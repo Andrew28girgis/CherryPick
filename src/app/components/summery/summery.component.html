@@ -1,0 +1,97 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="container">
+  <div class="row mt-2">
+    <ng-container *ngFor="let type of buyboxTypes">
+      <div class="col-md-12" (click)="chooseType(type.id);goToAllPlaces({})">
+        <div class="card-bodyx" [ngClass]="{ selected: BuyboxId === type.id }">
+          <div class="card-title">{{ type.name }}</div>
+        </div>
+        <!-- <button class="default-btn" (click)="goToAllPlaces({})" style="background-color: #000;">
+          View
+        </button> -->
+      </div>
+    </ng-container>
+  </div>
+<!-- 
+  <div class="row mt-3" *ngIf="showSummery">
+    <div class="col-md-12 card-body">
+      <div style="display: flex; justify-content: space-between">
+        <div class="card-title">Property Match Summary by City and State</div>
+        <div class="card-category d-flex justify-content-between">
+          <button class="default-btn" (click)="goToAllPlaces({})">
+            View All
+          </button>
+        </div>
+      </div>
+      <div class="table-responsive table-hover table-sales">
+        <table class="table mt-3">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>City</th>
+              <th style="color: #1bb406">Fully Matching Locations</th>
+              <th style="color: #ff9e27">Partially Matching Locations</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let city of groupedPropertiesArray">
+              <tr
+                class="city-row"
+                (click)="goToPlaces(city.city, city.properties[0].state, 1)"
+                *ngIf="getMatchStatusCount(city.properties) != 0"
+              >
+                <td class="city">{{ city.properties[0].state }}</td>
+                <td class="city">{{ city.city | titlecase }}</td>
+                <td
+                  class="text-right"
+                  style="color: #1bb406; font-weight: 700"
+                  (click)="goToPlaces(city.city, city.properties[0].state, 1)"
+                >
+                  {{ getMatchStatusCount(city.properties) }}
+                </td>
+                <td
+                  class="text-right"
+                  style="color: #ff9e27; font-weight: 700"
+                  (click)="goToPlaces(city.city, city.properties[0].state, 0)"
+                >
+                  {{
+                    getPartialCount(city.properties) == 0
+                      ? "-"
+                      : getPartialCount(city.properties)
+                  }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div> -->
+
+    <!-- <div class="col-md-5 card-body">
+      <div class="full-height" style="border: none">
+        <div class="">
+          <div class="card-title">Feed Activity</div>
+          <div class="card-category">
+            Daily information about statistics in system
+          </div>
+          <ol class="activity-feed">
+            <ng-container *ngFor="let activity of General.activities">
+              <li class="feed-item feed-item-secondary">
+                <time class="date" datetime="9-25" style="color: #8c96a3">{{
+                  activity.actionDate | date
+                }}</time>
+                <span class="text"
+                  >{{ activity.userName }} has already taken action at
+                  <b>"{{ activity.placeName }}"</b> by
+                  {{ activity.actionName }}</span
+                >
+              </li>
+            </ng-container>
+          </ol>
+        </div>
+      </div>
+    </div> -->
