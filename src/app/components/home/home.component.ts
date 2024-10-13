@@ -96,7 +96,6 @@ export class HomeComponent implements OnInit {
       this.MatchStatus = +params.MatchStatus;
       this.BuyBoxId = params.buyboxid;
       localStorage.setItem('BuyBoxId',this.BuyBoxId);
-
       this.GetFilteredPlacesLookup();
     });
     if (history.state && history.state.city) {
@@ -156,10 +155,7 @@ export class HomeComponent implements OnInit {
           // center.places.forEach((markerData) => {
           //   centerPoints.push(markerData) ;
           // });
-        });
-        console.log(`lol`);
-        
-        console.log(this.centerPoints);
+        }); 
         
       }
        

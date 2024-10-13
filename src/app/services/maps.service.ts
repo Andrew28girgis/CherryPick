@@ -66,12 +66,8 @@ export class MapsService {
     }
 
     return {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 9,
-      fillColor: color,
-      fillOpacity: 1,
-      strokeColor: 'white',
-      strokeWeight: 2,
+      url: this.getArrowSvgBlack(),
+      scaledSize: new google.maps.Size(30, 30),
     };
   }
 
@@ -95,6 +91,26 @@ export class MapsService {
     );
   }
 
+  private getArrowSvgBlack(): string {
+    return (
+      'data:image/svg+xml;charset=UTF-8,' +
+      encodeURIComponent(`
+       <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_456_4378)">
+<path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#0D0C0C"/>
+<path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#0D0C0C"/>
+</g>
+<defs>
+<clipPath id="clip0_456_4378">
+<rect width="48" height="48" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+
+    `)
+    );
+  }
+
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Competitor') {
       this.competitorMarkers.push(marker);
@@ -112,7 +128,7 @@ export class MapsService {
     let content =
       type === 'Prospect Target'
         ? this.getInfoWindowContent(markerData, centerName)
-        : '';
+        : this.getInfoWindowContentCompetitors(markerData, centerName);
     return new google.maps.InfoWindow({ content });
   }
 
@@ -183,6 +199,21 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
         </div>`;
   }
 
+  private getInfoWindowContentCompetitors(
+    markerData: any,
+    centerName?: string
+  ): string {
+    return ` <div class="info-window"> 
+            <div class="p-3"> 
+                ${
+                  markerData.name
+                    ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
+                    : ''
+                }
+       
+            </div>
+        </div>`;
+  }
   // Click on arrow
   private addInfoWindowListener(
     marker: any,

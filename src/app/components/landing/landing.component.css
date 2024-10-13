@@ -777,11 +777,21 @@
   border-radius: 20px;
   background-color: #ff4c4c;
   color: #fff;
+  height: 31px;
+  text-align: center;
+  cursor: auto;
+  padding: 0 15px;
+}
+
+.for-lease:focus {
+  background-color: #ff4c4c;
+  color: #fff;
 }
 
 .details-info {
-  padding: 0 24px;
-  border-left: 1px solid #ccc;
+  padding: 10px 24px;
+  border: 1px solid #E6E4E4;
+  border-radius: 20px;
 }
 
 .info-head {
@@ -795,9 +805,10 @@
 
 .info-value {
   color: #0d0c0c;
-  font-size: 20px;
+  font-size: 18px;
+  margin-bottom: 0;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 32px; /* 160% */
 }
 
@@ -813,12 +824,12 @@
 
 .main-img {
   max-height: 382px;
-  border-radius: 20px; 
+  border-radius: 20px;
   max-width: 90%;
 }
 
 .procpect-img {
-  border-radius: 20px; 
+  border-radius: 20px;
   max-height: 382px;
   max-width: 98%;
 }
@@ -849,35 +860,85 @@
 }
 
 .if-loc {
-  font-size: 16px; 
+  font-size: 16px;
   font-weight: 400;
   line-height: 30px; /* 187.5% */
   color: #817a79;
 }
 
-
-ul{
+ul {
   list-style-type: none;
   padding: 0;
 }
-li{
+li {
   display: flex;
-  border-bottom: 1px solid #E6E4E4;
+  border-bottom: 1px solid #e6e4e4;
   padding: 10px 0;
   justify-content: space-between;
 }
 
-.nearset{
-  color: #817A79;
+.nearset {
+  color: #817a79;
 }
 
-.venue-gallery{
+.venue-gallery {
   margin: 10px 0;
 }
 
 @media (max-width: 768px) {
-  .details-info{
-      padding: 0;
-      border-left: none;
+  .details-info {
+    padding: 0;
+    border-left: none;
   }
+}
+
+.another-places {
+  height: 350px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #b3afaf #f1f1f1;
+}
+
+.why-sec {
+  height: 97%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #b3afaf #f1f1f1;
+}
+
+.half-why{
+  height: 658px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #b3afaf #f1f1f1;
+}
+
+.feedback-btn { 
+  font-size: 16px;
+  width: 100%;
+  border: none;
+  height: 48px;
+  font-weight: 500;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 16px;
+  margin: 10px 0;
+  background-color: #0D0C0C;
+  color: #fff;
+}
+
+.gray{
+  color: #817A79;
+  text-wrap: nowrap;
+}
+
+.info-border{
+  border-bottom: 1px solid #E6E4E4;
+    padding: 12px 0;
+}
+
+
+.selected-reaction{
+  border: 2px solid #0D0C0C;
+  border-radius: 20px;
 }

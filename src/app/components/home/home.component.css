@@ -274,3 +274,9 @@
   font-size: 16px;
   color: #817A79;
 }
+
+.det-btn{
+  border: none;
+  color: #817A79;
+  background-color: #fff;
+}

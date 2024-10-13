@@ -55,8 +55,10 @@ export class Property {
   state!: string;
   zip!: string;
   extras!:any;
+  reaction!:string;
   longitude!: number;
   imagesLinks!:string;
+  feedBack!:string;
   centerName!:string;
   lat!:number;
   lon!:number
