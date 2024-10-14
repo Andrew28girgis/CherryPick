@@ -17,7 +17,10 @@ steps:
 
 - script: |
     npm install --legacy-peer-deps
-    npm install -g @angular/cli        
+    npm install -g @angular/cli      
+    npm install @fortawesome/angular-fontawesome
+    npm install @fortawesome/free-brands-svg-icons
+    npm install @fortawesome/free-solid-svg-icons  
     ng build 
   displayName: 'npm install and build'
 
