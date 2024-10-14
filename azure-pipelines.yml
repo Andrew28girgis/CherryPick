@@ -18,6 +18,8 @@ steps:
 - script: |
     npm install --legacy-peer-deps
     npm install -g @angular/cli    
+    npm install @fortawesome/fontawesome-svg-core --save
+    npm install @angular/cdk --save
     ng build 
   displayName: 'npm install and build'
 
