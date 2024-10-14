@@ -1,0 +1,18 @@
+{
+  "routes": [
+    {
+      "route": "/404",
+      "redirect": "/",
+      "statusCode": 302
+    },
+    {
+      "route": "/*",
+      "serve": "/index.html",
+      "statusCode": 200
+    }
+  ],
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/api/*", "/static/*"]
+  }
+}
