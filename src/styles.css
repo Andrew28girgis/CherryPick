@@ -26,8 +26,6 @@
   font-style: normal;
 }
 
-@import "~@fortawesome/fontawesome-free/css/all.css";
-
 :root {
   --app-color: #000000;
   --app-font: "Satoshi", sans-serif; /* Define Satoshi as a font variable */

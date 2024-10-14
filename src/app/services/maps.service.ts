@@ -187,7 +187,7 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
                       markerData.avalibleUnits
                         ? `
                         <div class="col-md-4 col-sm-12  d-flex flex-column spec">
-                            <p class="spec-head">Avalible Units</p>
+                            <p class="spec-head">Available Units</p>
                             <p class="spec-content">${markerData.avalibleUnits}</p>
                         </div>`
                         : ''
@@ -213,7 +213,7 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     markerData: any,
     centerName?: string
   ): string {
-    return ` <div class="info-window"> 
+    return ` <div> 
             <div class="p-3"> 
                 ${
                   markerData.name
