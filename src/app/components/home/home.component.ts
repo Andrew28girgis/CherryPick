@@ -45,6 +45,7 @@ export class HomeComponent implements OnInit {
   maxLandSize: any = null;
   minNumberOfBeds: any = null;
   maxNumberOfBeds: any = null;
+  
   options: Options = {
     floor: 0,
     ceil: 100000,
