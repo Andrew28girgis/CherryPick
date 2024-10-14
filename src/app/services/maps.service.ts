@@ -12,16 +12,12 @@ export class MapsService {
   storedBuyBoxId: any;
   storedLat: any;
   storedLon: any;
+  private markers:any[] = []; // Array to hold all markers
 
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedLat = localStorage.getItem('placeLat');
     this.storedLon = localStorage.getItem('placeLon');
-
-
-
-    console.log('Stored BuyBoxId:', this.storedLat , this.storedLon);
-    
   } 
   
   createMarker(
@@ -43,6 +39,7 @@ export class MapsService {
       icon: icon,
       
     });
+    this.markers.push(marker); 
 
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type, centerName);
@@ -149,7 +146,7 @@ export class MapsService {
   private getInfoWindowContent(markerData: any, centerName?: string): string {
     return ` <div class="info-window">
             <div class="main-img">
-                <img src="${markerData.mainImage}" alt="Main Image">
+                <img src="../../../assets/Images/Main/${markerData.mainImage}.jpg" alt="Main Image">
             </div>
             <div class="content-wrap"> 
                 ${
@@ -284,4 +281,75 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
       marker.setMap(show ? map : null);
     });
   }
+
+  initializeMap(map: any, latitude: number, longitude: number, mapId: string) {
+    return new google.maps.Map(map, {
+        center: { lat: latitude || 0, lng: longitude || 0 },
+        zoom: 25,
+        mapId,
+    });
+  }
+
+
+  //   // Method to highlight a marker
+  // highlightMarker(marker: any, highlight: boolean): void {
+  //   const originalIcon = marker.getIcon(); // Store original icon if needed
+  //   const highlightedIcon = {
+  //     url: 'https://img.icons8.com/?size=100&id=9918&format=png&color=000000', // Provide a highlighted icon URL
+  //     scaledSize: new google.maps.Size(30, 30), // Set size as needed
+  //   };
+
+  //   marker.setIcon(highlight ? highlightedIcon : originalIcon); // Change icon based on highlight
+  // }
+
+
+  private currentlyHighlightedMarker: { marker: any; originalIcon: any } | null = null; // Track the highlighted marker and its original icon
+
+  highlightMarker(latitude: number, longitude: number, highlight: boolean): void {
+    const highlightedIcon = {
+        url: 'https://img.icons8.com/?size=100&id=9918&format=png&color=000000', 
+        scaledSize: new google.maps.Size(30, 30),
+    };
+
+    // Find the marker with the matching latitude and longitude
+    const markerToHighlight = this.markers.find(marker => {
+        const position = marker.getPosition();
+        return position && position.lat() === latitude && position.lng() === longitude;
+    });
+
+    console.log(`test markerToHighlight: ${markerToHighlight}`);
+
+    // If the marker is found
+    if (markerToHighlight) {
+        // If highlighting and there is already a currently highlighted marker
+        if (highlight) {
+            // If the marker being highlighted is different from the currently highlighted marker
+            if (this.currentlyHighlightedMarker && this.currentlyHighlightedMarker.marker !== markerToHighlight) {
+                // Revert the previous marker to its original icon
+                this.currentlyHighlightedMarker.marker.setIcon(this.currentlyHighlightedMarker.originalIcon);
+            }
+
+            // Store the original icon of the new marker
+            const originalIcon = markerToHighlight.getIcon();
+            markerToHighlight.setIcon(highlightedIcon); // Set to highlighted icon
+            
+            // Update the currently highlighted marker reference
+            this.currentlyHighlightedMarker = { marker: markerToHighlight, originalIcon }; // Store marker and its original icon
+        } else {
+            // If not highlighting, revert to the original icon
+            if (this.currentlyHighlightedMarker && this.currentlyHighlightedMarker.marker === markerToHighlight) {
+                markerToHighlight.setIcon(this.currentlyHighlightedMarker.originalIcon);
+                this.currentlyHighlightedMarker = null; // Clear the reference
+            } else {
+                // If the marker is not the one highlighted, simply set it to its original icon
+                const originalIcon = markerToHighlight.getIcon(); // Get the original icon
+                markerToHighlight.setIcon(originalIcon);
+            }
+        }
+    } else {
+        console.error('Marker not found for the given latitude and longitude:', latitude, longitude);
+    }
+  }
+
+  
 }

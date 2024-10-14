@@ -360,6 +360,7 @@ export class HomeComponent implements OnInit {
     type: string,
     useArrow: boolean = false
   ) {
+    
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(
         this.map,
@@ -580,8 +581,19 @@ export class HomeComponent implements OnInit {
     return centerName.replace(/'/g, '');
   }
 
-  // ngOnDestroy(): void {
-  //   const currentScrollPosition = this.scrollableDiv.nativeElement.scrollTop;
-  //   sessionStorage.setItem('scrollPosition', currentScrollPosition.toString());
-  // }
+ 
+  
+  onMouseEnter(place: any): void { 
+    const { latitude, longitude } = place;
+    const mapElement = document.getElementById('map') as HTMLElement;
+    
+    if (!mapElement) return; 
+
+    if (this.map) {
+        this.map.setCenter({ lat: +latitude, lng: +longitude });
+        this.map.setZoom(17);  
+    }
+}
+
+
 }

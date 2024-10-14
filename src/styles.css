@@ -478,6 +478,7 @@
 
 .card-window {
   min-width: 430px;
+  cursor: pointer;
   margin-bottom: 20px;
 }
 
