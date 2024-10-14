@@ -720,6 +720,10 @@ export class LandingComponent {
     });
   }
 
+  replaceApostrophe(name: string, replacement: string = ''): string {
+    return name.replace(/'/g, replacement).toLowerCase();
+  }
+
   // getValueOfPlace(stageName: string) {
   //   const propertyName = stageName;
   //   const value = this.place[propertyName];

@@ -781,9 +781,7 @@
               <li *ngFor="let place of General.nearsetPlaces?.competitorPlaces">
                 <div>
                   <img
-                    src="https://osmows.cherrypick.com/logos/{{
-                      place.name
-                    }}.jpg"
+                  src="../../../assets/Images/Logos/{{replaceApostrophe(place.name)}}.jpg"
                     alt=""
                     style="height: 35px; margin-right: 10px; width: 35px"
                   />
@@ -809,10 +807,8 @@
               <li *ngFor="let place of General.nearsetPlaces?.cotenants">
                 <div>
                   <img
-                    src="https://osmows.cherrypick.com/logos/{{
-                      place.name
-                    }}.jpg"
-                    alt=""
+                  src="../../../assets/Images/Logos/{{replaceApostrophe(place.name)}}.jpg"
+                  alt=""
                     style="height: 35px; margin-right: 10px; width: 35px"
                   />
                   <span *ngIf="place.name">

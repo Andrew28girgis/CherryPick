@@ -146,7 +146,7 @@ export class MapsService {
   private getInfoWindowContent(markerData: any, centerName?: string): string {
     return ` <div class="info-window">
             <div class="main-img">
-                <img src="../../../assets/Images/Main/${markerData.mainImage}.jpg" alt="Main Image">
+                <img src="../../../assets/Images/Main/${markerData.name}.jpg" alt="Main Image">
             </div>
             <div class="content-wrap"> 
                 ${

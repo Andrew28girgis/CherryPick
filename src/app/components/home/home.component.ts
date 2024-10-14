@@ -141,6 +141,10 @@ export class HomeComponent implements OnInit {
     // }, 0);
   }
 
+  replaceApostrophe(name: string, replacement: string = ''): string {
+    return name.replace(/'/g, replacement);
+  }
+  
   toggleDropdown() {
     this.isOpen = !this.isOpen;
   }
