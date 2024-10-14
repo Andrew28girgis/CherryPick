@@ -716,6 +716,7 @@ export class LandingComponent {
         fillOpacity: 1,
         strokeColor: 'white',
         strokeWeight: 1,
+        
       },
     });
   }
