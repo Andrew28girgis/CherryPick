@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import {
@@ -56,19 +62,37 @@ export class HomeComponent implements OnInit {
   paginatedProperties: Property[] = [];
   filteredProperties: Property[] = [];
   contactId: any;
-  dropdowmOptions:any= [
-    { text: 'Map View', icon: '../../../assets/Images/Icons/map.png' , status: 1 }, // Add your SVG paths here
-    { text: 'Side List View', icon: '../../../assets/Images/Icons/element-3.png' ,status: 2 },
-    { text: 'Cards View', icon: '../../../assets/Images/Icons/grid-1.png' ,status: 3 },
-    { text: 'Table View', icon: '../../../assets/Images/Icons/grid-4.png' ,status: 4 },
+  dropdowmOptions: any = [
+    {
+      text: 'Map View',
+      icon: '../../../assets/Images/Icons/map.png',
+      status: 1,
+    }, // Add your SVG paths here
+    {
+      text: 'Side List View',
+      icon: '../../../assets/Images/Icons/element-3.png',
+      status: 2,
+    },
+    {
+      text: 'Cards View',
+      icon: '../../../assets/Images/Icons/grid-1.png',
+      status: 3,
+    },
+    {
+      text: 'Table View',
+      icon: '../../../assets/Images/Icons/grid-4.png',
+      status: 4,
+    },
   ];
   isOpen = false;
-
 
   allPlaces!: AllPlaces;
   anotherPlaces!: AnotherPlaces;
   cardView: boolean = true;
-  currentView:any ;
+  currentView: any;
+
+  storedLat: any;
+  storedLon: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -76,17 +100,18 @@ export class HomeComponent implements OnInit {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private configService: ConfigService,
-    private titleService: Title ,
-    private markerService:MapsService ,
+    private titleService: Title,
+    private markerService: MapsService,
     private cdr: ChangeDetectorRef
   ) {
     this.titleService.setTitle('CherryPick');
-
+    this.storedLat = localStorage.getItem('placeLat');
+    this.storedLon = localStorage.getItem('placeLon');
   }
 
   ngOnInit(): void {
     this.selectedOption = this.dropdowmOptions[0];
-    this.currentView = 1 ;
+    this.currentView = 1;
     this.mapView = true;
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
@@ -95,7 +120,8 @@ export class HomeComponent implements OnInit {
       this.currentCity = params.city;
       this.MatchStatus = +params.MatchStatus;
       this.BuyBoxId = params.buyboxid;
-      localStorage.setItem('BuyBoxId',this.BuyBoxId);
+      localStorage.setItem('BuyBoxId', this.BuyBoxId);
+
       this.GetFilteredPlacesLookup();
     });
     if (history.state && history.state.city) {
@@ -114,61 +140,87 @@ export class HomeComponent implements OnInit {
     // }, 0);
   }
 
-
   toggleDropdown() {
     this.isOpen = !this.isOpen;
   }
-  centerPoints:any[]=[] ;
-  
+  centerPoints: any[] = [];
+
   async getAllMarker() {
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
-      this.map = new Map(document.getElementById('map') as HTMLElement, {
-        center: {
-          lat: this.allPlaces.standAlonePlaces[0].latitude || 0,
-          lng: this.allPlaces.standAlonePlaces[0].longitude || 0,
-        },
-        zoom: 11,
-        mapId: '1234567890',
-      });
-   
+      
+      if (this.storedLat != null && this.storedLon != null) {
+        this.map = new Map(document.getElementById('map') as HTMLElement, {
+          center: {
+            lat: +this.storedLat || 0,
+            lng: +this.storedLon || 0,
+          },
+          zoom: 15,
+          mapId: '1234567890',
+        });
+      } else {
+
+
+        this.map = new Map(document.getElementById('map') as HTMLElement, {
+          center: {
+            lat: this.allPlaces.standAlonePlaces[0].latitude || 0,
+            lng: this.allPlaces.standAlonePlaces[0].longitude || 0,
+          },
+          zoom: 10,
+          mapId: '1234567890',
+        });
+      }
       if (this.allPlaces && this.allPlaces.centers) {
         this.allPlaces.centers.forEach((center) => {
-          let shoppingCenter:any = {};
-          shoppingCenter.name = center.centerName ;
-          shoppingCenter.avalibleUnits = center.places.length ;
-          shoppingCenter.address = center.places[0].address ;
-          shoppingCenter.city = center.places[0].city ;
-          shoppingCenter.state = center.places[0].state ;
-          shoppingCenter.nearestCompetitors = center.places[0].nearestCompetitorsInMiles ;
-          shoppingCenter.nearestCotenants = center.places[0].nearestCotenantsMiles ;
-          shoppingCenter.latitude = center.places[0].latitude ;
-          shoppingCenter.longitude = center.places[0].longitude ;
-          shoppingCenter.mainImage = center.places[0].mainImage ;
-          shoppingCenter.id = center.places[0].id ;
-          shoppingCenter.streetLatitude = center.places[0].streetLatitude ;
-          shoppingCenter.streetLongitude = center.places[0].streetLongitude ;
+          let shoppingCenter: any = {};
+          shoppingCenter.name = center.centerName;
+          shoppingCenter.avalibleUnits = center.places.length;
+          shoppingCenter.address = center.places[0].address;
+          shoppingCenter.city = center.places[0].city;
+          shoppingCenter.state = center.places[0].state;
+          shoppingCenter.nearestCompetitors =
+            center.places[0].nearestCompetitorsInMiles;
+          shoppingCenter.nearestCotenants =
+            center.places[0].nearestCotenantsMiles;
+          shoppingCenter.latitude = center.places[0].latitude;
+          shoppingCenter.longitude = center.places[0].longitude;
+          shoppingCenter.mainImage = center.places[0].mainImage;
+          shoppingCenter.id = center.places[0].id;
+          shoppingCenter.streetLatitude = center.places[0].streetLatitude;
+          shoppingCenter.streetLongitude = center.places[0].streetLongitude;
 
-          this.centerPoints.push(shoppingCenter) ;
+          this.centerPoints.push(shoppingCenter);
 
           // center.places.forEach((markerData) => {
           //   centerPoints.push(markerData) ;
           // });
-        }); 
-        
+        });
       }
-       
-      this.createMarkers(this.anotherPlaces.competitorPlaces, '#0D0C0C', 'Competitor');
+
+      this.createMarkers(
+        this.anotherPlaces.competitorPlaces,
+        '#0D0C0C',
+        'Competitor'
+      );
       this.createMarkers(this.anotherPlaces.cotenants, '#0074D9', 'Co-Tenant');
       this.createMarkers(this.anotherPlaces.ourPlaces, '#28A745', 'Our Place');
-      this.createMarkers(this.allPlaces.standAlonePlaces, 'rgb(212, 0, 42)', 'Prospect Target', true);
-      this.createMarkers(this.centerPoints, 'rgb(212, 0, 42)', 'Prospect Target', true);
+      this.createMarkers(
+        this.allPlaces.standAlonePlaces,
+        'rgb(212, 0, 42)',
+        'Prospect Target',
+        true
+      );
+      this.createMarkers(
+        this.centerPoints,
+        'rgb(212, 0, 42)',
+        'Prospect Target',
+        true
+      );
     } finally {
       this.spinner.hide();
     }
   }
-
 
   getAllBuyBoxComparables(buyboxId: number) {
     this.spinner.show();
@@ -178,7 +230,6 @@ export class HomeComponent implements OnInit {
       this.spinner.hide();
     });
   }
-
 
   GetFilteredPlacesLookup() {
     this.spinner.show();
@@ -292,24 +343,34 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  selectedOption:any ;
+  selectedOption: any;
   selectOption(option: any): void {
-    this.selectedOption = option ; 
-    this.currentView =  option.status;
-    this.isOpen = false; 
+    this.selectedOption = option;
+    this.currentView = option.status;
+    this.isOpen = false;
   }
 
   changeView() {
     this.mapView = !this.mapView;
   }
 
-  
-  createMarkers(markerDataArray: any[], color: string, type: string, useArrow: boolean = false) {
-    markerDataArray.forEach(markerData => {
-      this.markerService.createMarker(this.map, markerData, color, type, useArrow);
+  createMarkers(
+    markerDataArray: any[],
+    color: string,
+    type: string,
+    useArrow: boolean = false
+  ) {
+    markerDataArray.forEach((markerData) => {
+      this.markerService.createMarker(
+        this.map,
+        markerData,
+        color,
+        type,
+        useArrow
+      );
     });
   }
-  
+
   // Marker storage arrays
   // Marker storage arrays
   competitorMarkers: any[] = [];
@@ -323,9 +384,13 @@ export class HomeComponent implements OnInit {
 
   onCheckboxChange(value: string) {
     if (value == 'Competitor') {
-      this.markerService.toggleMarkers(value ,this.isCompetitorChecked  ,this.map)
-     } else {
-      this.markerService.toggleMarkers(value ,this.isCoTenantChecked ,this.map) 
+      this.markerService.toggleMarkers(
+        value,
+        this.isCompetitorChecked,
+        this.map
+      );
+    } else {
+      this.markerService.toggleMarkers(value, this.isCoTenantChecked, this.map);
     }
   }
 

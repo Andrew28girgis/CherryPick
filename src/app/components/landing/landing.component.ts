@@ -53,6 +53,8 @@ export class LandingComponent {
     private titleService: Title,
     private authService: AuthService
   ) {
+    localStorage.removeItem('placeLat');
+    localStorage.removeItem('placeLon');
     let color = this.configService.getColor();
     if (color == '#161616') {
       this.titleService.setTitle('peak7holdings');
@@ -205,7 +207,14 @@ export class LandingComponent {
     this.spinner.show();
     this.PlacesService.GetBuyBoxOnePlace(id, this.BuyBoxId).subscribe(
       (data) => {
-        this.place = data.place;
+        this.place = data.place; 
+        
+        localStorage.setItem('placeLat', this.place.lat.toString());
+        localStorage.setItem('placeLon', this.place.lon.toString());
+        
+        console.log(this.place.lat , this.place.lon);
+        
+
         this.placeImage = this.place.imagesLinks
           ?.split(',')
           .map((link) => link.trim());
@@ -308,7 +317,6 @@ export class LandingComponent {
         type: string
       ) => {
         let icon;
-        console.log(type);
         
         if (useArrow && type === 'Prospect Target') {
           icon = {

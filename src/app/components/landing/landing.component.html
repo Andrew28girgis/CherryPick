@@ -62,13 +62,31 @@
                 <div class="col-md-4 col-sm-12 p-0" *ngIf="place.address">
                   <div class="row details-info">
                     <div class="col-sm-12 p-0" *ngIf="place.address">
-                      <div class="d-flex flex-row align-items-center info-border">
-                        <p class="info-head"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M0.5 8C0.5 3.85786 3.85786 0.5 8 0.5H36C40.1421 0.5 43.5 3.85786 43.5 8V36C43.5 40.1421 40.1421 43.5 36 43.5H8C3.85786 43.5 0.5 40.1421 0.5 36V8Z" stroke="#817A79"/>
-                          <path d="M21.9999 24.1699C19.8699 24.1699 18.1299 22.4399 18.1299 20.2999C18.1299 18.1599 19.8699 16.4399 21.9999 16.4399C24.1299 16.4399 25.8699 18.1699 25.8699 20.3099C25.8699 22.4499 24.1299 24.1699 21.9999 24.1699ZM21.9999 17.9399C20.6999 17.9399 19.6299 18.9999 19.6299 20.3099C19.6299 21.6199 20.6899 22.6799 21.9999 22.6799C23.3099 22.6799 24.3699 21.6199 24.3699 20.3099C24.3699 18.9999 23.2999 17.9399 21.9999 17.9399Z" fill="#817A79"/>
-                          <path d="M21.9999 32.76C20.5199 32.76 19.0299 32.2 17.8699 31.09C14.9199 28.25 11.6599 23.72 12.8899 18.33C13.9999 13.44 18.2699 11.25 21.9999 11.25C21.9999 11.25 21.9999 11.25 22.0099 11.25C25.7399 11.25 30.0099 13.44 31.1199 18.34C32.3399 23.73 29.0799 28.25 26.1299 31.09C24.9699 32.2 23.4799 32.76 21.9999 32.76ZM21.9999 12.75C19.0899 12.75 15.3499 14.3 14.3599 18.66C13.2799 23.37 16.2399 27.43 18.9199 30C20.6499 31.67 23.3599 31.67 25.0899 30C27.7599 27.43 30.7199 23.37 29.6599 18.66C28.6599 14.3 24.9099 12.75 21.9999 12.75Z" fill="#817A79"/>
+                      <div
+                        class="d-flex flex-row align-items-center info-border"
+                      >
+                        <p class="info-head">
+                          <svg
+                            width="44"
+                            height="44"
+                            viewBox="0 0 44 44"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0.5 8C0.5 3.85786 3.85786 0.5 8 0.5H36C40.1421 0.5 43.5 3.85786 43.5 8V36C43.5 40.1421 40.1421 43.5 36 43.5H8C3.85786 43.5 0.5 40.1421 0.5 36V8Z"
+                              stroke="#817A79"
+                            />
+                            <path
+                              d="M21.9999 24.1699C19.8699 24.1699 18.1299 22.4399 18.1299 20.2999C18.1299 18.1599 19.8699 16.4399 21.9999 16.4399C24.1299 16.4399 25.8699 18.1699 25.8699 20.3099C25.8699 22.4499 24.1299 24.1699 21.9999 24.1699ZM21.9999 17.9399C20.6999 17.9399 19.6299 18.9999 19.6299 20.3099C19.6299 21.6199 20.6899 22.6799 21.9999 22.6799C23.3099 22.6799 24.3699 21.6199 24.3699 20.3099C24.3699 18.9999 23.2999 17.9399 21.9999 17.9399Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M21.9999 32.76C20.5199 32.76 19.0299 32.2 17.8699 31.09C14.9199 28.25 11.6599 23.72 12.8899 18.33C13.9999 13.44 18.2699 11.25 21.9999 11.25C21.9999 11.25 21.9999 11.25 22.0099 11.25C25.7399 11.25 30.0099 13.44 31.1199 18.34C32.3399 23.73 29.0799 28.25 26.1299 31.09C24.9699 32.2 23.4799 32.76 21.9999 32.76ZM21.9999 12.75C19.0899 12.75 15.3499 14.3 14.3599 18.66C13.2799 23.37 16.2399 27.43 18.9199 30C20.6499 31.67 23.3599 31.67 25.0899 30C27.7599 27.43 30.7199 23.37 29.6599 18.66C28.6599 14.3 24.9099 12.75 21.9999 12.75Z"
+                              fill="#817A79"
+                            />
                           </svg>
-                          </p>
+                        </p>
                         <p class="info-value ms-2">
                           {{ place.address }}, {{ place.city | titlecase }},
                           {{ place.state }}
@@ -76,53 +94,134 @@
                       </div>
                     </div>
 
-                    <div class="col-md-12 col-sm-12 p-0"  >
-                      <div class="d-flex flex-row align-items-center info-border">
-                        <p class="info-head"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M17.2798 11.2002C17.0898 11.2002 16.8997 11.1302 16.7497 10.9802C16.4597 10.6902 16.4597 10.2102 16.7497 9.9202L19.9397 6.7302L16.7497 3.54019C16.4597 3.25019 16.4597 2.7702 16.7497 2.4802C17.0397 2.1902 17.5197 2.1902 17.8097 2.4802L21.5298 6.20023C21.6698 6.34023 21.7497 6.5302 21.7497 6.7302C21.7497 6.9302 21.6698 7.12022 21.5298 7.26022L17.8097 10.9802C17.6597 11.1202 17.4698 11.2002 17.2798 11.2002Z" fill="#817A79"/>
-                          <path d="M21 7.47998H3C2.59 7.47998 2.25 7.13998 2.25 6.72998C2.25 6.31998 2.59 5.97998 3 5.97998H21C21.41 5.97998 21.75 6.31998 21.75 6.72998C21.75 7.13998 21.41 7.47998 21 7.47998Z" fill="#817A79"/>
-                          <path d="M6.71997 21.75C6.52997 21.75 6.34 21.68 6.19 21.53L2.46997 17.81C2.32997 17.67 2.25 17.48 2.25 17.28C2.25 17.08 2.32997 16.89 2.46997 16.75L6.19 13.03C6.48 12.74 6.96 12.74 7.25 13.03C7.54 13.32 7.54 13.8 7.25 14.09L4.06 17.28L7.25 20.4699C7.54 20.7599 7.54 21.24 7.25 21.53C7.11 21.68 6.91997 21.75 6.71997 21.75Z" fill="#817A79"/>
-                          <path d="M21 18.02H3C2.59 18.02 2.25 17.68 2.25 17.27C2.25 16.86 2.59 16.52 3 16.52H21C21.41 16.52 21.75 16.86 21.75 17.27C21.75 17.68 21.41 18.02 21 18.02Z" fill="#817A79"/>
+                    <div class="col-md-12 col-sm-12 p-0">
+                      <div
+                        class="d-flex flex-row align-items-center info-border"
+                      >
+                        <p class="info-head">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M17.2798 11.2002C17.0898 11.2002 16.8997 11.1302 16.7497 10.9802C16.4597 10.6902 16.4597 10.2102 16.7497 9.9202L19.9397 6.7302L16.7497 3.54019C16.4597 3.25019 16.4597 2.7702 16.7497 2.4802C17.0397 2.1902 17.5197 2.1902 17.8097 2.4802L21.5298 6.20023C21.6698 6.34023 21.7497 6.5302 21.7497 6.7302C21.7497 6.9302 21.6698 7.12022 21.5298 7.26022L17.8097 10.9802C17.6597 11.1202 17.4698 11.2002 17.2798 11.2002Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M21 7.47998H3C2.59 7.47998 2.25 7.13998 2.25 6.72998C2.25 6.31998 2.59 5.97998 3 5.97998H21C21.41 5.97998 21.75 6.31998 21.75 6.72998C21.75 7.13998 21.41 7.47998 21 7.47998Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M6.71997 21.75C6.52997 21.75 6.34 21.68 6.19 21.53L2.46997 17.81C2.32997 17.67 2.25 17.48 2.25 17.28C2.25 17.08 2.32997 16.89 2.46997 16.75L6.19 13.03C6.48 12.74 6.96 12.74 7.25 13.03C7.54 13.32 7.54 13.8 7.25 14.09L4.06 17.28L7.25 20.4699C7.54 20.7599 7.54 21.24 7.25 21.53C7.11 21.68 6.91997 21.75 6.71997 21.75Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M21 18.02H3C2.59 18.02 2.25 17.68 2.25 17.27C2.25 16.86 2.59 16.52 3 16.52H21C21.41 16.52 21.75 16.86 21.75 17.27C21.75 17.68 21.41 18.02 21 18.02Z"
+                              fill="#817A79"
+                            />
                           </svg>
-                          </p>
+                        </p>
                         <p class="info-value ms-2 gray">
-                           Nearest Competitor: <span style="color:#000;font-weight: bold;">{{place.nearestCompetitorsInMiles.toFixed(2) }} MI</span>
+                          Nearest Competitor:
+                          <span style="color: #000; font-weight: bold"
+                            >{{
+                              place.nearestCompetitorsInMiles.toFixed(2)
+                            }}
+                            MI</span
+                          >
                         </p>
                       </div>
                     </div>
-                    <div class="col-md-12 col-sm-12 p-0"  >
-                      <div class="d-flex flex-row align-items-center info-border">
-                        <p class="info-head"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M15.59 13.01C12.35 13.01 9.70996 10.37 9.70996 7.13C9.70996 3.89 12.35 1.25 15.59 1.25C18.83 1.25 21.47 3.89 21.47 7.13C21.47 10.37 18.83 13.01 15.59 13.01ZM15.59 2.75C13.18 2.75 11.21 4.71 11.21 7.13C11.21 9.55 13.17 11.51 15.59 11.51C18.01 11.51 19.97 9.55 19.97 7.13C19.97 4.71 18 2.75 15.59 2.75Z" fill="#817A79"/>
-                          <path d="M6.36026 20.1903C4.25026 20.1903 2.53027 18.4703 2.53027 16.3603C2.53027 14.2503 4.25026 12.5303 6.36026 12.5303C8.47026 12.5303 10.1903 14.2503 10.1903 16.3603C10.1903 18.4703 8.47026 20.1903 6.36026 20.1903ZM6.36026 14.0303C5.08026 14.0303 4.03027 15.0703 4.03027 16.3603C4.03027 17.6403 5.07026 18.6903 6.36026 18.6903C7.64026 18.6903 8.69028 17.6503 8.69028 16.3603C8.69028 15.0803 7.64026 14.0303 6.36026 14.0303Z" fill="#817A79"/>
-                          <path d="M16.6201 22.7499C14.7901 22.7499 13.3101 21.2599 13.3101 19.4399C13.3101 17.6099 14.8001 16.1299 16.6201 16.1299C18.4401 16.1299 19.9301 17.6199 19.9301 19.4399C19.9301 21.2599 18.4401 22.7499 16.6201 22.7499ZM16.6201 17.6199C15.6201 17.6199 14.8101 18.4299 14.8101 19.4299C14.8101 20.4299 15.6201 21.2399 16.6201 21.2399C17.6201 21.2399 18.4301 20.4299 18.4301 19.4299C18.4301 18.4399 17.6201 17.6199 16.6201 17.6199Z" fill="#817A79"/>
+                    <div class="col-md-12 col-sm-12 p-0">
+                      <div
+                        class="d-flex flex-row align-items-center info-border"
+                      >
+                        <p class="info-head">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M15.59 13.01C12.35 13.01 9.70996 10.37 9.70996 7.13C9.70996 3.89 12.35 1.25 15.59 1.25C18.83 1.25 21.47 3.89 21.47 7.13C21.47 10.37 18.83 13.01 15.59 13.01ZM15.59 2.75C13.18 2.75 11.21 4.71 11.21 7.13C11.21 9.55 13.17 11.51 15.59 11.51C18.01 11.51 19.97 9.55 19.97 7.13C19.97 4.71 18 2.75 15.59 2.75Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M6.36026 20.1903C4.25026 20.1903 2.53027 18.4703 2.53027 16.3603C2.53027 14.2503 4.25026 12.5303 6.36026 12.5303C8.47026 12.5303 10.1903 14.2503 10.1903 16.3603C10.1903 18.4703 8.47026 20.1903 6.36026 20.1903ZM6.36026 14.0303C5.08026 14.0303 4.03027 15.0703 4.03027 16.3603C4.03027 17.6403 5.07026 18.6903 6.36026 18.6903C7.64026 18.6903 8.69028 17.6503 8.69028 16.3603C8.69028 15.0803 7.64026 14.0303 6.36026 14.0303Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M16.6201 22.7499C14.7901 22.7499 13.3101 21.2599 13.3101 19.4399C13.3101 17.6099 14.8001 16.1299 16.6201 16.1299C18.4401 16.1299 19.9301 17.6199 19.9301 19.4399C19.9301 21.2599 18.4401 22.7499 16.6201 22.7499ZM16.6201 17.6199C15.6201 17.6199 14.8101 18.4299 14.8101 19.4299C14.8101 20.4299 15.6201 21.2399 16.6201 21.2399C17.6201 21.2399 18.4301 20.4299 18.4301 19.4299C18.4301 18.4399 17.6201 17.6199 16.6201 17.6199Z"
+                              fill="#817A79"
+                            />
                           </svg>
-                          
-                          </p>
+                        </p>
                         <p class="info-value ms-2 gray">
-                          Nearest Complementary Tenants: <span style="color:#000;font-weight: bold;">{{place.nearestCotenantsMiles.toFixed(2) }} MI</span> 
+                          Nearest Complementary Tenants:
+                          <span style="color: #000; font-weight: bold"
+                            >{{
+                              place.nearestCotenantsMiles.toFixed(2)
+                            }}
+                            MI</span
+                          >
                         </p>
                       </div>
                     </div>
-                    <div class="col-md-12 col-sm-12 p-0"  >
-                      <div class="d-flex flex-row align-items-center " style="padding: 12px 0;">
-                        <p class="info-head"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z" fill="#817A79"/>
-                          <path d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z" fill="#817A79"/>
-                          <path d="M19.8499 18.75H17.3699C16.9599 18.75 16.6199 18.41 16.6199 18C16.6199 17.59 16.9599 17.25 17.3699 17.25H19.8499C20.8699 17.25 21.2499 16.87 21.2499 15.85V4.15002C21.2499 3.13002 20.8699 2.75 19.8499 2.75H15.5499C14.5299 2.75 14.1499 3.13002 14.1499 4.15002V6C14.1499 6.41 13.8099 6.75 13.3999 6.75C12.9899 6.75 12.6499 6.41 12.6499 6V4.15002C12.6499 2.31002 13.7099 1.25 15.5499 1.25H19.8499C21.6899 1.25 22.7499 2.31002 22.7499 4.15002V15.85C22.7499 17.69 21.6899 18.75 19.8499 18.75Z" fill="#817A79"/>
-                          <path d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z" fill="#817A79"/>
-                          <path d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z" fill="#817A79"/>
-                          <path d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z" fill="#817A79"/>
+                    <div class="col-md-12 col-sm-12 p-0">
+                      <div
+                        class="d-flex flex-row align-items-center"
+                        style="padding: 12px 0"
+                      >
+                        <p class="info-head">
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M19.8499 18.75H17.3699C16.9599 18.75 16.6199 18.41 16.6199 18C16.6199 17.59 16.9599 17.25 17.3699 17.25H19.8499C20.8699 17.25 21.2499 16.87 21.2499 15.85V4.15002C21.2499 3.13002 20.8699 2.75 19.8499 2.75H15.5499C14.5299 2.75 14.1499 3.13002 14.1499 4.15002V6C14.1499 6.41 13.8099 6.75 13.3999 6.75C12.9899 6.75 12.6499 6.41 12.6499 6V4.15002C12.6499 2.31002 13.7099 1.25 15.5499 1.25H19.8499C21.6899 1.25 22.7499 2.31002 22.7499 4.15002V15.85C22.7499 17.69 21.6899 18.75 19.8499 18.75Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                              fill="#817A79"
+                            />
+                            <path
+                              d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                              fill="#817A79"
+                            />
                           </svg>
-                          
-                          </p>
-                        <p class="info-value ms-2 gray" *ngIf="anotherPlaces.length > 0 ">
-                          Available Units: <span style="color:#000;font-weight: bold;">{{anotherPlaces.length}}</span>
+                        </p>
+                        <p
+                          class="info-value ms-2 gray"
+                          *ngIf="anotherPlaces.length > 0"
+                        >
+                          Available Units:
+                          <span style="color: #000; font-weight: bold">{{
+                            anotherPlaces.length
+                          }}</span>
                         </p>
                       </div>
                     </div>
-
-                   
                   </div>
                 </div>
               </div>
@@ -423,12 +522,35 @@
       </div>
     </div>
 
- 
-
-
     <div class="row">
-      <div class="col-md-7">
-        <div class="main-section another-places p-0" *ngIf="anotherPlaces && anotherPlaces[0]?.centerName != '' " >
+      <ng-container *ngIf="place.siteSelectionReason || anotherPlaces && anotherPlaces[0]?.centerName != '' ">
+      <ng-container *ngIf="place.siteSelectionReason">
+        <div [ngClass]="anotherPlaces && anotherPlaces[0]?.centerName != '' ? 'col-md-6' : 'col-md-12'">
+       
+        <div
+          
+          class="main-section"
+          [ngClass]="
+            anotherPlaces[0]?.centerName != '' ? 'half-why' : 'why-sec'
+          "
+        >
+          <div>
+            <p class="main-name" *ngIf="place.siteSelectionReason">
+              Why does this location meet your requirements?
+            </p>
+            <p
+              *ngIf="place.siteSelectionReason"
+              [innerHtml]="place.siteSelectionReason"
+            ></p>
+          </div>
+        </div>
+      
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="anotherPlaces && anotherPlaces[0]?.centerName != ''" >
+        <div [ngClass]="!place.siteSelectionReason ? 'col-md-12' : 'col-md-6'">
+         <div  class="main-section another-places p-0">
           <table class="procpect-table">
             <thead class="procpect-table-head">
               <tr>
@@ -446,7 +568,11 @@
                   <td>
                     {{ place.listingType }}
                   </td>
-                  <td><span *ngIf="place.forLeasePrice !='undefined'">{{ place.forLeasePrice }}</span></td> 
+                  <td>
+                    <span *ngIf="place.forLeasePrice != 'undefined'">{{
+                      place.forLeasePrice
+                    }}</span>
+                  </td>
 
                   <td>{{ place.buildingSizeSf }} SF</td>
                   <td>
@@ -472,29 +598,16 @@
               </ng-container>
             </tbody>
           </table>
-        </div>
-        
-         <div
-         *ngIf="place.siteSelectionReason"
-          class="main-section"  [ngClass]="anotherPlaces[0]?.centerName != ''  ? 'half-why' : 'why-sec'"
- 
-      >
-        <div>
-          <p class="main-name" *ngIf="place.siteSelectionReason">
-            Why does this location meet your requirements?
-          </p>
-          <p
-            *ngIf="place.siteSelectionReason"
-            [innerHtml]="place.siteSelectionReason"
-          ></p>
-        </div>
          </div>
-      </div>
-      <div class="col-md-5">
-        <div class="main-section" style="height: 350px;">
+        </div>
+      </ng-container>
+    </ng-container>
+      <div class="col-md-6">
+        <div class="main-section" style="height: 562px">
           <div class="text-center">
+            <div>
             <p class="area-d">Area Demographics</p>
-
+           
             <ng-container *ngIf="place.populationDensity > 10000">
               <svg
                 width="300"
@@ -584,40 +697,49 @@
                 </div>
               </div>
             </div>
+
+          </div>
           </div>
         </div>
+      </div>
+
+      <div class="col-md-6">
         <div class="main-section">
           <div class="d-flex justify-content-center">
             <p class="rate-location">Please rate this property</p>
           </div>
           <div class="d-flex justify-content-around">
             <div style="cursor: pointer" (click)="sendFeedBack('Love')">
-              <div [ngClass]="place.reaction == 'Love' ? 'selected-reaction' : ''">
-
+              <div
+                [ngClass]="place.reaction == 'Love' ? 'selected-reaction' : ''"
+              >
                 <img
-                src="../../../assets/Images/Gif/love.gif"
-                alt="love"
-                width="100"
+                  src="../../../assets/Images/Gif/love.gif"
+                  alt="love"
+                  width="100"
                 />
               </div>
             </div>
             <div style="cursor: pointer" (click)="sendFeedBack('Happy')">
-              <div [ngClass]="place.reaction == 'Happy' ? 'selected-reaction' : ''"> 
-              <img
-                src="../../../assets/Images/Gif/happy.gif"
-                alt="happy"
-                width="100"
-              />
-            </div>
+              <div
+                [ngClass]="place.reaction == 'Happy' ? 'selected-reaction' : ''"
+              >
+                <img
+                  src="../../../assets/Images/Gif/happy.gif"
+                  alt="happy"
+                  width="100"
+                />
+              </div>
             </div>
             <div style="cursor: pointer" (click)="sendFeedBack('Sad')">
-              <div [ngClass]="place.reaction == 'Sad' ? 'selected-reaction' : ''"> 
-
-              <img
-                src="../../../assets/Images/Gif/sad.gif"
-                alt="sad"
-                width="100"
-              />
+              <div
+                [ngClass]="place.reaction == 'Sad' ? 'selected-reaction' : ''"
+              >
+                <img
+                  src="../../../assets/Images/Gif/sad.gif"
+                  alt="sad"
+                  width="100"
+                />
               </div>
             </div>
           </div>
@@ -630,10 +752,10 @@
           </p>
           <div class="form-group">
             <textarea
-            [(ngModel)]="place.feedBack"
+              [(ngModel)]="place.feedBack"
               class="form-control"
               name="message"
-              rows="9"
+              rows="5"
               placeholder="Type your Feedback..."
             ></textarea>
 
@@ -643,7 +765,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="row p-0">
         <div class="col-md-6">
           <div class="main-section">

@@ -5,14 +5,25 @@ declare const google: any;
 @Injectable({
   providedIn: 'root',
 })
-export class MapsService {
+export class MapsService { 
+
   private competitorMarkers: any[] = [];
   private cotenantMarkers: any[] = [];
   storedBuyBoxId: any;
+  storedLat: any;
+  storedLon: any;
+
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
-  }
+    this.storedLat = localStorage.getItem('placeLat');
+    this.storedLon = localStorage.getItem('placeLon');
 
+
+
+    console.log('Stored BuyBoxId:', this.storedLat , this.storedLon);
+    
+  } 
+  
   createMarker(
     map: any,
     markerData: any,
@@ -21,8 +32,8 @@ export class MapsService {
     useArrow: boolean = false,
     centerName?: string
   ): any {
-    let icon = this.getMarkerIcon(markerData, color, useArrow, type);
 
+    let icon = this.getMarkerIcon(markerData, color, useArrow, type);
     const marker = new google.maps.Marker({
       map,
       position: {
@@ -30,6 +41,7 @@ export class MapsService {
         lng: Number(markerData.longitude),
       },
       icon: icon,
+      
     });
 
     this.assignToMarkerArray(marker, type);
@@ -46,6 +58,7 @@ export class MapsService {
     useArrow: boolean,
     type: string
   ): any {
+    
     if (type === 'Co-Tenant' && markerData.name === 'Chipotle Mexican Grill') {
       return {
         url: 'https://seeklogo.com/images/C/chipotle-mexican-grill-logo-35771EBEA4-seeklogo.com.png',
@@ -221,6 +234,7 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     infoWindow: any,
     markerData: any
   ): void {
+    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     marker.addListener('click', () => infoWindow.open(map, marker));
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
       const viewDetailsButton = document.getElementById(
