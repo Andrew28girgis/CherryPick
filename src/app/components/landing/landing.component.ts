@@ -346,7 +346,7 @@ export class LandingComponent {
 
         let content;
         if (type === 'Prospect Target') {
-          content = `<div class="info-window"> 
+          content = `<div class="info-window">  
                     <div class="main-img">
                 <img src="${markerData.mainImage}" alt="Main Image">
             </div>
