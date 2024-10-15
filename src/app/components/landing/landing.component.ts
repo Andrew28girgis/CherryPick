@@ -5,7 +5,6 @@ import {
   Fbo,
   General,
   nearsetPlaces,
-  Place,
   Property,
 } from 'src/models/domain';
 declare const google: any;
@@ -55,17 +54,9 @@ export class LandingComponent {
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
-    let color = this.configService.getColor();
-    if (color == '#161616') {
-      this.titleService.setTitle('peak7holdings');
-    } else if (color == '#0e1b4d') {
-      this.titleService.setTitle('Common');
-    } else if (color == '#f37f00') {
-      this.titleService.setTitle('AutoZone');
-    } else {
-      this.titleService.setTitle('CherryPick');
-    }
-  }
+
+    this.titleService.setTitle('CherryPick');
+   }
 
   ngOnInit(): void {
     this.initializeParams();
@@ -326,7 +317,7 @@ export class LandingComponent {
 
         } else {
           icon = {
-            url: `https://osmows.cherrypick.com/logos/${markerData.name}.jpg`,
+            url: `../../../assets/Images/Logos/${this.replaceApostrophe(markerData.name)}.jpg`,
             scaledSize: new google.maps.Size(30, 30), // Adjust the size as needed
             origin: new google.maps.Point(0, 0), // Optional: Set the origin point
             anchor: new google.maps.Point(15, 15), // Optional: Set the anchor point
@@ -339,7 +330,6 @@ export class LandingComponent {
             scaledSize: new google.maps.Size(40, 40),
           };
         } 
-
           
         const marker = new google.maps.Marker({
           map,
@@ -516,10 +506,8 @@ export class LandingComponent {
 
     if (reaction != '') {
       feedback['Reaction'] = reaction;
-    }
-
-    feedback['buyboxId'] = +this.BuyBoxId;
-
+    } 
+    feedback['buyboxId'] = +this.BuyBoxId; 
     this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
       (data) => {
         this.showAlert = true;
@@ -716,7 +704,7 @@ export class LandingComponent {
         fillOpacity: 1,
         strokeColor: 'white',
         strokeWeight: 1,
-        
+
       },
     });
   }

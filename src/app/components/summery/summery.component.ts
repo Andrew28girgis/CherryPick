@@ -43,19 +43,7 @@ export class SummeryComponent {
     private titleService: Title,
     private route: ActivatedRoute
   ) {
-    let color = this.configService.getColor();
-    if (color == '#161616') {
-      this.titleService.setTitle('peak7holdings');
-      this.pageTitle = 'Peak 7 Holdings';
-    } else if (color == '#0e1b4d') {
-      this.titleService.setTitle('Common');
-      this.pageTitle = 'Common';
-    } else if (color == '#f37f00') {
-      this.titleService.setTitle('AutoZone');
-      this.pageTitle = 'AutoZone';
-    } else {
-      this.titleService.setTitle('CherryPick');
-    }
+    this.titleService.setTitle('CherryPick');
   }
 
   ngOnInit(): void {
@@ -127,15 +115,12 @@ export class SummeryComponent {
     this.showSummery = true;
     this.showSummery = true;
     this.BuyboxId = buyboxId;
-    
     //this.GetActionForSameBuyBox(buyboxId);
-
     this.GetAllWorkspacesBuyBox(buyboxId);
     this.propertiesService.setbuyboxId(this.BuyboxId);
   }
 
   GetAllWorkspacesBuyBox(id: number) { 
-
     if (
       this.propertiesService.getGroupedPropertiesArray().length > 0 &&
       this.BuyboxId == this.propertiesService.getbuyboxId()
@@ -148,12 +133,8 @@ export class SummeryComponent {
 
 
     this.spinner.show();
-
     this.PlacesService.BuyBoxesNumbers(id).subscribe((res: any) => {
       this.properties = res;
-      console.log(`properties`, this.properties);
-      
-      
       // this.groupedPropertiesArray = this.groupPropertiesByCityAndState(
       //   this.properties
       // ); 
@@ -161,15 +142,11 @@ export class SummeryComponent {
       // If One Buybox
       
       
-      if(this.buyboxTypes.length == 1){
-        console.log(`888`);
-          console.log(this.properties);
-          
+      if(this.buyboxTypes.length == 1){      
         this.goToAllPlaces(this.properties)
       }
       
       this.propertiesService.setGroupedPropertiesArray(this.groupedPropertiesArray);
-
       this.spinner.hide();
     });
   }
@@ -228,15 +205,9 @@ export class SummeryComponent {
 
   goToAllPlaces(city: any) {
     // city = this.groupedPropertiesArray;
-    console.log(`77`);
-    console.log(city);
-    
-    
-
     this.router.navigate(['/home', this.BuyboxId], {
       state: { city },
     });
-    
   }
 
 }

@@ -148,13 +148,13 @@ export class HomeComponent implements OnInit {
   toggleDropdown() {
     this.isOpen = !this.isOpen;
   }
+
   centerPoints: any[] = [];
 
   async getAllMarker() {
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
-      
       if (this.storedLat != null && this.storedLon != null) {
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
@@ -165,8 +165,6 @@ export class HomeComponent implements OnInit {
           mapId: '1234567890',
         });
       } else {
-
-
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
             lat: this.allPlaces.standAlonePlaces[0].latitude || 0,
