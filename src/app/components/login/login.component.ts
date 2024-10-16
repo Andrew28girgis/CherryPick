@@ -25,16 +25,7 @@ export class LoginComponent {
     private configService: ConfigService,
     private titleService: Title
   ) {
-    let color = this.configService.getColor();
-    if (color == '#161616') {
-      this.titleService.setTitle('peak7holdings');
-    } else if (color == '#0e1b4d') {
-      this.titleService.setTitle('Common');
-    } else if (color == '#f37f00') {
-      this.titleService.setTitle('AutoZone');
-    } else {
       this.titleService.setTitle('CherryPick');
-    }
   }
 
   ngOnInit(): void {
@@ -60,7 +51,6 @@ export class LoginComponent {
 
   private navigateToHome() {
     this.router.navigate(['/summary']);
-
     //this.router.navigate(['/CherryPickExpansion']);
   }
 
