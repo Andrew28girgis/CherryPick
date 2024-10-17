@@ -121,6 +121,7 @@ export class LandingComponent {
     this.PlacesService.GetShoppingCenterPlaces(
      centerName,
       this.placeId,
+      
       this.BuyBoxId
     ).subscribe((res) => {
       this.anotherPlaces = res.result;
