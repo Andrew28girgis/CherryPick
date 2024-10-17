@@ -116,9 +116,10 @@ export class LandingComponent {
   }
 
   anotherPlaces: any[] = [];
-  getAnotherPlaces() {
+  getAnotherPlaces() { 
+    let centerName = this.replaceApostrophe(this.place.centerName);  
     this.PlacesService.GetShoppingCenterPlaces(
-      this.place.centerName,
+     centerName,
       this.placeId,
       this.BuyBoxId
     ).subscribe((res) => {
@@ -307,14 +308,12 @@ export class LandingComponent {
         useArrow: boolean = false,
         type: string
       ) => {
-        let icon;
-        
+        let icon;    
         if (useArrow && type === 'Prospect Target') {
           icon = {
             url: this.getArrowSvg(),
             scaledSize: new google.maps.Size(40, 40),
           };
-
         } else {
           icon = {
             url: `../../../assets/Images/Logos/${this.replaceApostrophe(markerData.name)}.jpg`,
@@ -324,7 +323,7 @@ export class LandingComponent {
           };
         }
 
-         if(type === 'Competitor'){
+        if(type === 'Competitor'){
           icon = {
             url: this.getArrowSvgBlack(),
             scaledSize: new google.maps.Size(40, 40),
@@ -348,8 +347,8 @@ export class LandingComponent {
         if (type === 'Prospect Target') {
           content = `<div class="info-window">  
                     <div class="main-img">
-                <img src="${markerData.mainImage}" alt="Main Image">
-            </div>
+                      <img src="${markerData.mainImage}" alt="Main Image">
+                    </div>
             <div class="content-wrap"> 
                 ${
                   markerData.name
