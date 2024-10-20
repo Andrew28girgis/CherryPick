@@ -448,17 +448,19 @@ export class HomeComponent implements OnInit {
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
+
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-    this.General.modalObject = modalObject;
 
-    // Add a delay to ensure the map element is rendered
+    this.General.modalObject = modalObject;
+    
     setTimeout(() => {
       this.initializeMapWithMarker();
-    }, 100); // Adjust the delay as necessary
+    }, 100); 
+
   }
 
   mapViewOnePlace!: boolean;
@@ -467,7 +469,7 @@ export class HomeComponent implements OnInit {
     try {
       this.spinner.show();
       const { lat, lng, color } = this.extractCoordinates();
-      await this.setupMap(lat, lng, color);
+      await this.setupMap( lat , lng , color );
     } finally {
       this.spinner.hide();
     }
