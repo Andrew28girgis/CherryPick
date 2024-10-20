@@ -1,10 +1,11 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
+
+
 <nav class="navbars">
   <div class="navbar-line m-0">
     <div
-      class="nav-right w-100"
-      style="cursor: pointer; display: flex; justify-content: space-between"
+      class="nav-right" 
     >
       <div>
         <img
@@ -18,7 +19,7 @@
         />
       </div>
 
-      <div class="d-flex flex-row align-items-center" *ngIf=" currentView == 1 || currentView == 2">
+      <div class="d-flex flex-row align-items-center py-2" *ngIf=" currentView == 1 || currentView == 2">
         <div class="d-flex mx-2 competitor" >
           <input
             id="Competitors"
@@ -64,10 +65,7 @@
           </div>
         </div>
         
-        
       </div>
-      
-      <!-- <button (click)="changeView()">change</button> -->
     </div>
   </div>
 </nav>
@@ -441,7 +439,7 @@
         'col-8': currentView == 2
       }"
     >
-      <div id="map" style="height: 700px"></div>
+      <div id="map" class="custom-map"></div>
     </div>
   </div>
 </div>

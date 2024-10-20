@@ -259,6 +259,7 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     marker.addListener('mouseout', () => {
       infoWindow.close();
     });
+    
   }
 
   // Toggle show and hide markers

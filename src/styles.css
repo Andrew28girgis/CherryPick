@@ -235,10 +235,8 @@
 /* Style each line of tabs */
 
 .navbar-line {
-  display: flex;
-  justify-content: space-between;
   width: 100%;
-  padding: 10px 8px;
+  padding: 7px 8px;
   background: #ffffff;
 }
 
@@ -505,10 +503,16 @@
   margin: 0 0 8px 0;
 }
 
-.content-title .info {
+@media (max-width: 768px) {
+  .content-title { 
+    font-size: 14px;
+  } 
+}
+
+/* .content-title .info {
   width: 494px;
   height: 80px;
-}
+} */
 .info-window-title {
   margin-top: 10px;
   font-size: 18px;

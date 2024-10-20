@@ -119,9 +119,8 @@ export class LandingComponent {
   getAnotherPlaces() { 
     let centerName = this.replaceApostrophe(this.place.centerName);  
     this.PlacesService.GetShoppingCenterPlaces(
-     centerName,
+      centerName,
       this.placeId,
-      
       this.BuyBoxId
     ).subscribe((res) => {
       this.anotherPlaces = res.result;

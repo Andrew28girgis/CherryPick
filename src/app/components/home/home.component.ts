@@ -103,7 +103,6 @@ export class HomeComponent implements OnInit {
     private configService: ConfigService,
     private titleService: Title,
     private markerService: MapsService,
-    private cdr: ChangeDetectorRef
   ) {
     this.titleService.setTitle('CherryPick');
     this.storedLat = localStorage.getItem('placeLat');

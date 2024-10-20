@@ -204,14 +204,14 @@
 
 .views {
   border-radius: 16px;
-  border:  1px solid  #e6e4e4;
+  border: 1px solid #e6e4e4;
   background: #fff;
   cursor: pointer;
   padding: 7px 16px;
 }
 
 .views:focus-visible {
-  outline: none; 
+  outline: none;
 }
 
 .custom-select-container {
@@ -265,18 +265,39 @@
 }
 
 .option-icon img {
- 
   margin-right: 10px; /* Space between icon and text */
 }
-.selected-text{
+.selected-text {
   display: flex;
   justify-content: center;
   font-size: 16px;
-  color: #817A79;
+  color: #817a79;
 }
 
-.det-btn{
+.det-btn {
   border: none;
-  color: #817A79;
+  color: #817a79;
   background-color: #fff;
 }
+
+.nav-right {
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-map {   
+  height: 100vh;
+}
+
+
+@media (max-width: 768px) {
+  .nav-right {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+ 
+}
+ 
