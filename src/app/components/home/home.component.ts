@@ -363,10 +363,7 @@ export class HomeComponent implements OnInit {
     color: string,
     type: string,
     useArrow: boolean = false
-  ) {
-    console.log(`tet`);
-    
-    console.log(markerDataArray);
+  ) { 
     
     
     markerDataArray.forEach((markerData) => {

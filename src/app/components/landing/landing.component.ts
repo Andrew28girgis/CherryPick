@@ -124,9 +124,6 @@ export class LandingComponent {
       this.BuyBoxId
     ).subscribe((res) => {
       this.anotherPlaces = res;
-      console.log(`iii`);
-      
-      console.log(this.anotherPlaces);
       
     });
   }
@@ -207,8 +204,6 @@ export class LandingComponent {
         
         localStorage.setItem('placeLat', this.place.lat.toString());
         localStorage.setItem('placeLon', this.place.lon.toString());
-        
-        console.log(this.place.lat , this.place.lon);
         
 
         this.placeImage = this.place.imagesLinks
