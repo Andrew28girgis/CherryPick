@@ -123,7 +123,11 @@ export class LandingComponent {
       this.placeId,
       this.BuyBoxId
     ).subscribe((res) => {
-      this.anotherPlaces = res.result;
+      this.anotherPlaces = res;
+      console.log(`iii`);
+      
+      console.log(this.anotherPlaces);
+      
     });
   }
 

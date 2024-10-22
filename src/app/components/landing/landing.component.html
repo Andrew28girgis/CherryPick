@@ -521,11 +521,8 @@
       >
         <ng-container *ngIf="place.siteSelectionReason">
           <div
-            [ngClass]="
-              anotherPlaces && anotherPlaces[0]?.centerName != ''
-                ? 'col-md-6'
-                : 'col-md-12'
-            "
+          class="col-md-6"
+        
           >
             <div
               class="main-section"
@@ -547,7 +544,7 @@
         </ng-container>
 
         <ng-container
-          *ngIf="anotherPlaces && anotherPlaces[0]?.centerName != ''"
+          *ngIf="anotherPlaces "
         >
           <div
             [ngClass]="!place.siteSelectionReason ? 'col-md-12' : 'col-md-6'"
