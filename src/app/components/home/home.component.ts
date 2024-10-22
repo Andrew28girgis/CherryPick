@@ -94,6 +94,8 @@ export class HomeComponent implements OnInit {
 
   storedLat: any;
   storedLon: any;
+  centerPoints: any[] = [];
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -121,11 +123,10 @@ export class HomeComponent implements OnInit {
       this.MatchStatus = +params.MatchStatus;
       this.BuyBoxId = params.buyboxid;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
-
       this.GetFilteredPlacesLookup();
     });
     if (history.state && history.state.city) {
-      this.allPlaces = history.state.city;
+      this.allPlaces = history.state.city;  
       //this.getPlaces();
     } else {
       console.log('No city object found in navigation state');
@@ -148,7 +149,6 @@ export class HomeComponent implements OnInit {
     this.isOpen = !this.isOpen;
   }
 
-  centerPoints: any[] = [];
 
   async getAllMarker() {
     try {
@@ -193,32 +193,34 @@ export class HomeComponent implements OnInit {
           shoppingCenter.streetLongitude = center.places[0].streetLongitude;
 
           this.centerPoints.push(shoppingCenter);
-
+ 
+          
           // center.places.forEach((markerData) => {
           //   centerPoints.push(markerData) ;
           // });
         });
       }
 
-      this.createMarkers(
-        this.anotherPlaces.competitorPlaces,
-        '#0D0C0C',
-        'Competitor'
-      );
-      this.createMarkers(this.anotherPlaces.cotenants, '#0074D9', 'Co-Tenant');
-      this.createMarkers(this.anotherPlaces.ourPlaces, '#28A745', 'Our Place');
-      this.createMarkers(
-        this.allPlaces.standAlonePlaces,
-        'rgb(212, 0, 42)',
-        'Prospect Target',
-        true
-      );
-      this.createMarkers(
-        this.centerPoints,
-        'rgb(212, 0, 42)',
-        'Prospect Target',
-        true
-      );
+      if (this.anotherPlaces.competitorPlaces && this.anotherPlaces.competitorPlaces.length > 0) {
+        this.createMarkers(this.anotherPlaces.competitorPlaces, '#0D0C0C', 'Competitor');
+      }
+      
+      if (this.anotherPlaces.cotenants && this.anotherPlaces.cotenants.length > 0) {
+        this.createMarkers(this.anotherPlaces.cotenants, '#0074D9', 'Co-Tenant');
+      }
+      
+      if (this.anotherPlaces.ourPlaces&& this.anotherPlaces.ourPlaces.length > 0) {
+        this.createMarkers(this.anotherPlaces.ourPlaces, '#28A745', 'Our Place');
+      }
+      
+      if (this.allPlaces.standAlonePlaces && this.allPlaces.standAlonePlaces.length > 0) {
+        this.createMarkers(this.allPlaces.standAlonePlaces, 'rgb(212, 0, 42)', 'Prospect Target', true);
+      }
+      
+      if (this.centerPoints && this.centerPoints.length > 0) {
+        this.createMarkers(this.centerPoints, 'rgb(212, 0, 42)', 'Prospect Target', true);
+      }
+      
     } finally {
       this.spinner.hide();
     }
@@ -362,6 +364,10 @@ export class HomeComponent implements OnInit {
     type: string,
     useArrow: boolean = false
   ) {
+    console.log(`tet`);
+    
+    console.log(markerDataArray);
+    
     
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(

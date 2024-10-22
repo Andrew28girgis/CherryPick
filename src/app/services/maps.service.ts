@@ -224,6 +224,7 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
             </div>
         </div>`;
   }
+  
   // Click on arrow
   private addInfoWindowListener(
     marker: any,
@@ -299,7 +300,6 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
   //     url: 'https://img.icons8.com/?size=100&id=9918&format=png&color=000000', // Provide a highlighted icon URL
   //     scaledSize: new google.maps.Size(30, 30), // Set size as needed
   //   };
-
   //   marker.setIcon(highlight ? highlightedIcon : originalIcon); // Change icon based on highlight
   // }
 
@@ -317,33 +317,23 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
         const position = marker.getPosition();
         return position && position.lat() === latitude && position.lng() === longitude;
     });
-
-    console.log(`test markerToHighlight: ${markerToHighlight}`);
-
-    // If the marker is found
+    
+    
+    // If the marker is found 
     if (markerToHighlight) {
-        // If highlighting and there is already a currently highlighted marker
         if (highlight) {
-            // If the marker being highlighted is different from the currently highlighted marker
             if (this.currentlyHighlightedMarker && this.currentlyHighlightedMarker.marker !== markerToHighlight) {
-                // Revert the previous marker to its original icon
-                this.currentlyHighlightedMarker.marker.setIcon(this.currentlyHighlightedMarker.originalIcon);
+              this.currentlyHighlightedMarker.marker.setIcon(this.currentlyHighlightedMarker.originalIcon);
             }
-
-            // Store the original icon of the new marker
             const originalIcon = markerToHighlight.getIcon();
-            markerToHighlight.setIcon(highlightedIcon); // Set to highlighted icon
-            
-            // Update the currently highlighted marker reference
-            this.currentlyHighlightedMarker = { marker: markerToHighlight, originalIcon }; // Store marker and its original icon
+            markerToHighlight.setIcon(highlightedIcon);
+            this.currentlyHighlightedMarker = { marker: markerToHighlight, originalIcon };
         } else {
-            // If not highlighting, revert to the original icon
             if (this.currentlyHighlightedMarker && this.currentlyHighlightedMarker.marker === markerToHighlight) {
                 markerToHighlight.setIcon(this.currentlyHighlightedMarker.originalIcon);
-                this.currentlyHighlightedMarker = null; // Clear the reference
+                this.currentlyHighlightedMarker = null;
             } else {
-                // If the marker is not the one highlighted, simply set it to its original icon
-                const originalIcon = markerToHighlight.getIcon(); // Get the original icon
+                const originalIcon = markerToHighlight.getIcon();
                 markerToHighlight.setIcon(originalIcon);
             }
         }

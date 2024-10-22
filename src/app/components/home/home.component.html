@@ -110,8 +110,8 @@
                     {{ place.address }}, {{ place.city }}, {{ place.state }}
                   </td>
                   <td>{{ place.avalibleUnits }}</td>
-                  <td>{{ place.nearestCompetitors.toFixed(2) }} MI</td>
-                  <td>{{ place.nearestCotenants.toFixed(2) }} MI</td>
+                  <td><ng-container *ngIf="place.nearestCompetitors"> {{ place.nearestCompetitors.toFixed(2) }} MI </ng-container></td>
+                  <td><ng-container *ngIf="place.nearestCotenants">{{ place.nearestCotenants.toFixed(2) }} MI </ng-container></td>
                   <td class="d-flex">
                     <button
                       class="det-btn d-flex align-items-center"
@@ -195,8 +195,14 @@
                     {{ place.suite }}
                   </td>
                   <td>{{ place.buildingSizeSf }} SF</td>
-                  <td>{{ place.nearestCompetitorsInMiles.toFixed(2) }} MI</td>
-                  <td>{{ place.nearestCotenantsMiles.toFixed(2) }} MI</td>
+                  <td>
+                    <ng-container *ngIf="place.nearestCompetitorsInMiles">
+
+                    
+                    {{ place.nearestCompetitorsInMiles.toFixed(2) }} MI </ng-container> </td>
+                  
+                  <td>     <ng-container *ngIf="place.nearestCompetitorsInMiles">
+                    {{ place.nearestCotenantsMiles.toFixed(2) }} MI </ng-container> </td>
                   <td class="d-flex">
                     <button
                       class="det-btn d-flex align-items-center"
@@ -310,8 +316,8 @@
                       d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z"
                       stroke="#817A79"
                       stroke-width="1.5"
-                    /></svg
-                  >{{ place.address }}, {{ place.city }}, {{ place.state }}
+                    /></svg>
+                  {{ place.address }}, {{ place.city }}, {{ place.state }}
                 </p>
               </div>
 
@@ -416,6 +422,8 @@
         <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
           <div
             class="card-window"
+            (mouseenter)="onMouseEnter(place)"
+
             [ngClass]="{
               'col-4': currentView == 3
             }"
@@ -426,10 +434,10 @@
 
             <div
               class="content-wrap"
-              style="background-color: #fff; border-radius: 0 0 20px 20px"
-            >
-              <!-- <p class="content-title">${type}</p> -->
-              <p class="content-title">{{ place.centerName }}</p>
+              style="background-color: #fff; border-radius: 0 0 20px 20px  ; height: 235px;     display: flex;
+              flex-direction: column;
+              justify-content: space-between;"
+            > 
               <div class="row">
                 <div class="col-6 d-flex flex-column spec">
                   <p class="spec-head">Address</p>

@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row mt-2">
     <ng-container *ngFor="let type of buyboxTypes">
-      <div class="col-md-12" (click)="chooseType(type.id);goToAllPlaces({})">
+      <div class="col-md-12" (click)="chooseType(type.id)">
         <div class="card-bodyx" [ngClass]="{ selected: BuyboxId === type.id }">
           <div class="card-title">{{ type.name }}</div>
         </div>

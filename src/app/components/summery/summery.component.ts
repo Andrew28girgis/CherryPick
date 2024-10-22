@@ -55,6 +55,7 @@ export class SummeryComponent {
     this.route.queryParams.subscribe((params) => {
       this.Token = params['Token'];
     });
+    
     // Without Token in URL
     if (this.Token == null) {
       let token = localStorage.getItem('token');
@@ -100,14 +101,11 @@ export class SummeryComponent {
   }
 
   GetUserBuyBoxes() {
-    this.spinner.show();
-    this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {
-      this.buyboxTypes = res;
-      if (this.propertiesService.getbuyboxId()) {
-        this.chooseType(this.propertiesService.getbuyboxId());
-      } else {
+     this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {
+      this.buyboxTypes = res; 
+      if (this.buyboxTypes.length  == 1) {
         this.chooseType(this.buyboxTypes[0].id);
-      }
+      } 
     });
   }
 
@@ -120,32 +118,11 @@ export class SummeryComponent {
     this.propertiesService.setbuyboxId(this.BuyboxId);
   }
 
-  GetAllWorkspacesBuyBox(id: number) { 
-    if (
-      this.propertiesService.getGroupedPropertiesArray().length > 0 &&
-      this.BuyboxId == this.propertiesService.getbuyboxId()
-    ) {
-      console.log(
-        'Skipping API call as groupedPropertiesArray is already populated.'
-      );
-      return;
-    }
-
-
+  GetAllWorkspacesBuyBox(buyboxId: number) { 
     this.spinner.show();
-    this.PlacesService.BuyBoxesNumbers(id).subscribe((res: any) => {
+    this.PlacesService.BuyBoxesNumbers(buyboxId).subscribe((res: any) => {
       this.properties = res;
-      // this.groupedPropertiesArray = this.groupPropertiesByCityAndState(
-      //   this.properties
-      // ); 
-
-      // If One Buybox
-      
-      
-      if(this.buyboxTypes.length == 1){      
-        this.goToAllPlaces(this.properties)
-      }
-      
+      this.goToAllPlaces(this.properties)  
       this.propertiesService.setGroupedPropertiesArray(this.groupedPropertiesArray);
       this.spinner.hide();
     });
@@ -204,6 +181,10 @@ export class SummeryComponent {
   }
 
   goToAllPlaces(city: any) {
+    console.log(`iiii`);
+    
+    console.log(city);
+      
     // city = this.groupedPropertiesArray;
     this.router.navigate(['/home', this.BuyboxId], {
       state: { city },

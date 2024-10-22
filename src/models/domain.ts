@@ -76,7 +76,7 @@ export class Property {
   class!: string;
   zoningCode!: string;
   populationDensity!: number;
-  householdIncome!: number;
+  householdIncome!: any;
   employees!: number;
   listingType!: string;
   forSalePrice?: any;

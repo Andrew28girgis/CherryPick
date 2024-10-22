@@ -87,7 +87,7 @@
                       </div>
                     </div>
 
-                    <div class="col-md-12 col-sm-12 p-0">
+                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.nearestCompetitorsInMiles">
                       <div
                         class="d-flex flex-row align-items-center info-border"
                       >
@@ -129,7 +129,7 @@
                         </p>
                       </div>
                     </div>
-                    <div class="col-md-12 col-sm-12 p-0">
+                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.nearestCotenantsMiles">
                       <div
                         class="d-flex flex-row align-items-center info-border"
                       >
@@ -155,7 +155,7 @@
                             />
                           </svg>
                         </p>
-                        <p class="info-value ms-2 gray">
+                        <p class="info-value ms-2 gray" >
                           Nearest Complementary Tenants:
                           <span style="color: #000; font-weight: bold"
                             >{{
@@ -166,7 +166,7 @@
                         </p>
                       </div>
                     </div>
-                    <div class="col-md-12 col-sm-12 p-0">
+                    <div class="col-md-12 col-sm-12 p-0" *ngIf="anotherPlaces.length > 0">
                       <div
                         class="d-flex flex-row align-items-center"
                         style="padding: 12px 0"
@@ -207,7 +207,7 @@
                         </p>
                         <p
                           class="info-value ms-2 gray"
-                          *ngIf="anotherPlaces.length > 0"
+                       
                         >
                           Available Units:
                           <span style="color: #000; font-weight: bold">{{
@@ -218,8 +218,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-12">
-                  <h2 class="main-heading" *ngIf="place.notes">Notes</h2>
+                <div class="col-md-12" *ngIf="place.notes">
+                  <h2 class="main-heading">Notes</h2>
                   <p
                     class="rating-part"
                     style="text-align: justify; font-size: 17px"
@@ -688,14 +688,14 @@
                   <div class="d-flex flex-column">
                     <p class="info-head">Household Income</p>
                     <p class="info-value">
-                      ${{ place.householdIncome / 1000 | number : "1.0-0" }}K
+                      {{ place.householdIncome }}
                     </p>
                   </div>
                 </div>
                 <div class="col-md-6" *ngIf="place.employees">
                   <div class="d-flex flex-column">
                     <p class="info-head">Employees</p>
-                    <p class="info-value">{{ place.employees | number }}</p>
+                    <p class="info-value">{{ place.employees  }}</p>
                   </div>
                 </div>
               </div>
@@ -768,7 +768,7 @@
       </div>
 
       <div class="row p-0">
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="General.nearsetPlaces && General.nearsetPlaces.competitorPlaces.length>0">
           <div class="main-section">
             <p class="main-name">Nearest Competitors</p>
 
@@ -800,7 +800,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="General.nearsetPlaces && General.nearsetPlaces.cotenants.length>0">
           <div class="main-section">
             <p class="main-name">Nearest Complementary</p>
             <ul>
