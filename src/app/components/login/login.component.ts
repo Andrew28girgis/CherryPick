@@ -27,8 +27,7 @@ export class LoginComponent {
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
-
-      this.titleService.setTitle('CherryPick');
+    this.titleService.setTitle('CherryPick');
   }
 
   ngOnInit(): void {

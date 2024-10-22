@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
   maxLandSize: any = null;
   minNumberOfBeds: any = null;
   maxNumberOfBeds: any = null;
-  
+
   options: Options = {
     floor: 0,
     ceil: 100000,
@@ -95,7 +95,16 @@ export class HomeComponent implements OnInit {
   storedLat: any;
   storedLon: any;
   centerPoints: any[] = [];
+  // Marker storage arrays
+  // Marker storage arrays
+  competitorMarkers: any[] = [];
+  cotenantMarkers: any[] = [];
+  ourPlaceMarkers: any[] = [];
+  standAloneMarkers: any[] = [];
+  map: any; // Add this property to your class
 
+  isCompetitorChecked = false; // Track the checkbox state
+  isCoTenantChecked = false;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -104,11 +113,12 @@ export class HomeComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private configService: ConfigService,
     private titleService: Title,
-    private markerService: MapsService,
+    private markerService: MapsService
   ) {
     this.titleService.setTitle('CherryPick');
     this.storedLat = localStorage.getItem('placeLat');
     this.storedLon = localStorage.getItem('placeLon');
+
   }
 
   ngOnInit(): void {
@@ -126,7 +136,7 @@ export class HomeComponent implements OnInit {
       this.GetFilteredPlacesLookup();
     });
     if (history.state && history.state.city) {
-      this.allPlaces = history.state.city;  
+      this.allPlaces = history.state.city;
       //this.getPlaces();
     } else {
       console.log('No city object found in navigation state');
@@ -144,11 +154,10 @@ export class HomeComponent implements OnInit {
   replaceApostrophe(name: string, replacement: string = ''): string {
     return name.replace(/'/g, replacement);
   }
-  
+
   toggleDropdown() {
     this.isOpen = !this.isOpen;
   }
-
 
   async getAllMarker() {
     try {
@@ -193,34 +202,69 @@ export class HomeComponent implements OnInit {
           shoppingCenter.streetLongitude = center.places[0].streetLongitude;
 
           this.centerPoints.push(shoppingCenter);
- 
-          
+
           // center.places.forEach((markerData) => {
           //   centerPoints.push(markerData) ;
           // });
         });
       }
 
-      if (this.anotherPlaces.competitorPlaces && this.anotherPlaces.competitorPlaces.length > 0) {
-        this.createMarkers(this.anotherPlaces.competitorPlaces, '#0D0C0C', 'Competitor');
+      if (
+        this.anotherPlaces.competitorPlaces &&
+        this.anotherPlaces.competitorPlaces.length > 0
+      ) {
+        this.createMarkers(
+          this.anotherPlaces.competitorPlaces,
+          '#0D0C0C',
+          'Competitor'
+        );
       }
-      
-      if (this.anotherPlaces.cotenants && this.anotherPlaces.cotenants.length > 0) {
-        this.createMarkers(this.anotherPlaces.cotenants, '#0074D9', 'Co-Tenant');
+
+      if (
+        this.anotherPlaces.cotenants &&
+        this.anotherPlaces.cotenants.length > 0
+      ) {
+        this.createMarkers(
+          this.anotherPlaces.cotenants,
+          '#0074D9',
+          'Co-Tenant'
+        );
       }
-      
-      if (this.anotherPlaces.ourPlaces&& this.anotherPlaces.ourPlaces.length > 0) {
-        this.createMarkers(this.anotherPlaces.ourPlaces, '#28A745', 'Our Place');
+
+      if (
+        this.anotherPlaces.ourPlaces &&
+        this.anotherPlaces.ourPlaces.length > 0
+      ) {
+        this.createMarkers(
+          this.anotherPlaces.ourPlaces,
+          '#28A745',
+          'Our Place'
+        );
       }
-      
-      if (this.allPlaces.standAlonePlaces && this.allPlaces.standAlonePlaces.length > 0) {
-        this.createMarkers(this.allPlaces.standAlonePlaces, 'rgb(212, 0, 42)', 'Prospect Target', true);
+
+      if (
+        this.allPlaces.standAlonePlaces &&
+        this.allPlaces.standAlonePlaces.length > 0
+      ) {
+        this.createMarkers(
+          this.allPlaces.standAlonePlaces,
+          'rgb(212, 0, 42)',
+          'Prospect Target',
+          true
+        );
       }
-      
+
       if (this.centerPoints && this.centerPoints.length > 0) {
-        this.createMarkers(this.centerPoints, 'rgb(212, 0, 42)', 'Prospect Target', true);
+        this.createMarkers(
+          this.centerPoints,
+          'rgb(212, 0, 42)',
+          'Prospect Target',
+          true
+        );
       }
-      
+      this.markerService.toggleMarkers('Competitor', this.isCompetitorChecked, this.map);
+      this.markerService.toggleMarkers('Co-Tenant', this.isCoTenantChecked, this.map);
+
     } finally {
       this.spinner.hide();
     }
@@ -363,9 +407,7 @@ export class HomeComponent implements OnInit {
     color: string,
     type: string,
     useArrow: boolean = false
-  ) { 
-    
-    
+  ) {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(
         this.map,
@@ -376,17 +418,6 @@ export class HomeComponent implements OnInit {
       );
     });
   }
-
-  // Marker storage arrays
-  // Marker storage arrays
-  competitorMarkers: any[] = [];
-  cotenantMarkers: any[] = [];
-  ourPlaceMarkers: any[] = [];
-  standAloneMarkers: any[] = [];
-  map: any; // Add this property to your class
-
-  isCompetitorChecked = true; // Track the checkbox state
-  isCoTenantChecked = true;
 
   onCheckboxChange(value: string) {
     if (value == 'Competitor') {
@@ -451,7 +482,6 @@ export class HomeComponent implements OnInit {
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
-
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -459,11 +489,10 @@ export class HomeComponent implements OnInit {
     });
 
     this.General.modalObject = modalObject;
-    
+
     setTimeout(() => {
       this.initializeMapWithMarker();
-    }, 100); 
-
+    }, 100);
   }
 
   mapViewOnePlace!: boolean;
@@ -472,7 +501,7 @@ export class HomeComponent implements OnInit {
     try {
       this.spinner.show();
       const { lat, lng, color } = this.extractCoordinates();
-      await this.setupMap( lat , lng , color );
+      await this.setupMap(lat, lng, color);
     } finally {
       this.spinner.hide();
     }
@@ -588,19 +617,15 @@ export class HomeComponent implements OnInit {
     return centerName.replace(/'/g, '');
   }
 
- 
-  
-  onMouseEnter(place: any): void { 
+  onMouseEnter(place: any): void {
     const { latitude, longitude } = place;
     const mapElement = document.getElementById('map') as HTMLElement;
-    
-    if (!mapElement) return; 
+
+    if (!mapElement) return;
 
     if (this.map) {
-        this.map.setCenter({ lat: +latitude, lng: +longitude });
-        this.map.setZoom(17);  
+      this.map.setCenter({ lat: +latitude, lng: +longitude });
+      this.map.setZoom(17);
     }
-}
-
-
+  }
 }
