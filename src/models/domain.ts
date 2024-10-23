@@ -15,9 +15,13 @@ export class General {
 export class AllPlaces{
   centers!:  shoppingMall[];
   standAlonePlaces!:Property[];
+
+
 }
 export class shoppingMall{
   centerName !:string; 
+  latitude!:any;
+  longitude !:any
   places:Property[]=[];
 }
 

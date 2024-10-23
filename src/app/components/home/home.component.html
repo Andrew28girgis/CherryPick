@@ -423,7 +423,6 @@
           <div
             class="card-window"
             (mouseenter)="onMouseEnter(place)"
-
             [ngClass]="{
               'col-4': currentView == 3
             }"
@@ -551,9 +550,9 @@
   </div>
 </div>
 
-<ng-template #viewPlace let-modal>
+<!-- <ng-template #viewPlace let-modal>
   <div id="map" style="height: 700px" *ngIf="mapViewOnePlace"></div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #StreetViewPlace let-modal>
   <div id="street-view" style="height: 700px" *ngIf="StreetViewOnePlace"></div>

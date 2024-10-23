@@ -105,6 +105,7 @@ export class HomeComponent implements OnInit {
 
   isCompetitorChecked = false; // Track the checkbox state
   isCoTenantChecked = false;
+  cardsSideList:any[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -118,7 +119,6 @@ export class HomeComponent implements OnInit {
     this.titleService.setTitle('CherryPick');
     this.storedLat = localStorage.getItem('placeLat');
     this.storedLon = localStorage.getItem('placeLon');
-
   }
 
   ngOnInit(): void {
@@ -172,6 +172,11 @@ export class HomeComponent implements OnInit {
           zoom: 15,
           mapId: '1234567890',
         });
+        this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+        this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+        this.map.addListener('bounds_changed', () =>
+          this.onMapDragEnd(this.map)
+        );
       } else {
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
@@ -181,6 +186,11 @@ export class HomeComponent implements OnInit {
           zoom: 10,
           mapId: '1234567890',
         });
+        this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+        this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+        this.map.addListener('bounds_changed', () =>
+          this.onMapDragEnd(this.map)
+        );
       }
       if (this.allPlaces && this.allPlaces.centers) {
         this.allPlaces.centers.forEach((center) => {
@@ -262,12 +272,43 @@ export class HomeComponent implements OnInit {
           true
         );
       }
-      this.markerService.toggleMarkers('Competitor', this.isCompetitorChecked, this.map);
-      this.markerService.toggleMarkers('Co-Tenant', this.isCoTenantChecked, this.map);
-
+      this.markerService.toggleMarkers(
+        'Competitor',
+        this.isCompetitorChecked,
+        this.map
+      );
+      this.markerService.toggleMarkers(
+        'Co-Tenant',
+        this.isCoTenantChecked,
+        this.map
+      );
     } finally {
       this.spinner.hide();
     }
+  }
+
+  private onMapDragEnd(map: any) {
+    const bounds = map.getBounds();    
+    const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
+
+    this.allPlaces.centers.forEach((center) => {
+      center.latitude = center.places[0].latitude;
+      center.longitude = center.places[0].longitude;
+    });
+
+    let allPros: any[] = [
+      ...this.allPlaces.standAlonePlaces,
+      ...this.allPlaces.centers,
+    ];
+
+    this.cardsSideList = allPros.filter((property) =>
+      visibleMarkers.some(
+        (marker) =>
+          property.latitude === marker.lat && property.longitude === marker.lng
+      )
+    );
+
+    console.log('Filtered Properties:', this.cardsSideList);
   }
 
   getAllBuyBoxComparables(buyboxId: number) {
@@ -479,72 +520,6 @@ export class HomeComponent implements OnInit {
 
   GetBuyBoxNewPlaces() {
     this.PlacesService.GetBuyBoxNewPlaces(this.BuyBoxId).subscribe((res) => {});
-  }
-
-  openMapViewPlace(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-
-    this.General.modalObject = modalObject;
-
-    setTimeout(() => {
-      this.initializeMapWithMarker();
-    }, 100);
-  }
-
-  mapViewOnePlace!: boolean;
-  async initializeMapWithMarker() {
-    this.mapViewOnePlace = true;
-    try {
-      this.spinner.show();
-      const { lat, lng, color } = this.extractCoordinates();
-      await this.setupMap(lat, lng, color);
-    } finally {
-      this.spinner.hide();
-    }
-  }
-
-  extractCoordinates() {
-    const lat = +this.General.modalObject.latitude;
-    const lng = +this.General.modalObject.longitude;
-    const color = this.configService.getColor();
-    return { lat, lng, color };
-  }
-
-  async setupMap(lat: number, lng: number, color: string): Promise<void> {
-    const map = await this.createMap(lat, lng);
-    this.addMarkerToMap(map, lat, lng, color);
-  }
-
-  async createMap(lat: number, lng: number) {
-    const { Map } = (await google.maps.importLibrary('maps')) as any;
-    return new Map(document.getElementById('map') as HTMLElement, {
-      center: { lat, lng },
-      zoom: 17,
-      mapId: '1234567890',
-    });
-  }
-
-  addMarkerToMap(map: any, lat: number, lng: number, color: string) {
-    const svgPath =
-      'M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z';
-
-    // Create a separate marker for the specified location
-    new google.maps.Marker({
-      map,
-      position: { lat, lng },
-      icon: {
-        path: svgPath,
-        scale: 2,
-        fillColor: color,
-        fillOpacity: 1,
-        strokeColor: 'black',
-        strokeWeight: 2,
-      },
-    });
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {

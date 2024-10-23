@@ -5,21 +5,22 @@ declare const google: any;
 @Injectable({
   providedIn: 'root',
 })
-export class MapsService { 
-
+export class MapsService {
   private competitorMarkers: any[] = [];
   private cotenantMarkers: any[] = [];
   storedBuyBoxId: any;
   storedLat: any;
   storedLon: any;
-  private markers:any[] = []; // Array to hold all markers
+  private markers: any[] = []; // Array to hold all markers
+  private prosMarkers: any[] = []; // Array to hold all markers
 
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedLat = localStorage.getItem('placeLat');
     this.storedLon = localStorage.getItem('placeLon');
-  } 
-  
+  }
+
+  //Create Markers
   createMarker(
     map: any,
     markerData: any,
@@ -28,7 +29,6 @@ export class MapsService {
     useArrow: boolean = false,
     centerName?: string
   ): any {
-
     let icon = this.getMarkerIcon(markerData, color, useArrow, type);
     const marker = new google.maps.Marker({
       map,
@@ -37,14 +37,15 @@ export class MapsService {
         lng: Number(markerData.longitude),
       },
       icon: icon,
-      
     });
-    this.markers.push(marker); 
+    this.markers.push(marker);
 
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type, centerName);
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
     this.addMarkerEventListeners(marker, map, infoWindow, markerData);
+    this.closeIconListeners(marker, map, infoWindow, markerData);
+
     return marker;
   }
 
@@ -55,7 +56,6 @@ export class MapsService {
     useArrow: boolean,
     type: string
   ): any {
-    
     if (type === 'Co-Tenant' && markerData.name === 'Chipotle Mexican Grill') {
       return {
         url: 'https://seeklogo.com/images/C/chipotle-mexican-grill-logo-35771EBEA4-seeklogo.com.png',
@@ -81,7 +81,7 @@ export class MapsService {
     };
   }
 
-  //Arrow SVG
+  //Arrow SVG 
   private getArrowSvg(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
@@ -101,6 +101,7 @@ export class MapsService {
     );
   }
 
+  //Black SVG  
   private getArrowSvgBlack(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
@@ -126,6 +127,8 @@ export class MapsService {
       this.competitorMarkers.push(marker);
     } else if (type === 'Co-Tenant') {
       this.cotenantMarkers.push(marker);
+    } else if (type === 'Prospect Target') {
+      this.prosMarkers.push(marker);
     }
   }
 
@@ -144,11 +147,18 @@ export class MapsService {
 
   // Card Window Content
   private getInfoWindowContent(markerData: any, centerName?: string): string {
-    return ` <div class="info-window">
-            <div class="main-img">
-                <img src="../../../assets/Images/Main/${markerData.name}.jpg" alt="Main Image">
-            </div>
-            <div class="content-wrap"> 
+    return `
+    
+    <div class="info-window">
+         
+      <div class="main-img">
+        <img src="../../../assets/Images/Main/${
+          markerData.name
+        }.jpg" alt="Main Image">
+        <span class="close-btn">&times;</span>
+      </div>
+
+       <div class="content-wrap"> 
                 ${
                   markerData.name
                     ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
@@ -224,8 +234,8 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
             </div>
         </div>`;
   }
-  
-  // Click on arrow
+
+  // Click View Details
   private addInfoWindowListener(
     marker: any,
     map: any,
@@ -257,13 +267,30 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
       infoWindow.open(map, marker);
     });
 
-    marker.addListener('mouseout', () => {
-      infoWindow.close();
-    });
-    
+    const viewDetailsButton = document.getElementById(
+      `view-details-${markerData.id}`
+    );
+    // marker.addListener('mouseout', () => {
+    //   infoWindow.close();
+    // });
   }
 
-  // Toggle show and hide markers
+  // Close Card
+  private closeIconListeners(
+    marker: any,
+    map: any,
+    infoWindow: any,
+    markerData: any
+  ): void {
+    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+      const close = document.querySelector('.close-btn');
+      close?.addEventListener('click', () => {
+        infoWindow.close();
+      });
+    });
+  }
+
+  //Toggle show and hide markers
   toggleMarkers(type: string, show: boolean, map: any) {
     let markers: any[] = [];
     switch (type) {
@@ -284,63 +311,17 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     });
   }
 
-  initializeMap(map: any, latitude: number, longitude: number, mapId: string) {
-    return new google.maps.Map(map, {
-        center: { lat: latitude || 0, lng: longitude || 0 },
-        zoom: 25,
-        mapId,
-    });
-  }
-
-
-  //   // Method to highlight a marker
-  // highlightMarker(marker: any, highlight: boolean): void {
-  //   const originalIcon = marker.getIcon(); // Store original icon if needed
-  //   const highlightedIcon = {
-  //     url: 'https://img.icons8.com/?size=100&id=9918&format=png&color=000000', // Provide a highlighted icon URL
-  //     scaledSize: new google.maps.Size(30, 30), // Set size as needed
-  //   };
-  //   marker.setIcon(highlight ? highlightedIcon : originalIcon); // Change icon based on highlight
-  // }
-
-
-  private currentlyHighlightedMarker: { marker: any; originalIcon: any } | null = null; // Track the highlighted marker and its original icon
-
-  highlightMarker(latitude: number, longitude: number, highlight: boolean): void {
-    const highlightedIcon = {
-        url: 'https://img.icons8.com/?size=100&id=9918&format=png&color=000000', 
-        scaledSize: new google.maps.Size(30, 30),
-    };
-
-    // Find the marker with the matching latitude and longitude
-    const markerToHighlight = this.markers.find(marker => {
+  //Get Marker Icons
+  getVisibleProspectMarkers(bounds: any) {
+    return this.prosMarkers
+      .filter((marker) => bounds.contains(marker.getPosition()))
+      .map((marker) => {
         const position = marker.getPosition();
-        return position && position.lat() === latitude && position.lng() === longitude;
-    });
-    
-    
-    // If the marker is found 
-    if (markerToHighlight) {
-        if (highlight) {
-            if (this.currentlyHighlightedMarker && this.currentlyHighlightedMarker.marker !== markerToHighlight) {
-              this.currentlyHighlightedMarker.marker.setIcon(this.currentlyHighlightedMarker.originalIcon);
-            }
-            const originalIcon = markerToHighlight.getIcon();
-            markerToHighlight.setIcon(highlightedIcon);
-            this.currentlyHighlightedMarker = { marker: markerToHighlight, originalIcon };
-        } else {
-            if (this.currentlyHighlightedMarker && this.currentlyHighlightedMarker.marker === markerToHighlight) {
-                markerToHighlight.setIcon(this.currentlyHighlightedMarker.originalIcon);
-                this.currentlyHighlightedMarker = null;
-            } else {
-                const originalIcon = markerToHighlight.getIcon();
-                markerToHighlight.setIcon(originalIcon);
-            }
-        }
-    } else {
-        console.error('Marker not found for the given latitude and longitude:', latitude, longitude);
-    }
+        return {
+          lat: position.lat(),
+          lng: position.lng(),
+        };
+      });
   }
-
   
 }
