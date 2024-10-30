@@ -85,11 +85,11 @@ export class HomeComponent implements OnInit {
       status: 4,
     },
   ];
-  isOpen = false; 
+  isOpen = false;
   allPlaces!: AllPlaces;
   anotherPlaces!: AnotherPlaces;
   cardView: boolean = true;
-  currentView: any; 
+  currentView: any;
   storedLat: any;
   storedLon: any;
   centerPoints: any[] = [];
@@ -103,25 +103,25 @@ export class HomeComponent implements OnInit {
 
   isCompetitorChecked = false; // Track the checkbox state
   isCoTenantChecked = false;
-  cardsSideList:any[] = [];
+  cardsSideList: any[] = [];
+  selectedOption: any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private configService: ConfigService,
-    private titleService: Title,
-    private markerService: MapsService
+    private markerService: MapsService,
+    private cdr: ChangeDetectorRef
   ) {
-    this.titleService.setTitle('CherryPick');
     this.storedLat = localStorage.getItem('placeLat');
     this.storedLon = localStorage.getItem('placeLon');
+    this.currentView = localStorage.getItem('currentView') || 2;
   }
 
   ngOnInit(): void {
     this.selectedOption = this.dropdowmOptions[0];
-    this.currentView = 1;
     this.mapView = true;
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
@@ -147,6 +147,10 @@ export class HomeComponent implements OnInit {
     //     this.scrollableDiv.nativeElement.scrollTop = parseInt(storedScrollPosition, 10);
     //   }
     // }, 0);
+
+    this.selectedOption = this.dropdowmOptions.find(
+      (option: any) => +option.status == +this.currentView
+    );
   }
 
   replaceApostrophe(name: string, replacement: string = ''): string {
@@ -198,10 +202,8 @@ export class HomeComponent implements OnInit {
           shoppingCenter.address = center.places[0].address;
           shoppingCenter.city = center.places[0].city;
           shoppingCenter.state = center.places[0].state;
-          shoppingCenter.nearestCompetitors =
-            center.places[0].nearestCompetitorsInMiles;
-          shoppingCenter.nearestCotenants =
-            center.places[0].nearestCotenantsMiles;
+          shoppingCenter.nearestCompetitors = center.nearestCompetitorsInMiles;
+          shoppingCenter.nearestCotenants = center.nearestCotenantsMiles;
           shoppingCenter.latitude = center.places[0].latitude;
           shoppingCenter.longitude = center.places[0].longitude;
           shoppingCenter.mainImage = center.places[0].mainImage;
@@ -284,27 +286,33 @@ export class HomeComponent implements OnInit {
       this.spinner.hide();
     }
   }
-
   private onMapDragEnd(map: any) {
-    const bounds = map.getBounds();    
+    const bounds = map.getBounds();
     const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
 
+    // Use a Set for fast lookups of marker coordinates.
+    const visibleCoords = new Set(
+      visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
+    );
+
+    // Pre-compute center coordinates to avoid repeated lookups.
     this.allPlaces.centers.forEach((center) => {
-      center.latitude = center.places[0].latitude;
-      center.longitude = center.places[0].longitude;
+      const firstPlace = center.places[0];
+      center.latitude = firstPlace.latitude;
+      center.longitude = firstPlace.longitude;
     });
 
-    let allPros: any[] = [
+    // Merge all places into a single array.
+    const allPros: any[] = [
       ...this.allPlaces.standAlonePlaces,
       ...this.allPlaces.centers,
     ];
 
+    // Filter properties based on visibility.
     this.cardsSideList = allPros.filter((property) =>
-      visibleMarkers.some(
-        (marker) =>
-          property.latitude === marker.lat && property.longitude === marker.lng
-      )
+      visibleCoords.has(`${property.latitude},${property.longitude}`)
     );
+    this.cdr.detectChanges();
 
     console.log('Filtered Properties:', this.cardsSideList);
   }
@@ -319,6 +327,13 @@ export class HomeComponent implements OnInit {
       this.map.setCenter({ lat: +latitude, lng: +longitude });
       this.map.setZoom(17);
     }
+  }
+  onMouseHighlight(place:any ){
+    this.markerService.onMouseEnter(this.map , place);
+  }
+  onMouseLeaveHighlight(place:any ){
+    this.markerService.onMouseLeave(this.map , place);
+
   }
 
   getAllBuyBoxComparables(buyboxId: number) {
@@ -441,11 +456,11 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  selectedOption: any;
   selectOption(option: any): void {
     this.selectedOption = option;
     this.currentView = option.status;
     this.isOpen = false;
+    localStorage.setItem('currentView', this.currentView);
   }
 
   changeView() {
@@ -518,8 +533,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  goToPlace(place: Property) {
-    this.router.navigate(['/landing', place.id, this.BuyBoxId]);
+  goToPlace(place: any) {
+    if (place.id) {
+      this.router.navigate(['/landing', place.id, this.BuyBoxId]);
+    } else {
+      this.router.navigate(['/landing', place.places[0].id, this.BuyBoxId]);
+    }
   }
 
   getStatus(event: any) {
@@ -542,14 +561,14 @@ export class HomeComponent implements OnInit {
       this.viewOnStreet();
     }, 100);
   }
+
   StreetViewOnePlace!: boolean;
 
   viewOnStreet() {
     this.StreetViewOnePlace = true;
     let lat = +this.General.modalObject.streetLatitude;
     let lng = +this.General.modalObject.streetLongitude;
-
-    let heading = this.General.modalObject.heading || 165; // Default heading value
+    let heading = this.General.modalObject.heading || 165;
     let pitch = this.General.modalObject.pitch || 0;
 
     setTimeout(() => {
@@ -582,7 +601,7 @@ export class HomeComponent implements OnInit {
   addMarkerToStreetView(panorama: any, lat: number, lng: number) {
     const svgPath =
       'M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z';
-      
+
     const marker = new google.maps.Marker({
       position: { lat, lng },
       map: panorama,
@@ -601,5 +620,7 @@ export class HomeComponent implements OnInit {
     return centerName.replace(/'/g, '');
   }
 
-
+  trackByCenterName(index: number, place: any): string {
+    return place.centerName;
+  }
 }

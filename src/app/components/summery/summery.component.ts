@@ -39,11 +39,8 @@ export class SummeryComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private propertiesService: PropertiesServiceService,
-    private configService: ConfigService,
-    private titleService: Title,
     private route: ActivatedRoute
   ) {
-    this.titleService.setTitle('CherryPick');
   }
 
   ngOnInit(): void {

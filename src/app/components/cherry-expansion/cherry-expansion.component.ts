@@ -34,7 +34,6 @@ export class CherryExpansionComponent {
     private spinner: NgxSpinnerService,
     private propertiesService: PropertiesServiceService,
     private configService: ConfigService,
-    private titleService: Title,
     private route: ActivatedRoute
   ) {}
   ngOnInit(): void {

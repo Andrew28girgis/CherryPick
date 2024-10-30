@@ -20,8 +20,17 @@ export class AllPlaces{
 }
 export class shoppingMall{
   centerName !:string; 
-  latitude!:any;
-  longitude !:any
+  heading !: number ;
+  longitude!: number;
+  latitude!: number;
+  lat !: number;
+  lng !: number;
+  nearestBranchesInMiles :any ;
+  nearestCompetitorsInMiles :any;
+  nearestCotenantsMiles :any ; 
+  pitch :any ;
+  stLat!: number; 
+  stLng!:number ;
   places:Property[]=[];
 }
 

@@ -81,7 +81,7 @@ export class MapsService {
     };
   }
 
-  //Arrow SVG 
+  //Arrow SVG
   private getArrowSvg(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
@@ -101,7 +101,7 @@ export class MapsService {
     );
   }
 
-  //Black SVG  
+  //Black SVG
   private getArrowSvgBlack(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
@@ -192,17 +192,7 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
                             )} MI</p>
                         </div>`
                         : ''
-                    }
-                    ${
-                      markerData.avalibleUnits
-                        ? `
-                        <div class="col-md-4 col-sm-12  d-flex flex-column spec">
-                            <p class="spec-head">Available Units</p>
-                            <p class="spec-content">${markerData.avalibleUnits}</p>
-                        </div>`
-                        : ''
-                    }
-                 
+                    } 
                 </div>
                 <div class="buttons-wrap">
                     <button id="view-details-${
@@ -223,16 +213,20 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     markerData: any,
     centerName?: string
   ): string {
-    return ` <div> 
-            <div class="p-3"> 
-                ${
-                  markerData.name
-                    ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
-                    : ''
-                }
-       
-            </div>
-        </div>`;
+    return `  
+    <div class="py-2">
+    
+    <span class="close-btn">&times;</span>
+    </div>
+    <div>
+      <div class="p-3"> 
+        ${
+          markerData.name
+            ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
+            : ''
+        }
+      </div>
+    </div>`;
   }
 
   // Click View Details
@@ -256,6 +250,8 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     });
   }
 
+  private openInfoWindow: any | null = null;
+
   // Event On Point
   private addMarkerEventListeners(
     marker: any,
@@ -264,15 +260,19 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     markerData: any
   ): void {
     marker.addListener('click', () => {
+      // Close any previously open infoWindow
+      if (this.openInfoWindow) {
+        this.openInfoWindow.close();
+      }
+
+      // Open the current infoWindow and update the tracker
       infoWindow.open(map, marker);
+      this.openInfoWindow = infoWindow;
     });
 
     const viewDetailsButton = document.getElementById(
       `view-details-${markerData.id}`
     );
-    // marker.addListener('mouseout', () => {
-    //   infoWindow.close();
-    // });
   }
 
   // Close Card
@@ -286,6 +286,10 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
       const close = document.querySelector('.close-btn');
       close?.addEventListener('click', () => {
         infoWindow.close();
+        // Reset the openInfoWindow if it is the one being closed
+        if (this.openInfoWindow === infoWindow) {
+          this.openInfoWindow = null;
+        }
       });
     });
   }
@@ -323,5 +327,45 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
         };
       });
   }
-  
+  onMouseEnter(map: any, place: any): void {
+    const { latitude, longitude } = place;
+    const mapElement = document.getElementById('map') as HTMLElement;
+
+    if (!mapElement) return;
+
+    if (map && this.markers) {
+      // Find the specific marker related to the hovered place
+      const marker = this.markers.find(
+        (m: any) =>
+          m.getPosition()?.lat() === +latitude &&
+          m.getPosition()?.lng() === +longitude
+      );
+
+      if (marker) {
+        // Change marker icon to highlight it (e.g., different color/size)
+        marker.setIcon({
+          url: this.getArrowSvgBlack(),
+          scaledSize: new google.maps.Size(40, 40), // Make it larger
+        });
+      }
+    }
+  }
+
+  onMouseLeave(map: any, place: any): void {
+    const { latitude, longitude } = place;
+
+    if (map && this.markers) {
+      const marker = this.markers.find(
+        (m: any) =>
+          m.getPosition()?.lat() === +latitude &&
+          m.getPosition()?.lng() === +longitude
+      );
+
+      // Revert the marker icon to its original state
+      marker.setIcon({
+        url: this.getArrowSvg(),
+        scaledSize: new google.maps.Size(40, 40), // Make it larger
+      });
+    }
+  }
 }

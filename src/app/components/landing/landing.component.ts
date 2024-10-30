@@ -54,8 +54,6 @@ export class LandingComponent {
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
-
-    this.titleService.setTitle('CherryPick');
    }
 
   ngOnInit(): void {

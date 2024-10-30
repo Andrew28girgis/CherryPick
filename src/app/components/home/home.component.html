@@ -73,8 +73,9 @@
               class="option"
               *ngFor="let option of dropdowmOptions"
               (click)="selectOption(option)"
+              
             >
-              <span class="option-icon">
+              <span class="option-icon" >
                 <img [src]="option.icon" alt="" />
               </span>
               <span class="option-text">{{ option.text }}</span>
@@ -87,10 +88,10 @@
 </nav>
 
 <div class="map-view">
-  <div class="row" style="background-color: #f7f7f7">
+  <div class="row" style="background-color: #fff">
     <ng-container *ngIf="currentView == 4">
       <div class="container" style="padding: 35px">
-        <div style="overflow-x: auto">
+        <div style="overflow-x: auto" *ngIf="centerPoints.length > 0">
           <table class="procpect-table">
             <thead class="procpect-table-head">
               <tr>
@@ -173,7 +174,7 @@
             </tbody>
           </table>
         </div>
-        <div style="overflow-x: auto">
+        <div style="overflow-x: auto"  *ngIf="allPlaces.standAlonePlaces.length > 0">
           <table class="procpect-table mt-4">
             <thead class="procpect-table-head">
               <tr>
@@ -269,13 +270,16 @@
     <div
       [ngClass]="{
         'd-none': currentView == 1 || currentView == 4,
-        'col-md-4 col-sm-12 cards': currentView == 2,
+        'col-md-8 col-sm-12 cards': currentView == 2,
         'col-12': currentView == 3
       }"
     >
       <div class="row">
+        
+       <ng-container *ngIf="currentView != 2">
         <ng-container *ngFor="let place of centerPoints">
           <div
+            style="cursor: pointer;"
             class="card-window"
             (mouseenter)="onMouseEnter(place)"
             [ngClass]="{
@@ -342,7 +346,7 @@
                   </p>
                 </div>
 
-                <div
+                <!-- <div
                   class="col-6 d-flex flex-column spec"
                   *ngIf="place.avalibleUnits"
                 >
@@ -350,7 +354,7 @@
                   <p class="spec-content">
                     {{ place.avalibleUnits }}
                   </p>
-                </div>
+                </div> -->
               </div>
 
               <div class="buttons-wrap">
@@ -534,6 +538,52 @@
             </div>
           </div>
         </ng-container>
+       </ng-container>
+      <ng-container *ngIf="currentView == 2">
+        <div class="p-3"> 
+          <p style="font-weight: 500;" class="m-0">{{cardsSideList.length}} places within map area
+          </p>
+        </div>
+          <ng-container *ngFor="let place of cardsSideList; trackBy: trackByCenterName">
+          <div
+          class="card-window"
+          style="cursor: pointer;"
+          (mouseenter)="onMouseHighlight(place)"
+          (mouseleave)="onMouseLeaveHighlight(place)" 
+          (click)="goToPlace(place)"
+          [ngClass]="{
+            'col-md-4 col-sm-12': currentView == 2
+          }"
+        >
+          <div class="main-img" >
+            <img *ngIf="place.mainImage == null "
+              src="../../../assets/Images/Main/{{
+                replaceApostrophe(place.centerName)
+              }}.jpg"
+            />
+            <img *ngIf="place.mainImage != null "
+              src="{{place.mainImage}}"
+            />
+          </div>
+
+          <div
+            style="background-color: #fff; border-radius: 0 0 20px 20px"
+          >
+            <div *ngIf="place.centerName">
+              <p class="content-title" style="font-size: 17px;font-weight: 500;">{{ place.centerName | titlecase }}</p>
+            </div>
+
+            <div *ngIf="place.address">
+              <p  style="font-size: 15px;font-weight: 500; color: gray; margin-top: 7px;">{{ place.address | titlecase }}</p>
+            </div>
+   
+   
+
+           
+          </div>
+        </div>
+         </ng-container>
+      </ng-container>
       </div>
     </div>
 
@@ -542,7 +592,7 @@
       [ngClass]="{
         'd-none': currentView == 4 || currentView == 3,
         'col-12': currentView == 1,
-        'col-8': currentView == 2
+        'col-4': currentView == 2
       }"
     >
       <div id="map" class="custom-map"></div>

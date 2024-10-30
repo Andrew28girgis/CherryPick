@@ -23,11 +23,9 @@ export class LoginComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private configService: ConfigService,
-    private titleService: Title
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
-    this.titleService.setTitle('CherryPick');
   }
 
   ngOnInit(): void {

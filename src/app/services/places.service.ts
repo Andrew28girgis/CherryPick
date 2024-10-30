@@ -208,7 +208,6 @@ export class PlacesService {
       .get<any>(`${environment.api}/BuyBox/GetBrokerCategories`)
       .pipe();
   }
-
   
   public GetAllBuyBoxComparables(buyBoxId:number) {
     return this.http
