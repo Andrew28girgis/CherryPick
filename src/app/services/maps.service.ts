@@ -8,16 +8,12 @@ declare const google: any;
 export class MapsService {
   private competitorMarkers: any[] = [];
   private cotenantMarkers: any[] = [];
-  storedBuyBoxId: any;
-  storedLat: any;
-  storedLon: any;
-  private markers: any[] = []; // Array to hold all markers
-  private prosMarkers: any[] = []; // Array to hold all markers
+  storedBuyBoxId: any; 
+  private markers: any[] = []; 
+  private prosMarkers: any[] = []; 
 
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
-    this.storedLat = localStorage.getItem('placeLat');
-    this.storedLon = localStorage.getItem('placeLon');
   }
 
   //Create Markers
@@ -121,6 +117,22 @@ export class MapsService {
     `)
     );
   }
+  private getArrowSvgPurple(): string {
+    return (
+      'data:image/svg+xml;charset=UTF-8,' +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+<g clip-path="url(#clip0_699_4706)">
+<path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#007BFF"/>
+<path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#007BFF"/>
+</g>
+<defs>
+<clipPath id="clip0_699_4706">
+<rect width="48" height="48" fill="white"/>
+</clipPath>
+</defs>
+</svg>`)
+    );
+  }
 
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Competitor') {
@@ -170,6 +182,26 @@ export class MapsService {
                       <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
                     </svg>
 ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
+
+ 
+
+                   ${
+                    (markerData.leasePrice  != 'undefined' && markerData.leasePrice != null && markerData.leasePrice != 'N/A')
+                      ? `
+                      <div>
+                          <p class="spec-content">Lease Price: ${markerData.leasePrice}</p>
+                      </div>`
+                      : ''
+                   }
+
+                       ${
+                    markerData.minUnitSize 
+                      ? `
+                      <div>
+                          <p class="spec-content">Unit Size: ${markerData.minUnitSize} SF - ${markerData.maxUnitSize} SF</p>
+                      </div>`
+                      : ''
+                   }
                 <div class="row"> 
                     ${
                       markerData.nearestCompetitors
@@ -329,12 +361,8 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
   }
   onMouseEnter(map: any, place: any): void {
     const { latitude, longitude } = place;
-    const mapElement = document.getElementById('map') as HTMLElement;
-
-    if (!mapElement) return;
-
+  
     if (map && this.markers) {
-      // Find the specific marker related to the hovered place
       const marker = this.markers.find(
         (m: any) =>
           m.getPosition()?.lat() === +latitude &&
@@ -342,10 +370,10 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
       );
 
       if (marker) {
-        // Change marker icon to highlight it (e.g., different color/size)
+        console.log(`working`);
         marker.setIcon({
-          url: this.getArrowSvgBlack(),
-          scaledSize: new google.maps.Size(40, 40), // Make it larger
+          url: this.getArrowSvgPurple(),
+          scaledSize: new google.maps.Size(40, 40), 
         });
       }
     }

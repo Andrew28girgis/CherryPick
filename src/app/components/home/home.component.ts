@@ -90,8 +90,6 @@ export class HomeComponent implements OnInit {
   anotherPlaces!: AnotherPlaces;
   cardView: boolean = true;
   currentView: any;
-  storedLat: any;
-  storedLon: any;
   centerPoints: any[] = [];
   // Marker storage arrays
   // Marker storage arrays
@@ -105,7 +103,7 @@ export class HomeComponent implements OnInit {
   isCoTenantChecked = false;
   cardsSideList: any[] = [];
   selectedOption: any;
-
+  savedMapView: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -115,9 +113,8 @@ export class HomeComponent implements OnInit {
     private markerService: MapsService,
     private cdr: ChangeDetectorRef
   ) {
-    this.storedLat = localStorage.getItem('placeLat');
-    this.storedLon = localStorage.getItem('placeLon');
     this.currentView = localStorage.getItem('currentView') || 2;
+    this.savedMapView = localStorage.getItem('mapView');
   }
 
   ngOnInit(): void {
@@ -164,14 +161,16 @@ export class HomeComponent implements OnInit {
   async getAllMarker() {
     try {
       this.spinner.show();
-      const { Map } = await google.maps.importLibrary('maps');
-      if (this.storedLat != null && this.storedLon != null) {
+      const { Map } = await google.maps.importLibrary('maps'); 
+      if (this.savedMapView) {
+        const { lat, lng, zoom } = JSON.parse(this.savedMapView);
+
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
-            lat: +this.storedLat || 0,
-            lng: +this.storedLon || 0,
+            lat: lat,
+            lng: lng,
           },
-          zoom: 15,
+          zoom: zoom,
           mapId: '1234567890',
         });
         this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
@@ -210,6 +209,9 @@ export class HomeComponent implements OnInit {
           shoppingCenter.id = center.places[0].id;
           shoppingCenter.streetLatitude = center.places[0].streetLatitude;
           shoppingCenter.streetLongitude = center.places[0].streetLongitude;
+          shoppingCenter.leasePrice = center.leasePrice;
+          shoppingCenter.minUnitSize = center.minUnitSize;
+          shoppingCenter.maxUnitSize = center.maxUnitSize;
 
           this.centerPoints.push(shoppingCenter);
 
@@ -290,25 +292,33 @@ export class HomeComponent implements OnInit {
     const bounds = map.getBounds();
     const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
 
-    // Use a Set for fast lookups of marker coordinates.
+    // Save the current map view (center and zoom level) in local storage.
+    const center = map.getCenter();
+    const zoom = map.getZoom();
+    localStorage.setItem(
+      'mapView',
+      JSON.stringify({
+        lat: center.lat(),
+        lng: center.lng(),
+        zoom: zoom,
+      })
+    );
+
     const visibleCoords = new Set(
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
 
-    // Pre-compute center coordinates to avoid repeated lookups.
     this.allPlaces.centers.forEach((center) => {
       const firstPlace = center.places[0];
       center.latitude = firstPlace.latitude;
       center.longitude = firstPlace.longitude;
     });
 
-    // Merge all places into a single array.
     const allPros: any[] = [
       ...this.allPlaces.standAlonePlaces,
       ...this.allPlaces.centers,
     ];
 
-    // Filter properties based on visibility.
     this.cardsSideList = allPros.filter((property) =>
       visibleCoords.has(`${property.latitude},${property.longitude}`)
     );
@@ -328,12 +338,14 @@ export class HomeComponent implements OnInit {
       this.map.setZoom(17);
     }
   }
-  onMouseHighlight(place:any ){
-    this.markerService.onMouseEnter(this.map , place);
-  }
-  onMouseLeaveHighlight(place:any ){
-    this.markerService.onMouseLeave(this.map , place);
 
+  onMouseHighlight(place: any) {
+
+    this.markerService.onMouseEnter(this.map, place);
+  }
+
+  onMouseLeaveHighlight(place: any) {
+    this.markerService.onMouseLeave(this.map, place);
   }
 
   getAllBuyBoxComparables(buyboxId: number) {

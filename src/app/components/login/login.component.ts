@@ -24,8 +24,7 @@ export class LoginComponent {
     private spinner: NgxSpinnerService,
     private configService: ConfigService,
   ) {
-    localStorage.removeItem('placeLat');
-    localStorage.removeItem('placeLon');
+    localStorage.removeItem('mapView'); 
   }
 
   ngOnInit(): void {

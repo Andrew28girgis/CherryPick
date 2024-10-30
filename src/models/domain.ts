@@ -20,10 +20,13 @@ export class AllPlaces{
 }
 export class shoppingMall{
   centerName !:string; 
+  leasePrice:any;
   heading !: number ;
   longitude!: number;
   latitude!: number;
   lat !: number;
+  minUnitSize:any;
+  maxUnitSize:any;
   lng !: number;
   nearestBranchesInMiles :any ;
   nearestCompetitorsInMiles :any;

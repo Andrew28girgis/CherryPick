@@ -301,6 +301,7 @@
               <div>
                 <p class="content-title">{{ place.name | titlecase }}</p>
               </div>
+             
               <div>
                 <p class="address-content">
                   <svg
@@ -324,7 +325,13 @@
                   {{ place.address }}, {{ place.city }}, {{ place.state }}
                 </p>
               </div>
-
+              
+              <div *ngIf="place.leasePrice != 'undefined' && place.leasePrice != null && place.leasePrice != 'N/A'">
+                <p  style="font-size: 15px;font-weight: 500; color: #565656;  margin-block: 5px;">Lease Price: {{ place.leasePrice }}</p>
+              </div>
+              <div *ngIf="place.minUnitSize || place.maxUnitSize">
+                <p  style="font-size: 15px;font-weight: 500; color: #565656;">Unit Size: {{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</p>
+              </div>
               <div class="row">
                 <div
                   class="col-6 d-flex flex-column spec"
@@ -570,15 +577,19 @@
             style="background-color: #fff; border-radius: 0 0 20px 20px"
           >
             <div *ngIf="place.centerName">
-              <p class="content-title" style="font-size: 17px;font-weight: 500;">{{ place.centerName | titlecase }}</p>
+              <p class="content-title" style="font-size: 17px;font-weight: 500; margin-bottom: 2px;">{{ place.centerName | titlecase }}</p>
             </div>
 
             <div *ngIf="place.address">
-              <p  style="font-size: 15px;font-weight: 500; color: gray; margin-top: 7px;">{{ place.address | titlecase }}</p>
-            </div>
-   
-   
+              <p  style="font-size: 15px;font-weight: 500; color: #565656; margin-block: 5px;">{{ place.address | titlecase }}, {{place.city}}, {{place.state}}</p>
+            </div> 
 
+            <div *ngIf="place.leasePrice != undefined &&place.leasePrice != 'undefined '  && place.leasePrice != null && place.leasePrice != 'N/A'">
+              <p  style="font-size: 15px;font-weight: 500; color: #565656;  margin-block: 5px;">Lease Price: {{ place.leasePrice }}</p>
+            </div>
+            <div *ngIf="place.minUnitSize || place.maxUnitSize">
+              <p  style="font-size: 15px;font-weight: 500; color: #565656;">Unit Size: {{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</p>
+            </div>
            
           </div>
         </div>
