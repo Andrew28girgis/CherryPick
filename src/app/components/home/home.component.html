@@ -99,7 +99,7 @@
               <tr>
                 <th>Name</th>
                 <th>Address</th>
-                <th style="width: 190px;">Unit Size</th> 
+                <th style="width: 190px;">Unit Size</th>
                 <th>Lease Price</th>
                 <th>Nearest Competitor</th>
                 <th>Nearest Complementary</th>
@@ -564,8 +564,7 @@
           </div>
 
           <div
-            style="background-color: #fff; border-radius: 0 0 20px 20px"
-          >
+            style="background-color: #fff; border-radius: 0 0 20px 20px; height: 200px; display: flex;flex-direction: column;">
             <div *ngIf="place.centerName">
               <p class="content-title" style="font-size: 17px;font-weight: 500; margin-bottom: 2px;">{{ place.centerName | titlecase }}</p>
             </div>
@@ -581,7 +580,7 @@
               <p  style="font-size: 15px;font-weight: 500; color: #565656;">Unit Size: {{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</p>
             </div>
            
-          </div>
+    
           <div class="buttons-wrap">
             <button class="view-details-card" (click)="goToPlace(place)">
               View Details
@@ -607,6 +606,7 @@
               </svg>
             </button>
             </div>
+          </div>
         </div>
          </ng-container>
       </ng-container>

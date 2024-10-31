@@ -481,7 +481,7 @@
 
 .card-window {
   cursor: pointer;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .main-img {
@@ -595,7 +595,7 @@
 .buttons-wrap {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top:auto;
   height: 40px;
 }
 
