@@ -161,7 +161,7 @@ export class HomeComponent implements OnInit {
   async getAllMarker() {
     try {
       this.spinner.show();
-      const { Map } = await google.maps.importLibrary('maps'); 
+      const { Map } = await google.maps.importLibrary('maps');
       if (this.savedMapView) {
         const { lat, lng, zoom } = JSON.parse(this.savedMapView);
 
@@ -340,7 +340,6 @@ export class HomeComponent implements OnInit {
   }
 
   onMouseHighlight(place: any) {
-
     this.markerService.onMouseEnter(this.map, place);
   }
 

@@ -8,9 +8,9 @@ declare const google: any;
 export class MapsService {
   private competitorMarkers: any[] = [];
   private cotenantMarkers: any[] = [];
-  storedBuyBoxId: any; 
-  private markers: any[] = []; 
-  private prosMarkers: any[] = []; 
+  storedBuyBoxId: any;
+  private markers: any[] = [];
+  private prosMarkers: any[] = [];
 
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
@@ -36,6 +36,7 @@ export class MapsService {
     });
     this.markers.push(marker);
 
+    
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type, centerName);
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
@@ -117,20 +118,21 @@ export class MapsService {
     `)
     );
   }
+
   private getArrowSvgPurple(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
       encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-<g clip-path="url(#clip0_699_4706)">
-<path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#007BFF"/>
-<path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#007BFF"/>
-</g>
-<defs>
-<clipPath id="clip0_699_4706">
-<rect width="48" height="48" fill="white"/>
-</clipPath>
-</defs>
-</svg>`)
+            <g clip-path="url(#clip0_699_4706)">
+            <path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#007BFF"/>
+            <path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#007BFF"/>
+            </g>
+            <defs>
+            <clipPath id="clip0_699_4706">
+            <rect width="48" height="48" fill="white"/>
+            </clipPath>
+            </defs>
+            </svg>`)
     );
   }
 
@@ -186,22 +188,24 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
  
 
                    ${
-                    (markerData.leasePrice  != 'undefined' && markerData.leasePrice != null && markerData.leasePrice != 'N/A')
-                      ? `
+                     markerData.leasePrice != 'undefined' &&
+                     markerData.leasePrice != null &&
+                     markerData.leasePrice != 'N/A'
+                       ? `
                       <div>
                           <p class="spec-content">Lease Price: ${markerData.leasePrice}</p>
                       </div>`
-                      : ''
+                       : ''
                    }
 
                        ${
-                    markerData.minUnitSize 
-                      ? `
+                         markerData.minUnitSize
+                           ? `
                       <div>
                           <p class="spec-content">Unit Size: ${markerData.minUnitSize} SF - ${markerData.maxUnitSize} SF</p>
                       </div>`
-                      : ''
-                   }
+                           : ''
+                       }
                 <div class="row"> 
                     ${
                       markerData.nearestCompetitors
@@ -363,37 +367,67 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
     const { latitude, longitude } = place;
   
     if (map && this.markers) {
-      const marker = this.markers.find(
+      // Find the existing marker based on its latitude and longitude
+      const markerIndex = this.markers.findIndex(
         (m: any) =>
           m.getPosition()?.lat() === +latitude &&
           m.getPosition()?.lng() === +longitude
       );
-
-      if (marker) {
-        console.log(`working`);
-        marker.setIcon({
-          url: this.getArrowSvgPurple(),
-          scaledSize: new google.maps.Size(40, 40), 
+  
+      // If a matching marker is found, remove it from the map and the markers array
+      if (markerIndex !== -1) {
+        const existingMarker = this.markers[markerIndex];
+        existingMarker.setMap(null); // Remove from map
+        this.markers.splice(markerIndex, 1); // Remove from markers array
+  
+        // Add a new marker with your custom icon
+        const newMarker = new google.maps.Marker({
+          position: { lat: +latitude, lng: +longitude },
+          map,
+          icon: {
+            url: this.getArrowSvgPurple(),
+            scaledSize: new google.maps.Size(40, 40),
+          },
         });
+  
+        // Push the new marker into the markers array
+        this.markers.push(newMarker);
       }
     }
   }
+  
 
-  onMouseLeave(map: any, place: any): void {
-    const { latitude, longitude } = place;
+onMouseLeave(map: any, place: any): void {
+  const { latitude, longitude } = place;
 
-    if (map && this.markers) {
-      const marker = this.markers.find(
-        (m: any) =>
-          m.getPosition()?.lat() === +latitude &&
-          m.getPosition()?.lng() === +longitude
-      );
+  if (map && this.markers) {
+    // Find the marker created on mouse enter
+    const markerIndex = this.markers.findIndex(
+      (m: any) =>
+        m.getPosition()?.lat() === +latitude &&
+        m.getPosition()?.lng() === +longitude
+    );
 
-      // Revert the marker icon to its original state
-      marker.setIcon({
-        url: this.getArrowSvg(),
-        scaledSize: new google.maps.Size(40, 40), // Make it larger
+    // If the marker exists, remove it and replace it with the original icon marker
+    if (markerIndex !== -1) {
+      const existingMarker = this.markers[markerIndex];
+      existingMarker.setMap(null); // Remove it from the map
+      this.markers.splice(markerIndex, 1); // Remove from markers array
+
+      // Add a new marker with the original icon
+      const originalMarker = new google.maps.Marker({
+        position: { lat: +latitude, lng: +longitude },
+        map,
+        icon: {
+          url: this.getArrowSvg(),
+          scaledSize: new google.maps.Size(40, 40),
+        },
       });
+
+      // Push the original marker back into the markers array
+      this.markers.push(originalMarker);
     }
   }
+}
+
 }
