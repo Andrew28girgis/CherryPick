@@ -99,9 +99,7 @@
               <tr>
                 <th>Name</th>
                 <th>Address</th>
-                <th>Unit Size</th>
-
-                
+                <th style="width: 190px;">Unit Size</th> 
                 <th>Lease Price</th>
                 <th>Nearest Competitor</th>
                 <th>Nearest Complementary</th>
@@ -120,8 +118,9 @@
                   <td>{{ place.leasePrice }}</td>
                   <td><ng-container *ngIf="place.nearestCompetitors"> {{ place.nearestCompetitors.toFixed(2) }} MI </ng-container></td>
                   <td><ng-container *ngIf="place.nearestCotenants">{{ place.nearestCotenants.toFixed(2) }} MI </ng-container></td>
-                  <td class="d-flex">
-                    <button
+                  <td>
+                    <div class="d-flex">
+                      <button
                       class="det-btn d-flex align-items-center"
                       (click)="goToPlace(place)"
                     >
@@ -178,6 +177,10 @@
                         />
                       </svg>
                     </div>
+
+                    </div>
+                  
+
                   </td>
                 </tr>
               </ng-container>
@@ -258,7 +261,7 @@
                     >
                     <img src="../../../assets/Images/map.png" style="height: 30px; width: 30px;margin-right: 5px;" 
                     (click)="openMapViewPlace(MapViewPlace, place)"/>
-                    
+
                       <svg
                       (click)="openStreetViewPlace(StreetViewPlace, place)"
                         width="35"
