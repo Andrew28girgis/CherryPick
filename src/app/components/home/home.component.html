@@ -111,7 +111,7 @@
                 <tr>
                   <td>{{ place.name | titlecase }}</td>
                   <td>
-                    {{ place.address }}, {{ place.city }}, {{ place.state }}
+                    {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
                   </td>
                   <td>{{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</td>
 
@@ -203,7 +203,7 @@
               <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
                 <tr>
                   <td>
-                    {{ place.address }}, {{ place.city }}, {{ place.state }}
+                    {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
                   </td>
                   <td>
                     {{ place.suite }}
@@ -318,7 +318,7 @@
                 <p class="content-title">{{ place.name | titlecase }}</p>
               </div>
              
-              <div class="content-address" (click)="openMapViewPlace(MapViewPlace, place)">
+              <div class="content-address" (click)="openMapViewPlace(MapViewPlace, place)"  >
                 <p>
                   <svg
                     class="me-2"
@@ -338,7 +338,7 @@
                       stroke="#817A79"
                       stroke-width="1.5"
                     /></svg>
-                  {{ place.address }}, {{ place.city }}, {{ place.state }}
+                  {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
                 </p>
               </div>
               
@@ -447,7 +447,7 @@
                 <div class="col-6 d-flex flex-column spec">
                   <p class="spec-head">Address</p>
                   <p class="spec-content">
-                    {{ place.address }}, {{ place.city }}, {{ place.state }}
+                    {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
                   </p>
                 </div>
 
@@ -569,9 +569,29 @@
               <p class="content-title" style="font-size: 17px;font-weight: 500; margin-bottom: 2px;">{{ place.centerName | titlecase }}</p>
             </div>
 
-            <div *ngIf="place.address" (click)="openMapViewPlace(MapViewPlace, place)"  style="cursor: pointer;">
-              <p class="content-address" >{{ place.address | titlecase }}, {{place.city}}, {{place.state}}</p>
-            </div> 
+            <div class="content-address" (click)="openMapViewPlace(MapViewPlace, place)"  >
+              <p>
+                <svg
+                  class="me-2"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z"
+                    stroke="#817A79"
+                    stroke-width="1.5"
+                  />
+                  <path
+                    d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z"
+                    stroke="#817A79"
+                    stroke-width="1.5"
+                  /></svg>
+                {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
+              </p>
+            </div>
 
             <div *ngIf="place.leasePrice != undefined && place.leasePrice != 'undefined '  && place.leasePrice != null && place.leasePrice != 'N/A'">
               <p  style="font-size: 15px;font-weight: 500; color: #565656;  margin-block: 5px;">Lease Price: {{ place.leasePrice }}</p>
@@ -627,7 +647,7 @@
 </div>
 
 <ng-template #MapViewPlace let-modal>
-  <div id="mappopup" style="height: 700px"></div>
+   <div id="mappopup" style="height: 700px; " *ngIf="mapViewOnePlacex"></div>
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>

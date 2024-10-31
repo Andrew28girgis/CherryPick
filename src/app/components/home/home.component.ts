@@ -4,6 +4,7 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
+  NgZone 
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
@@ -104,6 +105,8 @@ export class HomeComponent implements OnInit {
   cardsSideList: any[] = [];
   selectedOption: any;
   savedMapView: any;
+  mapViewOnePlacex: boolean = false;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -111,7 +114,8 @@ export class HomeComponent implements OnInit {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private markerService: MapsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
   ) {
     this.currentView = localStorage.getItem('currentView') || 2;
     this.savedMapView = localStorage.getItem('mapView');
@@ -136,8 +140,9 @@ export class HomeComponent implements OnInit {
     } else {
       console.log('No city object found in navigation state');
     }
-    this.getAllBuyBoxComparables(this.BuyBoxId);
+    this.getAllBuyBoxComparables(this.BuyBoxId); 
 
+    
     // setTimeout(() => {
     //   const storedScrollPosition = sessionStorage.getItem('scrollPosition');
     //   if (storedScrollPosition) {
@@ -320,13 +325,15 @@ export class HomeComponent implements OnInit {
       ...this.allPlaces.centers,
     ];
 
-    this.cardsSideList = allPros.filter((property) =>
-      visibleCoords.has(`${property.latitude},${property.longitude}`)
-    );
-    this.cdr.detectChanges();
+    // Update the cardsSideList inside NgZone
+    this.ngZone.run(() => {
+      this.cardsSideList = allPros.filter((property) =>
+        visibleCoords.has(`${property.latitude},${property.longitude}`)
+      );
 
-    console.log('Filtered Properties:', this.cardsSideList);
-  }
+      console.log('Filtered Properties:', this.cardsSideList);
+    });
+}
 
   onMouseEnter(place: any): void {
     const { latitude, longitude } = place;
@@ -633,73 +640,48 @@ export class HomeComponent implements OnInit {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
-    });
-    this.General.modalObject = modalObject;
-    setTimeout(() => {
-      this.viewOnMap( modalObject.latitude  , modalObject.longitude);
-    }, 100);
+    })
+
+   this.viewOnMap(modalObject.latitude, modalObject.longitude);
+
+
+  }
+  
+  
+ async viewOnMap(lat: number, lng: number) {
+  this.mapViewOnePlacex = true; 
+
+  if (!lat || !lng) {
+    console.error("Latitude and longitude are required to display the map.");
+    return;
   }
 
-  mapViewOnePlace:boolean = false;
-  async viewOnMap(Lat: number,Lng: number) {
-    this.mapViewOnePlace = true;
-    try { 
-  
-      const lat = Lat;
-      const lon = Lng;
-      const colorCompetitor = 'black';
-      const colorCotenants = '#0652DD';
-      const colorOurPlaces = 'red'; 
-  
-      const { Map, InfoWindow } = await google.maps.importLibrary('maps');
-      const map = new Map(document.getElementById('mappopup') as HTMLElement, {
-        center: { lat, lng: lon },
-        zoom: 16,
-      });
-  
-      const createMarker = (
-        markerData: any,
-        color: string,
-        useArrow: boolean = false,
-        type: string
-      ) => {
-        let icon;
-  
-        if (useArrow && type === 'Prospect Target') {
-          icon = {
-            url: this.getArrowSvg(),
-            scaledSize: new google.maps.Size(40, 40),
-          };
-        } else if (type === 'Competitor') {
-          icon = {
-            url: this.getArrowSvgBlack(),
-            scaledSize: new google.maps.Size(40, 40),
-          };
-        } else {
-          icon = {
-            url: `../../../assets/Images/Logos/${this.replaceApostrophe(markerData.name)}.jpg`,
-            scaledSize: new google.maps.Size(30, 30),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(15, 15),
-          };
-        }
-  
-        new google.maps.Marker({
-          map,
-          position: {
-            lat: Number(markerData.latitude),
-            lng: Number(markerData.longitude),
-          },
-          icon: icon,
-        });
-      };
-   
-      createMarker(this.General.modalObject, colorOurPlaces, true, 'Prospect Target');
+  // Load Google Maps API libraries
+  const { Map } = (await google.maps.importLibrary('maps')) as any;
 
-      
-    } finally { 
-    }
+  // Find the map container element
+  const mapDiv = document.getElementById('mappopup') as HTMLElement;
+
+  // Check if the mapDiv exists
+  if (!mapDiv) {
+    console.error('Element with ID "mappopup" not found.');
+    return;
   }
+ 
+  const map = new Map(mapDiv, {
+    center: { lat, lng },
+    zoom: 14,
+  });
+
+  // Create a new marker
+  const marker = new google.maps.Marker({
+    position: { lat, lng },
+    map: map,
+    title: 'Location Marker',
+  });
+}
+
+  
   
 
   formatImageName(centerName: string): string {
