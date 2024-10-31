@@ -196,28 +196,29 @@ export class HomeComponent implements OnInit {
       if (this.allPlaces && this.allPlaces.centers) {
         this.allPlaces.centers.forEach((center) => {
           let shoppingCenter: any = {};
+          shoppingCenter.id = center.places[0].id; 
           shoppingCenter.name = center.centerName;
-          shoppingCenter.avalibleUnits = center.places.length;
-          shoppingCenter.address = center.places[0].address;
-          shoppingCenter.city = center.places[0].city;
-          shoppingCenter.state = center.places[0].state;
+          shoppingCenter.address = center.address;
+          shoppingCenter.city = center.city;
+          shoppingCenter.state = center.state;
+
+          shoppingCenter.avalibleUnits = center.places.length; 
+          shoppingCenter.mainImage = center.mainImage;
+
+          shoppingCenter.latitude = center.lat;
+          shoppingCenter.longitude = center.lng;
+          shoppingCenter.streetLatitude = center.stLat;
+          shoppingCenter.streetLongitude = center.stLng;
+          shoppingCenter.heading = center.heading; 
+          shoppingCenter.pitch = center.pitch;  
+                  
           shoppingCenter.nearestCompetitors = center.nearestCompetitorsInMiles;
           shoppingCenter.nearestCotenants = center.nearestCotenantsMiles;
-          shoppingCenter.latitude = center.places[0].latitude;
-          shoppingCenter.longitude = center.places[0].longitude;
-          shoppingCenter.mainImage = center.places[0].mainImage;
-          shoppingCenter.id = center.places[0].id;
-          shoppingCenter.streetLatitude = center.places[0].streetLatitude;
-          shoppingCenter.streetLongitude = center.places[0].streetLongitude;
           shoppingCenter.leasePrice = center.leasePrice;
           shoppingCenter.minUnitSize = center.minUnitSize;
           shoppingCenter.maxUnitSize = center.maxUnitSize;
 
-          this.centerPoints.push(shoppingCenter);
-
-          // center.places.forEach((markerData) => {
-          //   centerPoints.push(markerData) ;
-          // });
+          this.centerPoints.push(shoppingCenter); 
         });
       }
 
@@ -627,11 +628,125 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  openMapViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.General.modalObject = modalObject;
+    setTimeout(() => {
+      this.viewOnMap( modalObject.latitude  , modalObject.longitude);
+    }, 100);
+  }
+
+  mapViewOnePlace:boolean = false;
+  async viewOnMap(Lat: number,Lng: number) {
+    this.mapViewOnePlace = true;
+    try { 
+  
+      const lat = Lat;
+      const lon = Lng;
+      const colorCompetitor = 'black';
+      const colorCotenants = '#0652DD';
+      const colorOurPlaces = 'red'; 
+  
+      const { Map, InfoWindow } = await google.maps.importLibrary('maps');
+      const map = new Map(document.getElementById('mappopup') as HTMLElement, {
+        center: { lat, lng: lon },
+        zoom: 16,
+      });
+  
+      const createMarker = (
+        markerData: any,
+        color: string,
+        useArrow: boolean = false,
+        type: string
+      ) => {
+        let icon;
+  
+        if (useArrow && type === 'Prospect Target') {
+          icon = {
+            url: this.getArrowSvg(),
+            scaledSize: new google.maps.Size(40, 40),
+          };
+        } else if (type === 'Competitor') {
+          icon = {
+            url: this.getArrowSvgBlack(),
+            scaledSize: new google.maps.Size(40, 40),
+          };
+        } else {
+          icon = {
+            url: `../../../assets/Images/Logos/${this.replaceApostrophe(markerData.name)}.jpg`,
+            scaledSize: new google.maps.Size(30, 30),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(15, 15),
+          };
+        }
+  
+        new google.maps.Marker({
+          map,
+          position: {
+            lat: Number(markerData.latitude),
+            lng: Number(markerData.longitude),
+          },
+          icon: icon,
+        });
+      };
+   
+      createMarker(this.General.modalObject, colorOurPlaces, true, 'Prospect Target');
+
+      
+    } finally { 
+    }
+  }
+  
+
   formatImageName(centerName: string): string {
     return centerName.replace(/'/g, '');
   }
 
   trackByCenterName(index: number, place: any): string {
     return place.centerName;
+  }
+
+  private getArrowSvg(): string {
+    return (
+      'data:image/svg+xml;charset=UTF-8,' +
+      encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <g clip-path="url(#clip0_32_4219)">
+              <path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#CC3D3D"/>
+              <path d="M31.2 32.62L14.64 25.16C12.78 24.32 10.9 26.32 11.86 28.12L17.94 39.66C20.52 44.56 27.52 44.56 30.1 39.66L32.24 35.58C32.8 34.48 32.32 33.14 31.2 32.62Z" fill="#CC3D3D"/>
+          </g>
+          <defs>
+              <clipPath id="clip0_32_4219">
+                  <rect width="48" height="48" fill="white"/>
+              </clipPath>
+          </defs>
+      </svg>
+  `)
+    );
+  }
+
+
+  private getArrowSvgBlack(): string {
+    return (
+      'data:image/svg+xml;charset=UTF-8,' +
+      encodeURIComponent(`
+       <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_456_4378)">
+<path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#0D0C0C"/>
+<path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#0D0C0C"/>
+</g>
+<defs>
+<clipPath id="clip0_456_4378">
+<rect width="48" height="48" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+
+    `)
+    );
   }
 }

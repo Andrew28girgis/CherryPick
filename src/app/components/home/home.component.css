@@ -200,8 +200,8 @@
 .cards {
   height: 700px;
   overflow-y: scroll;
-  scrollbar-width: thin;  /* For Firefox */
-  scrollbar-color: #c1c1c1 transparent;  /* Track and thumb color */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #c1c1c1 transparent; /* Track and thumb color */
 }
 
 .views {
@@ -289,17 +289,24 @@
   justify-content: space-between;
 }
 
-.custom-map {   
+.custom-map {
   height: 100vh;
 }
-
 
 @media (max-width: 768px) {
   .nav-right {
     flex-direction: column;
     align-items: flex-start;
   }
-
- 
 }
- 
+
+.content-address {
+  font-size: 15px;
+  font-weight: 500;
+  color: #565656;
+  margin-block: 5px;
+}
+
+.content-address:hover {
+  text-decoration: underline;
+}

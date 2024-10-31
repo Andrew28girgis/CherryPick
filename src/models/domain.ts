@@ -19,8 +19,12 @@ export class AllPlaces{
 
 }
 export class shoppingMall{
+  address!:string;
+  city!:string;
+  state!:string;
   centerName !:string; 
   leasePrice:any;
+  mainImage!:string;
   heading !: number ;
   longitude!: number;
   latitude!: number;

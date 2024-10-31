@@ -89,7 +89,9 @@
 
 <div class="map-view">
   <div class="row" style="background-color: #fff">
-    <ng-container *ngIf="currentView == 4">
+
+    <!-- Start Table View -->
+      <ng-container *ngIf="currentView == 4">
       <div class="container" style="padding: 35px">
         <div style="overflow-x: auto" *ngIf="centerPoints.length > 0">
           <table class="procpect-table">
@@ -97,7 +99,10 @@
               <tr>
                 <th>Name</th>
                 <th>Address</th>
-                <th>Available Units</th>
+                <th>Unit Size</th>
+
+                
+                <th>Lease Price</th>
                 <th>Nearest Competitor</th>
                 <th>Nearest Complementary</th>
                 <th></th>
@@ -110,7 +115,9 @@
                   <td>
                     {{ place.address }}, {{ place.city }}, {{ place.state }}
                   </td>
-                  <td>{{ place.avalibleUnits }}</td>
+                  <td>{{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</td>
+
+                  <td>{{ place.leasePrice }}</td>
                   <td><ng-container *ngIf="place.nearestCompetitors"> {{ place.nearestCompetitors.toFixed(2) }} MI </ng-container></td>
                   <td><ng-container *ngIf="place.nearestCotenants">{{ place.nearestCotenants.toFixed(2) }} MI </ng-container></td>
                   <td class="d-flex">
@@ -152,10 +159,13 @@
                     </button>
 
                     <div
-                      style="cursor: pointer"
-                      (click)="openStreetViewPlace(StreetViewPlace, place)"
+                      style="cursor: pointer ; display: flex;"
                     >
+                    <img src="../../../assets/Images/map.png" style="height: 30px; width: 30px;margin-right: 5px;" 
+                    (click)="openMapViewPlace(MapViewPlace, place)"/>
                       <svg
+                      (click)="openStreetViewPlace(StreetViewPlace, place)"
+
                         width="35"
                         height="35"
                         viewBox="0 0 56 48"
@@ -266,7 +276,9 @@
           </table>
         </div>
       </div>
-    </ng-container>
+      </ng-container>
+    <!-- End Table View -->
+
     <div
       [ngClass]="{
         'd-none': currentView == 1 || currentView == 4,
@@ -281,16 +293,13 @@
           <div
             style="cursor: pointer;"
             class="card-window"
-            (mouseenter)="onMouseEnter(place)"
             [ngClass]="{
               'col-md-4 col-sm-12': currentView == 3
             }"
           >
             <div class="main-img">
               <img
-                src="../../../assets/Images/Main/{{
-                  replaceApostrophe(place.name)
-                }}.jpg"
+                src="{{place.mainImage}}"
               />
             </div>
 
@@ -302,8 +311,8 @@
                 <p class="content-title">{{ place.name | titlecase }}</p>
               </div>
              
-              <div>
-                <p class="address-content">
+              <div class="content-address" (click)="openMapViewPlace(MapViewPlace, place)">
+                <p>
                   <svg
                     class="me-2"
                     width="20"
@@ -388,27 +397,6 @@
                     />
                   </svg>
                 </button>
-                <!-- <button class="save-address-btn">
-                    Save Address
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z"
-                        stroke="#0D0C0C"
-                        stroke-width="1.5"
-                      />
-                      <path
-                        d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z"
-                        stroke="#0D0C0C"
-                        stroke-width="1.5"
-                      />
-                    </svg>
-                  </button> -->
                 <div
                   style="cursor: pointer"
                   (click)="openStreetViewPlace(StreetViewPlace, place)"
@@ -557,18 +545,13 @@
           style="cursor: pointer;"
           (mouseenter)="onMouseHighlight(place)"
           (mouseleave)="onMouseLeaveHighlight(place)" 
-          (click)="goToPlace(place)"
           [ngClass]="{
             'col-md-4 col-sm-12': currentView == 2
           }"
         >
           <div class="main-img" >
-            <img *ngIf="place.mainImage == null "
-              src="../../../assets/Images/Main/{{
-                replaceApostrophe(place.centerName)
-              }}.jpg"
-            />
-            <img *ngIf="place.mainImage != null "
+     
+            <img *ngIf="place.mainImage"
               src="{{place.mainImage}}"
             />
           </div>
@@ -580,11 +563,11 @@
               <p class="content-title" style="font-size: 17px;font-weight: 500; margin-bottom: 2px;">{{ place.centerName | titlecase }}</p>
             </div>
 
-            <div *ngIf="place.address">
-              <p  style="font-size: 15px;font-weight: 500; color: #565656; margin-block: 5px;">{{ place.address | titlecase }}, {{place.city}}, {{place.state}}</p>
+            <div *ngIf="place.address" (click)="openMapViewPlace(MapViewPlace, place)"  style="cursor: pointer;">
+              <p class="content-address" >{{ place.address | titlecase }}, {{place.city}}, {{place.state}}</p>
             </div> 
 
-            <div *ngIf="place.leasePrice != undefined &&place.leasePrice != 'undefined '  && place.leasePrice != null && place.leasePrice != 'N/A'">
+            <div *ngIf="place.leasePrice != undefined && place.leasePrice != 'undefined '  && place.leasePrice != null && place.leasePrice != 'N/A'">
               <p  style="font-size: 15px;font-weight: 500; color: #565656;  margin-block: 5px;">Lease Price: {{ place.leasePrice }}</p>
             </div>
             <div *ngIf="place.minUnitSize || place.maxUnitSize">
@@ -592,6 +575,31 @@
             </div>
            
           </div>
+          <div class="buttons-wrap">
+            <button class="view-details-card" (click)="goToPlace(place)">
+              View Details
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                  fill="#fff"
+                />
+                <path
+                  d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
+                  fill="#fff"
+                />
+                <path
+                  d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                  fill="#fff"
+                />
+              </svg>
+            </button>
+            </div>
         </div>
          </ng-container>
       </ng-container>
@@ -611,9 +619,9 @@
   </div>
 </div>
 
-<!-- <ng-template #viewPlace let-modal>
-  <div id="map" style="height: 700px" *ngIf="mapViewOnePlace"></div>
-</ng-template> -->
+<ng-template #MapViewPlace let-modal>
+  <div id="mappopup" style="height: 700px"></div>
+</ng-template>
 
 <ng-template #StreetViewPlace let-modal>
   <div id="street-view" style="height: 700px" *ngIf="StreetViewOnePlace"></div>

@@ -707,19 +707,5 @@ export class LandingComponent {
     return name.replace(/'/g, replacement).toLowerCase();
   }
 
-  // getValueOfPlace(stageName: string) {
-  //   const propertyName = stageName;
-  //   const value = this.place[propertyName];
-
-  //   if (typeof value === 'number' && propertyName !== 'minHighwayDist') {
-  //     return `${value.toFixed()} SF`;
-  //   }
-
-  //   if (propertyName == 'minHighwayDist' && value != null) {
-  //     let x = value.toFixed(2);
-  //     return Number(x);
-  //   }
-
-  //   return value;
-  // }
+ 
 }
