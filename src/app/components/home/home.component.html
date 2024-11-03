@@ -73,9 +73,8 @@
               class="option"
               *ngFor="let option of dropdowmOptions"
               (click)="selectOption(option)"
-              
             >
-              <span class="option-icon" >
+              <span class="option-icon">
                 <img [src]="option.icon" alt="" />
               </span>
               <span class="option-text">{{ option.text }}</span>
@@ -89,9 +88,8 @@
 
 <div class="map-view">
   <div class="row" style="background-color: #fff">
-
     <!-- Start Table View -->
-      <ng-container *ngIf="currentView == 4">
+    <ng-container *ngIf="currentView == 4">
       <div class="container" style="padding: 35px">
         <div style="overflow-x: auto" *ngIf="centerPoints.length > 0">
           <table class="procpect-table">
@@ -99,7 +97,7 @@
               <tr>
                 <th>Name</th>
                 <th>Address</th>
-                <th style="width: 190px;">Unit Size</th>
+                <th style="width: 190px">Unit Size</th>
                 <th>Lease Price</th>
                 <th>Nearest Competitor</th>
                 <th>Nearest Complementary</th>
@@ -111,83 +109,101 @@
                 <tr>
                   <td>{{ place.name | titlecase }}</td>
                   <td>
-                    {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
+                    {{ place.address }}, {{ place.city | titlecase }},
+                    {{ place.state }}
                   </td>
-                  <td>{{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</td>
+                  <td>
+                    {{
+                      place.minUnitSize === place.maxUnitSize
+                        ? place.minUnitSize + " SF"
+                        : place.minUnitSize +
+                          " SF - " +
+                          place.maxUnitSize +
+                          " SF"
+                    }}
+                  </td>
 
                   <td>{{ place.leasePrice }}</td>
-                  <td><ng-container *ngIf="place.nearestCompetitors"> {{ place.nearestCompetitors.toFixed(2) }} MI </ng-container></td>
-                  <td><ng-container *ngIf="place.nearestCotenants">{{ place.nearestCotenants.toFixed(2) }} MI </ng-container></td>
+                  <td>
+                    <ng-container *ngIf="place.nearestCompetitors">
+                      {{ place.nearestCompetitors.toFixed(2) }} MI
+                    </ng-container>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="place.nearestCotenants"
+                      >{{ place.nearestCotenants.toFixed(2) }} MI
+                    </ng-container>
+                  </td>
                   <td>
                     <div class="d-flex">
                       <button
-                      class="det-btn d-flex align-items-center"
-                      (click)="goToPlace(place)"
-                    >
-                      <span style="text-wrap: nowrap">View Details</span>
-                      <svg
-                        style="margin-left: 8px"
-                        width="21"
-                        height="20"
-                        viewBox="0 0 21 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                        class="det-btn d-flex align-items-center"
+                        (click)="goToPlace(place)"
                       >
-                        <path
-                          d="M11.1667 9.16683L18.0001 2.3335"
-                          stroke="#817A79"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M18.6667 5.6665V1.6665H14.6667"
-                          stroke="#817A79"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M9.50024 1.6665H7.83358C3.66691 1.6665 2.00024 3.33317 2.00024 7.49984V12.4998C2.00024 16.6665 3.66691 18.3332 7.83358 18.3332H12.8336C17.0002 18.3332 18.6669 16.6665 18.6669 12.4998V10.8332"
-                          stroke="#817A79"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </button>
+                        <span style="text-wrap: nowrap">View Details</span>
+                        <svg
+                          style="margin-left: 8px"
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M11.1667 9.16683L18.0001 2.3335"
+                            stroke="#817A79"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M18.6667 5.6665V1.6665H14.6667"
+                            stroke="#817A79"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M9.50024 1.6665H7.83358C3.66691 1.6665 2.00024 3.33317 2.00024 7.49984V12.4998C2.00024 16.6665 3.66691 18.3332 7.83358 18.3332H12.8336C17.0002 18.3332 18.6669 16.6665 18.6669 12.4998V10.8332"
+                            stroke="#817A79"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </button>
 
-                    <div
-                      style="cursor: pointer ; display: flex;"
-                    >
-                    <img src="../../../assets/Images/map.png" style="height: 30px; width: 30px;margin-right: 5px;" 
-                    (click)="openMapViewPlace(MapViewPlace, place)"/>
-                      <svg
-                      (click)="openStreetViewPlace(StreetViewPlace, place)"
-
-                        width="35"
-                        height="35"
-                        viewBox="0 0 56 48"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
-                          fill="#0D0C0C"
+                      <div style="cursor: pointer; display: flex">
+                        <img
+                          src="../../../assets/Images/map.png"
+                          style="height: 30px; width: 30px; margin-right: 5px"
+                          (click)="openMapViewPlace(MapViewPlace, place)"
                         />
-                      </svg>
+                        <svg
+                          (click)="openStreetViewPlace(StreetViewPlace, place)"
+                          width="35"
+                          height="35"
+                          viewBox="0 0 56 48"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
+                            fill="#0D0C0C"
+                          />
+                        </svg>
+                      </div>
                     </div>
-
-                    </div>
-                  
-
                   </td>
                 </tr>
               </ng-container>
             </tbody>
           </table>
         </div>
-        <div style="overflow-x: auto"  *ngIf="allPlaces.standAlonePlaces.length > 0">
+        <div
+          style="overflow-x: auto"
+          *ngIf="allPlaces.standAlonePlaces.length > 0"
+        >
           <table class="procpect-table mt-4">
             <thead class="procpect-table-head">
               <tr>
@@ -203,7 +219,8 @@
               <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
                 <tr>
                   <td>
-                    {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
+                    {{ place.address }}, {{ place.city | titlecase }},
+                    {{ place.state }}
                   </td>
                   <td>
                     {{ place.suite }}
@@ -211,12 +228,15 @@
                   <td>{{ place.buildingSizeSf }} SF</td>
                   <td>
                     <ng-container *ngIf="place.nearestCompetitorsInMiles">
+                      {{ place.nearestCompetitorsInMiles.toFixed(2) }} MI
+                    </ng-container>
+                  </td>
 
-                    
-                    {{ place.nearestCompetitorsInMiles.toFixed(2) }} MI </ng-container> </td>
-                  
-                  <td>     <ng-container *ngIf="place.nearestCompetitorsInMiles">
-                    {{ place.nearestCotenantsMiles.toFixed(2) }} MI </ng-container> </td>
+                  <td>
+                    <ng-container *ngIf="place.nearestCompetitorsInMiles">
+                      {{ place.nearestCotenantsMiles.toFixed(2) }} MI
+                    </ng-container>
+                  </td>
                   <td class="d-flex">
                     <button
                       class="det-btn d-flex align-items-center"
@@ -255,15 +275,15 @@
                       </svg>
                     </button>
 
-                    <div
-                      style="cursor: pointer"
-                     
-                    >
-                    <img src="../../../assets/Images/map.png" style="height: 30px; width: 30px;margin-right: 5px;" 
-                    (click)="openMapViewPlace(MapViewPlace, place)"/>
+                    <div style="cursor: pointer">
+                      <img
+                        src="../../../assets/Images/map.png"
+                        style="height: 30px; width: 30px; margin-right: 5px"
+                        (click)="openMapViewPlace(MapViewPlace, place)"
+                      />
 
                       <svg
-                      (click)="openStreetViewPlace(StreetViewPlace, place)"
+                        (click)="openStreetViewPlace(StreetViewPlace, place)"
                         width="35"
                         height="35"
                         viewBox="0 0 56 48"
@@ -283,7 +303,7 @@
           </table>
         </div>
       </div>
-      </ng-container>
+    </ng-container>
     <!-- End Table View -->
 
     <div
@@ -294,82 +314,109 @@
       }"
     >
       <div class="row">
-        
-       <ng-container *ngIf="currentView != 2">
-        <ng-container *ngFor="let place of centerPoints">
-          <div
-            style="cursor: pointer;"
-            class="card-window"
-            [ngClass]="{
-              'col-md-4 col-sm-12': currentView == 3
-            }"
-          >
-            <div class="main-img">
-              <img
-                src="{{place.mainImage}}"
-              />
-            </div>
-
+        <ng-container *ngIf="currentView != 2">
+          <ng-container *ngFor="let place of centerPoints">
             <div
-              class="content-wrap"
-              style="background-color: #fff; border-radius: 0 0 20px 20px"
+              style="cursor: pointer"
+              class="card-window"
+              [ngClass]="{
+                'col-md-4 col-sm-12': currentView == 3
+              }"
             >
-              <div>
-                <p class="content-title">{{ place.name | titlecase }}</p>
+              <div class="main-img">
+                <img src="{{ place.mainImage }}" />
               </div>
-             
-              <div class="content-address" (click)="openMapViewPlace(MapViewPlace, place)"  >
-                <p>
-                  <svg
-                    class="me-2"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+
+              <div
+                class="content-wrap"
+                style="background-color: #fff; border-radius: 0 0 20px 20px"
+              >
+                <div>
+                  <p class="content-title">{{ place.name | titlecase }}</p>
+                </div>
+
+                <div
+                  class="content-address"
+                  (click)="openMapViewPlace(MapViewPlace, place)"
+                >
+                  <p>
+                    <svg
+                      class="me-2"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z"
+                        stroke="#817A79"
+                        stroke-width="1.5"
+                      />
+                      <path
+                        d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z"
+                        stroke="#817A79"
+                        stroke-width="1.5"
+                      />
+                    </svg>
+                    {{ place.address }}, {{ place.city | titlecase }},
+                    {{ place.state }}
+                  </p>
+                </div>
+
+                <div
+                  *ngIf="
+                    place.leasePrice != 'undefined' &&
+                    place.leasePrice != null &&
+                    place.leasePrice != 'N/A'
+                  "
+                >
+                  <p
+                    style="
+                      font-size: 15px;
+                      font-weight: 500;
+                      color: #565656;
+                      margin-block: 5px;
+                    "
                   >
-                    <path
-                      d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z"
-                      stroke="#817A79"
-                      stroke-width="1.5"
-                    />
-                    <path
-                      d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z"
-                      stroke="#817A79"
-                      stroke-width="1.5"
-                    /></svg>
-                  {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
-                </p>
-              </div>
-              
-              <div *ngIf="place.leasePrice != 'undefined' && place.leasePrice != null && place.leasePrice != 'N/A'">
-                <p  style="font-size: 15px;font-weight: 500; color: #565656;  margin-block: 5px;">Lease Price: {{ place.leasePrice }}</p>
-              </div>
-              <div *ngIf="place.minUnitSize || place.maxUnitSize">
-                <p  style="font-size: 15px;font-weight: 500; color: #565656;">Unit Size: {{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</p>
-              </div>
-              <div class="row">
-                <div
-                  class="col-6 d-flex flex-column spec"
-                  *ngIf="place.nearestCompetitors"
-                >
-                  <p class="spec-head">Nearest Competitor</p>
-                  <p class="spec-content">
-                    {{ place.nearestCompetitors.toFixed(2) }} MI
+                    Lease Price: {{ place.leasePrice }}
                   </p>
                 </div>
-
-                <div
-                  class="col-6 d-flex flex-column spec"
-                  *ngIf="place.nearestCotenants"
-                >
-                  <p class="spec-head">Nearest Complementary</p>
-                  <p class="spec-content">
-                    {{ place.nearestCotenants.toFixed(2) }} MI
+                <div *ngIf="place.minUnitSize || place.maxUnitSize">
+                  <p style="font-size: 15px; font-weight: 500; color: #565656">
+                    Unit Size:
+                    {{
+                      place.minUnitSize === place.maxUnitSize
+                        ? place.minUnitSize + " SF"
+                        : place.minUnitSize +
+                          " SF - " +
+                          place.maxUnitSize +
+                          " SF"
+                    }}
                   </p>
                 </div>
+                <div class="row">
+                  <div
+                    class="col-6 d-flex flex-column spec"
+                    *ngIf="place.nearestCompetitors"
+                  >
+                    <p class="spec-head">Nearest Competitor</p>
+                    <p class="spec-content">
+                      {{ place.nearestCompetitors.toFixed(2) }} MI
+                    </p>
+                  </div>
 
-                <!-- <div
+                  <div
+                    class="col-6 d-flex flex-column spec"
+                    *ngIf="place.nearestCotenants"
+                  >
+                    <p class="spec-head">Nearest Complementary</p>
+                    <p class="spec-content">
+                      {{ place.nearestCotenants.toFixed(2) }} MI
+                    </p>
+                  </div>
+
+                  <!-- <div
                   class="col-6 d-flex flex-column spec"
                   *ngIf="place.avalibleUnits"
                 >
@@ -378,258 +425,306 @@
                     {{ place.avalibleUnits }}
                   </p>
                 </div> -->
-              </div>
+                </div>
 
-              <div class="buttons-wrap">
-                <button class="view-details-card" (click)="goToPlace(place)">
-                  View Details
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                <div class="buttons-wrap">
+                  <button class="view-details-card" (click)="goToPlace(place)">
+                    View Details
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                        fill="#fff"
+                      />
+                      <path
+                        d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
+                        fill="#fff"
+                      />
+                      <path
+                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                        fill="#fff"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    style="cursor: pointer"
+                    (click)="openStreetViewPlace(StreetViewPlace, place)"
                   >
-                    <path
-                      d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                      fill="#fff"
-                    />
-                    <path
-                      d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
-                      fill="#fff"
-                    />
-                    <path
-                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                      fill="#fff"
-                    />
-                  </svg>
-                </button>
-                <div
-                  style="cursor: pointer"
-                  (click)="openStreetViewPlace(StreetViewPlace, place)"
-                >
-                  <svg
-                    width="56"
-                    height="48"
-                    viewBox="0 0 56 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
-                      fill="#0D0C0C"
-                    />
-                  </svg>
+                    <svg
+                      width="56"
+                      height="48"
+                      viewBox="0 0 56 48"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
+                        fill="#0D0C0C"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </ng-container>
-        <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
-          <div
-            class="card-window"
-            (mouseenter)="onMouseEnter(place)"
-            [ngClass]="{
-              'col-4': currentView == 3
-            }"
-          >
-            <div class="main-img">
-              <img src="{{ place.mainImage }}" />
-            </div>
-
+          </ng-container>
+          <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
             <div
-              class="content-wrap"
-              style="background-color: #fff; border-radius: 0 0 20px 20px  ; height: 235px;     display: flex;
-              flex-direction: column;
-              justify-content: space-between;"
-            > 
-              <div class="row">
-                <div class="col-6 d-flex flex-column spec">
-                  <p class="spec-head">Address</p>
-                  <p class="spec-content">
-                    {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
-                  </p>
-                </div>
-
-                <div class="col-6 d-flex flex-column spec" *ngIf="place.suite">
-                  <p class="spec-head">Suite</p>
-                  <p class="spec-content">{{ place.suite }}</p>
-                </div>
-
-                <div
-                  class="col-6 d-flex flex-column spec"
-                  *ngIf="place.buildingSizeSf"
-                >
-                  <p class="spec-head">Unit Size</p>
-                  <p class="spec-content">{{ place.buildingSizeSf }} SF</p>
-                </div>
-
-                <div
-                  class="col-6 d-flex flex-column spec"
-                  *ngIf="place.nearestBranchesInMiles"
-                >
-                  <p class="spec-head">Nearest Branches</p>
-                  <p class="spec-content">
-                    {{ place.nearestBranchesInMiles.toFixed(2) }} MI
-                  </p>
-                </div>
-
-                <div
-                  class="col-6 d-flex flex-column spec"
-                  *ngIf="place.nearestCompetitorsInMiles"
-                >
-                  <p class="spec-head">Nearest Competitor</p>
-                  <p class="spec-content">
-                    {{ place.nearestCompetitorsInMiles.toFixed(2) }} MI
-                  </p>
-                </div>
-
-                <div
-                  class="col-6 d-flex flex-column spec"
-                  *ngIf="place.nearestCotenantsMiles"
-                >
-                  <p class="spec-head">Nearest Co-tenant</p>
-                  <p class="spec-content">
-                    {{ place.nearestCotenantsMiles.toFixed(2) }} MI
-                  </p>
-                </div>
+              class="card-window"
+              (mouseenter)="onMouseEnter(place)"
+              [ngClass]="{
+                'col-4': currentView == 3
+              }"
+            >
+              <div class="main-img">
+                <img src="{{ place.mainImage }}" />
               </div>
 
-              <div class="buttons-wrap">
-                <button class="view-details-card" (click)="goToPlace(place)">
-                  View Details
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                      fill="#fff"
-                    />
-                    <path
-                      d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
-                      fill="#fff"
-                    />
-                    <path
-                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                      fill="#fff"
-                    />
-                  </svg>
-                </button>
-                <div
-                  style="cursor: pointer"
-                  (click)="openStreetViewPlace(StreetViewPlace, place)"
-                >
-                  <svg
-                    width="56"
-                    height="48"
-                    viewBox="0 0 56 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
-                      fill="#0D0C0C"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ng-container>
-       </ng-container>
-      <ng-container *ngIf="currentView == 2">
-        <div class="p-3"> 
-          <p style="font-weight: 500;" class="m-0">{{cardsSideList.length}} places within map area
-          </p>
-        </div>
-          <ng-container *ngFor="let place of cardsSideList; trackBy: trackByCenterName">
-          <div
-          class="card-window"
-          style="cursor: pointer;"
-          (mouseenter)="onMouseHighlight(place)"
-          (mouseleave)="onMouseLeaveHighlight(place)" 
-          [ngClass]="{
-            'col-md-4 col-sm-12': currentView == 2
-          }"
-        >
-          <div class="main-img" >
-     
-            <img *ngIf="place.mainImage"
-              src="{{place.mainImage}}"
-            />
-          </div>
-
-          <div
-            style="background-color: #fff; border-radius: 0 0 20px 20px; height: 200px; display: flex;flex-direction: column;">
-            <div *ngIf="place.centerName">
-              <p class="content-title" style="font-size: 17px;font-weight: 500; margin-bottom: 2px;">{{ place.centerName | titlecase }}</p>
-            </div>
-
-            <div class="content-address" (click)="openMapViewPlace(MapViewPlace, place)"  >
-              <p>
-                <svg
-                  class="me-2"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z"
-                    stroke="#817A79"
-                    stroke-width="1.5"
-                  />
-                  <path
-                    d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z"
-                    stroke="#817A79"
-                    stroke-width="1.5"
-                  /></svg>
-                {{ place.address }}, {{ place.city | titlecase}}, {{ place.state }}
-              </p>
-            </div>
-
-            <div *ngIf="place.leasePrice != undefined && place.leasePrice != 'undefined '  && place.leasePrice != null && place.leasePrice != 'N/A'">
-              <p  style="font-size: 15px;font-weight: 500; color: #565656;  margin-block: 5px;">Lease Price: {{ place.leasePrice }}</p>
-            </div>
-            <div *ngIf="place.minUnitSize || place.maxUnitSize">
-              <p  style="font-size: 15px;font-weight: 500; color: #565656;">Unit Size: {{ place.minUnitSize }} SF - {{place.maxUnitSize}} SF</p>
-            </div>
-           
-    
-          <div class="buttons-wrap">
-            <button class="view-details-card" (click)="goToPlace(place)">
-              View Details
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="content-wrap"
+                style="
+                  background-color: #fff;
+                  border-radius: 0 0 20px 20px;
+                  height: 235px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: space-between;
+                "
               >
-                <path
-                  d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                  fill="#fff"
-                />
-                <path
-                  d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
-                  fill="#fff"
-                />
-                <path
-                  d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                  fill="#fff"
-                />
-              </svg>
-            </button>
+                <div class="row">
+                  <div class="col-6 d-flex flex-column spec">
+                    <p class="spec-head">Address</p>
+                    <p class="spec-content">
+                      {{ place.address }}, {{ place.city | titlecase }},
+                      {{ place.state }}
+                    </p>
+                  </div>
+
+                  <div
+                    class="col-6 d-flex flex-column spec"
+                    *ngIf="place.suite"
+                  >
+                    <p class="spec-head">Suite</p>
+                    <p class="spec-content">{{ place.suite }}</p>
+                  </div>
+
+                  <div
+                    class="col-6 d-flex flex-column spec"
+                    *ngIf="place.buildingSizeSf"
+                  >
+                    <p class="spec-head">Unit Size</p>
+                    <p class="spec-content">{{ place.buildingSizeSf }} SF</p>
+                  </div>
+
+                  <div
+                    class="col-6 d-flex flex-column spec"
+                    *ngIf="place.nearestBranchesInMiles"
+                  >
+                    <p class="spec-head">Nearest Branches</p>
+                    <p class="spec-content">
+                      {{ place.nearestBranchesInMiles.toFixed(2) }} MI
+                    </p>
+                  </div>
+
+                  <div
+                    class="col-6 d-flex flex-column spec"
+                    *ngIf="place.nearestCompetitorsInMiles"
+                  >
+                    <p class="spec-head">Nearest Competitor</p>
+                    <p class="spec-content">
+                      {{ place.nearestCompetitorsInMiles.toFixed(2) }} MI
+                    </p>
+                  </div>
+
+                  <div
+                    class="col-6 d-flex flex-column spec"
+                    *ngIf="place.nearestCotenantsMiles"
+                  >
+                    <p class="spec-head">Nearest Co-tenant</p>
+                    <p class="spec-content">
+                      {{ place.nearestCotenantsMiles.toFixed(2) }} MI
+                    </p>
+                  </div>
+                </div>
+
+                <div class="buttons-wrap">
+                  <button class="view-details-card" (click)="goToPlace(place)">
+                    View Details
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                        fill="#fff"
+                      />
+                      <path
+                        d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
+                        fill="#fff"
+                      />
+                      <path
+                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                        fill="#fff"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    style="cursor: pointer"
+                    (click)="openStreetViewPlace(StreetViewPlace, place)"
+                  >
+                    <svg
+                      width="56"
+                      height="48"
+                      viewBox="0 0 56 48"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
+                        fill="#0D0C0C"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="currentView == 2">
+          <div class="p-3">
+            <p style="font-weight: 500" class="m-0">
+              {{ cardsSideList.length }} places within map area
+            </p>
           </div>
-        </div>
-         </ng-container>
-      </ng-container>
+          <ng-container
+            *ngFor="let place of cardsSideList; trackBy: trackByCenterName"
+          >
+            <div
+              class="card-window"
+              style="cursor: pointer"
+              (mouseenter)="onMouseHighlight(place)"
+              (mouseleave)="onMouseLeaveHighlight(place)"
+              [ngClass]="{
+                'col-md-4 col-sm-12': currentView == 2
+              }"
+            >
+              <div class="main-img">
+                <img *ngIf="place.mainImage" src="{{ place.mainImage }}" />
+              </div>
+
+              <div
+                style="
+                  background-color: #fff;
+                  border-radius: 0 0 20px 20px;
+                  height: 200px;
+                  display: flex;
+                  flex-direction: column;
+                "
+              >
+                <div *ngIf="place.centerName">
+                  <p
+                    class="content-title"
+                    style="
+                      font-size: 17px;
+                      font-weight: 500;
+                      margin-bottom: 2px;
+                    "
+                  >
+                    {{ place.centerName | titlecase }}
+                  </p>
+                </div>
+
+                <div
+                  class="content-address"
+                  (click)="openMapViewPlace(MapViewPlace, place)"
+                >
+                  <p>
+                    <svg
+                      class="me-2"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z"
+                        stroke="#817A79"
+                        stroke-width="1.5"
+                      />
+                      <path
+                        d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z"
+                        stroke="#817A79"
+                        stroke-width="1.5"
+                      />
+                    </svg>
+                    {{ place.address }}, {{ place.city | titlecase }},
+                    {{ place.state }}
+                  </p>
+                </div>
+
+                <div
+                  *ngIf="
+                    place.leasePrice != undefined &&
+                    place.leasePrice != 'undefined ' &&
+                    place.leasePrice != null &&
+                    place.leasePrice != 'N/A'
+                  "
+                >
+                  <p
+                    style="
+                      font-size: 15px;
+                      font-weight: 500;
+                      color: #565656;
+                      margin-block: 5px;
+                    "
+                  >
+                    Lease Price: {{ place.leasePrice }}
+                  </p>
+                </div>
+                <div *ngIf="place.minUnitSize || place.maxUnitSize">
+                  <p style="font-size: 15px; font-weight: 500; color: #565656">
+                    Unit Size: {{ place.minUnitSize === place.maxUnitSize ? place.minUnitSize + ' SF' : place.minUnitSize + ' SF - ' + place.maxUnitSize + ' SF' }}
+
+                  </p>
+                </div>
+
+                <div class="buttons-wrap">
+                  <button class="view-details-card" (click)="goToPlace(place)">
+                    View Details
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                        fill="#fff"
+                      />
+                      <path
+                        d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
+                        fill="#fff"
+                      />
+                      <path
+                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                        fill="#fff"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
 
@@ -647,7 +742,7 @@
 </div>
 
 <ng-template #MapViewPlace let-modal>
-   <div id="mappopup" style="height: 700px; " *ngIf="mapViewOnePlacex"></div>
+  <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>
