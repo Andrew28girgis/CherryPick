@@ -687,7 +687,8 @@
 .content-address {
   font-size: 15px;
   font-weight: 500;
-  color: #565656;
+  color: #0039ff !important;
+  text-decoration: underline !important; 
   margin-block: 5px;
   cursor: pointer;
 }

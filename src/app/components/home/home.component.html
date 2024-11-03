@@ -109,17 +109,16 @@
                 <tr>
                   <td>{{ place.name | titlecase }}</td>
                   <td>
-                    {{ place.address }}, {{ place.city | titlecase }},
-                    {{ place.state }}
+                    <div class="content-address"   (click)="openMapViewPlace(MapViewPlace, place)">
+                      {{ place.address }}, {{ place.city | titlecase }},
+                      {{ place.state }}
+                    </div>
                   </td>
                   <td>
-                    {{
+                     {{
                       place.minUnitSize === place.maxUnitSize
-                        ? place.minUnitSize + " SF"
-                        : place.minUnitSize +
-                          " SF - " +
-                          place.maxUnitSize +
-                          " SF"
+                        ? (place.minUnitSize | number) + ' SF'
+                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
                     }}
                   </td>
 
@@ -231,13 +230,16 @@
               <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
                 <tr>
                   <td>
-                    {{ place.address }}, {{ place.city | titlecase }},
-                    {{ place.state }}
+                    <div class="content-address"   (click)="openMapViewPlace(MapViewPlace, place)">
+                      {{ place.address }}, {{ place.city | titlecase }},
+                      {{ place.state }}
+                    </div>
+                    
                   </td>
                   <td>
                     {{ place.suite }}
                   </td>
-                  <td>{{ place.buildingSizeSf }} SF</td>
+                  <td>{{ place.buildingSizeSf |number }} SF</td>
                   <td>
                     <ng-container *ngIf="place.nearestCompetitorsInMiles">
                       <img
@@ -261,7 +263,7 @@
                       style="height: 35px; margin-right: 10px; width: 35px"
                     />  
                       {{ place.nearestCotenantsMiles.toFixed(2) }} MI
-                    </ng-container>nearestCompetitorsName
+                    </ng-container> 
                   </td>
                   <td class="d-flex">
                     <button
@@ -391,14 +393,10 @@
                 </div>
                 <div *ngIf="place.minUnitSize || place.maxUnitSize">
                   <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    Unit Size:
-                    {{
+                    Unit Size: {{
                       place.minUnitSize === place.maxUnitSize
-                        ? place.minUnitSize + " SF"
-                        : place.minUnitSize +
-                          " SF - " +
-                          place.maxUnitSize +
-                          " SF"
+                        ? (place.minUnitSize | number) + ' SF'
+                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
                     }}
                   </p>
                 </div>
@@ -706,7 +704,11 @@
                 </div>
                 <div *ngIf="place.minUnitSize || place.maxUnitSize">
                   <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    Unit Size: {{ place.minUnitSize === place.maxUnitSize ? place.minUnitSize + ' SF' : place.minUnitSize + ' SF - ' + place.maxUnitSize + ' SF' }}
+                    Unit Size: {{
+                      place.minUnitSize === place.maxUnitSize
+                        ? (place.minUnitSize | number) + ' SF'
+                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
+                    }}
                   </p>
                 </div>
 

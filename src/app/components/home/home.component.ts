@@ -135,11 +135,7 @@ export class HomeComponent implements OnInit {
       this.GetFilteredPlacesLookup();
     });
     if (history.state && history.state.city) {
-      this.allPlaces = history.state.city;
-      console.log(`ll`);
-      console.log(this.allPlaces);
-      
-      
+      this.allPlaces = history.state.city;  
       //this.getPlaces();
     } else {
       console.log('No city object found in navigation state');
@@ -738,4 +734,17 @@ export class HomeComponent implements OnInit {
     `)
     );
   }
+
+ 
+// YourComponent.ts
+getUnitSize(place: any): string {
+  const minSize = place.minUnitSize;
+  const maxSize = place.maxUnitSize;
+
+  return minSize === maxSize
+    ? `${minSize} SF`
+    : `${minSize} SF - ${maxSize} SF`;
+}
+
+
 }

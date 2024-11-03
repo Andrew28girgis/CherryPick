@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 declare const google: any;
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -103,7 +102,6 @@ export class MapsService {
 
   // Card Window Content
   private getInfoWindowContent(markerData: any, centerName?: string): string {
-
     return `
     
     <div class="info-window">
@@ -124,9 +122,7 @@ export class MapsService {
                       <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
                       <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
                     </svg>
-${markerData.address}, ${markerData.city}, ${markerData.state}</p>
-
- 
+                  ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
 
                    ${
                      markerData.leasePrice != 'undefined' &&
@@ -139,49 +135,46 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
                        : ''
                    }
 
-                       ${
+                   ${
                          markerData.minUnitSize !== markerData.maxUnitSize
                            ? `
                       <div>
-                          <p class="spec-content">Unit Size: ${markerData.minUnitSize} SF - ${markerData.maxUnitSize} SF</p>
+                          <p class="spec-content">Unit Size: ${this.formatNumber(markerData.minUnitSize)} SF - ${this.formatNumber(markerData.maxUnitSize)} SF</p>
                       </div>`
                            : `
                       <div>
-                          <p class="spec-content">Unit Size: ${markerData.minUnitSize} SF</p>
+                          <p class="spec-content">Unit Size: ${this.formatNumber(markerData.minUnitSize)} SF</p>
                       </div>`
-                       }
+                    }
+
                 <div class="row"> 
                     ${
                       markerData.nearestCompetitors
                         ? `
-                        <div class="col-md-4 col-sm-12 d-flex flex-column spec">
-                            <p class="spec-head">Nearest Competitors</p>
+                        <div class="col-md-6 col-sm-12 d-flex flex-column spec">
+                            <p class="spec-head" style="font-size:13px">Nearest Competitors</p>
                             <p class="spec-content">
                                   <img
-                      src="../../../assets/Images/Logos/${markerData.nearestCompetitorsName.toLowerCase()}.jpg"
+                      src="../../../assets/Images/Logos/${this.replaceApostrophe(markerData.nearestCompetitorsName)}.jpg"
                       title="${markerData.nearestCompetitorsName}"
                       style="height: 35px; margin-right: 10px; width: 35px"
                     />  
-                            ${markerData.nearestCompetitors.toFixed(
-                              2
-                            )} MI</p>
+                            ${markerData.nearestCompetitors.toFixed(2)} MI</p>
                         </div>`
                         : ''
                     }
                     ${
                       markerData.nearestCotenants
                         ? `
-                        <div class="col-md-4 col-sm-12 d-flex flex-column spec">
-                            <p class="spec-head">Nearest Complementary</p>
+                        <div class="col-md-6 col-sm-12 d-flex flex-column spec">
+                            <p class="spec-head" style="font-size:13px">Nearest Complementary</p>
                             <p class="spec-content">
                               <img
-                      src="../../../assets/Images/Logos/${markerData.nearestCotenantsName.toLowerCase()}.jpg"
+                      src="../../../assets/Images/Logos/${this.replaceApostrophe(markerData.nearestCotenantsName)}.jpg"
                       title="${markerData.nearestCotenantsName}" 
                       style="height: 35px; margin-right: 10px; width: 35px"
                     />   
-                            ${markerData.nearestCotenants.toFixed(
-                              2
-                            )} MI</p>
+                            ${markerData.nearestCotenants.toFixed(2)} MI</p>
                         </div>`
                         : ''
                     } 
@@ -442,4 +435,14 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
             </svg>`)
     );
   }
+
+
+  private formatNumber(value:any) {
+    return new Intl.NumberFormat('en-US').format(value);
+  }
+
+  private replaceApostrophe(name: string, replacement: string = ''): string {
+    return name.toLowerCase().replace(/'/g, replacement);
+  }
+  
 }
