@@ -300,13 +300,3 @@
   }
 }
 
-.content-address {
-  font-size: 15px;
-  font-weight: 500;
-  color: #565656;
-  margin-block: 5px;
-}
-
-.content-address:hover {
-  text-decoration: underline;
-}

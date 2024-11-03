@@ -683,3 +683,15 @@
   border-bottom: 1px solid #e4e4e4;
 }
 
+
+.content-address {
+  font-size: 15px;
+  font-weight: 500;
+  color: #565656;
+  margin-block: 5px;
+  cursor: pointer;
+}
+
+.content-address:hover {
+  text-decoration: underline;
+}

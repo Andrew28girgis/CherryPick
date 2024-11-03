@@ -23,6 +23,8 @@ export class shoppingMall{
   city!:string;
   state!:string;
   centerName !:string; 
+  nearestCotenantsName!:string;
+  nearestCompetitorsName!:string;
   leasePrice:any;
   mainImage!:string;
   heading !: number ;
@@ -101,6 +103,8 @@ export class Property {
   listingType!: string;
   forSalePrice?: any;
   forLeasePrice?: any;
+  docsLink?:string;
+  sitePlan?:string;
   leaseType!: string;
   landUse!: string;
   minHighwayDist?: any;

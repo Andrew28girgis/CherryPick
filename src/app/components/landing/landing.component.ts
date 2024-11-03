@@ -41,6 +41,7 @@ export class LandingComponent {
   BuyBoxId!: number;
   contactId!: number;
   showFirstCol = true; // Toggle to false to hide the first col-md-7
+  mapViewOnePlacex!:boolean; 
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -635,6 +636,56 @@ export class LandingComponent {
     this.General.modalObject = modalObject;
   }
 
+  
+  openMapViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    })
+
+   this.viewOnMap(modalObject.lat, modalObject.lon);
+
+
+  }
+  
+  
+ async viewOnMap(lat: number, lng: number) {
+  this.mapViewOnePlacex = true; 
+
+  if (!lat || !lng) {
+    console.error("Latitude and longitude are required to display the map.");
+    return;
+  }
+
+  // Load Google Maps API libraries
+  const { Map } = (await google.maps.importLibrary('maps')) as any;
+
+  // Find the map container element
+  const mapDiv = document.getElementById('mapInPopup') as HTMLElement;
+
+  // Check if the mapDiv exists
+  if (!mapDiv) {
+    console.error('Element with ID "mappopup" not found.');
+    return;
+  }
+ 
+  const map = new Map(mapDiv, {
+    center: { lat, lng },
+    zoom: 14,
+  });
+
+  // Create a new marker
+  const marker = new google.maps.Marker({
+    position: { lat, lng },
+    map: map,
+    title: 'Location Marker',
+  });
+}
+
+  
+  
+  
   openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',

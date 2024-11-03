@@ -156,8 +156,9 @@ export class HomeComponent implements OnInit {
   }
 
   replaceApostrophe(name: string, replacement: string = ''): string {
-    return name.replace(/'/g, replacement);
+    return name.toLowerCase().replace(/'/g, replacement);
   }
+  
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;
@@ -222,6 +223,8 @@ export class HomeComponent implements OnInit {
           shoppingCenter.leasePrice = center.leasePrice;
           shoppingCenter.minUnitSize = center.minUnitSize;
           shoppingCenter.maxUnitSize = center.maxUnitSize;
+          shoppingCenter.nearestCompetitorsName = center.nearestCompetitorsName;
+          shoppingCenter.nearestCotenantsName = center.nearestCotenantsName;
 
           this.centerPoints.push(shoppingCenter); 
         });
