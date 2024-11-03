@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 declare const google: any;
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -36,7 +37,6 @@ export class MapsService {
     });
     this.markers.push(marker);
 
-    
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type, centerName);
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
@@ -76,7 +76,7 @@ export class MapsService {
       url: this.getArrowSvgBlack(),
       scaledSize: new google.maps.Size(30, 30),
     };
-  }  
+  }
 
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Competitor') {
@@ -103,14 +103,13 @@ export class MapsService {
 
   // Card Window Content
   private getInfoWindowContent(markerData: any, centerName?: string): string {
+
     return `
     
     <div class="info-window">
          
       <div class="main-img">
-        <img src="${
-          markerData.mainImage
-        }" alt="Main Image">
+        <img src="${markerData.mainImage}" alt="Main Image">
         <span class="close-btn">&times;</span>
       </div>
 
@@ -141,12 +140,15 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
                    }
 
                        ${
-                         markerData.minUnitSize
+                         markerData.minUnitSize !== markerData.maxUnitSize
                            ? `
                       <div>
                           <p class="spec-content">Unit Size: ${markerData.minUnitSize} SF - ${markerData.maxUnitSize} SF</p>
                       </div>`
-                           : ''
+                           : `
+                      <div>
+                          <p class="spec-content">Unit Size: ${markerData.minUnitSize} SF</p>
+                      </div>`
                        }
                 <div class="row"> 
                     ${
@@ -154,7 +156,13 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
                         ? `
                         <div class="col-md-4 col-sm-12 d-flex flex-column spec">
                             <p class="spec-head">Nearest Competitors</p>
-                            <p class="spec-content">${markerData.nearestCompetitors.toFixed(
+                            <p class="spec-content">
+                                  <img
+                      src="../../../assets/Images/Logos/${markerData.nearestCompetitorsName.toLowerCase()}.jpg"
+                      title="${markerData.nearestCompetitorsName}"
+                      style="height: 35px; margin-right: 10px; width: 35px"
+                    />  
+                            ${markerData.nearestCompetitors.toFixed(
                               2
                             )} MI</p>
                         </div>`
@@ -165,7 +173,13 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
                         ? `
                         <div class="col-md-4 col-sm-12 d-flex flex-column spec">
                             <p class="spec-head">Nearest Complementary</p>
-                            <p class="spec-content">${markerData.nearestCotenants.toFixed(
+                            <p class="spec-content">
+                              <img
+                      src="../../../assets/Images/Logos/${markerData.nearestCotenantsName.toLowerCase()}.jpg"
+                      title="${markerData.nearestCotenantsName}" 
+                      style="height: 35px; margin-right: 10px; width: 35px"
+                    />   
+                            ${markerData.nearestCotenants.toFixed(
                               2
                             )} MI</p>
                         </div>`
@@ -307,7 +321,7 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
   }
   onMouseEnter(map: any, place: any): void {
     const { latitude, longitude } = place;
-  
+
     if (map && this.markers) {
       // Find the existing marker based on its latitude and longitude
       const markerIndex = this.markers.findIndex(
@@ -315,13 +329,13 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
           m.getPosition()?.lat() === +latitude &&
           m.getPosition()?.lng() === +longitude
       );
-  
+
       // If a matching marker is found, remove it from the map and the markers array
       if (markerIndex !== -1) {
         const existingMarker = this.markers[markerIndex];
         existingMarker.setMap(null); // Remove from map
         this.markers.splice(markerIndex, 1); // Remove from markers array
-  
+
         // Add a new marker with your custom icon
         const newMarker = new google.maps.Marker({
           position: { lat: +latitude, lng: +longitude },
@@ -331,46 +345,45 @@ ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
             scaledSize: new google.maps.Size(40, 40),
           },
         });
-  
+
         // Push the new marker into the markers array
         this.markers.push(newMarker);
       }
     }
   }
-  
 
-onMouseLeave(map: any, place: any): void {
-  const { latitude, longitude } = place;
+  onMouseLeave(map: any, place: any): void {
+    const { latitude, longitude } = place;
 
-  if (map && this.markers) {
-    // Find the marker created on mouse enter
-    const markerIndex = this.markers.findIndex(
-      (m: any) =>
-        m.getPosition()?.lat() === +latitude &&
-        m.getPosition()?.lng() === +longitude
-    );
+    if (map && this.markers) {
+      // Find the marker created on mouse enter
+      const markerIndex = this.markers.findIndex(
+        (m: any) =>
+          m.getPosition()?.lat() === +latitude &&
+          m.getPosition()?.lng() === +longitude
+      );
 
-    // If the marker exists, remove it and replace it with the original icon marker
-    if (markerIndex !== -1) {
-      const existingMarker = this.markers[markerIndex];
-      existingMarker.setMap(null); // Remove it from the map
-      this.markers.splice(markerIndex, 1); // Remove from markers array
+      // If the marker exists, remove it and replace it with the original icon marker
+      if (markerIndex !== -1) {
+        const existingMarker = this.markers[markerIndex];
+        existingMarker.setMap(null); // Remove it from the map
+        this.markers.splice(markerIndex, 1); // Remove from markers array
 
-      // Add a new marker with the original icon
-      const originalMarker = new google.maps.Marker({
-        position: { lat: +latitude, lng: +longitude },
-        map,
-        icon: {
-          url: this.getArrowSvg(),
-          scaledSize: new google.maps.Size(40, 40),
-        },
-      });
+        // Add a new marker with the original icon
+        const originalMarker = new google.maps.Marker({
+          position: { lat: +latitude, lng: +longitude },
+          map,
+          icon: {
+            url: this.getArrowSvg(),
+            scaledSize: new google.maps.Size(40, 40),
+          },
+        });
 
-      // Push the original marker back into the markers array
-      this.markers.push(originalMarker);
+        // Push the original marker back into the markers array
+        this.markers.push(originalMarker);
+      }
     }
   }
-}
 
   //Arrow SVG
   private getArrowSvg(): string {
