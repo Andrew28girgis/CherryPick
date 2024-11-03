@@ -136,6 +136,10 @@ export class HomeComponent implements OnInit {
     });
     if (history.state && history.state.city) {
       this.allPlaces = history.state.city;
+      console.log(`ll`);
+      console.log(this.allPlaces);
+      
+      
       //this.getPlaces();
     } else {
       console.log('No city object found in navigation state');

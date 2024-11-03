@@ -77,6 +77,8 @@ export class Property {
   state!: string;
   zip!: string;
   extras!:any;
+  nearestCompetitorsName!:string;
+  nearestCotenantsName!:string;
   reaction!:string;
   longitude!: number;
   imagesLinks!:string;
