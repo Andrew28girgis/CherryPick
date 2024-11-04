@@ -1,12 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
-import {
-  Fbo,
-  General,
-  nearsetPlaces,
-  Property,
-} from 'src/models/domain';
+import { Fbo, General, nearsetPlaces, Property } from 'src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -41,7 +36,7 @@ export class LandingComponent {
   BuyBoxId!: number;
   contactId!: number;
   showFirstCol = true; // Toggle to false to hide the first col-md-7
-  mapViewOnePlacex!:boolean; 
+  mapViewOnePlacex!: boolean;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -55,7 +50,7 @@ export class LandingComponent {
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
-   }
+  }
 
   ngOnInit(): void {
     this.initializeParams();
@@ -115,14 +110,24 @@ export class LandingComponent {
   }
 
   anotherPlaces: any[] = [];
-  getAnotherPlaces() { 
-    let centerName = this.replaceApostrophe(this.place.centerName);  
+  minBuildingSize!:number;
+  maxBuildingSize!:number;
+  getAnotherPlaces() {
+    let centerName = this.replaceApostrophe(this.place.centerName);
     this.PlacesService.GetShoppingCenterPlaces(
       this.place.centerName,
       this.placeId,
       this.BuyBoxId
     ).subscribe((res) => {
       this.anotherPlaces = res;
+
+      if(this.anotherPlaces.length > 0) {
+        const buildingSizes = this.anotherPlaces.map(
+          (place: any) => place.buildingSizeSf
+        );
+        this.minBuildingSize = Math.min(...buildingSizes);
+        this.maxBuildingSize = Math.max(...buildingSizes);  
+       } 
       
     });
   }
@@ -199,11 +204,10 @@ export class LandingComponent {
     this.spinner.show();
     this.PlacesService.GetBuyBoxOnePlace(id, this.BuyBoxId).subscribe(
       (data) => {
-        this.place = data.place; 
-        
+        this.place = data.place;
+
         localStorage.setItem('placeLat', this.place.lat.toString());
         localStorage.setItem('placeLon', this.place.lon.toString());
-        
 
         this.placeImage = this.place.imagesLinks
           ?.split(',')
@@ -306,7 +310,7 @@ export class LandingComponent {
         useArrow: boolean = false,
         type: string
       ) => {
-        let icon;    
+        let icon;
         if (useArrow && type === 'Prospect Target') {
           icon = {
             url: this.getArrowSvg(),
@@ -314,20 +318,22 @@ export class LandingComponent {
           };
         } else {
           icon = {
-            url: `../../../assets/Images/Logos/${this.replaceApostrophe(markerData.name)}.jpg`,
+            url: `../../../assets/Images/Logos/${this.replaceApostrophe(
+              markerData.name
+            )}.jpg`,
             scaledSize: new google.maps.Size(30, 30), // Adjust the size as needed
             origin: new google.maps.Point(0, 0), // Optional: Set the origin point
             anchor: new google.maps.Point(15, 15), // Optional: Set the anchor point
           };
         }
 
-        if(type === 'Competitor'){
+        if (type === 'Competitor') {
           icon = {
             url: this.getArrowSvgBlack(),
             scaledSize: new google.maps.Size(40, 40),
           };
-        } 
-          
+        }
+
         const marker = new google.maps.Marker({
           map,
           position: {
@@ -366,8 +372,8 @@ export class LandingComponent {
                         <div class="col-md-4 col-sm-12 d-flex flex-column spec">
                             <p class="spec-head">Nearest Competitors</p>
                             <p class="spec-content">${markerData.nearestCompetitorsInMiles.toFixed(
-                                2
-                              )} MI</p>
+                              2
+                            )} MI</p>
                         </div>`
                         : ''
                     }
@@ -377,8 +383,8 @@ export class LandingComponent {
                         <div class="col-md-4 col-sm-12 d-flex flex-column spec">
                             <p class="spec-head">Nearest Complementary</p>
                             <p class="spec-content">${markerData.nearestCotenantsMiles.toFixed(
-                                2
-                              )} MI</p>
+                              2
+                            )} MI</p>
                         </div>`
                         : ''
                     }
@@ -484,7 +490,7 @@ export class LandingComponent {
     `)
     );
   }
-  
+
   validatePercentageInput(event: any) {
     let inputValue = event.target.value;
     inputValue = parseFloat(inputValue.replace(/[^0-9.]/g, ''));
@@ -501,8 +507,8 @@ export class LandingComponent {
 
     if (reaction != '') {
       feedback['Reaction'] = reaction;
-    } 
-    feedback['buyboxId'] = +this.BuyBoxId; 
+    }
+    feedback['buyboxId'] = +this.BuyBoxId;
     this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
       (data) => {
         this.showAlert = true;
@@ -636,56 +642,49 @@ export class LandingComponent {
     this.General.modalObject = modalObject;
   }
 
-  
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
-    })
+    });
 
-   this.viewOnMap(modalObject.lat, modalObject.lon);
-
-
-  }
-  
-  
- async viewOnMap(lat: number, lng: number) {
-  this.mapViewOnePlacex = true; 
-
-  if (!lat || !lng) {
-    console.error("Latitude and longitude are required to display the map.");
-    return;
+    this.viewOnMap(modalObject.lat, modalObject.lon);
   }
 
-  // Load Google Maps API libraries
-  const { Map } = (await google.maps.importLibrary('maps')) as any;
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true;
 
-  // Find the map container element
-  const mapDiv = document.getElementById('mapInPopup') as HTMLElement;
+    if (!lat || !lng) {
+      console.error('Latitude and longitude are required to display the map.');
+      return;
+    }
 
-  // Check if the mapDiv exists
-  if (!mapDiv) {
-    console.error('Element with ID "mappopup" not found.');
-    return;
+    // Load Google Maps API libraries
+    const { Map } = (await google.maps.importLibrary('maps')) as any;
+
+    // Find the map container element
+    const mapDiv = document.getElementById('mapInPopup') as HTMLElement;
+
+    // Check if the mapDiv exists
+    if (!mapDiv) {
+      console.error('Element with ID "mappopup" not found.');
+      return;
+    }
+
+    const map = new Map(mapDiv, {
+      center: { lat, lng },
+      zoom: 14,
+    });
+
+    // Create a new marker
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: map,
+      title: 'Location Marker',
+    });
   }
- 
-  const map = new Map(mapDiv, {
-    center: { lat, lng },
-    zoom: 14,
-  });
 
-  // Create a new marker
-  const marker = new google.maps.Marker({
-    position: { lat, lng },
-    map: map,
-    title: 'Location Marker',
-  });
-}
-
-  
-  
-  
   openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -749,7 +748,6 @@ export class LandingComponent {
         fillOpacity: 1,
         strokeColor: 'white',
         strokeWeight: 1,
-
       },
     });
   }
@@ -757,6 +755,4 @@ export class LandingComponent {
   replaceApostrophe(name: string, replacement: string = ''): string {
     return name.replace(/'/g, replacement).toLowerCase();
   }
-
- 
 }
