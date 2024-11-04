@@ -204,6 +204,14 @@
   scrollbar-color: #c1c1c1 transparent; /* Track and thumb color */
 }
 
+.card-2{
+  background-color: #fff;
+    border-radius: 0 0 20px 20px;
+    height: 225px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
 .views {
   border-radius: 16px;
   border: 1px solid #e6e4e4;

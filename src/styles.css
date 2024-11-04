@@ -532,8 +532,8 @@
 .content-title { 
   font-size: 24px;
   font-weight: 700;
-  color: #000000; 
-  margin: 8px 0 0 0;
+  color: #000000;  
+  margin: 0;
 }
 
 @media (max-width: 768px) {

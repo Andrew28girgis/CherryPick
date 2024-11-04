@@ -335,6 +335,7 @@
     <!-- End Table View -->
 
     <div
+    style="background-color: #f4f4f4;"
       [ngClass]="{
         'd-none': currentView == 1 || currentView == 4,
         'col-md-8 col-sm-12 cards': currentView == 2,
@@ -651,12 +652,14 @@
               </div>
 
               <div
+              class="card-2"
                 style="
-                  background-color: #fff;
-                  border-radius: 0 0 20px 20px;
-                  height: 200px;
-                  display: flex;
-                  flex-direction: column;
+                background-color: #fff;
+    border-radius: 0 0 20px 20px;
+    height: 225px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
                 "
               >
                 <div *ngIf="place.centerName">
@@ -664,8 +667,7 @@
                     class="content-title"
                     style="
                       font-size: 17px;
-                      font-weight: 500;
-                      margin-bottom: 2px;
+                      font-weight: 500; 
                     "
                   >
                     {{ place.centerName | titlecase }}

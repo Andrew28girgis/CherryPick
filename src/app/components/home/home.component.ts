@@ -216,7 +216,7 @@ export class HomeComponent implements OnInit {
           shoppingCenter.streetLatitude = center.stLat;
           shoppingCenter.streetLongitude = center.stLng;
           shoppingCenter.heading = center.heading; 
-          shoppingCenter.pitch = center.pitch;  
+          shoppingCenter.pitch = center.pitch;    
                   
           shoppingCenter.nearestCompetitors = center.nearestCompetitorsInMiles;
           shoppingCenter.nearestCotenants = center.nearestCotenantsMiles;
