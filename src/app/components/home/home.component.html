@@ -685,6 +685,17 @@
                   </p>
                 </div>
 
+                <div *ngIf="place.minUnitSize || place.maxUnitSize">
+                  <p style="font-size: 15px; font-weight: 500; color: #565656">
+                    Unit Size: {{
+                      place.minUnitSize === place.maxUnitSize
+                        ? (place.minUnitSize | number) + ' SF'
+                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
+                    }}
+                  </p>
+                </div>
+
+
                 <div
                   *ngIf="
                     place.leasePrice != undefined &&
@@ -704,16 +715,7 @@
                     Lease Price: {{ place.leasePrice }}
                   </p>
                 </div>
-                <div *ngIf="place.minUnitSize || place.maxUnitSize">
-                  <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    Unit Size: {{
-                      place.minUnitSize === place.maxUnitSize
-                        ? (place.minUnitSize | number) + ' SF'
-                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
-                    }}
-                  </p>
-                </div>
-
+        
                 <div class="buttons-wrap">
                   <button class="view-details-card" (click)="goToPlace(place)">
                     View Details
