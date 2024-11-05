@@ -110,8 +110,8 @@ export class LandingComponent {
   }
 
   anotherPlaces: any[] = [];
-  minBuildingSize!:number;
-  maxBuildingSize!:number;
+  minBuildingSize!: number;
+  maxBuildingSize!: number;
   getAnotherPlaces() {
     let centerName = this.replaceApostrophe(this.place.centerName);
     this.PlacesService.GetShoppingCenterPlaces(
@@ -120,15 +120,13 @@ export class LandingComponent {
       this.BuyBoxId
     ).subscribe((res) => {
       this.anotherPlaces = res;
-
-      if(this.anotherPlaces.length > 0) {
+      if (this.anotherPlaces.length > 0) {
         const buildingSizes = this.anotherPlaces.map(
           (place: any) => place.buildingSizeSf
         );
         this.minBuildingSize = Math.min(...buildingSizes);
-        this.maxBuildingSize = Math.max(...buildingSizes);  
-       } 
-      
+        this.maxBuildingSize = Math.max(...buildingSizes);
+      }
     });
   }
 
