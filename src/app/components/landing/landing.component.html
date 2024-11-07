@@ -33,6 +33,9 @@
           <div class="row">
             <div class="col-lg-12 p-0">
               <div class="center-name">
+                <p *ngIf="!ShoppingCenter" class="m-0 procpect-name">
+                  {{ CustomPlace.Address }}, {{CustomPlace.City}}, {{CustomPlace.State}}
+                </p>
                 <p *ngIf="ShoppingCenter" class="m-0 procpect-name">
                   {{ ShoppingCenter.CenterName | titlecase }}
                 </p>
@@ -52,10 +55,7 @@
                     ></p>
                   </div>
                 </div>
-                <div
-                  class="col-md-5 col-sm-12 p-0"
-                  *ngIf="ShoppingCenter.CenterAddress"
-                >
+                <div class="col-md-5 col-sm-12 p-0" *ngIf="ShoppingCenter">
                   <div class="row details-info">
                     <div
                       class="col-sm-12 p-0"
@@ -448,7 +448,7 @@
       </section>
     </ng-container>
 
-    <div class="main-section" *ngIf="ShoppingCenter.MainImage !== ''">
+    <div class="main-section" *ngIf="ShoppingCenter">
       <p class="main-name">Gallery</p>
       <div class="row no-gutters mt-2 text-center">
         <div class="col-md-8">
@@ -504,7 +504,7 @@
           </div>
         </ng-container>
 
-        <ng-container *ngIf="anotherPlaces">
+        <ng-container *ngIf="ShoppingCenter">
           <div class="col-md-12">
             <div class="main-section another-places p-0">
               <table class="procpect-table">

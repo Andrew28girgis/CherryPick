@@ -72,6 +72,7 @@ export class LandingComponent {
     this.General = new General();
     this.place = new Property();
     this.fbo = new Fbo();
+    this.CustomPlace = new LandingPlace();
     this.showAlert = false;
   }
 
@@ -80,6 +81,7 @@ export class LandingComponent {
       Name: 'GetPlaceDetails',
       Params: {
         PlaceID: placeId,
+        buyboxid: this.BuyBoxId,
       },
     };
 
@@ -370,8 +372,8 @@ export class LandingComponent {
   async getAllMarker() {
     this.mapView = true;
     try {
-      let lat = +this.ShoppingCenter.Latitude;
-      let lon = +this.ShoppingCenter.Longitude;
+      let lat = +this.ShoppingCenter?.Latitude;
+      let lon = +this.ShoppingCenter?.Longitude;
 
       const { Map, InfoWindow } = await google.maps.importLibrary('maps');
       const map = new Map(document.getElementById('map') as HTMLElement, {
@@ -397,8 +399,8 @@ export class LandingComponent {
         const marker = new google.maps.Marker({
           map,
           position: {
-            lat: markerData.Latitude,
-            lng: markerData.Longitude,
+            lat: markerData?.Latitude,
+            lng: markerData?.Longitude,
           },
           icon: icon,
         });
@@ -628,10 +630,10 @@ export class LandingComponent {
   }
 
   viewOnStreet() {
-    let lat = this.ShoppingCenter.StreetLatitude;
-    let lng = this.ShoppingCenter.StreetLongitude;
-    let heading = this.ShoppingCenter.Heading || 165; // Default heading value
-    let pitch = this.ShoppingCenter.Pitch || 0; // Default pitch value
+    let lat = this.ShoppingCenter?.StreetLatitude;
+    let lng = this.ShoppingCenter?.StreetLongitude;
+    let heading = this.ShoppingCenter?.Heading || 165; // Default heading value
+    let pitch = this.ShoppingCenter?.Pitch || 0; // Default pitch value
     // this.updateOpacity(mapdata);
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
