@@ -27,6 +27,11 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { OrganizationsComponent } from './components/organizations/organizations.component';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
+import { KanbanComponent } from './components/kanban/kanban.component';
+import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
+import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -43,6 +48,9 @@ import { CherryExpansionComponent } from './components/cherry-expansion/cherry-e
     OrganizationsComponent,
     OrganizationDetailsComponent,
     CherryExpansionComponent,
+    KanbanComponent,
+    KanbanHomeComponent,
+    SidebarComponent, 
   ],
   imports: [
     BrowserModule,
@@ -61,6 +69,7 @@ import { CherryExpansionComponent } from './components/cherry-expansion/cherry-e
     }),
     ShareIconsModule,
     NgxPaginationModule,
+    DragDropModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

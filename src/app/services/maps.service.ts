@@ -1,120 +1,182 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BuyboxCategory } from 'src/models/buyboxCategory';
+import { Center } from 'src/models/shoppingCenters';
 declare const google: any;
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapsService {
-  private competitorMarkers: any[] = [];
-  private cotenantMarkers: any[] = [];
   storedBuyBoxId: any;
   private markers: any[] = [];
   private prosMarkers: any[] = [];
+  private markerMap: { [key: string]: any[] } = {};
 
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
   }
 
   //Create Markers
-  createMarker(
-    map: any,
-    markerData: any,
-    color: string,
-    type: string,
-    useArrow: boolean = false,
-    centerName?: string
-  ): any {
-    let icon = this.getMarkerIcon(markerData, color, useArrow, type);
+  createMarker(map: any, markerData: any, type: string): any {
+    let icon = this.getArrowSvg();
     const marker = new google.maps.Marker({
       map,
       position: {
-        lat: Number(markerData.latitude),
-        lng: Number(markerData.longitude),
+        lat: Number(markerData.Latitude),
+        lng: Number(markerData.Longitude),
       },
       icon: icon,
     });
     this.markers.push(marker);
 
     this.assignToMarkerArray(marker, type);
-    const infoWindow = this.createInfoWindow(markerData, type, centerName);
+    const infoWindow = this.createInfoWindow(markerData, type);
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
-    this.addMarkerEventListeners(marker, map, infoWindow, markerData);
     this.closeIconListeners(marker, map, infoWindow, markerData);
+    this.addMarkerEventListeners(marker, map, infoWindow, markerData);
 
     return marker;
   }
 
-  // Icons Style
-  private getMarkerIcon(
-    markerData: any,
-    color: string,
-    useArrow: boolean,
-    type: string
-  ): any {
-    if (type === 'Co-Tenant' && markerData.name === 'Chipotle Mexican Grill') {
-      return {
-        url: 'https://seeklogo.com/images/C/chipotle-mexican-grill-logo-35771EBEA4-seeklogo.com.png',
-        scaledSize: new google.maps.Size(28, 28),
-      };
-    } else if (type === 'Co-Tenant' && markerData.name == 'Five Guys') {
-      return {
-        url: 'https://wl3-cdn.landsec.com/sites/default/files/images/shops/logos/five_guys.jpg',
-        scaledSize: new google.maps.Size(28, 28),
-      };
+  createCustomMarker(map: any, markerData: BuyboxCategory): void {
+    // Clear existing markers from the markerMap object for this ID if they already exist
+    if (!this.markerMap[markerData.id]) {
+      this.markerMap[markerData.id] = [];
     }
 
-    if (useArrow) {
-      return {
-        url: this.getArrowSvg(),
-        scaledSize: new google.maps.Size(40, 40),
-      };
+    // If markers already exist for this category, we do not need to recreate them
+    if (this.markerMap[markerData.id].length > 0) {
+      return;
     }
 
-    return {
-      url: this.getArrowSvgBlack(),
-      scaledSize: new google.maps.Size(30, 30),
-    };
+    markerData.places.forEach((place) => {
+      // Construct image URL based on place ID
+      const imgUrl = `https://files.cherrypick.com/logos/${place.Id}.png`;
+
+      place.BuyBoxPlaces.forEach((branch) => {
+        const latitude = Number(branch.Latitude);
+        const longitude = Number(branch.Longitude);
+
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+          const marker = new google.maps.Marker({
+            position: {
+              lat: latitude,
+              lng: longitude,
+            },
+            icon: {
+              url: imgUrl,
+              scaledSize: new google.maps.Size(30, 30), // Adjust size as needed
+            },
+            map: map, // Attach the marker to the map
+          });
+
+          // Create an InfoWindow instance with close button
+          const closeButtonId = `close-button-${branch.Id}`;
+          const infoWindowContent = `
+                    <div style="padding:0 10px">
+                        <div style="display: flex; justify-content: end">
+                            <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
+                                &times;
+                            </button>
+                        </div>
+                        <div>
+                            <p style="font-size: 19px; font-weight: 500;">${place.Name}</p>
+                        </div>
+                    </div>`;
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent,
+          });
+
+          // Add a click listener to the marker to show the InfoWindow
+          marker.addListener('click', () => {
+            // Close any previously opened InfoWindow (if needed)
+            infoWindow.close();
+            // Open the InfoWindow at the marker's position
+            infoWindow.setPosition(marker.getPosition());
+            infoWindow.open(map);
+
+            // Call the function to attach close button listener
+            this.closeIconListener(infoWindow, closeButtonId);
+          });
+
+          // Store the marker in the marker map
+          this.markerMap[markerData.id].push(marker);
+        }
+      });
+    });
+
+    // Call toggleMarkers when drawing markers
+    this.toggleMarkers(map, markerData);
   }
 
+  // Function to handle close button click events
+  closeIconListener(infoWindow: any, buttonId: string): void {
+    // Use a timeout to ensure the InfoWindow content is rendered before accessing the button
+    setTimeout(() => {
+      const closeButton = document.getElementById(buttonId);
+      if (closeButton) {
+        closeButton.onclick = () => {
+          infoWindow.close();
+        };
+      }
+    }, 0);
+  }
+
+  toggleMarkers(map: any, markerData: any): void {
+    if (markerData.isChecked) {
+      this.showMarkers(map, markerData.id);
+    } else {
+      this.hideMarkers(markerData.id);
+    }
+  }
+
+  showMarkers(map: any, id: number): void {
+    if (this.markerMap[id]) {
+      this.markerMap[id].forEach((marker) => {
+        marker.setMap(map);
+      });
+    }
+  }
+
+  hideMarkers(id: string): void {
+    if (this.markerMap[id]) {
+      this.markerMap[id].forEach((marker) => {
+        marker.setMap(null);
+      });
+    }
+  }
   private assignToMarkerArray(marker: any, type: string): void {
-    if (type === 'Competitor') {
-      this.competitorMarkers.push(marker);
-    } else if (type === 'Co-Tenant') {
-      this.cotenantMarkers.push(marker);
-    } else if (type === 'Prospect Target') {
+    if (type === 'Shopping Center' || type === 'Stand Alone') {
       this.prosMarkers.push(marker);
     }
   }
 
   // Create Card Window
-  private createInfoWindow(
-    markerData: any,
-    type: string,
-    centerName?: string
-  ): any {
+  private createInfoWindow(markerData: any, type: string): any {
     let content =
-      type === 'Prospect Target'
-        ? this.getInfoWindowContent(markerData, centerName)
-        : this.getInfoWindowContentCompetitors(markerData, centerName);
+      type === 'Shopping Center'
+        ? this.shoopingCenterPopup(markerData)
+        : this.standAlonerPopup(markerData);
     return new google.maps.InfoWindow({ content });
   }
 
   // Card Window Content
-  private getInfoWindowContent(markerData: any, centerName?: string): string {
+  private shoopingCenterPopup(markerData: any): string {
     return `
     
     <div class="info-window">
          
       <div class="main-img">
-        <img src="${markerData.mainImage}" alt="Main Image">
+        <img src="${markerData.MainImage}" alt="Main Image">
         <span class="close-btn">&times;</span>
       </div>
 
        <div class="content-wrap"> 
                 ${
-                  markerData.name
-                    ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
+                  markerData.CenterName
+                    ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
                     : ''
                 }
                     <p class="address-content">
@@ -122,66 +184,17 @@ export class MapsService {
                       <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
                       <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
                     </svg>
-                  ${markerData.address}, ${markerData.city}, ${markerData.state}</p>
+                  ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+      markerData.CenterState
+    }
+                  </p>
+                <p class="address-content">
+                   ${this.getShoppingCenterUnitSize(markerData)}
+                </p> 
 
-                   ${
-                     markerData.leasePrice != 'undefined' &&
-                     markerData.leasePrice != null &&
-                     markerData.leasePrice != 'N/A'
-                       ? `
-                      <div>
-                          <p class="spec-content">Lease Price: ${markerData.leasePrice}</p>
-                      </div>`
-                       : ''
-                   }
-
-                   ${
-                         markerData.minUnitSize !== markerData.maxUnitSize
-                           ? `
-                      <div>
-                          <p class="spec-content">Unit Size: ${this.formatNumber(markerData.minUnitSize)} SF - ${this.formatNumber(markerData.maxUnitSize)} SF</p>
-                      </div>`
-                           : `
-                      <div>
-                          <p class="spec-content">Unit Size: ${this.formatNumber(markerData.minUnitSize)} SF</p>
-                      </div>`
-                    }
-
-                <div class="row"> 
-                    ${
-                      markerData.nearestCompetitors
-                        ? `
-                        <div class="col-md-6 col-sm-12 d-flex flex-column spec">
-                            <p class="spec-head" style="font-size:13px">Nearest Competitors</p>
-                            <p class="spec-content">
-                                  <img
-                      src="../../../assets/Images/Logos/${this.replaceApostrophe(markerData.nearestCompetitorsName)}.jpg"
-                      title="${markerData.nearestCompetitorsName}"
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />  
-                            ${markerData.nearestCompetitors.toFixed(2)} MI</p>
-                        </div>`
-                        : ''
-                    }
-                    ${
-                      markerData.nearestCotenants
-                        ? `
-                        <div class="col-md-6 col-sm-12 d-flex flex-column spec">
-                            <p class="spec-head" style="font-size:13px">Nearest Complementary</p>
-                            <p class="spec-content">
-                              <img
-                      src="../../../assets/Images/Logos/${this.replaceApostrophe(markerData.nearestCotenantsName)}.jpg"
-                      title="${markerData.nearestCotenantsName}" 
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />   
-                            ${markerData.nearestCotenants.toFixed(2)} MI</p>
-                        </div>`
-                        : ''
-                    } 
-                </div>
                 <div class="buttons-wrap">
                     <button id="view-details-${
-                      markerData.id
+                      markerData.Id
                     }" class="view-details-card">View Details
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
@@ -194,24 +207,25 @@ export class MapsService {
         </div>`;
   }
 
-  private getInfoWindowContentCompetitors(
-    markerData: any,
-    centerName?: string
-  ): string {
+  private standAlonerPopup(markerData: any): string {
     return `  
-    <div class="py-2">
-    
-    <span class="close-btn">&times;</span>
+      <div class="info-window">
+         
+      <div class="main-img">
+        <img src="${markerData.MainImage}" alt="Main Image">
+        <span class="close-btn">&times;</span>
+      </div
+ 
+      <p class="address-content"> 
+        Address: ${markerData.Address}, ${markerData.City}, ${markerData.State}
+      </p>
+
+      <p class="address-content"> 
+        Unit Size: ${markerData.BuildingSizeSf} SF
+      </p>
+
     </div>
-    <div>
-      <div class="p-3"> 
-        ${
-          markerData.name
-            ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
-            : ''
-        }
-      </div>
-    </div>`;
+    `;
   }
 
   // Click View Details
@@ -279,27 +293,6 @@ export class MapsService {
     });
   }
 
-  //Toggle show and hide markers
-  toggleMarkers(type: string, show: boolean, map: any) {
-    let markers: any[] = [];
-    switch (type) {
-      case 'Competitor':
-        markers = this.competitorMarkers;
-        break;
-      case 'Co-Tenant':
-        markers = this.cotenantMarkers;
-        break;
-
-      default:
-        console.error('Invalid marker type specified');
-        return;
-    }
-
-    markers.forEach((marker) => {
-      marker.setMap(show ? map : null);
-    });
-  }
-
   //Get Marker Icons
   getVisibleProspectMarkers(bounds: any) {
     return this.prosMarkers
@@ -312,6 +305,7 @@ export class MapsService {
         };
       });
   }
+
   onMouseEnter(map: any, place: any): void {
     const { latitude, longitude } = place;
 
@@ -436,13 +430,53 @@ export class MapsService {
     );
   }
 
-
-  private formatNumber(value:any) {
+  private formatNumber(value: any) {
     return new Intl.NumberFormat('en-US').format(value);
   }
 
-  private replaceApostrophe(name: string, replacement: string = ''): string {
-    return name.toLowerCase().replace(/'/g, replacement);
+  getShoppingCenterUnitSize(shoppingCenter: Center): any {
+    if (shoppingCenter.ShoppingCenter) {
+      const places = shoppingCenter.ShoppingCenter.Places;
+
+      if (places.length > 0) {
+        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+        const leasePrices = places.map(
+          (place: any) => place.forLeasePrice || null
+        );
+
+        let minSize = Math.min(...buildingSizes);
+        let maxSize = Math.max(...buildingSizes);
+
+        let minPrice = null;
+        let maxPrice = null;
+
+        // Find lease prices corresponding to min and max sizes
+        for (let place of places) {
+          if (place.BuildingSizeSf === minSize) {
+            minPrice = place.ForLeasePrice;
+          }
+          if (place.BuildingSizeSf === maxSize) {
+            maxPrice = place.ForLeasePrice;
+          }
+        }
+
+        if (minSize === maxSize) {
+          return minPrice
+            ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
+            : `Unit Size: ${minSize} SF`;
+        }
+
+        let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
+
+        if (minPrice || maxPrice) {
+          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
+            maxPrice ? maxPrice : 'N/A'
+          }`;
+        }
+
+        return sizeRange;
+      }
+    }
+    return null;
   }
-  
 }

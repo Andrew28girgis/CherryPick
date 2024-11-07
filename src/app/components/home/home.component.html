@@ -18,7 +18,22 @@
         class="d-flex flex-row align-items-center py-2"
         *ngIf="currentView == 1 || currentView == 2"
       >
-        <div class="d-flex mx-2 competitor">
+        <ng-container *ngFor="let category of buyboxCategories">
+          <div class="d-flex mx-2 competitor">
+            <input
+              type="checkbox"
+              id="{{ category.id }}"
+              [(ngModel)]="category.isChecked"
+              (change)="onCheckboxChange(category)"
+              class="me-2"
+            />
+            <label class="p-0 m-0" [for]="category.id" style="cursor: pointer">
+              {{ category.name }}
+            </label>
+          </div>
+        </ng-container>
+
+        <!-- <div class="d-flex mx-2 competitor">
           <input
             id="Competitors"
             type="checkbox"
@@ -43,7 +58,7 @@
           <label class="p-0 m-0" for="Complementary" style="cursor: pointer"
             >Complementary Tenants</label
           >
-        </div>
+        </div> -->
       </div>
       <div class="custom-select-container">
         <div class="custom-dropdown">
@@ -91,65 +106,71 @@
     <!-- Start Table View -->
     <ng-container *ngIf="currentView == 4">
       <div class="container" style="padding: 35px">
-        <div style="overflow-x: auto" *ngIf="centerPoints.length > 0">
+        <div style="overflow-x: auto" *ngIf="shoppingCenters.length > 0">
           <table class="procpect-table">
             <thead class="procpect-table-head">
               <tr>
                 <th>Name</th>
                 <th>Address</th>
-                <th style="width: 190px">Unit Size</th>
-                <th>Lease Price</th>
-                <th>Nearest Competitor</th>
-                <th>Nearest Complementary</th>
+                <th style="width: 250px">Unit Size & Lease Price</th>
+                <ng-container
+                  *ngFor="
+                    let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces
+                  "
+                >
+                  <th>
+                    Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                  </th>
+                </ng-container>
                 <th></th>
               </tr>
             </thead>
             <tbody class="procpect-table-body">
-              <ng-container *ngFor="let place of centerPoints">
+              <ng-container *ngFor="let shoppingCenter of shoppingCenters">
                 <tr>
-                  <td>{{ place.name | titlecase }}</td>
+                  <td>{{ shoppingCenter.CenterName | titlecase }}</td>
                   <td>
-                    <div class="content-address"   (click)="openMapViewPlace(MapViewPlace, place)">
-                      {{ place.address }}, {{ place.city | titlecase }},
-                      {{ place.state }}
+                    <div
+                      class="content-address"
+                      (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                    >
+                      {{ shoppingCenter.CenterAddress }},
+                      {{ shoppingCenter.CenterCity | titlecase }},
+                      {{ shoppingCenter.CenterState }}
                     </div>
                   </td>
-                  <td>
-                     {{
-                      place.minUnitSize === place.maxUnitSize
-                        ? (place.minUnitSize | number) + ' SF'
-                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
-                    }}
-                  </td>
-
-                  <td>{{ place.leasePrice }}</td>
-                  <td>
-                    <ng-container *ngIf="place.nearestCompetitors">
+                  <td [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"> </td>
+                  <ng-container
+                    *ngFor="
+                      let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces
+                    "
+                  >
+                    <td>
                       <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCompetitorsName)
-                      }}.jpg"
-                      title="{{place.nearestCompetitorsName}}"
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />   {{ place.nearestCompetitors.toFixed(2) }} MI
+                      class="logo"
+                        src="https://files.cherrypick.com/logos/{{item.BuyBoxPlaceId}}.png"
+                        title="{{ item.BuyBoxPlaceName }}"
+                        alt=""
+                      />
+                      {{ item.Distance.toFixed() }} MI
+                    </td>
+                  </ng-container>
+                  <td></td>
+                  <!-- <td>
+                    <ng-container *ngIf="shoppingCenter.nearestCompetitors">
+                    {{ place.nearestCompetitors.toFixed(2) }} MI
                     </ng-container>
                   </td>
                   <td>
                     <ng-container *ngIf="place.nearestCotenants"
-                      >    <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCotenantsName)
-                      }}.jpg"
-                      title="{{place.nearestCotenantsName}}" 
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />{{ place.nearestCotenants.toFixed(2) }} MI
+                      >   {{ place.nearestCotenants.toFixed(2) }} MI
                     </ng-container>
-                  </td>
+                  </td> -->
                   <td>
                     <div class="d-flex">
                       <button
                         class="det-btn d-flex align-items-center"
-                        (click)="goToPlace(place)"
+                        (click)="goToPlace(shoppingCenter)"
                       >
                         <span style="text-wrap: nowrap">View Details</span>
                         <svg
@@ -188,10 +209,14 @@
                         <img
                           src="../../../assets/Images/map.png"
                           style="height: 30px; width: 30px; margin-right: 5px"
-                          (click)="openMapViewPlace(MapViewPlace, place)"
+                          (click)="
+                            openMapViewPlace(MapViewPlace, shoppingCenter)
+                          "
                         />
                         <svg
-                          (click)="openStreetViewPlace(StreetViewPlace, place)"
+                          (click)="
+                            openStreetViewPlace(StreetViewPlace, shoppingCenter)
+                          "
                           width="35"
                           height="35"
                           viewBox="0 0 56 48"
@@ -211,60 +236,32 @@
             </tbody>
           </table>
         </div>
-        <div
-          style="overflow-x: auto"
-          *ngIf="allPlaces.standAlonePlaces.length > 0"
-        >
+        <div style="overflow-x: auto" *ngIf="standAlone.length > 0">
           <table class="procpect-table mt-4">
             <thead class="procpect-table-head">
               <tr>
                 <th>Address</th>
                 <th>Suite</th>
                 <th>Unit Size</th>
-                <th>Nearest Competitor</th>
-                <th>Nearest Complementary</th>
                 <th></th>
               </tr>
             </thead>
             <tbody class="procpect-table-body">
-              <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
+              <ng-container *ngFor="let place of standAlone">
                 <tr>
                   <td>
-                    <div class="content-address"   (click)="openMapViewPlace(MapViewPlace, place)">
-                      {{ place.address }}, {{ place.city | titlecase }},
-                      {{ place.state }}
+                    <div
+                      class="content-address"
+                      (click)="openMapViewPlace(MapViewPlace, place)"
+                    >
+                      {{ place.Address }}, {{ place.City | titlecase }},
+                      {{ place.State }}
                     </div>
-                    
                   </td>
                   <td>
-                    {{ place.suite }}
+                    {{ place.Suite }}
                   </td>
-                  <td>{{ place.buildingSizeSf |number }} SF</td>
-                  <td>
-                    <ng-container *ngIf="place.nearestCompetitorsInMiles">
-                      <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCompetitorsName)
-                      }}.jpg"
-                      title="{{place.nearestCompetitorsName}}"
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />  
-                      {{ place.nearestCompetitorsInMiles.toFixed(2) }} MI
-                    </ng-container>
-                  </td>
-
-                  <td>
-                    <ng-container *ngIf="place.nearestCompetitorsInMiles">
-                      <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCotenantsName)
-                      }}.jpg"
-                      title="{{place.nearestCotenantsName}}"
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />  
-                      {{ place.nearestCotenantsMiles.toFixed(2) }} MI
-                    </ng-container> 
-                  </td>
+                  <td>{{ place.BuildingSizeSf | number }} SF</td> 
                   <td class="d-flex">
                     <button
                       class="det-btn d-flex align-items-center"
@@ -335,7 +332,7 @@
     <!-- End Table View -->
 
     <div
-    style="background-color: #f4f4f4;"
+      style="background-color: #f4f4f4"
       [ngClass]="{
         'd-none': currentView == 1 || currentView == 4,
         'col-md-8 col-sm-12 cards': currentView == 2,
@@ -344,7 +341,7 @@
     >
       <div class="row">
         <ng-container *ngIf="currentView != 2">
-          <ng-container *ngFor="let place of centerPoints">
+          <ng-container *ngFor="let shopping of shoppingCenters">
             <div
               style="cursor: pointer"
               class="card-window"
@@ -353,101 +350,62 @@
               }"
             >
               <div class="main-img">
-                <img src="{{ place.mainImage }}" />
+                <img src="{{ shopping.MainImage }}" />
               </div>
 
               <div
                 class="content-wrap"
-                style="background-color: #fff; border-radius: 0 0 20px 20px ;  height:300px ;    display: flex;
-    flex-direction: column;"
+                style="
+                  background-color: #fff;
+                  border-radius: 0 0 20px 20px;
+                  height: 300px;
+                  display: flex;
+                  flex-direction: column;
+                "
               >
                 <div>
-                  <p class="content-title">{{ place.name | titlecase }}</p>
+                  <p class="content-title">
+                    {{ shopping.CenterName | titlecase }}
+                  </p>
                 </div>
 
                 <div
                   class="content-address"
-                  (click)="openMapViewPlace(MapViewPlace, place)"
+                  (click)="openMapViewPlace(MapViewPlace, shopping)"
                 >
                   <p>
-                    {{ place.address }}, {{ place.city | titlecase }},
-                    {{ place.state }}
+                    {{ shopping.CenterAddress }},
+                    {{ shopping.CenterCity | titlecase }},
+                    {{ shopping.CenterState }}
                   </p>
-                </div>
-
-                <div
-                  *ngIf="
-                    place.leasePrice != 'undefined' &&
-                    place.leasePrice != null &&
-                    place.leasePrice != 'N/A'
-                  "
-                >
-                  <p
-                    style="
-                      font-size: 15px;
-                      font-weight: 500;
-                      color: #565656;
-                      margin-block: 5px;
-                    "
-                  >
-                    Lease Price: {{ place.leasePrice }}
-                  </p>
-                </div>
-                <div *ngIf="place.minUnitSize || place.maxUnitSize">
-                  <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    Unit Size: {{
-                      place.minUnitSize === place.maxUnitSize
-                        ? (place.minUnitSize | number) + ' SF'
-                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
-                    }}
+                </div> 
+                <div>
+                  <p style="font-size: 15px; font-weight: 500; color: #565656" [innerHTML]="getShoppingCenterUnitSize(shopping)"> 
                   </p>
                 </div>
                 <div class="row">
                   <div
+                    *ngFor="let item of shopping.ShoppingCenter.BuyBoxPlaces"
                     class="col-6 d-flex flex-column spec"
-                    *ngIf="place.nearestCompetitors"
                   >
-                    <p class="spec-head">Nearest Competitor</p>
-                    <p class="spec-content">
-                      <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCompetitorsName)
-                      }}.jpg"
-                      title="{{place.nearestCompetitorsName}}"
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />  {{ place.nearestCompetitors.toFixed(2) }} MI
+                    <p class="spec-head">
+                      Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                     </p>
-                  </div>
-
-                  <div
-                    class="col-6 d-flex flex-column spec"
-                    *ngIf="place.nearestCotenants"
-                  >
-                    <p class="spec-head">Nearest Complementary</p>
-                    <p class="spec-content">
-                      <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCotenantsName)
-                      }}.jpg"
-                      title="{{place.nearestCotenantsName}}" 
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />    {{ place.nearestCotenants.toFixed(2) }} MI
-                    </p>
-                  </div>
-
-                  <!-- <div
-                  class="col-6 d-flex flex-column spec"
-                  *ngIf="place.avalibleUnits"
-                >
-                  <p class="spec-head">Available Units</p>
-                  <p class="spec-content">
-                    {{ place.avalibleUnits }}
-                  </p>
-                </div> -->
+                    <p class="spec-content">   <img
+                      class="logo"
+                        src="https://files.cherrypick.com/logos/{{ item.BuyBoxPlaceId
+                        }}.png"
+                        title="{{ item.BuyBoxPlaceName }}"
+                        alt=""
+                      /> <span class="ms-2">{{ item.Distance.toFixed() }} MI </span></p>
+                  </div> 
                 </div>
 
                 <div class="buttons-wrap">
-                  <button class="view-details-card" (click)="goToPlace(place)">
+                  <button
+                    class="view-details-card"
+                    (click)="goToPlace(shopping)"
+                  >
                     View Details
                     <svg
                       width="20"
@@ -472,7 +430,7 @@
                   </button>
                   <div
                     style="cursor: pointer"
-                    (click)="openStreetViewPlace(StreetViewPlace, place)"
+                    (click)="openStreetViewPlace(StreetViewPlace, shopping)"
                   >
                     <svg
                       width="56"
@@ -491,7 +449,7 @@
               </div>
             </div>
           </ng-container>
-          <ng-container *ngFor="let place of allPlaces.standAlonePlaces">
+          <ng-container *ngFor="let place of standAlone">
             <div
               class="card-window"
               (mouseenter)="onMouseEnter(place)"
@@ -500,7 +458,7 @@
               }"
             >
               <div class="main-img">
-                <img src="{{ place.mainImage }}" />
+                <img src="{{ place.MainImage }}" />
               </div>
 
               <div
@@ -518,74 +476,30 @@
                   <div class="col-6 d-flex flex-column spec">
                     <p class="spec-head">Address</p>
                     <p class="spec-content">
-                      {{ place.address }}, {{ place.city | titlecase }},
-                      {{ place.state }}
+                      {{ place.Address }}, {{ place.City | titlecase }},
+                      {{ place.State }}
                     </p>
                   </div>
 
                   <div
                     class="col-6 d-flex flex-column spec"
-                    *ngIf="place.suite"
+                    *ngIf="place.Suite"
                   >
                     <p class="spec-head">Suite</p>
-                    <p class="spec-content">{{ place.suite }}</p>
+                    <p class="spec-content">{{ place.Suite }}</p>
                   </div>
 
                   <div
                     class="col-6 d-flex flex-column spec"
-                    *ngIf="place.buildingSizeSf"
+                    *ngIf="place.BuildingSizeSf"
                   >
                     <p class="spec-head">Unit Size</p>
-                    <p class="spec-content">{{ place.buildingSizeSf }} SF</p>
-                  </div>
-
-                  <div
-                    class="col-6 d-flex flex-column spec"
-                    *ngIf="place.nearestBranchesInMiles"
-                  >
-                    <p class="spec-head">Nearest Branches</p>
-                    <p class="spec-content">
-                      {{ place.nearestBranchesInMiles.toFixed(2) }} MI
-                    </p>
-                  </div>
-
-                  <div
-                    class="col-6 d-flex flex-column spec"
-                    *ngIf="place.nearestCompetitorsInMiles"
-                  >
-                    <p class="spec-head">Nearest Competitor</p>
-                    <p class="spec-content">
-                      <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCompetitorsName)
-                      }}.jpg"
-                      title="{{place.nearestCompetitorsName}}"
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    /> 
-                      {{ place.nearestCompetitorsInMiles.toFixed(2) }} MI
-                    </p>
-                  </div>
-
-                  <div
-                    class="col-6 d-flex flex-column spec"
-                    *ngIf="place.nearestCotenantsMiles"
-                  >
-                    <p class="spec-head">Nearest Complementary</p>
-                    <p class="spec-content">
-                      <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.nearestCotenantsName)
-                      }}.jpg"
-                      title="{{place.nearestCotenantsName}}" 
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    /> 
-                      {{ place.nearestCotenantsMiles.toFixed(2) }} MI
-                    </p>
-                  </div>
+                    <p class="spec-content">{{ place.BuildingSizeSf }} SF</p>
+                  </div> 
                 </div>
 
                 <div class="buttons-wrap">
-                  <button class="view-details-card" (click)="goToPlace(place)">
+                  <button class="view-details-card" (click)="goToPlace(place )">
                     View Details
                     <svg
                       width="20"
@@ -636,9 +550,7 @@
               {{ cardsSideList.length }} places within map area
             </p>
           </div>
-          <ng-container
-            *ngFor="let place of cardsSideList; trackBy: trackByCenterName"
-          >
+          <ng-container *ngFor="let place of cardsSideList">
             <div
               class="card-window"
               style="cursor: pointer"
@@ -649,74 +561,55 @@
               }"
             >
               <div class="main-img">
-                <img *ngIf="place.mainImage" src="{{ place.mainImage }}" />
+                <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
               </div>
 
               <div
-              class="card-2"
+                class="card-2"
                 style="
-                background-color: #fff;
-    border-radius: 0 0 20px 20px;
-    height: 225px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+                  background-color: #fff;
+                  border-radius: 0 0 20px 20px;
+                  height: 225px;
+                  display: flex;
+                  flex-direction: column;
+                  padding: 15px;
                 "
               >
-                <div *ngIf="place.centerName">
+                <div *ngIf="place.CenterName">
                   <p
                     class="content-title"
-                    style="
-                      font-size: 17px;
-                      font-weight: 500; 
-                    "
+                    style="font-size: 17px; font-weight: 500"
                   >
-                    {{ place.centerName | titlecase }}
+                    {{ place.CenterName | titlecase }}
                   </p>
                 </div>
 
                 <div
+                  *ngIf="place.CenterAddress"
                   class="content-address"
                   (click)="openMapViewPlace(MapViewPlace, place)"
                 >
                   <p>
-                 
-                    {{ place.address }}, {{ place.city | titlecase }},
-                    {{ place.state }}
+                    {{ place.CenterAddress }},
+                    {{ place.CenterCity | titlecase }},
+                    {{ place.CenterState }}
                   </p>
                 </div>
-
-                <div *ngIf="place.minUnitSize || place.maxUnitSize">
-                  <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    Unit Size: {{
-                      place.minUnitSize === place.maxUnitSize
-                        ? (place.minUnitSize | number) + ' SF'
-                        : (place.minUnitSize | number) + ' SF - ' + (place.maxUnitSize | number) + ' SF'
-                    }}
-                  </p>
-                </div>
-
 
                 <div
-                  *ngIf="
-                    place.leasePrice != undefined &&
-                    place.leasePrice != 'undefined ' &&
-                    place.leasePrice != null &&
-                    place.leasePrice != 'N/A'
-                  "
+                  *ngIf="place.Address"
+                  class="content-address"
+                  (click)="openMapViewPlace(MapViewPlace, place)"
                 >
-                  <p
-                    style="
-                      font-size: 15px;
-                      font-weight: 500;
-                      color: #565656;
-                      margin-block: 5px;
-                    "
-                  >
-                    Lease Price: {{ place.leasePrice }}
+                  <p>
+                    {{ place.Address }}, {{ place.City | titlecase }},
+                    {{ place.State }}
                   </p>
                 </div>
-        
+
+                <div>
+                  <p style="font-size: 15px; font-weight: 500; color: #565656" [innerHTML]="getShoppingCenterUnitSize(place)"></p>
+                </div>
                 <div class="buttons-wrap">
                   <button class="view-details-card" (click)="goToPlace(place)">
                     View Details

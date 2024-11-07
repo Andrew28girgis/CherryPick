@@ -8,6 +8,8 @@ import { UserBuyboxComponent } from './components/user-buybox/user-buybox.compon
 import { AuthGuardService } from './services/auth-guard.service';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
+import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component'; 
+import { KanbanComponent } from './components/kanban/kanban.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, canActivate: [AuthGuardService] },
@@ -33,6 +35,7 @@ const routes: Routes = [
   { path: 'landing/:id/:buyboxid', component: LandingComponent },
   { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
+  { path: 'Kanban', component: KanbanComponent },
 ];
 
 @NgModule({

@@ -1,0 +1,74 @@
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="sidebar" [ngClass]="{ 'sidebar-collapse': collapse }">
+      <div class="sidebar-header">
+        <ng-container *ngIf="!collapse else other_content"> 
+        <div class="header-title">Kanban</div> 
+        <svg (click)="changeCollapse()"
+        xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/><path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z"/></svg>
+      </ng-container>
+      <ng-template #other_content>  
+        <i
+          class="fa-solid fa-angle-right header-btn"
+          (click)="changeCollapse()"
+        ></i>
+        </ng-template> 
+        
+      </div>
+      <ul class="sidebar-items">
+        <li
+          *ngFor="let item of sidebarItems"
+          class="sidebar-item"
+          [routerLink]="[item.route]"
+          routerLinkActive="active"
+        >
+          <a class="item-link">
+            <span class="item-title" *ngIf="!collapse">{{ item.title }}</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="sidebar-items logout-item">
+        <li
+          class="sidebar-item logout-btn"
+          routerLinkActive="active"
+          (click)="logout()"
+        >
+          <div class="item-link">
+            <i class="fa-solid fa-arrow-right-from-bracket item-icon"></i>
+            <span class="item-title" *ngIf="!collapse">Logout</span>
+          </div>
+        </li>
+      </ul>
+      
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="row d-flex ">
+      <div *ngFor="let list of lists" class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h2>{{ list.title }}</h2>
+          </div>
+          <div
+            cdkDropList
+            [id]="list.id"
+            [cdkDropListData]="list.items"
+            [cdkDropListConnectedTo]="getConnectedLists(list.id)"
+            class="card-body example-list"
+            (cdkDropListDropped)="drop($event)">
+            <div class="example-box" *ngFor="let item of list.items" cdkDrag>{{ item }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+
+    
+  </div>
+</div>
+
+  
+  

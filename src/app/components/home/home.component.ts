@@ -4,66 +4,31 @@ import {
   ElementRef,
   OnInit,
   ViewChild,
-  NgZone 
+  NgZone,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
-import {
-  AllPlaces,
-  AnotherPlaces,
-  General,
-  GroupedProperties,
-  Property,
-} from 'src/models/domain';
+import { AllPlaces, AnotherPlaces, General, Property } from 'src/models/domain';
 declare const google: any;
-import { Options } from 'ngx-slider-v2';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ConfigService } from 'src/app/services/config.service';
-import { Title } from '@angular/platform-browser';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ViewportScroller } from '@angular/common';
 import { MapsService } from 'src/app/services/maps.service';
-
+import { BuyboxCategory } from 'src/models/buyboxCategory';
+import { Center, Place } from 'src/models/shoppingCenters';
+import { BbPlace } from 'src/models/buyboxPlaces';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  @ViewChild('scrollableDiv') scrollableDiv!: ElementRef;
-  private savedScrollPosition: number = 0;
-
   General!: General;
-  mapView!: boolean;
-  userToken!: string | null;
-  minValue: number = 0;
-  maxValue: number = 100000;
-  selectedStates!: string;
-  MatchStatus!: number;
-  selectedCity!: string;
-  cities: string[] = [];
-  minLandSize: any = null;
-  maxLandSize: any = null;
-  minNumberOfBeds: any = null;
-  maxNumberOfBeds: any = null;
-
-  options: Options = {
-    floor: 0,
-    ceil: 100000,
-  };
-  searchStatus!: string;
-  currentCity!: string;
   pageTitle!: string;
-  rating: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  city!: GroupedProperties;
-  AllCities: GroupedProperties[] = [];
-  matchStatus!: number;
   BuyBoxId!: any;
   page: number = 1;
   pageSize: number = 25;
   paginatedProperties: Property[] = [];
   filteredProperties: Property[] = [];
-  contactId: any;
   dropdowmOptions: any = [
     {
       text: 'Map View',
@@ -89,15 +54,9 @@ export class HomeComponent implements OnInit {
   isOpen = false;
   allPlaces!: AllPlaces;
   anotherPlaces!: AnotherPlaces;
-  cardView: boolean = true;
   currentView: any;
   centerPoints: any[] = [];
-  // Marker storage arrays
-  // Marker storage arrays
-  competitorMarkers: any[] = [];
-  cotenantMarkers: any[] = [];
-  ourPlaceMarkers: any[] = [];
-  standAloneMarkers: any[] = [];
+
   map: any; // Add this property to your class
 
   isCompetitorChecked = false; // Track the checkbox state
@@ -107,6 +66,11 @@ export class HomeComponent implements OnInit {
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
 
+  buyboxCategories: BuyboxCategory[] = [];
+  shoppingCenters: Center[] = [];
+  standAlone: Place[] = [];
+  buyboxPlaces: BbPlace[] = [];
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -115,50 +79,135 @@ export class HomeComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private markerService: MapsService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,
+    private ngZone: NgZone
   ) {
     this.currentView = localStorage.getItem('currentView') || 2;
     this.savedMapView = localStorage.getItem('mapView');
   }
 
   ngOnInit(): void {
-    this.selectedOption = this.dropdowmOptions[0];
-    this.mapView = true;
+    this.spinner.show();
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
-      this.contactId = params.contactId;
-      this.selectedStates = params.State;
-      this.currentCity = params.city;
-      this.MatchStatus = +params.MatchStatus;
       this.BuyBoxId = params.buyboxid;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
-      this.GetFilteredPlacesLookup();
     });
-    if (history.state && history.state.city) {
-      this.allPlaces = history.state.city;  
-      //this.getPlaces();
-    } else {
-      console.log('No city object found in navigation state');
-    }
-    this.getAllBuyBoxComparables(this.BuyBoxId); 
 
-    
-    // setTimeout(() => {
-    //   const storedScrollPosition = sessionStorage.getItem('scrollPosition');
-    //   if (storedScrollPosition) {
-    //     this.scrollableDiv.nativeElement.scrollTop = parseInt(storedScrollPosition, 10);
-    //   }
-    // }, 0);
+    this.selectedOption = this.dropdowmOptions[2];
+    this.BuyBoxPlacesCategories(this.BuyBoxId);
 
     this.selectedOption = this.dropdowmOptions.find(
       (option: any) => +option.status == +this.currentView
     );
   }
 
-  replaceApostrophe(name: string, replacement: string = ''): string {
-    return name.toLowerCase().replace(/'/g, replacement);
+  BuyBoxPlacesCategories(buyboxId: number): void {
+    const body: any = {
+      Name: 'GetBuyBoxPlacesCategories',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.buyboxCategories = data.json;
+        this.getShoppingCenters(this.BuyBoxId);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
   }
-  
+
+  getShoppingCenters(buyboxId: number): void {
+    const body: any = {
+      Name: 'MarketSurveyPlaces',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.shoppingCenters = data.json;
+        console.log(`shoppingCenters`);
+        console.log(this.shoppingCenters);
+        
+        
+        this.getStandAlonePlaces(this.BuyBoxId);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+  getStandAlonePlaces(buyboxId: number): void {
+    const body: any = {
+      Name: 'MarketSurveyStandalonePlaces',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.standAlone = data.json;
+        this.getBuyBoxPlaces(this.BuyBoxId);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+  getBuyBoxPlaces(buyboxId: number): void {
+    const body: any = {
+      Name: 'BuyBoxPlaces',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.buyboxPlaces = data.json;
+
+        this.buyboxCategories.forEach((category) => {
+          category.isChecked = false;
+          category.places = this.buyboxPlaces.filter((place) =>
+            place.BuyBoxPlaces?.some((x) => x.CategoryId === category.id)
+          );
+        });
+
+        console.log(`buyboxPLACES`);
+        
+      console.log(this.buyboxPlaces);
+       
+
+        
+        this.getAllMarker();
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+  getLogo(id: number) {
+        
+    // console.log(this.buyboxPlaces);
+
+    for (const place of this.buyboxPlaces) {
+      const foundBranch = place.BuyBoxPlaces?.find((branch) => branch.Id === id);
+      if (foundBranch) {
+        return place.Id;
+      }
+    }
+    return undefined;
+  }
+
+  getLogoTitle(id: number) {
+    for (const place of this.buyboxPlaces) {
+      const foundBranch = place.BuyBoxPlaces?.find((branch) => branch.Id === id);
+      if (foundBranch) {
+        return place.Name;
+      }
+    }
+    return undefined;
+  }
 
   toggleDropdown() {
     this.isOpen = !this.isOpen;
@@ -187,8 +236,8 @@ export class HomeComponent implements OnInit {
       } else {
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
-            lat: this.allPlaces.standAlonePlaces[0].latitude || 0,
-            lng: this.allPlaces.standAlonePlaces[0].longitude || 0,
+            lat: this.shoppingCenters[0].Latitude || 0,
+            lng: this.shoppingCenters[0].Longitude || 0,
           },
           zoom: 10,
           mapId: '1234567890',
@@ -199,109 +248,40 @@ export class HomeComponent implements OnInit {
           this.onMapDragEnd(this.map)
         );
       }
-      if (this.allPlaces && this.allPlaces.centers) {
-        this.allPlaces.centers.forEach((center) => {
-          let shoppingCenter: any = {};
-          shoppingCenter.id = center.places[0].id; 
-          shoppingCenter.name = center.centerName;
-          shoppingCenter.address = center.address;
-          shoppingCenter.city = center.city;
-          shoppingCenter.state = center.state;
 
-          shoppingCenter.avalibleUnits = center.places.length; 
-          shoppingCenter.mainImage = center.mainImage;
-
-          shoppingCenter.latitude = center.lat;
-          shoppingCenter.longitude = center.lng;
-          shoppingCenter.streetLatitude = center.stLat;
-          shoppingCenter.streetLongitude = center.stLng;
-          shoppingCenter.heading = center.heading; 
-          shoppingCenter.pitch = center.pitch;    
-                  
-          shoppingCenter.nearestCompetitors = center.nearestCompetitorsInMiles;
-          shoppingCenter.nearestCotenants = center.nearestCotenantsMiles;
-          shoppingCenter.leasePrice = center.leasePrice;
-          shoppingCenter.minUnitSize = center.minUnitSize;
-          shoppingCenter.maxUnitSize = center.maxUnitSize;
-          shoppingCenter.nearestCompetitorsName = center.nearestCompetitorsName;
-          shoppingCenter.nearestCotenantsName = center.nearestCotenantsName;
-
-          this.centerPoints.push(shoppingCenter); 
-        });
+      if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+        this.createMarkers(this.shoppingCenters, 'Shopping Center');
       }
 
-      if (
-        this.anotherPlaces.competitorPlaces &&
-        this.anotherPlaces.competitorPlaces.length > 0
-      ) {
-        this.createMarkers(
-          this.anotherPlaces.competitorPlaces,
-          '#0D0C0C',
-          'Competitor'
-        );
+      if (this.standAlone && this.standAlone.length > 0) {
+        this.createMarkers(this.standAlone, 'Stand Alone');
       }
 
-      if (
-        this.anotherPlaces.cotenants &&
-        this.anotherPlaces.cotenants.length > 0
-      ) {
-        this.createMarkers(
-          this.anotherPlaces.cotenants,
-          '#0074D9',
-          'Co-Tenant'
-        );
-      }
-
-      if (
-        this.anotherPlaces.ourPlaces &&
-        this.anotherPlaces.ourPlaces.length > 0
-      ) {
-        this.createMarkers(
-          this.anotherPlaces.ourPlaces,
-          '#28A745',
-          'Our Place'
-        );
-      }
-
-      if (
-        this.allPlaces.standAlonePlaces &&
-        this.allPlaces.standAlonePlaces.length > 0
-      ) {
-        this.createMarkers(
-          this.allPlaces.standAlonePlaces,
-          'rgb(212, 0, 42)',
-          'Prospect Target',
-          true
-        );
-      }
-
-      if (this.centerPoints && this.centerPoints.length > 0) {
-        this.createMarkers(
-          this.centerPoints,
-          'rgb(212, 0, 42)',
-          'Prospect Target',
-          true
-        );
-      }
-      this.markerService.toggleMarkers(
-        'Competitor',
-        this.isCompetitorChecked,
-        this.map
-      );
-      this.markerService.toggleMarkers(
-        'Co-Tenant',
-        this.isCoTenantChecked,
-        this.map
-      );
+      this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
     }
   }
+
+  createMarkers(markerDataArray: any[], type: string) {
+    markerDataArray.forEach((markerData) => {
+      this.markerService.createMarker(this.map, markerData, type);
+    });
+  }
+
+  createCustomMarkers(markerDataArray: any[]) {
+    markerDataArray.forEach((categoryData) => {
+      this.markerService.createCustomMarker(this.map, categoryData);
+    });
+  }
+
+  onCheckboxChange(category: BuyboxCategory): void {
+    this.markerService.toggleMarkers(this.map, category);
+  }
+
   private onMapDragEnd(map: any) {
     const bounds = map.getBounds();
     const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
-
-    // Save the current map view (center and zoom level) in local storage.
     const center = map.getCenter();
     const zoom = map.getZoom();
     localStorage.setItem(
@@ -317,35 +297,32 @@ export class HomeComponent implements OnInit {
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
 
-    this.allPlaces.centers.forEach((center) => {
-      const firstPlace = center.places[0];
-      center.latitude = firstPlace.latitude;
-      center.longitude = firstPlace.longitude;
+    this.shoppingCenters.forEach((center) => {
+      const firstPlace = center.ShoppingCenter.Places[0];
+      center.Latitude = firstPlace.Latitude;
+      center.Longitude = firstPlace.Longitude;
     });
 
-    const allPros: any[] = [
-      ...this.allPlaces.standAlonePlaces,
-      ...this.allPlaces.centers,
-    ];
+    const allPros: any[] = [...this.shoppingCenters, ...this.standAlone];
 
     // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
       this.cardsSideList = allPros.filter((property) =>
-        visibleCoords.has(`${property.latitude},${property.longitude}`)
+        visibleCoords.has(`${property.Latitude},${property.Longitude}`)
       );
 
       console.log('Filtered Properties:', this.cardsSideList);
     });
-}
+  }
 
   onMouseEnter(place: any): void {
-    const { latitude, longitude } = place;
+    const { Latitude, Longitude } = place;
     const mapElement = document.getElementById('map') as HTMLElement;
 
     if (!mapElement) return;
 
     if (this.map) {
-      this.map.setCenter({ lat: +latitude, lng: +longitude });
+      this.map.setCenter({ lat: +Latitude, lng: +Longitude });
       this.map.setZoom(17);
     }
   }
@@ -367,117 +344,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  GetFilteredPlacesLookup() {
-    this.spinner.show();
-    this.PlacesService.GetFilteredPlacesLookup(this.BuyBoxId).subscribe(
-      (data) => {
-        this.General.Filter = data;
-        if (this.selectedStates) {
-          this.fillCities();
-        }
-        this.spinner.hide();
-      }
-    );
-  }
-
-  fillCities() {
-    this.General.Filter?.forEach((item) => {
-      if (item.state == this.selectedStates) {
-        item.cities?.forEach((c) => {
-          this.cities.push(c);
-        });
-        this.cities.sort((a, b) => a.localeCompare(b));
-        this.selectedCity = this.currentCity;
-      }
-    });
-  }
-
-  getPlaces() {
-    this.updatePaginatedProperties();
-
-    // if (this.currentCity != undefined) {
-    //   this.AllCities = history.state.city;
-    //   console.log(`cities`, this.AllCities);
-
-    //   let ExictingCity = this.AllCities.filter(
-    //     (c) => c.city == this.currentCity && c.state == this.selectedStates
-    //   );
-    //   this.city.properties = ExictingCity.flatMap((city) => city.properties);
-
-    //   this.filteredProperties = [...this.city.properties];
-    //   // this.filteredProperties.sort((a, b) => b.matchStatus - a.matchStatus);
-    //   this.updatePaginatedProperties();
-    // } else {
-    //   this.AllCities = history.state.city;
-    //   this.city.properties = [];
-    //   this.city.properties = this.AllCities.flatMap((city) => city.properties);
-    //   this.filteredProperties = [...this.city.properties];
-    //   // this.filteredProperties.sort((a, b) => b.matchStatus - a.matchStatus);
-    //   this.updatePaginatedProperties();
-    // }
-  }
-
-  applyFilters() {
-    const filters = [
-      { property: 'state', value: this.selectedStates },
-      { property: 'city', value: this.selectedCity },
-    ];
-    this.filterClient(filters);
-  }
-
-  filterClient(filters: { property: string; value: any }[]) {
-    const allProperties = this.AllCities.flatMap((city) => city.properties);
-    this.filteredProperties = allProperties;
-    for (const filter of filters) {
-      if (!filter.value || filter.value === 'All') {
-        continue;
-      }
-      this.filteredProperties = this.filteredProperties.filter(
-        (property: any) => property[filter.property] === filter.value
-      );
-    }
-    this.city.properties = this.filteredProperties;
-    this.page = 1;
-    this.updatePaginatedProperties();
-  }
-
-  updatePaginatedProperties(): void {
-    const start = (this.page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedProperties = this.filteredProperties.slice(start, end);
-    this.spinner.hide();
-    this.getAllMarker();
-  }
-
-  onPageChange(): void {
-    this.updatePaginatedProperties();
-  }
-
-  GetBuyBoxPlaces() {
-    this.spinner.show();
-    this.PlacesService.GetBuyBoxPlaces(this.BuyBoxId).subscribe((data) => {
-      // this.General.places = data.places;
-      this.General.fbo = data.fpo;
-      this.getAllMarker();
-      this.spinner.hide();
-    });
-  }
-
-  getCitiesFromInit(state: any) {
-    this.cities = [];
-    this.General.Filter.forEach((item) => {
-      if (item.state == state) {
-        item.cities?.forEach((c) => {
-          this.cities.push(c);
-        });
-        // Sort cities alphabetically
-        this.cities.sort((a, b) => a.localeCompare(b));
-        this.selectedCity = this.currentCity;
-        this.filter();
-      }
-    });
-  }
-
   selectOption(option: any): void {
     this.selectedOption = option;
     this.currentView = option.status;
@@ -485,91 +351,12 @@ export class HomeComponent implements OnInit {
     localStorage.setItem('currentView', this.currentView);
   }
 
-  changeView() {
-    this.mapView = !this.mapView;
-  }
-
-  createMarkers(
-    markerDataArray: any[],
-    color: string,
-    type: string,
-    useArrow: boolean = false
-  ) {
-    markerDataArray.forEach((markerData) => {
-      this.markerService.createMarker(
-        this.map,
-        markerData,
-        color,
-        type,
-        useArrow
-      );
-    });
-  }
-
-  onCheckboxChange(value: string) {
-    if (value == 'Competitor') {
-      this.markerService.toggleMarkers(
-        value,
-        this.isCompetitorChecked,
-        this.map
-      );
-    } else {
-      this.markerService.toggleMarkers(value, this.isCoTenantChecked, this.map);
-    }
-  }
-
-  getCities(event: any) {
-    this.cities = [];
-    this.selectedCity = '';
-    let value = event.target.value;
-    this.selectedStates = value;
-    this.General.Filter.forEach((item) => {
-      if (item.state == value) {
-        item.cities?.forEach((c) => {
-          this.cities.push(c);
-        });
-        this.cities.sort((a, b) => a.localeCompare(b));
-      }
-    });
-  }
-
-  filter() {
-    let searchFilter: any = {};
-    searchFilter.isAccepted = +this.searchStatus;
-    searchFilter.City = this.selectedCity;
-    searchFilter.City = this.selectedCity == 'All' ? null : this.selectedCity;
-    searchFilter.State =
-      this.selectedStates == 'All' ? null : this.selectedStates;
-    searchFilter.MatchStatus = +this.MatchStatus;
-    // searchFilter.MinLandSize = this.minLandSize;
-    // searchFilter.MaxLandSize = this.maxLandSize;
-    // searchFilter.MinNumOfBeds = this.minNumberOfBeds;
-    // searchFilter.MaxNumOfBeds = this.maxNumberOfBeds;
-
-    this.PlacesService.GetFilteredBuyBoxPlaces(
-      searchFilter,
-      this.BuyBoxId
-    ).subscribe((data) => {
-      this.General.places = data.places;
-      this.getAllMarker();
-    });
-  }
-
   goToPlace(place: any) {
-    if (place.id) {
-      this.router.navigate(['/landing', place.id, this.BuyBoxId]);
-    } else {
-      this.router.navigate(['/landing', place.places[0].id, this.BuyBoxId]);
+    if(place.CenterAddress){
+      this.router.navigate(['/landing', place.ShoppingCenter.Places[0].Id, this.BuyBoxId]);
+    }else{
+      this.router.navigate(['/landing', place.Id, this.BuyBoxId]);
     }
-  }
-
-  getStatus(event: any) {
-    let value = event.target.value;
-    this.searchStatus = value;
-  }
-
-  GetBuyBoxNewPlaces() {
-    this.PlacesService.GetBuyBoxNewPlaces(this.BuyBoxId).subscribe((res) => {});
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
@@ -588,10 +375,10 @@ export class HomeComponent implements OnInit {
 
   viewOnStreet() {
     this.StreetViewOnePlace = true;
-    let lat = +this.General.modalObject.streetLatitude;
-    let lng = +this.General.modalObject.streetLongitude;
-    let heading = this.General.modalObject.heading || 165;
-    let pitch = this.General.modalObject.pitch || 0;
+    let lat = +this.General.modalObject.StreetLatitude;
+    let lng = +this.General.modalObject.StreetLongitude;
+    let heading = this.General.modalObject.Heading || 165;
+    let pitch = this.General.modalObject.Pitch || 0;
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
@@ -643,108 +430,88 @@ export class HomeComponent implements OnInit {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
-    })
+    });
 
-   this.viewOnMap(modalObject.latitude, modalObject.longitude);
-
-
-  }
-  
-  
- async viewOnMap(lat: number, lng: number) {
-  this.mapViewOnePlacex = true; 
-
-  if (!lat || !lng) {
-    console.error("Latitude and longitude are required to display the map.");
-    return;
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
-  // Load Google Maps API libraries
-  const { Map } = (await google.maps.importLibrary('maps')) as any;
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true;
 
-  // Find the map container element
-  const mapDiv = document.getElementById('mappopup') as HTMLElement;
+    if (!lat || !lng) {
+      console.error('Latitude and longitude are required to display the map.');
+      return;
+    }
+    // Load Google Maps API libraries
+    const { Map } = (await google.maps.importLibrary('maps')) as any;
+    const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
-  // Check if the mapDiv exists
-  if (!mapDiv) {
-    console.error('Element with ID "mappopup" not found.');
-    return;
-  }
- 
-  const map = new Map(mapDiv, {
-    center: { lat, lng },
-    zoom: 14,
-  });
+    if (!mapDiv) {
+      console.error('Element with ID "mappopup" not found.');
+      return;
+    }
 
-  // Create a new marker
-  const marker = new google.maps.Marker({
-    position: { lat, lng },
-    map: map,
-    title: 'Location Marker',
-  });
-}
+    const map = new Map(mapDiv, {
+      center: { lat, lng },
+      zoom: 14,
+    });
 
-  
-  
-
-  formatImageName(centerName: string): string {
-    return centerName.replace(/'/g, '');
+    // Create a new marker
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: map,
+      title: 'Location Marker',
+    });
   }
 
-  trackByCenterName(index: number, place: any): string {
-    return place.centerName;
+  getShoppingCenterUnitSize(shoppingCenter: Center): any {
+    if (shoppingCenter.ShoppingCenter) {
+      const places = shoppingCenter.ShoppingCenter.Places;
+
+      if (places.length > 0) {
+        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+        const leasePrices = places.map(
+          (place: any) => place.forLeasePrice || null
+        );
+
+        let minSize = Math.min(...buildingSizes);
+        let maxSize = Math.max(...buildingSizes);
+
+        let minPrice = null;
+        let maxPrice = null;
+
+        // Find lease prices corresponding to min and max sizes
+        for (let place of places) {
+          if (place.BuildingSizeSf === minSize) {
+            minPrice = place.ForLeasePrice;
+          }
+          if (place.BuildingSizeSf === maxSize) {
+            maxPrice = place.ForLeasePrice;
+          }
+        }
+
+        if (minSize === maxSize) {
+          return minPrice
+            ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
+            : `Unit Size: ${minSize} SF`;
+        }
+
+        let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
+
+        if (minPrice || maxPrice) {
+          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
+            maxPrice ? maxPrice : 'N/A'
+          }`;
+        }
+
+        return sizeRange;
+      }
+    }
+    return null;
   }
 
-  private getArrowSvg(): string {
-    return (
-      'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <g clip-path="url(#clip0_32_4219)">
-              <path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#CC3D3D"/>
-              <path d="M31.2 32.62L14.64 25.16C12.78 24.32 10.9 26.32 11.86 28.12L17.94 39.66C20.52 44.56 27.52 44.56 30.1 39.66L32.24 35.58C32.8 34.48 32.32 33.14 31.2 32.62Z" fill="#CC3D3D"/>
-          </g>
-          <defs>
-              <clipPath id="clip0_32_4219">
-                  <rect width="48" height="48" fill="white"/>
-              </clipPath>
-          </defs>
-      </svg>
-  `)
-    );
+  getNeareastCategoryName(categoryId: number) {
+    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
+    return categories[0].name;
   }
-
-
-  private getArrowSvgBlack(): string {
-    return (
-      'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`
-       <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_456_4378)">
-<path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#0D0C0C"/>
-<path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#0D0C0C"/>
-</g>
-<defs>
-<clipPath id="clip0_456_4378">
-<rect width="48" height="48" fill="white"/>
-</clipPath>
-</defs>
-</svg>
-
-    `)
-    );
-  }
-
- 
-// YourComponent.ts
-getUnitSize(place: any): string {
-  const minSize = place.minUnitSize;
-  const maxSize = place.maxUnitSize;
-
-  return minSize === maxSize
-    ? `${minSize} SF`
-    : `${minSize} SF - ${maxSize} SF`;
-}
-
-
 }

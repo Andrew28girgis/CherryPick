@@ -9,6 +9,8 @@ import { ConfigService } from 'src/app/services/config.service';
 import { getDomainConfig } from 'src/app/config';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from 'src/app/services/auth.service';
+import { LandingPlace, ShoppingCenter } from 'src/models/landingPlace';
+import { NearByType } from 'src/models/nearBy';
 
 @Component({
   selector: 'app-landing',
@@ -38,14 +40,16 @@ export class LandingComponent {
   showFirstCol = true; // Toggle to false to hide the first col-md-7
   mapViewOnePlacex!: boolean;
 
+  PlaceId!: number;
+  CustomPlace!: LandingPlace;
+  ShoppingCenter!: ShoppingCenter;
+  NearByType: NearByType[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private configService: ConfigService,
-    private titleService: Title,
     private authService: AuthService
   ) {
     localStorage.removeItem('placeLat');
@@ -54,18 +58,121 @@ export class LandingComponent {
 
   ngOnInit(): void {
     this.initializeParams();
-    this.initializeQueryParams();
     this.initializeDefaults();
-    this.applyDomainConfig();
+    //this.initializeQueryParams();
   }
 
   private initializeParams(): void {
     this.activatedRoute.params.subscribe((params: any) => {
-      this.placeId = +params.id;
       this.BuyBoxId = params.buyboxid;
+      this.PlaceId = params.id;
+      this.GetPlaceDetails(this.PlaceId);
+      this.GetPlaceNearBy(this.PlaceId);
     });
   }
 
+  private initializeDefaults(): void {
+    this.General = new General();
+    this.place = new Property();
+    this.fbo = new Fbo();
+    this.showAlert = false;
+  }
+
+  GetPlaceDetails(placeId: number): void {
+    const body: any = {
+      Name: 'GetPlaceDetails',
+      Params: {
+        PlaceID: placeId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.CustomPlace = data.json[0];
+        this.CustomPlace.PopulationDensity =
+          +this.CustomPlace.PopulationDensity;
+
+        if (this.CustomPlace.ShoppingCenters[0].CenterAddress) {
+          this.ShoppingCenter = this.CustomPlace.ShoppingCenters[0];
+        }
+
+        console.log(`custom place`);
+        console.log(this.CustomPlace);
+
+        console.log(`shopping Center`);
+        console.log(this.ShoppingCenter);
+        this.getMinMaxUnitSize(this.ShoppingCenter);
+        this.viewOnStreet();
+
+        this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
+          link.trim()
+        );
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+  getMinMaxUnitSize(ShoppingCenter: ShoppingCenter) {
+    if (ShoppingCenter.OtherPlaces) {
+      const places = ShoppingCenter.OtherPlaces;
+
+      if (places.length > 0) {
+        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+        let minSize = Math.min(...buildingSizes);
+        let maxSize = Math.max(...buildingSizes);
+
+        let minPrice = null;
+        let maxPrice = null;
+
+        // Find lease prices corresponding to min and max sizes
+        for (let place of places) {
+          if (place.BuildingSizeSf === minSize) {
+            minPrice = place.ForLeasePrice;
+          }
+          if (place.BuildingSizeSf === maxSize) {
+            maxPrice = place.ForLeasePrice;
+          }
+        }
+
+        if (minSize === maxSize) {
+          return minPrice
+            ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
+            : `Unit Size: ${minSize} SF`;
+        }
+
+        let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
+
+        if (minPrice || maxPrice) {
+          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
+            maxPrice ? maxPrice : 'N/A'
+          }`;
+        }
+
+        return sizeRange;
+      }
+    }
+    return null;
+  }
+
+  GetPlaceNearBy(placeId: number): void {
+    const body: any = {
+      Name: 'GetPlaceNearBy',
+      Params: {
+        PlaceID: placeId,
+        BuyBoxId: this.BuyBoxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.NearByType = data.json;
+        console.log(`nearBy`);
+        console.log(this.NearByType);
+        this.getAllMarker();
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
   private initializeQueryParams(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       this.token = params['Token'];
@@ -79,23 +186,6 @@ export class LandingComponent {
         this.GetSharedPlace(this.token, this.placeId);
       }
     });
-  }
-
-  private initializeDefaults(): void {
-    this.General = new General();
-    this.place = new Property();
-    this.fbo = new Fbo();
-    this.showAlert = false;
-  }
-
-  private applyDomainConfig(): void {
-    const domain = window.location.href;
-    this.initDomain = window.location.hostname;
-    const config = getDomainConfig(domain);
-    this.logoUrl = config.logo;
-    this.color = config.color;
-    document.documentElement.style.setProperty('--app-color', this.color);
-    this.fontFamily = config.fontFamily;
   }
 
   LoginWithContact(contactId: any, token: any) {
@@ -163,7 +253,6 @@ export class LandingComponent {
   }
 
   GetSharedPlace(token: number, sharedId: number) {
-    this.spinner.show();
     this.PlacesService.GetSharedPlace(token, sharedId, this.BuyBoxId).subscribe(
       (data) => {
         this.place = data.place;
@@ -185,7 +274,6 @@ export class LandingComponent {
         this.GetNearestPlaces();
         this.getSpecificPlaces(this.place.id, this.BuyBoxId);
         this.viewOnStreet();
-        this.spinner.hide();
       }
     );
   }
@@ -199,7 +287,6 @@ export class LandingComponent {
   formattedFboUnit!: string | null;
   placeImage: string[] = [];
   getPlace(id: number) {
-    this.spinner.show();
     this.PlacesService.GetBuyBoxOnePlace(id, this.BuyBoxId).subscribe(
       (data) => {
         this.place = data.place;
@@ -211,7 +298,6 @@ export class LandingComponent {
           ?.split(',')
           .map((link) => link.trim());
         this.GetNearestPlaces();
-        this.viewOnStreet();
         this.getAnotherPlaces();
 
         // if (this.place !== undefined) {
@@ -233,7 +319,6 @@ export class LandingComponent {
         this.GetUserEstimatedNumbers(this.place.id);
         // this.getComparable(this.place.id, this.place.organizationId);
         // this.GetAllFilesFromPlace(this.place.id);
-        this.spinner.hide();
       }
     );
   }
@@ -245,20 +330,17 @@ export class LandingComponent {
       this.place.id
     ).subscribe((res) => {
       this.General.nearsetPlaces = res;
-      this.getAllMarker();
+      //this.getAllMarker();
       // this.rentResults = this.findMinMaxRent(res);
     });
   }
 
   getComparable(placeId: number, orgId: number) {
-    this.spinner.show();
     this.PlacesService.NearestFiveComparable(placeId, orgId).subscribe(
       (res) => {
         this.General.comparable = res;
       },
-      (error) => {
-        this.spinner.hide();
-      }
+      (error) => {}
     );
   }
 
@@ -289,12 +371,8 @@ export class LandingComponent {
   async getAllMarker() {
     this.mapView = true;
     try {
-      this.spinner.show();
-      let lat = +this.place.lat;
-      let lon = +this.place.lon;
-      let colorCompetitor = 'black';
-      let colorCotenants = '#0652DD';
-      let colorOurPlaces = 'red';
+      let lat = +this.ShoppingCenter.Latitude;
+      let lon = +this.ShoppingCenter.Longitude;
 
       const { Map, InfoWindow } = await google.maps.importLibrary('maps');
       const map = new Map(document.getElementById('map') as HTMLElement, {
@@ -302,32 +380,17 @@ export class LandingComponent {
         zoom: 14,
       });
 
-      const createMarker = (
-        markerData: any,
-        color: string,
-        useArrow: boolean = false,
-        type: string
-      ) => {
+      const createMarker = (markerData: any, type: string) => {
         let icon;
-        if (useArrow && type === 'Prospect Target') {
+
+        if (type === 'Shopping Center') {
           icon = {
             url: this.getArrowSvg(),
             scaledSize: new google.maps.Size(40, 40),
           };
         } else {
           icon = {
-            url: `../../../assets/Images/Logos/${this.replaceApostrophe(
-              markerData.name
-            )}.jpg`,
-            scaledSize: new google.maps.Size(30, 30), // Adjust the size as needed
-            origin: new google.maps.Point(0, 0), // Optional: Set the origin point
-            anchor: new google.maps.Point(15, 15), // Optional: Set the anchor point
-          };
-        }
-
-        if (type === 'Competitor') {
-          icon = {
-            url: this.getArrowSvgBlack(),
+            url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
             scaledSize: new google.maps.Size(40, 40),
           };
         }
@@ -335,26 +398,22 @@ export class LandingComponent {
         const marker = new google.maps.Marker({
           map,
           position: {
-            lat: useArrow
-              ? Number(markerData.lat)
-              : Number(markerData.latitude),
-            lng: useArrow
-              ? Number(markerData.lon)
-              : Number(markerData.longitude),
+            lat: markerData.Latitude,
+            lng: markerData.Longitude,
           },
           icon: icon,
         });
 
         let content;
-        if (type === 'Prospect Target') {
+        if (type === 'Shopping Center') {
           content = `<div class="info-window">  
                     <div class="main-img">
-                      <img src="${markerData.mainImage}" alt="Main Image">
+                      <img src="${markerData.MainImage}" alt="Main Image">
                     </div>
             <div class="content-wrap"> 
                 ${
                   markerData.name
-                    ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
+                    ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
                     : ''
                 }
                     <p class="address-content">
@@ -362,7 +421,9 @@ export class LandingComponent {
                       <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
                       <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
                     </svg>
-               ${markerData.address}</p>
+                 ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+            markerData.CenterState
+          }</p>
                 <div class="row"> 
                     ${
                       markerData.nearestCompetitorsInMiles
@@ -399,11 +460,11 @@ export class LandingComponent {
             </div>
         </div>`;
         } else {
-          content = `<div class="info-window"> 
+          content = `<div > 
             <div class="p-3"> 
                 ${
-                  markerData.name
-                    ? `<p class="content-title">${markerData.name.toUpperCase()}</p>`
+                  markerData.BuyBoxPlace[0].Name
+                    ? `<p class="content-title">${markerData.BuyBoxPlace[0].Name.toUpperCase()}</p>`
                     : ''
                 }
             </div>
@@ -423,30 +484,21 @@ export class LandingComponent {
           });
         });
 
-        // Hide info window on mouseout
         marker.addListener('mouseout', () => {
           infoWindow.close();
         });
       };
 
-      // Create red marker for current place (lat and lon)
-      createMarker(this.place, colorOurPlaces, true, 'Prospect Target');
+      createMarker(this.ShoppingCenter, 'Shopping Center');
 
-      // Cotenants
-      if (this.General.nearsetPlaces.cotenants) {
-        this.General.nearsetPlaces.cotenants.forEach((markerData) => {
-          createMarker(markerData, colorCotenants, false, 'Co-Tenant');
-        });
-      }
-
-      // Competitor Places
-      if (this.General.nearsetPlaces?.competitorPlaces) {
-        this.General.nearsetPlaces?.competitorPlaces.forEach((markerData) => {
-          createMarker(markerData, colorCompetitor, false, 'Competitor');
+      if (this.NearByType.length > 0) {
+        this.NearByType.forEach((type) => {
+          type.BuyBoxPlaces.slice(0, 5).forEach((place) => {
+            createMarker(place, type.Name);
+          });
         });
       }
     } finally {
-      this.spinner.hide();
     }
   }
 
@@ -521,7 +573,6 @@ export class LandingComponent {
   }
 
   sendInterested(rate: number) {
-    this.spinner.show();
     let feedback: any = {};
     feedback['placeId'] = this.placeId;
     feedback['IsAccepted'] = rate;
@@ -530,7 +581,6 @@ export class LandingComponent {
     this.PlacesService.UpdatePlaceAcceptable(feedback).subscribe((data) => {
       this.getPlace(this.placeId);
       this.theRating = rate;
-      this.spinner.hide();
     });
   }
 
@@ -579,10 +629,10 @@ export class LandingComponent {
   }
 
   viewOnStreet() {
-    let lat = this.place.streetLatitude;
-    let lng = this.place.streetLongitude;
-    let heading = this.place.heading || 165; // Default heading value
-    let pitch = this.place.pitch || 0; // Default pitch value
+    let lat = this.ShoppingCenter.StreetLatitude;
+    let lng = this.ShoppingCenter.StreetLongitude;
+    let heading = this.ShoppingCenter.Heading || 165; // Default heading value
+    let pitch = this.ShoppingCenter.Pitch || 0; // Default pitch value
     // this.updateOpacity(mapdata);
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
@@ -646,8 +696,7 @@ export class LandingComponent {
       size: 'lg',
       scrollable: true,
     });
-
-    this.viewOnMap(modalObject.lat, modalObject.lon);
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
   async viewOnMap(lat: number, lng: number) {
@@ -698,11 +747,11 @@ export class LandingComponent {
 
   viewOnStreetPopUp() {
     this.StreetViewOnePlace = true;
-    let lat = +this.General.modalObject.streetLatitude;
-    let lng = +this.General.modalObject.streetLongitude;
+    let lat = +this.General.modalObject.StreetLatitude;
+    let lng = +this.General.modalObject.StreetLongitude;
 
-    let heading = this.General.modalObject.heading || 165; // Default heading value
-    let pitch = this.General.modalObject.pitch || 0;
+    let heading = this.General.modalObject.Heading || 165; // Default heading value
+    let pitch = this.General.modalObject.Pitch || 0;
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view-pop');

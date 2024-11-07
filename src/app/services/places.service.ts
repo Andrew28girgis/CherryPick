@@ -220,5 +220,11 @@ export class PlacesService {
       .get<any>(`${environment.api}/Scoutlyn/GetShoppingCenterPlaces?CenterName=${CenterName}&PlaceId=${PlaceId}&BuyBoxId=${BuyBoxId}`)
       .pipe();
   }
+
+  public GenericAPI(body: any) {
+    return this.http
+      .post<any>(`${environment.api}/GenericAPI/Execute`, body)
+      .pipe();
+  }
   
 }

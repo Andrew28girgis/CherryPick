@@ -33,11 +33,11 @@
           <div class="row">
             <div class="col-lg-12 p-0">
               <div class="center-name">
-                <p *ngIf="place.centerName" class="m-0 procpect-name">
-                  {{ place.centerName | titlecase }}
+                <p *ngIf="ShoppingCenter" class="m-0 procpect-name">
+                  {{ ShoppingCenter.CenterName | titlecase }}
                 </p>
-                <button class="btn for-lease">
-                  {{ place.listingType }}
+                <button class="btn for-lease" *ngIf="CustomPlace">
+                  {{ CustomPlace.ListingType }}
                 </button>
               </div>
 
@@ -48,148 +48,86 @@
                       class="info-value"
                       class="rating-part"
                       style="text-align: justify; font-size: 17px"
-                      [innerHTML]="place.description"
+                      [innerHTML]="CustomPlace.Description"
                     ></p>
                   </div>
                 </div>
-                <div class="col-md-5 col-sm-12 p-0" *ngIf="place.address">
+                <div
+                  class="col-md-5 col-sm-12 p-0"
+                  *ngIf="ShoppingCenter.CenterAddress"
+                >
                   <div class="row details-info">
-                    <div class="col-sm-12 p-0" *ngIf="place.address">
+                    <div
+                      class="col-sm-12 p-0"
+                      *ngIf="ShoppingCenter.CenterAddress"
+                    >
                       <div
                         class="d-flex flex-row align-items-center info-border"
                       >
-                        <p class="info-head">
-                          <svg
-                            width="44"
-                            height="44"
-                            viewBox="0 0 44 44"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M0.5 8C0.5 3.85786 3.85786 0.5 8 0.5H36C40.1421 0.5 43.5 3.85786 43.5 8V36C43.5 40.1421 40.1421 43.5 36 43.5H8C3.85786 43.5 0.5 40.1421 0.5 36V8Z"
-                              stroke="#817A79"
-                            />
-                            <path
-                              d="M21.9999 24.1699C19.8699 24.1699 18.1299 22.4399 18.1299 20.2999C18.1299 18.1599 19.8699 16.4399 21.9999 16.4399C24.1299 16.4399 25.8699 18.1699 25.8699 20.3099C25.8699 22.4499 24.1299 24.1699 21.9999 24.1699ZM21.9999 17.9399C20.6999 17.9399 19.6299 18.9999 19.6299 20.3099C19.6299 21.6199 20.6899 22.6799 21.9999 22.6799C23.3099 22.6799 24.3699 21.6199 24.3699 20.3099C24.3699 18.9999 23.2999 17.9399 21.9999 17.9399Z"
-                              fill="#817A79"
-                            />
-                            <path
-                              d="M21.9999 32.76C20.5199 32.76 19.0299 32.2 17.8699 31.09C14.9199 28.25 11.6599 23.72 12.8899 18.33C13.9999 13.44 18.2699 11.25 21.9999 11.25C21.9999 11.25 21.9999 11.25 22.0099 11.25C25.7399 11.25 30.0099 13.44 31.1199 18.34C32.3399 23.73 29.0799 28.25 26.1299 31.09C24.9699 32.2 23.4799 32.76 21.9999 32.76ZM21.9999 12.75C19.0899 12.75 15.3499 14.3 14.3599 18.66C13.2799 23.37 16.2399 27.43 18.9199 30C20.6499 31.67 23.3599 31.67 25.0899 30C27.7599 27.43 30.7199 23.37 29.6599 18.66C28.6599 14.3 24.9099 12.75 21.9999 12.75Z"
-                              fill="#817A79"
-                            />
-                          </svg>
-                        </p>
-                        <p class="info-value ms-2 content-address" (click)="openMapViewPlace(mapPopup , place)">
-                          {{ place.address }}, {{ place.city | titlecase }},
-                          {{ place.state }}
-                        </p>
-                      </div>
-                    </div>
-
-
-                    <div class="col-md-12 col-sm-12 p-0" *ngIf="minBuildingSize || maxBuildingSize">
-                      <div
-                        class="d-flex flex-row align-items-center info-border"
-                      >
-                        <p class="info-head"> 
-                        </p>
-
-                        <p class="info-value ms-2 gray">
-                           Unit Size :
-                          <span style="color: #000; font-weight: bold"
-                            > {{
-                              minBuildingSize === maxBuildingSize
-                                ? (minBuildingSize| number) + ' SF'
-                                : (minBuildingSize| number) + ' SF - ' + (maxBuildingSize | number) + ' SF'
-                            }}
-                            </span
-                          >
-                        </p>
-                      </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.forLeasePrice">
-                      <div
-                        class="d-flex flex-row align-items-center info-border"
-                      >
-                        <p class="info-head"> 
-                        </p>
-
-                        <p class="info-value ms-2 gray">
-                           Lease Price:
-                          <span style="color: #000; font-weight: bold"
-                            >{{
-                              place.forLeasePrice
-                            }}
-                            </span
-                          >
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.nearestCompetitorsInMiles">
-                      <div
-                        class="d-flex flex-row align-items-center info-border"
-                      >
-                    
-
-                        <p class="info-value ms-2 gray">
-                          Nearest Competitor:
-                          <img *ngIf="General.nearsetPlaces.competitorPlaces[0]"
-                          src="../../../assets/Images/Logos/{{
-                            replaceApostrophe(General.nearsetPlaces.competitorPlaces[0].name)
-                          }}.jpg"
-                          title="{{General.nearsetPlaces.competitorPlaces[0].name}}"
-                          style="height: 35px; margin-right: 10px; width: 35px"
-                        />
-                          <span style="color: #000; font-weight: bold"
-                            >{{
-                              place.nearestCompetitorsInMiles.toFixed(2)
-                            }}
-                            MI</span
-                          >
-                        </p>
-                      </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.nearestCotenantsMiles">
-                      <div
-                        class="d-flex flex-row align-items-center info-border"
-                      > 
-                        <p class="info-value ms-2 gray" >
-                          Nearest Comp. Tenant :
-                          <img *ngIf="General.nearsetPlaces.cotenants[0]"
-                          src="../../../assets/Images/Logos/{{
-                            replaceApostrophe(General.nearsetPlaces.cotenants[0].name)
-                          }}.jpg"
-                          title="{{General.nearsetPlaces.cotenants[0].name}}"
-                          style="height: 35px; margin-right: 10px; width: 35px"
-                        />
-                          <span style="color: #000; font-weight: bold"
-                            >{{
-                              place.nearestCotenantsMiles.toFixed(2)
-                            }}
-                            MI</span
-                          >
-                        </p>
-                      </div>
-                    </div>
-                    <div class="col-md-12 col-sm-12 p-0" *ngIf="anotherPlaces.length > 0">
-                      <div
-                        class="d-flex flex-row align-items-center"
-                        style="padding: 12px 0"
-                      >
+                        <p class="info-head"></p>
                         <p
-                          class="info-value ms-2 gray"
-                       
+                          class="info-value content-address"
+                          (click)="openMapViewPlace(mapPopup, ShoppingCenter)"
                         >
+                          {{ ShoppingCenter.CenterAddress }},
+                          {{ ShoppingCenter.CenterCity | titlecase }},
+                          {{ ShoppingCenter.CenterState }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p
+                      class="info-value p-0"
+                      [innerHTML]="getMinMaxUnitSize(ShoppingCenter)"
+                    ></p>
+
+                    <ng-container *ngFor="let near of NearByType">
+                      <div class="d-flex align-items-center p-0" style="margin-bottom: 5px;">
+                        <p class="m-0">Nearest {{ near.Name }}:</p>
+                        <ng-container
+                          *ngFor="
+                            let place of near.BuyBoxPlaces | slice : 0 : 1
+                          "
+                        >
+                          <img
+                            src="https://files.cherrypick.com/logos/{{
+                              place.BuyBoxPlace[0].Id
+                            }}.png"
+                            alt=""
+                            title="{{ place.BuyBoxPlace[0].Name }}"
+                            style="
+                              height: 30px;
+                              margin-inline: 10px;
+                              width: 30px;
+                            "
+                          />
+
+                          <b
+                            style="text-wrap: nowrap"
+                            *ngIf="place.BuyBoxPlace[0].Distance"
+                          >
+                            {{ place.BuyBoxPlace[0].Distance.toFixed() }}
+                            MI
+                          </b>
+                          <div></div>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+
+                    <div
+                      class="col-md-12 col-sm-12 p-0"
+                      *ngIf="ShoppingCenter.OtherPlaces.length > 0"
+                    >
+                      <div>
+                        <p >
                           Available Units:
                           <span style="color: #000; font-weight: bold">{{
-                            anotherPlaces.length
+                            ShoppingCenter.OtherPlaces.length
                           }}</span>
                         </p>
                       </div>
                     </div>
-                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.docsLink" >
+                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.docsLink">
                       <div
                         class="d-flex flex-row align-items-center"
                         style="padding: 12px 0"
@@ -228,10 +166,15 @@
                             />
                           </svg>
                         </p>
-                       <a  class="info-value ms-2 gray" href="{{place.docsLink}}" target="_blank">View Document</a>
+                        <a
+                          class="info-value ms-2 gray"
+                          href="{{ place.docsLink }}"
+                          target="_blank"
+                          >View Document</a
+                        >
                       </div>
                     </div>
-                    <div class="col-md-12 col-sm-12 p-0"  *ngIf="place.sitePlan">
+                    <div class="col-md-12 col-sm-12 p-0" *ngIf="place.sitePlan">
                       <div
                         class="d-flex flex-row align-items-center"
                         style="padding: 12px 0"
@@ -270,19 +213,23 @@
                             />
                           </svg>
                         </p>
-                        <a class="info-value ms-2 gray"  href="{{place.sitePlan}}" target="_blank">View Site Plan</a>
-
+                        <a
+                          class="info-value ms-2 gray"
+                          href="{{ place.sitePlan }}"
+                          target="_blank"
+                          >View Site Plan</a
+                        >
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-12" *ngIf="place.notes">
+                <div class="col-md-12" *ngIf="CustomPlace.Notes">
                   <h2 class="main-heading">Notes</h2>
                   <p
                     class="rating-part"
                     style="text-align: justify; font-size: 17px"
                   >
-                    {{ place.notes | titlecase }}
+                    {{ CustomPlace.Notes | titlecase }}
                   </p>
                 </div>
               </div>
@@ -528,27 +475,18 @@
       </section>
     </ng-container>
 
-    <div class="main-section" *ngIf="place.mainImage !== ''">
+    <div class="main-section" *ngIf="ShoppingCenter.MainImage !== ''">
       <p class="main-name">Gallery</p>
       <div class="row no-gutters mt-2 text-center">
         <div class="col-md-8">
-          <a class="procpect-img" href="{{ place.mainImage }}" target="_blank">
-            <img
-              *ngIf="place.mainImage != null"
-              [src]="place.mainImage"
-              class="d-block w-100 main-img"
-            />
-          </a>
           <a
             class="procpect-img"
-            href="https://api.capsnap.ai/api/BuyBox/main?placeId={{ place.id }}"
+            href="{{ ShoppingCenter.MainImage }}"
             target="_blank"
           >
             <img
-              *ngIf="place.mainImage == null"
-              src="https://api.capsnap.ai/api/BuyBox/main?placeId={{
-                place.id
-              }}"
+              *ngIf="ShoppingCenter.MainImage != null"
+              [src]="ShoppingCenter.MainImage"
               class="d-block w-100 main-img"
             />
           </a>
@@ -571,17 +509,9 @@
     </div>
 
     <div class="row">
-      <ng-container
-        *ngIf="
-          place.siteSelectionReason ||
-          (anotherPlaces && anotherPlaces[0]?.centerName != '')
-        "
-      >
-        <ng-container *ngIf="place.siteSelectionReason">
-          <div
-          class="col-md-6"
-        
-          >
+      <ng-container *ngIf="CustomPlace.SiteSelectionReason">
+        <ng-container *ngIf="CustomPlace.SiteSelectionReason">
+          <div class="col-md-12">
             <div
               class="main-section"
               [ngClass]="
@@ -589,24 +519,20 @@
               "
             >
               <div>
-                <p class="main-name" *ngIf="place.siteSelectionReason">
+                <p class="main-name" *ngIf="CustomPlace.SiteSelectionReason">
                   Why does this location meet your requirements?
                 </p>
                 <p
-                  *ngIf="place.siteSelectionReason"
-                  [innerHtml]="place.siteSelectionReason"
+                  *ngIf="CustomPlace.SiteSelectionReason"
+                  [innerHtml]="CustomPlace.SiteSelectionReason"
                 ></p>
               </div>
             </div>
           </div>
         </ng-container>
 
-        <ng-container
-          *ngIf="anotherPlaces "
-        >
-          <div
-            [ngClass]="!place.siteSelectionReason ? 'col-md-12' : 'col-md-6'"
-          >
+        <ng-container *ngIf="anotherPlaces">
+          <div class="col-md-12">
             <div class="main-section another-places p-0">
               <table class="procpect-table">
                 <thead class="procpect-table-head">
@@ -619,18 +545,20 @@
                   </tr>
                 </thead>
                 <tbody class="procpect-table-body">
-                  <ng-container *ngFor="let place of anotherPlaces">
+                  <ng-container
+                    *ngFor="let place of ShoppingCenter.OtherPlaces"
+                  >
                     <tr>
-                      <td>{{ place.suite }}</td>
+                      <td>{{ place.Suite }}</td>
                       <td>
-                        {{ place.listingType }}
+                        {{ place.ListingType }}
                       </td>
                       <td>
-                        <span *ngIf="place.forLeasePrice != 'undefined'">{{
-                          place.forLeasePrice
+                        <span *ngIf="place.ForLeasePrice != 'undefined'">{{
+                          place.ForLeasePrice
                         }}</span>
                       </td>
-                      <td>{{ place.buildingSizeSf }} SF</td>
+                      <td>{{ place.BuildingSizeSf }} SF</td>
                       <td>
                         <div
                           style="cursor: pointer"
@@ -664,7 +592,7 @@
             <div>
               <p class="area-d">Area Demographics</p>
 
-              <ng-container *ngIf="place.populationDensity > 10000">
+              <ng-container *ngIf="CustomPlace.PopulationDensity > 10000">
                 <svg
                   width="300"
                   height="180"
@@ -688,8 +616,8 @@
               </ng-container>
               <ng-container
                 *ngIf="
-                  place.populationDensity >= 1000 &&
-                  place.populationDensity <= 10000
+                  CustomPlace.PopulationDensity >= 1000 &&
+                  CustomPlace.PopulationDensity <= 10000
                 "
               >
                 <svg
@@ -714,7 +642,7 @@
                 </svg>
               </ng-container>
 
-              <ng-container *ngIf="place.populationDensity < 1000">
+              <ng-container *ngIf="CustomPlace.PopulationDensity < 1000">
                 <svg
                   width="300"
                   height="177"
@@ -738,18 +666,18 @@
               </ng-container>
 
               <div class="row mt-3">
-                <div class="col-md-6" *ngIf="place.householdIncome">
+                <div class="col-md-6" *ngIf="CustomPlace.HouseholdIncome">
                   <div class="d-flex flex-column">
                     <p class="info-head">Household Income</p>
                     <p class="info-value">
-                      {{ place.householdIncome }}
+                      {{ CustomPlace.HouseholdIncome }}
                     </p>
                   </div>
                 </div>
-                <div class="col-md-6" *ngIf="place.employees">
+                <div class="col-md-6" *ngIf="CustomPlace.Employees">
                   <div class="d-flex flex-column">
                     <p class="info-head">Employees</p>
-                    <p class="info-value">{{ place.employees  }}</p>
+                    <p class="info-value">{{ CustomPlace.Employees }}</p>
                   </div>
                 </div>
               </div>
@@ -822,61 +750,35 @@
       </div>
 
       <div class="row p-0">
-        <div class="col-md-6" *ngIf="General.nearsetPlaces && General.nearsetPlaces.competitorPlaces.length>0">
+        <div class="col-md-6" *ngFor="let near of NearByType">
           <div class="main-section">
-            <p class="main-name">Nearest Competitors</p>
+            <p class="main-name">Nearest {{ near.Name }}</p>
 
             <ul>
-              <li *ngFor="let place of General.nearsetPlaces?.competitorPlaces">
+              <li *ngFor="let place of near.BuyBoxPlaces | slice : 0 : 5">
                 <div class="d-flex align-items-center">
                   <div>
                     <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.name)
-                      }}.jpg"
+                      src="https://files.cherrypick.com/logos/{{
+                        place.BuyBoxPlace[0].Id
+                      }}.png"
                       alt=""
                       style="height: 35px; margin-right: 10px; width: 35px"
                     />
                   </div>
 
                   <div>
-                    <span *ngIf="place.name" class="nearset">{{
-                      place.name
+                    <span *ngIf="place.BuyBoxPlace[0].Name" class="nearset">{{
+                      place.BuyBoxPlace[0].Name
                     }}</span>
                   </div>
                 </div>
 
-                <b style="text-wrap: nowrap;">
-                  {{ place.distance * 0.000621371 | number : "1.2-2" }}
-                  MI
-                </b>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-6" *ngIf="General.nearsetPlaces && General.nearsetPlaces.cotenants.length>0">
-          <div class="main-section">
-            <p class="main-name">Nearest Complementary</p>
-            <ul>
-              <li *ngFor="let place of General.nearsetPlaces?.cotenants">
-                <div class="d-flex align-items-center">
-                  <div>
-                    <img
-                      src="../../../assets/Images/Logos/{{
-                        replaceApostrophe(place.name)
-                      }}.jpg"
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                    />
-                  </div>
-                  <div>
-                    <span *ngIf="place.name">
-                      <span class="fa-li"></span>{{ place.name }}</span
-                    >
-                  </div>
-                </div>
-
-                <b style="text-wrap: nowrap;">
-                  {{ place.distance * 0.000621371 | number : "1.2-2" }}
+                <b
+                  style="text-wrap: nowrap"
+                  *ngIf="place.BuyBoxPlace[0].Distance"
+                >
+                  {{ place.BuyBoxPlace[0].Distance.toFixed() }}
                   MI
                 </b>
               </li>
@@ -885,12 +787,9 @@
         </div>
       </div>
 
-      <div class="main-section">
-        <div class="row">
-          <div class="col-md-12">
-            <p class="main-name">Map</p>
-            <div id="map" style="height: 500px" *ngIf="mapView"></div>
-          </div>
+      <div class="row">
+        <div class="col-md-12 p-0">
+          <div id="map" style="height: 500px" *ngIf="mapView"></div>
         </div>
       </div>
 
