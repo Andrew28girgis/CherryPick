@@ -240,11 +240,15 @@ export class MapsService {
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
       const viewDetailsButton = document.getElementById(
         `view-details-${markerData.Id}`
-      ); 
-      
+      );
+
       if (viewDetailsButton) {
         viewDetailsButton.addEventListener('click', () =>
-          this.router.navigate(['/landing', markerData.ShoppingCenter.Places[0].Id, this.storedBuyBoxId])
+          this.router.navigate([
+            '/landing',
+            markerData.ShoppingCenter.Places[0].Id,
+            this.storedBuyBoxId,
+          ])
         );
       }
     });
@@ -442,7 +446,7 @@ export class MapsService {
       if (places.length > 0) {
         const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
         const leasePrices = places.map(
-          (place: any) => place.forLeasePrice || null
+          (place: any) => place.ForLeasePrice || null
         );
 
         let minSize = Math.min(...buildingSizes);
@@ -459,6 +463,13 @@ export class MapsService {
           if (place.BuildingSizeSf === maxSize) {
             maxPrice = place.ForLeasePrice;
           }
+        }
+
+        // Check if the min and max lease prices are the same
+        if (minPrice === maxPrice) {
+          return minPrice
+            ? `Unit Size: ${minSize} SF - ${maxSize} SF<br>Lease Price: ${minPrice}`
+            : `Unit Size: ${minSize} SF - ${maxSize} SF`;
         }
 
         if (minSize === maxSize) {
