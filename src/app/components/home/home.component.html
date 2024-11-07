@@ -139,7 +139,9 @@
                       {{ shoppingCenter.CenterState }}
                     </div>
                   </td>
-                  <td [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"> </td>
+                  <td
+                    [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
+                  ></td>
                   <ng-container
                     *ngFor="
                       let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces
@@ -147,12 +149,17 @@
                   >
                     <td>
                       <img
-                      class="logo"
-                        src="https://files.cherrypick.com/logos/{{item.BuyBoxPlaceId}}.png"
+                        class="logo"
+                        src="https://files.cherrypick.com/logos/{{
+                          item.BuyBoxPlaceId
+                        }}.png"
                         title="{{ item.BuyBoxPlaceName }}"
                         alt=""
                       />
-                      {{ item.Distance.toFixed() }} MI
+                      <span class="ms-2" *ngIf="item.Distance >= 1"
+                        >{{ item.Distance.toFixed() }} MI</span
+                      >
+                      <span class="ms-2" *ngIf="item.Distance < 1">Less than 1 MI</span>
                     </td>
                   </ng-container>
                   <td></td>
@@ -261,7 +268,7 @@
                   <td>
                     {{ place.Suite }}
                   </td>
-                  <td>{{ place.BuildingSizeSf | number }} SF</td> 
+                  <td>{{ place.BuildingSizeSf | number }} SF</td>
                   <td class="d-flex">
                     <button
                       class="det-btn d-flex align-items-center"
@@ -378,10 +385,12 @@
                     {{ shopping.CenterCity | titlecase }},
                     {{ shopping.CenterState }}
                   </p>
-                </div> 
+                </div>
                 <div>
-                  <p style="font-size: 15px; font-weight: 500; color: #565656" [innerHTML]="getShoppingCenterUnitSize(shopping)"> 
-                  </p>
+                  <p
+                    style="font-size: 15px; font-weight: 500; color: #565656"
+                    [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                  ></p>
                 </div>
                 <div class="row">
                   <div
@@ -391,14 +400,23 @@
                     <p class="spec-head">
                       Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                     </p>
-                    <p class="spec-content">   <img
-                      class="logo"
-                        src="https://files.cherrypick.com/logos/{{ item.BuyBoxPlaceId
+                    <p class="spec-content">
+                      <img
+                        class="logo"
+                        src="https://files.cherrypick.com/logos/{{
+                          item.BuyBoxPlaceId
                         }}.png"
                         title="{{ item.BuyBoxPlaceName }}"
                         alt=""
-                      /> <span class="ms-2">{{ item.Distance.toFixed() }} MI </span></p>
-                  </div> 
+                      />
+                      <span class="ms-2">
+                        <span *ngIf="item.Distance >= 1"
+                          >{{ item.Distance.toFixed() }} MI</span
+                        >
+                        <span *ngIf="item.Distance < 1">Less than 1 MI</span>
+                      </span>
+                    </p>
+                  </div>
                 </div>
 
                 <div class="buttons-wrap">
@@ -495,11 +513,11 @@
                   >
                     <p class="spec-head">Unit Size</p>
                     <p class="spec-content">{{ place.BuildingSizeSf }} SF</p>
-                  </div> 
+                  </div>
                 </div>
 
                 <div class="buttons-wrap">
-                  <button class="view-details-card" (click)="goToPlace(place )">
+                  <button class="view-details-card" (click)="goToPlace(place)">
                     View Details
                     <svg
                       width="20"
@@ -608,7 +626,10 @@
                 </div>
 
                 <div>
-                  <p style="font-size: 15px; font-weight: 500; color: #565656" [innerHTML]="getShoppingCenterUnitSize(place)"></p>
+                  <p
+                    style="font-size: 15px; font-weight: 500; color: #565656"
+                    [innerHTML]="getShoppingCenterUnitSize(place)"
+                  ></p>
                 </div>
                 <div class="buttons-wrap">
                   <button class="view-details-card" (click)="goToPlace(place)">
