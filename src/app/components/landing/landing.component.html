@@ -36,7 +36,7 @@
                 <p *ngIf="ShoppingCenter" class="m-0 procpect-name">
                   {{ ShoppingCenter.CenterName | titlecase }}
                 </p>
-                <button class="btn for-lease" *ngIf="CustomPlace">
+                <button class="btn for-lease" *ngIf="CustomPlace.ListingType">
                   {{ CustomPlace.ListingType }}
                 </button>
               </div>
@@ -82,7 +82,10 @@
                     ></p>
 
                     <ng-container *ngFor="let near of NearByType">
-                      <div class="d-flex align-items-center p-0" style="margin-bottom: 5px;">
+                      <div
+                        class="d-flex align-items-center p-0"
+                        style="margin-bottom: 5px"
+                      >
                         <p class="m-0">Nearest {{ near.Name }}:</p>
                         <ng-container
                           *ngFor="
@@ -119,7 +122,7 @@
                       *ngIf="ShoppingCenter.OtherPlaces.length > 0"
                     >
                       <div>
-                        <p >
+                        <p>
                           Available Units:
                           <span style="color: #000; font-weight: bold">{{
                             ShoppingCenter.OtherPlaces.length
@@ -128,17 +131,19 @@
                       </div>
                     </div>
                     <!-- <ng-container *ngFor="let item of ShoppingCenter.ShoppingCenter.Places"></ng-container> -->
-                    <div class="col-md-12 col-sm-12 p-0" *ngIf="CustomPlace.DocsLink">
+                    <div
+                      class="col-md-12 col-sm-12 p-0"
+                      *ngIf="CustomPlace.DocsLink"
+                    >
                       <div
                         class="d-flex flex-row align-items-center"
                         style="padding: 12px 0"
                       >
-                    
                         <a
                           class="info-value gray"
                           href="{{ CustomPlace.DocsLink }}"
                           target="_blank"
-                          >View Document</a 
+                          >View Document</a
                         >
                       </div>
                     </div>

@@ -464,7 +464,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-getShoppingCenterUnitSize(shoppingCenter: Center): any {
+  getShoppingCenterUnitSize(shoppingCenter: Center): any {
     if (shoppingCenter.ShoppingCenter) {
         const places = shoppingCenter.ShoppingCenter.Places;
 
@@ -490,17 +490,18 @@ getShoppingCenterUnitSize(shoppingCenter: Center): any {
                 }
             }
 
-            // Check if the min and max lease prices are the same
-            if (minPrice === maxPrice) {
-                return minPrice
-                    ? `Unit Size: ${minSize} SF - ${maxSize} SF<br>Lease Price: ${minPrice}`
-                    : `Unit Size: ${minSize} SF - ${maxSize} SF`;
-            }
-
+            // Check if min and max sizes are the same
             if (minSize === maxSize) {
                 return minPrice
                     ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
                     : `Unit Size: ${minSize} SF`;
+            }
+
+            // Check if min and max lease prices are the same
+            if (minPrice === maxPrice) {
+                return minPrice
+                    ? `Unit Size: ${minSize} SF - ${maxSize} SF<br>Lease Price: ${minPrice}`
+                    : `Unit Size: ${minSize} SF - ${maxSize} SF`;
             }
 
             let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
@@ -516,6 +517,7 @@ getShoppingCenterUnitSize(shoppingCenter: Center): any {
     }
     return null;
 }
+
 
 
   getNeareastCategoryName(categoryId: number) {
