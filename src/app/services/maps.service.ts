@@ -239,11 +239,12 @@ export class MapsService {
     marker.addListener('click', () => infoWindow.open(map, marker));
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
       const viewDetailsButton = document.getElementById(
-        `view-details-${markerData.id}`
-      );
+        `view-details-${markerData.Id}`
+      ); 
+      
       if (viewDetailsButton) {
         viewDetailsButton.addEventListener('click', () =>
-          this.router.navigate(['/landing', markerData.id, this.storedBuyBoxId])
+          this.router.navigate(['/landing', markerData.ShoppingCenter.Places[0].Id, this.storedBuyBoxId])
         );
       }
     });
@@ -307,14 +308,14 @@ export class MapsService {
   }
 
   onMouseEnter(map: any, place: any): void {
-    const { latitude, longitude } = place;
+    const { Latitude, Longitude } = place;
 
     if (map && this.markers) {
       // Find the existing marker based on its latitude and longitude
       const markerIndex = this.markers.findIndex(
         (m: any) =>
-          m.getPosition()?.lat() === +latitude &&
-          m.getPosition()?.lng() === +longitude
+          m.getPosition()?.lat() === +Latitude &&
+          m.getPosition()?.lng() === +Longitude
       );
 
       // If a matching marker is found, remove it from the map and the markers array
@@ -325,7 +326,7 @@ export class MapsService {
 
         // Add a new marker with your custom icon
         const newMarker = new google.maps.Marker({
-          position: { lat: +latitude, lng: +longitude },
+          position: { lat: +Latitude, lng: +Longitude },
           map,
           icon: {
             url: this.getArrowSvgPurple(),
@@ -340,14 +341,14 @@ export class MapsService {
   }
 
   onMouseLeave(map: any, place: any): void {
-    const { latitude, longitude } = place;
+    const { Latitude, Longitude } = place;
 
     if (map && this.markers) {
       // Find the marker created on mouse enter
       const markerIndex = this.markers.findIndex(
         (m: any) =>
-          m.getPosition()?.lat() === +latitude &&
-          m.getPosition()?.lng() === +longitude
+          m.getPosition()?.lat() === +Latitude &&
+          m.getPosition()?.lng() === +Longitude
       );
 
       // If the marker exists, remove it and replace it with the original icon marker
@@ -358,7 +359,7 @@ export class MapsService {
 
         // Add a new marker with the original icon
         const originalMarker = new google.maps.Marker({
-          position: { lat: +latitude, lng: +longitude },
+          position: { lat: +Latitude, lng: +Longitude },
           map,
           icon: {
             url: this.getArrowSvg(),

@@ -464,51 +464,59 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getShoppingCenterUnitSize(shoppingCenter: Center): any {
+getShoppingCenterUnitSize(shoppingCenter: Center): any {
     if (shoppingCenter.ShoppingCenter) {
-      const places = shoppingCenter.ShoppingCenter.Places;
+        const places = shoppingCenter.ShoppingCenter.Places;
 
-      if (places.length > 0) {
-        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
-        const leasePrices = places.map(
-          (place: any) => place.forLeasePrice || null
-        );
+        if (places.length > 0) {
+            const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+            const leasePrices = places.map(
+                (place: any) => place.ForLeasePrice || null
+            );
 
-        let minSize = Math.min(...buildingSizes);
-        let maxSize = Math.max(...buildingSizes);
+            let minSize = Math.min(...buildingSizes);
+            let maxSize = Math.max(...buildingSizes);
 
-        let minPrice = null;
-        let maxPrice = null;
+            let minPrice = null;
+            let maxPrice = null;
 
-        // Find lease prices corresponding to min and max sizes
-        for (let place of places) {
-          if (place.BuildingSizeSf === minSize) {
-            minPrice = place.ForLeasePrice;
-          }
-          if (place.BuildingSizeSf === maxSize) {
-            maxPrice = place.ForLeasePrice;
-          }
+            // Find lease prices corresponding to min and max sizes
+            for (let place of places) {
+                if (place.BuildingSizeSf === minSize) {
+                    minPrice = place.ForLeasePrice;
+                }
+                if (place.BuildingSizeSf === maxSize) {
+                    maxPrice = place.ForLeasePrice;
+                }
+            }
+
+            // Check if the min and max lease prices are the same
+            if (minPrice === maxPrice) {
+                return minPrice
+                    ? `Unit Size: ${minSize} SF - ${maxSize} SF<br>Lease Price: ${minPrice}`
+                    : `Unit Size: ${minSize} SF - ${maxSize} SF`;
+            }
+
+            if (minSize === maxSize) {
+                return minPrice
+                    ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
+                    : `Unit Size: ${minSize} SF`;
+            }
+
+            let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
+
+            if (minPrice || maxPrice) {
+                sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
+                    maxPrice ? maxPrice : 'N/A'
+                }`;
+            }
+
+            return sizeRange;
         }
-
-        if (minSize === maxSize) {
-          return minPrice
-            ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
-            : `Unit Size: ${minSize} SF`;
-        }
-
-        let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
-
-        if (minPrice || maxPrice) {
-          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
-            maxPrice ? maxPrice : 'N/A'
-          }`;
-        }
-
-        return sizeRange;
-      }
     }
     return null;
-  }
+}
+
 
   getNeareastCategoryName(categoryId: number) {
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);

@@ -4,10 +4,7 @@ import { PlacesService } from 'src/app/services/places.service';
 import { Fbo, General, nearsetPlaces, Property } from 'src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConfigService } from 'src/app/services/config.service';
-import { getDomainConfig } from 'src/app/config';
-import { Title } from '@angular/platform-browser';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
 import { AuthService } from 'src/app/services/auth.service';
 import { LandingPlace, ShoppingCenter } from 'src/models/landingPlace';
 import { NearByType } from 'src/models/nearBy';
@@ -101,7 +98,9 @@ export class LandingComponent {
 
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
-        this.getMinMaxUnitSize(this.ShoppingCenter);
+        if(this.ShoppingCenter){
+          this.getMinMaxUnitSize(this.ShoppingCenter);
+        }
         this.viewOnStreet();
 
         this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
