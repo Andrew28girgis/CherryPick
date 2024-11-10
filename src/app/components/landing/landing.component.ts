@@ -64,7 +64,6 @@ export class LandingComponent {
       this.BuyBoxId = params.buyboxid;
       this.PlaceId = params.id;
       this.GetPlaceDetails(this.PlaceId);
-      this.GetPlaceNearBy(this.PlaceId);
     });
   }
 
@@ -102,12 +101,15 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
         if(this.ShoppingCenter){
           this.getMinMaxUnitSize(this.ShoppingCenter);
+          
         }
         this.viewOnStreet();
 
         this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
           link.trim()
         );
+        this.GetPlaceNearBy(this.PlaceId);
+
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -369,139 +371,120 @@ export class LandingComponent {
   }
 
   mapView!: boolean;
-  async getAllMarker() {
-    this.mapView = true;
-    try {
-      let lat = +this.ShoppingCenter?.Latitude;
-      let lon = +this.ShoppingCenter?.Longitude;
 
-      const { Map, InfoWindow } = await google.maps.importLibrary('maps');
-      const map = new Map(document.getElementById('map') as HTMLElement, {
-        center: { lat: lat || 0, lng: lon || 0 },
-        zoom: 14,
+async getAllMarker() {
+  this.mapView = true;
+  try {
+    const lat = this.getLatitude();
+    const lon = this.getLongitude();
+    
+    const map = await this.initializeMap(lat, lon);
+    this.addMarkerForPrimaryLocation(map);
+
+    if (this.NearByType.length > 0) {
+      this.NearByType.forEach(type => {
+        type.BuyBoxPlaces.slice(0, 5).forEach(place => {
+          this.createMarker(map, place, type.Name);
+        });
       });
-
-      const createMarker = (markerData: any, type: string) => {
-        let icon;
-
-        if (type === 'Shopping Center') {
-          icon = {
-            url: this.getArrowSvg(),
-            scaledSize: new google.maps.Size(40, 40),
-          };
-        } else {
-          icon = {
-            url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
-            scaledSize: new google.maps.Size(40, 40),
-          };
-        }
-
-        const marker = new google.maps.Marker({
-          map,
-          position: {
-            lat: markerData?.Latitude,
-            lng: markerData?.Longitude,
-          },
-          icon: icon,
-        });
-
-        let content;
-        if (type === 'Shopping Center') {
-          content = `<div class="info-window">  
-                    <div class="main-img">
-                      <img src="${markerData.MainImage}" alt="Main Image">
-                    </div>
-            <div class="content-wrap"> 
-                ${
-                  markerData.name
-                    ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
-                    : ''
-                }
-                    <p class="address-content">
-                    <svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
-                      <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
-                    </svg>
-                 ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
-            markerData.CenterState
-          }</p>
-                <div class="row"> 
-                    ${
-                      markerData.nearestCompetitorsInMiles
-                        ? `
-                        <div class="col-md-4 col-sm-12 d-flex flex-column spec">
-                            <p class="spec-head">Nearest Competitors</p>
-                            <p class="spec-content">${markerData.nearestCompetitorsInMiles.toFixed(
-                              2
-                            )} MI</p>
-                        </div>`
-                        : ''
-                    }
-                    ${
-                      markerData.nearestCotenantsMiles
-                        ? `
-                        <div class="col-md-4 col-sm-12 d-flex flex-column spec">
-                            <p class="spec-head">Nearest Complementary</p>
-                            <p class="spec-content">${markerData.nearestCotenantsMiles.toFixed(
-                              2
-                            )} MI</p>
-                        </div>`
-                        : ''
-                    }
-                    ${
-                      markerData.avalibleUnits
-                        ? `
-                        <div class="col-md-4 col-sm-12  d-flex flex-column spec">
-                            <p class="spec-head">Avalible Units</p>
-                            <p class="spec-content">${markerData.avalibleUnits}</p>
-                        </div>`
-                        : ''
-                    }
-                </div> 
-            </div>
-        </div>`;
-        } else {
-          content = `<div > 
-            <div class="p-3"> 
-                ${
-                  markerData.BuyBoxPlace[0].Name
-                    ? `<p class="content-title">${markerData.BuyBoxPlace[0].Name.toUpperCase()}</p>`
-                    : ''
-                }
-            </div>
-        </div>`; // Display the name and type of the place
-        }
-
-        const infoWindow = new InfoWindow({
-          content: content,
-        });
-
-        // Show info window on mouseover
-        marker.addListener('click', () => {
-          infoWindow.open({
-            anchor: marker,
-            map,
-            shouldFocus: false,
-          });
-        });
-
-        marker.addListener('mouseout', () => {
-          infoWindow.close();
-        });
-      };
-
-      createMarker(this.ShoppingCenter, 'Shopping Center');
-
-      if (this.NearByType.length > 0) {
-        this.NearByType.forEach((type) => {
-          type.BuyBoxPlaces.slice(0, 5).forEach((place) => {
-            createMarker(place, type.Name);
-          });
-        });
-      }
-    } finally {
     }
+  } finally {
+    // Any cleanup if necessary
   }
+}
+
+getLatitude(): number {
+  return this.ShoppingCenter ? +this.ShoppingCenter.Latitude : +this.CustomPlace.Latitude;
+}
+
+getLongitude(): number {
+  return this.ShoppingCenter ? +this.ShoppingCenter.Longitude : +this.CustomPlace.Longitude;
+}
+
+async initializeMap(lat: number, lon: number): Promise<any> {
+  const { Map } = await google.maps.importLibrary('maps');
+  return new Map(document.getElementById('map') as HTMLElement, {
+    center: { lat: lat || 0, lng: lon || 0 },
+    zoom: 12,
+  });
+}
+
+addMarkerForPrimaryLocation(map: any) {
+  const primaryLocation = this.ShoppingCenter || this.CustomPlace;
+  const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
+  this.createMarker(map, primaryLocation, type);
+}
+
+createMarker(map: any, markerData: any, type: string) {
+  const icon = this.getIcon(markerData, type);
+  const marker = new google.maps.Marker({
+    map,
+    position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
+    icon: icon,
+  });
+
+  const infoWindow = new google.maps.InfoWindow({
+    content: this.getInfoWindowContent(markerData, type),
+  });
+
+  this.addInfoWindowListeners(marker, infoWindow);
+}
+
+getIcon(markerData: any, type: string): any {
+  if (type === 'Shopping Center' || type === 'Stand Alone') {
+    return {
+      url: this.getArrowSvg(),
+      scaledSize: new google.maps.Size(40, 40),
+    };
+  } else {
+    return {
+      url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
+      scaledSize: new google.maps.Size(40, 40),
+    };
+  }
+}
+
+getInfoWindowContent(markerData: any, type: string): string {
+  if (type === 'Shopping Center') {
+    return `<div class="info-window">  
+              <div class="main-img"><img src="${markerData.MainImage}" alt="Main Image"></div>
+              <div class="content-wrap">
+                ${markerData.CenterName ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>` : ''}
+                <p class="address-content">${this.getAddressContent(markerData)}</p>
+                <div class="row">${this.getSpecificationContent(markerData)}</div>
+              </div>
+            </div>`;
+  } else {
+    return `<div class="p-3">
+              ${markerData.BuyBoxPlace ? `<p class="content-title">${markerData.BuyBoxPlace[0].Name.toUpperCase()}</p>` : ''}
+            </div>`;
+  }
+}
+
+getAddressContent(markerData: any): string {
+  return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
+            <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
+          </svg> ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}`;
+}
+
+getSpecificationContent(markerData: any): string {
+  return `
+    ${markerData.nearestCompetitorsInMiles ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Competitors</p><p class="spec-content">${markerData.nearestCompetitorsInMiles.toFixed(2)} MI</p></div>` : ''}
+    ${markerData.nearestCotenantsMiles ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Complementary</p><p class="spec-content">${markerData.nearestCotenantsMiles.toFixed(2)} MI</p></div>` : ''}
+    ${markerData.avalibleUnits ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Available Units</p><p class="spec-content">${markerData.avalibleUnits}</p></div>` : ''}`;
+}
+
+addInfoWindowListeners(marker: any, infoWindow: any) {
+  marker.addListener('click', () => {
+    infoWindow.open({ anchor: marker, map: marker.getMap(), shouldFocus: false });
+  });
+
+  marker.addListener('mouseout', () => {
+    infoWindow.close();
+  });
+}
+
 
   private getArrowSvg(): string {
     return (
@@ -756,7 +739,6 @@ export class LandingComponent {
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view-pop');
-
       if (streetViewElement) {
         this.streetMapPopup(lat, lng, heading, pitch);
       } else {
