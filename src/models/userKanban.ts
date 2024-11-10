@@ -1,0 +1,42 @@
+export interface Kanban {
+    Id: number
+    targetStakeholderId: number
+    kanbanName: string
+    kanbanDefinitions: KanbanDefinition[]
+  }
+  
+  export interface KanbanDefinition {
+    Id: number
+    kanbanId: number
+    contactId: number
+    Contact: Contact[]
+  }
+  
+  export interface Contact {
+    ID: number
+    Firstname: string
+    Lastname: string
+    Email: string
+    CellPhone: string
+    OrganizationId: number
+    LinkedIn: string
+    JobTitle: string
+    Profile: string
+    Area: string
+    FormattedCellPhone: string
+    LastSignInDate: string
+    Password: string
+    Organization: Organization[]
+  }
+  
+  export interface Organization {
+    ID: number
+    Name: string
+    Address: string
+    PhoneNumber: string
+    Description: string
+    LinkedIn: string
+    States: string
+    Status: string
+  }
+  

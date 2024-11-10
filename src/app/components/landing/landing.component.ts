@@ -431,9 +431,10 @@ export class LandingComponent {
   viewOnStreet() {
     let lat = this.getStreetLat();
     let lng = this.getStreetLong(); 
-    let heading =   this.CustomPlace.Heading || 165 ; // Default heading value
-    let pitch =  this.CustomPlace.Pitch ||0  ; // Default pitch value
-
+    let heading =   this.getStreetHeading() || 165 ; // Default heading value
+    let pitch =  this.getStreetPitch() || 0  ; // Default pitch value
+    console.log(lat, lng, heading, pitch);
+    
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
@@ -454,6 +455,18 @@ export class LandingComponent {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLongitude
       : +this.CustomPlace.StreetLongitude;
+  } 
+  
+  getStreetHeading(): number {
+    return this.ShoppingCenter
+      ? +this.ShoppingCenter.Heading
+      : +this.CustomPlace.Heading;
+  }
+
+  getStreetPitch(): number {
+    return this.ShoppingCenter
+      ? +this.ShoppingCenter.Pitch
+      : +this.CustomPlace.Pitch;
   }
 
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
@@ -463,7 +476,7 @@ export class LandingComponent {
         streetViewElement as HTMLElement,
         {
           position: { lat: lat, lng: lng },
-          pov: { heading: heading, pitch: 0 },
+          pov: { heading: heading, pitch: pitch },
         }
       );
     } else {

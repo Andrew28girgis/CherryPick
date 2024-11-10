@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-  CdkDrag,
-  CdkDropList,
-} from '@angular/cdk/drag-drop';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PlacesService } from 'src/app/services/places.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from 'src/app/services/auth.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Kanban } from 'src/models/userKanban';
+import { KanbanCard, KanbanOrganization } from 'src/models/kanbans';
 @Component({
   selector: 'app-kanban',
   templateUrl: './kanban.component.html',
@@ -31,8 +32,17 @@ export class KanbanComponent {
       items: ['Completed Task 1', 'Completed Task 2']
     }
   ];
-  
-  constructor() {
+  kanbans:Kanban[]=[];
+  kanbanList:KanbanCard[]=[] ;
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    public router: Router,
+    private PlacesService: PlacesService,
+    private spinner: NgxSpinnerService,
+    private modalService: NgbModal,
+    private authService: AuthService
+
+  ) {
     this.sidebarItems = [
       {
         title: 'Projects',
@@ -69,7 +79,100 @@ export class KanbanComponent {
     this.collapse = false;
   }
 
+
+  ngOnInit(): void {
+    this.GetUserKanbans();
+  }
   
+
+  GetUserKanbans(): void {
+    const body: any = {
+      Name: 'GetUserKanbans',
+      Params: {
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.kanbans = data.json ;   
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+  
+  GetKanbanDetails(kanban:Kanban){
+    const body: any = {
+      Name: 'GetKanbanDetails',
+      Params: {
+        kanbanId: kanban.Id
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+          this.kanbanList = data.json; 
+          
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  } 
+
+  getConnectedLists(currentId: string) {
+    return this.kanbanList[0].kanbanStages
+      .map(stage => stage.Id.toString())
+      .filter(id => id !== currentId);
+  }
+
+  drop(event: CdkDragDrop<any[]>) {
+    let movedItem;
+  
+    if (event.previousContainer === event.container) {
+      // Moving within the same container
+      movedItem = event.container.data[event.previousIndex];
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      // Moving to a different container
+      movedItem = event.previousContainer.data[event.previousIndex];
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+  
+      // Update the kanbanStageId to reflect the new stage
+      const newStageId = parseInt(event.container.id, 10); // Convert the container id to a number
+      movedItem.kanbanStageId = newStageId;
+    }
+  
+    // `movedItem` now contains the item that was moved with an updated kanbanStageId
+    console.log('Moved item:', movedItem);
+    console.log('After move:', this.kanbanList);
+      
+    // Optional: Call a function to handle the updated list
+    this.postDrag(movedItem);
+  }
+  
+  
+
+
+  postDrag(movedItem:KanbanOrganization){
+    
+    console.log('Kanban list after drop:', movedItem);
+    let body:any = {} ;
+    body.json = movedItem;
+    body.mainEntity = 'kanban.kanbanOrganization';
+    body.name = 'kanbanOrganizations';
+    body.params = {}; 
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => { 
+          
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
   changeCollapse(): void {
     this.collapse = !this.collapse; 
   }
@@ -78,28 +181,6 @@ export class KanbanComponent {
     // Implement logout logic here
   }
 
-  
-
-  getConnectedLists(currentId: string) {
-    return this.lists
-      .map(list => list.id)
-      .filter(id => id !== currentId);
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      return;
-    } 
-
-    const previousList = this.lists.find(list => list.id === event.previousContainer.id);
-    const currentList = this.lists.find(list => list.id === event.container.id);
-
-    if (previousList && currentList) {
-      const movedItem = previousList.items.splice(event.previousIndex, 1)[0];
-      currentList.items.splice(event.currentIndex, 0, movedItem);
-    }
-  }
- 
 
   
 }

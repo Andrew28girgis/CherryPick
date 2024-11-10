@@ -44,24 +44,39 @@
     </div>
   </div>
   <div class="col-md-8">
-    <div class="row d-flex ">
-      <div *ngFor="let list of lists" class="col-md-4">
+
+    <div class="row d-flex my-3">
+      <div *ngFor="let kanban of kanbans" class="col-md-4">
+        <div class="card" (click)="GetKanbanDetails(kanban)">
+          <div class="card-header">
+            <h2 >{{ kanban.kanbanName }}</h2>
+          </div> 
+        </div>
+      </div>
+    </div>
+
+    <div class="row d-flex" *ngIf="kanbanList">
+      <div *ngFor="let stage of kanbanList[0]?.kanbanStages" class="col-md-4">
         <div class="card">
           <div class="card-header">
-            <h2>{{ list.title }}</h2>
+            <h2>{{ stage.stageName }}</h2>
           </div>
           <div
             cdkDropList
-            [id]="list.id"
-            [cdkDropListData]="list.items"
-            [cdkDropListConnectedTo]="getConnectedLists(list.id)"
+            [id]="stage.Id.toString()"
+            [cdkDropListData]="stage.kanbanOrganizations"
+            [cdkDropListConnectedTo]="getConnectedLists(stage.Id.toString())"
             class="card-body example-list"
             (cdkDropListDropped)="drop($event)">
-            <div class="example-box" *ngFor="let item of list.items" cdkDrag>{{ item }}</div>
+            
+            <div class="example-box" *ngFor="let org of stage.kanbanOrganizations" cdkDrag>
+              {{ org.Organization[0].Name }}
+            </div>
           </div>
         </div>
       </div>
     </div>
+    
     
     
     
