@@ -4,7 +4,7 @@ import { PlacesService } from 'src/app/services/places.service';
 import { Fbo, General, nearsetPlaces, Property } from 'src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'src/app/services/auth.service';
 import { LandingPlace, ShoppingCenter } from 'src/models/landingPlace';
 import { NearByType } from 'src/models/nearBy';
@@ -40,7 +40,8 @@ export class LandingComponent {
   PlaceId!: number;
   CustomPlace!: LandingPlace;
   ShoppingCenter!: ShoppingCenter;
-  NearByType: NearByType[] = [];
+  NearByType: NearByType[] = []; 
+  placeImage: string[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -99,17 +100,16 @@ export class LandingComponent {
 
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
-        if(this.ShoppingCenter){
+        if (this.ShoppingCenter) {
           this.getMinMaxUnitSize(this.ShoppingCenter);
-          
         }
         this.viewOnStreet();
+
 
         this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
           link.trim()
         );
         this.GetPlaceNearBy(this.PlaceId);
-
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -172,56 +172,13 @@ export class LandingComponent {
         console.log(`nearBy`);
         console.log(this.NearByType);
         this.getAllMarker();
+
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
-  private initializeQueryParams(): void {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      this.token = params['Token'];
-      this.Etoken = params['EToken'];
-      if (this.Etoken) {
-        localStorage.setItem('Token', this.Etoken);
-        this.LoginWithContact(this.contactId, this.Etoken);
-      } else if (!this.token) {
-        this.getPlace(this.placeId);
-      } else {
-        this.GetSharedPlace(this.token, this.placeId);
-      }
-    });
-  }
-
-  LoginWithContact(contactId: any, token: any) {
-    let x: any = {};
-    x.contactId = contactId;
-    x.token = token;
-    localStorage.setItem('contactId', contactId);
-    this.PlacesService.LoginWithContact(x).subscribe((res) => {
-      this.authService.setToken(res.token);
-      this.getPlace(this.placeId);
-    });
-  }
-
-  anotherPlaces: any[] = [];
   minBuildingSize!: number;
-  maxBuildingSize!: number;
-  getAnotherPlaces() {
-    let centerName = this.replaceApostrophe(this.place.centerName);
-    this.PlacesService.GetShoppingCenterPlaces(
-      this.place.centerName,
-      this.placeId,
-      this.BuyBoxId
-    ).subscribe((res) => {
-      this.anotherPlaces = res;
-      if (this.anotherPlaces.length > 0) {
-        const buildingSizes = this.anotherPlaces.map(
-          (place: any) => place.buildingSizeSf
-        );
-        this.minBuildingSize = Math.min(...buildingSizes);
-        this.maxBuildingSize = Math.max(...buildingSizes);
-      }
-    });
-  }
+  maxBuildingSize!: number; 
 
   GetUserEstimatedNumbers(placeId: number) {
     this.PlacesService.GetUserEstimatedNumbers(
@@ -253,105 +210,7 @@ export class LandingComponent {
     this.PlacesService.UpdateBuyBoxUserEstimatedNumbers(this.fbo).subscribe(
       (res) => {}
     );
-  }
-
-  GetSharedPlace(token: number, sharedId: number) {
-    this.PlacesService.GetSharedPlace(token, sharedId, this.BuyBoxId).subscribe(
-      (data) => {
-        this.place = data.place;
-        this.placeId = this.place.id;
-        this.GetUserEstimatedNumbersForShare(this.placeId, sharedId);
-        this.GetAllFilesFromPlace(this.placeId);
-        // this.place.maxBuildingSize =
-        //   this.place?.maxBuildingSize === 0
-        //     ? this.place?.landSf * this.place?.far
-        //     : this.place?.maxBuildingSize ?? 0;
-        // this.place.stages.forEach((s) => {
-        //   if (s.propertyName) {
-        //     s.propertyName =
-        //       s.propertyName.charAt(0).toLowerCase() + s.propertyName.slice(1);
-        //   }
-        // });
-        // this.GetNearbyBuildings(this.place.lat, this.place.lon);
-        //    this.getAllMarker();
-        this.GetNearestPlaces();
-        this.getSpecificPlaces(this.place.id, this.BuyBoxId);
-        this.viewOnStreet();
-      }
-    );
-  }
-
-  GetAllFilesFromPlace(placeId: number) {
-    this.PlacesService.GetAllFilesFromPlace(placeId).subscribe((res) => {
-      this.PlaceFiles = res.filenames;
-    });
-  }
-
-  formattedFboUnit!: string | null;
-  placeImage: string[] = [];
-  getPlace(id: number) {
-    this.PlacesService.GetBuyBoxOnePlace(id, this.BuyBoxId).subscribe(
-      (data) => {
-        this.place = data.place;
-
-        localStorage.setItem('placeLat', this.place.lat.toString());
-        localStorage.setItem('placeLon', this.place.lon.toString());
-
-        this.placeImage = this.place.imagesLinks
-          ?.split(',')
-          .map((link) => link.trim());
-        this.GetNearestPlaces();
-        this.getAnotherPlaces();
-
-        // if (this.place !== undefined) {
-        //   this.theRating = this.place.isAccepted;
-        // }
-        // this.place.maxBuildingSize =
-        //   this.place?.maxBuildingSize === 0
-        //     ? this.place?.landSf * this.place?.far
-        //     : this.place?.maxBuildingSize ?? 0;
-        // this.place.stages.forEach((s) => {
-        //   if (s.propertyName) {
-        //     s.propertyName =
-        //       s.propertyName.charAt(0).toLowerCase() + s.propertyName.slice(1);
-        //   }
-        // });
-        this.getSpecificPlaces(this.place.id, this.BuyBoxId);
-        // this.GetNearbyBuildings(this.place.lat, this.place.lon);
-
-        this.GetUserEstimatedNumbers(this.place.id);
-        // this.getComparable(this.place.id, this.place.organizationId);
-        // this.GetAllFilesFromPlace(this.place.id);
-      }
-    );
-  }
-
-  GetNearestPlaces() {
-    this.General.nearsetPlaces = new nearsetPlaces();
-    this.PlacesService.GetNearestBuyBoxPlaces(
-      this.place.organizationId,
-      this.place.id
-    ).subscribe((res) => {
-      this.General.nearsetPlaces = res;
-      //this.getAllMarker();
-      // this.rentResults = this.findMinMaxRent(res);
-    });
-  }
-
-  getComparable(placeId: number, orgId: number) {
-    this.PlacesService.NearestFiveComparable(placeId, orgId).subscribe(
-      (res) => {
-        this.General.comparable = res;
-      },
-      (error) => {}
-    );
-  }
-
-  updateNoi(value: string): void {
-    const numericValue = +value.replace(/,/g, '');
-    this.fbo.noi = numericValue;
-    this.UpdateBuyBoxUserEstimatedNumbers();
-  }
+  } 
 
   formatNumberWithCommas(value: number | null): string {
     if (value !== null) {
@@ -360,131 +219,166 @@ export class LandingComponent {
       return '';
     }
   }
+  
+  mapView!: boolean;
 
-  rentResults: any[] = [];
-  GetNearbyBuildings(lat: number, lng: number) {
-    this.PlacesService.GetNearbyBuildings(lat, lng).subscribe((data) => {
-      this.General.Buildings = data;
-      this.rentResults = this.findMinMaxRent(data);
-      //  this.getAllMarker();
+  async getAllMarker() {
+    this.mapView = true;
+    try {
+      const lat = this.getLatitude();
+      const lon = this.getLongitude();
+      
+      const map = await this.initializeMap(lat, lon);
+      this.addMarkerForPrimaryLocation(map);
+
+      console.log(`from map`);
+      console.log(this.NearByType);
+      
+      
+      if (this.NearByType.length > 0) {
+        this.NearByType.forEach((type) => {
+          type.BuyBoxPlaces.slice(0, 5).forEach((place) => {
+            this.createMarker(map, place, type.Name);
+          });
+        });
+      }
+    } finally {
+      // Any cleanup if necessary
+    }
+  }
+
+  getLatitude(): number {
+    return this.ShoppingCenter
+      ? +this.ShoppingCenter.Latitude
+      : +this.CustomPlace.Latitude;
+  }
+
+  getLongitude(): number {
+    return this.ShoppingCenter
+      ? +this.ShoppingCenter.Longitude
+      : +this.CustomPlace.Longitude;
+  }
+
+
+  async initializeMap(lat: number, lon: number): Promise<any> {
+    const { Map } = await google.maps.importLibrary('maps');
+    return new Map(document.getElementById('map') as HTMLElement, {
+      center: { lat: lat || 0, lng: lon || 0 },
+      zoom: 12,
     });
   }
 
-  mapView!: boolean;
+  addMarkerForPrimaryLocation(map: any) {
+    const primaryLocation = this.ShoppingCenter || this.CustomPlace;
+    const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
+    this.createMarker(map, primaryLocation, type);
+  }
 
-async getAllMarker() {
-  this.mapView = true;
-  try {
-    const lat = this.getLatitude();
-    const lon = this.getLongitude();
+  createMarker(map: any, markerData: any, type: string) {
+    const icon = this.getIcon(markerData, type);
+    const marker = new google.maps.Marker({
+      map,
+      position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
+      icon: icon,
+    });
+
+    const infoWindow = new google.maps.InfoWindow({
+      content: this.getInfoWindowContent(markerData, type),
+    });
+
+    this.addInfoWindowListeners(marker, infoWindow);
+  }
+
+  getIcon(markerData: any, type: string): any {
     
-    const map = await this.initializeMap(lat, lon);
-    this.addMarkerForPrimaryLocation(map);
+    if (type === 'Shopping Center' || type === 'Stand Alone') { 
 
-    if (this.NearByType.length > 0) {
-      this.NearByType.forEach(type => {
-        type.BuyBoxPlaces.slice(0, 5).forEach(place => {
-          this.createMarker(map, place, type.Name);
-        });
-      });
+      return {
+        url: this.getArrowSvg(),
+        scaledSize: new google.maps.Size(40, 40),
+      };
+    } else {
+      return {
+        url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
+        scaledSize: new google.maps.Size(40, 40),
+      };
     }
-  } finally {
-    // Any cleanup if necessary
   }
-}
 
-getLatitude(): number {
-  return this.ShoppingCenter ? +this.ShoppingCenter.Latitude : +this.CustomPlace.Latitude;
-}
-
-getLongitude(): number {
-  return this.ShoppingCenter ? +this.ShoppingCenter.Longitude : +this.CustomPlace.Longitude;
-}
-
-async initializeMap(lat: number, lon: number): Promise<any> {
-  const { Map } = await google.maps.importLibrary('maps');
-  return new Map(document.getElementById('map') as HTMLElement, {
-    center: { lat: lat || 0, lng: lon || 0 },
-    zoom: 12,
-  });
-}
-
-addMarkerForPrimaryLocation(map: any) {
-  const primaryLocation = this.ShoppingCenter || this.CustomPlace;
-  const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
-  this.createMarker(map, primaryLocation, type);
-}
-
-createMarker(map: any, markerData: any, type: string) {
-  const icon = this.getIcon(markerData, type);
-  const marker = new google.maps.Marker({
-    map,
-    position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
-    icon: icon,
-  });
-
-  const infoWindow = new google.maps.InfoWindow({
-    content: this.getInfoWindowContent(markerData, type),
-  });
-
-  this.addInfoWindowListeners(marker, infoWindow);
-}
-
-getIcon(markerData: any, type: string): any {
-  if (type === 'Shopping Center' || type === 'Stand Alone') {
-    return {
-      url: this.getArrowSvg(),
-      scaledSize: new google.maps.Size(40, 40),
-    };
-  } else {
-    return {
-      url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
-      scaledSize: new google.maps.Size(40, 40),
-    };
-  }
-}
-
-getInfoWindowContent(markerData: any, type: string): string {
-  if (type === 'Shopping Center') {
-    return `<div class="info-window">  
-              <div class="main-img"><img src="${markerData.MainImage}" alt="Main Image"></div>
+  getInfoWindowContent(markerData: any, type: string): string {
+    if (type === 'Shopping Center') {
+      return `<div class="info-window">  
+              <div class="main-img"><img src="${
+                markerData.MainImage
+              }" alt="Main Image"></div>
               <div class="content-wrap">
-                ${markerData.CenterName ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>` : ''}
-                <p class="address-content">${this.getAddressContent(markerData)}</p>
-                <div class="row">${this.getSpecificationContent(markerData)}</div>
+                ${
+                  markerData.CenterName
+                    ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
+                    : ''
+                }
+                <p class="address-content">${this.getAddressContent(
+                  markerData
+                )}</p>
+                <div class="row">${this.getSpecificationContent(
+                  markerData
+                )}</div>
               </div>
             </div>`;
-  } else {
-    return `<div class="p-3">
-              ${markerData.BuyBoxPlace ? `<p class="content-title">${markerData.BuyBoxPlace[0].Name.toUpperCase()}</p>` : ''}
+    } else {
+      return `<div class="p-3">
+              ${
+                markerData.BuyBoxPlace
+                  ? `<p class="content-title">${markerData.BuyBoxPlace[0].Name.toUpperCase()}</p>`
+                  : ''
+              }
             </div>`;
+    }
   }
-}
 
-getAddressContent(markerData: any): string {
-  return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  getAddressContent(markerData: any): string {
+    return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
             <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
           </svg> ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}`;
-}
+  }
 
-getSpecificationContent(markerData: any): string {
-  return `
-    ${markerData.nearestCompetitorsInMiles ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Competitors</p><p class="spec-content">${markerData.nearestCompetitorsInMiles.toFixed(2)} MI</p></div>` : ''}
-    ${markerData.nearestCotenantsMiles ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Complementary</p><p class="spec-content">${markerData.nearestCotenantsMiles.toFixed(2)} MI</p></div>` : ''}
-    ${markerData.avalibleUnits ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Available Units</p><p class="spec-content">${markerData.avalibleUnits}</p></div>` : ''}`;
-}
+  getSpecificationContent(markerData: any): string {
+    return `
+    ${
+      markerData.nearestCompetitorsInMiles
+        ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Competitors</p><p class="spec-content">${markerData.nearestCompetitorsInMiles.toFixed(
+            2
+          )} MI</p></div>`
+        : ''
+    }
+    ${
+      markerData.nearestCotenantsMiles
+        ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Complementary</p><p class="spec-content">${markerData.nearestCotenantsMiles.toFixed(
+            2
+          )} MI</p></div>`
+        : ''
+    }
+    ${
+      markerData.avalibleUnits
+        ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Available Units</p><p class="spec-content">${markerData.avalibleUnits}</p></div>`
+        : ''
+    }`;
+  }
 
-addInfoWindowListeners(marker: any, infoWindow: any) {
-  marker.addListener('click', () => {
-    infoWindow.open({ anchor: marker, map: marker.getMap(), shouldFocus: false });
-  });
+  addInfoWindowListeners(marker: any, infoWindow: any) {
+    marker.addListener('click', () => {
+      infoWindow.open({
+        anchor: marker,
+        map: marker.getMap(),
+        shouldFocus: false,
+      });
+    });
 
-  marker.addListener('mouseout', () => {
-    infoWindow.close();
-  });
-}
-
+    marker.addListener('mouseout', () => {
+      infoWindow.close();
+    });
+  }
 
   private getArrowSvg(): string {
     return (
@@ -554,70 +448,15 @@ addInfoWindowListeners(marker: any, infoWindow: any) {
         }
       }
     );
-  }
-
-  sendInterested(rate: number) {
-    let feedback: any = {};
-    feedback['placeId'] = this.placeId;
-    feedback['IsAccepted'] = rate;
-    feedback['buyboxId'] = +this.BuyBoxId;
-
-    this.PlacesService.UpdatePlaceAcceptable(feedback).subscribe((data) => {
-      this.getPlace(this.placeId);
-      this.theRating = rate;
-    });
-  }
-
-  isActive(rate: any): boolean {
-    return rate === this.theRating;
-  }
-
-  scrollToFeedback(el: HTMLElement) {
-    el.scrollIntoView();
-  }
-
-  findMinMaxRent(data: any) {
-    const rentMap = new Map();
-    data.forEach((building: any) => {
-      building.appartements.forEach((apartment: any) => {
-        const { appartementType, rentPerMonth } = apartment;
-        if (!rentMap.has(appartementType)) {
-          // If the appartementType is not in the map, initialize it
-          rentMap.set(appartementType, {
-            minRent: rentPerMonth,
-            maxRent: rentPerMonth,
-          });
-        } else {
-          rentMap.get(appartementType).minRent = Math.min(
-            rentMap.get(appartementType).minRent,
-            rentPerMonth
-          );
-          rentMap.get(appartementType).maxRent = Math.max(
-            rentMap.get(appartementType).maxRent,
-            rentPerMonth
-          );
-        }
-      });
-    });
-
-    // Convert the rentMap  an array of objects
-    const rentArray = Array.from(
-      rentMap,
-      ([appartementType, { minRent, maxRent }]) => ({
-        appartementType,
-        minRent,
-        maxRent,
-      })
-    );
-    return rentArray;
-  }
+  }  
+ 
 
   viewOnStreet() {
-    let lat = this.ShoppingCenter?.StreetLatitude;
-    let lng = this.ShoppingCenter?.StreetLongitude;
-    let heading = this.ShoppingCenter?.Heading || 165; // Default heading value
-    let pitch = this.ShoppingCenter?.Pitch || 0; // Default pitch value
-    // this.updateOpacity(mapdata);
+    let lat = this.getStreetLat();
+    let lng = this.getStreetLong(); 
+    let heading =   this.CustomPlace.Heading || 165 ; // Default heading value
+    let pitch =  this.CustomPlace.Pitch ||0  ; // Default pitch value
+
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
@@ -626,6 +465,18 @@ addInfoWindowListeners(marker: any, infoWindow: any) {
         console.error("Element with id 'street-view' not found.");
       }
     });
+  }
+
+  getStreetLat(): number {
+    return this.ShoppingCenter
+      ? +this.ShoppingCenter.StreetLatitude
+      : +this.CustomPlace.StreetLatitude;
+  }
+
+  getStreetLong(): number {
+    return this.ShoppingCenter
+      ? +this.ShoppingCenter.StreetLongitude
+      : +this.CustomPlace.StreetLongitude;
   }
 
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
@@ -643,36 +494,7 @@ addInfoWindowListeners(marker: any, infoWindow: any) {
     }
   }
 
-  shareableLink!: string;
-  SharePlace() {
-    let share: any = {};
-    share.BaseUrl = 'https://' + this.initDomain + '/landing';
-    // share.BaseUrl = 'http://localhost:4200/landing' ;
-    share.placeId = this.placeId;
-    share.buyboxId = +this.BuyBoxId;
-    this.PlacesService.SharePlace(share).subscribe((res) => {
-      this.shareableLink = res.token;
-    });
-  }
-
-  openShare(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'sm',
-      scrollable: true,
-    });
-    this.General.modalObject = modalObject;
-    this.SharePlace();
-  }
-
-  openMoreDetails(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-    this.General.modalObject = modalObject;
-  }
+ 
 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
@@ -780,9 +602,5 @@ addInfoWindowListeners(marker: any, infoWindow: any) {
         strokeWeight: 1,
       },
     });
-  }
-
-  replaceApostrophe(name: string, replacement: string = ''): string {
-    return name.replace(/'/g, replacement).toLowerCase();
-  }
+  } 
 }

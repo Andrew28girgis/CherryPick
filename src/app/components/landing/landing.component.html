@@ -25,7 +25,7 @@
       <ngb-alert [dismissible]="false" class="alert-success">
         <strong>Thank</strong> you for letting us know.
       </ngb-alert>
-    </p>
+    </p> 
 
     <div class="main-section">
       <section id="hero">
@@ -85,7 +85,7 @@
                     <p
                     *ngIf="CustomPlace.BuildingSizeSf"
                      class="info-value p-0" 
-                    > Unit Size: {{CustomPlace.BuildingSizeSf}}</p>
+                    > Unit Size: {{CustomPlace.BuildingSizeSf |number}} SF</p>
 
                     <ng-container *ngFor="let near of NearByType">
                       <div
@@ -111,14 +111,11 @@
                             "
                           />
 
-                          <b
-                            style="text-wrap: nowrap"
-                            *ngIf="place.BuyBoxPlace[0].Distance"
-                          >
-                            {{ place.BuyBoxPlace[0].Distance.toFixed() }}
-                            MI
-                          </b>
-                          <div></div>
+                          
+                          <span class="ms-2 font-weight-bold">
+                            {{ place.BuyBoxPlace[0].Distance > 1 ? place.BuyBoxPlace[0].Distance.toFixed() + ' MI' : 'Less than 1 MI' }}
+                          </span>
+                          
                         </ng-container>
                       </div>
                     </ng-container> 
@@ -205,14 +202,9 @@
                             "
                           />
 
-                          <b
-                            style="text-wrap: nowrap"
-                            *ngIf="place.BuyBoxPlace[0].Distance"
-                          >
-                            {{ place.BuyBoxPlace[0].Distance.toFixed() }}
-                            MI
-                          </b>
-                          <div></div>
+                          <span class="ms-2 font-weight-bold">
+                            {{ place.BuyBoxPlace[0].Distance > 1 ? place.BuyBoxPlace[0].Distance.toFixed() + ' MI' : 'Less than 1 MI' }}
+                          </span>
                         </ng-container>
                       </div>
                     </ng-container>
@@ -329,7 +321,6 @@
                     class="form-control"
                     name="noi"
                     [ngModel]="formatNumberWithCommas(fbo.noi)"
-                    (ngModelChange)="updateNoi($event)"
                     style="height: 30px; width: 90px"
                   />
 
@@ -554,10 +545,8 @@
         <ng-container *ngIf="CustomPlace.SiteSelectionReason">
           <div class="col-md-12">
             <div
-              class="main-section"
-              [ngClass]="
-                anotherPlaces[0]?.centerName != '' ? 'half-why' : 'why-sec'
-              "
+              class="main-section" 
+              
             >
               <div>
                 <p class="main-name" *ngIf="CustomPlace.SiteSelectionReason">
@@ -815,13 +804,12 @@
                   </div>
                 </div>
 
-                <b
-                  style="text-wrap: nowrap"
-                  *ngIf="place.BuyBoxPlace[0].Distance"
+
+                <span class="ms-2 font-weight-bold" *ngIf="place.BuyBoxPlace[0].Distance >= 1"
+                  >{{ place.BuyBoxPlace[0].Distance.toFixed() }} MI</span
                 >
-                  {{ place.BuyBoxPlace[0].Distance.toFixed() }}
-                  MI
-                </b>
+                <span class="ms-2 font-weight-bold" *ngIf="place.BuyBoxPlace[0].Distance < 1">Less than 1 MI</span>
+             
               </li>
             </ul>
           </div>
@@ -992,33 +980,6 @@
       </div>
     </section> -->
 
-      <ng-template #viewShared let-modal>
-        <div class="container">
-          <h1 class="share-head">Share Place</h1>
-          <p class="m-0 share-via">Share this link via</p>
-          <share-buttons
-            theme="modern-dark"
-            style="border-radius: 8px; padding: 10px"
-            [include]="[
-              'facebook',
-              'email',
-              'viber',
-              'whatsapp',
-              'messenger',
-              'linkedin',
-              'telegram',
-              'twitter',
-              'copy',
-              'print'
-            ]"
-            [showIcon]="true"
-            [showText]="false"
-            url="{{ shareableLink }}"
-            twitterAccount="rodrigokamada"
-          >
-          </share-buttons>
-        </div>
-      </ng-template>
 
       <ng-template #MoreDetails let-modal>
         <div class="container" style="padding: 5px 20px 10px">
