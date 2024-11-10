@@ -177,40 +177,6 @@ export class LandingComponent {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
-  minBuildingSize!: number;
-  maxBuildingSize!: number; 
-
-  GetUserEstimatedNumbers(placeId: number) {
-    this.PlacesService.GetUserEstimatedNumbers(
-      placeId,
-      this.BuyBoxId
-    ).subscribe((res) => {
-      this.fbo = res;
-    });
-  }
-
-  getSpecificPlaces(placeId: number, buyboxId: number) {
-    this.PlacesService.getSpecificPlaces(placeId, buyboxId).subscribe((res) => {
-      this.General.SpecificPlaces = res;
-    });
-  }
-
-  GetUserEstimatedNumbersForShare(placeId: number, sharedId: number) {
-    this.PlacesService.GetUserEstimatedNumbersForShared(
-      placeId,
-      sharedId,
-      this.BuyBoxId
-    ).subscribe((res) => {
-      this.fbo = res;
-    });
-  }
-
-  UpdateBuyBoxUserEstimatedNumbers() {
-    this.fbo.PlaceId = this.placeId;
-    this.PlacesService.UpdateBuyBoxUserEstimatedNumbers(this.fbo).subscribe(
-      (res) => {}
-    );
-  } 
 
   formatNumberWithCommas(value: number | null): string {
     if (value !== null) {
@@ -305,7 +271,8 @@ export class LandingComponent {
     }
   }
 
-  getInfoWindowContent(markerData: any, type: string): string {
+  getInfoWindowContent(markerData: any, type: string): string { 
+    
     if (type === 'Shopping Center') {
       return `<div class="info-window">  
               <div class="main-img"><img src="${
@@ -326,12 +293,19 @@ export class LandingComponent {
               </div>
             </div>`;
     } else {
-      return `<div class="p-3">
-              ${
-                markerData.BuyBoxPlace
-                  ? `<p class="content-title">${markerData.BuyBoxPlace[0].Name.toUpperCase()}</p>`
-                  : ''
-              }
+      return `<div class="info-window">  
+              <div class="main-img"><img src="${
+                markerData.MainImage
+              }" alt="Main Image"></div>
+              <div class="content-wrap">
+                 
+                <p class="address-content">${this.getAddressContentStandAlone(
+                  markerData
+                )}</p>
+                <div class="row">${this.getSpecificationContent(
+                  markerData
+                )}</div>
+              </div>
             </div>`;
     }
   }
@@ -341,6 +315,13 @@ export class LandingComponent {
             <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
             <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
           </svg> ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}`;
+  }
+
+  getAddressContentStandAlone(markerData: any): string {
+    return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
+            <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
+          </svg> ${markerData.Address}, ${markerData.City}, ${markerData.State}`;
   }
 
   getSpecificationContent(markerData: any): string {
@@ -493,9 +474,7 @@ export class LandingComponent {
       console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
-
- 
-
+  
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -603,4 +582,6 @@ export class LandingComponent {
       },
     });
   } 
+
+
 }
