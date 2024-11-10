@@ -192,14 +192,10 @@ export class LandingComponent {
     this.mapView = true;
     try {
       const lat = this.getLatitude();
-      const lon = this.getLongitude();
-      
+      const lon = this.getLongitude(); 
       const map = await this.initializeMap(lat, lon);
-      this.addMarkerForPrimaryLocation(map);
-
-      console.log(`from map`);
-      console.log(this.NearByType);
       
+      this.addMarkerForPrimaryLocation(map); 
       
       if (this.NearByType.length > 0) {
         this.NearByType.forEach((type) => {

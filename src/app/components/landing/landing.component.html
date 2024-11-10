@@ -310,6 +310,39 @@
       </div>
     </div>
 
+    <div class="main-section" *ngIf="!ShoppingCenter">
+      <p class="main-name">Gallery</p>
+      <div class="row no-gutters mt-2 text-center">
+        <div class="col-md-8">
+          <a
+            class="procpect-img"
+            href="{{ CustomPlace.MainImage }}"
+            target="_blank"
+          >
+            <img
+              *ngIf="CustomPlace.MainImage != null"
+              [src]="CustomPlace.MainImage"
+              class="d-block w-100 main-img"
+            />
+          </a>
+        </div>
+        <ng-container *ngFor="let img of placeImage">
+          <div class="col-md-4">
+            <div class="venue-gallery">
+              <a
+                href="{{ img }}"
+                class="procpect-img"
+                data-gall="venue-gallery"
+                target="_blank"
+              >
+                <img src="{{ img }}" alt="" class="procpect-img" />
+              </a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
     <div class="row">
       <ng-container *ngIf="CustomPlace.SiteSelectionReason">
         <ng-container *ngIf="CustomPlace.SiteSelectionReason">
