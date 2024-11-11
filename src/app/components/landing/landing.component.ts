@@ -141,11 +141,11 @@ export class LandingComponent {
 
         if (minSize === maxSize) {
           return minPrice
-            ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
-            : `Unit Size: ${minSize} SF`;
+            ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF<br>Lease Price: ${minPrice}`
+            : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
         }
 
-        let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
+        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
 
         if (minPrice || maxPrice) {
           sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
@@ -234,11 +234,19 @@ export class LandingComponent {
 
   addMarkerForPrimaryLocation(map: any) {
     const primaryLocation = this.ShoppingCenter || this.CustomPlace;
+    console.log(`primary location`);
+    
+      console.log(primaryLocation);
+      
     const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
     this.createMarker(map, primaryLocation, type);
   }
 
   createMarker(map: any, markerData: any, type: string) {
+    console.log(`marker data`);
+    console.log(markerData);
+    
+    
     const icon = this.getIcon(markerData, type);
     const marker = new google.maps.Marker({
       map,
@@ -246,6 +254,9 @@ export class LandingComponent {
       icon: icon,
     });
 
+ 
+    
+    
     const infoWindow = new google.maps.InfoWindow({
       content: this.getInfoWindowContent(markerData, type),
     });

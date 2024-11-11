@@ -235,7 +235,7 @@
                           class="info-value gray"
                           href="{{ CustomPlace.DocsLink }}"
                           target="_blank"
-                          >View Document</a
+                          >Property Docs</a
                         >
                       </div>
                     </div>
@@ -388,10 +388,10 @@
                       </td>
                       <td>
                         <span *ngIf="place.ForLeasePrice != 'undefined'">{{
-                          place.ForLeasePrice
+                          place.ForLeasePrice 
                         }}</span>
                       </td>
-                      <td>{{ place.BuildingSizeSf }} SF</td>
+                      <td>{{ place.BuildingSizeSf | number}} SF</td>
                       <td>
                         <div
                           style="cursor: pointer"

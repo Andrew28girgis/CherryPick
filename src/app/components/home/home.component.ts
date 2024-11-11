@@ -530,8 +530,9 @@ export class HomeComponent implements OnInit {
 
 
   getNeareastCategoryName(categoryId: number) {
+
+    let categories = this.buyboxCategories.filter((x) => x.id == categoryId); 
     
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0].name;
   }
 
