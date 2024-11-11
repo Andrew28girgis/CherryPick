@@ -109,7 +109,7 @@
         <div style="overflow-x: auto" *ngIf="shoppingCenters.length > 0">
           <table class="procpect-table">
             <thead class="procpect-table-head">
-              <tr>
+              <tr style="    border-bottom: 1px solid #e4e4e4;">
                 <th>Name</th>
                 <th>Address</th>
                 <th style="width: 250px">Unit Size & Lease Price</th>
@@ -123,8 +123,7 @@
                   </th> 
 
                 </ng-container>
-                <th></th>
-              </tr>
+               </tr>
             </thead>
             <tbody class="procpect-table-body">
               <ng-container *ngFor="let shoppingCenter of shoppingCenters">
