@@ -652,10 +652,9 @@ private addCloseButtonListener(infoWindow: any, marker: any): void {
   viewOnStreetPopUp() {
     this.StreetViewOnePlace = true;
     let lat = +this.General.modalObject.StreetLatitude;
-    let lng = +this.General.modalObject.StreetLongitude;
-
-    let heading = this.General.modalObject.Heading || 165; // Default heading value
-    let pitch = this.General.modalObject.Pitch || 0;
+    let lng = +this.General.modalObject.StreetLongitude; 
+    let heading = this.General.modalObject.Heading  ; // Default heading value
+    let pitch =  0;
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view-pop');
@@ -674,7 +673,7 @@ private addCloseButtonListener(infoWindow: any, marker: any): void {
         streetViewElement as HTMLElement,
         {
           position: { lat: lat, lng: lng },
-          pov: { heading: heading, pitch: 0 }, // Dynamic heading and pitch
+          pov: { heading: heading, pitch: pitch }, // Dynamic heading and pitch
           zoom: 1,
         }
       );

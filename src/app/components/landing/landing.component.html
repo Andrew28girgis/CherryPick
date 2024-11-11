@@ -272,6 +272,20 @@
       </section>
       <div class="row">
         <div class="col-md-12">
+          <div class="tabs">
+            <!-- Tab headers -->
+            <ul class="tab-headers" *ngIf="ShoppingCenter">
+              <li (click)="viewOnStreet()">  
+                Main View
+               </li>
+              <li *ngFor="let place of ShoppingCenter.OtherPlaces; let i = index" (click)="streetMap(place.StreetLatitude ,  place.StreetLongitude , place.Heading , 0)">  
+               Unit {{ i + 1 }}
+              </li>
+            </ul>
+          
+            
+          </div>
+          
           <div id="street-view" style="height: 400px; margin-top: 20px"></div>
         </div>
       </div>
