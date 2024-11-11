@@ -351,7 +351,7 @@ private getIconsContent(markerData: any): string {
            <span class="close-btn" id="close-btn-${markerData.id}">&times;</span>
         </div>
             <div>
-              <p style="font-size: 19px; font-weight: 500; margin:0; padding:15px">${markerData.BuyBoxPlace[0].Name}: ${markerData.BuyBoxPlace[0].Distance.toFixed()} MI</p>
+              <p style="font-size: 19px; font-weight: 500; margin:0; padding:15px">${markerData.BuyBoxPlace[0].Name}: ${markerData.BuyBoxPlace[0].Distance.toFixed(2)} MI</p>
             </div>
           </div>
     </div>

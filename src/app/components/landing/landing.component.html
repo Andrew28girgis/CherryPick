@@ -113,7 +113,7 @@
 
                           
                           <span class="ms-2 font-weight-bold">
-                            {{ place.BuyBoxPlace[0].Distance > 1 ? place.BuyBoxPlace[0].Distance.toFixed() + ' MI' : 'Less than 1 MI' }}
+                            {{ place.BuyBoxPlace[0].Distance > 1 ? place.BuyBoxPlace[0].Distance.toFixed(2) + ' MI' : 'Less than 1 MI' }}
                           </span>
                           
                         </ng-container>
@@ -203,7 +203,7 @@
                           />
 
                           <span class="ms-2 font-weight-bold">
-                            {{ place.BuyBoxPlace[0].Distance > 1 ? place.BuyBoxPlace[0].Distance.toFixed() + ' MI' : 'Less than 1 MI' }}
+                            {{ place.BuyBoxPlace[0].Distance > 1 ? place.BuyBoxPlace[0].Distance.toFixed(2) + ' MI' : 'Less than 1 MI' }}
                           </span>
                         </ng-container>
                       </div>
@@ -276,10 +276,10 @@
             <!-- Tab headers -->
             <ul class="tab-headers" *ngIf="ShoppingCenter">
               <li (click)="viewOnStreet()">  
-                Main View
+                {{ ShoppingCenter.CenterName | titlecase }}
                </li>
               <li *ngFor="let place of ShoppingCenter.OtherPlaces; let i = index" (click)="streetMap(place.StreetLatitude ,  place.StreetLongitude , place.Heading , 0)">  
-               Unit {{ i + 1 }}
+                Unit {{ i + 1 }} ( {{place.Suite}} )
               </li>
             </ul>
           
@@ -623,7 +623,7 @@
 
 
                 <span class="ms-2 font-weight-bold" *ngIf="place.BuyBoxPlace[0].Distance >= 1"
-                  >{{ place.BuyBoxPlace[0].Distance.toFixed() }} MI</span
+                  >{{ place.BuyBoxPlace[0].Distance.toFixed(2) }} MI</span
                 >
                 <span class="ms-2 font-weight-bold" *ngIf="place.BuyBoxPlace[0].Distance < 1">Less than 1 MI</span>
              
