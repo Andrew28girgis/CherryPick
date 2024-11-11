@@ -40,7 +40,7 @@ export class LandingComponent {
   PlaceId!: number;
   CustomPlace!: LandingPlace;
   ShoppingCenter!: ShoppingCenter;
-  NearByType: NearByType[] = []; 
+  NearByType: NearByType[] = [];
   placeImage: string[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -105,7 +105,6 @@ export class LandingComponent {
         }
         this.viewOnStreet();
 
-
         this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
           link.trim()
         );
@@ -118,17 +117,16 @@ export class LandingComponent {
   getMinMaxUnitSize(ShoppingCenter: ShoppingCenter) {
     if (ShoppingCenter.OtherPlaces) {
       const places = ShoppingCenter.OtherPlaces;
-
+  
       if (places.length > 0) {
-        const buildingSizes = places.map((place: any) => 
-          place.BuildingSizeSf);
-        
+        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+  
         let minSize = Math.min(...buildingSizes);
         let maxSize = Math.max(...buildingSizes);
-
+  
         let minPrice = null;
         let maxPrice = null;
-
+  
         // Find lease prices corresponding to min and max sizes
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
@@ -138,26 +136,36 @@ export class LandingComponent {
             maxPrice = place.ForLeasePrice;
           }
         }
-
+  
+        // If the sizes are the same, display only one price if they are the same
         if (minSize === maxSize) {
           return minPrice
-            ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF<br>Lease Price: ${minPrice}`
+            ? `Unit Size: ${this.formatNumberWithCommas(
+                minSize
+              )} SF<br>Lease Price: ${minPrice}`
             : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
         }
-
-        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-
-        if (minPrice || maxPrice) {
+  
+        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
+          minSize
+        )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+  
+        // Display only one lease price if minPrice and maxPrice are the same
+        if (minPrice === maxPrice) {
+          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'}`;
+        } else if (minPrice || maxPrice) {
           sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
             maxPrice ? maxPrice : 'N/A'
           }`;
         }
-
+  
         return sizeRange;
       }
     }
     return null;
   }
+  
+
 
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
@@ -174,7 +182,6 @@ export class LandingComponent {
         console.log(`nearBy`);
         console.log(this.NearByType);
         this.getAllMarker();
-
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -187,25 +194,25 @@ export class LandingComponent {
       return '';
     }
   }
-  
+
   mapView!: boolean;
 
   async getAllMarker() {
     this.mapView = true;
     try {
       const lat = this.getLatitude();
-      const lon = this.getLongitude(); 
+      const lon = this.getLongitude();
       const map = await this.initializeMap(lat, lon);
-      
-      this.addMarkerForPrimaryLocation(map); 
-      
-      if (this.NearByType.length > 0) {
-        this.NearByType.forEach((type) => {
-          type.BuyBoxPlaces.slice(0, 5).forEach((place) => {
-            this.createMarker(map, place, type.Name);
-          });
-        });
-      }
+
+      this.addMarkerForPrimaryLocation(map);
+
+      // if (this.NearByType.length > 0) {
+      //   this.NearByType.forEach((type) => {
+      //     type.BuyBoxPlaces.slice(0, 5).forEach((place) => {
+      //       this.createMarker(map, place, type.Name);
+      //     });
+      //   });
+      // }
     } finally {
       // Any cleanup if necessary
     }
@@ -223,7 +230,6 @@ export class LandingComponent {
       : +this.CustomPlace.Longitude;
   }
 
-
   async initializeMap(lat: number, lon: number): Promise<any> {
     const { Map } = await google.maps.importLibrary('maps');
     return new Map(document.getElementById('map') as HTMLElement, {
@@ -235,9 +241,9 @@ export class LandingComponent {
   addMarkerForPrimaryLocation(map: any) {
     const primaryLocation = this.ShoppingCenter || this.CustomPlace;
     console.log(`primary location`);
-    
-      console.log(primaryLocation);
-      
+
+    console.log(primaryLocation);
+
     const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
     this.createMarker(map, primaryLocation, type);
   }
@@ -245,8 +251,7 @@ export class LandingComponent {
   createMarker(map: any, markerData: any, type: string) {
     console.log(`marker data`);
     console.log(markerData);
-    
-    
+
     const icon = this.getIcon(markerData, type);
     const marker = new google.maps.Marker({
       map,
@@ -254,9 +259,6 @@ export class LandingComponent {
       icon: icon,
     });
 
- 
-    
-    
     const infoWindow = new google.maps.InfoWindow({
       content: this.getInfoWindowContent(markerData, type),
     });
@@ -265,9 +267,7 @@ export class LandingComponent {
   }
 
   getIcon(markerData: any, type: string): any {
-    
-    if (type === 'Shopping Center' || type === 'Stand Alone') { 
-
+    if (type === 'Shopping Center' || type === 'Stand Alone') {
       return {
         url: this.getArrowSvg(),
         scaledSize: new google.maps.Size(40, 40),
@@ -280,27 +280,37 @@ export class LandingComponent {
     }
   }
 
-  getInfoWindowContent(markerData: any, type: string): string { 
-    
+  getInfoWindowContent(markerData: any, type: string): string {
     if (type === 'Shopping Center') {
-      return `<div class="info-window">  
-              <div class="main-img"><img src="${
-                markerData.MainImage
-              }" alt="Main Image"></div>
-              <div class="content-wrap">
+      return `<div class="info-window">
+         
+      <div class="main-img">
+        <img src="${markerData.MainImage}" alt="Main Image">
+        <span class="close-btn">&times;</span>
+      </div>
+
+       <div class="content-wrap"> 
                 ${
                   markerData.CenterName
                     ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
                     : ''
                 }
-                <p class="address-content">${this.getAddressContent(
-                  markerData
-                )}</p>
-                <div class="row">${this.getSpecificationContent(
-                  markerData
-                )}</div>
-              </div>
-            </div>`;
+                    <p class="address-content">
+                    <svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
+                      <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
+                    </svg>
+                  ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+      markerData.CenterState
+    }
+                  </p>
+                <p class="address-content">
+                   ${this.getShoppingCenterUnitSize(markerData)}
+                </p> 
+
+         
+            </div>
+        </div>`;
     } else {
       return `<div class="info-window">  
               <div class="main-img"><img src="${
@@ -311,20 +321,79 @@ export class LandingComponent {
                 <p class="address-content">${this.getAddressContentStandAlone(
                   markerData
                 )}</p>
-                <div class="row">${this.getSpecificationContent(
-                  markerData
-                )}</div>
+            
+                
+
               </div>
             </div>`;
     }
   }
 
-  getAddressContent(markerData: any): string {
-    return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
-            <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
-          </svg> ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}`;
-  }
+
+ 
+  getShoppingCenterUnitSize(shoppingCenter: any): any {
+    if (shoppingCenter.ShoppingCenter) {
+        const places = shoppingCenter.ShoppingCenter.Places;
+
+        if (places.length > 0) {
+            const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+            const leasePrices = places.map(
+                (place: any) => place.ForLeasePrice || null
+            );
+
+            let minSize = Math.min(...buildingSizes);
+            let maxSize = Math.max(...buildingSizes);
+
+            let minPrice = null;
+            let maxPrice = null;
+
+            // Find lease prices corresponding to min and max sizes
+            for (let place of places) {
+                if (place.BuildingSizeSf === minSize) {
+                    minPrice = place.ForLeasePrice;
+                }
+                if (place.BuildingSizeSf === maxSize) {
+                    maxPrice = place.ForLeasePrice;
+                }
+            }
+
+            // Check if min and max sizes are the same
+            if (minSize === maxSize) {
+                return minPrice
+                    ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF<br>Lease Price: ${minPrice}`
+                    : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
+            }
+
+            // Check if min and max lease prices are the same
+            if (minPrice === maxPrice) {
+                return minPrice
+                    ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF<br>Lease Price: ${minPrice}`
+                    : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+            }
+
+            let sizeRange = `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+
+            
+            if (minPrice || maxPrice) {
+                sizeRange += `<br>Lease Price: ${minPrice ? minPrice : ''} - ${
+                    maxPrice ? maxPrice : ''
+                }`;
+            }
+
+            return sizeRange;
+        }
+    } else{
+        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(shoppingCenter.BuildingSizeSf)} SF`;
+
+         if (shoppingCenter.ForLeasePrice) {
+          sizeRange += `<br>Lease Price: ${shoppingCenter. ForLeasePrice}`;
+      }
+        return sizeRange;
+    }
+    return null;
+}
+
+ 
 
   getAddressContentStandAlone(markerData: any): string {
     return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -333,28 +402,7 @@ export class LandingComponent {
           </svg> ${markerData.Address}, ${markerData.City}, ${markerData.State}`;
   }
 
-  getSpecificationContent(markerData: any): string {
-    return `
-    ${
-      markerData.nearestCompetitorsInMiles
-        ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Competitors</p><p class="spec-content">${markerData.nearestCompetitorsInMiles.toFixed(
-            2
-          )} MI</p></div>`
-        : ''
-    }
-    ${
-      markerData.nearestCotenantsMiles
-        ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Nearest Complementary</p><p class="spec-content">${markerData.nearestCotenantsMiles.toFixed(
-            2
-          )} MI</p></div>`
-        : ''
-    }
-    ${
-      markerData.avalibleUnits
-        ? `<div class="col-md-4 col-sm-12 d-flex flex-column spec"><p class="spec-head">Available Units</p><p class="spec-content">${markerData.avalibleUnits}</p></div>`
-        : ''
-    }`;
-  }
+
 
   addInfoWindowListeners(marker: any, infoWindow: any) {
     marker.addListener('click', () => {
@@ -365,9 +413,9 @@ export class LandingComponent {
       });
     });
 
-    marker.addListener('mouseout', () => {
-      infoWindow.close();
-    });
+    // marker.addListener('mouseout', () => {
+    //   infoWindow.close();
+    // });
   }
 
   private getArrowSvg(): string {
@@ -438,16 +486,15 @@ export class LandingComponent {
         }
       }
     );
-  }  
- 
+  }
 
   viewOnStreet() {
     let lat = this.getStreetLat();
-    let lng = this.getStreetLong(); 
-    let heading =   this.getStreetHeading() || 165 ; // Default heading value
-    let pitch =  this.getStreetPitch() || 0  ; // Default pitch value
+    let lng = this.getStreetLong();
+    let heading = this.getStreetHeading() || 165; // Default heading value
+    let pitch = this.getStreetPitch() || 0; // Default pitch value
     console.log(lat, lng, heading, pitch);
-    
+
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
@@ -468,8 +515,8 @@ export class LandingComponent {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLongitude
       : +this.CustomPlace.StreetLongitude;
-  } 
-  
+  }
+
   getStreetHeading(): number {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Heading
@@ -496,7 +543,7 @@ export class LandingComponent {
       console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
-  
+
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -603,7 +650,5 @@ export class LandingComponent {
         strokeWeight: 1,
       },
     });
-  } 
-
-
+  }
 }
