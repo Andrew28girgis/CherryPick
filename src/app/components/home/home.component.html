@@ -110,9 +110,8 @@
           <table class="procpect-table">
             <thead class="procpect-table-head">
               <tr style="border-bottom: 1px solid #e4e4e4">
-                <th>Name</th>
-                <th>Address</th>
-                <th style="width: 250px">Unit Size & Lease Price</th>
+                <th>Name</th> 
+                <th >Unit Size & Lease Price</th>
                 <ng-container
                   *ngFor="
                     let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces
@@ -127,17 +126,16 @@
             <tbody class="procpect-table-body">
               <ng-container *ngFor="let shoppingCenter of shoppingCenters">
                 <tr>
-                  <td>{{ shoppingCenter.CenterName | titlecase }}</td>
-                  <td>
+                  <td>{{ shoppingCenter.CenterName | titlecase }}
                     <div
-                      class="content-address"
-                      (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
-                    >
-                      {{ shoppingCenter.CenterAddress }},
-                      {{ shoppingCenter.CenterCity | titlecase }},
-                      {{ shoppingCenter.CenterState }}
-                    </div>
-                  </td>
+                    class="content-address"
+                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                  >
+                    {{ shoppingCenter.CenterAddress }},
+                    {{ shoppingCenter.CenterCity | titlecase }},
+                    {{ shoppingCenter.CenterState }}
+                  </div>
+                  </td> 
                   <td
                     [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
                   ></td>
@@ -248,9 +246,17 @@
           <table class="procpect-table mt-4">
             <thead class="procpect-table-head">
               <tr>
-                <th>Address</th>
-                <th>Suite</th>
-                <th>Unit Size</th>
+                <th>Address</th> 
+                <th>Unit Size & Lease Price</th>
+                <ng-container 
+                  *ngFor="
+                    let item of standAlone[0].Place.BuyBoxPlaces
+                  "
+                >
+                  <th>
+                    Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                  </th>
+                </ng-container>
                 <th></th>
               </tr>
             </thead>
@@ -265,11 +271,31 @@
                       {{ place.Address }}, {{ place.City | titlecase }},
                       {{ place.State }}
                     </div>
+                  </td> 
+                  <td>Unit Size: {{ place.BuildingSizeSf | number }} SF <br> 
+                     LeasePrice: {{ place.ForLeasePrice  }}
+                    
                   </td>
-                  <td>
-                    {{ place.Suite }}
-                  </td>
-                  <td>{{ place.BuildingSizeSf | number }} SF</td>
+                  <ng-container
+                  *ngFor="let item of place.Place.BuyBoxPlaces"
+                  >
+                    <td>
+                      <img
+                        class="logo"
+                        src="https://files.cherrypick.com/logos/{{
+                          item.BuyBoxPlaceId
+                        }}.png"
+                        title="{{ item.BuyBoxPlaceName }}"
+                        alt=""
+                      />
+                      <span class="ms-2" *ngIf="item.Distance >= 1"
+                        >{{ item.Distance.toFixed() }} MI</span
+                      >
+                      <span class="ms-2" *ngIf="item.Distance < 1"
+                        >Less than 1 MI</span
+                      >
+                    </td>
+                  </ng-container>
                   <td class="d-flex">
                     <button
                       class="det-btn d-flex align-items-center"
