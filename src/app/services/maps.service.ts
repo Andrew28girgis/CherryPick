@@ -40,25 +40,27 @@ export class MapsService {
     return marker;
   }
 
+  private currentlyOpenInfoWindow: any | null = null;  // Track the currently open InfoWindow
+
   createCustomMarker(map: any, markerData: BuyboxCategory): void {
     // Clear existing markers from the markerMap object for this ID if they already exist
     if (!this.markerMap[markerData.id]) {
       this.markerMap[markerData.id] = [];
     }
-
+  
     // If markers already exist for this category, we do not need to recreate them
     if (this.markerMap[markerData.id].length > 0) {
       return;
     }
-
+  
     markerData.places.forEach((place) => {
       // Construct image URL based on place ID
       const imgUrl = `https://files.cherrypick.com/logos/${place.Id}.png`;
-
+  
       place.BuyBoxPlaces.forEach((branch) => {
         const latitude = Number(branch.Latitude);
         const longitude = Number(branch.Longitude);
-
+  
         if (!isNaN(latitude) && !isNaN(longitude)) {
           const marker = new google.maps.Marker({
             position: {
@@ -71,47 +73,62 @@ export class MapsService {
             },
             map: map, // Attach the marker to the map
           });
-
+  
           // Create an InfoWindow instance with close button
           const closeButtonId = `close-button-${branch.Id}`;
           const infoWindowContent = `
-                    <div style="padding:0 10px">
-                        <div style="display: flex; justify-content: end">
-                            <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
-                                &times;
-                            </button>
-                        </div>
-                        <div>
-                            <p style="font-size: 19px; font-weight: 500;">${place.Name}</p>
-                        </div>
-                    </div>`;
-
+            <div style="padding:0 10px">
+              <div style="display: flex; justify-content: end">
+                <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
+                  &times;
+                </button>
+              </div>
+              <div>
+                <p style="font-size: 19px; font-weight: 500;">${place.Name}</p>
+              </div>
+            </div>`;
+  
           const infoWindow = new google.maps.InfoWindow({
             content: infoWindowContent,
           });
-
+  
           // Add a click listener to the marker to show the InfoWindow
           marker.addListener('click', () => {
             // Close any previously opened InfoWindow (if needed)
-            infoWindow.close();
-            // Open the InfoWindow at the marker's position
-            infoWindow.setPosition(marker.getPosition());
-            infoWindow.open(map);
-
+            if (this.currentlyOpenInfoWindow) {
+              this.currentlyOpenInfoWindow.close();
+            }
+            // Open the new InfoWindow
+            infoWindow.open(map, marker);
+            this.currentlyOpenInfoWindow = infoWindow;  // Track the currently open InfoWindow
+  
             // Call the function to attach close button listener
-            this.closeIconListener(infoWindow, closeButtonId);
+            this.addCloseButtonListener(infoWindow, closeButtonId);
           });
-
+  
           // Store the marker in the marker map
           this.markerMap[markerData.id].push(marker);
         }
       });
     });
-
+  
     // Call toggleMarkers when drawing markers
     this.toggleMarkers(map, markerData);
   }
-
+  
+  // Function to handle the close button click events
+  private addCloseButtonListener(infoWindow: any, buttonId: string): void {
+    // Use the 'domready' event to ensure the InfoWindow's DOM is fully loaded
+    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+      const closeButton = document.getElementById(buttonId);
+      if (closeButton) {
+        closeButton.addEventListener('click', () => {
+          infoWindow.close();
+          this.currentlyOpenInfoWindow = null; // Reset the open info window tracker
+        });
+      }
+    });
+  } 
   // Function to handle close button click events
   closeIconListener(infoWindow: any, buttonId: string): void {
     // Use a timeout to ensure the InfoWindow content is rendered before accessing the button

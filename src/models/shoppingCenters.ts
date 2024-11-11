@@ -58,7 +58,22 @@ export interface Center {
     StreetLongitude: number
     Extras: string
     ShoppingCenterId: number
+    Place:Root
   }
+  
+   
+  export interface Root {
+    BuyBoxPlaces: BuyBoxPlace[]
+  }
+  
+  export interface BuyBoxPlace {
+    PlaceID: number
+    CategoryId: number
+    BuyBoxPlaceId: number
+    Distance: number
+    BuyBoxPlaceName: string
+  }
+   
   
   export interface BuyBoxPlace {
     ShoppingCenterID: number

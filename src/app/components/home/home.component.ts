@@ -150,6 +150,10 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.standAlone = data.json;
+        console.log(`standAlone`);
+        console.log(this.standAlone);
+        
+        
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -173,10 +177,7 @@ export class HomeComponent implements OnInit {
             place.BuyBoxPlaces?.some((x) => x.CategoryId === category.id)
           );
         });
-
-        console.log(`buyboxPLACES`);
-        
-      console.log(this.buyboxPlaces);
+ 
        
 
         
@@ -529,7 +530,6 @@ export class HomeComponent implements OnInit {
 
 
   getNeareastCategoryName(categoryId: number) {
-    console.log(`categoryId: ${categoryId}`);
     
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0].name;

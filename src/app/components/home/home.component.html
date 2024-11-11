@@ -109,7 +109,7 @@
         <div style="overflow-x: auto" *ngIf="shoppingCenters.length > 0">
           <table class="procpect-table">
             <thead class="procpect-table-head">
-              <tr style="    border-bottom: 1px solid #e4e4e4;">
+              <tr style="border-bottom: 1px solid #e4e4e4">
                 <th>Name</th>
                 <th>Address</th>
                 <th style="width: 250px">Unit Size & Lease Price</th>
@@ -120,10 +120,9 @@
                 >
                   <th>
                     Nearest {{ getNeareastCategoryName(item.CategoryId) }}
-                  </th> 
-
+                  </th>
                 </ng-container>
-               </tr>
+              </tr>
             </thead>
             <tbody class="procpect-table-body">
               <ng-container *ngFor="let shoppingCenter of shoppingCenters">
@@ -159,7 +158,9 @@
                       <span class="ms-2" *ngIf="item.Distance >= 1"
                         >{{ item.Distance.toFixed() }} MI</span
                       >
-                      <span class="ms-2" *ngIf="item.Distance < 1">Less than 1 MI</span>
+                      <span class="ms-2" *ngIf="item.Distance < 1"
+                        >Less than 1 MI</span
+                      >
                     </td>
                   </ng-container>
                   <td></td>
@@ -491,40 +492,61 @@
                 "
               >
                 <div class="row">
-                  <div class="col-6 d-flex flex-column "     
-                  >
-                    
+                  <div class="col-6 d-flex flex-column p-0">
                     <p class="spec-head">Address</p>
-                    <p class="content-address" (click)="openMapViewPlace(MapViewPlace, place)">
+                    <p
+                      class="content-address"
+                      (click)="openMapViewPlace(MapViewPlace, place)"
+                    >
                       {{ place.Address }}, {{ place.City | titlecase }},
                       {{ place.State }}
                     </p>
                   </div>
 
                   <div
-                    class="col-6 d-flex flex-column spec"
-                    *ngIf="place.Suite"
-                  >
-                    <p class="spec-head">Suite</p>
-                    <p class="spec-content">{{ place.Suite }}</p>
-                  </div>
-
-                  <div
-                    class="col-6 d-flex flex-column"
+                    class="col-6 d-flex flex-column p-0"
                     *ngIf="place.BuildingSizeSf"
                   >
                     <p class="spec-head">Unit Size</p>
-                    <p class="spec-content">{{ place.BuildingSizeSf | number }} SF</p>
+                    <p class="spec-content">
+                      {{ place.BuildingSizeSf | number }} SF
+                    </p>
                   </div>
 
-
                   <div
-                  class="col-6 d-flex flex-column"
-                  *ngIf="place.ForLeasePrice"
-                >
-                  <p class="spec-head">Lease Price</p>
-                  <p class="spec-content">{{ place.ForLeasePrice }}</p>
+                    class="col-6 d-flex flex-column p-0"
+                    *ngIf="place.ForLeasePrice"
+                  >
+                    <p class="spec-head">Lease Price</p>
+                    <p class="spec-content">{{ place.ForLeasePrice }}</p>
+                  </div>
                 </div>
+
+                <div class="row">
+                  <div
+                    *ngFor="let item of place.Place.BuyBoxPlaces"
+                    class="col-6 d-flex flex-column spec"
+                  >
+                    <p class="spec-head">
+                      Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                    </p>
+                    <p class="spec-content">
+                      <img
+                        class="logo"
+                        src="https://files.cherrypick.com/logos/{{
+                          item.BuyBoxPlaceId
+                        }}.png"
+                        title="{{ item.BuyBoxPlaceName }}"
+                        alt=""
+                      />
+                      <span class="ms-2">
+                        <span *ngIf="item.Distance >= 1"
+                          >{{ item.Distance.toFixed() }} MI</span
+                        >
+                        <span *ngIf="item.Distance < 1">Less than 1 MI</span>
+                      </span>
+                    </p>
+                  </div>
                 </div>
 
                 <div class="buttons-wrap">
