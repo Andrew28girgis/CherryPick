@@ -148,12 +148,9 @@
                       [title]="item.BuyBoxPlaceName"
                       alt=""
                     />
-                    <span class="ms-2" *ngIf="item.Distance >= 1">
+                    <span class="ms-2"  >
                       {{ item.Distance.toFixed(2) }} MI
-                    </span>
-                    <span class="ms-2" *ngIf="item.Distance < 1">
-                      Less than 1 MI
-                    </span>
+                    </span> 
                   </td>
                 </ng-container>
 
@@ -283,12 +280,10 @@
                         title="{{ item.BuyBoxPlaceName }}"
                         alt=""
                       />
-                      <span class="ms-2" *ngIf="item.Distance >= 1"
+                      <span class="ms-2" 
                         >{{ item.Distance.toFixed(2) }} MI</span
                       >
-                      <span class="ms-2" *ngIf="item.Distance < 1"
-                        >Less than 1 MI</span
-                      >
+                       
                     </td>
                   </ng-container>
                   <td >
@@ -432,11 +427,10 @@
                         alt=""
                       />
                       <span class="ms-2">
-                        <span *ngIf="item.Distance >= 1"
+                        <span  
                           >{{ item.Distance.toFixed(2) }} MI</span
                         >
-                        <span *ngIf="item.Distance < 1">Less than 1 MI</span>
-                      </span>
+                       </span>
                     </p>
                   </div>
                 </div>
@@ -561,11 +555,10 @@
                         alt=""
                       />
                       <span class="ms-2">
-                        <span *ngIf="item.Distance >= 1"
+                        <span  
                           >{{ item.Distance.toFixed(2) }} MI</span
                         >
-                        <span *ngIf="item.Distance < 1">Less than 1 MI</span>
-                      </span>
+                       </span>
                     </p>
                   </div>
                 </div>
@@ -704,10 +697,9 @@
                         alt=""
                       />
                       <span class="ms-2">
-                        <span *ngIf="item.Distance >= 1"
+                        <span 
                           >{{ item.Distance.toFixed(2) }} MI</span
                         >
-                        <span *ngIf="item.Distance < 1">Less than 1 MI</span>
                       </span>
                     </p>
                   </div>
