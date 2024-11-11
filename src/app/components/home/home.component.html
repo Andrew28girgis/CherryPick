@@ -111,7 +111,7 @@
             <thead class="procpect-table-head">
               <tr style="border-bottom: 1px solid #e4e4e4">
                 <th>Name</th> 
-                <th >Unit Size & Lease Price</th>
+                <th>Unit Size & Lease Price</th>
                 <ng-container
                   *ngFor="
                     let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces
@@ -646,7 +646,7 @@
                 style="
                   background-color: #fff;
                   border-radius: 0 0 20px 20px;
-                  height: 240px;
+                  height: 375px;
                   display: flex;
                   flex-direction: column;
                   padding: 15px;
@@ -683,13 +683,44 @@
                     {{ place.State }}
                   </p>
                 </div>
-
+                
                 <div>
                   <p
                     style="font-size: 15px; font-weight: 500; color: #565656"
                     [innerHTML]="getShoppingCenterUnitSize(place)"
                   ></p>
                 </div>
+
+                <div class="row">
+                  <div
+                    *ngFor="let item of place.ShoppingCenter?  place.ShoppingCenter.BuyBoxPlaces : place.Place.BuyBoxPlaces"
+                    class="col-12 d-flex flex-column spec"
+                  >
+                    <p class="spec-head">
+                      Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                    </p>
+                    <p class="spec-content">
+                      <img
+                        class="logo"
+                        src="https://files.cherrypick.com/logos/{{
+                          item.BuyBoxPlaceId
+                        }}.png"
+                        title="{{ item.BuyBoxPlaceName }}"
+                        alt=""
+                      />
+                      <span class="ms-2">
+                        <span *ngIf="item.Distance >= 1"
+                          >{{ item.Distance.toFixed() }} MI</span
+                        >
+                        <span *ngIf="item.Distance < 1">Less than 1 MI</span>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+
+
+
                 <div class="buttons-wrap">
                   <button class="view-details-card" (click)="goToPlace(place)">
                     View Details
