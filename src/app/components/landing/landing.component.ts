@@ -242,10 +242,8 @@ export class LandingComponent {
   }
 
 
-private currentlyOpenInfoWindow: any | null = null;  // Track the currently open InfoWindow
-
+private currentlyOpenInfoWindow: any | null = null;   
 createMarker(map: any, markerData: any, type: string): void {
-
   const icon = this.getIcon(markerData, type);
   const marker = new google.maps.Marker({
     map,
@@ -261,7 +259,6 @@ createMarker(map: any, markerData: any, type: string): void {
   this.addCloseButtonListener(infoWindow, marker); 
 
   marker.addListener('click', () => {
-    // Close the previously opened InfoWindow (if needed)
     if (this.currentlyOpenInfoWindow) {
       this.currentlyOpenInfoWindow.close();
     }
@@ -350,6 +347,9 @@ private getIconsContent(markerData: any): string {
   return `
     <div class="info-window p-0">
         <div> 
+        <div style="padding:9px">
+           <span class="close-btn" id="close-btn-${markerData.id}">&times;</span>
+        </div>
             <div>
               <p style="font-size: 19px; font-weight: 500; margin:0; padding:15px">${markerData.BuyBoxPlace[0].Name}: ${markerData.BuyBoxPlace[0].Distance.toFixed()} MI</p>
             </div>
@@ -358,9 +358,10 @@ private getIconsContent(markerData: any): string {
   `;
 }
 
+
 // Function to handle the close button click events
 private addCloseButtonListener(infoWindow: any, marker: any): void {
-  // Add listener for close button click
+  // Wait until the InfoWindow content is rendered (domready)
   google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
     const closeButton = document.getElementById(`close-btn-${marker.id}`);
     

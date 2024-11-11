@@ -113,14 +113,13 @@
                 <th>Name</th> 
                 <th>Unit Size & Lease Price</th>
                 <ng-container
-                  *ngFor="
-                    let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces
-                  "
-                >
-                  <th>
-                    Nearest {{ getNeareastCategoryName(item.CategoryId) }}
-                  </th>
-                </ng-container>
+                *ngFor="let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces; let i = index; trackBy: trackByIndex"
+              >
+                <th>
+                  Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                </th>
+              </ng-container>
+              
               </tr>
             </thead>
             <tbody class="procpect-table-body">
@@ -140,27 +139,24 @@
                     [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
                   ></td>
                   <ng-container
-                    *ngFor="
-                      let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces
-                    "
-                  >
-                    <td>
-                      <img
-                        class="logo"
-                        src="https://files.cherrypick.com/logos/{{
-                          item.BuyBoxPlaceId
-                        }}.png"
-                        title="{{ item.BuyBoxPlaceName }}"
-                        alt=""
-                      />
-                      <span class="ms-2" *ngIf="item.Distance >= 1"
-                        >{{ item.Distance.toFixed() }} MI</span
-                      >
-                      <span class="ms-2" *ngIf="item.Distance < 1"
-                        >Less than 1 MI</span
-                      >
-                    </td>
-                  </ng-container>
+                  *ngFor="let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces; let i = index; trackBy: trackByIndex"
+                >
+                  <td>
+                    <img
+                      class="logo"
+                      [src]="'https://files.cherrypick.com/logos/' + item.BuyBoxPlaceId + '.png'"
+                      [title]="item.BuyBoxPlaceName"
+                      alt=""
+                    />
+                    <span class="ms-2" *ngIf="item.Distance >= 1">
+                      {{ item.Distance.toFixed() }} MI
+                    </span>
+                    <span class="ms-2" *ngIf="item.Distance < 1">
+                      Less than 1 MI
+                    </span>
+                  </td>
+                </ng-container>
+
                   <td></td>
                   <!-- <td>
                     <ng-container *ngIf="shoppingCenter.nearestCompetitors">
@@ -250,7 +246,7 @@
                 <th>Unit Size & Lease Price</th>
                 <ng-container 
                   *ngFor="
-                    let item of standAlone[0].Place.BuyBoxPlaces
+                    let item of standAlone[0].Place.BuyBoxPlaces  ; let i = index; trackBy: trackByIndex
                   "
                 >
                   <th>
@@ -276,8 +272,7 @@
                      LeasePrice: {{ place.ForLeasePrice  }}
                     
                   </td>
-                  <ng-container
-                  *ngFor="let item of place.Place.BuyBoxPlaces"
+                  <ng-container *ngFor="let item of place.Place.BuyBoxPlaces ; let i = index; trackBy: trackByIndex"
                   >
                     <td>
                       <img

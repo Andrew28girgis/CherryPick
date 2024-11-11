@@ -371,7 +371,11 @@ export class HomeComponent implements OnInit {
       this.viewOnStreet();
     }, 100);
   }
-
+  
+  trackByIndex(index: number, item: any): number {
+    return index; // Return the index to track by the position
+  }
+  
   StreetViewOnePlace!: boolean;
 
   viewOnStreet() {
