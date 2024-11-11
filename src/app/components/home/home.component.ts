@@ -464,7 +464,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getShoppingCenterUnitSize(shoppingCenter: Center): any {
+  getShoppingCenterUnitSize(shoppingCenter: any): any {
     if (shoppingCenter.ShoppingCenter) {
         const places = shoppingCenter.ShoppingCenter.Places;
 
@@ -493,27 +493,35 @@ export class HomeComponent implements OnInit {
             // Check if min and max sizes are the same
             if (minSize === maxSize) {
                 return minPrice
-                    ? `Unit Size: ${minSize} SF<br>Lease Price: ${minPrice}`
-                    : `Unit Size: ${minSize} SF`;
+                    ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF<br>Lease Price: ${minPrice}`
+                    : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
             }
 
             // Check if min and max lease prices are the same
             if (minPrice === maxPrice) {
                 return minPrice
-                    ? `Unit Size: ${minSize} SF - ${maxSize} SF<br>Lease Price: ${minPrice}`
-                    : `Unit Size: ${minSize} SF - ${maxSize} SF`;
+                    ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF<br>Lease Price: ${minPrice}`
+                    : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
             }
 
-            let sizeRange = `Unit Size: ${minSize} SF - ${maxSize} SF`;
+            let sizeRange = `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
 
+            
             if (minPrice || maxPrice) {
-                sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
-                    maxPrice ? maxPrice : 'N/A'
+                sizeRange += `<br>Lease Price: ${minPrice ? minPrice : ''} - ${
+                    maxPrice ? maxPrice : ''
                 }`;
             }
 
             return sizeRange;
         }
+    } else{
+        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(shoppingCenter.BuildingSizeSf)} SF`;
+
+         if (shoppingCenter.ForLeasePrice) {
+          sizeRange += `<br>Lease Price: ${shoppingCenter. ForLeasePrice}`;
+      }
+        return sizeRange;
     }
     return null;
 }
@@ -523,5 +531,13 @@ export class HomeComponent implements OnInit {
   getNeareastCategoryName(categoryId: number) {
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0].name;
+  }
+
+  formatNumberWithCommas(value: number | null): string {
+    if (value !== null) {
+      return value?.toLocaleString();
+    } else {
+      return '';
+    }
   }
 }

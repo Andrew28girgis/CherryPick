@@ -491,9 +491,11 @@
                 "
               >
                 <div class="row">
-                  <div class="col-6 d-flex flex-column spec">
+                  <div class="col-6 d-flex flex-column "     
+                  >
+                    
                     <p class="spec-head">Address</p>
-                    <p class="spec-content">
+                    <p class="content-address" (click)="openMapViewPlace(MapViewPlace, place)">
                       {{ place.Address }}, {{ place.City | titlecase }},
                       {{ place.State }}
                     </p>
@@ -508,12 +510,21 @@
                   </div>
 
                   <div
-                    class="col-6 d-flex flex-column spec"
+                    class="col-6 d-flex flex-column"
                     *ngIf="place.BuildingSizeSf"
                   >
                     <p class="spec-head">Unit Size</p>
-                    <p class="spec-content">{{ place.BuildingSizeSf }} SF</p>
+                    <p class="spec-content">{{ place.BuildingSizeSf | number }} SF</p>
                   </div>
+
+
+                  <div
+                  class="col-6 d-flex flex-column"
+                  *ngIf="place.ForLeasePrice"
+                >
+                  <p class="spec-head">Lease Price</p>
+                  <p class="spec-content">{{ place.ForLeasePrice }}</p>
+                </div>
                 </div>
 
                 <div class="buttons-wrap">
@@ -587,7 +598,7 @@
                 style="
                   background-color: #fff;
                   border-radius: 0 0 20px 20px;
-                  height: 225px;
+                  height: 240px;
                   display: flex;
                   flex-direction: column;
                   padding: 15px;
