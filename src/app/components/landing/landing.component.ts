@@ -120,7 +120,9 @@ export class LandingComponent {
       const places = ShoppingCenter.OtherPlaces;
 
       if (places.length > 0) {
-        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+        const buildingSizes = places.map((place: any) => 
+          place.BuildingSizeSf);
+        
         let minSize = Math.min(...buildingSizes);
         let maxSize = Math.max(...buildingSizes);
 

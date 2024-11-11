@@ -32,6 +32,7 @@ export class MapsService {
 
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
+
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
     this.closeIconListeners(marker, map, infoWindow, markerData);
     this.addMarkerEventListeners(marker, map, infoWindow, markerData);
@@ -214,49 +215,78 @@ export class MapsService {
       <div class="main-img">
         <img src="${markerData.MainImage}" alt="Main Image">
         <span class="close-btn">&times;</span>
-      </div
- 
+      </div>
+    <div class="content-wrap">  
       <p class="address-content"> 
         Address: ${markerData.Address}, ${markerData.City}, ${markerData.State}
       </p>
 
       <p class="address-content"> 
-        Unit Size: ${markerData.BuildingSizeSf} SF
+        Unit Size: ${this.formatNumberWithCommas(markerData.BuildingSizeSf)} SF
       </p>
 
+      <p class="address-content"> 
+        Lease Price: ${markerData.ForLeasePrice} 
+      </p>
+
+           <div class="buttons-wrap">
+                    <button id="view-details-${markerData.Id}" class="view-details-card">View Details
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
+                            <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
+                            <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#fff"/>
+                        </svg>
+                    </button>
+                </div>
+
+      </div>
     </div>
     `;
   }
 
   // Click View Details
-  private addInfoWindowListener(
+ private addInfoWindowListener(
     marker: any,
     map: any,
     infoWindow: any,
     markerData: any
-  ): void {
-    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
-    marker.addListener('click', () => infoWindow.open(map, marker));
-    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
-      const viewDetailsButton = document.getElementById(
-        `view-details-${markerData.Id}`
-      );
+): void {
+    // Retrieve the BuyBoxId only once
+    const storedBuyBoxId = localStorage.getItem('BuyBoxId');
 
-      if (viewDetailsButton) {
-        viewDetailsButton.addEventListener('click', () =>
-          this.router.navigate([
-            '/landing',
-            markerData.ShoppingCenter.Places[0].Id,
-            this.storedBuyBoxId,
-          ])
-        );
-      }
+    // Open the infoWindow when the marker is clicked
+    marker.addListener('click', () => {
+        infoWindow.open(map, marker);
     });
-  }
+
+    // Add event listener once the infoWindow DOM is ready
+    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+        // Find the "View Details" button
+        const viewDetailsButton = document.getElementById(
+            `view-details-${markerData.Id}`
+        );
+
+        // If the button exists, attach the click event listener
+        if (viewDetailsButton) {
+            viewDetailsButton.addEventListener('click', () => {
+                // Determine the ID to pass to the router
+                const shoppingCenterId = markerData.ShoppingCenter
+                    ? markerData.ShoppingCenter.Places[0].Id
+                    : markerData.Id;
+
+                // Navigate to the landing page with the correct ID and BuyBoxId
+                this.router.navigate([
+                    '/landing',
+                    shoppingCenterId,
+                    storedBuyBoxId
+                ]);
+            });
+        }
+    });
+}
 
   private openInfoWindow: any | null = null;
 
-  // Event On Point
   private addMarkerEventListeners(
     marker: any,
     map: any,
@@ -274,9 +304,21 @@ export class MapsService {
       this.openInfoWindow = infoWindow;
     });
 
-    const viewDetailsButton = document.getElementById(
-      `view-details-${markerData.id}`
-    );
+    // Wait for the DOM element to exist before attaching event listener
+    setTimeout(() => {
+      const viewDetailsButton = document.getElementById(
+        `view-details-${markerData.Id}`
+      );
+
+      if (viewDetailsButton) {
+        viewDetailsButton.addEventListener('click', () => {
+          // Add your custom functionality for the "view details" button click here
+          console.log(`View details for marker ID: ${markerData.id}`);
+        });
+      } else {
+        console.log(`Button for marker ${markerData.id} not found`);
+      }
+    }, 0);
   }
 
   // Close Card
@@ -499,15 +541,16 @@ export class MapsService {
 
         return sizeRange;
       }
-    }
-    else{
-      let sizeRange = `Unit Size: ${this.formatNumberWithCommas(shoppingCenter.BuildingSizeSf)} SF`;
+    } else {
+      let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
+        shoppingCenter.BuildingSizeSf
+      )} SF`;
 
-       if (shoppingCenter.ForLeasePrice) {
-        sizeRange += `<br>Lease Price: ${shoppingCenter. ForLeasePrice}`;
-    }
+      if (shoppingCenter.ForLeasePrice) {
+        sizeRange += `<br>Lease Price: ${shoppingCenter.ForLeasePrice}`;
+      }
       return sizeRange;
-  }
+    }
     return null;
   }
 
