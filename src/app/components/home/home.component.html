@@ -219,14 +219,8 @@
                         </svg>
                       </button>
 
-                      <div style="cursor: pointer; display: flex">
-                        <img
-                          src="../../../assets/Images/map.png"
-                          style="height: 30px; width: 30px; margin-right: 5px"
-                          (click)="
-                            openMapViewPlace(MapViewPlace, shoppingCenter)
-                          "
-                        />
+                 
+                   
                         <svg
                           (click)="
                             openStreetViewPlace(StreetViewPlace, shoppingCenter)
@@ -242,7 +236,7 @@
                             fill="#0D0C0C"
                           />
                         </svg>
-                      </div>
+                     
                     </div>
                   </td>
                 </tr>
@@ -350,12 +344,6 @@
                     </button>
 
                     <div style="cursor: pointer">
-                      <img
-                        src="../../../assets/Images/map.png"
-                        style="height: 30px; width: 30px; margin-right: 5px"
-                        (click)="openMapViewPlace(MapViewPlace, place)"
-                      />
-
                       <svg
                         (click)="openStreetViewPlace(StreetViewPlace, place)"
                         width="35"

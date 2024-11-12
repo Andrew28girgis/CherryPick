@@ -137,12 +137,17 @@ export class LandingComponent {
           }
         }
 
+        // Helper function to format lease price
+        const formatLeasePrice = (price: any) => {
+          return price === 'On Request' ? 'On Request' : price;
+        };
+
         // If the sizes are the same, display only one price if they are the same
         if (minSize === maxSize) {
           return minPrice
             ? `Unit Size: ${this.formatNumberWithCommas(
                 minSize
-              )} SF<br>Lease Price: ${minPrice}`
+              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
             : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
         }
 
@@ -150,13 +155,22 @@ export class LandingComponent {
           minSize
         )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
 
-        // Display only one lease price if minPrice and maxPrice are the same
-        if (minPrice === maxPrice) {
-          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'}`;
-        } else if (minPrice || maxPrice) {
-          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : 'N/A'} - ${
-            maxPrice ? maxPrice : 'N/A'
+        // Display only one lease price if minPrice and maxPrice are the same or if either is "On Request"
+        if (
+          minPrice === maxPrice ||
+          minPrice === 'On Request' ||
+          maxPrice === 'On Request'
+        ) {
+          sizeRange += `<br>Lease Price: ${
+            minPrice ? formatLeasePrice(minPrice) : 'N/A'
           }`;
+        } else if (minPrice || maxPrice) {
+          // Avoid range like "On Request - $55 SF/YR" by checking if either value is "On Request"
+          if (minPrice === 'On Request' || maxPrice === 'On Request') {
+            sizeRange += `<br>Lease Price: On Request`;
+          } else {
+            sizeRange += `<br>Lease Price: ${minPrice} - ${maxPrice}`;
+          }
         }
 
         return sizeRange;
@@ -442,23 +456,32 @@ export class LandingComponent {
           }
         }
 
+        // Helper function to format lease price
+        const formatLeasePrice = (price: any) => {
+          return price === 'On Request' ? 'On Request' : price;
+        };
+
         // Check if min and max sizes are the same
         if (minSize === maxSize) {
           return minPrice
             ? `Unit Size: ${this.formatNumberWithCommas(
                 minSize
-              )} SF<br>Lease Price: ${minPrice}`
+              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
             : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
         }
 
-        // Check if min and max lease prices are the same
-        if (minPrice === maxPrice) {
+        // Check if min and max lease prices are the same or if either is "On Request"
+        if (
+          minPrice === maxPrice ||
+          minPrice === 'On Request' ||
+          maxPrice === 'On Request'
+        ) {
           return minPrice
             ? `Unit Size: ${this.formatNumberWithCommas(
                 minSize
               )} SF - ${this.formatNumberWithCommas(
                 maxSize
-              )} SF<br>Lease Price: ${minPrice}`
+              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
             : `Unit Size: ${this.formatNumberWithCommas(
                 minSize
               )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
@@ -468,10 +491,17 @@ export class LandingComponent {
           minSize
         )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
 
-        if (minPrice || maxPrice) {
-          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : ''} - ${
-            maxPrice ? maxPrice : ''
-          }`;
+        // Avoid range like "On Request - $55 SF/YR" by checking if either value is "On Request"
+        if (minPrice && maxPrice) {
+          if (minPrice === 'On Request' || maxPrice === 'On Request') {
+            sizeRange += `<br>Lease Price: On Request`;
+          } else {
+            sizeRange += `<br>Lease Price: ${minPrice} - ${maxPrice}`;
+          }
+        } else if (minPrice) {
+          sizeRange += `<br>Lease Price: ${formatLeasePrice(minPrice)}`;
+        } else if (maxPrice) {
+          sizeRange += `<br>Lease Price: ${formatLeasePrice(maxPrice)}`;
         }
 
         return sizeRange;
@@ -482,7 +512,11 @@ export class LandingComponent {
       )} SF`;
 
       if (shoppingCenter.ForLeasePrice) {
-        sizeRange += `<br>Lease Price: ${shoppingCenter.ForLeasePrice}`;
+        sizeRange += `<br>Lease Price: ${
+          shoppingCenter.ForLeasePrice === 'On Request'
+            ? 'On Request'
+            : shoppingCenter.ForLeasePrice
+        }`;
       }
       return sizeRange;
     }
