@@ -45,8 +45,6 @@
 }
 
 @media (max-width: 991px) {
-
-
   #hero .animated {
     -webkit-animation: none;
     animation: none;
@@ -787,7 +785,7 @@
 
 .details-info {
   padding: 10px 24px;
-  border: 1px solid #E6E4E4;
+  border: 1px solid #e6e4e4;
   border-radius: 20px;
 }
 
@@ -896,14 +894,14 @@ li {
   scrollbar-color: #b3afaf #f1f1f1;
 }
 
-.half-why{
+.half-why {
   height: 350px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #b3afaf #f1f1f1;
 }
 
-.feedback-btn { 
+.feedback-btn {
   font-size: 16px;
   width: 100%;
   border: none;
@@ -913,34 +911,33 @@ li {
   text-align: center;
   border-radius: 16px;
   margin: 10px 0;
-  background-color: #0D0C0C;
+  background-color: #0d0c0c;
   color: #fff;
 }
 
-.gray{
-  color: #817A79;
+.gray {
+  color: #817a79;
 }
 
-.info-border{
-  border-bottom: 1px solid #E6E4E4;
-    padding: 12px 0;
+.info-border {
+  border-bottom: 1px solid #e6e4e4;
+  padding: 12px 0;
 }
 
-.selected-reaction{
-  border: 2px solid #0D0C0C;
+.selected-reaction {
+  border: 2px solid #0d0c0c;
   border-radius: 20px;
 }
 
-.center-name{
+.center-name {
   display: flex;
   justify-content: space-between;
 }
 
-
 @media (max-width: 575px) {
-  .center-name{
-   flex-direction: column;
-   align-items: center;
+  .center-name {
+    flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -955,7 +952,7 @@ li {
   position: relative;
 }
 #intro:before {
-  content: ""; 
+  content: "";
   background: rgb(6 12 38 / 26%);
   position: absolute;
   bottom: 0;
@@ -976,8 +973,7 @@ li {
   text-align: center;
   padding: 0 15px;
 }
-#intro h1
-{
+#intro h1 {
   color: #fff;
   font-family: "Raleway", sans-serif;
   font-size: 56px;
@@ -1004,7 +1000,7 @@ li {
 }
 
 #intro .play-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   top: 50%;
@@ -1019,7 +1015,7 @@ li {
 }
 
 #intro .play-btn:before {
-  content: '';
+  content: "";
   position: absolute;
   width: 120px;
   height: 120px;
@@ -1042,7 +1038,7 @@ li {
 }
 
 #intro .play-btn:hover::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 50%;
   top: 50%;

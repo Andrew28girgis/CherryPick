@@ -106,52 +106,68 @@
     <!-- Start Table View -->
     <ng-container *ngIf="currentView == 4">
       <div class="container" style="padding: 35px">
-        <div style="overflow-x: auto" *ngIf="shoppingCenters && shoppingCenters.length > 0">
+        <div
+          style="overflow-x: auto"
+          *ngIf="shoppingCenters && shoppingCenters.length > 0"
+        >
           <table class="procpect-table">
             <thead class="procpect-table-head">
               <tr style="border-bottom: 1px solid #e4e4e4">
-                <th>Name</th> 
+                <th>Name</th>
                 <th>Unit Size & Lease Price</th>
                 <ng-container
-                *ngFor="let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces; let i = index; trackBy: trackByIndex"
-                 >
-                <th>
-                  Nearest {{ getNeareastCategoryName(item.CategoryId) }}
-                </th>
-              </ng-container> 
+                  *ngFor="
+                    let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
+                    let i = index;
+                    trackBy: trackByIndex
+                  "
+                >
+                  <th>
+                    Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                  </th>
+                </ng-container>
               </tr>
             </thead>
             <tbody class="procpect-table-body">
               <ng-container *ngFor="let shoppingCenter of shoppingCenters">
                 <tr>
-                  <td>{{ shoppingCenter.CenterName | titlecase }}
+                  <td>
+                    {{ shoppingCenter.CenterName | titlecase }}
                     <div
-                    class="content-address"
-                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
-                  >
-                    {{ shoppingCenter.CenterAddress }},
-                    {{ shoppingCenter.CenterCity | titlecase }},
-                    {{ shoppingCenter.CenterState }}
-                  </div>
-                  </td> 
+                      class="content-address"
+                      (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                    >
+                      {{ shoppingCenter.CenterAddress }},
+                      {{ shoppingCenter.CenterCity | titlecase }},
+                      {{ shoppingCenter.CenterState }}
+                    </div>
+                  </td>
                   <td
                     [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
                   ></td>
                   <ng-container
-                  *ngFor="let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces; let i = index; trackBy: trackByIndex"
-                >
-                  <td>
-                    <img
-                      class="logo"
-                      [src]="'https://files.cherrypick.com/logos/' + item.BuyBoxPlaceId + '.png'"
-                      [title]="item.BuyBoxPlaceName"
-                      alt=""
-                    />
-                    <span class="ms-2"  >
-                      {{ item.Distance.toFixed(2) }} MI
-                    </span> 
-                  </td>
-                </ng-container>
+                    *ngFor="
+                      let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces;
+                      let i = index;
+                      trackBy: trackByIndex
+                    "
+                  >
+                    <td>
+                      <img
+                        class="logo"
+                        [src]="
+                          'https://files.cherrypick.com/logos/' +
+                          item.BuyBoxPlaceId +
+                          '.png'
+                        "
+                        [title]="item.BuyBoxPlaceName"
+                        alt=""
+                      />
+                      <span class="ms-2">
+                        {{ item.Distance.toFixed(2) }} MI
+                      </span>
+                    </td>
+                  </ng-container>
 
                   <td></td>
                   <!-- <td>
@@ -165,7 +181,7 @@
                     </ng-container>
                   </td> -->
                   <td>
-                    <div >
+                    <div>
                       <button
                         class="det-btn d-flex align-items-center"
                         (click)="goToPlace(shoppingCenter)"
@@ -238,19 +254,21 @@
           <table class="procpect-table mt-4">
             <thead class="procpect-table-head">
               <tr>
-                <th>Address</th> 
+                <th>Address</th>
                 <th>Unit Size & Lease Price</th>
                 <ng-container *ngIf="standAlone[0].Place">
-                <ng-container  
-                  *ngFor="
-                    let item of standAlone[0].Place.BuyBoxPlaces  ; let i = index; trackBy: trackByIndex
-                  "
-                >
-                  <th>
-                    Nearest {{ getNeareastCategoryName(item.CategoryId) }}
-                  </th>
+                  <ng-container
+                    *ngFor="
+                      let item of standAlone[0].Place.BuyBoxPlaces;
+                      let i = index;
+                      trackBy: trackByIndex
+                    "
+                  >
+                    <th>
+                      Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                    </th>
+                  </ng-container>
                 </ng-container>
-              </ng-container>
                 <th></th>
               </tr>
             </thead>
@@ -265,31 +283,35 @@
                       {{ place.Address }}, {{ place.City | titlecase }},
                       {{ place.State }}
                     </div>
-                  </td> 
-                  <td>Unit Size: {{ place.BuildingSizeSf | number }} SF <br> 
-                     LeasePrice: {{ place.ForLeasePrice  }}
-                    
+                  </td>
+                  <td>
+                    Unit Size: {{ place.BuildingSizeSf | number }} SF <br />
+                    LeasePrice: {{ place.ForLeasePrice }}
                   </td>
                   <ng-container *ngIf="place.Place">
-                    <ng-container *ngFor="let item of place.Place.BuyBoxPlaces ; let i = index; trackBy: trackByIndex"
-                  >
-                    <td>
-                      <img
-                        class="logo"
-                        src="https://files.cherrypick.com/logos/{{
-                          item.BuyBoxPlaceId
-                        }}.png"
-                        title="{{ item.BuyBoxPlaceName }}"
-                        alt=""
-                      />
-                      <span class="ms-2" 
-                        >{{ item.Distance.toFixed(2) }} MI</span
-                      >
-                       
-                    </td>
-                     </ng-container>
+                    <ng-container
+                      *ngFor="
+                        let item of place.Place.BuyBoxPlaces;
+                        let i = index;
+                        trackBy: trackByIndex
+                      "
+                    >
+                      <td>
+                        <img
+                          class="logo"
+                          src="https://files.cherrypick.com/logos/{{
+                            item.BuyBoxPlaceId
+                          }}.png"
+                          title="{{ item.BuyBoxPlaceName }}"
+                          alt=""
+                        />
+                        <span class="ms-2"
+                          >{{ item.Distance.toFixed(2) }} MI</span
+                        >
+                      </td>
+                    </ng-container>
                   </ng-container>
-                  <td >
+                  <td>
                     <button
                       class="det-btn d-flex align-items-center"
                       (click)="goToPlace(place)"
@@ -327,7 +349,7 @@
                       </svg>
                     </button>
 
-                    <div style="cursor: pointer; ">
+                    <div style="cursor: pointer">
                       <img
                         src="../../../assets/Images/map.png"
                         style="height: 30px; width: 30px; margin-right: 5px"
@@ -430,10 +452,8 @@
                         alt=""
                       />
                       <span class="ms-2">
-                        <span  
-                          >{{ item.Distance.toFixed(2) }} MI</span
-                        >
-                       </span>
+                        <span>{{ item.Distance.toFixed(2) }} MI</span>
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -558,10 +578,8 @@
                         alt=""
                       />
                       <span class="ms-2">
-                        <span  
-                          >{{ item.Distance.toFixed(2) }} MI</span
-                        >
-                       </span>
+                        <span>{{ item.Distance.toFixed(2) }} MI</span>
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -674,7 +692,7 @@
                     {{ place.State }}
                   </p>
                 </div>
-                
+
                 <div>
                   <p
                     style="font-size: 15px; font-weight: 500; color: #565656"
@@ -682,14 +700,22 @@
                   ></p>
                 </div>
 
-                <div class="row" *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place">
+                <div
+                  class="row"
+                  *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
+                >
                   <div
-                    *ngFor="let item of place.ShoppingCenter?  place.ShoppingCenter.BuyBoxPlaces : place.Place.BuyBoxPlaces"
+                    *ngFor="
+                      let item of place.ShoppingCenter
+                        ? place.ShoppingCenter.BuyBoxPlaces
+                        : place.Place.BuyBoxPlaces
+                    "
                     class="col-12 d-flex flex-column spec"
                   >
                     <p class="spec-head">
                       Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                     </p>
+
                     <p class="spec-content">
                       <img
                         class="logo"
@@ -700,16 +726,11 @@
                         alt=""
                       />
                       <span class="ms-2">
-                        <span 
-                          >{{ item.Distance.toFixed(2) }} MI</span
-                        >
+                        <span>{{ item.Distance.toFixed(2) }} MI</span>
                       </span>
                     </p>
                   </div>
                 </div>
-
-
-
 
                 <div class="buttons-wrap">
                   <button class="view-details-card" (click)="goToPlace(place)">

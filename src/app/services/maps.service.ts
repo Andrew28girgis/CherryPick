@@ -16,7 +16,7 @@ export class MapsService {
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
   }
- 
+
   createMarker(map: any, markerData: any, type: string): any {
     let icon = this.getArrowSvg();
     const marker = new google.maps.Marker({
@@ -30,7 +30,7 @@ export class MapsService {
     this.markers.push(marker);
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
-    
+
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
     this.closeIconListeners(infoWindow);
     this.addMarkerEventListeners(marker, map, infoWindow, markerData);
@@ -138,7 +138,7 @@ export class MapsService {
     map: any,
     infoWindow: any,
     markerData: any
-  ): void {  
+  ): void {
     const storedBuyBoxId = localStorage.getItem('BuyBoxId');
 
     marker.addListener('click', () => {
@@ -179,7 +179,6 @@ export class MapsService {
     infoWindow: any,
     markerData: any
   ): void {
-    
     marker.addListener('click', () => {
       if (this.openInfoWindow && this.openInfoWindow !== infoWindow) {
         this.openInfoWindow.close();
