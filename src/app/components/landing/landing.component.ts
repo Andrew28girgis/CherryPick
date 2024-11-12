@@ -119,7 +119,20 @@ export class LandingComponent {
       const places = ShoppingCenter.OtherPlaces;
 
       if (places.length > 0) {
-        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+        // Filter out invalid values (undefined, null, NaN) and create an array of valid building sizes
+        const buildingSizes = places
+          .map((place: any) => place.BuildingSizeSf)
+          .filter(
+            (size: any) => size !== undefined && size !== null && !isNaN(size)
+          );
+
+        // Log building sizes for debugging purposes
+        console.log(`buildingSizes`, buildingSizes);
+
+        // If buildingSizes array is empty or invalid, stop the process
+        if (buildingSizes.length === 0) {
+          return null;
+        }
 
         let minSize = Math.min(...buildingSizes);
         let maxSize = Math.max(...buildingSizes);
@@ -371,15 +384,24 @@ export class LandingComponent {
           ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
       markerData.CenterState
     }
-        </p>
-        <p class="address-content">
-          Unit Size: ${this.formatNumberWithCommas(
-            markerData.OtherPlaces[0].BuildingSizeSf
-          )} SF
-        </p> 
-        <p class="address-content">
-          Lease price: ${markerData.OtherPlaces[0].ForLeasePrice}
-        </p> 
+    ${
+      markerData.OtherPlaces &&
+      markerData.OtherPlaces.length > 0 &&
+      markerData.OtherPlaces[0].BuildingSizeSf !== undefined &&
+      !isNaN(markerData.OtherPlaces[0].BuildingSizeSf)
+        ? `
+      <p class="address-content">
+        Unit Size: ${this.formatNumberWithCommas(
+          markerData.OtherPlaces[0].BuildingSizeSf
+        )} SF
+      </p>
+    `
+        : ''
+    }
+
+    <p class="address-content">
+        Lease price: ${markerData.OtherPlaces[0].ForLeasePrice}
+    </p> 
       </div>
     </div>
   `;
@@ -581,14 +603,6 @@ export class LandingComponent {
 
     `)
     );
-  }
-
-  validatePercentageInput(event: any) {
-    let inputValue = event.target.value;
-    inputValue = parseFloat(inputValue.replace(/[^0-9.]/g, ''));
-    if (!isNaN(inputValue)) {
-      inputValue = Math.min(100, Math.max(0, inputValue));
-    }
   }
 
   sendFeedBack(reaction: string) {

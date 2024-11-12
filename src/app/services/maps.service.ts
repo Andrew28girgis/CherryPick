@@ -76,9 +76,16 @@ export class MapsService {
       markerData.CenterState
     }
                   </p>
-                <p class="address-content">
-                   ${this.getShoppingCenterUnitSize(markerData)}
-                </p> 
+                  ${
+                    this.getShoppingCenterUnitSize(markerData)
+                      ? `
+                    <p class="address-content">
+                      ${this.getShoppingCenterUnitSize(markerData)}
+                    </p>
+                  `
+                      : ''
+                  }
+                  
 
                 <div class="buttons-wrap">
                     <button id="view-details-${
@@ -451,19 +458,24 @@ export class MapsService {
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     if (shoppingCenter.ShoppingCenter) {
       const places = shoppingCenter.ShoppingCenter.Places;
-  
+
       if (places.length > 0) {
-        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
-        const leasePrices = places.map(
-          (place: any) => place.ForLeasePrice || null
-        );
-  
+        const buildingSizes = places
+          .map((place: any) => place.BuildingSizeSf)
+          .filter(
+            (size: any) => size !== undefined && size !== null && !isNaN(size)
+          );
+
+        if (buildingSizes.length === 0) {
+          return null;
+        }
+
         let minSize = Math.min(...buildingSizes);
         let maxSize = Math.max(...buildingSizes);
-  
+
         let minPrice = null;
         let maxPrice = null;
-  
+
         // Find lease prices corresponding to min and max sizes
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
@@ -473,12 +485,12 @@ export class MapsService {
             maxPrice = place.ForLeasePrice;
           }
         }
-  
+
         // Helper function to format lease price
         const formatLeasePrice = (price: any) => {
-          return price === "On Request" ? "On Request" : price;
+          return price === 'On Request' ? 'On Request' : price;
         };
-  
+
         // Check if min and max sizes are the same
         if (minSize === maxSize) {
           return minPrice
@@ -487,9 +499,13 @@ export class MapsService {
               )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
             : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
         }
-  
+
         // Check if min and max lease prices are the same or if either is "On Request"
-        if (minPrice === maxPrice || minPrice === "On Request" || maxPrice === "On Request") {
+        if (
+          minPrice === maxPrice ||
+          minPrice === 'On Request' ||
+          maxPrice === 'On Request'
+        ) {
           return minPrice
             ? `Unit Size: ${this.formatNumberWithCommas(
                 minSize
@@ -500,14 +516,14 @@ export class MapsService {
                 minSize
               )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
         }
-  
+
         let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
           minSize
         )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-  
+
         // Avoid range like "On Request - $55 SF/YR" by checking if either value is "On Request"
         if (minPrice && maxPrice) {
-          if (minPrice === "On Request" || maxPrice === "On Request") {
+          if (minPrice === 'On Request' || maxPrice === 'On Request') {
             sizeRange += `<br>Lease Price: On Request`;
           } else {
             sizeRange += `<br>Lease Price: ${minPrice} - ${maxPrice}`;
@@ -517,18 +533,18 @@ export class MapsService {
         } else if (maxPrice) {
           sizeRange += `<br>Lease Price: ${formatLeasePrice(maxPrice)}`;
         }
-  
+
         return sizeRange;
       }
     } else {
       let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
         shoppingCenter.BuildingSizeSf
       )} SF`;
-  
+
       if (shoppingCenter.ForLeasePrice) {
         sizeRange += `<br>Lease Price: ${
-          shoppingCenter.ForLeasePrice === "On Request"
-            ? "On Request"
+          shoppingCenter.ForLeasePrice === 'On Request'
+            ? 'On Request'
             : shoppingCenter.ForLeasePrice
         }`;
       }
@@ -536,7 +552,7 @@ export class MapsService {
     }
     return null;
   }
-  
+
   formatNumberWithCommas(value: number | null): string {
     if (value !== null) {
       return value?.toLocaleString();
