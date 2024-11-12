@@ -119,17 +119,14 @@ export class LandingComponent {
       const places = ShoppingCenter.OtherPlaces;
 
       if (places.length > 0) {
-        // Filter out invalid values (undefined, null, NaN) and create an array of valid building sizes
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
           .filter(
             (size: any) => size !== undefined && size !== null && !isNaN(size)
           );
 
-        // Log building sizes for debugging purposes
-        console.log(`buildingSizes`, buildingSizes);
 
-        // If buildingSizes array is empty or invalid, stop the process
+
         if (buildingSizes.length === 0) {
           return null;
         }
@@ -633,7 +630,6 @@ export class LandingComponent {
     let lng = this.getStreetLong();
     let heading = this.getStreetHeading() || 165; // Default heading value
     let pitch = this.getStreetPitch() || 0; // Default pitch value
-    console.log(lat, lng, heading, pitch);
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');

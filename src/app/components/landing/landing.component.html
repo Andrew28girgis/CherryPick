@@ -61,9 +61,7 @@
                   <!-- Start if StandAlone -->
                   <div class="row details-info" *ngIf="!ShoppingCenter">
                     <div class="col-sm-12 p-0">
-                      <div
-                        class="d-flex flex-row align-items-center"
-                      >
+                      <div class="d-flex flex-row align-items-center">
                         <p class="info-head"></p>
                         <p
                           class="info-value content-address"
@@ -382,62 +380,60 @@
             </div>
           </div>
         </ng-container>
-
-        <ng-container *ngIf="ShoppingCenter">
-          <div class="col-md-12">
-            <div class="main-section another-places p-0">
-              <table class="procpect-table">
-                <thead class="procpect-table-head">
-                  <tr>
-                    <th>Suite</th>
-                    <th>Listing Type</th>
-                    <th>Lease Price</th>
-                    <th>Unit Size (SF)</th>
-                    <th>Street View</th>
-                  </tr>
-                </thead>
-                <tbody class="procpect-table-body">
-                  <ng-container
-                    *ngFor="let place of ShoppingCenter.OtherPlaces"
-                  >
-                    <tr>
-                      <td>{{ place.Suite }}</td>
-                      <td>
-                        {{ place.ListingType }}
-                      </td>
-                      <td>
-                        <span *ngIf="place.ForLeasePrice != 'undefined'">{{
-                          place.ForLeasePrice
-                        }}</span>
-                      </td>
-                      <td>{{ place.BuildingSizeSf | number }} SF</td>
-                      <td>
-                        <div
-                          style="cursor: pointer"
-                          (click)="openStreetViewPlace(StreetViewPlace, place)"
-                        >
-                          <svg
-                            width="46"
-                            height="30"
-                            viewBox="0 0 46 30"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M19.4961 29.8983C19.655 29.9556 19.8212 30 20 30H23H26C26.1788 30 26.3451 29.9556 26.504 29.8983C31.8508 29.597 38 28.5817 38 25.5C38 22.6886 32.8809 21.5968 27.9231 21.1979L30.0605 19.0605C30.3418 18.7793 30.5 18.3977 30.5 18V13.5C30.5 10.7502 28.6304 8.45124 26.1025 7.7449C26.9597 6.92505 27.5 5.77698 27.5 4.5C27.5 2.01855 25.4814 0 23 0C20.5185 0 18.5 2.01855 18.5 4.5C18.5 5.77698 19.0403 6.92505 19.8975 7.7449C17.3696 8.45124 15.5 10.7502 15.5 13.5V18C15.5 18.3977 15.6582 18.7793 15.9395 19.0605L18.0769 21.1979C13.1191 21.5968 8 22.6886 8 25.5C8 28.5817 14.1493 29.597 19.4961 29.8983ZM27.5 26.825V24.175C31.0845 24.4636 33.3286 25.0481 34.4067 25.5C33.3286 25.9519 31.0845 26.5364 27.5 26.825ZM23 3C23.8276 3 24.5 3.67309 24.5 4.5C24.5 5.32691 23.8276 6 23 6C22.1724 6 21.5 5.32691 21.5 4.5C21.5 3.67309 22.1724 3 23 3ZM18.5 13.5C18.5 11.8455 19.8462 10.5 21.5 10.5H24.5C26.1538 10.5 27.5 11.8455 27.5 13.5V17.3789L24.9395 19.9395C24.6582 20.2207 24.5 20.6023 24.5 21V22.5747V26.9625C24.2734 26.9685 24.0508 26.9759 23.8203 26.9795C23.273 26.9873 22.7271 26.9873 22.1797 26.9795C21.9492 26.9759 21.7266 26.9685 21.5 26.9625V22.5747V21C21.5 20.6023 21.3418 20.2207 21.0605 19.9395L18.5 17.3789V13.5ZM18.5 24.175V26.825C14.9155 26.5364 12.6714 25.9519 11.5933 25.5C12.6714 25.0481 14.9155 24.4636 18.5 24.175Z"
-                              fill="#0D0C0C"
-                            />
-                          </svg>
-                        </div>
-                      </td>
-                    </tr>
-                  </ng-container>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </ng-container>
       </ng-container>
+      <ng-container *ngIf="ShoppingCenter">
+        <div class="col-md-12">
+          <div class="main-section another-places p-0">
+            <table class="procpect-table">
+              <thead class="procpect-table-head">
+                <tr>
+                  <th>Suite</th>
+                  <th>Listing Type</th>
+                  <th>Lease Price</th>
+                  <th>Unit Size (SF)</th>
+                  <th>Street View</th>
+                </tr>
+              </thead>
+              <tbody class="procpect-table-body">
+                <ng-container *ngFor="let place of ShoppingCenter.OtherPlaces">
+                  <tr>
+                    <td>{{ place.Suite }}</td>
+                    <td>
+                      {{ place.ListingType }}
+                    </td>
+                    <td>
+                      <span *ngIf="place.ForLeasePrice != 'undefined'">{{
+                        place.ForLeasePrice
+                      }}</span>
+                    </td>
+                    <td>{{ place.BuildingSizeSf | number }} SF</td>
+                    <td>
+                      <div
+                        style="cursor: pointer"
+                        (click)="openStreetViewPlace(StreetViewPlace, place)"
+                      >
+                        <svg
+                          width="46"
+                          height="30"
+                          viewBox="0 0 46 30"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M19.4961 29.8983C19.655 29.9556 19.8212 30 20 30H23H26C26.1788 30 26.3451 29.9556 26.504 29.8983C31.8508 29.597 38 28.5817 38 25.5C38 22.6886 32.8809 21.5968 27.9231 21.1979L30.0605 19.0605C30.3418 18.7793 30.5 18.3977 30.5 18V13.5C30.5 10.7502 28.6304 8.45124 26.1025 7.7449C26.9597 6.92505 27.5 5.77698 27.5 4.5C27.5 2.01855 25.4814 0 23 0C20.5185 0 18.5 2.01855 18.5 4.5C18.5 5.77698 19.0403 6.92505 19.8975 7.7449C17.3696 8.45124 15.5 10.7502 15.5 13.5V18C15.5 18.3977 15.6582 18.7793 15.9395 19.0605L18.0769 21.1979C13.1191 21.5968 8 22.6886 8 25.5C8 28.5817 14.1493 29.597 19.4961 29.8983ZM27.5 26.825V24.175C31.0845 24.4636 33.3286 25.0481 34.4067 25.5C33.3286 25.9519 31.0845 26.5364 27.5 26.825ZM23 3C23.8276 3 24.5 3.67309 24.5 4.5C24.5 5.32691 23.8276 6 23 6C22.1724 6 21.5 5.32691 21.5 4.5C21.5 3.67309 22.1724 3 23 3ZM18.5 13.5C18.5 11.8455 19.8462 10.5 21.5 10.5H24.5C26.1538 10.5 27.5 11.8455 27.5 13.5V17.3789L24.9395 19.9395C24.6582 20.2207 24.5 20.6023 24.5 21V22.5747V26.9625C24.2734 26.9685 24.0508 26.9759 23.8203 26.9795C23.273 26.9873 22.7271 26.9873 22.1797 26.9795C21.9492 26.9759 21.7266 26.9685 21.5 26.9625V22.5747V21C21.5 20.6023 21.3418 20.2207 21.0605 19.9395L18.5 17.3789V13.5ZM18.5 24.175V26.825C14.9155 26.5364 12.6714 25.9519 11.5933 25.5C12.6714 25.0481 14.9155 24.4636 18.5 24.175Z"
+                            fill="#0D0C0C"
+                          />
+                        </svg>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+
       <div class="col-md-6">
         <div class="main-section" style="height: 562px">
           <div class="text-center">
@@ -529,7 +525,9 @@
                 <div class="col-md-6" *ngIf="CustomPlace.Employees">
                   <div class="d-flex flex-column">
                     <p class="info-head">Employees</p>
-                    <p class="info-value">{{ CustomPlace.Employees | number}}</p>
+                    <p class="info-value">
+                      {{ CustomPlace.Employees | number }}
+                    </p>
                   </div>
                 </div>
               </div>
