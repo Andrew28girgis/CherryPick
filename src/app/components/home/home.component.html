@@ -114,12 +114,11 @@
                 <th>Unit Size & Lease Price</th>
                 <ng-container
                 *ngFor="let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces; let i = index; trackBy: trackByIndex"
-              >
+                 >
                 <th>
                   Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                 </th>
-              </ng-container>
-              
+              </ng-container> 
               </tr>
             </thead>
             <tbody class="procpect-table-body">

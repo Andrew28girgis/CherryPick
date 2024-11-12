@@ -236,82 +236,132 @@ export class LandingComponent {
   }
 
   addMarkerForPrimaryLocation(map: any) {
-    const primaryLocation = this.ShoppingCenter || this.CustomPlace; 
+    const primaryLocation = this.ShoppingCenter || this.CustomPlace;
     const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
     this.createMarker(map, primaryLocation, type);
   }
 
+  private currentlyOpenInfoWindow: any | null = null;
 
-private currentlyOpenInfoWindow: any | null = null;   
-createMarker(map: any, markerData: any, type: string): void {
-  const icon = this.getIcon(markerData, type);
-  const marker = new google.maps.Marker({
-    map,
-    position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
-    icon: icon,
-  });
+  createMarker(map: any, markerData: any, type: string): void {
+    const marker = this.initializeMarker(map, markerData, type);
+    const infoWindow = this.initializeInfoWindow(markerData, type);
 
-  const infoWindow = new google.maps.InfoWindow({
-    content: this.getInfoWindowContent(markerData, type),
-  });
+    this.addMarkerClickListener(marker, map, infoWindow);
+    this.addCloseButtonListener(infoWindow, marker);
 
-  this.addInfoWindowListeners(marker, infoWindow);
-  this.addCloseButtonListener(infoWindow, marker); 
+    // Add map click listener to close any open InfoWindow when clicking outside
+    this.addMapClickListener(map);
+  }
 
-  marker.addListener('click', () => {
-    if (this.currentlyOpenInfoWindow) {
-      this.currentlyOpenInfoWindow.close();
+  // Method to initialize a marker with custom icon and position
+  private initializeMarker(map: any, markerData: any, type: string): any {
+    const icon = this.getIcon(markerData, type);
+    return new google.maps.Marker({
+      map,
+      position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
+      icon: icon,
+    });
+  }
+
+  // Method to initialize an InfoWindow
+  private initializeInfoWindow(markerData: any, type: string): any {
+    return new google.maps.InfoWindow({
+      content: this.getInfoWindowContent(markerData, type),
+    });
+  }
+
+  // Method to add a click listener to the marker
+  private addMarkerClickListener(marker: any, map: any, infoWindow: any): void {
+    marker.addListener('click', () => {
+      if (this.currentlyOpenInfoWindow) {
+        this.currentlyOpenInfoWindow.close();
+      }
+
+      // Open the new InfoWindow
+      infoWindow.open(map, marker);
+      this.currentlyOpenInfoWindow = infoWindow; // Track the currently open InfoWindow
+    });
+  }
+
+  // Method to handle the close button click events within the InfoWindow
+  private addCloseButtonListener(infoWindow: any, marker: any): void {
+    // Wait until the InfoWindow content is rendered (domready)
+    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+      const closeButton = document.getElementById(`close-btn-${marker.id}`);
+
+      if (closeButton) {
+        closeButton.addEventListener('click', () => {
+          infoWindow.close();
+          if (this.currentlyOpenInfoWindow === infoWindow) {
+            this.currentlyOpenInfoWindow = null;
+          }
+        });
+      }
+    });
+  }
+
+  // Method to add a click listener to the map to close any open InfoWindow when clicking outside
+  private addMapClickListener(map: any): void {
+    google.maps.event.addListener(map, 'click', (event: any) => {
+      if (this.currentlyOpenInfoWindow) {
+        this.currentlyOpenInfoWindow.close();
+        this.currentlyOpenInfoWindow = null; // Reset the currently open InfoWindow reference
+      }
+    });
+  }
+
+  getIcon(markerData: any, type: string): any {
+    const defaultIconUrl = this.getArrowSvg();
+    if (type === 'Shopping Center' || type === 'Stand Alone') {
+      return {
+        url: defaultIconUrl,
+        scaledSize: new google.maps.Size(40, 40),
+      };
+    } else {
+      return {
+        url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
+        scaledSize: new google.maps.Size(40, 40),
+      };
+    }
+  }
+
+  getInfoWindowContent(markerData: any, type: string): string {
+    if (type === 'Shopping Center') {
+      return this.getShoppingCenterInfoWindowContent(markerData);
+    } else if (type === 'Stand Alone') {
+      return this.getOtherPlaceInfoWindowContent(markerData);
     }
 
-    // Open the new InfoWindow
-    infoWindow.open(map, marker);
-    this.currentlyOpenInfoWindow = infoWindow;  // Track the currently open InfoWindow
-  });
-}
-
-getIcon(markerData: any, type: string): any {
-  const defaultIconUrl = this.getArrowSvg(); 
-  if (type === 'Shopping Center' || type === 'Stand Alone') {
-    return {
-      url: defaultIconUrl,
-      scaledSize: new google.maps.Size(40, 40),
-    };
-  } else { 
-    return {
-      url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
-      scaledSize: new google.maps.Size(40, 40),
-    };
+    return this.getIconsContent(markerData);
   }
-}
 
-getInfoWindowContent(markerData: any, type: string): string {
-  if (type === 'Shopping Center') {
-    return this.getShoppingCenterInfoWindowContent(markerData);
-  } else if (type === 'Stand Alone') {
-    return this.getOtherPlaceInfoWindowContent(markerData);
-  }
-  
-  return this.getIconsContent(markerData);
-}
-
-private getShoppingCenterInfoWindowContent(markerData: any): string {
-  return `
+  private getShoppingCenterInfoWindowContent(markerData: any): string {
+    return `
     <div class="info-window">
       <div class="main-img">
         <img src="${markerData.MainImage}" alt="Main Image">
         <span class="close-btn" id="close-btn-${markerData.id}">&times;</span>
       </div>
       <div class="content-wrap">
-        ${markerData.CenterName ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>` : ''}
+        ${
+          markerData.CenterName
+            ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
+            : ''
+        }
         <p class="address-content">
           <svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
             <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
           </svg>
-          ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}
+          ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+      markerData.CenterState
+    }
         </p>
         <p class="address-content">
-          Unit Size: ${this.formatNumberWithCommas(markerData.OtherPlaces[0].BuildingSizeSf)} SF
+          Unit Size: ${this.formatNumberWithCommas(
+            markerData.OtherPlaces[0].BuildingSizeSf
+          )} SF
         </p> 
         <p class="address-content">
           Lease price: ${markerData.OtherPlaces[0].ForLeasePrice}
@@ -319,20 +369,24 @@ private getShoppingCenterInfoWindowContent(markerData: any): string {
       </div>
     </div>
   `;
-}
+  }
 
-private getOtherPlaceInfoWindowContent(markerData: any): string {
-  return `
+  private getOtherPlaceInfoWindowContent(markerData: any): string {
+    return `
     <div class="info-window">
       <div class="main-img">
         <img src="${markerData.MainImage}" alt="Main Image">
         <span class="close-btn" id="close-btn-${markerData.id}">&times;</span>
       </div>
       <div class="content-wrap">
-        <p class="address-content">${this.getAddressContentStandAlone(markerData)}</p>
+        <p class="address-content">${this.getAddressContentStandAlone(
+          markerData
+        )}</p>
 
         <p class="address-content"> 
-          Unit Size: ${this.formatNumberWithCommas(markerData.BuildingSizeSf)} SF
+          Unit Size: ${this.formatNumberWithCommas(
+            markerData.BuildingSizeSf
+          )} SF
         </p>
 
         <p class="address-content"> 
@@ -341,38 +395,26 @@ private getOtherPlaceInfoWindowContent(markerData: any): string {
       </div> 
     </div>
   `;
-}
+  }
 
-private getIconsContent(markerData: any): string {
-  return `
+  private getIconsContent(markerData: any): string {
+    return `
     <div class="info-window p-0">
         <div> 
         <div style="padding:9px">
-           <span class="close-btn" id="close-btn-${markerData.id}">&times;</span>
+           <span class="close-btn" id="close-btn-${
+             markerData.id
+           }">&times;</span>
         </div>
             <div>
-              <p style="font-size: 19px; font-weight: 500; margin:0; padding:15px">${markerData.BuyBoxPlace[0].Name}: ${markerData.BuyBoxPlace[0].Distance.toFixed(2)} MI</p>
+              <p style="font-size: 19px; font-weight: 500; margin:0; padding:15px">${
+                markerData.BuyBoxPlace[0].Name
+              }: ${markerData.BuyBoxPlace[0].Distance.toFixed(2)} MI</p>
             </div>
           </div>
     </div>
   `;
-}
-
-
-// Function to handle the close button click events
-private addCloseButtonListener(infoWindow: any, marker: any): void {
-  // Wait until the InfoWindow content is rendered (domready)
-  google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
-    const closeButton = document.getElementById(`close-btn-${marker.id}`);
-    
-    if (closeButton) {
-      closeButton.addEventListener('click', () => {
-        infoWindow.close();
-      });
-    }
-  });
-}
-
+  }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     if (shoppingCenter.ShoppingCenter) {
@@ -652,9 +694,9 @@ private addCloseButtonListener(infoWindow: any, marker: any): void {
   viewOnStreetPopUp() {
     this.StreetViewOnePlace = true;
     let lat = +this.General.modalObject.StreetLatitude;
-    let lng = +this.General.modalObject.StreetLongitude; 
-    let heading = this.General.modalObject.Heading  ; // Default heading value
-    let pitch =  0;
+    let lng = +this.General.modalObject.StreetLongitude;
+    let heading = this.General.modalObject.Heading; // Default heading value
+    let pitch = 0;
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view-pop');
