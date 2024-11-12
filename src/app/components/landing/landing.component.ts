@@ -204,7 +204,7 @@ export class LandingComponent {
 
       this.addMarkerForPrimaryLocation(map);
 
-      if (this.NearByType.length > 0) {
+      if (this.NearByType && this.NearByType.length > 0) {
         this.NearByType.forEach((type) => {
           type.BuyBoxPlaces.slice(0, 5).forEach((place) => {
             this.createMarker(map, place, type.Name);

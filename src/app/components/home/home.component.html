@@ -240,7 +240,8 @@
               <tr>
                 <th>Address</th> 
                 <th>Unit Size & Lease Price</th>
-                <ng-container 
+                <ng-container *ngIf="standAlone[0].Place">
+                <ng-container  
                   *ngFor="
                     let item of standAlone[0].Place.BuyBoxPlaces  ; let i = index; trackBy: trackByIndex
                   "
@@ -249,6 +250,7 @@
                     Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                   </th>
                 </ng-container>
+              </ng-container>
                 <th></th>
               </tr>
             </thead>
@@ -268,7 +270,8 @@
                      LeasePrice: {{ place.ForLeasePrice  }}
                     
                   </td>
-                  <ng-container *ngFor="let item of place.Place.BuyBoxPlaces ; let i = index; trackBy: trackByIndex"
+                  <ng-container *ngIf="place.Place">
+                    <ng-container *ngFor="let item of place.Place.BuyBoxPlaces ; let i = index; trackBy: trackByIndex"
                   >
                     <td>
                       <img
@@ -284,6 +287,7 @@
                       >
                        
                     </td>
+                     </ng-container>
                   </ng-container>
                   <td >
                     <button
@@ -536,7 +540,7 @@
                   </div>
                 </div>
 
-                <div class="row">
+                <div class="row" *ngIf="place.Place">
                   <div
                     *ngFor="let item of place.Place.BuyBoxPlaces"
                     class="col-6 d-flex flex-column spec"
@@ -678,7 +682,7 @@
                   ></p>
                 </div>
 
-                <div class="row">
+                <div class="row" *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place">
                   <div
                     *ngFor="let item of place.ShoppingCenter?  place.ShoppingCenter.BuyBoxPlaces : place.Place.BuyBoxPlaces"
                     class="col-12 d-flex flex-column spec"
