@@ -235,8 +235,12 @@ export class HomeComponent implements OnInit {
       } else {
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
-            lat: this.shoppingCenters[0].Latitude || 0,
-            lng: this.shoppingCenters[0].Longitude || 0,
+            lat: this.shoppingCenters
+              ? this.shoppingCenters[0].Latitude
+              : this.standAlone[0].Latitude || 0,
+            lng: this.shoppingCenters
+              ? this.shoppingCenters[0].Longitude
+              : this.standAlone[0].Longitude || 0,
           },
           zoom: 10,
           mapId: '1234567890',
@@ -296,14 +300,21 @@ export class HomeComponent implements OnInit {
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
 
-    this.shoppingCenters.forEach((center) => {
-      const firstPlace = center.ShoppingCenter.Places[0];
-      center.Latitude = firstPlace.Latitude;
-      center.Longitude = firstPlace.Longitude;
-    });
+    if (this.shoppingCenters) {
+      this.shoppingCenters.forEach((center) => {
+        const firstPlace = center.ShoppingCenter.Places[0];
+        center.Latitude = firstPlace.Latitude;
+        center.Longitude = firstPlace.Longitude;
+      });
+    }
 
-    const allPros: any[] = [...this.shoppingCenters, ...this.standAlone];
-
+    const allPros: any[] = [
+      ...(this.shoppingCenters && this.shoppingCenters.length > 0
+        ? this.shoppingCenters
+        : []),
+      ...(this.standAlone && this.standAlone.length > 0 ? this.standAlone : []),
+    ]; 
+    
     // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
       this.cardsSideList = allPros.filter((property) =>

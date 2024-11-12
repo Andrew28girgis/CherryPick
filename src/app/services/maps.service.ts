@@ -16,7 +16,7 @@ export class MapsService {
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
   }
-
+ 
   createMarker(map: any, markerData: any, type: string): any {
     let icon = this.getArrowSvg();
     const marker = new google.maps.Marker({
@@ -30,6 +30,7 @@ export class MapsService {
     this.markers.push(marker);
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
+    
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
     this.closeIconListeners(infoWindow);
     this.addMarkerEventListeners(marker, map, infoWindow, markerData);
@@ -137,7 +138,7 @@ export class MapsService {
     map: any,
     infoWindow: any,
     markerData: any
-  ): void {
+  ): void {  
     const storedBuyBoxId = localStorage.getItem('BuyBoxId');
 
     marker.addListener('click', () => {
@@ -178,22 +179,18 @@ export class MapsService {
     infoWindow: any,
     markerData: any
   ): void {
-    // Add click listener to the marker
+    
     marker.addListener('click', () => {
-      // Close any previously open infoWindow
       if (this.openInfoWindow && this.openInfoWindow !== infoWindow) {
         this.openInfoWindow.close();
       }
 
-      // Open the current infoWindow and update the tracker
       infoWindow.open(map, marker);
       this.openInfoWindow = infoWindow;
     });
 
-    // Add listener for clicking outside the infoWindow
     this.addMapClickListener(map);
 
-    // Wait for the DOM element to exist before attaching event listener
     setTimeout(() => {
       const viewDetailsButton = document.getElementById(
         `view-details-${markerData.Id}`
@@ -213,7 +210,7 @@ export class MapsService {
     google.maps.event.addListener(map, 'click', () => {
       if (this.openInfoWindow) {
         this.openInfoWindow.close();
-        this.openInfoWindow = null; // Reset the reference to indicate no infoWindow is open
+        this.openInfoWindow = null;
       }
     });
   }
@@ -244,21 +241,20 @@ export class MapsService {
             },
             icon: {
               url: imgUrl,
-              scaledSize: new google.maps.Size(30, 30), // Adjust size as needed
+              scaledSize: new google.maps.Size(30, 30),
             },
-            map: map, // Attach the marker to the map
+            map: map,
           });
 
-          // Create an InfoWindow instance with close button
           const closeButtonId = `close-button-${branch.Id}`;
-          //   <div style="display: flex; justify-content: end">
-          //   <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
-          //     &times;
-          //   </button>
-          // </div>
+
           const infoWindowContent = `
           <div style="padding:0 10px">
-         
+             <div style="display: flex; justify-content: end">
+            <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
+              &times;
+            </button>
+          </div>
             <div>
               <p style="font-size: 19px; font-weight: 500;margin: 0;padding: 13px;">${place.Name}</p>
             </div>
