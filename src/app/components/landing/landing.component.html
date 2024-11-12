@@ -522,14 +522,14 @@
                   <div class="d-flex flex-column">
                     <p class="info-head">Household Income</p>
                     <p class="info-value">
-                      {{ CustomPlace.HouseholdIncome }}
+                      ${{ CustomPlace.HouseholdIncome | number }}
                     </p>
                   </div>
                 </div>
                 <div class="col-md-6" *ngIf="CustomPlace.Employees">
                   <div class="d-flex flex-column">
                     <p class="info-head">Employees</p>
-                    <p class="info-value">{{ CustomPlace.Employees }}</p>
+                    <p class="info-value">{{ CustomPlace.Employees | number}}</p>
                   </div>
                 </div>
               </div>
