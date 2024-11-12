@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center } from 'src/models/shoppingCenters';
 declare const google: any;
 
 @Injectable({
@@ -12,12 +11,12 @@ export class MapsService {
   private markers: any[] = [];
   private prosMarkers: any[] = [];
   private markerMap: { [key: string]: any[] } = {};
+  private openInfoWindow: any | null = null;
 
   constructor(private router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
   }
 
-  //Create Markers
   createMarker(map: any, markerData: any, type: string): any {
     let icon = this.getArrowSvg();
     const marker = new google.maps.Marker({
@@ -29,149 +28,20 @@ export class MapsService {
       icon: icon,
     });
     this.markers.push(marker);
-
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
-
     this.addInfoWindowListener(marker, map, infoWindow, markerData);
-    this.closeIconListeners(marker, map, infoWindow, markerData);
+    this.closeIconListeners(infoWindow);
     this.addMarkerEventListeners(marker, map, infoWindow, markerData);
-
     return marker;
   }
 
-  private currentlyOpenInfoWindow: any | null = null;  // Track the currently open InfoWindow
-
-  createCustomMarker(map: any, markerData: BuyboxCategory): void {
-    // Clear existing markers from the markerMap object for this ID if they already exist
-    if (!this.markerMap[markerData.id]) {
-      this.markerMap[markerData.id] = [];
-    }
-  
-    // If markers already exist for this category, we do not need to recreate them
-    if (this.markerMap[markerData.id].length > 0) {
-      return;
-    }
-  
-    markerData.places.forEach((place) => {
-      // Construct image URL based on place ID
-      const imgUrl = `https://files.cherrypick.com/logos/${place.Id}.png`;
-  
-      place.BuyBoxPlaces.forEach((branch) => {
-        const latitude = Number(branch.Latitude);
-        const longitude = Number(branch.Longitude);
-  
-        if (!isNaN(latitude) && !isNaN(longitude)) {
-          const marker = new google.maps.Marker({
-            position: {
-              lat: latitude,
-              lng: longitude,
-            },
-            icon: {
-              url: imgUrl,
-              scaledSize: new google.maps.Size(30, 30), // Adjust size as needed
-            },
-            map: map, // Attach the marker to the map
-          });
-  
-          // Create an InfoWindow instance with close button
-          const closeButtonId = `close-button-${branch.Id}`;
-          const infoWindowContent = `
-            <div style="padding:0 10px">
-              <div style="display: flex; justify-content: end">
-                <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
-                  &times;
-                </button>
-              </div>
-              <div>
-                <p style="font-size: 19px; font-weight: 500;">${place.Name}</p>
-              </div>
-            </div>`;
-  
-          const infoWindow = new google.maps.InfoWindow({
-            content: infoWindowContent,
-          });
-  
-          // Add a click listener to the marker to show the InfoWindow
-          marker.addListener('click', () => {
-            // Close any previously opened InfoWindow (if needed)
-            if (this.currentlyOpenInfoWindow) {
-              this.currentlyOpenInfoWindow.close();
-            }
-            // Open the new InfoWindow
-            infoWindow.open(map, marker);
-            this.currentlyOpenInfoWindow = infoWindow;  // Track the currently open InfoWindow
-  
-            // Call the function to attach close button listener
-            this.addCloseButtonListener(infoWindow, closeButtonId);
-          });
-  
-          // Store the marker in the marker map
-          this.markerMap[markerData.id].push(marker);
-        }
-      });
-    });
-  
-    // Call toggleMarkers when drawing markers
-    this.toggleMarkers(map, markerData);
-  }
-  
-  // Function to handle the close button click events
-  private addCloseButtonListener(infoWindow: any, buttonId: string): void {
-    // Use the 'domready' event to ensure the InfoWindow's DOM is fully loaded
-    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
-      const closeButton = document.getElementById(buttonId);
-      if (closeButton) {
-        closeButton.addEventListener('click', () => {
-          infoWindow.close();
-          this.currentlyOpenInfoWindow = null; // Reset the open info window tracker
-        });
-      }
-    });
-  } 
-  // Function to handle close button click events
-  closeIconListener(infoWindow: any, buttonId: string): void {
-    // Use a timeout to ensure the InfoWindow content is rendered before accessing the button
-    setTimeout(() => {
-      const closeButton = document.getElementById(buttonId);
-      if (closeButton) {
-        closeButton.onclick = () => {
-          infoWindow.close();
-        };
-      }
-    }, 0);
-  }
-
-  toggleMarkers(map: any, markerData: any): void {
-    if (markerData.isChecked) {
-      this.showMarkers(map, markerData.id);
-    } else {
-      this.hideMarkers(markerData.id);
-    }
-  }
-
-  showMarkers(map: any, id: number): void {
-    if (this.markerMap[id]) {
-      this.markerMap[id].forEach((marker) => {
-        marker.setMap(map);
-      });
-    }
-  }
-
-  hideMarkers(id: string): void {
-    if (this.markerMap[id]) {
-      this.markerMap[id].forEach((marker) => {
-        marker.setMap(null);
-      });
-    }
-  }
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Shopping Center' || type === 'Stand Alone') {
       this.prosMarkers.push(marker);
     }
   }
 
-  // Create Card Window
   private createInfoWindow(markerData: any, type: string): any {
     let content =
       type === 'Shopping Center'
@@ -180,7 +50,6 @@ export class MapsService {
     return new google.maps.InfoWindow({ content });
   }
 
-  // Card Window Content
   private shoopingCenterPopup(markerData: any): string {
     return `
     
@@ -247,7 +116,9 @@ export class MapsService {
       </p>
 
            <div class="buttons-wrap">
-                    <button id="view-details-${markerData.Id}" class="view-details-card">View Details
+                    <button id="view-details-${
+                      markerData.Id
+                    }" class="view-details-card">View Details
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
                             <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
@@ -261,48 +132,45 @@ export class MapsService {
     `;
   }
 
-  // Click View Details
- private addInfoWindowListener(
+  private addInfoWindowListener(
     marker: any,
     map: any,
     infoWindow: any,
     markerData: any
-): void {
-    // Retrieve the BuyBoxId only once
+  ): void {
     const storedBuyBoxId = localStorage.getItem('BuyBoxId');
 
-    // Open the infoWindow when the marker is clicked
     marker.addListener('click', () => {
-        infoWindow.open(map, marker);
+      infoWindow.open(map, marker);
     });
 
-    // Add event listener once the infoWindow DOM is ready
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
-        // Find the "View Details" button
-        const viewDetailsButton = document.getElementById(
-            `view-details-${markerData.Id}`
-        );
+      const viewDetailsButton = document.getElementById(
+        `view-details-${markerData.Id}`
+      );
 
-        // If the button exists, attach the click event listener
-        if (viewDetailsButton) {
-            viewDetailsButton.addEventListener('click', () => {
-                // Determine the ID to pass to the router
-                const shoppingCenterId = markerData.ShoppingCenter
-                    ? markerData.ShoppingCenter.Places[0].Id
-                    : markerData.Id;
-
-                // Navigate to the landing page with the correct ID and BuyBoxId
-                this.router.navigate([
-                    '/landing',
-                    shoppingCenterId,
-                    storedBuyBoxId
-                ]);
-            });
-        }
+      if (viewDetailsButton) {
+        viewDetailsButton.addEventListener('click', () => {
+          const shoppingCenterId = markerData.ShoppingCenter
+            ? markerData.ShoppingCenter.Places[0].Id
+            : markerData.Id;
+          this.router.navigate(['/landing', shoppingCenterId, storedBuyBoxId]);
+        });
+      }
     });
-}
+  }
 
-  private openInfoWindow: any | null = null;
+  private closeIconListeners(infoWindow: any): void {
+    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+      const close = document.querySelector('.close-btn');
+      close?.addEventListener('click', () => {
+        infoWindow.close();
+        if (this.openInfoWindow === infoWindow) {
+          this.openInfoWindow = null;
+        }
+      });
+    });
+  }
 
   private addMarkerEventListeners(
     marker: any,
@@ -310,9 +178,10 @@ export class MapsService {
     infoWindow: any,
     markerData: any
   ): void {
+    // Add click listener to the marker
     marker.addListener('click', () => {
       // Close any previously open infoWindow
-      if (this.openInfoWindow) {
+      if (this.openInfoWindow && this.openInfoWindow !== infoWindow) {
         this.openInfoWindow.close();
       }
 
@@ -320,6 +189,9 @@ export class MapsService {
       infoWindow.open(map, marker);
       this.openInfoWindow = infoWindow;
     });
+
+    // Add listener for clicking outside the infoWindow
+    this.addMapClickListener(map);
 
     // Wait for the DOM element to exist before attaching event listener
     setTimeout(() => {
@@ -329,35 +201,146 @@ export class MapsService {
 
       if (viewDetailsButton) {
         viewDetailsButton.addEventListener('click', () => {
-          // Add your custom functionality for the "view details" button click here
-          console.log(`View details for marker ID: ${markerData.id}`);
+          console.log(`View details for marker ID: ${markerData.Id}`);
         });
       } else {
-        console.log(`Button for marker ${markerData.id} not found`);
+        console.log(`Button for marker ${markerData.Id} not found`);
       }
     }, 0);
   }
 
-  // Close Card
-  private closeIconListeners(
-    marker: any,
-    map: any,
-    infoWindow: any,
-    markerData: any
-  ): void {
-    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
-      const close = document.querySelector('.close-btn');
-      close?.addEventListener('click', () => {
-        infoWindow.close();
-        // Reset the openInfoWindow if it is the one being closed
-        if (this.openInfoWindow === infoWindow) {
-          this.openInfoWindow = null;
-        }
-      });
+  private addMapClickListener(map: any): void {
+    google.maps.event.addListener(map, 'click', () => {
+      if (this.openInfoWindow) {
+        this.openInfoWindow.close();
+        this.openInfoWindow = null; // Reset the reference to indicate no infoWindow is open
+      }
     });
   }
 
-  //Get Marker Icons
+  private currentlyOpenInfoWindow: any | null = null;
+
+  createCustomMarker(map: any, markerData: BuyboxCategory): void {
+    if (!this.markerMap[markerData.id]) {
+      this.markerMap[markerData.id] = [];
+    }
+
+    if (this.markerMap[markerData.id].length > 0) {
+      return;
+    }
+
+    markerData.places.forEach((place) => {
+      const imgUrl = `https://files.cherrypick.com/logos/${place.Id}.png`;
+
+      place.BuyBoxPlaces.forEach((branch) => {
+        const latitude = Number(branch.Latitude);
+        const longitude = Number(branch.Longitude);
+
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+          const marker = new google.maps.Marker({
+            position: {
+              lat: latitude,
+              lng: longitude,
+            },
+            icon: {
+              url: imgUrl,
+              scaledSize: new google.maps.Size(30, 30), // Adjust size as needed
+            },
+            map: map, // Attach the marker to the map
+          });
+
+          // Create an InfoWindow instance with close button
+          const closeButtonId = `close-button-${branch.Id}`;
+          //   <div style="display: flex; justify-content: end">
+          //   <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
+          //     &times;
+          //   </button>
+          // </div>
+          const infoWindowContent = `
+          <div style="padding:0 10px">
+         
+            <div>
+              <p style="font-size: 19px; font-weight: 500;margin: 0;padding: 13px;">${place.Name}</p>
+            </div>
+          </div>`;
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: infoWindowContent,
+          });
+
+          // Add a click listener to the marker to show the InfoWindow
+          marker.addListener('click', () => {
+            // Close any previously opened InfoWindow
+            if (this.currentlyOpenInfoWindow) {
+              this.currentlyOpenInfoWindow.close();
+            }
+
+            // Open the new InfoWindow
+            infoWindow.open(map, marker);
+            this.currentlyOpenInfoWindow = infoWindow;
+
+            // Add the close button listener to the InfoWindow
+            this.addCloseButtonListener(infoWindow, closeButtonId);
+          });
+
+          // Add listener for clicking on the map to close the currently open InfoWindow
+          this.addMapClickListenerCustom(map);
+
+          // Store the marker
+          this.markerMap[markerData.id].push(marker);
+        }
+      });
+    });
+
+    this.toggleMarkers(map, markerData);
+  }
+
+  private addMapClickListenerCustom(map: any): void {
+    google.maps.event.addListener(map, 'click', () => {
+      if (this.currentlyOpenInfoWindow) {
+        this.currentlyOpenInfoWindow.close();
+        this.currentlyOpenInfoWindow = null; // Reset the reference to indicate no InfoWindow is open
+      }
+    });
+  }
+
+  // Function to handle the close button click events
+  private addCloseButtonListener(infoWindow: any, buttonId: string): void {
+    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+      const closeButton = document.getElementById(buttonId);
+      if (closeButton) {
+        closeButton.addEventListener('click', () => {
+          infoWindow.close();
+          this.currentlyOpenInfoWindow = null;
+        });
+      }
+    });
+  }
+
+  toggleMarkers(map: any, markerData: any): void {
+    if (markerData.isChecked) {
+      this.showMarkers(map, markerData.id);
+    } else {
+      this.hideMarkers(markerData.id);
+    }
+  }
+
+  showMarkers(map: any, id: number): void {
+    if (this.markerMap[id]) {
+      this.markerMap[id].forEach((marker) => {
+        marker.setMap(map);
+      });
+    }
+  }
+
+  hideMarkers(id: string): void {
+    if (this.markerMap[id]) {
+      this.markerMap[id].forEach((marker) => {
+        marker.setMap(null);
+      });
+    }
+  }
+
   getVisibleProspectMarkers(bounds: any) {
     return this.prosMarkers
       .filter((marker) => bounds.contains(marker.getPosition()))
@@ -396,8 +379,6 @@ export class MapsService {
             scaledSize: new google.maps.Size(40, 40),
           },
         });
-
-        // Push the new marker into the markers array
         this.markers.push(newMarker);
       }
     }
@@ -436,7 +417,6 @@ export class MapsService {
     }
   }
 
-  //Arrow SVG
   private getArrowSvg(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
@@ -456,27 +436,6 @@ export class MapsService {
     );
   }
 
-  //Black SVG
-  private getArrowSvgBlack(): string {
-    return (
-      'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`
-       <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_456_4378)">
-<path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#0D0C0C"/>
-<path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#0D0C0C"/>
-</g>
-<defs>
-<clipPath id="clip0_456_4378">
-<rect width="48" height="48" fill="white"/>
-</clipPath>
-</defs>
-</svg>
-
-    `)
-    );
-  }
-
   private getArrowSvgPurple(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
@@ -492,10 +451,6 @@ export class MapsService {
             </defs>
             </svg>`)
     );
-  }
-
-  private formatNumber(value: any) {
-    return new Intl.NumberFormat('en-US').format(value);
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {

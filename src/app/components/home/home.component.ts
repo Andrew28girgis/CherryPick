@@ -131,8 +131,7 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         console.log(`shoppingCenters`);
         console.log(this.shoppingCenters);
-        
-        
+
         this.getStandAlonePlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -152,8 +151,7 @@ export class HomeComponent implements OnInit {
         this.standAlone = data.json;
         console.log(`standAlone`);
         console.log(this.standAlone);
-        
-        
+
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -177,10 +175,7 @@ export class HomeComponent implements OnInit {
             place.BuyBoxPlaces?.some((x) => x.CategoryId === category.id)
           );
         });
- 
-       
 
-        
         this.getAllMarker();
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -188,11 +183,12 @@ export class HomeComponent implements OnInit {
   }
 
   getLogo(id: number) {
-        
     // console.log(this.buyboxPlaces);
 
     for (const place of this.buyboxPlaces) {
-      const foundBranch = place.BuyBoxPlaces?.find((branch) => branch.Id === id);
+      const foundBranch = place.BuyBoxPlaces?.find(
+        (branch) => branch.Id === id
+      );
       if (foundBranch) {
         return place.Id;
       }
@@ -202,7 +198,9 @@ export class HomeComponent implements OnInit {
 
   getLogoTitle(id: number) {
     for (const place of this.buyboxPlaces) {
-      const foundBranch = place.BuyBoxPlaces?.find((branch) => branch.Id === id);
+      const foundBranch = place.BuyBoxPlaces?.find(
+        (branch) => branch.Id === id
+      );
       if (foundBranch) {
         return place.Name;
       }
@@ -353,9 +351,13 @@ export class HomeComponent implements OnInit {
   }
 
   goToPlace(place: any) {
-    if(place.CenterAddress){
-      this.router.navigate(['/landing', place.ShoppingCenter.Places[0].Id, this.BuyBoxId]);
-    }else{
+    if (place.CenterAddress) {
+      this.router.navigate([
+        '/landing',
+        place.ShoppingCenter.Places[0].Id,
+        this.BuyBoxId,
+      ]);
+    } else {
       this.router.navigate(['/landing', place.Id, this.BuyBoxId]);
     }
   }
@@ -371,11 +373,11 @@ export class HomeComponent implements OnInit {
       this.viewOnStreet();
     }, 100);
   }
-  
+
   trackByIndex(index: number, item: any): number {
     return index; // Return the index to track by the position
   }
-  
+
   StreetViewOnePlace!: boolean;
 
   viewOnStreet() {
@@ -471,72 +473,80 @@ export class HomeComponent implements OnInit {
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     if (shoppingCenter.ShoppingCenter) {
-        const places = shoppingCenter.ShoppingCenter.Places;
+      const places = shoppingCenter.ShoppingCenter.Places;
 
-        if (places.length > 0) {
-            const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
-            const leasePrices = places.map(
-                (place: any) => place.ForLeasePrice || null
-            );
+      if (places.length > 0) {
+        const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
+        const leasePrices = places.map(
+          (place: any) => place.ForLeasePrice || null
+        );
 
-            let minSize = Math.min(...buildingSizes);
-            let maxSize = Math.max(...buildingSizes);
+        let minSize = Math.min(...buildingSizes);
+        let maxSize = Math.max(...buildingSizes);
 
-            let minPrice = null;
-            let maxPrice = null;
+        let minPrice = null;
+        let maxPrice = null;
 
-            // Find lease prices corresponding to min and max sizes
-            for (let place of places) {
-                if (place.BuildingSizeSf === minSize) {
-                    minPrice = place.ForLeasePrice;
-                }
-                if (place.BuildingSizeSf === maxSize) {
-                    maxPrice = place.ForLeasePrice;
-                }
-            }
-
-            // Check if min and max sizes are the same
-            if (minSize === maxSize) {
-                return minPrice
-                    ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF<br>Lease Price: ${minPrice}`
-                    : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
-            }
-
-            // Check if min and max lease prices are the same
-            if (minPrice === maxPrice) {
-                return minPrice
-                    ? `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF<br>Lease Price: ${minPrice}`
-                    : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-            }
-
-            let sizeRange = `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-
-            
-            if (minPrice || maxPrice) {
-                sizeRange += `<br>Lease Price: ${minPrice ? minPrice : ''} - ${
-                    maxPrice ? maxPrice : ''
-                }`;
-            }
-
-            return sizeRange;
+        // Find lease prices corresponding to min and max sizes
+        for (let place of places) {
+          if (place.BuildingSizeSf === minSize) {
+            minPrice = place.ForLeasePrice;
+          }
+          if (place.BuildingSizeSf === maxSize) {
+            maxPrice = place.ForLeasePrice;
+          }
         }
-    } else{
-        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(shoppingCenter.BuildingSizeSf)} SF`;
 
-         if (shoppingCenter.ForLeasePrice) {
-          sizeRange += `<br>Lease Price: ${shoppingCenter. ForLeasePrice}`;
-      }
+        // Check if min and max sizes are the same
+        if (minSize === maxSize) {
+          return minPrice
+            ? `Unit Size: ${this.formatNumberWithCommas(
+                minSize
+              )} SF<br>Lease Price: ${minPrice}`
+            : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
+        }
+
+        // Check if min and max lease prices are the same
+        if (minPrice === maxPrice) {
+          return minPrice
+            ? `Unit Size: ${this.formatNumberWithCommas(
+                minSize
+              )} SF - ${this.formatNumberWithCommas(
+                maxSize
+              )} SF<br>Lease Price: ${minPrice}`
+            : `Unit Size: ${this.formatNumberWithCommas(
+                minSize
+              )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+        }
+
+        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
+          minSize
+        )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+
+        if (minPrice || maxPrice) {
+          sizeRange += `<br>Lease Price: ${minPrice ? minPrice : ''} - ${
+            maxPrice ? maxPrice : ''
+          }`;
+        }
+
         return sizeRange;
+      }
+    } else {
+      let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
+        shoppingCenter.BuildingSizeSf
+      )} SF`;
+
+      if (shoppingCenter.ForLeasePrice) {
+        sizeRange += `<br>Lease Price: ${shoppingCenter.ForLeasePrice}`;
+      }
+      return sizeRange;
     }
     return null;
-}
-
-
+  }
 
   getNeareastCategoryName(categoryId: number) {
+    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
 
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId); 
-    
     return categories[0].name;
   }
 
