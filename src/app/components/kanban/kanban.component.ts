@@ -76,7 +76,7 @@ export class KanbanComponent {
       },
       
     ];
-    this.collapse = false;
+    this.collapse = true;
   }
 
 

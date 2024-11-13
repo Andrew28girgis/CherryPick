@@ -112,7 +112,7 @@
         >
           <table class="procpect-table">
             <thead class="procpect-table-head">
-              <tr style="border-bottom: 1px solid #e4e4e4">
+              <tr>
                 <th>Name</th>
                 <th>Unit Size & Lease Price</th>
                 <ng-container
@@ -132,8 +132,8 @@
             <tbody class="procpect-table-body">
               <ng-container *ngFor="let shoppingCenter of shoppingCenters">
                 <tr>
-                  <td>
-                    {{ shoppingCenter.CenterName | titlecase }}
+                  <td  >
+                   <span [innerHTML]=" shoppingCenter.CenterName | titlecase "></span> 
                     <div
                       class="content-address"
                       (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
@@ -389,8 +389,7 @@
                 "
               >
                 <div>
-                  <p class="content-title">
-                    {{ shopping.CenterName | titlecase }}
+                  <p class="content-title" [innerHTML]="shopping.CenterName | titlecase">
                   </p>
                 </div>
 

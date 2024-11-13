@@ -37,8 +37,8 @@
                   {{ CustomPlace.Address }}, {{ CustomPlace.City }},
                   {{ CustomPlace.State }}
                 </p>
-                <p *ngIf="ShoppingCenter" class="m-0 procpect-name">
-                  {{ ShoppingCenter.CenterName | titlecase }}
+                <p *ngIf="ShoppingCenter" class="m-0 procpect-name"   [innerHTML]="ShoppingCenter.CenterName | titlecase">
+            
                 </p>
 
                 <!-- <button class="btn for-lease" *ngIf="CustomPlace.ListingType">
@@ -273,9 +273,8 @@
           <div class="tabs">
             <!-- Tab headers -->
             <ul class="tab-headers" *ngIf="ShoppingCenter">
-              <li (click)="viewOnStreet()">
-                {{ ShoppingCenter.CenterName | titlecase }}
-              </li>
+              <li (click)="viewOnStreet()"  [innerHTML]="ShoppingCenter.CenterName | titlecase">
+               </li>
               <li
                 *ngFor="let place of ShoppingCenter.OtherPlaces; let i = index"
                 (click)="

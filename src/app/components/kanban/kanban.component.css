@@ -141,4 +141,7 @@
   .sidebar .sidebar-items.logout-item .item-icon {
     transform: scaleX(-1);
   }
-  
+  .kanban-wrap{
+    background-color: #F2F3F4;
+    padding: 15px;
+  }

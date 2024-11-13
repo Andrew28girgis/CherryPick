@@ -1,20 +1,29 @@
-
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-md-2">
     <div class="sidebar" [ngClass]="{ 'sidebar-collapse': collapse }">
       <div class="sidebar-header">
-        <ng-container *ngIf="!collapse else other_content"> 
-        <div class="header-title">Kanban</div> 
-        <svg (click)="changeCollapse()"
-        xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/><path d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z"/></svg>
-      </ng-container>
-      <ng-template #other_content>  
-        <i
-          class="fa-solid fa-angle-right header-btn"
-          (click)="changeCollapse()"
-        ></i>
-        </ng-template> 
-        
+        <ng-container *ngIf="!collapse; else other_content">
+          <div class="header-title">Kanban</div>
+          <svg
+            (click)="changeCollapse()"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+          >
+            <path
+              d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"
+            />
+            <path
+              d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z"
+            />
+          </svg>
+        </ng-container>
+        <ng-template #other_content>
+          <i
+            class="fa-solid fa-angle-right header-btn"
+            (click)="changeCollapse()"
+          ></i>
+        </ng-template>
       </div>
       <ul class="sidebar-items">
         <li
@@ -40,50 +49,47 @@
           </div>
         </li>
       </ul>
-      
     </div>
   </div>
-  <div class="col-md-8">
-
+  <div class="col-md-10">
     <div class="row d-flex my-3">
       <div *ngFor="let kanban of kanbans" class="col-md-4">
         <div class="card" (click)="GetKanbanDetails(kanban)">
           <div class="card-header">
-            <h2 >{{ kanban.kanbanName }}</h2>
-          </div> 
+            <h2>{{ kanban.kanbanName }}</h2>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="row d-flex" *ngIf="kanbanList">
-      <div *ngFor="let stage of kanbanList[0]?.kanbanStages" class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            <h2>{{ stage.stageName }}</h2>
-          </div>
-          <div
-            cdkDropList
-            [id]="stage.Id.toString()"
-            [cdkDropListData]="stage.kanbanOrganizations"
-            [cdkDropListConnectedTo]="getConnectedLists(stage.Id.toString())"
-            class="card-body example-list"
-            (cdkDropListDropped)="drop($event)">
-            
-            <div class="example-box" *ngFor="let org of stage.kanbanOrganizations" cdkDrag>
-              {{ org.Organization[0].Name }}
+
+    <div class="kanban-wrap">
+      <div class="row d-flex" *ngIf="kanbanList">
+        <div *ngFor="let stage of kanbanList[0]?.kanbanStages" class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h2>{{ stage.stageName }}</h2>
+            </div>
+            <div
+              cdkDropList
+              [id]="stage.Id.toString()"
+              [cdkDropListData]="stage.kanbanOrganizations"
+              [cdkDropListConnectedTo]="getConnectedLists(stage.Id.toString())"
+              class="card-body example-list"
+              (cdkDropListDropped)="drop($event)"
+            >
+              <div
+                class="example-box"
+                *ngFor="let org of stage.kanbanOrganizations"
+                cdkDrag
+              >
+                {{ org.Organization[0].Name }}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
     
-    
-    
-    
-
-    
   </div>
 </div>
-
-  
-  
