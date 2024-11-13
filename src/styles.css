@@ -638,17 +638,18 @@
 
 .procpect-table-head th {
   padding: 10px;
-  background-color: #fff;
+  background-color: #E4E7E9;
 }
 
 .procpect-table-head th:first-child {
-  border-top-left-radius: 12px;
-  background-color: #fff;
+  border-top-left-radius: 12px; 
+  background-color: #E4E7E9; 
 }
 
 .procpect-table-head th:last-child {
-  border-top-right-radius: 12px;
-  background-color: #fff;
+  border-top-right-radius: 12px; 
+  background-color: #E4E7E9; 
+
 }
 
 .rounded-table {
@@ -680,7 +681,7 @@
   font-weight: 500;
   line-height: 24px; /* 171.429% */
   color: #0d0c0c;
-  border-bottom: 1px solid #e4e4e4;
+  border: 1px solid #e4e4e4;
 }
 
 
