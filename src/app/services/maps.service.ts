@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 declare const google: any;
 
@@ -14,36 +13,12 @@ export class MapsService {
   private openInfoWindow: any | null = null;
   private map: any;
 
-  constructor(private router: Router) {
+  constructor() {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
-    this.setupVisibilityChangeListener();
-  }
-
-  setupVisibilityChangeListener() {
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && this.map) {
-        // Re-initialize map to ensure all markers and InfoWindows are active
-        this.reinitializeMap();
-      }
-    });
-  }
-
-  reinitializeMap(): void {
-    // Trigger a slight map redraw by resizing and resetting the center
-    google.maps.event.trigger(this.map, 'resize');
-    const center = this.map.getCenter();
-    if (center) {
-      this.map.setCenter(center);
-    }
-    // Re-open the last open InfoWindow if applicable
-    if (this.openInfoWindow && this.openInfoWindow.marker) {
-      const marker = this.openInfoWindow.marker;
-      this.openInfoWindow.open(this.map, marker);
-    }
   }
 
   createMarker(map: any, markerData: any, type: string): any {
-    this.map = map; // Store reference to the map for later use
+    this.map = map;
     const icon = this.getArrowSvg();
     const marker = new google.maps.Marker({
       map,
@@ -53,56 +28,59 @@ export class MapsService {
       },
       icon: icon,
     });
-
-    // Store markerData and type directly in the marker for easier reference
+  
     marker.markerData = markerData;
     marker.type = type;
-
     this.markers.push(marker);
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
-
     this.addMarkerEventListeners(marker, infoWindow);
-
     return marker;
   }
-
+  
   private addMarkerEventListeners(marker: any, infoWindow: any): void {
     marker.addListener('click', () => {
       this.handleMarkerClick(marker, infoWindow);
     });
-
-    // Use the map click event only once to avoid attaching multiple listeners
-    google.maps.event.addListenerOnce(this.map, 'click', () => {
+    google.maps.event.addListener(this.map, 'click', (event:any) => {
+      // Close the info window when clicking on the map, if one is open
       if (this.openInfoWindow) {
         this.openInfoWindow.close();
         this.openInfoWindow = null;
       }
     });
   }
-
+  
   private handleMarkerClick(marker: any, infoWindow: any): void {
-    console.log('Marker clicked');
-
-    // Close the currently open infoWindow, if any
     if (this.openInfoWindow && this.openInfoWindow !== infoWindow) {
       this.openInfoWindow.close();
-    }
-
-    // Open the new infoWindow
+    } 
+  
     infoWindow.open(this.map, marker);
-    infoWindow.marker = marker; // Store marker reference in the infoWindow
+    infoWindow.marker = marker;  
     this.openInfoWindow = infoWindow;
-
-    // Attach additional listeners once the InfoWindow is rendered
+  
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
       this.addViewDetailsButtonListener(marker);
+      this.addCloseButtonListener(infoWindow);
     });
   }
-
+  
+  private addCloseButtonListener(infoWindow: any): void {
+    const closeButton = document.querySelector('.close-btn');
+    if (closeButton) {
+      closeButton.addEventListener('click', () => {
+        infoWindow.close();
+        this.openInfoWindow = null;
+      });
+    }
+  }
+  
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
-    const viewDetailsButton = document.getElementById(`view-details-${markerData.Id}`);
+    const viewDetailsButton = document.getElementById(
+      `view-details-${markerData.Id}`
+    );
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
         this.handleViewDetailsClick(markerData.Id);
@@ -111,24 +89,24 @@ export class MapsService {
       console.log(`Button for marker ${markerData.Id} not found`);
     }
   }
-
+  
   private handleViewDetailsClick(markerId: any): void {
     console.log(`View details for marker ID: ${markerId}`);
   }
-
+  
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Shopping Center' || type === 'Stand Alone') {
       this.prosMarkers.push(marker);
     }
   }
-
+  
   private createInfoWindow(markerData: any, type: string): any {
     let content =
       type === 'Shopping Center'
         ? this.shoopingCenterPopup(markerData)
         : this.standAlonerPopup(markerData);
     const infoWindow = new google.maps.InfoWindow({ content });
-    infoWindow.marker = null; // Track which marker is attached to this infoWindow
+    infoWindow.marker = null;  
     return infoWindow;
   }
   
@@ -140,7 +118,11 @@ export class MapsService {
         <span class="close-btn">&times;</span>
       </div>
       <div class="content-wrap">
-        ${markerData.CenterName ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>` : ''}
+        ${
+          markerData.CenterName
+            ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
+            : ''
+        }
         <p class="address-content">
           <svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
@@ -148,9 +130,17 @@ export class MapsService {
           </svg>
           ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}
         </p>
-        ${this.getShoppingCenterUnitSize(markerData) ? `<p class="address-content">${this.getShoppingCenterUnitSize(markerData)}</p>` : ''}
+        ${
+          this.getShoppingCenterUnitSize(markerData)
+            ? `<p class="address-content">${this.getShoppingCenterUnitSize(
+                markerData
+              )}</p>`
+            : ''
+        }
         <div class="buttons-wrap">
-          <button id="view-details-${markerData.Id}" class="view-details-card">View Details
+          <button id="view-details-${
+            markerData.Id
+          }" class="view-details-card">View Details
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
               <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
@@ -161,45 +151,40 @@ export class MapsService {
       </div>
     </div>`;
   }
-
+  
   private standAlonerPopup(markerData: any): string {
     return `  
       <div class="info-window">
-         
-      <div class="main-img">
-        <img src="${markerData.MainImage}" alt="Main Image">
-        <span class="close-btn">&times;</span>
+        <div class="main-img">
+          <img src="${markerData.MainImage}" alt="Main Image">
+          <span class="close-btn">&times;</span>
+        </div>
+        <div class="content-wrap">  
+          <p class="address-content"> 
+            Address: ${markerData.Address}, ${markerData.City}, ${markerData.State}
+          </p>
+          <p class="address-content"> 
+            Unit Size: ${this.formatNumberWithCommas(markerData.BuildingSizeSf)} SF
+          </p>
+          <p class="address-content"> 
+            Lease Price: ${markerData.ForLeasePrice} 
+          </p>
+          <div class="buttons-wrap">
+            <button id="view-details-${
+              markerData.Id
+            }" class="view-details-card">View Details
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
+                <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
+                <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#fff"/>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-    <div class="content-wrap">  
-      <p class="address-content"> 
-        Address: ${markerData.Address}, ${markerData.City}, ${markerData.State}
-      </p>
-
-      <p class="address-content"> 
-        Unit Size: ${this.formatNumberWithCommas(markerData.BuildingSizeSf)} SF
-      </p>
-
-      <p class="address-content"> 
-        Lease Price: ${markerData.ForLeasePrice} 
-      </p>
-
-           <div class="buttons-wrap">
-                    <button id="view-details-${
-                      markerData.Id
-                    }" class="view-details-card">View Details
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
-                            <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
-                            <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#fff"/>
-                        </svg>
-                    </button>
-                </div>
-
-      </div>
-    </div>
     `;
-  } 
-
+  }
+  
 
   private currentlyOpenInfoWindow: any | null = null;
 
@@ -262,7 +247,7 @@ export class MapsService {
             this.currentlyOpenInfoWindow = infoWindow;
 
             // Add the close button listener to the InfoWindow
-            this.addCloseButtonListener(infoWindow, closeButtonId);
+            this.closeSmall(infoWindow, closeButtonId);
           });
 
           // Add listener for clicking on the map to close the currently open InfoWindow
@@ -287,7 +272,7 @@ export class MapsService {
   }
 
   // Function to handle the close button click events
-  private addCloseButtonListener(infoWindow: any, buttonId: string): void {
+  private closeSmall(infoWindow: any, buttonId: string): void {
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
       const closeButton = document.getElementById(buttonId);
       if (closeButton) {
