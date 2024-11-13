@@ -28,7 +28,7 @@ export class MapsService {
       },
       icon: icon,
     });
-  
+
     marker.markerData = markerData;
     marker.type = type;
     this.markers.push(marker);
@@ -37,12 +37,12 @@ export class MapsService {
     this.addMarkerEventListeners(marker, infoWindow);
     return marker;
   }
-  
+
   private addMarkerEventListeners(marker: any, infoWindow: any): void {
     marker.addListener('click', () => {
       this.handleMarkerClick(marker, infoWindow);
     });
-    google.maps.event.addListener(this.map, 'click', (event:any) => {
+    google.maps.event.addListener(this.map, 'click', (event: any) => {
       // Close the info window when clicking on the map, if one is open
       if (this.openInfoWindow) {
         this.openInfoWindow.close();
@@ -50,23 +50,22 @@ export class MapsService {
       }
     });
   }
-  
+
   private handleMarkerClick(marker: any, infoWindow: any): void {
     if (this.openInfoWindow && this.openInfoWindow !== infoWindow) {
       this.openInfoWindow.close();
-      
-    } 
-  
+    }
+
     infoWindow.open(this.map, marker);
-    infoWindow.marker = marker;  
+    infoWindow.marker = marker;
     this.openInfoWindow = infoWindow;
-  
+
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
       this.addViewDetailsButtonListener(marker);
       this.addCloseButtonListener(infoWindow);
     });
   }
-  
+
   private addCloseButtonListener(infoWindow: any): void {
     const closeButton = document.querySelector('.close-btn');
     if (closeButton) {
@@ -76,7 +75,7 @@ export class MapsService {
       });
     }
   }
-  
+
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
     const viewDetailsButton = document.getElementById(
@@ -90,27 +89,27 @@ export class MapsService {
       console.log(`Button for marker ${markerData.Id} not found`);
     }
   }
-  
+
   private handleViewDetailsClick(markerId: any): void {
     console.log(`View details for marker ID: ${markerId}`);
   }
-  
+
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Shopping Center' || type === 'Stand Alone') {
       this.prosMarkers.push(marker);
     }
   }
-  
+
   private createInfoWindow(markerData: any, type: string): any {
     let content =
       type === 'Shopping Center'
         ? this.shoopingCenterPopup(markerData)
         : this.standAlonerPopup(markerData);
     const infoWindow = new google.maps.InfoWindow({ content });
-    infoWindow.marker = null;  
+    infoWindow.marker = null;
     return infoWindow;
   }
-  
+
   private shoopingCenterPopup(markerData: any): string {
     return `
     <div class="info-window">
@@ -129,7 +128,9 @@ export class MapsService {
             <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
             <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
           </svg>
-          ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}
+          ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+      markerData.CenterState
+    }
         </p>
         ${
           this.getShoppingCenterUnitSize(markerData)
@@ -152,7 +153,7 @@ export class MapsService {
       </div>
     </div>`;
   }
-  
+
   private standAlonerPopup(markerData: any): string {
     return `  
       <div class="info-window">
@@ -162,10 +163,14 @@ export class MapsService {
         </div>
         <div class="content-wrap">  
           <p class="address-content"> 
-            Address: ${markerData.Address}, ${markerData.City}, ${markerData.State}
+            Address: ${markerData.Address}, ${markerData.City}, ${
+      markerData.State
+    }
           </p>
           <p class="address-content"> 
-            Unit Size: ${this.formatNumberWithCommas(markerData.BuildingSizeSf)} SF
+            Unit Size: ${this.formatNumberWithCommas(
+              markerData.BuildingSizeSf
+            )} SF
           </p>
           <p class="address-content"> 
             Lease Price: ${markerData.ForLeasePrice} 
@@ -185,7 +190,6 @@ export class MapsService {
       </div>
     `;
   }
-  
 
   private currentlyOpenInfoWindow: any | null = null;
 
@@ -388,18 +392,9 @@ export class MapsService {
   private getArrowSvg(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <g clip-path="url(#clip0_32_4219)">
-                <path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#CC3D3D"/>
-                <path d="M31.2 32.62L14.64 25.16C12.78 24.32 10.9 26.32 11.86 28.12L17.94 39.66C20.52 44.56 27.52 44.56 30.1 39.66L32.24 35.58C32.8 34.48 32.32 33.14 31.2 32.62Z" fill="#CC3D3D"/>
-            </g>
-            <defs>
-                <clipPath id="clip0_32_4219">
-                    <rect width="48" height="48" fill="white"/>
-                </clipPath>
-            </defs>
-        </svg>
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
+</svg>
     `)
     );
   }
