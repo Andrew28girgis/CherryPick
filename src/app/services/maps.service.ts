@@ -54,6 +54,7 @@ export class MapsService {
   private handleMarkerClick(marker: any, infoWindow: any): void {
     if (this.openInfoWindow && this.openInfoWindow !== infoWindow) {
       this.openInfoWindow.close();
+      
     } 
   
     infoWindow.open(this.map, marker);
