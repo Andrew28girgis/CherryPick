@@ -37,9 +37,11 @@
                   {{ CustomPlace.Address }}, {{ CustomPlace.City }},
                   {{ CustomPlace.State }}
                 </p>
-                <p *ngIf="ShoppingCenter" class="m-0 procpect-name"   [innerHTML]="ShoppingCenter.CenterName | titlecase">
-            
-                </p>
+                <p
+                  *ngIf="ShoppingCenter"
+                  class="m-0 procpect-name"
+                  [innerHTML]="ShoppingCenter.CenterName | titlecase"
+                ></p>
 
                 <!-- <button class="btn for-lease" *ngIf="CustomPlace.ListingType">
                   {{ CustomPlace.ListingType }}
@@ -273,25 +275,39 @@
           <div class="tabs">
             <!-- Tab headers -->
             <ul class="tab-headers" *ngIf="ShoppingCenter">
-              <li (click)="viewOnStreet()"  [innerHTML]="ShoppingCenter.CenterName | titlecase">
-               </li>
+              <li
+                (click)="changeStreetView(ShoppingCenter)"
+                [innerHTML]="ShoppingCenter.CenterName | titlecase"
+              ></li>
               <li
                 *ngFor="let place of ShoppingCenter.OtherPlaces; let i = index"
-                (click)="
-                  streetMap(
-                    place.StreetLatitude,
-                    place.StreetLongitude,
-                    place.Heading,
-                    0
-                  )
-                "
+                (click)="changeStreetView(place)"
               >
                 Unit {{ i + 1 }} ( {{ place.Suite }} )
               </li>
             </ul>
           </div>
 
-          <div id="street-view" style="height: 400px; margin-top: 20px"></div>
+          <iframe
+            *ngIf="sanitizedUrl"
+            [src]="sanitizedUrl"
+            style="
+              border: 0;
+              width: 100%;
+              height: 450px;
+              margin-top: 20px;
+              border-radius: 20px;
+            "
+            allowfullscreen=""
+            loading="lazy"
+          >
+          </iframe>
+
+          <div
+            [ngStyle]="{ display: sanitizedUrl ? 'none' : 'block' }"
+            id="street-view"
+            style="height: 450px; margin-top: 20px"
+          ></div>
         </div>
       </div>
     </div>
@@ -380,7 +396,7 @@
           </div>
         </ng-container>
       </ng-container>
-      
+
       <ng-container *ngIf="ShoppingCenter">
         <div class="col-md-12">
           <div class="main-section another-places p-0">
@@ -901,6 +917,15 @@
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>
+  <iframe
+    *ngIf="sanitizedUrl"
+    [src]="sanitizedUrl"
+    style="border: 0; width: 100%; height: 700px"
+    allowfullscreen=""
+    loading="lazy"
+  >
+  </iframe>
+
   <div
     id="street-view-pop"
     style="height: 700px"

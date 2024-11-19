@@ -16,6 +16,7 @@ import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -79,7 +80,8 @@ export class HomeComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private markerService: MapsService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private sanitizer: DomSanitizer
   ) {
     this.currentView = localStorage.getItem('currentView') || 2;
     this.savedMapView = localStorage.getItem('mapView');
@@ -373,6 +375,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  sanitizedUrl!: any;
   openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -380,9 +383,26 @@ export class HomeComponent implements OnInit {
       scrollable: true,
     });
     this.General.modalObject = modalObject;
-    setTimeout(() => {
-      this.viewOnStreet();
-    }, 100);
+    console.log(`street`);
+    console.log(this.General.modalObject);
+
+    if (this.General.modalObject.StreetViewURL) {
+      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+    } else {
+      setTimeout(() => {
+        this.viewOnStreet();
+      }, 100);
+    }
+  }
+
+  ngOnChanges() {
+    if (this.General.modalObject?.StreetViewURL) {
+      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+    }
+  }
+
+  setIframeUrl(url: string): void {
+    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   trackByIndex(index: number, item: any): number {
@@ -491,7 +511,7 @@ export class HomeComponent implements OnInit {
           .map((place: any) => place.BuildingSizeSf)
           .filter(
             (size: any) => size !== undefined && size !== null && !isNaN(size)
-          ); 
+          );
 
         // If buildingSizes array is empty or invalid, stop the process
         if (buildingSizes.length === 0) {

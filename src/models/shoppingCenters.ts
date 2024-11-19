@@ -28,6 +28,7 @@ export interface Center {
     Zip: string
     Longitude: number
     Latitude: number
+    StreetViewURL: string
     Type: string
     Units: string
     ZoningCode: string

@@ -9,9 +9,22 @@ export interface Kanban {
     Id: number
     kanbanId: number
     contactId: number
-    Contact: Contact[]
+    OrganizationId: number
+    Organization: Organization[]
   }
-  
+  export interface Organization {
+    ID: number
+    Name: string
+    Address: string
+    PhoneNumber: string
+    Description: string
+    stakeholderId: number
+    LinkedIn: string
+    States: string
+    Status: string
+    Contacts: Contact[]
+  }
+
   export interface Contact {
     ID: number
     Firstname: string
@@ -25,18 +38,8 @@ export interface Kanban {
     Area: string
     FormattedCellPhone: string
     LastSignInDate: string
-    Password: string
-    Organization: Organization[]
+    Password: string 
   }
   
-  export interface Organization {
-    ID: number
-    Name: string
-    Address: string
-    PhoneNumber: string
-    Description: string
-    LinkedIn: string
-    States: string
-    Status: string
-  }
+
   

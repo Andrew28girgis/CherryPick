@@ -1,3 +1,4 @@
+import { KanbanAction } from "./kanbanActions"
 
 
 export interface KanbanCard {
@@ -14,10 +15,11 @@ export interface KanbanStage {
   isQualified: boolean
   kanbanId: number
   kanbanOrganizations: KanbanOrganization[]
+  stageActions: KanbanAction[]
 }
 
 export interface KanbanOrganization {
-  Organization: Organization[]
+  Organization?: Organization[]
   Id?: number
   OrganizationId?: number
   kanbanStageId?: number
@@ -26,4 +28,10 @@ export interface KanbanOrganization {
 export interface Organization {
   ID?: number
   Name?: string
+  stakeholderId:  number
+}
+
+export interface StakeHolder {
+  id?: number
+  name?: string
 }

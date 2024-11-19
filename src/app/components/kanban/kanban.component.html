@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-2">
+  <!-- <div class="col-md-2">
     <div class="sidebar" [ngClass]="{ 'sidebar-collapse': collapse }">
       <div class="sidebar-header">
         <ng-container *ngIf="!collapse; else other_content">
@@ -50,25 +50,47 @@
         </li>
       </ul>
     </div>
-  </div>
-  <div class="col-md-10">
+  </div> -->
+  <div class="col-md-12 p-0">
     <div class="row d-flex my-3">
-      <div *ngFor="let kanban of kanbans" class="col-md-4">
-        <div class="card" (click)="GetKanbanDetails(kanban)">
+      <div
+        *ngFor="let kanban of kanbans"
+        class="col-md-6 d-flex"
+        (click)="GetKanbanDetails(kanban)"
+      >
+        <div *ngFor="let def of kanban.kanbanDefinitions; let i = index">
           <div class="card-header">
-            <h2>{{ kanban.kanbanName }}</h2>
+            <p>
+              <ng-container *ngFor="let org of def?.Organization">
+                <span *ngIf="i > 0" class="px-2">/</span>{{ org.Name }}
+              </ng-container>
+            </p>
           </div>
         </div>
+        <span class="px-2">--></span
+        >{{ getStackHolderName(kanban.targetStakeholderId) }}
       </div>
     </div>
 
-
     <div class="kanban-wrap">
       <div class="row d-flex" *ngIf="kanbanList">
-        <div *ngFor="let stage of kanbanList[0]?.kanbanStages" class="col-md-4">
+        <div *ngFor="let stage of kanbanList[0]?.kanbanStages" class="col">
           <div class="card">
-            <div class="card-header">
-              <h2>{{ stage.stageName }}</h2>
+            <div class="stage-container">
+              <h2
+                class="stage-name"
+                [ngClass]="{ 'green-text': stage.isQualified }"
+              >
+                {{ stage.stageName }}
+              </h2>
+
+              <button
+                *ngIf="stage.stageActions"
+                class="btn btn-primary"
+                (click)="openActions(ViewStageActions, stage.stageActions)"
+              >
+                Actions
+              </button>
             </div>
             <div
               cdkDropList
@@ -78,18 +100,112 @@
               class="card-body example-list"
               (cdkDropListDropped)="drop($event)"
             >
-              <div
-                class="example-box"
-                *ngFor="let org of stage.kanbanOrganizations"
-                cdkDrag
-              >
-                {{ org.Organization[0].Name }}
-              </div>
+              <ng-container *ngFor="let org of stage.kanbanOrganizations">
+                <div
+                  *ngIf="org.Organization?.[0]?.Name "
+                  class="kanban-org"
+                  cdkDrag
+                >
+                  {{ org.Organization?.[0]?.Name }}
+
+                  <button
+                    *ngIf="
+                      stage.stageActions &&
+                      stage.stageActions[0]?.actionLevel == 'Target'
+                    "
+                    class="btn btn-primary"
+                    (click)="openActions(ViewTargetActions, stage.stageActions)"
+                  >
+                    Actions
+                  </button>
+
+                  <!-- <ng-container *ngFor="let action of stage.stageActions">
+                  (   {{action.actionName}} )
+
+                  </ng-container> -->
+                  <button
+                    class="btn btn-success"
+                    *ngIf="stage.isQualified"
+                    (click)="open(chooseStackHolder, org)"
+                  >
+                    +
+                  </button>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
   </div>
 </div>
+
+<ng-template #chooseStackHolder let-modal>
+  <div
+    class="bg-light rounded"
+    style="max-height: 500px; overflow-y: auto; padding: 20px"
+  >
+    <ng-container *ngIf="selectedKanban?.targetStakeholderId !== 4">
+      <p>
+        <b>
+          {{ General.modalObject.Organization[0]?.Name }} has qualified this
+          kanban
+        </b>
+      </p>
+    </ng-container>
+
+    <span>Start a new kanban for </span>
+    <ng-container *ngFor="let item of selectedKanban?.kanbanDefinitions">
+      <ng-container *ngFor="let org of item.Organization">
+        <ng-container *ngIf="org.Name"> {{ org.Name }} </ng-container>
+        <ng-container *ngIf="org.Contacts?.[0]?.Firstname">
+          {{ org.Contacts[0].Firstname }}
+        </ng-container>
+      </ng-container> </ng-container
+    >& {{ General.modalObject.Organization[0]?.Name }}
+
+    <ng-container *ngFor="let temp of kanbanTemplate">
+      <p>{{ temp.kanbanTemplateName }}</p>
+    </ng-container>
+    <div class="d-flex justify-content-center mt-4">
+      <button
+        class="btn btn-success px-4"
+        (click)="modal.close(); onCreateClick()"
+      >
+        Create
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #ViewStageActions let-modal>
+  <div class="p-3">
+    <ng-container *ngFor="let action of TargetActions">
+      <ng-container *ngIf="action.actionLevel == 'Stage'">
+        <a
+          *ngIf="action.actionType == 'Popup'"
+          href="{{ action.actionURL }}"
+          target="_blank"
+        >
+          {{ action.actionName }}
+        </a>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #ViewTargetActions let-modal>
+  <div class="p-3">
+    <ng-container *ngFor="let action of TargetActions">
+      <ng-container *ngIf="action.actionLevel == 'Target'">
+        <a
+          *ngIf="action.actionType == 'Link'"
+          href="{{ action.actionURL }}"
+          target="_blank"
+        >
+          {{ action.actionName }}
+        </a>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>

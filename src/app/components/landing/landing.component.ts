@@ -6,8 +6,13 @@ declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'src/app/services/auth.service';
-import { LandingPlace, ShoppingCenter } from 'src/models/landingPlace';
+import {
+  LandingPlace,
+  OtherPlace,
+  ShoppingCenter,
+} from 'src/models/landingPlace';
 import { NearByType } from 'src/models/nearBy';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-landing',
@@ -48,7 +53,8 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private authService: AuthService
+    private authService: AuthService,
+    private sanitizer: DomSanitizer
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
@@ -100,10 +106,17 @@ export class LandingComponent {
 
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
+
         if (this.ShoppingCenter) {
           this.getMinMaxUnitSize(this.ShoppingCenter);
+          this.ShoppingCenter.StreetViewURL
+            ? this.setIframeUrl(this.CustomPlace.StreetViewURL)
+            : this.viewOnStreet();
+        } else {
+          this.CustomPlace.StreetViewURL
+            ? this.setIframeUrl(this.CustomPlace.StreetViewURL)
+            : this.viewOnStreet();
         }
-        this.viewOnStreet();
 
         this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
           link.trim()
@@ -112,6 +125,32 @@ export class LandingComponent {
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
+  }
+
+  changeStreetView(place: any) {
+    this.sanitizedUrl = '';
+
+    if (place.StreetViewURL) {
+      this.setIframeUrl(place.StreetViewURL);
+    } else {
+      this.streetMap(
+        place.StreetLatitude,
+        place.StreetLongitude,
+        place.Heading,
+        0
+      );
+    }
+  }
+
+  sanitizedUrl: any;
+  setIframeUrl(url: string): void {
+    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  ngOnChanges() {
+    if (this.CustomPlace.StreetViewURL) {
+      this.setIframeUrl(this.CustomPlace.StreetViewURL);
+    }
   }
 
   getMinMaxUnitSize(ShoppingCenter: ShoppingCenter) {
@@ -718,9 +757,13 @@ export class LandingComponent {
       scrollable: true,
     });
     this.General.modalObject = modalObject;
-    setTimeout(() => {
-      this.viewOnStreetPopUp();
-    }, 100);
+    if (this.General.modalObject.StreetViewURL) {
+      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+    } else {
+      setTimeout(() => {
+        this.viewOnStreetPopUp();
+      }, 100);
+    }
   }
   StreetViewOnePlace!: boolean;
 

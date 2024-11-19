@@ -32,6 +32,7 @@ import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     ShareIconsModule,
     NgxPaginationModule,
     DragDropModule,
+    ReactiveFormsModule  
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

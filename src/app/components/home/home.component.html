@@ -132,8 +132,10 @@
             <tbody class="procpect-table-body">
               <ng-container *ngFor="let shoppingCenter of shoppingCenters">
                 <tr>
-                  <td  >
-                   <span [innerHTML]=" shoppingCenter.CenterName | titlecase "></span> 
+                  <td>
+                    <span
+                      [innerHTML]="shoppingCenter.CenterName | titlecase"
+                    ></span>
                     <div
                       class="content-address"
                       (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
@@ -389,8 +391,10 @@
                 "
               >
                 <div>
-                  <p class="content-title" [innerHTML]="shopping.CenterName | titlecase">
-                  </p>
+                  <p
+                    class="content-title"
+                    [innerHTML]="shopping.CenterName | titlecase"
+                  ></p>
                 </div>
 
                 <div
@@ -755,5 +759,19 @@
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>
-  <div id="street-view" style="height: 700px" *ngIf="StreetViewOnePlace"></div>
+  <div *ngIf="General.modalObject.StreetViewURL">
+    <iframe
+      [src]="sanitizedUrl"
+      height="450"
+      style="border: 0; width: 100%; height: 700px"
+      allowfullscreen=""
+      loading="lazy"
+    >
+    </iframe>
+  </div>
+  <div
+    id="street-view"
+    style="height: 700px"
+    *ngIf="!General.modalObject.StreetViewURL"
+  ></div>
 </ng-template>

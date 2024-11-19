@@ -11,6 +11,7 @@ export class LandingPlace {
     ZoningCode!: string
     LandUse!: string
     BuildingSizeSf!: number
+    StreetViewURL!: string
     ForSalePrice!: string
     Description!: string
     UploadDate!: string
@@ -53,6 +54,7 @@ export class LandingPlace {
     CenterAddress: string
     CenterCity: string
     CenterState: string
+    StreetViewURL: string
     Latitude: number
     Longitude: number
     MainImage: string
@@ -68,6 +70,7 @@ export class LandingPlace {
     City: string
     State: string
     Zip: string
+    StreetViewURL: string
     Longitude: number
     Latitude: number
     Type: string

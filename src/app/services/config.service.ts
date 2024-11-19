@@ -24,5 +24,7 @@ export class ConfigService {
   getFontFamily(): string {
     return this.domainConfig ? this.domainConfig.fontFamily : '';
   }
+
+ 
   
 }
