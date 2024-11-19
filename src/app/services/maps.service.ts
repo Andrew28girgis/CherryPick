@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 declare const google: any;
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class MapsService {
   private openInfoWindow: any | null = null;
   private map: any;
 
-  constructor() {
+  constructor(public router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
   }
 
@@ -78,20 +79,26 @@ export class MapsService {
 
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
+
+    let placeId:number ;
+    marker.markerData.ShoppingCenter ? placeId= markerData.ShoppingCenter.Places[0].Id  : placeId = markerData.Id
+
     const viewDetailsButton = document.getElementById(
-      `view-details-${markerData.Id}`
+      `view-details-${placeId}`
     );
+    
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
-        this.handleViewDetailsClick(markerData.Id);
+        this.handleViewDetailsClick(placeId);
       });
     } else {
-      console.log(`Button for marker ${markerData.Id} not found`);
+      console.log(`Button for marker ${placeId} not found`);
     }
   }
 
   private handleViewDetailsClick(markerId: any): void {
     console.log(`View details for marker ID: ${markerId}`);
+    this.router.navigate(['/landing', markerId, this.storedBuyBoxId]);
   }
 
   private assignToMarkerArray(marker: any, type: string): void {
@@ -141,7 +148,7 @@ export class MapsService {
         }
         <div class="buttons-wrap">
           <button id="view-details-${
-            markerData.Id
+            markerData.ShoppingCenter.Places[0].Id
           }" class="view-details-card">View Details
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
