@@ -37,6 +37,7 @@ export class KanbanComponent {
   kanbanTemplate: KanbanTemplate[] = [];
   KanbanActions: KanbanAction[] = [];
   TargetActions: KanbanAction[] = [];
+  TargetOrg!: KanbanOrganization ;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -226,7 +227,7 @@ export class KanbanComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.kanbanTemplate = data.json;
-      }
+      },
     });
   }
 
@@ -282,16 +283,17 @@ export class KanbanComponent {
     });
   }
 
-  openActions(content: any, modalObject?: any) {
+  openActions(content: any, modalObject?: any , organization?:any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'sm',
       scrollable: true,
-      animation: true,  
+      animation: true,
     });
     this.TargetActions = modalObject;
+    this.TargetOrg = organization;
     console.log(`s`);
-    console.log(this.TargetActions);
+    console.log(this.TargetOrg);
   }
 
   open(content: any, modalObject?: any) {
@@ -301,6 +303,8 @@ export class KanbanComponent {
       scrollable: true,
     });
     this.General.modalObject = modalObject;
+ 
+    
     this.GetKanbanMatchTemplate();
   }
 }

@@ -114,7 +114,9 @@
                       stage.stageActions[0]?.actionLevel == 'Target'
                     "
                     class="btn btn-primary"
-                    (click)="openActions(ViewTargetActions, stage.stageActions)"
+                    (click)="
+                      openActions(ViewTargetActions, stage.stageActions, org)
+                    "
                   >
                     Actions
                   </button>
@@ -200,7 +202,7 @@
       <ng-container *ngIf="action.actionLevel == 'Target'">
         <a
           *ngIf="action.actionType == 'Link'"
-          href="{{ action.actionURL }}"
+          href="{{ action.actionURL + TargetOrg.Id }}"
           target="_blank"
         >
           {{ action.actionName }}
