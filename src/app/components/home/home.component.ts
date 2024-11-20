@@ -289,7 +289,7 @@ export class HomeComponent implements OnInit {
     this.updateShoppingCenterCoordinates();
     this.updateCardsSideList(map);
   }
-  
+
   private saveMapView(map: any): void {
     const center = map.getCenter();
     const zoom = map.getZoom();
@@ -302,7 +302,7 @@ export class HomeComponent implements OnInit {
       })
     );
   }
-  
+
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
       this.shoppingCenters.forEach((center) => {
@@ -312,34 +312,35 @@ export class HomeComponent implements OnInit {
       });
     }
   }
-  
+
   private updateCardsSideList(map: any): void {
     const bounds = map.getBounds();
     const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
-  
+
     const visibleCoords = new Set(
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
-  
+
     const allProperties = [
       ...(this.shoppingCenters || []),
       ...(this.standAlone || []),
     ];
-  
+
     // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
-      this.cardsSideList = allProperties.filter((property) =>
-        visibleCoords.has(`${property.Latitude},${property.Longitude}`) || this.isWithinBounds(property, bounds)
+      this.cardsSideList = allProperties.filter(
+        (property) =>
+          visibleCoords.has(`${property.Latitude},${property.Longitude}`) ||
+          this.isWithinBounds(property, bounds)
       );
     });
   }
-  
+
   private isWithinBounds(property: any, bounds: any): boolean {
     const lat = property.Latitude;
     const lng = property.Longitude;
     return bounds.contains({ lat, lng });
   }
-  
 
   onMouseEnter(place: any): void {
     const { Latitude, Longitude } = place;
