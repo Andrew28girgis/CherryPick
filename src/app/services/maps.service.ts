@@ -79,14 +79,15 @@ export class MapsService {
 
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
-
-    let placeId:number ;
-    marker.markerData.ShoppingCenter ? placeId= markerData.ShoppingCenter.Places[0].Id  : placeId = markerData.Id
+    let placeId: number;
+    marker.markerData.ShoppingCenter
+      ? (placeId = markerData.ShoppingCenter.Places[0].Id)
+      : (placeId = markerData.Id);
 
     const viewDetailsButton = document.getElementById(
       `view-details-${placeId}`
     );
-    
+
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
         this.handleViewDetailsClick(placeId);
