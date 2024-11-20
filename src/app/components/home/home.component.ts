@@ -244,7 +244,7 @@ export class HomeComponent implements OnInit {
               ? this.shoppingCenters[0].Longitude
               : this.standAlone[0].Longitude || 0,
           },
-          zoom: 10,
+          zoom: 8,
           mapId: '1234567890',
         });
         this.map.addListener('dragend', () => this.onMapDragEnd(this.map));

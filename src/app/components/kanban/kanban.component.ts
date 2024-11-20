@@ -37,8 +37,9 @@ export class KanbanComponent {
   kanbanTemplate: KanbanTemplate[] = [];
   KanbanActions: KanbanAction[] = [];
   TargetActions: KanbanAction[] = [];
-  TargetOrg!: KanbanOrganization ;
-
+  TargetOrg!: KanbanOrganization;
+  Organizations: any[] = [];
+  currentStage!: KanbanStage;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -283,7 +284,18 @@ export class KanbanComponent {
     });
   }
 
-  openActions(content: any, modalObject?: any , organization?:any) {
+  openActionsForStage(content: any, modalObject?: any, stage?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'sm',
+      scrollable: true,
+      animation: true,
+    });
+    this.TargetActions = modalObject;
+    this.currentStage = stage;
+  }
+
+  openActionsForTarget(content: any, modalObject?: any, organization?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'sm',
@@ -292,8 +304,6 @@ export class KanbanComponent {
     });
     this.TargetActions = modalObject;
     this.TargetOrg = organization;
-    console.log(`s`);
-    console.log(this.TargetOrg);
   }
 
   open(content: any, modalObject?: any) {
@@ -303,8 +313,58 @@ export class KanbanComponent {
       scrollable: true,
     });
     this.General.modalObject = modalObject;
- 
-    
+
     this.GetKanbanMatchTemplate();
+  }
+
+  openModel(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.General.modalObject = modalObject;
+  }
+
+
+
+  CreateOrganication(name: string, stageId: number): void {
+    const body: any = {
+      Name: 'CreateOrganization',
+      Params: { Name: name, kanbanStageId: stageId },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+    });
+  }
+  
+  SearchOrganication(name: string): void {
+    const body: any = {
+      Name: 'SearchOrganizationByName',
+      Params: { Name: name },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.Organizations = data.json;
+        console.log(this.Organizations);
+      },
+    });
+  }
+
+  AddExistingOrganication(stageId: number, orgId: string): void {
+    const body: any = {
+      Name: 'AddOrganizationToKanban',
+      Params: { organizationid: orgId, kanbanstageid: stageId },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+    });
   }
 }

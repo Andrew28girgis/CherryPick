@@ -87,7 +87,13 @@
               <button
                 *ngIf="stage.stageActions"
                 class="btn btn-primary"
-                (click)="openActions(ViewStageActions, stage.stageActions)"
+                (click)="
+                  openActionsForStage(
+                    ViewStageActions,
+                    stage.stageActions,
+                    stage
+                  )
+                "
               >
                 Actions
               </button>
@@ -115,7 +121,11 @@
                     "
                     class="btn btn-primary"
                     (click)="
-                      openActions(ViewTargetActions, stage.stageActions, org)
+                      openActionsForTarget(
+                        ViewTargetActions,
+                        stage.stageActions,
+                        org
+                      )
                     "
                   >
                     Actions
@@ -185,8 +195,9 @@
     <ng-container *ngFor="let action of TargetActions">
       <ng-container *ngIf="action.actionLevel == 'Stage'">
         <a
+          style="cursor: pointer"
           *ngIf="action.actionType == 'Popup'"
-          href="{{ action.actionURL }}"
+          (click)="openModel(addOrganization)"
           target="_blank"
         >
           {{ action.actionName }}
@@ -207,6 +218,33 @@
         >
           {{ action.actionName }}
         </a>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #addOrganization let-modal>
+  <div class="p-3" style="height: 500px; overflow-y: scroll">
+    <div>
+      <label for="">Search Organization</label>
+      <input type="text" placeholder="Organization name" #orgInput />
+      <button
+        class="btn btn-success px-2"
+        (click)="SearchOrganication(orgInput.value)"
+      >
+        Search
+      </button>
+    </div>
+
+    <ng-container *ngIf="Organizations && Organizations.length > 0">
+      <ng-container *ngFor="let org of Organizations">
+        {{ org.name }}
+        <button
+          class="btn btn-success px-2"
+          (click)="AddExistingOrganication(currentStage.Id, org.id)"
+        >
+          Add
+        </button>
       </ng-container>
     </ng-container>
   </div>
