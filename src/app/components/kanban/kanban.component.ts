@@ -19,6 +19,7 @@ import { General } from 'src/models/domain';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { KanbanTemplate } from 'src/models/kanbanTemplates';
 import { KanbanAction } from 'src/models/kanbanActions';
+import { Organization, OrganizationContact } from 'src/models/Organiztions';
 
 @Component({
   selector: 'app-kanban',
@@ -29,7 +30,7 @@ export class KanbanComponent {
   General!: General;
   sidebarItems!: any[];
   collapse!: boolean;
-  kanbans: Kanban[] = [];
+  userKanbans: Kanban[] = [];
   kanbanList: KanbanCard[] = [];
   stackHolders: StakeHolder[] = [];
   selectedKanban?: Kanban;
@@ -39,7 +40,9 @@ export class KanbanComponent {
   TargetActions: KanbanAction[] = [];
   TargetOrg!: KanbanOrganization;
   Organizations: any[] = [];
-  currentStage!: KanbanStage;
+  currentOpenedStage!: KanbanStage;
+  allOrganizations: Organization[] = [];
+  organizationContact: OrganizationContact[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -94,10 +97,9 @@ export class KanbanComponent {
       Name: 'GetUserKanbans',
       Params: {},
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.kanbans = data.json;
+        this.userKanbans = data.json;
       },
     });
   }
@@ -107,7 +109,6 @@ export class KanbanComponent {
       Name: 'GetAllStakeHolders',
       Params: {},
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.stackHolders = data.json;
@@ -128,21 +129,20 @@ export class KanbanComponent {
         kanbanId: kanban.Id,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.kanbanList = data.json;
         this.kanbanList[0].kanbanStages.forEach((stage) => {
-          this.GetStageActions(stage.Id, stage);
+          this.GetStageActions(stage);
         });
       },
     });
   }
 
-  GetStageActions(stageId: number, stage: KanbanStage): any {
+  GetStageActions(stage: KanbanStage): any {
     const body: any = {
       Name: 'GetStageActions',
-      Params: { StageID: stageId },
+      Params: { StageID: stage.Id },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
@@ -205,6 +205,17 @@ export class KanbanComponent {
     this.collapse = !this.collapse;
   }
 
+  openCreateNewKanban(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'xl',
+      scrollable: true,
+    });
+    this.General.modalObject = modalObject;
+    this.GetKanbanMatchTemplate();
+    this.getAllOrganizations();
+  }
+
   GetKanbanMatchTemplate(): void {
     let StakeholderIds = [];
 
@@ -220,6 +231,7 @@ export class KanbanComponent {
     }
 
     let resultString = StakeholderIds.join(',');
+
     const body: any = {
       Name: 'GetKanbanMatchTemplate',
       Params: { StakeholderIds: resultString },
@@ -284,37 +296,28 @@ export class KanbanComponent {
     });
   }
 
-  openActionsForStage(content: any, modalObject?: any, stage?: any) {
+  // Start Actions
+
+  openActionsForStage(content: any, stage?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'sm',
       scrollable: true,
       animation: true,
     });
-    this.TargetActions = modalObject;
-    this.currentStage = stage;
+    this.TargetActions = stage.stageActions;
+    this.currentOpenedStage = stage;
   }
 
-  openActionsForTarget(content: any, modalObject?: any, organization?: any) {
+  openActionsForTarget(content: any, targetAction?: any, organization?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'sm',
       scrollable: true,
       animation: true,
     });
-    this.TargetActions = modalObject;
+    this.TargetActions = targetAction;
     this.TargetOrg = organization;
-  }
-
-  open(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-    this.General.modalObject = modalObject;
-
-    this.GetKanbanMatchTemplate();
   }
 
   openModel(content: any, modalObject?: any) {
@@ -325,8 +328,6 @@ export class KanbanComponent {
     });
     this.General.modalObject = modalObject;
   }
-
-
 
   CreateOrganication(name: string, stageId: number): void {
     const body: any = {
@@ -340,7 +341,7 @@ export class KanbanComponent {
       },
     });
   }
-  
+
   SearchOrganication(name: string): void {
     const body: any = {
       Name: 'SearchOrganizationByName',
@@ -350,7 +351,6 @@ export class KanbanComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.Organizations = data.json;
-        console.log(this.Organizations);
       },
     });
   }
@@ -362,8 +362,64 @@ export class KanbanComponent {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {},
+    });
+  }
+
+  //Route To Broker
+
+  getAllOrganizations(): void {
+    const body: any = {
+      Name: 'GetAllOrganizations',
+      Params: {},
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log(data);
+        this.allOrganizations = data.json;
+      },
+    });
+  }
+
+  getOrganizationContacts(event: any): void {
+    let Organizationid = event.target.value;
+    const body: any = {
+      Name: 'GetOrganizationContacts',
+      Params: { organizationid: Organizationid },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.organizationContact = data.json;
+      },
+    });
+  }
+
+  orgKanbans: Kanban[] = [];
+  getContactKanbans(event: any): void {
+    let ContactId = event.target.value;
+
+    const body: any = {
+      Name: 'GetContactKanbans',
+      Params: { contactId: ContactId },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.orgKanbans = data.json;
+      },
+    });
+  }
+
+  CreateKanbanOrganization(ContactId: number, KanbanStageId: number): void {
+    const body: any = {
+      Name: 'CreateKanbanOrganization',
+      Params: { contactId: ContactId, kanbanStageId: KanbanStageId },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        console.log(data.json);
       },
     });
   }

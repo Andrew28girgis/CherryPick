@@ -108,13 +108,15 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter) {
+
           this.getMinMaxUnitSize(this.ShoppingCenter);
+          
           this.ShoppingCenter.StreetViewURL
-            ? this.setIframeUrl(this.CustomPlace.StreetViewURL)
+            ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
           this.CustomPlace.StreetViewURL
-            ? this.setIframeUrl(this.CustomPlace.StreetViewURL)
+            ? this.changeStreetView(this.CustomPlace)
             : this.viewOnStreet();
         }
 
@@ -670,6 +672,7 @@ export class LandingComponent {
   }
 
   getStreetLat(): number {
+    
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLatitude
       : +this.CustomPlace.StreetLatitude;

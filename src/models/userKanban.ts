@@ -1,6 +1,7 @@
 export interface Kanban {
     Id: number
     targetStakeholderId: number
+    kanbanTemplateId: number
     kanbanName: string
     kanbanDefinitions: KanbanDefinition[]
   }

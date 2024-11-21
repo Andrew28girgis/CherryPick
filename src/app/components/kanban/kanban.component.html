@@ -54,7 +54,7 @@
   <div class="col-md-12 p-0">
     <div class="row d-flex my-3">
       <div
-        *ngFor="let kanban of kanbans"
+        *ngFor="let kanban of userKanbans"
         class="col-md-6 d-flex"
         (click)="GetKanbanDetails(kanban)"
       >
@@ -87,13 +87,7 @@
               <button
                 *ngIf="stage.stageActions"
                 class="btn btn-primary"
-                (click)="
-                  openActionsForStage(
-                    ViewStageActions,
-                    stage.stageActions,
-                    stage
-                  )
-                "
+                (click)="openActionsForStage(ViewStageActions, stage)"
               >
                 Actions
               </button>
@@ -138,7 +132,7 @@
                   <button
                     class="btn btn-success"
                     *ngIf="stage.isQualified"
-                    (click)="open(chooseStackHolder, org)"
+                    (click)="openCreateNewKanban(chooseStackHolder, org)"
                   >
                     +
                   </button>
@@ -153,10 +147,7 @@
 </div>
 
 <ng-template #chooseStackHolder let-modal>
-  <div
-    class="bg-light rounded"
-    style="max-height: 500px; overflow-y: auto; padding: 20px"
-  >
+  <div class="p-2">
     <ng-container *ngIf="selectedKanban?.targetStakeholderId !== 4">
       <p>
         <b>
@@ -165,27 +156,81 @@
         </b>
       </p>
     </ng-container>
+  </div>
 
-    <span>Start a new kanban for </span>
-    <ng-container *ngFor="let item of selectedKanban?.kanbanDefinitions">
-      <ng-container *ngFor="let org of item.Organization">
-        <ng-container *ngIf="org.Name"> {{ org.Name }} </ng-container>
-        <ng-container *ngIf="org.Contacts?.[0]?.Firstname">
-          {{ org.Contacts[0].Firstname }}
-        </ng-container>
-      </ng-container> </ng-container
-    >& {{ General.modalObject.Organization[0]?.Name }}
+  <div class="row">
+    <div class="bg-light rounded col-md-6 p-2">
+      <h5>Start a new kanban for</h5>
+      <ng-container *ngFor="let item of selectedKanban?.kanbanDefinitions">
+        <ng-container *ngFor="let org of item.Organization">
+          <ng-container *ngIf="org.Name"> {{ org.Name }} </ng-container>
+          <ng-container *ngIf="org.Contacts?.[0]?.Firstname">
+            {{ org.Contacts[0].Firstname }}
+          </ng-container>
+        </ng-container> </ng-container
+      >& {{ General.modalObject.Organization[0]?.Name }}
 
-    <ng-container *ngFor="let temp of kanbanTemplate">
-      <p>{{ temp.kanbanTemplateName }}</p>
-    </ng-container>
-    <div class="d-flex justify-content-center mt-4">
-      <button
-        class="btn btn-success px-4"
-        (click)="modal.close(); onCreateClick()"
-      >
-        Create
-      </button>
+      <ng-container *ngFor="let temp of kanbanTemplate">
+        <p>{{ temp.kanbanTemplateName }}</p>
+      </ng-container>
+      <div class="d-flex justify-content-center mt-4">
+        <button
+          class="btn btn-success px-4"
+          (click)="modal.close(); onCreateClick()"
+        >
+          Create
+        </button>
+      </div>
+    </div>
+    <div class="bg-light rounded col-md-6 p-2">
+      <div>
+        <h5>Route To kanban</h5>
+        <div class="p-2">
+          <label for=""><b>Select Organization</b></label>
+          <select
+            class="form-control w-50"
+            (change)="getOrganizationContacts($event)"
+          >
+            <option *ngFor="let org of allOrganizations" [value]="org.id">
+              {{ org.name }}
+            </option>
+          </select>
+        </div>
+
+        <div
+          class="p-2"
+          *ngIf="organizationContact && organizationContact.length > 0"
+        >
+          <label for=""><b>Select Contact</b></label>
+          <select
+            class="form-control w-50"
+            (change)="getContactKanbans($event)"
+          >
+            <option value="" selected>All</option>
+
+            <option
+              *ngFor="let contact of organizationContact"
+              [value]="contact.id"
+            >
+              {{ contact.firstname }} {{ contact.lastname }}
+            </option>
+          </select>
+        </div>
+
+        <div class="p-2" *ngIf="orgKanbans && orgKanbans.length > 0">
+          <label for=""><b>Select Kanban</b></label>
+          <select class="form-control w-50" >
+            <option value="" selected>All</option>
+            <option *ngFor="let kanaban of orgKanbans" [value]="kanaban.Id">
+              {{ kanaban.kanbanName }}
+            </option>
+          </select>
+        </div>
+
+        <!-- <button class="btn btn-success" *ngIf="orgKanbans.length > 0" (click)="CreateKanbanOrganization()"> 
+          Create
+        </button> -->
+      </div>
     </div>
   </div>
 </ng-template>
@@ -225,7 +270,17 @@
 
 <ng-template #addOrganization let-modal>
   <div class="p-3" style="height: 500px; overflow-y: scroll">
-    <div>
+    <div class="p-2">
+      <label for="">Create Organization</label>
+      <input type="text" placeholder="Organization name" #newOrgInput />
+      <button
+        class="btn btn-success px-2"
+        (click)="CreateOrganication(newOrgInput.value, currentOpenedStage.Id)"
+      >
+        Create
+      </button>
+    </div>
+    <div class="p-2">
       <label for="">Search Organization</label>
       <input type="text" placeholder="Organization name" #orgInput />
       <button
@@ -241,7 +296,7 @@
         {{ org.name }}
         <button
           class="btn btn-success px-2"
-          (click)="AddExistingOrganication(currentStage.Id, org.id)"
+          (click)="AddExistingOrganication(currentOpenedStage.Id, org.id)"
         >
           Add
         </button>
