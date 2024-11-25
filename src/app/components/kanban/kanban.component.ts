@@ -19,14 +19,15 @@ import { General } from 'src/models/domain';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { KanbanTemplate } from 'src/models/kanbanTemplates';
 import { KanbanAction } from 'src/models/kanbanActions';
-import { Organization, OrganizationContact } from 'src/models/Organiztions';
-
+import { Organization, OrganizationContact } from 'src/models/Organiztions'; 
+ 
 @Component({
   selector: 'app-kanban',
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.css'],
 })
 export class KanbanComponent {
+ 
   General!: General;
   sidebarItems!: any[];
   collapse!: boolean;
@@ -53,17 +54,17 @@ export class KanbanComponent {
   ) {
     this.sidebarItems = [
       {
-        title: 'Projects',
+        title: 'Dashboard',
         icon: 'fa-solid fa-house',
         link: '/dashboard',
       },
       {
-        title: 'Stake Holders',
+        title: 'Stake holders',
         icon: 'fa-solid fa-list',
         link: '/kanban',
       },
       {
-        title: 'Proper Items',
+        title: 'Properties',
         icon: 'fa-solid fa-gear',
         link: '/settings',
       },
@@ -78,12 +79,22 @@ export class KanbanComponent {
         link: '/settings',
       },
       {
+        title: 'Archive',
+        icon: 'fa-solid fa-gear',
+        link: '/settings',
+      },
+      {
         title: 'Corpus',
         icon: 'fa-solid fa-gear',
         link: '/settings',
       },
+      {
+        title: 'Permission',
+        icon: 'fa-solid fa-gear',
+        link: '/settings',
+      },
     ];
-    this.collapse = true;
+    this.collapse = false;
   }
 
   ngOnInit(): void {
@@ -212,6 +223,8 @@ export class KanbanComponent {
       scrollable: true,
     });
     this.General.modalObject = modalObject;
+    console.log(this.General.modalObject);
+
     this.GetKanbanMatchTemplate();
     this.getAllOrganizations();
   }
@@ -407,19 +420,71 @@ export class KanbanComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.orgKanbans = data.json;
+        console.log(`orgKanbans`, this.orgKanbans);
       },
     });
   }
 
-  CreateKanbanOrganization(ContactId: number, KanbanStageId: number): void {
+  selectedTargetKanban!: number;
+
+  CreateKanbanOrganization(): void {
     const body: any = {
       Name: 'CreateKanbanOrganization',
-      Params: { contactId: ContactId, kanbanStageId: KanbanStageId },
+      Params: {
+        OrganizationId: this.General.modalObject.Id,
+        kanbanid: this.selectedTargetKanban,
+      },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         console.log(data.json);
+      },
+    });
+  }
+
+  keyword: string = '';
+  searchResults: any[] = [];
+  filteredNames: any[] = [];
+
+  onSearchInput(): void {
+    if (this.keyword.trim() === '') {
+      this.filteredNames = [];
+      return;
+    }
+
+    const body: any = {
+      Name: 'SearchContact',
+      Params: { keyword: '%' + this.keyword + '%' },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.searchResults = data.json;
+        this.filteredNames = this.searchResults;
+      },
+      error: (err) => {
+        console.error('Error fetching results:', err);
+      },
+    });
+  }
+
+  // Handle click on a name
+  onNameClick(name: any): void {
+    this.keyword =
+      name.firstname + ' ' + name.lastname + ' ' + '(' + name.name + ')';
+    this.filteredNames = [];
+
+    const body: any = {
+      Name: 'GetContactKanbans',
+      Params: { contactId: name.id },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.orgKanbans = data.json;
+
+        console.log(`orgKanbans`, this.orgKanbans);
       },
     });
   }

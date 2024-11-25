@@ -8,8 +8,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { NgxSliderModule } from 'ngx-slider-v2';
+import { NavbarComponent } from './components/navbar/navbar.component'; 
 import { LandingComponent } from './components/landing/landing.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NumberFormatDirective } from './app-number-format.directive';
@@ -19,8 +18,6 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TokenInterceptor } from './token.interceptor';
 import { StartingComponent } from './components/starting/starting.component';
-import { ShareButtonsModule } from 'ngx-sharebuttons/buttons';
-import { ShareIconsModule } from 'ngx-sharebuttons/icons';
 import { SummeryComponent } from './components/summery/summery.component';
 import { UserBuyboxComponent } from './components/user-buybox/user-buybox.component';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -30,9 +27,8 @@ import { CherryExpansionComponent } from './components/cherry-expansion/cherry-e
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {DragDropModule} from '@angular/cdk/drag-drop';
-import { ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule} from '@angular/cdk/drag-drop';
+import { ReactiveFormsModule } from '@angular/forms'; 
 
 @NgModule({
   declarations: [
@@ -59,19 +55,14 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule,
-    NgxSliderModule,
+    FormsModule, 
     NgxSpinnerModule,
     NgbModule,
     NgbTooltipModule,
-    NgbAlertModule,
-    ShareButtonsModule.withConfig({
-      debug: true,
-    }),
-    ShareIconsModule,
+    NgbAlertModule, 
     NgxPaginationModule,
     DragDropModule,
-    ReactiveFormsModule  
+    ReactiveFormsModule  , 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

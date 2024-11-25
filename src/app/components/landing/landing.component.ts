@@ -41,12 +41,12 @@ export class LandingComponent {
   contactId!: number;
   showFirstCol = true; // Toggle to false to hide the first col-md-7
   mapViewOnePlacex!: boolean;
-
   PlaceId!: number;
   CustomPlace!: LandingPlace;
   ShoppingCenter!: ShoppingCenter;
   NearByType: NearByType[] = [];
   placeImage: string[] = [];
+  
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -108,9 +108,7 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter) {
-
           this.getMinMaxUnitSize(this.ShoppingCenter);
-          
           this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
@@ -672,7 +670,6 @@ export class LandingComponent {
   }
 
   getStreetLat(): number {
-    
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLatitude
       : +this.CustomPlace.StreetLatitude;

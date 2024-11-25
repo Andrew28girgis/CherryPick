@@ -1,10 +1,11 @@
 <div class="row">
-  <!-- <div class="col-md-2">
+  <div class="col-md-2 border-r" style="height:100vh">
     <div class="sidebar" [ngClass]="{ 'sidebar-collapse': collapse }">
       <div class="sidebar-header">
         <ng-container *ngIf="!collapse; else other_content">
-          <div class="header-title">Kanban</div>
-          <svg
+          <div class="header-title">CHERRYPICK</div>
+          <!-- Uncomment this block if needed -->
+          <!-- <svg
             (click)="changeCollapse()"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -12,11 +13,11 @@
           >
             <path
               d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"
-            />
+            ></path>
             <path
               d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z"
-            />
-          </svg>
+            ></path>
+          </svg> -->
         </ng-container>
         <ng-template #other_content>
           <i
@@ -37,22 +38,16 @@
           </a>
         </li>
       </ul>
-      <ul class="sidebar-items logout-item">
-        <li
-          class="sidebar-item logout-btn"
-          routerLinkActive="active"
-          (click)="logout()"
-        >
-          <div class="item-link">
-            <i class="fa-solid fa-arrow-right-from-bracket item-icon"></i>
-            <span class="item-title" *ngIf="!collapse">Logout</span>
-          </div>
-        </li>
-      </ul>
     </div>
-  </div> -->
-  <div class="col-md-12 p-0">
+  </div>
+  
+  <div class="col-md-10 p-0">
+
+    
+    <i class="fa-solid fa-magnifying-glass"></i>
+    
     <div class="row d-flex my-3">
+      
       <div
         *ngFor="let kanban of userKanbans"
         class="col-md-6 d-flex"
@@ -74,6 +69,7 @@
 
     <div class="kanban-wrap">
       <div class="row d-flex" *ngIf="kanbanList">
+
         <div *ngFor="let stage of kanbanList[0]?.kanbanStages" class="col">
           <div class="card">
             <div class="stage-container">
@@ -185,7 +181,40 @@
     <div class="bg-light rounded col-md-6 p-2">
       <div>
         <h5>Route To kanban</h5>
-        <div class="p-2">
+
+        <div class="search-container">
+          <div class="mb-3">
+            <label for=""><b>Search Broker</b></label>
+            <input
+              type="text"
+              [(ngModel)]="keyword"
+              (ngModelChange)="onSearchInput()"
+              class="form-control"
+              placeholder="Search names..."
+              aria-label="Search names"
+            />
+          </div>
+
+          <!-- Display Filtered Results -->
+          <ul
+            *ngIf="filteredNames.length > 0"
+            class="list-group"
+            style="max-height: 350px; overflow-y: auto"
+          >
+            <li
+              *ngFor="let name of filteredNames"
+              class="list-group-item broker-name"
+              (click)="onNameClick(name)"
+            >
+              {{ name.firstname }} {{ name.lastname }}
+              <span>
+                <b>( {{ name.name }} )</b>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <div>
           <label for=""><b>Select Organization</b></label>
           <select
             class="form-control w-50"
@@ -198,7 +227,7 @@
         </div>
 
         <div
-          class="p-2"
+          class="py-2"
           *ngIf="organizationContact && organizationContact.length > 0"
         >
           <label for=""><b>Select Contact</b></label>
@@ -207,7 +236,6 @@
             (change)="getContactKanbans($event)"
           >
             <option value="" selected>All</option>
-
             <option
               *ngFor="let contact of organizationContact"
               [value]="contact.id"
@@ -217,9 +245,9 @@
           </select>
         </div>
 
-        <div class="p-2" *ngIf="orgKanbans && orgKanbans.length > 0">
+        <div class="py-2" *ngIf="orgKanbans && orgKanbans.length > 0">
           <label for=""><b>Select Kanban</b></label>
-          <select class="form-control w-50" >
+          <select class="form-control w-50" [(ngModel)]="selectedTargetKanban">
             <option value="" selected>All</option>
             <option *ngFor="let kanaban of orgKanbans" [value]="kanaban.Id">
               {{ kanaban.kanbanName }}
@@ -227,9 +255,13 @@
           </select>
         </div>
 
-        <!-- <button class="btn btn-success" *ngIf="orgKanbans.length > 0" (click)="CreateKanbanOrganization()"> 
+        <button
+          class="btn btn-success"
+          *ngIf="orgKanbans && orgKanbans.length > 0"
+          (click)="CreateKanbanOrganization()"
+        >
           Create
-        </button> -->
+        </button>
       </div>
     </div>
   </div>

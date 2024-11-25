@@ -86,6 +86,12 @@
                     >
                       Unit Size: {{ CustomPlace.BuildingSizeSf | number }} SF
                     </p>
+                    <p
+                    *ngIf="CustomPlace.ForLeasePrice"
+                    class="info-value p-0"
+                  >
+                   Lease Price : {{ CustomPlace.ForLeasePrice  }} 
+                  </p>
 
                     <ng-container *ngFor="let near of NearByType">
                       <div
