@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-2 border-r" style="height:100vh">
+  <div class="col-md-2 border-r" style="height: 100vh">
     <div class="sidebar" [ngClass]="{ 'sidebar-collapse': collapse }">
       <div class="sidebar-header">
         <ng-container *ngIf="!collapse; else other_content">
@@ -34,20 +34,18 @@
           routerLinkActive="active"
         >
           <a class="item-link">
-            <span class="item-title" *ngIf="!collapse">{{ item.title }}</span>
+            <i class="{{ item.icon }}"></i>
+            <span class="item-title ms-3" *ngIf="!collapse">{{
+              item.title
+            }}</span>
           </a>
         </li>
       </ul>
     </div>
   </div>
-  
-  <div class="col-md-10 p-0">
 
-    
-    <i class="fa-solid fa-magnifying-glass"></i>
-    
+  <div class="col-md-10 p-0">
     <div class="row d-flex my-3">
-      
       <div
         *ngFor="let kanban of userKanbans"
         class="col-md-6 d-flex"
@@ -69,7 +67,6 @@
 
     <div class="kanban-wrap">
       <div class="row d-flex" *ngIf="kanbanList">
-
         <div *ngFor="let stage of kanbanList[0]?.kanbanStages" class="col">
           <div class="card">
             <div class="stage-container">
@@ -80,14 +77,13 @@
                 {{ stage.stageName }}
               </h2>
 
-              <button
+              <i
+                class="fa-solid fa-ellipsis"
                 *ngIf="stage.stageActions"
-                class="btn btn-primary"
                 (click)="openActionsForStage(ViewStageActions, stage)"
-              >
-                Actions
-              </button>
+              ></i>
             </div>
+
             <div
               cdkDropList
               [id]="stage.Id.toString()"
@@ -104,7 +100,22 @@
                 >
                   {{ org.Organization?.[0]?.Name }}
 
-                  <button
+                  <i
+                    class="fa-solid fa-ellipsis"
+                    *ngIf="
+                      stage.stageActions &&
+                      stage.stageActions[0]?.actionLevel == 'Target'
+                    "
+                    (click)="
+                      openActionsForTarget(
+                        ViewTargetActions,
+                        stage.stageActions,
+                        org
+                      )
+                    "
+                  ></i>
+
+                  <!-- <button
                     *ngIf="
                       stage.stageActions &&
                       stage.stageActions[0]?.actionLevel == 'Target'
@@ -119,7 +130,7 @@
                     "
                   >
                     Actions
-                  </button>
+                  </button> -->
 
                   <!-- <ng-container *ngFor="let action of stage.stageActions">
                   (   {{action.actionName}} )

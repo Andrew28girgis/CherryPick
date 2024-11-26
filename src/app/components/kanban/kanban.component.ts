@@ -75,17 +75,17 @@ export class KanbanComponent {
       },
       {
         title: 'Source',
-        icon: 'fa-solid fa-gear',
+        icon: 'fa-brands fa-sourcetree',
         link: '/settings',
       },
       {
         title: 'Archive',
-        icon: 'fa-solid fa-gear',
+        icon: 'fa-solid fa-box-archive',
         link: '/settings',
-      },
+      }, 
       {
         title: 'Corpus',
-        icon: 'fa-solid fa-gear',
+        icon: 'fa-solid fa-folder',
         link: '/settings',
       },
       {

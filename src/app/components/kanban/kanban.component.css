@@ -1,6 +1,6 @@
 .sidebar {
-  min-height: 100vh; 
-  background-color: #fff ;
+  min-height: 100vh;
+  background-color: #fff;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -44,9 +44,8 @@
   cursor: pointer;
   transition: all 0.5s ease-in-out;
 }
-.border-r{
-  border-right: 1px solid #CACED3 ;
-
+.border-r {
+  border-right: 1px solid #caced3;
 }
 
 .sidebar .sidebar-items .sidebar-item {
@@ -88,20 +87,21 @@
   align-items: baseline;
   position: relative;
   z-index: 1;
+  color: #4a5057;
+
   transition: all 0.5s ease-in-out;
 }
 .sidebar .sidebar-items .sidebar-item .item-link .item-icon {
   width: 1rem;
   text-align: center;
 }
-.sidebar .sidebar-items .sidebar-item .item-link .item-title { 
+.sidebar .sidebar-items .sidebar-item .item-link .item-title {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #7A8591;
 }
- 
+
 .sidebar.sidebar-collapse {
   width: 4rem;
 }
@@ -145,7 +145,7 @@
 }
 
 .kanban-wrap {
-  background-color: #F2F3F4 ; 
+  background-color: #f2f3f4;
   padding: 15px;
 }
 
@@ -203,4 +203,12 @@
 
 .broker-name {
   cursor: pointer;
+}
+
+.fa-ellipsis {
+  padding: 3px 4px;
+  border-radius: 50%;
+  color: #4a5057;
+  cursor: pointer;
+  font-size: 18px;
 }

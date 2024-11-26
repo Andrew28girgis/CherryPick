@@ -31,7 +31,7 @@
   --app-font: "Satoshi", sans-serif; /* Define Satoshi as a font variable */
 }
 
-* {
+body{
   font-family: var(--app-font) !important;
 }
 
