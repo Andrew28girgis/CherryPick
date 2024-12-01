@@ -29,257 +29,227 @@
 
     <div class="main-section">
       <section id="hero">
-        <div>
-          <div class="row">
-            <div class="col-lg-12 p-0">
-              <div class="center-name">
-                <p *ngIf="!ShoppingCenter" class="m-0 procpect-name">
-                  {{ CustomPlace.Address }}, {{ CustomPlace.City }},
-                  {{ CustomPlace.State }}
-                </p>
+        <div class="row py-4">
+          <div class="col-md-7 col-sm-12 p-0">
+            <div class="center-name">
+              <p *ngIf="!ShoppingCenter" class="m-0 procpect-name">
+                {{ CustomPlace.Address }}, {{ CustomPlace.City }},
+                {{ CustomPlace.State }}
+              </p>
+              <ng-container *ngIf="ShoppingCenter">
                 <p
-                  *ngIf="ShoppingCenter"
                   class="m-0 procpect-name"
                   [innerHTML]="ShoppingCenter.CenterName | titlecase"
                 ></p>
+              </ng-container>
 
-                <!-- <button class="btn for-lease" *ngIf="CustomPlace.ListingType">
-                  {{ CustomPlace.ListingType }}
-                </button> -->
+              <!-- <button class="btn for-lease" *ngIf="CustomPlace.ListingType">
+                      {{ CustomPlace.ListingType }}
+                    </button> -->
+            </div>
+            <div style="padding: 20px 20px 0 0">
+              <p
+                class="info-value"
+                class="rating-part"
+                style="text-align: justify; font-size: 17px"
+                [innerHTML]="CustomPlace.Description"
+              ></p>
+            </div>
+          </div>
+          <div class="col-md-5 col-sm-12 p-0">
+            <!-- Start if StandAlone -->
+            <div class="row details-info" *ngIf="!ShoppingCenter">
+              <div class="col-sm-12 p-0">
+                <div class="d-flex flex-row align-items-center">
+                  <p class="info-head"></p>
+                  <p
+                    class="info-value content-address"
+                    (click)="openMapViewPlace(mapPopup, CustomPlace)"
+                  >
+                    {{ CustomPlace.Address }},
+                    {{ CustomPlace.City | titlecase }},
+                    {{ CustomPlace.State }}
+                  </p>
+                </div>
               </div>
 
-              <div class="row py-4">
-                <div class="col-md-7 col-sm-12 p-0">
-                  <div style="padding: 0 20px">
-                    <p
-                      class="info-value"
-                      class="rating-part"
-                      style="text-align: justify; font-size: 17px"
-                      [innerHTML]="CustomPlace.Description"
-                    ></p>
-                  </div>
-                </div>
-                <div class="col-md-5 col-sm-12 p-0">
-                  <!-- Start if StandAlone -->
-                  <div class="row details-info" *ngIf="!ShoppingCenter">
-                    <div class="col-sm-12 p-0">
-                      <div class="d-flex flex-row align-items-center">
-                        <p class="info-head"></p>
-                        <p
-                          class="info-value content-address"
-                          (click)="openMapViewPlace(mapPopup, CustomPlace)"
-                        >
-                          {{ CustomPlace.Address }},
-                          {{ CustomPlace.City | titlecase }},
-                          {{ CustomPlace.State }}
-                        </p>
-                      </div>
-                    </div>
+              <p *ngIf="CustomPlace.Suite" class="info-value p-0">
+                Suite: {{ CustomPlace.Suite }}
+              </p>
 
-                    <p *ngIf="CustomPlace.Suite" class="info-value p-0">
-                      Suite: {{ CustomPlace.Suite }}
-                    </p>
+              <p *ngIf="CustomPlace.BuildingSizeSf" class="info-value p-0">
+                Unit Size: {{ CustomPlace.BuildingSizeSf | number }} SF
+              </p>
+              <p *ngIf="CustomPlace.ForLeasePrice" class="info-value p-0">
+                Lease Price : {{ CustomPlace.ForLeasePrice }}
+              </p>
 
-                    <p
-                      *ngIf="CustomPlace.BuildingSizeSf"
-                      class="info-value p-0"
-                    >
-                      Unit Size: {{ CustomPlace.BuildingSizeSf | number }} SF
-                    </p>
-                    <p
-                    *ngIf="CustomPlace.ForLeasePrice"
-                    class="info-value p-0"
+              <ng-container *ngFor="let near of NearByType">
+                <div
+                  class="d-flex align-items-center p-0"
+                  style="margin-bottom: 5px"
+                >
+                  <p class="m-0">Nearest {{ near.Name }}:</p>
+                  <ng-container
+                    *ngFor="let branch of near.Branches | slice : 0 : 1"
                   >
-                   Lease Price : {{ CustomPlace.ForLeasePrice  }} 
-                  </p>
+                    <img
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        branch.OrganizationId
+                      }}"
+                      alt=""
+                      title="{{ branch.RelationOrganization[0].Name }}"
+                      style="height: 30px; margin-inline: 10px; width: 30px"
+                    />
 
-                    <ng-container *ngFor="let near of NearByType">
-                      <div
-                        class="d-flex align-items-center p-0"
-                        style="margin-bottom: 5px"
-                      >
-                        <p class="m-0">Nearest {{ near.Name }}:</p>
-                        <ng-container
-                          *ngFor="
-                            let place of near.BuyBoxPlaces | slice : 0 : 1
-                          "
-                        >
-                          <img
-                            src="https://files.cherrypick.com/logos/{{
-                              place.BuyBoxPlace[0].Id
-                            }}.png"
-                            alt=""
-                            title="{{ place.BuyBoxPlace[0].Name }}"
-                            style="
-                              height: 30px;
-                              margin-inline: 10px;
-                              width: 30px;
-                            "
-                          />
-
-                          <span class="ms-2 font-weight-bold">
-                            {{ place.BuyBoxPlace[0].Distance.toFixed(2) }}
-                          </span>
-                        </ng-container>
-                      </div>
-                    </ng-container>
-                    <!-- <ng-container *ngFor="let item of ShoppingCenter.ShoppingCenter.Places"></ng-container> -->
-                    <div
-                      class="col-md-12 col-sm-12 p-0"
-                      *ngIf="CustomPlace.DocsLink"
-                    >
-                      <div
-                        class="d-flex flex-row align-items-center"
-                        style="padding: 12px 0"
-                      >
-                        <a
-                          class="info-value gray"
-                          href="{{ CustomPlace.DocsLink }}"
-                          target="_blank"
-                          >Property Docs</a
-                        >
-                      </div>
-                    </div>
-                    <div
-                      class="col-md-12 col-sm-12 p-0"
-                      *ngIf="CustomPlace.SitePlan"
-                    >
-                      <div class="d-flex flex-row align-items-center">
-                        <a
-                          class="info-value gray"
-                          href="{{ CustomPlace.SitePlan }}"
-                          target="_blank"
-                          >View Site Plan</a
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <!-- End if StandAlone -->
-
-                  <!-- Start if ShoppingCenter -->
-
-                  <div class="row details-info" *ngIf="ShoppingCenter">
-                    <div
-                      class="col-sm-12 p-0"
-                      *ngIf="ShoppingCenter.CenterAddress"
-                    >
-                      <div
-                        class="d-flex flex-row align-items-center info-border"
-                      >
-                        <p class="info-head"></p>
-                        <p
-                          class="info-value content-address"
-                          (click)="openMapViewPlace(mapPopup, ShoppingCenter)"
-                        >
-                          {{ ShoppingCenter.CenterAddress }},
-                          {{ ShoppingCenter.CenterCity | titlecase }},
-                          {{ ShoppingCenter.CenterState }}
-                        </p>
-                      </div>
-                    </div>
-
-                    <p
-                      class="info-value p-0"
-                      [innerHTML]="getMinMaxUnitSize(ShoppingCenter)"
-                    ></p>
-
-                    <ng-container *ngFor="let near of NearByType">
-                      <div
-                        class="d-flex align-items-center p-0"
-                        style="margin-bottom: 5px"
-                      >
-                        <p class="m-0">Nearest {{ near.Name }}:</p>
-                        <ng-container
-                          *ngFor="
-                            let place of near.BuyBoxPlaces | slice : 0 : 1
-                          "
-                        >
-                          <img
-                            src="https://files.cherrypick.com/logos/{{
-                              place.BuyBoxPlace[0].Id
-                            }}.png"
-                            alt=""
-                            title="{{ place.BuyBoxPlace[0].Name }}"
-                            style="
-                              height: 30px;
-                              margin-inline: 10px;
-                              width: 30px;
-                            "
-                          />
-
-                          <span class="ms-2 font-weight-bold">
-                            {{
-                              place.BuyBoxPlace[0].Distance.toFixed(2) + " MI"
-                            }}
-                          </span>
-                        </ng-container>
-                      </div>
-                    </ng-container>
-
-                    <div
-                      class="col-md-12 col-sm-12 p-0"
-                      *ngIf="ShoppingCenter.OtherPlaces.length > 0"
-                    >
-                      <div>
-                        <p>
-                          Available Units:
-                          <span style="color: #000; font-weight: bold">{{
-                            ShoppingCenter.OtherPlaces.length
-                          }}</span>
-                        </p>
-                      </div>
-                    </div>
-                    <!-- <ng-container *ngFor="let item of ShoppingCenter.ShoppingCenter.Places"></ng-container> -->
-                    <div
-                      class="col-md-12 col-sm-12 p-0"
-                      *ngIf="CustomPlace.DocsLink"
-                    >
-                      <div
-                        class="d-flex flex-row align-items-center"
-                        style="padding: 12px 0"
-                      >
-                        <a
-                          class="info-value gray"
-                          href="{{ CustomPlace.DocsLink }}"
-                          target="_blank"
-                          >Property Docs</a
-                        >
-                      </div>
-                    </div>
-                    <div
-                      class="col-md-12 col-sm-12 p-0"
-                      *ngIf="CustomPlace.SitePlan"
-                    >
-                      <div class="d-flex flex-row align-items-center">
-                        <a
-                          class="info-value gray"
-                          href="{{ CustomPlace.SitePlan }}"
-                          target="_blank"
-                          >View Site Plan</a
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <!-- End if ShoppingCenter -->
+                    <span class="ms-2 font-weight-bold">
+                      {{ branch.RelationOrganization[0].Distance.toFixed(2) }}
+                    </span>
+                  </ng-container>
                 </div>
-                <div class="col-md-12" *ngIf="CustomPlace.Notes">
-                  <h2 class="main-heading">Notes</h2>
-                  <p
-                    class="rating-part"
-                    style="text-align: justify; font-size: 17px"
+              </ng-container>
+              <!-- <ng-container *ngFor="let item of ShoppingCenter.ShoppingCenter.Places"></ng-container> -->
+              <div class="col-md-12 col-sm-12 p-0" *ngIf="CustomPlace.DocsLink">
+                <div
+                  class="d-flex flex-row align-items-center"
+                  style="padding: 12px 0"
+                >
+                  <a
+                    class="info-value gray"
+                    href="{{ CustomPlace.DocsLink }}"
+                    target="_blank"
+                    >Property Docs</a
                   >
-                    {{ CustomPlace.Notes }}
-                  </p>
+                </div>
+              </div>
+              <div class="col-md-12 col-sm-12 p-0" *ngIf="CustomPlace.SitePlan">
+                <div class="d-flex flex-row align-items-center">
+                  <a
+                    class="info-value gray"
+                    href="{{ CustomPlace.SitePlan }}"
+                    target="_blank"
+                    >View Site Plan</a
+                  >
                 </div>
               </div>
             </div>
+            <!-- End if StandAlone -->
+
+            <!-- Start if ShoppingCenter -->
+
+            <div class="row details-info" *ngIf="ShoppingCenter">
+              <div class="p-0 info-border">
+                <div>
+                  <p class="m-0 procpect-name" style="font-size: 20px">
+                    {{ OrgManager[0].name }}
+                  </p>
+                </div>
+                <div class="d-flex flex-column">
+                  <ng-container *ngFor="let Manager of OrgManager">
+                    <p class="m-0">
+                      {{ Manager.firstname }} {{ Manager.lastname }}
+                    </p>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="col-sm-12 p-0" *ngIf="ShoppingCenter.CenterAddress">
+                <div class="d-flex flex-row align-items-center">
+                  <p class="info-head"></p>
+                  <p
+                    class="info-value content-address"
+                    (click)="openMapViewPlace(mapPopup, ShoppingCenter)"
+                  >
+                    {{ ShoppingCenter.CenterAddress }},
+                    {{ ShoppingCenter.CenterCity | titlecase }},
+                    {{ ShoppingCenter.CenterState }}
+                  </p>
+                </div>
+              </div>
+
+              <p
+                class="info-value p-0"
+                [innerHTML]="getMinMaxUnitSize(ShoppingCenter)"
+              ></p>
+
+              <ng-container *ngFor="let near of NearByType">
+                <div
+                  class="d-flex align-items-center p-0"
+                  style="margin-bottom: 5px"
+                >
+                  <p class="m-0">Nearest {{ near.Name }}:</p>
+                  <ng-container
+                    *ngFor="let branch of near.Branches | slice : 0 : 1"
+                  >
+                    <img
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        branch.OrganizationId
+                      }}"
+                      alt=""
+                      title="{{ branch.RelationOrganization[0].Name }}"
+                      style="height: 30px; margin-inline: 10px; width: 30px"
+                    />
+
+                    <span class="ms-2 font-weight-bold">
+                      {{
+                        branch.RelationOrganization[0].Distance.toFixed(2) +
+                          " MI"
+                      }}
+                    </span>
+                  </ng-container>
+                </div>
+              </ng-container>
+
+              <div
+                class="col-md-12 col-sm-12 p-0"
+                *ngIf="ShoppingCenter.OtherPlaces.length > 0"
+              >
+                <div>
+                  <p>
+                    Available Units:
+                    <span style="color: #000; font-weight: bold">{{
+                      ShoppingCenter.OtherPlaces.length
+                    }}</span>
+                  </p>
+                </div>
+              </div>
+              <!-- <ng-container *ngFor="let item of ShoppingCenter.ShoppingCenter.Places"></ng-container> -->
+              <div class="col-md-12 col-sm-12 p-0" *ngIf="CustomPlace.DocsLink">
+                <div
+                  class="d-flex flex-row align-items-center"
+                  style="padding: 12px 0"
+                >
+                  <a
+                    class="info-value gray"
+                    href="{{ CustomPlace.DocsLink }}"
+                    target="_blank"
+                    >Property Docs</a
+                  >
+                </div>
+              </div>
+              <div class="col-md-12 col-sm-12 p-0" *ngIf="CustomPlace.SitePlan">
+                <div class="d-flex flex-row align-items-center">
+                  <a
+                    class="info-value gray"
+                    href="{{ CustomPlace.SitePlan }}"
+                    target="_blank"
+                    >View Site Plan</a
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- End if ShoppingCenter -->
+          </div>
+          <div class="col-md-12" *ngIf="CustomPlace.Notes">
+            <h2 class="main-heading">Notes</h2>
+            <p class="rating-part" style="text-align: justify; font-size: 17px">
+              {{ CustomPlace.Notes }}
+            </p>
           </div>
         </div>
       </section>
       <div class="row">
         <div class="col-md-12">
           <div class="tabs">
-            <!-- Tab headers -->
             <ul class="tab-headers" *ngIf="ShoppingCenter">
               <li
                 (click)="changeStreetView(ShoppingCenter)"
@@ -622,33 +592,67 @@
       </div>
 
       <div class="row p-0">
-        <div class="col-md-6" *ngFor="let near of NearByType">
-          <div class="main-section">
-            <p class="main-name">Nearest {{ near.Name }}</p>
-
+        <div class="col-md-4">
+          <div class="main-section" style="height: 408px; overflow-y: auto">
+            <p class="main-name">Co-Tenants</p>
             <ul>
-              <li *ngFor="let place of near.BuyBoxPlaces | slice : 0 : 5">
+              <li *ngFor="let place of placeCotenants">
                 <div class="d-flex align-items-center">
                   <div>
                     <img
-                      src="https://files.cherrypick.com/logos/{{
-                        place.BuyBoxPlace[0].Id
-                      }}.png"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        place.ID
+                      }}"
                       alt=""
                       style="height: 35px; margin-right: 10px; width: 35px"
                     />
                   </div>
 
-                  <div>
-                    <span *ngIf="place.BuyBoxPlace[0].Name" class="nearset">{{
-                      place.BuyBoxPlace[0].Name
+                  <div class="d-flex flex-column">
+                    <span *ngIf="place.Name" class="nearset"
+                      >{{ place.Name }}
+                    </span>
+                    <span *ngIf="place.ActivityType" class="activityType">{{
+                      place.ActivityType | titlecase
                     }}</span>
                   </div>
                 </div>
 
-                <span class="ms-2 font-weight-bold"
-                  >{{ place.BuyBoxPlace[0].Distance.toFixed(2) }} MI</span
+                <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
+                  >{{ place.Branches[0].Distance.toFixed(2) }} MI</span
                 >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4" *ngFor="let near of NearByType">
+          <div class="main-section">
+            <p class="main-name">{{ near.Name }}</p>
+            <ul>
+              <li *ngFor="let place of near.Branches | slice : 0 : 5">
+                <ng-container *ngFor="let branch of place.RelationOrganization">
+                  <div class="d-flex align-items-center">
+                    <div>
+                      <img
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          branch.id
+                        }}"
+                        alt=""
+                        style="height: 35px; margin-right: 10px; width: 35px"
+                      />
+                    </div>
+
+                    <div>
+                      <span *ngIf="branch.Name" class="nearset">{{
+                        branch.Name
+                      }}</span>
+                    </div>
+                  </div>
+
+                  <span class="ms-2 font-weight-bold"
+                    >{{ branch.Distance.toFixed(2) }} MI</span
+                  >
+                </ng-container>
               </li>
             </ul>
           </div>

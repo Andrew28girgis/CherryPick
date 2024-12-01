@@ -13,6 +13,8 @@ import {
 } from 'src/models/landingPlace';
 import { NearByType } from 'src/models/nearBy';
 import { DomSanitizer } from '@angular/platform-browser';
+import { PlaceCotenants } from 'src/models/PlaceCo';
+import { OrgManager } from 'src/models/organization';
 
 @Component({
   selector: 'app-landing',
@@ -46,7 +48,10 @@ export class LandingComponent {
   ShoppingCenter!: ShoppingCenter;
   NearByType: NearByType[] = [];
   placeImage: string[] = [];
-  
+  placeCotenants:PlaceCotenants[] = [];
+  OrgManager:OrgManager[]=[];
+
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -71,6 +76,7 @@ export class LandingComponent {
       this.BuyBoxId = params.buyboxid;
       this.PlaceId = params.id;
       this.GetPlaceDetails(this.PlaceId);
+      this.GetPlaceCotenants(this.PlaceId);
     });
   }
 
@@ -108,6 +114,7 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter) {
+          this.GetShoppingCenterManager(this.ShoppingCenter.Id);
           this.getMinMaxUnitSize(this.ShoppingCenter);
           this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
@@ -115,7 +122,7 @@ export class LandingComponent {
         } else {
           this.CustomPlace.StreetViewURL
             ? this.changeStreetView(this.CustomPlace)
-            : this.viewOnStreet();
+            : this.viewOnStreet();  
         }
 
         this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
@@ -127,6 +134,40 @@ export class LandingComponent {
     });
   }
 
+  GetPlaceCotenants(placeId: number): void {
+    const body: any = {
+      Name: 'GetPlaceCotenants',
+      Params: {
+        PlaceID: placeId,
+        buyboxid: this.BuyBoxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => { 
+        this.placeCotenants = data.json;
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+
+  GetShoppingCenterManager(ShoppingCenterId: number): void {
+    const body: any = {
+      Name: 'GetShoppingCenterManager',
+      Params: {
+        ShoppingCenterId: ShoppingCenterId, 
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => { 
+        this.OrgManager = data.json;
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+  
   changeStreetView(place: any) {
     this.sanitizedUrl = '';
 
@@ -228,7 +269,7 @@ export class LandingComponent {
 
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
-      Name: 'GetPlaceNearBy',
+      Name: 'GetNearBuyRetails',
       Params: {
         PlaceID: placeId,
         BuyBoxId: this.BuyBoxId,
@@ -267,7 +308,7 @@ export class LandingComponent {
 
       if (this.NearByType && this.NearByType.length > 0) {
         this.NearByType.forEach((type) => {
-          type.BuyBoxPlaces.slice(0, 5).forEach((place) => {
+          type.Branches.slice(0, 5).forEach((place) => { 
             this.createMarker(map, place, type.Name);
           });
         });
@@ -347,7 +388,6 @@ export class LandingComponent {
 
   // Method to handle the close button click events within the InfoWindow
   private addCloseButtonListener(infoWindow: any, marker: any): void {
-    // Wait until the InfoWindow content is rendered (domready)
     google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
       const closeButton = document.getElementById(`close-btn-${marker.id}`);
 
@@ -381,7 +421,7 @@ export class LandingComponent {
       };
     } else {
       return {
-        url: `https://files.cherrypick.com/logos/${markerData.BuyBoxPlace[0].Id}.png`,
+        url: `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${markerData.OrganizationId}`,
         scaledSize: new google.maps.Size(40, 40),
       };
     }
@@ -478,14 +518,13 @@ export class LandingComponent {
         </div>
             <div>
               <p style="font-size: 19px; font-weight: 500; margin:0; padding:15px">${
-                markerData.BuyBoxPlace[0].Name
-              }: ${markerData.BuyBoxPlace[0].Distance.toFixed(2)} MI</p>
+                markerData.RelationOrganization[0].Name
+              }: ${markerData.RelationOrganization[0].Distance.toFixed(2)} MI</p>
             </div>
           </div>
     </div>
   `;
   }
-
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     if (shoppingCenter.ShoppingCenter) {
       const places = shoppingCenter.ShoppingCenter.Places;
@@ -724,14 +763,10 @@ export class LandingComponent {
       console.error('Latitude and longitude are required to display the map.');
       return;
     }
-
-    // Load Google Maps API libraries
     const { Map } = (await google.maps.importLibrary('maps')) as any;
-
-    // Find the map container element
+    
     const mapDiv = document.getElementById('mapInPopup') as HTMLElement;
 
-    // Check if the mapDiv exists
     if (!mapDiv) {
       console.error('Element with ID "mappopup" not found.');
       return;

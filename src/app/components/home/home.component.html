@@ -114,6 +114,8 @@
             <thead class="procpect-table-head">
               <tr>
                 <th>Name</th>
+                <th>Manager By</th>
+
                 <th>Unit Size & Lease Price</th>
                 <ng-container
                   *ngFor="
@@ -145,6 +147,27 @@
                       {{ shoppingCenter.CenterState }}
                     </div>
                   </td>
+                  <td>
+                    <ng-container
+                      *ngIf="shoppingCenter.ManagerOrganizationName"
+                    >
+                      <div>
+                        <div>
+                          <img
+                            class="logo"
+                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              shoppingCenter.ManagerOrganizationId
+                            }}"
+                            [title]="shoppingCenter.ManagerOrganizationName"
+                            alt=""
+                          />
+                        </div>
+                        <div>
+                          {{ shoppingCenter.ManagerOrganizationName }}
+                        </div>
+                      </div>
+                    </ng-container>
+                  </td>
                   <td
                     [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
                   ></td>
@@ -158,12 +181,10 @@
                     <td>
                       <img
                         class="logo"
-                        [src]="
-                          'https://files.cherrypick.com/logos/' +
-                          item.BuyBoxPlaceId +
-                          '.png'
-                        "
-                        [title]="item.BuyBoxPlaceName"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
                         alt=""
                       />
                       <span class="ms-2">
@@ -230,7 +251,10 @@
             </tbody>
           </table>
         </div>
-        <div style="overflow-x: auto" *ngIf="standAlone && standAlone.length > 0">
+        <div
+          style="overflow-x: auto"
+          *ngIf="standAlone && standAlone.length > 0"
+        >
           <table class="procpect-table mt-4">
             <thead class="procpect-table-head">
               <tr>
@@ -279,10 +303,10 @@
                       <td>
                         <img
                           class="logo"
-                          src="https://files.cherrypick.com/logos/{{
-                            item.BuyBoxPlaceId
-                          }}.png"
-                          title="{{ item.BuyBoxPlaceName }}"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            item.RelationOrganizationId
+                          }}"
+                          [title]="item.RelationOrganizationName"
                           alt=""
                         />
                         <span class="ms-2"
@@ -385,7 +409,7 @@
                 style="
                   background-color: #fff;
                   border-radius: 0 0 20px 20px;
-                  height: 300px;
+                  height: 360px;
                   display: flex;
                   flex-direction: column;
                 "
@@ -415,8 +439,25 @@
                 </div>
                 <div class="row">
                   <div
+                    class="col-md-12 spec"
+                    *ngIf="shopping.ManagerOrganizationName"
+                  >
+                    <p class="spec-head">
+                      Manager By:
+                      <img
+                        class="logo"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          shopping.ManagerOrganizationId
+                        }}"
+                        [title]="shopping.ManagerOrganizationName"
+                        alt=""
+                      />
+                      {{ shopping.ManagerOrganizationName }}
+                    </p>
+                  </div>
+                  <div
                     *ngFor="let item of shopping.ShoppingCenter.BuyBoxPlaces"
-                    class="col-6 d-flex flex-column spec"
+                    class="col-12 d-flex flex-column spec"
                   >
                     <p class="spec-head">
                       Nearest {{ getNeareastCategoryName(item.CategoryId) }}
@@ -424,10 +465,10 @@
                     <p class="spec-content">
                       <img
                         class="logo"
-                        src="https://files.cherrypick.com/logos/{{
-                          item.BuyBoxPlaceId
-                        }}.png"
-                        title="{{ item.BuyBoxPlaceName }}"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
                         alt=""
                       />
                       <span class="ms-2">
@@ -502,7 +543,7 @@
                 style="
                   background-color: #fff;
                   border-radius: 0 0 20px 20px;
-                  height: 300px;
+                  height: 360px;
                   display: flex;
                   flex-direction: column;
                   justify-content: space-between;
@@ -550,10 +591,10 @@
                     <p class="spec-content">
                       <img
                         class="logo"
-                        src="https://files.cherrypick.com/logos/{{
-                          item.BuyBoxPlaceId
-                        }}.png"
-                        title="{{ item.BuyBoxPlaceName }}"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
                         alt=""
                       />
                       <span class="ms-2">
@@ -696,10 +737,10 @@
                     <p class="spec-content">
                       <img
                         class="logo"
-                        src="https://files.cherrypick.com/logos/{{
-                          item.BuyBoxPlaceId
-                        }}.png"
-                        title="{{ item.BuyBoxPlaceName }}"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
                         alt=""
                       />
                       <span class="ms-2">

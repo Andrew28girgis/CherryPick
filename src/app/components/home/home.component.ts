@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
 
   BuyBoxPlacesCategories(buyboxId: number): void {
     const body: any = {
-      Name: 'GetBuyBoxPlacesCategories',
+      Name: 'GetRetailRelationCategories',
       Params: {
         BuyBoxId: buyboxId,
       },
@@ -122,7 +122,7 @@ export class HomeComponent implements OnInit {
 
   getShoppingCenters(buyboxId: number): void {
     const body: any = {
-      Name: 'MarketSurveyPlaces',
+      Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         BuyBoxId: buyboxId,
       },
@@ -142,7 +142,7 @@ export class HomeComponent implements OnInit {
 
   getStandAlonePlaces(buyboxId: number): void {
     const body: any = {
-      Name: 'MarketSurveyStandalonePlaces',
+      Name: 'GetMarketSurveyStandalonePlaces',
       Params: {
         BuyBoxId: buyboxId,
       },
@@ -162,7 +162,7 @@ export class HomeComponent implements OnInit {
 
   getBuyBoxPlaces(buyboxId: number): void {
     const body: any = {
-      Name: 'BuyBoxPlaces',
+      Name: 'BuyBoxRelatedRetails',
       Params: {
         BuyBoxId: buyboxId,
       },
@@ -174,10 +174,9 @@ export class HomeComponent implements OnInit {
         this.buyboxCategories.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces.filter((place) =>
-            place.BuyBoxPlaces?.some((x) => x.CategoryId === category.id)
+            place.RetailRelationCategories?.some((x) => x.Id === category.id)
           );
         });
-
         this.getAllMarker();
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -185,14 +184,12 @@ export class HomeComponent implements OnInit {
   }
 
   getLogo(id: number) {
-    // console.log(this.buyboxPlaces);
-
     for (const place of this.buyboxPlaces) {
-      const foundBranch = place.BuyBoxPlaces?.find(
+      const foundBranch = place.RetailRelationCategories[0].Branches.find(
         (branch) => branch.Id === id
       );
       if (foundBranch) {
-        return place.Id;
+        return place.id;
       }
     }
     return undefined;
@@ -200,7 +197,7 @@ export class HomeComponent implements OnInit {
 
   getLogoTitle(id: number) {
     for (const place of this.buyboxPlaces) {
-      const foundBranch = place.BuyBoxPlaces?.find(
+      const foundBranch = place.RetailRelationCategories[0].Branches.find(
         (branch) => branch.Id === id
       );
       if (foundBranch) {
@@ -617,9 +614,9 @@ export class HomeComponent implements OnInit {
   }
 
   getNeareastCategoryName(categoryId: number) {
+    // console.log(categoryId);
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
-
-    return categories[0].name;
+    return categories[0]?.name;
   }
 
   formatNumberWithCommas(value: number | null): string {

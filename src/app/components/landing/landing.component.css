@@ -726,7 +726,7 @@
 .main-section {
   border-radius: 20px;
   background: #fff;
-  padding: 32px;
+  padding: 20px 30px;
   margin: 0 0 32px 0;
   /* background-image: linear-gradient(
     130deg,
@@ -765,7 +765,7 @@
 .procpect-name {
   font-size: 30px;
   font-weight: 700;
-  line-height: 48px;
+  line-height: 25px;
 }
 
 .for-lease {
@@ -1107,4 +1107,9 @@ li {
 .tab-content p {
   font-size: 18px;
   color: #333;
+}
+
+.activityType {
+  font-weight: bold;
+  font-size: 14px;
 }

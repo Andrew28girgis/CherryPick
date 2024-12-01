@@ -500,12 +500,12 @@ body{
   position: absolute;
   top: 6px;
   right: 10px;
-  font-size: 23px;
+  font-size: 18px;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;

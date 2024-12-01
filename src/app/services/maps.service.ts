@@ -202,6 +202,10 @@ export class MapsService {
   private currentlyOpenInfoWindow: any | null = null;
 
   createCustomMarker(map: any, markerData: BuyboxCategory): void {
+    console.log(`custom marker created`);
+    console.log(markerData);
+    
+    
     if (!this.markerMap[markerData.id]) {
       this.markerMap[markerData.id] = [];
     }
@@ -211,11 +215,13 @@ export class MapsService {
     }
 
     markerData.places.forEach((place) => {
-      const imgUrl = `https://files.cherrypick.com/logos/${place.Id}.png`;
+      const imgUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${place.id}`;
 
-      place.BuyBoxPlaces.forEach((branch) => {
-        const latitude = Number(branch.Latitude);
-        const longitude = Number(branch.Longitude);
+      place.RetailRelationCategories.forEach((branch) => {
+        branch.Branches.forEach( (b) => {
+
+        const latitude = Number(b.Latitude);
+        const longitude = Number(b.Longitude);
 
         if (!isNaN(latitude) && !isNaN(longitude)) {
           const marker = new google.maps.Marker({
@@ -230,7 +236,7 @@ export class MapsService {
             map: map,
           });
 
-          const closeButtonId = `close-button-${branch.Id}`;
+          const closeButtonId = `close-button-${b.Id}`;
 
           const infoWindowContent = `
           <div style="padding:0 10px">
@@ -269,6 +275,7 @@ export class MapsService {
           // Store the marker
           this.markerMap[markerData.id].push(marker);
         }
+      })
       });
     });
 

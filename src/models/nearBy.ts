@@ -2,22 +2,21 @@
 export interface NearByType {
   Id: number
   Name: string
-  BuyBoxPlaces: BuyBoxPlace[]
+  Branches: Branch[]
 }
 
-export interface BuyBoxPlace {
+export interface Branch {
   Id: number
   Latitude: number
   Longitude: number
-  IsCompetitor: number
   OrganizationId: number
-  CategoryId: number
-  BuyBoxPlaceId: number
-  BuyBoxPlace: BuyBoxPlace2[]
+  RelationOrganization: RelationOrganization[]
 }
 
-export interface BuyBoxPlace2 {
-  Id: number
+export interface RelationOrganization {
+  id: number
   Name: string
+  RelationCategoryId: number
+  RelationCategoryName: string
   Distance: number
 }
