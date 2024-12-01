@@ -4,8 +4,6 @@ export interface Center {
     CenterType: string
     CenterAddress: string
     CenterCity: string
-    ManagerOrganizationId: number
-    ManagerOrganizationName :string
     CenterState: string
     Latitude: number
     Longitude: number
@@ -20,6 +18,12 @@ export interface Center {
   export interface ShoppingCenter {
     Places: Place[]
     BuyBoxPlaces: BuyBoxPlace[]
+    ManagerOrganization: ManagerOrganization[]
+  }
+
+  export interface ManagerOrganization{
+    ID: number
+    Name: string
   }
   
   export interface Place {

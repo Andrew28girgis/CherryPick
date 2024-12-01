@@ -525,10 +525,10 @@ export class LandingComponent {
     </div>
   `;
   }
+
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     if (shoppingCenter.ShoppingCenter) {
       const places = shoppingCenter.ShoppingCenter.Places;
-
       if (places.length > 0) {
         const buildingSizes = places.map((place: any) => place.BuildingSizeSf);
         const leasePrices = places.map(
@@ -537,10 +537,9 @@ export class LandingComponent {
 
         let minSize = Math.min(...buildingSizes);
         let maxSize = Math.max(...buildingSizes);
-
         let minPrice = null;
         let maxPrice = null;
-
+        
         // Find lease prices corresponding to min and max sizes
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
@@ -565,7 +564,6 @@ export class LandingComponent {
             : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
         }
 
-        // Check if min and max lease prices are the same or if either is "On Request"
         if (
           minPrice === maxPrice ||
           minPrice === 'On Request' ||
@@ -585,7 +583,6 @@ export class LandingComponent {
         let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
           minSize
         )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-
         // Avoid range like "On Request - $55 SF/YR" by checking if either value is "On Request"
         if (minPrice && maxPrice) {
           if (minPrice === 'On Request' || maxPrice === 'On Request') {
@@ -598,7 +595,6 @@ export class LandingComponent {
         } else if (maxPrice) {
           sizeRange += `<br>Lease Price: ${formatLeasePrice(maxPrice)}`;
         }
-
         return sizeRange;
       }
     } else {

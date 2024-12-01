@@ -149,21 +149,21 @@
                   </td>
                   <td>
                     <ng-container
-                      *ngIf="shoppingCenter.ManagerOrganizationName"
+                      *ngIf="shoppingCenter.ShoppingCenter.ManagerOrganization"
                     >
                       <div>
                         <div>
                           <img
                             class="logo"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                              shoppingCenter.ManagerOrganizationId
+                              shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID
                             }}"
-                            [title]="shoppingCenter.ManagerOrganizationName"
+                            [title]="shoppingCenter.ShoppingCenter.ManagerOrganization[0].Name"
                             alt=""
                           />
                         </div>
                         <div>
-                          {{ shoppingCenter.ManagerOrganizationName }}
+                          {{ shoppingCenter.ShoppingCenter.ManagerOrganization[0].Name }}
                         </div>
                       </div>
                     </ng-container>
@@ -440,19 +440,19 @@
                 <div class="row">
                   <div
                     class="col-md-12 spec"
-                    *ngIf="shopping.ManagerOrganizationName"
+                    *ngIf="shopping.ShoppingCenter.ManagerOrganization"
                   >
                     <p class="spec-head">
                       Manager By:
                       <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          shopping.ManagerOrganizationId
+                          shopping.ShoppingCenter.ManagerOrganization[0].ID
                         }}"
-                        [title]="shopping.ManagerOrganizationName"
+                        [title]="shopping.ShoppingCenter.ManagerOrganization[0].Name"
                         alt=""
                       />
-                      {{ shopping.ManagerOrganizationName }}
+                      {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
                     </p>
                   </div>
                   <div

@@ -170,7 +170,6 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxPlaces = data.json;
-
         this.buyboxCategories.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces.filter((place) =>
