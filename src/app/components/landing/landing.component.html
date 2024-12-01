@@ -140,7 +140,7 @@
             <div class="row details-info" *ngIf="ShoppingCenter">
               <div class="p-0 info-border">
                 <div>
-                  <p class="m-0 procpect-name" style="font-size: 20px">
+                  <p class="m-0 procpect-name" style="font-size: 20px" *ngIf="OrgManager && OrgManager[0]">
                     {{ OrgManager[0].name }}
                   </p>
                 </div>
