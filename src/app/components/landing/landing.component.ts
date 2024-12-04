@@ -341,7 +341,7 @@ export class LandingComponent {
   }
 
   addMarkerForPrimaryLocation(map: any) {
-    const primaryLocation = this.ShoppingCenter || this.CustomPlace;
+    const primaryLocation = this.ShoppingCenter || this.StandAlonePlace;
     const type = this.ShoppingCenter ? 'Shopping Center' : 'Stand Alone';
     this.createMarker(map, primaryLocation, type);
   }
@@ -350,12 +350,10 @@ export class LandingComponent {
 
   createMarker(map: any, markerData: any, type: string): void {
     const marker = this.initializeMarker(map, markerData, type);
-    const infoWindow = this.initializeInfoWindow(markerData, type);
+    //const infoWindow = this.initializeInfoWindow(markerData, type);
+    //this.addMarkerClickListener(marker, map, infoWindow);
+    //this.addCloseButtonListener(infoWindow, marker);
 
-    this.addMarkerClickListener(marker, map, infoWindow);
-    this.addCloseButtonListener(infoWindow, marker);
-
-    // Add map click listener to close any open InfoWindow when clicking outside
     this.addMapClickListener(map);
   }
 
