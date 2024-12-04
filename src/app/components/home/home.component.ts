@@ -299,12 +299,14 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  private updateShoppingCenterCoordinates(): void {
+  private updateShoppingCenterCoordinates(): void { 
     if (this.shoppingCenters) {
-      this.shoppingCenters.forEach((center) => {
-        const firstPlace = center.ShoppingCenter.Places[0];
-        center.Latitude = firstPlace.Latitude;
-        center.Longitude = firstPlace.Longitude;
+      this.shoppingCenters?.forEach((center) => {
+        if(center.ShoppingCenter.Places){
+          const firstPlace = center.ShoppingCenter?.Places[0];
+          center.Latitude = firstPlace.Latitude;
+          center.Longitude = firstPlace.Longitude;
+        } 
       });
     }
   }
@@ -341,8 +343,8 @@ export class HomeComponent implements OnInit {
   onMouseEnter(place: any): void {
     const { Latitude, Longitude } = place;
     const mapElement = document.getElementById('map') as HTMLElement;
-
-    if (!mapElement) return;
+ 
+   if (!mapElement) return;
 
     if (this.map) {
       this.map.setCenter({ lat: +Latitude, lng: +Longitude });
@@ -375,14 +377,18 @@ export class HomeComponent implements OnInit {
   }
 
   goToPlace(place: any) {
+    console.log(`from routing`);
+    console.log(place);
+    
     if (place.CenterAddress) {
       this.router.navigate([
         '/landing',
-        place.ShoppingCenter.Places[0].Id,
+        place.ShoppingCenter.Places ? place.ShoppingCenter.Places[0].Id : 0,
+        place.Id ,
         this.BuyBoxId,
       ]);
     } else {
-      this.router.navigate(['/landing', place.Id, this.BuyBoxId]);
+      this.router.navigate(['/landing', place.Id , 0 , this.BuyBoxId]);
     }
   }
 
@@ -396,7 +402,7 @@ export class HomeComponent implements OnInit {
     this.General.modalObject = modalObject;
     console.log(`street`);
     console.log(this.General.modalObject);
-
+    
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
@@ -517,7 +523,7 @@ export class HomeComponent implements OnInit {
     if (shoppingCenter.ShoppingCenter) {
       const places = shoppingCenter.ShoppingCenter.Places;
 
-      if (places.length > 0) {
+      if (places && places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
           .filter(

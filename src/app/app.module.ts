@@ -27,8 +27,8 @@ import { CherryExpansionComponent } from './components/cherry-expansion/cherry-e
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
-import { DragDropModule} from '@angular/cdk/drag-drop';
 import { ReactiveFormsModule } from '@angular/forms'; 
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -62,7 +62,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NgbAlertModule, 
     NgxPaginationModule,
     DragDropModule,
-    ReactiveFormsModule  , 
+    ReactiveFormsModule, 
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

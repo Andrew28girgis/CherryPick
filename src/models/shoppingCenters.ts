@@ -24,6 +24,8 @@ export interface Center {
   export interface ManagerOrganization{
     ID: number
     Name: string
+    Firstname:string
+    LastName :string
   }
   
   export interface Place {

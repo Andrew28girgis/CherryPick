@@ -165,6 +165,10 @@
                         <div>
                           {{ shoppingCenter.ShoppingCenter.ManagerOrganization[0].Name }}
                         </div>
+                        <br>
+                        <ng-container *ngFor="let org of shoppingCenter.ShoppingCenter.ManagerOrganization">
+                        <div>  <b>  {{org.Firstname}} {{org.LastName}} </b> </div>
+                          </ng-container>
                       </div>
                     </ng-container>
                   </td>
@@ -409,7 +413,7 @@
                 style="
                   background-color: #fff;
                   border-radius: 0 0 20px 20px;
-                  height: 360px;
+                  height: 400px;
                   display: flex;
                   flex-direction: column;
                 "
@@ -443,7 +447,6 @@
                     *ngIf="shopping.ShoppingCenter.ManagerOrganization"
                   >
                     <p class="spec-head">
-                      Manager By:
                       <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -453,6 +456,10 @@
                         alt=""
                       />
                       {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
+                      <br>
+                      <ng-container *ngFor="let org of shopping.ShoppingCenter.ManagerOrganization">
+                      <b>  {{org.Firstname}} {{org.LastName}} </b>
+                      </ng-container>
                     </p>
                   </div>
                   <div
@@ -543,7 +550,7 @@
                 style="
                   background-color: #fff;
                   border-radius: 0 0 20px 20px;
-                  height: 360px;
+                  height: 400px;
                   display: flex;
                   flex-direction: column;
                   justify-content: space-between;

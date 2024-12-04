@@ -23,8 +23,6 @@ import { OrgManager } from 'src/models/organization';
 })
 export class LandingComponent {
   General!: General;
-  userToken!: string | null;
-  placeId!: number;
   place!: Property;
   fbo!: Fbo;
   PlaceFiles: string[] = [];
@@ -48,10 +46,10 @@ export class LandingComponent {
   ShoppingCenter!: ShoppingCenter;
   NearByType: NearByType[] = [];
   placeImage: string[] = [];
-  placeCotenants:PlaceCotenants[] = [];
-  OrgManager:OrgManager[]=[];
-
-
+  placeCotenants: PlaceCotenants[] = [];
+  OrgManager: OrgManager[] = [];
+  ShoppingCenterId!: number;
+  StandAlonePlace!: OtherPlace | null | undefined;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -75,7 +73,12 @@ export class LandingComponent {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.PlaceId = params.id;
-      this.GetPlaceDetails(this.PlaceId);
+      this.ShoppingCenterId = params.shoppiongCenterId;
+      if (this.ShoppingCenterId != 0) {
+        this.GetPlaceDetails(0, this.ShoppingCenterId);
+      } else {
+        this.GetPlaceDetails(this.PlaceId, 0);
+      }
       this.GetPlaceCotenants(this.PlaceId);
     });
   }
@@ -88,11 +91,12 @@ export class LandingComponent {
     this.showAlert = false;
   }
 
-  GetPlaceDetails(placeId: number): void {
+  GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     const body: any = {
-      Name: 'GetPlaceDetails',
+      Name: 'GetShoppingCenterDetails',
       Params: {
         PlaceID: placeId,
+        shoppingcenterId: ShoppingcenterId,
         buyboxid: this.BuyBoxId,
       },
     };
@@ -100,13 +104,10 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.CustomPlace = data.json[0];
-        this.CustomPlace.PopulationDensity =
-          +this.CustomPlace.PopulationDensity;
 
-        if (this.CustomPlace.ShoppingCenters[0].CenterAddress) {
-          this.ShoppingCenter = this.CustomPlace.ShoppingCenters[0];
+        if (ShoppingcenterId !== 0) {
+          this.ShoppingCenter = this.CustomPlace.ShoppingCenter[0];
         }
-
         console.log(`custom place`);
         console.log(this.CustomPlace);
 
@@ -114,20 +115,26 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter) {
+          if (this.CustomPlace.OtherPlaces) {
+            this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
+            this.StandAlonePlace.PopulationDensity =
+              +this.StandAlonePlace.PopulationDensity;
+
+            this.placeImage = this.StandAlonePlace.Images?.split(',').map(
+              (link) => link.trim()
+            );
+          }
           this.GetShoppingCenterManager(this.ShoppingCenter.Id);
-          this.getMinMaxUnitSize(this.ShoppingCenter);
+          this.getMinMaxUnitSize();
           this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
-          this.CustomPlace.StreetViewURL
-            ? this.changeStreetView(this.CustomPlace)
-            : this.viewOnStreet();  
+          this.StandAlonePlace = this.CustomPlace.Place[0];
+          this.StandAlonePlace.StreetViewURL
+            ? this.changeStreetView(this.StandAlonePlace)
+            : this.viewOnStreet();
         }
-
-        this.placeImage = this.CustomPlace.Images?.split(',').map((link) =>
-          link.trim()
-        );
         this.GetPlaceNearBy(this.PlaceId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -138,36 +145,36 @@ export class LandingComponent {
     const body: any = {
       Name: 'GetPlaceCotenants',
       Params: {
+        ShoppingCenterId: this.ShoppingCenterId,
         PlaceID: placeId,
         buyboxid: this.BuyBoxId,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => { 
+      next: (data) => {
         this.placeCotenants = data.json;
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
 
-
   GetShoppingCenterManager(ShoppingCenterId: number): void {
     const body: any = {
       Name: 'GetShoppingCenterManager',
       Params: {
-        ShoppingCenterId: ShoppingCenterId, 
+        ShoppingCenterId: ShoppingCenterId,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => { 
+      next: (data) => {
         this.OrgManager = data.json;
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
-  
+
   changeStreetView(place: any) {
     this.sanitizedUrl = '';
 
@@ -189,14 +196,14 @@ export class LandingComponent {
   }
 
   ngOnChanges() {
-    if (this.CustomPlace.StreetViewURL) {
-      this.setIframeUrl(this.CustomPlace.StreetViewURL);
+    if (this.StandAlonePlace?.StreetViewURL) {
+      this.setIframeUrl(this.StandAlonePlace.StreetViewURL);
     }
   }
 
-  getMinMaxUnitSize(ShoppingCenter: ShoppingCenter) {
-    if (ShoppingCenter.OtherPlaces) {
-      const places = ShoppingCenter.OtherPlaces;
+  getMinMaxUnitSize() {
+    if (this.CustomPlace.OtherPlaces) {
+      const places = this.CustomPlace.OtherPlaces;
 
       if (places.length > 0) {
         const buildingSizes = places
@@ -242,18 +249,15 @@ export class LandingComponent {
         let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
           minSize
         )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-
-        // Display only one lease price if minPrice and maxPrice are the same or if either is "On Request"
         if (
           minPrice === maxPrice ||
-          minPrice === 'On Request' ||
+          minPrice === 'On Request' ||  
           maxPrice === 'On Request'
         ) {
           sizeRange += `<br>Lease Price: ${
             minPrice ? formatLeasePrice(minPrice) : 'N/A'
           }`;
         } else if (minPrice || maxPrice) {
-          // Avoid range like "On Request - $55 SF/YR" by checking if either value is "On Request"
           if (minPrice === 'On Request' || maxPrice === 'On Request') {
             sizeRange += `<br>Lease Price: On Request`;
           } else {
@@ -272,6 +276,7 @@ export class LandingComponent {
       Name: 'GetNearBuyRetails',
       Params: {
         PlaceID: placeId,
+        ShoppingCenterId: this.ShoppingCenterId,
         BuyBoxId: this.BuyBoxId,
       },
     };
@@ -296,19 +301,17 @@ export class LandingComponent {
   }
 
   mapView!: boolean;
-
   async getAllMarker() {
     this.mapView = true;
     try {
       const lat = this.getLatitude();
       const lon = this.getLongitude();
       const map = await this.initializeMap(lat, lon);
-
       this.addMarkerForPrimaryLocation(map);
 
       if (this.NearByType && this.NearByType.length > 0) {
         this.NearByType.forEach((type) => {
-          type.Branches.slice(0, 5).forEach((place) => { 
+          type.Branches.slice(0, 5).forEach((place) => {
             this.createMarker(map, place, type.Name);
           });
         });
@@ -317,16 +320,16 @@ export class LandingComponent {
     }
   }
 
-  getLatitude(): number {
+  getLatitude(): any {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Latitude
-      : +this.CustomPlace.Latitude;
+      : this.StandAlonePlace?.Latitude;
   }
 
-  getLongitude(): number {
+  getLongitude(): any {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Longitude
-      : +this.CustomPlace.Longitude;
+      : this.StandAlonePlace?.Longitude;
   }
 
   async initializeMap(lat: number, lon: number): Promise<any> {
@@ -519,7 +522,9 @@ export class LandingComponent {
             <div>
               <p style="font-size: 19px; font-weight: 500; margin:0; padding:15px">${
                 markerData.RelationOrganization[0].Name
-              }: ${markerData.RelationOrganization[0].Distance.toFixed(2)} MI</p>
+              }: ${markerData.RelationOrganization[0].Distance.toFixed(
+      2
+    )} MI</p>
             </div>
           </div>
     </div>
@@ -539,7 +544,7 @@ export class LandingComponent {
         let maxSize = Math.max(...buildingSizes);
         let minPrice = null;
         let maxPrice = null;
-        
+
         // Find lease prices corresponding to min and max sizes
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
@@ -669,7 +674,7 @@ export class LandingComponent {
     this.place.reaction = reaction;
     let feedback: any = {};
     feedback['note'] = this.place.feedBack;
-    feedback['placeId'] = this.placeId;
+    feedback['placeId'] = this.PlaceId;
 
     if (reaction != '') {
       feedback['Reaction'] = reaction;
@@ -704,28 +709,28 @@ export class LandingComponent {
     });
   }
 
-  getStreetLat(): number {
+  getStreetLat(): any {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLatitude
-      : +this.CustomPlace.StreetLatitude;
+      : this.StandAlonePlace?.StreetLatitude;
   }
 
-  getStreetLong(): number {
+  getStreetLong(): any {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLongitude
-      : +this.CustomPlace.StreetLongitude;
+      : this.StandAlonePlace?.StreetLongitude;
   }
 
   getStreetHeading(): number {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Heading
-      : +this.CustomPlace.Heading;
+      : +this.CustomPlace.OtherPlaces[0].Heading;
   }
 
   getStreetPitch(): number {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Pitch
-      : +this.CustomPlace.Pitch;
+      : +this.CustomPlace.OtherPlaces[0].Pitch;
   }
 
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
@@ -760,7 +765,7 @@ export class LandingComponent {
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
-    
+
     const mapDiv = document.getElementById('mapInPopup') as HTMLElement;
 
     if (!mapDiv) {

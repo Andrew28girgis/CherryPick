@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 declare const google: any;
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -99,7 +99,7 @@ export class MapsService {
 
   private handleViewDetailsClick(markerId: any): void {
     console.log(`View details for marker ID: ${markerId}`);
-    this.router.navigate(['/landing', markerId, this.storedBuyBoxId]);
+    this.router.navigate(['/landing', markerId, 0 ,this.storedBuyBoxId]);
   }
 
   private assignToMarkerArray(marker: any, type: string): void {
@@ -148,8 +148,11 @@ export class MapsService {
             : ''
         }
         <div class="buttons-wrap">
+        
           <button id="view-details-${
-            markerData.ShoppingCenter.Places[0].Id
+            markerData.ShoppingCenter.Places
+              ? markerData.ShoppingCenter.Places[0].Id
+              : 0
           }" class="view-details-card">View Details
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
@@ -204,8 +207,7 @@ export class MapsService {
   createCustomMarker(map: any, markerData: BuyboxCategory): void {
     console.log(`custom marker created`);
     console.log(markerData);
-    
-    
+
     if (!this.markerMap[markerData.id]) {
       this.markerMap[markerData.id] = [];
     }
@@ -218,27 +220,26 @@ export class MapsService {
       const imgUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${place.id}`;
 
       place.RetailRelationCategories.forEach((branch) => {
-        branch.Branches.forEach( (b) => {
+        branch.Branches.forEach((b) => {
+          const latitude = Number(b.Latitude);
+          const longitude = Number(b.Longitude);
 
-        const latitude = Number(b.Latitude);
-        const longitude = Number(b.Longitude);
+          if (!isNaN(latitude) && !isNaN(longitude)) {
+            const marker = new google.maps.Marker({
+              position: {
+                lat: latitude,
+                lng: longitude,
+              },
+              icon: {
+                url: imgUrl,
+                scaledSize: new google.maps.Size(30, 30),
+              },
+              map: map,
+            });
 
-        if (!isNaN(latitude) && !isNaN(longitude)) {
-          const marker = new google.maps.Marker({
-            position: {
-              lat: latitude,
-              lng: longitude,
-            },
-            icon: {
-              url: imgUrl,
-              scaledSize: new google.maps.Size(30, 30),
-            },
-            map: map,
-          });
+            const closeButtonId = `close-button-${b.Id}`;
 
-          const closeButtonId = `close-button-${b.Id}`;
-
-          const infoWindowContent = `
+            const infoWindowContent = `
           <div style="padding:0 10px">
              <div style="display: flex; justify-content: end">
             <button id="${closeButtonId}" style="background: transparent; border: none; cursor: pointer; font-size: 24px; color: black; padding:0; border: none; outline: none;">
@@ -250,32 +251,32 @@ export class MapsService {
             </div>
           </div>`;
 
-          const infoWindow = new google.maps.InfoWindow({
-            content: infoWindowContent,
-          });
+            const infoWindow = new google.maps.InfoWindow({
+              content: infoWindowContent,
+            });
 
-          // Add a click listener to the marker to show the InfoWindow
-          marker.addListener('click', () => {
-            // Close any previously opened InfoWindow
-            if (this.currentlyOpenInfoWindow) {
-              this.currentlyOpenInfoWindow.close();
-            }
+            // Add a click listener to the marker to show the InfoWindow
+            marker.addListener('click', () => {
+              // Close any previously opened InfoWindow
+              if (this.currentlyOpenInfoWindow) {
+                this.currentlyOpenInfoWindow.close();
+              }
 
-            // Open the new InfoWindow
-            infoWindow.open(map, marker);
-            this.currentlyOpenInfoWindow = infoWindow;
+              // Open the new InfoWindow
+              infoWindow.open(map, marker);
+              this.currentlyOpenInfoWindow = infoWindow;
 
-            // Add the close button listener to the InfoWindow
-            this.closeSmall(infoWindow, closeButtonId);
-          });
+              // Add the close button listener to the InfoWindow
+              this.closeSmall(infoWindow, closeButtonId);
+            });
 
-          // Add listener for clicking on the map to close the currently open InfoWindow
-          this.addMapClickListenerCustom(map);
+            // Add listener for clicking on the map to close the currently open InfoWindow
+            this.addMapClickListenerCustom(map);
 
-          // Store the marker
-          this.markerMap[markerData.id].push(marker);
-        }
-      })
+            // Store the marker
+            this.markerMap[markerData.id].push(marker);
+          }
+        });
       });
     });
 
@@ -398,7 +399,6 @@ export class MapsService {
           },
         });
 
-        // Push the original marker back into the markers array
         this.markers.push(originalMarker);
       }
     }
@@ -408,12 +408,12 @@ export class MapsService {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
       encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-  <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
-</svg>
+      <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
+      </svg>
     `)
     );
-  }
-
+   }
+  
   private getArrowSvgPurple(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
@@ -434,8 +434,7 @@ export class MapsService {
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     if (shoppingCenter.ShoppingCenter) {
       const places = shoppingCenter.ShoppingCenter.Places;
-
-      if (places.length > 0) {
+      if (places && places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
           .filter(
