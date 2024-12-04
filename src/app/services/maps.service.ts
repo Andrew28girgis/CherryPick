@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 declare const google: any;
-import {  Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -99,7 +99,7 @@ export class MapsService {
 
   private handleViewDetailsClick(markerId: any): void {
     console.log(`View details for marker ID: ${markerId}`);
-    this.router.navigate(['/landing', markerId, 0 ,this.storedBuyBoxId]);
+    this.router.navigate(['/landing', markerId, 0, this.storedBuyBoxId]);
   }
 
   private assignToMarkerArray(marker: any, type: string): void {
@@ -343,128 +343,122 @@ export class MapsService {
 
   private addHoverCircle(map: any, place: any, isEntering: boolean): void {
     const { Latitude, Longitude } = place;
-  
+
     if (!map || !this.markers) return;
-  
+
     // Find the existing marker based on its latitude and longitude
     const markerIndex = this.markers.findIndex(
       (m: any) =>
         m.getPosition()?.lat() === +Latitude &&
         m.getPosition()?.lng() === +Longitude
     );
-  
+
     if (markerIndex !== -1) {
       const marker = this.markers[markerIndex];
-  
+
       // If hovering in, add a circle around the marker
       if (isEntering) {
         const circle = new google.maps.Circle({
           map,
           center: marker.getPosition(),
-          radius: 150,  // Radius of the circle (in meters)
+          radius: 150, // Radius of the circle (in meters)
           strokeColor: '#FF0000', // Circle border color
-          strokeWeight: 2,  // Circle border thickness
+          strokeWeight: 2, // Circle border thickness
           fillColor: '#FF0000', // Circle fill color
           fillOpacity: 0.2, // Circle fill opacity
-          clickable: false,  // Don't trigger any click event on the circle
+          clickable: false, // Don't trigger any click event on the circle
         });
-  
+
         // Store the circle in the marker object for easy removal later
         marker.circle = circle;
       } else {
         // If hovering out, remove the circle
         if (marker.circle) {
           marker.circle.setMap(null);
-          delete marker.circle;  // Remove the reference to the circle
+          delete marker.circle; // Remove the reference to the circle
         }
       }
     }
   }
   private animateMarkerJump(marker: any, map: any): void {
-    const originalPosition = marker.getPosition();  // Save the original position
-    const originalIcon = marker.getIcon();  // Save the original marker icon
-    
+    const originalPosition = marker.getPosition(); // Save the original position
+    const originalIcon = marker.getIcon(); // Save the original marker icon
+
     // Jump animation by moving the marker up and down
     let jumpCount = 0;
-    const jumpHeight = 25;  // Height of the jump (in pixels) - increased for a taller jump
-    const jumpSpeed = 150;  // Time between each jump (in milliseconds)
-  
+    const jumpHeight = 25; // Height of the jump (in pixels) - increased for a taller jump
+    const jumpSpeed = 150; // Time between each jump (in milliseconds)
+
     // Change marker icon during jump (for example, change to a different icon)
     const jumpIcon = {
-      url: 'https://path/to/jumping-icon.png',  // Replace with the URL of your jumping icon
-      scaledSize: new google.maps.Size(40, 40),  // Adjust the size if needed
-      labelOrigin: new google.maps.Point(20, 20) // Center the label on the icon if needed
+      url: 'https://path/to/jumping-icon.png', // Replace with the URL of your jumping icon
+      scaledSize: new google.maps.Size(40, 40), // Adjust the size if needed
+      labelOrigin: new google.maps.Point(20, 20), // Center the label on the icon if needed
     };
     marker.setIcon(jumpIcon);
-  
+
     const jumpInterval = setInterval(() => {
-      const offset = (jumpCount % 2 === 0) ? jumpHeight : -jumpHeight;  // Alternate between up and down
+      const offset = jumpCount % 2 === 0 ? jumpHeight : -jumpHeight; // Alternate between up and down
       const newPosition = {
         lat: originalPosition.lat() + offset / 100000, // Convert pixel offset to lat/lng offset
-        lng: originalPosition.lng()
+        lng: originalPosition.lng(),
       };
-  
+
       marker.setPosition(newPosition); // Move the marker
-  
+
       jumpCount++;
-  
-      if (jumpCount === 6) { // After 3 jumps up and down (6 steps)
-        clearInterval(jumpInterval);  // Stop the jumping animation
+
+      if (jumpCount === 6) {
+        // After 3 jumps up and down (6 steps)
+        clearInterval(jumpInterval); // Stop the jumping animation
         marker.setPosition(originalPosition); // Reset the marker to its original position
-  
+
         // Restore the original icon
         marker.setIcon(originalIcon);
       }
     }, jumpSpeed);
   }
-  
-  private updateMarker(
-    map: any,
-    place: any,
-    isEntering: boolean
-  ): void {
+
+  private updateMarker(map: any, place: any, isEntering: boolean): void {
     const { Latitude, Longitude, infoWindowContent } = place;
-  
+
     if (!map || !this.markers) return;
-  
+
     // Find the existing marker based on its latitude and longitude
     const markerIndex = this.markers.findIndex(
       (m: any) =>
         m.getPosition()?.lat() === +Latitude &&
         m.getPosition()?.lng() === +Longitude
     );
-  
+
     // Create the InfoWindow for the existing marker
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
     });
-  
+
     // If the marker exists, we need to re-attach the infoWindow event listener
     if (markerIndex !== -1) {
       const existingMarker = this.markers[markerIndex];
-  
+
       // Re-attach the InfoWindow click event
       existingMarker.addListener('click', () => {
         infoWindow.open(map, existingMarker);
       });
-  
+
       // Trigger the jump animation if mouse enters
       if (isEntering) {
         this.animateMarkerJump(existingMarker, map);
       }
     }
   }
-  
+
   onMouseEnter(map: any, place: any): void {
-    this.updateMarker(map, place, true);    // Trigger jump animation and ensure InfoWindow click functionality
+    this.updateMarker(map, place, true); // Trigger jump animation and ensure InfoWindow click functionality
   }
-  
+
   onMouseLeave(map: any, place: any): void {
-    this.updateMarker(map, place, false);   // No jump on hover out
+    this.updateMarker(map, place, false); // No jump on hover out
   }
-  
-  
-  
 
   private getArrowSvg(): string {
     return (
@@ -474,8 +468,8 @@ export class MapsService {
       </svg>
     `)
     );
-   }
-  
+  }
+
   private getArrowSvgPurple(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +

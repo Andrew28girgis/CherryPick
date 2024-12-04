@@ -251,7 +251,7 @@ export class LandingComponent {
         )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
         if (
           minPrice === maxPrice ||
-          minPrice === 'On Request' ||  
+          minPrice === 'On Request' ||
           maxPrice === 'On Request'
         ) {
           sizeRange += `<br>Lease Price: ${
@@ -336,7 +336,7 @@ export class LandingComponent {
     const { Map } = await google.maps.importLibrary('maps');
     return new Map(document.getElementById('map') as HTMLElement, {
       center: { lat: lat || 0, lng: lon || 0 },
-      zoom: 12,
+      zoom: 13,
     });
   }
 
