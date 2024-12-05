@@ -32,7 +32,6 @@
             </label>
           </div>
         </ng-container>
-        
       </div>
       <div class="custom-select-container">
         <div class="custom-dropdown">
@@ -89,7 +88,7 @@
               <tr>
                 <th>Name</th>
                 <th>Manager By</th>
-                <th>Unit Size & Lease Price</th>
+                <th style="width: 250px;">Unit Size & Lease Price</th> 
                 <ng-container
                   *ngFor="
                     let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
@@ -129,19 +128,33 @@
                           <img
                             class="logo"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                              shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID
+                              shoppingCenter.ShoppingCenter
+                                .ManagerOrganization[0].ID
                             }}"
-                            [title]="shoppingCenter.ShoppingCenter.ManagerOrganization[0].Name"
+                            [title]="
+                              shoppingCenter.ShoppingCenter
+                                .ManagerOrganization[0].Name
+                            "
                             alt=""
                           />
                         </div>
                         <div>
-                          {{ shoppingCenter.ShoppingCenter.ManagerOrganization[0].Name }}
+                          {{
+                            shoppingCenter.ShoppingCenter.ManagerOrganization[0]
+                              .Name 
+                          }}
                         </div>
-                        <br>
-                        <ng-container *ngFor="let org of shoppingCenter.ShoppingCenter.ManagerOrganization">
-                        <div>  <b>  {{org.Firstname}} {{org.LastName}} </b> </div>
-                          </ng-container>
+                        <br />
+                        <ng-container
+                          *ngFor="
+                            let org of shoppingCenter.ShoppingCenter
+                              .ManagerOrganization
+                          "
+                        >
+                          <div>
+                            <b> {{ org.Firstname| titlecase }} {{ org.LastName | titlecase}} </b>
+                          </div>
+                        </ng-container>
                       </div>
                     </ng-container>
                   </td>
@@ -156,6 +169,9 @@
                     "
                   >
                     <td>
+                      <span class="ms-2">
+                        {{ item.Distance.toFixed(2) }} MI
+                      </span>
                       <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -164,9 +180,6 @@
                         [title]="item.RelationOrganizationName"
                         alt=""
                       />
-                      <span class="ms-2">
-                        {{ item.Distance.toFixed(2) }} MI
-                      </span>
                     </td>
                   </ng-container>
                   <td>
@@ -267,7 +280,7 @@
                   </td>
                   <td>
                     Unit Size: {{ place.BuildingSizeSf | number }} SF <br />
-                    LeasePrice: {{ place.ForLeasePrice }}
+                   <span *ngIf="place.ForLeasePrice"> LeasePrice: {{ place.ForLeasePrice }}</span>
                   </td>
                   <ng-container *ngIf="place.Place">
                     <ng-container
@@ -278,6 +291,9 @@
                       "
                     >
                       <td>
+                        <span class="ms-2"
+                          >{{ item.Distance.toFixed(2) }} MI</span
+                        >
                         <img
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -286,9 +302,6 @@
                           [title]="item.RelationOrganizationName"
                           alt=""
                         />
-                        <span class="ms-2"
-                          >{{ item.Distance.toFixed(2) }} MI</span
-                        >
                       </td>
                     </ng-container>
                   </ng-container>
@@ -363,7 +376,7 @@
       style="background-color: #f4f4f4"
       [ngClass]="{
         'd-none': currentView == 1 || currentView == 4,
-        'col-md-8 col-sm-12 cards': currentView == 2,
+        'col-md-6 col-sm-12 cards': currentView == 2,
         'col-12': currentView == 3
       }"
     >
@@ -387,7 +400,7 @@
                   background-color: #fff;
                   border-radius: 0 0 20px 20px;
                   height: 400px;
-                  cursor:auto ;
+                  cursor: auto;
                   display: flex;
                   flex-direction: column;
                 "
@@ -421,18 +434,25 @@
                     *ngIf="shopping.ShoppingCenter.ManagerOrganization"
                   >
                     <p class="spec-head">
+                      {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
+
                       <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                           shopping.ShoppingCenter.ManagerOrganization[0].ID
                         }}"
-                        [title]="shopping.ShoppingCenter.ManagerOrganization[0].Name"
+                        [title]="
+                          shopping.ShoppingCenter.ManagerOrganization[0].Name
+                        "
                         alt=""
                       />
-                      {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
-                      <br>
-                      <ng-container *ngFor="let org of shopping.ShoppingCenter.ManagerOrganization">
-                      <b>  {{org.Firstname}} {{org.LastName}} </b>
+                      <br />
+                      <ng-container
+                        *ngFor="
+                          let org of shopping.ShoppingCenter.ManagerOrganization
+                        "
+                      >
+                        <b> {{ org.Firstname  | titlecase }} {{ org.LastName | titlecase }} </b> <br>
                       </ng-container>
                     </p>
                   </div>
@@ -444,6 +464,9 @@
                       Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                     </p>
                     <p class="spec-content">
+                      <span class="ms-2">
+                        <span>{{ item.Distance.toFixed(2) }} MI</span>
+                      </span>
                       <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -452,9 +475,6 @@
                         [title]="item.RelationOrganizationName"
                         alt=""
                       />
-                      <span class="ms-2">
-                        <span>{{ item.Distance.toFixed(2) }} MI</span>
-                      </span>
                     </p>
                   </div>
                 </div>
@@ -526,7 +546,7 @@
                   border-radius: 0 0 20px 20px;
                   height: 400px;
                   display: flex;
-                  cursor: auto ;
+                  cursor: auto;
                   flex-direction: column;
                   justify-content: space-between;
                 "
@@ -571,6 +591,9 @@
                       Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                     </p>
                     <p class="spec-content">
+                      <span class="ms-2">
+                        <span>{{ item.Distance.toFixed(2) }} MI</span>
+                      </span>
                       <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -579,9 +602,6 @@
                         [title]="item.RelationOrganizationName"
                         alt=""
                       />
-                      <span class="ms-2">
-                        <span>{{ item.Distance.toFixed(2) }} MI</span>
-                      </span>
                     </p>
                   </div>
                 </div>
@@ -645,7 +665,7 @@
               (mouseenter)="onMouseHighlight(place)"
               (mouseleave)="onMouseLeaveHighlight(place)"
               [ngClass]="{
-                'col-md-4 col-sm-12': currentView == 2
+                'col-md-6 col-sm-12': currentView == 2
               }"
             >
               <div class="main-img">
@@ -719,6 +739,9 @@
                     </p>
 
                     <p class="spec-content">
+                      <span class="ms-2">
+                        <span>{{ item.Distance.toFixed(2) }} MI</span>
+                      </span>
                       <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -727,9 +750,6 @@
                         [title]="item.RelationOrganizationName"
                         alt=""
                       />
-                      <span class="ms-2">
-                        <span>{{ item.Distance.toFixed(2) }} MI</span>
-                      </span>
                     </p>
                   </div>
                 </div>
@@ -771,7 +791,7 @@
       [ngClass]="{
         'd-none': currentView == 4 || currentView == 3,
         'col-12': currentView == 1,
-        'col-4': currentView == 2
+        'col-6': currentView == 2
       }"
     >
       <div id="map" class="custom-map"></div>

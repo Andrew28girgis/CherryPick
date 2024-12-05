@@ -352,8 +352,6 @@ export class MapsService {
     const { Latitude, Longitude, infoWindowContent } = place;
     
     if (!map || !this.markers) return;
-    console.log(`markers`)
-    console.log(this.markers)
     // Find the existing marker based on its latitude and longitude
     const markerIndex = this.markers.findIndex(
       (m: any) =>

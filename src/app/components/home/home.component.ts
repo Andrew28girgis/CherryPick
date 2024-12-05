@@ -521,104 +521,55 @@ export class HomeComponent implements OnInit {
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
-    if (shoppingCenter.ShoppingCenter) {
-      const places = shoppingCenter.ShoppingCenter.Places;
-
-      if (places && places.length > 0) {
-        const buildingSizes = places
-          .map((place: any) => place.BuildingSizeSf)
-          .filter(
-            (size: any) => size !== undefined && size !== null && !isNaN(size)
-          );
-
-        // If buildingSizes array is empty or invalid, stop the process
-        if (buildingSizes.length === 0) {
-          return null;
-        }
-
-        let minSize = Math.min(...buildingSizes);
-        let maxSize = Math.max(...buildingSizes);
-
-        let minPrice = null;
-        let maxPrice = null;
-
-        // Find lease prices corresponding to min and max sizes
-        for (let place of places) {
-          if (place.BuildingSizeSf === minSize) {
-            minPrice = place.ForLeasePrice;
-          }
-          if (place.BuildingSizeSf === maxSize) {
-            maxPrice = place.ForLeasePrice;
-          }
-        }
-
-        // Helper function to format lease price
-        const formatLeasePrice = (price: any) => {
-          return price === 'On Request' ? 'On Request' : price;
-        };
-
-        // Check if min and max sizes are the same
-        if (minSize === maxSize) {
-          return minPrice
-            ? `Unit Size: ${this.formatNumberWithCommas(
-                minSize
-              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
-            : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
-        }
-
-        // Check if min and max lease prices are the same or if either is "On Request"
-        if (
-          minPrice === maxPrice ||
-          minPrice === 'On Request' ||
-          maxPrice === 'On Request'
-        ) {
-          return minPrice
-            ? `Unit Size: ${this.formatNumberWithCommas(
-                minSize
-              )} SF - ${this.formatNumberWithCommas(
-                maxSize
-              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
-            : `Unit Size: ${this.formatNumberWithCommas(
-                minSize
-              )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-        }
-
-        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
-          minSize
-        )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-
-        // Avoid range like "On Request - $55 SF/YR" by checking if either value is "On Request"
-        if (minPrice && maxPrice) {
-          if (minPrice === 'On Request' || maxPrice === 'On Request') {
-            sizeRange += `<br>Lease Price: On Request`;
-          } else {
-            sizeRange += `<br>Lease Price: ${minPrice} - ${maxPrice}`;
-          }
-        } else if (minPrice) {
-          sizeRange += `<br>Lease Price: ${formatLeasePrice(minPrice)}`;
-        } else if (maxPrice) {
-          sizeRange += `<br>Lease Price: ${formatLeasePrice(maxPrice)}`;
-        }
-
-        return sizeRange;
+    // Helper function to format lease price (add $ and /month if needed)
+    const formatLeasePrice = (price: any) => {
+      if (price === 0 || price === 'On Request') return 'On Request';
+      const priceNumber = parseFloat(price);
+      return !isNaN(priceNumber) ? `$${priceNumber.toFixed(2)}/month` : price;
+    };
+  
+    // Extract the places array
+    const places = shoppingCenter?.ShoppingCenter?.Places || [];
+  
+    // Collect building sizes if available
+    const buildingSizes = places
+      .map((place: any) => place.BuildingSizeSf)
+      .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
+  
+    if (buildingSizes.length === 0) {
+      // Handle case for a single shopping center without valid places
+      const singleSize = shoppingCenter.BuildingSizeSf;
+      if (singleSize) {
+        const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
+        return `Unit Size: ${this.formatNumberWithCommas(singleSize)} SF` + 
+               (leasePrice && leasePrice !== 'On Request' ? `<br>Lease Price: ${leasePrice}` : '');
       }
-    } else {
-      let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
-        shoppingCenter.BuildingSizeSf
-      )} SF`;
-
-      if (shoppingCenter.ForLeasePrice) {
-        sizeRange += `<br>Lease Price: ${
-          shoppingCenter.ForLeasePrice === 'On Request'
-            ? 'On Request'
-            : shoppingCenter.ForLeasePrice
-        }`;
-      }
-      return sizeRange;
+      return null;
     }
-    return null;
+  
+    // Calculate min and max size
+    const minSize = Math.min(...buildingSizes);
+    const maxSize = Math.max(...buildingSizes);
+  
+    // Find corresponding lease prices for min and max sizes
+    const minPrice = places.find((place: any) => place.BuildingSizeSf === minSize)?.ForLeasePrice || 'On Request';
+    const maxPrice = places.find((place: any) => place.BuildingSizeSf === maxSize)?.ForLeasePrice || 'On Request';
+  
+    // Format unit sizes and lease price
+    const sizeRange = minSize === maxSize
+      ? `${this.formatNumberWithCommas(minSize)} SF`
+      : `${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+  
+    // Ensure only one price is shown if one is "On Request"
+    const leasePrice = (minPrice === 'On Request' && maxPrice === 'On Request') 
+      ? 'On Request' 
+      : formatLeasePrice(minPrice === 'On Request' ? maxPrice : minPrice);
+  
+    return `Unit Size: ${sizeRange}<br>Lease Price: ${leasePrice}`;
   }
-
+  
+  
+  
   getNeareastCategoryName(categoryId: number) {
     // console.log(categoryId);
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);

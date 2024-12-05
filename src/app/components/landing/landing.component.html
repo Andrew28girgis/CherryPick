@@ -161,7 +161,7 @@
                 <div class="d-flex flex-column">
                   <ng-container *ngFor="let Manager of OrgManager">
                     <p class="m-0">
-                      {{ Manager.firstname }} {{ Manager.lastname }}
+                      {{ Manager.firstname | titlecase }} {{ Manager.lastname | titlecase}}
                     </p>
                   </ng-container>
                 </div>

@@ -309,6 +309,6 @@
 }
 
 .logo{
-  height: 30px;
-  max-width: 50px;
+   max-width: 40px;
+   margin: 0 10px;
 }
