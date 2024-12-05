@@ -185,9 +185,12 @@ export class MapsService {
               markerData.BuildingSizeSf
             )} SF
           </p>
-          <p class="address-content"> 
-            Lease Price: ${markerData.ForLeasePrice} 
-          </p>
+         ${
+           `<p class="address-content">Lease price: ${this.getStandAloneLeasePrice(
+                markerData.ForLeasePrice , markerData.BuildingSizeSf
+              )}</p>`
+            
+        }
           <div class="buttons-wrap">
             <button id="view-details-${
               markerData.Id
@@ -495,6 +498,27 @@ export class MapsService {
       : 'On Request';
   
     return `Unit Size: ${sizeRange}<br>Lease Price: ${resultLeasePrice}`;
+  }
+  
+  getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
+    // Ensure the values are numbers by explicitly converting them
+    const leasePrice = Number(forLeasePrice);
+    const size = Number(buildingSizeSf);
+  
+    // Check if the values are valid numbers
+    if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
+      // Calculate the lease price per month
+      const calculatedPrice = Math.floor(leasePrice * size / 12);
+      
+      // Format the calculated price with commas
+      const formattedPrice = calculatedPrice.toLocaleString();
+      
+      // Return the formatted result
+      return `$${formattedPrice}/month`;
+    } else {
+      // If invalid values are provided, return 'On Request'
+      return 'On Request';
+    }
   }
   
 

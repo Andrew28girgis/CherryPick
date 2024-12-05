@@ -547,7 +547,7 @@ export class HomeComponent implements OnInit {
       if (singleSize) {
         const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
         return `Unit Size: ${formatNumberWithCommas(singleSize)} SF` + 
-               (leasePrice && leasePrice !== 'On Request' ? `<br>Lease Price: $${formatNumberWithCommas(leasePrice)}/month` : '');
+               (leasePrice && leasePrice !== 'On Request' ? `<br>Lease price: $${formatNumberWithCommas(leasePrice)}/month` : '');
       }
       return null;
     }
@@ -579,7 +579,7 @@ export class HomeComponent implements OnInit {
       ? `$${formatNumberWithCommas(Math.floor(parseFloat(leasePrice) * minSize / 12))}/month` 
       : 'On Request';
   
-    return `Unit Size: ${sizeRange}<br>Lease Price: ${resultLeasePrice}`;
+    return `Unit Size: ${sizeRange}<br>Lease price: ${resultLeasePrice}`;
   }
 
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
