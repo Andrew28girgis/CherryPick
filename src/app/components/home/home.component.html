@@ -280,7 +280,7 @@
                   </td>
                   <td>
                     Unit Size: {{ place.BuildingSizeSf | number }} SF <br />
-                   <span *ngIf="place.ForLeasePrice"> LeasePrice: {{ place.ForLeasePrice }}</span>
+                    <span> LeasePrice: {{getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)}}</span>
                   </td>
                   <ng-container *ngIf="place.Place">
                     <ng-container
@@ -578,7 +578,7 @@
                     *ngIf="place.ForLeasePrice"
                   >
                     <p class="spec-head">Lease Price</p>
-                    <p class="spec-content">{{ place.ForLeasePrice }}</p>
+                    <p class="spec-content">{{getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)}}</p>
                   </div>
                 </div>
 
@@ -715,11 +715,19 @@
                   </p>
                 </div>
 
-                <div>
+                <div *ngIf="place.CenterAddress">
                   <p
                     style="font-size: 15px; font-weight: 500; color: #565656"
                     [innerHTML]="getShoppingCenterUnitSize(place)"
                   ></p>
+                </div>
+                <div *ngIf="!place.CenterAddress">
+                  <p
+                    style="font-size: 15px; font-weight: 500; color: #565656" 
+                  > <span> Unit Size: {{place.BuildingSizeSf | number}}  SF</span></p>
+                  <p
+                    style="font-size: 15px; font-weight: 500; color: #565656" 
+                  > <span> LeasePrice: {{getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)}}</span></p>
                 </div>
 
                 <div
