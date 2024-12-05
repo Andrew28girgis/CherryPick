@@ -33,8 +33,8 @@ export class MapsService {
     marker.markerData = markerData;
     marker.type = type;
     this.markers.push(marker);
-    console.log(`from create`)
-    console.log(this.markers)
+    console.log(`from create`);
+    console.log(this.markers);
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
     this.addMarkerEventListeners(marker, infoWindow);
@@ -343,77 +343,70 @@ export class MapsService {
       });
   }
 
-
-  private updateMarker(
-    map: any,
-    place: any,
-    isEntering: boolean
-  ): void {
+  private updateMarker(map: any, place: any, isEntering: boolean): void {
     const { Latitude, Longitude, infoWindowContent } = place;
-    
+
     if (!map || !this.markers) return;
     // Find the existing marker based on its latitude and longitude
     const markerIndex = this.markers.findIndex(
       (m: any) =>
         m.markerData.Latitude === +Latitude &&
-        m.markerData.Longitude  === +Longitude
+        m.markerData.Longitude === +Longitude
     );
-    console.log(Latitude , Longitude)
-    console.log(markerIndex)
-
+    console.log(Latitude, Longitude);
+    console.log(markerIndex);
 
     // Create the InfoWindow for the existing marker
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
     });
-  
+
     // If the marker exists, we need to re-attach the infoWindow event listener
     if (markerIndex !== -1) {
       const existingMarker = this.markers[markerIndex];
-  
+
       // Re-attach the InfoWindow click event
       existingMarker.addListener('click', () => {
         infoWindow.open(map, existingMarker);
       });
-  
+
       // Trigger the hover effect
       if (isEntering) {
-        this.changeMarkerStyle(existingMarker, true);  // On hover in, change icon
+        this.changeMarkerStyle(existingMarker, true); // On hover in, change icon
       } else {
         this.changeMarkerStyle(existingMarker, false); // On hover out, revert icon
       }
     }
   }
-  
+
   private changeMarkerStyle(marker: any, isHovering: boolean): void {
-    const originalIcon = marker.getIcon();  // Save the original icon on the first hover
-  
+    const originalIcon = marker.getIcon(); // Save the original icon on the first hover
+
     // Store the original icon in the marker itself (so we can access it later)
     if (!marker._originalIcon) {
       marker._originalIcon = originalIcon; // Only save once
     }
-  
+
     if (isHovering) {
       // Placeholder icon when hovering
       const hoverIcon = {
-        url: this.getArrowSvgPurple(),  // Placeholder icon (can be an image URL or SVG)
-        scaledSize: new google.maps.Size(50, 50),  // Adjust the size of the placeholder icon
+        url: this.getArrowSvgPurple(), // Placeholder icon (can be an image URL or SVG)
+        scaledSize: new google.maps.Size(50, 50), // Adjust the size of the placeholder icon
       };
-      marker.setIcon(hoverIcon);  // Change to the placeholder icon
+      marker.setIcon(hoverIcon); // Change to the placeholder icon
     } else {
       // Reset to the original icon when mouse leaves
-      marker.setIcon(marker._originalIcon);  // Revert back to the original icon
+      marker.setIcon(marker._originalIcon); // Revert back to the original icon
     }
   }
-  
+
   onMouseEnter(map: any, place: any): void {
-    this.updateMarker(map, place, true);  // Trigger icon change on hover
+    this.updateMarker(map, place, true); // Trigger icon change on hover
   }
-  
+
   onMouseLeave(map: any, place: any): void {
     this.updateMarker(map, place, false); // Revert to the original icon on mouse leave
   }
-  
 
   private getArrowSvg(): string {
     return (
@@ -443,100 +436,65 @@ export class MapsService {
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
-    if (shoppingCenter.ShoppingCenter) {
-      const places = shoppingCenter.ShoppingCenter.Places;
-      if (places && places.length > 0) {
-        const buildingSizes = places
-          .map((place: any) => place.BuildingSizeSf)
-          .filter(
-            (size: any) => size !== undefined && size !== null && !isNaN(size)
-          );
+    // Helper function to format lease price (add $ and /month if needed)
+    const formatLeasePrice = (price: any) => {
+      if (price === 0 || price === 'On Request') return 'On Request';
+      const priceNumber = parseFloat(price);
+      return !isNaN(priceNumber) ? `$${priceNumber.toFixed(2)}/month` : price;
+    };
 
-        if (buildingSizes.length === 0) {
-          return null;
-        }
+    // Extract the places array
+    const places = shoppingCenter?.ShoppingCenter?.Places || [];
 
-        let minSize = Math.min(...buildingSizes);
-        let maxSize = Math.max(...buildingSizes);
+    // Collect building sizes if available
+    const buildingSizes = places
+      .map((place: any) => place.BuildingSizeSf)
+      .filter(
+        (size: any) => size !== undefined && size !== null && !isNaN(size)
+      );
 
-        let minPrice = null;
-        let maxPrice = null;
-
-        // Find lease prices corresponding to min and max sizes
-        for (let place of places) {
-          if (place.BuildingSizeSf === minSize) {
-            minPrice = place.ForLeasePrice;
-          }
-          if (place.BuildingSizeSf === maxSize) {
-            maxPrice = place.ForLeasePrice;
-          }
-        }
-
-        // Helper function to format lease price
-        const formatLeasePrice = (price: any) => {
-          return price === 'On Request' ? 'On Request' : price;
-        };
-
-        // Check if min and max sizes are the same
-        if (minSize === maxSize) {
-          return minPrice
-            ? `Unit Size: ${this.formatNumberWithCommas(
-                minSize
-              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
-            : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
-        }
-
-        // Check if min and max lease prices are the same or if either is "On Request"
-        if (
-          minPrice === maxPrice ||
-          minPrice === 'On Request' ||
-          maxPrice === 'On Request'
-        ) {
-          return minPrice
-            ? `Unit Size: ${this.formatNumberWithCommas(
-                minSize
-              )} SF - ${this.formatNumberWithCommas(
-                maxSize
-              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
-            : `Unit Size: ${this.formatNumberWithCommas(
-                minSize
-              )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-        }
-
-        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
-          minSize
-        )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-
-        // Avoid range like "On Request - $55 SF/YR" by checking if either value is "On Request"
-        if (minPrice && maxPrice) {
-          if (minPrice === 'On Request' || maxPrice === 'On Request') {
-            sizeRange += `<br>Lease Price: On Request`;
-          } else {
-            sizeRange += `<br>Lease Price: ${minPrice} - ${maxPrice}`;
-          }
-        } else if (minPrice) {
-          sizeRange += `<br>Lease Price: ${formatLeasePrice(minPrice)}`;
-        } else if (maxPrice) {
-          sizeRange += `<br>Lease Price: ${formatLeasePrice(maxPrice)}`;
-        }
-
-        return sizeRange;
+    if (buildingSizes.length === 0) {
+      // Handle case for a single shopping center without valid places
+      const singleSize = shoppingCenter.BuildingSizeSf;
+      if (singleSize) {
+        const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
+        return (
+          `Unit Size: ${this.formatNumberWithCommas(singleSize)} SF` +
+          (leasePrice && leasePrice !== 'On Request'
+            ? `<br>Lease Price: ${leasePrice}`
+            : '')
+        );
       }
-    } else {
-      let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
-        shoppingCenter.BuildingSizeSf
-      )} SF`;
-
-      if (shoppingCenter.ForLeasePrice) {
-        sizeRange += `<br>Lease Price: ${
-          shoppingCenter.ForLeasePrice === 'On Request'
-            ? 'On Request'
-            : shoppingCenter.ForLeasePrice
-        }`;
-      }
-      return sizeRange;
+      return null;
     }
-    return null;
+
+    // Calculate min and max size
+    const minSize = Math.min(...buildingSizes);
+    const maxSize = Math.max(...buildingSizes);
+
+    // Find corresponding lease prices for min and max sizes
+    const minPrice =
+      places.find((place: any) => place.BuildingSizeSf === minSize)
+        ?.ForLeasePrice || 'On Request';
+    const maxPrice =
+      places.find((place: any) => place.BuildingSizeSf === maxSize)
+        ?.ForLeasePrice || 'On Request';
+
+    // Format unit sizes and lease price
+    const sizeRange =
+      minSize === maxSize
+        ? `${this.formatNumberWithCommas(minSize)} SF`
+        : `${this.formatNumberWithCommas(
+            minSize
+          )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+
+    // Ensure only one price is shown if one is "On Request"
+    const leasePrice =
+      minPrice === 'On Request' && maxPrice === 'On Request'
+        ? 'On Request'
+        : formatLeasePrice(minPrice === 'On Request' ? maxPrice : minPrice);
+
+    return `Unit Size: ${sizeRange}<br>Lease Price: ${leasePrice}`;
   }
 
   formatNumberWithCommas(value: number | null): string {
