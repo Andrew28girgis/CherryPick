@@ -521,11 +521,16 @@ export class HomeComponent implements OnInit {
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
+    // Helper function to format numbers with commas
+    const formatNumberWithCommas = (number: number) => {
+      return number.toLocaleString(); // Format the number with commas
+    };
+  
     // Helper function to format lease price (add $ and /month if needed)
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
-      return !isNaN(priceNumber) ? `$${priceNumber.toFixed(2)}/month` : price;
+      return !isNaN(priceNumber) ? Math.floor(priceNumber) : price; // Remove decimal points and return the whole number
     };
   
     // Extract the places array
@@ -541,8 +546,8 @@ export class HomeComponent implements OnInit {
       const singleSize = shoppingCenter.BuildingSizeSf;
       if (singleSize) {
         const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
-        return `Unit Size: ${this.formatNumberWithCommas(singleSize)} SF` + 
-               (leasePrice && leasePrice !== 'On Request' ? `<br>Lease Price: ${leasePrice}` : '');
+        return `Unit Size: ${formatNumberWithCommas(singleSize)} SF` + 
+               (leasePrice && leasePrice !== 'On Request' ? `<br>Lease Price: $${formatNumberWithCommas(leasePrice)}/month` : '');
       }
       return null;
     }
@@ -557,16 +562,26 @@ export class HomeComponent implements OnInit {
   
     // Format unit sizes and lease price
     const sizeRange = minSize === maxSize
-      ? `${this.formatNumberWithCommas(minSize)} SF`
-      : `${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+      ? `${formatNumberWithCommas(minSize)} SF`
+      : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(maxSize)} SF`;
   
     // Ensure only one price is shown if one is "On Request"
-    const leasePrice = (minPrice === 'On Request' && maxPrice === 'On Request') 
-      ? 'On Request' 
-      : formatLeasePrice(minPrice === 'On Request' ? maxPrice : minPrice);
+    const formattedMinPrice = minPrice === 'On Request' ? 'On Request' : formatLeasePrice(minPrice);
+    const formattedMaxPrice = maxPrice === 'On Request' ? 'On Request' : formatLeasePrice(maxPrice);
   
-    return `Unit Size: ${sizeRange}<br>Lease Price: ${leasePrice}`;
+    // Calculate the price by multiplying unit size by the lease price, divided by 12 (annual cost)
+    const leasePrice = (formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request') 
+      ? 'On Request' 
+      : (formattedMinPrice === 'On Request' ? formattedMaxPrice : formattedMinPrice);
+  
+    // Calculate and return the result without decimals, formatted as "$X/month"
+    const resultLeasePrice = leasePrice !== 'On Request' 
+      ? `$${formatNumberWithCommas(Math.floor(parseFloat(leasePrice) * minSize / 12))}/month` 
+      : 'On Request';
+  
+    return `Unit Size: ${sizeRange}<br>Lease Price: ${resultLeasePrice}`;
   }
+  
   
   
   
