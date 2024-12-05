@@ -204,24 +204,22 @@ export class LandingComponent {
   getMinMaxUnitSize() {
     if (this.CustomPlace.OtherPlaces) {
       const places = this.CustomPlace.OtherPlaces;
-
+  
       if (places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
-          .filter(
-            (size: any) => size !== undefined && size !== null && !isNaN(size)
-          );
-
+          .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
+  
         if (buildingSizes.length === 0) {
           return null;
         }
-
+  
         let minSize = Math.min(...buildingSizes);
         let maxSize = Math.max(...buildingSizes);
-
+  
         let minPrice = null;
         let maxPrice = null;
-
+  
         // Find lease prices corresponding to min and max sizes
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
@@ -231,45 +229,51 @@ export class LandingComponent {
             maxPrice = place.ForLeasePrice;
           }
         }
-
-        // Helper function to format lease price
-        const formatLeasePrice = (price: any) => {
-          return price === 'On Request' ? 'On Request' : price;
+  
+        // Helper function to format lease price after calculating
+        const calculateLeasePrice = (price: any, size: any) => {
+          if (price === 'On Request' || price === 0 || size === 0 || size === 'On Request') {
+            return 'On Request';
+          }
+          const pricePerSF = parseFloat(price);
+          const unitSize = parseFloat(size);
+          if (!isNaN(pricePerSF) && !isNaN(unitSize)) {
+            // Calculate the monthly lease price based on the formula (Lease Price * Unit Size / 12)
+            const monthlyLease = Math.floor(pricePerSF * unitSize / 12);
+            return `$${monthlyLease.toLocaleString()}/month`;
+          }
+          return 'On Request'; // In case the price or size is invalid
         };
-
-        // If the sizes are the same, display only one price if they are the same
+  
+        // If minSize and maxSize are the same
         if (minSize === maxSize) {
-          return minPrice
-            ? `Unit Size: ${this.formatNumberWithCommas(
-                minSize
-              )} SF<br>Lease Price: ${formatLeasePrice(minPrice)}`
-            : `Unit Size: ${this.formatNumberWithCommas(minSize)} SF`;
+          const formattedPrice = minPrice ? calculateLeasePrice(minPrice, minSize) : '';
+          return `Unit Size: ${this.formatNumberWithCommas(minSize)} SF${formattedPrice ? `<br>Lease Price: ${formattedPrice}` : ''}`;
         }
-
-        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
-          minSize
-        )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-        if (
-          minPrice === maxPrice ||
-          minPrice === 'On Request' ||
-          maxPrice === 'On Request'
-        ) {
-          sizeRange += `<br>Lease Price: ${
-            minPrice ? formatLeasePrice(minPrice) : 'N/A'
-          }`;
+  
+        // Range of sizes
+        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+  
+        // If minPrice and maxPrice are the same or "On Request", display that
+        if (minPrice === maxPrice || minPrice === 'On Request' || maxPrice === 'On Request') {
+          sizeRange += `<br>Lease Price: ${calculateLeasePrice(minPrice || maxPrice, minSize)}`;
         } else if (minPrice || maxPrice) {
-          if (minPrice === 'On Request' || maxPrice === 'On Request') {
+          const minLeasePrice = calculateLeasePrice(minPrice, minSize);
+          const maxLeasePrice = calculateLeasePrice(maxPrice, maxSize);
+  
+          if (minLeasePrice === 'On Request' || maxLeasePrice === 'On Request') {
             sizeRange += `<br>Lease Price: On Request`;
           } else {
-            sizeRange += `<br>Lease Price: ${minPrice} - ${maxPrice}`;
+            sizeRange += `<br>Lease Price: ${minLeasePrice} - ${maxLeasePrice}`;
           }
         }
-
+  
         return sizeRange;
       }
     }
     return null;
   }
+  
 
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
