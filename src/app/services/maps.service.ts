@@ -33,6 +33,8 @@ export class MapsService {
     marker.markerData = markerData;
     marker.type = type;
     this.markers.push(marker);
+    console.log(`from create`)
+    console.log(this.markers)
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
     this.addMarkerEventListeners(marker, infoWindow);
@@ -341,124 +343,79 @@ export class MapsService {
       });
   }
 
-  private addHoverCircle(map: any, place: any, isEntering: boolean): void {
-    const { Latitude, Longitude } = place;
 
-    if (!map || !this.markers) return;
-
-    // Find the existing marker based on its latitude and longitude
-    const markerIndex = this.markers.findIndex(
-      (m: any) =>
-        m.getPosition()?.lat() === +Latitude &&
-        m.getPosition()?.lng() === +Longitude
-    );
-
-    if (markerIndex !== -1) {
-      const marker = this.markers[markerIndex];
-
-      // If hovering in, add a circle around the marker
-      if (isEntering) {
-        const circle = new google.maps.Circle({
-          map,
-          center: marker.getPosition(),
-          radius: 150, // Radius of the circle (in meters)
-          strokeColor: '#FF0000', // Circle border color
-          strokeWeight: 2, // Circle border thickness
-          fillColor: '#FF0000', // Circle fill color
-          fillOpacity: 0.2, // Circle fill opacity
-          clickable: false, // Don't trigger any click event on the circle
-        });
-
-        // Store the circle in the marker object for easy removal later
-        marker.circle = circle;
-      } else {
-        // If hovering out, remove the circle
-        if (marker.circle) {
-          marker.circle.setMap(null);
-          delete marker.circle; // Remove the reference to the circle
-        }
-      }
-    }
-  }
-  private animateMarkerJump(marker: any, map: any): void {
-    const originalPosition = marker.getPosition(); // Save the original position
-    const originalIcon = marker.getIcon(); // Save the original marker icon
-
-    // Jump animation by moving the marker up and down
-    let jumpCount = 0;
-    const jumpHeight = 25; // Height of the jump (in pixels) - increased for a taller jump
-    const jumpSpeed = 150; // Time between each jump (in milliseconds)
-
-    // Change marker icon during jump (for example, change to a different icon)
-    const jumpIcon = {
-      url: 'https://path/to/jumping-icon.png', // Replace with the URL of your jumping icon
-      scaledSize: new google.maps.Size(40, 40), // Adjust the size if needed
-      labelOrigin: new google.maps.Point(20, 20), // Center the label on the icon if needed
-    };
-    marker.setIcon(jumpIcon);
-
-    const jumpInterval = setInterval(() => {
-      const offset = jumpCount % 2 === 0 ? jumpHeight : -jumpHeight; // Alternate between up and down
-      const newPosition = {
-        lat: originalPosition.lat() + offset / 100000, // Convert pixel offset to lat/lng offset
-        lng: originalPosition.lng(),
-      };
-
-      marker.setPosition(newPosition); // Move the marker
-
-      jumpCount++;
-
-      if (jumpCount === 6) {
-        // After 3 jumps up and down (6 steps)
-        clearInterval(jumpInterval); // Stop the jumping animation
-        marker.setPosition(originalPosition); // Reset the marker to its original position
-
-        // Restore the original icon
-        marker.setIcon(originalIcon);
-      }
-    }, jumpSpeed);
-  }
-
-  private updateMarker(map: any, place: any, isEntering: boolean): void {
+  private updateMarker(
+    map: any,
+    place: any,
+    isEntering: boolean
+  ): void {
     const { Latitude, Longitude, infoWindowContent } = place;
-
+    
     if (!map || !this.markers) return;
-
+    console.log(`markers`)
+    console.log(this.markers)
     // Find the existing marker based on its latitude and longitude
     const markerIndex = this.markers.findIndex(
       (m: any) =>
-        m.getPosition()?.lat() === +Latitude &&
-        m.getPosition()?.lng() === +Longitude
+        m.markerData.Latitude === +Latitude &&
+        m.markerData.Longitude  === +Longitude
     );
+    console.log(Latitude , Longitude)
+    console.log(markerIndex)
+
 
     // Create the InfoWindow for the existing marker
     const infoWindow = new google.maps.InfoWindow({
       content: infoWindowContent,
     });
-
+  
     // If the marker exists, we need to re-attach the infoWindow event listener
     if (markerIndex !== -1) {
       const existingMarker = this.markers[markerIndex];
-
+  
       // Re-attach the InfoWindow click event
       existingMarker.addListener('click', () => {
         infoWindow.open(map, existingMarker);
       });
-
-      // Trigger the jump animation if mouse enters
+  
+      // Trigger the hover effect
       if (isEntering) {
-        this.animateMarkerJump(existingMarker, map);
+        this.changeMarkerStyle(existingMarker, true);  // On hover in, change icon
+      } else {
+        this.changeMarkerStyle(existingMarker, false); // On hover out, revert icon
       }
     }
   }
-
+  
+  private changeMarkerStyle(marker: any, isHovering: boolean): void {
+    const originalIcon = marker.getIcon();  // Save the original icon on the first hover
+  
+    // Store the original icon in the marker itself (so we can access it later)
+    if (!marker._originalIcon) {
+      marker._originalIcon = originalIcon; // Only save once
+    }
+  
+    if (isHovering) {
+      // Placeholder icon when hovering
+      const hoverIcon = {
+        url: this.getArrowSvgPurple(),  // Placeholder icon (can be an image URL or SVG)
+        scaledSize: new google.maps.Size(50, 50),  // Adjust the size of the placeholder icon
+      };
+      marker.setIcon(hoverIcon);  // Change to the placeholder icon
+    } else {
+      // Reset to the original icon when mouse leaves
+      marker.setIcon(marker._originalIcon);  // Revert back to the original icon
+    }
+  }
+  
   onMouseEnter(map: any, place: any): void {
-    this.updateMarker(map, place, true); // Trigger jump animation and ensure InfoWindow click functionality
+    this.updateMarker(map, place, true);  // Trigger icon change on hover
   }
-
+  
   onMouseLeave(map: any, place: any): void {
-    this.updateMarker(map, place, false); // No jump on hover out
+    this.updateMarker(map, place, false); // Revert to the original icon on mouse leave
   }
+  
 
   private getArrowSvg(): string {
     return (
@@ -473,17 +430,17 @@ export class MapsService {
   private getArrowSvgPurple(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <g clip-path="url(#clip0_699_4706)">
-            <path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#007BFF"/>
-            <path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#007BFF"/>
-            </g>
-            <defs>
-            <clipPath id="clip0_699_4706">
-            <rect width="48" height="48" fill="white"/>
-            </clipPath>
-            </defs>
-            </svg>`)
+      encodeURIComponent(`<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_4994_40245)">
+<path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#2B26CE"/>
+</g>
+<defs>
+<clipPath id="clip0_4994_40245">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+`)
     );
   }
 

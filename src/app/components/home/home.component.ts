@@ -322,8 +322,7 @@ export class HomeComponent implements OnInit {
     const allProperties = [
       ...(this.shoppingCenters || []),
       ...(this.standAlone || []),
-    ];
-
+    ]; 
     // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
       this.cardsSideList = allProperties.filter(
@@ -353,6 +352,8 @@ export class HomeComponent implements OnInit {
   }
 
   onMouseHighlight(place: any) {
+    console.log(`thiiiis placeee`)
+    console.log(place)
     this.markerService.onMouseEnter(this.map, place);
   }
 
