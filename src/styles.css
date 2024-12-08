@@ -697,3 +697,9 @@ body{
 .content-address:hover {
   text-decoration: underline;
 }
+
+.fa-info{
+  color: #0039ff !important;
+  padding: 10px;
+  font-size: 19px;
+}

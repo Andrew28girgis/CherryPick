@@ -28,6 +28,11 @@
     </p>
 
     <div class="main-section">
+      <i
+        class="fa-solid fa-arrow-left"
+        style="font-size: 24px; cursor: pointer"
+        (click)="goBack()"
+      ></i>
       <section id="hero">
         <div class="row py-4">
           <div class="col-md-7 col-sm-12 p-0">
@@ -84,8 +89,19 @@
               <p *ngIf="StandAlonePlace?.BuildingSizeSf" class="info-value p-0">
                 Unit Size: {{ StandAlonePlace?.BuildingSizeSf | number }} SF
               </p>
-              <p *ngIf="StandAlonePlace?.ForLeasePrice" class="info-value p-0">
-                Lease Price : {{ getLeasePriceStandAlone(StandAlonePlace) }}
+              <p class="info-value p-0">
+                Lease Price :
+                {{
+                  StandAlonePlace?.ForLeasePrice
+                    ? getLeasePriceStandAlone(StandAlonePlace)
+                    : "On Request"
+                }}
+                <span *ngIf="StandAlonePlace?.ForLeasePrice"
+                  ><i
+                    class="fa-solid fa-info"
+                    title="${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year"
+                  ></i
+                ></span>
               </p>
 
               <ng-container *ngFor="let near of NearByType">
@@ -148,7 +164,7 @@
             <!-- Start if ShoppingCenter -->
 
             <div class="row details-info" *ngIf="ShoppingCenter">
-              <div class="p-0 info-border">
+              <div class="p-0 info-border" *ngIf="OrgManager && OrgManager[0]">
                 <div>
                   <p
                     class="m-0 procpect-name"
@@ -418,6 +434,7 @@
                   <th>Listing Type</th>
                   <th>Lease Price</th>
                   <th>Unit Size (SF)</th>
+                  <th>Secondary Type</th>
                   <th>Street View</th>
                 </tr>
               </thead>
@@ -436,6 +453,8 @@
                       }}</span>
                     </td>
                     <td>{{ place.BuildingSizeSf | number }} SF</td>
+                    <td>{{ place.SecondaryType }}</td>
+
                     <td>
                       <div
                         style="cursor: pointer"

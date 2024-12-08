@@ -87,22 +87,30 @@ export class MapsService {
 
     const viewDetailsButton = document.getElementById(
       `view-details-${placeId}`
-    );     
-    
-    let shoppingCenterId =  markerData.CenterName ? markerData.Id : 0;
-    
+    );
+
+    let shoppingCenterId = markerData.CenterName ? markerData.Id : 0;
+
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
-        this.handleViewDetailsClick(placeId ,shoppingCenterId);
+        this.handleViewDetailsClick(placeId, shoppingCenterId);
       });
     } else {
       console.log(`Button for marker ${placeId} not found`);
     }
   }
 
-  private handleViewDetailsClick(markerId: any, shoppingCenterId?: number): void {
+  private handleViewDetailsClick(
+    markerId: any,
+    shoppingCenterId?: number
+  ): void {
     console.log(`View details for marker ID: ${markerId}`);
-    this.router.navigate(['/landing', markerId, shoppingCenterId, this.storedBuyBoxId]);
+    this.router.navigate([
+      '/landing',
+      markerId,
+      shoppingCenterId,
+      this.storedBuyBoxId,
+    ]);
   }
 
   private assignToMarkerArray(marker: any, type: string): void {
@@ -122,52 +130,65 @@ export class MapsService {
   }
 
   private shoopingCenterPopup(markerData: any): string {
-    return `
-    <div class="info-window">
-      <div class="main-img">
-        <img src="${markerData.MainImage}" alt="Main Image">
-        <span class="close-btn">&times;</span>
-      </div>
-      <div class="content-wrap">
-        ${
-          markerData.CenterName
-            ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
-            : ''
-        }
-        <p class="address-content">
-          <svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
-            <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
-          </svg>
-          ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
-      markerData.CenterState
-    }
-        </p>
-        ${
-          this.getShoppingCenterUnitSize(markerData)
-            ? `<p class="address-content">${this.getShoppingCenterUnitSize(
-                markerData
-              )}</p>`
-            : ''
-        }
-        <div class="buttons-wrap">
-        
-          <button id="view-details-${
-            markerData.ShoppingCenter.Places
-              ? markerData.ShoppingCenter.Places[0].Id
-              : 0
-          }" class="view-details-card">View Details
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
-              <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
-              <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#fff"/>
-            </svg>
-          </button>
+    const managerOrgs = markerData.ShoppingCenter.ManagerOrganization
+      .map((org: any) => `
+        <div class="contact-container">
+          <p class="text-bold m-0">${org.Firstname} ${org.LastName}</p> 
         </div>
-      </div>
-    </div>`;
+      `)
+      .join('');
+  
+    return `
+      <div class="info-window">
+        <div class="main-img">
+          <img src="${markerData.MainImage}" alt="Main Image">
+          <span class="close-btn">&times;</span>
+        </div>
+        <div class="content-wrap">
+          ${
+            markerData.CenterName
+              ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
+              : ''
+          }
+          <p class="address-content"> 
+            ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}
+          </p>
+          ${
+            this.getShoppingCenterUnitSize(markerData)
+              ? `<p class="address-content">${this.getShoppingCenterUnitSize(markerData)}</p>`
+              : ''
+          }
+          <div class="d-flex align-items-center">
+         <b>   ${
+              markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''
+            } </b>
+            <img
+              class="logo ms-2"
+              style="width:40px"
+              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${
+                markerData.ShoppingCenter.ManagerOrganization[0]?.ID || ''
+              }"
+              alt="${markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''}"
+            />
+          </div>
+          <div class="py-2">
+            ${managerOrgs}
+          </div>
+          <div class="buttons-wrap">
+            <button id="view-details-${
+              markerData.ShoppingCenter.Places
+                ? markerData.ShoppingCenter.Places[0]?.Id
+                : 0
+            }" class="view-details-card">View Details
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="..." fill="#fff"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>`;
   }
-
+  
   private standAlonerPopup(markerData: any): string {
     return `  
       <div class="info-window">
@@ -186,12 +207,10 @@ export class MapsService {
               markerData.BuildingSizeSf
             )} SF
           </p>
-         ${
-           `<p class="address-content">Lease price: ${this.getStandAloneLeasePrice(
-                markerData.ForLeasePrice , markerData.BuildingSizeSf
-              )}</p>`
-            
-        }
+         ${`<p class="address-content">Lease price: ${this.getStandAloneLeasePrice(
+           markerData.ForLeasePrice,
+           markerData.BuildingSizeSf
+         )}</p>`}
           <div class="buttons-wrap">
             <button id="view-details-${
               markerData.Id
@@ -211,7 +230,6 @@ export class MapsService {
   private currentlyOpenInfoWindow: any | null = null;
 
   createCustomMarker(map: any, markerData: BuyboxCategory): void {
-
     if (!this.markerMap[markerData.id]) {
       this.markerMap[markerData.id] = [];
     }
@@ -440,76 +458,97 @@ export class MapsService {
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
     };
-  
+
     // Helper function to format lease price (add $ and /month if needed)
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
       return !isNaN(priceNumber) ? Math.floor(priceNumber) : price; // Remove decimal points and return the whole number
     };
-  
+
     // Extract the places array
     const places = shoppingCenter?.ShoppingCenter?.Places || [];
-  
+
     // Collect building sizes if available
     const buildingSizes = places
       .map((place: any) => place.BuildingSizeSf)
-      .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
-  
+      .filter(
+        (size: any) => size !== undefined && size !== null && !isNaN(size)
+      );
+
     if (buildingSizes.length === 0) {
       // Handle case for a single shopping center without valid places
       const singleSize = shoppingCenter.BuildingSizeSf;
       if (singleSize) {
         const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
-        return `Unit Size: ${formatNumberWithCommas(singleSize)} SF` + 
-               (leasePrice && leasePrice !== 'On Request' ? `<br>Lease Price: $${formatNumberWithCommas(leasePrice)}/month` : '');
+        return (
+          `Unit Size: ${formatNumberWithCommas(singleSize)} SF` +
+          (leasePrice && leasePrice !== 'On Request'
+            ? `<br>Lease Price: $${formatNumberWithCommas(leasePrice)}/month`
+            : '')
+        );
       }
       return null;
     }
-  
+
     // Calculate min and max size
     const minSize = Math.min(...buildingSizes);
     const maxSize = Math.max(...buildingSizes);
-  
+
     // Find corresponding lease prices for min and max sizes
-    const minPrice = places.find((place: any) => place.BuildingSizeSf === minSize)?.ForLeasePrice || 'On Request';
-    const maxPrice = places.find((place: any) => place.BuildingSizeSf === maxSize)?.ForLeasePrice || 'On Request';
-  
+    const minPrice =
+      places.find((place: any) => place.BuildingSizeSf === minSize)
+        ?.ForLeasePrice || 'On Request';
+    const maxPrice =
+      places.find((place: any) => place.BuildingSizeSf === maxSize)
+        ?.ForLeasePrice || 'On Request';
+
     // Format unit sizes and lease price
-    const sizeRange = minSize === maxSize
-      ? `${formatNumberWithCommas(minSize)} SF`
-      : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(maxSize)} SF`;
-  
+    const sizeRange =
+      minSize === maxSize
+        ? `${formatNumberWithCommas(minSize)} SF`
+        : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(
+            maxSize
+          )} SF`;
+
     // Ensure only one price is shown if one is "On Request"
-    const formattedMinPrice = minPrice === 'On Request' ? 'On Request' : formatLeasePrice(minPrice);
-    const formattedMaxPrice = maxPrice === 'On Request' ? 'On Request' : formatLeasePrice(maxPrice);
-  
+    const formattedMinPrice =
+      minPrice === 'On Request' ? 'On Request' : formatLeasePrice(minPrice);
+    const formattedMaxPrice =
+      maxPrice === 'On Request' ? 'On Request' : formatLeasePrice(maxPrice);
+
     // Calculate the price by multiplying unit size by the lease price, divided by 12 (annual cost)
-    const leasePrice = (formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request') 
-      ? 'On Request' 
-      : (formattedMinPrice === 'On Request' ? formattedMaxPrice : formattedMinPrice);
-  
+    const leasePrice =
+      formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request'
+        ? 'On Request'
+        : formattedMinPrice === 'On Request'
+        ? formattedMaxPrice
+        : formattedMinPrice;
+
     // Calculate and return the result without decimals, formatted as "$X/month"
-    const resultLeasePrice = leasePrice !== 'On Request' 
-      ? `$${formatNumberWithCommas(Math.floor(parseFloat(leasePrice) * minSize / 12))}/month` 
-      : 'On Request';
-  
+    const resultLeasePrice =
+      leasePrice !== 'On Request'
+        ? `$${formatNumberWithCommas(
+            Math.floor((parseFloat(leasePrice) * minSize) / 12)
+          )}/month`
+        : 'On Request';
+
     return `Unit Size: ${sizeRange}<br>Lease Price: ${resultLeasePrice}`;
   }
-  
+
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
     // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
     const size = Number(buildingSizeSf);
-  
+
     // Check if the values are valid numbers
     if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
       // Calculate the lease price per month
-      const calculatedPrice = Math.floor(leasePrice * size / 12);
-      
+      const calculatedPrice = Math.floor((leasePrice * size) / 12);
+
       // Format the calculated price with commas
       const formattedPrice = calculatedPrice.toLocaleString();
-      
+
       // Return the formatted result
       return `$${formattedPrice}/month`;
     } else {
@@ -517,7 +556,6 @@ export class MapsService {
       return 'On Request';
     }
   }
-  
 
   formatNumberWithCommas(value: number | null): string {
     if (value !== null) {

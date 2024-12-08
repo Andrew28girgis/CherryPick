@@ -114,7 +114,8 @@ export class LandingComponent {
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
 
-        if (this.ShoppingCenter) {
+        if (this.ShoppingCenter) { 
+
           if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
@@ -131,6 +132,9 @@ export class LandingComponent {
             : this.viewOnStreet();
         } else {
           this.StandAlonePlace = this.CustomPlace.Place[0];
+          this.placeImage = this.StandAlonePlace.Images?.split(',').map(
+            (link) => link.trim()
+          );
           this.StandAlonePlace.StreetViewURL
             ? this.changeStreetView(this.StandAlonePlace)
             : this.viewOnStreet();
@@ -252,39 +256,61 @@ export class LandingComponent {
           return number.toLocaleString();
         };
   
+        // Function to append info icon with the original price in $X/sqft/Year format
+        const appendInfoIcon = (
+          calculatedPrice: string,
+          originalPrice: any
+        ) => {
+          if (calculatedPrice === 'On Request') {
+            return calculatedPrice; // Return as is, without adding an icon
+          }
+          const formattedOriginalPrice = `$${parseFloat(
+            originalPrice
+          ).toLocaleString()}/sqft/Year`;
+          return `${calculatedPrice} <i class="fa-solid fa-info" title="${formattedOriginalPrice}"></i>`;
+        };
+  
         // If minSize and maxSize are the same
         if (minSize === maxSize) {
           const formattedPrice = minPrice
-            ? calculateLeasePrice(minPrice, minSize)
+            ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
             : 'On Request';
-          return `Unit Size: ${formatNumberWithCommas(minSize)} SF<br>Lease Price: ${formattedPrice}`;
+          return `Unit Size: ${formatNumberWithCommas(
+            minSize
+          )} SF<br>Lease Price: ${formattedPrice}`;
         }
   
         // Range of sizes
-        let sizeRange = `Unit Size: ${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(maxSize)} SF`;
+        let sizeRange = `Unit Size: ${formatNumberWithCommas(
+          minSize
+        )} SF - ${formatNumberWithCommas(maxSize)} SF`;
   
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
-          ? calculateLeasePrice(minPrice, minSize)
+          ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
           : 'On Request';
         const maxLeasePrice = maxPrice
-          ? calculateLeasePrice(maxPrice, maxSize)
+          ? appendInfoIcon(calculateLeasePrice(maxPrice, maxSize), maxPrice)
           : 'On Request';
   
-        // Handle cases where one price is "On Request"
-        if (minLeasePrice === 'On Request' || maxLeasePrice === 'On Request') {
-          sizeRange += `<br>Lease Price: ${minLeasePrice} - ${maxLeasePrice}`;
+        // Handle display of prices
+        let leasePriceRange: string;
+        if (minLeasePrice === 'On Request' && maxLeasePrice === 'On Request') {
+          leasePriceRange = 'On Request';
+        } else if (minLeasePrice === 'On Request') {
+          leasePriceRange = `${maxLeasePrice}`;
+        } else if (maxLeasePrice === 'On Request') {
+          leasePriceRange = `${minLeasePrice}`;
         } else {
-          sizeRange += `<br>Lease Price: ${minLeasePrice} - ${maxLeasePrice}`;
+          leasePriceRange = `${minLeasePrice} - ${maxLeasePrice}`;
         }
   
-        return sizeRange;
+        return `  ${sizeRange}<br>Lease Price: ${leasePriceRange}`;
       }
     }
     return null;
   }
   
-
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
       Name: 'GetNearBuyRetails',
@@ -636,8 +662,9 @@ export class LandingComponent {
         Math.floor((StandALone.ForLeasePrice * StandALone.BuildingSizeSf) / 12)
       ) +
       '/month';
+
     return leasePrice;
-  } 
+  }
 
   getAddressContentStandAlone(markerData: any): string {
     return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -874,4 +901,9 @@ export class LandingComponent {
       },
     });
   }
+
+  goBack(){
+    this.router.navigate(['/home', this.BuyBoxId]);
+  }
+
 }

@@ -86,7 +86,7 @@
           <table class="procpect-table">
             <thead class="procpect-table-head">
               <tr>
-                <th>Name</th>
+                <th>Name </th>
                 <th>Manager By</th>
                 <th style="width: 250px;">Unit Size & Lease Price</th> 
                 <ng-container
@@ -160,7 +160,9 @@
                   </td>
                   <td
                     [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
-                  ></td>
+                    
+                  > 
+                </td>
                   <ng-container
                     *ngFor="
                       let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces;
@@ -280,7 +282,7 @@
                   </td>
                   <td>
                     Unit Size: {{ place.BuildingSizeSf | number }} SF <br />
-                    <span> Lease price: {{getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)}}</span>
+                    <span [innerHTML]=" getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)"> </span>
                   </td>
                   <ng-container *ngIf="place.Place">
                     <ng-container
@@ -576,9 +578,8 @@
                   <div
                     class="col-6 d-flex flex-column p-0"
                     *ngIf="place.ForLeasePrice"
-                  >
-                    <p class="spec-head">Lease Price</p>
-                    <p class="spec-content">{{getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)}}</p>
+                  > 
+                    <p class="spec-content" [innerHTML]="getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)"> </p>
                   </div>
                 </div>
 
