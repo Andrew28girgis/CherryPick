@@ -641,13 +641,14 @@ export class LandingComponent {
   }
 
   getLeasePriceStandAlone(StandALone: any) {
-    let leasePrice  =  (
-      '$' +this.formatNumberWithCommas(Math.floor((StandALone.ForLeasePrice * StandALone.BuildingSizeSf) / 12))
-       +
-      '/month'
-    );
-    return leasePrice
-  }
+    let leasePrice =
+      '$' +
+      this.formatNumberWithCommas(
+        Math.floor((StandALone.ForLeasePrice * StandALone.BuildingSizeSf) / 12)
+      ) +
+      '/month';
+    return leasePrice;
+  } 
 
   getAddressContentStandAlone(markerData: any): string {
     return `<svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

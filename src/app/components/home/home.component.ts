@@ -570,6 +570,7 @@ export class HomeComponent implements OnInit {
       places.find((place: any) => place.BuildingSizeSf === maxSize)
         ?.ForLeasePrice || 'On Request';
 
+        
     // Format unit sizes and lease price
     const sizeRange =
       minSize === maxSize
