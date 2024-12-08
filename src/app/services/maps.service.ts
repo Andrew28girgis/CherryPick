@@ -86,20 +86,28 @@ export class MapsService {
 
     const viewDetailsButton = document.getElementById(
       `view-details-${placeId}`
-    );
+    );     
+    console.log(`mmm`);
+    
+    console.log(markerData);
+    
+    
+    let shoppingCenterId =  markerData.CenterName ? markerData.Id : 0;
+
 
     if (viewDetailsButton) {
+
       viewDetailsButton.addEventListener('click', () => {
-        this.handleViewDetailsClick(placeId);
+        this.handleViewDetailsClick(placeId ,shoppingCenterId);
       });
     } else {
       console.log(`Button for marker ${placeId} not found`);
     }
   }
 
-  private handleViewDetailsClick(markerId: any): void {
+  private handleViewDetailsClick(markerId: any, shoppingCenterId?: number): void {
     console.log(`View details for marker ID: ${markerId}`);
-    this.router.navigate(['/landing', markerId, 0, this.storedBuyBoxId]);
+    this.router.navigate(['/landing', markerId, shoppingCenterId, this.storedBuyBoxId]);
   }
 
   private assignToMarkerArray(marker: any, type: string): void {

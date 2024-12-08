@@ -378,8 +378,6 @@ export class HomeComponent implements OnInit {
   }
 
   goToPlace(place: any) {
-    console.log(`from routing`);
-    console.log(place);
 
     if (place.CenterAddress) {
       this.router.navigate([
@@ -521,12 +519,10 @@ export class HomeComponent implements OnInit {
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
-    // Helper function to format numbers with commas
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
     };
 
-    // Helper function to format lease price (add $ and /month if needed)
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
@@ -570,7 +566,6 @@ export class HomeComponent implements OnInit {
       places.find((place: any) => place.BuildingSizeSf === maxSize)
         ?.ForLeasePrice || 'On Request';
 
-        
     // Format unit sizes and lease price
     const sizeRange =
       minSize === maxSize
