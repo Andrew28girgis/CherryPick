@@ -130,14 +130,14 @@ export class MapsService {
   }
 
   private shoopingCenterPopup(markerData: any): string {
-    const managerOrgs = markerData.ShoppingCenter.ManagerOrganization
-      .map((org: any) => `
+    const managerOrgs = markerData.ShoppingCenter.ManagerOrganization.map(
+      (org: any) => `
         <div class="contact-container">
           <p class="text-bold m-0">${org.Firstname} ${org.LastName}</p> 
         </div>
-      `)
-      .join('');
-  
+      `
+    ).join('');
+
     return `
       <div class="info-window">
         <div class="main-img">
@@ -151,24 +151,30 @@ export class MapsService {
               : ''
           }
           <p class="address-content"> 
-            ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}
+            ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+      markerData.CenterState
+    }
           </p>
           ${
             this.getShoppingCenterUnitSize(markerData)
-              ? `<p class="address-content">${this.getShoppingCenterUnitSize(markerData)}</p>`
+              ? `<p class="address-content">${this.getShoppingCenterUnitSize(
+                  markerData
+                )}</p>`
               : ''
           }
           <div class="d-flex align-items-center">
          <b>   ${
-              markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''
-            } </b>
+           markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''
+         } </b>
             <img
               class="logo ms-2"
               style="width:40px"
               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${
                 markerData.ShoppingCenter.ManagerOrganization[0]?.ID || ''
               }"
-              alt="${markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''}"
+              alt="${
+                markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''
+              }"
             />
           </div>
           <div class="py-2">
@@ -188,7 +194,7 @@ export class MapsService {
         </div>
       </div>`;
   }
-  
+
   private standAlonerPopup(markerData: any): string {
     return `  
       <div class="info-window">

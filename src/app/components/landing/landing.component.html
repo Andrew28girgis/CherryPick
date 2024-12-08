@@ -450,7 +450,9 @@
                         place.ForLeasePrice
                           ? getLeasePriceStandAlone(place)
                           : "On Request"
-                      }}</span>
+                      }} 
+                       <i class="fa-solid fa-info" title="${{place.ForLeasePrice}}/sqft/Year"></i>
+                      </span>
                     </td>
                     <td>{{ place.BuildingSizeSf | number }} SF</td>
                     <td>{{ place.SecondaryType }}</td>
