@@ -429,7 +429,7 @@
                     </td>
                     <td>
                       <span *ngIf="place.ForLeasePrice != 'undefined'">{{
-                        place.ForLeasePrice
+                        place.ForLeasePrice ? place.ForLeasePrice : 'On Request'
                       }}</span>
                     </td>
                     <td>{{ place.BuildingSizeSf | number }} SF</td>
