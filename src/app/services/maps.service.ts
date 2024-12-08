@@ -33,8 +33,6 @@ export class MapsService {
     marker.markerData = markerData;
     marker.type = type;
     this.markers.push(marker);
-    console.log(`from create`);
-    console.log(this.markers);
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
     this.addMarkerEventListeners(marker, infoWindow);
@@ -210,8 +208,6 @@ export class MapsService {
   private currentlyOpenInfoWindow: any | null = null;
 
   createCustomMarker(map: any, markerData: BuyboxCategory): void {
-    console.log(`custom marker created`);
-    console.log(markerData);
 
     if (!this.markerMap[markerData.id]) {
       this.markerMap[markerData.id] = [];
@@ -356,8 +352,6 @@ export class MapsService {
         m.markerData.Latitude === +Latitude &&
         m.markerData.Longitude === +Longitude
     );
-    console.log(Latitude, Longitude);
-    console.log(markerIndex);
 
     // Create the InfoWindow for the existing marker
     const infoWindow = new google.maps.InfoWindow({
