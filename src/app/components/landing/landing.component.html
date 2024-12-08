@@ -85,7 +85,7 @@
                 Unit Size: {{ StandAlonePlace?.BuildingSizeSf | number }} SF
               </p>
               <p *ngIf="StandAlonePlace?.ForLeasePrice" class="info-value p-0">
-                Lease Price : {{getLeasePriceStandAlone(StandAlonePlace)}}
+                Lease Price : {{ getLeasePriceStandAlone(StandAlonePlace)  }}
               </p>
 
               <ng-container *ngFor="let near of NearByType">

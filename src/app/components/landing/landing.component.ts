@@ -641,7 +641,12 @@ export class LandingComponent {
   }
 
   getLeasePriceStandAlone(StandALone: any) {
-    return '$'+(StandALone.ForLeasePrice * StandALone.BuildingSizeSf) / 12+'/month';
+    let leasePrice  =  (
+      '$' +this.formatNumberWithCommas(Math.floor((StandALone.ForLeasePrice * StandALone.BuildingSizeSf) / 12))
+       +
+      '/month'
+    );
+    return leasePrice
   }
 
   getAddressContentStandAlone(markerData: any): string {
