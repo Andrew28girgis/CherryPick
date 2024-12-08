@@ -204,22 +204,23 @@ export class LandingComponent {
   getMinMaxUnitSize() {
     if (this.CustomPlace.OtherPlaces) {
       const places = this.CustomPlace.OtherPlaces;
-  
+
       if (places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
-          .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
-  
+          .filter(
+            (size: any) => size !== undefined && size !== null && !isNaN(size)
+          );
+
         if (buildingSizes.length === 0) {
           return null;
         }
-  
+
         let minSize = Math.min(...buildingSizes);
         let maxSize = Math.max(...buildingSizes);
-  
         let minPrice = null;
         let maxPrice = null;
-  
+
         // Find lease prices corresponding to min and max sizes
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
@@ -229,51 +230,71 @@ export class LandingComponent {
             maxPrice = place.ForLeasePrice;
           }
         }
-  
+
         // Helper function to format lease price after calculating
         const calculateLeasePrice = (price: any, size: any) => {
-          if (price === 'On Request' || price === 0 || size === 0 || size === 'On Request') {
+          if (
+            price === 'On Request' ||
+            price === 0 ||
+            size === 0 ||
+            size === 'On Request'
+          ) {
             return 'On Request';
           }
           const pricePerSF = parseFloat(price);
           const unitSize = parseFloat(size);
           if (!isNaN(pricePerSF) && !isNaN(unitSize)) {
             // Calculate the monthly lease price based on the formula (Lease Price * Unit Size / 12)
-            const monthlyLease = Math.floor(pricePerSF * unitSize / 12);
+            const monthlyLease = Math.floor((pricePerSF * unitSize) / 12);
             return `$${monthlyLease.toLocaleString()}/month`;
           }
           return 'On Request'; // In case the price or size is invalid
         };
-  
+
         // If minSize and maxSize are the same
         if (minSize === maxSize) {
-          const formattedPrice = minPrice ? calculateLeasePrice(minPrice, minSize) : '';
-          return `Unit Size: ${this.formatNumberWithCommas(minSize)} SF${formattedPrice ? `<br>Lease Price: ${formattedPrice}` : ''}`;
+          const formattedPrice = minPrice
+            ? calculateLeasePrice(minPrice, minSize)
+            : '';
+          return `Unit Size: ${this.formatNumberWithCommas(minSize)} SF${
+            formattedPrice ? `<br>Lease Price: ${formattedPrice}` : ''
+          }`;
         }
-  
+
         // Range of sizes
-        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(minSize)} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
-  
+        let sizeRange = `Unit Size: ${this.formatNumberWithCommas(
+          minSize
+        )} SF - ${this.formatNumberWithCommas(maxSize)} SF`;
+
         // If minPrice and maxPrice are the same or "On Request", display that
-        if (minPrice === maxPrice || minPrice === 'On Request' || maxPrice === 'On Request') {
-          sizeRange += `<br>Lease Price: ${calculateLeasePrice(minPrice || maxPrice, minSize)}`;
+        if (
+          minPrice === maxPrice ||
+          minPrice === 'On Request' ||
+          maxPrice === 'On Request'
+        ) {
+          sizeRange += `<br>Lease Price: ${calculateLeasePrice(
+            minPrice || maxPrice,
+            minSize
+          )}`;
         } else if (minPrice || maxPrice) {
           const minLeasePrice = calculateLeasePrice(minPrice, minSize);
           const maxLeasePrice = calculateLeasePrice(maxPrice, maxSize);
-  
-          if (minLeasePrice === 'On Request' || maxLeasePrice === 'On Request') {
+
+          if (
+            minLeasePrice === 'On Request' ||
+            maxLeasePrice === 'On Request'
+          ) {
             sizeRange += `<br>Lease Price: On Request`;
           } else {
             sizeRange += `<br>Lease Price: ${minLeasePrice} - ${maxLeasePrice}`;
           }
         }
-  
+
         return sizeRange;
       }
     }
     return null;
   }
-  
 
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
@@ -288,8 +309,6 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.NearByType = data.json;
-        console.log(`nearBy`);
-        console.log(this.NearByType);
         this.getAllMarker();
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -619,6 +638,10 @@ export class LandingComponent {
       return sizeRange;
     }
     return null;
+  }
+
+  getLeasePriceStandAlone(StandALone: any) {
+    return '$'+(StandALone.ForLeasePrice * StandALone.BuildingSizeSf) / 12+'/month';
   }
 
   getAddressContentStandAlone(markerData: any): string {
