@@ -85,7 +85,7 @@
                 Unit Size: {{ StandAlonePlace?.BuildingSizeSf | number }} SF
               </p>
               <p *ngIf="StandAlonePlace?.ForLeasePrice" class="info-value p-0">
-                Lease Price : {{ getLeasePriceStandAlone(StandAlonePlace)  }}
+                Lease Price : {{ getLeasePriceStandAlone(StandAlonePlace) }}
               </p>
 
               <ng-container *ngFor="let near of NearByType">
@@ -161,7 +161,8 @@
                 <div class="d-flex flex-column">
                   <ng-container *ngFor="let Manager of OrgManager">
                     <p class="m-0">
-                      {{ Manager.firstname | titlecase }} {{ Manager.lastname | titlecase}}
+                      {{ Manager.firstname | titlecase }}
+                      {{ Manager.lastname | titlecase }}
                     </p>
                   </ng-container>
                 </div>
@@ -429,7 +430,10 @@
                     </td>
                     <td>
                       <span *ngIf="place.ForLeasePrice != 'undefined'">{{
-                        place.ForLeasePrice ?  getLeasePriceStandAlone(place): 'On Request'}}</span>
+                        place.ForLeasePrice
+                          ? getLeasePriceStandAlone(place)
+                          : "On Request"
+                      }}</span>
                     </td>
                     <td>{{ place.BuildingSizeSf | number }} SF</td>
                     <td>
@@ -749,7 +753,10 @@
       </div>
 
       <div class="row p-0">
-        <div class="col-md-4" *ngIf="placeCotenants && placeCotenants.length>0">
+        <div
+          class="col-md-4"
+          *ngIf="placeCotenants && placeCotenants.length > 0"
+        >
           <div class="main-section" style="height: 408px; overflow-y: auto">
             <p class="main-name">Co-Tenants</p>
             <ul>
@@ -762,7 +769,7 @@
                       }}"
                       alt=""
                       style="height: 35px; margin-right: 10px; width: 35px"
-                      />
+                    />
                   </div>
 
                   <div class="d-flex flex-column">

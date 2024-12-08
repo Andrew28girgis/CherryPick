@@ -123,9 +123,13 @@
                     <ng-container
                       *ngIf="shoppingCenter.ShoppingCenter.ManagerOrganization"
                     >
-                      <div>
-                        <div>
-                          <img
+                      <div> 
+                        <div class="d-flex">
+                          {{
+                            shoppingCenter.ShoppingCenter.ManagerOrganization[0]
+                              .Name 
+                          }}
+                            <img
                             class="logo"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                               shoppingCenter.ShoppingCenter
@@ -138,12 +142,6 @@
                             alt=""
                           />
                         </div>
-                        <div>
-                          {{
-                            shoppingCenter.ShoppingCenter.ManagerOrganization[0]
-                              .Name 
-                          }}
-                        </div>
                         <br />
                         <ng-container
                           *ngFor="
@@ -151,8 +149,10 @@
                               .ManagerOrganization
                           "
                         >
-                          <div>
-                            <b> {{ org.Firstname| titlecase }} {{ org.LastName | titlecase}} </b>
+                          <div class="contact-container">
+                            <p class="text-bold m-0"> {{ org.Firstname| titlecase }} {{ org.LastName | titlecase}} </p>
+                            <p class="m-0">{{org.CellPhone}}</p>
+                            <p class="m-0">{{org.Email}}</p> 
                           </div>
                         </ng-container>
                       </div>

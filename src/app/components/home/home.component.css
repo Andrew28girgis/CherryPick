@@ -312,3 +312,9 @@
    max-width: 40px;
    margin: 0 10px;
 }
+.contact-container{
+  background: #E4E7E9;
+  padding: 6px;
+  border-radius: 12px;
+  margin: 10px 0;
+}

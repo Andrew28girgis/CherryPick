@@ -26,6 +26,8 @@ export interface Center {
     Name: string
     Firstname:string
     LastName :string
+    CellPhone : number
+    Email: string
   }
   
   export interface Place {
