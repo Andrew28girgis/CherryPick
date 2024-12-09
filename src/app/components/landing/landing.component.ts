@@ -114,8 +114,7 @@ export class LandingComponent {
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
 
-        if (this.ShoppingCenter) { 
-
+        if (this.ShoppingCenter) {
           if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
@@ -208,26 +207,23 @@ export class LandingComponent {
   getMinMaxUnitSize() {
     if (this.CustomPlace.OtherPlaces) {
       const places = this.CustomPlace.OtherPlaces;
-  
+
       if (places.length > 0) {
-        // Extract valid building sizes
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
           .filter(
             (size: any) => size !== undefined && size !== null && !isNaN(size)
           );
-  
+
         if (buildingSizes.length === 0) {
           return null;
         }
-  
+
         const minSize = Math.min(...buildingSizes);
         const maxSize = Math.max(...buildingSizes);
-  
         let minPrice = null;
         let maxPrice = null;
-  
-        // Find lease prices corresponding to min and max sizes
+
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
             minPrice = place.ForLeasePrice;
@@ -236,8 +232,7 @@ export class LandingComponent {
             maxPrice = place.ForLeasePrice;
           }
         }
-  
-        // Helper function to calculate lease price
+
         const calculateLeasePrice = (price: any, size: any) => {
           if (price === 'On Request' || price === 0 || size === 0) {
             return 'On Request';
@@ -250,26 +245,24 @@ export class LandingComponent {
           }
           return 'On Request';
         };
-  
-        // Format unit size with commas
+
         const formatNumberWithCommas = (number: number) => {
           return number.toLocaleString();
         };
-  
-        // Function to append info icon with the original price in $X/sqft/Year format
+
         const appendInfoIcon = (
           calculatedPrice: string,
           originalPrice: any
         ) => {
           if (calculatedPrice === 'On Request') {
-            return calculatedPrice; // Return as is, without adding an icon
+            return calculatedPrice;
           }
           const formattedOriginalPrice = `$${parseFloat(
             originalPrice
           ).toLocaleString()}/sqft/Year`;
           return `${calculatedPrice} <i class="fa-solid fa-info" title="${formattedOriginalPrice}"></i>`;
         };
-  
+
         // If minSize and maxSize are the same
         if (minSize === maxSize) {
           const formattedPrice = minPrice
@@ -279,12 +272,12 @@ export class LandingComponent {
             minSize
           )} SF<br>Lease Price: ${formattedPrice}`;
         }
-  
+
         // Range of sizes
         let sizeRange = `Unit Size: ${formatNumberWithCommas(
           minSize
         )} SF - ${formatNumberWithCommas(maxSize)} SF`;
-  
+
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
           ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
@@ -292,7 +285,7 @@ export class LandingComponent {
         const maxLeasePrice = maxPrice
           ? appendInfoIcon(calculateLeasePrice(maxPrice, maxSize), maxPrice)
           : 'On Request';
-  
+
         // Handle display of prices
         let leasePriceRange: string;
         if (minLeasePrice === 'On Request' && maxLeasePrice === 'On Request') {
@@ -304,13 +297,13 @@ export class LandingComponent {
         } else {
           leasePriceRange = `${minLeasePrice} - ${maxLeasePrice}`;
         }
-  
+
         return `  ${sizeRange}<br>Lease Price: ${leasePriceRange}`;
       }
     }
     return null;
   }
-  
+
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
       Name: 'GetNearBuyRetails',
@@ -902,8 +895,7 @@ export class LandingComponent {
     });
   }
 
-  goBack(){
+  goBack() {
     this.router.navigate(['/home', this.BuyBoxId]);
   }
-
 }

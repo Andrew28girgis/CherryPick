@@ -328,16 +328,23 @@ export class HomeComponent implements OnInit {
       this.cardsSideList = allProperties.filter(
         (property) =>
           visibleCoords.has(`${property.Latitude},${property.Longitude}`) ||
-          this.isWithinBounds(property, bounds)
+         this.isWithinBounds(property, bounds) 
       );
     });
   }
 
   private isWithinBounds(property: any, bounds: any): boolean {
-    const lat = property.Latitude;
-    const lng = property.Longitude;
+    const lat = parseFloat(property.Latitude);
+    const lng = parseFloat(property.Longitude);
+  
+    if (isNaN(lat) || isNaN(lng)) {
+      console.warn("Invalid Latitude or Longitude for property:", property);
+      return false;
+    }
+  
     return bounds.contains({ lat, lng });
   }
+  
 
   onMouseEnter(place: any): void {
     const { Latitude, Longitude } = place;
