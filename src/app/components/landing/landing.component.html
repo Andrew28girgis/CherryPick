@@ -90,17 +90,15 @@
                 Unit Size: {{ StandAlonePlace?.BuildingSizeSf | number }} SF
               </p>
               <p class="info-value p-0">
-                Lease Price :
+                <b>Lease Price: </b> <br>
                 {{
                   StandAlonePlace?.ForLeasePrice
                     ? getLeasePriceStandAlone(StandAlonePlace)
                     : "On Request"
                 }}
                 <span *ngIf="StandAlonePlace?.ForLeasePrice"
-                  ><i
-                    class="fa-solid fa-info"
-                    title="${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year"
-                  ></i
+                  ><p 
+                  >${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</p
                 ></span>
               </p>
 
@@ -452,11 +450,9 @@
                             ? getLeasePriceStandAlone(place)
                             : "On Request"
                         }}
-                        <i
-                          *ngIf="place.ForLeasePrice"
-                          class="fa-solid fa-info"
-                          title="${{ place.ForLeasePrice }}/sqft/Year"
-                        ></i>
+                        <p
+                          *ngIf="place.ForLeasePrice" 
+                        >${{ place.ForLeasePrice }}/sqft/Year</p>
                       </span>
                     </td>
                     <td *ngIf="place.BuildingSizeSf">

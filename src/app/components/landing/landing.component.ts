@@ -237,23 +237,23 @@ export class LandingComponent {
   getMinMaxUnitSize() {
     if (this.CustomPlace.OtherPlaces) {
       const places = this.CustomPlace.OtherPlaces;
-
+  
       if (places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
           .filter(
             (size: any) => size !== undefined && size !== null && !isNaN(size)
           );
-
+  
         if (buildingSizes.length === 0) {
           return null;
         }
-
+  
         const minSize = Math.min(...buildingSizes);
         const maxSize = Math.max(...buildingSizes);
         let minPrice = null;
         let maxPrice = null;
-
+  
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
             minPrice = place.ForLeasePrice;
@@ -262,7 +262,7 @@ export class LandingComponent {
             maxPrice = place.ForLeasePrice;
           }
         }
-
+  
         const calculateLeasePrice = (price: any, size: any) => {
           if (price === 'On Request' || price === 0 || size === 0) {
             return 'On Request';
@@ -275,24 +275,29 @@ export class LandingComponent {
           }
           return 'On Request';
         };
-
+  
         const formatNumberWithCommas = (number: number) => {
           return number.toLocaleString();
         };
-
-        const appendInfoIcon = (
-          calculatedPrice: string,
-          originalPrice: any
-        ) => {
+  
+        const appendInfoIcon = (calculatedPrice: string, originalPrice: any) => {
           if (calculatedPrice === 'On Request') {
             return calculatedPrice;
           }
-          const formattedOriginalPrice = `$${parseFloat(
-            originalPrice
-          ).toLocaleString()}/sqft/Year`;
-          return `${calculatedPrice} <i class="fa-solid fa-info" title="${formattedOriginalPrice}"></i>`;
+  
+          const formattedOriginalPrice = `$${parseFloat(originalPrice).toLocaleString()}/sqft/Year`;
+  
+          // Adjust inline styles as desired
+          return `
+            <div style="display:inline-block; text-align:left; line-height:1.2; vertical-align:middle;">
+              <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
+              <div style="font-size:12px; color:#666; margin-top:4px;">
+                ${calculatedPrice}  
+              </div>
+            </div>
+          `;
         };
-
+  
         // If minSize and maxSize are the same
         if (minSize === maxSize) {
           const formattedPrice = minPrice
@@ -300,14 +305,14 @@ export class LandingComponent {
             : 'On Request';
           return `Unit Size: ${formatNumberWithCommas(
             minSize
-          )} SF<br>Lease Price: ${formattedPrice}`;
+          )} SF<br> <b>Lease Price:</b> ${formattedPrice}`;
         }
-
+  
         // Range of sizes
         let sizeRange = `Unit Size: ${formatNumberWithCommas(
           minSize
         )} SF - ${formatNumberWithCommas(maxSize)} SF`;
-
+  
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
           ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
@@ -315,7 +320,7 @@ export class LandingComponent {
         const maxLeasePrice = maxPrice
           ? appendInfoIcon(calculateLeasePrice(maxPrice, maxSize), maxPrice)
           : 'On Request';
-
+  
         // Handle display of prices
         let leasePriceRange: string;
         if (minLeasePrice === 'On Request' && maxLeasePrice === 'On Request') {
@@ -327,12 +332,13 @@ export class LandingComponent {
         } else {
           leasePriceRange = `${minLeasePrice} - ${maxLeasePrice}`;
         }
-
-        return `  ${sizeRange}<br>Lease Price: ${leasePriceRange}`;
+  
+        return `${sizeRange}<br><b>Lease Price:</b> ${leasePriceRange}`;
       }
     }
     return null;
   }
+  
 
   GetPlaceNearBy(placeId: number): void {
     const body: any = {

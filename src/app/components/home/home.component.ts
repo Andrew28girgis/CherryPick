@@ -524,33 +524,36 @@ export class HomeComponent implements OnInit {
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
     };
-
+  
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
       return !isNaN(priceNumber) ? Math.floor(priceNumber) : price; // Remove decimal points and return the whole number
     };
-
+  
     const appendInfoIcon = (calculatedPrice: string, originalPrice: any) => {
       if (calculatedPrice === 'On Request') {
         return calculatedPrice; // No icon for "On Request"
       }
-      const formattedOriginalPrice = `$${parseFloat(
-        originalPrice
-      ).toLocaleString()}/sqft/Year`;
-      return `${calculatedPrice} <i class="fa-solid fa-info" style="padding:10px" title="${formattedOriginalPrice}"></i>`;
+      const formattedOriginalPrice = `$${parseFloat(originalPrice).toLocaleString()}/sqft/Year`;
+  
+      // Inline styles can be adjusted as desired
+      return `
+        <div style="display:inline-block; text-align:left; line-height:1.2;">
+          <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
+          <div style="font-size:12px; color:#666; margin-top:4px;">${calculatedPrice}</div>
+        </div>
+      `;
     };
-
+  
     // Extract the places array
     const places = shoppingCenter?.ShoppingCenter?.Places || [];
-
+  
     // Collect building sizes if available
     const buildingSizes = places
       .map((place: any) => place.BuildingSizeSf)
-      .filter(
-        (size: any) => size !== undefined && size !== null && !isNaN(size)
-      );
-
+      .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
+  
     if (buildingSizes.length === 0) {
       // Handle case for a single shopping center without valid places
       const singleSize = shoppingCenter.BuildingSizeSf;
@@ -571,19 +574,19 @@ export class HomeComponent implements OnInit {
       }
       return null;
     }
-
+  
     // Calculate min and max size
     const minSize = Math.min(...buildingSizes);
     const maxSize = Math.max(...buildingSizes);
-
+  
     // Find corresponding lease prices for min and max sizes
     const minPrice =
-      places.find((place: any) => place.BuildingSizeSf === minSize)
-        ?.ForLeasePrice || 'On Request';
+      places.find((place: any) => place.BuildingSizeSf === minSize)?.ForLeasePrice ||
+      'On Request';
     const maxPrice =
-      places.find((place: any) => place.BuildingSizeSf === maxSize)
-        ?.ForLeasePrice || 'On Request';
-
+      places.find((place: any) => place.BuildingSizeSf === maxSize)?.ForLeasePrice ||
+      'On Request';
+  
     // Format unit sizes
     const sizeRange =
       minSize === maxSize
@@ -591,7 +594,7 @@ export class HomeComponent implements OnInit {
         : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(
             maxSize
           )} SF`;
-
+  
     // Ensure only one price is shown if one is "On Request"
     const formattedMinPrice =
       minPrice === 'On Request'
@@ -602,6 +605,7 @@ export class HomeComponent implements OnInit {
             )}/month`,
             minPrice
           );
+  
     const formattedMaxPrice =
       maxPrice === 'On Request'
         ? 'On Request'
@@ -611,51 +615,61 @@ export class HomeComponent implements OnInit {
             )}/month`,
             maxPrice
           );
-
+  
     // Handle the lease price display logic
     let leasePriceRange;
-    if (
-      formattedMinPrice === 'On Request' &&
-      formattedMaxPrice === 'On Request'
-    ) {
+    if (formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request') {
       leasePriceRange = 'On Request';
     } else if (formattedMinPrice === 'On Request') {
       leasePriceRange = formattedMaxPrice;
     } else if (formattedMaxPrice === 'On Request') {
       leasePriceRange = formattedMinPrice;
     } else if (formattedMinPrice === formattedMaxPrice) {
-      // Check for duplicate prices and return only one
+      // If both are the same price, just show one
       leasePriceRange = formattedMinPrice;
     } else {
       leasePriceRange = `${formattedMinPrice} - ${formattedMaxPrice}`;
     }
-
-    return `Unit Size: ${sizeRange}<br>Lease price: ${leasePriceRange}`;
+  
+    return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
+  
 
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
     // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
     const size = Number(buildingSizeSf);
-
+  
     // Check if the values are valid numbers
     if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
       // Calculate the lease price per month
       const calculatedPrice = Math.floor((leasePrice * size) / 12);
-
+  
       // Format the calculated price with commas
       const formattedPrice = calculatedPrice.toLocaleString();
-
+  
       // Format the original price in $X/sqft/Year format
       const formattedOriginalPrice = `$${leasePrice.toLocaleString()}/sqft/Year`;
-
-      // Return the formatted result with an info icon
-      return `Lease price: $${formattedPrice}/month <i class="fa-solid fa-info" style="color: blue;" title="Original Price: ${formattedOriginalPrice}"></i>`;
+  
+      // Return formatted result in a stacked layout with an info icon
+      return `
+        <div style="display:inline-block; text-align:left; line-height:1.2; vertical-align:middle;">
+        <b>Lease price:</b>
+          <div style="font-size:14px; font-weight:600; color:#333;">
+            ${formattedOriginalPrice}
+          </div>
+          <div style="font-size:12px; color:#666; margin-top:4px;">
+            $${formattedPrice}/month 
+           
+          </div>
+        </div>
+      `;
     } else {
       // If invalid values are provided, return 'On Request'
-      return 'On Request';
+      return '<b>Lease price:</b>: On Request';
     }
   }
+  
 
   getNeareastCategoryName(categoryId: number) {
     // console.log(categoryId);
