@@ -87,11 +87,7 @@ export class MapsService {
 
     const viewDetailsButton = document.getElementById(
       `view-details-${placeId}`
-    );
-
-    console.log(`ssxx`);
-    console.log(markerData.Id);
-
+    ); 
     let shoppingCenterId = markerData.CenterName ? markerData.Id : 0;
 
     if (viewDetailsButton) {
@@ -380,11 +376,7 @@ export class MapsService {
       });
   }
 
-  private updateMarker(map: any, place: any, isEntering: boolean): void {
-    console.log(`pp`);
-
-    console.log(place);
-
+  private updateMarker(map: any, place: any, isEntering: boolean): void { 
     const { Latitude, Longitude, infoWindowContent } = place;
 
     if (!map || !this.markers) return;

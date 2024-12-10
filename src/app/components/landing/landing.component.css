@@ -1117,3 +1117,45 @@ li {
   font-weight: bold;
   font-size: 14px;
 }
+
+
+/* Applies to the select element */
+.styled-select {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  width: 100%;
+  appearance: none; /* Removes the default arrow in some browsers */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="10" height="7"><polygon points="0,0 10,0 5,7" fill="%23333"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 7px;
+  cursor: pointer;
+}
+
+/* Adjust hover and focus states */
+.styled-select:hover {
+  border-color: #999;
+}
+
+.styled-select:focus {
+  outline: none;
+  border-color: #007BFF;
+  box-shadow: 0 0 4px rgba(0,123,255,0.25);
+}
+
+/* Option styling */
+.styled-select option {
+  padding: 8px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* Optional: Darker background for hovered options in some browsers */
+.styled-select option:hover {
+  background-color: #f4f4f4;
+}
