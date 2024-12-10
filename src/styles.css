@@ -699,7 +699,9 @@ body{
 }
 
 .fa-info{
-  color: #0039ff !important;
-  padding: 10px;
-  font-size: 19px;
+  color: #000 !important;
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #000;
+  border-radius: 26px;
 }

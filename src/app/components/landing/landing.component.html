@@ -446,17 +446,24 @@
                       {{ place.ListingType }}
                     </td>
                     <td>
-                      <span *ngIf="place.ForLeasePrice != 'undefined'">{{
-                        place.ForLeasePrice
-                          ? getLeasePriceStandAlone(place)
-                          : "On Request"
-                      }} 
-                       <i *ngIf="place.ForLeasePrice" class="fa-solid fa-info" title="${{place.ForLeasePrice}}/sqft/Year"></i>
+                      <span *ngIf="place.ForLeasePrice != 'undefined'"
+                        >{{
+                          place.ForLeasePrice
+                            ? getLeasePriceStandAlone(place)
+                            : "On Request"
+                        }}
+                        <i
+                          *ngIf="place.ForLeasePrice"
+                          class="fa-solid fa-info"
+                          title="${{ place.ForLeasePrice }}/sqft/Year"
+                        ></i>
                       </span>
                     </td>
-                    <td>{{ place.BuildingSizeSf | number }} SF</td>
+                    <td *ngIf="place.BuildingSizeSf">
+                      {{ place.BuildingSizeSf | number }} SF
+                    </td>
+                    <td *ngIf="!place.BuildingSizeSf">On Request</td>
                     <td>{{ place.SecondaryType }}</td>
-
                     <td>
                       <div
                         style="cursor: pointer"
@@ -797,14 +804,52 @@
                     <span *ngIf="place.Name" class="nearset"
                       >{{ place.Name }}
                     </span>
-                    <span *ngIf="place.ActivityType" class="activityType">{{
-                      place.ActivityType | titlecase
+                    <span *ngIf="place.SubCategory" class="activityType">{{
+                      place.SubCategory[0].OrganizationCategory | titlecase
                     }}</span>
                   </div>
                 </div>
 
                 <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
-                  >{{ place.Branches[0].Distance.toFixed(2) }} MI</span
+                  >{{
+                    place.SubCategory[0].Branches[0].Distance.toFixed(2)
+                  }}
+                  MI</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="col-md-4"
+          *ngIf="
+            OrganizationBranches && OrganizationBranches.Branches.length > 0
+          "
+        >
+          <div class="main-section" style="height: 408px; overflow-y: auto">
+            <p class="main-name">Branches</p>
+            <ul>
+              <li *ngFor="let place of OrganizationBranches.Branches">
+                <div class="d-flex align-items-center">
+                  <div>
+                    <img
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        OrganizationBranches.Id
+                      }}"
+                      alt=""
+                      style="height: 35px; margin-right: 10px; width: 35px"
+                    />
+                  </div>
+
+                  <div class="d-flex flex-column">
+                    <span *ngIf="OrganizationBranches.Name" class="nearset"
+                      >{{ OrganizationBranches.Name }}
+                    </span>
+                  </div>
+                </div>
+
+                <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
+                  >{{ place.Distance.toFixed(2) }} MI</span
                 >
               </li>
             </ul>

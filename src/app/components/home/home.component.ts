@@ -85,6 +85,7 @@ export class HomeComponent implements OnInit {
   ) {
     this.currentView = localStorage.getItem('currentView') || 2;
     this.savedMapView = localStorage.getItem('mapView');
+    this.markerService.clearMarkers();
   }
 
   ngOnInit(): void {
@@ -328,7 +329,7 @@ export class HomeComponent implements OnInit {
       this.cardsSideList = allProperties.filter(
         (property) =>
           visibleCoords.has(`${property.Latitude},${property.Longitude}`) ||
-         this.isWithinBounds(property, bounds) 
+          this.isWithinBounds(property, bounds)
       );
     });
   }
@@ -336,15 +337,14 @@ export class HomeComponent implements OnInit {
   private isWithinBounds(property: any, bounds: any): boolean {
     const lat = parseFloat(property.Latitude);
     const lng = parseFloat(property.Longitude);
-  
+
     if (isNaN(lat) || isNaN(lng)) {
-      console.warn("Invalid Latitude or Longitude for property:", property);
+      console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
-  
+
     return bounds.contains({ lat, lng });
   }
-  
 
   onMouseEnter(place: any): void {
     const { Latitude, Longitude } = place;
@@ -358,7 +358,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onMouseHighlight(place: any) { 
+  onMouseHighlight(place: any) {
     this.markerService.onMouseEnter(this.map, place);
   }
 
@@ -383,7 +383,6 @@ export class HomeComponent implements OnInit {
   }
 
   goToPlace(place: any) {
-
     if (place.CenterAddress) {
       this.router.navigate([
         '/landing',
@@ -403,7 +402,7 @@ export class HomeComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-    this.General.modalObject = modalObject; 
+    this.General.modalObject = modalObject;
 
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
@@ -525,31 +524,33 @@ export class HomeComponent implements OnInit {
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
     };
-  
+
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
       return !isNaN(priceNumber) ? Math.floor(priceNumber) : price; // Remove decimal points and return the whole number
     };
-  
+
     const appendInfoIcon = (calculatedPrice: string, originalPrice: any) => {
       if (calculatedPrice === 'On Request') {
         return calculatedPrice; // No icon for "On Request"
       }
-      const formattedOriginalPrice = `$${parseFloat(originalPrice).toLocaleString()}/sqft/Year`;
+      const formattedOriginalPrice = `$${parseFloat(
+        originalPrice
+      ).toLocaleString()}/sqft/Year`;
       return `${calculatedPrice} <i class="fa-solid fa-info" style="padding:10px" title="${formattedOriginalPrice}"></i>`;
     };
-  
+
     // Extract the places array
     const places = shoppingCenter?.ShoppingCenter?.Places || [];
-  
+
     // Collect building sizes if available
     const buildingSizes = places
       .map((place: any) => place.BuildingSizeSf)
       .filter(
         (size: any) => size !== undefined && size !== null && !isNaN(size)
       );
-  
+
     if (buildingSizes.length === 0) {
       // Handle case for a single shopping center without valid places
       const singleSize = shoppingCenter.BuildingSizeSf;
@@ -564,15 +565,17 @@ export class HomeComponent implements OnInit {
                 shoppingCenter.ForLeasePrice
               )
             : 'On Request';
-        return `Unit Size: ${formatNumberWithCommas(singleSize)} SF<br>Lease price: ${resultPrice}`;
+        return `Unit Size: ${formatNumberWithCommas(
+          singleSize
+        )} SF<br>Lease price: ${resultPrice}`;
       }
       return null;
     }
-  
+
     // Calculate min and max size
     const minSize = Math.min(...buildingSizes);
     const maxSize = Math.max(...buildingSizes);
-  
+
     // Find corresponding lease prices for min and max sizes
     const minPrice =
       places.find((place: any) => place.BuildingSizeSf === minSize)
@@ -580,7 +583,7 @@ export class HomeComponent implements OnInit {
     const maxPrice =
       places.find((place: any) => place.BuildingSizeSf === maxSize)
         ?.ForLeasePrice || 'On Request';
-  
+
     // Format unit sizes
     const sizeRange =
       minSize === maxSize
@@ -588,7 +591,7 @@ export class HomeComponent implements OnInit {
         : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(
             maxSize
           )} SF`;
-  
+
     // Ensure only one price is shown if one is "On Request"
     const formattedMinPrice =
       minPrice === 'On Request'
@@ -608,10 +611,13 @@ export class HomeComponent implements OnInit {
             )}/month`,
             maxPrice
           );
-  
+
     // Handle the lease price display logic
     let leasePriceRange;
-    if (formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request') {
+    if (
+      formattedMinPrice === 'On Request' &&
+      formattedMaxPrice === 'On Request'
+    ) {
       leasePriceRange = 'On Request';
     } else if (formattedMinPrice === 'On Request') {
       leasePriceRange = formattedMaxPrice;
@@ -623,27 +629,26 @@ export class HomeComponent implements OnInit {
     } else {
       leasePriceRange = `${formattedMinPrice} - ${formattedMaxPrice}`;
     }
-  
+
     return `Unit Size: ${sizeRange}<br>Lease price: ${leasePriceRange}`;
   }
-  
-  
+
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
     // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
     const size = Number(buildingSizeSf);
-  
+
     // Check if the values are valid numbers
     if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
       // Calculate the lease price per month
       const calculatedPrice = Math.floor((leasePrice * size) / 12);
-  
+
       // Format the calculated price with commas
       const formattedPrice = calculatedPrice.toLocaleString();
-  
+
       // Format the original price in $X/sqft/Year format
       const formattedOriginalPrice = `$${leasePrice.toLocaleString()}/sqft/Year`;
-  
+
       // Return the formatted result with an info icon
       return `Lease price: $${formattedPrice}/month <i class="fa-solid fa-info" style="color: blue;" title="Original Price: ${formattedOriginalPrice}"></i>`;
     } else {
@@ -651,7 +656,7 @@ export class HomeComponent implements OnInit {
       return 'On Request';
     }
   }
-  
+
   getNeareastCategoryName(categoryId: number) {
     // console.log(categoryId);
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);

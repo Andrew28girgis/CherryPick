@@ -15,6 +15,8 @@ import { NearByType } from 'src/models/nearBy';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PlaceCotenants } from 'src/models/PlaceCo';
 import { OrgManager } from 'src/models/organization';
+import { BuyboxOrg } from 'src/models/buyboxOrg';
+import { OrgBranch } from 'src/models/branches';
 
 @Component({
   selector: 'app-landing',
@@ -50,6 +52,9 @@ export class LandingComponent {
   OrgManager: OrgManager[] = [];
   ShoppingCenterId!: number;
   StandAlonePlace!: OtherPlace | null | undefined;
+  BuyboxOrg!:BuyboxOrg;
+  OrganizationBranches!:OrgBranch;
+    
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -74,6 +79,7 @@ export class LandingComponent {
       this.BuyBoxId = params.buyboxid;
       this.PlaceId = params.id;
       this.ShoppingCenterId = params.shoppiongCenterId;
+      this.GetBuyBoxOrganizationDetails(this.ShoppingCenterId  ,this.PlaceId , this.BuyBoxId)
       if (this.ShoppingCenterId != 0) {
         this.GetPlaceDetails(0, this.ShoppingCenterId);
       } else {
@@ -161,6 +167,30 @@ export class LandingComponent {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+
+
+
+  GetBuyBoxOrganizationDetails (Shoppingcenterid : number , PlaceId:number , Buyboxid:number): void {
+    const body: any = {
+      Name: 'GetBuyBoxOrganizationDetails',
+      Params: {
+        shoppingcenterid : +Shoppingcenterid , 
+        placeId : +PlaceId ,
+        buyboxid: +Buyboxid, 
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => { 
+        this.OrganizationBranches = data.json[0] ;
+        console.log(`bbb`);
+        console.log(this.OrganizationBranches);
+        
+        
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
 
   GetShoppingCenterManager(ShoppingCenterId: number): void {
     const body: any = {
@@ -345,6 +375,11 @@ export class LandingComponent {
           type.Branches.slice(0, 5).forEach((place) => {
             this.createMarker(map, place, type.Name);
           });
+        });
+      }
+      if (this.OrganizationBranches?.Branches && this.OrganizationBranches.Branches.length > 0) {
+        this.OrganizationBranches.Branches.forEach((Branch) => { 
+            this.createMarker(map, Branch, 'Branch');
         });
       }
     } finally {
