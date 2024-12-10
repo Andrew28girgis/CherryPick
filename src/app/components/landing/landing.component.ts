@@ -163,6 +163,13 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.placeCotenants = data.json;
+        this.placeCotenants.forEach(co=>{
+          co.SubCategory.forEach(c=>{
+            console.log(`6666`);
+            
+            console.log(c.OrganizationCategory);
+          })
+        })
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });

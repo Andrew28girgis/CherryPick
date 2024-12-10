@@ -86,9 +86,9 @@
           <table class="procpect-table">
             <thead class="procpect-table-head">
               <tr>
-                <th>Name </th>
+                <th>Name</th>
                 <th>Manager By</th>
-                <th style="width: 250px;">Unit Size & Lease Price</th> 
+                <th style="width: 250px">Unit Size & Lease Price</th>
                 <ng-container
                   *ngFor="
                     let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
@@ -123,13 +123,13 @@
                     <ng-container
                       *ngIf="shoppingCenter.ShoppingCenter.ManagerOrganization"
                     >
-                      <div> 
+                      <div>
                         <div class="d-flex">
                           {{
                             shoppingCenter.ShoppingCenter.ManagerOrganization[0]
-                              .Name 
+                              .Name
                           }}
-                            <img
+                          <img
                             class="logo"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                               shoppingCenter.ShoppingCenter
@@ -150,9 +150,12 @@
                           "
                         >
                           <div class="contact-container">
-                            <p class="text-bold m-0"> {{ org.Firstname| titlecase }} {{ org.LastName | titlecase}} </p>
-                            <p class="m-0">{{org.CellPhone}}</p>
-                            <p class="m-0">{{org.Email}}</p> 
+                            <p class="text-bold m-0">
+                              {{ org.Firstname | titlecase }}
+                              {{ org.LastName | titlecase }}
+                            </p>
+                            <p class="m-0">{{ org.CellPhone }}</p>
+                            <p class="m-0">{{ org.Email }}</p>
                           </div>
                         </ng-container>
                       </div>
@@ -160,9 +163,7 @@
                   </td>
                   <td
                     [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
-                    
-                  > 
-                </td>
+                  ></td>
                   <ng-container
                     *ngFor="
                       let item of shoppingCenter.ShoppingCenter.BuyBoxPlaces;
@@ -282,7 +283,15 @@
                   </td>
                   <td>
                     Unit Size: {{ place.BuildingSizeSf | number }} SF <br />
-                    <span [innerHTML]=" getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)"> </span>
+                    <span
+                      [innerHTML]="
+                        getStandAloneLeasePrice(
+                          place.ForLeasePrice,
+                          place.BuildingSizeSf
+                        )
+                      "
+                    >
+                    </span>
                   </td>
                   <ng-container *ngIf="place.Place">
                     <ng-container
@@ -454,7 +463,11 @@
                           let org of shopping.ShoppingCenter.ManagerOrganization
                         "
                       >
-                        <b> {{ org.Firstname  | titlecase }} {{ org.LastName | titlecase }} </b> <br>
+                        <b>
+                          {{ org.Firstname | titlecase }}
+                          {{ org.LastName | titlecase }}
+                        </b>
+                        <br />
                       </ng-container>
                     </p>
                   </div>
@@ -578,8 +591,16 @@
                   <div
                     class="col-6 d-flex flex-column p-0"
                     *ngIf="place.ForLeasePrice"
-                  > 
-                    <p class="spec-content" [innerHTML]="getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)"> </p>
+                  >
+                    <p
+                      class="spec-content"
+                      [innerHTML]="
+                        getStandAloneLeasePrice(
+                          place.ForLeasePrice,
+                          place.BuildingSizeSf
+                        )
+                      "
+                    ></p>
                   </div>
                 </div>
 
@@ -723,12 +744,22 @@
                   ></p>
                 </div>
                 <div *ngIf="!place.CenterAddress">
-                  <p
-                    style="font-size: 15px; font-weight: 500; color: #565656" 
-                  > <span> Unit Size: {{place.BuildingSizeSf | number}}  SF</span></p>
-                  <p
-                    style="font-size: 15px; font-weight: 500; color: #565656" 
-                  > <span> Lease price: {{getStandAloneLeasePrice(place.ForLeasePrice , place.BuildingSizeSf)}}</span></p>
+                  <p style="font-size: 15px; font-weight: 500; color: #565656">
+                    <span>
+                      Unit Size: {{ place.BuildingSizeSf | number }} SF</span
+                    >
+                  </p>
+                  <p style="font-size: 15px; font-weight: 500; color: #565656">
+                    <span>
+                      Lease price:
+                      {{
+                        getStandAloneLeasePrice(
+                          place.ForLeasePrice,
+                          place.BuildingSizeSf
+                        )
+                      }}</span
+                    >
+                  </p>
                 </div>
 
                 <div
