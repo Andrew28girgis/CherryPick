@@ -317,6 +317,7 @@ export class ScoutlynImages {
 export class adminLogin {
   Email!: string;
   Password!: string;
+  contactToken!:any;
 }
 
 export class Filter {

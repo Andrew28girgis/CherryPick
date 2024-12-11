@@ -16,6 +16,9 @@ export class LoginComponent {
   wrongPassword = false;
   General!: General;
   logoUrl: string = '';
+  t:any;
+  r:any ;
+  private afterLoginRedirect: string | null = null;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -30,23 +33,41 @@ export class LoginComponent {
   ngOnInit(): void {
     this.General = new General();
     this.adminLogin = new adminLogin();
-    this.logoUrl = this.configService.getLogoUrl();
+    this.logoUrl = this.configService.getLogoUrl(); 
+    this.activatedRoute.queryParamMap.subscribe(params => {
+      this.t = params.get('t');
+      this.r = params.get('r');  
+      if (this.t && this.r) { 
+          this.onSubmit()
+      }
+    });
   }
 
-  onSubmit() {
-    this.spinner.show();
-    this.PlacesService.loginUser(this.adminLogin).subscribe(
-      (data: any) => {
-        localStorage.setItem('token', data.token);
-        this.navigateToHome();
-        this.spinner.hide();
-      },
-      (error) => {
-        this.handleError(error.error);
-        this.spinner.hide();
-      }
-    );
+onSubmit() {
+  this.spinner.show();
+  if (this.t) {
+    this.adminLogin.contactToken = this.t;
   }
+  
+  this.PlacesService.loginUser(this.adminLogin).subscribe(
+    (data: any) => {
+      localStorage.setItem('token', data.token);
+      this.spinner.hide();
+
+      if (this.r) {
+        // If 'r' is something like '/landing/723223/165/84'
+        this.router.navigateByUrl(this.r);
+      } else {
+        this.navigateToHome();
+      }
+    },
+    (error) => {
+      this.handleError(error.error);
+      this.spinner.hide();
+    }
+  );
+}
+
 
   private navigateToHome() {
     this.router.navigate(['/summary']);
