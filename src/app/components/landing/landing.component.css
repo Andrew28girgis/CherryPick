@@ -1092,7 +1092,7 @@ li {
 }
 
 .tab-headers li {
-  padding: 10px 20px;
+  padding: 10px ;
   cursor: pointer;
   text-align: center;
 }
