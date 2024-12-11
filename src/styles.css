@@ -459,6 +459,9 @@ body{
   .gm-style .gm-style-iw-c { 
     max-width: 100vw !important; 
   }
+  .modal-dialog  {
+    margin: 40px !important;
+  }
 }
 
 .gm-style-iw-chr {
@@ -705,3 +708,4 @@ body{
   border: 1px solid #000;
   border-radius: 26px;
 }
+
