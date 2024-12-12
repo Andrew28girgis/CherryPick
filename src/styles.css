@@ -709,3 +709,9 @@ body{
   border-radius: 26px;
 }
 
+.carousel-control-prev {
+  left: -121px !important;
+}
+.carousel-control-next {
+  right: -121px !important;
+}

@@ -1167,7 +1167,7 @@ li {
     rgba(0, 0, 0, 0.8) 80%,
     rgba(0, 0, 0, 1) 100%
   );
-  
+
   position: absolute;
   bottom: 0;
   top: 0;
@@ -1252,11 +1252,10 @@ li {
   margin: 0;
 }
 
-
 .view-gallery {
-  background-color: transparent;     /* A plain white background */
-  color: #fff;                /* Black text for contrast */
-  border: 1px solid #ccc;     /* A light gray border */
+  background-color: transparent; /* A plain white background */
+  color: #fff; /* Black text for contrast */
+  border: 1px solid #ccc; /* A light gray border */
   border-radius: 4px;
   padding: 10px 20px;
   cursor: pointer;
@@ -1264,24 +1263,25 @@ li {
   transition: filter 0.3s ease; /* Smooth transition for blur */
 }
 
- 
-.carousel-wrapper {
-  position: relative; /* Allows absolute positioning of indicators */
+.modal-body {
+  position: relative; /* ensures the absolute positioning references this area */
 }
 
+/* Target the indicators inside your carousel */
 .custom-carousel .carousel-indicators {
   position: absolute;
-  bottom: -40px; /* Adjust this value as desired */
+  /* Move the indicators outside the modal body area */
+  bottom: -50px; /* adjust as needed; negative moves them below the modal content area */
   left: 50%;
   transform: translateX(-50%);
-  margin: 0;
-  padding: 0;
 }
 
+/* Style the indicators black */
 .custom-carousel .carousel-indicators li {
-  background-color: #000; /* Adjust indicator color */
+  background-color: black;
 }
 
 .custom-carousel .carousel-indicators .active {
-  background-color: #fff; /* Active indicator color */
+  background-color: #333; /* slightly different shade or keep it black as well */
 }
+
