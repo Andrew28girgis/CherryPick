@@ -524,14 +524,14 @@
       </section>
     </div>
 
-    <div class="main-section">
+    <div class="main-section"          *ngIf="
+    ShoppingCenter &&
+    CustomPlace.OtherPlaces &&
+    CustomPlace.OtherPlaces.length > 0
+  "> 
       <section id="hero">
         <ng-container
-          *ngIf="
-            ShoppingCenter &&
-            CustomPlace.OtherPlaces &&
-            CustomPlace.OtherPlaces.length > 0
-          "
+ 
         >
           <div class="col-md-12">
             <h2 class="main-heading">Units Inside</h2>
@@ -601,13 +601,13 @@
       </section>
     </div>
 
-    <div class="main-section">
+    <div class="main-section"     *ngIf="
+    StandAlonePlace?.SiteSelectionReason ||
+    ShoppingCenter?.SiteSelectionReason
+  ">
       <section id="hero">
         <ng-container
-          *ngIf="
-            StandAlonePlace?.SiteSelectionReason ||
-            ShoppingCenter?.SiteSelectionReason
-          "
+      
         >
           <div class="col-md-12"> 
               <div>

@@ -1294,6 +1294,7 @@ li {
 .modal-backdrop.show {
   background-color: transparent !important;
 }
+
 .p-img{
   max-height: 400px;
 }
