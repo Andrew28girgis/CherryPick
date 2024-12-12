@@ -386,8 +386,9 @@ export class HomeComponent implements OnInit {
     if (place.CenterAddress) {
       this.router.navigate([
         '/landing',
-        place.ShoppingCenter.Places ? place.ShoppingCenter.Places[0].Id : 0,
+        place.ShoppingCenter?.Places ? place.ShoppingCenter.Places[0].Id : 0,
         place.Id,
+        
         this.BuyBoxId,
       ]);
     } else {

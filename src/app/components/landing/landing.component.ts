@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { Fbo, General, nearsetPlaces, Property } from 'src/models/domain';
@@ -198,17 +198,12 @@ export class LandingComponent {
     const value = event.target.value;
   
     if (value === 'All') {
-      // If "All" is selected, show all cotenants
-      this.filterCotenats = this.placeCotenants;
+       this.filterCotenats = this.placeCotenants;
     } else {
-      // Filter the cotenants by the selected OrganizationCategory
-      this.filterCotenats = this.placeCotenants.filter(co => {
-        // Check if the first subcategory matches the chosen category
-        return co.SubCategory[0].OrganizationCategory === value;
+       this.filterCotenats = this.placeCotenants.filter(co => {
+         return co.SubCategory[0].OrganizationCategory === value;
       });
-    }
-  
-    console.log('Filtered Cotenants:', this.filterCotenats);
+    } 
   }
   
 
@@ -227,7 +222,10 @@ export class LandingComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.OrganizationBranches = data.json[0];
+        if(data.json){
+          this.OrganizationBranches = data.json[0];
+
+        }
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -278,23 +276,23 @@ export class LandingComponent {
   getMinMaxUnitSize() {
     if (this.CustomPlace.OtherPlaces) {
       const places = this.CustomPlace.OtherPlaces;
-
+  
       if (places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
           .filter(
             (size: any) => size !== undefined && size !== null && !isNaN(size)
           );
-
+  
         if (buildingSizes.length === 0) {
           return null;
         }
-
+  
         const minSize = Math.min(...buildingSizes);
         const maxSize = Math.max(...buildingSizes);
         let minPrice = null;
         let maxPrice = null;
-
+  
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
             minPrice = place.ForLeasePrice;
@@ -303,88 +301,85 @@ export class LandingComponent {
             maxPrice = place.ForLeasePrice;
           }
         }
-
+  
         const calculateLeasePrice = (price: any, size: any) => {
           if (price === 'On Request' || price === 0 || size === 0) {
-            return 'On Request';
+            return '<b>On Request</b>';
           }
           const pricePerSF = parseFloat(price);
           const unitSize = parseFloat(size);
           if (!isNaN(pricePerSF) && !isNaN(unitSize)) {
             const monthlyLease = Math.floor((pricePerSF * unitSize) / 12);
-            return `$${monthlyLease.toLocaleString()}/month`;
+            return `<b>$${monthlyLease.toLocaleString()}/month</b>`;
           }
-          return 'On Request';
+          return '<b>On Request</b>';
         };
-
+  
         const formatNumberWithCommas = (number: number) => {
-          return number.toLocaleString();
+          return `<b>${number.toLocaleString()}</b>`;
         };
-
+  
         const appendInfoIcon = (
           calculatedPrice: string,
           originalPrice: any
         ) => {
-          if (calculatedPrice === 'On Request') {
+          if (calculatedPrice === '<b>On Request</b>') {
             return calculatedPrice;
           }
-
-          const formattedOriginalPrice = `$${parseFloat(
+  
+          const formattedOriginalPrice = `<b>$${parseFloat(
             originalPrice
-          ).toLocaleString()}/sqft/Year`;
-
+          ).toLocaleString()}</b>/sqft/Year`;
+  
           // Adjust inline styles as desired
           return `
-            <div style="display:inline-block; text-align:left; line-height:1.2; vertical-align:middle;">
-              <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
-              <div style="font-size:12px; color:#666; margin-top:4px;">
-                ${calculatedPrice}  
-              </div>
+            <div style="display:flex;">
+              <p>${formattedOriginalPrice} ,   ${calculatedPrice}  </p> 
             </div>
           `;
         };
-
+  
         // If minSize and maxSize are the same
         if (minSize === maxSize) {
           const formattedPrice = minPrice
             ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
-            : 'On Request';
-          return `Unit Size: ${formatNumberWithCommas(
+            : '<b>On Request</b>';
+          return `Unit Size:  <p class="px-2"> ${formatNumberWithCommas(
             minSize
-          )} SF<br> <b>Lease Price:</b> ${formattedPrice}`;
+          )} SF </p>  <p class="px-2"> Lease Price: ${formattedPrice} </p>`;
         }
+  
 
-        // Range of sizes
-        let sizeRange = `Unit Size: ${formatNumberWithCommas(
+        let sizeRange = `Unit Size :  <p class="px-2"> ${formatNumberWithCommas(
           minSize
-        )} SF - ${formatNumberWithCommas(maxSize)} SF`;
-
+        )}</p> SF - <p class="px-2">${formatNumberWithCommas(maxSize)} SF </p>`;
+  
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
           ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
-          : 'On Request';
+          : '<b>On Request</b>';
         const maxLeasePrice = maxPrice
           ? appendInfoIcon(calculateLeasePrice(maxPrice, maxSize), maxPrice)
-          : 'On Request';
-
+          : '<b>On Request</b>';
+  
         // Handle display of prices
         let leasePriceRange: string;
-        if (minLeasePrice === 'On Request' && maxLeasePrice === 'On Request') {
-          leasePriceRange = 'On Request';
-        } else if (minLeasePrice === 'On Request') {
+        if (minLeasePrice === '<b>On Request</b>' && maxLeasePrice === '<b>On Request</b>') {
+          leasePriceRange = '<b>On Request</b>';
+        } else if (minLeasePrice === '<b>On Request</b>') {
           leasePriceRange = `${maxLeasePrice}`;
-        } else if (maxLeasePrice === 'On Request') {
+        } else if (maxLeasePrice === '<b>On Request</b>') {
           leasePriceRange = `${minLeasePrice}`;
         } else {
           leasePriceRange = `${minLeasePrice} - ${maxLeasePrice}`;
         }
-
-        return `${sizeRange}<br><b>Lease Price:</b> ${leasePriceRange}`;
+  
+        return `${sizeRange} Lease Price: ${leasePriceRange}`;
       }
     }
     return null;
   }
-
+  
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
       Name: 'GetNearBuyRetails',
@@ -853,13 +848,13 @@ export class LandingComponent {
   getStreetHeading(): number {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Heading
-      : +this.CustomPlace.OtherPlaces[0].Heading;
+      : +this.CustomPlace?.OtherPlaces?.[0]?.Heading;
   }
 
   getStreetPitch(): number {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Pitch
-      : +this.CustomPlace.OtherPlaces[0].Pitch;
+      : +this.CustomPlace?.OtherPlaces?.[0]?.Pitch;
   }
 
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
@@ -885,10 +880,14 @@ export class LandingComponent {
     });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
+  @ViewChild('galleryModal', { static: true }) galleryModal: any;
+
+  openGallery() {
+    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
+  }
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
-
     if (!lat || !lng) {
       console.error('Latitude and longitude are required to display the map.');
       return;
@@ -987,4 +986,29 @@ export class LandingComponent {
   goBack() {
     this.router.navigate(['/home', this.BuyBoxId]);
   }
+
+  getBackgroundImage(): string {
+    const imageUrl = this.ShoppingCenter?.MainImage || this.StandAlonePlace?.MainImage;
+    return imageUrl ? `url(${imageUrl}) no-repeat center center / cover` : '';
+  }
+  
+  getAddress(): string {
+    const addressParts = this.ShoppingCenter
+      ? [
+          this.ShoppingCenter.CenterAddress,
+          this.ShoppingCenter.CenterCity,
+          this.ShoppingCenter.CenterState
+        ]
+      : this.StandAlonePlace
+      ? [
+          this.StandAlonePlace.Address,
+          this.StandAlonePlace.City,
+          this.StandAlonePlace.State
+        ]
+      : null;
+  
+    return addressParts ? addressParts.filter(Boolean).join(', ') : 'Address not available';
+  }
+  
+  
 }
