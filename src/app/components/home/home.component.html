@@ -750,14 +750,12 @@
                     >
                   </p>
                   <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    <span>
-                      Lease price:
-                      {{
-                        getStandAloneLeasePrice(
-                          place.ForLeasePrice,
-                          place.BuildingSizeSf
-                        )
-                      }}</span
+                    <span [innerHTML]="
+                      getStandAloneLeasePrice(
+                        place.ForLeasePrice,
+                        place.BuildingSizeSf
+                      )
+                    "></span
                     >
                   </p>
                 </div>

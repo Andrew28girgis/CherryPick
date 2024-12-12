@@ -667,7 +667,7 @@ export class HomeComponent implements OnInit {
       `;
     } else {
       // If invalid values are provided, return 'On Request'
-      return '<b>Lease price:</b>: On Request';
+      return '<b>Lease price:</b> On Request';
     }
   }
   
