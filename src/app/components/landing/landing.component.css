@@ -1285,3 +1285,15 @@ li {
   background-color: #333; /* slightly different shade or keep it black as well */
 }
 
+.modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.modal-backdrop.show {
+  background-color: transparent !important;
+}
+.p-img{
+  max-height: 400px;
+}
