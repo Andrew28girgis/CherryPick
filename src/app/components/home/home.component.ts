@@ -303,7 +303,7 @@ export class HomeComponent implements OnInit {
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
       this.shoppingCenters?.forEach((center) => {
-        if (center.ShoppingCenter.Places) {
+        if (center.ShoppingCenter?.Places) {
           const firstPlace = center.ShoppingCenter?.Places[0];
           center.Latitude = firstPlace.Latitude;
           center.Longitude = firstPlace.Longitude;

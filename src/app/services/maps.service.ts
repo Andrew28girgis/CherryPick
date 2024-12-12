@@ -129,7 +129,7 @@ export class MapsService {
   }
 
   private shoopingCenterPopup(markerData: any): string {
-    const managerOrgs = markerData.ShoppingCenter.ManagerOrganization?.map(
+    const managerOrgs = markerData.ShoppingCenter?.ManagerOrganization?.map(
       (org: any) => {
         if (org.Firstname && org.LastName) {
           return `
@@ -166,8 +166,8 @@ export class MapsService {
           }
   
           ${
-            markerData.ShoppingCenter.ManagerOrganization &&
-            markerData.ShoppingCenter.ManagerOrganization[0]
+            markerData.ShoppingCenter?.ManagerOrganization &&
+            markerData.ShoppingCenter?.ManagerOrganization[0]
               ? `
                 <div class="d-flex align-items-center">
                   <b>${markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''}</b>
@@ -188,7 +188,7 @@ export class MapsService {
   
           <div class="buttons-wrap">
             <button id="view-details-${
-              markerData.ShoppingCenter.Places
+              markerData.ShoppingCenter?.Places
                 ? markerData.ShoppingCenter.Places[0]?.Id
                 : markerData.Id
             }" class="view-details-card">View Details
