@@ -134,7 +134,10 @@ export class MapsService {
         if (org.Firstname && org.LastName) {
           return `
             <div class="contact-container">
-              <p class="text-bold m-0">${org.Firstname} ${org.LastName}</p>
+              <p class="text-bold m-0">
+                ${org.Firstname.charAt(0).toUpperCase() + org.Firstname.slice(1)} 
+                ${org.LastName.charAt(0).toUpperCase() + org.LastName.slice(1)}
+              </p>
             </div>
           `;
         } else {
