@@ -44,6 +44,10 @@ export class KanbanComponent {
   currentOpenedStage!: KanbanStage;
   allOrganizations: Organization[] = [];
   organizationContact: OrganizationContact[] = [];
+  keyword: string = '';
+  searchResults: any[] = [];
+  filteredNames: any[] = [];
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -122,7 +126,7 @@ export class KanbanComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.stackHolders = data.json;
+        this.stackHolders = data.json;  
       },
     });
   }
@@ -443,9 +447,7 @@ export class KanbanComponent {
     });
   }
 
-  keyword: string = '';
-  searchResults: any[] = [];
-  filteredNames: any[] = [];
+
 
   onSearchInput(): void {
     if (this.keyword.trim() === '') {
@@ -488,4 +490,5 @@ export class KanbanComponent {
       },
     });
   }
+
 }
