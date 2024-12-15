@@ -8,10 +8,10 @@ import { UserBuyboxComponent } from './components/user-buybox/user-buybox.compon
 import { AuthGuardService } from './services/auth-guard.service';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
- import { KanbanComponent } from './components/kanban/kanban.component';
+import { KanbanComponent } from './components/kanban/kanban.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent},
+  { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'BuyboxType',
@@ -31,17 +31,25 @@ const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuardService],
   },
-  { path: 'landing/:id/:shoppiongCenterId/:buyboxid', component: LandingComponent },
+  {
+    path: 'landing/:id/:shoppiongCenterId/:buyboxid',
+    component: LandingComponent,
+  },
   { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
-  { path: 'Kanban', component: KanbanComponent },
+  {
+    path: 'Kanban',
+    component: KanbanComponent,
+    canActivate: [AuthGuardService],
+  },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'enabled' 
-    })
-  ],  exports: [RouterModule],
+      scrollPositionRestoration: 'enabled',
+    }),
+  ],
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}
