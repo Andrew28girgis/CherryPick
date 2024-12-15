@@ -247,13 +247,13 @@
                 {{ StandAlonePlace?.BuildingSizeSf | number }} SF
               </p>
               <p class="info-value px-3">
-                <b  >Lease Price: </b>
+                <b>Lease Price: </b>
                 {{
                   StandAlonePlace?.ForLeasePrice
                     ? getLeasePriceStandAlone(StandAlonePlace)
                     : " On Request"
                 }}
-                <span class="px-3" *ngIf="StandAlonePlace?.ForLeasePrice"
+                <span class="px-2" *ngIf="StandAlonePlace?.ForLeasePrice"
                   >${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</span
                 >
               </p>
@@ -1096,21 +1096,24 @@
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>
-  <iframe
-    *ngIf="sanitizedUrl"
-    [src]="sanitizedUrl"
-    style="border: 0; width: 100%; height: 700px"
-    allowfullscreen=""
-    loading="lazy"
-  >
-  </iframe>
+  <ng-container *ngIf="sanitizedUrl; else linkView">
+    <iframe
+      [src]="sanitizedUrl"
+      style="border: 0; width: 100%; height: 500px;"
+      allowfullscreen=""
+      loading="lazy"
+    ></iframe>
+  </ng-container>
 
-  <div
-    id="street-view-pop"
-    style="height: 700px"
-    *ngIf="StreetViewOnePlace"
-  ></div>
+  <ng-template #linkView>
+    <div
+      id="street-view-pop"
+      style="min-height: 500px"
+      *ngIf="StreetViewOnePlace"
+    ></div>
+  </ng-template>
 </ng-template>
+
 
 <!-- Modal Template -->
 <ng-template #galleryModal let-modal>
