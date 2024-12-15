@@ -81,7 +81,7 @@
             </ng-container>
 
             <div
-              class="d-flex mx-2"
+              class="d-flex  mx-2"
               *ngIf="
                 CustomPlace.OtherPlaces && CustomPlace.OtherPlaces.length > 0
               "
@@ -234,33 +234,33 @@
               </div>
             </ng-container>
 
-            <div class="d-flex">
+            <div class="d-flex align-items-center m ">
               <p *ngIf="StandAlonePlace?.Suite" class="info-value pe-4">
                 <b class="pe-2"> Suite: </b>{{ StandAlonePlace?.Suite }}
               </p>
 
               <p
                 *ngIf="StandAlonePlace?.BuildingSizeSf"
-                class="info-value pe-4"
+                class="info-value  "
               >
-                <b class="pe-2">Unit Size:</b>
+                <b class="px-3">Unit Size:</b>
                 {{ StandAlonePlace?.BuildingSizeSf | number }} SF
               </p>
-              <p class="info-value pe-4">
-                <b class="pe-2">Lease Price: </b>
+              <p class="info-value px-3">
+                <b  >Lease Price: </b>
                 {{
                   StandAlonePlace?.ForLeasePrice
                     ? getLeasePriceStandAlone(StandAlonePlace)
                     : " On Request"
                 }}
-                <span *ngIf="StandAlonePlace?.ForLeasePrice"
-                  ><p>${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</p></span
+                <span class="px-3" *ngIf="StandAlonePlace?.ForLeasePrice"
+                  >${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</span
                 >
               </p>
             </div>
           </div>
 
-          <div class="d-flex">
+          <div class="d-flex align-items-center ">
             <div class="pe-3" *ngIf="StandAlonePlace?.DocsLink">
               <div>
                 <svg

@@ -81,7 +81,7 @@ export class MapsService {
     const markerData = marker.markerData;
     let placeId: number;
 
-    marker.markerData.ShoppingCenter.Places
+    marker.markerData.ShoppingCenter?.Places
       ? (placeId = markerData.ShoppingCenter.Places[0].Id)
       : (placeId = markerData.Id);
 

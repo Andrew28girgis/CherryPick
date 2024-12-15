@@ -1203,6 +1203,7 @@ li {
 #intro p {
   color: #ebebeb;
   font-size: 16px;
+  align-items: center;
   display: flex;
 }
 #intro .about-btn {
