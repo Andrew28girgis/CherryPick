@@ -998,7 +998,7 @@ export class LandingComponent {
   
     const addressParts = this.ShoppingCenter
       ? [
-          capitalizeFirst(this.ShoppingCenter.CenterAddress),
+          this.ShoppingCenter.CenterAddress,
           capitalizeFirst(this.ShoppingCenter.CenterCity),
           this.ShoppingCenter.CenterState.toUpperCase()
         ]
