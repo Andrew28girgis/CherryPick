@@ -120,7 +120,7 @@ export class MapsService {
 
   private createInfoWindow(markerData: any, type: string): any {
     let content =
-      type === 'Shopping Center'
+     type === 'Shopping Center'
         ? this.shoopingCenterPopup(markerData)
         : this.standAlonerPopup(markerData);
     const infoWindow = new google.maps.InfoWindow({ content });
