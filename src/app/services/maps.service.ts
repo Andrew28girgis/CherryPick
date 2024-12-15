@@ -140,7 +140,6 @@ export class MapsService {
                 }
                 ${org.LastName.charAt(0).toUpperCase() + org.LastName.slice(1).toLowerCase()}
               </p>
-
             </div>
           `;
         } else {
