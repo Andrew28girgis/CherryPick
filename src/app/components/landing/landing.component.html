@@ -209,7 +209,7 @@
             <ng-container *ngFor="let near of NearByType">
               <div
                 class="d-flex align-items-center p-0"
-                style="margin-bottom: 5px"
+               
               >
                 <ng-container
                   *ngFor="let branch of near.Branches | slice : 0 : 1"
@@ -234,27 +234,27 @@
               </div>
             </ng-container>
 
-            <div class="d-flex align-items-center m ">
+            <div class="d-flex align-items-center">
               <p *ngIf="StandAlonePlace?.Suite" class="info-value pe-4">
                 <b class="pe-2"> Suite: </b>{{ StandAlonePlace?.Suite }}
               </p>
 
               <p
                 *ngIf="StandAlonePlace?.BuildingSizeSf"
-                class="info-value  "
+                class="info-value  px-3 "
               >
-                <b class="px-3">Unit Size:</b>
+                <b  class="me-1 ">Unit Size:</b>
                 {{ StandAlonePlace?.BuildingSizeSf | number }} SF
               </p>
               <p class="info-value px-3">
-                <b>Lease Price: </b>
+                <b class="me-1">Lease Price: </b>
                 {{
                   StandAlonePlace?.ForLeasePrice
                     ? getLeasePriceStandAlone(StandAlonePlace)
                     : " On Request"
                 }}
-                <span class="px-2" *ngIf="StandAlonePlace?.ForLeasePrice"
-                  >${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</span
+                <span class="pe-2" *ngIf="StandAlonePlace?.ForLeasePrice"
+                  >, ${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</span
                 >
               </p>
             </div>

@@ -344,15 +344,15 @@ export class LandingComponent {
           const formattedPrice = minPrice
             ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
             : '<b>On Request</b>';
-          return `Unit Size:  <p class="px-2"> ${formatNumberWithCommas(
+          return `Unit Size:  <p class="px-2 mb-0"> ${formatNumberWithCommas(
             minSize
-          )} SF </p>  <p class="px-2"> Lease Price: ${formattedPrice} </p>`;
+          )} SF </p>  <p class="px-2 mb-0"> Lease Price: ${formattedPrice} </p>`;
         }
   
 
-        let sizeRange = `Unit Size :  <p class="px-2"> ${formatNumberWithCommas(
+        let sizeRange = `Unit Size :  <p class="px-2 mb-0"> ${formatNumberWithCommas(
           minSize
-        )}</p> SF - <p class="px-2">${formatNumberWithCommas(maxSize)} SF </p>`;
+        )}</p> SF - <p class="px-2 mb-0" >${formatNumberWithCommas(maxSize)} SF </p>`;
   
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
@@ -1009,7 +1009,7 @@ export class LandingComponent {
           this.StandAlonePlace.State.toUpperCase()
         ]
       : null;
-  
+
     return addressParts ? addressParts.filter(Boolean).join(', ') : 'Address not available';
   }
   
