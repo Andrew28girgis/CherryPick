@@ -87,7 +87,7 @@ export class MapsService {
 
     const viewDetailsButton = document.getElementById(
       `view-details-${placeId}`
-    ); 
+    );
     let shoppingCenterId = markerData.CenterName ? markerData.Id : 0;
 
     if (viewDetailsButton) {
@@ -129,24 +129,26 @@ export class MapsService {
   }
 
   private shoopingCenterPopup(markerData: any): string {
-    const managerOrgs = markerData.ShoppingCenter?.ManagerOrganization?.map(
-      (org: any) => {
+    const managerOrgs =
+      markerData.ShoppingCenter?.ManagerOrganization?.map((org: any) => {
         if (org.Firstname && org.LastName) {
           return `
             <div class="contact-container">
-              <p class="text-bold m-0">
-                ${org.Firstname.charAt(0).toUpperCase() + org.Firstname.slice(1)} 
-                ${org.LastName.charAt(0).toUpperCase() + org.LastName.slice(1)}
+             <p class="text-bold m-0">
+                ${
+                  org.Firstname.charAt(0).toUpperCase() + org.Firstname.slice(1).toLowerCase()
+                }
+                ${org.LastName.charAt(0).toUpperCase() + org.LastName.slice(1).toLowerCase()}
               </p>
+
             </div>
           `;
         } else {
           // If either Firstname or LastName is missing, return an empty string
           return '';
         }
-      }
-    ).join('') || '';
-  
+      }).join('') || '';
+
     return `
       <div class="info-window">
         <div class="main-img">
@@ -160,11 +162,15 @@ export class MapsService {
               : ''
           }
           <p class="address-content"> 
-            ${markerData.CenterAddress}, ${markerData.CenterCity}, ${markerData.CenterState}
+            ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+      markerData.CenterState
+    }
           </p>
           ${
             this.getShoppingCenterUnitSize(markerData)
-              ? `<p class="address-content">${this.getShoppingCenterUnitSize(markerData)}</p>`
+              ? `<p class="address-content">${this.getShoppingCenterUnitSize(
+                  markerData
+                )}</p>`
               : ''
           }
   
@@ -173,14 +179,19 @@ export class MapsService {
             markerData.ShoppingCenter?.ManagerOrganization[0]
               ? `
                 <div class="d-flex align-items-center">
-                  <b>${markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''}</b>
+                  <b>${
+                    markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''
+                  }</b>
                   <img
                     class="logo ms-2"
                     style="width:40px"
                     src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${
                       markerData.ShoppingCenter.ManagerOrganization[0]?.ID || ''
                     }"
-                    alt="${markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''}"
+                    alt="${
+                      markerData.ShoppingCenter.ManagerOrganization[0]?.Name ||
+                      ''
+                    }"
                   />
                 </div>
               `
@@ -204,7 +215,7 @@ export class MapsService {
       </div>
     `;
   }
-  
+
   private standAlonerPopup(markerData: any): string {
     return `  
       <div class="info-window">
@@ -379,7 +390,7 @@ export class MapsService {
       });
   }
 
-  private updateMarker(map: any, place: any, isEntering: boolean): void { 
+  private updateMarker(map: any, place: any, isEntering: boolean): void {
     const { Latitude, Longitude, infoWindowContent } = place;
 
     if (!map || !this.markers) return;
@@ -472,19 +483,23 @@ export class MapsService {
   private getShoppingCenterUnitSize(shoppingCenter: any): string | null {
     // Helper function to format numbers with commas
     const formatNumberWithCommas = (num: number) => num.toLocaleString();
-  
+
     // Format lease price as a whole number or "On Request"
     const formatLeasePrice = (price: any): string => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
-      return !isNaN(priceNumber) ? Math.floor(priceNumber).toString() : 'On Request';
+      return !isNaN(priceNumber)
+        ? Math.floor(priceNumber).toString()
+        : 'On Request';
     };
-  
+
     const places = shoppingCenter?.ShoppingCenter?.Places || [];
     const buildingSizes = places
       .map((place: any) => place.BuildingSizeSf)
-      .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
-  
+      .filter(
+        (size: any) => size !== undefined && size !== null && !isNaN(size)
+      );
+
     // If no valid building sizes from places:
     if (buildingSizes.length === 0) {
       // Fall back to single center logic
@@ -497,7 +512,7 @@ export class MapsService {
                 Math.floor((parseFloat(leasePriceStr) * singleSize) / 12)
               )}/month`
             : ''; // If lease price is On Request, show nothing here
-  
+
         return `Unit Size: ${formatNumberWithCommas(singleSize)} SF${
           leasePriceDisplay ? `<br>${leasePriceDisplay}` : ''
         }`;
@@ -505,20 +520,20 @@ export class MapsService {
       // No sizes at all, return null if no unit size
       return null;
     }
-  
+
     // We have at least one building size
     const minSize = Math.min(...buildingSizes);
     const maxSize = Math.max(...buildingSizes);
-  
+
     // Find prices for min and max sizes
     const findPriceForSize = (size: number): string => {
       const place = places.find((p: any) => p.BuildingSizeSf === size);
       return place?.ForLeasePrice ?? 'On Request';
     };
-  
+
     const minPriceStr = findPriceForSize(minSize);
     const maxPriceStr = findPriceForSize(maxSize);
-  
+
     // Format unit size range
     const sizeRange =
       minSize === maxSize
@@ -526,14 +541,17 @@ export class MapsService {
         : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(
             maxSize
           )} SF`;
-  
+
     // Format the minimum and maximum prices
     const formattedMinPrice = formatLeasePrice(minPriceStr);
     const formattedMaxPrice = formatLeasePrice(maxPriceStr);
-  
+
     // Determine which lease price to use
     let finalLeasePrice: string;
-    if (formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request') {
+    if (
+      formattedMinPrice === 'On Request' &&
+      formattedMaxPrice === 'On Request'
+    ) {
       finalLeasePrice = 'On Request';
     } else if (formattedMinPrice === 'On Request') {
       // Only max is valid
@@ -545,7 +563,7 @@ export class MapsService {
       // Both are valid numbers: Use the min price to calculate
       finalLeasePrice = formattedMinPrice;
     }
-  
+
     // Calculate monthly lease price if possible
     let resultLeasePrice = 'On Request';
     if (finalLeasePrice !== 'On Request') {
@@ -558,10 +576,10 @@ export class MapsService {
         resultLeasePrice = 'On Request';
       }
     }
-  
+
     return `Unit Size: ${sizeRange}<br>Lease Price: ${resultLeasePrice}`;
   }
-  
+
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
     // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
