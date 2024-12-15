@@ -993,22 +993,26 @@ export class LandingComponent {
   }
   
   getAddress(): string {
+    const capitalizeFirst = (value: string) =>
+      value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : '';
+  
     const addressParts = this.ShoppingCenter
       ? [
-          this.ShoppingCenter.CenterAddress,
-          this.ShoppingCenter.CenterCity,
-          this.ShoppingCenter.CenterState
+          capitalizeFirst(this.ShoppingCenter.CenterAddress),
+          capitalizeFirst(this.ShoppingCenter.CenterCity),
+          this.ShoppingCenter.CenterState.toUpperCase()
         ]
       : this.StandAlonePlace
       ? [
           this.StandAlonePlace.Address,
           this.StandAlonePlace.City,
-          this.StandAlonePlace.State
+          this.StandAlonePlace.State.toUpperCase()
         ]
       : null;
   
     return addressParts ? addressParts.filter(Boolean).join(', ') : 'Address not available';
   }
+  
   
   
 }

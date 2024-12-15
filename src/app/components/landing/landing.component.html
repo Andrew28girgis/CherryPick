@@ -27,11 +27,11 @@
       </ngb-alert>
     </p>
 
-    <!-- <i
+    <i
     class="fa-solid fa-arrow-left"
-    style="font-size: 24px; cursor: pointer"
+    style="font-size: 24px; cursor: pointer;    padding: 15px 10px;"
     (click)="goBack()"
-  ></i> -->
+  ></i>
     <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
       <div class="intro-container wow fadeIn">
         <h1
@@ -334,8 +334,8 @@
           </div>
         </ng-container>
 
-        <div class="w-100 d-flex justify-content-end">
-          <button class="view-gallery" (click)="openGallery()">
+        <div class="w-100 d-flex justify-content-end" *ngIf="placeImage && placeImage.length> 0">
+          <button class="view-gallery" (click)="openGallery()" >
             View Gallery
           </button>
         </div>
