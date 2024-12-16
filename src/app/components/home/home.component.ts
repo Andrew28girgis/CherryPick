@@ -104,6 +104,9 @@ export class HomeComponent implements OnInit {
     );
   }
 
+ 
+
+
   BuyBoxPlacesCategories(buyboxId: number): void {
     const body: any = {
       Name: 'GetRetailRelationCategories',

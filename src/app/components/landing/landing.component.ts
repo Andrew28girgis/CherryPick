@@ -346,7 +346,7 @@ export class LandingComponent {
             : '<b>On Request</b>';
           return `Unit Size:  <p class="px-2 mb-0"> ${formatNumberWithCommas(
             minSize
-          )} SF </p>  <p class="px-2 mb-0"> Lease Price: ${formattedPrice} </p>`;
+          )} SF </p>  <p class="px-2 m-0"> Lease Price: ${formattedPrice} </p>`;
         }
   
 
