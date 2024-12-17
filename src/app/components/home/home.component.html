@@ -118,6 +118,14 @@
                       {{ shoppingCenter.CenterCity | titlecase }},
                       {{ shoppingCenter.CenterState }}
                     </div>
+                    <button
+                    *ngIf="ShareOrg[0]"
+                    class="view-details-card"
+                    style="background-color: rgb(41, 187, 255)"
+                    (click)="openLink(ShareLink, shoppingCenter)"
+                  >
+                    Share With {{ ShareOrg[0].name }}
+                  </button>
                   </td>
                   <td>
                     <ng-container
@@ -186,6 +194,7 @@
                     </td>
                   </ng-container>
                   <td>
+               
                     <div
                       class="d-flex justify-content-center align-items-center"
                       style="cursor: pointer"
@@ -237,7 +246,9 @@
                           fill="#0D0C0C"
                         />
                       </svg>
-                    </div>
+                     </div>
+                    
+              
                   </td>
                 </tr>
               </ng-container>
@@ -280,6 +291,14 @@
                       {{ place.Address }}, {{ place.City | titlecase }},
                       {{ place.State }}
                     </div>
+                    <button
+                    *ngIf="ShareOrg[0]"
+                    class="view-details-card"
+                    style="background-color: rgb(41, 187, 255)"
+                    (click)="openLink(ShareLink, place)"
+                  >
+                    Share With {{ ShareOrg[0].name }}
+                  </button>
                   </td>
                   <td>
                     Unit Size: {{ place.BuildingSizeSf | number }} SF <br />
@@ -521,6 +540,14 @@
                       />
                     </svg>
                   </button>
+                  <button
+                    *ngIf="ShareOrg[0]"
+                    class="view-details-card"
+                    style="background-color: rgb(41, 187, 255)"
+                    (click)="openLink(ShareLink, shopping)"
+                  >
+                    Share With {{ ShareOrg[0].name }}
+                  </button>
                   <div
                     style="cursor: pointer"
                     (click)="openStreetViewPlace(StreetViewPlace, shopping)"
@@ -652,6 +679,14 @@
                       />
                     </svg>
                   </button>
+                  <button
+                  *ngIf="ShareOrg[0]"
+                  class="view-details-card"
+                  style="background-color: rgb(41, 187, 255)"
+                  (click)="openLink(ShareLink, place)"
+                >
+                  Share With {{ ShareOrg[0].name }}
+                </button>
                   <div
                     style="cursor: pointer"
                     (click)="openStreetViewPlace(StreetViewPlace, place)"
@@ -750,13 +785,14 @@
                     >
                   </p>
                   <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    <span [innerHTML]="
-                      getStandAloneLeasePrice(
-                        place.ForLeasePrice,
-                        place.BuildingSizeSf
-                      )
-                    "></span
-                    >
+                    <span
+                      [innerHTML]="
+                        getStandAloneLeasePrice(
+                          place.ForLeasePrice,
+                          place.BuildingSizeSf
+                        )
+                      "
+                    ></span>
                   </p>
                 </div>
 
@@ -839,6 +875,20 @@
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
+</ng-template>
+
+<ng-template #ShareLink let-modal>
+  <div
+    class="d-flex p-3 m-3 align-items-center"
+    style="border: 1px solid #ccc; border-radius: 10px"
+  >
+    <p>{{ shareLink }}</p>
+    <i
+      style="cursor: pointer"
+      class="fa-solid fa-copy ms-3"
+      (click)="copyLink(shareLink)"
+    ></i>
+  </div>
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>

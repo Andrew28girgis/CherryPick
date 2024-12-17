@@ -61,7 +61,7 @@ export class SummeryComponent {
       next: (data) => {
         this.buyboxTypes =  data.json ;
         if (this.buyboxTypes.length == 1) {
-          this.chooseType(this.buyboxTypes[0].id);
+          this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId);
         }
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -73,20 +73,20 @@ export class SummeryComponent {
     this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {
       this.buyboxTypes = res;
       if (this.buyboxTypes.length == 1) {
-        this.chooseType(this.buyboxTypes[0].id);
+        this.chooseType(this.buyboxTypes[0].id ,  this.buyboxTypes[0].organizationId);
       }
     });
   }
 
-  chooseType(buyboxId: number) {
+  chooseType(buyboxId: number , orgId:number) {
     this.showSummery = true;
     this.showSummery = true;
-    this.goToAllPlaces(buyboxId);
+    this.goToAllPlaces(buyboxId , orgId);
     this.propertiesService.setbuyboxId(buyboxId);
   }
 
-  goToAllPlaces(buyboxId: number) {
-    this.router.navigate(['/home', buyboxId]);
+  goToAllPlaces(buyboxId: number , orgId:number ) {
+    this.router.navigate(['/home', buyboxId ,orgId]);
   }
   
 }

@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row mt-2">
     <ng-container *ngFor="let type of buyboxTypes">
-      <div class="col-md-12" (click)="chooseType(type.id)">
+      <div class="col-md-12" (click)="chooseType(type.id , type.organizationId)">
         <div class="card-bodyx" >
           <div class="card-title">{{ type.name }}</div>
         </div>

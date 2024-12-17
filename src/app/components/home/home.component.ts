@@ -18,6 +18,7 @@ import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Polygons } from 'src/models/polygons';
+import { ShareOrg } from 'src/models/shareOrg';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit {
   General!: General;
   pageTitle!: string;
   BuyBoxId!: any;
+  OrgId!:any;
   page: number = 1;
   pageSize: number = 25;
   paginatedProperties: Property[] = [];
@@ -73,6 +75,9 @@ export class HomeComponent implements OnInit {
   standAlone: Place[] = [];
   buyboxPlaces: BbPlace[] = [];
   Polygons:Polygons[]=[];
+  ShareOrg:ShareOrg[]=[];
+  shareLink:any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -94,19 +99,35 @@ export class HomeComponent implements OnInit {
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
+      this.OrgId = params.orgId;
+
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
     });
 
     this.selectedOption = this.dropdowmOptions[2];
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetPolygons(this.BuyBoxId);
-
+    this.GetOrganizationById(this.OrgId);
     this.selectedOption = this.dropdowmOptions.find(
       (option: any) => +option.status == +this.currentView
     );
   }
 
- 
+  GetOrganizationById(orgId: number): void {
+    const body: any = {
+      Name: 'GetOrganizationById',
+      Params: {
+        organizationid: orgId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.ShareOrg = data.json ;
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
 
 
   BuyBoxPlacesCategories(buyboxId: number): void {
@@ -516,6 +537,29 @@ export class HomeComponent implements OnInit {
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
+  openLink(content: any, modalObject?: any) {
+    this.shareLink = '';
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    if (modalObject.CenterAddress) {
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}` ;
+    }else{
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}` ;
+    }
+  }
+  
+  copyLink(link: string) {
+    navigator.clipboard.writeText(link).then(() => {
+      console.log('Link copied to clipboard!');
+      // Optionally, you could show a toast or notification to the user
+    }).catch(err => {
+      console.error('Could not copy text: ', err);
+    });
+  
+  }
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
 
