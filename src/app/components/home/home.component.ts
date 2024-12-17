@@ -539,7 +539,7 @@ export class HomeComponent implements OnInit {
       if (calculatedPrice === 'On Request') {
         return calculatedPrice; // No icon for "On Request"
       }
-      const formattedOriginalPrice = `$${parseFloat(originalPrice).toLocaleString()}/sqft/Year`;
+      const formattedOriginalPrice = `$${parseFloat(originalPrice).toLocaleString()}/sq ft./year`;
   
       // Inline styles can be adjusted as desired
       return `
@@ -653,7 +653,7 @@ export class HomeComponent implements OnInit {
       const formattedPrice = calculatedPrice.toLocaleString();
   
       // Format the original price in $X/sqft/Year format
-      const formattedOriginalPrice = `$${leasePrice.toLocaleString()}/sqft/Year`;
+      const formattedOriginalPrice = `$${leasePrice.toLocaleString()}/sq ft./year`;
   
       // Return formatted result in a stacked layout with an info icon
       return `

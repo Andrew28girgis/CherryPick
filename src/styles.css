@@ -708,12 +708,15 @@ body{
   border: 1px solid #000;
   border-radius: 26px;
 }
+
 p {
   margin-bottom: 0 !important;
 }
+
 .carousel-control-prev {
   left: -121px !important;
 }
+
 .carousel-control-next {
   right: -121px !important;
 }

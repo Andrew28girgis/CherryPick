@@ -310,7 +310,7 @@ export class LandingComponent {
           const unitSize = parseFloat(size);
           if (!isNaN(pricePerSF) && !isNaN(unitSize)) {
             const monthlyLease = Math.floor((pricePerSF * unitSize) / 12);
-            return `<b>$${monthlyLease.toLocaleString()}/month</b>`;
+            return `<b>$${monthlyLease.toLocaleString()}</b>/month`;
           }
           return '<b>On Request</b>';
         };
@@ -329,12 +329,12 @@ export class LandingComponent {
   
           const formattedOriginalPrice = `<b>$${parseFloat(
             originalPrice
-          ).toLocaleString()}</b>/sqft/Year`;
+          ).toLocaleString()}</b>/sq ft./year`;
   
           // Adjust inline styles as desired
           return `
             <div style="display:flex;">
-              <p>${formattedOriginalPrice} ,   ${calculatedPrice}  </p> 
+              <p class="mx-2"> ${formattedOriginalPrice},   ${calculatedPrice}  </p> 
             </div>
           `;
         };
@@ -346,13 +346,13 @@ export class LandingComponent {
             : '<b>On Request</b>';
           return `Unit Size:  <p class="px-2 mb-0"> ${formatNumberWithCommas(
             minSize
-          )} SF </p>  <p class="px-2 m-0"> Lease Price: ${formattedPrice} </p>`;
+          )}sq ft. </p>  <p class="px-2 m-0"> Lease Price: ${formattedPrice} </p>`;
         }
-  
+        
 
-        let sizeRange = `Unit Size :  <p class="px-2 mb-0"> ${formatNumberWithCommas(
+        let sizeRange = `Unit Size:  <p class="px-2 mb-0"> ${formatNumberWithCommas(
           minSize
-        )}</p> SF - <p class="px-2 mb-0" >${formatNumberWithCommas(maxSize)} SF </p>`;
+        )}</p> sq ft. - <p class="px-2 mb-0" >${formatNumberWithCommas(maxSize)} sq ft. </p>`;
   
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
