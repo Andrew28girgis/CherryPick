@@ -45,8 +45,29 @@ export class SummeryComponent {
       this.Token = params['Token'];
     });
 
-    this.GetUserBuyBoxes();
+    //this.GetUserBuyBoxes();
+    this.getUserBuyBoxes();
   }
+
+
+  getUserBuyBoxes(): void {
+    const body: any = {
+      Name: 'GetUserBuyBoxes',
+      Params: {
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.buyboxTypes =  data.json ;
+        if (this.buyboxTypes.length == 1) {
+          this.chooseType(this.buyboxTypes[0].id);
+        }
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
 
   GetUserBuyBoxes() {
     this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {

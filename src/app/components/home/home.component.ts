@@ -17,6 +17,7 @@ import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Polygons } from 'src/models/polygons';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -71,7 +72,7 @@ export class HomeComponent implements OnInit {
   shoppingCenters: Center[] = [];
   standAlone: Place[] = [];
   buyboxPlaces: BbPlace[] = [];
-
+  Polygons:Polygons[]=[];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -98,6 +99,7 @@ export class HomeComponent implements OnInit {
 
     this.selectedOption = this.dropdowmOptions[2];
     this.BuyBoxPlacesCategories(this.BuyBoxId);
+    this.GetPolygons(this.BuyBoxId);
 
     this.selectedOption = this.dropdowmOptions.find(
       (option: any) => +option.status == +this.currentView
@@ -123,6 +125,23 @@ export class HomeComponent implements OnInit {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+
+  GetPolygons(buyboxId: number): void {
+    const body: any = {
+      Name: 'GetPolygons',
+      Params: {
+        buyboxid: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+          this.Polygons = data.json ;
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
 
   getShoppingCenters(buyboxId: number): void {
     const body: any = {
@@ -272,6 +291,8 @@ export class HomeComponent implements OnInit {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(this.map, markerData, type);
     });
+   // this.markerService.drawMultiplePolygons(this.map, this.Polygons);
+
   }
 
   createCustomMarkers(markerDataArray: any[]) {
