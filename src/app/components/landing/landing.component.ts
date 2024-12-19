@@ -177,15 +177,14 @@ export class LandingComponent {
         this.filterCotenats = this.placeCotenants ; 
 
         const uniqueCategoriesSet = new Set<string>();
-
         this.placeCotenants.forEach((co) => {
           co.SubCategory.forEach((c) => {
             if (c.OrganizationCategory) {
               uniqueCategoriesSet.add(c.OrganizationCategory);
             }
           });
-        });
-        
+        }); 
+
         this.uniqueCategories = Array.from(uniqueCategoriesSet); 
         this.uniqueCategories.sort((a, b) => a.localeCompare(b)); 
         this.uniqueCategories.unshift('All'); 
@@ -196,7 +195,6 @@ export class LandingComponent {
 
   filterCotent(event: any) {
     const value = event.target.value;
-  
     if (value === 'All') {
        this.filterCotenats = this.placeCotenants;
     } else {

@@ -56,6 +56,20 @@
               </svg>
             </div>
           </div>
+          <div>
+
+          
+          <div>
+            <button
+            *ngIf="ShareOrg[0]"
+            class="view-details-card me-0 mt-2"
+            style="background-color: rgb(41, 187, 255); padding: 8px 30px;"
+            (click)="openLink(ShareLink)"
+          >
+            Share With {{ ShareOrg[0].name }}
+          </button>
+          </div>
+        
           <div class="dropdown-options" *ngIf="isOpen">
             <div
               class="option"
@@ -68,6 +82,7 @@
               <span class="option-text">{{ option.text }}</span>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

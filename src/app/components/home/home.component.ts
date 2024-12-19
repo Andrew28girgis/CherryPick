@@ -100,7 +100,6 @@ export class HomeComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
-
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
     });
 
@@ -544,11 +543,16 @@ export class HomeComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-    if (modalObject.CenterAddress) {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}` ;
+    if(modalObject){
+      if (modalObject.CenterAddress) {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}` ;
+      }else{
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}` ;
+      }
     }else{
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}` ;
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}` ;
     }
+ 
   }
   
   copyLink(link: string) {
