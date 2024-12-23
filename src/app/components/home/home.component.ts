@@ -347,11 +347,10 @@ export class HomeComponent implements OnInit {
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
       this.shoppingCenters?.forEach((center) => {
-        if (center.ShoppingCenter?.Places) {
-          const firstPlace = center.ShoppingCenter?.Places[0];
-          center.Latitude = firstPlace.Latitude;
-          center.Longitude = firstPlace.Longitude;
-        }
+        // if (center.ShoppingCenter?.Places) {
+          center.Latitude = center.Latitude;
+          center.Longitude = center.Longitude;
+        // }
       });
     }
   }
@@ -368,20 +367,28 @@ export class HomeComponent implements OnInit {
       ...(this.shoppingCenters || []),
       ...(this.standAlone || []),
     ];
+  
+    
+    
     // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
       this.cardsSideList = allProperties.filter(
-        (property) =>
+        (property) => 
+
           visibleCoords.has(`${property.Latitude},${property.Longitude}`) ||
           this.isWithinBounds(property, bounds)
+          
+        
+          
       );
     });
+
   }
 
   private isWithinBounds(property: any, bounds: any): boolean {
     const lat = parseFloat(property.Latitude);
     const lng = parseFloat(property.Longitude);
-
+    
     if (isNaN(lat) || isNaN(lng)) {
       console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
@@ -642,7 +649,7 @@ export class HomeComponent implements OnInit {
             : 'On Request';
         return `Unit Size: ${formatNumberWithCommas(
           singleSize
-        )} SF<br>Lease price: ${resultPrice}`;
+        )} sq ft.<br>Lease price: ${resultPrice}`;
       }
       return null;
     }
@@ -662,10 +669,10 @@ export class HomeComponent implements OnInit {
     // Format unit sizes
     const sizeRange =
       minSize === maxSize
-        ? `${formatNumberWithCommas(minSize)} SF`
-        : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(
+        ? `${formatNumberWithCommas(minSize)} sq ft.`
+        : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
             maxSize
-          )} SF`;
+          )} sq ft.`;
   
     // Ensure only one price is shown if one is "On Request"
     const formattedMinPrice =
