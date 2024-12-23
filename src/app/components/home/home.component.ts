@@ -552,7 +552,6 @@ export class HomeComponent implements OnInit {
     }else{
       this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}` ;
     }
- 
   }
   
   copyLink(link: string) {
@@ -738,14 +737,12 @@ export class HomeComponent implements OnInit {
         </div>
       `;
     } else {
-      // If invalid values are provided, return 'On Request'
       return '<b>Lease price:</b> On Request';
     }
   }
   
 
   getNeareastCategoryName(categoryId: number) {
-    // console.log(categoryId);
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }

@@ -133,21 +133,28 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter) {
+          
+        
+          console.log(`i`);
+          
+          console.log(this.placeImage);
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
+            (link) => link.trim()
+          );
           if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
-              +this.StandAlonePlace.PopulationDensity;
-
-            this.placeImage = this.StandAlonePlace.Images?.split(',').map(
-              (link) => link.trim()
-            );
-          }
+              +this.StandAlonePlace.PopulationDensity; 
+          }  
+          
           this.GetShoppingCenterManager(this.ShoppingCenter.Id);
           this.getMinMaxUnitSize();
+          
           this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
+          
           this.StandAlonePlace = this.CustomPlace.Place[0];
           this.placeImage = this.StandAlonePlace.Images?.split(',').map(
             (link) => link.trim()
@@ -978,7 +985,10 @@ export class LandingComponent {
         strokeColor: 'white',
         strokeWeight: 1,
       },
+      animation: google.maps.Animation.DROP, // Animated drop effect
+
     });
+    
   }
 
   goBack() {
