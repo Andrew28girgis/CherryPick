@@ -735,6 +735,7 @@ export class LandingComponent {
       return sizeRange;
     }
     return null;
+    
   }
 
   getLeasePriceStandAlone(StandALone: any) {

@@ -104,12 +104,14 @@ export class MapsService {
     shoppingCenterId?: number
   ): void {
     console.log(`View details for marker ID: ${markerId}`);
+
     this.router.navigate([
       '/landing',
       markerId,
-      shoppingCenterId,
+      markerId != shoppingCenterId ? shoppingCenterId : 0,
       this.storedBuyBoxId,
     ]);
+
   }
 
   private assignToMarkerArray(marker: any, type: string): void {

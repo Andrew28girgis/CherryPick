@@ -652,6 +652,7 @@ export class HomeComponent implements OnInit {
         )} sq ft.<br>Lease price: ${resultPrice}`;
       }
       return null;
+
     }
   
     // Calculate min and max size
