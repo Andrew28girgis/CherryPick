@@ -618,57 +618,43 @@ export class MapsService {
   }
 
 
-  drawPolygon(map: any, polygonFeature: any): void {
-    if (!polygonFeature.json) {
-      console.error('No JSON property found on the provided polygon feature.');
-      return;
-    }
-
-    let geojson;
-    try {
-      geojson = JSON.parse(polygonFeature.json);
-    } catch (error) {
-      console.error('Invalid GeoJSON:', error);
-      return;
-    }
-
-    
-    // Ensure it’s a Polygon geometry
-    if (
-      !geojson.geometry ||
-      geojson.geometry.type !== 'Polygon' ||
-      !Array.isArray(geojson.geometry.coordinates)
-    ) {
-      console.error('GeoJSON does not contain a valid Polygon geometry.');
-      return;
-    }
-
-    // GeoJSON Polygon coordinates: [ [ [lng, lat], [lng, lat], ... ] ]
-    const coordinates = geojson.geometry.coordinates[0]; // The outer ring
-    
-    const paths = coordinates.map((coord: [number, number]) => {
-      return { lat: coord[1], lng: coord[0] };
-    });
-
-    const polygon = new google.maps.Polygon({
-      paths: paths,
-      strokeColor: '#0984e3',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#0984e3',
-      fillOpacity: 0.35,
-      map: map,
-    });
-
-    // You can also store a reference to the polygon if needed for future use
-    // For example:
-    // this.drawnPolygons.push(polygon);
-  } 
-  
+ 
   drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
     // this.drawPolygon(map, polygonFeatures[0]);
     polygonFeatures.forEach((feature) => {
-      this.drawPolygon(map, feature);
+      this.drawSinglePolygon(map, feature);
     });
   }
+
+  drawSinglePolygon(map: any, feature: any): void {
+    try {
+      // Parse the JSON string into an object
+      const geoJson = JSON.parse(feature.json);
+
+      // Extract coordinates from the GeoJSON structure
+      const coordinates = geoJson.geometry.coordinates[0];
+
+      // Convert coordinates to LatLng array for Google Maps
+      const polygonCoords = coordinates.map((coord: number[]) => ({
+        lat: coord[1], // Latitude is second element
+        lng: coord[0]  // Longitude is first element
+      }));
+
+      // Create and add the polygon to the map
+      const polygon = new google.maps.Polygon({
+        paths: polygonCoords,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map
+      });
+
+    } catch (error) {
+      console.error('Error drawing polygon:', error);
+    }
+  }
+
+ 
 }
