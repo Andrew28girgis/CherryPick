@@ -31,7 +31,7 @@ import { ShareOrg } from 'src/models/shareOrg';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit ,AfterViewInit  {
+export class HomeComponent implements OnInit {
   shoppingCenter: any; // Replace with your actual type if available
 
   selectedView: string = 'shoppingCenters'; // Default view
@@ -516,13 +516,13 @@ export class HomeComponent implements OnInit ,AfterViewInit  {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
-  ngAfterViewInit(): void {
-    // Initialize all popovers on the page
-    const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    // popoverTriggerList.forEach(popoverTriggerEl => {
-    //   new bootstrap.Popover(popoverTriggerEl);
-    // });
-  }
+  // ngAfterViewInit(): void {
+  //   // Initialize all popovers on the page
+  //   const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
+  //   popoverTriggerList.forEach(popoverTriggerEl => {
+  //     // new bootstrap.Popover(popoverTriggerEl);
+  //   });
+  // }
 
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
