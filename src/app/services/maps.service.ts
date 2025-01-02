@@ -278,6 +278,7 @@ export class MapsService {
             const marker = new google.maps.Marker({
               position: {
                 lat: latitude,
+                
                 lng: longitude,
               },
               icon: {
