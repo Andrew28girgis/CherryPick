@@ -26,16 +26,16 @@ import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Polygons } from 'src/models/polygons';
 import { ShareOrg } from 'src/models/shareOrg';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
+
 export class HomeComponent implements OnInit {
-  shoppingCenter: any; // Replace with your actual type if available
-
-  selectedView: string = 'shoppingCenters'; // Default view
-
+  shoppingCenter: any;
+  selectedView: string = 'shoppingCenters'; 
   General!: General;
   pageTitle!: string;
   BuyBoxId!: any;
@@ -81,15 +81,12 @@ export class HomeComponent implements OnInit {
   selectedSS!:number ;
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
-
   buyboxCategories: BuyboxCategory[] = [];
-
   showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
-
   showStandalone: boolean = true; // Ensure this reflects your initial state
   standAlone: Place[] = [];
   toggleStandalone() {
@@ -172,7 +169,7 @@ export class HomeComponent implements OnInit {
         buyboxid: buyboxId,
       },
     };
-
+    
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
           this.Polygons = data.json ;
@@ -180,7 +177,6 @@ export class HomeComponent implements OnInit {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
-
 
   getShoppingCenters(buyboxId: number): void {
     this.spinner.show();
