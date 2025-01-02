@@ -9,6 +9,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
  import { KanbanComponent } from './components/kanban/kanban.component';
+import { KayakComponent } from './components/Kayak/kayak/kayak.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent},
@@ -35,6 +36,8 @@ const routes: Routes = [
   { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
   { path: 'Kanban', component: KanbanComponent },
+  { path: 'kayak', component: KayakComponent },
+
 ];
 
 @NgModule({
