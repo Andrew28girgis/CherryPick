@@ -29,6 +29,7 @@ import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { KayakComponent } from './components/Kayak/kayak/kayak.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     CherryExpansionComponent,
     KanbanComponent,
     KanbanHomeComponent,
-    SidebarComponent, 
+    SidebarComponent,
+    KayakComponent,
   ],
   imports: [
     BrowserModule,

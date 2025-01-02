@@ -1,0 +1,140 @@
+<div class="container-fluid my-3">
+  <div class="row">
+    <div class="col-md-3">
+        <div class="card card-filter">
+          <div class="card-body position-relative"> <!-- Add position-relative to the parent container -->
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <span>Filter</span>
+              </div>
+              <div>
+                <span>Clear Filters</span>
+              </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-center mt-3 filter-btn-container">
+              <button class="btn btn-filter">Filter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+    <div class="col-md-9">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-9">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="input-group mb-3">
+                    <!-- Input group for the search icon -->
+                    <span class="input-group-text" id="basic-addon1">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <!-- Search input field -->
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Search"
+                      aria-label="Search"
+                      aria-describedby="basic-addon1"
+                    />
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                    <select
+                      id="state-select"
+                      class="form-select"
+                      aria-label="Default select example"
+                    >
+                      <option selected>State</option>
+                    </select>
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <select
+                      id="city-select"
+                      class="form-select"
+                      aria-label="Default select example"
+                    >
+                      <option selected>City</option>
+                    </select>
+                  </div>
+                  
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="row">
+                <div class="col-md-9">
+                  <div
+                    class="d-inline-flex align-items-center border p-2 rounded"
+                    style="background-color: #f8f9fa"
+                  >
+                    <!-- Span Text -->
+                    <span class="me-2 show-map">Show Map</span>
+                    <!-- Icon -->
+                    <img src="../../../../assets/Images/Icons/map.png" alt="" />
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="blue-box" >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12" *ngFor="let result of KayakResult.Result">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="row">
+                    <!-- Image Column -->
+                    <div class="col-md-5">
+                        <img
+                          class="kayak-img img-fluid rounded"
+                          *ngIf="result.MainImage"
+                          [src]="result.MainImage"
+                          [alt]="result.CenterName"
+                         
+                        />
+                      </div>
+
+                    <!-- Details Column -->
+                    <div class="col-md-4 sizeofdata">
+                        <div>
+                          <strong>Center Name:</strong> {{ result.CenterName }}
+                        </div>
+                        <div>
+                          <strong>Address:</strong> {{ result.CenterAddress }}
+                        </div>
+                        <div>
+                          <strong>State:</strong> {{ result.CenterState }}
+                        </div>
+                        <div>
+                          <strong>City:</strong> {{ result.CenterCity }}
+                        </div>
+                
+                        <!-- <div *ngIf="result.place?.length">
+                          <strong>Total Places:</strong> {{ result.place.length }}
+                          <ul>
+                            <li *ngFor="let place of result.place">
+                              <div>
+                                <strong>Building Size:</strong> {{ place.BuildingSizeSf }} sq ft
+                              </div>
+                             
+                            </li>
+                          </ul>
+                        </div> -->
+                      </div>
+                    <div class="col-md-3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
