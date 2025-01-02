@@ -66,9 +66,15 @@ export class KayakComponent implements OnInit {
       next: (data) => {
         this.KayakCitiesandStates = data.json; 
 
-        this.uniqueStates = Array.from(
-          new Set(this.KayakCitiesandStates.map((item: any) => item.stateCode))
-        );   
+        this.uniqueStates = [
+          ...new Set(this.KayakCitiesandStates.map((item: any) => item.stateCode))
+        ];  
+      
+        this.uniqueStates = [
+          ...new Set(this.uniqueStates.map(state => state.trim()))
+        ];
+
+        
         this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -77,6 +83,7 @@ export class KayakComponent implements OnInit {
 
 
   getCitiesOfState(){
+    this.selectedCity= '' ;
     this.uniqueCities = this.KayakCitiesandStates.filter(s=> s.stateCode == this.selectedState);    
   } 
 
