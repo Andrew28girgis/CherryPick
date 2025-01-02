@@ -1,3 +1,5 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
 <div class="container-fluid my-3">
   <div class="row">
     <div class="col-md-3">
@@ -46,9 +48,11 @@
                     <select
                       id="state-select"
                       class="form-select"
-                      aria-label="Default select example"
+                      [(ngModel)]="selectedState"
+                      (change)="getCitiesOfState()"
                     >
-                      <option selected>State</option>
+                       <option selected>All</option>
+                       <option *ngFor="let state of uniqueStates">{{state}}</option>
                     </select>
                   </div>
                   
@@ -56,9 +60,10 @@
                     <select
                       id="city-select"
                       class="form-select"
-                      aria-label="Default select example"
+                      [(ngModel)]="selectedCity"
                     >
-                      <option selected>City</option>
+                      <option selected>All</option>
+                      <option  *ngFor="let city of uniqueCities">{{city.city}}</option>
                     </select>
                   </div>
                   
@@ -79,59 +84,77 @@
                 </div>
 
                 <div class="col-md-3">
-                  <div class="blue-box" >
+                  <div class="blue-box"  (click)="searchShoppingCenter()">
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-12" *ngFor="let result of KayakResult.Result">
-              <div class="card mb-3">
-                <div class="card-body">
-                  <div class="row">
-                    <!-- Image Column -->
-                    <div class="col-md-5">
-                        <img
-                          class="kayak-img img-fluid rounded"
-                          *ngIf="result.MainImage"
-                          [src]="result.MainImage"
-                          [alt]="result.CenterName"
-                         
-                        />
-                      </div>
-
-                    <!-- Details Column -->
-                    <div class="col-md-4 sizeofdata">
-                        <div>
-                          <strong>Center Name:</strong> {{ result.CenterName }}
-                        </div>
-                        <div>
-                          <strong>Address:</strong> {{ result.CenterAddress }}
-                        </div>
-                        <div>
-                          <strong>State:</strong> {{ result.CenterState }}
-                        </div>
-                        <div>
-                          <strong>City:</strong> {{ result.CenterCity }}
-                        </div>
-                
-                        <!-- <div *ngIf="result.place?.length">
-                          <strong>Total Places:</strong> {{ result.place.length }}
-                          <ul>
-                            <li *ngFor="let place of result.place">
+            <ng-container  >
+                <div class="col-md-12" *ngFor="let result of KayakResult?.Result">
+                    <div class="card mb-3" style="background-color: #FFFFF7;">
+                      <div class="card-body">
+                        <div class="row">
+                          <!-- Image Column -->
+                          <div class="col-md-3">
+                              <img
+                                class="kayak-img img-fluid rounded"
+                                *ngIf="result.MainImage"
+                                [src]="result.MainImage"
+                                [alt]="result.CenterName"
+                               
+                              />
+                            </div>
+      
+                          <!-- Details Column -->
+                          <div class="col-md-4 sizeofdata">
                               <div>
-                                <strong>Building Size:</strong> {{ place.BuildingSizeSf }} sq ft
+                                <strong>Center Name:</strong> {{ result.CenterName }}
                               </div>
-                             
-                            </li>
-                          </ul>
-                        </div> -->
+                              <div>
+                                <strong>Address:</strong> {{ result.CenterAddress }}
+                              </div>
+                              <div>
+                                <strong>State:</strong> {{ result.CenterState }}
+                              </div>
+                              <div>
+                                <strong>City:</strong> {{ result.CenterCity }}
+                              </div>
+                      
+                              <!-- <div *ngIf="result.place?.length">
+                                <strong>Total Places:</strong> {{ result.place.length }}
+                                <ul>
+                                  <li *ngFor="let place of result.place">
+                                    <div>
+                                      <strong>Building Size:</strong> {{ place.BuildingSizeSf }} sq ft
+                                    </div>
+                                   
+                                  </li>
+                                </ul>
+                              </div> -->
+                            </div>
+                            <div class="col-md-5">
+                                <div class="text-center">
+                                  <!-- Image -->
+                                  <img src="../../../../assets/Images/Logos/Co. Logo.png" alt="Company Logo" class="img-fluid">
+                                  
+                                  <!-- Span under the image -->
+                                  <span class="company-name">KLNB</span>
+                                  
+                                  <!-- Background with black dot and text -->
+                                  <div class="info-background">
+                                    <span class="black-dot"></span>
+                                    <span class="info-text">Retail Leasing</span>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                        </div>
                       </div>
-                    <div class="col-md-3"></div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
+            </ng-container>
+      
           </div>
         </div>
       </div>
