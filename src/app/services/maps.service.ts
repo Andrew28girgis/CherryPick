@@ -264,7 +264,9 @@ export class MapsService {
 
     if (this.markerMap[markerData.id].length > 0) {
       return;
-    }
+    } 
+
+    
 
     markerData.places.forEach((place) => {
       const imgUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${place.id}`;
