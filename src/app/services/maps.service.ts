@@ -199,8 +199,8 @@ export class MapsService {
               : ''
           }
   
-          ${managerOrgs ? `<div class="py-2">${managerOrgs}</div>` : ''}
-  
+          ${managerOrgs ? `<div class="py-2">${managerOrgs}</div>` : ''} 
+          
           <div class="buttons-wrap">
             <button id="view-details-${
               markerData.ShoppingCenter?.Places
@@ -268,7 +268,6 @@ export class MapsService {
 
     markerData.places.forEach((place) => {
       const imgUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${place.id}`;
-
       place.RetailRelationCategories.forEach((branch) => {
         branch.Branches.forEach((b) => {
           const latitude = Number(b.Latitude);
@@ -573,7 +572,6 @@ export class MapsService {
         const monthlyCost = Math.floor((leaseNumeric * minSize) / 12);
         resultLeasePrice = `$${formatNumberWithCommas(monthlyCost)}/month`;
       } else {
-        // If parsing failed, default to On Request
         resultLeasePrice = 'On Request';
       }
     }
@@ -582,22 +580,13 @@ export class MapsService {
   }
 
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
-    // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
     const size = Number(buildingSizeSf);
-
-    // Check if the values are valid numbers
     if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
-      // Calculate the lease price per month
       const calculatedPrice = Math.floor((leasePrice * size) / 12);
-
-      // Format the calculated price with commas
       const formattedPrice = calculatedPrice.toLocaleString();
-
-      // Return the formatted result
       return `$${formattedPrice}/month`;
     } else {
-      // If invalid values are provided, return 'On Request'
       return 'On Request';
     }
   }
@@ -628,25 +617,20 @@ export class MapsService {
 
   drawSinglePolygon(map: any, feature: any): void {
     try {
-      // Parse the JSON string into an object
       const geoJson = JSON.parse(feature.json);
-
-      // Extract coordinates from the GeoJSON structure
       const coordinates = geoJson.geometry.coordinates[0];
-
-      // Convert coordinates to LatLng array for Google Maps
       const polygonCoords = coordinates.map((coord: number[]) => ({
-        lat: coord[1], // Latitude is second element
-        lng: coord[0]  // Longitude is first element
+        lat: coord[1], 
+        lng: coord[0]  
       }));
 
       // Create and add the polygon to the map
       const polygon = new google.maps.Polygon({
         paths: polygonCoords,
-        strokeColor: '#FF0000',
+        strokeColor: '#3498db',
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: '#FF0000',
+        fillColor: '#3498db',
         fillOpacity: 0.35,
         map: map
       });
