@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 
-import * as bootstrap from 'bootstrap'; // Import Bootstrap
+// import * as bootstrap from 'bootstrap'; // Import Bootstrap
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
@@ -519,9 +519,9 @@ export class HomeComponent implements OnInit ,AfterViewInit  {
   ngAfterViewInit(): void {
     // Initialize all popovers on the page
     const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    popoverTriggerList.forEach(popoverTriggerEl => {
-      new bootstrap.Popover(popoverTriggerEl);
-    });
+    // popoverTriggerList.forEach(popoverTriggerEl => {
+    //   new bootstrap.Popover(popoverTriggerEl);
+    // });
   }
 
   setIframeUrl(url: string): void {

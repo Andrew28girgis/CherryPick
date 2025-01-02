@@ -277,8 +277,7 @@ export class MapsService {
           if (!isNaN(latitude) && !isNaN(longitude)) {
             const marker = new google.maps.Marker({
               position: {
-                lat: latitude,
-                
+                lat: latitude, 
                 lng: longitude,
               },
               icon: {
