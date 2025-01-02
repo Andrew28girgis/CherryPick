@@ -1,30 +1,5 @@
-@font-face {
-  font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi-regular/Satoshi-Regular.woff2")
-      format("woff2"),
-    url("/assets/fonts/satoshi-regular/Satoshi-Regular.woff") format("woff"),
-    url("/assets/fonts/satoshi-regular/Satoshi-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
 
-@font-face {
-  font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi-bold/Satoshi-Bold.woff2") format("woff2"),
-    url("/assets/fonts/satoshi-bold/Satoshi-Bold.woff") format("woff"),
-    url("/assets/fonts/satoshi-bold/Satoshi-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi-medium/Satoshi-Medium.woff2") format("woff2"),
-    url("/assets/fonts/satoshi-medium/Satoshi-Medium.woff") format("woff"),
-    url("/assets/fonts/satoshi-medium/Satoshi-Medium.ttf") format("truetype");
-  font-weight: 500;
-  font-style: normal;
-}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
   --app-color: #000000;
@@ -533,10 +508,16 @@ body{
 }
 
 .content-title { 
-  font-size: 24px;
+  font-size: 20px;
+  white-space: nowrap;
   font-weight: 700;
   color: #000000;  
   margin: 0;
+  transition: color 1s ease;  
+
+}
+.content-title:hover {
+  color: gray;  
 }
 
 @media (max-width: 768px) {
@@ -574,16 +555,18 @@ body{
   font-weight: bold;
 }
 .spec {
-  margin-block: 5px;
   padding-right: 10px;
   padding-left: 0;
 }
 .spec-head {
-  color: #817a79;
-  font-weight: 400;
-  font-size: 16px;
-  margin: 0;
-  line-height: 20px;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 19px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: Body/Heading Color;
 }
 
 .spec-content {
@@ -631,6 +614,13 @@ body{
   color: #817a79;
 }
 
+/* General Table Styling */
+.procpect-table {
+  width: 100%; 
+  border-collapse: collapse; /* Ensure there's no space between cells */
+  table-layout: auto; /* Table adjusts dynamically based on content */
+}
+
 .procpect-table-head {
   background-color: #f5f5f5;
   position: sticky;
@@ -642,40 +632,22 @@ body{
 .procpect-table-head th {
   padding: 10px;
   background-color: #E4E7E9;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0d0c0c;
+  border-bottom: 1px solid #e4e4e4;
 }
 
 .procpect-table-head th:first-child {
-  border-top-left-radius: 12px; 
-  background-color: #E4E7E9; 
+  border-top-left-radius: 12px;
 }
 
 .procpect-table-head th:last-child {
-  border-top-right-radius: 12px; 
-  background-color: #E4E7E9; 
-
+  border-top-right-radius: 12px;
 }
 
-.rounded-table {
-  border-collapse: separate;  
-  border-spacing: 0;   
-  width: 100%;
-}
-
-.procpect-table {
-  width: 100%; 
-}
-
-.procpect-table-body{
+.procpect-table-body {
   background-color: #fff;
-}
-
-.procpect-table-head th {
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  color: #0d0c0c;
-  padding: 20px;
-  border-bottom: 1px solid #e4e4e4;
 }
 
 .procpect-table-body td {
@@ -685,6 +657,58 @@ body{
   line-height: 24px; /* 171.429% */
   color: #0d0c0c;
   border: 1px solid #e4e4e4;
+}
+
+/* Responsive Adjustments for Small Screens (extra small) */
+@media (max-width: 576px) {
+  /* Decrease font size and padding for small screens */
+  .procpect-table-head th, .procpect-table-body td {
+    font-size: 12px; /* Smaller font size */
+    padding: 8px; /* Reduced padding for compact layout */
+  }
+
+  /* Adjust the padding of the table body cells */
+  .procpect-table-body td {
+    font-size: 11px; /* Slightly smaller font for the table body */
+    padding: 8px;
+  }
+
+  /* Stack content vertically for smaller screens */
+  .d-flex {
+    flex-direction: column; /* Stack items in a column on small screens */
+    align-items: flex-start; /* Align items to the left */
+  }
+
+  /* Make sure images inside table cells do not stretch */
+  .procpect-table-body td img {
+    max-width: 30px; /* Limit the image size for smaller screens */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  /* Handle address lines in the first column */
+  .content-address {
+    font-size: 10px; /* Smaller text for the address */
+    line-height: 1.4; /* Adjust line height for better readability */
+  }
+
+  /* Remove any excessive margins or padding that could affect layout */
+  .procpect-table-body .contact-container p {
+    font-size: 10px; /* Smaller text for contact information */
+    margin: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  /* For very small screens, reduce padding further */
+  .procpect-table-head th, .procpect-table-body td {
+    padding: 5px;
+    font-size: 10px; /* Even smaller font size */
+  }
+
+  /* Ensure text and images scale well */
+  .procpect-table-body td img {
+    max-width: 25px; /* Further reduce image size */
+  }
 }
 
 

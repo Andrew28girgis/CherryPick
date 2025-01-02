@@ -5,7 +5,14 @@ import {
   OnInit,
   ViewChild,
   NgZone,
+  AfterViewInit,
+  TemplateRef
+  
 } from '@angular/core';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+
+import * as bootstrap from 'bootstrap'; // Import Bootstrap
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { AllPlaces, AnotherPlaces, General, Property } from 'src/models/domain';
@@ -24,7 +31,11 @@ import { ShareOrg } from 'src/models/shareOrg';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit ,AfterViewInit  {
+  shoppingCenter: any; // Replace with your actual type if available
+
+  selectedView: string = 'shoppingCenters'; // Default view
+
   General!: General;
   pageTitle!: string;
   BuyBoxId!: any;
@@ -66,13 +77,25 @@ export class HomeComponent implements OnInit {
   isCompetitorChecked = false; // Track the checkbox state
   isCoTenantChecked = false;
   cardsSideList: any[] = [];
-  selectedOption: any;
+  selectedOption!: number ;
+  selectedSS!:number ;
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
 
   buyboxCategories: BuyboxCategory[] = [];
+
+  showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
+  toggleShoppingCenters() {
+    this.showShoppingCenters = !this.showShoppingCenters;
+  }
+
+  showStandalone: boolean = true; // Ensure this reflects your initial state
   standAlone: Place[] = [];
+  toggleStandalone() {
+    this.showStandalone = !this.showStandalone;
+  }
+
   buyboxPlaces: BbPlace[] = [];
   Polygons:Polygons[]=[];
   ShareOrg:ShareOrg[]=[];
@@ -95,7 +118,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.loadShoppingCenterData();
+
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
@@ -103,13 +127,8 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
     });
 
-    this.selectedOption = this.dropdowmOptions[2];
+    this.selectedSS = 1;
     this.BuyBoxPlacesCategories(this.BuyBoxId);
-    this.GetPolygons(this.BuyBoxId);
-    this.GetOrganizationById(this.OrgId);
-    this.selectedOption = this.dropdowmOptions.find(
-      (option: any) => +option.status == +this.currentView
-    );
   }
 
   GetOrganizationById(orgId: number): void {
@@ -164,6 +183,7 @@ export class HomeComponent implements OnInit {
 
 
   getShoppingCenters(buyboxId: number): void {
+    this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -176,7 +196,7 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         console.log(`shoppingCenters`);
         console.log(this.shoppingCenters);
-
+        this.spinner.hide();
         this.getStandAlonePlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -184,6 +204,7 @@ export class HomeComponent implements OnInit {
   }
 
   getStandAlonePlaces(buyboxId: number): void {
+    this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyStandalonePlaces',
       Params: {
@@ -196,7 +217,7 @@ export class HomeComponent implements OnInit {
         this.standAlone = data.json;
         console.log(`standAlone`);
         console.log(this.standAlone);
-
+        this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -323,6 +344,31 @@ export class HomeComponent implements OnInit {
 
   onCheckboxChange(category: BuyboxCategory): void {
     this.markerService.toggleMarkers(this.map, category);
+  }
+  loadShoppingCenterData(): void {
+    // Example API response structure
+    this.shoppingCenter = {
+      ShoppingCenter: {
+        ManagerOrganization: [
+          {
+            Firstname: 'John',
+            LastName: 'Doe',
+            CellPhone: '123-456-7890',
+            Email: 'john.doe@example.com'
+          },
+          {
+            Firstname: 'Jane',
+            LastName: 'Smith',
+            CellPhone: '987-654-3210',
+            Email: 'jane.smith@example.com'
+          }
+        ]
+      }
+    };
+  }
+
+  isLast(currentItem: any, array: any[]): boolean {
+    return array.indexOf(currentItem) === array.length - 1;
   }
 
   private onMapDragEnd(map: any) {
@@ -469,6 +515,13 @@ export class HomeComponent implements OnInit {
     if (this.General.modalObject?.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
+  }
+  ngAfterViewInit(): void {
+    // Initialize all popovers on the page
+    const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.forEach(popoverTriggerEl => {
+      new bootstrap.Popover(popoverTriggerEl);
+    });
   }
 
   setIframeUrl(url: string): void {
@@ -762,4 +815,10 @@ export class HomeComponent implements OnInit {
       return '';
     }
   }
+
+
+  setDefaultView(viewValue:number){
+    this.selectedSS = viewValue ;
+  }
+
 }
