@@ -3,15 +3,18 @@
   border: 1px solid var(--Body-General-Body-Border, #caced3);
   background: var(--Card-Section-BG, #fff);
 }
+
 .form-select {
   border-radius: 0;
   padding: 7px 19px;
 }
+
 .separator {
   margin: 0 10px;
   font-weight: bold;
   color: #ccc; 
 }
+
 .d-flex .form-select,
 .d-flex .input-group {
   flex-grow: 1; 
@@ -20,6 +23,7 @@
 .d-flex {
   gap: 0; 
 }
+
 .blue-box {
   background-color: #013060;
   padding: 13px;
@@ -46,7 +50,6 @@
 .show-map {
   color: var(--Colors-Neutral-900, #0c0d0e);
   text-align: center;
-
   font-family: Montserrat;
   font-size: 14px;
   font-style: normal;
@@ -54,6 +57,7 @@
   line-height: 24px; 
   letter-spacing: -0.07px;
 }
+
 .btn-filter {
   background-color: #007bff; 
   color: white; 
@@ -321,5 +325,55 @@ line-height: 30px;
   z-index: 0;
 }
 
+.tags{
+  background-color: var(--secondary-color);
+  border: var(--secondary-color);
+  margin-left: 0;
+}
 
-
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+.badge {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 15px;
+}
+.view-act{
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 20px;
+}
+.view-act h4{
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--app-color);
+}
+.custom-multiselect {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.search-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.specialty-list {
+  display: flex;
+  flex-direction: column;
+}
+.specialty-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.specialty-item input {
+  margin-right: 10px;
+}
