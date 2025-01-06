@@ -5,7 +5,6 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { KayakResult, StatesAndCities } from 'src/models/kayak';
 
 @Component({
@@ -14,8 +13,8 @@ import { KayakResult, StatesAndCities } from 'src/models/kayak';
   styleUrls: ['./kayak.component.css'],
 })
 export class KayakComponent implements OnInit {
-  KayakResult!: KayakResult; // Stores the filtered results
-  KayakCitiesandStates: StatesAndCities[] = []; // Stores the states and cities data
+  KayakResult!: KayakResult; 
+  KayakCitiesandStates: StatesAndCities[] = []; 
   selectedState:any;
   selectedCity:any;
   uniqueStates!:any[];
@@ -24,7 +23,6 @@ export class KayakComponent implements OnInit {
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
-    private modalService: NgbModal,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService
   ) {}
@@ -65,7 +63,6 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakCitiesandStates = data.json; 
-
         this.uniqueStates = [
           ...new Set(this.KayakCitiesandStates.map((item: any) => item.stateCode))
         ];  
@@ -73,8 +70,6 @@ export class KayakComponent implements OnInit {
         this.uniqueStates = [
           ...new Set(this.uniqueStates.map(state => state.trim()))
         ];
-
-        
         this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),

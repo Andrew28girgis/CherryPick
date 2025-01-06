@@ -170,17 +170,31 @@
                                   [placement]="'right'"
                                 />
                               </div>
-                              
                             </div>
                             <ng-template #popoverContent>
                               <!-- Dynamic Content from ManagerOrganization -->
-                              <div *ngFor="let org of shoppingCenter.ShoppingCenter.ManagerOrganization" class="contact-container table-text">
+                              <div
+                                *ngFor="
+                                  let org of shoppingCenter.ShoppingCenter
+                                    .ManagerOrganization
+                                "
+                                class="contact-container table-text"
+                              >
                                 <p class="text-bold m-0">
-                                  {{ org.Firstname | titlecase }} {{ org.LastName | titlecase }}
+                                  {{ org.Firstname | titlecase }}
+                                  {{ org.LastName | titlecase }}
                                 </p>
                                 <p class="m-0">{{ org.CellPhone }}</p>
                                 <p class="m-0">{{ org.Email }}</p>
-                                <hr *ngIf="!isLast(org, shoppingCenter.ShoppingCenter.ManagerOrganization)" />
+                                <hr
+                                  *ngIf="
+                                    !isLast(
+                                      org,
+                                      shoppingCenter.ShoppingCenter
+                                        .ManagerOrganization
+                                    )
+                                  "
+                                />
                               </div>
                             </ng-template>
                           </div>
@@ -638,7 +652,8 @@
                 <div class="row">
                   <div
                     *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
-                    class="col-12 d-flex flex-column spec">
+                    class="col-12 d-flex flex-column spec"
+                  >
                     <!-- Wrap everything in a flex container -->
                     <div class="d-flex align-items-center">
                       <!-- Logo Image -->
@@ -651,14 +666,14 @@
                         alt=""
                       />
                       <!-- Distance and MI -->
-                      <div class="d-flex align-items-center justify-content-center">
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                      >
                         <span class="me-2">
                           <span>{{ item.Distance.toFixed(2) }} </span>
                         </span>
-                        <span>
-                          MI
-                        </span>
-                       </div>
+                        <span> MI </span>
+                      </div>
                       <!-- Nearest Category Name -->
                       <span class="spec-head ms-3">
                         Nearest {{ getNeareastCategoryName(item.CategoryId) }}
@@ -687,15 +702,15 @@
                       {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
 
                       <img
-                      style="cursor: pointer"
-                      class="ms-2"
-                      src="../../../assets/Images/Icons/eye.png"
-                      alt="View Manager Details"
-                      [ngbPopover]="popoverContent"
-                      popoverTitle="Organization Contact Info"
-                      triggers="click:outside"
-                      [placement]="'right'"
-                    />
+                        style="cursor: pointer"
+                        class="ms-2"
+                        src="../../../assets/Images/Icons/eye.png"
+                        alt="View Manager Details"
+                        [ngbPopover]="popoverContent"
+                        popoverTitle="Organization Contact Info"
+                        triggers="click:outside"
+                        [placement]="'right'"
+                      />
                       <br />
                       <!-- <ng-container
                         *ngFor="
@@ -709,13 +724,28 @@
                         <br />
                       </ng-container> -->
                       <ng-template #popoverContent>
-                        <div *ngFor="let org of shopping.ShoppingCenter.ManagerOrganization" class="contact-container table-text">
+                        <div
+                          *ngFor="
+                            let org of shopping.ShoppingCenter
+                              .ManagerOrganization
+                          "
+                          class="contact-container table-text"
+                        >
                           <p class="text-bold m-0">
-                            {{ org.Firstname | titlecase }} {{ org.LastName | titlecase }}
+                            {{ org.Firstname | titlecase }}
+                            {{ org.LastName | titlecase }}
                           </p>
                           <p class="m-0">{{ org.CellPhone }}</p>
                           <p class="m-0">{{ org.Email }}</p>
-                          <hr *ngIf="!isLast(org, shoppingCenter.ShoppingCenter.ManagerOrganization)" />
+                          <hr
+                            *ngIf="
+                              !isLast(
+                                org,
+                                shoppingCenter.ShoppingCenter
+                                  .ManagerOrganization
+                              )
+                            "
+                          />
                         </div>
                       </ng-template>
                     </p>
@@ -925,18 +955,19 @@
                 <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
               </div>
 
-              <div
-                class="content-wrap card-sideview"       >
+              <div class="content-wrap card-sideview">
                 <div *ngIf="place.CenterName">
                   <p
                     class="content-title"
                     (click)="goToPlace(place)"
-                    style="cursor: pointer">
+                    style="cursor: pointer"
+                  >
                     {{
                       place.CenterName.length > 22
                         ? (place.CenterName | titlecase).slice(0, 22) + "..."
                         : (place.CenterName | titlecase)
-                    }}                  </p>
+                    }}
+                  </p>
                 </div>
 
                 <div
@@ -966,8 +997,8 @@
 
                 <div *ngIf="place.CenterAddress">
                   <p
-                  style="font-size: 15px; font-weight: 500; color: #565656"
-                  [innerHTML]="getShoppingCenterUnitSize(place)"
+                    style="font-size: 15px; font-weight: 500; color: #565656"
+                    [innerHTML]="getShoppingCenterUnitSize(place)"
                   ></p>
                 </div>
                 <div *ngIf="!place.CenterAddress">
@@ -1000,30 +1031,30 @@
                     "
                     class="col-12 d-flex flex-column spec"
                   >
-                  <div class="d-flex align-items-center">
-                    <!-- Logo Image -->
-                    <img
-                      class="logo ms-2"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        item.RelationOrganizationId
-                      }}"
-                      [title]="item.RelationOrganizationName"
-                      alt=""
-                    />
-                    <!-- Distance and MI -->
-                   <div class="d-flex align-items-center justify-content-center">
-                    <span class="me-2">
-                      <span>{{ item.Distance.toFixed(2) }} </span>
-                    </span>
-                    <span>
-                      MI
-                    </span>
-                   </div>
-                    <!-- Nearest Category Name -->
-                    <span class="spec-head ms-3">
-                      Nearest {{ getNeareastCategoryName(item.CategoryId) }}
-                    </span>
-                  </div>
+                    <div class="d-flex align-items-center">
+                      <!-- Logo Image -->
+                      <img
+                        class="logo ms-2"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
+                        alt=""
+                      />
+                      <!-- Distance and MI -->
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                      >
+                        <span class="me-2">
+                          <span>{{ item.Distance.toFixed(2) }} </span>
+                        </span>
+                        <span> MI </span>
+                      </div>
+                      <!-- Nearest Category Name -->
+                      <span class="spec-head ms-3">
+                        Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

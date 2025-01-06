@@ -1,153 +1,149 @@
-.card-filter{
-    border-radius: var(--Card-Section-Lg-Radius, 20px);
-    border: 1px solid var(--Body-General-Body-Border, #CACED3);
-    background: var(--Card-Section-BG, #FFF);
-    height: 100vh;
+.card-filter {
+  border-radius: var(--Card-Section-Lg-Radius, 20px);
+  border: 1px solid var(--Body-General-Body-Border, #caced3);
+  background: var(--Card-Section-BG, #fff);
+  height: 100vh;
 }
 .form-select {
-    border-radius: 0; /* Removes rounding */
-  }
-  .separator {
-    margin: 0 10px; /* Adds spacing around the | character */
-    font-weight: bold;
-    color: #ccc; /* Light gray color for the separator */
-  }
-  .d-flex .form-select,
-  .d-flex .input-group {
-    flex-grow: 1; /* Ensures all elements are the same size */
-  }
-  
-  .d-flex {
-    gap: 0; /* Removes extra spacing between columns */
-  }
-  .blue-box {
-    background-color: #013060;
-    padding: 13px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
-    cursor: pointer;
-  }
-  
-  .blue-box i {
-    color: white; /* Makes the icon white */
-    transition: color 0.3s ease; /* Smooth transition for icon color */
-  }
-  
-  /* Hover effect */
-  .blue-box:hover {
-    background-color: #00509e; /* Slightly lighter blue */
-    transform: scale(1.1); /* Slightly enlarges the box */
-  }
-  
-  
-  .show-map{
-    color: var(--Colors-Neutral-900, #0C0D0E);
-text-align: center;
+  border-radius: 0; /* Removes rounding */
+}
+.separator {
+  margin: 0 10px; /* Adds spacing around the | character */
+  font-weight: bold;
+  color: #ccc; /* Light gray color for the separator */
+}
+.d-flex .form-select,
+.d-flex .input-group {
+  flex-grow: 1; /* Ensures all elements are the same size */
+}
 
-font-family: Montserrat;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; /* 171.429% */
-letter-spacing: -0.07px;
-  }
-  .btn-filter {
-    background-color: #007bff; /* Blue background */
-    color: white; /* White text */
-    border: none; /* Remove default border */
-    border-radius: 20px; /* Rounded corners */
-    padding: 10px 20px; /* Add some padding */
-    font-size: 16px; /* Adjust font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease; /* Smooth transition on hover */
-  }
-  
-  .btn-filter:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
-  .kayak-img {
-    max-height: 200px;
-    width: 300px;
-    object-fit: cover; /* Ensures the image fits nicely without distortion */
-    border-radius: 8px; /* Optional: Adjust rounding to match design */
-  }
-  .sizeofdata{
-    border-right: 1px solid #ccc;
-    font-size: 0.9rem;
-  }
+.d-flex {
+  gap: 0; 
+}
+
+.blue-box {
+  background-color: #013060;
+  padding: 13px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
+  cursor: pointer;
+}
+
+.blue-box i {
+  color: white; /* Makes the icon white */
+  transition: color 0.3s ease; /* Smooth transition for icon color */
+}
+
+/* Hover effect */
+.blue-box:hover {
+  background-color: #00509e; /* Slightly lighter blue */
+  transform: scale(1.1); /* Slightly enlarges the box */
+}
+
+.show-map {
+  color: var(--Colors-Neutral-900, #0c0d0e);
+  text-align: center;
+
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 171.429% */
+  letter-spacing: -0.07px;
+}
+.btn-filter {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  border: none; /* Remove default border */
+  border-radius: 20px; /* Rounded corners */
+  padding: 10px 20px; /* Add some padding */
+  font-size: 16px; /* Adjust font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.btn-filter:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+.kayak-img {
+  max-height: 200px;
+  width: 300px;
+  object-fit: cover; /* Ensures the image fits nicely without distortion */
+  border-radius: 8px; /* Optional: Adjust rounding to match design */
+}
+.sizeofdata {
+  border-right: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
 #state-select,
 #city-select {
   border-radius: 10px;
 }
-.card-body {
-    position: relative; /* Ensures the button is positioned relative to the card body */
-  }
-  
-  .filter-btn-container {
-    position: absolute;
-    bottom: 15px; /* Adjust spacing from the bottom */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust for centering */
-    width: 100%; /* Optional: Make it span the width of the container */
-    text-align: center; /* Center text alignment */
-  }
-  
-  .btn-filter {
-    width: 80%; /* Optional: Adjust button width */
-    border-radius: 15px; /* Rounded corners for a modern look */
-  }
-  /* Center-align content inside the div */
-.text-center {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  .company-name {
-    display: block;
-    font-weight: bold;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-  
-  .info-background {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f5f5f5; /* Light gray background */
-    padding: 5px 15px;
-    border-radius: 20px; /* Rounded background */
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .black-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    background-color: black;
-    border-radius: 50%;
-    margin-right: 8px; /* Space between the dot and text */
-  }
-  
-  .info-text {
-    font-family: Montserrat;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 24px;
-    letter-spacing: -0.005em;
-    text-align: center;
-    text-underline-position: from-font;
-    text-decoration-skip-ink: none;
-    
-  }
-  
-  
 
-  
-      
+.card-body {
+  position: relative; /* Ensures the button is positioned relative to the card body */
+}
+
+.filter-btn-container {
+  position: absolute;
+  bottom: 15px; /* Adjust spacing from the bottom */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Adjust for centering */
+  width: 100%; /* Optional: Make it span the width of the container */
+  text-align: center; /* Center text alignment */
+}
+
+.btn-filter {
+  width: 80%; /* Optional: Adjust button width */
+  border-radius: 15px; /* Rounded corners for a modern look */
+}
+/* Center-align content inside the div */
+.text-center {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.company-name {
+  display: block;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.info-background {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5; /* Light gray background */
+  padding: 5px 15px;
+  border-radius: 20px; /* Rounded background */
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.black-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: black;
+  border-radius: 50%;
+  margin-right: 8px; /* Space between the dot and text */
+}
+
+.info-text {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  text-align: center;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
