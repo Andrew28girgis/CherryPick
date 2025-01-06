@@ -13,8 +13,10 @@ import { KayakResult, StatesAndCities } from 'src/models/kayak';
   styleUrls: ['./kayak.component.css'],
 })
 export class KayakComponent implements OnInit {
-  KayakResult!: KayakResult; 
-  KayakCitiesandStates: StatesAndCities[] = []; 
+  Ids!: number[]; 
+  filtered!:any;
+  KayakResult!: KayakResult; // Stores the filtered results
+  KayakCitiesandStates: StatesAndCities[] = []; // Stores the states and cities data
   selectedState:any;
   selectedCity:any;
   uniqueStates!:any[];
@@ -29,6 +31,7 @@ export class KayakComponent implements OnInit {
 
   ngOnInit(): void {
     this.GetStatesAndCities();
+    this.GetFilters();
   }
 
   getResult(stateCode: string, city: string): void {
@@ -47,10 +50,30 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakResult = data.json[0];  
+  
+        
        },
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+  GetFilters(): void {
+    const body: any = {
+      Name: 'GetFilters',
+      Params: {
+        ids : this.Ids 
+      },
+
+    }; 
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.filtered = data;  
+        console.log(this.filtered);
+        
+       },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+  
 
  
   GetStatesAndCities(): void {
@@ -63,13 +86,12 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakCitiesandStates = data.json; 
-        this.uniqueStates = [
-          ...new Set(this.KayakCitiesandStates.map((item: any) => item.stateCode))
-        ];  
-      
-        this.uniqueStates = [
-          ...new Set(this.uniqueStates.map(state => state.trim()))
-        ];
+        console.log(this.KayakCitiesandStates);
+        
+
+        this.uniqueStates = Array.from(
+          new Set(this.KayakCitiesandStates.map((item: any) => item.stateCode))
+        );   
         this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -99,6 +121,10 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakResult = data.json[0];  
+        this.Ids = data.json[0].Ids;
+        console.log(this.Ids);
+        
+        this.GetFilters(); 
         this.spinner.hide();
        },
       error: (error) => console.error('Error fetching APIs:', error),
