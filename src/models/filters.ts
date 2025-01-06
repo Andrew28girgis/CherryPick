@@ -10,6 +10,8 @@ export interface KayakFilters {
     OrganizationId: number
     Name: string
     ShoppingCenterContact: ShoppingCenterContact[]
+    Selected : boolean
+
   }
   
   export interface ShoppingCenterContact {
@@ -26,6 +28,7 @@ export interface KayakFilters {
   export interface Tenant {
     OrganizationId: number
     Name: string
+    Selected : boolean
     Branches: Branch[]
   }
   
@@ -47,16 +50,16 @@ export interface KayakFilters {
     SecondaryType: string
   }
   
-  export class filterValues {
-    statecode!: string   
-    city!: string
-    neighbourhood!: string
-    availabilty!:boolean
-    sqft!: number
-    secondarytype: any
-    tenants:any
-    tags: any 
-    managementOrganizationIds: any
-    minsize!: number
-    maxsize!: number
+  export class FilterValues {
+    statecode!: string;
+    city!: string;
+    neighbourhood!: string;
+    availabilty!: boolean;
+    sqft!: number;
+    secondarytype!: string | null; // Assume secondary type could be a string or null
+    tenants: any;
+    tags!: any; // Assuming tags are stored as an array of strings
+    managementOrganizationIds!: any; // Assuming IDs are an array of strings
+    minsize!: number;
+    maxsize!: number;
   }

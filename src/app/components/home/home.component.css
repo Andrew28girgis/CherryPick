@@ -479,7 +479,7 @@ img[alt="logo"] {
 .table-text{
   color: var(--Table-Info-Cell-Color, #7A8591);
   font-family: Montserrat;
-  font-size: 16px;
+  font-size: 0.9rem;
   font-style: normal;
   font-weight: 400;
   line-height: 30px; 

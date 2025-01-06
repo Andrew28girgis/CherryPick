@@ -1,10 +1,15 @@
-import { filterValues } from './../../../../models/filters';
+import { Organization } from './../../../../models/userKanban';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { KayakResult, StatesAndCities } from 'src/models/kayak';
-import { KayakFilters } from 'src/models/filters';
+import {
+  FilterValues,
+  KayakFilters,
+  ManagementOrganization,
+  Tenant,
+} from 'src/models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -22,7 +27,7 @@ export class KayakComponent implements OnInit {
   uniqueStates!: any[];
   uniqueCities!: any[];
   Filters!: KayakFilters;
-  filterValues!: any;
+  filterValues!: FilterValues;
 
   tags: any[] = [];
   visibleTags: any[] = [];
@@ -40,18 +45,31 @@ export class KayakComponent implements OnInit {
 
   ngOnInit(): void {
     this.GetStatesAndCities();
-    this.GetFilters();
-    this.filterValues = {};
+    this.filterValues = {
+      statecode: '',
+      city: '',
+      neighbourhood: '',
+      availabilty: false,
+      sqft: 0,
+      secondarytype: '',
+      tenants: '',
+      tags: '',
+      managementOrganizationIds: '',
+      minsize: 0,
+      maxsize: 0,
+    };
   }
 
   getResult(): void {
+    console.log(`filter values`);
+
     console.log(this.filterValues);
 
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
     };
-    
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakResult = data.json[0];
@@ -70,10 +88,9 @@ export class KayakComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        this.Filters = data.json[0];
-        console.log(`filters`);
-
-        console.log(this.Filters);
+        if (data && data.json && data.json.length > 0) {
+          this.Filters = data.json[0];
+        }
 
         this.spinner.hide();
       },
@@ -106,28 +123,66 @@ export class KayakComponent implements OnInit {
     this.uniqueCities = this.KayakCitiesandStates.filter(
       (s) => s.stateCode == this.filterValues?.statecode
     );
-    console.log(this.KayakCitiesandStates);
+  }
+
+  toggleTenantSelection(tenant: Tenant): void {
+    // Safely get the current comma-separated string of IDs
+    const currentTenants = this.filterValues.tenants || '';
+
+    // Split on commas, trim spaces, and remove any empty entries
+    let tenantIds = currentTenants
+      .split(',')
+      .map((id: any) => id.trim())
+      .filter((id: any) => id !== '');
+
+    // Convert OrganizationId to string to ensure matching works
+    const orgIdAsString = String(tenant.OrganizationId);
+
+    if (tenant.Selected) {
+      // Add the ID if not already present
+      if (!tenantIds.includes(orgIdAsString)) {
+        tenantIds.push(orgIdAsString);
+      }
+    } else {
+      // Remove the ID
+      tenantIds = tenantIds.filter((id: any) => id !== orgIdAsString);
+    }
+
+    // Convert back to a comma-separated string
+    this.filterValues.tenants = tenantIds.join(',');
+    console.log('Tenants:', this.filterValues.tenants);
+  }
+
+  toggleOrgSelection() {
+    this.filterValues.managementOrganizationIds =
+      this.Filters?.ManagementOrganization?.filter(
+        (org: ManagementOrganization) => org.Selected
+      )
+        .map((org: ManagementOrganization) => org.OrganizationId)
+        .join(',');
+    console.log(
+      'ManagementOrganizationIds:',
+      this.filterValues.managementOrganizationIds
+    );
   }
 
   searchShoppingCenter() {
     this.spinner.show();
+
     const body: any = {
       Name: 'GetResult',
-      Params: {
-        city: this.selectedCity ? this.selectedCity : '',
-        statecode: this.selectedState ? this.selectedState : '',
-        minsize: '',
-        maxsize: '',
-        tags: '',
-        secondarytype: '',
-      },
+      Params: this.filterValues,
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakResult = data.json[0];
         this.Ids = data.json[0].Ids;
-        this.GetFilters();
+
+        if (!this.Filters?.SecondaryType) {
+          this.GetFilters();
+        }
+
         this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -170,18 +225,33 @@ export class KayakComponent implements OnInit {
   }
   toggleTagSelection(tag: any): void {
     const index = this.selectedTags.findIndex((t) => t.tag === tag.tag);
+  
+    // Toggle logic for this.selectedTags
     if (index > -1) {
-      this.selectedTags.splice(index, 1); // Remove if already selected
+      // Remove if already selected
+      this.selectedTags.splice(index, 1);
     } else {
-      this.selectedTags.push(tag); // Add if not selected
+      // Add if not selected
+      this.selectedTags.push(tag);
     }
-    // Update isSelected property to sync with modal
+  
+    // Update isSelected property in the main tags array (for the modal)
     const modalTagIndex = this.tags.findIndex((t) => t.tag === tag.tag);
     if (modalTagIndex > -1) {
-      this.tags[modalTagIndex].isSelected = index === -1;
+      // If index is -1, it means we are adding it (so isSelected=true)
+      this.tags[modalTagIndex].isSelected = (index === -1);
     }
-    // this.GetWizardShoppingCenters();
-  }
+  
+    // Create a comma-separated string of all tags that are isSelected == true
+    // (use the main "tags" array or "selectedTags" — here, "tags" is more reliable if you want to ensure isSelected is accurate)
+    const selectedTagObjects = this.tags.filter(t => t.isSelected);
+    const selectedTagNames   = selectedTagObjects.map(t => t.tag);
+  
+    // Store comma-separated tags in filterValues
+    this.filterValues.tags = selectedTagNames.join(',');
+  
+   }
+  
   isTagSelected(tag: any): boolean {
     return this.selectedTags.some((t) => t.tag === tag.tag);
   }
