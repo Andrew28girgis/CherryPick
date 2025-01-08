@@ -744,3 +744,7 @@ p {
 .carousel-control-next {
   right: -121px !important;
 }
+
+.gm-style .gm-style-iw-tc::after {
+  display: none;
+}
