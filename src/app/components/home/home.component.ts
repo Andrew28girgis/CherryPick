@@ -118,6 +118,9 @@ export class HomeComponent implements OnInit {
 
     this.selectedSS = 1;
     this.BuyBoxPlacesCategories(this.BuyBoxId);
+    this.GetOrganizationById(this.OrgId);
+    this.GetPolygons(this.BuyBoxId);
+
   }
 
   GetOrganizationById(orgId: number): void {
