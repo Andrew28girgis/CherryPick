@@ -266,7 +266,6 @@ export class KayakComponent implements OnInit {
   }
   applyTags(): void {
     const selectedTagsJson = this.selectedTags.map((tag) => ({ tag: tag.tag }));
-    console.log('Selected Tags to be sent:', selectedTagsJson);
     this.modalService.dismissAll();
   }
 }

@@ -1,17 +1,11 @@
 import {
   ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  NgZone,
-  AfterViewInit,
-  TemplateRef,
+  Component, 
+  OnInit, 
+  NgZone, 
 } from '@angular/core';
-import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-
-// import * as bootstrap from 'bootstrap'; // Import Bootstrap
-
+ 
+ 
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { AllPlaces, AnotherPlaces, General, Property } from 'src/models/domain';
@@ -425,7 +419,7 @@ export class HomeComponent implements OnInit {
       return false;
     }
 
-    return bounds.contains({ lat, lng });
+    return bounds?.contains({ lat, lng });
   }
 
   onMouseEnter(place: any): void {

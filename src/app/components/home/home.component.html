@@ -393,7 +393,7 @@
                     <th>Lease Price</th>
                     <ng-container
                       *ngFor="
-                        let item of standAlone[0].Place.BuyBoxPlaces;
+                        let item of standAlone[0].Place?.BuyBoxPlaces;
                         let i = index
                       "
                     >
@@ -437,7 +437,7 @@
                       <ng-container *ngIf="place.Place">
                         <ng-container
                           *ngFor="
-                            let item of place.Place.BuyBoxPlaces;
+                            let item of place.Place?.BuyBoxPlaces;
                             let i = index;
                             trackBy: trackByIndex
                           "
@@ -709,7 +709,7 @@
                         [ngbPopover]="popoverContent"
                         popoverTitle="Organization Contact Info"
                         triggers="click:outside"
-                        [placement]="'right'"
+                        [placement]="'bottom'"
                       />
                       <br />
                       <!-- <ng-container
@@ -858,7 +858,7 @@
 
                 <div *ngIf="place.Place">
                   <div
-                    *ngFor="let item of place.Place.BuyBoxPlaces"
+                    *ngFor="let item of place.Place?.BuyBoxPlaces"
                     class="d-flex align-items-center justify-content-centermb-2"
                   >
                     <!-- Image -->
@@ -1026,8 +1026,8 @@
                   <div
                     *ngFor="
                       let item of place.ShoppingCenter
-                        ? place.ShoppingCenter.BuyBoxPlaces
-                        : place.Place.BuyBoxPlaces
+                        ? place.ShoppingCenter?.BuyBoxPlaces
+                        : place.Place?.BuyBoxPlaces
                     "
                     class="col-12 d-flex flex-column spec"
                   >

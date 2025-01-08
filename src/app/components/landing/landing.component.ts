@@ -121,10 +121,10 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.CustomPlace = data.json[0];
+        this.CustomPlace = data.json?.[0] || null;
 
         if (ShoppingcenterId !== 0) {
-          this.ShoppingCenter = this.CustomPlace.ShoppingCenter[0];
+          this.ShoppingCenter = this.CustomPlace?.ShoppingCenter?.[0];
         }
         console.log(`custom place`);
         console.log(this.CustomPlace);
@@ -155,11 +155,11 @@ export class LandingComponent {
             : this.viewOnStreet();
         } else {
           
-          this.StandAlonePlace = this.CustomPlace.Place[0];
-          this.placeImage = this.StandAlonePlace.Images?.split(',').map(
+          this.StandAlonePlace = this.CustomPlace?.Place[0];
+          this.placeImage = this.StandAlonePlace?.Images?.split(',').map(
             (link) => link.trim()
           );
-          this.StandAlonePlace.StreetViewURL
+          this.StandAlonePlace?.StreetViewURL
             ? this.changeStreetView(this.StandAlonePlace)
             : this.viewOnStreet();
         }
