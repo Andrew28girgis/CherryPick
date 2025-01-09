@@ -16,8 +16,8 @@ export class MapsService {
   private map: any;
 
   constructor(public router: Router) {
-    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
-    this.storedOrgId = localStorage.getItem('OrgId');
+  
+    
   }
 
   createMarker(map: any, markerData: any, type: string): any {
@@ -106,6 +106,16 @@ export class MapsService {
     shoppingCenterId?: number
   ): void {
     console.log(`View details for marker ID: ${markerId}`);
+
+    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
+    this.storedOrgId = localStorage.getItem('OrgId');
+
+    console.log('BBS');
+    
+    console.log(this.storedBuyBoxId);
+    console.log(this.storedOrgId);
+    
+
 
     this.router.navigate([
       '/landing',
