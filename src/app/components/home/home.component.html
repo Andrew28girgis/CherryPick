@@ -44,18 +44,17 @@
           <span class="icon-text">{{ option.text }}</span>
         </div>
       </div>
-      
     </div>
     <div class="ms-2">
       <button
-      *ngIf="ShareOrg[0]"
-      class="view-details-card me-0 mt-2"
-      style="background-color:#001F3F; padding: 8px 30px;"
-      (click)="openLink(ShareLink)"
-    >
-      Share 
-    </button>
-    <!-- With {{ ShareOrg[0].name }} -->
+        *ngIf="ShareOrg[0]"
+        class="view-details-card me-0 mt-2"
+        style="background-color: #001f3f; padding: 8px 30px"
+        (click)="openLink(ShareLink)"
+      >
+        Share
+      </button>
+      <!-- With {{ ShareOrg[0].name }} -->
     </div>
   </div>
 </nav>
@@ -622,7 +621,7 @@
               style="cursor: pointer"
               class="card-window"
               [ngClass]="{
-                'col-md-3 col-sm-4 col-12': currentView == 3
+                'col-md-4 col-sm-4 col-12': currentView == 3
               }"
             >
               <div class="main-img" (click)="goToPlace(shopping)">
@@ -630,69 +629,80 @@
               </div>
 
               <div class="content-wrap card-content">
-                <div>
-                  <p
-                    class="content-title"
-                    (click)="goToPlace(shopping)"
-                    style="cursor: pointer"
-                  >
-                    {{
-                      shopping.CenterName.length > 22
-                        ? (shopping.CenterName | titlecase).slice(0, 22) + "..."
-                        : (shopping.CenterName | titlecase)
-                    }}
-                  </p>
-                </div>
-
-                <div
-                  class="card-address"
-                  style="cursor: pointer"
-                  (click)="openMapViewPlace(MapViewPlace, shopping)"
-                >
-                  <span class="mb-5">
-                    {{ shopping.CenterAddress }},
-                    {{ shopping.CenterCity | titlecase }},
-                    {{ shopping.CenterState }}
-                  </span>
-                </div>
-                <div>
-                  <p
-                    style="font-size: 15px; font-weight: 500; color: #565656"
-                    [innerHTML]="getShoppingCenterUnitSize(shopping)"
-                  ></p>
-                </div>
-                <div class="row">
-                  <div
-                    *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
-                    class="col-12 d-flex flex-column spec"
-                  >
-                    <!-- Wrap everything in a flex container -->
-                    <div class="d-flex align-items-center">
-                      <!-- Logo Image -->
-                      <img
-                        class="logo ms-2"
-                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          item.RelationOrganizationId
-                        }}"
-                        [title]="item.RelationOrganizationName"
-                        alt=""
-                      />
-                      <!-- Distance and MI -->
-                      <div
-                        class="d-flex align-items-center justify-content-center"
+                <div >
+                  <div style="height: 220px;overflow: auto;">
+                    <div>
+                      <p
+                        class="content-title"
+                        (click)="goToPlace(shopping)"
+                        style="cursor: pointer"
                       >
-                        <span class="me-2">
-                          <span>{{ item.Distance.toFixed(2) }} </span>
-                        </span>
-                        <span> MI </span>
-                      </div>
-                      <!-- Nearest Category Name -->
-                      <span class="spec-head ms-3">
-                        Nearest {{ getNeareastCategoryName(item.CategoryId) }}
+                        {{
+                          shopping.CenterName.length > 22
+                            ? (shopping.CenterName | titlecase).slice(0, 22) +
+                              "..."
+                            : (shopping.CenterName | titlecase)
+                        }}
+                      </p>
+                    </div>
+
+                    <div
+                      class="card-address"
+                      style="cursor: pointer"
+                      (click)="openMapViewPlace(MapViewPlace, shopping)"
+                    >
+                      <span class="mb-5">
+                        {{ shopping.CenterAddress }},
+                        {{ shopping.CenterCity | titlecase }},
+                        {{ shopping.CenterState }}
                       </span>
                     </div>
+                    <div>
+                      <p
+                        style="
+                          font-size: 15px;
+                          font-weight: 500;
+                          color: #565656;
+                        "
+                        [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                      ></p>
+                    </div>
+                    <div class="row">
+                      <div
+                        *ngFor="
+                          let item of shopping.ShoppingCenter?.BuyBoxPlaces
+                        "
+                        class="col-12 d-flex flex-column spec"
+                      >
+                        <!-- Wrap everything in a flex container -->
+                        <div class="d-flex align-items-center">
+                          <!-- Logo Image -->
+                          <img
+                            class="logo ms-2"
+                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              item.RelationOrganizationId
+                            }}"
+                            [title]="item.RelationOrganizationName"
+                            alt=""
+                          />
+                          <!-- Distance and MI -->
+                          <div
+                            class="d-flex align-items-center justify-content-center"
+                          >
+                            <span class="me-2">
+                              <span>{{ item.Distance.toFixed(2) }} </span>
+                            </span>
+                            <span> MI </span>
+                          </div>
+                          <!-- Nearest Category Name -->
+                          <span class="spec-head ms-3">
+                            Nearest
+                            {{ getNeareastCategoryName(item.CategoryId) }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
                   <hr class="small-hr mt-2" />
 
                   <div

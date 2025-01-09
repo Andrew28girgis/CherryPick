@@ -96,8 +96,7 @@ export class HomeComponent implements OnInit {
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private markerService: MapsService,
-    private cdr: ChangeDetectorRef,
+    private markerService: MapsService, 
     private ngZone: NgZone,
     private sanitizer: DomSanitizer
   ) {
@@ -108,7 +107,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadShoppingCenterData();
-
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
@@ -467,11 +465,13 @@ export class HomeComponent implements OnInit {
         '/landing',
         place.ShoppingCenter?.Places ? place.ShoppingCenter.Places[0].Id : 0,
         place.Id,
+        this.BuyBoxId, 
+        this.OrgId
+        
 
-        this.BuyBoxId,
       ]);
     } else {
-      this.router.navigate(['/landing', place.Id, 0, this.BuyBoxId]);
+      this.router.navigate(['/landing', place.Id, 0, this.BuyBoxId ,this.OrgId] );
     }
   }
 
@@ -601,8 +601,7 @@ export class HomeComponent implements OnInit {
       .writeText(link)
       .then(() => {
         console.log('Link copied to clipboard!');
-        // Optionally, you could show a toast or notification to the user
-      })
+       })
       .catch((err) => {
         console.error('Could not copy text: ', err);
       });

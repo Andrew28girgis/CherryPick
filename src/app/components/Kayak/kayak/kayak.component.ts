@@ -214,6 +214,7 @@ export class KayakComponent implements OnInit {
       },
     });
   }
+
   filterTags(): void {
     if (this.searchTerm) {
       this.visibleTags = this.tags.filter((tag) =>
@@ -222,7 +223,8 @@ export class KayakComponent implements OnInit {
     } else {
       this.visibleTags = this.tags.slice(0, 10); // Reset to default
     }
-  }
+}
+
   toggleTagSelection(tag: any): void {
     const index = this.selectedTags.findIndex((t) => t.tag === tag.tag);
   
@@ -255,17 +257,18 @@ export class KayakComponent implements OnInit {
   isTagSelected(tag: any): boolean {
     return this.selectedTags.some((t) => t.tag === tag.tag);
   }
+
   removeTag(tag: any): void {
-    // Remove the tag from the selectedTags array
     this.selectedTags = this.selectedTags.filter((t) => t.tag !== tag.tag);
-    // Update the modal's checkbox state
     const modalTagIndex = this.tags.findIndex((t) => t.tag === tag.tag);
     if (modalTagIndex > -1) {
       this.tags[modalTagIndex].isSelected = false; // Ensure sync with modal
     }
   }
+
   applyTags(): void {
     const selectedTagsJson = this.selectedTags.map((tag) => ({ tag: tag.tag }));
     this.modalService.dismissAll();
   }
+
 }
