@@ -112,6 +112,7 @@ export class HomeComponent implements OnInit {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
+      localStorage.setItem('OrgId', this.OrgId);
     });
 
     this.selectedSS = 1;

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 })
 export class MapsService {
   storedBuyBoxId: any;
+  storedOrgId: any;
   private markers: any[] = [];
   private prosMarkers: any[] = [];
   private markerMap: { [key: string]: any[] } = {};
@@ -16,6 +17,7 @@ export class MapsService {
 
   constructor(public router: Router) {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
+    this.storedOrgId = localStorage.getItem('OrgId');
   }
 
   createMarker(map: any, markerData: any, type: string): any {
@@ -110,6 +112,7 @@ export class MapsService {
       markerId,
       markerId != shoppingCenterId ? shoppingCenterId : 0,
       this.storedBuyBoxId,
+      this.storedOrgId
     ]);
 
   }
