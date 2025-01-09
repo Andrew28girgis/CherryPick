@@ -67,6 +67,7 @@
         <div class="toggle-buttons">
           <!-- Shopping Centers toggle button -->
           <div
+            *ngIf=" shoppingCenters && shoppingCenters.length> 0"
             class="toggle-button"
             [class.selected]="selectedSS === 1"
             (click)="setDefaultView(1)"

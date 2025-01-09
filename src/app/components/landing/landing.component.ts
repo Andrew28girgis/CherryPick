@@ -132,27 +132,28 @@ export class LandingComponent {
         if (ShoppingcenterId !== 0) {
           this.ShoppingCenter = this.CustomPlace?.ShoppingCenter?.[0];
         }
+
         console.log(`custom place`);
         console.log(this.CustomPlace);
-
+        
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter && this.ShoppingCenter.Images) { 
           this.placeImage = this.ShoppingCenter.Images?.split(',').map((link) =>
             link.trim()
-          ); 
+        ); 
 
-          if (this.CustomPlace.OtherPlaces) {
+        if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
               +this.StandAlonePlace.PopulationDensity;
-          }
+        }
 
-          this.GetShoppingCenterManager(this.ShoppingCenter.Id);
-          this.getMinMaxUnitSize();
+        this.GetShoppingCenterManager(this.ShoppingCenter.Id);
+        this.getMinMaxUnitSize();
 
-          this.ShoppingCenter.StreetViewURL
+        this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {

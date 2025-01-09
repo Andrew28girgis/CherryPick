@@ -114,8 +114,8 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
-
-    this.selectedSS = 1;
+    this.shoppingCenters.length > 0 ? this.selectedSS = 1 : this.selectedSS = 2;
+    
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetPolygons(this.BuyBoxId);
