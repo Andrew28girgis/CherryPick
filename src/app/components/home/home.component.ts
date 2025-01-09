@@ -204,7 +204,7 @@ export class HomeComponent implements OnInit {
         console.log(this.standAlone);
         
         if (!this.stateService.getSelectedSS()) {
-          this.shoppingCenters.length > 0 ? this.selectedSS = 1 : this.selectedSS = 2;
+          this.shoppingCenters?.length > 0 ? this.selectedSS = 1 : this.selectedSS = 2;
         }
         else {
           this.selectedSS = this.stateService.getSelectedSS();
