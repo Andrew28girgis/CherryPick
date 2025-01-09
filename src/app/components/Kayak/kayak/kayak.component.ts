@@ -1,15 +1,15 @@
 import { Organization } from './../../../../models/userKanban';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from '../../../../app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { KayakResult, StatesAndCities } from 'src/models/kayak';
+import { KayakResult, StatesAndCities } from '../../../../models/kayak';
 import {
   FilterValues,
   KayakFilters,
   ManagementOrganization,
   Tenant,
-} from 'src/models/filters';
+} from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
