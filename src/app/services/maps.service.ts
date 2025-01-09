@@ -90,8 +90,12 @@ export class MapsService {
     const viewDetailsButton = document.getElementById(
       `view-details-${placeId}`
     );
+  
+    
+    
     let shoppingCenterId = markerData.CenterName ? markerData.Id : 0;
-
+    console.log(`888`);
+    console.log(shoppingCenterId);
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
         this.handleViewDetailsClick(placeId, shoppingCenterId);
@@ -105,22 +109,16 @@ export class MapsService {
     markerId: any,
     shoppingCenterId?: number
   ): void {
-    console.log(`View details for marker ID: ${markerId}`);
+    console.log(`markerID ${markerId}`);
+    console.log(`ShoppingCenterID ${shoppingCenterId}`);
 
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
-    this.storedOrgId = localStorage.getItem('OrgId');
-
-    console.log('BBS');
-    
-    console.log(this.storedBuyBoxId);
-    console.log(this.storedOrgId);
-    
-
+    this.storedOrgId = localStorage.getItem('OrgId'); 
 
     this.router.navigate([
       '/landing',
-      markerId,
-      markerId != shoppingCenterId ? shoppingCenterId : 0,
+      markerId == shoppingCenterId ? 0 :  markerId,
+      shoppingCenterId ,
       this.storedBuyBoxId,
       this.storedOrgId
     ]);

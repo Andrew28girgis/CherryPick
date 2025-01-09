@@ -111,10 +111,7 @@ export class HomeComponent implements OnInit {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
-      localStorage.setItem('OrgId', this.OrgId);
-      console.log(`bbID`);
-      console.log(localStorage.getItem('BuyBoxId'));
-      
+      localStorage.setItem('OrgId', this.OrgId);  
       
     });
     this.BuyBoxPlacesCategories(this.BuyBoxId);
