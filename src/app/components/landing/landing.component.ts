@@ -138,11 +138,11 @@ export class LandingComponent {
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
 
-        if (this.ShoppingCenter && this.ShoppingCenter.Images) {
-          
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) { 
           this.placeImage = this.ShoppingCenter.Images?.split(',').map((link) =>
             link.trim()
           ); 
+
           if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
