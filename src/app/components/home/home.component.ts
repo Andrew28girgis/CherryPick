@@ -19,6 +19,7 @@ import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Polygons } from 'src/models/polygons';
 import { ShareOrg } from 'src/models/shareOrg';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-home',
@@ -63,9 +64,7 @@ export class HomeComponent implements OnInit {
   anotherPlaces!: AnotherPlaces;
   currentView: any;
   centerPoints: any[] = [];
-
   map: any; // Add this property to your class
-
   isCompetitorChecked = false; // Track the checkbox state
   isCoTenantChecked = false;
   cardsSideList: any[] = [];
@@ -98,7 +97,8 @@ export class HomeComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private markerService: MapsService, 
     private ngZone: NgZone,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private stateService: StateService
   ) {
     this.currentView = localStorage.getItem('currentView') || 2;
     this.savedMapView = localStorage.getItem('mapView');
@@ -106,20 +106,17 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadShoppingCenterData();
-    this.General = new General();
+     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
-    this.shoppingCenters.length > 0 ? this.selectedSS = 1 : this.selectedSS = 2;
-    
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
-    this.GetPolygons(this.BuyBoxId);
 
+    // this.GetPolygons(this.BuyBoxId);
   }
 
   GetOrganizationById(orgId: number): void {
@@ -129,14 +126,13 @@ export class HomeComponent implements OnInit {
         organizationid: orgId,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.ShareOrg = data.json;
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
-  }
+ }
 
   BuyBoxPlacesCategories(buyboxId: number): void {
     const body: any = {
@@ -144,8 +140,7 @@ export class HomeComponent implements OnInit {
       Params: {
         BuyBoxId: buyboxId,
       },
-    };
-
+    }; 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
@@ -206,7 +201,15 @@ export class HomeComponent implements OnInit {
         this.standAlone = data.json;
         console.log(`standAlone`);
         console.log(this.standAlone);
+        
+        if (!this.stateService.getSelectedSS()) {
+          this.shoppingCenters.length > 0 ? this.selectedSS = 1 : this.selectedSS = 2;
+        }
+        else {
+          this.selectedSS = this.stateService.getSelectedSS();
+        }
         this.spinner.hide();
+
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -332,28 +335,7 @@ export class HomeComponent implements OnInit {
 
   onCheckboxChange(category: BuyboxCategory): void {
     this.markerService.toggleMarkers(this.map, category);
-  }
-  loadShoppingCenterData(): void {
-    // Example API response structure
-    this.shoppingCenter = {
-      ShoppingCenter: {
-        ManagerOrganization: [
-          {
-            Firstname: 'John',
-            LastName: 'Doe',
-            CellPhone: '123-456-7890',
-            Email: 'john.doe@example.com',
-          },
-          {
-            Firstname: 'Jane',
-            LastName: 'Smith',
-            CellPhone: '987-654-3210',
-            Email: 'jane.smith@example.com',
-          },
-        ],
-      },
-    };
-  }
+  } 
 
   isLast(currentItem: any, array: any[]): boolean {
     return array.indexOf(currentItem) === array.length - 1;
@@ -806,5 +788,6 @@ export class HomeComponent implements OnInit {
 
   setDefaultView(viewValue: number) {
     this.selectedSS = viewValue;
+    this.stateService.setSelectedSS(viewValue);
   }
 }

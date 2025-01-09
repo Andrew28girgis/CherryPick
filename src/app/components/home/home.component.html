@@ -78,7 +78,8 @@
 
           <!-- Standalone toggle button -->
           <div
-            class="toggle-button"
+            *ngIf="standAlone && standAlone.length > 0"
+            class="toggle-button" 
             [class.selected]="selectedSS === 2"
             (click)="setDefaultView(2)"
             style="cursor: pointer"
