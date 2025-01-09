@@ -118,6 +118,7 @@
                         Nearest {{ getNeareastCategoryName(item.CategoryId) }}
                       </th>
                     </ng-container>
+                    <th>Neighbourhood</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -248,6 +249,11 @@
                           </div>
                         </td>
                       </ng-container>
+                      <td>
+                        <div class="table-text">
+                          {{ shoppingCenter.Neighbourhood }}
+                        </div>
+                      </td>
                       <td>
                         <div
                           class="d-flex justify-content-center align-items-center"
@@ -380,6 +386,7 @@
                           </div>
                         </div>
                       </td>
+                
                     </tr>
                   </ng-container>
                 </tbody>
