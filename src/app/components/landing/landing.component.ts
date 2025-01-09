@@ -138,13 +138,11 @@ export class LandingComponent {
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
 
-        if (this.ShoppingCenter) {
-          console.log(`i`);
-
-          console.log(this.placeImage);
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) {
+          
           this.placeImage = this.ShoppingCenter.Images?.split(',').map((link) =>
             link.trim()
-          );
+          ); 
           if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
@@ -942,7 +940,7 @@ openStreetViewPlace(content: any, modalObject?: any) {
       }, 100);
     }
   }
-  
+
   StreetViewOnePlace!: boolean;
 
   viewOnStreetPopUp() {
