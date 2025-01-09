@@ -57,6 +57,9 @@ export class LandingComponent {
   uniqueCategories!: any[];
   filterCotenats: PlaceCotenants[] = [];
   OrgId!: number;
+  sanitizedUrl: any;
+  sanitizedUrlPopup: any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -265,9 +268,12 @@ export class LandingComponent {
     }
   }
 
-  sanitizedUrl: any;
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  setIframeUrlPopup(url: string): void {
+    this.sanitizedUrlPopup = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   ngOnChanges() {
@@ -921,7 +927,7 @@ export class LandingComponent {
     });
   }
 
-  openStreetViewPlace(content: any, modalObject?: any) {
+openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -929,13 +935,14 @@ export class LandingComponent {
     });
     this.General.modalObject = modalObject;
     if (this.General.modalObject.StreetViewURL) {
-      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+      this.setIframeUrlPopup(this.General.modalObject.StreetViewURL);
     } else {
       setTimeout(() => {
         this.viewOnStreetPopUp();
       }, 100);
     }
   }
+  
   StreetViewOnePlace!: boolean;
 
   viewOnStreetPopUp() {

@@ -114,7 +114,6 @@ export class MapsService {
       this.storedBuyBoxId,
       this.storedOrgId
     ]);
-
   }
 
   private assignToMarkerArray(marker: any, type: string): void {

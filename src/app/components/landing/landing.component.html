@@ -1101,9 +1101,9 @@
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>
-  <ng-container *ngIf="sanitizedUrl; else linkView">
+  <ng-container *ngIf="sanitizedUrlPopup; else linkView">
     <iframe
-      [src]="sanitizedUrl"
+      [src]="sanitizedUrlPopup"
       style="border: 0; width: 100%; height: 500px"
       allowfullscreen=""
       loading="lazy"
