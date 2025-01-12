@@ -690,80 +690,95 @@ export class MapsService {
   
 
 
-  async  fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
-    const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area) + ',' + city + ',' + state}&polygon_geojson=1&format=json`;
+  // async  fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
+  //     data.features.forEach((f:any) => {
+  //       if(f.geometry.type == 'Point'){
+  //         console.log(`from point`);
+          
+  //         console.log(f.geometry.coordinates);
+          
+  //       }else{
+  //         console.log(`from polygon`);
+
+  //         console.log(f.geometry.coordinates);
+
+  //       }
+         
   
-    try {
-      const response = await fetch(boundaryUrl);
-      const data: any[] = await response.json();
+  //     });
   
-      if (data.length === 0) {
-        alert("No boundary data found for the specified area");
-        return;
-      }
+      
+      
+  //     // if (data.length === 0) {
+  //     //   return;
+  //     // }
   
-      // Clear existing data on the map
-      map.data.forEach((feature: any) => map.data.remove(feature));
+  //     // // Clear existing data on the map
+  //     // map.data.forEach((feature: any) => map.data.remove(feature));
   
-      // Initialize bounds for all polygons
-      const globalBounds = new google.maps.LatLngBounds();
+  //     // // Initialize bounds for all polygons
+  //     // const globalBounds = new google.maps.LatLngBounds();
   
-      for (const entry of data) {
-        const geojsonBoundary = entry.geojson;
+  //     // for (const entry of data) {
+  //     //   const geojsonBoundary = entry.geojson;
   
-        // Wrap the GeoJSON in a valid FeatureCollection
-        const featureCollection = {
-          type: "FeatureCollection",
-          features: [
-            {
-              type: "Feature",
-              geometry: geojsonBoundary,
-              properties: {},
-            },
-          ],
-        };
+  //     //   // Wrap the GeoJSON in a valid FeatureCollection
+  //     //   const featureCollection = {
+  //     //     type: "FeatureCollection",
+  //     //     features: [
+  //     //       {
+  //     //         type: "Feature",
+  //     //         geometry: geojsonBoundary,
+  //     //         properties: {},
+  //     //       },
+  //     //     ],
+  //     //   };
   
-        // Add the GeoJSON boundary to the map
-        map.data.addGeoJson(featureCollection);
+  //     //   // Add the GeoJSON boundary to the map
+  //     //   map.data.addGeoJson(featureCollection);
   
-        // Extend bounds to include this boundary
-        const bounds = new google.maps.LatLngBounds();
+  //     //   // Extend bounds to include this boundary
+  //     //   const bounds = new google.maps.LatLngBounds();
   
-        const processPoints = (coords: any[]) => {
-          coords.forEach((point) => {
-            if (Array.isArray(point[0])) {
-              processPoints(point);
-            } else {
-              bounds.extend({ lat: point[1], lng: point[0] });
-            }
-          });
-        };
+  //     //   const processPoints = (coords: any[]) => {
+  //     //     coords.forEach((point) => {
+  //     //       if (Array.isArray(point[0])) {
+  //     //         processPoints(point);
+  //     //       } else {
+  //     //         bounds.extend({ lat: point[1], lng: point[0] });
+  //     //       }
+  //     //     });
+  //     //   };
   
-        if (geojsonBoundary.type === "Polygon") {
-          processPoints(geojsonBoundary.coordinates);
-        } else if (geojsonBoundary.type === "MultiPolygon") {
-          geojsonBoundary.coordinates.forEach(processPoints);
-        }
+  //     //   if (geojsonBoundary.type === "Polygon") {
+  //     //     processPoints(geojsonBoundary.coordinates);
+  //     //   } else if (geojsonBoundary.type === "MultiPolygon") {
+  //     //     geojsonBoundary.coordinates.forEach(processPoints);
+  //     //   }
   
-        // Merge bounds for the current polygon with the global bounds
-        globalBounds.union(bounds);
-      }
+  //     //   // Merge bounds for the current polygon with the global bounds
+  //     //   globalBounds.union(bounds);
+  //     // }
   
-      // Fit map to the global bounds of all polygons
-      map.fitBounds(globalBounds);
+  //     // // Fit map to the global bounds of all polygons
+  //     // map.fitBounds(globalBounds);
   
-      // Style all polygons
-      map.data.setStyle({
-        fillColor: "#FF0000",
-        fillOpacity: 0.35,
-        strokeColor: "#FF0000",
-        strokeWeight: 2,
-      });
-    } catch (error) {
-      console.error("Error fetching boundary data:", error);
-      alert("Failed to fetch boundary data. Please try again.");
-    }
-  }
+  //     // // Style all polygons
+  //     // map.data.setStyle({
+  //     //   fillColor: "#FF0000",
+  //     //   fillOpacity: 0.35,
+  //     //   strokeColor: "#FF0000",
+  //     //   strokeWeight: 2,
+  //     // });
+  //   } catch (error) {
+  //     console.error("Error fetching boundary data:", error);
+  //     // alert("Failed to fetch boundary data. Please try again.");
+  //   }
+  // }
   
 
 
@@ -778,8 +793,7 @@ export class MapsService {
     return {
       center: { lat: 39.8283, lng: -98.5795 }, // Center of USA
       zoom: 4,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
+       mapTypeControl: false,
       streetViewControl: false
     };
   }
