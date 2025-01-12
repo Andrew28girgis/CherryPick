@@ -4,6 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from '../../../../app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { KayakResult, StatesAndCities } from '../../../../models/kayak';
+import { AllPlaces, AnotherPlaces, General, Property } from './../../../../../src/models/domain';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+
 import {
   FilterValues,
   KayakFilters,
@@ -11,6 +15,7 @@ import {
   Tenant,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+declare const google: any;
 
 @Component({
   selector: 'app-kayak',
@@ -18,9 +23,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./kayak.component.css'],
 })
 export class KayakComponent implements OnInit {
+  General!: General;
+
   Ids!: number[];
   filtered!: any;
-  KayakResult!: KayakResult;
+  KayakResult!: any;
   KayakCitiesandStates: StatesAndCities[] = [];
   selectedState: any;
   selectedCity: any;
@@ -28,19 +35,30 @@ export class KayakComponent implements OnInit {
   uniqueCities!: any[];
   Filters!: KayakFilters;
   filterValues!: FilterValues;
-
   tags: any[] = [];
   visibleTags: any[] = [];
   selectedTags: any[] = [];
   searchTerm: string = '';
   formSearch: boolean = false;
+  showAllTenants: boolean = false;
+  showAllOrgs = false; // Default state to show only 15 organizations
+  sanitizedUrl!: any;
+  StreetViewOnePlace!: boolean;
+  mapViewOnePlacex: boolean = false;
+  MapViewPlace: any;
+  shoppingCenter: any;
+
+
+
 
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private sanitizer: DomSanitizer
+
   ) {}
 
   ngOnInit(): void {
@@ -58,8 +76,123 @@ export class KayakComponent implements OnInit {
       minsize: 0,
       maxsize: 0,
     };
+    this.getResult();
+    this.GetFilters()
   }
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true;
 
+    if (!lat || !lng) {
+      console.error('Latitude and longitude are required to display the map.');
+      return;
+    }
+    // Load Google Maps API libraries
+    const { Map } = (await google.maps.importLibrary('maps')) as any;
+    const mapDiv = document.getElementById('mappopup') as HTMLElement;
+
+    if (!mapDiv) {
+      console.error('Element with ID "mappopup" not found.');
+      return;
+    }
+
+    const map = new Map(mapDiv, {
+      center: { lat, lng },
+      zoom: 14,
+    });
+
+    // Create a new marker
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: map,
+      title: 'Location Marker',
+    });
+  }
+  addMarkerToStreetView(panorama: any, lat: number, lng: number) {
+    const svgPath =
+      'M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z';
+
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: panorama,
+      icon: {
+        path: svgPath,
+        scale: 4,
+        fillColor: 'black',
+        fillOpacity: 1,
+        strokeColor: 'white',
+        strokeWeight: 1,
+      },
+    });
+  }
+  streetMap(lat: number, lng: number, heading: number, pitch: number) {
+    const streetViewElement = document.getElementById('street-view');
+    if (streetViewElement) {
+      const panorama = new google.maps.StreetViewPanorama(
+        streetViewElement as HTMLElement,
+        {
+          position: { lat: lat, lng: lng },
+          pov: { heading: heading, pitch: 0 }, // Dynamic heading and pitch
+          zoom: 1,
+        }
+      );
+      this.addMarkerToStreetView(panorama, lat, lng);
+    } else {
+      console.error("Element with id 'street-view' not found in the DOM.");
+    }
+  }
+  viewOnStreet() {
+    this.StreetViewOnePlace = true;
+    let lat = +this.General.modalObject.StreetLatitude;
+    let lng = +this.General.modalObject.StreetLongitude;
+    let heading = this.General.modalObject.Heading || 165;
+    let pitch = this.General.modalObject.Pitch || 0;
+
+    setTimeout(() => {
+      const streetViewElement = document.getElementById('street-view');
+      if (streetViewElement) {
+        this.streetMap(lat, lng, heading, pitch);
+      } else {
+        console.error("Element with id 'street-view' not found.");
+      }
+    });
+  }
+  setIframeUrl(url: string): void {
+    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+  openStreetViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.General.modalObject = modalObject;
+
+    if (this.General.modalObject.StreetViewURL) {
+      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+    } else {
+      setTimeout(() => {
+        this.viewOnStreet();
+      }, 100);
+    }
+  }
+  openMapViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+  }
+  toggleTenantList(): void {
+    this.showAllTenants = !this.showAllTenants;
+  }
+  toggleOrgSelect(org: any): void {
+    org.Selected = !org.Selected; // Toggle selection state
+  }
+  toggleOrgList(): void {
+    this.showAllOrgs = !this.showAllOrgs; // Toggle between all and sliced view
+  }
   getResult(): void {
     console.log(`filter values`);
 
@@ -73,6 +206,8 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakResult = data.json[0];
+        console.log(this.KayakResult);
+        
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });

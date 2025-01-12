@@ -1,1 +1,66 @@
-<p>sidebar works!</p>
+<div
+  class="sidebar-container"
+  [class.sidebar-collapse]="collapse"
+  [class.inactive]="isInactive"
+>
+  <button
+    class="collapse-toggle"
+    (click)="changeCollapse()"
+    [attr.aria-label]="collapse ? 'Expand sidebar' : 'Collapse sidebar'"
+  >
+    <img src="assets/Images/Icons/grid-6.svg" alt="" class="toggle-img" />
+  </button>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <img
+        *ngIf="!collapse"
+        src="assets/Images/Icons/cherryPick.png"
+        alt="CherryPick Logo"
+        class="header-logo"
+      />
+      <img
+        *ngIf="collapse"
+        src="assets/Images/Icons/cherryPick-active.png"
+        alt="CherryPick Logo"
+        class="header-logo-active"
+      />
+    </div>
+
+    <ul class="sidebar-items">
+      <li
+        *ngFor="let item of sidebarItems"
+        class="sidebar-item"
+        (click)="onSidebarItemClick(item)"
+        [class.active]="isLinkActive(item.link)"
+      >
+        <a class="item-link">
+          <img
+            [src]="
+              'assets/Images/Icons/' +
+              item.icon +
+              (isLinkActive(item.link) ? '-active' : '') +
+              '.svg'
+            "
+            [alt]="item.title"
+            class="item-icon"
+          />
+          <span class="item-title" *ngIf="!collapse">{{ item.title }}</span>
+        </a>
+      </li>
+      <li class="sidebar-item theme-toggle">
+        <a class="item-link" (click)="toggleTheme()">
+          <img
+            [src]="(isDarkTheme$ | async) ? 
+              'assets/Images/Icons/moon.svg' : 
+              'assets/Images/Icons/sun.svg'"
+            [alt]="(isDarkTheme$ | async) ? 'Dark theme' : 'Light theme'"
+            class="item-icon"
+          />
+          <span class="item-title" *ngIf="!collapse">
+            Theme: {{ (isDarkTheme$ | async) ? 'Dark' : 'Light' }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

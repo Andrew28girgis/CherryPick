@@ -7,8 +7,8 @@ import {
 } from '@angular/core'; 
  
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
-import { AllPlaces, AnotherPlaces, General, Property } from 'src/models/domain';
+import { PlacesService } from './../../../../src/app/services/places.service';
+import { AllPlaces, AnotherPlaces, General, Property } from './../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';

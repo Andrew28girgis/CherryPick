@@ -1,0 +1,542 @@
+/* Layout Structure */
+.page-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: #fff;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  background: #fff;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  min-height: 100vh;
+  background: #fff;
+}
+
+/* Header */
+.dashboard-header {
+  padding: 24px 32px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #101828;
+  margin: 0;
+}
+
+/* File Upload Container */
+.table-wrapper {
+  padding: 32px;
+  background-color: #f8f9fa;
+}
+
+.table-container {
+  background: #fff;
+  border-radius: 12px;
+  height: calc(100vh - 140px);
+  overflow: auto;
+}
+
+.file-upload-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-area {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+}
+
+/* Upload Button */
+.upload-button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #fff;
+  border: 1px solid #001f3f;
+  border-radius: 16px;
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: #001f3f;
+}
+
+.upload-button:hover {
+  background: #f8f9fa;
+}
+
+/* Empty State */
+.upload-content {
+  gap: 100px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.illustration {
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 24px;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #101828;
+  margin: 8px;
+}
+
+p {
+  font-size: 14px;
+  color: #475467;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* File List */
+.file-list {
+  width: 100%;
+  padding: 24px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #101828;
+}
+
+.remove-file {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d0d5dd;
+  border-radius: 4px;
+  background: none;
+  color: #667085;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.remove-file:hover {
+  background: #fee4e2;
+  border-color: #fda29b;
+  color: #b42318;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 64px;
+    min-width: 64px;
+  }
+
+  .main-content {
+    margin-left: 64px;
+  }
+
+  .upload-area {
+    padding: 24px;
+  }
+
+  .illustration {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* Collapsed State */
+.sidebar-collapsed .main-content {
+  margin-left: 64px;
+}
+
+.sidebar-collapsed .sidebar {
+  width: 64px;
+  min-width: 64px;
+}
+
+/* Keep existing styles and add/update the following */
+
+.files-table-wrapper {
+  margin-top: 60px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.files-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.files-table th {
+  padding: 12px 16px;
+  text-align: left;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.files-table td {
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.file-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #111827;
+  font-size: 14px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  padding: 8px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-button:hover {
+  background: #f3f4f6;
+}
+
+.action-button svg {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+}
+
+.drag-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.drag-overlay.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.drag-content {
+  text-align: center;
+  color: #6b7280;
+}
+
+.drag-content svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.drag-content h3 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Update existing styles */
+.upload-button {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #001f3f;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-button:hover {
+  background: #003366;
+}
+
+.table-container {
+  position: relative;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  min-height: calc(100vh - 140px);
+}
+
+/* Keep existing styles and add the following */
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  z-index: 1;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #6b7280;
+  border-radius: 4px;
+}
+
+.close-button:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  ring: 2px solid rgba(37, 99, 235, 0.1);
+}
+
+.help-text {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.file-info {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 4px 0 12px;
+}
+
+.file-select-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #6b7280;
+}
+
+.select-file-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #001f3f;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.upp {
+  gap: 10px;
+}
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.cancel-button {
+  padding: 9px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  color: #111827;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.add-file-button {
+  padding: 10px 16px;
+  background: #001f3f;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.add-file-button:hover {
+  background: #003366;
+}
+
+/* Update existing table styles to match the design */
+.files-table th {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.files-table td {
+  font-size: 14px;
+  color: #111827;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background: #f3f4f6;
+  color: #4b5563;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.remove-file-button {
+  display: flex;
+  height: 48px;
+  padding: var(--Button-Padding-top-bottom, 12px)
+    var(--Button-Padding-left-right, 24px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Button-Gap, 8px);
+  border-radius: var(--Button-Radius, 16px);
+  border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #001f3f);
+  background: var(--Button-Secondary-BG, #fff);
+}
+
+.remove-file-button:hover {
+  background: #faf9f9;
+  opacity: 0.9;
+}
