@@ -373,8 +373,6 @@ export class HomeComponent implements OnInit {
      });
   }
 
- 
-
   createCustomMarkers(markerDataArray: any[]) {
     markerDataArray.forEach((categoryData) => {
       this.markerService.createCustomMarker(this.map, categoryData);
