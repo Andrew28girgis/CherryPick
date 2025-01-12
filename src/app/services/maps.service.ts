@@ -618,7 +618,7 @@ export class MapsService {
 
  
   drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
-    // this.drawPolygon(map, polygonFeatures[0]);
+    
     polygonFeatures.forEach((feature) => {
       this.drawSinglePolygon(map, feature);
     });
@@ -628,6 +628,7 @@ export class MapsService {
     try {
       const geoJson = JSON.parse(feature.json);
       const coordinates = geoJson.geometry.coordinates[0];
+      
       const polygonCoords = coordinates.map((coord: number[]) => ({
         lat: coord[1], 
         lng: coord[0]  
@@ -649,5 +650,52 @@ export class MapsService {
     }
   }
 
- 
+  drawNeighbourhoodPolygons(
+    map:any,
+    polygonFeatures: number[][][] | number[][]
+  ): void {
+   
+    // If polygonFeatures is just a single polygon, wrap it in an array so we can handle it uniformly.
+    let polygons: number[][][];
+  
+    if (Array.isArray(polygonFeatures[0]) && Array.isArray(polygonFeatures[0][0])) {
+      // polygonFeatures is already number[][][]
+      polygons = polygonFeatures as number[][][];
+    } else {
+      // polygonFeatures must be number[][]
+      polygons = [polygonFeatures as number[][]];
+    }
+  
+    // Now 'polygons' is always number[][][], i.e. an array of polygons
+    polygons.forEach((onePolygon) => {
+      // each polygon is an array of rings (number[][])
+      const polygonPaths: any[][] = [];
+  
+      onePolygon.forEach((ring) => {
+        // 'ring' is number[][]
+        const path = ring.map((coord:any) => {
+          // coordinate is [lng, lat]
+          return { lat: coord[1], lng: coord[0] };
+        });
+        polygonPaths.push(path);
+      });
+      console.log(`polygonPaths`, polygonPaths);
+      
+  
+      // Create polygon and add to the map
+      const polygon = new google.maps.Polygon({
+        paths: polygonPaths,
+        strokeColor: '#FF0000',
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        clickable: true,
+      });
+      polygon.setMap(map);
+    });
+  }
+  
+
+
+
 }

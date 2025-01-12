@@ -59,13 +59,11 @@
 </nav>
 
 <div class="map-view">
-  <div class="row" style="background-color: #f2f3f4" #scrollContainer>
-    <!-- Start Table View -->
+  <div class="row" style="background-color: #f2f3f4"  >
     <ng-container *ngIf="currentView == 4">
-      <div class="container-fluid justify-between mt-2 mb-4">
+      <!-- <div class="container-fluid justify-between mt-2 mb-4">
         <div class="toggle-buttons">
-          <!-- Shopping Centers toggle button -->
-          <div
+           <div
             *ngIf="shoppingCenters && shoppingCenters.length > 0"
             class="toggle-button"
             [class.selected]="selectedSS === 1"
@@ -75,8 +73,7 @@
             Shopping Centers
           </div>
 
-          <!-- Standalone toggle button -->
-          <div
+           <div
             *ngIf="standAlone && standAlone.length > 0"
             class="toggle-button"
             [class.selected]="selectedSS === 2"
@@ -86,19 +83,18 @@
             Standalone
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="container">
         <div
-          style="overflow-x: auto"
+          style="overflow-x: auto; margin-top: 10px;"
           *ngIf="
-            selectedSS === 1 &&
             showShoppingCenters &&
             shoppingCenters &&
             shoppingCenters.length > 0
           "
         >
           <div class="card card-frame">
-            <div class="card-body">
+            <div class="card-body" >
               <table class="procpect-table">
                 <thead class="procpect-table-head">
                   <tr>
@@ -404,9 +400,8 @@
           </div>
         </div>
         <div
-          style="overflow-x: auto"
+          style="overflow-x: auto ; margin-top: 10px;"
           *ngIf="
-            selectedSS === 2 &&
             showStandalone &&
             standAlone &&
             standAlone.length > 0
@@ -778,18 +773,7 @@
                         triggers="click:outside"
                         [placement]="'bottom'"
                       />
-                      <br />
-                      <!-- <ng-container
-                        *ngFor="
-                          let org of shopping.ShoppingCenter.ManagerOrganization
-                        "
-                      >
-                        <span>
-                          {{ org.Firstname | titlecase }}
-                          {{ org.LastName | titlecase }}
-                        </span>
-                        <br />
-                      </ng-container> -->
+                      <br /> 
                       <ng-template #popoverContent>
                         <div
                           *ngFor="
@@ -1181,6 +1165,63 @@
                     </svg>
                   </button>
                 </div> -->
+
+                <div
+                class="col-md-12 spec"
+                *ngIf="place.ShoppingCenter?.ManagerOrganization"
+              >
+                <span class="managed-by">Managed by</span>
+                <p class="spec-head">
+                  <img
+                    class="logo"
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      place.ShoppingCenter.ManagerOrganization[0].ID
+                    }}"
+                    [title]="
+                      place.ShoppingCenter.ManagerOrganization[0].Name
+                    "
+                    alt=""
+                  />
+                  {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
+
+                  <img
+                    style="cursor: pointer"
+                    class="ms-2"
+                    src="../../../assets/Images/Icons/eye.png"
+                    alt="View Manager Details"
+                    [ngbPopover]="popoverContent"
+                    popoverTitle="Organization Contact Info"
+                    triggers="click:outside"
+                    [placement]="'bottom'"
+                  />
+                  <br /> 
+                  <ng-template #popoverContent>
+                    <div
+                      *ngFor="
+                        let org of place.ShoppingCenter
+                          .ManagerOrganization
+                      "
+                      class="contact-container table-texttt"
+                    >
+                      <p class="text-bold m-0">
+                        {{ org.Firstname | titlecase }}
+                        {{ org.LastName | titlecase }}
+                      </p>
+                      <p class="m-0">{{ org.CellPhone }}</p>
+                      <p class="m-0">{{ org.Email }}</p>
+                      <hr
+                        *ngIf="
+                          !isLast(
+                            org,
+                            shoppingCenter.ShoppingCenter
+                              .ManagerOrganization
+                          )
+                        "
+                      />
+                    </div>
+                  </ng-template>
+                </p>
+              </div>
               </div>
             </div>
           </ng-container>
@@ -1236,6 +1277,4 @@
   ></div>
 </ng-template>
 
-<div class="your-scrollable-container" (scroll)="onScroll($event)">
-  <!-- Your existing content -->
-</div>
+ 

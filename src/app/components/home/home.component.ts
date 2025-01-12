@@ -1,14 +1,10 @@
-import {
-  ChangeDetectorRef,
+import { 
   Component, 
   OnInit, 
-  NgZone, 
-  OnDestroy,
+  NgZone,  
   ViewChild,
-  ElementRef,
-  AfterViewInit
-} from '@angular/core';
- 
+  ElementRef, 
+} from '@angular/core'; 
  
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
@@ -20,7 +16,7 @@ import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Polygons } from 'src/models/polygons';
 import { ShareOrg } from 'src/models/shareOrg';
 import { StateService } from 'src/app/services/state.service';
@@ -30,7 +26,8 @@ import { StateService } from 'src/app/services/state.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HomeComponent implements OnInit {
+  @ViewChild('mainContainer') mainContainer!: ElementRef;
   shoppingCenter: any;
   selectedView: string = 'shoppingCenters';
   General!: General;
@@ -80,8 +77,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
 
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
@@ -124,41 +119,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     
     this.BuyBoxPlacesCategories(this.BuyBoxId);
-    this.GetOrganizationById(this.OrgId);
+    this.GetOrganizationById(this.OrgId); 
+    this.GetPolygons(this.BuyBoxId);
+  } 
 
-    // Get the scroll container and restore position after all data is loaded
-    this.restoreScrollPosition();
-  }
-
-  ngAfterViewInit() {
-    // Restore scroll position after view is initialized
-    this.restoreScrollPosition();
-  }
-
-  private restoreScrollPosition(): void {
-    if (this.scrollContainer?.nativeElement) {
-      const savedPosition = this.stateService.getScrollPosition(this.currentView);
-      if (savedPosition) {
-        // Use requestAnimationFrame to ensure smooth scrolling
-        requestAnimationFrame(() => {
-          this.scrollContainer.nativeElement.scrollTop = savedPosition;
-        });
-      }
-    }
-  }
-
-  ngOnDestroy(): void {
-    // Save scroll position before destroying component
-    if (this.scrollContainer?.nativeElement) {
-      const scrollPosition = this.scrollContainer.nativeElement.scrollTop;
-      this.stateService.setScrollPosition(this.currentView, scrollPosition);
-    }
-  }
-
-  onScroll(event: any): void {
-    // Save scroll position for current view
-    this.stateService.setScrollPosition(this.currentView, event.target.scrollTop);
-  }
 
   GetOrganizationById(orgId: number): void {
     if (this.stateService.getShareOrg().length > 0) {
@@ -307,6 +271,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           );
         });
         this.getAllMarker();
+
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -398,7 +363,24 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(this.map, markerData, type);
     });
+
+     
+    
     // this.markerService.drawMultiplePolygons(this.map, this.Polygons);
+
+     this.shoppingCenters.forEach((center) => {
+      if(center.Neighbourhood) {
+        const url = `https://nominatim.openstreetmap.org/search.php?q=${center.Neighbourhood}&polygon_geojson=1&format=json`;
+        fetch(url)
+        .then(response => response.json())
+        .then(data =>{ 
+          if(this.map, data.features[0].geometry.type == 'Polygon') {
+            this.markerService.drawNeighbourhoodPolygons(this.map, data.features[0].geometry.coordinates);    
+          } 
+                
+      })
+      }
+     });
   }
 
   createCustomMarkers(markerDataArray: any[]) {
@@ -465,7 +447,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           visibleCoords.has(`${property.Latitude},${property.Longitude}`) ||
           this.isWithinBounds(property, bounds)
       );
-    }); 
+    });  
+    
   }
 
   private isWithinBounds(property: any, bounds: any): boolean {
@@ -509,37 +492,26 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  selectOption(option: any): void {
-    // Save current scroll position
-    if (this.scrollContainer?.nativeElement) {
-      const scrollPosition = this.scrollContainer.nativeElement.scrollTop;
-      this.stateService.setScrollPosition(this.currentView, scrollPosition);
-    }
-
+  selectOption(option: any): void { 
     this.selectedOption = option;
     this.currentView = option.status;
     this.isOpen = false;
-    localStorage.setItem('currentView', this.currentView);
-
-    // Restore scroll position for new view
-    setTimeout(() => {
-      this.restoreScrollPosition();
-    }, 100);
+    localStorage.setItem('currentView', this.currentView); 
   }
 
   goToPlace(place: any) {
+ 
+    
     if (place.CenterAddress) {
       this.router.navigate([
         '/landing',
         place.ShoppingCenter?.Places ? place.ShoppingCenter.Places[0].Id : 0,
         place.Id,
-        this.BuyBoxId, 
+        this.BuyBoxId,
         this.OrgId
-        
-
       ]);
     } else {
-      this.router.navigate(['/landing', place.Id, 0, this.BuyBoxId ,this.OrgId] );
+      this.router.navigate(['/landing', place.Id, 0, this.BuyBoxId, this.OrgId]);
     }
   }
 
@@ -566,14 +538,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
-  // ngAfterViewInit(): void {
-  //   // Initialize all popovers on the page
-  //   const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
-  //   popoverTriggerList.forEach(popoverTriggerEl => {
-  //     // new bootstrap.Popover(popoverTriggerEl);
-  //   });
-  // }
-
+ 
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
@@ -875,4 +840,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedSS = viewValue;
     this.stateService.setSelectedSS(viewValue);
   }
+
+  // Add this method to handle scroll restoration after data is loaded
+ 
 }
