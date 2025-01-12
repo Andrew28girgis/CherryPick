@@ -608,39 +608,6 @@ export class MapsService {
     this.currentlyOpenInfoWindow = null;
   }
 
-<<<<<<< HEAD
-  getDefaultMapConfig(): GoogleMapsOptions {
-    return {
-      zoom: 12,
-      center: { lat: 0, lng: 0 },
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      styles: [],
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false
-    };
-  }
-
-  createMap(element: HTMLElement, config: GoogleMapsOptions): any {
-    return new google.maps.Map(element, config);
-  }
-
-  addPropertyMarker(
-    map: any,
-    position: GoogleMapsLatLng,
-    property: any
-  ): GoogleMapsMarker & { addListener: (event: string, handler: () => void) => void } {
-    return new google.maps.Marker({
-      map,
-      position,
-      title: property.title,
-      icon: {
-        url: 'path/to/your/marker/icon.png',
-        scaledSize: new google.maps.Size(32, 32)
-      }
-    });
-  }
-=======
 
  
   drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
@@ -676,5 +643,4 @@ export class MapsService {
   }
 
  
->>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
 }

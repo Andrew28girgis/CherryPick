@@ -29,25 +29,9 @@ import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
-<<<<<<< HEAD
-import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
-import { DetailsComponent } from './components/kanban/details/details.component';
-import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
-import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
-import { TasksComponent } from './components/kanban/tasks/tasks.component';
-import { FileUploadComponent } from './file-upload/file-upload.component';
-import { ArchiveComponent } from './components/kanban/archive/archive.component';
-import { AssistantComponent } from './components/kanban/assistant/assistant.component';
-import { SourcesComponent } from './components/kanban/sources/sources.component';
-import { AddSourceModalComponent } from './components/kanban/sources/add-source-modal/add-source-modal.component';
-import { PropertiesComponent } from './components/kanban/properties/properties.component';
-import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
-import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
+import { KayakComponent } from './components/Kayak/kayak/kayak.component';
 import { ToastrModule } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
-=======
-import { KayakComponent } from './components/Kayak/kayak/kayak.component';
->>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
 
 @NgModule({
   declarations: [
@@ -67,22 +51,7 @@ import { KayakComponent } from './components/Kayak/kayak/kayak.component';
     KanbanComponent,
     KanbanHomeComponent,
     SidebarComponent,
-<<<<<<< HEAD
-    FilterPanelComponent, 
-    DetailsComponent,
-    EditPopupComponent,
-    StakeHolderComponent,
-    TasksComponent,
-    ArchiveComponent,
-    AssistantComponent,
-    SourcesComponent,
-    AddSourceModalComponent,
-    PropertiesComponent,
-    PropertiesspilitviewComponent,
-    PropertiesgridviewComponentComponent,
-=======
     KayakComponent,
->>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
   ],
   imports: [
     BrowserModule,
