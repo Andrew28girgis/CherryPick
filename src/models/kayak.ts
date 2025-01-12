@@ -27,7 +27,7 @@ export interface KayakResult {
     Suite?: string
     ForLeasePrice?: number
   }
-  export interface StatesAndCities {
-    stateCode: string
-    city: string
-  }
+    export interface StatesAndCities {
+      stateCode: string
+      city: string
+    }
