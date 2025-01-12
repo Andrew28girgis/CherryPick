@@ -205,7 +205,7 @@ export class KayakComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.KayakResult = data.json[0];
+        this.KayakResult = data.json;
         console.log(this.KayakResult);
         
       },
