@@ -14,6 +14,7 @@ export class StateService {
   private standAlone: Place[] = [];
   private buyboxPlaces: BbPlace[] = [];
   private shareOrg: ShareOrg[] = [];
+  private scrollPositions: { [key: string]: number } = {};
 
   // Selected SS methods
   setSelectedSS(value: number) {
@@ -65,6 +66,14 @@ export class StateService {
     return this.shareOrg;
   }
 
+  setScrollPosition(viewType: string, position: number) {
+    this.scrollPositions[viewType] = position;
+  }
+
+  getScrollPosition(viewType: string): number {
+    return this.scrollPositions[viewType] || 0;
+  }
+
   clearAll() {
     this.buyboxCategories = [];
     this.shoppingCenters = [];
@@ -72,5 +81,6 @@ export class StateService {
     this.buyboxPlaces = [];
     this.shareOrg = [];
     this.selectedSS = null;
+    this.scrollPositions = {};
   }
 } 

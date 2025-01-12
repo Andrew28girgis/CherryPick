@@ -471,7 +471,9 @@ img[alt="logo"] {
   align-items: center;
 }
 
-
+a{
+  text-decoration: none;
+}
 
 .svg-icon:last-child {
   margin-right: 0;  /* No margin on the last SVG */

@@ -107,6 +107,8 @@ export class MapsService {
     markerId: any,
     shoppingCenterId?: number
   ): void { 
+    console.log(`markerID ${markerId}`);
+    console.log(`ShoppingCenterID ${shoppingCenterId}`);
 
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedOrgId = localStorage.getItem('OrgId'); 

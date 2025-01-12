@@ -998,7 +998,7 @@ openStreetViewPlace(content: any, modalObject?: any) {
   }
 
   goBack() {
-    this.router.navigate(['/home', this.BuyBoxId , this.OrgId]);
+    window.history.back();
   }
 
   getBackgroundImage(): string {

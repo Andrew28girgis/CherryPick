@@ -3,6 +3,10 @@ import {
   Component, 
   OnInit, 
   NgZone, 
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
 } from '@angular/core';
  
  
@@ -26,7 +30,7 @@ import { StateService } from 'src/app/services/state.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   shoppingCenter: any;
   selectedView: string = 'shoppingCenters';
   General!: General;
@@ -75,11 +79,16 @@ export class HomeComponent implements OnInit {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
+
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
+
   showStandalone: boolean = true; // Ensure this reflects your initial state
   standAlone: Place[] = [];
+  
   toggleStandalone() {
     this.showStandalone = !this.showStandalone;
   }
@@ -100,24 +109,55 @@ export class HomeComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || 2;
+    this.currentView = localStorage.getItem('currentView') || '2';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
 
   ngOnInit(): void {
-     this.General = new General();
+    this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
-      localStorage.setItem('OrgId', this.OrgId);  
-      
+      localStorage.setItem('OrgId', this.OrgId);
     });
+    
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
 
-    // this.GetPolygons(this.BuyBoxId);
+    // Get the scroll container and restore position after all data is loaded
+    this.restoreScrollPosition();
+  }
+
+  ngAfterViewInit() {
+    // Restore scroll position after view is initialized
+    this.restoreScrollPosition();
+  }
+
+  private restoreScrollPosition(): void {
+    if (this.scrollContainer?.nativeElement) {
+      const savedPosition = this.stateService.getScrollPosition(this.currentView);
+      if (savedPosition) {
+        // Use requestAnimationFrame to ensure smooth scrolling
+        requestAnimationFrame(() => {
+          this.scrollContainer.nativeElement.scrollTop = savedPosition;
+        });
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Save scroll position before destroying component
+    if (this.scrollContainer?.nativeElement) {
+      const scrollPosition = this.scrollContainer.nativeElement.scrollTop;
+      this.stateService.setScrollPosition(this.currentView, scrollPosition);
+    }
+  }
+
+  onScroll(event: any): void {
+    // Save scroll position for current view
+    this.stateService.setScrollPosition(this.currentView, event.target.scrollTop);
   }
 
   GetOrganizationById(orgId: number): void {
@@ -207,8 +247,11 @@ export class HomeComponent implements OnInit {
   }
 
   getStandAlonePlaces(buyboxId: number): void {
-    if (this.stateService.getStandAlone().length > 0) {
+    if (this.stateService.getStandAlone()?.length > 0) {
       this.standAlone = this.stateService.getStandAlone();
+      // Set selectedSS from stored value or default
+      this.selectedSS = this.stateService.getSelectedSS() || 
+                       (this.shoppingCenters?.length > 0 ? 1 : 2);
       this.getBuyBoxPlaces(buyboxId);
       return;
     }
@@ -225,8 +268,11 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.standAlone = data.json;
         this.stateService.setStandAlone(data.json);
+        // Set initial selectedSS value if not already set
         if (!this.stateService.getSelectedSS()) {
-          this.shoppingCenters?.length > 0 ? this.selectedSS = 1 : this.selectedSS = 2;
+          const newValue = this.shoppingCenters?.length > 0 ? 1 : 2;
+          this.selectedSS = newValue;
+          this.stateService.setSelectedSS(newValue);
         } else {
           this.selectedSS = this.stateService.getSelectedSS();
         }
@@ -238,7 +284,7 @@ export class HomeComponent implements OnInit {
   }
 
   getBuyBoxPlaces(buyboxId: number): void {
-    if (this.stateService.getBuyboxPlaces().length > 0) {
+    if (this.stateService.getBuyboxPlaces()?.length > 0) {
       this.buyboxPlaces = this.stateService.getBuyboxPlaces();
       this.getAllMarker();
       return;
@@ -419,7 +465,7 @@ export class HomeComponent implements OnInit {
           visibleCoords.has(`${property.Latitude},${property.Longitude}`) ||
           this.isWithinBounds(property, bounds)
       );
-    });
+    }); 
   }
 
   private isWithinBounds(property: any, bounds: any): boolean {
@@ -464,10 +510,21 @@ export class HomeComponent implements OnInit {
   }
 
   selectOption(option: any): void {
+    // Save current scroll position
+    if (this.scrollContainer?.nativeElement) {
+      const scrollPosition = this.scrollContainer.nativeElement.scrollTop;
+      this.stateService.setScrollPosition(this.currentView, scrollPosition);
+    }
+
     this.selectedOption = option;
     this.currentView = option.status;
     this.isOpen = false;
     localStorage.setItem('currentView', this.currentView);
+
+    // Restore scroll position for new view
+    setTimeout(() => {
+      this.restoreScrollPosition();
+    }, 100);
   }
 
   goToPlace(place: any) {
