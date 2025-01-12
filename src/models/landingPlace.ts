@@ -12,6 +12,7 @@ export class ShoppingCenter {
   CenterCity!: string
   CenterState!: string
   Latitude!: number
+  Images!:string
   Description!: string
   Longitude!: number
   MainImage!: string

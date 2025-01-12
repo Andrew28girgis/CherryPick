@@ -121,10 +121,10 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.CustomPlace = data.json[0];
+        this.CustomPlace = data.json?.[0] || null;
 
         if (ShoppingcenterId !== 0) {
-          this.ShoppingCenter = this.CustomPlace.ShoppingCenter[0];
+          this.ShoppingCenter = this.CustomPlace?.ShoppingCenter?.[0];
         }
         console.log(`custom place`);
         console.log(this.CustomPlace);
@@ -133,26 +133,33 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter) {
+          
+        
+          console.log(`i`);
+          
+          console.log(this.placeImage);
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
+            (link) => link.trim()
+          );
           if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
-              +this.StandAlonePlace.PopulationDensity;
-
-            this.placeImage = this.StandAlonePlace.Images?.split(',').map(
-              (link) => link.trim()
-            );
-          }
+              +this.StandAlonePlace.PopulationDensity; 
+          }  
+          
           this.GetShoppingCenterManager(this.ShoppingCenter.Id);
           this.getMinMaxUnitSize();
+          
           this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
-          this.StandAlonePlace = this.CustomPlace.Place[0];
-          this.placeImage = this.StandAlonePlace.Images?.split(',').map(
+          
+          this.StandAlonePlace = this.CustomPlace?.Place[0];
+          this.placeImage = this.StandAlonePlace?.Images?.split(',').map(
             (link) => link.trim()
           );
-          this.StandAlonePlace.StreetViewURL
+          this.StandAlonePlace?.StreetViewURL
             ? this.changeStreetView(this.StandAlonePlace)
             : this.viewOnStreet();
         }
@@ -177,15 +184,14 @@ export class LandingComponent {
         this.filterCotenats = this.placeCotenants ; 
 
         const uniqueCategoriesSet = new Set<string>();
-
         this.placeCotenants.forEach((co) => {
           co.SubCategory.forEach((c) => {
             if (c.OrganizationCategory) {
               uniqueCategoriesSet.add(c.OrganizationCategory);
             }
           });
-        });
-        
+        }); 
+
         this.uniqueCategories = Array.from(uniqueCategoriesSet); 
         this.uniqueCategories.sort((a, b) => a.localeCompare(b)); 
         this.uniqueCategories.unshift('All'); 
@@ -196,7 +202,6 @@ export class LandingComponent {
 
   filterCotent(event: any) {
     const value = event.target.value;
-  
     if (value === 'All') {
        this.filterCotenats = this.placeCotenants;
     } else {
@@ -310,7 +315,7 @@ export class LandingComponent {
           const unitSize = parseFloat(size);
           if (!isNaN(pricePerSF) && !isNaN(unitSize)) {
             const monthlyLease = Math.floor((pricePerSF * unitSize) / 12);
-            return `<b>$${monthlyLease.toLocaleString()}/month</b>`;
+            return `<b>$${monthlyLease.toLocaleString()}</b>/month`;
           }
           return '<b>On Request</b>';
         };
@@ -329,12 +334,12 @@ export class LandingComponent {
   
           const formattedOriginalPrice = `<b>$${parseFloat(
             originalPrice
-          ).toLocaleString()}</b>/sqft/Year`;
+          ).toLocaleString()}</b>/sq ft./year`;
   
           // Adjust inline styles as desired
           return `
             <div style="display:flex;">
-              <p>${formattedOriginalPrice} ,   ${calculatedPrice}  </p> 
+              <p class="mx-2"> ${formattedOriginalPrice},   ${calculatedPrice}  </p> 
             </div>
           `;
         };
@@ -346,13 +351,13 @@ export class LandingComponent {
             : '<b>On Request</b>';
           return `Unit Size:  <p class="px-2 mb-0"> ${formatNumberWithCommas(
             minSize
-          )} SF </p>  <p class="px-2 mb-0"> Lease Price: ${formattedPrice} </p>`;
+          )}sq ft. </p>  <p class="px-2 m-0"> Lease Price: ${formattedPrice} </p>`;
         }
-  
+        
 
-        let sizeRange = `Unit Size :  <p class="px-2 mb-0"> ${formatNumberWithCommas(
+        let sizeRange = `Unit Size:  <p class="px-2 mb-0"> ${formatNumberWithCommas(
           minSize
-        )}</p> SF - <p class="px-2 mb-0" >${formatNumberWithCommas(maxSize)} SF </p>`;
+        )}</p> sq ft. - <p class="px-2 mb-0" >${formatNumberWithCommas(maxSize)} sq ft. </p>`;
   
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
@@ -730,6 +735,7 @@ export class LandingComponent {
       return sizeRange;
     }
     return null;
+    
   }
 
   getLeasePriceStandAlone(StandALone: any) {
@@ -980,7 +986,10 @@ export class LandingComponent {
         strokeColor: 'white',
         strokeWeight: 1,
       },
+      animation: google.maps.Animation.DROP, // Animated drop effect
+
     });
+    
   }
 
   goBack() {

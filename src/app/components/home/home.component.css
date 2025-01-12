@@ -1,5 +1,6 @@
+
 .info {
-  background-color: #fff;
+  background-color: red;
   color: #000;
 }
 
@@ -299,22 +300,315 @@
 
 .custom-map {
   height: 100vh;
+  
+}
+.logo{
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+.img-logo{
+  height: 40px; 
+  width: 184px
+}
+.navbars {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  background-color: #ffffff; 
+  border-bottom: 1px solid #e4e4e4; 
 }
 
-@media (max-width: 768px) {
+.navbar-line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between;
+  width: 100%; 
+}
+
+.nav-right > div {
+  display: flex;
+  align-items: center; 
+}
+
+img[alt="logo"] {
+  margin-right: 20px; 
+}
+
+.d-flex.flex-row.align-items-center.py-2 {
+  display: flex;
+  align-items: center; 
+}
+
+.custom-icon-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  gap: 7px; 
+}
+
+.icon-option {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  cursor: pointer;
+  padding: 5px; 
+  border-radius: 5px; 
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.icon-option:hover {
+  background-color: #eaeaea; 
+  transform: scale(1.1); 
+}
+
+.icon-option.selected {
+  background-color: #001F3F; 
+  color: #fff; 
+}
+
+.icon-option.selected .icon-image {
+  filter: brightness(0) invert(1); 
+}
+
+.icon-option.selected .icon-text {
+  color: #fff; 
+}
+
+.icon-image {
+  width: 24px; 
+  height: 24px;
+}
+
+.icon-text {
+  font-size: 0.7rem;
+  text-align: center;
+  margin-top: 5px; 
+}
+
+
+.justify-between {
+  display: flex;
+  justify-content: space-between; /* Space items evenly */
+  align-items: center; /* Align items vertically */
+}
+
+.spans-container {
+  display: flex;
+  gap: 10px; /* Add spacing between the spans */
+}
+
+.shopping-center,
+.standalone {
+  font-size: 16px;
+  font-weight: bold;
+  color: #7A8591;
+}
+
+.custom-icon-container {
+  display: flex;
+  gap: 15px; /* Add spacing between the icons */
+}
+
+.icon-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon-option:hover {
+  transform: scale(1.1);
+}
+
+.icon-option.selected {
+  color: blue; /* Highlight the selected option */
+}
+
+.toggle-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  color: #7a8591; /* Default text color */
+}
+
+.toggle-button.selected {
+  background-color: #ccd2d9; /* Background color of selected button */
+  color: #001f3f; /* Text color when selected */
+  border-radius: var(--Radius-Radius-8, 8px);
+
+}
+
+
+.toggle-button:hover {
+  background-color: #f0f0f0;
+}
+.parent-container {
+  display: flex; /* Use Flexbox for the layout */
+  justify-content: flex-end; /* Align the children to the right end */
+  width: 100%; /* Ensure it takes up the full width of the page */
+  position: relative; /* Optional: To make sure the element aligns relative to its container */
+}
+.card-frame{
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  background: #FFF;
+}
+.svg-container {
+  display: flex;
+  align-items: center;
+}
+
+
+
+.svg-icon:last-child {
+  margin-right: 0;  /* No margin on the last SVG */
+}
+.table-text{
+  color: var(--Table-Info-Cell-Color, #7A8591);
+  font-family: Montserrat;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; 
+
+}
+.table-texttt{
+  color: var(--Table-Info-Cell-Color, #7A8591);
+  font-family: Montserrat;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; 
+
+}
+
+.card-content{
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  height: 330px;
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+}
+.card-sideview{
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  height: 270px;
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+}
+.card-sideview2{
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  height: 240px;
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+}
+.card-content2{
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  height: 250px;
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+}
+.card-address{
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 30px;
+  letter-spacing: -0.005em;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #7A8591  
+}
+.managed-by{
+font-family: Montserrat;
+font-size: 14px;
+font-weight: 400;
+line-height: 20px;
+text-align: left;
+text-underline-position: from-font;
+text-decoration-skip-ink: none;
+color: #7A8591  ;
+
+}
+
+
+
+
+
+
+
+@media (max-width: 576px) {  
   .nav-right {
-    flex-direction: column;
-    align-items: flex-start;
+    .nav-right {
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      width: 100%; 
+    }
+  }
+  .img-logo{
+    height: 40px; 
+    width: 165px
+  }
+  .custom-dropdown{
+    width:170px;
+  }
+  .custom-map {
+    height: 100%;
+    
   }
 }
+@media (min-width: 576px) {  
+  .nav-right {
+    .nav-right {
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      width: 100%; 
+    }
+  }
+  .img-logo{
+    height: 40px; 
+    width: 165px
+  }
+ 
+}
 
-.logo{
-   max-width: 40px;
-   margin: 0 10px;
-}
-.contact-container{
-  background: #E4E7E9;
-  padding: 6px;
-  border-radius: 12px;
-  margin: 10px 0;
-}
+@media (min-width: 768px) {
+
+ }
+
+@media (min-width: 992px) { 
+
+ }
+
+@media (min-width: 1200px) { 
+
+ }
+
+@media (min-width: 1400px) { 
+
+ }
+
+

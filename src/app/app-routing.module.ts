@@ -8,6 +8,7 @@ import { UserBuyboxComponent } from './components/user-buybox/user-buybox.compon
 import { AuthGuardService } from './services/auth-guard.service';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
+<<<<<<< HEAD
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
@@ -18,6 +19,10 @@ import { SourcesComponent } from './components/kanban/sources/sources.component'
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
+=======
+ import { KanbanComponent } from './components/kanban/kanban.component';
+import { KayakComponent } from './components/Kayak/kayak/kayak.component';
+>>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -31,7 +36,7 @@ const routes: Routes = [
   { path: 'summary/:orgId', component: SummeryComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
   {
-    path: 'home/:buyboxid',
+    path: 'home/:buyboxid/:orgId',
     component: HomeComponent,
     canActivate: [AuthGuardService],
   },
@@ -46,6 +51,7 @@ const routes: Routes = [
   },
   { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
+<<<<<<< HEAD
   {
     path: 'Kanban',
     component: KanbanComponent,
@@ -96,6 +102,11 @@ const routes: Routes = [
     component: PropertiesgridviewComponentComponent,
     canActivate: [AuthGuardService],
   },
+=======
+  { path: 'Kanban', component: KanbanComponent },
+  { path: 'kayak', component: KayakComponent },
+
+>>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
 ];
 
 @NgModule({
@@ -106,4 +117,5 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
+
 export class AppRoutingModule {}

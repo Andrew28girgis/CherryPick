@@ -1,11 +1,11 @@
 import {
   ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  NgZone,
+  Component, 
+  OnInit, 
+  NgZone, 
 } from '@angular/core';
+ 
+ 
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { AllPlaces, AnotherPlaces, General, Property } from 'src/models/domain';
@@ -17,15 +17,21 @@ import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Polygons } from 'src/models/polygons';
+import { ShareOrg } from 'src/models/shareOrg';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
+  shoppingCenter: any;
+  selectedView: string = 'shoppingCenters';
   General!: General;
   pageTitle!: string;
   BuyBoxId!: any;
+  OrgId!: any;
   page: number = 1;
   pageSize: number = 25;
   paginatedProperties: Property[] = [];
@@ -63,14 +69,26 @@ export class HomeComponent implements OnInit {
   isCompetitorChecked = false; // Track the checkbox state
   isCoTenantChecked = false;
   cardsSideList: any[] = [];
-  selectedOption: any;
+  selectedOption!: number;
+  selectedSS!: number;
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
-
   buyboxCategories: BuyboxCategory[] = [];
+  showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
+  toggleShoppingCenters() {
+    this.showShoppingCenters = !this.showShoppingCenters;
+  }
+  showStandalone: boolean = true; // Ensure this reflects your initial state
   standAlone: Place[] = [];
+  toggleStandalone() {
+    this.showStandalone = !this.showStandalone;
+  }
+
   buyboxPlaces: BbPlace[] = [];
+  Polygons: Polygons[] = [];
+  ShareOrg: ShareOrg[] = [];
+  shareLink: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -89,19 +107,36 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.loadShoppingCenterData();
+
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
+      this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
     });
 
-    this.selectedOption = this.dropdowmOptions[2];
+    this.selectedSS = 1;
     this.BuyBoxPlacesCategories(this.BuyBoxId);
+    this.GetOrganizationById(this.OrgId);
+    this.GetPolygons(this.BuyBoxId);
 
-    this.selectedOption = this.dropdowmOptions.find(
-      (option: any) => +option.status == +this.currentView
-    );
+  }
+
+  GetOrganizationById(orgId: number): void {
+    const body: any = {
+      Name: 'GetOrganizationById',
+      Params: {
+        organizationid: orgId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.ShareOrg = data.json;
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
   }
 
   BuyBoxPlacesCategories(buyboxId: number): void {
@@ -121,7 +156,24 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  GetPolygons(buyboxId: number): void {
+    const body: any = {
+      Name: 'GetPolygons',
+      Params: {
+        buyboxid: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.Polygons = data.json;
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
   getShoppingCenters(buyboxId: number): void {
+    this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -134,7 +186,7 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         console.log(`shoppingCenters`);
         console.log(this.shoppingCenters);
-
+        this.spinner.hide();
         this.getStandAlonePlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -142,6 +194,7 @@ export class HomeComponent implements OnInit {
   }
 
   getStandAlonePlaces(buyboxId: number): void {
+    this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyStandalonePlaces',
       Params: {
@@ -154,7 +207,7 @@ export class HomeComponent implements OnInit {
         this.standAlone = data.json;
         console.log(`standAlone`);
         console.log(this.standAlone);
-
+        this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -258,7 +311,7 @@ export class HomeComponent implements OnInit {
       if (this.standAlone && this.standAlone.length > 0) {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
-
+      
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
@@ -269,6 +322,7 @@ export class HomeComponent implements OnInit {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(this.map, markerData, type);
     });
+    // this.markerService.drawMultiplePolygons(this.map, this.Polygons);
   }
 
   createCustomMarkers(markerDataArray: any[]) {
@@ -279,6 +333,31 @@ export class HomeComponent implements OnInit {
 
   onCheckboxChange(category: BuyboxCategory): void {
     this.markerService.toggleMarkers(this.map, category);
+  }
+  loadShoppingCenterData(): void {
+    // Example API response structure
+    this.shoppingCenter = {
+      ShoppingCenter: {
+        ManagerOrganization: [
+          {
+            Firstname: 'John',
+            LastName: 'Doe',
+            CellPhone: '123-456-7890',
+            Email: 'john.doe@example.com',
+          },
+          {
+            Firstname: 'Jane',
+            LastName: 'Smith',
+            CellPhone: '987-654-3210',
+            Email: 'jane.smith@example.com',
+          },
+        ],
+      },
+    };
+  }
+
+  isLast(currentItem: any, array: any[]): boolean {
+    return array.indexOf(currentItem) === array.length - 1;
   }
 
   private onMapDragEnd(map: any) {
@@ -303,11 +382,10 @@ export class HomeComponent implements OnInit {
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
       this.shoppingCenters?.forEach((center) => {
-        if (center.ShoppingCenter?.Places) {
-          const firstPlace = center.ShoppingCenter?.Places[0];
-          center.Latitude = firstPlace.Latitude;
-          center.Longitude = firstPlace.Longitude;
-        }
+        // if (center.ShoppingCenter?.Places) {
+        center.Latitude = center.Latitude;
+        center.Longitude = center.Longitude;
+        // }
       });
     }
   }
@@ -324,6 +402,7 @@ export class HomeComponent implements OnInit {
       ...(this.shoppingCenters || []),
       ...(this.standAlone || []),
     ];
+
     // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
       this.cardsSideList = allProperties.filter(
@@ -343,7 +422,7 @@ export class HomeComponent implements OnInit {
       return false;
     }
 
-    return bounds.contains({ lat, lng });
+    return bounds?.contains({ lat, lng });
   }
 
   onMouseEnter(place: any): void {
@@ -388,7 +467,7 @@ export class HomeComponent implements OnInit {
         '/landing',
         place.ShoppingCenter?.Places ? place.ShoppingCenter.Places[0].Id : 0,
         place.Id,
-        
+
         this.BuyBoxId,
       ]);
     } else {
@@ -419,6 +498,13 @@ export class HomeComponent implements OnInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
+  // ngAfterViewInit(): void {
+  //   // Initialize all popovers on the page
+  //   const popoverTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="popover"]'));
+  //   popoverTriggerList.forEach(popoverTriggerEl => {
+  //     // new bootstrap.Popover(popoverTriggerEl);
+  //   });
+  // }
 
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
@@ -492,6 +578,35 @@ export class HomeComponent implements OnInit {
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
+  openLink(content: any, modalObject?: any) {
+    this.shareLink = '';
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    if (modalObject) {
+      if (modalObject.CenterAddress) {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
+      } else {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
+      }
+    } else {
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
+    }
+  }
+
+  copyLink(link: string) {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        console.log('Link copied to clipboard!');
+        // Optionally, you could show a toast or notification to the user
+      })
+      .catch((err) => {
+        console.error('Could not copy text: ', err);
+      });
+  }
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
 
@@ -525,19 +640,21 @@ export class HomeComponent implements OnInit {
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
     };
-  
+
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
       return !isNaN(priceNumber) ? Math.floor(priceNumber) : price; // Remove decimal points and return the whole number
     };
-  
+
     const appendInfoIcon = (calculatedPrice: string, originalPrice: any) => {
       if (calculatedPrice === 'On Request') {
         return calculatedPrice; // No icon for "On Request"
       }
-      const formattedOriginalPrice = `$${parseFloat(originalPrice).toLocaleString()}/sqft/Year`;
-  
+      const formattedOriginalPrice = `$${parseFloat(
+        originalPrice
+      ).toLocaleString()}/sq ft./year`;
+
       // Inline styles can be adjusted as desired
       return `
         <div style="display:inline-block; text-align:left; line-height:1.2;">
@@ -546,15 +663,17 @@ export class HomeComponent implements OnInit {
         </div>
       `;
     };
-  
+
     // Extract the places array
     const places = shoppingCenter?.ShoppingCenter?.Places || [];
-  
+
     // Collect building sizes if available
     const buildingSizes = places
       .map((place: any) => place.BuildingSizeSf)
-      .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
-  
+      .filter(
+        (size: any) => size !== undefined && size !== null && !isNaN(size)
+      );
+
     if (buildingSizes.length === 0) {
       // Handle case for a single shopping center without valid places
       const singleSize = shoppingCenter.BuildingSizeSf;
@@ -571,31 +690,31 @@ export class HomeComponent implements OnInit {
             : 'On Request';
         return `Unit Size: ${formatNumberWithCommas(
           singleSize
-        )} SF<br>Lease price: ${resultPrice}`;
+        )} sq ft.<br>Lease price: ${resultPrice}`;
       }
       return null;
     }
-  
+
     // Calculate min and max size
     const minSize = Math.min(...buildingSizes);
     const maxSize = Math.max(...buildingSizes);
-  
+
     // Find corresponding lease prices for min and max sizes
     const minPrice =
-      places.find((place: any) => place.BuildingSizeSf === minSize)?.ForLeasePrice ||
-      'On Request';
+      places.find((place: any) => place.BuildingSizeSf === minSize)
+        ?.ForLeasePrice || 'On Request';
     const maxPrice =
-      places.find((place: any) => place.BuildingSizeSf === maxSize)?.ForLeasePrice ||
-      'On Request';
-  
+      places.find((place: any) => place.BuildingSizeSf === maxSize)
+        ?.ForLeasePrice || 'On Request';
+
     // Format unit sizes
     const sizeRange =
       minSize === maxSize
-        ? `${formatNumberWithCommas(minSize)} SF`
-        : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(
+        ? `${formatNumberWithCommas(minSize)} sq ft.`
+        : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
             maxSize
-          )} SF`;
-  
+          )} sq ft.`;
+
     // Ensure only one price is shown if one is "On Request"
     const formattedMinPrice =
       minPrice === 'On Request'
@@ -606,7 +725,7 @@ export class HomeComponent implements OnInit {
             )}/month`,
             minPrice
           );
-  
+
     const formattedMaxPrice =
       maxPrice === 'On Request'
         ? 'On Request'
@@ -616,10 +735,13 @@ export class HomeComponent implements OnInit {
             )}/month`,
             maxPrice
           );
-  
+
     // Handle the lease price display logic
     let leasePriceRange;
-    if (formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request') {
+    if (
+      formattedMinPrice === 'On Request' &&
+      formattedMaxPrice === 'On Request'
+    ) {
       leasePriceRange = 'On Request';
     } else if (formattedMinPrice === 'On Request') {
       leasePriceRange = formattedMaxPrice;
@@ -631,27 +753,26 @@ export class HomeComponent implements OnInit {
     } else {
       leasePriceRange = `${formattedMinPrice} - ${formattedMaxPrice}`;
     }
-  
+
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
-  
 
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
     // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
     const size = Number(buildingSizeSf);
-  
+
     // Check if the values are valid numbers
     if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
       // Calculate the lease price per month
       const calculatedPrice = Math.floor((leasePrice * size) / 12);
-  
+
       // Format the calculated price with commas
       const formattedPrice = calculatedPrice.toLocaleString();
-  
+
       // Format the original price in $X/sqft/Year format
-      const formattedOriginalPrice = `$${leasePrice.toLocaleString()}/sqft/Year`;
-  
+      const formattedOriginalPrice = `$${leasePrice.toLocaleString()}/sq ft./year`;
+
       // Return formatted result in a stacked layout with an info icon
       return `
         <div style="display:inline-block; text-align:left; line-height:1.2; vertical-align:middle;">
@@ -666,14 +787,11 @@ export class HomeComponent implements OnInit {
         </div>
       `;
     } else {
-      // If invalid values are provided, return 'On Request'
       return '<b>Lease price:</b> On Request';
     }
   }
-  
 
   getNeareastCategoryName(categoryId: number) {
-    // console.log(categoryId);
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }
@@ -684,5 +802,9 @@ export class HomeComponent implements OnInit {
     } else {
       return '';
     }
+  }
+
+  setDefaultView(viewValue: number) {
+    this.selectedSS = viewValue;
   }
 }

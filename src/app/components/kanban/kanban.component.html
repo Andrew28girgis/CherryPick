@@ -1,8 +1,55 @@
+<<<<<<< HEAD
 <div class="page-layout" [ngClass]="{ 'sidebar-collapsed': sidebarCollapsed }"  >
   <div class="sidebar"  >
     <app-sidebar
       (collapseChange)="onSidebarCollapse($event)"
     ></app-sidebar>
+=======
+<div class="row">
+  <div class="col-md-2 border-r" style="height: 100vh">
+    <div class="sidebar" [ngClass]="{ 'sidebar-collapse': collapse }">
+      <div class="sidebar-header">
+        <ng-container *ngIf="!collapse; else other_content">
+          <div class="header-title">CHERRYPICK</div>
+          <!-- Uncomment this block if needed -->
+          <!-- <svg
+            (click)="changeCollapse()"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+          >
+            <path
+              d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"
+            ></path>
+            <path
+              d="M13.293 7.293 8.586 12l4.707 4.707 1.414-1.414L11.414 12l3.293-3.293-1.414-1.414z"
+            ></path>
+          </svg> -->
+        </ng-container>
+        <ng-template #other_content>
+          <i
+            class="fa-solid fa-angle-right header-btn"
+            (click)="changeCollapse()"
+          ></i>
+        </ng-template>
+      </div>
+      <ul class="sidebar-items">
+        <li
+          *ngFor="let item of sidebarItems"
+          class="sidebar-item"
+          [routerLink]="[item.route]"
+          routerLinkActive="active"
+        >
+          <a class="item-link">
+            <i class="{{ item.icon }}"></i>
+            <span class="item-title ms-3" *ngIf="!collapse">{{
+              item.title
+            }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+>>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
   </div>
   <div class="main-content">
     <div class="dashboard-header">

@@ -29,6 +29,7 @@ import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+<<<<<<< HEAD
 import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
@@ -44,6 +45,9 @@ import { PropertiesspilitviewComponent } from './components/kanban/properties/wi
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
 import { ToastrModule } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
+=======
+import { KayakComponent } from './components/Kayak/kayak/kayak.component';
+>>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
 
 @NgModule({
   declarations: [
@@ -63,6 +67,7 @@ import { RouterModule } from '@angular/router';
     KanbanComponent,
     KanbanHomeComponent,
     SidebarComponent,
+<<<<<<< HEAD
     FilterPanelComponent, 
     DetailsComponent,
     EditPopupComponent,
@@ -75,6 +80,9 @@ import { RouterModule } from '@angular/router';
     PropertiesComponent,
     PropertiesspilitviewComponent,
     PropertiesgridviewComponentComponent,
+=======
+    KayakComponent,
+>>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
   ],
   imports: [
     BrowserModule,

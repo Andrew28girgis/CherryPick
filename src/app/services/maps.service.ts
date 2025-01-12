@@ -105,12 +105,14 @@ export class MapsService {
     shoppingCenterId?: number
   ): void {
     console.log(`View details for marker ID: ${markerId}`);
+
     this.router.navigate([
       '/landing',
       markerId,
-      shoppingCenterId,
+      markerId != shoppingCenterId ? shoppingCenterId : 0,
       this.storedBuyBoxId,
     ]);
+
   }
 
   private assignToMarkerArray(marker: any, type: string): void {
@@ -198,8 +200,8 @@ export class MapsService {
               : ''
           }
   
-          ${managerOrgs ? `<div class="py-2">${managerOrgs}</div>` : ''}
-  
+          ${managerOrgs ? `<div class="py-2">${managerOrgs}</div>` : ''} 
+          
           <div class="buttons-wrap">
             <button id="view-details-${
               markerData.ShoppingCenter?.Places
@@ -257,17 +259,17 @@ export class MapsService {
   private currentlyOpenInfoWindow: any | null = null;
 
   createCustomMarker(map: any, markerData: BuyboxCategory): void {
+
     if (!this.markerMap[markerData.id]) {
       this.markerMap[markerData.id] = [];
     }
 
     if (this.markerMap[markerData.id].length > 0) {
       return;
-    }
+    } 
 
     markerData.places.forEach((place) => {
       const imgUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${place.id}`;
-
       place.RetailRelationCategories.forEach((branch) => {
         branch.Branches.forEach((b) => {
           const latitude = Number(b.Latitude);
@@ -276,7 +278,7 @@ export class MapsService {
           if (!isNaN(latitude) && !isNaN(longitude)) {
             const marker = new google.maps.Marker({
               position: {
-                lat: latitude,
+                lat: latitude, 
                 lng: longitude,
               },
               icon: {
@@ -572,7 +574,6 @@ export class MapsService {
         const monthlyCost = Math.floor((leaseNumeric * minSize) / 12);
         resultLeasePrice = `$${formatNumberWithCommas(monthlyCost)}/month`;
       } else {
-        // If parsing failed, default to On Request
         resultLeasePrice = 'On Request';
       }
     }
@@ -581,22 +582,13 @@ export class MapsService {
   }
 
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
-    // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
     const size = Number(buildingSizeSf);
-
-    // Check if the values are valid numbers
     if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
-      // Calculate the lease price per month
       const calculatedPrice = Math.floor((leasePrice * size) / 12);
-
-      // Format the calculated price with commas
       const formattedPrice = calculatedPrice.toLocaleString();
-
-      // Return the formatted result
       return `$${formattedPrice}/month`;
     } else {
-      // If invalid values are provided, return 'On Request'
       return 'On Request';
     }
   }
@@ -616,6 +608,7 @@ export class MapsService {
     this.currentlyOpenInfoWindow = null;
   }
 
+<<<<<<< HEAD
   getDefaultMapConfig(): GoogleMapsOptions {
     return {
       zoom: 12,
@@ -647,4 +640,41 @@ export class MapsService {
       }
     });
   }
+=======
+
+ 
+  drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
+    // this.drawPolygon(map, polygonFeatures[0]);
+    polygonFeatures.forEach((feature) => {
+      this.drawSinglePolygon(map, feature);
+    });
+  }
+
+  drawSinglePolygon(map: any, feature: any): void {
+    try {
+      const geoJson = JSON.parse(feature.json);
+      const coordinates = geoJson.geometry.coordinates[0];
+      const polygonCoords = coordinates.map((coord: number[]) => ({
+        lat: coord[1], 
+        lng: coord[0]  
+      }));
+
+      // Create and add the polygon to the map
+      const polygon = new google.maps.Polygon({
+        paths: polygonCoords,
+        strokeColor: '#3498db',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#3498db',
+        fillOpacity: 0.35,
+        map: map
+      });
+
+    } catch (error) {
+      console.error('Error drawing polygon:', error);
+    }
+  }
+
+ 
+>>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
 }
