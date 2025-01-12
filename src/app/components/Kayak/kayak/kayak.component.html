@@ -2,12 +2,15 @@
 <div class="container-fluid my-3">
   <div class="row">
     <div class="col-md-3">
-      <div class="card card-filter gray-background" >
-        <div class="card-body position-relative" style="height: 100vh ; overflow-y: scroll;">
+      <div class="card card-filter gray-background">
+        <div
+          class="card-body position-relative"
+          style="height: 100vh; overflow-y: scroll"
+        >
           <div class="d-flex align-items-center justify-content-between">
             <div class="title-filter">
               <span>Filter</span>
-            </div> 
+            </div>
           </div>
 
           <div>
@@ -16,7 +19,7 @@
             </div>
             <select
               id="state-select"
-              class="form-select search-inputs" 
+              class="form-select search-inputs"
               (change)="getCitiesOfState()"
               [(ngModel)]="filterValues.statecode"
             >
@@ -31,8 +34,7 @@
             <div class="mt-3 small-titlefilter">
               <span>City</span>
             </div>
-            <select 
-              
+            <select
               id="city-select"
               class="form-select search-inputs"
               [(ngModel)]="filterValues.city"
@@ -53,8 +55,7 @@
                   id="availabilty"
                   name="availabilty"
                   class="form-check-input"
-                  [(ngModel)]="filterValues.availabilty" 
-                   
+                  [(ngModel)]="filterValues.availabilty"
                 />
                 <label for="availabilty" class="form-check-label ms-2"
                   >Availabilty</label
@@ -63,18 +64,26 @@
 
               <div class="mt-3 small-titlefilter">
                 <span>Sqft</span>
-                <input type="number" class="form-control" placeholder="sqft" [(ngModel)]="filterValues.sqft" />
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="sqft"
+                  [(ngModel)]="filterValues.sqft"
+                />
               </div>
               <div class="mt-3 small-titlefilter">
                 <span>Secondary Type</span>
               </div>
-              <select class="form-select search-inputs" [(ngModel)]="filterValues.secondarytype">
+              <select
+                class="form-select search-inputs"
+                [(ngModel)]="filterValues.secondarytype"
+              >
                 <option selected>All</option>
-                <ng-container  *ngFor="let Secondary of Filters?.SecondaryType">
-                <option value="{{ Secondary.SecondaryType }}">
-                  {{ Secondary.SecondaryType }}
-                </option>
-              </ng-container>
+                <ng-container *ngFor="let Secondary of Filters?.SecondaryType">
+                  <option value="{{ Secondary.SecondaryType }}">
+                    {{ Secondary.SecondaryType }}
+                  </option>
+                </ng-container>
               </select>
             </div>
             <hr class="small-line" />
@@ -84,7 +93,13 @@
               </div>
               <div class="mt-3">
                 <div class="form-check">
-                  <ng-container *ngFor="let tenant of Filters.Tenants">
+                  <ng-container
+                    *ngFor="
+                      let tenant of showAllTenants
+                        ? Filters.Tenants
+                        : Filters.Tenants.slice(0, 15)
+                    "
+                  >
                     <input
                       type="checkbox"
                       name="Comp-Tenants"
@@ -94,6 +109,11 @@
                     />
                     <label class="form-check-label">{{ tenant.Name }}</label>
                   </ng-container>
+                </div>
+                <div class="text-center mt-2">
+                  <button class="btn btn-link" (click)="toggleTenantList()">
+                    {{ showAllTenants ? "Show Less ▲" : "Show More ▼" }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -105,11 +125,11 @@
                 <button class="x-btn tags" (click)="openTagsModal(tagsModal)">
                   Select Tags <i class="fas fa-tags ml-1"></i>
                 </button>
-                <div *ngIf="selectedTags.length > 0"  class="mt-3 d-flex flex-column">
-                  <span
-                    *ngFor="let tag of selectedTags"
-                    class=""
-                  >
+                <div
+                  *ngIf="selectedTags.length > 0"
+                  class="mt-3 d-flex flex-column"
+                >
+                  <span *ngFor="let tag of selectedTags" class="">
                     {{ tag.tag }}
                     <!-- <i
                       class="fas fa-times ml-1 cursor-pointer"
@@ -125,19 +145,28 @@
               </div>
               <div class="mt-3">
                 <div class="form-check">
+                  <!-- Slice to 15 or show all based on `showAllOrgs` -->
                   <ng-container
-                    *ngFor="let Org of Filters.ManagementOrganization"
+                    *ngFor="
+                      let Org of showAllOrgs
+                        ? Filters.ManagementOrganization
+                        : Filters.ManagementOrganization.slice(0, 15)
+                    "
                   >
                     <input
                       type="checkbox"
                       name="Comp-Tenants"
                       class="form-check-input"
-                      (change)="toggleOrgSelection()"
+                      (change)="toggleOrgSelect(Org)"
                       [(ngModel)]="Org.Selected"
-
                     />
                     <label class="form-check-label">{{ Org.Name }}</label>
                   </ng-container>
+                </div>
+                <div class="text-center mt-2">
+                  <button class="btn btn-link" (click)="toggleOrgList()">
+                    {{ showAllOrgs ? "Show Less ▲" : "Show More ▼" }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -183,20 +212,25 @@
                 <div class="col-md-9">
                   <div
                     class="d-inline-flex align-items-center border p-2 rounded gray-background"
-                   
                   >
                     <span class="me-2 show-map">Show Map</span>
                     <img src="../../../../assets/Images/Icons/map.png" alt="" />
                   </div>
                 </div>
- 
+                <!-- <div class="col-md-3">
+                  <button class="btn btn-secondary" (click)="searchShoppingCenter()">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                </div> -->
               </div>
             </div>
             <ng-container>
-              <div class="col-md-12" *ngFor="let result of KayakResult?.Result">
+              <!-- Loop through KayakResult -->
+              <div class="col-md-12" *ngFor="let result of KayakResult?.json">
                 <div class="card carddd mb-3 gray-background">
                   <div class="card-body">
                     <div class="row">
+                      <!-- Left Side: Result Details -->
                       <div class="col-md-3">
                         <img
                           class="kayak-img img-fluid rounded"
@@ -245,35 +279,48 @@
                             <span>{{ result.CenterState }}</span>
                           </div>
                         </div>
-
-                        <!-- <div *ngIf="result.place?.length">
-                                <strong>Total Places:</strong> {{ result.place.length }}
-                                <ul>
-                                  <li *ngFor="let place of result.place">
-                                    <div>
-                                      <strong>Building Size:</strong> {{ place.BuildingSizeSf }} sq ft
-                                    </div>
-                                   
-                                  </li>
-                                </ul>
-                              </div> -->
                       </div>
+
+                      <!-- Right Side: Management Organization -->
                       <div class="col-md-5">
-                        <div class="text-center">
+                        <div
+                          class="text-center"
+                          *ngFor="
+                            let filtering of Filters?.ManagementOrganization
+                          "
+                        >
                           <img
-                            src="../../../../assets/Images/Logos/Co. Logo.png"
-                            alt="Company Logo"
+                            [src]="
+                              'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                              filtering.OrganizationId
+                            "
+                            [alt]="filtering.Name"
                             class="img-fluid"
                           />
-
-                          <span class="company-name">KLNB</span>
-                          <div class="info-background">
-                            <span class="black-dot"></span>
-                            <span class="info-text">Retail Leasing</span>
-                          </div>
+                          <span class="company-name">{{ filtering.Name }}</span>
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Loop through Filters.ManagementOrganization -->
+              <div
+                class="col-md-12"
+                *ngFor="let organization of Filters?.ManagementOrganization"
+              >
+                <div class="card carddd mb-3 gray-background">
+                  <div class="card-body text-center">
+                    <img
+                      [src]="
+                        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                        organization.OrganizationId
+                      "
+                      [alt]="organization.Name"
+                      class="img-fluid"
+                    />
+                    <span class="company-name">{{ organization.Name }}</span>
                   </div>
                 </div>
               </div>
@@ -285,7 +332,7 @@
   </div>
 </div>
 
-<ng-template #tagsModal let-modal> 
+<ng-template #tagsModal let-modal>
   <div class="modal-body">
     <div class="custom-multiselect">
       <!-- Search Input -->

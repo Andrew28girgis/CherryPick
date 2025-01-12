@@ -30,6 +30,7 @@ import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { KayakComponent } from './components/Kayak/kayak/kayak.component';
+import { SortByPipe } from './pipes/sortBy/sort-by.pipe';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { KayakComponent } from './components/Kayak/kayak/kayak.component';
     KanbanHomeComponent,
     SidebarComponent,
     KayakComponent,
+    SortByPipe,
   ],
   imports: [
     BrowserModule,
