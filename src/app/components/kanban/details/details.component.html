@@ -1,0 +1,175 @@
+<div class="page-layout" [ngClass]="{'sidebar-collapsed': sidebarCollapsed}">
+  <div class="sidebar">
+    <app-sidebar (collapseChange)="onSidebarCollapse($event)"></app-sidebar>
+  </div>
+  <div class="main-content">
+    <div class="dashboard-header">
+      <h1 class="title">Dashboard</h1>
+      <div class="tabs">
+        <a
+          routerLink="/Kanban"
+          routerLinkActive="active"
+          class="tab"
+          [ngClass]="{ active: activeTab === 'In Progress' }"
+          (click)="setActiveTab('In Progress')"
+        >
+          In Progress
+        </a>
+        <a
+          routerLink="/Done"
+          routerLinkActive="active"
+          class="tab"
+          [ngClass]="{ active: activeTab === 'Done' }"
+          (click)="setActiveTab('Done')"
+        >
+          Done
+        </a>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <div class="table-header">
+        <div class="search-bar position-relative">
+          <div class="search-section">
+            <div class="input">
+              <input
+                class="form-control search-input"
+                type="search"
+                placeholder="Search..."
+                [(ngModel)]="searchText"
+                (input)="onSearchChange($event)"
+              />
+              <img
+                src="assets/Images/Icons/search-normal.svg"
+                alt="Search Icon"
+                class="search-icon"
+              />
+            </div>
+          </div>
+          <div class="filter-bar">
+            <!-- ... other filter bar content ... -->
+            <button class="filter-button btn" (click)="toggleFilter()">
+              <img src="assets/Images/Icons/filter.svg" alt="Filter" />
+            </button>
+          </div>
+
+          <app-filter-panel
+            (filterChange)="onFilterChange($event)"
+          ></app-filter-panel>
+        </div>
+        <app-edit-popup
+          *ngIf="editingRow"
+          [row]="editingRow"
+          (save)="onSaveEdit($event)"
+          (cancel)="onCancelEdit()"
+        ></app-edit-popup>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead class="table-head">
+            <tr class="table-head">
+              <th style="width: 280px;">Client</th>
+              <th style="width: 280px;">Lead Broker</th>
+              <th style="width: 280px;">Stakeholder</th>
+              <th style="width: 280px;">Unit</th>
+              <th style="width: 165px;">Status</th>
+              <th style="width: 270px;">Date</th>
+              <th style="width: 500px;">Notes</th>
+              <th style="width: 110px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of filteredData">
+              <td class="client-cell">
+                <div class="client-info">
+                  <div class="avatar">
+                    <img
+                      [src]="row.client.companyLogo"
+                      [alt]="row.leadBroker.name"
+                    />
+                    {{ row.client.name.charAt(0) }}
+                  </div>
+                  <div class="details">
+                    <span class="name">{{ row.client.name }}</span>
+                    <span class="location">{{ row.client.location }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="broker-cell">
+                <div class="broker-info">
+                  <div class="avatar">
+                    <img
+                      [src]="row.leadBroker.avatar"
+                      [alt]="row.leadBroker.name"
+                    />
+                  </div>
+                  <span class="name">{{ row.leadBroker.name }}</span>
+                </div>
+              </td>
+              <td class="stakeholder-cell">
+                <div class="stakeholder-info">
+                  <div class="avatar">
+                    <img
+                      [src]="row.stakeholder.avatar"
+                      [alt]="row.stakeholder.name"
+                    />
+                  </div>
+                  <div class="details">
+                    <span class="name">{{ row.stakeholder.name }}</span>
+                    <span class="phone">{{ row.stakeholder.phone }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="client-cell">
+                <div class="client-info">
+                  <div class="avatar">
+                    <img
+                      [src]="row.unitImg"
+                      [alt]="row.unit"
+                    />
+                    {{ row.unit.charAt(0) }}
+                  </div>
+                  <div class="details">
+                    <span class="name">{{ row.unit }}</span>
+                    <span class="location">{{ row.client.location }}</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="status-badge-container">
+                  <span
+                    class="status-badge"
+                    [ngClass]="row.status.toLowerCase()"
+                  >
+                  <span class="status-dot" [ngClass]="row.status.toLowerCase()"></span>
+
+                    {{ row.status }}
+                  </span>
+                </div>
+              </td>
+              <td class="date">{{ row.date }}</td>
+              <td class="date">{{ row.Notes }}</td>
+              <td class="action-cell">
+                <button
+                  class="action-btn"
+                  (click)="onEdit(row)"
+                  [attr.aria-label]="'Edit row ' + row.id"
+                >
+                  <img src="assets/Images/Icons/edit.svg" alt="edit" />
+                </button>
+                <button
+                  class="action-btn delete"
+                  (click)="onDelete(row)"
+                  [attr.aria-label]="'Delete row ' + row.id"
+                >
+                  <img src="assets/Images/Icons/trash.svg" alt="delete" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+

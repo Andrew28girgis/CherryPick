@@ -154,7 +154,7 @@ body{
 }
 
 .active {
-  color: #00aeff !important;
+  /* color: #00aeff !important; */
 }
 
 .logout-admin {
@@ -745,6 +745,36 @@ p {
   right: -121px !important;
 }
 
-.gm-style .gm-style-iw-tc::after {
-  display: none;
+
+
+
+/* .................... */
+
+
+
+
+
+/* Add these at the root level of your styles.css */
+:root {
+  --background-primary: #ffffff;
+  --background-secondary: #f8f9fa;
+  --text-primary: #0C0D0E;
+  --text-secondary: #7A8591;
+  --border-color: #CACED3;
+  --sidebar-bg: #ffffff;
+  --sidebar-active: #001F3F;
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover: rgba(0, 31, 63, 0.1);
+}
+
+body.dark-theme {
+  --background-primary: #0C0D0E;
+  --background-secondary: #1A1D1F;
+  --text-primary: #001F3F;
+  --text-secondary: #A1A7B0;
+  --border-color: #2A2F34;
+  --sidebar-bg: #1A1D1F;
+  --sidebar-active: #CCD2D9;
+  --sidebar-active-text: #001F3F;
+  --sidebar-hover: rgba(255, 255, 255, 0.1);
 }

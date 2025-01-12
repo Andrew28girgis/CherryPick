@@ -1,0 +1,36 @@
+<div class="modal-overlay">
+    <div class="modal-container">
+      
+      <div class="modal-header">
+        <h2>Add Source</h2>
+        <button class="close-button" (click)="onCancel()">×</button>
+      </div>
+      <form [formGroup]="sourceForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="link">Link</label>
+          <input 
+            type="url" 
+            id="link" 
+            formControlName="link"
+            placeholder="https://www.cherrypick.com"
+          >
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+          <button 
+            type="submit" 
+            class="submit-btn" 
+            [disabled]="!sourceForm.valid"
+          >
+            Add Source
+          </button>
+        </div>
+        <div class="content" *ngIf="isLoading">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading sources...</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
