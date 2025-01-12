@@ -210,11 +210,10 @@ export class HomeComponent implements OnInit {
           this.selectedSS = this.stateService.getSelectedSS();
         }
         this.spinner.hide();
-
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
-    });
+    }); 
   }
 
   getBuyBoxPlaces(buyboxId: number): void {

@@ -157,7 +157,7 @@ export class LandingComponent {
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
-          this.StandAlonePlace = this.CustomPlace?.Place[0];
+          this.StandAlonePlace = this.CustomPlace?.Place?.[0];
           this.placeImage = this.StandAlonePlace?.Images?.split(',').map(
             (link) => link.trim()
           );
@@ -186,7 +186,7 @@ export class LandingComponent {
         this.filterCotenats = this.placeCotenants;
 
         const uniqueCategoriesSet = new Set<string>();
-        this.placeCotenants.forEach((co) => {
+        this.placeCotenants?.forEach((co) => {
           co.SubCategory.forEach((c) => {
             if (c.OrganizationCategory) {
               uniqueCategoriesSet.add(c.OrganizationCategory);

@@ -93,9 +93,7 @@ export class MapsService {
   
     
     
-    let shoppingCenterId = markerData.CenterName ? markerData.Id : 0;
-    console.log(`888`);
-    console.log(shoppingCenterId);
+    let shoppingCenterId = markerData.CenterName ? markerData.Id : 0; 
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
         this.handleViewDetailsClick(placeId, shoppingCenterId);
@@ -108,9 +106,7 @@ export class MapsService {
   private handleViewDetailsClick(
     markerId: any,
     shoppingCenterId?: number
-  ): void {
-    console.log(`markerID ${markerId}`);
-    console.log(`ShoppingCenterID ${shoppingCenterId}`);
+  ): void { 
 
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedOrgId = localStorage.getItem('OrgId'); 
