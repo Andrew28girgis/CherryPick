@@ -642,5 +642,26 @@ export class MapsService {
     }
   }
 
- 
+  addPropertyMarker(map: any, position: { lat: number; lng: number }, property: any) {
+    return new google.maps.Marker({
+      position,
+      map,
+      title: property.title
+    });
+  }
+
+  getDefaultMapConfig() {
+    return {
+      center: { lat: 39.8283, lng: -98.5795 }, // Center of USA
+      zoom: 4,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      streetViewControl: false
+    };
+  }
+
+  createMap(element: HTMLElement, config: any): any {
+    return new google.maps.Map(element, config);
+  }
+
 }
