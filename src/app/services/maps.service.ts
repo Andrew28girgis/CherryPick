@@ -650,52 +650,120 @@ export class MapsService {
     }
   }
 
-  drawNeighbourhoodPolygons(
-    map:any,
-    polygonFeatures: number[][][] | number[][]
-  ): void {
-   
-    // If polygonFeatures is just a single polygon, wrap it in an array so we can handle it uniformly.
-    let polygons: number[][][];
-  
-    if (Array.isArray(polygonFeatures[0]) && Array.isArray(polygonFeatures[0][0])) {
-      // polygonFeatures is already number[][][]
-      polygons = polygonFeatures as number[][][];
-    } else {
-      // polygonFeatures must be number[][]
-      polygons = [polygonFeatures as number[][]];
+  drawPolygons(map: any, response: any): void {
+    if (!map || !response || !Array.isArray(response)) {
+      console.error('Invalid parameters provided to drawPolygons');
+      return;
     }
   
-    // Now 'polygons' is always number[][][], i.e. an array of polygons
-    polygons.forEach((onePolygon) => {
-      // each polygon is an array of rings (number[][])
-      const polygonPaths: any[][] = [];
+    response.forEach((polygonCoordinates: number[][][]) => {
+      const paths = polygonCoordinates.map(coords => {
+        return coords.map((coord:any) => {
+          // Ensure that latitude and longitude are numbers
+          const lat = parseFloat(coord[1]);
+          const lng = parseFloat(coord[0]);
   
-      onePolygon.forEach((ring) => {
-        // 'ring' is number[][]
-        const path = ring.map((coord:any) => {
-          // coordinate is [lng, lat]
-          return { lat: coord[1], lng: coord[0] };
-        });
-        polygonPaths.push(path);
+          // Check if they are valid numbers
+          if (isNaN(lat) || isNaN(lng)) {
+            console.error('Invalid coordinate:', coord);
+            return null;
+          }
+  
+          return { lat, lng };
+        }).filter(point => point !== null); // Remove invalid points
       });
-      console.log(`polygonPaths`, polygonPaths);
-      
   
-      // Create polygon and add to the map
+      // Create the polygon
       const polygon = new google.maps.Polygon({
-        paths: polygonPaths,
+        paths,
         strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        clickable: true,
+        fillOpacity: 0.35
       });
+  
       polygon.setMap(map);
     });
   }
   
 
+
+  async  fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+    const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area) + ',' + city + ',' + state}&polygon_geojson=1&format=json`;
+  
+    try {
+      const response = await fetch(boundaryUrl);
+      const data: any[] = await response.json();
+  
+      if (data.length === 0) {
+        alert("No boundary data found for the specified area");
+        return;
+      }
+  
+      // Clear existing data on the map
+      map.data.forEach((feature: any) => map.data.remove(feature));
+  
+      // Initialize bounds for all polygons
+      const globalBounds = new google.maps.LatLngBounds();
+  
+      for (const entry of data) {
+        const geojsonBoundary = entry.geojson;
+  
+        // Wrap the GeoJSON in a valid FeatureCollection
+        const featureCollection = {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: geojsonBoundary,
+              properties: {},
+            },
+          ],
+        };
+  
+        // Add the GeoJSON boundary to the map
+        map.data.addGeoJson(featureCollection);
+  
+        // Extend bounds to include this boundary
+        const bounds = new google.maps.LatLngBounds();
+  
+        const processPoints = (coords: any[]) => {
+          coords.forEach((point) => {
+            if (Array.isArray(point[0])) {
+              processPoints(point);
+            } else {
+              bounds.extend({ lat: point[1], lng: point[0] });
+            }
+          });
+        };
+  
+        if (geojsonBoundary.type === "Polygon") {
+          processPoints(geojsonBoundary.coordinates);
+        } else if (geojsonBoundary.type === "MultiPolygon") {
+          geojsonBoundary.coordinates.forEach(processPoints);
+        }
+  
+        // Merge bounds for the current polygon with the global bounds
+        globalBounds.union(bounds);
+      }
+  
+      // Fit map to the global bounds of all polygons
+      map.fitBounds(globalBounds);
+  
+      // Style all polygons
+      map.data.setStyle({
+        fillColor: "#FF0000",
+        fillOpacity: 0.35,
+        strokeColor: "#FF0000",
+        strokeWeight: 2,
+      });
+    } catch (error) {
+      console.error("Error fetching boundary data:", error);
+      alert("Failed to fetch boundary data. Please try again.");
+    }
+  }
+  
 
 
 }

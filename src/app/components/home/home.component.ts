@@ -365,23 +365,15 @@ export class HomeComponent implements OnInit {
     });
 
      
-    
-    // this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-
+ 
      this.shoppingCenters.forEach((center) => {
       if(center.Neighbourhood) {
-        const url = `https://nominatim.openstreetmap.org/search.php?q=${center.Neighbourhood}&polygon_geojson=1&format=json`;
-        fetch(url)
-        .then(response => response.json())
-        .then(data =>{ 
-          if(this.map, data.features[0].geometry.type == 'Polygon') {
-            this.markerService.drawNeighbourhoodPolygons(this.map, data.features[0].geometry.coordinates);    
-          } 
-                
-      })
+        this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood); 
       }
      });
   }
+
+ 
 
   createCustomMarkers(markerDataArray: any[]) {
     markerDataArray.forEach((categoryData) => {
