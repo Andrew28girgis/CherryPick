@@ -745,7 +745,6 @@ p {
   right: -121px !important;
 }
 
-<<<<<<< HEAD
 
 
 
@@ -778,8 +777,4 @@ body.dark-theme {
   --sidebar-active: #CCD2D9;
   --sidebar-active-text: #001F3F;
   --sidebar-hover: rgba(255, 255, 255, 0.1);
-=======
-.gm-style .gm-style-iw-tc::after {
-  display: none;
->>>>>>> 3060c052fbe7925d53f211a798635f8e319c9203
 }
