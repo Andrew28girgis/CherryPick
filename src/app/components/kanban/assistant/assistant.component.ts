@@ -154,6 +154,7 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     // { id: '9', text: 'Create a follow-up reminder for the client meeting scheduled next week.' }
   ];
 
+  
   queryAssistantPrompts: SuggestedPrompt[] = [
     { id: '1', text: 'Show me all available properties in Manhattan with at least 2,000 square feet' },
     { id: '2', text: 'Who are my top clients interested in commercial spaces?' },
