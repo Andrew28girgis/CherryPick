@@ -7,18 +7,18 @@ import {
  
  
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
-import { AllPlaces, AnotherPlaces, General, Property } from 'src/models/domain';
+import { PlacesService } from './../../../../src/app/services/places.service';
+import { AllPlaces, AnotherPlaces, General, Property } from './../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MapsService } from 'src/app/services/maps.service';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center, Place } from 'src/models/shoppingCenters';
-import { BbPlace } from 'src/models/buyboxPlaces';
+import { MapsService } from './../../../../src/app/services/maps.service';
+import { BuyboxCategory } from './../../../../src/models/buyboxCategory';
+import { Center, Place } from './../../../../src/models/shoppingCenters';
+import { BbPlace } from './../../../../src/models/buyboxPlaces';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Polygons } from 'src/models/polygons';
-import { ShareOrg } from 'src/models/shareOrg';
+import { Polygons } from './../../../../src/models/polygons';
+import { ShareOrg } from './../../../../src/models/shareOrg';
 
 @Component({
   selector: 'app-home',
