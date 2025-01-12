@@ -69,7 +69,7 @@ export class HomeComponent implements OnInit {
   isCoTenantChecked = false;
   cardsSideList: any[] = [];
   selectedOption!: number;
-  selectedSS!: number;
+  selectedSS!: any;
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
   buyboxCategories: BuyboxCategory[] = [];
@@ -121,6 +121,11 @@ export class HomeComponent implements OnInit {
   }
 
   GetOrganizationById(orgId: number): void {
+    if (this.stateService.getShareOrg().length > 0) {
+      this.ShareOrg = this.stateService.getShareOrg();
+      return;
+    }
+
     const body: any = {
       Name: 'GetOrganizationById',
       Params: {
@@ -130,12 +135,19 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.ShareOrg = data.json;
+        this.stateService.setShareOrg(data.json);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
- }
+  }
 
   BuyBoxPlacesCategories(buyboxId: number): void {
+    if (this.stateService.getBuyboxCategories().length > 0) {
+      this.buyboxCategories = this.stateService.getBuyboxCategories();
+      this.getShoppingCenters(buyboxId);
+      return;
+    }
+
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
@@ -145,6 +157,7 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
+        this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -168,6 +181,12 @@ export class HomeComponent implements OnInit {
   }
 
   getShoppingCenters(buyboxId: number): void {
+    if (this.stateService.getShoppingCenters().length > 0) {
+      this.shoppingCenters = this.stateService.getShoppingCenters();
+      this.getStandAlonePlaces(buyboxId);
+      return;
+    }
+
     this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
@@ -179,8 +198,7 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
-        console.log(`shoppingCenters`);
-        console.log(this.shoppingCenters);
+        this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
         this.getStandAlonePlaces(this.BuyBoxId);
       },
@@ -189,6 +207,12 @@ export class HomeComponent implements OnInit {
   }
 
   getStandAlonePlaces(buyboxId: number): void {
+    if (this.stateService.getStandAlone().length > 0) {
+      this.standAlone = this.stateService.getStandAlone();
+      this.getBuyBoxPlaces(buyboxId);
+      return;
+    }
+
     this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyStandalonePlaces',
@@ -200,23 +224,26 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.standAlone = data.json;
-        console.log(`standAlone`);
-        console.log(this.standAlone);
-        
+        this.stateService.setStandAlone(data.json);
         if (!this.stateService.getSelectedSS()) {
           this.shoppingCenters?.length > 0 ? this.selectedSS = 1 : this.selectedSS = 2;
-        }
-        else {
+        } else {
           this.selectedSS = this.stateService.getSelectedSS();
         }
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
-    }); 
+    });
   }
 
   getBuyBoxPlaces(buyboxId: number): void {
+    if (this.stateService.getBuyboxPlaces().length > 0) {
+      this.buyboxPlaces = this.stateService.getBuyboxPlaces();
+      this.getAllMarker();
+      return;
+    }
+
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
@@ -226,6 +253,7 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxPlaces = data.json;
+        this.stateService.setBuyboxPlaces(data.json);
         this.buyboxCategories.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces?.filter((place) =>
