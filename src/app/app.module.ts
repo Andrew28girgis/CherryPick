@@ -29,6 +29,21 @@ import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
+import { DetailsComponent } from './components/kanban/details/details.component';
+import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
+import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
+import { TasksComponent } from './components/kanban/tasks/tasks.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { ArchiveComponent } from './components/kanban/archive/archive.component';
+import { AssistantComponent } from './components/kanban/assistant/assistant.component';
+import { SourcesComponent } from './components/kanban/sources/sources.component';
+import { AddSourceModalComponent } from './components/kanban/sources/add-source-modal/add-source-modal.component';
+import { PropertiesComponent } from './components/kanban/properties/properties.component';
+import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
+import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
+import { ToastrModule } from 'ngx-toastr';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -47,7 +62,19 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     CherryExpansionComponent,
     KanbanComponent,
     KanbanHomeComponent,
-    SidebarComponent, 
+    SidebarComponent,
+    FilterPanelComponent, 
+    DetailsComponent,
+    EditPopupComponent,
+    StakeHolderComponent,
+    TasksComponent,
+    ArchiveComponent,
+    AssistantComponent,
+    SourcesComponent,
+    AddSourceModalComponent,
+    PropertiesComponent,
+    PropertiesspilitviewComponent,
+    PropertiesgridviewComponentComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +90,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     NgxPaginationModule,
     DragDropModule,
     ReactiveFormsModule, 
+    ToastrModule.forRoot(),
+    RouterModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
@@ -73,5 +102,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     },
   ],
   bootstrap: [AppComponent],
+  exports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule
+  ]
 })
 export class AppModule {}

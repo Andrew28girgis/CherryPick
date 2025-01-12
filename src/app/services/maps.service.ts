@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
+import { GoogleMap, GoogleMapsOptions, GoogleMapsLatLng, GoogleMapsMarker } from '../../models/google-maps.types';
 declare const google: any;
 import { Router } from '@angular/router';
 
@@ -613,5 +614,37 @@ export class MapsService {
     this.prosMarkers = [];
     this.openInfoWindow = null;
     this.currentlyOpenInfoWindow = null;
+  }
+
+  getDefaultMapConfig(): GoogleMapsOptions {
+    return {
+      zoom: 12,
+      center: { lat: 0, lng: 0 },
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      styles: [],
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false
+    };
+  }
+
+  createMap(element: HTMLElement, config: GoogleMapsOptions): any {
+    return new google.maps.Map(element, config);
+  }
+
+  addPropertyMarker(
+    map: any,
+    position: GoogleMapsLatLng,
+    property: any
+  ): GoogleMapsMarker & { addListener: (event: string, handler: () => void) => void } {
+    return new google.maps.Marker({
+      map,
+      position,
+      title: property.title,
+      icon: {
+        url: 'path/to/your/marker/icon.png',
+        scaledSize: new google.maps.Size(32, 32)
+      }
+    });
   }
 }

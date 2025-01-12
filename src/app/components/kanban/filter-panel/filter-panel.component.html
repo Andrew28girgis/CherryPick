@@ -1,0 +1,89 @@
+<div class="overlay" [class.active]="isOpen" [class.sidebar-collapsed]="sidebarCollapsed"></div>
+
+<div class="filter-panel" [class.active]="isOpen">
+  <div class="filter-header">
+    <h2>Filter</h2>
+    <button class="clear-filters" (click)="clearFilters()">
+      Clear Filters
+    </button>
+  </div>
+
+  <div class="filter-content">
+    <!-- Selected Filters -->
+    <div class="selected-filters" *ngIf="selectedFilters.length > 0">
+      <div class="filter-tag" *ngFor="let filter of selectedFilters">
+        {{ filter.label }}
+        <button class="remove-filter" (click)="removeFilter(filter)">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M12.5 7.5L7.5 12.5M7.5 7.5L12.5 12.5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Project Status -->
+    <div class="filter-section">
+      <h3>Project Status</h3>
+      <div class="checkbox-group">
+        <label *ngFor="let filter of filters" class="check">
+          <ng-container *ngIf="filter.type === 'status'" class="la">
+            <input
+              type="checkbox"
+              [checked]="filter.checked"
+              (change)="filter.checked = !filter.checked; emitFilterChange()"
+            />
+            <span>{{ filter.label }}</span>
+          </ng-container>
+        </label>
+      </div>
+    </div>
+
+    <!-- Project Type -->
+    <div class="filter-section">
+      <h3>Project Type</h3>
+      <div class="checkbox-group">
+        <label *ngFor="let filter of filters">
+          <ng-container *ngIf="filter.type === 'project'">
+            <input
+              type="checkbox"
+              [checked]="filter.checked"
+              (change)="filter.checked = !filter.checked; emitFilterChange()"
+            />
+            <span>{{ filter.label }}</span>
+          </ng-container>
+        </label>
+      </div>
+    </div>
+
+    <!-- Client -->
+    <div class="filter-section">
+      <h3>Client</h3>
+      <input
+        type="text"
+        placeholder="Type The Client Name"
+        class="client-input"
+        [(ngModel)]="clientName"
+        (ngModelChange)="emitFilterChange()"
+        (keyup.enter)="addClientName()"
+      />
+      <div class="checkbox-group">
+        <label *ngFor="let filter of filters">
+          <ng-container *ngIf="filter.type === 'client'">
+            <input
+              type="checkbox"
+              [checked]="filter.checked"
+              (change)="filter.checked = !filter.checked; emitFilterChange()"
+            />
+            <span>{{ filter.label }}</span>
+          </ng-container>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
