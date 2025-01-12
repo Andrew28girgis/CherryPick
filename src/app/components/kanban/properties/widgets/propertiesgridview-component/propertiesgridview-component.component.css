@@ -296,32 +296,49 @@
   /* Keep all existing styles from properties.component.css and add/modify these: */
 
   .table-container {
-    border: 1px solid var(--Body-General-Body-Border, #caced3);
+    border: 1px solid #E4E7E9;
     border-radius: 8px;
-    overflow: auto;
+    overflow: hidden;
+    background: white;
   }
   
   table {
-    /* width: 110%; */
-    border-radius: 8px;
+    width: 100%;
     border-collapse: separate;
     border-spacing: 0;
+    background: white;
+  }
+  
+  th {
+    padding: 16px 20px;
+    text-align: left;
+    background: #F8F9FA;
+    color: #495057;
+    font-weight: 500;
+    font-size: 13px;
+    border-bottom: 1px solid #E4E7E9;
+    height: 48px;
+    vertical-align: middle;
+    border-right: 1px solid #E4E7E9;
+  }
+  
+  th:last-child {
+    border-right: none;
   }
   
   td {
-    padding: 16px;
+    padding: 20px;
     text-align: left;
-    border-bottom: 1px solid var(--Body-General-Body-Border, #E4E7E9);
-    border-right: 1px solid var(--Body-General-Body-Border, #E4E7E9);
-    font-size: 14px;
-  }
-  th {
-    padding: 16px;
-    text-align: left;
-    font-size: 14px;
+    font-size: 13px;
+    color: #495057;
+    background: white;
+    height: 80px;
+    vertical-align: middle;
+    line-height: 1.4;
+    border-bottom: 1px solid #E4E7E9;
+    border-right: 1px solid #E4E7E9;
   }
   
-  th:last-child,
   td:last-child {
     border-right: none;
   }
@@ -330,74 +347,59 @@
     border-bottom: none;
   }
   
-  th {
-    background: #e4e7e9;
-    color: #0C0D0E;
-    font-weight: 500;
-  }
-  
-  th:first-child {
-    width: 48px;
-    padding-left: 24px;
-    border-right: none;
-  }
-  
-  td {
-    color: #1f2937;
-  }
-  
-  td:first-child {
-    padding-left: 24px;
-  }
-  
-  td input[type="checkbox"],
-  th input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    border-radius: var(--Radius-Radius-8, 8px);
-    border: 1px solid var(--Button-CheckBox-Enabled-Unchecked-Stroke, #caced3);
-    background: var(--Button-CheckBox-Enabled-Unchecked-Fill, #fff);
-    appearance: none;
-    cursor: pointer;
-    /* appearance: auto; */
-    position: relative;
-  }
-  
-  td input[type="checkbox"]:checked,
-  th input[type="checkbox"]:checked {
-    border-radius: var(--Radius-Radius-8, 8px);
-    border: 1px solid var(--Button-CheckBox-Enabled-Checked-Fill--Stroke, #001f3f);
-    background: var(--Button-CheckBox-Enabled-Checked-Fill--Stroke, #001f3f);
-  }
-  
-  td input[type="checkbox"]:checked::after,
-  th input[type="checkbox"]:checked::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-  }
+  th:nth-child(1), td:nth-child(1) { width: 20%; }
+  th:nth-child(2), td:nth-child(2) { width: 35%; }
+  th:nth-child(3), td:nth-child(3) { width: 15%; }
+  th:nth-child(4), td:nth-child(4) { width: 15%; }
+  th:nth-child(5), td:nth-child(5) { width: 15%; }
   
   .competitor-cell {
-    /* display: flex; */
+    display: flex;
     align-items: center;
     gap: 8px;
   }
   
   .competitor-logo {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    margin-right: 8px;
+    object-fit: cover;
   }
   
-  tr:hover {
-    background-color: #f9fafb;
+  .table-wrapper {
+    margin: 24px;
+    padding: 24px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .search-section {
+    margin-bottom: 20px;
+  }
+  
+  .search-container {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  td, th {
+    padding: 8px 16px;
+    line-height: 1.4;
+  }
+  
+  tr:nth-child(even) td {
+    background-color: transparent;
+  }
+  
+  th {
+    font-weight: 600;
+    color: #343A40;
+  }
+  
+  td {
+    color: #495057;
   }
   
   /* Keep the existing sidebar and layout styles */
@@ -575,3 +577,103 @@ tr:last-child td {
   justify-content: center;
   cursor: pointer;
 }
+
+td:nth-child(2) {
+  color: #6B7280;
+}
+
+td:nth-child(3),
+td:nth-child(4) {
+  font-variant-numeric: tabular-nums;
+}
+
+.competitor-cell span {
+  color: #6B7280;
+  font-size: 13px;
+}
+
+/* Update/add these styles */
+
+.table-container {
+  border: 1px solid #E4E7E9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th {
+  padding: 12px 20px;
+  text-align: left;
+  background: #F8F9FA;
+  color: #495057;
+  font-weight: 500;
+  font-size: 13px;
+  border-bottom: 1px solid #E4E7E9;
+}
+
+td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #E4E7E9;
+  font-size: 14px;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.property-name {
+  color: #001F3F;
+  font-weight: 500;
+}
+
+.property-address {
+  color: #6B7280;
+}
+
+.unit-size {
+  color: #001F3F;
+}
+
+.lease-price {
+  color: #001F3F;
+  font-weight: 500;
+}
+
+.competitor-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.competitor-badge {
+  width: 24px;
+  height: 24px;
+  background: #001F3F;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.competitor-logo {
+  width: 16px;
+  height: 16px;
+}
+
+.competitor-distance {
+  color: #6B7280;
+  font-size: 13px;
+}
+
+/* Column widths */
+th:nth-child(1), td:nth-child(1) { width: 20%; }
+th:nth-child(2), td:nth-child(2) { width: 35%; }
+th:nth-child(3), td:nth-child(3) { width: 15%; }
+th:nth-child(4), td:nth-child(4) { width: 15%; }
+th:nth-child(5), td:nth-child(5) { width: 15%; }

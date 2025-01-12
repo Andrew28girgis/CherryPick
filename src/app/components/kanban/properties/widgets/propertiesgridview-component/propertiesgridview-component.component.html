@@ -77,15 +77,15 @@
             </div>
 
             <div class="dropdown-group">
-              <select [(ngModel)]="selectedCountry" class="dropdown">
+              <select [(ngModel)]="selectedCountry" class="dropdown" (change)="onCountryChange()">
                 <option value="USA">USA</option>
                 <option value="Canada">Canada</option>
               </select>
-              <select [(ngModel)]="selectedCity" class="dropdown">
+              <select [(ngModel)]="selectedCity" class="dropdown" (change)="onCityChange()">
                 <option value="New York">New York</option>
                 <option value="Los Angeles">Los Angeles</option>
               </select>
-              <select [(ngModel)]="selectedArea" class="dropdown">
+              <select [(ngModel)]="selectedArea" class="dropdown" (change)="onAreaChange()">
                 <option value="Albany/Buffalo/Syracuse">Albany/Buffalo/Syracuse</option>
                 <option value="Manhattan">Manhattan</option>
               </select>
@@ -129,13 +129,25 @@
           </thead>
           <tbody>
             <tr *ngFor="let property of filteredProperties">
-              <td>{{ property.name }}</td>
-              <td>{{ property.address }}</td>
-              <td>{{ property.unitSize }}</td>
-              <td>{{ property.leasePrice }}</td>
-              <td class="competitor-cell">
-                <img [src]="property.nearestCompetitors.logo" [alt]="'Competitor logo'" class="competitor-logo">
-                <span>{{ property.nearestCompetitors.distance }}</span>
+              <td>
+                <span class="property-name">{{ property.name }}</span>
+              </td>
+              <td>
+                <span class="property-address">{{ property.address }}</span>
+              </td>
+              <td>
+                <span class="unit-size">{{ property.unitSize }}</span>
+              </td>
+              <td>
+                <span class="lease-price">${{ property.leasePrice }}</span>
+              </td>
+              <td>
+                <div class="competitor-cell">
+                  <div class="competitor-badge">
+                    <img src="assets/images/competitor-logo.png" alt="competitor" class="competitor-logo">
+                  </div>
+                  <span class="competitor-distance">{{ property.competitorDistance }} Mi</span>
+                </div>
               </td>
             </tr>
           </tbody>
