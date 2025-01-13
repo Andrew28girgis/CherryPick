@@ -83,7 +83,10 @@ export class MapsService {
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
     let placeId: number;
-
+    console.log(`iiuuoo`);
+    
+    console.log(marker.markerData);
+    
     marker.markerData.ShoppingCenter?.Places
       ? (placeId = markerData.ShoppingCenter.Places[0].Id)
       : (placeId = markerData.Id);
@@ -97,7 +100,7 @@ export class MapsService {
     let shoppingCenterId = markerData.CenterName ? markerData.Id : 0; 
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
-        this.handleViewDetailsClick(placeId, shoppingCenterId);
+        this.handleViewDetailsClick(placeId, shoppingCenterId , marker.markerData.CenterAddress ? 'Shopping Center': 'Stand Alone' );
       });
     } else {
       console.log(`Button for marker ${placeId} not found`);
@@ -106,14 +109,15 @@ export class MapsService {
 
   private handleViewDetailsClick(
     markerId: any,
-    shoppingCenterId?: number
+    shoppingCenterId?: number , 
+    placeType?: string
   ): void { 
     console.log(`markerID ${markerId}`);
     console.log(`ShoppingCenterID ${shoppingCenterId}`);
 
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedOrgId = localStorage.getItem('OrgId'); 
-
+    if(placeType == 'Shopping Center'){
     this.router.navigate([
       '/landing',
       markerId == shoppingCenterId ? 0 :  markerId,
@@ -121,8 +125,17 @@ export class MapsService {
       this.storedBuyBoxId,
       this.storedOrgId
     ]);
+  }else{
+    this.router.navigate([
+      '/landing',
+      markerId ,
+      0 ,
+      this.storedBuyBoxId,
+      this.storedOrgId
+    ]);
   }
-
+  }
+  
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Shopping Center' || type === 'Stand Alone') {
       this.prosMarkers.push(marker);

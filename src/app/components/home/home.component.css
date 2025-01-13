@@ -200,7 +200,7 @@
 
 .cards {
   height: 700px;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: thin; /* For Firefox */
   scrollbar-color: #c1c1c1 transparent; /* Track and thumb color */
 }
