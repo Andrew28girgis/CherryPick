@@ -138,6 +138,10 @@ export class PropertiesgridviewComponentComponent implements OnInit {
     ).subscribe(searchTerm => {
       this.searchProperties(searchTerm);
     });
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState) {
+      this.sidebarCollapsed = JSON.parse(savedState);
+    }
   }
 
   searchProperties(searchTerm: string | null) {
@@ -201,6 +205,8 @@ export class PropertiesgridviewComponentComponent implements OnInit {
 
   onSidebarCollapse(collapsed: boolean) {
     this.sidebarCollapsed = collapsed;
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
+
   }
 
   removeFilter(tag: any) {

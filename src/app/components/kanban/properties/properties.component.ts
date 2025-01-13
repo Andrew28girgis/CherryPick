@@ -283,10 +283,13 @@ list: any;
   ngOnInit() {
     const buyboxId = this.propertiesService.getbuyboxId();
     this.loadProperties(buyboxId);
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState) {
+      this.sidebarCollapsed = JSON.parse(savedState);
+    }
   }
 
   private async loadProperties(buyboxId: number) {
-    this.isLoading = true;
     try {
       const response = await this.placesService.GetBuyBoxPlaces(buyboxId).toPromise();
       this.propertiesService.setGroupedPropertiesArray(response);
@@ -438,7 +441,7 @@ list: any;
     if (view === 'split') {
       setTimeout(() => {
         this.initializeMap();
-      }, 100); // Small delay to ensure DOM is ready
+      }, 0); // Small delay to ensure DOM is ready
     }
   }
 }

@@ -18,6 +18,7 @@ import { SourcesComponent } from './components/kanban/sources/sources.component'
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
+import { KayakComponent } from './components/Kayak/kayak/kayak.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -94,6 +95,11 @@ const routes: Routes = [
   {
     path: 'PropertiesGrid',
     component: PropertiesgridviewComponentComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'Kayak',
+    component: KayakComponent,
     canActivate: [AuthGuardService],
   },
 ];

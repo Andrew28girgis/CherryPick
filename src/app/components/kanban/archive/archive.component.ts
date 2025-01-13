@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 interface FileItem {
+  id: string;
   name: string;
   uploadedBy: {
     name: string;
@@ -8,6 +9,8 @@ interface FileItem {
   };
   uploadDate: Date;
   size: number;
+  type: string;
+  status: 'uploading' | 'complete' | 'error';
 }
 
 @Component({
@@ -24,11 +27,19 @@ export class ArchiveComponent implements OnInit {
   showUploadModal = false;
   newFileName = '';
   selectedFile: File | null = null;
+  isUploading = false;
+  uploadProgress = 0;
+  errorMessage: string | null = null;
+  alertMessage: string | null = null;
+  alertTimeout: any = null;
   @ViewChild('fileInput') fileInput!: ElementRef;
+  selectedRows: Set<string> = new Set();
 
-  constructor() { }
+  constructor() {
+    this.loadFilesFromStorage();
+  }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.loadProperties();
     const savedState = localStorage.getItem('sidebarCollapsed');
     if (savedState) {
@@ -42,27 +53,126 @@ export class ArchiveComponent implements OnInit {
       this.isLoading = false;
     }, 0);
   }
+
   openUploadModal(): void {
     this.showUploadModal = true;
     this.selectedFile = null;
+    this.newFileName = '';
+    this.errorMessage = null;
+    this.uploadProgress = 0;
   }
 
   closeUploadModal(): void {
     this.showUploadModal = false;
     this.newFileName = '';
     this.selectedFile = null;
+    this.errorMessage = null;
+    this.uploadProgress = 0;
+    this.isUploading = false;
   }
+
   removeSelectedFile(): void {
     this.selectedFile = null;
     this.fileInput.nativeElement.value = '';
+    this.errorMessage = null;
   }
 
+  onFileSelected(event: Event): void {
+    const element = event.target as HTMLInputElement;
+    const files = element.files;
+    
+    if (files && files.length > 0) {
+      const file = files[0];
+      
+      // Validate file size (30MB limit)
+      if (file.size > 30 * 1024 * 1024) {
+        this.errorMessage = 'File size exceeds 30MB limit';
+        this.selectedFile = null;
+        element.value = '';
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = ['.pdf', '.docx', '.xlsx'];
+      const fileExtension = file.name.toLowerCase().slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2);
+      if (!allowedTypes.includes('.' + fileExtension)) {
+        this.errorMessage = 'Only PDF, DOCX, and XLSX files are allowed';
+        this.selectedFile = null;
+        element.value = '';
+        return;
+      }
+
+      this.selectedFile = file;
+      this.errorMessage = null;
+    }
+  }
+
+  async uploadFile(): Promise<void> {
+    if (!this.selectedFile) {
+      this.errorMessage = 'Please select a file to upload';
+      return;
+    }
+
+    try {
+      this.isUploading = true;
+      this.errorMessage = null;
+
+      await this.simulateFileUpload();
+
+      const fileItem: FileItem = {
+        id: Date.now().toString(),
+        name: this.newFileName || this.selectedFile.name,
+        uploadedBy: {
+          name: 'You',
+          avatar: 'Y'
+        },
+        uploadDate: new Date(),
+        size: this.selectedFile.size,
+        type: this.getFileExtension(this.selectedFile.name),
+        status: 'complete'
+      };
+
+      this.files.unshift(fileItem);
+      this.saveFilesToStorage();
+      this.closeUploadModal();
+
+    } catch (error) {
+      console.error('Upload failed:', error);
+      this.errorMessage = 'Failed to upload file. Please try again.';
+      this.isUploading = false;
+    }
+  }
+
+  private async simulateFileUpload(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.uploadProgress = 0;
+      const interval = setInterval(() => {
+        this.uploadProgress += 5;
+        if (this.uploadProgress >= 100) {
+          clearInterval(interval);
+          resolve();
+        }
+      }, 100);
+    });
+  }
+
+  private getFileExtension(filename: string): string {
+    return filename.split('.').pop()?.toLowerCase() || '';
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
 
   onFileDropped(event: DragEvent) {
     event.preventDefault();
     this.isDragging = false;
     const files = event.dataTransfer?.files;
-    if (files) {
+    if (files && files.length > 0) {
       this.handleFiles(files);
     }
   }
@@ -77,51 +187,67 @@ export class ArchiveComponent implements OnInit {
     this.isDragging = false;
   }
 
-  onFileSelected(event: Event): void {
-    const element = event.target as HTMLInputElement;
-    const files = element.files;
-    if (files && files.length > 0) {
-      this.selectedFile = files[0];
-    }
-  }
-
   addFile(): void {
     if (this.selectedFile) {
       const fileItem: FileItem = {
+        id: Date.now().toString(),
         name: this.newFileName || this.selectedFile.name,
         uploadedBy: {
           name: 'You',
           avatar: 'Y'
         },
         uploadDate: new Date(),
-        size: this.selectedFile.size
+        size: this.selectedFile.size,
+        type: this.getFileExtension(this.selectedFile.name),
+        status: 'complete'
       };
       this.files.unshift(fileItem);
       this.closeUploadModal();
     }
   }
   private handleFiles(files: FileList) {
+    // Clear any existing alert
+    this.clearAlert();
+    
     Array.from(files).forEach(file => {
-      if (!this.files.some(f => f.name === file.name)) {
-        const fileItem: FileItem = {
-          name: this.newFileName || file.name,
-          uploadedBy: {
-            name: 'You',
-            avatar: 'Y'
-          },
-          uploadDate: new Date(),
-          size: file.size
-        };
-        this.files.unshift(fileItem);
+      // Validate file size (30MB limit)
+      if (file.size > 30 * 1024 * 1024) {
+        this.showAlert('File size exceeds 30MB limit');
+        return;
       }
+
+      // Validate file type
+      const allowedTypes = ['.pdf', '.docx', '.xlsx'];
+      const fileExtension = '.' + file.name.toLowerCase().split('.').pop();
+      if (!allowedTypes.includes(fileExtension)) {
+        this.showAlert('Only PDF, DOCX, and XLSX files are allowed');
+        return;
+      }
+
+      const fileItem: FileItem = {
+        id: Date.now().toString(),
+        name: this.newFileName || file.name,
+        uploadedBy: {
+          name: 'You',
+          avatar: 'Y'
+        },
+        uploadDate: new Date(),
+        size: file.size,
+        type: this.getFileExtension(file.name),
+        status: 'complete'
+      };
+      this.files.unshift(fileItem);
     });
+    
+    this.saveFilesToStorage();
     this.newFileName = '';
   }
 
   removeFile(file: FileItem) {
-    const index = this.files.findIndex(f => f.name === file.name);
+    const index = this.files.findIndex(f => f.id === file.id);
     if (index !== -1) {
       this.files.splice(index, 1);
+      this.saveFilesToStorage();
     }
   }
 
@@ -131,6 +257,7 @@ export class ArchiveComponent implements OnInit {
 
   deleteFile(file: FileItem) {
     this.removeFile(file);
+    this.saveFilesToStorage();
   }
 
   showFileInfo(file: FileItem) {
@@ -140,5 +267,69 @@ export class ArchiveComponent implements OnInit {
   onSidebarCollapse(collapsed: boolean): void {
     this.sidebarCollapsed = collapsed;
     localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
+  }
+
+  private loadFilesFromStorage(): void {
+    const savedFiles = localStorage.getItem('archiveFiles');
+    if (savedFiles) {
+      this.files = JSON.parse(savedFiles).map((file: any) => ({
+        ...file,
+        uploadDate: new Date(file.uploadDate)
+      }));
+    }
+  }
+
+  private saveFilesToStorage(): void {
+    localStorage.setItem('archiveFiles', JSON.stringify(this.files));
+  }
+
+  clearStorage(): void {
+    localStorage.removeItem('archiveFiles');
+    this.files = [];
+  }
+
+  private showAlert(message: string) {
+    this.alertMessage = message;
+    
+    // Clear any existing timeout
+    if (this.alertTimeout) {
+      clearTimeout(this.alertTimeout);
+    }
+    
+    // Set new timeout to clear the alert after 4 seconds
+    this.alertTimeout = setTimeout(() => {
+      this.clearAlert();
+    }, 4000);
+  }
+
+  private clearAlert() {
+    if (this.alertTimeout) {
+      clearTimeout(this.alertTimeout);
+    }
+    this.alertMessage = null;
+  }
+
+  isAllSelected(): boolean {
+    return this.files.length > 0 && this.selectedRows.size === this.files.length;
+  }
+
+  toggleAllRows(): void {
+    if (this.isAllSelected()) {
+      this.selectedRows.clear();
+    } else {
+      this.files.forEach(file => this.selectedRows.add(file.id));
+    }
+  }
+
+  isRowSelected(file: FileItem): boolean {
+    return this.selectedRows.has(file.id);
+  }
+
+  toggleRow(file: FileItem): void {
+    if (this.selectedRows.has(file.id)) {
+      this.selectedRows.delete(file.id);
+    } else {
+      this.selectedRows.add(file.id);
+    }
   }
 }

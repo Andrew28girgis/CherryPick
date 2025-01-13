@@ -48,7 +48,12 @@
   min-height: 140px;
   scrollbar-width: thin;
   scroll-behavior: smooth;
-
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Remove smooth scroll during drag */
+  scroll-behavior: auto;
 }
 
 .card::-webkit-scrollbar {
@@ -113,7 +118,9 @@
 .broker-name {
   cursor: pointer;
   font-family: "Montserrat", sans-serif;
-
+  font-weight: bold;
+  white-space: nowrap;
+  max-width: 120px; /* Adjust based on your layout */
 }
 
 .brokerrr{
@@ -336,25 +343,59 @@
 }
 
 .kanban-card {
-  display: flex;
-  padding: 16px;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  align-self: stretch;
+  background: white;
   border-radius: 12px;
-  background: #fff;
-  margin-bottom: 8px;
+  padding: 16px;
+  padding-bottom: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+  width: 100%;
+  border: 1px solid #E5E7EB;
 }
 
-/* Kanban Header Styles */
 .kanban-header {
-  display: flex;
-  /* align-items: center; */
-  gap: 8px;
-  width: 100%;
+  margin-bottom: 16px;
+}
+
+.kanban-title {
+  margin-left: 12px;
+}
+
+.kanban-title .name {
+  font-weight: 600;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px; /* Adjust based on your layout */
+}
+
+.kanban-title .place {
+  font-size: 0.9em;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px; /* Adjust based on your layout */
+}
+
+.expandable-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out, opacity 0.2s ease-out;
+  opacity: 0;
+}
+
+.expandable-content.expanded {
+  max-height: 300px; /* Or calculate based on content */
+  opacity: 1;
+  transition: max-height 0.2s ease-in, opacity 0.2s ease-in;
+}
+
+.expand-btn {
+  padding: 4px 8px;
+  color: #666;
 }
 
 .logo {
@@ -364,96 +405,7 @@
   object-fit: cover;
 }
 
-.kanban-title {
-  flex-grow: 1;
-}
-
-.name {
-  color: var(--Body-Heading-Color, #0c0d0e);
-
-  /* Body/16/30/SemiBold */
-  font-family: "Montserrat", sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px; /* 187.5% */
-  width: 5px;
-}
-
-.place {
-  color: var(--Body-Body-Color-Text-Icons, #7a8591);
-
-  /* Body/14/24/Regular */
-  font-family: "Montserrat", sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px; /* 171.429% */
-  letter-spacing: -0.07px;
-}
-
-.more-icon {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
-
 /* Kanban Details Styles */
-.kanban-details {
-  display: flex;
-  padding: 8px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  align-self: stretch;
-  border-radius: 8px;
-  background: #f2f3f4;
-  width: 100%;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-/* Footer Section */
-.kanban-footer {
-  border-top: 2px solid #caced3;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.user-image {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.lead-broker {
-  flex-grow: 1;
-  margin-left: 8px;
-}
-
-.broker-name {
-  font-weight: bold;
-}
-
-.data {
-  color: #7a8591;
-  font-size: 14px;
-}
-
-.value {
-  color: #0c0d0e;
-  font-size: 14px;
-  font-weight: 600;
-}
-
 .kanban-details {
   display: flex;
   padding: var(--Space-Space-8, 8px);
@@ -462,7 +414,91 @@
   gap: var(--Space-Space-8, 8px);
   align-self: stretch;
   border-radius: var(--Radius-Radius-8, 8px);
-  background: var(--Colors-Neutral-50, #f2f3f4);
+  background: var(--Card-Section-Highlight-BG, #F2F3F4);
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.detail-item .label {
+  color: #6B7280;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.detail-item .value {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.kanban-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #E5E7EB;
+  margin: 12px -16px 0;
+  padding: 12px 16px;
+}
+
+
+
+
+
+.broker-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.broker-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.broker-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.broker-label {
+  color: var(--Body-Body-Color-Text-Icons, #7A8591);
+
+/* Body/14/24/Regular */
+font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; /* 171.429% */
+letter-spacing: -0.07px;
+}
+
+.broker-name {
+  color: var(--Body-Heading-Color, #0C0D0E);
+
+/* Body/16/30/SemiBold */
+font-family: Montserrat;
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 30px; /* 187.5% */
+}
+
+.add-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 
 .options {
@@ -701,7 +737,6 @@
   }
 
   .kanban-card {
-    margin-bottom: 12px;
   }
 
   /* Improved touch targets */
@@ -831,5 +866,11 @@
 .selected-broker {
   font-weight: 500;
   color: #0d6efd;
+}
+
+/* Add this class for dragging state */
+.cdk-drag-preview {
+  /* Remove transitions while dragging */
+  transition: none !important;
 }
 

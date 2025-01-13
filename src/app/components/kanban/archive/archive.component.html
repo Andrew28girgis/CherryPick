@@ -1,250 +1,246 @@
 <div class="page-layout" [ngClass]="{ 'sidebar-collapsed': sidebarCollapsed }">
+  <div class="alert-container" *ngIf="alertMessage">
+    <div class="alert">
+      {{ alertMessage }}
+    </div>
+  </div>
   <div class="sidebar">
     <app-sidebar (collapseChange)="onSidebarCollapse($event)"></app-sidebar>
   </div>
   <div class="main-content">
     <div class="dashboard-header">
       <h1 class="title">Archive</h1>
-
     </div>
     <div class="table-wrapper">
-      <div class="table-container">
-        <div class="file-upload-container">
-          <div
-            class="upload-area"
-            [class.dragging]="isDragging"
-            (dragover)="onDragOver($event)"
-            (dragleave)="onDragLeave($event)"
-            (drop)="onFileDropped($event)"
-          >
-            <div class="upload-content" *ngIf="files.length === 0">
-              <div class="upp">
-              <div class="illustration">
-                <svg width="200" height="200" viewBox="0 0 400 400">
-                  <!-- File stack illustration -->
-                  <g class="file-stack">
-                    <rect
-                      x="100"
-                      y="100"
-                      width="160"
-                      height="200"
-                      fill="#f8f9fa"
-                      stroke="#e2e8f0"
-                      stroke-width="2"
-                    />
-                    <rect
-                      x="120"
-                      y="80"
-                      width="160"
-                      height="200"
-                      fill="#f8f9fa"
-                      stroke="#e2e8f0"
-                      stroke-width="2"
-                    />
-                    <rect
-                      x="140"
-                      y="60"
-                      width="160"
-                      height="200"
-                      fill="#f8f9fa"
-                      stroke="#e2e8f0"
-                      stroke-width="2"
-                    />
-                  </g>
-                  <!-- Character -->
-                  <g class="character" transform="translate(200, 160)">
-                    <circle cx="0" cy="0" r="20" fill="#6366f1" />
-                    <path
-                      d="M -10 30 Q 0 60 10 30"
-                      stroke="#6366f1"
-                      fill="none"
-                      stroke-width="4"
-                    />
-                    <line
-                      x1="0"
-                      y1="20"
-                      x2="0"
-                      y2="50"
-                      stroke="#6366f1"
-                      stroke-width="4"
-                    />
-                    <line
-                      x1="-20"
-                      y1="40"
-                      x2="0"
-                      y2="20"
-                      stroke="#6366f1"
-                      stroke-width="4"
-                    />
-                    <line
-                      x1="20"
-                      y1="40"
-                      x2="0"
-                      y2="20"
-                      stroke="#6366f1"
-                      stroke-width="4"
-                    />
-                  </g>
-                </svg>
-                  
-              </div>
-             
+      <div class="button-container">
+        <button class="upload-button" (click)="openUploadModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M7.50016 14.167V9.16699L5.8335 10.8337" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7.5 9.16699L9.16667 10.8337" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.3332 8.33366V12.5003C18.3332 16.667 16.6665 18.3337 12.4998 18.3337H7.49984C3.33317 18.3337 1.6665 16.667 1.6665 12.5003V7.50033C1.6665 3.33366 3.33317 1.66699 7.49984 1.66699H11.6665" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.3332 8.33366H14.9998C12.4998 8.33366 11.6665 7.50033 11.6665 5.00033V1.66699L18.3332 8.33366Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Upload File
+        </button>
+      </div>
+
+      <!-- Empty State -->
+      <div class="upload-area" *ngIf="files.length === 0"
+        [class.dragging]="isDragging"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onFileDropped($event)"
+      >
+        <div class="upload-content">
+          <div class="upp">
+            <div class="illustration">
+              <svg width="200" height="200" viewBox="0 0 400 400">
+                <!-- File stack illustration -->
+                <g class="file-stack">
+                  <rect
+                    x="100"
+                    y="100"
+                    width="160"
+                    height="200"
+                    fill="#f8f9fa"
+                    stroke="#e2e8f0"
+                    stroke-width="2"
+                  />
+                  <rect
+                    x="120"
+                    y="80"
+                    width="160"
+                    height="200"
+                    fill="#f8f9fa"
+                    stroke="#e2e8f0"
+                    stroke-width="2"
+                  />
+                  <rect
+                    x="140"
+                    y="60"
+                    width="160"
+                    height="200"
+                    fill="#f8f9fa"
+                    stroke="#e2e8f0"
+                    stroke-width="2"
+                  />
+                </g>
+                <!-- Character -->
+                <g class="character" transform="translate(200, 160)">
+                  <circle cx="0" cy="0" r="20" fill="#6366f1" />
+                  <path
+                    d="M -10 30 Q 0 60 10 30"
+                    stroke="#6366f1"
+                    fill="none"
+                    stroke-width="4"
+                  />
+                  <line
+                    x1="0"
+                    y1="20"
+                    x2="0"
+                    y2="50"
+                    stroke="#6366f1"
+                    stroke-width="4"
+                  />
+                  <line
+                    x1="-20"
+                    y1="40"
+                    x2="0"
+                    y2="20"
+                    stroke="#6366f1"
+                    stroke-width="4"
+                  />
+                  <line
+                    x1="20"
+                    y1="40"
+                    x2="0"
+                    y2="20"
+                    stroke="#6366f1"
+                    stroke-width="4"
+                  />
+                </g>
+              </svg>
             </div>
-            <h3>Files Will Appear Here</h3>
-            <p>
-              Once you upload files, they'll be displayed here for easy access
-              and management.
-            </p>
-              <div class="upload-actions">
-                <input
-                  type="file"
-                  #fileInput
-                  (change)="onFileSelected($event)"
-                  multiple
-                  class="file-input"
-                  hidden
-                />
-                <button class="upload-button" (click)="openUploadModal()">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M7.50016 14.167V9.16699L5.8335 10.8337" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M7.5 9.16699L9.16667 10.8337" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18.3332 8.33366V12.5003C18.3332 16.667 16.6665 18.3337 12.4998 18.3337H7.49984C3.33317 18.3337 1.6665 16.667 1.6665 12.5003V7.50033C1.6665 3.33366 3.33317 1.66699 7.49984 1.66699H11.6665" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18.3332 8.33366H14.9998C12.4998 8.33366 11.6665 7.50033 11.6665 5.00033V1.66699L18.3332 8.33366Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </div>
+          <h3>Files Will Appear Here</h3>
+          <p>Once you upload files, they'll be displayed here for easy access and management.</p>
+        </div>
+      </div>
+
+      <!-- Table View - Only shown when there are files -->
+      <div class="table-container" *ngIf="files.length > 0">
+        <table>
+          <thead>
+            <tr>
+              <th>File Name</th>
+              <th>Uploaded By</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let file of files">
+              <td>
+                <div class="file-info">
+                  {{ file.name }}
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <div class="user-avatar">
+                    {{ file.uploadedBy.avatar }}
+                  </div>
+                  <span>{{ file.uploadedBy.name }}</span>
+                </div>
+              </td>
+              <td>{{ file.uploadDate | date:'mediumDate' }}</td>
+              <td class="action-cell">
+                <button class="action-btn" (click)="editFile(file)">
+                  <img src="assets/Images/Icons/edit-22.svg" alt="Edit">
+                </button>
+                <button class="action-btn delete" (click)="deleteFile(file)">
+                  <img src="assets/Images/Icons/trash.svg" alt="Delete">
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Upload Modal -->
+      <div class="modal" *ngIf="showUploadModal">
+        <div class="modal-overlay" (click)="closeUploadModal()"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Upload File</h2>
+            <button class="close-button" (click)="closeUploadModal()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="fileName">File Name (Optional)</label>
+              <input 
+                type="text" 
+                id="fileName"
+                [(ngModel)]="newFileName"
+                placeholder="Add a custom name for this file"
+                class="form-input"
+                [disabled]="isUploading"
+              >
+              <small class="help-text">
+                If left empty, the original file name will be used
+              </small>
+            </div>
+            
+            <div class="form-group">
+              <label>Select File</label>
+              <p class="file-info">PDF, DOCX, or XLSX file. Maximum size: 30 MB</p>
+              <input
+                type="file"
+                #fileInput
+                (change)="onFileSelected($event)"
+                accept=".pdf,.docx,.xlsx"
+                class="file-input"
+                hidden
+                [disabled]="isUploading"
+              />
+              
+              <div class="file-select-area" [class.uploading]="isUploading">
+                <div class="file-info-display">
+                  <span class="file-name">{{ selectedFile ? selectedFile.name : 'No file selected' }}</span>
+                  <span class="file-size" *ngIf="selectedFile">
+                    ({{ formatFileSize(selectedFile.size) }})
+                  </span>
+                </div>
+                <button 
+                  [class]="selectedFile ? 'remove-file-button' : 'select-file-button'"
+                  (click)="selectedFile ? removeSelectedFile() : fileInput.click()"
+                  [disabled]="isUploading"
+                >
+                  <svg *ngIf="!selectedFile" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M7.50016 14.167V9.16699L5.8335 10.8337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7.5 9.16699L9.16667 10.8337" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
-                  Upload File
+                  {{ selectedFile ? 'Remove' : 'Choose File' }}
                 </button>
               </div>
             </div>
-              <!-- Upload Modal -->
-        <div class="modal" *ngIf="showUploadModal">
-          <div class="modal-overlay" (click)="closeUploadModal()"></div>
-          <div class="modal-content">
-            <div class="modal-header">
-              <h2>Upload File</h2>
-              <button class="close-button" (click)="closeUploadModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="form-group">
-                <label for="fileName">File Name</label>
-                <input 
-                  type="text" 
-                  id="fileName"
-                  [(ngModel)]="newFileName"
-                  placeholder="Add a Name That Describe This File. ex: Osmow's Buy Box"
-                  class="form-input"
-                >
-                <small class="help-text">
-                  If you don't specify a file name, the default file name from the upload will be used.
-                  This step is optional but allows you to give the file a custom name for better
-                  organization in our system.
-                </small>
+            
+            <div class="upload-progress" *ngIf="isUploading">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="uploadProgress"></div>
               </div>
-              <div class="form-group">
-                <label>Select File</label>
-                <p class="file-info">PDF, Docx, or xlsx file. Maximum file size of 30 MB.</p>
-                <input
-                  type="file"
-                  #fileInput
-                  (change)="onFileSelected($event)"
-                  class="file-input"
-                  hidden
-                />
-                <div class="file-select-area">
-                  <span>{{ selectedFile ? selectedFile.name : 'No File Selected' }}</span>
-                  <button 
-                    [class]="selectedFile ? 'remove-file-button' : 'select-file-button'" 
-                    (click)="selectedFile ? removeSelectedFile() : fileInput.click()">
-                    <svg *ngIf="!selectedFile" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M7.50016 14.167V9.16699L5.8335 10.8337" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M7.5 9.16699L9.16667 10.8337" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M18.3332 8.33366V12.5003C18.3332 16.667 16.6665 18.3337 12.4998 18.3337H7.49984C3.33317 18.3337 1.6665 16.667 1.6665 12.5003V7.50033C1.6665 3.33366 3.33317 1.66699 7.49984 1.66699H11.6665" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M18.3332 8.33366H14.9998C12.4998 8.33366 11.6665 7.50033 11.6665 5.00033V1.66699L18.3332 8.33366Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <svg *ngIf="selectedFile" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M9.99984 18.3337C14.5832 18.3337 18.3332 14.5837 18.3332 10.0003C18.3332 5.41699 14.5832 1.66699 9.99984 1.66699C5.4165 1.66699 1.6665 5.41699 1.6665 10.0003C1.6665 14.5837 5.4165 18.3337 9.99984 18.3337Z" stroke="#001F3F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M7.6416 12.3583L12.3583 7.6416" stroke="#001F3F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M12.3583 12.3583L7.6416 7.6416" stroke="#001F3F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    {{ selectedFile ? 'Remove File' : 'Upload File' }}
-                  </button>
-                </div>
-              </div>
-              
+              <span class="progress-text">Uploading... {{ uploadProgress }}%</span>
             </div>
-            <div class="modal-footer">
-              <button class="cancel-button" (click)="closeUploadModal()">Cancel</button>
-              <button class="add-file-button" (click)="fileInput.click()">Add File</button>
+
+            <div class="error-message" *ngIf="errorMessage">
+              {{ errorMessage }}
             </div>
           </div>
-        </div>
-                <!-- Table View -->
-                <div class="files-table-wrapper" *ngIf="files.length > 0">
-                  <table class="files-table">
-                    <thead>
-                      <tr>
-                        <th>File Name</th>
-                        <th>Uploaded By</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let file of files">
-                        <td class="file-name-cell">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M13.3332 1.66699H6.6665C3.33317 1.66699 1.6665 3.33366 1.6665 6.66699V13.3337C1.6665 16.667 3.33317 18.3337 6.6665 18.3337H13.3332C16.6665 18.3337 18.3332 16.667 18.3332 13.3337V6.66699C18.3332 3.33366 16.6665 1.66699 13.3332 1.66699Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                          {{ file.name }}
-                        </td>
-                        <td>
-                          <div class="user-info">
-                            <div class="user-avatar">{{ file.uploadedBy.avatar }}</div>
-                            <span>{{ file.uploadedBy.name }}</span>
-                          </div>
-                        </td>
-                        <td>{{ file.uploadDate | date:'mediumDate' }}</td>
-                        <td class="actions-cell">
-                          <button class="action-button" (click)="editFile(file)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M5.53999 19.5196C4.92999 19.5196 4.35999 19.3096 3.94999 18.9196C3.42999 18.4296 3.17999 17.6896 3.26999 16.8896L3.63999 13.6496C3.70999 13.0396 4.07999 12.2296 4.50999 11.7896L12.72 3.09956C14.77 0.929561 16.91 0.869561 19.08 2.91956C21.25 4.96956 21.31 7.10956 19.26 9.27956L11.05 17.9696C10.63 18.4196 9.84999 18.8396 9.23999 18.9396L6.01999 19.4896C5.84999 19.4996 5.69999 19.5196 5.53999 19.5196ZM15.93 2.90956C15.16 2.90956 14.49 3.38956 13.81 4.10956L5.59999 12.8096C5.39999 13.0196 5.16999 13.5196 5.12999 13.8096L4.75999 17.0496C4.71999 17.3796 4.79999 17.6496 4.97999 17.8196C5.15999 17.9896 5.42999 18.0496 5.75999 17.9996L8.97999 17.4496C9.26999 17.3996 9.74999 17.1396 9.94999 16.9296L18.16 8.23956C19.4 6.91956 19.85 5.69956 18.04 3.99956C17.24 3.22956 16.55 2.90956 15.93 2.90956Z" fill="#7A8591"/>
-                              <path d="M17.3404 10.9498C17.3204 10.9498 17.2904 10.9498 17.2704 10.9498C14.1504 10.6398 11.6404 8.26985 11.1604 5.16985C11.1004 4.75985 11.3804 4.37985 11.7904 4.30985C12.2004 4.24985 12.5804 4.52985 12.6504 4.93985C13.0304 7.35985 14.9904 9.21985 17.4304 9.45985C17.8404 9.49985 18.1404 9.86985 18.1004 10.2798C18.0504 10.6598 17.7204 10.9498 17.3404 10.9498Z" fill="#7A8591"/>
-                              <path d="M21 22.75H3C2.59 22.75 2.25 22.41 2.25 22C2.25 21.59 2.59 21.25 3 21.25H21C21.41 21.25 21.75 21.59 21.75 22C21.75 22.41 21.41 22.75 21 22.75Z" fill="#7A8591"/>
-                            </svg>
-                          </button>
-                          <button class="action-button" (click)="deleteFile(file)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M20.9997 6.73046C20.9797 6.73046 20.9497 6.73046 20.9197 6.73046C15.6297 6.20046 10.3497 6.00046 5.11967 6.53046L3.07967 6.73046C2.65967 6.77046 2.28967 6.47046 2.24967 6.05046C2.20967 5.63046 2.50967 5.27046 2.91967 5.23046L4.95967 5.03046C10.2797 4.49046 15.6697 4.70046 21.0697 5.23046C21.4797 5.27046 21.7797 5.64046 21.7397 6.05046C21.7097 6.44046 21.3797 6.73046 20.9997 6.73046Z" fill="#FF4C4C"/>
-                              <path d="M8.49977 5.72C8.45977 5.72 8.41977 5.72 8.36977 5.71C7.96977 5.64 7.68977 5.25 7.75977 4.85L7.97977 3.54C8.13977 2.58 8.35977 1.25 10.6898 1.25H13.3098C15.6498 1.25 15.8698 2.63 16.0198 3.55L16.2398 4.85C16.3098 5.26 16.0298 5.65 15.6298 5.71C15.2198 5.78 14.8298 5.5 14.7698 5.1L14.5498 3.8C14.4098 2.93 14.3798 2.76 13.3198 2.76H10.6998C9.63977 2.76 9.61977 2.9 9.46977 3.79L9.23977 5.09C9.17977 5.46 8.85977 5.72 8.49977 5.72Z" fill="#FF4C4C"/>
-                              <path d="M15.2104 22.7496H8.79039C5.30039 22.7496 5.16039 20.8196 5.05039 19.2596L4.40039 9.18959C4.37039 8.77959 4.69039 8.41959 5.10039 8.38959C5.52039 8.36959 5.87039 8.67959 5.90039 9.08959L6.55039 19.1596C6.66039 20.6796 6.70039 21.2496 8.79039 21.2496H15.2104C17.3104 21.2496 17.3504 20.6796 17.4504 19.1596L18.1004 9.08959C18.1304 8.67959 18.4904 8.36959 18.9004 8.38959C19.3104 8.41959 19.6304 8.76959 19.6004 9.18959L18.9504 19.2596C18.8404 20.8196 18.7004 22.7496 15.2104 22.7496Z" fill="#FF4C4C"/>
-                              <path d="M13.6601 17.25H10.3301C9.92008 17.25 9.58008 16.91 9.58008 16.5C9.58008 16.09 9.92008 15.75 10.3301 15.75H13.6601C14.0701 15.75 14.4101 16.09 14.4101 16.5C14.4101 16.91 14.0701 17.25 13.6601 17.25Z" fill="#FF4C4C"/>
-                              <path d="M14.5 13.25H9.5C9.09 13.25 8.75 12.91 8.75 12.5C8.75 12.09 9.09 11.75 9.5 11.75H14.5C14.91 11.75 15.25 12.09 15.25 12.5C15.25 12.91 14.91 13.25 14.5 13.25Z" fill="#FF4C4C"/>
-                            </svg>
-                          </button>
-                          <button class="action-button" (click)="showFileInfo(file)">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                              <path d="M11.9999 16.3299C9.60992 16.3299 7.66992 14.3899 7.66992 11.9999C7.66992 9.60992 9.60992 7.66992 11.9999 7.66992C14.3899 7.66992 16.3299 9.60992 16.3299 11.9999C16.3299 14.3899 14.3899 16.3299 11.9999 16.3299ZM11.9999 9.16992C10.4399 9.16992 9.16992 10.4399 9.16992 11.9999C9.16992 13.5599 10.4399 14.8299 11.9999 14.8299C13.5599 14.8299 14.8299 13.5599 14.8299 11.9999C14.8299 10.4399 13.5599 9.16992 11.9999 9.16992Z" fill="#7A8591"/>
-                              <path d="M12.0001 21.0205C8.24008 21.0205 4.69008 18.8205 2.25008 15.0005C1.19008 13.3505 1.19008 10.6605 2.25008 9.00047C4.70008 5.18047 8.25008 2.98047 12.0001 2.98047C15.7501 2.98047 19.3001 5.18047 21.7401 9.00047C22.8001 10.6505 22.8001 13.3405 21.7401 15.0005C19.3001 18.8205 15.7501 21.0205 12.0001 21.0205ZM12.0001 4.48047C8.77008 4.48047 5.68008 6.42047 3.52008 9.81047C2.77008 10.9805 2.77008 13.0205 3.52008 14.1905C5.68008 17.5805 8.77008 19.5205 12.0001 19.5205C15.2301 19.5205 18.3201 17.5805 20.4801 14.1905C21.2301 13.0205 21.2301 10.9805 20.4801 9.81047C18.3201 6.42047 15.2301 4.48047 12.0001 4.48047Z" fill="#7A8591"/>
-                            </svg>
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
+          
+          <div class="modal-footer">
+            <button 
+              class="cancel-button" 
+              (click)="closeUploadModal()" 
+              [disabled]="isUploading"
+            >
+              Cancel
+            </button>
+            <button 
+              class="upload-button" 
+              (click)="uploadFile()"
+              [disabled]="!selectedFile || isUploading"
+            >
+              <span *ngIf="!isUploading">Upload File</span>
+              <span *ngIf="isUploading">Uploading...</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
