@@ -38,13 +38,13 @@
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.0",
+    "@angular-devkit/build-angular": "^16.2.16",
     "@angular/cli": "~16.2.0",
     "@angular/compiler-cli": "^16.2.0",
     "@angular/localize": "^16.2.0",
+    "@types/bootstrap": "^5.2.10",
     "@types/google.maps": "^3.58.1",
     "@types/hammerjs": "^2.0.46",
-    "@types/bootstrap": "^5.2.10",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
@@ -52,6 +52,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "languine": "^1.0.2",
     "typescript": "~5.1.3"
   }
 }

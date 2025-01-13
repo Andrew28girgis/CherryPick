@@ -191,18 +191,14 @@ isMobileView = false;
   }
 
   drop(event: CdkDragDrop<any[]>) {
+    // Temporarily disable animations
+    document.body.classList.add('dragging');
+    
     let movedItem;
-
     if (event.previousContainer === event.container) {
-      // Moving within the same container
       movedItem = event.container.data[event.previousIndex];
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      // Moving to a different container
       movedItem = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
@@ -210,11 +206,14 @@ isMobileView = false;
         event.previousIndex,
         event.currentIndex
       );
-
-      // Update the kanbanStageId to reflect the new stage
-      const newStageId = parseInt(event.container.id, 10); // Convert the container id to a number
+      const newStageId = parseInt(event.container.id, 10);
       movedItem.kanbanStageId = newStageId;
     }
+
+    // Re-enable animations after drag
+    setTimeout(() => {
+      document.body.classList.remove('dragging');
+    }, 0);
 
     this.postDrag(movedItem);
   }
@@ -541,6 +540,7 @@ isMobileView = false;
 
   setActiveFilter(filter: string): void {
     this.activeFilter = filter;
+    // this.filterKanbanList();
   }
 
   onSearchIconClick(): void {
@@ -578,7 +578,6 @@ isMobileView = false;
   }
   onSidebarCollapse(collapsed: boolean): void {
     this.sidebarCollapsed = collapsed;
-    // Save sidebar state
     localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
   }
   checkMobileView() {
@@ -699,5 +698,9 @@ isMobileView = false;
   onSearchChange(event: any): void {
     this.searchText = event.target.value;
     this.filterKanbanData();
+  }
+
+  toggleCard(org: KanbanOrganization): void {
+    org.isExpanded = !org.isExpanded;
   }
 }
