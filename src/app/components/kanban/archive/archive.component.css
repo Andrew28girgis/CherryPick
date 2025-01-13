@@ -50,7 +50,7 @@
 .table-container table-container2 {
   background: #fff;
   border-radius: 12px;
-  height: 500px;
+  height: fit-content;
   overflow-y: auto;
   margin-top: 24px;
   background: white;
@@ -81,7 +81,6 @@ thead {
 tbody {
   display: block;
   overflow: auto;
-  height: calc(500px - 53px); /* 53px is header height */
 }
 
 tr {
@@ -442,7 +441,7 @@ color: var(--Button-Primary-Text-Color, #FFF);
   padding: 24px;
   background: white;
   border-radius: 12px;
-  min-height: calc(100vh - 140px);
+  /* min-height: calc(100vh - 140px); */
 }
 
 .table-container2{
@@ -557,15 +556,13 @@ color: var(--Button-Primary-Text-Color, #FFF);
 
 .select-file-button {
   display: flex;
+  height: 48px;
+  padding: var(--Button-Padding-top-bottom, 12px) var(--Button-Padding-left-right, 24px);
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: #001f3f;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
-  font-weight: 500;
-  cursor: pointer;
+  gap: var(--Button-Gap, 8px);
+  border-radius: var(--Button-Radius, 16px);
+background: var(--Button-Primary-BG, #001F3F);
 }
 
 .upp {
@@ -805,13 +802,12 @@ color: var(--Button-Primary-Text-Color, #FFF);
 }
 
 .select-file-button {
-  background: #2563eb;
   color: white;
-  border: none;
+  border-radius: var(--Button-Radius, 16px);
+background: var(--Button-Primary-BG, #001F3F);
 }
 
 .select-file-button:hover {
-  background: #1d4ed8;
 }
 
 .remove-file-button {
@@ -878,6 +874,7 @@ color: var(--Button-Primary-Text-Color, #FFF);
   overflow: auto;
   margin-top: 24px;
   background: white;
+  /* height: 500px; */
 }
 
 /* Table base styles */
@@ -894,6 +891,7 @@ th, td {
   font-size: 14px;
   border-bottom: 1px solid #e4e7e9;
   vertical-align: middle;
+  gap: 8px;
 }
 
 th {
@@ -928,8 +926,8 @@ td:nth-child(3) {
 
 th:last-child,
 td:last-child {
-  width: 15%;
   padding-right: 24px;
+  height: 70.07px;
 }
 
 /* User info styles */
