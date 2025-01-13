@@ -961,8 +961,16 @@
     <div class="main-section" *ngIf="OrgManager && OrgManager[0]">
       <section id="hero">
         <div class="p-0">
-          <div>
-            <h2 class="main-heading" *ngIf="OrgManager && OrgManager[0]">
+          <div class="d-flex align-items-center">
+            <img
+              style="width: 50px;"
+              class="logo"
+              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                OrgManager[0].id
+              }}"
+              alt=""
+            />
+            <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
               {{ OrgManager[0].name }}
             </h2>
           </div>
@@ -974,6 +982,8 @@
                 {{ Manager.firstname | titlecase }}
                 {{ Manager.lastname | titlecase }}
               </p>
+              <p>{{ Manager.cellPhone }}</p>
+              <p>{{ Manager.email }}</p>
             </div>
           </ng-container>
         </div>
