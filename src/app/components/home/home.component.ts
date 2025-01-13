@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit {
     
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId); 
-    this.GetPolygons(this.BuyBoxId);
+   // this.GetPolygons(this.BuyBoxId);
   } 
 
 
@@ -366,11 +366,11 @@ export class HomeComponent implements OnInit {
 
      
  
-    //  this.shoppingCenters.forEach((center) => {
-    //   if(center.Neighbourhood) {
-    //     this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood); 
-    //   }
-    //  });
+     this.shoppingCenters.forEach((center) => {
+      if(center.Neighbourhood) { 
+        this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood); 
+      }
+     });
   }
 
   createCustomMarkers(markerDataArray: any[]) {

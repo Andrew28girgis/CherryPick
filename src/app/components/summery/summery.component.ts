@@ -8,6 +8,7 @@ import { PropertiesServiceService } from 'src/app/services/properties-service.se
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-summery',
@@ -32,10 +33,12 @@ export class SummeryComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private propertiesService: PropertiesServiceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private stateService: StateService
   ) {}
 
   ngOnInit(): void {
+    this.stateService.clearAll();
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.orgId = +params.orgId;
