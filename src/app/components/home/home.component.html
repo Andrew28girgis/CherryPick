@@ -176,7 +176,7 @@
                                   [ngbPopover]="popoverContent"
                                   popoverTitle="Organization Contact Info"
                                   triggers="click:outside"
-                                  [placement]="'bottom'"
+                                  [placement]="'top'"
                                 />
                               </div>
                             </div>
@@ -768,7 +768,7 @@
                         [ngbPopover]="popoverContent"
                         popoverTitle="Organization Contact Info"
                         triggers="click:outside"
-                        [placement]="'bottom'"
+                        [placement]="'top'"
                       />
                       <br /> 
                       <ng-template #popoverContent>
@@ -998,7 +998,7 @@
               (mouseenter)="onMouseHighlight(place)"
               (mouseleave)="onMouseLeaveHighlight(place)"
               [ngClass]="{
-                'col-md-4 col-sm-12': currentView == 2
+                'col-md-6 col-sm-12': currentView == 2
               }"
             >
               <a
@@ -1189,7 +1189,7 @@
                     [ngbPopover]="popoverContent"
                     popoverTitle="Organization Contact Info"
                     triggers="click:outside"
-                    [placement]="'bottom'"
+                    [placement]="'top'"
                   />
                   <br /> 
                   <ng-template #popoverContent>
