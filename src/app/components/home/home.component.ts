@@ -365,12 +365,29 @@ export class HomeComponent implements OnInit {
     });
 
      
+    let centerIds: any[] = [];
+    this.shoppingCenters.forEach((center) => {
+      centerIds.push(center.Id);
+      // this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood);
+    });
+    
+    const centerIdsString = centerIds.join(',');
+    this.getPolygons(centerIdsString);
+     
  
-     this.shoppingCenters.forEach((center) => {
-      if(center.Neighbourhood) { 
-        this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood); 
-      }
-     });
+  }
+
+  getPolygons(centerIdsString: string){
+    const body: any = {
+      Name: 'GetShoppingCenterPolygons',
+      Params: {
+        ids: centerIdsString,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe((data) => {
+      this.Polygons = data.json;
+      this.markerService.drawMultiplePolygons(this.map, this.Polygons); 
+    });
   }
 
   createCustomMarkers(markerDataArray: any[]) {

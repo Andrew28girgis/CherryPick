@@ -135,7 +135,7 @@ export class MapsService {
     ]);
   }
   }
-  
+
   private assignToMarkerArray(marker: any, type: string): void {
     if (type === 'Shopping Center' || type === 'Stand Alone') {
       this.prosMarkers.push(marker);
@@ -631,18 +631,16 @@ export class MapsService {
 
 
  
-  drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
-    
+  drawMultiplePolygons(map: any, polygonFeatures: any[]): void { 
     polygonFeatures.forEach((feature) => {
       this.drawSinglePolygon(map, feature);
     });
   }
 
-  drawSinglePolygon(map: any, feature: any): void {
-    try {
-      const geoJson = JSON.parse(feature.json);
-      const coordinates = geoJson.geometry.coordinates[0];
-      
+  drawSinglePolygon(map: any, feature: any): void { 
+      try {
+      const geoJson = JSON.parse(feature.json);  
+      const coordinates = geoJson.geometry.coordinates[0]; 
       const polygonCoords = coordinates.map((coord: number[]) => ({
         lat: coord[1], 
         lng: coord[0]  
@@ -703,78 +701,78 @@ export class MapsService {
   
 
 
-  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
-    console.log(state);
+  // async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+  //   console.log(state);
     
-    const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
-    try {
-      const response = await fetch(boundaryUrl);
-      const data: any = await response.json();
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
 
-      data.features.forEach((f:any) => {
-        if(f.geometry.type == 'Point' && f.properties.type == 'neighbourhood'  ){
-          // Draw circle only
-          const [lng, lat] = f.geometry.coordinates;
+  //     data.features.forEach((f:any) => {
+  //       if(f.geometry.type == 'Point' && f.properties.type == 'neighbourhood'  ){
+  //         // Draw circle only
+  //         const [lng, lat] = f.geometry.coordinates;
 
-          // Add circle around point
-          const circle = new google.maps.Circle({
-            strokeColor: '#3498db',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#3498db', 
-            fillOpacity: 0.35,
-            map: map,
-            center: { lat, lng },
-            radius: 1600 // 1km radius
-          });
+  //         // Add circle around point
+  //         const circle = new google.maps.Circle({
+  //           strokeColor: '#3498db',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#3498db', 
+  //           fillOpacity: 0.35,
+  //           map: map,
+  //           center: { lat, lng },
+  //           radius: 1600 // 1km radius
+  //         });
 
-          // Show name by default
-          const infoWindow = new google.maps.InfoWindow({
-            content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent ;padding: 7px">${f.properties.name}</div>`,
-            position: { lat, lng }
-          });
-          infoWindow.open(map);
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent ;padding: 7px">${f.properties.name}</div>`,
+  //           position: { lat, lng }
+  //         });
+  //         infoWindow.open(map);
           
-        } else if (
-          f.geometry.type === 'Polygon' && 
-          f.properties.type === 'neighbourhood' && 
-          f.properties['ISO3166-2'] === `US${state}`
-        ) {
-          // Draw polygon
-          const paths = f.geometry.coordinates[0].map((coord: number[]) => {
-            return {
-              lat: coord[1],
-              lng: coord[0]
-            };
-          });
+  //       } else if (
+  //         f.geometry.type === 'Polygon' && 
+  //         f.properties.type === 'neighbourhood' && 
+  //         f.properties['ISO3166-2'] === `US${state}`
+  //       ) {
+  //         // Draw polygon
+  //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+  //           return {
+  //             lat: coord[1],
+  //             lng: coord[0]
+  //           };
+  //         });
 
-          const polygon = new google.maps.Polygon({
-            paths: paths,
-            strokeColor: '#e74c3c',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#e74c3c',
-            fillOpacity: 0.35,
-            map: map
-          });
+  //         const polygon = new google.maps.Polygon({
+  //           paths: paths,
+  //           strokeColor: '#e74c3c',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#e74c3c',
+  //           fillOpacity: 0.35,
+  //           map: map
+  //         });
 
-          // Calculate polygon center for label placement
-          const bounds = new google.maps.LatLngBounds();
-          paths.forEach((path:any) => bounds.extend(path));
-          const center = bounds.getCenter();
+  //         // Calculate polygon center for label placement
+  //         const bounds = new google.maps.LatLngBounds();
+  //         paths.forEach((path:any) => bounds.extend(path));
+  //         const center = bounds.getCenter();
 
-          // Show name by default
-          const infoWindow = new google.maps.InfoWindow({
-            content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
-            position: center
-          });
-          infoWindow.open(map);
-        }
-      }); 
-    } catch (error) {
-      console.error("Error fetching boundary data:", error);
-    }
-  }
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+  //           position: center
+  //         });
+  //         infoWindow.open(map);
+  //       }
+  //     }); 
+  //   } catch (error) {
+  //     console.error("Error fetching boundary data:", error);
+  //   }
+  // }
   
 
 
