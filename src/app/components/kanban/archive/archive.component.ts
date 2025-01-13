@@ -1,4 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, throwError, firstValueFrom } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
 interface FileItem {
   id: string;
@@ -11,6 +14,8 @@ interface FileItem {
   size: number;
   type: string;
   status: 'uploading' | 'complete' | 'error';
+  downloadUrl?: string;
+  content?: string | ArrayBuffer;
 }
 
 @Component({
@@ -34,8 +39,9 @@ export class ArchiveComponent implements OnInit {
   alertTimeout: any = null;
   @ViewChild('fileInput') fileInput!: ElementRef;
   selectedRows: Set<string> = new Set();
+  fileContent: string | ArrayBuffer | null = null;
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.loadFilesFromStorage();
   }
 
@@ -102,21 +108,31 @@ export class ArchiveComponent implements OnInit {
         return;
       }
 
-      this.selectedFile = file;
-      this.errorMessage = null;
+      // Read file content
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.selectedFile = file;
+        if (e.target?.result) {
+          // Convert ArrayBuffer to Base64 string
+          const base64String = btoa(
+            new Uint8Array(e.target.result as ArrayBuffer)
+              .reduce((data, byte) => data + String.fromCharCode(byte), '')
+          );
+          this.fileContent = base64String;
+        }
+      };
+      reader.readAsArrayBuffer(file);
     }
   }
 
   async uploadFile(): Promise<void> {
-    if (!this.selectedFile) {
+    if (!this.selectedFile || !this.fileContent) {
       this.errorMessage = 'Please select a file to upload';
       return;
     }
 
     try {
       this.isUploading = true;
-      this.errorMessage = null;
-
       await this.simulateFileUpload();
 
       const fileItem: FileItem = {
@@ -129,17 +145,16 @@ export class ArchiveComponent implements OnInit {
         uploadDate: new Date(),
         size: this.selectedFile.size,
         type: this.getFileExtension(this.selectedFile.name),
-        status: 'complete'
+        status: 'complete',
+        content: this.fileContent // Save the content
       };
 
       this.files.unshift(fileItem);
       this.saveFilesToStorage();
       this.closeUploadModal();
-
     } catch (error) {
       console.error('Upload failed:', error);
       this.errorMessage = 'Failed to upload file. Please try again.';
-      this.isUploading = false;
     }
   }
 
@@ -205,15 +220,14 @@ export class ArchiveComponent implements OnInit {
       this.closeUploadModal();
     }
   }
-  private handleFiles(files: FileList) {
-    // Clear any existing alert
+  private async handleFiles(files: FileList) {
     this.clearAlert();
     
-    Array.from(files).forEach(file => {
+    for (const file of Array.from(files)) {
       // Validate file size (30MB limit)
       if (file.size > 30 * 1024 * 1024) {
         this.showAlert('File size exceeds 30MB limit');
-        return;
+        continue;
       }
 
       // Validate file type
@@ -221,26 +235,55 @@ export class ArchiveComponent implements OnInit {
       const fileExtension = '.' + file.name.toLowerCase().split('.').pop();
       if (!allowedTypes.includes(fileExtension)) {
         this.showAlert('Only PDF, DOCX, and XLSX files are allowed');
-        return;
+        continue;
       }
 
-      const fileItem: FileItem = {
-        id: Date.now().toString(),
-        name: this.newFileName || file.name,
-        uploadedBy: {
-          name: 'You',
-          avatar: 'Y'
-        },
-        uploadDate: new Date(),
-        size: file.size,
-        type: this.getFileExtension(file.name),
-        status: 'complete'
-      };
-      this.files.unshift(fileItem);
-    });
+      try {
+        // Read file content and convert to Base64
+        const base64Content = await this.readFileAsBase64(file);
+        
+        const fileItem: FileItem = {
+          id: Date.now().toString(),
+          name: this.newFileName || file.name,
+          uploadedBy: {
+            name: 'You',
+            avatar: 'Y'
+          },
+          uploadDate: new Date(),
+          size: file.size,
+          type: this.getFileExtension(file.name),
+          status: 'complete',
+          content: base64Content
+        };
+        
+        this.files.unshift(fileItem);
+      } catch (error) {
+        console.error('Error processing file:', error);
+        this.showAlert(`Failed to process file: ${file.name}`);
+      }
+    }
     
     this.saveFilesToStorage();
     this.newFileName = '';
+  }
+
+  private readFileAsBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          const base64String = btoa(
+            new Uint8Array(e.target.result as ArrayBuffer)
+              .reduce((data, byte) => data + String.fromCharCode(byte), '')
+          );
+          resolve(base64String);
+        } else {
+          reject(new Error('Failed to read file'));
+        }
+      };
+      reader.onerror = () => reject(reader.error);
+      reader.readAsArrayBuffer(file);
+    });
   }
 
   removeFile(file: FileItem) {
@@ -332,4 +375,52 @@ export class ArchiveComponent implements OnInit {
       this.selectedRows.add(file.id);
     }
   }
+
+  async downloadFile(file: FileItem): Promise<void> {
+    try {
+      this.isLoading = true;
+
+      if (!file.content) {
+        throw new Error('File content not found');
+      }
+
+      // Convert Base64 string back to ArrayBuffer
+      const binaryString = atob(file.content as string);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      const blob = new Blob([bytes], { type: this.getMimeType(file.type) });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = file.name;
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Download failed:', error);
+      this.showAlert('Failed to download file. Please try again.');
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  private getMimeType(fileType: string): string {
+    const mimeTypes: { [key: string]: string } = {
+      'pdf': 'application/pdf',
+      'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    };
+    return mimeTypes[fileType.toLowerCase()] || 'application/octet-stream';
+  }
 }
+
+
+
+
+

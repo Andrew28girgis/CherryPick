@@ -122,7 +122,7 @@
             <tr *ngFor="let file of files">
               <td>
                 <div class="file-info">
-                  {{ file.name }}
+                  <span class="file-name-link" (click)="downloadFile(file)">{{ file.name }}</span>
                 </div>
               </td>
               <td>
@@ -136,10 +136,13 @@
               <td>{{ file.uploadDate | date:'mediumDate' }}</td>
               <td class="action-cell">
                 <button class="action-btn" (click)="editFile(file)">
-                  <img src="assets/Images/Icons/edit-22.svg" alt="Edit">
+                  <img src="assets/Images/Icons/edit.svg" alt="Edit">
                 </button>
                 <button class="action-btn delete" (click)="deleteFile(file)">
-                  <img src="assets/Images/Icons/trash.svg" alt="Delete">
+                  <img src="assets/Images/Icons/trash.svg" alt="Delete" class="action-img">
+                </button>
+                <button class="action-btn" (click)="downloadFile(file)" title="Download">
+                  <img src="assets/Images/Icons/eye.svg" alt="Download">
                 </button>
               </td>
             </tr>

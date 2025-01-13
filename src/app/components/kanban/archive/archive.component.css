@@ -147,7 +147,7 @@ tr:last-child td {
 
 .action-btn {
   display: flex;
-  padding: 4px;
+  padding: 8px;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
@@ -156,10 +156,17 @@ tr:last-child td {
   cursor: pointer;
   width: 32px;
   height: 32px;
+  transition: all 0.2s ease;
 }
 
 .action-btn:hover {
   background-color: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+.action-btn img {
+  width: 24px;
+  height: 24px;
 }
 
 .action-btn.delete {
@@ -168,11 +175,6 @@ tr:last-child td {
 
 .action-btn.delete:hover {
   background-color: #fff5f5;
-}
-
-.action-btn img {
-  width: 24px;
-  height: 24px;
 }
 
 .file-upload-container {
@@ -652,6 +654,7 @@ background: var(--Button-Primary-BG, #001F3F);
   padding: 24px 32px;
   position: static;
   margin-bottom: 24px;
+  padding-right: 0  ;
 }
 
 /* Update file-upload-container styles */
@@ -956,13 +959,14 @@ td:last-child {
 
 .action-btn {
   display: flex;
-  padding: 8px;
+  padding: var(--Table-Action-Button-Padding-All-sides, 4px);
   align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  border: 1px solid #caced3;
-  background-color: #fff;
-  cursor: pointer;
+  gap: 10px;
+
+}
+.action-img{
+  width: 24px;
+  height: 24px;
 }
 
 .action-btn:hover {
@@ -996,6 +1000,18 @@ td:last-child {
   gap: 24px;
   max-width: 400px;
   text-align: center;
+}
+
+.file-name-link {
+  color: #001F3F;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.file-name-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }
 
 
