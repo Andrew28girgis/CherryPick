@@ -44,9 +44,6 @@ export class KayakComponent implements OnInit {
   showAllOrgs = false; // Default state to show only 15 organizations
   sanitizedUrl!: any;
   StreetViewOnePlace!: boolean;
-  mapViewOnePlacex: boolean = false;
-  MapViewPlace: any;
-  shoppingCenter: any;
 
 
 
@@ -80,7 +77,7 @@ export class KayakComponent implements OnInit {
     this.GetFilters()
   }
   async viewOnMap(lat: number, lng: number) {
-    this.mapViewOnePlacex = true;
+    // this.mapViewOnePlacex = true;
 
     if (!lat || !lng) {
       console.error('Latitude and longitude are required to display the map.');

@@ -226,7 +226,7 @@
             </div>
             <ng-container>
               <!-- Loop through KayakResult -->
-              <div class="col-md-12" *ngFor="let result of KayakResult?.json">
+              <div class="col-md-12" *ngFor="let result of KayakResult?.Result; let i = index">
                 <div class="card carddd mb-3 gray-background">
                   <div class="card-body">
                     <div class="row">
@@ -283,22 +283,16 @@
 
                       <!-- Right Side: Management Organization -->
                       <div class="col-md-5">
-                        <div
-                          class="text-center"
-                          *ngFor="
-                            let filtering of Filters?.ManagementOrganization
-                          "
-                        >
-                          <img
-                            [src]="
-                              'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                              filtering.OrganizationId
-                            "
-                            [alt]="filtering.Name"
-                            class="img-fluid"
-                          />
-                          <span class="company-name">{{ filtering.Name }}</span>
-                        </div>
+                        <ng-container *ngIf="KayakResult?.ManagementOrganizations?.[i]">
+                          <div>
+                            <img
+                              [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + KayakResult.ManagementOrganizations[i].Id"
+                              [alt]="KayakResult.ManagementOrganizations[i].Name"
+                              class="img-fluid mb-2"
+                            />
+                            <span class="company-name">{{ KayakResult.ManagementOrganizations[i].Name }}</span>
+                          </div>
+                        </ng-container>
                       </div>
                     </div>
                   </div>

@@ -9,6 +9,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
+import { KayakComponent } from './components/Kayak/kayak/kayak.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
@@ -18,7 +19,7 @@ import { SourcesComponent } from './components/kanban/sources/sources.component'
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
-import { KayakComponent } from './components/Kayak/kayak/kayak.component';
+
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -98,7 +99,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
-    path: 'Kayak',
+    path: 'kayak',
     component: KayakComponent,
     canActivate: [AuthGuardService],
   },

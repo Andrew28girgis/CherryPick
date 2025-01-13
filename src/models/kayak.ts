@@ -1,6 +1,14 @@
 export interface KayakResult {
     Ids: string
+    ManagementOrganizations:ManagementOrganizations[]
     Result: Result[]
+  }
+  export interface ManagementOrganizations {
+    ShoppingCenterContact: ShoppingCenterContact[]
+  }
+  
+  export interface ShoppingCenterContact {
+    ShoppingCenterId: number
   }
   
   export interface Result {
@@ -19,7 +27,7 @@ export interface KayakResult {
     Suite?: string
     ForLeasePrice?: number
   }
-  export interface StatesAndCities {
-    stateCode: string
-    city: string
-  }
+    export interface StatesAndCities {
+      stateCode: string
+      city: string
+    }
