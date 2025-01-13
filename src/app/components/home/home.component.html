@@ -212,17 +212,15 @@
                       <td
                         class="table-text"
                         [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
-                      ></td>
-                      <ng-container
-                        *ngFor="
+                      ></td> 
+                        <td>
+                          <div
+                          *ngFor="
                           let item of shoppingCenter.ShoppingCenter
                             ?.BuyBoxPlaces;
                           let i = index;
                           trackBy: trackByIndex
                         "
-                      >
-                        <td>
-                          <div
                             class="d-flex align-items-center justify-content-center"
                           >
                             <img
@@ -242,8 +240,7 @@
                               <span class="ms-2 table-text"> MI </span>
                             </div>
                           </div>
-                        </td>
-                      </ng-container>
+                        </td> 
                       <td class="neighbourhood">
                         <div >
                           {{ shoppingCenter.Neighbourhood ?  shoppingCenter.Neighbourhood : '' }}
