@@ -24,8 +24,17 @@
         </button>
       </div>
 
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          placeholder="Search files..." 
+          class="search-input"
+        >
+      </div>
+
       <!-- Empty State -->
-      <div class="upload-area" *ngIf="files.length === 0"
+      <div class="upload-area" *ngIf="filterFiles().length === 0"
         [class.dragging]="isDragging"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
@@ -108,7 +117,7 @@
       </div>
 
       <!-- Table View - Only shown when there are files -->
-      <div class="table-container" *ngIf="files.length > 0">
+      <div class="table-container" *ngIf="filterFiles().length > 0">
         <table>
           <thead>
             <tr>
@@ -119,7 +128,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let file of files">
+            <tr *ngFor="let file of filterFiles()">
               <td>
                 <div class="file-info">
                   <span class="file-name-link" (click)="downloadFile(file)">{{ file.name }}</span>
@@ -250,7 +259,7 @@
   </div>
 </div>
 
-<div class="file-viewer-modal" *ngIf="selectedFileForView">
+<div class="file-viewer-modal" *ngIf="selectedFileForView" (click)="closeFileViewer()">
   <div class="file-viewer-content" (click)="$event.stopPropagation()">
     <div class="file-viewer-header">
       <h3 class="file-viewer-title">{{ selectedFileForView.name }}</h3>

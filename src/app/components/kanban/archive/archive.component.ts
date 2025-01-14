@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, firstValueFrom } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
@@ -62,6 +62,9 @@ export class ArchiveComponent implements OnInit {
   docxContent: SafeHtml | null = null;
   pdfContent: SafeHtml | null = null;
   excelData: ExcelData | null = null;
+  searchTerm: string = ''; // Added searchTerm property
+  sortColumn: string = 'name'; // Added sortColumn property
+  sortDirection: 'asc' | 'desc' = 'asc'; // Added sortDirection property
 
   constructor(
     private http: HttpClient,
@@ -76,6 +79,7 @@ export class ArchiveComponent implements OnInit {
     if (savedState) {
       this.sidebarCollapsed = JSON.parse(savedState);
     }
+    this.searchTerm = ''; // Initialize searchTerm
   }
 
   private loadProperties(): void {
@@ -515,18 +519,40 @@ export class ArchiveComponent implements OnInit {
     this.excelData = null;
   }
 
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: MouseEvent) {
-    // Get the modal element
-    const modal = document.querySelector('.file-viewer-modal');
-    const modalContent = document.querySelector('.file-viewer-content');
-    
-    if (modal && modalContent) {
-      // Check if the click was outside the modal content
-      if (modal.contains(event.target as Node) && 
-          !modalContent.contains(event.target as Node)) {
-        this.closeFileViewer();
+  filterFiles(): FileItem[] { // Added filterFiles method
+    let filteredFiles = this.files;
+    if (this.searchTerm) {
+      filteredFiles = filteredFiles.filter(file => 
+        file.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+    return this.sortFiles(filteredFiles);
+  }
+
+  sortFiles(files: FileItem[]): FileItem[] {
+    return files.sort((a, b) => {
+      let comparison = 0;
+      switch (this.sortColumn) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'uploadDate':
+          comparison = a.uploadDate.getTime() - b.uploadDate.getTime();
+          break;
+        case 'size':
+          comparison = a.size - b.size;
+          break;
       }
+      return this.sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  toggleSort(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
     }
   }
 }

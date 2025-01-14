@@ -105,6 +105,11 @@ th {
   background: #e4e7e9;
   color: #0C0D0E;
   font-weight: 500;
+  cursor: pointer; /* Added for sortable headers */
+}
+
+th:hover {
+  background-color: #f0f0f0; /* Added for sortable headers */
 }
 
 th:last-child,
@@ -479,6 +484,11 @@ th {
   position: sticky;
   top: 0;
   z-index: 1;
+  cursor: default;
+}
+
+th:hover {
+  background-color: #e4e7e9;
 }
 
 tr:last-child td {
@@ -751,6 +761,10 @@ background: var(--Button-Primary-BG, #001F3F);
   margin-top: 16px;
 }
 
+.search-container {
+  margin-bottom: 1rem;
+}
+
 .search-box {
   position: relative;
   flex: 1;
@@ -758,10 +772,16 @@ background: var(--Button-Primary-BG, #001F3F);
 
 .search-input {
   width: 100%;
-  padding: 10px 16px 10px 40px;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  font-size: 14px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
 .search-icon {
@@ -994,39 +1014,16 @@ background: var(--Button-Primary-BG, #001F3F);
   animation: slideOut 0.3s ease-in forwards;
 }
 
-.excel-viewer {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  padding: 1rem;
+th {
+  cursor: default;
+  user-select: none;
 }
 
-.excel-table {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 600px;
+th:hover {
+  background-color: #e4e7e9;
 }
 
-.excel-table th,
-.excel-table td {
-  border: 1px solid #e2e8f0;
-  padding: 8px 12px;
-  text-align: left;
-}
-
-.excel-table th {
-  background-color: #f8fafc;
-  font-weight: 600;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.excel-table tr:nth-child(even) {
-  background-color: #f8fafc;
-}
-
-.excel-table tr:hover {
-  background-color: #f1f5f9;
+th span {
+  display: none;
 }
 
