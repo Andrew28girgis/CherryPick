@@ -132,6 +132,7 @@
                     <h2 class="stage-name" [ngClass]="{ 'green-text': stage.isQualified }">
                       {{ stage.stageName }}
                     </h2>
+                    
                     <img
                       src="assets/Images/Icons/more-circle.svg"
                       alt="More options"
@@ -169,8 +170,26 @@
                                   <div class="kanban-title">
                                     <span class="name">{{ org.Organization?.[0]?.Name || '' }}</span>
                                     <span class="place">{{ org.Organization?.[0]?.Location || '' }}</span>
+                                    
                                   </div>
+                                  
                                 </div>
+                                <img
+                                    src="assets/Images/Icons/more-circle.svg"
+                                    alt="More Actions"
+                                    class="more-iconn"
+                                    *ngIf="
+                                      stage.stageActions &&
+                                      stage.stageActions[0]?.actionLevel == 'Target'
+                                    "
+                                    (click)="
+                                      openActionsForTarget(
+                                        ViewTargetActions,
+                                        stage.stageActions,
+                                        org
+                                      )
+                                    "
+                                  />
                               </div>
                             </div>
                           </div>
@@ -266,17 +285,17 @@
           </ul>
         </div>
 
-        <!-- <div>
+        <div>
           <label for=""><b>Select Organization</b></label>
           <select
             class="form-control w-50"
             (change)="getOrganizationContacts($event)"
           >
-            <option *ngFor="let org of allOrganizations" [value]="org.id">
-              {{ org.name }}
+            <option *ngFor="let org of allOrganizations" [value]="org.ID">
+              {{ org.Name }}
             </option>
           </select>
-        </div> -->
+        </div>
 
         <div
           class="py-2"
