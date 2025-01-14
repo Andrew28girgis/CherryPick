@@ -141,7 +141,7 @@
             <tr *ngFor="let file of filterFiles()">
               <td>
                 <div class="file-info">
-                  <span class="file-name-link" (click)="downloadFile(file)">{{ file.name }}</span>
+                  <!-- <span class="file-name-link" (click)="downloadFile(file)">{{ file.name }}</span> -->
                 </div>
               </td>
               <td>
@@ -160,9 +160,9 @@
                 <button class="action-btn delete" (click)="deleteFile(file)">
                   <img src="assets/Images/Icons/trash.svg" alt="Delete" class="action-img">
                 </button>
-                <button class="action-btn" (click)="viewFile(file)" title="View">
+                <!-- <button class="action-btn" (click)="viewFile(file)" title="View">
                   <img src="assets/Images/Icons/eye.svg" alt="View">
-                </button>
+                </button> -->
               </td>
             </tr>
           </tbody>
@@ -286,7 +286,7 @@
           <iframe [src]="fileViewerUrl" class="file-viewer-iframe" *ngIf="fileViewerUrl"></iframe>
         </ng-container>
         <ng-container *ngSwitchCase="'docx'">
-          <div class="docx-content" [innerHTML]="docxContent"></div>
+          <!-- <div class="docx-content" [innerHTML]="docxContent"></div> -->
         </ng-container>
         <ng-container *ngSwitchCase="'xlsx'">
           <div class="excel-viewer" *ngIf="excelData">
