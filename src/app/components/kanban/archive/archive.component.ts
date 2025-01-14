@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, firstValueFrom } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { renderAsync } from 'docx-preview';
+// import { renderAsync } from 'docx-preview';
 import { CommonModule } from '@angular/common';
 
 interface FileItem {

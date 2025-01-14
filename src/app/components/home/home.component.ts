@@ -367,13 +367,18 @@ export class HomeComponent implements OnInit {
      
     let centerIds: any[] = [];
     this.shoppingCenters.forEach((center) => {
-      centerIds.push(center.Id);
+      // centerIds.push(center.Id);
+      if(center.Latitude  && center.Longitude){
       // this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood);
+      if (this.shoppingCenters.indexOf(center) < 1) {
+        this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState, center.Latitude, center.Longitude);
+      } 
+      }
     });
     
     const centerIdsString = centerIds.join(',');
-    this.getPolygons(centerIdsString);
-     
+  //  this.getPolygons(centerIdsString);
+      
  
   }
 

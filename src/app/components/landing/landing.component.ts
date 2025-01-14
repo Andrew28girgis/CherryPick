@@ -23,6 +23,7 @@ import { OrgBranch } from 'src/models/branches';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css'],
 })
+
 export class LandingComponent {
   General!: General;
   place!: Property;

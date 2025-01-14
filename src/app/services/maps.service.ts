@@ -657,6 +657,29 @@ export class MapsService {
         map: map
       });
 
+      // Calculate polygon center
+      const bounds = new google.maps.LatLngBounds();
+      polygonCoords.forEach((coord:any) => {
+        bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+      });
+      const center = bounds.getCenter();
+
+      // Add label at polygon center
+      new google.maps.Marker({
+        position: center,
+        map: map,
+        label: {
+          text: feature.name,
+          color: '#000000',
+          fontSize: '12px',
+          fontWeight: 'bold'
+        },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 0
+        }
+      });
+
     } catch (error) {
       console.error('Error drawing polygon:', error);
     }
@@ -701,7 +724,62 @@ export class MapsService {
   
 
 
-  // async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+  async fetchAndDrawPolygon(map: any, city:any , state:any , lat?: any , lng?: any ): Promise<void> {
+    console.log(state);
+    
+    // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+    const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
+
+    
+    try {
+      const response = await fetch(boundaryUrl);
+      const data: any = await response.json();
+
+      data.features.forEach((f:any) => { 
+         if (
+          f.geometry.type === 'Polygon' 
+        ) 
+        // && f.properties['ISO3166-2'] === `US${state}`
+        {
+          // Draw polygon
+          const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+            return {
+              lat: coord[1],
+              lng: coord[0]
+            };
+          });
+
+          const polygon = new google.maps.Polygon({
+            paths: paths,
+            strokeColor: '#e74c3c',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#e74c3c',
+            fillOpacity: 0.35,
+            map: map
+          });
+
+          // Calculate polygon center for label placement
+          const bounds = new google.maps.LatLngBounds();
+          paths.forEach((path:any) => bounds.extend(path));
+          const center = bounds.getCenter();
+
+          // Show name by default
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+            position: center
+          });
+          infoWindow.open(map);
+        }
+      }); 
+    } catch (error) {
+      console.error("Error fetching boundary data:", error);
+    }
+  }
+  
+
+
+  //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
   //   console.log(state);
     
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
@@ -710,34 +788,36 @@ export class MapsService {
   //     const data: any = await response.json();
 
   //     data.features.forEach((f:any) => {
-  //       if(f.geometry.type == 'Point' && f.properties.type == 'neighbourhood'  ){
-  //         // Draw circle only
-  //         const [lng, lat] = f.geometry.coordinates;
+  //       // if(f.geometry.type == 'Point' && f.properties.type == 'neighbourhood'  ){
+  //       //   // Draw circle only
+  //       //   const [lng, lat] = f.geometry.coordinates;
 
-  //         // Add circle around point
-  //         const circle = new google.maps.Circle({
-  //           strokeColor: '#3498db',
-  //           strokeOpacity: 0.8,
-  //           strokeWeight: 2,
-  //           fillColor: '#3498db', 
-  //           fillOpacity: 0.35,
-  //           map: map,
-  //           center: { lat, lng },
-  //           radius: 1600 // 1km radius
-  //         });
+  //       //   // Add circle around point
+  //       //   const circle = new google.maps.Circle({
+  //       //     strokeColor: '#3498db',
+  //       //     strokeOpacity: 0.8,
+  //       //     strokeWeight: 2,
+  //       //     fillColor: '#3498db', 
+  //       //     fillOpacity: 0.35,
+  //       //     map: map,
+  //       //     center: { lat, lng },
+  //       //     radius: 1600 // 1km radius
+  //       //   });
 
-  //         // Show name by default
-  //         const infoWindow = new google.maps.InfoWindow({
-  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent ;padding: 7px">${f.properties.name}</div>`,
-  //           position: { lat, lng }
-  //         });
-  //         infoWindow.open(map);
+  //       //   // Show name by default
+  //       //   const infoWindow = new google.maps.InfoWindow({
+  //       //     content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent ;padding: 7px">${f.properties.name}</div>`,
+  //       //     position: { lat, lng }
+  //       //   });
+  //       //   infoWindow.open(map);
           
-  //       } else if (
-  //         f.geometry.type === 'Polygon' && 
-  //         f.properties.type === 'neighbourhood' && 
-  //         f.properties['ISO3166-2'] === `US${state}`
-  //       ) {
+
+  //       // } 
+  //        if (
+  //         f.geometry.type === 'Polygon' 
+  //       ) 
+  //       // && f.properties['ISO3166-2'] === `US${state}`
+  //       {
   //         // Draw polygon
   //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
   //           return {
@@ -774,7 +854,6 @@ export class MapsService {
   //   }
   // }
   
-
 
   addPropertyMarker(map: any, position: { lat: number; lng: number }, property: any) {
     return new google.maps.Marker({
