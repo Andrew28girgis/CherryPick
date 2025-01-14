@@ -1014,6 +1014,95 @@ td:last-child {
   text-decoration: underline;
 }
 
+/* Add these styles for the file viewer modal */
+.file-viewer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.file-viewer-content {
+  position: relative;
+  width: 90%;
+  height: 90vh;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.file-viewer-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.file-viewer-close {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #6b7280;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-viewer-close:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.file-viewer-body {
+  flex: 1;
+  padding: 24px;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.file-viewer-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.file-preview-error {
+  text-align: center;
+  padding: 24px;
+  color: #dc2626;
+}
+
+.docx-viewer {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow: auto;
+  background: white;
+}
+
+.docx-viewer .document-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+}
+
 
 
 

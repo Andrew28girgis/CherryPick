@@ -28,13 +28,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ) {
     this.sidebarItems = [
       { title: 'Dashboard', icon: 'element-4', link: '/Kanban' },
-      { title: 'StakeHolders', icon: 'people', link: '/stake-holders' },
-      { title: 'Properties', icon: 'building', link: '/Properties' },
-      { title: 'Tasks', icon: 'task-square', link: '/tasks' },
-      { title: 'Sources', icon: 'global', link: '/Sources' },
-      { title: 'Archive', icon: 'folder-open', link: '/archive' },
-      { title: 'Assistant', icon: 'magic-star', link: '/assistant' },
-      { title: 'Permissions', icon: 'setting', link: '/permissions' },
+      // { title: 'StakeHolders', icon: 'people', link: '/stake-holders' },
+      // { title: 'Properties', icon: 'building', link: '/Properties' },
+      // { title: 'Tasks', icon: 'task-square', link: '/tasks' },
+      // { title: 'Sources', icon: 'global', link: '/Sources' },
+      // { title: 'Archive', icon: 'folder-open', link: '/archive' },
+      // { title: 'Assistant', icon: 'magic-star', link: '/assistant' },
+      // { title: 'Permissions', icon: 'setting', link: '/permissions' },
     ];
     this.collapse = this.sidebarService.getCollapsedState();
   }

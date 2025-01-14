@@ -76,6 +76,7 @@ isMobileView = false;
   // kanbanStages: any[] = [];
   kanbanStages: KanbanStage[] = []; // Initialize kanbanStages array
   @Output() kanbanCreated = new EventEmitter<any>();
+  showFilter: boolean = false; // Add this property
 
   constructor(
     public activatedRoute: ActivatedRoute,

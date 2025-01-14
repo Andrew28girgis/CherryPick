@@ -5,7 +5,7 @@
     ></app-sidebar>
   </div>
   <div class="main-content">
-    <div class="dashboard-header">
+    <!-- <div class="dashboard-header">
       <h1 class="title">Dashboard</h1>
       <nav class="tabs">
         <a routerLink="/Kanban" routerLinkActive="active" class="tab" (click)="setActiveTab('In Progress')">
@@ -15,8 +15,8 @@
           Done
         </a>
       </nav>
-    </div>
-    <div class="filter">
+    </div> -->
+    <div class="filter" *ngIf="showFilter">
       <div class="filter-tabs">
         <button
           class="filter-tab"
@@ -68,34 +68,56 @@
           [sidebarCollapsed]="sidebarCollapsed"
         ></app-filter-panel>
       </div>
+      
     </div>
     <div class="col-md-15 p-0 ta">
       <div class="row d-flex my-3">
-        <div
-          *ngFor="let kanban of userKanbans"
-          class="col-md-6 d-flex"
-          (click)="GetKanbanDetails(kanban)"
-        >
-          <div *ngFor="let def of kanban.kanbanDefinitions; let i = index">
-            <div class="card-header">
-              <p
-                *ngIf="!hiddenOrganizations[1]"
-                (click)="hideOrganization(1)"
-                class="organization-name"
-              >
-                <ng-container *ngFor="let org of def?.Organization">
-                  <span *ngIf="i > 0" class="org-name px-2">/</span
-                  >{{ org.Name }}
+        <div class="search-bar position-relative"></div>
+          <div class="input">
+            <input
+              type="search"
+              placeholder="Search..."
+              class="form-control search-input"
+              [(ngModel)]="searchText"
+              (input)="onSearchChange($event)"
+            />
+            <!-- <img
+              src="assets/Images/Icons/search-normal.svg"
+              alt="Search Icon"
+              class="search-icon"
+            /> -->
+        </div>
+        <div class="kanban-header-section">
+          <div *ngFor="let kanban of userKanbans" 
+               class="kanban-info-card" 
+               (click)="GetKanbanDetails(kanban)">
+            <div class="card-content">
+              <!-- Organizations Chain -->
+              <div class="org-chain">
+                <ng-container *ngFor="let def of kanban.kanbanDefinitions; let i = index">
+                  <ng-container *ngFor="let org of def?.Organization; let last = last">
+                    <div class="org-item">
+                      <span class="org-badge">{{ org.Name }}</span>
+                      <i class="connection-icon" *ngIf="!last">→</i>
+                    </div>
+                  </ng-container>
                 </ng-container>
-              </p>
+              </div>
+              
+              <!-- Stakeholder Info -->
+              <div class="stakeholder-info">
+                <div class="stakeholder-avatar">
+                  {{ getStackHolderName(kanban.targetStakeholderId)?.charAt(0) }}
+                </div>
+                <div class="stakeholder-details">
+                  <span class="stakeholder-label">Stakeholder</span>
+                  <span class="stakeholder-title">
+                    {{ getStackHolderName(kanban.targetStakeholderId) }}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-          <span
-            *ngIf="!hiddenOrganizations[1]"
-            (click)="hideOrganization(1)"
-            class="stakeholder-name px-2"
-            >{{ getStackHolderName(kanban.targetStakeholderId) }}</span
-          >
         </div>
       </div>
 

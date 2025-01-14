@@ -2,6 +2,9 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, firstValueFrom } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { renderAsync } from 'docx-preview';
+import { CommonModule } from '@angular/common';
 
 interface FileItem {
   id: string;
@@ -18,10 +21,16 @@ interface FileItem {
   content?: string | ArrayBuffer;
 }
 
+interface MammothResult {
+  value: string;
+  messages: any[];
+}
+
 @Component({
   selector: 'app-archive',
   templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.css']
+  styleUrls: ['./archive.component.css'],
+  standalone: false,
 })
 export class ArchiveComponent implements OnInit {
   files: FileItem[] = [];
@@ -40,8 +49,13 @@ export class ArchiveComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
   selectedRows: Set<string> = new Set();
   fileContent: string | ArrayBuffer | null = null;
+  selectedFileForView: FileItem | null = null;
+  fileViewerUrl: SafeResourceUrl | null = null;
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
+  ) {
     this.loadFilesFromStorage();
   }
 
@@ -171,7 +185,7 @@ export class ArchiveComponent implements OnInit {
     });
   }
 
-  private getFileExtension(filename: string): string {
+  getFileExtension(filename: string): string {
     return filename.split('.').pop()?.toLowerCase() || '';
   }
 
@@ -417,6 +431,40 @@ export class ArchiveComponent implements OnInit {
       'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     };
     return mimeTypes[fileType.toLowerCase()] || 'application/octet-stream';
+  }
+
+  viewFile(file: FileItem): void {
+    this.selectedFileForView = file;
+    const fileType = this.getFileExtension(file.name).toLowerCase();
+    
+    if (!file.content) {
+      this.showAlert('File content not found');
+      return;
+    }
+
+    try {
+      const binaryString = atob(file.content as string);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      const blob = new Blob([bytes], { type: this.getMimeType(file.type) });
+      const url = URL.createObjectURL(blob);
+      this.fileViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      
+    } catch (error) {
+      console.error('Error creating preview:', error);
+      this.showAlert('Failed to create file preview');
+    }
+  }
+
+  closeFileViewer(): void {
+    if (this.fileViewerUrl) {
+      URL.revokeObjectURL(this.fileViewerUrl.toString());
+    }
+    this.selectedFileForView = null;
+    this.fileViewerUrl = null;
   }
 }
 
