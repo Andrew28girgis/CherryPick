@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, firstValueFrom } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
@@ -513,6 +513,21 @@ export class ArchiveComponent implements OnInit {
     this.fileViewerUrl = null;
     this.docxContent = null;
     this.excelData = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent) {
+    // Get the modal element
+    const modal = document.querySelector('.file-viewer-modal');
+    const modalContent = document.querySelector('.file-viewer-content');
+    
+    if (modal && modalContent) {
+      // Check if the click was outside the modal content
+      if (modal.contains(event.target as Node) && 
+          !modalContent.contains(event.target as Node)) {
+        this.closeFileViewer();
+      }
+    }
   }
 }
 

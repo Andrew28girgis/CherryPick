@@ -251,7 +251,7 @@
 </div>
 
 <div class="file-viewer-modal" *ngIf="selectedFileForView">
-  <div class="file-viewer-content">
+  <div class="file-viewer-content" (click)="$event.stopPropagation()">
     <div class="file-viewer-header">
       <h3 class="file-viewer-title">{{ selectedFileForView.name }}</h3>
       <button class="file-viewer-close" (click)="closeFileViewer()">
