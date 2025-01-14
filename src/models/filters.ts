@@ -1,9 +1,13 @@
+import { Result } from "./kayak"
+
 export interface KayakFilters {
     ManagementOrganization: ManagementOrganization[]
     Tenants: Tenant[]
     StateCity: StateCity[]
     MinMaxBuildingSize: MinMaxBuildingSize[]
     SecondaryType: SecondaryType[]
+  Result?: Result[]; // Add this property
+
   }
   
   export interface ManagementOrganization {

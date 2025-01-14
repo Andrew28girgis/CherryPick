@@ -4,15 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'sortBy'
 })
 export class SortByPipe implements PipeTransform {
-  transform(array: any[], field: string): any[] {
-    if (!Array.isArray(array)) {
-      return array;
-    }
-    return array.sort((a: any, b: any) => {
-      if (a[field].toLowerCase() < b[field].toLowerCase()) return -1;
-      if (a[field].toLowerCase() > b[field].toLowerCase()) return 1;
-      return 0;
-    });
+  transform(tenants: any[]): any[] {
+    if (!tenants) return [];
+    return tenants.sort((a, b) => a.Name.localeCompare(b.Name));
   }
-
 }

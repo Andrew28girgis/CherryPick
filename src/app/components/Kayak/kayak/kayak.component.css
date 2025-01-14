@@ -441,3 +441,70 @@ line-height: 30px;
 .gray-background{
  background-color: #efefef;
 }
+.no-underline {
+  text-decoration: none !important; /* Remove underline */
+}
+.tenantorg{
+  font-size: 0.9rem;
+}
+.image-slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  width: 300px; /* Adjust based on your needs */
+}
+
+.image-slider img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.slider-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  z-index: 10;
+}
+
+.slider-control.prev {
+  left: 0;
+}
+
+.slider-control.next {
+  right: 0;
+}
+
+.custom-carousel img {
+  max-height: 500px;
+  margin: auto;
+}
+
+.view-gallery {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-gallery:hover {
+  background-color: #0056b3;
+}
+
+.carousel-wrapper {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+.modal-imgg{
+  max-width: 400px;;
+}
