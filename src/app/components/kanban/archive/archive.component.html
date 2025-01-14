@@ -121,9 +121,19 @@
         <table>
           <thead>
             <tr>
-              <th>File Name</th>
+              <th (click)="toggleSort('name')">
+                File Name
+                <span *ngIf="sortColumn === 'name'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
               <th>Uploaded By</th>
-              <th>Date</th>
+              <th (click)="toggleSort('uploadDate')">
+                Date
+                <span *ngIf="sortColumn === 'uploadDate'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>

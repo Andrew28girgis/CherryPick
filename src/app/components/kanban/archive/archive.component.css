@@ -484,11 +484,11 @@ th {
   position: sticky;
   top: 0;
   z-index: 1;
-  cursor: default;
+  cursor: pointer; /* Added for sortable headers */
 }
 
 th:hover {
-  background-color: #e4e7e9;
+  background-color: #f0f0f0; /* Added for sortable headers */
 }
 
 tr:last-child td {
@@ -1015,15 +1015,16 @@ background: var(--Button-Primary-BG, #001F3F);
 }
 
 th {
-  cursor: default;
+  cursor: pointer;
   user-select: none;
 }
 
 th:hover {
-  background-color: #e4e7e9;
+  background-color: #f0f0f0;
 }
 
 th span {
-  display: none;
+  margin-left: 4px;
+  font-size: 12px;
 }
 
