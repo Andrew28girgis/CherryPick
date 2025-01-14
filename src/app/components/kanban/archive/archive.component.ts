@@ -2,9 +2,10 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError, firstValueFrom } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeHtml } from '@angular/platform-browser';
 import { renderAsync } from 'docx-preview';
 import { CommonModule } from '@angular/common';
+import * as mammoth from 'mammoth';
 
 interface FileItem {
   id: string;
@@ -51,6 +52,7 @@ export class ArchiveComponent implements OnInit {
   fileContent: string | ArrayBuffer | null = null;
   selectedFileForView: FileItem | null = null;
   fileViewerUrl: SafeResourceUrl | null = null;
+  docxContent: SafeHtml | null = null;
 
   constructor(
     private http: HttpClient,
@@ -433,7 +435,7 @@ export class ArchiveComponent implements OnInit {
     return mimeTypes[fileType.toLowerCase()] || 'application/octet-stream';
   }
 
-  viewFile(file: FileItem): void {
+  async viewFile(file: FileItem): Promise<void> {
     this.selectedFileForView = file;
     const fileType = this.getFileExtension(file.name).toLowerCase();
     
@@ -443,6 +445,7 @@ export class ArchiveComponent implements OnInit {
     }
 
     try {
+      // Convert Base64 string back to binary data
       const binaryString = atob(file.content as string);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
@@ -450,9 +453,21 @@ export class ArchiveComponent implements OnInit {
       }
 
       const blob = new Blob([bytes], { type: this.getMimeType(file.type) });
-      const url = URL.createObjectURL(blob);
-      this.fileViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      
+    
+      if (fileType === 'docx') {
+        // For DOCX files:
+        // 1. Convert blob to ArrayBuffer
+        const arrayBuffer = await blob.arrayBuffer();
+        // 2. Use mammoth to convert DOCX to HTML
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+        // 3. Sanitize and store the HTML content
+        this.docxContent = this.sanitizer.bypassSecurityTrustHtml(result.value);
+        this.fileViewerUrl = null;
+      } else {
+        const url = URL.createObjectURL(blob);
+        this.fileViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+        this.docxContent = null;
+      }
     } catch (error) {
       console.error('Error creating preview:', error);
       this.showAlert('Failed to create file preview');
@@ -465,10 +480,7 @@ export class ArchiveComponent implements OnInit {
     }
     this.selectedFileForView = null;
     this.fileViewerUrl = null;
+    this.docxContent = null;
   }
 }
-
-
-
-
 
