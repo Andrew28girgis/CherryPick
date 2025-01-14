@@ -71,7 +71,7 @@
       
     </div>
     <div class="col-md-15 p-0 ta">
-      <div class="row d-flex my-3">
+      <div class="row d-flex">
         <div class="search-bar position-relative"></div>
           <div class="input">
             <input
@@ -121,126 +121,75 @@
         </div>
       </div>
 
+      
       <div class="kanban-wrap">
-        <div class="row d-flex" *ngIf="filteredKanbanList">
-          <div *ngFor="let stage of filteredKanbanList[0]?.kanbanStages" class="col">
-            <div class="card">
-              <div class="stage-container">
-                <h2
-                  class="stage-name"
-                  [ngClass]="{ 'green-text': stage.isQualified }"
-                >
-                  {{ stage.stageName }}
-                </h2>
-
-                <img
-                  src="assets/Images/Icons/more-circle.svg"
-                  alt="Search Icon"
-                  class="optionsss"
-                  *ngIf="stage.stageActions"
-                  (click)="openActionsForStage(ViewStageActions, stage)"
-                />
-              </div>
-              <div
-                class="add-organization"
-                (click)="openCreateNewKanban(ViewStageActions, stage)"
-              >
-                <img
-                  src="assets/Images/Icons/add.svg"
-                  alt="Add Icon"
-                  class="icon"
-                />
-              </div>
-              
-              <div
-                  cdkDropList
-                  [id]="stage.Id.toString()"
-                  [cdkDropListData]="stage.kanbanOrganizations || []"
-                  [cdkDropListConnectedTo]="getConnectedLists(stage.Id.toString())"
-                  class="card-body example-list"
-                  (cdkDropListDropped)="drop($event)"
-                >
-                <ng-container *ngFor="let org of stage.kanbanOrganizations">
-                  <ng-container *ngIf="org.Organization?.[0]?.Name">
-                    <div class="kanban-card" cdkDrag>
-                      <!-- Header Section - Always visible -->
-                      <div class="kanban-header" >
-                        <!-- (click)="toggleCard(org)" -->
-                        <div class="d-flex justify-content-between w-100 align-items-center">
-                          <div class="d-flex align-items-center">
-                            <img
-                              [src]="org.Organization?.[0]?.Logo || 'assets/Images/Logos/Osmos.svg'"
-                              alt="Logo"
-                              class="logo"
-                            />
-                            <div class="kanban-title">
-                              <span class="name">{{ org.Organization?.[0]?.Name || '' }}</span>
-                              <span class="place">{{ org.Organization?.[0]?.Location || '' }}</span>
+        <div class="table-container">
+          <table role="grid" aria-label="Kanban board">
+            <thead>
+              <tr>
+                <th *ngFor="let stage of filteredKanbanList[0]?.kanbanStages">
+                  <div class="stage-container">
+                    <h2 class="stage-name" [ngClass]="{ 'green-text': stage.isQualified }">
+                      {{ stage.stageName }}
+                    </h2>
+                    <img
+                      src="assets/Images/Icons/more-circle.svg"
+                      alt="More options"
+                      class="optionsss"
+                      *ngIf="stage.stageActions"
+                      (click)="openActionsForStage(ViewStageActions, stage)"
+                    />
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td *ngFor="let stage of filteredKanbanList[0]?.kanbanStages">
+                  <div class="card">
+                    
+                    <div cdkDropList
+                      [id]="stage.Id.toString()"
+                      [cdkDropListData]="stage.kanbanOrganizations || []"
+                      [cdkDropListConnectedTo]="getConnectedLists(stage.Id.toString())"
+                      class="card-body example-list"
+                      (cdkDropListDropped)="drop($event)">
+                      <ng-container *ngFor="let org of stage.kanbanOrganizations">
+                        <ng-container *ngIf="org.Organization?.[0]?.Name">
+                             <tr>
+                          <div class="kanban-card" cdkDrag>
+                            <div class="kanban-header">
+                              <div class="d-flex justify-content-between w-100 align-items-center">
+                                <div class="d-flex align-items-center">
+                                  <img
+                                    [src]="org.Organization?.[0]?.Logo || 'assets/Images/Logos/Osmos.svg'"
+                                    alt="Logo"
+                                    class="logo"
+                                  />
+                                  <div class="kanban-title">
+                                    <span class="name">{{ org.Organization?.[0]?.Name || '' }}</span>
+                                    <span class="place">{{ org.Organization?.[0]?.Location || '' }}</span>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div class="d-flex align-items-center">
-                            <!-- <button class="btn btn-link expand-btn" (click)="toggleCard(org); $event.stopPropagation()">
-                              <i [class]="org.isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
-                            </button> -->
-                            <img
-                              src="assets/Images/Icons/more-circle.svg"
-                              alt="More Actions"
-                              class="more-icon"
-                              *ngIf="stage.stageActions && stage.stageActions[0]?.actionLevel == 'Target'"
-                              (click)="openActionsForTarget(ViewTargetActions, stage.stageActions, org); $event.stopPropagation()"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <!-- Expandable Content -->
-                      <div class="expandable-content" [class.expanded]="org.isExpanded">
-                        <!-- Middle Section -->
-                        <div class="kanban-details">
-                          <div class="detail-item">
-                            <span class="label">Asset Type</span>
-                            <span class="value">{{ org.Organization?.[0]?.AssetType || 'Fast Food' }}</span>
-                          </div>
-                          <div class="detail-item">
-                            <span class="label">Total Properties</span>
-                            <span class="value">{{ org.Organization?.[0]?.TotalProperties || '13' }}</span>
-                          </div>
-                        </div>
-
-                        <!-- Footer Section -->
-                        <div class="kanban-footer">
-                          <div class="broker-info">
-                            <img
-                              [src]="org.LeadBroker?.Picture || 'assets/Images/Avatars/hassan.svg'"
-                              alt="Lead Broker"
-                              class="broker-avatar"
-                            />
-                            <div class="broker-details">
-                              <span class="broker-label">Lead Broker</span>
-                              <span class="broker-name">{{ org.LeadBroker?.Name || 'Andrew Poncher' }}</span>
-                            </div>
-                          </div>
-                          <button
-                            *ngIf="stage.isQualified"
-                            class="btn btn-success add-btn"
-                            (click)="openCreateNewKanban(chooseStackHolder, org); $event.stopPropagation()"
-                            aria-label="Add new kanban"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
+                        </tr>
+                        </ng-container>
+                      </ng-container>
                     </div>
-                  </ng-container>
-                </ng-container>
-              </div>
-            </div>
-          </div>
+               
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 
 <ng-template #chooseStackHolder let-modal>
   <div class="p-2">

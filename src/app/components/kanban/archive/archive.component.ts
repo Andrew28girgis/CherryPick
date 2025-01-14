@@ -5,6 +5,9 @@ import { delay, tap } from 'rxjs/operators';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 // import { renderAsync } from 'docx-preview';
 import { CommonModule } from '@angular/common';
+import * as mammoth from 'mammoth';
+import * as pdfjsLib from 'pdfjs-dist';
+import * as XLSX from 'xlsx';
 
 interface FileItem {
   id: string;
@@ -24,6 +27,11 @@ interface FileItem {
 interface MammothResult {
   value: string;
   messages: any[];
+}
+
+interface ExcelData {
+  headers: string[];
+  rows: any[][];
 }
 
 @Component({
@@ -51,6 +59,12 @@ export class ArchiveComponent implements OnInit {
   fileContent: string | ArrayBuffer | null = null;
   selectedFileForView: FileItem | null = null;
   fileViewerUrl: SafeResourceUrl | null = null;
+  docxContent: SafeHtml | null = null;
+  pdfContent: SafeHtml | null = null;
+  excelData: ExcelData | null = null;
+  searchTerm: string = ''; // Added searchTerm property
+  sortColumn: string = 'name'; // Added sortColumn property
+  sortDirection: 'asc' | 'desc' = 'asc'; // Added sortDirection property
 
   constructor(
     private http: HttpClient,
@@ -65,6 +79,7 @@ export class ArchiveComponent implements OnInit {
     if (savedState) {
       this.sidebarCollapsed = JSON.parse(savedState);
     }
+    this.searchTerm = ''; // Initialize searchTerm
   }
 
   private loadProperties(): void {
@@ -433,7 +448,7 @@ export class ArchiveComponent implements OnInit {
     return mimeTypes[fileType.toLowerCase()] || 'application/octet-stream';
   }
 
-  viewFile(file: FileItem): void {
+  async viewFile(file: FileItem): Promise<void> {
     this.selectedFileForView = file;
     const fileType = this.getFileExtension(file.name).toLowerCase();
     
@@ -443,6 +458,7 @@ export class ArchiveComponent implements OnInit {
     }
 
     try {
+      // Convert Base64 string back to binary data
       const binaryString = atob(file.content as string);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {
@@ -450,13 +466,47 @@ export class ArchiveComponent implements OnInit {
       }
 
       const blob = new Blob([bytes], { type: this.getMimeType(file.type) });
+  
+    if (fileType === 'docx') {
+      // For DOCX files:
+      // 1. Convert blob to ArrayBuffer
+      const arrayBuffer = await blob.arrayBuffer();
+      // 2. Use mammoth to convert DOCX to HTML
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+      // 3. Sanitize and store the HTML content
+      this.docxContent = this.sanitizer.bypassSecurityTrustHtml(result.value);
+      this.fileViewerUrl = null;
+      this.excelData = null;
+    } else if (fileType === 'xlsx') {
+      // For Excel files:
+      const arrayBuffer = await blob.arrayBuffer();
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      
+      this.excelData = {
+        headers: jsonData[0] as string[],
+        rows: jsonData.slice(1) as any[][]
+      };
+      
+      this.docxContent = null;
+      this.fileViewerUrl = null;
+    } else {
       const url = URL.createObjectURL(blob);
       this.fileViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      
-    } catch (error) {
-      console.error('Error creating preview:', error);
-      this.showAlert('Failed to create file preview');
+      this.docxContent = null;
+      this.excelData = null;
     }
+  } catch (error) {
+    console.error('Error creating preview:', error);
+    this.showAlert('Failed to create file preview');
+  }
+}
+
+  private formatPdfContent(content: string): string {
+    // Basic formatting, you can enhance this further
+    return content.replace(/\n/g, '<br>');
   }
 
   closeFileViewer(): void {
@@ -465,10 +515,45 @@ export class ArchiveComponent implements OnInit {
     }
     this.selectedFileForView = null;
     this.fileViewerUrl = null;
+    this.docxContent = null;
+    this.excelData = null;
+  }
+
+  filterFiles(): FileItem[] { // Added filterFiles method
+    let filteredFiles = this.files;
+    if (this.searchTerm) {
+      filteredFiles = filteredFiles.filter(file => 
+        file.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+    return this.sortFiles(filteredFiles);
+  }
+
+  sortFiles(files: FileItem[]): FileItem[] {
+    return files.sort((a, b) => {
+      let comparison = 0;
+      switch (this.sortColumn) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'uploadDate':
+          comparison = a.uploadDate.getTime() - b.uploadDate.getTime();
+          break;
+        case 'size':
+          comparison = a.size - b.size;
+          break;
+      }
+      return this.sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  toggleSort(column: string): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
   }
 }
-
-
-
-
 

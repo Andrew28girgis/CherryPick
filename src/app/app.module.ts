@@ -42,7 +42,6 @@ import { AddSourceModalComponent } from './components/kanban/sources/add-source-
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
 import { SourcesComponent } from './components/kanban/sources/sources.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
-
 @NgModule({
   declarations: [
     AppComponent,

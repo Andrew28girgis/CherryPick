@@ -24,8 +24,17 @@
         </button>
       </div>
 
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          placeholder="Search files..." 
+          class="search-input"
+        >
+      </div>
+
       <!-- Empty State -->
-      <div class="upload-area" *ngIf="files.length === 0"
+      <div class="upload-area" *ngIf="filterFiles().length === 0"
         [class.dragging]="isDragging"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
@@ -108,18 +117,28 @@
       </div>
 
       <!-- Table View - Only shown when there are files -->
-      <div class="table-container" *ngIf="files.length > 0">
+      <div class="table-container" *ngIf="filterFiles().length > 0">
         <table>
           <thead>
             <tr>
-              <th>File Name</th>
+              <th (click)="toggleSort('name')">
+                File Name
+                <span *ngIf="sortColumn === 'name'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
               <th>Uploaded By</th>
-              <th>Date</th>
+              <th (click)="toggleSort('uploadDate')">
+                Date
+                <span *ngIf="sortColumn === 'uploadDate'">
+                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                </span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let file of files">
+            <tr *ngFor="let file of filterFiles()">
               <td>
                 <div class="file-info">
                   <span class="file-name-link" (click)="downloadFile(file)">{{ file.name }}</span>
@@ -250,8 +269,8 @@
   </div>
 </div>
 
-<div class="file-viewer-modal" *ngIf="selectedFileForView">
-  <div class="file-viewer-content">
+<div class="file-viewer-modal" *ngIf="selectedFileForView" (click)="closeFileViewer()">
+  <div class="file-viewer-content" (click)="$event.stopPropagation()">
     <div class="file-viewer-header">
       <h3 class="file-viewer-title">{{ selectedFileForView.name }}</h3>
       <button class="file-viewer-close" (click)="closeFileViewer()">
@@ -267,11 +286,23 @@
           <iframe [src]="fileViewerUrl" class="file-viewer-iframe" *ngIf="fileViewerUrl"></iframe>
         </ng-container>
         <ng-container *ngSwitchCase="'docx'">
-          <ngx-doc-viewer 
-            [url]="fileViewerUrl" 
-            viewer="google"
-            style="width:100%;height:100vh;"
-          ></ngx-doc-viewer>
+          <div class="docx-content" [innerHTML]="docxContent"></div>
+        </ng-container>
+        <ng-container *ngSwitchCase="'xlsx'">
+          <div class="excel-viewer" *ngIf="excelData">
+            <table class="excel-table">
+              <thead>
+                <tr>
+                  <th *ngFor="let header of excelData.headers">{{ header }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of excelData.rows">
+                  <td *ngFor="let cell of row">{{ cell }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </ng-container>
         <div class="file-preview-error" *ngSwitchDefault>
           Preview not available for this file type. Please download to view.
@@ -280,3 +311,4 @@
     </div>
   </div>
 </div>
+
