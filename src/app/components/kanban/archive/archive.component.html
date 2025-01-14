@@ -269,6 +269,22 @@
         <ng-container *ngSwitchCase="'docx'">
           <div class="docx-content" [innerHTML]="docxContent"></div>
         </ng-container>
+        <ng-container *ngSwitchCase="'xlsx'">
+          <div class="excel-viewer" *ngIf="excelData">
+            <table class="excel-table">
+              <thead>
+                <tr>
+                  <th *ngFor="let header of excelData.headers">{{ header }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of excelData.rows">
+                  <td *ngFor="let cell of row">{{ cell }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
         <div class="file-preview-error" *ngSwitchDefault>
           Preview not available for this file type. Please download to view.
         </div>

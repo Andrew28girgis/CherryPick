@@ -6,6 +6,8 @@ import { DomSanitizer, SafeResourceUrl, SafeHtml } from '@angular/platform-brows
 import { renderAsync } from 'docx-preview';
 import { CommonModule } from '@angular/common';
 import * as mammoth from 'mammoth';
+import * as pdfjsLib from 'pdfjs-dist';
+import * as XLSX from 'xlsx';
 
 interface FileItem {
   id: string;
@@ -25,6 +27,11 @@ interface FileItem {
 interface MammothResult {
   value: string;
   messages: any[];
+}
+
+interface ExcelData {
+  headers: string[];
+  rows: any[][];
 }
 
 @Component({
@@ -53,6 +60,8 @@ export class ArchiveComponent implements OnInit {
   selectedFileForView: FileItem | null = null;
   fileViewerUrl: SafeResourceUrl | null = null;
   docxContent: SafeHtml | null = null;
+  pdfContent: SafeHtml | null = null;
+  excelData: ExcelData | null = null;
 
   constructor(
     private http: HttpClient,
@@ -453,25 +462,47 @@ export class ArchiveComponent implements OnInit {
       }
 
       const blob = new Blob([bytes], { type: this.getMimeType(file.type) });
-    
-      if (fileType === 'docx') {
-        // For DOCX files:
-        // 1. Convert blob to ArrayBuffer
-        const arrayBuffer = await blob.arrayBuffer();
-        // 2. Use mammoth to convert DOCX to HTML
-        const result = await mammoth.convertToHtml({ arrayBuffer });
-        // 3. Sanitize and store the HTML content
-        this.docxContent = this.sanitizer.bypassSecurityTrustHtml(result.value);
-        this.fileViewerUrl = null;
-      } else {
-        const url = URL.createObjectURL(blob);
-        this.fileViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-        this.docxContent = null;
-      }
-    } catch (error) {
-      console.error('Error creating preview:', error);
-      this.showAlert('Failed to create file preview');
+  
+    if (fileType === 'docx') {
+      // For DOCX files:
+      // 1. Convert blob to ArrayBuffer
+      const arrayBuffer = await blob.arrayBuffer();
+      // 2. Use mammoth to convert DOCX to HTML
+      const result = await mammoth.convertToHtml({ arrayBuffer });
+      // 3. Sanitize and store the HTML content
+      this.docxContent = this.sanitizer.bypassSecurityTrustHtml(result.value);
+      this.fileViewerUrl = null;
+      this.excelData = null;
+    } else if (fileType === 'xlsx') {
+      // For Excel files:
+      const arrayBuffer = await blob.arrayBuffer();
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      
+      this.excelData = {
+        headers: jsonData[0] as string[],
+        rows: jsonData.slice(1) as any[][]
+      };
+      
+      this.docxContent = null;
+      this.fileViewerUrl = null;
+    } else {
+      const url = URL.createObjectURL(blob);
+      this.fileViewerUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.docxContent = null;
+      this.excelData = null;
     }
+  } catch (error) {
+    console.error('Error creating preview:', error);
+    this.showAlert('Failed to create file preview');
+  }
+}
+
+  private formatPdfContent(content: string): string {
+    // Basic formatting, you can enhance this further
+    return content.replace(/\n/g, '<br>');
   }
 
   closeFileViewer(): void {
@@ -481,6 +512,7 @@ export class ArchiveComponent implements OnInit {
     this.selectedFileForView = null;
     this.fileViewerUrl = null;
     this.docxContent = null;
+    this.excelData = null;
   }
 }
 
