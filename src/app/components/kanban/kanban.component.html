@@ -151,87 +151,87 @@
                   class="icon"
                 />
               </div>
+              
               <div
-                cdkDropList
-                [id]="stage.Id.toString()"
-                [cdkDropListData]="stage.kanbanOrganizations"
-                [cdkDropListConnectedTo]="
-                  getConnectedLists(stage.Id.toString())
-                "
-                class="card-body example-list"
-                (cdkDropListDropped)="drop($event)"
-              >
+                  cdkDropList
+                  [id]="stage.Id.toString()"
+                  [cdkDropListData]="stage.kanbanOrganizations || []"
+                  [cdkDropListConnectedTo]="getConnectedLists(stage.Id.toString())"
+                  class="card-body example-list"
+                  (cdkDropListDropped)="drop($event)"
+                >
                 <ng-container *ngFor="let org of stage.kanbanOrganizations">
-                  <!-- Inside the kanban-card div -->
-                  <div class="kanban-card" cdkDrag>
-                    <!-- Header Section - Always visible -->
-                    <div class="kanban-header" >
-                      <!-- (click)="toggleCard(org)" -->
-                      <div class="d-flex justify-content-between w-100 align-items-center">
-                        <div class="d-flex align-items-center">
-                          <img
-                            [src]="org.Organization?.[0]?.Logo || 'assets/Images/Logos/Osmos.svg'"
-                            alt="Logo"
-                            class="logo"
-                          />
-                          <div class="kanban-title">
-                            <span class="name">{{ org.Organization?.[0]?.Name || '' }}</span>
-                            <span class="place">{{ org.Organization?.[0]?.Location || '' }}</span>
+                  <ng-container *ngIf="org.Organization?.[0]?.Name">
+                    <div class="kanban-card" cdkDrag>
+                      <!-- Header Section - Always visible -->
+                      <div class="kanban-header" >
+                        <!-- (click)="toggleCard(org)" -->
+                        <div class="d-flex justify-content-between w-100 align-items-center">
+                          <div class="d-flex align-items-center">
+                            <img
+                              [src]="org.Organization?.[0]?.Logo || 'assets/Images/Logos/Osmos.svg'"
+                              alt="Logo"
+                              class="logo"
+                            />
+                            <div class="kanban-title">
+                              <span class="name">{{ org.Organization?.[0]?.Name || '' }}</span>
+                              <span class="place">{{ org.Organization?.[0]?.Location || '' }}</span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                          <!-- <button class="btn btn-link expand-btn" (click)="toggleCard(org); $event.stopPropagation()">
-                            <i [class]="org.isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
-                          </button> -->
-                          <img
-                            src="assets/Images/Icons/more-circle.svg"
-                            alt="More Actions"
-                            class="more-icon"
-                            *ngIf="stage.stageActions && stage.stageActions[0]?.actionLevel == 'Target'"
-                            (click)="openActionsForTarget(ViewTargetActions, stage.stageActions, org); $event.stopPropagation()"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Expandable Content -->
-                    <div class="expandable-content" [class.expanded]="org.isExpanded">
-                      <!-- Middle Section -->
-                      <div class="kanban-details">
-                        <div class="detail-item">
-                          <span class="label">Asset Type</span>
-                          <span class="value">{{ org.Organization?.[0]?.AssetType || 'Fast Food' }}</span>
-                        </div>
-                        <div class="detail-item">
-                          <span class="label">Total Properties</span>
-                          <span class="value">{{ org.Organization?.[0]?.TotalProperties || '13' }}</span>
+                          <div class="d-flex align-items-center">
+                            <!-- <button class="btn btn-link expand-btn" (click)="toggleCard(org); $event.stopPropagation()">
+                              <i [class]="org.isExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                            </button> -->
+                            <img
+                              src="assets/Images/Icons/more-circle.svg"
+                              alt="More Actions"
+                              class="more-icon"
+                              *ngIf="stage.stageActions && stage.stageActions[0]?.actionLevel == 'Target'"
+                              (click)="openActionsForTarget(ViewTargetActions, stage.stageActions, org); $event.stopPropagation()"
+                            />
+                          </div>
                         </div>
                       </div>
 
-                      <!-- Footer Section -->
-                      <div class="kanban-footer">
-                        <div class="broker-info">
-                          <img
-                            [src]="org.LeadBroker?.Picture || 'assets/Images/Avatars/hassan.svg'"
-                            alt="Lead Broker"
-                            class="broker-avatar"
-                          />
-                          <div class="broker-details">
-                            <span class="broker-label">Lead Broker</span>
-                            <span class="broker-name">{{ org.LeadBroker?.Name || 'Andrew Poncher' }}</span>
+                      <!-- Expandable Content -->
+                      <div class="expandable-content" [class.expanded]="org.isExpanded">
+                        <!-- Middle Section -->
+                        <div class="kanban-details">
+                          <div class="detail-item">
+                            <span class="label">Asset Type</span>
+                            <span class="value">{{ org.Organization?.[0]?.AssetType || 'Fast Food' }}</span>
+                          </div>
+                          <div class="detail-item">
+                            <span class="label">Total Properties</span>
+                            <span class="value">{{ org.Organization?.[0]?.TotalProperties || '13' }}</span>
                           </div>
                         </div>
-                        <button
-                          *ngIf="stage.isQualified"
-                          class="btn btn-success add-btn"
-                          (click)="openCreateNewKanban(chooseStackHolder, org); $event.stopPropagation()"
-                          aria-label="Add new kanban"
-                        >
-                          +
-                        </button>
+
+                        <!-- Footer Section -->
+                        <div class="kanban-footer">
+                          <div class="broker-info">
+                            <img
+                              [src]="org.LeadBroker?.Picture || 'assets/Images/Avatars/hassan.svg'"
+                              alt="Lead Broker"
+                              class="broker-avatar"
+                            />
+                            <div class="broker-details">
+                              <span class="broker-label">Lead Broker</span>
+                              <span class="broker-name">{{ org.LeadBroker?.Name || 'Andrew Poncher' }}</span>
+                            </div>
+                          </div>
+                          <button
+                            *ngIf="stage.isQualified"
+                            class="btn btn-success add-btn"
+                            (click)="openCreateNewKanban(chooseStackHolder, org); $event.stopPropagation()"
+                            aria-label="Add new kanban"
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </ng-container>
                 </ng-container>
               </div>
             </div>
