@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
   Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
   shareLink: any;
-
+  BuyBoxName: string = '';
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -114,6 +114,7 @@ export class HomeComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
+      this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });

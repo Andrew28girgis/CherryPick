@@ -33,7 +33,7 @@ const routes: Routes = [
   { path: 'summary/:orgId', component: SummeryComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
   {
-    path: 'home/:buyboxid/:orgId',
+    path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [AuthGuardService],
   },

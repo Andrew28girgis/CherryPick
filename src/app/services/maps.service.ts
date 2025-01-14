@@ -734,7 +734,7 @@ export class MapsService {
     try {
       const response = await fetch(boundaryUrl);
       const data: any = await response.json();
-      data.features.forEach((f:any) => { 
+      data.features?.forEach((f:any) => { 
          if (
           f.geometry.type === 'Polygon' 
         ) 
