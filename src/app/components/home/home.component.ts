@@ -375,12 +375,10 @@ export class HomeComponent implements OnInit {
       } 
       }
     });
-    
-    const centerIdsString = centerIds.join(',');
-  //  this.getPolygons(centerIdsString);
       
- 
-  }
+    const centerIdsString = centerIds.join(',');
+    // this.getPolygons(centerIdsString); 
+  } 
 
   getPolygons(centerIdsString: string){
     const body: any = {
