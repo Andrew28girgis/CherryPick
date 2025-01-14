@@ -83,6 +83,8 @@ isMobileView = false;
   private pollingSubscription?: Subscription;
   private isPollingActive = false;
   private lastKnownStageCount = 0;
+  animatingCards: { [key: number]: string } = {};
+  stages: KanbanStage[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -220,12 +222,11 @@ private crf:ChangeDetectorRef,
   }
 
   removeOrganizationFromStage(organization: KanbanOrganization, stageId: number) {
-    const stage = this.kanbanList[0].kanbanStages.find(s => s.Id === stageId);
+    const stage = this.kanbanList[0].kanbanStages.find((s: KanbanStage) => s.Id === stageId);
     if (stage) {
-      const index = stage.kanbanOrganizations.findIndex(org => org.Id === organization.Id);
-      if (index !== -1) {
-        stage.kanbanOrganizations.splice(index, 1);
-      }
+      stage.kanbanOrganizations = (stage.kanbanOrganizations || [])
+        .filter(org => org.Id !== organization.Id)
+        .filter(org => org && org.Organization && org.Organization.length > 0);
     }
   }
 
@@ -743,7 +744,16 @@ private crf:ChangeDetectorRef,
       next: (data) => {
         if (!this.kanbanList.length) {
           // Initial load
-          this.kanbanList = data.json;
+          const filteredData = data.json.map((kanban: KanbanCard) => ({
+            ...kanban,
+            kanbanStages: kanban.kanbanStages.map(stage => ({
+              ...stage,
+              kanbanOrganizations: (stage.kanbanOrganizations || []).filter(org => 
+                org && org.Organization && org.Organization.length > 0
+              )
+            }))
+          }));
+          this.kanbanList = filteredData;
           this.filteredKanbanList = [...this.kanbanList];
           this.lastKnownStageCount = this.kanbanList[0]?.kanbanStages?.length || 0;
         }
@@ -761,63 +771,86 @@ private crf:ChangeDetectorRef,
   }
 
   private checkForNewStagesAndOrganizations() {
-  const body: any = {
-    Name: 'GetKanbanDetails',
-    Params: {
-      kanbanId: this.selectedKanban?.Id,
-    },
-  };
+    const body: any = {
+      Name: 'GetKanbanDetails',
+      Params: {
+        kanbanId: this.selectedKanban?.Id,
+      },
+    };
 
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (data) => {
-      const newData = data.json;
-      const newStages = newData[0]?.kanbanStages || [];
-      const currentStages = this.kanbanList[0]?.kanbanStages || [];
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        const newData = data.json;
+        const newStages = newData[0]?.kanbanStages || [];
+        const currentStages = this.kanbanList[0]?.kanbanStages || [];
 
-      if (this.isDataUnchanged(newStages, currentStages)) {
-        // If data is unchanged, do nothing
-        return;
-      }
+        if (this.isDataUnchanged(newStages, currentStages)) {
+          return;
+        }
 
-      // Check for new stages
-      if (newStages.length > this.lastKnownStageCount) {
-        // Find new stages
-        const newStageItems = newStages.filter((newStage: KanbanStage) => 
-          !currentStages.some(currentStage => currentStage.Id === newStage.Id)
-        );
+        // Check for new stages
+        if (newStages.length > this.lastKnownStageCount) {
+          const newStageItems = newStages.filter((newStage: KanbanStage) => 
+            !currentStages.some(currentStage => currentStage.Id === newStage.Id)
+          );
 
-        // Add new stages to the existing kanban
-        newStageItems.forEach((newStage: KanbanStage) => {
-          this.kanbanList[0].kanbanStages.push(newStage);
-          this.GetStageActions(newStage);
+          newStageItems.forEach((newStage: KanbanStage) => {
+            this.kanbanList[0].kanbanStages.push(newStage);
+            this.GetStageActions(newStage);
+          });
+
+          this.lastKnownStageCount = newStages.length;
+        }
+
+        // Update existing stages and organizations with animation
+        this.kanbanList[0].kanbanStages = currentStages.map((currentStage: KanbanStage) => {
+          const newStage = newStages.find((stage: KanbanStage) => stage.Id === currentStage.Id);
+          if (newStage) {
+            const updatedOrgs = newStage.kanbanOrganizations
+              .filter((org: KanbanOrganization) => org && org.Organization && org.Organization.length > 0)
+              .map((org: KanbanOrganization) => ({
+                ...org,
+                kanbanStageId: newStage.Id
+              }));
+
+            // Determine which organizations have moved
+            const movedOrgs = updatedOrgs.filter((updatedOrg: { Id: number; }) => 
+              !currentStage.kanbanOrganizations.some(currentOrg => currentOrg.Id === updatedOrg.Id)
+            );
+
+            // Animate moved organizations
+            movedOrgs.forEach((org: { Id: number; }) => {
+              const previousStage = currentStages.find(stage => 
+                stage.kanbanOrganizations.some(currentOrg => currentOrg.Id === org.Id)
+              );
+              if (previousStage) {
+                const direction = previousStage.Id < newStage.Id ? 'right' : 'left';
+                this.animatingCards[org.Id] = `card-move-${direction}`;
+                setTimeout(() => {
+                  this.animatingCards[org.Id] = 'card-appear';
+                  setTimeout(() => {
+                    delete this.animatingCards[org.Id];
+                  }, 500);
+                }, 0);
+              }
+            });
+
+            return {
+              ...currentStage,
+              kanbanOrganizations: updatedOrgs
+            };
+          }
+          return currentStage;
         });
 
-        this.lastKnownStageCount = newStages.length;
+        // Update filtered list
+        this.filteredKanbanList = [...this.kanbanList];
+        
+        // Trigger change detection
+        this.crf.detectChanges();
       }
-
-      // Update existing stages and organizations
-      this.kanbanList[0].kanbanStages = currentStages.map((currentStage: KanbanStage) => {
-        const newStage = newStages.find((stage: KanbanStage) => stage.Id === currentStage.Id);
-        if (newStage) {
-          return {
-            ...currentStage,
-            kanbanOrganizations: newStage.kanbanOrganizations.map((org: KanbanOrganization) => ({
-              ...org,
-              kanbanStageId: newStage.Id
-            }))
-          };
-        }
-        return currentStage;
-      });
-
-      // Update filtered list
-      this.filteredKanbanList = [...this.kanbanList];
-      
-      // Trigger change detection
-      this.crf.detectChanges();
-    }
-  });
-}
+    });
+  }
 
   private isDataUnchanged(newStages: KanbanStage[], currentStages: KanbanStage[]): boolean {
     if (newStages.length !== currentStages.length) {
