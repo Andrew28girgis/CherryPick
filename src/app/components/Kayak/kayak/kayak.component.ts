@@ -1,11 +1,14 @@
 import { Organization } from './../../../../models/userKanban';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef,  ChangeDetectorRef,  NgZone, ViewChild
+
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from '../../../../app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { KayakResult, StatesAndCities } from '../../../../models/kayak';
 import { AllPlaces, AnotherPlaces, General, Property } from './../../../../../src/models/domain';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MapsService } from './../../../../../src/app/services/maps.service';
 
 
 import {
@@ -15,6 +18,7 @@ import {
   Tenant,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SortByPipe } from '../../../pipes/sortBy/sort-by.pipe';
 declare const google: any;
 
 @Component({
@@ -24,7 +28,7 @@ declare const google: any;
 })
 export class KayakComponent implements OnInit {
   General!: General;
-
+  placeImage: string[] = [];
   Ids!: number[];
   filtered!: any;
   KayakResult!: any;
@@ -40,13 +44,17 @@ export class KayakComponent implements OnInit {
   selectedTags: any[] = [];
   searchTerm: string = '';
   formSearch: boolean = false;
-  showAllTenants: boolean = false;
-  showAllOrgs = false; // Default state to show only 15 organizations
+  sortedTenants: Tenant[] = []; // To hold the sorted tenants
+  showAllTenants: boolean = false; // Default to show limited tenants
+  sortedOrgs: ManagementOrganization[] = []; // To hold the sorted organizations
+  showAllOrgs: boolean = false; // Default to show limited organizations
   sanitizedUrl!: any;
   StreetViewOnePlace!: boolean;
   mapViewOnePlacex: boolean = false;
-  MapViewPlace: any;
-  shoppingCenter: any;
+  ShoppingCenterAvailability: any = []; // To store availability data
+ShoppingCenterTenants: any = []; // To store tenant data
+
+
 
 
 
@@ -56,12 +64,17 @@ export class KayakComponent implements OnInit {
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
+    private markerService: MapsService,
     private modalService: NgbModal,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef,
 
-  ) {}
+
+  ) {    this.markerService.clearMarkers();
+  }
 
   ngOnInit(): void {
+    this.General = new General();
     this.GetStatesAndCities();
     this.filterValues = {
       statecode: '',
@@ -77,7 +90,86 @@ export class KayakComponent implements OnInit {
       maxsize: 0,
     };
     this.getResult();
-    this.GetFilters()
+    this.GetFilters();
+    // this.GetShoppingCenterAvailability();
+    // this.GetShoppingCenterTenants(51);
+
+  }
+
+  ngOnChanges() {
+    if (this.General.modalObject?.StreetViewURL) {
+      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+    }
+  }
+  GetShoppingCenterAvailability(shoppingCenterId: number): void {
+    this.spinner.show();
+  
+    const body: any = {
+      Name: 'GetShoppingCenterAvailability',
+      Params: {
+        shoppingcenterid: shoppingCenterId,
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        if (data && data.json) {
+          // Process the availability data
+          this.ShoppingCenterAvailability = data.json;
+          console.log('Shopping Center Availability:', this.ShoppingCenterAvailability);
+        }
+  
+        this.spinner.hide();
+      },
+      error: (error) => {
+        console.error('Error fetching Shopping Center Availability:', error);
+        this.spinner.hide();
+      },
+    });
+  }
+  GetShoppingCenterTenants(shoppingCenterId: number): void {
+    this.spinner.show();
+  
+    const body: any = {
+      Name: 'GetShoppingCenterTenants',
+      Params: {
+        shoppingcenterid: shoppingCenterId,
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        if (data && data.json) {
+          // Process the tenant data
+          this.ShoppingCenterTenants = data.json;
+          console.log('Shopping Center Tenants:', this.ShoppingCenterTenants);
+        }
+  
+        this.spinner.hide();
+      },
+      error: (error) => {
+        console.error('Error fetching Shopping Center Tenants:', error);
+        this.spinner.hide();
+      },
+    });
+  }
+  
+  
+  @ViewChild('galleryModal', { static: true }) galleryModal: any;
+
+  openGallery(index: number): void {
+    // Get the images for the specific row
+    const result = this.KayakResult.Result[index];
+    if (result?.Images) {
+      this.placeImage = result.Images.split(',').map((link: string) => link.trim());
+    } else {
+      this.placeImage = [];
+    }
+
+    console.log('Images for Gallery:', this.placeImage);
+
+    // Open the gallery modal
+    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
@@ -165,8 +257,7 @@ export class KayakComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-    this.General.modalObject = modalObject;
-
+    this.General.modalObject = modalObject;  
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
@@ -175,43 +266,94 @@ export class KayakComponent implements OnInit {
       }, 100);
     }
   }
+  
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
+
   toggleTenantList(): void {
     this.showAllTenants = !this.showAllTenants;
+    this.updateSortedTenants();
   }
+
+  updateSortedTenants(): void {
+    if (!this.Filters?.Tenants || this.Filters.Tenants.length === 0) {
+      console.error('Tenants list is empty or undefined.');
+      this.sortedTenants = []; 
+      return;
+    }
+  
+    const sortedList = [...this.Filters.Tenants].sort((a, b) => {
+      const nameA = a.Name || '';
+      const nameB = b.Name || '';
+      return nameA.localeCompare(nameB);
+    });
+  
+    const uniqueTenants = Array.from(
+      new Set(
+        sortedList.map((tenant) => `${tenant.OrganizationId}-${tenant.Name}`)
+      )
+    ).map((uniqueKey) =>
+      sortedList.find(
+        (tenant) => `${tenant.OrganizationId}-${tenant.Name}` === uniqueKey
+      )
+    );
+  
+    this.sortedTenants = uniqueTenants.filter(
+      (tenant): tenant is Tenant => tenant !== undefined
+    );
+    this.sortedTenants = this.showAllTenants
+    ? this.sortedTenants 
+    : this.sortedTenants.slice(0, 12); 
+  
+    console.log('Unique and Sorted Tenants:', this.sortedTenants);
+  }
+  
+  
+  
+  
+  
   toggleOrgSelect(org: any): void {
-    org.Selected = !org.Selected; // Toggle selection state
+    org.Selected = !org.Selected; 
   }
   toggleOrgList(): void {
-    this.showAllOrgs = !this.showAllOrgs; // Toggle between all and sliced view
+    this.showAllOrgs = !this.showAllOrgs;
+    this.updateSortedOrgs(); 
   }
   getResult(): void {
     console.log(`filter values`);
-
     console.log(this.filterValues);
-
+  
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
     };
-
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.KayakResult = data.json;
-        console.log(this.KayakResult);
-        
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
+        this.KayakResult = data.json[0];
+        console.log('KayakResult',this.KayakResult);
+
+ if (this.KayakResult?.Result && Array.isArray(this.KayakResult.Result)) {
+   this.KayakResult.Result.forEach((result: any) => {
+     if (result.Images) {
+       const images = result.Images.split(',').map((link: string) => link.trim());
+       this.placeImage.push(...images); // Add trimmed image links to placeImage
+     }
+   });
+ }
+
+//  console.log('Collected Place Images:', this.placeImage);
+},
+error: (error) => console.error('Error fetching APIs:', error),
+});
+}
+  
 
   GetFilters(): void {
     this.spinner.show();
@@ -225,6 +367,11 @@ export class KayakComponent implements OnInit {
       next: (data: any) => {
         if (data && data.json && data.json.length > 0) {
           this.Filters = data.json[0];
+          // this.showAllTenants=data.json[0].Tenants;
+          console.log('TT',this.Filters.Tenants);
+          
+          this.updateSortedTenants(); // Sort tenants on fetch
+          this.updateSortedOrgs(); // Sort organizations on fetch
         }
 
         this.spinner.hide();
@@ -232,6 +379,45 @@ export class KayakComponent implements OnInit {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+
+  updateSortedOrgs(): void {
+    if (!this.Filters?.ManagementOrganization || this.Filters.ManagementOrganization.length === 0) {
+      console.error('ManagementOrganization list is empty or undefined.');
+      this.sortedOrgs = []; // Clear the array if no data
+      return;
+    }
+  
+    // Sort organizations alphabetically by Name
+    const sortedList = [...this.Filters.ManagementOrganization].sort((a, b) => {
+      const nameA = a.Name || '';
+      const nameB = b.Name || '';
+      return nameA.localeCompare(nameB);
+    });
+  
+    // Deduplicate organizations by a unique combination of OrganizationId and Name
+    const uniqueOrgs = Array.from(
+      new Set(
+        sortedList.map((org) => `${org.OrganizationId}-${org.Name}`)
+      )
+    ).map((uniqueKey) =>
+      sortedList.find(
+        (org) => `${org.OrganizationId}-${org.Name}` === uniqueKey
+      )
+    );
+  
+    // Ensure no undefined values
+    const deduplicatedOrgs = uniqueOrgs.filter(
+      (org): org is ManagementOrganization => org !== undefined
+    );
+  
+    // Show all or limited organizations based on the current state
+    this.sortedOrgs = this.showAllOrgs
+      ? deduplicatedOrgs // Show all organizations
+      : deduplicatedOrgs.slice(0, 10);
+  
+    console.log('Unique and Sorted Organizations:', this.sortedOrgs);
+  }
+  
 
   GetStatesAndCities(): void {
     this.spinner.show();

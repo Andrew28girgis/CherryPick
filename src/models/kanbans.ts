@@ -18,14 +18,12 @@ export interface KanbanStage {
 }
 
 export interface KanbanOrganization {
-  Organization?: Organization[];
-  Id?: number;
-  OrganizationId?: number;
-  kanbanStageId?: number;
-  LeadBroker?: {
-    Name: string;
-    Picture: string;
-  }
+  Id: number;
+  kanbanStageId: number;
+  OrganizationId: string;
+  Organization?: any[];
+  LeadBroker?: any;
+  isExpanded?: boolean;
 }
 
 export interface Organization {
