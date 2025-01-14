@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -27,6 +27,8 @@ import { KanbanAction } from 'src/models/kanbanActions';
 import {  OrganizationContact } from 'src/models/Organiztions';
 import { ToastrService } from 'ngx-toastr';
 import { retry, finalize } from 'rxjs/operators';
+import { interval, Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-kanban',
@@ -78,13 +80,17 @@ isMobileView = false;
   @Output() kanbanCreated = new EventEmitter<any>();
   showFilter: boolean = false; // Add this property
 
+  private pollingSubscription?: Subscription;
+  private isPollingActive = false;
+  private lastKnownStageCount = 0;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-
+private crf:ChangeDetectorRef,
     private fb: FormBuilder,
     private toastr: ToastrService
   ) {
@@ -145,29 +151,19 @@ isMobileView = false;
 
   GetKanbanDetails(kanban: Kanban) {
     this.selectedKanban = kanban;
-    const body: any = {
-      Name: 'GetKanbanDetails',
-      Params: {
-        kanbanId: kanban.Id,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        console.log('Kanban details response:', data);
-        this.kanbanList = data.json;
-        this.filteredKanbanList = [...this.kanbanList]; // Initialize filteredKanbanList with all data
-        if (this.kanbanList && this.kanbanList[0]?.kanbanStages) {
-          this.kanbanList[0].kanbanStages.forEach((stage) => {
-            this.GetStageActions(stage);
-          });
-        } else {
-          console.error('Invalid kanban data structure:', this.kanbanList);
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching kanban details:', error);
-      }
-    });
+    this.isPollingActive = true;
+  
+    // Initial load
+    this.fetchKanbanDetails();
+
+    // Set up polling for new stages and organizations
+    this.pollingSubscription = interval(5000) // Poll every 5 seconds
+      .pipe(
+        takeWhile(() => this.isPollingActive)
+      )
+      .subscribe(() => {
+        this.checkForNewStagesAndOrganizations();
+      });
   }
   
   
@@ -194,8 +190,8 @@ isMobileView = false;
   drop(event: CdkDragDrop<any[]>) {
     // Temporarily disable animations
     document.body.classList.add('dragging');
-    
-    let movedItem;
+  
+    let movedItem: KanbanOrganization;
     if (event.previousContainer === event.container) {
       movedItem = event.container.data[event.previousIndex];
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -209,6 +205,10 @@ isMobileView = false;
       );
       const newStageId = parseInt(event.container.id, 10);
       movedItem.kanbanStageId = newStageId;
+
+      // Remove the item from the previous stage
+      const previousStageId = parseInt(event.previousContainer.id, 10);
+      this.removeOrganizationFromStage(movedItem, previousStageId);
     }
 
     // Re-enable animations after drag
@@ -219,18 +219,44 @@ isMobileView = false;
     this.postDrag(movedItem);
   }
 
+  removeOrganizationFromStage(organization: KanbanOrganization, stageId: number) {
+    const stage = this.kanbanList[0].kanbanStages.find(s => s.Id === stageId);
+    if (stage) {
+      const index = stage.kanbanOrganizations.findIndex(org => org.Id === organization.Id);
+      if (index !== -1) {
+        stage.kanbanOrganizations.splice(index, 1);
+      }
+    }
+  }
+
   postDrag(movedItem: KanbanOrganization) {
-    const { Organization, ...movedItemWithoutOrganization } = movedItem;
+  const { Organization, ...movedItemWithoutOrganization } = movedItem;
 
-    let body: any = {};
-    body.json = movedItemWithoutOrganization;
-    body.mainEntity = 'kanbanOrganization';
-    body.name = 'kanbanOrganizations';
-    body.params = {};
+  let body: any = {};
+  body.json = movedItemWithoutOrganization;
+  body.mainEntity = 'kanbanOrganization';
+  body.name = 'kanbanOrganizations';
+  body.params = {};
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {},
-    });
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (data) => {
+      // Immediately check for updates after the drag operation
+      this.checkForNewStagesAndOrganizations();
+    },
+    error: (error) => {
+      console.error('Error updating organization:', error);
+      // Revert the change in the view if the API call fails
+      this.checkForNewStagesAndOrganizations();
+    }
+  });
+}
+
+  updateKanbanView() {
+    // Update filtered list
+    this.filteredKanbanList = [...this.kanbanList];
+  
+    // Trigger change detection
+    this.crf.detectChanges();
   }
 
   changeCollapse(): void {
@@ -381,7 +407,7 @@ isMobileView = false;
       this.PlacesService.GenericAPI(body).subscribe({
         next: (data) => {
           console.log('Organization created:', data);
-          this.GetKanbanDetails(this.selectedKanban!);
+          this.checkForNewStagesAndOrganizations(); // Refresh Kanban details
           this.modalService.dismissAll();
         },
         error: (err) => {
@@ -704,4 +730,127 @@ isMobileView = false;
   toggleCard(org: KanbanOrganization): void {
     org.isExpanded = !org.isExpanded;
   }
+
+  private fetchKanbanDetails() {
+    const body: any = {
+      Name: 'GetKanbanDetails',
+      Params: {
+        kanbanId: this.selectedKanban?.Id,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (!this.kanbanList.length) {
+          // Initial load
+          this.kanbanList = data.json;
+          this.filteredKanbanList = [...this.kanbanList];
+          this.lastKnownStageCount = this.kanbanList[0]?.kanbanStages?.length || 0;
+        }
+        
+        if (this.kanbanList && this.kanbanList[0]?.kanbanStages) {
+          this.kanbanList[0].kanbanStages.forEach((stage) => {
+            this.GetStageActions(stage);
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching kanban details:', error);
+      }
+    });
+  }
+
+  private checkForNewStagesAndOrganizations() {
+  const body: any = {
+    Name: 'GetKanbanDetails',
+    Params: {
+      kanbanId: this.selectedKanban?.Id,
+    },
+  };
+
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (data) => {
+      const newData = data.json;
+      const newStages = newData[0]?.kanbanStages || [];
+      const currentStages = this.kanbanList[0]?.kanbanStages || [];
+
+      if (this.isDataUnchanged(newStages, currentStages)) {
+        // If data is unchanged, do nothing
+        return;
+      }
+
+      // Check for new stages
+      if (newStages.length > this.lastKnownStageCount) {
+        // Find new stages
+        const newStageItems = newStages.filter((newStage: KanbanStage) => 
+          !currentStages.some(currentStage => currentStage.Id === newStage.Id)
+        );
+
+        // Add new stages to the existing kanban
+        newStageItems.forEach((newStage: KanbanStage) => {
+          this.kanbanList[0].kanbanStages.push(newStage);
+          this.GetStageActions(newStage);
+        });
+
+        this.lastKnownStageCount = newStages.length;
+      }
+
+      // Update existing stages and organizations
+      this.kanbanList[0].kanbanStages = currentStages.map((currentStage: KanbanStage) => {
+        const newStage = newStages.find((stage: KanbanStage) => stage.Id === currentStage.Id);
+        if (newStage) {
+          return {
+            ...currentStage,
+            kanbanOrganizations: newStage.kanbanOrganizations.map((org: KanbanOrganization) => ({
+              ...org,
+              kanbanStageId: newStage.Id
+            }))
+          };
+        }
+        return currentStage;
+      });
+
+      // Update filtered list
+      this.filteredKanbanList = [...this.kanbanList];
+      
+      // Trigger change detection
+      this.crf.detectChanges();
+    }
+  });
 }
+
+  private isDataUnchanged(newStages: KanbanStage[], currentStages: KanbanStage[]): boolean {
+    if (newStages.length !== currentStages.length) {
+      return false;
+    }
+
+    for (let i = 0; i < newStages.length; i++) {
+      const newStage = newStages[i];
+      const currentStage = currentStages[i];
+
+      if (newStage.Id !== currentStage.Id || 
+          newStage.kanbanOrganizations.length !== currentStage.kanbanOrganizations.length) {
+        return false;
+      }
+
+      for (let j = 0; j < newStage.kanbanOrganizations.length; j++) {
+        const newOrg = newStage.kanbanOrganizations[j];
+        const currentOrg = currentStage.kanbanOrganizations[j];
+
+        if (newOrg.Id !== currentOrg.Id || newOrg.kanbanStageId !== currentOrg.kanbanStageId) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  ngOnDestroy() {
+    this.isPollingActive = false;
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
+}
+
