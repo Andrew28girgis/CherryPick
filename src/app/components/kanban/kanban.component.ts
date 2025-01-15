@@ -159,7 +159,7 @@ private crf:ChangeDetectorRef,
     this.fetchKanbanDetails();
 
     // Set up polling for new stages and organizations
-    this.pollingSubscription = interval(5000) // Poll every 5 seconds
+    this.pollingSubscription = interval(30000) // Poll every 30 seconds
       .pipe(
         takeWhile(() => this.isPollingActive)
       )
