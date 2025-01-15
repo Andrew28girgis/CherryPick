@@ -1,14 +1,19 @@
-import { 
-  Component, 
-  OnInit, 
-  NgZone,  
+import {
+  Component,
+  OnInit,
+  NgZone,
   ViewChild,
-  ElementRef, 
-} from '@angular/core'; 
- 
+  ElementRef,
+} from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from './../../../../src/app/services/places.service';
-import { AllPlaces, AnotherPlaces, General, Property } from './../../../../src/models/domain';
+import {
+  AllPlaces,
+  AnotherPlaces,
+  General,
+  Property,
+} from './../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -20,6 +25,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Polygons } from 'src/models/polygons';
 import { ShareOrg } from 'src/models/shareOrg';
 import { StateService } from 'src/app/services/state.service';
+import { permission } from 'src/models/permission';
 
 @Component({
   selector: 'app-home',
@@ -83,7 +89,7 @@ export class HomeComponent implements OnInit {
 
   showStandalone: boolean = true; // Ensure this reflects your initial state
   standAlone: Place[] = [];
-  
+
   toggleStandalone() {
     this.showStandalone = !this.showStandalone;
   }
@@ -93,13 +99,15 @@ export class HomeComponent implements OnInit {
   ShareOrg: ShareOrg[] = [];
   shareLink: any;
   BuyBoxName: string = '';
+  Permission: permission[] = [];
+  placesRepresentative:boolean | undefined;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private markerService: MapsService, 
+    private markerService: MapsService,
     private ngZone: NgZone,
     private sanitizer: DomSanitizer,
     private stateService: StateService
@@ -118,12 +126,43 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
-    
-    this.BuyBoxPlacesCategories(this.BuyBoxId);
-    this.GetOrganizationById(this.OrgId); 
-   // this.GetPolygons(this.BuyBoxId);
-  } 
 
+    this.BuyBoxPlacesCategories(this.BuyBoxId);
+    this.GetOrganizationById(this.OrgId);
+    this.GetCustomSections(this.BuyBoxId);
+    // this.GetPolygons(this.BuyBoxId);
+  }
+
+  GetCustomSections(buyboxId: number): void {
+    if (this.stateService.getPermission().length > 0) {
+      this.Permission = this.stateService.getPermission();
+      return;
+    }
+
+    const body: any = {
+      Name: 'GetCustomSections',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.Permission = data.json;
+        this.placesRepresentative = this.Permission?.find((item:permission) => item.sectionName === "PlacesRepresentative")?.visible; 
+        this.stateService.setPermission(data.json);
+
+        if (this.stateService.getPlacesRepresentative()) {
+          this.placesRepresentative = this.stateService.getPlacesRepresentative();
+          return;
+        }
+
+        this.stateService.setPlacesRepresentative(this.placesRepresentative); 
+        this.markerService.setPlacesRepresentative(this.placesRepresentative);  
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
 
   GetOrganizationById(orgId: number): void {
     if (this.stateService.getShareOrg().length > 0) {
@@ -158,7 +197,7 @@ export class HomeComponent implements OnInit {
       Params: {
         BuyBoxId: buyboxId,
       },
-    }; 
+    };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
@@ -215,8 +254,9 @@ export class HomeComponent implements OnInit {
     if (this.stateService.getStandAlone()?.length > 0) {
       this.standAlone = this.stateService.getStandAlone();
       // Set selectedSS from stored value or default
-      this.selectedSS = this.stateService.getSelectedSS() || 
-                       (this.shoppingCenters?.length > 0 ? 1 : 2);
+      this.selectedSS =
+        this.stateService.getSelectedSS() ||
+        (this.shoppingCenters?.length > 0 ? 1 : 2);
       this.getBuyBoxPlaces(buyboxId);
       return;
     }
@@ -272,7 +312,6 @@ export class HomeComponent implements OnInit {
           );
         });
         this.getAllMarker();
-
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -353,7 +392,7 @@ export class HomeComponent implements OnInit {
       if (this.standAlone && this.standAlone.length > 0) {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
-      
+
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
@@ -365,23 +404,28 @@ export class HomeComponent implements OnInit {
       this.markerService.createMarker(this.map, markerData, type);
     });
 
-     
     let centerIds: any[] = [];
     this.shoppingCenters.forEach((center) => {
       // centerIds.push(center.Id);
-      if(center.Latitude  && center.Longitude){
-      // this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood);
-      if (this.shoppingCenters.indexOf(center) < 1) {
-        this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState, center.Latitude, center.Longitude);
-      } 
+      if (center.Latitude && center.Longitude) {
+        // this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood);
+        if (this.shoppingCenters.indexOf(center) < 1) {
+          this.markerService.fetchAndDrawPolygon(
+            this.map,
+            center.CenterCity,
+            center.CenterState,
+            center.Latitude,
+            center.Longitude
+          );
+        }
       }
     });
-      
-    const centerIdsString = centerIds.join(',');
-    // this.getPolygons(centerIdsString); 
-  } 
 
-  getPolygons(centerIdsString: string){
+    const centerIdsString = centerIds.join(',');
+    // this.getPolygons(centerIdsString);
+  }
+
+  getPolygons(centerIdsString: string) {
     const body: any = {
       Name: 'GetShoppingCenterPolygons',
       Params: {
@@ -390,7 +434,7 @@ export class HomeComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe((data) => {
       this.Polygons = data.json;
-      this.markerService.drawMultiplePolygons(this.map, this.Polygons); 
+      this.markerService.drawMultiplePolygons(this.map, this.Polygons);
     });
   }
 
@@ -402,7 +446,7 @@ export class HomeComponent implements OnInit {
 
   onCheckboxChange(category: BuyboxCategory): void {
     this.markerService.toggleMarkers(this.map, category);
-  } 
+  }
 
   isLast(currentItem: any, array: any[]): boolean {
     return array.indexOf(currentItem) === array.length - 1;
@@ -458,8 +502,7 @@ export class HomeComponent implements OnInit {
           visibleCoords.has(`${property.Latitude},${property.Longitude}`) ||
           this.isWithinBounds(property, bounds)
       );
-    });  
-    
+    });
   }
 
   private isWithinBounds(property: any, bounds: any): boolean {
@@ -503,26 +546,30 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  selectOption(option: any): void { 
+  selectOption(option: any): void {
     this.selectedOption = option;
     this.currentView = option.status;
     this.isOpen = false;
-    localStorage.setItem('currentView', this.currentView); 
+    localStorage.setItem('currentView', this.currentView);
   }
 
   goToPlace(place: any) {
- 
-    
     if (place.CenterAddress) {
       this.router.navigate([
         '/landing',
         place.ShoppingCenter?.Places ? place.ShoppingCenter.Places[0].Id : 0,
         place.Id,
         this.BuyBoxId,
-        this.OrgId
+        this.OrgId,
       ]);
     } else {
-      this.router.navigate(['/landing', place.Id, 0, this.BuyBoxId, this.OrgId]);
+      this.router.navigate([
+        '/landing',
+        place.Id,
+        0,
+        this.BuyBoxId,
+        this.OrgId,
+      ]);
     }
   }
 
@@ -549,7 +596,7 @@ export class HomeComponent implements OnInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
- 
+
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
@@ -645,7 +692,7 @@ export class HomeComponent implements OnInit {
       .writeText(link)
       .then(() => {
         console.log('Link copied to clipboard!');
-       })
+      })
       .catch((err) => {
         console.error('Could not copy text: ', err);
       });
@@ -853,5 +900,4 @@ export class HomeComponent implements OnInit {
   }
 
   // Add this method to handle scroll restoration after data is loaded
- 
 }

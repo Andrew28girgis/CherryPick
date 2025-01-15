@@ -101,7 +101,7 @@
                   <tr>
                     <th>Name</th>
                     <th>Address</th>
-                    <th>Managed By</th>
+                    <th *ngIf="placesRepresentative != false">Managed By</th>
                     <th style="width: 250px">Unit Size & Lease Price</th>
                     <ng-container
                       *ngFor="
@@ -139,7 +139,7 @@
                           {{ shoppingCenter.CenterState }}
                         </div>
                       </td>
-                      <td>
+                      <td *ngIf="placesRepresentative != false">
                         <ng-container
                           *ngIf="
                             shoppingCenter.ShoppingCenter?.ManagerOrganization
@@ -744,12 +744,12 @@
                       </div>
                     </div>
                   </div>
-                  <hr class="small-hr mt-2" />
 
                   <div
                     class="col-md-12 spec"
-                    *ngIf="shopping.ShoppingCenter?.ManagerOrganization"
+                    *ngIf="shopping.ShoppingCenter?.ManagerOrganization && placesRepresentative != false"
                   >
+                  <hr class="small-hr mt-2" /> 
                     <span class="managed-by">Managed by</span>
                     <p class="spec-head">
                       <img
@@ -1167,9 +1167,9 @@
                   </button>
                 </div> -->
 
-                <div
+                <div 
                 class="col-md-12 spec"
-                *ngIf="place.ShoppingCenter?.ManagerOrganization"
+                *ngIf="place.ShoppingCenter?.ManagerOrganization && placesRepresentative != false"
               >
                 <span class="managed-by">Managed by</span>
                 <p class="spec-head">

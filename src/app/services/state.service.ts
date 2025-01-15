@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+ import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { ShareOrg } from 'src/models/shareOrg';
-
+import { permission } from 'src/models/permission';
+ 
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +14,11 @@ export class StateService {
   private shoppingCenters: Center[] = [];
   private standAlone: Place[] = [];
   private buyboxPlaces: BbPlace[] = [];
+  private Permission:permission[] = [];
+
   private shareOrg: ShareOrg[] = []; 
   private scrollPosition: number = 0;
+  placesRepresentative:boolean | undefined;
 
   // Selected SS methods
   setSelectedSS(value: number) {
@@ -66,6 +70,21 @@ export class StateService {
     return this.shareOrg;
   }
  
+  setPermission(permission: permission[]) {
+    this.Permission = permission;
+  }
+
+  setPlacesRepresentative(PlacesRepresentative:any) {
+    this.placesRepresentative = PlacesRepresentative;
+  }
+
+  getPlacesRepresentative(): boolean | undefined {
+    return this.placesRepresentative;
+  }
+
+  getPermission(): permission[] {
+    return this.Permission;
+  }
 
   clearAll() {
     this.buyboxCategories = [];
@@ -74,5 +93,7 @@ export class StateService {
     this.buyboxPlaces = [];
     this.shareOrg = [];
     this.selectedSS = null; 
+    this.Permission = [];
   }
+
 } 

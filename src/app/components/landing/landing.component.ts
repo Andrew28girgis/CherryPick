@@ -17,6 +17,8 @@ import { PlaceCotenants } from 'src/models/PlaceCo';
 import { OrgManager } from 'src/models/organization';
 import { BuyboxOrg } from 'src/models/buyboxOrg';
 import { OrgBranch } from 'src/models/branches';
+import { StateService } from 'src/app/services/state.service';
+import { permission } from 'src/models/permission';
 
 @Component({
   selector: 'app-landing',
@@ -60,24 +62,46 @@ export class LandingComponent {
   OrgId!: number;
   sanitizedUrl: any;
   sanitizedUrlPopup: any;
-
-  constructor(
+  placesRepresentative:boolean | undefined;
+  Permission: permission[] = [];
+   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private authService: AuthService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private stateService: StateService
+    
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
   }
 
   ngOnInit(): void {
+    
     this.initializeParams();
     this.initializeDefaults();
     //this.initializeQueryParams();
+  }
+
+
+  GetCustomSections(buyboxId: number): void { 
+    const body: any = {
+      Name: 'GetCustomSections',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.Permission = data.json;
+        this.placesRepresentative = this.Permission?.find((item:permission) => item.sectionName === "PlacesRepresentative")?.visible; 
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
   }
 
   private initializeParams(): void {
@@ -86,6 +110,7 @@ export class LandingComponent {
       this.PlaceId = params.id;
       this.ShoppingCenterId = params.shoppiongCenterId;
       this.OrgId = params.orgId;
+      this.GetCustomSections(this.BuyBoxId);
 
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(
