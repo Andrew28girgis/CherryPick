@@ -235,7 +235,7 @@ private crf:ChangeDetectorRef,
 
   let body: any = {};
   body.json = movedItemWithoutOrganization;
-  body.mainEntity = 'UpdateKanbanOrganizationStage';
+  // body.mainEntity = 'UpdateKanbanOrganizationStage';
   body.name = 'UpdateKanbanOrganizationStage';
   body.params =  {
         StageId: movedItem.kanbanStageId,
