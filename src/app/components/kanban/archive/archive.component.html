@@ -24,17 +24,8 @@
         </button>
       </div>
 
-      <div class="search-container">
-        <input 
-          type="text" 
-          [(ngModel)]="searchTerm" 
-          placeholder="Search files..." 
-          class="search-input"
-        >
-      </div>
-
       <!-- Empty State -->
-      <div class="upload-area" *ngIf="filterFiles().length === 0"
+      <div class="upload-area" *ngIf="files.length === 0"
         [class.dragging]="isDragging"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
@@ -117,28 +108,18 @@
       </div>
 
       <!-- Table View - Only shown when there are files -->
-      <div class="table-container" *ngIf="filterFiles().length > 0">
+      <div class="table-container" *ngIf="files.length > 0">
         <table>
           <thead>
             <tr>
-              <th (click)="toggleSort('name')">
-                File Name
-                <span *ngIf="sortColumn === 'name'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
+              <th>File Name</th>
               <th>Uploaded By</th>
-              <th (click)="toggleSort('uploadDate')">
-                Date
-                <span *ngIf="sortColumn === 'uploadDate'">
-                  {{ sortDirection === 'asc' ? '▲' : '▼' }}
-                </span>
-              </th>
+              <th>Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let file of filterFiles()">
+            <tr *ngFor="let file of files">
               <td>
                 <div class="file-info">
                   <span class="file-name-link" (click)="downloadFile(file)">{{ file.name }}</span>
@@ -286,7 +267,10 @@
           <iframe [src]="fileViewerUrl" class="file-viewer-iframe" *ngIf="fileViewerUrl"></iframe>
         </ng-container>
         <ng-container *ngSwitchCase="'docx'">
-          <div class="docx-content" [innerHTML]="docxContent"></div>
+          <div class="docx-content">
+            <!-- View mode -->
+            <div [innerHTML]="docxContent"></div>
+          </div>
         </ng-container>
         <ng-container *ngSwitchCase="'xlsx'">
           <div class="excel-viewer" *ngIf="excelData">
