@@ -137,7 +137,7 @@
                       src="assets/Images/Icons/more-circle.svg"
                       alt="More options"
                       class="optionsss"
-                      *ngIf="stage.stageActions"
+                      *ngIf="stage.Id===69"
                       (click)="openActionsForStage(ViewStageActions, stage)"
                     />
                   </div>
@@ -384,7 +384,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="newOrganizationForm" (ngSubmit)="CreateOrganication()">
+    <!-- <form [formGroup]="newOrganizationForm" (ngSubmit)="CreateOrganication()">
       <div class="form-group">
         <label for="name">Organization Name</label>
         <input
@@ -438,9 +438,9 @@
       >
         Create Organization
       </button>
-    </form>
+    </form> -->
 
-    <hr />
+    <!-- <hr /> -->
 
     <h5>Search Existing Organizations</h5>
     <div class="form-group">

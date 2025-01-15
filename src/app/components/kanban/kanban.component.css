@@ -1031,7 +1031,7 @@ td {
   border-right: 1px solid #eaecf0;
   background: #fff;
   vertical-align: top;
-  width: auto;
+  width: 250px;
 }
 
 th {
@@ -1067,9 +1067,13 @@ tr:last-child td {
 }
 
 .card {
-  /* padding: 8px; */
-  height: fit-content;
+/* padding: 8px; */
+  /* height: fit-content;
+   */
+   min-height: 1000px;
   background: #fff;
+  min-width: 250px;
+
   /* overflow: auto; */
 }
 
@@ -1081,7 +1085,7 @@ tr:last-child td {
   /* border: 1px solid #EAECF0; */
   /* box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05); */
 }
-
+/* 
 @media (max-width: 768px) {
   .table-container {
     margin: 8px;
@@ -1101,4 +1105,4 @@ tr:last-child td {
 
 td {
   padding: 0;
-}
+} */
