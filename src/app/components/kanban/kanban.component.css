@@ -1031,7 +1031,9 @@ td {
   border-right: 1px solid #eaecf0;
   background: #fff;
   vertical-align: top;
-  width: 250px;
+  width: 320px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 th {
@@ -1046,7 +1048,7 @@ th {
 }
 
 tr {
-  border-bottom: 1px solid #caced3;
+  border-bottom: 1px solid #eaecf0;
   /* border-right: 1px solid #CACED3; */
 
   width: 100%;
