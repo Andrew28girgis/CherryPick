@@ -5,6 +5,7 @@
   height: calc(100vh - 200px); /* Adjust based on your header height */
   display: flex;
   align-items: flex-start;
+  margin-bottom: 30px;
 }
 
 .main-content {
@@ -33,32 +34,29 @@
 }
 
 .card {
-  display: flex;
-  width: 100%;
-  /* padding: 12px; */
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  border-radius: 20px;
-  background: #fff;
+background: var(--glass-bg);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s var(--transition-bezier);
+  overflow: hidden;
   height: 100%;
-  overflow-y: auto;
-  max-height: 467px;
-  overflow-y: hidden;
-  min-height: 140px;
-  scrollbar-width: thin;
-  scroll-behavior: smooth;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  /* Remove smooth scroll during drag */
-  scroll-behavior: auto;
-  border: none;
+  max-height: calc(100vh - 300px);
 }
 
 .card::-webkit-scrollbar {
-  display: none;
+  width: 6px;
+}
+
+.card::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+.card::-webkit-scrollbar-thumb {
+  background-color: #CBD5E1;
+  border-radius: 3px;
 }
 
 .stage-name {
@@ -342,16 +340,44 @@
 }
 
 .kanban-card {
-  background: white;
+  background: var(--glass-bg);
   border-radius: 12px;
-  padding: 16px;
-  padding-bottom: 0;
-  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
-  cursor: pointer;
-  transition: box-shadow 0.2s ease;
+  padding: 1rem;
+  margin: 0.5rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s var(--transition-bezier);
+  /* cursor: grab; */
+  position: relative;
+  overflow: hidden;
+}
+
+.kanban-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  /* border: 1px solid #E5E7EB; */
-  transition: all 0.3s ease;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s var(--transition-bezier);
+}
+
+.kanban-card:hover::before {
+  opacity: 1;
+}
+
+.kanban-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.kanban-card:active {
+  /* cursor: grabbing; */
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+
+  transform: translateY(-2px) scale(0.98);
 }
 
 .kanban-header {
@@ -868,14 +894,23 @@ line-height: 30px; /* 187.5% */
 
 /* Add this class for dragging state */
 .cdk-drag-preview {
-  /* Remove transitions while dragging */
-  transition: none !important;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-              0 8px 10px 1px rgba(0, 0, 0, 0.14),
-              0 3px 14px 2px rgba(0, 0, 0, 0.12);
-  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  opacity: 0.9;
+  transform: scale(1.05);
+  transition: all 0.2s var(--transition-bezier);
 }
 
+.cdk-drag-placeholder {
+  opacity: 0.3;
+  background: #E2E8F0;
+  border: 2px dashed #94A3B8;
+  border-radius: 12px;
+  animation: pulse 2s var(--transition-bezier) infinite;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms var(--transition-bezier);
+}
 .kanban-header-section {
   padding: 16px;
   background: #fff;
@@ -988,7 +1023,7 @@ line-height: 30px; /* 187.5% */
 }
 
 .cdk-drag-animating {
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 250ms cubic-bezier(0.2, 0, 0, 1);
 }
 
 .cdk-drag-placeholder {
@@ -1000,36 +1035,44 @@ line-height: 30px; /* 187.5% */
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 .table-container {
-  background: #fff;
+  background: var(--glass-bg);
   border-radius: 12px;
-  margin: 16px;
-  /* box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1); */
+  margin: 1rem;
+  overflow: hidden; /* This ensures content doesn't overflow rounded corners */
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative; /* For proper stacking context */
 }
-
-
 
 table {
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
   border: 1px solid #EAECF0;
-  border-radius: 8px;
-  
 }
 
 th, td {
-  border-right: 1px solid #CACED3;
-  border-bottom: 1px solid #CACED3;
-  padding: 16px 0 0 0 ;
-  min-width: 250px;
+  border-right: 1px solid #EAECF0;
   background: #fff;
-}
-th{
-  padding: var(--Calendar-Cell-Day-Padding-top-bottom, 8px) var(--Calendar-Cell-Day-Padding-right-left, 20px);
-
+  vertical-align: top;
+  width: auto;
 }
 
-td{
-  padding-top: 0;
+th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  padding: 16px;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 2px solid #EAECF0;
 }
+
+
 
 tr{
   border-bottom: 1px solid #CACED3;
@@ -1040,7 +1083,7 @@ tr{
 
 th:last-child {
   border-right: none;
-  border-bottom: none;
+  /* border-bottom: none; */
 
 }
 
@@ -1068,3 +1111,38 @@ tr:last-child td {
   /* border: 1px solid #EAECF0; */
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
 }
+
+@media (max-width: 768px) {
+  .table-container {
+    margin: 8px;
+  }
+  
+  th, td {
+    min-width: 260px;
+    padding: 8px;
+  }
+  
+  .kanban-card {
+    margin: 6px;
+    padding: 12px;
+  }
+}
+
+
+
+td{
+  padding: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

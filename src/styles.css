@@ -8,6 +8,7 @@
 
 body{
   font-family: var(--app-font) !important;
+  background-color: #F2F3F4;
 }
 
 .row {
@@ -778,4 +779,10 @@ body.dark-theme {
 
 .gm-style-iw-tc{
   display: none;
+}
+.logo{
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin: 0 10px;
 }

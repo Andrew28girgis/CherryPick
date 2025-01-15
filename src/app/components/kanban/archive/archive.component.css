@@ -109,7 +109,7 @@ th {
 }
 
 th:hover {
-  background-color: #f0f0f0; /* Added for sortable headers */
+  /* background-color: #f0f0f0; Added for sortable headers */
 }
 
 th:last-child,
@@ -488,7 +488,7 @@ th {
 }
 
 th:hover {
-  background-color: #f0f0f0; /* Added for sortable headers */
+  /* background-color: #f0f0f0; Added for sortable headers */
 }
 
 tr:last-child td {
@@ -1020,11 +1020,212 @@ th {
 }
 
 th:hover {
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
 }
 
 th span {
   margin-left: 4px;
   font-size: 12px;
+}
+
+/* Add these to your existing CSS */
+.file-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.form-input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.modal-body .file-info {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.edit-mode-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 4px;
+  background: #f3f4f6;
+  border-radius: 8px;
+}
+
+.mode-button {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.mode-button.active {
+  background: white;
+  color: #001F3F;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mode-button:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.docx-toolbar {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.edit-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #001F3F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background: #003366;
+}
+
+.docx-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: #f9fafb;
+  border-radius: 6px;
+}
+
+.editable-content {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 16px;
+  min-height: 400px;
+  background: white;
+  outline: none;
+  overflow-y: auto;
+  direction: ltr;
+  text-align: left;
+}
+
+.editable-content:focus {
+  border-color: #001F3F;
+  box-shadow: 0 0 0 2px rgba(0, 31, 63, 0.1);
+}
+
+.save-button {
+  padding: 8px 16px;
+  background: #001F3F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background: #003366;
+}
+
+.excel-viewer {
+  max-height: 80vh;
+  overflow: auto;
+  padding: 20px;
+  background: white;
+}
+
+.excel-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.excel-table th,
+.excel-table td {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  text-align: left;
+}
+
+.excel-table th {
+  background: #f3f4f6;
+  font-weight: 500;
+}
+
+.file-viewer-iframe {
+  width: 100%;
+  height: 80vh;
+  border: none;
+}
+
+.docx-content {
+  padding: 20px;
+  background: white;
+  max-height: 80vh;
+  overflow-y: auto;
+  direction: ltr;
+  text-align: left;
+}
+
+.docx-content p {
+  margin-bottom: 1em;
+  line-height: 1.5;
+  direction: ltr;
+  text-align: left;
+}
+
+.docx-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+}
+
+.docx-content table td,
+.docx-content table th {
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+}
+
+.file-viewer-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.file-viewer-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
