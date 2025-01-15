@@ -141,8 +141,8 @@
                 <button class="action-btn delete" (click)="deleteFile(file)">
                   <img src="assets/Images/Icons/trash.svg" alt="Delete" class="action-img">
                 </button>
-                <button class="action-btn" (click)="downloadFile(file)" title="Download">
-                  <img src="assets/Images/Icons/eye.svg" alt="Download">
+                <button class="action-btn" (click)="viewFile(file)" title="View">
+                  <img src="assets/Images/Icons/eye.svg" alt="View">
                 </button>
               </td>
             </tr>
@@ -249,3 +249,50 @@
     </div>
   </div>
 </div>
+
+<div class="file-viewer-modal" *ngIf="selectedFileForView" (click)="closeFileViewer()">
+  <div class="file-viewer-content" (click)="$event.stopPropagation()">
+    <div class="file-viewer-header">
+      <h3 class="file-viewer-title">{{ selectedFileForView.name }}</h3>
+      <button class="file-viewer-close" (click)="closeFileViewer()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="file-viewer-body">
+      <ng-container [ngSwitch]="getFileExtension(selectedFileForView.name).toLowerCase()">
+        <ng-container *ngSwitchCase="'pdf'">
+          <iframe [src]="fileViewerUrl" class="file-viewer-iframe" *ngIf="fileViewerUrl"></iframe>
+        </ng-container>
+        <ng-container *ngSwitchCase="'docx'">
+          <div class="docx-content">
+            <!-- View mode -->
+            <div [innerHTML]="docxContent"></div>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="'xlsx'">
+          <div class="excel-viewer" *ngIf="excelData">
+            <table class="excel-table">
+              <thead>
+                <tr>
+                  <th *ngFor="let header of excelData.headers">{{ header }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of excelData.rows">
+                  <td *ngFor="let cell of row">{{ cell }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+        <div class="file-preview-error" *ngSwitchDefault>
+          Preview not available for this file type. Please download to view.
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
