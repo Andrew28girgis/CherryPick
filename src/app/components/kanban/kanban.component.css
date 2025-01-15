@@ -19,7 +19,6 @@
   display: flex;
   flex-wrap: nowrap;
   overflow: auto;
-
 }
 
 .kanban-wrap .col {
@@ -34,7 +33,7 @@
 }
 
 .card {
-background: var(--glass-bg);
+  background: var(--glass-bg);
   border-radius: 16px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
@@ -51,11 +50,11 @@ background: var(--glass-bg);
 }
 
 .card::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: #f1f5f9;
 }
 
 .card::-webkit-scrollbar-thumb {
-  background-color: #CBD5E1;
+  background-color: #cbd5e1;
   border-radius: 3px;
 }
 
@@ -104,13 +103,13 @@ background: var(--glass-bg);
 }
 .stage-container {
   display: flex;
-  padding: var(--Calendar-Cell-Day-Padding-top-bottom, 8px) var(--Calendar-Cell-Day-Padding-right-left, 20px);
+  padding: var(--Calendar-Cell-Day-Padding-top-bottom, 8px)
+    var(--Calendar-Cell-Day-Padding-right-left, 20px);
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
   /* margin-bottom: 8px; */
 }
-
 
 .broker-name {
   cursor: pointer;
@@ -120,9 +119,9 @@ background: var(--glass-bg);
   max-width: 120px; /* Adjust based on your layout */
 }
 
-.brokerrr{
+.brokerrr {
   font-family: "Montserrat", sans-serif;
-  color: var(--Body-Body-Color-Text-Icons, #7A8591);
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
   /* Body/14/24/Regular */
   font-size: 14px;
@@ -177,14 +176,15 @@ background: var(--glass-bg);
   background: none;
   color: #667085;
   text-align: center;
-  
+
   /* Body/16/30/Medium */
   font-family: "Montserrat", sans-serif;
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 30px; /* 187.5% */  cursor: pointer;
+  line-height: 30px; /* 187.5% */
+  cursor: pointer;
   position: relative;
   /* margin-right: 16px; */
   text-decoration: none;
@@ -243,15 +243,14 @@ background: var(--glass-bg);
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 30px; /* 187.5% */  ;
+  line-height: 30px; /* 187.5% */
   font-family: "Montserrat", sans-serif;
-
 }
 
 .filter-tab.active {
   border-radius: var(--Radius-Radius-8, 8px);
   background: var(--Tabs-BG, #ccd2d9);
-  color: var(--Body-Heading-Color, #0C0D0E);
+  color: var(--Body-Heading-Color, #0c0d0e);
 }
 
 .search-bar {
@@ -350,38 +349,42 @@ background: var(--glass-bg);
   /* cursor: grab; */
   position: relative;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .kanban-card::before {
-  content: '';
+  cursor: pointer;
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   /* width: 100%; */
   height: 100%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   opacity: 0;
   transition: opacity 0.3s var(--transition-bezier);
 }
 
 .kanban-card:hover::before {
   opacity: 1;
+  cursor: grab;
+
 }
 
 .kanban-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+  /* transform: translateY(-4px) scale(1.02); */
+  /* box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12); */
 }
 
 .kanban-card:active {
   /* cursor: grabbing; */
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
-
+  cursor: grab;
   transform: translateY(-2px) scale(0.98);
-}
-
-.kanban-header {
-  /* margin-bottom: 16px; */
 }
 
 .kanban-title {
@@ -440,7 +443,7 @@ background: var(--glass-bg);
   gap: var(--Space-Space-8, 8px);
   align-self: stretch;
   border-radius: var(--Radius-Radius-8, 8px);
-  background: var(--Card-Section-Highlight-BG, #F2F3F4);
+  background: var(--Card-Section-Highlight-BG, #f2f3f4);
 }
 
 .detail-item {
@@ -451,7 +454,7 @@ background: var(--glass-bg);
 }
 
 .detail-item .label {
-  color: #6B7280;
+  color: #6b7280;
   font-size: 14px;
   font-weight: 400;
 }
@@ -467,14 +470,10 @@ background: var(--glass-bg);
   display: flex;
   align-items: center;
   gap: 12px;
-  border-top: 1px solid #E5E7EB;
+  border-top: 1px solid #e5e7eb;
   margin: 12px -16px 0;
   padding: 12px 16px;
 }
-
-
-
-
 
 .broker-info {
   display: flex;
@@ -495,26 +494,26 @@ background: var(--glass-bg);
 }
 
 .broker-label {
-  color: var(--Body-Body-Color-Text-Icons, #7A8591);
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
-/* Body/14/24/Regular */
-font-family: Montserrat;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; /* 171.429% */
-letter-spacing: -0.07px;
+  /* Body/14/24/Regular */
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 171.429% */
+  letter-spacing: -0.07px;
 }
 
 .broker-name {
-  color: var(--Body-Heading-Color, #0C0D0E);
+  color: var(--Body-Heading-Color, #0c0d0e);
 
-/* Body/16/30/SemiBold */
-font-family: Montserrat;
-font-size: 16px;
-font-style: normal;
-font-weight: 600;
-line-height: 30px; /* 187.5% */
+  /* Body/16/30/SemiBold */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; /* 187.5% */
 }
 
 .add-btn {
@@ -571,7 +570,7 @@ line-height: 30px; /* 187.5% */
 
 /* Individual organization name */
 .org-name {
-  display:flex;
+  display: flex;
   background: linear-gradient(135deg, #edf2f7, #e2e8f0);
   color: #1a202c;
   padding: 4px 10px;
@@ -635,8 +634,6 @@ line-height: 30px; /* 187.5% */
   transition: margin-left 0.3s ease;
 } */
 
-
-
 .sidebar-collapsed .main-content {
   margin-left: 4rem;
 }
@@ -654,27 +651,7 @@ line-height: 30px; /* 187.5% */
   transition: margin-left 0.3s ease;
   overflow: hidden;
   /* height: 770px; */
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Mobile styles (up to 768px) */
 @media (max-width: 768px) {
@@ -766,7 +743,7 @@ line-height: 30px; /* 187.5% */
   }
 
   /* Improved touch targets */
-  .stage-container, 
+  .stage-container,
   .add-organization,
   .kanban-card,
   .filter-tab,
@@ -799,14 +776,12 @@ line-height: 30px; /* 187.5% */
     padding: 16px;
     overflow-x: hidden;
     height: 500000px;
-
   }
 
   .kanban-wrap .row {
     flex-wrap: nowrap;
     overflow-x: hidden;
     height: 500000px;
-
   }
 
   .kanban-wrap .col {
@@ -826,12 +801,6 @@ line-height: 30px; /* 187.5% */
   }
 }
 
-
-
-
-
-
-
 .template-list {
   max-height: 200px;
   overflow-y: auto;
@@ -842,8 +811,6 @@ line-height: 30px; /* 187.5% */
   border-bottom: 1px solid #e0e0e0;
 }
 
-
-
 .template-item span {
   font-size: 14px;
   color: #333;
@@ -853,12 +820,6 @@ line-height: 30px; /* 187.5% */
   font-size: 12px;
   padding: 2px 8px;
 }
-
-
-
-
-
-
 
 .broker-search-container {
   position: relative;
@@ -884,7 +845,7 @@ line-height: 30px; /* 187.5% */
   background: white;
   /* border: 1px solid #dee2e6; */
   border-radius: 0.25rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .selected-broker {
@@ -894,16 +855,19 @@ line-height: 30px; /* 187.5% */
 
 /* Add this class for dragging state */
 .cdk-drag-preview {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   opacity: 0.9;
   transform: scale(1.05);
   transition: all 0.2s var(--transition-bezier);
+  cursor: grab;
+
 }
 
 .cdk-drag-placeholder {
   opacity: 0.3;
-  background: #E2E8F0;
-  border: 2px dashed #94A3B8;
+  background: #e2e8f0;
+  border: 2px dashed #94a3b8;
   border-radius: 12px;
   animation: pulse 2s var(--transition-bezier) infinite;
 }
@@ -1015,7 +979,7 @@ line-height: 30px; /* 187.5% */
   .kanban-header-section {
     padding: 12px;
   }
-  
+
   .org-chain {
     flex-direction: column;
     align-items: flex-start;
@@ -1030,7 +994,6 @@ line-height: 30px; /* 187.5% */
   opacity: 0;
 }
 
-
 .example-list.cdk-drop-list-dragging .kanban-card:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
@@ -1044,19 +1007,19 @@ line-height: 30px; /* 187.5% */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   position: relative; /* For proper stacking context */
-  border: 1px solid #EAECF0;
-
+  border: 1px solid #eaecf0;
 }
 
 table {
-  width: 100%;
+  width: fit-content;
   border-collapse: separate;
   border-spacing: 0;
   background: white;
 }
 
-th, td {
-  border-right: 1px solid #EAECF0;
+th,
+td {
+  border-right: 1px solid #eaecf0;
   background: #fff;
   vertical-align: top;
   width: auto;
@@ -1070,22 +1033,19 @@ th {
   padding: 16px;
   font-weight: 600;
   color: #111827;
-  border-bottom: 2px solid #EAECF0;
+  border-bottom: 2px solid #eaecf0;
 }
 
-
-
-tr{
-  border-bottom: 1px solid #CACED3;
+tr {
+  border-bottom: 1px solid #caced3;
   /* border-right: 1px solid #CACED3; */
 
-  width:100%
+  width: 100%;
 }
 
 th:last-child {
   border-right: none;
   /* border-bottom: none; */
-
 }
 
 td:last-child {
@@ -1117,33 +1077,19 @@ tr:last-child td {
   .table-container {
     margin: 8px;
   }
-  
-  th, td {
+
+  th,
+  td {
     min-width: 260px;
     padding: 8px;
   }
-  
+
   .kanban-card {
     margin: 6px;
     padding: 12px;
   }
 }
 
-
-
-td{
+td {
   padding: 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
