@@ -200,7 +200,7 @@
 
 .cards {
   height: 700px;
-  overflow-y: scroll;
+  overflow-y: auto;
   scrollbar-width: thin; /* For Firefox */
   scrollbar-color: #c1c1c1 transparent; /* Track and thumb color */
 }
@@ -302,12 +302,7 @@
   height: 100vh;
   
 }
-.logo{
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  margin: 0 10px;
-}
+
 .img-logo{
   height: 40px; 
   width: 184px
@@ -471,7 +466,9 @@ img[alt="logo"] {
   align-items: center;
 }
 
-
+a{
+  text-decoration: none;
+}
 
 .svg-icon:last-child {
   margin-right: 0;  /* No margin on the last SVG */

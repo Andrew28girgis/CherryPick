@@ -8,6 +8,7 @@
 
 body{
   font-family: var(--app-font) !important;
+  background-color: #F2F3F4;
 }
 
 .row {
@@ -153,9 +154,6 @@ body{
   color: #fff;
 }
 
-.active {
-  /* color: #00aeff !important; */
-}
 
 .logout-admin {
   color: #383838;
@@ -777,4 +775,15 @@ body.dark-theme {
   --sidebar-active: #CCD2D9;
   --sidebar-active-text: #001F3F;
   --sidebar-hover: rgba(255, 255, 255, 0.1);
+}
+
+.gm-style-iw-tc{
+  display: none;
+}
+
+.logo{
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin: 0 10px;
 }

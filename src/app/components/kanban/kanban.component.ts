@@ -385,6 +385,8 @@ private crf:ChangeDetectorRef,
       animation: true,
     });
     this.TargetActions = targetAction;
+    console.log(targetAction);
+    
     this.TargetOrg = organization;
   }
 

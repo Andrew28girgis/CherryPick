@@ -27,11 +27,11 @@
       </ngb-alert>
     </p>
 
-    <!-- <i
+    <i
       class="fa-solid fa-arrow-left"
       style="font-size: 24px; cursor: pointer; padding: 15px 10px"
       (click)="goBack()"
-    ></i> -->
+    ></i>
     <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
       <div class="intro-container wow fadeIn">
         <h1
@@ -961,19 +961,29 @@
     <div class="main-section" *ngIf="OrgManager && OrgManager[0]">
       <section id="hero">
         <div class="p-0">
-          <div>
-            <h2 class="main-heading" *ngIf="OrgManager && OrgManager[0]">
+          <div class="d-flex align-items-center">
+            <img
+              style="width: 50px;"
+              class="logo"
+              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                OrgManager[0].id
+              }}"
+              alt=""
+            />
+            <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
               {{ OrgManager[0].name }}
             </h2>
           </div>
         </div>
         <div class="row py-2">
           <ng-container *ngFor="let Manager of OrgManager">
-            <div class="col-3 contact-card text-center">
+            <div class="col-4 contact-card text-center">
               <p class="contact">
                 {{ Manager.firstname | titlecase }}
                 {{ Manager.lastname | titlecase }}
               </p>
+              <p>{{ Manager.cellPhone }}</p>
+              <p>{{ Manager.email }}</p>
             </div>
           </ng-container>
         </div>
@@ -985,14 +995,14 @@
         <div class="main-section" style="height: 408px; overflow-y: auto">
           <div>
             <p class="main-name">Co-Tenants</p>
-            <select
+            <!-- <select
               class="form-control styled-select"
               (change)="filterCotent($event)"
             >
               <option *ngFor="let cat of uniqueCategories" [value]="cat">
                 {{ cat }}
               </option>
-            </select>
+            </select> -->
           </div>
           <ul>
             <li *ngFor="let place of filterCotenats">
@@ -1011,9 +1021,9 @@
                   <span *ngIf="place.Name" class="nearset"
                     >{{ place.Name }}
                   </span>
-                  <span *ngIf="place.SubCategory" class="activityType">{{
+                  <!-- <span *ngIf="place.SubCategory" class="activityType">{{
                     place.SubCategory[0].OrganizationCategory | titlecase
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
 
@@ -1101,9 +1111,9 @@
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>
-  <ng-container *ngIf="sanitizedUrl; else linkView">
+  <ng-container *ngIf="sanitizedUrlPopup; else linkView">
     <iframe
-      [src]="sanitizedUrl"
+      [src]="sanitizedUrlPopup"
       style="border: 0; width: 100%; height: 500px"
       allowfullscreen=""
       loading="lazy"

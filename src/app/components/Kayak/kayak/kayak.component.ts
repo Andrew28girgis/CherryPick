@@ -51,8 +51,13 @@ export class KayakComponent implements OnInit {
   sanitizedUrl!: any;
   StreetViewOnePlace!: boolean;
   mapViewOnePlacex: boolean = false;
-  ShoppingCenterAvailability: any = []; // To store availability data
-ShoppingCenterTenants: any = []; // To store tenant data
+  ShoppingCenterAvailability: any = null; // Store API response
+  ShoppingCenterTenants: any = null; // Store API response
+  isDropdownOpen: boolean = false;
+  isDropdownOpenIndex: number | null = null; // Track which card's dropdown is open
+  showMorePlaces: boolean = false; // Track if additional places should be shown
+  showAllPlacesIndex: number | null = null; // Track which card's places are fully visible
+
 
 
 
@@ -91,8 +96,7 @@ ShoppingCenterTenants: any = []; // To store tenant data
     };
     this.getResult();
     this.GetFilters();
-    // this.GetShoppingCenterAvailability();
-    // this.GetShoppingCenterTenants(51);
+ 
 
   }
 
@@ -103,22 +107,20 @@ ShoppingCenterTenants: any = []; // To store tenant data
   }
   GetShoppingCenterAvailability(shoppingCenterId: number): void {
     this.spinner.show();
-  
+
     const body: any = {
       Name: 'GetShoppingCenterAvailability',
       Params: {
         shoppingcenterid: shoppingCenterId,
       },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         if (data && data.json) {
-          // Process the availability data
           this.ShoppingCenterAvailability = data.json;
           console.log('Shopping Center Availability:', this.ShoppingCenterAvailability);
         }
-  
         this.spinner.hide();
       },
       error: (error) => {
@@ -127,31 +129,45 @@ ShoppingCenterTenants: any = []; // To store tenant data
       },
     });
   }
+
+  fetchAvailability(shoppingCenterId: number): void {
+    console.log('Fetching availability for Shopping Center ID:', shoppingCenterId);
+    this.GetShoppingCenterAvailability(shoppingCenterId);
+  }
+  @ViewChild('tenantModal', { static: true }) tenantModal!: TemplateRef<any>;
+
   GetShoppingCenterTenants(shoppingCenterId: number): void {
     this.spinner.show();
-  
+
     const body: any = {
       Name: 'GetShoppingCenterTenants',
       Params: {
         shoppingcenterid: shoppingCenterId,
       },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         if (data && data.json) {
-          // Process the tenant data
-          this.ShoppingCenterTenants = data.json;
-          console.log('Shopping Center Tenants:', this.ShoppingCenterTenants);
+          this.ShoppingCenterTenants = data.json; // Populate tenants
+          console.log('Fetched Tenants:', this.ShoppingCenterTenants); // Debugging
+          this.modalService.open(this.tenantModal, { centered: true }); // Open modal
+        } else {
+          this.ShoppingCenterTenants = []; // Handle no data scenario
         }
-  
         this.spinner.hide();
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error fetching Shopping Center Tenants:', error);
         this.spinner.hide();
       },
     });
+  }
+  
+
+  fetchTenants(shoppingCenterId: number): void {
+    console.log('Fetching tenants for Shopping Center ID:', shoppingCenterId);
+    this.GetShoppingCenterTenants(shoppingCenterId);
   }
   
   
@@ -535,6 +551,7 @@ error: (error) => console.error('Error fetching APIs:', error),
       },
     });
   }
+
   filterTags(): void {
     if (this.searchTerm) {
       this.visibleTags = this.tags.filter((tag) =>
@@ -543,7 +560,8 @@ error: (error) => console.error('Error fetching APIs:', error),
     } else {
       this.visibleTags = this.tags.slice(0, 10); // Reset to default
     }
-  }
+}
+
   toggleTagSelection(tag: any): void {
     const index = this.selectedTags.findIndex((t) => t.tag === tag.tag);
   
@@ -576,18 +594,36 @@ error: (error) => console.error('Error fetching APIs:', error),
   isTagSelected(tag: any): boolean {
     return this.selectedTags.some((t) => t.tag === tag.tag);
   }
+
   removeTag(tag: any): void {
-    // Remove the tag from the selectedTags array
     this.selectedTags = this.selectedTags.filter((t) => t.tag !== tag.tag);
-    // Update the modal's checkbox state
     const modalTagIndex = this.tags.findIndex((t) => t.tag === tag.tag);
     if (modalTagIndex > -1) {
       this.tags[modalTagIndex].isSelected = false; // Ensure sync with modal
     }
   }
+
   applyTags(): void {
     const selectedTagsJson = this.selectedTags.map((tag) => ({ tag: tag.tag }));
     this.modalService.dismissAll();
   }
+  toggleDropdown(index: number): void {
+    this.isDropdownOpenIndex = this.isDropdownOpenIndex === index ? null : index;
+  }
+  toggleSeeMore(): void {
+    this.showMorePlaces = !this.showMorePlaces;
+  }
+  getVisiblePlaces(result: any, index: number): any[] {
+    if (!result?.place) {
+      return [];
+    }
+    // Check if the current index matches the expanded card
+    return this.showAllPlacesIndex === index ? result.place : result.place.slice(0, 2);
+  }
+  
+  toggleSeeMorePlaces(index: number): void {
+    this.showAllPlacesIndex = this.showAllPlacesIndex === index ? null : index;
+  }
+  
 
 }

@@ -8,6 +8,7 @@ import { PropertiesServiceService } from 'src/app/services/properties-service.se
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-summery',
@@ -32,10 +33,12 @@ export class SummeryComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private propertiesService: PropertiesServiceService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private stateService: StateService
   ) {}
 
   ngOnInit(): void {
+    this.stateService.clearAll();
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.orgId = +params.orgId;
@@ -61,7 +64,7 @@ export class SummeryComponent {
       next: (data) => {
         this.buyboxTypes =  data.json ;
         if (this.buyboxTypes.length == 1) {
-          this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId);
+          this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
         }
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -73,20 +76,20 @@ export class SummeryComponent {
     this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {
       this.buyboxTypes = res;
       if (this.buyboxTypes.length == 1) {
-        this.chooseType(this.buyboxTypes[0].id ,  this.buyboxTypes[0].organizationId);
+        this.chooseType(this.buyboxTypes[0].id ,  this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
       }
     });
   }
 
-  chooseType(buyboxId: number , orgId:number) {
+  chooseType(buyboxId: number , orgId:number , name:string) {
     this.showSummery = true;
     this.showSummery = true;
-    this.goToAllPlaces(buyboxId , orgId);
+    this.goToAllPlaces(buyboxId , orgId , name);
     this.propertiesService.setbuyboxId(buyboxId);
   }
 
-  goToAllPlaces(buyboxId: number , orgId:number ) {
-    this.router.navigate(['/home', buyboxId ,orgId]);
+  goToAllPlaces(buyboxId: number , orgId:number , name:string) {
+    this.router.navigate(['/home', buyboxId , orgId , name]);
   }
   
 }

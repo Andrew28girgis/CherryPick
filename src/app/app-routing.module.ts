@@ -13,8 +13,7 @@ import { KayakComponent } from './components/Kayak/kayak/kayak.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
-import { ArchiveComponent } from './components/kanban/archive/archive.component';
-import { AssistantComponent } from './components/kanban/assistant/assistant.component';
+ import { AssistantComponent } from './components/kanban/assistant/assistant.component';
 import { SourcesComponent } from './components/kanban/sources/sources.component';
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
@@ -33,7 +32,7 @@ const routes: Routes = [
   { path: 'summary/:orgId', component: SummeryComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
   {
-    path: 'home/:buyboxid/:orgId',
+    path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [AuthGuardService],
   },
@@ -42,10 +41,7 @@ const routes: Routes = [
     component: HomeComponent,
     canActivate: [AuthGuardService],
   },
-  {
-    path: 'landing/:id/:shoppiongCenterId/:buyboxid',
-    component: LandingComponent,
-  },
+  { path: 'landing/:id/:shoppiongCenterId/:buyboxid/:orgId', component: LandingComponent },
   { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
   {
@@ -67,12 +63,7 @@ const routes: Routes = [
     path: 'tasks',
     component: TasksComponent,
     canActivate: [AuthGuardService],
-  },
-  {
-    path: 'archive',
-    component: ArchiveComponent,
-    canActivate: [AuthGuardService],
-  },
+  }, 
   {
     path: 'assistant',
     component: AssistantComponent,
@@ -108,10 +99,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'enabled',
-    }),
-  ],
-  exports: [RouterModule],
+      scrollPositionRestoration: 'enabled' ,
+      anchorScrolling: 'enabled',
+    })
+  ],  exports: [RouterModule],
 })
 
 export class AppRoutingModule {}

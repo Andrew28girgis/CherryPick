@@ -33,7 +33,6 @@ import { RouterModule } from '@angular/router';
 import { AssistantComponent } from './components/kanban/assistant/assistant.component';
 import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
 import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
-import { ArchiveComponent } from './components/kanban/archive/archive.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
@@ -66,7 +65,6 @@ import { TasksComponent } from './components/kanban/tasks/tasks.component';
     AssistantComponent,
     FilterPanelComponent,
     EditPopupComponent,
-    ArchiveComponent,
     DetailsComponent,
     PropertiesComponent,
     PropertiesgridviewComponentComponent,

@@ -23,6 +23,7 @@ import { OrgBranch } from 'src/models/branches';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css'],
 })
+
 export class LandingComponent {
   General!: General;
   place!: Property;
@@ -55,7 +56,11 @@ export class LandingComponent {
   BuyboxOrg!: BuyboxOrg;
   OrganizationBranches!: OrgBranch;
   uniqueCategories!: any[];
-  filterCotenats:PlaceCotenants[] = [];
+  filterCotenats: PlaceCotenants[] = [];
+  OrgId!: number;
+  sanitizedUrl: any;
+  sanitizedUrlPopup: any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -80,6 +85,8 @@ export class LandingComponent {
       this.BuyBoxId = params.buyboxid;
       this.PlaceId = params.id;
       this.ShoppingCenterId = params.shoppiongCenterId;
+      this.OrgId = params.orgId;
+
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(
           this.ShoppingCenterId,
@@ -126,36 +133,32 @@ export class LandingComponent {
         if (ShoppingcenterId !== 0) {
           this.ShoppingCenter = this.CustomPlace?.ShoppingCenter?.[0];
         }
+
         console.log(`custom place`);
         console.log(this.CustomPlace);
-
+        
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
 
-        if (this.ShoppingCenter) {
-          
-        
-          console.log(`i`);
-          
-          console.log(this.placeImage);
-          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
-            (link) => link.trim()
-          );
-          if (this.CustomPlace.OtherPlaces) {
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) { 
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map((link) =>
+            link.trim()
+        ); 
+
+        if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
-              +this.StandAlonePlace.PopulationDensity; 
-          }  
-          
-          this.GetShoppingCenterManager(this.ShoppingCenter.Id);
-          this.getMinMaxUnitSize();
-          
-          this.ShoppingCenter.StreetViewURL
+              +this.StandAlonePlace.PopulationDensity;
+        }
+
+        this.GetShoppingCenterManager(this.ShoppingCenter.Id);
+        this.getMinMaxUnitSize();
+
+        this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
-          
-          this.StandAlonePlace = this.CustomPlace?.Place[0];
+          this.StandAlonePlace = this.CustomPlace?.Place?.[0];
           this.placeImage = this.StandAlonePlace?.Images?.split(',').map(
             (link) => link.trim()
           );
@@ -181,20 +184,20 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.placeCotenants = data.json;
-        this.filterCotenats = this.placeCotenants ; 
+        this.filterCotenats = this.placeCotenants;
 
         const uniqueCategoriesSet = new Set<string>();
-        this.placeCotenants.forEach((co) => {
+        this.placeCotenants?.forEach((co) => {
           co.SubCategory.forEach((c) => {
             if (c.OrganizationCategory) {
               uniqueCategoriesSet.add(c.OrganizationCategory);
             }
           });
-        }); 
+        });
 
-        this.uniqueCategories = Array.from(uniqueCategoriesSet); 
-        this.uniqueCategories.sort((a, b) => a.localeCompare(b)); 
-        this.uniqueCategories.unshift('All'); 
+        this.uniqueCategories = Array.from(uniqueCategoriesSet);
+        this.uniqueCategories.sort((a, b) => a.localeCompare(b));
+        this.uniqueCategories.unshift('All');
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -203,14 +206,13 @@ export class LandingComponent {
   filterCotent(event: any) {
     const value = event.target.value;
     if (value === 'All') {
-       this.filterCotenats = this.placeCotenants;
+      this.filterCotenats = this.placeCotenants;
     } else {
-       this.filterCotenats = this.placeCotenants.filter(co => {
-         return co.SubCategory[0].OrganizationCategory === value;
+      this.filterCotenats = this.placeCotenants.filter((co) => {
+        return co.SubCategory[0].OrganizationCategory === value;
       });
-    } 
+    }
   }
-  
 
   GetBuyBoxOrganizationDetails(
     Shoppingcenterid: number,
@@ -227,9 +229,8 @@ export class LandingComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if(data.json){
+        if (data.json) {
           this.OrganizationBranches = data.json[0];
-
         }
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -267,9 +268,12 @@ export class LandingComponent {
     }
   }
 
-  sanitizedUrl: any;
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  setIframeUrlPopup(url: string): void {
+    this.sanitizedUrlPopup = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   ngOnChanges() {
@@ -281,23 +285,23 @@ export class LandingComponent {
   getMinMaxUnitSize() {
     if (this.CustomPlace.OtherPlaces) {
       const places = this.CustomPlace.OtherPlaces;
-  
+
       if (places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
           .filter(
             (size: any) => size !== undefined && size !== null && !isNaN(size)
           );
-  
+
         if (buildingSizes.length === 0) {
           return null;
         }
-  
+
         const minSize = Math.min(...buildingSizes);
         const maxSize = Math.max(...buildingSizes);
         let minPrice = null;
         let maxPrice = null;
-  
+
         for (let place of places) {
           if (place.BuildingSizeSf === minSize) {
             minPrice = place.ForLeasePrice;
@@ -306,7 +310,7 @@ export class LandingComponent {
             maxPrice = place.ForLeasePrice;
           }
         }
-  
+
         const calculateLeasePrice = (price: any, size: any) => {
           if (price === 'On Request' || price === 0 || size === 0) {
             return '<b>On Request</b>';
@@ -319,11 +323,11 @@ export class LandingComponent {
           }
           return '<b>On Request</b>';
         };
-  
+
         const formatNumberWithCommas = (number: number) => {
           return `<b>${number.toLocaleString()}</b>`;
         };
-  
+
         const appendInfoIcon = (
           calculatedPrice: string,
           originalPrice: any
@@ -331,11 +335,11 @@ export class LandingComponent {
           if (calculatedPrice === '<b>On Request</b>') {
             return calculatedPrice;
           }
-  
+
           const formattedOriginalPrice = `<b>$${parseFloat(
             originalPrice
           ).toLocaleString()}</b>/sq ft./year`;
-  
+
           // Adjust inline styles as desired
           return `
             <div style="display:flex;">
@@ -343,7 +347,7 @@ export class LandingComponent {
             </div>
           `;
         };
-  
+
         // If minSize and maxSize are the same
         if (minSize === maxSize) {
           const formattedPrice = minPrice
@@ -353,12 +357,13 @@ export class LandingComponent {
             minSize
           )}sq ft. </p>  <p class="px-2 m-0"> Lease Price: ${formattedPrice} </p>`;
         }
-        
 
         let sizeRange = `Unit Size:  <p class="px-2 mb-0"> ${formatNumberWithCommas(
           minSize
-        )}</p> sq ft. - <p class="px-2 mb-0" >${formatNumberWithCommas(maxSize)} sq ft. </p>`;
-  
+        )}</p> sq ft. - <p class="px-2 mb-0" >${formatNumberWithCommas(
+          maxSize
+        )} sq ft. </p>`;
+
         // Calculate lease prices for min and max
         const minLeasePrice = minPrice
           ? appendInfoIcon(calculateLeasePrice(minPrice, minSize), minPrice)
@@ -366,10 +371,13 @@ export class LandingComponent {
         const maxLeasePrice = maxPrice
           ? appendInfoIcon(calculateLeasePrice(maxPrice, maxSize), maxPrice)
           : '<b>On Request</b>';
-  
+
         // Handle display of prices
         let leasePriceRange: string;
-        if (minLeasePrice === '<b>On Request</b>' && maxLeasePrice === '<b>On Request</b>') {
+        if (
+          minLeasePrice === '<b>On Request</b>' &&
+          maxLeasePrice === '<b>On Request</b>'
+        ) {
           leasePriceRange = '<b>On Request</b>';
         } else if (minLeasePrice === '<b>On Request</b>') {
           leasePriceRange = `${maxLeasePrice}`;
@@ -378,13 +386,13 @@ export class LandingComponent {
         } else {
           leasePriceRange = `${minLeasePrice} - ${maxLeasePrice}`;
         }
-  
+
         return `${sizeRange} Lease Price: ${leasePriceRange}`;
       }
     }
     return null;
   }
-  
+
   GetPlaceNearBy(placeId: number): void {
     const body: any = {
       Name: 'GetNearBuyRetails',
@@ -735,7 +743,6 @@ export class LandingComponent {
       return sizeRange;
     }
     return null;
-    
   }
 
   getLeasePriceStandAlone(StandALone: any) {
@@ -920,7 +927,7 @@ export class LandingComponent {
     });
   }
 
-  openStreetViewPlace(content: any, modalObject?: any) {
+openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -928,13 +935,14 @@ export class LandingComponent {
     });
     this.General.modalObject = modalObject;
     if (this.General.modalObject.StreetViewURL) {
-      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+      this.setIframeUrlPopup(this.General.modalObject.StreetViewURL);
     } else {
       setTimeout(() => {
         this.viewOnStreetPopUp();
       }, 100);
     }
   }
+
   StreetViewOnePlace!: boolean;
 
   viewOnStreetPopUp() {
@@ -987,41 +995,39 @@ export class LandingComponent {
         strokeWeight: 1,
       },
       animation: google.maps.Animation.DROP, // Animated drop effect
-
     });
-    
   }
 
   goBack() {
-    this.router.navigate(['/home', this.BuyBoxId]);
+    window.history.back();
   }
 
   getBackgroundImage(): string {
-    const imageUrl = this.ShoppingCenter?.MainImage || this.StandAlonePlace?.MainImage;
+    const imageUrl =
+      this.ShoppingCenter?.MainImage || this.StandAlonePlace?.MainImage;
     return imageUrl ? `url(${imageUrl}) no-repeat center center / cover` : '';
   }
-  
+
   getAddress(): string {
     const capitalizeFirst = (value: string) =>
       value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : '';
-  
+
     const addressParts = this.ShoppingCenter
       ? [
           this.ShoppingCenter.CenterAddress,
           capitalizeFirst(this.ShoppingCenter.CenterCity),
-          this.ShoppingCenter.CenterState.toUpperCase()
+          this.ShoppingCenter.CenterState.toUpperCase(),
         ]
       : this.StandAlonePlace
       ? [
           this.StandAlonePlace.Address,
           this.StandAlonePlace.City,
-          this.StandAlonePlace.State.toUpperCase()
+          this.StandAlonePlace.State.toUpperCase(),
         ]
       : null;
 
-    return addressParts ? addressParts.filter(Boolean).join(', ') : 'Address not available';
+    return addressParts
+      ? addressParts.filter(Boolean).join(', ')
+      : 'Address not available';
   }
-  
-  
-  
 }

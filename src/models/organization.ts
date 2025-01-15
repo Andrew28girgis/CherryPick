@@ -4,4 +4,6 @@ export interface OrgManager {
   id1: number;
   firstname: string;
   lastname: string;
+  cellPhone: string;
+  email: string;  
 }

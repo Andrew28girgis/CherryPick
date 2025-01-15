@@ -32,6 +32,7 @@ export interface KayakFilters {
   export interface Tenant {
     OrganizationId: number
     Name: string
+    Summary:string
     Selected : boolean
     Branches: Branch[]
   }

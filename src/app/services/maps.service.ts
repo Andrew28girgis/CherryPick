@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class MapsService {
   storedBuyBoxId: any;
+  storedOrgId: any;
   private markers: any[] = [];
   private prosMarkers: any[] = [];
   private markerMap: { [key: string]: any[] } = {};
@@ -16,7 +17,8 @@ export class MapsService {
   private map: any;
 
   constructor(public router: Router) {
-    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
+  
+    
   }
 
   createMarker(map: any, markerData: any, type: string): any {
@@ -81,7 +83,10 @@ export class MapsService {
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
     let placeId: number;
-
+    console.log(`iiuuoo`);
+    
+    console.log(marker.markerData);
+    
     marker.markerData.ShoppingCenter?.Places
       ? (placeId = markerData.ShoppingCenter.Places[0].Id)
       : (placeId = markerData.Id);
@@ -89,11 +94,13 @@ export class MapsService {
     const viewDetailsButton = document.getElementById(
       `view-details-${placeId}`
     );
-    let shoppingCenterId = markerData.CenterName ? markerData.Id : 0;
-
+  
+    
+    
+    let shoppingCenterId = markerData.CenterName ? markerData.Id : 0; 
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
-        this.handleViewDetailsClick(placeId, shoppingCenterId);
+        this.handleViewDetailsClick(placeId, shoppingCenterId , marker.markerData.CenterAddress ? 'Shopping Center': 'Stand Alone' );
       });
     } else {
       console.log(`Button for marker ${placeId} not found`);
@@ -102,17 +109,31 @@ export class MapsService {
 
   private handleViewDetailsClick(
     markerId: any,
-    shoppingCenterId?: number
-  ): void {
-    console.log(`View details for marker ID: ${markerId}`);
+    shoppingCenterId?: number , 
+    placeType?: string
+  ): void { 
+    console.log(`markerID ${markerId}`);
+    console.log(`ShoppingCenterID ${shoppingCenterId}`);
 
+    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
+    this.storedOrgId = localStorage.getItem('OrgId'); 
+    if(placeType == 'Shopping Center'){
     this.router.navigate([
       '/landing',
-      markerId,
-      markerId != shoppingCenterId ? shoppingCenterId : 0,
+      markerId == shoppingCenterId ? 0 :  markerId,
+      shoppingCenterId ,
       this.storedBuyBoxId,
+      this.storedOrgId
     ]);
-
+  }else{
+    this.router.navigate([
+      '/landing',
+      markerId ,
+      0 ,
+      this.storedBuyBoxId,
+      this.storedOrgId
+    ]);
+  }
   }
 
   private assignToMarkerArray(marker: any, type: string): void {
@@ -610,17 +631,16 @@ export class MapsService {
 
 
  
-  drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
-    // this.drawPolygon(map, polygonFeatures[0]);
+  drawMultiplePolygons(map: any, polygonFeatures: any[]): void { 
     polygonFeatures.forEach((feature) => {
       this.drawSinglePolygon(map, feature);
     });
   }
 
-  drawSinglePolygon(map: any, feature: any): void {
-    try {
-      const geoJson = JSON.parse(feature.json);
-      const coordinates = geoJson.geometry.coordinates[0];
+  drawSinglePolygon(map: any, feature: any): void { 
+      try {
+      const geoJson = JSON.parse(feature.json);  
+      const coordinates = geoJson.geometry.coordinates[0]; 
       const polygonCoords = coordinates.map((coord: number[]) => ({
         lat: coord[1], 
         lng: coord[0]  
@@ -637,10 +657,202 @@ export class MapsService {
         map: map
       });
 
+      // Calculate polygon center
+      const bounds = new google.maps.LatLngBounds();
+      polygonCoords.forEach((coord:any) => {
+        bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+      });
+      const center = bounds.getCenter();
+
+      // Add label at polygon center
+      new google.maps.Marker({
+        position: center,
+        map: map,
+        label: {
+          text: feature.name,
+          color: '#000000',
+          fontSize: '12px',
+          fontWeight: 'bold'
+        },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 0
+        }
+      });
+
     } catch (error) {
       console.error('Error drawing polygon:', error);
     }
   }
+
+  drawPolygons(map: any, response: any): void {
+    if (!map || !response || !Array.isArray(response)) {
+      console.error('Invalid parameters provided to drawPolygons');
+      return;
+    }
+  
+    response.forEach((polygonCoordinates: number[][][]) => {
+      const paths = polygonCoordinates.map(coords => {
+        return coords.map((coord:any) => {
+          // Ensure that latitude and longitude are numbers
+          const lat = parseFloat(coord[1]);
+          const lng = parseFloat(coord[0]);
+  
+          // Check if they are valid numbers
+          if (isNaN(lat) || isNaN(lng)) {
+            console.error('Invalid coordinate:', coord);
+            return null;
+          }
+  
+          return { lat, lng };
+        }).filter(point => point !== null); // Remove invalid points
+      });
+  
+      // Create the polygon
+      const polygon = new google.maps.Polygon({
+        paths,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35
+      });
+  
+      polygon.setMap(map);
+    });
+  }
+  
+
+
+  async fetchAndDrawPolygon(map: any, city:any , state:any , lat?: any , lng?: any ): Promise<void> {
+    console.log(state);
+    
+    // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+    const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
+
+    
+    try {
+      const response = await fetch(boundaryUrl);
+      const data: any = await response.json();
+      data.features?.forEach((f:any) => { 
+         if (
+          f.geometry.type === 'Polygon' 
+        ) 
+        // && f.properties['ISO3166-2'] === `US${state}`
+        {
+          // Draw polygon
+          const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+            return {
+              lat: coord[1],
+              lng: coord[0]
+            };
+          });
+
+          const polygon = new google.maps.Polygon({
+            paths: paths,
+            strokeColor: '#e74c3c',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#e74c3c',
+            fillOpacity: 0.35,
+            map: map
+          });
+
+          // Calculate polygon center for label placement
+          const bounds = new google.maps.LatLngBounds();
+          paths.forEach((path:any) => bounds.extend(path));
+          const center = bounds.getCenter();
+
+          // Show name by default
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+            position: center
+          });
+          infoWindow.open(map);
+        }
+      }); 
+    } catch (error) {
+      console.error("Error fetching boundary data:", error);
+    }
+  }
+  
+
+
+  //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+  //   console.log(state);
+    
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
+
+  //     data.features.forEach((f:any) => {
+  //       // if(f.geometry.type == 'Point' && f.properties.type == 'neighbourhood'  ){
+  //       //   // Draw circle only
+  //       //   const [lng, lat] = f.geometry.coordinates;
+
+  //       //   // Add circle around point
+  //       //   const circle = new google.maps.Circle({
+  //       //     strokeColor: '#3498db',
+  //       //     strokeOpacity: 0.8,
+  //       //     strokeWeight: 2,
+  //       //     fillColor: '#3498db', 
+  //       //     fillOpacity: 0.35,
+  //       //     map: map,
+  //       //     center: { lat, lng },
+  //       //     radius: 1600 // 1km radius
+  //       //   });
+
+  //       //   // Show name by default
+  //       //   const infoWindow = new google.maps.InfoWindow({
+  //       //     content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent ;padding: 7px">${f.properties.name}</div>`,
+  //       //     position: { lat, lng }
+  //       //   });
+  //       //   infoWindow.open(map);
+          
+
+  //       // } 
+  //        if (
+  //         f.geometry.type === 'Polygon' 
+  //       ) 
+  //       // && f.properties['ISO3166-2'] === `US${state}`
+  //       {
+  //         // Draw polygon
+  //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+  //           return {
+  //             lat: coord[1],
+  //             lng: coord[0]
+  //           };
+  //         });
+
+  //         const polygon = new google.maps.Polygon({
+  //           paths: paths,
+  //           strokeColor: '#e74c3c',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#e74c3c',
+  //           fillOpacity: 0.35,
+  //           map: map
+  //         });
+
+  //         // Calculate polygon center for label placement
+  //         const bounds = new google.maps.LatLngBounds();
+  //         paths.forEach((path:any) => bounds.extend(path));
+  //         const center = bounds.getCenter();
+
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+  //           position: center
+  //         });
+  //         infoWindow.open(map);
+  //       }
+  //     }); 
+  //   } catch (error) {
+  //     console.error("Error fetching boundary data:", error);
+  //   }
+  // }
+  
 
   addPropertyMarker(map: any, position: { lat: number; lng: number }, property: any) {
     return new google.maps.Marker({
@@ -649,17 +861,14 @@ export class MapsService {
       title: property.title
     });
   }
-
   getDefaultMapConfig() {
     return {
       center: { lat: 39.8283, lng: -98.5795 }, // Center of USA
       zoom: 4,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: false,
+       mapTypeControl: false,
       streetViewControl: false
     };
   }
-
   createMap(element: HTMLElement, config: any): any {
     return new google.maps.Map(element, config);
   }
