@@ -59,6 +59,7 @@ const routes: Routes = [
     component: StakeHolderComponent,
     canActivate: [AuthGuardService],
   },
+  
   {
     path: 'tasks',
     component: TasksComponent,
