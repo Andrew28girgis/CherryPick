@@ -1068,7 +1068,7 @@ tr:last-child td {
 
 .card {
   /* padding: 8px; */
-  height: 10000000000px;
+  height: fit-content;
   background: #fff;
   /* overflow: auto; */
 }
