@@ -1044,6 +1044,8 @@ line-height: 30px; /* 187.5% */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   position: relative; /* For proper stacking context */
+  border: 1px solid #EAECF0;
+
 }
 
 table {
@@ -1051,7 +1053,6 @@ table {
   border-collapse: separate;
   border-spacing: 0;
   background: white;
-  border: 1px solid #EAECF0;
 }
 
 th, td {
@@ -1109,7 +1110,7 @@ tr:last-child td {
   padding: 16px;
   margin-bottom: 8px;
   /* border: 1px solid #EAECF0; */
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+  /* box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05); */
 }
 
 @media (max-width: 768px) {

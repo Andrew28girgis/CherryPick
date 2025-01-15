@@ -235,9 +235,12 @@ private crf:ChangeDetectorRef,
 
   let body: any = {};
   body.json = movedItemWithoutOrganization;
-  body.mainEntity = 'kanbanOrganization';
-  body.name = 'kanbanOrganizations';
-  body.params = {};
+  body.mainEntity = 'UpdateKanbanOrganizationStage';
+  body.name = 'UpdateKanbanOrganizationStage';
+  body.params =  {
+        StageId: movedItem.kanbanStageId,
+        OrganizationId: movedItem.OrganizationId
+      };
 
   this.PlacesService.GenericAPI(body).subscribe({
     next: (data) => {

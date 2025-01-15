@@ -26,6 +26,15 @@ export interface KanbanOrganization {
   isExpanded?: boolean;
 }
 
+export interface KanOrganization {
+  Id: number;
+  kanbanStageId: number;
+  OrganizationId: string;
+  // Organization?: any[];
+  // LeadBroker?: any;
+  // isExpanded?: boolean;
+}
+
 export interface Organization {
   ID?: number;
   Name?: string;
