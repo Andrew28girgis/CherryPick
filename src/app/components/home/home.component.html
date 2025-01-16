@@ -101,7 +101,7 @@
                   <tr>
                     <th>Name</th>
                     <th>Address</th>
-                    <th *ngIf="placesRepresentative != false">Managed By</th>
+                    <th *ngIf="placesRepresentative != false">Leased by</th>
                     <th style="width: 250px">Unit Size & Lease Price</th>
                     <ng-container
                       *ngFor="
@@ -750,7 +750,7 @@
                     *ngIf="shopping.ShoppingCenter?.ManagerOrganization && placesRepresentative != false"
                   >
                   <hr class="small-hr mt-2" /> 
-                    <span class="managed-by">Managed by</span>
+                    <span class="managed-by">Leased by</span>
                     <p class="spec-head">
                       <img
                         class="logo"
@@ -1171,7 +1171,7 @@
                 class="col-md-12 spec"
                 *ngIf="place.ShoppingCenter?.ManagerOrganization && placesRepresentative != false"
               >
-                <span class="managed-by">Managed by</span>
+                <span class="managed-by">Leased by</span>
                 <p class="spec-head">
                   <img
                     class="logo"
