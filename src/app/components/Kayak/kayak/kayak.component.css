@@ -6,67 +6,10 @@ body{
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.filter-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 0;
-}
-
-.sticky-header {
-  position: sticky;
-  top: 0;
-  background: white;
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
-  z-index: 1;
-}
-
-.filter-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
-  
-  /* Custom scrollbar styling */
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-    
-    &:hover {
-      background: #555;
-    }
-  }
-}
-
-.filter-footer {
-  position: sticky;
-  bottom: 0;
-  background: white;
-  padding: 1rem;
-  border-top: 1px solid #eee;
-  text-align: center;
-}
-
 .form-select {
   border-radius: 0;
   padding: 7px 19px;
 }
-
-.separator {
-  margin: 0 10px;
-  font-weight: bold;
-  color: #ccc; 
-}
-
 .d-flex .form-select,
 .d-flex .input-group {
   flex-grow: 1; 
@@ -130,8 +73,8 @@ body{
 }
 
 .kayak-img {
-  height: 200px;
-  width: 200px;
+  height: 250px;
+  width: 300px;
   object-fit: cover; /* Maintain aspect ratio and cover the container */
   border-radius: 8px; /* Rounded corners */
   display: block; /* Ensure the image behaves as a block */
@@ -185,7 +128,7 @@ body{
 }
 
 .carddd:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1.3px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
 }
 .info-background {
@@ -283,6 +226,10 @@ line-height: 30px;
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+
 }
 
 .search-inputs option {
@@ -334,12 +281,6 @@ line-height: 30px;
   text-overflow: ellipsis; 
   max-width: 300px; 
 }
-.text-truncatename {
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  max-width: 150px; 
-}
 .text-managementorg {
   white-space: nowrap; 
   overflow: hidden; 
@@ -365,61 +306,6 @@ font-weight: 600;
 line-height: 30px; 
 }
 
-.range-container {
-  width: 100%;
-  height: 40px;
-  position: relative;
-}
-
-.form-range {
-  width: 100%;
-  background: transparent;
-  appearance: none;
-  z-index: 2;
-}
-
-.form-range::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #007bff;
-  cursor: pointer;
-}
-
-.form-range::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #007bff;
-  cursor: pointer;
-}
-
-.range-track {
-  position: absolute;
-  height: 4px;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 100%;
-  background: #ddd;
-  z-index: 1;
-}
-
-.range-values {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.range-track::after {
-  content: '';
-  position: absolute;
-  height: 100%;
-  background: #007bff;
-  z-index: 0;
-}
-
 .tags{
   background-color: var(--secondary-color);
   border: var(--secondary-color);
@@ -430,21 +316,7 @@ line-height: 30px;
   display: flex;
   flex-wrap: wrap;
 }
-.badge {
-  font-size: 14px;
-  padding: 5px 10px;
-  border-radius: 15px;
-}
-.view-act{
-  padding-top: 20px;
-  padding-left: 10px;
-  padding-right: 20px;
-}
-.view-act h4{
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--app-color);
-}
+
 .custom-multiselect {
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -472,75 +344,16 @@ line-height: 30px;
 .specialty-item input {
   margin-right: 10px;
 }
-.card-background{
- background-color: #efefef;
-}
 .no-underline {
   text-decoration: none !important; /* Remove underline */
 }
 .tenantorg{
   font-size: 0.9rem;
 }
-.image-slider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  width: 300px; /* Adjust based on your needs */
-}
-
-.image-slider img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.slider-control {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 5px 10px;
-  z-index: 10;
-}
-
-.slider-control.prev {
-  left: 0;
-}
-
-.slider-control.next {
-  right: 0;
-}
-
-.custom-carousel img {
-  max-height: 500px;
-  margin: auto;
-}
-
-
-.carousel-wrapper {
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-}
 .modal-imgg{
-  max-width: 400px;;
-}
-.locationstreetbtn{
-  flex: 1;
-  padding: 2px;
-  border-radius: var(--Button-Radius, 16px);
-  border: 1px solid var(--Body-General-Body-Border, #CACED3);
-  background: var(--Button-Secondary-BG, #FFF);
-  cursor: pointer;
-}
-.two-buttons{
-  width: 100%; 
-  gap: 16px;
+  max-width: 700px;
+  max-height: 700px;
+
 }
 .shoppingcentername{
   color: var(--Body-Heading-Color, #0C0D0E);
@@ -550,14 +363,6 @@ font-size: 16px;
 font-style: normal;
 font-weight: 600;
 line-height: 30px; 
-}
-.management-org{
-color: var(--Body-Body-Color-Text-Icons, #7A8591);
-font-family: Montserrat;
-font-size: 12px;
-font-style: normal;
-font-weight: 400;
-line-height: 20px;
 }
 .logooo{
   width: 24px;
@@ -571,54 +376,8 @@ line-height: 20px;
   position: relative;
 }
 
-.nested-card {
-  display: flex;
-  flex-direction: column;  /* Content flows vertically inside */
-  justify-content: center; /* Center content vertically */
-  align-items: center;     /* Center content horizontally */
-  gap: 10px;
-  padding: var(--Space-Space-8, 8px);
-  max-width: 600px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-  border-radius: var(--Radius-Radius-8, 8px);
-  text-align: center;
-}
-.custom-arrow-left{
-  border-radius: 20px;
-  margin-left: 155px; 
-}
-.custom-arrow-right{
-  border-radius: 20px;
-  margin-right: 155px; 
-}
-.carousel-indicators {
-  right: 0;
-  bottom: -15px;
-  left: 0;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin-right: 15%;
-  margin-bottom: 1rem;
-  margin-left: 15%;
-}
-.carousel-indicators button {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: gray; /* Default color */
-  border: none;
-  margin: 0 5px; /* Spacing between indicators */
-  transition: background-color 0.3s ease;
-}
-
-.carousel-indicators button.active {
-  background-color: black; /* Active indicator color */
-}
 .gallerybtn {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   opacity: 0.8; /* Softer look */
   transition: opacity 0.3s ease, transform 0.2s ease, backdrop-filter 0.3s ease; /* Smooth transitions */
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for blur effect */
@@ -637,11 +396,6 @@ line-height: 20px;
 .gallerybtn:active {
   opacity: 0.9; /* Slightly dimmed when clicked */
   transform: scale(0.95); /* Add a press effect */
-}
-.tenantbtn{
-    font-size: 0.8rem;
-    flex-grow: 1; /* Make the button take up the remaining space */
-    padding: 10px 16px;
 }
 .svg-container {
   display: inline-flex;

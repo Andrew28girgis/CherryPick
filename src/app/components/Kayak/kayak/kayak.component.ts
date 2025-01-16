@@ -1,5 +1,5 @@
 import { Organization } from './../../../../models/userKanban';
-import { Component, OnInit, TemplateRef,  ChangeDetectorRef,  NgZone, ViewChild
+import { Component, OnInit, TemplateRef,  ChangeDetectorRef,  NgZone, ViewChild,HostListener 
 
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -94,9 +94,9 @@ export class KayakComponent implements OnInit {
       minsize: 0,
       maxsize: 0,
     };
-    this.GetStatesAndCities();
-    this.GetFilters();
-    this.getResult();
+    this.getResult(); 
+    this.GetStatesAndCities(); 
+    this.GetFilters(); 
  
 
   }
@@ -152,7 +152,7 @@ export class KayakComponent implements OnInit {
         if (data && data.json) {
           this.ShoppingCenterTenants = data.json; // Populate tenants
           console.log('Fetched Tenants:', this.ShoppingCenterTenants); // Debugging
-          this.modalService.open(this.tenantModal, { centered: true }); // Open modal
+          this.modalService.open(this.tenantModal, { size: 'lg', centered: true }); // Open modal
         } else {
           this.ShoppingCenterTenants = []; // Handle no data scenario
         }
@@ -186,7 +186,7 @@ export class KayakComponent implements OnInit {
     console.log('Images for Gallery:', this.placeImage);
 
     // Open the gallery modal
-    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
+    this.modalService.open(this.galleryModal, { size: 'lg', centered: true });
   }
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
@@ -339,53 +339,75 @@ export class KayakComponent implements OnInit {
     this.updateSortedOrgs(); 
   }
   getResult(): void {
+    this.spinner.show();
     console.log('Filtering with values:', this.filterValues);
+  
+    const body: any = {
+      Name: 'GetResult',
+      Params: this.filterValues,
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        // Filter results to include only cards with complete data
+        this.KayakResult = data.json[0];
+        this.KayakResult.Result = this.KayakResult.Result.filter((result: any) => {
+          return (
+            result.MainImage &&
+            result.CenterName &&
+            result.CenterAddress &&
+            result.CenterCity &&
+            result.CenterState
+          );
+        });
+  
+        // Update tenant selection
+        const selectedTenantIds = this.filterValues.tenants.split(',');
+        this.sortedTenants.forEach((tenant) => {
+          tenant.Selected = selectedTenantIds.includes(String(tenant.OrganizationId));
+        });
+  
+        console.log('Filtered Result:', this.KayakResult);
+        this.spinner.hide();
+      },
+      error: (error) => {
+        console.error('Error fetching filtered results:', error);
+        this.spinner.hide();
+      },
+    });
+  }
+  
+  
 
+ GetFilters(): void {
+  this.spinner.show();
   const body: any = {
-    Name: 'GetResult',
-    Params: this.filterValues,
+    Name: 'GetFilters',
+    Params: {
+      ids: this.Ids,
+    },
   };
 
-  this.spinner.show();
   this.PlacesService.GenericAPI(body).subscribe({
-    next: (data) => {
-      this.KayakResult = data.json[0];
-      console.log('Filtered Result:', this.KayakResult);
+    next: (data: any) => {
+      if (data && data.json && data.json.length > 0) {
+        this.Filters = data.json[0];
+        console.log('Filters loaded:', this.Filters); // Debugging
+
+        this.updateSortedTenants(); // Populate tenants
+        this.updateSortedOrgs(); // Populate management organizations
+      } else {
+        console.error('Filters data is empty or undefined.');
+      }
       this.spinner.hide();
     },
     error: (error) => {
-      console.error('Error fetching filtered results:', error);
+      console.error('Error fetching filters:', error);
       this.spinner.hide();
     },
   });
-  
 }
-  
 
-  GetFilters(): void {
-    this.spinner.show();
-    const body: any = {
-      Name: 'GetFilters',
-      Params: {
-        ids: this.Ids,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        if (data && data.json && data.json.length > 0) {
-          this.Filters = data.json[0];
-          // this.showAllTenants=data.json[0].Tenants;
-          console.log('TT',this.Filters.Tenants);
-          
-          this.updateSortedTenants(); // Sort tenants on fetch
-          this.updateSortedOrgs(); // Sort organizations on fetch
-        }
-
-        this.spinner.hide();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
 
   updateSortedOrgs(): void {
     if (!this.Filters?.ManagementOrganization || this.Filters.ManagementOrganization.length === 0) {
@@ -467,8 +489,8 @@ export class KayakComponent implements OnInit {
     // Split, trim, and remove empty entries
     let tenantIds = currentTenants
       .split(',')
-      .map((id:any) => id.trim())
-      .filter((id:any) => id !== '');
+      .map((id: any) => id.trim())
+      .filter((id: any) => id !== '');
   
     const orgIdAsString = String(tenant.OrganizationId);
   
@@ -479,15 +501,23 @@ export class KayakComponent implements OnInit {
       }
     } else {
       // Remove the ID
-      tenantIds = tenantIds.filter((id:any) => id !== orgIdAsString);
+      tenantIds = tenantIds.filter((id: any) => id !== orgIdAsString);
     }
   
+    // Update filterValues.tenants
     this.filterValues.tenants = tenantIds.join(',');
+  
+    // Update tenant.Selected status in sortedTenants
+    this.sortedTenants.forEach((t) => {
+      t.Selected = tenantIds.includes(String(t.OrganizationId));
+    });
+  
     console.log('Updated Tenants Filter:', this.filterValues.tenants);
   
     // Trigger filtering API
     this.getResult();
   }
+  
   
 
   toggleOrgSelection(org: ManagementOrganization): void {
@@ -513,6 +543,26 @@ export class KayakComponent implements OnInit {
   
     this.filterValues.managementOrganizationIds = orgIds.join(',');
     console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
+  
+    // Trigger filtering API
+    this.getResult();
+  }
+  handleAvailabilityChange(): void {
+    console.log('Availability changed:', this.filterValues.availabilty);
+  
+    // Update filter values
+    this.filterValues.availabilty = !!this.filterValues.availabilty;
+  
+    // Trigger filtering API
+    this.getResult();
+  }
+  handleSqftChange(): void {
+    console.log('Sqft changed:', this.filterValues.sqft);
+  
+    // Prevent invalid sqft values
+    if (this.filterValues.sqft < 0) {
+      this.filterValues.sqft = 0;
+    }
   
     // Trigger filtering API
     this.getResult();
@@ -626,6 +676,13 @@ export class KayakComponent implements OnInit {
   }
   toggleDropdown(index: number): void {
     this.isDropdownOpenIndex = this.isDropdownOpenIndex === index ? null : index;
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.circle-container') && !target.closest('.custom-dropdown')) {
+      this.isDropdownOpenIndex = null; // Close the dropdown if clicked outside
+    }
   }
   toggleSeeMore(): void {
     this.showMorePlaces = !this.showMorePlaces;
