@@ -396,9 +396,7 @@ export class KayakComponent implements OnInit {
 
         this.updateSortedTenants(); // Populate tenants
         this.updateSortedOrgs(); // Populate management organizations
-      } else {
-        console.error('Filters data is empty or undefined.');
-      }
+      } 
       this.spinner.hide();
     },
     error: (error) => {
