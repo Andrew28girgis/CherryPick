@@ -5,7 +5,7 @@
       <div class="card card-filter ">
         <div
           class="card-body position-relative "
-          style="height: 100vh; overflow-y: scroll"
+          
         >
           <div class="d-flex align-items-center justify-content-between">
             <div class="title-filter">
@@ -20,16 +20,14 @@
             <select
               id="state-select"
               class="form-select search-inputs"
-              (change)="getCitiesOfState()"
               [(ngModel)]="filterValues.statecode"
+              (ngModelChange)="onStateChange()"
             >
               <option selected>All</option>
-              <option *ngFor="let state of uniqueStates">
-                {{ state }}
-              </option>
+              <option *ngFor="let state of uniqueStates">{{ state }}</option>
             </select>
           </div>
-
+          
           <div>
             <div class="mt-3 small-titlefilter">
               <span>City</span>
@@ -38,16 +36,18 @@
               id="city-select"
               class="form-select search-inputs"
               [(ngModel)]="filterValues.city"
+              (ngModelChange)="onCityChange()"
             >
               <option selected>All</option>
-              <option *ngFor="let city of uniqueCities">
-                {{ city.city }}
-              </option>
+              <option *ngFor="let city of uniqueCities">{{ city.city }}</option>
             </select>
           </div>
+          
 
           <ng-container *ngIf="Filters">
             <hr class="small-line" />
+          
+            <!-- Availability Filter -->
             <div>
               <div class="mt-3 small-titlefilter">
                 <input
@@ -56,27 +56,31 @@
                   name="availabilty"
                   class="form-check-input"
                   [(ngModel)]="filterValues.availabilty"
+                  (ngModelChange)="getResult()"
                 />
-                <label for="availabilty" class="form-check-label ms-2"
-                  >Availabilty</label
-                >
+                <label for="availabilty" class="form-check-label ms-2">Availabilty</label>
               </div>
-
-              <div class="mt-3 small-titlefilter">
-                <span>Sqft</span>
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="sqft"
-                  [(ngModel)]="filterValues.sqft"
-                />
-              </div>
+          
+              <!-- Square Footage Filter -->
+             <div class="mt-3 small-titlefilter">
+  <span>Sqft</span>
+  <input
+    type="number"
+    class="form-control"
+    placeholder="sqft"
+    [(ngModel)]="filterValues.sqft"
+    (change)="getResult()"
+  />
+</div>
+          
+              <!-- Secondary Type Filter -->
               <div class="mt-3 small-titlefilter">
                 <span>Secondary Type</span>
               </div>
               <select
                 class="form-select search-inputs"
                 [(ngModel)]="filterValues.secondarytype"
+                (ngModelChange)="getResult()"
               >
                 <option selected>All</option>
                 <ng-container *ngFor="let Secondary of Filters?.SecondaryType">
@@ -86,96 +90,86 @@
                 </ng-container>
               </select>
             </div>
+          
             <hr class="small-line" />
+          
+            <!-- Tenants Filter -->
             <div>
-              <div class="mt-3 small-titlefilter">
-                <span>Tenants</span>
-              </div>
-              <div class="mt-3">
-                <ng-container *ngFor="let tenant of sortedTenants">
-                  <div class="form-check" *ngIf="tenant.Name">
-                    <input
-                      type="checkbox"
-                      [id]="'tenant-' + tenant.OrganizationId"
-                      name="Comp-Tenants"
-                      class="form-check-input"
-                      (change)="toggleTenantSelection(tenant)"
-                      [(ngModel)]="tenant.Selected"
-                    />
-                    <label
-                      class="form-check-label tenantorg"
-                      [for]="'tenant-' + tenant.OrganizationId"
-                    >
-                      {{ tenant.Name.length > 25 ? tenant.Name.slice(0, 25) + '...' : tenant.Name }}
-                    </label>
-                  </div>
+              <div>
+                <div class="mt-3 small-titlefilter">
+                  <span>Tenants</span>
+                </div>
+                <div class="mt-3">
+                  <ng-container *ngFor="let tenant of sortedTenants">
+                    <div class="form-check" *ngIf="tenant.Name">
+                      <input
+                        type="checkbox"
+                        [id]="'tenant-' + tenant.OrganizationId"
+                        name="Comp-Tenants"
+                        class="form-check-input"
+                        (change)="toggleTenantSelection(tenant)"
+                        [(ngModel)]="tenant.Selected"
+                      />
+                      <label
+                        class="form-check-label tenantorg"
+                        [for]="'tenant-' + tenant.OrganizationId"
+                      >
+                        {{ tenant.Name.length > 25 ? tenant.Name.slice(0, 25) + '...' : tenant.Name }}
+                      </label>
+                    </div>
                   </ng-container>
-                <div class="text-center mt-2">
-                  <button
-                    class="btn btn-link no-underline"
-                    (click)="toggleTenantList()"
-                  >
-                    {{ showAllTenants ? "Show Less ▲" : "Show More ▼" }}
-                  </button>
+                  <div class="text-center mt-2">
+                    <button class="btn btn-link no-underline" (click)="toggleTenantList()">
+                      {{ showAllTenants ? "Show Less ▲" : "Show More ▼" }}
+                    </button>
+                  </div>
                 </div>
               </div>
               
               
               
               
+            
             </div>
+          
+            <!-- Tags Filter -->
             <div>
               <div class="mt-3 small-titlefilter">
                 <span>Tenant Tags</span>
               </div>
-              <div>
-                <button class="x-btn tags" (click)="openTagsModal(tagsModal)">
-                  Select Tags <i class="fas fa-tags ml-1"></i>
-                </button>
-                <div
-                  *ngIf="selectedTags.length > 0"
-                  class="mt-3 d-flex flex-column"
-                >
-                  <span *ngFor="let tag of selectedTags" class="">
-                    {{ tag.tag }}
-                    <!-- <i
-                      class="fas fa-times ml-1 cursor-pointer"
-                      (click)="removeTag(tag)"
-                    ></i> -->
-                  </span>
-                </div>
-              </div>
+              <button class="x-btn tags" (click)="openTagsModal(tagsModal)">
+                Select Tags <i class="fas fa-tags ml-1"></i>
+              </button>
             </div>
+          
+            <!-- Management Company Filter -->
             <div>
               <div class="mt-3 small-titlefilter">
                 <span>Management Company</span>
               </div>
               <div class="mt-3">
                 <div *ngFor="let Org of sortedOrgs">
-                <div class="form-check" *ngIf="Org.Name">
+                  <div class="form-check" *ngIf="Org.Name">
                     <input
                       type="checkbox"
                       name="Comp-Tenants"
                       class="form-check-input"
-                      (change)="toggleOrgSelect(Org)"
+                      (change)="toggleOrgSelection(Org)"
                       [(ngModel)]="Org.Selected"
                     />
-                      <label class="form-check-label tenantorg">
-                        {{ Org.Name.length > 25 ? Org.Name.slice(0, 25) + '...' : Org.Name }}
-                      </label>
+                    <label class="form-check-label tenantorg">
+                      {{ Org.Name.length > 25 ? Org.Name.slice(0, 25) + '...' : Org.Name }}
+                    </label>
                   </div>
                 </div>
                 <div class="text-center mt-2">
-                  <button
-                    class="btn btn-link no-underline"
-                    (click)="toggleOrgList()"
-                  >
+                  <button class="btn btn-link no-underline" (click)="toggleOrgList()">
                     {{ showAllOrgs ? "Show Less ▲" : "Show More ▼" }}
                   </button>
                 </div>
               </div>
-              
             </div>
+            
           </ng-container>
           <div class="d-flex align-items-center justify-content-center mt-3">
             <button
