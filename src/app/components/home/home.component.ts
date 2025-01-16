@@ -351,7 +351,6 @@ export class HomeComponent implements OnInit {
       const { Map } = await google.maps.importLibrary('maps');
       if (this.savedMapView) {
         const { lat, lng, zoom } = JSON.parse(this.savedMapView);
-
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
             lat: lat,
@@ -393,6 +392,7 @@ export class HomeComponent implements OnInit {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
 
+      //this.getPolygons();
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
@@ -402,34 +402,36 @@ export class HomeComponent implements OnInit {
   createMarkers(markerDataArray: any[], type: string) {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(this.map, markerData, type);
-    });
+      // this.markerService.fetchAndDrawPolygon(th)
+    }); 
 
-    let centerIds: any[] = [];
-    this.shoppingCenters.forEach((center) => {
-      // centerIds.push(center.Id);
-      if (center.Latitude && center.Longitude) {
-        // this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood);
-        if (this.shoppingCenters.indexOf(center) < 1) {
-          this.markerService.fetchAndDrawPolygon(
-            this.map,
-            center.CenterCity,
-            center.CenterState,
-            center.Latitude,
-            center.Longitude
-          );
-        }
-      }
-    });
+    // let centerIds: any[] = [];
+    // this.shoppingCenters.forEach((center) => {
+    //   // centerIds.push(center.Id);
+    //   if (center.Latitude && center.Longitude) {
+    //     // this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood);
+    //     if (this.shoppingCenters.indexOf(center) < 1) {
+    //       this.markerService.fetchAndDrawPolygon(
+    //         this.map,
+    //         center.CenterCity,
+    //         center.CenterState,
+    //         center.Latitude,
+    //         center.Longitude
+    //       );
+    //     }
+    //   }
+    // });
 
-    const centerIdsString = centerIds.join(',');
-    // this.getPolygons(centerIdsString);
+    // const centerIdsString = centerIds.join(',');
   }
 
-  getPolygons(centerIdsString: string) {
+
+  getPolygons() {
     const body: any = {
-      Name: 'GetShoppingCenterPolygons',
+      Name: 'GetBuyBoxSCsIntersectPolys',
       Params: {
-        ids: centerIdsString,
+        BuyBoxId : this.BuyBoxId,
+        PolygonSourceId : 3 
       },
     };
     this.PlacesService.GenericAPI(body).subscribe((data) => {

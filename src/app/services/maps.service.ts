@@ -639,6 +639,7 @@ export class MapsService {
       return '';
     }
   }
+
   clearMarkers() {
     this.markers.forEach((m) => m.setMap(null));
     this.markers = [];
@@ -646,6 +647,39 @@ export class MapsService {
     this.openInfoWindow = null;
     this.currentlyOpenInfoWindow = null;
   }
+
+  addPropertyMarker(
+    map: any,
+    position: { lat: number; lng: number },
+    property: any
+  ) {
+    return new google.maps.Marker({
+      position,
+      map,
+      title: property.title,
+    });
+  }
+
+  getDefaultMapConfig() {
+    return {
+      center: { lat: 39.8283, lng: -98.5795 }, // Center of USA
+      zoom: 4,
+      mapTypeControl: false,
+      streetViewControl: false,
+    };
+  }
+
+  createMap(element: HTMLElement, config: any): any {
+    return new google.maps.Map(element, config);
+  }
+
+  setPlacesRepresentative(PlacesRepresentative: any) {
+    this.placesRepresentative = PlacesRepresentative;
+  }
+
+  getPlacesRepresentative(): boolean | undefined {
+    return this.placesRepresentative;
+  } 
 
   drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
     polygonFeatures.forEach((feature) => {
@@ -686,9 +720,9 @@ export class MapsService {
         map: map,
         label: {
           text: feature.name,
-          color: '#000000',
-          fontSize: '12px',
-          fontWeight: 'bold',
+          color: '#00426e',
+          fontSize: '11px',
+          fontWeight: '600',
         },
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
@@ -700,100 +734,158 @@ export class MapsService {
     }
   }
 
-  drawPolygons(map: any, response: any): void {
-    if (!map || !response || !Array.isArray(response)) {
-      console.error('Invalid parameters provided to drawPolygons');
-      return;
-    }
 
-    response.forEach((polygonCoordinates: number[][][]) => {
-      const paths = polygonCoordinates.map((coords) => {
-        return coords
-          .map((coord: any) => {
-            // Ensure that latitude and longitude are numbers
-            const lat = parseFloat(coord[1]);
-            const lng = parseFloat(coord[0]);
 
-            // Check if they are valid numbers
-            if (isNaN(lat) || isNaN(lng)) {
-              console.error('Invalid coordinate:', coord);
-              return null;
-            }
+  
 
-            return { lat, lng };
-          })
-          .filter((point) => point !== null); // Remove invalid points
-      });
+  // drawPolygons(map: any, response: any): void {
+  //   if (!map || !response || !Array.isArray(response)) {
+  //     console.error('Invalid parameters provided to drawPolygons');
+  //     return;
+  //   }
 
-      // Create the polygon
-      const polygon = new google.maps.Polygon({
-        paths,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-      });
+  //   response.forEach((polygonCoordinates: number[][][]) => {
+  //     const paths = polygonCoordinates.map((coords) => {
+  //       return coords
+  //         .map((coord: any) => {
+  //           // Ensure that latitude and longitude are numbers
+  //           const lat = parseFloat(coord[1]);
+  //           const lng = parseFloat(coord[0]);
 
-      polygon.setMap(map);
-    });
-  }
+  //           // Check if they are valid numbers
+  //           if (isNaN(lat) || isNaN(lng)) {
+  //             console.error('Invalid coordinate:', coord);
+  //             return null;
+  //           }
 
-  async fetchAndDrawPolygon(
-    map: any,
-    city: any,
-    state: any,
-    lat?: any,
-    lng?: any
-  ): Promise<void> {
-    console.log(state);
+  //           return { lat, lng };
+  //         })
+  //         .filter((point) => point !== null); // Remove invalid points
+  //     });
 
-    // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
-    const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
+  //     // Create the polygon
+  //     const polygon = new google.maps.Polygon({
+  //       paths,
+  //       strokeColor: '#FF0000',
+  //       strokeOpacity: 0.8,
+  //       strokeWeight: 2,
+  //       fillColor: '#FF0000',
+  //       fillOpacity: 0.35,
+  //     });
 
-    try {
-      const response = await fetch(boundaryUrl);
-      const data: any = await response.json();
-      data.features?.forEach((f: any) => {
-        if (f.geometry.type === 'Polygon') {
-          // && f.properties['ISO3166-2'] === `US${state}`
-          // Draw polygon
-          const paths = f.geometry.coordinates[0].map((coord: number[]) => {
-            return {
-              lat: coord[1],
-              lng: coord[0],
-            };
-          });
+  //     polygon.setMap(map);
+  //   });
+  // }
 
-          const polygon = new google.maps.Polygon({
-            paths: paths,
-            strokeColor: '#e74c3c',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#e74c3c',
-            fillOpacity: 0.35,
-            map: map,
-          });
+  
+  // async fetchAndDrawPolygon(
+  //   map: any,
+  //   city: any,
+  //   state: any,
+  //   lat?: any,
+  //   lng?: any
+  // ): Promise<void> {
+  //   console.log(state);
 
-          // Calculate polygon center for label placement
-          const bounds = new google.maps.LatLngBounds();
-          paths.forEach((path: any) => bounds.extend(path));
-          const center = bounds.getCenter();
+  //   // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
 
-          // Show name by default
-          const infoWindow = new google.maps.InfoWindow({
-            content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
-            position: center,
-          });
-          infoWindow.open(map);
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching boundary data:', error);
-    }
-  }
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
+  //     data.features?.forEach((f: any) => {
+  //       if (f.geometry.type === 'Polygon') {
+  //         // && f.properties['ISO3166-2'] === `US${state}`
+  //         // Draw polygon
+  //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+  //           return {
+  //             lat: coord[1],
+  //             lng: coord[0],
+  //           };
+  //         });
 
-  //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+  //         const polygon = new google.maps.Polygon({
+  //           paths: paths,
+  //           strokeColor: '#e74c3c',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#e74c3c',
+  //           fillOpacity: 0.35,
+  //           map: map,
+  //         });
+
+  //         // Calculate polygon center for label placement
+  //         const bounds = new google.maps.LatLngBounds();
+  //         paths.forEach((path: any) => bounds.extend(path));
+  //         const center = bounds.getCenter();
+
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+  //           position: center,
+  //         });
+  //         infoWindow.open(map);
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error('Error fetching boundary data:', error);
+  //   }
+  // }
+
+  // async fetchAndDrawPolygons(
+  //   map: any,
+  //   buyboxId: any, 
+  // ): Promise<void> { 
+
+  //   // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
+
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
+  //     data.features?.forEach((f: any) => {
+  //       if (f.geometry.type === 'Polygon') {
+  //         // && f.properties['ISO3166-2'] === `US${state}`
+  //         // Draw polygon
+  //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+  //           return {
+  //             lat: coord[1],
+  //             lng: coord[0],
+  //           };
+  //         });
+
+  //         const polygon = new google.maps.Polygon({
+  //           paths: paths,
+  //           strokeColor: '#e74c3c',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#e74c3c',
+  //           fillOpacity: 0.35,
+  //           map: map,
+  //         });
+
+  //         // Calculate polygon center for label placement
+  //         const bounds = new google.maps.LatLngBounds();
+  //         paths.forEach((path: any) => bounds.extend(path));
+  //         const center = bounds.getCenter();
+
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+  //           position: center,
+  //         });
+  //         infoWindow.open(map);
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error('Error fetching boundary data:', error);
+  //   }
+  // }
+
+
+
+  
+   //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
   //   console.log(state);
 
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
@@ -866,36 +958,4 @@ export class MapsService {
   //     console.error("Error fetching boundary data:", error);
   //   }
   // }
-
-  addPropertyMarker(
-    map: any,
-    position: { lat: number; lng: number },
-    property: any
-  ) {
-    return new google.maps.Marker({
-      position,
-      map,
-      title: property.title,
-    });
-  }
-  getDefaultMapConfig() {
-    return {
-      center: { lat: 39.8283, lng: -98.5795 }, // Center of USA
-      zoom: 4,
-      mapTypeControl: false,
-      streetViewControl: false,
-    };
-  }
-
-  createMap(element: HTMLElement, config: any): any {
-    return new google.maps.Map(element, config);
-  }
-
-  setPlacesRepresentative(PlacesRepresentative: any) {
-    this.placesRepresentative = PlacesRepresentative;
-  }
-
-  getPlacesRepresentative(): boolean | undefined {
-    return this.placesRepresentative;
-  }
 }
