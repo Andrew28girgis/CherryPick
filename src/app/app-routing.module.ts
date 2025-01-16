@@ -18,6 +18,7 @@ import { SourcesComponent } from './components/kanban/sources/sources.component'
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
+import { CommunicationComponent } from './components/kanban/communication/communication.component';
 
 
 const routes: Routes = [
@@ -91,10 +92,15 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
-    path: 'kayak',
-    component: KayakComponent,
+    path: 'communication',
+    component: CommunicationComponent,
     canActivate: [AuthGuardService],
   },
+    {
+      path: 'kayak',
+      component: KayakComponent,
+      canActivate: [AuthGuardService],
+    },
 ];
 
 @NgModule({

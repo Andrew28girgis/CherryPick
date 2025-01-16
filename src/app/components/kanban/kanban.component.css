@@ -375,7 +375,7 @@
 
 .kanban-card:hover::before {
   opacity: 1;
-  cursor: grab;
+  /* cursor: grab; */
 
 }
 
@@ -387,7 +387,7 @@
 .kanban-card:active {
   /* cursor: grabbing; */
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
-  cursor: grab;
+  /* cursor: grab; */
   transform: translateY(-2px) scale(0.98);
 }
 
@@ -864,7 +864,7 @@
   opacity: 0.9;
   transform: scale(1.05);
   transition: all 0.2s var(--transition-bezier);
-  cursor: grab;
+  /* cursor: grab; */
 
 }
 
@@ -1005,7 +1005,7 @@
   background: var(--glass-bg);
   border-radius: 12px;
   margin: 1rem;
-  overflow: visible;
+  overflow: hidden;
   box-shadow: var(--glass-shadow);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(8px);
@@ -1031,7 +1031,9 @@ td {
   border-right: 1px solid #eaecf0;
   background: #fff;
   vertical-align: top;
-  width: auto;
+  width: 320px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 th {
@@ -1046,7 +1048,7 @@ th {
 }
 
 tr {
-  border-bottom: 1px solid #caced3;
+  border-bottom: 1px solid #eaecf0;
   /* border-right: 1px solid #CACED3; */
 
   width: 100%;
@@ -1067,9 +1069,14 @@ tr:last-child td {
 }
 
 .card {
-  /* padding: 8px; */
-  height: fit-content;
+/* padding: 8px; */
+  /* height: fit-content;
+   */
+   min-height:500px;
+   /* padding-bottom: 200px; */
   background: #fff;
+  min-width: 250px;
+
   /* overflow: auto; */
 }
 
@@ -1081,7 +1088,7 @@ tr:last-child td {
   /* border: 1px solid #EAECF0; */
   /* box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05); */
 }
-
+/* 
 @media (max-width: 768px) {
   .table-container {
     margin: 8px;
@@ -1101,4 +1108,4 @@ tr:last-child td {
 
 td {
   padding: 0;
-}
+} */

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SourcesService, WebsiteMetadata } from '../../../services/sources-service.service';
+import { Sources2Service, WebsiteMetadata } from '../../../services/sorces2.service';
 
 interface Source {
   id: number;
@@ -21,7 +21,7 @@ export class SourcesComponent implements OnInit {
   showAddModal: boolean = false;
   isLoading: boolean = false;
 
-  constructor(private sourcesService: SourcesService) {}
+  constructor(private sourcesService: Sources2Service) {}
 
   ngOnInit(): void {
     this.loadSources();
@@ -32,44 +32,57 @@ export class SourcesComponent implements OnInit {
   }
 
   loadSources(): void {
-    this.isLoading = true;
-    // Simulate loading sources
-    setTimeout(() => {
-      this.sources = [];
-      this.isLoading = false;
-    }, 1000);
+    const savedSources = localStorage.getItem('sources');
+    if (savedSources) {
+      this.sources = JSON.parse(savedSources);
+    }
   }
 
   handleAddSource(url: string): void {
     this.isLoading = true;
     this.sourcesService.getWebsiteMetadata(url).subscribe({
       next: (metadata: WebsiteMetadata) => {
+        console.log('Received metadata:', metadata);
         const newSource: Source = {
           id: this.sources.length + 1,
-          name: metadata.title || 'Untitled',
+          name: metadata.title,
           description: metadata.description,
-          logo: metadata.favicon || this.getFallbackIcon(url),
-          url: url,
-          loadError: !metadata.success
+          logo: metadata.favicon,
+          url: url
         };
         
+        console.log('Created new source:', newSource);
         this.sources = [...this.sources, newSource];
+        this.saveSources();
         this.closeAddSourceModal();
       },
       error: (error) => {
         console.error('Error adding source:', error);
+        const hostname = this.sourcesService.getHostnameFromURL(url);
+        const fallbackSource: Source = {
+          id: this.sources.length + 1,
+          name: hostname,
+          description: `Website link for ${hostname}`,
+          logo: this.getFallbackIcon(url),
+          url: url
+        };
+        this.sources = [...this.sources, fallbackSource];
+        this.saveSources();
+        this.closeAddSourceModal();
       },
       complete: () => {
         this.isLoading = false;
       }
     });
   }
-  
-  
+
+  saveSources(): void {
+    localStorage.setItem('sources', JSON.stringify(this.sources));
+  }
 
   toggleOptions(source: Source): void {
-    // Implement options menu logic here
     console.log('Toggle options for source:', source);
+    // Implement options menu logic here
   }
 
   onSidebarCollapse(collapsed: boolean): void {

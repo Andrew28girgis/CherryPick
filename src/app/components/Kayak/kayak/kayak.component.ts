@@ -57,6 +57,7 @@ export class KayakComponent implements OnInit {
   isDropdownOpenIndex: number | null = null; // Track which card's dropdown is open
   showMorePlaces: boolean = false; // Track if additional places should be shown
   showAllPlacesIndex: number | null = null; // Track which card's places are fully visible
+  showAllSqft: boolean = false; // Toggle to show all or limited sqft results
 
 
 
@@ -80,7 +81,6 @@ export class KayakComponent implements OnInit {
 
   ngOnInit(): void {
     this.General = new General();
-    this.GetStatesAndCities();
     this.filterValues = {
       statecode: '',
       city: '',
@@ -94,8 +94,9 @@ export class KayakComponent implements OnInit {
       minsize: 0,
       maxsize: 0,
     };
-    this.getResult();
+    this.GetStatesAndCities();
     this.GetFilters();
+    this.getResult();
  
 
   }
@@ -291,44 +292,40 @@ export class KayakComponent implements OnInit {
     });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
-
   toggleTenantList(): void {
     this.showAllTenants = !this.showAllTenants;
-    this.updateSortedTenants();
+    this.updateSortedTenants(); // Update the tenant list based on the toggle
   }
+  
 
   updateSortedTenants(): void {
     if (!this.Filters?.Tenants || this.Filters.Tenants.length === 0) {
       console.error('Tenants list is empty or undefined.');
-      this.sortedTenants = []; 
+      this.sortedTenants = [];
       return;
     }
   
+    // Sort tenants alphabetically
     const sortedList = [...this.Filters.Tenants].sort((a, b) => {
       const nameA = a.Name || '';
       const nameB = b.Name || '';
       return nameA.localeCompare(nameB);
     });
   
+    // Deduplicate tenants
     const uniqueTenants = Array.from(
-      new Set(
-        sortedList.map((tenant) => `${tenant.OrganizationId}-${tenant.Name}`)
-      )
-    ).map((uniqueKey) =>
-      sortedList.find(
-        (tenant) => `${tenant.OrganizationId}-${tenant.Name}` === uniqueKey
-      )
-    );
+      new Set(sortedList.map((tenant) => tenant.OrganizationId))
+    ).map((id) => sortedList.find((tenant) => tenant.OrganizationId === id))
+      .filter((tenant): tenant is Tenant => tenant !== undefined); // Ensure valid tenants
   
-    this.sortedTenants = uniqueTenants.filter(
-      (tenant): tenant is Tenant => tenant !== undefined
-    );
+    // Correctly slice the tenant list based on the toggle state
     this.sortedTenants = this.showAllTenants
-    ? this.sortedTenants 
-    : this.sortedTenants.slice(0, 12); 
+      ? uniqueTenants // Show all tenants
+      : uniqueTenants.slice(0, 12); // Show only the first 12 tenants
   
-    console.log('Unique and Sorted Tenants:', this.sortedTenants);
+    console.log('Updated Tenants:', this.sortedTenants);
   }
+  
   
   
   
@@ -342,32 +339,26 @@ export class KayakComponent implements OnInit {
     this.updateSortedOrgs(); 
   }
   getResult(): void {
-    console.log(`filter values`);
-    console.log(this.filterValues);
-  
-    const body: any = {
-      Name: 'GetResult',
-      Params: this.filterValues,
-    };
-  
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.KayakResult = data.json[0];
-        console.log('KayakResult',this.KayakResult);
+    console.log('Filtering with values:', this.filterValues);
 
- if (this.KayakResult?.Result && Array.isArray(this.KayakResult.Result)) {
-   this.KayakResult.Result.forEach((result: any) => {
-     if (result.Images) {
-       const images = result.Images.split(',').map((link: string) => link.trim());
-       this.placeImage.push(...images); // Add trimmed image links to placeImage
-     }
-   });
- }
+  const body: any = {
+    Name: 'GetResult',
+    Params: this.filterValues,
+  };
 
-//  console.log('Collected Place Images:', this.placeImage);
-},
-error: (error) => console.error('Error fetching APIs:', error),
-});
+  this.spinner.show();
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (data) => {
+      this.KayakResult = data.json[0];
+      console.log('Filtered Result:', this.KayakResult);
+      this.spinner.hide();
+    },
+    error: (error) => {
+      console.error('Error fetching filtered results:', error);
+      this.spinner.hide();
+    },
+  });
+  
 }
   
 
@@ -437,22 +428,31 @@ error: (error) => console.error('Error fetching APIs:', error),
 
   GetStatesAndCities(): void {
     this.spinner.show();
-    const body: any = {
-      Name: 'GetStates',
-      Params: {},
-    };
+    const body: any = { Name: 'GetStates', Params: {} };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakCitiesandStates = data.json;
-        this.uniqueStates = [
-          ...new Set(
-            this.KayakCitiesandStates.map((item: any) => item.stateCode.trim())
-          ),
-        ];
+        this.uniqueStates = [...new Set(this.KayakCitiesandStates.map((item: any) => item.stateCode.trim()))];
         this.spinner.hide();
       },
-      error: (error) => console.error('Error fetching APIs:', error),
+      error: (error) => {
+        console.error('Error fetching states and cities:', error);
+        this.spinner.hide();
+      },
     });
+  }
+  onStateChange(): void {
+    this.updateCitiesForSelectedState();
+    this.getResult(); // Automatically call the API on state change
+  }
+
+  onCityChange(): void {
+    this.getResult(); // Automatically call the API on city change
+  }
+  updateCitiesForSelectedState(): void {
+    this.uniqueCities = this.KayakCitiesandStates.filter(
+      (s) => !this.filterValues.statecode || s.stateCode === this.filterValues.statecode
+    );
   }
 
   getCitiesOfState() {
@@ -461,20 +461,17 @@ error: (error) => console.error('Error fetching APIs:', error),
       (s) => s.stateCode == this.filterValues?.statecode
     );
   }
-
   toggleTenantSelection(tenant: Tenant): void {
-    // Safely get the current comma-separated string of IDs
     const currentTenants = this.filterValues.tenants || '';
-
-    // Split on commas, trim spaces, and remove any empty entries
+  
+    // Split, trim, and remove empty entries
     let tenantIds = currentTenants
       .split(',')
-      .map((id: any) => id.trim())
-      .filter((id: any) => id !== '');
-
-    // Convert OrganizationId to string to ensure matching works
+      .map((id:any) => id.trim())
+      .filter((id:any) => id !== '');
+  
     const orgIdAsString = String(tenant.OrganizationId);
-
+  
     if (tenant.Selected) {
       // Add the ID if not already present
       if (!tenantIds.includes(orgIdAsString)) {
@@ -482,26 +479,46 @@ error: (error) => console.error('Error fetching APIs:', error),
       }
     } else {
       // Remove the ID
-      tenantIds = tenantIds.filter((id: any) => id !== orgIdAsString);
+      tenantIds = tenantIds.filter((id:any) => id !== orgIdAsString);
     }
-
-    // Convert back to a comma-separated string
+  
     this.filterValues.tenants = tenantIds.join(',');
-    console.log('Tenants:', this.filterValues.tenants);
+    console.log('Updated Tenants Filter:', this.filterValues.tenants);
+  
+    // Trigger filtering API
+    this.getResult();
   }
+  
 
-  toggleOrgSelection() {
-    this.filterValues.managementOrganizationIds =
-      this.Filters?.ManagementOrganization?.filter(
-        (org: ManagementOrganization) => org.Selected
-      )
-        .map((org: ManagementOrganization) => org.OrganizationId)
-        .join(',');
-    console.log(
-      'ManagementOrganizationIds:',
-      this.filterValues.managementOrganizationIds
-    );
+  toggleOrgSelection(org: ManagementOrganization): void {
+    const currentOrgs = this.filterValues.managementOrganizationIds || '';
+  
+    // Split, trim, and remove empty entries
+    let orgIds = currentOrgs
+      .split(',')
+      .map((id: any) => id.trim())
+      .filter((id: any) => id !== '');
+  
+    const orgIdAsString = String(org.OrganizationId);
+  
+    if (org.Selected) {
+      // Add the ID if not already present
+      if (!orgIds.includes(orgIdAsString)) {
+        orgIds.push(orgIdAsString);
+      }
+    } else {
+      // Remove the ID
+      orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+    }
+  
+    this.filterValues.managementOrganizationIds = orgIds.join(',');
+    console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
+  
+    // Trigger filtering API
+    this.getResult();
   }
+  
+  
 
   searchShoppingCenter() {
     this.spinner.show();

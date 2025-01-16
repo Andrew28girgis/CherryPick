@@ -103,7 +103,8 @@ export class StakeHolderComponent implements OnInit {
     this.filteredData = this.data.filter((row) => 
       row.leadBroker.name.toLowerCase().includes(searchLower) ||
       row.leadBroker.email.toLowerCase().includes(searchLower) ||
-      row.leadBroker.phone.toLowerCase().includes(searchLower)
+      row.leadBroker.phone.toLowerCase().includes(searchLower)||
+      row.leadBroker.lastSeen.toLowerCase().includes(searchLower)
     );
   }
 

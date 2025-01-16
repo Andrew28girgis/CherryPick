@@ -1,12 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, HostListener } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { ChatService } from '../../../services/chat-service.service';
 
-interface AIResponse {
-  content: string;
-  type: 'text' | 'properties' | 'analysis' | 'report';
-  data?: any;
-}
+
 
 interface AnalysisResult {
   title: string;
@@ -53,6 +50,11 @@ interface ChatSession {
 interface ChatGroup {
   label: string;
   chats: ChatSession[];
+}
+interface AIResponse {
+  content: string;
+  type: 'text' | 'properties' | 'analysis' | 'report';
+  data?: any;
 }
 
 @Component({
@@ -160,6 +162,8 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     { id: '2', text: 'Who are my top clients interested in commercial spaces?' },
     { id: '3', text: 'What follow-ups are pending for my last meeting?' }
   ];
+  constructor(private chatService: ChatService) {}
+
   private loadProperties(): void {
     this.isLoading = true;
     // Simulate API call
@@ -239,7 +243,8 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
   async handleSend(): Promise<void> {
     if (!this.currentSession) {
       this.startNewChat();
-    }    const messageContent = this.newMessage.value?.trim();
+    }
+    const messageContent = this.newMessage.value?.trim();
     if (!messageContent && this.attachments.length === 0) return;
 
     const userMessage: Message = {
@@ -255,21 +260,34 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     this.attachments = [];
     this.isTyping = true;
 
-    try {
-      const aiResponse = await this.generateAIResponse(messageContent || '');
-      
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: aiResponse.content,
-        sender: 'assistant',
-        timestamp: new Date(),
-        properties: aiResponse.type === 'properties' ? aiResponse.data : undefined,
-        analysis: aiResponse.type === 'analysis' ? aiResponse.data : undefined,
-        suggestions: aiResponse.data?.suggestions
-      };
 
-      this.messages.push(assistantMessage);
-    } catch (error) {
+    try {
+      // Assuming generateAIResponse returns an Observable
+      const aiResponse = await this.chatService.generateAIResponse(messageContent || '').toPromise();
+      
+      if (aiResponse) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: aiResponse.content,
+          sender: 'assistant',
+          timestamp: new Date(),
+          properties: aiResponse.type === 'properties' ? aiResponse.data : undefined,
+          analysis: aiResponse.type === 'analysis' ? aiResponse.data : undefined,
+          suggestions: aiResponse.data?.suggestions
+        };
+        this.messages.push(assistantMessage);
+      } else {
+        // Handle the case where aiResponse is undefined
+        console.error('AI response is undefined');
+        this.messages.push({
+          id: (Date.now() + 1).toString(),
+          content: 'I apologize, but I couldn\'t generate a response. Please try again.',
+          sender: 'assistant',
+          timestamp: new Date()
+        });
+      }
+    } 
+     catch (error) {
       console.error('Error generating AI response:', error);
       this.messages.push({
         id: (Date.now() + 1).toString(),

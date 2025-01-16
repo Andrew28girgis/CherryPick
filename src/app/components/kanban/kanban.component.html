@@ -72,15 +72,18 @@
     </div>
     <div class="col-md-15 p-0 ta">
       <div class="row d-flex">
-        <!-- <div class="search-bar position-relative"></div>
+         <div class="search-bar position-relative"></div>
           <div class="input">
             <input
               type="search"
               placeholder="Search..."
               class="form-control search-input"
               [(ngModel)]="searchText"
+              #searchInput
+
               (input)="onSearchChange($event)"
             />
+            
             <!-- <img
               src="assets/Images/Icons/search-normal.svg"
               alt="Search Icon"
@@ -137,7 +140,7 @@
                       src="assets/Images/Icons/more-circle.svg"
                       alt="More options"
                       class="optionsss"
-                      *ngIf="stage.stageActions"
+                      *ngIf="stage.Id===69"
                       (click)="openActionsForStage(ViewStageActions, stage)"
                     />
                   </div>
@@ -384,7 +387,7 @@
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="newOrganizationForm" (ngSubmit)="CreateOrganication()">
+    <!-- <form [formGroup]="newOrganizationForm" (ngSubmit)="CreateOrganication()">
       <div class="form-group">
         <label for="name">Organization Name</label>
         <input
@@ -438,9 +441,9 @@
       >
         Create Organization
       </button>
-    </form>
+    </form> -->
 
-    <hr />
+    <!-- <hr /> -->
 
     <h5>Search Existing Organizations</h5>
     <div class="form-group">
@@ -449,10 +452,11 @@
         placeholder="Search organizations"
         #searchInput
         class="form-control"
+        (input)=" searchInput.value.length >= 3 ? SearchOrganication(searchInput.value): null"
       />
       <button
         class="btn btn-secondary mt-2"
-        (click)="SearchOrganication(searchInput.value)"
+        (click)="searchInput.value.length >= 3 ? SearchOrganication(searchInput.value) : null"
       >
         Search
       </button>
