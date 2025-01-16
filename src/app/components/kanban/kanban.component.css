@@ -1072,7 +1072,8 @@ tr:last-child td {
 /* padding: 8px; */
   /* height: fit-content;
    */
-   min-height: 1000px;
+   min-height:500px;
+   /* padding-bottom: 200px; */
   background: #fff;
   min-width: 250px;
 

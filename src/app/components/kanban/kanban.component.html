@@ -79,8 +79,11 @@
               placeholder="Search..."
               class="form-control search-input"
               [(ngModel)]="searchText"
+              #searchInput
+
               (input)="onSearchChange($event)"
             />
+            
             <!-- <img
               src="assets/Images/Icons/search-normal.svg"
               alt="Search Icon"
@@ -449,10 +452,11 @@
         placeholder="Search organizations"
         #searchInput
         class="form-control"
+        (input)=" searchInput.value.length >= 3 ? SearchOrganication(searchInput.value): null"
       />
       <button
         class="btn btn-secondary mt-2"
-        (click)="SearchOrganication(searchInput.value)"
+        (click)="searchInput.value.length >= 3 ? SearchOrganication(searchInput.value) : null"
       >
         Search
       </button>
