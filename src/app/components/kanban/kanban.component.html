@@ -90,33 +90,33 @@
               class="search-icon"
             /> -->
         <!-- </div>  -->
-        <div class="kanban-header-section">
-          <div *ngFor="let kanban of userKanbans" 
-               class="kanban-info-card" 
-               (click)="GetKanbanDetails(kanban)">
-            <div class="card-content">
-              <!-- Organizations Chain -->
-              <div class="org-chain">
-                <ng-container *ngFor="let def of kanban.kanbanDefinitions; let i = index">
-                  <ng-container *ngFor="let org of def?.Organization; let last = last">
-                    <div class="org-item">
-                      <span class="org-badge">{{ org.Name }}</span>
-                      <i class="connection-icon" *ngIf="!last">→</i>
+        <div class="kanban-header-section container-fluid py-4">
+          <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let kanban of userKanbans">
+              <div class="kanban-info-card shadow-sm" (click)="GetKanbanDetails(kanban)">
+                <div class="card-content">
+                  <div class="org-chain">
+                    <ng-container *ngFor="let def of kanban.kanbanDefinitions; let i = index">
+                      <ng-container *ngFor="let org of def?.Organization; let last = last">
+                        <div class="org-item">
+                          <span class="org-badge">{{ org.Name }}</span>
+                          <i class="connection-icon bi bi-arrow-right" *ngIf="!last"></i>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  
+                  <div class="stakeholder-info">
+                    <div class="stakeholder-avatar">
+                      {{ getStackHolderName(kanban.targetStakeholderId)?.charAt(0) }}
                     </div>
-                  </ng-container>
-                </ng-container>
-              </div>
-              
-              <!-- Stakeholder Info -->
-              <div class="stakeholder-info">
-                <div class="stakeholder-avatar">
-                  {{ getStackHolderName(kanban.targetStakeholderId)?.charAt(0) }}
-                </div>
-                <div class="stakeholder-details">
-                  <span class="stakeholder-label">Stakeholder</span>
-                  <span class="stakeholder-title">
-                    {{ getStackHolderName(kanban.targetStakeholderId) }}
-                  </span>
+                    <div class="stakeholder-details">
+                      <span class="stakeholder-label">Stakeholder</span>
+                      <span class="stakeholder-title">
+                        {{ getStackHolderName(kanban.targetStakeholderId) }}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
