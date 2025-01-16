@@ -299,32 +299,29 @@ export class KayakComponent implements OnInit {
   
 
   updateSortedTenants(): void {
-    if (!this.Filters?.Tenants || this.Filters.Tenants.length === 0) {
+    if (!this.Filters?.Tenants || !Array.isArray(this.Filters.Tenants)) {
       console.error('Tenants list is empty or undefined.');
-      this.sortedTenants = [];
+      this.sortedTenants = []; // Default to an empty array
       return;
     }
   
-    // Sort tenants alphabetically
-    const sortedList = [...this.Filters.Tenants].sort((a, b) => {
-      const nameA = a.Name || '';
-      const nameB = b.Name || '';
-      return nameA.localeCompare(nameB);
-    });
+    const sortedList = [...this.Filters.Tenants].sort((a, b) =>
+      (a.Name || '').localeCompare(b.Name || '')
+    );
   
-    // Deduplicate tenants
     const uniqueTenants = Array.from(
       new Set(sortedList.map((tenant) => tenant.OrganizationId))
-    ).map((id) => sortedList.find((tenant) => tenant.OrganizationId === id))
+    )
+      .map((id) => sortedList.find((tenant) => tenant.OrganizationId === id))
       .filter((tenant): tenant is Tenant => tenant !== undefined); // Ensure valid tenants
   
-    // Correctly slice the tenant list based on the toggle state
     this.sortedTenants = this.showAllTenants
       ? uniqueTenants // Show all tenants
       : uniqueTenants.slice(0, 12); // Show only the first 12 tenants
   
     console.log('Updated Tenants:', this.sortedTenants);
   }
+  
   
   
   
@@ -433,7 +430,7 @@ export class KayakComponent implements OnInit {
 
 
 updateSortedOrgs(): void {
-  if (!this.Filters?.ManagementOrganization || this.Filters.ManagementOrganization.length === 0) {
+  if (!this.Filters?.ManagementOrganization || !Array.isArray(this.Filters.ManagementOrganization)) {
     console.error('ManagementOrganization is not defined or not an array.');
     this.sortedOrgs = []; // Default to an empty array
     return;
@@ -450,7 +447,10 @@ updateSortedOrgs(): void {
     .filter((org): org is ManagementOrganization => org !== undefined); // Remove undefined values
 
   this.sortedOrgs = this.showAllOrgs ? uniqueOrgs : uniqueOrgs.slice(0, 10);
+
+  console.log('Updated Management Organizations:', this.sortedOrgs);
 }
+
 
   
 
@@ -587,7 +587,7 @@ updateSortedOrgs(): void {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakResult = data.json[0];
-        this.Ids = data.json[0].Ids;
+        this.Ids = data.json[0]?.Ids;
 
         if (!this.Filters?.SecondaryType) {
           this.GetFilters();
