@@ -331,9 +331,34 @@ export class KayakComponent implements OnInit {
   
   
   
-  toggleOrgSelect(org: any): void {
-    org.Selected = !org.Selected; 
+  toggleOrgSelect(org: ManagementOrganization): void {
+    const currentOrgs = this.filterValues.managementOrganizationIds || '';
+  
+    // Split, trim, and remove empty entries
+    let orgIds = currentOrgs
+      .split(',')
+      .map((id: any) => id.trim())
+      .filter((id: any) => id !== '');
+  
+    const orgIdAsString = String(org.OrganizationId);
+  
+    if (org.Selected) {
+      // Add the ID if not already present
+      if (!orgIds.includes(orgIdAsString)) {
+        orgIds.push(orgIdAsString);
+      }
+    } else {
+      // Remove the ID
+      orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+    }
+  
+    this.filterValues.managementOrganizationIds = orgIds.join(',');
+    console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
+  
+    // Trigger filtering API
+    this.getResult();
   }
+  
   toggleOrgList(): void {
     this.showAllOrgs = !this.showAllOrgs;
     this.updateSortedOrgs(); 
@@ -396,9 +421,7 @@ export class KayakComponent implements OnInit {
 
         this.updateSortedTenants(); // Populate tenants
         this.updateSortedOrgs(); // Populate management organizations
-      } else {
-        console.error('Filters data is empty or undefined.');
-      }
+      } 
       this.spinner.hide();
     },
     error: (error) => {
@@ -409,43 +432,26 @@ export class KayakComponent implements OnInit {
 }
 
 
-  updateSortedOrgs(): void {
-    if (!this.Filters?.ManagementOrganization || this.Filters.ManagementOrganization.length === 0) {
-      console.error('ManagementOrganization list is empty or undefined.');
-      this.sortedOrgs = []; // Clear the array if no data
-      return;
-    }
-  
-    // Sort organizations alphabetically by Name
-    const sortedList = [...this.Filters.ManagementOrganization].sort((a, b) => {
-      const nameA = a.Name || '';
-      const nameB = b.Name || '';
-      return nameA.localeCompare(nameB);
-    });
-  
-    // Deduplicate organizations by a unique combination of OrganizationId and Name
-    const uniqueOrgs = Array.from(
-      new Set(
-        sortedList.map((org) => `${org.OrganizationId}-${org.Name}`)
-      )
-    ).map((uniqueKey) =>
-      sortedList.find(
-        (org) => `${org.OrganizationId}-${org.Name}` === uniqueKey
-      )
-    );
-  
-    // Ensure no undefined values
-    const deduplicatedOrgs = uniqueOrgs.filter(
-      (org): org is ManagementOrganization => org !== undefined
-    );
-  
-    // Show all or limited organizations based on the current state
-    this.sortedOrgs = this.showAllOrgs
-      ? deduplicatedOrgs // Show all organizations
-      : deduplicatedOrgs.slice(0, 10);
-  
-    console.log('Unique and Sorted Organizations:', this.sortedOrgs);
+updateSortedOrgs(): void {
+  if (!this.Filters?.ManagementOrganization || this.Filters.ManagementOrganization.length === 0) {
+    console.error('ManagementOrganization is not defined or not an array.');
+    this.sortedOrgs = []; // Default to an empty array
+    return;
   }
+
+  const sortedList = [...this.Filters.ManagementOrganization].sort((a, b) =>
+    (a.Name || '').localeCompare(b.Name || '')
+  );
+
+  const uniqueOrgs = Array.from(
+    new Set(sortedList.map((org) => org.OrganizationId))
+  )
+    .map((id) => sortedList.find((org) => org.OrganizationId === id))
+    .filter((org): org is ManagementOrganization => org !== undefined); // Remove undefined values
+
+  this.sortedOrgs = this.showAllOrgs ? uniqueOrgs : uniqueOrgs.slice(0, 10);
+}
+
   
 
   GetStatesAndCities(): void {
