@@ -1,0 +1,148 @@
+<div class="page-layout" [ngClass]="{ 'sidebar-collapsed': sidebarCollapsed }">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <app-sidebar (collapseChange)="onSidebarCollapse($event)"></app-sidebar>
+  </div>
+
+  <div class="main-content">
+    <!-- Top Navigation -->
+    <div class="top-navigation">
+      <div class="nav-left">
+        <div class="breadcrumb">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+          <i class="fas fa-chevron-right"></i>
+          <span>Communication</span>
+        </div>
+      </div>
+      <button class="start-call-btn" (click)="startNewCall()">
+        <i class="fas fa-phone"></i>
+        Start a Call
+      </button>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+      <div class="tabs">
+        <a
+          routerLink="/Communication"
+          routerLinkActive="active"
+          class="tab"
+          [ngClass]="{ active: activeTab === 'Workflow' }"
+          (click)="setActiveTab('Workflow')"
+        >
+          Workflow
+        </a>
+        <a
+          routerLink="/Communication"
+          routerLinkActive="active"
+          class="tab"
+          [ngClass]="{ active: activeTab === 'Communication' }"
+          (click)="setActiveTab('Communication')"
+        >
+          Communication
+        </a>
+        <a
+          routerLink="/Communication"
+          routerLinkActive="active"
+          class="tab"
+          [ngClass]="{ active: activeTab === 'Tasks' }"
+          (click)="setActiveTab('Tasks')"
+        >
+          Tasks
+        </a>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <button
+        class="filter-tab"
+        [ngClass]="{ active: activeFilter === 'Mail' }"
+        (click)="setActiveFilter('Mail')"
+      >
+        Mail
+      </button>
+      <button
+        class="filter-tab"
+        [ngClass]="{ active: activeFilter === 'Call' }"
+        (click)="setActiveFilter('Call')"
+      >
+        Call
+      </button>
+      <button
+        class="filter-tab"
+        [ngClass]="{ active: activeFilter === 'Meetings' }"
+        (click)="setActiveFilter('Meetings')"
+      >
+        Meetings
+      </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="sources-container">
+      <div class="call-history-content">
+        <!-- Call List -->
+        <div class="call-list">
+          <div class="call-section">
+            <h2 class="section-title">Today</h2>
+            <div class="call-item" *ngFor="let call of filterCalls()" (click)="selectCall(call)">
+              <div class="call-item-left">
+                <div class="avatar">
+                  <img [src]="call.participants[0].avatar" alt="Avatar" />
+                </div>
+                <div class="call-info">
+                  <div class="caller-name">{{ call.participants[0].name }}</div>
+                  <div class="call-meta">
+                    <span>{{ call.duration ? formatDuration(call.duration) : 'N/A' }}</span>
+                    <span>{{ getFormattedTime(call.timestamp) }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="call-item-right">
+                <span class="status-indicator" [ngClass]="call.status"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Call Details -->
+        <div class="call-details" *ngIf="selectedCall">
+          <div class="call-info-panel">
+            <div class="selected-call-header">
+              <div class="avatar large">
+                <img [src]="selectedCall.participants[0].avatar" alt="Avatar" />
+              </div>
+              <div class="participant-meta">
+                <div class="name">{{ selectedCall.participants[0].name }}</div>
+                <div class="department">{{ selectedCall.participants[0].department }}</div>
+                <a [href]="'mailto:' + selectedCall.participants[0].email" class="email">{{ selectedCall.participants[0].email }}</a>
+              </div>
+            </div>
+            <div class="call-details-meta">
+              <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                <span>{{ selectedCall.duration ? formatDuration(selectedCall.duration) : 'N/A' }}</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>{{ selectedCall.timestamp | date: 'shortDate' }}</span>
+              </div>
+              <div class="meta-item">
+                <i class="fas fa-phone"></i>
+                <span>{{ selectedCall.type }}</span>
+              </div>
+            </div>
+            <div class="call-tags">
+              <span class="tag" *ngFor="let tag of selectedCall.tags">{{ tag }}</span>
+            </div>
+            <div class="call-notes" *ngIf="selectedCall.notes">
+              <h3>Notes</h3>
+              <p>{{ selectedCall.notes }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

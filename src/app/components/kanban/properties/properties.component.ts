@@ -53,6 +53,8 @@ export class PropertiesComponent {
   selectedArea = 'Albany/Buffalo/Syracuse';
   viewMode: 'grid' | 'list' | 'compact' = 'grid';
   currentView: 'dashboard' | 'split' | 'list' | 'grid' = 'dashboard';
+  searchText: string = '';
+  filteredProperties: Property[] = []; // Replace 'Property' with the actual type of your property objects
 
   isLoading = false;
   sidebarCollapsed: boolean = false;
@@ -67,203 +69,96 @@ export class PropertiesComponent {
   properties: Property[] = [
     {
       id: 1,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
+      title: 'Modern Office Space Downtown',
+      address: '1201 Maple Street, Denver, Colorado...',
       image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
+      isFavorite: true,
       metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
+        nearestCompetitor: '0.89-1.32 Mi',
+        nearestCompTenant: '1.55-2.01 Mi',
+        purchasePrice: '10,000$-12,500$',
+        availableUnits: 8,
+        unitSizes: '1,100 SF-1,400 SF',
       },
       broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
+        name: 'CBRE',
+        logo: 'assets/Images/klnb-logo.jpg',
+      },
     },
     {
       id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
+      title: 'Retail Plaza on Elm Street',
+      address: '45 Elm Street, Boston, Massachusetts...',
       image: 'assets/Images/property-2.jpg',
       isFavorite: false,
       metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
+        nearestCompetitor: '2.10-3.50 Mi',
+        nearestCompTenant: '1.75-2.45 Mi',
+        purchasePrice: '15,000$-18,000$',
+        availableUnits: 4,
+        unitSizes: '1,500 SF-2,000 SF',
       },
       broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
+        name: 'JLL',
+        logo: 'assets/Images/klnb-logo.jpg',
+      },
     },
     {
       id: 3,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
+      title: 'Warehouse Facility Near Port',
+      address: '870 Industrial Road, Oakland, California...',
       image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
+      isFavorite: true,
       metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
+        nearestCompetitor: '1.20-2.50 Mi',
+        nearestCompTenant: '2.80-3.50 Mi',
+        purchasePrice: '8,000$-10,000$',
+        availableUnits: 12,
+        unitSizes: '2,500 SF-3,000 SF',
       },
       broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
+        name: 'Savills',
+        logo: 'assets/Images/klnb-logo.jpg',
+      },
     },
     {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
+      id: 4,
+      title: 'High-Rise Apartments with Amenities',
+      address: '300 Pine Street, Seattle, Washington...',
       image: 'assets/Images/property-2.jpg',
       isFavorite: false,
       metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
+        nearestCompetitor: '1.00-1.50 Mi',
+        nearestCompTenant: '1.75-2.20 Mi',
+        purchasePrice: '20,000$-25,000$',
+        availableUnits: 3,
+        unitSizes: '900 SF-1,200 SF',
       },
       broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
+        name: 'Colliers',
+        logo: 'assets/Images/klnb-logo.jpg',
+      },
     },
     {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
+      id: 5,
+      title: 'Commercial Complex Near Highway',
+      address: '1980 Highway 7, Charlotte, North Carolina...',
       image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
+      isFavorite: true,
       metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
+        nearestCompetitor: '1.25-2.00 Mi',
+        nearestCompTenant: '2.00-2.75 Mi',
+        purchasePrice: '12,500$-15,000$',
+        availableUnits: 6,
+        unitSizes: '1,300 SF-1,600 SF',
       },
       broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
+        name: 'Avison Young',
+        logo: 'assets/Images/klnb-logo.jpg',
+      },
     },
-    {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
-      image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
-      metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
-      },
-      broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
-    },
-    {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
-      image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
-      metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
-      },
-      broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
-    },
-    {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
-      image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
-      metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
-      },
-      broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
-    },
-    {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
-      image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
-      metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
-      },
-      broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
-    },
-    {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
-      image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
-      metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
-      },
-      broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
-    },
-    {
-      id: 2,
-      title: 'Prospect Target Fairfax Boulevard',
-      address: '9607 Fairfax Blvd, Fairfax, Virginia 21...',
-      image: 'assets/Images/property-2.jpg',
-      isFavorite: false,
-      metrics: {
-        nearestCompetitor: '1.59-2.12 Mi',
-        nearestCompTenant: '2.41-3.14 Mi',
-        purchasePrice: '13,450$-15000$',
-        availableUnits: 5,
-        unitSizes: '1,214 SF-1,568 SF'
-      },
-      broker: {
-        name: 'KLNB',
-        logo: 'assets/Images/klnb-logo.jpg'
-      }
-    }
   ];
+  
 list: any;
 
   // Add new properties for map handling
@@ -281,6 +176,7 @@ list: any;
   }
 
   ngOnInit() {
+    this.filteredProperties = [...this.properties];
     const buyboxId = this.propertiesService.getbuyboxId();
     this.loadProperties(buyboxId);
     const savedState = localStorage.getItem('sidebarCollapsed');
@@ -403,7 +299,12 @@ list: any;
   searchProperties(query: string): void {
     this.properties = this.properties.filter(property =>
       property.title.toLowerCase().includes(query.toLowerCase()) ||
-      property.address.toLowerCase().includes(query.toLowerCase())
+      property.address.toLowerCase().includes(query.toLowerCase())||
+      property.metrics.nearestCompetitor.toLowerCase().includes(query.toLowerCase()) ||
+      property.metrics.nearestCompTenant.toLowerCase().includes(query.toLowerCase()) ||
+      property.metrics.purchasePrice.toLowerCase().includes(query.toLowerCase()) ||
+      property.metrics.unitSizes.toLowerCase().includes(query.toLowerCase()) ||
+      property.broker.name.toLowerCase().includes(query.toLowerCase())
     );
   }
 
@@ -443,6 +344,13 @@ list: any;
         this.initializeMap();
       }, 0); // Small delay to ensure DOM is ready
     }
+  }
+  onSearchChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredProperties = this.properties.filter(property =>
+      property.title.toLowerCase().includes(value) ||
+      property.address.toLowerCase().includes(value)
+    );
   }
 }
 
