@@ -26,8 +26,11 @@ export class MapsService {
   placesRepresentative: boolean | undefined;
   Permission: permission[] = [];
 
-  constructor(public router: Router, private PlacesService: PlacesService ,    private stateService: StateService) {
-  }
+  constructor(
+    public router: Router,
+    private PlacesService: PlacesService,
+    private stateService: StateService
+  ) {}
 
   createMarker(map: any, markerData: any, type: string): any {
     this.map = map;
@@ -90,7 +93,7 @@ export class MapsService {
 
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
-    let placeId: number; 
+    let placeId: number;
 
     marker.markerData.ShoppingCenter?.Places
       ? (placeId = markerData.ShoppingCenter.Places[0].Id)
@@ -160,8 +163,6 @@ export class MapsService {
   }
 
   private shoopingCenterPopup(markerData: any): string {
-     
-    
     const managerOrgs =
       markerData.ShoppingCenter?.ManagerOrganization?.map((org: any) => {
         if (org.Firstname && org.LastName) {
@@ -235,7 +236,11 @@ export class MapsService {
               : ''
           }
           
-    ${managerOrgs && this.getPlacesRepresentative() !== false ? `<div class="py-2">${managerOrgs}</div>` : ''}
+    ${
+      managerOrgs && this.getPlacesRepresentative() !== false
+        ? `<div class="py-2">${managerOrgs}</div>`
+        : ''
+    }
           
           <div class="buttons-wrap">
             <button id="view-details-${
@@ -886,7 +891,7 @@ export class MapsService {
     return new google.maps.Map(element, config);
   }
 
-  setPlacesRepresentative(PlacesRepresentative:any) {
+  setPlacesRepresentative(PlacesRepresentative: any) {
     this.placesRepresentative = PlacesRepresentative;
   }
 
