@@ -27,172 +27,85 @@ export class TasksComponent implements OnInit {
     {
       id: 1,
       leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
+        task: 'Follow up with clients about property viewings.',
         status: 'Not Started',
-        project: 'Nike',
+        project: 'Adidas',
         projectImg: 'assets/Images/Avatars/Mark.svg',
         asignee: 'Hassan Magdy',
         asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Overdue',
-        priority: 'Medium',
-        notes: 'Client very interested in location; highlighted key amenities.',
+        due: 'Today',
+        priority: 'High',
+        notes: 'Client prefers properties with large backyards.',
       },
     },
     {
       id: 2,
       leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
+        task: 'Prepare a market analysis report for the client.',
+        status: 'In Progress',
+        project: 'Reebok',
+        projectImg: 'assets/Images/Avatars/Mark.svg',
+        asignee: 'Hassan Magdy',
+        asigneeImg: 'assets/Images/Avatars/Mark.svg',
+        due: 'Upcoming',
+        priority: 'Low',
+        notes: 'Focus on residential properties in urban areas.',
+      },
+    },
+    {
+      id: 3,
+      leadBroker: {
+        task: 'Coordinate property listings for new clients.',
         status: 'Started',
-        project: 'Nike',
+        project: 'Puma',
         projectImg: 'assets/Images/Avatars/Mark.svg',
         asignee: 'Hassan Magdy',
         asigneeImg: 'assets/Images/Avatars/Mark.svg',
         due: 'Overdue',
         priority: 'Medium',
-        notes: 'Client very interested in location; highlighted key amenities.',
-      },
-    },
-    // Additional sample data matching the image
-    {
-      id: 3,
-      leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
-        status: 'Not Started',
-        project: 'Nike',
-        projectImg: 'assets/Images/Avatars/Mark.svg',
-        asignee: 'Hassan Magdy',
-        asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Today',
-        priority: 'Low',
-        notes: 'Client very interested in location; highlighted key amenities.',
+        notes: 'Listings need to emphasize modern architecture.',
       },
     },
     {
       id: 4,
       leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
-        status: 'Started',
-        project: 'Nike',
-        projectImg: 'assets/Images/Avatars/Mark.svg',
-        asignee: 'Hassan Magdy',
-        asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Upcoming',
-        priority: 'High',
-        notes: 'Client very interested in location; highlighted key amenities.',
-      },
-    },
-    {
-      id: 1,
-      leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
+        task: 'Arrange site visits for high-priority clients.',
         status: 'Not Started',
-        project: 'Nike',
-        projectImg: 'assets/Images/Avatars/Mark.svg',
-        asignee: 'Hassan Magdy',
-        asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Overdue',
-        priority: 'Medium',
-        notes: 'Client very interested in location; highlighted key amenities.',
-      },
-    },
-    {
-      id: 2,
-      leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
-        status: 'Started',
-        project: 'Nike',
-        projectImg: 'assets/Images/Avatars/Mark.svg',
-        asignee: 'Hassan Magdy',
-        asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Overdue',
-        priority: 'Medium',
-        notes: 'Client very interested in location; highlighted key amenities.',
-      },
-    },
-    // Additional sample data matching the image
-    {
-      id: 3,
-      leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
-        status: 'Not Started',
-        project: 'Nike',
+        project: 'Under Armour',
         projectImg: 'assets/Images/Avatars/Mark.svg',
         asignee: 'Hassan Magdy',
         asigneeImg: 'assets/Images/Avatars/Mark.svg',
         due: 'Today',
-        priority: 'Low',
-        notes: 'Client very interested in location; highlighted key amenities.',
+        priority: 'High',
+        notes: 'Ensure all visits are scheduled within the next week.',
       },
     },
     {
-      id: 4,
+      id: 5,
       leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
+        task: 'Draft proposals for commercial property leases.',
         status: 'Started',
-        project: 'Nike',
+        project: 'New Balance',
         projectImg: 'assets/Images/Avatars/Mark.svg',
         asignee: 'Hassan Magdy',
         asigneeImg: 'assets/Images/Avatars/Mark.svg',
         due: 'Upcoming',
-        priority: 'High',
-        notes: 'Client very interested in location; highlighted key amenities.',
-      },
-    },
-    {
-      id: 1,
-      leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
-        status: 'Not Started',
-        project: 'Nike',
-        projectImg: 'assets/Images/Avatars/Mark.svg',
-        asignee: 'Hassan Magdy',
-        asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Overdue',
         priority: 'Medium',
-        notes: 'Client very interested in location; highlighted key amenities.',
+        notes: 'Highlight long-term leasing benefits to clients.',
       },
     },
     {
-      id: 2,
+      id: 6,
       leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
+        task: 'Finalize agreements for pending sales.',
         status: 'Started',
-        project: 'Nike',
+        project: 'Converse',
         projectImg: 'assets/Images/Avatars/Mark.svg',
         asignee: 'Hassan Magdy',
         asigneeImg: 'assets/Images/Avatars/Mark.svg',
         due: 'Overdue',
-        priority: 'Medium',
-        notes: 'Client very interested in location; highlighted key amenities.',
-      },
-    },
-    // Additional sample data matching the image
-    {
-      id: 3,
-      leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
-        status: 'Not Started',
-        project: 'Nike',
-        projectImg: 'assets/Images/Avatars/Mark.svg',
-        asignee: 'Hassan Magdy',
-        asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Today',
         priority: 'Low',
-        notes: 'Client very interested in location; highlighted key amenities.',
-      },
-    },
-    {
-      id: 4,
-      leadBroker: {
-        task: 'Schedule initial consultations to understand client needs. ',
-        status: 'Started',
-        project: 'Nike',
-        projectImg: 'assets/Images/Avatars/Mark.svg',
-        asignee: 'Hassan Magdy',
-        asigneeImg: 'assets/Images/Avatars/Mark.svg',
-        due: 'Upcoming',
-        priority: 'High',
-        notes: 'Client very interested in location; highlighted key amenities.',
+        notes: 'Ensure all agreements are signed and properly documented.',
       },
     },
   ];
@@ -236,9 +149,12 @@ export class TasksComponent implements OnInit {
     this.filteredData = this.data.filter(
       (row) =>
         row.leadBroker.task.toLowerCase().includes(searchLower) ||
-        row.leadBroker.task.toLowerCase().includes(searchLower) ||
-        row.leadBroker.task.toLowerCase().includes(searchLower) ||
-        row.leadBroker.task.toLowerCase().includes(searchLower)
+        row.leadBroker.status.toLowerCase().includes(searchLower) ||
+        row.leadBroker.project.toLowerCase().includes(searchLower) ||
+        row.leadBroker.asignee.toLowerCase().includes(searchLower)||
+        row.leadBroker.due.toLowerCase().includes(searchLower) ||
+        row.leadBroker.priority.toLowerCase().includes(searchLower) ||
+        row.leadBroker.notes.toLowerCase().includes(searchLower)
     );
   }
 
@@ -381,5 +297,9 @@ export class TasksComponent implements OnInit {
     }
 
     row.leadBroker.priority = priorities[newIndex];
+  }
+  onSearchChange(event: any): void {
+    this.searchText = event.target.value;
+    this.filterData();
   }
 }

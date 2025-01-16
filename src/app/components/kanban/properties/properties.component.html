@@ -91,7 +91,9 @@
                 type="text"
                 [formControl]="searchControl"
                 placeholder="Search Location..."
-                class="search-input"
+                class="form-control search-input"
+                [(ngModel)]="searchText"
+                (input)="onSearchChange($event)"
               />
             </div>
 
@@ -152,7 +154,7 @@
 
       <!-- Properties Grid -->
       <div class="properties-container" [class.loading]="isLoading">
-        <div class="property-card" *ngFor="let property of properties">
+        <div class="property-card" *ngFor="let property of filteredProperties">
           <div class="property-image">
             <img [src]="property.image" [alt]="property.title" />
             <!-- <button
