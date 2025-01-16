@@ -765,7 +765,7 @@ p {
   --sidebar-hover: rgba(0, 31, 63, 0.1);
 }
 
-body.dark-theme {
+/* body.dark-theme {
   --background-primary: #0C0D0E;
   --background-secondary: #1A1D1F;
   --text-primary: #001F3F;
@@ -775,7 +775,7 @@ body.dark-theme {
   --sidebar-active: #CCD2D9;
   --sidebar-active-text: #001F3F;
   --sidebar-hover: rgba(255, 255, 255, 0.1);
-}
+} */
 
 .gm-style-iw-tc{
   display: none;
