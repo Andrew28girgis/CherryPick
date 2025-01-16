@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <nav class="navbars">
-  <div class="navbar-line m-0" s>
+  <div class="navbar-line m-0" >
     <div
       class="nav-right w-100"
       style="cursor: pointer; display: flex; justify-content: space-between"
@@ -28,6 +28,7 @@
     </p>
 
     <i
+    *ngIf="windowHistrony!==1"
       class="fa-solid fa-arrow-left"
       style="font-size: 24px; cursor: pointer; padding: 15px 10px"
       (click)="goBack()"

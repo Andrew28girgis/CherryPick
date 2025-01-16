@@ -64,6 +64,7 @@ export class LandingComponent {
   sanitizedUrlPopup: any;
   placesRepresentative:boolean | undefined;
   Permission: permission[] = [];
+  windowHistrony:any;
    constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -80,7 +81,8 @@ export class LandingComponent {
   }
 
   ngOnInit(): void {
-    
+    this.windowHistrony = window.history.length   
+
     this.initializeParams();
     this.initializeDefaults();
     //this.initializeQueryParams();
