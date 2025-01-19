@@ -503,7 +503,7 @@ a{
 .card-sideview{
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  height: 270px;
+  height: 300px;
   cursor: auto;
   display: flex;
   flex-direction: column;

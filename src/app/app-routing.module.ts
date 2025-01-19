@@ -19,6 +19,7 @@ import { PropertiesComponent } from './components/kanban/properties/properties.c
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
+import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
 
 
 const routes: Routes = [
@@ -60,6 +61,7 @@ const routes: Routes = [
     component: StakeHolderComponent,
     canActivate: [AuthGuardService],
   },
+  
   {
     path: 'tasks',
     component: TasksComponent,
@@ -95,11 +97,16 @@ const routes: Routes = [
     component: CommunicationComponent,
     canActivate: [AuthGuardService],
   },
-    {
-      path: 'kayak',
-      component: KayakComponent,
-      canActivate: [AuthGuardService],
-    },
+  {
+    path: 'kayak',
+    component: KayakComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'dashboard/:buyboxid',
+    component: KayakHomeComponent,
+    canActivate: [AuthGuardService],
+  },
 ];
 
 @NgModule({

@@ -1,0 +1,51 @@
+p {
+    color: #0C0D0E;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    margin-bottom: 0;
+}
+
+h3{
+    vertical-align: middle;
+    text-align: start;
+    color: #7a8591;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+}
+.check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    cursor: pointer;
+    gap: 5px;
+  }
+  .copy-sty{
+    cursor: pointer;
+    color: #6c757d;
+    font-size: 20px;
+    margin-right: 8px;
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+  }
+  .copy-sty:hover{
+    color: #53565c;
+  }
+  .eraser-sty{
+    font-size: 18px;
+    margin-right: 8px;
+    margin-bottom: 10px;
+    color: #ce0000;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  .eraser-sty:hover{
+    color: #941a1a !important;
+  }
+  .modal-title{
+    margin-bottom: 0px;
+    font-size: 18px;
+    font-weight: 400;
+  }

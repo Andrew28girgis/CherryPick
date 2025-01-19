@@ -43,25 +43,22 @@ export class KayakComponent implements OnInit {
   visibleTags: any[] = [];
   selectedTags: any[] = [];
   searchTerm: string = '';
+  filteredKayakResult: any[] = []; 
   formSearch: boolean = false;
-  sortedTenants: Tenant[] = []; // To hold the sorted tenants
-  showAllTenants: boolean = false; // Default to show limited tenants
-  sortedOrgs: ManagementOrganization[] = []; // To hold the sorted organizations
-  showAllOrgs: boolean = false; // Default to show limited organizations
+  sortedTenants: Tenant[] = []; 
+  showAllTenants: boolean = false; 
+  sortedOrgs: ManagementOrganization[] = []; 
+  showAllOrgs: boolean = false; 
   sanitizedUrl!: any;
   StreetViewOnePlace!: boolean;
   mapViewOnePlacex: boolean = false;
-  ShoppingCenterAvailability: any = null; // Store API response
-  ShoppingCenterTenants: any = null; // Store API response
+  ShoppingCenterAvailability: any = null; 
+  ShoppingCenterTenants: any = null; 
   isDropdownOpen: boolean = false;
   isDropdownOpenIndex: number | null = null; // Track which card's dropdown is open
   showMorePlaces: boolean = false; // Track if additional places should be shown
   showAllPlacesIndex: number | null = null; // Track which card's places are fully visible
   showAllSqft: boolean = false; // Toggle to show all or limited sqft results
-
-
-
-
 
 
 
@@ -301,7 +298,7 @@ export class KayakComponent implements OnInit {
   updateSortedTenants(): void {
     if (!this.Filters?.Tenants || !Array.isArray(this.Filters.Tenants)) {
       console.error('Tenants list is empty or undefined.');
-      this.sortedTenants = []; // Default to an empty array
+      this.sortedTenants = [];
       return;
     }
   
@@ -313,14 +310,13 @@ export class KayakComponent implements OnInit {
       new Set(sortedList.map((tenant) => tenant.OrganizationId))
     )
       .map((id) => sortedList.find((tenant) => tenant.OrganizationId === id))
-      .filter((tenant): tenant is Tenant => tenant !== undefined); // Ensure valid tenants
+      .filter((tenant): tenant is Tenant => tenant !== undefined);
   
-    this.sortedTenants = this.showAllTenants
-      ? uniqueTenants // Show all tenants
-      : uniqueTenants.slice(0, 12); // Show only the first 12 tenants
+    this.sortedTenants = this.showAllTenants ? uniqueTenants : uniqueTenants.slice(0, 12);
   
     console.log('Updated Tenants:', this.sortedTenants);
   }
+  
   
   
   
@@ -360,6 +356,23 @@ export class KayakComponent implements OnInit {
     this.showAllOrgs = !this.showAllOrgs;
     this.updateSortedOrgs(); 
   }
+  filterCards(): void {
+    if (!this.KayakResult?.Result) {
+      this.filteredKayakResult = []; // Ensure filtered result is empty if no data.
+      return;
+    }
+  
+    const search = this.searchTerm.toLowerCase();
+  
+    this.filteredKayakResult = this.KayakResult.Result.filter((result: any) =>
+      result.CenterName.toLowerCase().includes(search) ||
+      result.CenterAddress.toLowerCase().includes(search) ||
+      result.CenterCity.toLowerCase().includes(search) ||
+      result.CenterState.toLowerCase().includes(search)
+    );
+  
+    console.log('Filtered Cards:', this.filteredKayakResult);
+  }
   getResult(): void {
     this.spinner.show();
     console.log('Filtering with values:', this.filterValues);
@@ -371,25 +384,33 @@ export class KayakComponent implements OnInit {
   
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        // Filter results to include only cards with complete data
-        this.KayakResult = data.json[0];
-        this.KayakResult.Result = this.KayakResult.Result.filter((result: any) => {
-          return (
-            result.MainImage &&
-            result.CenterName &&
-            result.CenterAddress &&
-            result.CenterCity &&
-            result.CenterState
-          );
-        });
+        if (data?.json?.[0]) {
+          this.KayakResult = data.json[0];
   
-        // Update tenant selection
-        const selectedTenantIds = this.filterValues.tenants.split(',');
-        this.sortedTenants.forEach((tenant) => {
-          tenant.Selected = selectedTenantIds.includes(String(tenant.OrganizationId));
-        });
+          if (!Array.isArray(this.KayakResult.Result)) {
+            console.warn('KayakResult.Result is not an array:', this.KayakResult.Result);
+            this.KayakResult.Result = []; // Default to an empty array if not valid
+          }
   
-        console.log('Filtered Result:', this.KayakResult);
+          this.KayakResult.Result = this.KayakResult.Result.filter((result: any) => {
+            return (
+              result.MainImage &&
+              result.CenterName &&
+              result.CenterAddress &&
+              result.CenterCity &&
+              result.CenterState
+            );
+          });
+  
+          // Initialize the filtered result to the full result.
+          this.filteredKayakResult = [...this.KayakResult.Result];
+  
+          console.log('Filtered Result:', this.KayakResult);
+        } else {
+          console.warn('Data does not contain expected structure:', data);
+          this.KayakResult = { Result: [] }; // Default to a structure with an empty array
+          this.filteredKayakResult = []; // Reset the filtered result
+        }
         this.spinner.hide();
       },
       error: (error) => {
@@ -398,6 +419,9 @@ export class KayakComponent implements OnInit {
       },
     });
   }
+  
+
+  
   
   
 
@@ -432,7 +456,7 @@ export class KayakComponent implements OnInit {
 updateSortedOrgs(): void {
   if (!this.Filters?.ManagementOrganization || !Array.isArray(this.Filters.ManagementOrganization)) {
     console.error('ManagementOrganization is not defined or not an array.');
-    this.sortedOrgs = []; // Default to an empty array
+    this.sortedOrgs = [];
     return;
   }
 
@@ -444,7 +468,7 @@ updateSortedOrgs(): void {
     new Set(sortedList.map((org) => org.OrganizationId))
   )
     .map((id) => sortedList.find((org) => org.OrganizationId === id))
-    .filter((org): org is ManagementOrganization => org !== undefined); // Remove undefined values
+    .filter((org): org is ManagementOrganization => org !== undefined);
 
   this.sortedOrgs = this.showAllOrgs ? uniqueOrgs : uniqueOrgs.slice(0, 10);
 
@@ -488,70 +512,40 @@ updateSortedOrgs(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
       (s) => s.stateCode == this.filterValues?.statecode
     );
+    
   }
   toggleTenantSelection(tenant: Tenant): void {
-    const currentTenants = this.filterValues.tenants || '';
+    const currentTenants = this.filterValues.tenants || ''; // Ensure tenants is a string
+    let tenantIds = currentTenants.split(',').filter((id:any) => id.trim());
   
-    // Split, trim, and remove empty entries
-    let tenantIds = currentTenants
-      .split(',')
-      .map((id: any) => id.trim())
-      .filter((id: any) => id !== '');
-  
-    const orgIdAsString = String(tenant.OrganizationId);
-  
+    const tenantIdAsString = String(tenant.OrganizationId);
     if (tenant.Selected) {
-      // Add the ID if not already present
-      if (!tenantIds.includes(orgIdAsString)) {
-        tenantIds.push(orgIdAsString);
+      if (!tenantIds.includes(tenantIdAsString)) {
+        tenantIds.push(tenantIdAsString);
       }
     } else {
-      // Remove the ID
-      tenantIds = tenantIds.filter((id: any) => id !== orgIdAsString);
+      tenantIds = tenantIds.filter((id:any) => id !== tenantIdAsString);
     }
   
-    // Update filterValues.tenants
     this.filterValues.tenants = tenantIds.join(',');
-  
-    // Update tenant.Selected status in sortedTenants
-    this.sortedTenants.forEach((t) => {
-      t.Selected = tenantIds.includes(String(t.OrganizationId));
-    });
-  
-    console.log('Updated Tenants Filter:', this.filterValues.tenants);
-  
-    // Trigger filtering API
-    this.getResult();
+    this.getResult(); // Trigger filtering API
   }
   
-  
-
   toggleOrgSelection(org: ManagementOrganization): void {
-    const currentOrgs = this.filterValues.managementOrganizationIds || '';
-  
-    // Split, trim, and remove empty entries
-    let orgIds = currentOrgs
-      .split(',')
-      .map((id: any) => id.trim())
-      .filter((id: any) => id !== '');
+    const currentOrgs = this.filterValues.managementOrganizationIds || ''; // Ensure it's a string
+    let orgIds = currentOrgs.split(',').filter((id:any) => id.trim());
   
     const orgIdAsString = String(org.OrganizationId);
-  
     if (org.Selected) {
-      // Add the ID if not already present
       if (!orgIds.includes(orgIdAsString)) {
         orgIds.push(orgIdAsString);
       }
     } else {
-      // Remove the ID
-      orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+      orgIds = orgIds.filter((id:any) => id !== orgIdAsString);
     }
   
     this.filterValues.managementOrganizationIds = orgIds.join(',');
-    console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
-  
-    // Trigger filtering API
-    this.getResult();
+    this.getResult(); // Trigger filtering API
   }
   handleAvailabilityChange(): void {
     console.log('Availability changed:', this.filterValues.availabilty);
@@ -672,7 +666,7 @@ updateSortedOrgs(): void {
     this.selectedTags = this.selectedTags.filter((t) => t.tag !== tag.tag);
     const modalTagIndex = this.tags.findIndex((t) => t.tag === tag.tag);
     if (modalTagIndex > -1) {
-      this.tags[modalTagIndex].isSelected = false; // Ensure sync with modal
+      this.tags[modalTagIndex].isSelected = false; 
     }
   }
 
@@ -687,11 +681,8 @@ updateSortedOrgs(): void {
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     if (!target.closest('.circle-container') && !target.closest('.custom-dropdown')) {
-      this.isDropdownOpenIndex = null; // Close the dropdown if clicked outside
+      this.isDropdownOpenIndex = null; 
     }
-  }
-  toggleSeeMore(): void {
-    this.showMorePlaces = !this.showMorePlaces;
   }
   getVisiblePlaces(result: any, index: number): any[] {
     if (!result?.place) {

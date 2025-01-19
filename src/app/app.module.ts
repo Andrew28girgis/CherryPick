@@ -42,6 +42,9 @@ import { StakeHolderComponent } from './components/kanban/stake-holders/stake-ho
 import { SourcesComponent } from './components/kanban/sources/sources.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
+import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
+import { EmilyComponent } from './components/kayak-home/emily/emily.component';
+import { BuyboxDetailsComponent } from './components/kayak-home/buybox-details/buybox-details.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +77,10 @@ import { CommunicationComponent } from './components/kanban/communication/commun
     StakeHolderComponent,
     SourcesComponent,
     TasksComponent,
-    CommunicationComponent
+    CommunicationComponent,
+    KayakHomeComponent,
+    EmilyComponent,
+    BuyboxDetailsComponent
   ],
   imports: [
     BrowserModule,

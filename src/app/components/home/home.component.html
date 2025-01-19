@@ -94,14 +94,13 @@
             shoppingCenters.length > 0
           "
         >
-          <div class="card card-frame">
-            <div class="card-body" >
-              <table class="procpect-table">
+      
+            <table class="procpect-table">
                 <thead class="procpect-table-head">
                   <tr>
                     <th>Name</th>
                     <th>Address</th>
-                    <th>Managed By</th>
+                    <th *ngIf="placesRepresentative != false">Leased by</th>
                     <th style="width: 250px">Unit Size & Lease Price</th>
                     <ng-container
                       *ngFor="
@@ -139,7 +138,7 @@
                           {{ shoppingCenter.CenterState }}
                         </div>
                       </td>
-                      <td>
+                      <td *ngIf="placesRepresentative != false">
                         <ng-container
                           *ngIf="
                             shoppingCenter.ShoppingCenter?.ManagerOrganization
@@ -395,9 +394,7 @@
                     </tr>
                   </ng-container>
                 </tbody>
-              </table>
-            </div>
-          </div>
+            </table>
         </div>
         <div
           style="overflow-x: auto ; margin-top: 10px;"
@@ -744,13 +741,13 @@
                       </div>
                     </div>
                   </div>
-                  <hr class="small-hr mt-2" />
 
                   <div
                     class="col-md-12 spec"
-                    *ngIf="shopping.ShoppingCenter?.ManagerOrganization"
+                    *ngIf="shopping.ShoppingCenter?.ManagerOrganization && placesRepresentative != false"
                   >
-                    <span class="managed-by">Managed by</span>
+                  <hr class="small-hr mt-2" /> 
+                    <span class="managed-by">Leased by</span>
                     <p class="spec-head">
                       <img
                         class="logo"
@@ -1167,11 +1164,11 @@
                   </button>
                 </div> -->
 
-                <div
+                <div 
                 class="col-md-12 spec"
-                *ngIf="place.ShoppingCenter?.ManagerOrganization"
+                *ngIf="place.ShoppingCenter?.ManagerOrganization && placesRepresentative != false"
               >
-                <span class="managed-by">Managed by</span>
+                <span class="managed-by">Leased by</span>
                 <p class="spec-head">
                   <img
                     class="logo"
