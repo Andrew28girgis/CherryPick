@@ -6,11 +6,11 @@
                     <div class="nano-content">
                         <ul>
                             <li class="label" (click)="setActiveComponent('search')">Search Shopping Centers</li>
-                            <li class="label">Buybox management
+                            <li class="label">Buybox
                                 <ul>
+                                    <li><a (click)="setActiveComponent('details')">Specs</a></li>
                                     <li><a (click)="setActiveComponent('emily')">Emily</a></li>
                                     <li><a (click)="setActiveComponent('centers')">Shopping Centers</a></li>
-                                    <li><a (click)="setActiveComponent('specs')">Edit Specs</a></li>
                                     <li><a (click)="setActiveComponent('sharing')">Sharing</a></li>
                                 </ul>
                             </li>
@@ -21,13 +21,15 @@
         </div>
         <div class="col-md-9">
             <ng-container [ngSwitch]="activeComponent">
-                <app-kayak *ngSwitchCase="'search'"></app-kayak>
-                <app-bind *ngSwitchCase="'bind'"></app-bind>
-                <app-wizard *ngSwitchCase="'wizard'"></app-wizard>
+                <app-kayak *ngSwitchCase="'search'"></app-kayak> 
                 <app-emily *ngSwitchCase="'emily'"></app-emily>
+                <app-buybox-details *ngSwitchCase="'details'"></app-buybox-details>
+                <!-- <app-kayak *ngSwitchCase="'search'"></app-kayak>
+                <app-wizard *ngSwitchCase="'wizard'"></app-wizard>
                 <app-shopping-centers *ngSwitchCase="'centers'"></app-shopping-centers>
                 <app-edit-specs *ngSwitchCase="'specs'"></app-edit-specs>
-                <app-sharing *ngSwitchCase="'sharing'"></app-sharing>
+                <app-sharing *ngSwitchCase="'sharing'"></app-sharing> -->
             </ng-container>
         </div>
      </div>
+

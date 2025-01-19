@@ -37,5 +37,14 @@ export class PlacesService {
     return this.http.get<any>(`${environment.api}/BuyBox/GetUserBuyBoxes`);
   }
 
+  public generateEmail(promptId: number, context: string) {
+    const apiUrl = `${environment.api}/PromptHub/GenerateEmail`;
+    const body = {
+      promptId,
+      context,
+    };
+    return this.http.post<any>(apiUrl, body);
+  }
+
   // Add other methods as needed from your original service
 }

@@ -1,0 +1,136 @@
+<div class="card buybox-details-card mt-3" >
+    <button 
+    class="tap" 
+    (click)="openEditProperty(BuyBoxProperty, buybox)">
+    <!-- <i class="fas fa-edit"></i> -->Edit BuyBox
+  </button>
+    <div class="card-body">
+      <h2>BuyBox ' {{ buybox?.Name }} '</h2>
+      <ul class="list list-group-flush">
+        <li class="list-group-item">
+          <strong>Description:</strong> {{ buybox?.Description || "N/A" }}
+        </li>
+        <li class="list-group-item">
+          <strong>MinBuilding Size:</strong>
+          {{ buybox?.MinBuildingSize || "N/A" }}
+        </li>
+        <li class="list-group-item">
+          <strong>MaxBuilding Size:</strong>
+          {{ buybox?.MaxBuildingSize || "N/A" }}
+        </li>
+        <li class="list-group-item">
+          <strong>Organization Id:</strong>
+          {{ buybox?.OrganizationId || "N/A" }}
+        </li>
+        <li class="list-group-item">
+          <strong>Organization Name:</strong> {{ buybox?.OrgName || "N/A" }}
+        </li>
+        <li class="list-group-item">
+          <strong>ManagerContact Id:</strong>
+          {{ buybox?.ManagerContactId || "N/A" }}
+        </li>
+        <li class="list-group-item">
+          <strong>ManagerOrganization Id:</strong>
+          {{ buybox?.ManagerOrganizationId || "N/A" }}
+        </li>
+        <li class="list-group-item">
+          <strong>ManagerOrganization Name:</strong>
+          {{ buybox?.ManagerOrganizationName || "N/A" }}
+        </li>
+        <li class="list-group-item" *ngIf="buybox?.CONTACTS">
+          <strong>Contacts:</strong>
+          <ul>
+            <li *ngFor="let contact of buybox?.CONTACTS">
+              {{ contact.FirstName || "N/A" }}
+              {{ contact.LastName || "N/A" }}
+              <span *ngIf="contact?.Email">( Email: </span>
+              {{ contact.Email || " " }}
+              <span *ngIf="contact?.Email">)</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <ng-template #BuyBoxProperty let-modal>
+    <div class="modal-body">
+      <!-- <p class="small">Create a new row using this form, make sure you fill them all</p> -->
+      <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+        <div class="row">
+          <!-- Name -->
+          <div class="col-sm-12">
+            <div class="form-group form-group-default">
+              <label>Name</label>
+              <input
+                type="text"
+                class="form-control"
+                name="Name"
+                [(ngModel)]="Obj.Name"
+                #name="ngModel"
+                [ngClass]="{ 'is-invalid': f.submitted && name.invalid }"
+                required
+              />
+            </div>
+          </div>
+          <!-- Description -->
+          <div class="col-sm-12">
+            <div class="form-group form-group-default">
+              <label>Description</label>
+              <input
+                class="form-control"
+                name="Description"
+                [(ngModel)]="Obj.Description"
+                #description="ngModel"
+                [ngClass]="{ 'is-invalid': f.submitted && description.invalid }"
+              />
+            </div>
+          </div>
+         
+          <div class="col-sm-12">
+            <div class="form-group form-group-default">
+              <label>Min BuildingSize</label>
+              <input
+                type="number"
+                class="form-control"
+                name="minBuildingSize"
+                [(ngModel)]="Obj.MinBuildingSize"
+                #minBuildingSize="ngModel"
+                [ngClass]="{
+                  'is-invalid': f.submitted && minBuildingSize.invalid
+                }"
+              />
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="form-group form-group-default">
+              <label>Max BuildingSize</label>
+              <input
+                type="number"
+                class="form-control"
+                name="maxBuildingSize"
+                [(ngModel)]="Obj.MaxBuildingSize"
+                #maxBuildingSize="ngModel"
+                [ngClass]="{
+                  'is-invalid': f.submitted && maxBuildingSize.invalid
+                }"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer no-bd p-0">
+          <button type="submit" id="addRowButton" class="btn btn-primary">
+             Edit  
+          </button>
+          <button
+            type="button"
+            class="x-btn-close"
+            data-dismiss="modal"
+            (click)="closeModal()"
+          >
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
