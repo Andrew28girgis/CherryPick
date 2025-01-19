@@ -7,7 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class KayakHomeComponent implements OnInit {
   activeComponent: string = '';
-
   constructor() {}
 
   ngOnInit() {

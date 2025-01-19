@@ -392,7 +392,7 @@ export class HomeComponent implements OnInit {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
 
-      this.getPolygons();
+      //this.getPolygons();
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
