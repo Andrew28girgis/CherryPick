@@ -62,10 +62,6 @@ export class KayakComponent implements OnInit {
 
 
 
-
-
-
-
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,

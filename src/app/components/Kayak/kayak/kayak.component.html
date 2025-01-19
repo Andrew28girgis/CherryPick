@@ -436,7 +436,6 @@ class="col-md-12"
   </div>
 </ng-template>
 
-
 <!-- Modal Template -->
 <ng-template #galleryModal let-modal>
   <div class="modal-header">
@@ -456,6 +455,7 @@ class="col-md-12"
     </ng-template>
   </div>
 </ng-template>
+
 <ng-template #popoverContent>
   <div *ngIf="sortedTenants.length > 0; else noTenants">
     <div *ngFor="let tenant of sortedTenants" class="mb-2">
@@ -478,6 +478,7 @@ class="col-md-12"
     <div id="mappopup" style="height: 400px; width: 100%;"></div>
   </div>
 </ng-template>
+
 <ng-template #tenantModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Shopping Center Tenants</h5>
@@ -527,6 +528,7 @@ class="col-md-12"
     <div id="street-view" style="height: 400px; width: 100%;"></div>
   </div>
 </ng-template>
+
 <ng-template #noDataTemplate>
   <div class="col-md-12">
     <div class="card carddd my-3 gray-background">

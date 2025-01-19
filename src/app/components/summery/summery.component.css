@@ -19,6 +19,8 @@
     margin: 20px 0;
     cursor: pointer;
     border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .city {

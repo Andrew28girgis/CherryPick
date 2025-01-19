@@ -1,0 +1,33 @@
+
+     <div class="row">
+        <div class="col-md-3 m-0 p-0">
+            <div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+                <div class="nano">
+                    <div class="nano-content">
+                        <ul>
+                            <li class="label" (click)="setActiveComponent('search')">Search Shopping Centers</li>
+                            <li class="label">Buybox management
+                                <ul>
+                                    <li><a (click)="setActiveComponent('emily')">Emily</a></li>
+                                    <li><a (click)="setActiveComponent('centers')">Shopping Centers</a></li>
+                                    <li><a (click)="setActiveComponent('specs')">Edit Specs</a></li>
+                                    <li><a (click)="setActiveComponent('sharing')">Sharing</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <ng-container [ngSwitch]="activeComponent">
+                <app-kayak *ngSwitchCase="'search'"></app-kayak>
+                <app-bind *ngSwitchCase="'bind'"></app-bind>
+                <app-wizard *ngSwitchCase="'wizard'"></app-wizard>
+                <app-emily *ngSwitchCase="'emily'"></app-emily>
+                <app-shopping-centers *ngSwitchCase="'centers'"></app-shopping-centers>
+                <app-edit-specs *ngSwitchCase="'specs'"></app-edit-specs>
+                <app-sharing *ngSwitchCase="'sharing'"></app-sharing>
+            </ng-container>
+        </div>
+     </div>

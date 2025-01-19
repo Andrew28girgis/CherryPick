@@ -19,6 +19,7 @@ import { PropertiesComponent } from './components/kanban/properties/properties.c
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
+import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
 
 
 const routes: Routes = [
@@ -99,6 +100,11 @@ const routes: Routes = [
   {
     path: 'kayak',
     component: KayakComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'dashboard/:buyboxid',
+    component: KayakHomeComponent,
     canActivate: [AuthGuardService],
   },
 ];
