@@ -73,55 +73,68 @@
     <div class="col-md-15 p-0 ta">
       <div class="row d-flex">
          <div class="search-bar position-relative"></div>
-          <div class="input">
-            <input
-              type="search"
-              placeholder="Search..."
-              class="form-control search-input"
-              [(ngModel)]="searchText"
-              #searchInput
-
-              (input)="onSearchChange($event)"
-            />
-            
-            <!-- <img
-              src="assets/Images/Icons/search-normal.svg"
-              alt="Search Icon"
-              class="search-icon"
-            /> -->
-        <!-- </div>  -->
-        <div class="kanban-header-section container-fluid py-4">
-          <div class="row">
-            <div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let kanban of userKanbans">
-              <div class="kanban-info-card shadow-sm" (click)="GetKanbanDetails(kanban)">
-                <div class="card-content">
-                  <div class="org-chain">
-                    <ng-container *ngFor="let def of kanban.kanbanDefinitions; let i = index">
-                      <ng-container *ngFor="let org of def?.Organization; let last = last">
-                        <div class="org-item">
-                          <span class="org-badge">{{ org.Name }}</span>
-                          <i class="connection-icon bi bi-arrow-right" *ngIf="!last"></i>
-                        </div>
-                      </ng-container>
-                    </ng-container>
-                  </div>
-                  
+      
+        <div class="kanban-header-section container-fluid">
+          
+          <div class="row ">
+            <div>
+              <div class="input">
+                <input
+                  type="search"
+                  placeholder="Search..."
+                  class="form-control search-input"
+                  [(ngModel)]="searchText"
+                  #searchInput
+    
+                  (input)="onSearchChange($event)"
+                />
+                
+                <!-- <img
+                  src="assets/Images/Icons/search-normal.svg"
+                  alt="Search Icon"
+                  class="search-icon"
+                /> -->
+            </div> 
+            <div class="col-12 col-md-6 col-lg-4" *ngFor="let kanban of userKanbans">
+             
+              <div class="kanban-ca" [class.collapsed]="kanban.isCollapsed"  (click)="GetKanbanDetails(kanban)"   (click)="toggleCollapse(kanban)">
+                <!---->
+                <div class="card-header">
                   <div class="stakeholder-info">
                     <div class="stakeholder-avatar">
                       {{ getStackHolderName(kanban.targetStakeholderId)?.charAt(0) }}
                     </div>
                     <div class="stakeholder-details">
-                      <span class="stakeholder-label">Stakeholder</span>
-                      <span class="stakeholder-title">
+                      <span class="stakeholder-name">
                         {{ getStackHolderName(kanban.targetStakeholderId) }}
                       </span>
                     </div>
                   </div>
+                  <!-- <button class="btn btn-toggle" aria-expanded="true" [attr.aria-label]="kanban.isCollapsed ? 'Expand' : 'Collapse'">
+                    <i class="fas" [class.fa-chevron-down]="!kanban.isCollapsed" [class.fa-chevron-up]="kanban.isCollapsed"></i>
+                  </button> -->
+                </div>
+                <div class="card-content" [class.show]="!kanban.isCollapsed">
+                  <div class="org-chain">
+                    <ng-container *ngFor="let def of kanban.kanbanDefinitions; let i = index">
+                      <ng-container *ngFor="let org of def?.Organization; let last = last">
+                        <div class="org-item">
+                          <span class="org-badge">{{ org.Name }}</span>
+                          <i class="connection-icon fas fa-chevron-right" *ngIf="!last"></i>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  <!-- <div class="card-footer">
+                    <button class="btn btn-primary btn-sm" (click)="GetKanbanDetails(kanban); $event.stopPropagation();">View Details</button>
+                  </div> -->
                 </div>
               </div>
             </div>
           </div>
+          </div>
         </div>
+        
       </div>
 
       
@@ -171,7 +184,8 @@
                                     class="logo"
                                   />
                                   <div class="kanban-title">
-                                    <span class="name">{{ org.Organization?.[0]?.Name || '' }}</span>
+                                    <span class="name"  [title]="(org.Organization?.[0]?.Name?.length > 20 ? org.Organization?.[0]?.Name : '') || ''"
+                                      [class.truncate]="org.Organization?.[0]?.Name?.length > 20">{{ org.Organization?.[0]?.Name || '' }}</span>
                                     <span class="place">{{ org.Organization?.[0]?.Location || '' }}</span>
                                     
                                   </div>
@@ -193,6 +207,13 @@
                                       )
                                     "
                                   />
+                                  <button
+                                  class="btn btn-success add-btn"
+                                  *ngIf="stage.isQualified"
+                                  (click)="openCreateNewKanban(chooseStackHolder, org)"
+                                >
+                                  +
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -288,7 +309,7 @@
           </ul>
         </div>
 
-        <div>
+        <!-- <div>
           <label for=""><b>Select Organization</b></label>
           <select
             class="form-control w-50"
@@ -298,7 +319,7 @@
               {{ org.Name }}
             </option>
           </select>
-        </div>
+        </div> -->
 
         <div
           class="py-2"
