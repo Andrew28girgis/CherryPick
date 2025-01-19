@@ -96,11 +96,11 @@ const routes: Routes = [
     component: CommunicationComponent,
     canActivate: [AuthGuardService],
   },
-    {
-      path: 'kayak',
-      component: KayakComponent,
-      canActivate: [AuthGuardService],
-    },
+  {
+    path: 'kayak',
+    component: KayakComponent,
+    canActivate: [AuthGuardService],
+  },
 ];
 
 @NgModule({

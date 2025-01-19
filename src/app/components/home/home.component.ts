@@ -392,7 +392,7 @@ export class HomeComponent implements OnInit {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
 
-      //this.getPolygons();
+      this.getPolygons();
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
@@ -431,7 +431,7 @@ export class HomeComponent implements OnInit {
       Name: 'GetBuyBoxSCsIntersectPolys',
       Params: {
         BuyBoxId : this.BuyBoxId,
-        PolygonSourceId : 3 
+        PolygonSourceId : 0 
       },
     };
     this.PlacesService.GenericAPI(body).subscribe((data) => {
@@ -487,7 +487,6 @@ export class HomeComponent implements OnInit {
   private updateCardsSideList(map: any): void {
     const bounds = map.getBounds();
     const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
-
     const visibleCoords = new Set(
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
@@ -583,7 +582,7 @@ export class HomeComponent implements OnInit {
       scrollable: true,
     });
     this.General.modalObject = modalObject;
-
+    
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
