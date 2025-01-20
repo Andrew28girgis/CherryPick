@@ -97,7 +97,7 @@
             </div> 
             <div class="col-12 col-md-6 col-lg-4" *ngFor="let kanban of userKanbans">
              
-              <div class="kanban-ca" [class.collapsed]="kanban.isCollapsed"  (click)="GetKanbanDetails(kanban)"   (click)="toggleCollapse(kanban)">
+              <div class="kanban-ca"   (click)="GetKanbanDetails(kanban)"   (click)="toggleCollapse(kanban)">
                 <!---->
                 <div class="card-header">
                   <div class="stakeholder-info">

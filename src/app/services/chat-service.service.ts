@@ -1,82 +1,112 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Injectable } from "@angular/core"
+import {  HttpClient, HttpHeaders,  HttpErrorResponse ,HttpHandler} from "@angular/common/http"
+import {  Observable, throwError } from "rxjs"
+import { catchError, map, retry } from "rxjs/operators"
+import { environment } from "../../environments/environment"
+import { GroqApiInterceptor } from "../groq-api-interceptor.interceptor"
+import { ChatHttpClient } from "./chat-http-client"
 
 interface AIResponse {
-  type: string;
-  content: string;
-  data: any;
-}
-
-interface Property {
-  id: string;
-  name: string;
-  location: string;
-  image: string;
+  type: string
+  content: string
+  data?: any
+  error?: string
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ChatService {
-  constructor() { }
+  private apiUrl = environment.GROQ_API_URL
+  private maxRetries = 1
+  private chatHttpClient: ChatHttpClient
 
-  generateAIResponse(prompt: string): Observable<AIResponse> {
-    // Simulate API call with delay
-    return of(this.mockGenerateAIResponse(prompt)).pipe(delay(1500));
+  constructor(    private http: HttpClient,
+    handler: HttpHandler,
+) {
+  this.chatHttpClient = ChatHttpClient.create(http, handler)
+    
+
   }
 
-  private mockGenerateAIResponse(prompt: string): AIResponse {
-    if (prompt.toLowerCase().includes('show') && prompt.toLowerCase().includes('properties')) {
-      return {
-        type: 'properties',
-        content: 'Here are the properties matching your criteria:',
-        data: this.mockProperties
-      };
-    } else if (prompt.toLowerCase().includes('analysis') || prompt.toLowerCase().includes('report')) {
-      return {
-        type: 'analysis',
-        content: 'Here\'s the analysis you requested:',
-        data: [
-          { title: 'Average Price', value: '$2.5M', trend: 'up' },
-          { title: 'Total Properties', value: 127, trend: 'neutral' },
-          { title: 'Market Growth', value: '5.2%', trend: 'up' }
-        ]
-      };
-    } else if (prompt.toLowerCase().includes('calculate') && prompt.toLowerCase().includes('yield')) {
-      return {
-        type: 'analysis',
-        content: 'Here are the rental yield calculations:',
-        data: [
-          { title: 'Average Yield', value: '7.2%', trend: 'up' },
-          { title: 'Highest Yield', value: '8.5%', trend: 'up' },
-          { title: 'Lowest Yield', value: '5.8%', trend: 'down' },
-          { title: 'Market Average', value: '6.5%', trend: 'neutral' }
-        ]
-      };
+generateAIResponse(prompt: string): Observable<any> {
+    const body = {
+      model: "mixtral-8x7b-32768",
+      messages: [{ role: "user", content: prompt }],
     }
 
-    return {
-      type: 'text',
-      content: `I understand you're asking about "${prompt}". Here's what I found...`,
-      data: {
-        suggestions: [
-          'Would you like to see related properties?',
-          'Should I generate a detailed report?',
-          'Would you like to analyze market trends?'
-        ]
-      }
-    };
+    return this.chatHttpClient.post(this.apiUrl, body).pipe(
+      map((response: any) => this.processResponse(response)),
+      catchError(this.handleError),
+    )
+  }
+  
+
+  private processResponse(response: any): AIResponse {
+    console.log("API Response:", response)
+    if (!response?.choices?.[0]?.message?.content) {
+      throw new Error("Invalid API response structure")
+    }
+
+    const content = response.choices[0].message.content
+    return this.parseContentToAIResponse(content)
   }
 
-  private mockProperties: Property[] = [
-    { id: '1', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: 'assets/Images/unit.svg' },
-    { id: '2', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: 'assets/Images/unit2.svg' },
-    { id: '3', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: 'assets/Images/unit2.svg' },
-    { id: '4', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: 'assets/Images/unit.svg' },
-    { id: '5', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: '/assets/Images/unit2.svg' },
-    { id: '6', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: 'assets/Images/unit.svg' },
-    { id: '7', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: 'assets/Images/unit2.svg' },
-    { id: '8', name: 'Unit 0 Mall of America', location: 'Washington, DC', image: 'assets/Images/unit2.svg' },
-  ];
+  private parseContentToAIResponse(content: string): AIResponse {
+    try {
+      const parsedContent = JSON.parse(content)
+      if (typeof parsedContent === "object" && parsedContent !== null) {
+        if (parsedContent.properties || parsedContent.listings) {
+          return {
+            type: "properties",
+            content: "Here are the properties matching your criteria:",
+            data: parsedContent,
+          }
+        } else if (parsedContent.analysis || parsedContent.summary) {
+          return {
+            type: "analysis",
+            content: "Here's the analysis you requested:",
+            data: parsedContent,
+          }
+        }
+      }
+    } catch (error) {
+      // If parsing fails, treat as plain text
+    }
+
+    // Default to text response
+    return {
+      type: "text",
+      content: content,
+      data: null,
+    }
+  }
+
+  private handleError = (error: HttpErrorResponse): Observable<AIResponse> => {
+    let errorMessage = "An error occurred while processing your request."
+
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`
+    } else {
+      // Server-side error
+      if (error.status === 401) {
+        errorMessage = "Authentication failed. Please check your API key."
+      } else if (error.error && error.error.error) {
+        errorMessage = `Error: ${error.error.error.message}`
+      } else {
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`
+      }
+    }
+
+    console.error("API Error:", error)
+
+    return throwError(() => ({
+      type: "error",
+      content: errorMessage,
+      data: null,
+      error: error.message,
+    }))
+  }
 }
+
