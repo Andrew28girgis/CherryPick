@@ -111,6 +111,8 @@ private crf:ChangeDetectorRef,
     this.GetUserKanbans();
     this.GetAllStakeHolders();
     this.loadProperties();
+    this.userKanbans.forEach(kanban => kanban.isCollapsed = false);
+
     // Load saved sidebar state
     const savedState = localStorage.getItem('sidebarCollapsed');
     if (savedState) {
@@ -310,7 +312,7 @@ private crf:ChangeDetectorRef,
   onCreateClick(selectedTemplate: KanbanTemplate) {
     let kanabanName = this.selectedKanban?.kanbanName;
     let targetStakeholderId = this.kanbanTemplate[0].targetStakeholderId;
-   this.createKanbanByTemplate(selectedTemplate);
+  this.createKanbanByTemplate(selectedTemplate);
 
     const kanbanDefinitions: any[] = [];
 
@@ -646,8 +648,7 @@ private crf:ChangeDetectorRef,
 
   createKanbanByTemplate(selectedTemplate: KanbanTemplate): void {
     if (!this.selectedBroker) {
-      // Assuming toastr is injected.  Replace with your error handling.
-      console.error('Please select a broker before creating a Kanban.'); //Replace with toastr.error
+      console.error('Please select a broker before creating a Kanban.'); 
       return;
     }
 
@@ -660,11 +661,11 @@ private crf:ChangeDetectorRef,
     const kanbanOwnerOrganizationId = this.selectedBroker.id1;
     const placeId = selectedOrg?.PlaceId || null;
 
-    console.log('Template ID:', templateId);
-    console.log('Previous Kanban ID:', prevKanbanId);
-    console.log('Target Organization ID:', targetOrganizationId);
-    console.log('Kanban Owner Contact ID:', kanbanOwnerContactId);
-    console.log('Kanban Owner Organization ID:', kanbanOwnerOrganizationId);
+    // console.log('Template ID:', templateId);
+    // console.log('Previous Kanban ID:', prevKanbanId);
+    // console.log('Target Organization ID:', targetOrganizationId);
+    // console.log('Kanban Owner Contact ID:', kanbanOwnerContactId);
+    // console.log('Kanban Owner Organization ID:', kanbanOwnerOrganizationId);
     console.log('Place ID:', placeId);
 
     if (!templateId || !targetOrganizationId) {
@@ -693,7 +694,6 @@ private crf:ChangeDetectorRef,
           // Show error to user
           return;
         }
-        console.log('Kanban created successfully:', response);
         this.GetUserKanbans();
         this.modalService.dismissAll();
       },
@@ -703,6 +703,9 @@ private crf:ChangeDetectorRef,
       }
     });
   }
+
+
+
 
 
 
@@ -890,5 +893,9 @@ private crf:ChangeDetectorRef,
       this.pollingSubscription.unsubscribe();
     }
   }
+  toggleCollapse(kanban: any): void {
+    kanban.isCollapsed = !kanban.isCollapsed;
+  }
+  
 }
 
