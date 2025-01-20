@@ -94,7 +94,9 @@ body{
   backdrop-filter: blur(1.5px);
   cursor: pointer;
 }
-
+.show-map{
+  width: max-content;
+}
 #state-select,
 #city-select {
   border-radius: 10px;
