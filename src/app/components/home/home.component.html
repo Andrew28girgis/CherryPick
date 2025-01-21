@@ -714,6 +714,11 @@
                         class="col-12 d-flex flex-column spec"
                       >
                         <div class="d-flex flex-column">
+                          <p class="nearset-category">
+                            <b
+                              >{{ getNeareastCategoryName(item.CategoryId) }}
+                            </b>
+                          </p>
                           <p>
                             {{ item.RelationOrganizationName }}
                             <img
@@ -725,16 +730,10 @@
                               alt=""
                             />
                           </p>
-                          <p>
-                            <b
-                              >{{ getNeareastCategoryName(item.CategoryId) }}
-                            </b>
-                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
-
                   <div
                     class="col-md-12 spec"
                     *ngIf="
@@ -1107,24 +1106,22 @@
                     "
                     class="col-12 d-flex flex-column spec"
                   >
-                  <div class="d-flex flex-column">
-                    <p>
-                      {{ item.RelationOrganizationName }}
-                      <img
-                        class="logo ms-2"
-                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          item.RelationOrganizationId
-                        }}"
-                        [title]="item.RelationOrganizationName"
-                        alt=""
-                      />
-                    </p>
-                    <p>
-                      <b
-                        >{{ getNeareastCategoryName(item.CategoryId) }}
-                      </b>
-                    </p>
-                  </div>
+                    <div class="d-flex flex-column">
+                      <p class="nearset-category">
+                        <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                      </p>
+                      <p>
+                        {{ item.RelationOrganizationName }}
+                        <img
+                          class="logo ms-2"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            item.RelationOrganizationId
+                          }}"
+                          [title]="item.RelationOrganizationName"
+                          alt=""
+                        />
+                      </p>
+                    </div>
                   </div>
                 </div>
 

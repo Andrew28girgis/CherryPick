@@ -130,7 +130,7 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
-    this.GetBuyboxRelations();
+   // this.GetBuyboxRelations();
     // this.GetPolygons(this.BuyBoxId);
   }
 
