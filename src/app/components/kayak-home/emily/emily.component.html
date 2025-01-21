@@ -1,405 +1,124 @@
-<div class="container-fluid">
-    <div class="row">
-      <div class="col-12 d-flex" style="padding-left: 10px;">
-        <div class="col-3" style="max-height: 90vh; overflow-y: auto; scrollbar-width: thin;">
-          <!-- <button (click)="open(View)" class="x-btn">view</button> -->
-          <div class="row">
-            <div class="d-flex justify-content-center align-items-center">
-              <label class="check">
-                <input
-                  type="checkbox"
-                  style="cursor: pointer"
-                  [(ngModel)]="showClientProfile"
-                  (change)="onCheckboxChange()"
-                />
-                <p>{{ BuyBoxOrganizationName }}</p>
-              </label>
-            </div>
-          </div>
-  
-          <div class="row">
-            <div class="d-flex justify-content-center align-items-center">
-              <label class="check">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="showRelationNames"
-                  (change)="onRelationNamesChange()"
-                />
-                <p>Relation Name</p>
-              </label>
-            </div>
-          </div>
-  
-          <div *ngIf="showRelationNames">
-            <div *ngFor="let relation of relationCategoriesNames">
-              <label class="check">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="relation.selected"
-                  (change)="onRelationNamesChange()"
-                />
-                {{ relation.name }}
-              </label>
-  
-              <div class="px-2 mb-3">
-                <ng-container *ngFor="let item of generated[0]?.Releations">
-                  <ng-container
-                    *ngIf="item.RetailRelationCategoryId == relation.id"
-                  >
-                    <label class="check">
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="item.relationSelect"
-                        (change)="updateEmailBody()"
-                      />
-  
-                      {{ item.Name }}
-                    </label>
-                  </ng-container>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-  
-          <div class="row">
-            <div class="">
-              <label class="check">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="showOrganizationManagers"
-                  (change)="onOrganizationManagersChange()"
-                />
-                <p>{{ ManagerOrganizationName }}</p>
-              </label>
-  
-              <label class="check" *ngIf="showOrganizationManagers">
-                <input
-                  type="checkbox"
-                  style="cursor: pointer"
-                  [(ngModel)]="showMangerDescription"
-                  (change)="onMangerDescriptionChange()"
-                />
-                <p>Tenant Rep. Description</p>
-              </label>
-            </div>
-          </div>
-  
-          <!-- Manager Organizations and Contacts -->
-          <div *ngIf="showOrganizationManagers">
-            <div *ngFor="let manager of managerOrganizations">
-              <div>
-                <div *ngFor="let contact of manager.ManagerOrganizationContacts">
-                  <label class="check">
-                    <input
-                      type="checkbox"
-                      [(ngModel)]="contact.selected"
-                      (change)="onContactCheckboxChange()"
-                      [checked]="contact.selected"
-                    />
-                    {{ contact.Firstname }} {{ contact.LastName }}
-                  </label>
-  
-                  <!-- Add Assistant Details -->
-                  <div *ngIf="contact.AssistantName">
-                    <label class="check">
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="contact.assistantSelected"
-                        (change)="onAssistantCheckboxChange(contact)"
-                      />
-                      Broker Assistant
-                    </label>
-                    <!-- <div *ngIf="contact.assistantSelected" class="px-4">
-                      <p>Name: {{ contact.AssistantName }}</p>
-                      <p>Email: {{ generateAssistantEmail(contact.AssistantName) }}</p>
-                    </div> -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div style="padding-right: 5px;">
-              <select
-              id="shoppingCenterDropdown"
-              class="form-control mb-2"
-              [(ngModel)]="selectedShoppingCenter"
-              (change)="onSelectedShoppingCenterChange()"
-            >
-              <option value="" selected>Select a Shopping Center</option>
-              <option *ngFor="let center of ShoppingCenterNames" [value]="center.CenterName">
-                {{ center.CenterName }}
-                <span  >
-                  ({{ center.ShoppingCenterManager[0].Name }})
-                </span>
-              </option>
-            </select>
-            </div>
-          </div>
-  
-          <div *ngIf="selectedShoppingCenter">
-            <div class="row">
-              <label class="check">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="showManagerName"
-                  (change)="updateEmailBody()"
-                />
-                <p>Landlord Rep. Description</p>
-              </label>
-            </div>
-  
-            <div class="row">
-              <!-- Manager Contacts with checkboxes -->
-              <div *ngIf="showManagerName" class="px-3">
-                <div
-                  *ngFor="
-                    let contact of getManagerContacts(selectedShoppingCenter)
-                  "
-                >
-                  <label class="check">
-                    <!-- First Name Last Name checkbox -->
-                    <input
-                      type="checkbox"
-                      [(ngModel)]="contact.selectedName"
-                      (change)="updateEmailBody()"
-                    />
-                    M.Contact: {{ contact.Firstname }} {{ contact.Lastname }}
-                  </label>
-                </div>
-              </div>
-            </div>
-  
-  <!-- All Cotenants -->
-            <!-- <div class="row">
-              <label class="check">
-                <input
-                  type="checkbox"
-                  [(ngModel)]="showAllCotenants"
-                  (change)="onAllCotenantsChange()"
-                />
-                <p>Select All Cotenants</p>
-              </label>
-            </div> -->
-  
-  <!-- Cotenants in the shopping center -->
-            <div class="row pl-2">
-              <div>
-                <label class="check">
-                  <input
-                    type="checkbox"
-                    [(ngModel)]="showCotenantsWithActivity"
-                    (change)="onCotenantsWithActivityChange()"
-                  />
-                  <p>Co-tenant in the shopping center</p>
-                </label>
-  
-                <!-- Add *ngIf here -->
-                <ul *ngIf="showCotenantsWithActivity" style="list-style-type: none; padding-left: 10px">
-                  <li *ngFor="let activity of groupedActivityTypes">
-                    <label class="check">
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="activity.selected"
-                        (change)="onActivityChange(activity)"
-                      />
-                      {{ activity.ActivityType }}
-                    </label>
-  
-                    <div class="px-4">
-                      <ng-container *ngFor="let co of activity.Cotenants">
-                        <label class="check">
-                          <input
-                            type="checkbox"
-                            [(ngModel)]="co.selected"
-                            (change)="updateEmailBody()"
-                          />
-                          {{ co.CotenantName }}
-                        </label>
-                      </ng-container>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-  
-  <!-- Cotenants without shopping center -->
-            <div class="row pl-2">
-              <!-- <div>
-                <label class="check">
-                  <input
-                    type="checkbox"
-                    [(ngModel)]="showCotenantsWithoutActivity"
-                    (change)="onCotenantsWithoutActivityChange()"
-                  />
-                  <p>Cotenants without shopping center</p>
-                </label>
-                <ul *ngIf="showCotenantsWithoutActivity" style="list-style-type: none; padding-left: 10px;">
-                  <li *ngFor="let cotenant of getCotenantsWithoutActivityType(selectedShoppingCenter)">
-                    <label class="check">
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="cotenant.selected"
-                        (change)="updateEmailBody()"
-                      />
-                      {{ cotenant.CotenantName }}
-                    </label>
-                  </li>
-                </ul>
-              </div> -->
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-9">
-          <p style="margin-bottom: 10px">Data</p>
-          <div class="container">
-            <!-- Select Prompt -->
-            <div class="form-group">
-              <label for="discussionDropdown">Select a Prompt:</label>
-              <select
-                id="discussionDropdown"
-                class="form-control"
-                [(ngModel)]="selectedPromptId"
-                (change)="updatePrompt()"
-              >
-                <option value="" selected>Select a Prompt</option>
-                <option *ngFor="let prompt of prompts" [value]="prompt.id">
-                  {{ prompt.name }}
-                </option>
-              </select>
-            </div>
-  
-            <!-- Display Prompt in Separate Textarea -->
-            <div class="form-group" *ngIf="selectedPromptId">
-              <label for="selectedPromptTextarea">Selected Prompt:</label>
-              <div class="row">
-                <div
-                  class="col-12 d-flex justify-content-between align-items-center"
-                >
-                  <div class="w-100">
-                    <textarea
-                      id="selectedPromptTextarea"
-                      rows="1"
-                      class="form-control"
-                      [value]="selectedPromptText"
-                      readonly
-                    ></textarea>
-                  </div>
-                  <div>
-                    <button
-                      class="x-btn d-flex justify-content-center align-items-center"
-                      (click)="openPromptTextModal(View)"
-                      style="height: 35px"
-                    >
-                      Prompt
-                      <i class="fas fa-sign-in-alt px-1"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-  
-            <!-- Email Body -->
-            <div>
-              <div class="d-flex justify-content-between align-items-center">
-              <label for="emailBodyTextarea">Email Body:</label>
-              <i class="fas fa-eraser eraser-sty" (click)="clearSelections()" *ngIf="emailBody!=''" title="Clear Body" ></i>
-            </div>
-              <textarea
-                id="emailBodyTextarea"
-                rows="20"
-                class="form-control"
-                [(ngModel)]="emailBody"
-              ></textarea>
-            </div>
-  
-            <!-- Generic Button -->
-            <div class="form-group d-flex justify-content-between">
-              <button class="x-btn mb-0" (click)="getGenericEmail()">Generate</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <div class="row">
-      <!-- API Response View -->
-      <div class="col-12">
-        <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
-          <div class="card shadow-sm border-0">
-            <div class="card-header text-white" style="background-color: #141e2a">
-              <h5 class="mb-0">Generated Email</h5>
-            </div>
-            <div class="card-body bg-light">
-              <div class="mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                <label class="fw-bold text-secondary">Email Subject:</label>
-                <span (click)="copyEmailSubject()" class="copy-icon-container">
-                  <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
-                  <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span> </span>
-              </div>
-                <div class="p-3 border rounded bg-white text-dark">
-                  {{ emailSubject }}
-                </div>
-              </div>
-              <div>
-                <div class="d-flex justify-content-between align-items-center">
-                <label class="fw-bold text-secondary">Email Body:</label>
-                <span (click)="copyEmailBody()" class="copy-icon-container">
-                  <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
-                  <span class="copied-text" *ngIf="isBodyCopied">Copied!</span> </span>
-              </div>
-                <div class="p-3 border rounded bg-white text-dark">
-                  <p [innerHTML]="emailBodyResponse" class="m-0"></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
+<section class="container-fluid pt-2 pb-2">
+  <div class="head__section">
+    <div>Buybox Management</div>
+    <div>Academy Sports Puls Outdoors</div>
   </div>
-  
-  <ng-template #View let-modal>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title text-light">{{ selectedPromptName }}</h3>
-        <!-- <button
-          type="button"
-          class="btn-close"
-          aria-label="Close"
-          (click)="modal.dismiss('Cross click')"
-        ></button> -->
-      </div>
-      <div class="modal-body">
-        <!-- Display or Edit Prompt Text -->
-        <textarea
-          *ngIf="isEditing"
-          class="form-control"
-          rows="15"
-          [(ngModel)]="editablePromptText"
-        ></textarea>
-        <!-- <p *ngIf="!isEditing" [innerHTML]="selectedPromptText"></p> -->
-        <textarea *ngIf="!isEditing" [innerHTML]="selectedPromptText"
-        readonly rows="15" class="form-control"></textarea>
-      </div>
-      <div class="modal-footer">
-        <button *ngIf="!isEditing" class="btn btn-warning" (click)="editPrompt()">
-          Edit
-        </button>
-        <button
-          *ngIf="isEditing"
-          class="btn btn-success"
-          (click)="savePrompt(modal)"
-        >
-          Save
-        </button>
-        <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">
-          Close
-        </button>
-      </div>
-    </div>
-  </ng-template>
-  
+  <div class="Nav__section">
+    <ul class="pt-3 pe-2 ps-2 m-0">
+      <li id="Emily" *ngFor="let tab of tabs" [ngClass]="{'active': selectedTab === tab.id}"
+        (click)="selectTab(tab.id)">{{ tab.label }}</li>
+    </ul>
+  </div>
+  <div class="main-section">
+    <section *ngIf="selectedTab === 'Emily'" class="row d-flex m-0 p-0">
+      <article class="sidbar__contant">
+        <div class="checkbox-section-head checkbox-section-border checkbox-section">
+          <input type="checkbox" name="Parts" id="Parts" class="form-check-input">
+          <label for="Parts">Advance Auto Parts</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body">
+          <input type="checkbox" name="Relation" id="Relation" class="form-check-input">
+          <label for="Relation">Relation Name</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-first">
+          <input type="checkbox" name="Complementary" id="Complementary" class="form-check-input">
+          <label for="Complementary">Complementary Tenants</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-first">
+          <input type="checkbox" name="Auto" id="Auto" class="form-check-input">
+          <label for="Auto">Advance Auto Parts</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-first">
+          <input type="checkbox" name="Manger" id="Manger" class="form-check-input">
+          <label for="Manger">Manger Organization Descript</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-second">
+          <input type="checkbox" name="Mitchell" id="Mitchell" class="form-check-input">
+          <label for="Mitchell">Mitchell Recoon</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-second">
+          <input type="checkbox" name="Nick" id="Nick" class="form-check-input">
+          <label for="Nick">Nick Robinson</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-second checkbox-section-border pb-2">
+          <input type="checkbox" name="Esther" id="Esther" class="form-check-input">
+          <label for="Esther">Esther Foster</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body">
+          <input type="checkbox" name="RelationTwo" id="RelationTwo" class="form-check-input">
+          <label for="RelationTwo">Relation Name</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-first checkbox-section-border pb-2">
+          <input type="checkbox" name="ComplementaryTwo" id="ComplementaryTwo" class="form-check-input">
+          <label for="ComplementaryTwo">Complementary Tenants</label>
+        </div>
+        <div class="checkbox-section-select pb-2 checkbox-section-border">
+          <label for="ShoppingCenter">Shopping Center</label>
+          <select class="form-select form-select-lg mb-3" aria-label="Large select example" id="ShoppingCenter">
+            <option value="1" selected>Jemal's Van Ness</option>
+            <option value="2">Jemal's Van Ness</option>
+            <option value="3">Jemal's Van Ness</option>
+          </select>
+        </div>
+        <div class="checkbox-section checkbox-section-body">
+          <input type="checkbox" name="MangerTwo0" id="MangerTwo0" class="form-check-input">
+          <label for="MangerTwo0">Manger Description</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body">
+          <input type="checkbox" name="CotenantsTwo0" id="CotenantsTwo0" class="form-check-input">
+          <label for="CotenantsTwo0">Cotenants in the shopping center</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-first">
+          <input type="checkbox" name="ComplementaryTenants" id="ComplementaryTenants" class="form-check-input">
+          <label for="ComplementaryTenants">Museum Gift Shop</label>
+        </div>
+        <div class="checkbox-section checkbox-section-body-second">
+          <input type="checkbox" name="HirshhornGift" id="HirshhornGift" class="form-check-input">
+          <label for="HirshhornGift">Hirshhorn Gift Shop</label>
+        </div>
+      </article>
+      <aside class="Emily__contant">
+        <div class="Emily__contant__head">Prompt</div>
+        <div class="checkbox-section-select pb-2">
+          <label for="exampleFormControlTextarea3">Select Prompt</label>
+          <select class="form-select form-select-lg" aria-label="Large select example" id="exampleFormControlTextarea3">
+            <option value="1" selected>Discuss Co-tenants</option>
+            <option value="2">Discuss Co-tenants</option>
+            <option value="3">Discuss Co-tenants</option>
+          </select>
+        </div>
+        <div class="textarea pb-3 checkbox-section-border">
+          <label for="exampleFormControlTextarea2">Selected Prompt</label>
+          <textarea class="form-control" id="exampleFormControlTextarea2"
+            rows="4">You are a CRE tenant rep broker drafting an outreach email for a tenant representative project reaching out to landlords and brokers about potential spaces for a [TENANT]. The goal is to inquire about specific properties and gather availability, terms, or co-tenancy options. </textarea>
+        </div>
+        <div class="Emily__contant__head pt-3 pb-2">Email Body <p class="Emily__contant__head__p">Clear</p>
+        </div>
+        <div class="textarea">
+          <div class="form-control textarea_div" contenteditable="true" (input)="onContentChange($event)"
+            [innerHTML]="getFormattedText()">
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <button class="Emily__contant__button mt-3 mb-1">
+            <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
+                stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Generate
+          </button>
+        </div>
+      </aside>
+    </section>
+    <section *ngIf="selectedTab === 'Details'" class="row d-flex m-0 p-2">
+      <app-buybox-details />
+    </section>
+    <section *ngIf="selectedTab === 'Shopping Centers'" class="row d-flex m-0 p-2">
+      <app-buybox-shopping-centers/>
+    </section>
+    <section *ngIf="selectedTab === 'Sharing'" class="row d-flex m-0 p-2">
+    </section>
+  </div>
+</section>

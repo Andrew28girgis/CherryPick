@@ -45,6 +45,7 @@ import { CommunicationComponent } from './components/kanban/communication/commun
 import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
 import { EmilyComponent } from './components/kayak-home/emily/emily.component';
 import { BuyboxDetailsComponent } from './components/kayak-home/buybox-details/buybox-details.component';
+import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-shopping-centers/buybox-shopping-centers.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,9 @@ import { BuyboxDetailsComponent } from './components/kayak-home/buybox-details/b
     CommunicationComponent,
     KayakHomeComponent,
     EmilyComponent,
-    BuyboxDetailsComponent
+    BuyboxDetailsComponent,
+    BuyboxShoppingCentersComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -90,6 +93,7 @@ import { BuyboxDetailsComponent } from './components/kayak-home/buybox-details/b
     HttpClientModule,
     FormsModule,
     NgxSpinnerModule,
+    ReactiveFormsModule,
     NgbModule,
     NgbTooltipModule,
     NgbAlertModule,
