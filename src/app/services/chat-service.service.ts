@@ -31,7 +31,7 @@ export class ChatService {
 
 generateAIResponse(prompt: string): Observable<any> {
     const body = {
-      model: "mixtral-8x7b-32768",
+      model: "llama-3.3-70b-versatile",
       messages: [{ role: "user", content: prompt }],
     }
 
