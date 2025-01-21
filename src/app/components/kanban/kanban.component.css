@@ -945,7 +945,7 @@
 
 .card-content {
   max-height: 0;
-  overflow: hidden;
+  overflow: hidden; 
   transition: max-height 0.3s ease;
 }
 
@@ -992,12 +992,12 @@
 .btn-primary {
   background: #3b82f6;
   border: none;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
 }
 
 .btn-primary:hover {
   background: #2563eb;
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
   box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
 }
 
@@ -1075,7 +1075,9 @@
   background: var(--glass-bg);
   border-radius: 12px;
   margin: 1rem;
-  overflow: hidden;
+  /* overflow: hidden; */
+  overflow: auto; /* Enable scrolling */
+
   box-shadow: var(--glass-shadow);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(8px);
@@ -1083,12 +1085,14 @@
   position: relative; /* For proper stacking context */
   border: 1px solid #eaecf0;
   height: auto;
-  min-height: 100%;
+  /* min-height: 100%; */
+  height: calc(100vh - 2rem); /* Set a fixed height based on viewport */
+  max-height: 650px;
 
 }
 
 table {
-  width: fit-content;
+  /* width: fit-content; */
   border-collapse: separate;
   border-spacing: 0;
   background: white;
@@ -1101,7 +1105,7 @@ td {
   border-right: 1px solid #eaecf0;
   background: #fff;
   vertical-align: top;
-  width: 320px;
+  /* width: 320px; */
   padding-left: 0;
   padding-right: 0;
 }
@@ -1145,7 +1149,7 @@ tr:last-child td {
    min-height:500px;
    /* padding-bottom: 200px; */
   background: #fff;
-  min-width: 250px;
+  /* min-width: 250px; */
 
   /* overflow: auto; */
 }
@@ -1224,8 +1228,164 @@ td {
 
 
 
+.modal-content {
+  width: fit-content;
+  max-width: 900px;
+  /* margin: 20px; */
+}
 
+.custom-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease-in-out;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+}
 
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #edf2f7;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
 
+.modal-header .modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+}
 
+.modal-header .btn-close {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
 
+.modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-body {
+  padding: 0;
+  max-height: 70vh;
+  overflow-y: auto;
+  color: #4a5568;
+}
+
+.content-item {
+  margin-bottom: 24px;
+  background: #f8fafc;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.content-title {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #000;
+  margin: 0;
+  padding: 20px;
+  background: #f8fafc;
+  white-space: pre-wrap;
+  font-weight: 400;
+}
+
+.toggle-btn {
+  background-color: #4d65b4 !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+  margin: 0 20px 20px 20px !important;
+}
+
+.toggle-btn:hover {
+  background-color: #455ba2 !important;
+}
+
+/* .head{
+  background-color: rgba(0,0,0,.03);
+} */
+
+.content-answer {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2d3748;
+  background: white;
+  border-top: 1px solid #edf2f7;
+  margin-top: 0;
+}
+
+.no-data {
+  font-size: 15px;
+  color: #a0aec0;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #edf2f7;
+  padding-top: 16px;
+  margin-top: 24px;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #f7fafc;
+  border: 1px solid #e2e8f0;
+  color: #4a5568;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar styles */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: #f7fafc;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
