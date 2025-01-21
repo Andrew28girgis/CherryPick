@@ -908,7 +908,8 @@
                         <b>${{ ShoppingCenter.HouseholdIncome | number }}</b>
                       </p>
                     </div>
-                    <div class="d-flex justify-content-between mt-2">
+                    <div class="d-flex justify-content-between mt-2"
+                    style="border-bottom: 1px solid #caced3">
                       <p
                         class="info-value"
                         *ngIf="ShoppingCenter && ShoppingCenter.Employees"
@@ -917,6 +918,17 @@
                       </p>
                       <p>
                         <b>{{ ShoppingCenter.Employees | number }}</b>
+                      </p>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2"  *ngIf="ShoppingCenter && ShoppingCenter.SubletVacantSpace">
+                      <p
+                        class="info-value"
+                       
+                      >
+                      Licensed Stylists
+                      </p>
+                      <p>
+                        <b>{{ ShoppingCenter.SubletVacantSpace | number }}</b>
                       </p>
                     </div>
                   </div>

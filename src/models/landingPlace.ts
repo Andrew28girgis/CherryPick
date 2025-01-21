@@ -25,7 +25,7 @@ export class ShoppingCenter {
   SitePlan!: string
   DocsLink!: string
   Employees!: string
-   
+  SubletVacantSpace!: any
   HouseholdIncome!: string
   PopulationDensity!: any
   SiteSelectionReason!: string
