@@ -45,6 +45,11 @@ import { CommunicationComponent } from './components/kanban/communication/commun
 import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
 import { EmilyComponent } from './components/kayak-home/emily/emily.component';
 import { BuyboxDetailsComponent } from './components/kayak-home/buybox-details/buybox-details.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
+import { ChatHttpClient } from './services/chat-http-client';
 import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-shopping-centers/buybox-shopping-centers.component';
 
 @NgModule({
@@ -102,12 +107,21 @@ import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-s
     ReactiveFormsModule, 
     ToastrModule.forRoot(),
     RouterModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule,
+    BrowserAnimationsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: GroqApiInterceptor,
       multi: true,
     },
   ],

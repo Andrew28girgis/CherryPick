@@ -1,8 +1,16 @@
-import { Component, Input, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+  TemplateRef,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { FilterPanelComponent } from './filter-panel/filter-panel.component';
 import { Fbo } from 'src/models/domain';
@@ -21,10 +29,10 @@ import {
   LeadBroker,
 } from 'src/models/kanbans';
 import { General } from 'src/models/domain';
-import { FormArray, FormBuilder,FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KanbanTemplate } from 'src/models/kanbanTemplates';
 import { KanbanAction } from 'src/models/kanbanActions';
-import {  OrganizationContact } from 'src/models/Organiztions';
+import { OrganizationContact } from 'src/models/Organiztions';
 import { ToastrService } from 'ngx-toastr';
 import { retry, finalize } from 'rxjs/operators';
 import { interval, Subscription } from 'rxjs';
@@ -37,9 +45,9 @@ import { takeWhile } from 'rxjs/operators';
 })
 export class KanbanComponent {
   @ViewChild(FilterPanelComponent) filterPanel!: FilterPanelComponent;
-  @Input() isInactive: boolean = false;
+  @Input() isInactive = false;
   isMobileMenuOpen = false;
-isMobileView = false;
+  isMobileView = false;
 
   General!: General;
   sidebarItems!: any[];
@@ -57,28 +65,31 @@ isMobileView = false;
   currentOpenedStage!: KanbanStage;
   allOrganizations: Organization[] = [];
   organizationContact: OrganizationContact[] = [];
-  keyword: string = '';
+  keyword = '';
   searchResults: any[] = [];
   filteredNames: any[] = [];
-  activeTab: string = 'In Progress';
-  activeFilter: string = 'Prospect';
-  showFilterSidebar: boolean = false;
-  showTableWrapper: boolean = false; // Added property
+  activeTab = 'In Progress';
+  activeFilter = 'Prospect';
+  showFilterSidebar = false;
+  showTableWrapper = false; // Added property
   hiddenOrganizations: { [key: number]: boolean } = {}; // Tracks visibility of organization names
-  isStakeholderHidden: boolean = false; // Tracks visibility of stakeholder name
-  mobileNavOpen: boolean = false;
-  sidebarCollapsed: boolean = false;
-  isOpen: boolean = false;
+  isStakeholderHidden = false; // Tracks visibility of stakeholder name
+  mobileNavOpen = false;
+  sidebarCollapsed = false;
+  isOpen = false;
   newOrganizationForm!: FormGroup;
   isLoading = false;
   selectedBroker: any = null; // Added: selectedBroker property
-  searchText: string = '';
+  searchText = '';
   filteredKanbanList: KanbanCard[] = [];
+  modalContent: any = null;
+  isAnswerVisible: boolean[] = []; // Array to track visibility of answers
+  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>; // Add this line
 
   // kanbanStages: any[] = [];
   kanbanStages: KanbanStage[] = []; // Initialize kanbanStages array
   @Output() kanbanCreated = new EventEmitter<any>();
-  showFilter: boolean = false; // Add this property
+  showFilter = false; // Add this property
 
   private pollingSubscription?: Subscription;
   private isPollingActive = false;
@@ -92,7 +103,7 @@ isMobileView = false;
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-private crf:ChangeDetectorRef,
+    private crf: ChangeDetectorRef,
     private fb: FormBuilder,
     private toastr: ToastrService
   ) {
@@ -111,16 +122,15 @@ private crf:ChangeDetectorRef,
     this.GetUserKanbans();
     this.GetAllStakeHolders();
     this.loadProperties();
+    this.userKanbans.forEach((kanban) => (kanban.isCollapsed = false));
+
     // Load saved sidebar state
     const savedState = localStorage.getItem('sidebarCollapsed');
     if (savedState) {
-        this.sidebarCollapsed = JSON.parse(savedState);
+      this.sidebarCollapsed = JSON.parse(savedState);
     }
     this.checkMobileView();
-
   }
-
-  
 
   GetUserKanbans(): void {
     const body: any = {
@@ -147,28 +157,24 @@ private crf:ChangeDetectorRef,
   }
 
   getStackHolderName(stackHolderId: number) {
-    let stack = this.stackHolders.filter((x) => x.id == stackHolderId);
+    const stack = this.stackHolders.filter((x) => x.id == stackHolderId);
     return stack[0]?.name;
   }
 
   GetKanbanDetails(kanban: Kanban) {
     this.selectedKanban = kanban;
     this.isPollingActive = true;
-  
+
     // Initial load
     this.fetchKanbanDetails();
 
     // Set up polling for new stages and organizations
     this.pollingSubscription = interval(30000) // Poll every 30 seconds
-      .pipe(
-        takeWhile(() => this.isPollingActive)
-      )
+      .pipe(takeWhile(() => this.isPollingActive))
       .subscribe(() => {
         this.checkForNewStagesAndOrganizations();
       });
   }
-  
-  
 
   GetStageActions(stage: KanbanStage): any {
     const body: any = {
@@ -192,11 +198,15 @@ private crf:ChangeDetectorRef,
   drop(event: CdkDragDrop<any[]>) {
     // Temporarily disable animations
     document.body.classList.add('dragging');
-  
+
     let movedItem: KanbanOrganization;
     if (event.previousContainer === event.container) {
       movedItem = event.container.data[event.previousIndex];
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     } else {
       movedItem = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
@@ -205,11 +215,11 @@ private crf:ChangeDetectorRef,
         event.previousIndex,
         event.currentIndex
       );
-      const newStageId = parseInt(event.container.id, 10);
+      const newStageId = Number.parseInt(event.container.id, 10);
       movedItem.kanbanStageId = newStageId;
 
       // Remove the item from the previous stage
-      const previousStageId = parseInt(event.previousContainer.id, 10);
+      const previousStageId = Number.parseInt(event.previousContainer.id, 10);
       this.removeOrganizationFromStage(movedItem, previousStageId);
     }
 
@@ -221,44 +231,51 @@ private crf:ChangeDetectorRef,
     this.postDrag(movedItem);
   }
 
-  removeOrganizationFromStage(organization: KanbanOrganization, stageId: number) {
-    const stage = this.kanbanList[0].kanbanStages.find((s: KanbanStage) => s.Id === stageId);
+  removeOrganizationFromStage(
+    organization: KanbanOrganization,
+    stageId: number
+  ) {
+    const stage = this.kanbanList[0].kanbanStages.find(
+      (s: KanbanStage) => s.Id === stageId
+    );
     if (stage) {
       stage.kanbanOrganizations = (stage.kanbanOrganizations || [])
-        .filter(org => org.Id !== organization.Id)
-        .filter(org => org && org.Organization && org.Organization.length > 0);
+        .filter((org) => org.Id !== organization.Id)
+        .filter(
+          (org) => org && org.Organization && org.Organization.length > 0
+        );
     }
   }
 
   postDrag(movedItem: KanbanOrganization) {
-  const { Organization, ...movedItemWithoutOrganization } = movedItem;
+    const { Organization, ...movedItemWithoutOrganization } = movedItem;
 
-  let body: any = {};
-  // body.json = movedItemWithoutOrganization;
-  // body.mainEntity = 'UpdateKanbanOrganizationStage';
-  body.name = 'UpdateKanbanOrganizationStage';
-  body.params =  {
-        StageId: movedItem.kanbanStageId,
-        OrganizationId: movedItem.OrganizationId
-      };
+    const body: any = {};
+    // body.json = movedItemWithoutOrganization;
+    // body.mainEntity = 'UpdateKanbanOrganizationStage';
+    body.name = 'UpdateKanbanOrganizationStage';
+    body.params = {
+      StageId: movedItem.kanbanStageId,
+      OrganizationId: movedItem.OrganizationId,
+    };
 
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (data) => {
-      // Immediately check for updates after the drag operation
-      this.checkForNewStagesAndOrganizations();
-    },
-    error: (error) => {
-      console.error('Error updating organization:', error);
-      // Revert the change in the view if the API call fails
-      this.checkForNewStagesAndOrganizations();
-    }
-  });
-}
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        // Immediately check for updates after the drag operation
+        this.checkForNewStagesAndOrganizations();
+      },
+      error: (error) => {
+        console.error('Error updating organization:', error);
+        // Revert the change in the view if the API call fails
+        this.checkForNewStagesAndOrganizations();
+      },
+    });
+  }
 
   updateKanbanView() {
     // Update filtered list
     this.filteredKanbanList = [...this.kanbanList];
-  
+
     // Trigger change detection
     this.crf.detectChanges();
   }
@@ -280,7 +297,7 @@ private crf:ChangeDetectorRef,
   }
 
   GetKanbanMatchTemplate(): void {
-    let StakeholderIds = [];
+    const StakeholderIds = [];
 
     this.selectedKanban?.kanbanDefinitions.forEach((definition) => {
       definition.Organization.forEach((org) => {
@@ -288,12 +305,12 @@ private crf:ChangeDetectorRef,
       });
     });
 
-    let movedOrg = this.General.modalObject.Organization[0]?.stakeholderId;
+    const movedOrg = this.General.modalObject.Organization[0]?.stakeholderId;
     if (movedOrg) {
       StakeholderIds.push(movedOrg);
     }
 
-    let resultString = StakeholderIds.join('  ');
+    const resultString = StakeholderIds.join('  ');
 
     const body: any = {
       Name: 'GetKanbanMatchTemplate',
@@ -308,9 +325,9 @@ private crf:ChangeDetectorRef,
   }
 
   onCreateClick(selectedTemplate: KanbanTemplate) {
-    let kanabanName = this.selectedKanban?.kanbanName;
-    let targetStakeholderId = this.kanbanTemplate[0].targetStakeholderId;
-   this.createKanbanByTemplate(selectedTemplate);
+    const kanabanName = this.selectedKanban?.kanbanName;
+    const targetStakeholderId = this.kanbanTemplate[0].targetStakeholderId;
+    this.createKanbanByTemplate(selectedTemplate);
 
     const kanbanDefinitions: any[] = [];
 
@@ -323,7 +340,6 @@ private crf:ChangeDetectorRef,
       };
       // kanbanStages.push(Stage);
     });
-
 
     const kanbanNewDefinition = {
       organizationId: this.General.modalObject.OrganizationId,
@@ -342,7 +358,7 @@ private crf:ChangeDetectorRef,
       kanbanStages.push(Stage);
     });
 
-    let pay: any = {};
+    const pay: any = {};
     pay.targetStakeholderId = targetStakeholderId;
     pay.kanbanName = kanabanName;
     pay.kanbanDefinitions = kanbanDefinitions;
@@ -361,7 +377,6 @@ private crf:ChangeDetectorRef,
       },
     });
     this.modalService.dismissAll();
-
   }
 
   // Start Actions
@@ -385,8 +400,6 @@ private crf:ChangeDetectorRef,
       animation: true,
     });
     this.TargetActions = targetAction;
-    console.log(targetAction);
-    
     this.TargetOrg = organization;
   }
 
@@ -404,9 +417,9 @@ private crf:ChangeDetectorRef,
       const newOrg = this.newOrganizationForm.value;
       const body: any = {
         Name: 'CreateOrganization',
-        Params: { 
+        Params: {
           ...newOrg,
-          kanbanStageId: this.currentOpenedStage.Id 
+          kanbanStageId: this.currentOpenedStage.Id,
         },
       };
 
@@ -418,7 +431,7 @@ private crf:ChangeDetectorRef,
         },
         error: (err) => {
           console.error('Error creating organization:', err);
-        }
+        },
       });
     }
   }
@@ -450,7 +463,7 @@ private crf:ChangeDetectorRef,
       },
       error: (err) => {
         console.error('Error adding organization to Kanban:', err);
-      }
+      },
     });
   }
 
@@ -470,7 +483,7 @@ private crf:ChangeDetectorRef,
   }
 
   getOrganizationContacts(event: any): void {
-    let Organizationid = event.target.value;
+    const Organizationid = event.target.value;
     const body: any = {
       Name: 'GetOrganizationContacts',
       Params: { organizationid: Organizationid },
@@ -485,7 +498,7 @@ private crf:ChangeDetectorRef,
 
   orgKanbans: Kanban[] = [];
   getContactKanbans(event: any): void {
-    let ContactId = event.target.value;
+    const ContactId = event.target.value;
 
     const body: any = {
       Name: 'GetContactKanbans',
@@ -520,17 +533,17 @@ private crf:ChangeDetectorRef,
 
   onSearchInput(): void {
     const trimmedKeyword = this.keyword.trim();
-    
+
     if (trimmedKeyword.length <= 2) {
       this.filteredNames = [];
       return;
     }
-  
+
     const body: any = {
       Name: 'SearchContact',
       Params: { keyword: '%' + trimmedKeyword + '%' },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.searchResults = data.json;
@@ -561,10 +574,9 @@ private crf:ChangeDetectorRef,
       },
     });
     this.selectedBroker = name;
-  this.keyword = `${name.firstname} ${name.lastname} (${name.name})`;
-  this.filteredNames = [];
-  this.toastr.success('Broker selected');
-
+    this.keyword = `${name.firstname} ${name.lastname} (${name.name})`;
+    this.filteredNames = [];
+    this.toastr.success('Broker selected');
   }
 
   setActiveTab(tab: string): void {
@@ -626,28 +638,13 @@ private crf:ChangeDetectorRef,
       location: [''],
       assetType: [''],
       totalProperties: [0, Validators.min(0)],
-      leadBrokerName: ['']
+      leadBrokerName: [''],
     });
   }
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   createKanbanByTemplate(selectedTemplate: KanbanTemplate): void {
     if (!this.selectedBroker) {
-      // Assuming toastr is injected.  Replace with your error handling.
-      console.error('Please select a broker before creating a Kanban.'); //Replace with toastr.error
+      console.error('Please select a broker before creating a Kanban.');
       return;
     }
 
@@ -656,15 +653,15 @@ private crf:ChangeDetectorRef,
     const targetOrganizationId = this.General.modalObject?.OrganizationId;
 
     const selectedOrg = this.General.modalObject?.Organization?.[0];
-    const kanbanOwnerContactId = this.selectedBroker.id ;
+    const kanbanOwnerContactId = this.selectedBroker.id;
     const kanbanOwnerOrganizationId = this.selectedBroker.id1;
     const placeId = selectedOrg?.PlaceId || null;
 
-    console.log('Template ID:', templateId);
-    console.log('Previous Kanban ID:', prevKanbanId);
-    console.log('Target Organization ID:', targetOrganizationId);
-    console.log('Kanban Owner Contact ID:', kanbanOwnerContactId);
-    console.log('Kanban Owner Organization ID:', kanbanOwnerOrganizationId);
+    // console.log('Template ID:', templateId);
+    // console.log('Previous Kanban ID:', prevKanbanId);
+    // console.log('Target Organization ID:', targetOrganizationId);
+    // console.log('Kanban Owner Contact ID:', kanbanOwnerContactId);
+    // console.log('Kanban Owner Organization ID:', kanbanOwnerOrganizationId);
     console.log('Place ID:', placeId);
 
     if (!templateId || !targetOrganizationId) {
@@ -683,7 +680,7 @@ private crf:ChangeDetectorRef,
         kanbanOwnerOrganizationId,
         placeId,
         // brokerId: this.selectedBroker.id // Add this line
-      }
+      },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
@@ -693,41 +690,49 @@ private crf:ChangeDetectorRef,
           // Show error to user
           return;
         }
-        console.log('Kanban created successfully:', response);
         this.GetUserKanbans();
         this.modalService.dismissAll();
       },
       error: (error) => {
         console.error('Error creating kanban:', error);
         // Show error to user
-      }
+      },
     });
   }
-
-
 
   filterKanbanData(): void {
     if (!this.searchText.trim()) {
       this.filteredKanbanList = [...this.kanbanList];
       return;
     }
-  
+
     const searchLower = this.searchText.toLowerCase().trim();
-    this.filteredKanbanList = this.kanbanList.map(kanban => ({
-      ...kanban,
-      kanbanStages: kanban.kanbanStages.map(stage => ({
-        ...stage,
-        kanbanOrganizations: stage.kanbanOrganizations.filter(org =>
-          org.Organization?.[0]?.Name?.toLowerCase().includes(searchLower) ||
-          org.Organization?.[0]?.Location?.toLowerCase().includes(searchLower) ||
-          org.Organization?.[0]?.AssetType?.toLowerCase().includes(searchLower) ||
-          org.LeadBroker?.Name?.toLowerCase().includes(searchLower) ||
-          stage.stageName.toLowerCase().includes(searchLower)
-        )
-      })).filter(stage => stage.kanbanOrganizations.length > 0)
-    })).filter(kanban => kanban.kanbanStages.length > 0);
+    this.filteredKanbanList = this.kanbanList
+      .map((kanban) => ({
+        ...kanban,
+        kanbanStages: kanban.kanbanStages
+          .map((stage) => ({
+            ...stage,
+            kanbanOrganizations: stage.kanbanOrganizations.filter(
+              (org) =>
+                org.Organization?.[0]?.Name?.toLowerCase().includes(
+                  searchLower
+                ) ||
+                org.Organization?.[0]?.Location?.toLowerCase().includes(
+                  searchLower
+                ) ||
+                org.Organization?.[0]?.AssetType?.toLowerCase().includes(
+                  searchLower
+                ) ||
+                org.LeadBroker?.Name?.toLowerCase().includes(searchLower) ||
+                stage.stageName.toLowerCase().includes(searchLower)
+            ),
+          }))
+          .filter((stage) => stage.kanbanOrganizations.length > 0),
+      }))
+      .filter((kanban) => kanban.kanbanStages.length > 0);
   }
-  
+
   onSearchChange(event: any): void {
     this.searchText = event.target.value;
     this.filterKanbanData();
@@ -751,18 +756,19 @@ private crf:ChangeDetectorRef,
           // Initial load
           const filteredData = data.json.map((kanban: KanbanCard) => ({
             ...kanban,
-            kanbanStages: kanban.kanbanStages.map(stage => ({
+            kanbanStages: kanban.kanbanStages.map((stage) => ({
               ...stage,
-              kanbanOrganizations: (stage.kanbanOrganizations || []).filter(org => 
-                org && org.Organization && org.Organization.length > 0
-              )
-            }))
+              kanbanOrganizations: (stage.kanbanOrganizations || []).filter(
+                (org) => org && org.Organization && org.Organization.length > 0
+              ),
+            })),
           }));
           this.kanbanList = filteredData;
           this.filteredKanbanList = [...this.kanbanList];
-          this.lastKnownStageCount = this.kanbanList[0]?.kanbanStages?.length || 0;
+          this.lastKnownStageCount =
+            this.kanbanList[0]?.kanbanStages?.length || 0;
         }
-        
+
         if (this.kanbanList && this.kanbanList[0]?.kanbanStages) {
           this.kanbanList[0].kanbanStages.forEach((stage) => {
             this.GetStageActions(stage);
@@ -771,7 +777,7 @@ private crf:ChangeDetectorRef,
       },
       error: (error) => {
         console.error('Error fetching kanban details:', error);
-      }
+      },
     });
   }
 
@@ -795,8 +801,11 @@ private crf:ChangeDetectorRef,
 
         // Check for new stages
         if (newStages.length > this.lastKnownStageCount) {
-          const newStageItems = newStages.filter((newStage: KanbanStage) => 
-            !currentStages.some(currentStage => currentStage.Id === newStage.Id)
+          const newStageItems = newStages.filter(
+            (newStage: KanbanStage) =>
+              !currentStages.some(
+                (currentStage) => currentStage.Id === newStage.Id
+              )
           );
 
           newStageItems.forEach((newStage: KanbanStage) => {
@@ -808,56 +817,72 @@ private crf:ChangeDetectorRef,
         }
 
         // Update existing stages and organizations with animation
-        this.kanbanList[0].kanbanStages = currentStages.map((currentStage: KanbanStage) => {
-          const newStage = newStages.find((stage: KanbanStage) => stage.Id === currentStage.Id);
-          if (newStage) {
-            const updatedOrgs = newStage.kanbanOrganizations
-              .filter((org: KanbanOrganization) => org && org.Organization && org.Organization.length > 0)
-              .map((org: KanbanOrganization) => ({
-                ...org,
-                kanbanStageId: newStage.Id
-              }));
-
-            // Determine which organizations have moved
-            const movedOrgs = updatedOrgs.filter((updatedOrg: { Id: number; }) => 
-              !currentStage.kanbanOrganizations.some(currentOrg => currentOrg.Id === updatedOrg.Id)
+        this.kanbanList[0].kanbanStages = currentStages.map(
+          (currentStage: KanbanStage) => {
+            const newStage = newStages.find(
+              (stage: KanbanStage) => stage.Id === currentStage.Id
             );
+            if (newStage) {
+              const updatedOrgs = newStage.kanbanOrganizations
+                .filter(
+                  (org: KanbanOrganization) =>
+                    org && org.Organization && org.Organization.length > 0
+                )
+                .map((org: KanbanOrganization) => ({
+                  ...org,
+                  kanbanStageId: newStage.Id,
+                }));
 
-            // Animate moved organizations
-            movedOrgs.forEach((org: { Id: number; }) => {
-              const previousStage = currentStages.find(stage => 
-                stage.kanbanOrganizations.some(currentOrg => currentOrg.Id === org.Id)
+              // Determine which organizations have moved
+              const movedOrgs = updatedOrgs.filter(
+                (updatedOrg: { Id: number }) =>
+                  !currentStage.kanbanOrganizations.some(
+                    (currentOrg) => currentOrg.Id === updatedOrg.Id
+                  )
               );
-              if (previousStage) {
-                const direction = previousStage.Id < newStage.Id ? 'right' : 'left';
-                this.animatingCards[org.Id] = `card-move-${direction}`;
-                setTimeout(() => {
-                  this.animatingCards[org.Id] = 'card-appear';
-                  setTimeout(() => {
-                    delete this.animatingCards[org.Id];
-                  }, 500);
-                }, 0);
-              }
-            });
 
-            return {
-              ...currentStage,
-              kanbanOrganizations: updatedOrgs
-            };
+              // Animate moved organizations
+              movedOrgs.forEach((org: { Id: number }) => {
+                const previousStage = currentStages.find((stage) =>
+                  stage.kanbanOrganizations.some(
+                    (currentOrg) => currentOrg.Id === org.Id
+                  )
+                );
+                if (previousStage) {
+                  const direction =
+                    previousStage.Id < newStage.Id ? 'right' : 'left';
+                  this.animatingCards[org.Id] = `card-move-${direction}`;
+                  setTimeout(() => {
+                    this.animatingCards[org.Id] = 'card-appear';
+                    setTimeout(() => {
+                      delete this.animatingCards[org.Id];
+                    }, 500);
+                  }, 0);
+                }
+              });
+
+              return {
+                ...currentStage,
+                kanbanOrganizations: updatedOrgs,
+              };
+            }
+            return currentStage;
           }
-          return currentStage;
-        });
+        );
 
         // Update filtered list
         this.filteredKanbanList = [...this.kanbanList];
-        
+
         // Trigger change detection
         this.crf.detectChanges();
-      }
+      },
     });
   }
 
-  private isDataUnchanged(newStages: KanbanStage[], currentStages: KanbanStage[]): boolean {
+  private isDataUnchanged(
+    newStages: KanbanStage[],
+    currentStages: KanbanStage[]
+  ): boolean {
     if (newStages.length !== currentStages.length) {
       return false;
     }
@@ -866,8 +891,11 @@ private crf:ChangeDetectorRef,
       const newStage = newStages[i];
       const currentStage = currentStages[i];
 
-      if (newStage.Id !== currentStage.Id || 
-          newStage.kanbanOrganizations.length !== currentStage.kanbanOrganizations.length) {
+      if (
+        newStage.Id !== currentStage.Id ||
+        newStage.kanbanOrganizations.length !==
+          currentStage.kanbanOrganizations.length
+      ) {
         return false;
       }
 
@@ -875,7 +903,10 @@ private crf:ChangeDetectorRef,
         const newOrg = newStage.kanbanOrganizations[j];
         const currentOrg = currentStage.kanbanOrganizations[j];
 
-        if (newOrg.Id !== currentOrg.Id || newOrg.kanbanStageId !== currentOrg.kanbanStageId) {
+        if (
+          newOrg.Id !== currentOrg.Id ||
+          newOrg.kanbanStageId !== currentOrg.kanbanStageId
+        ) {
           return false;
         }
       }
@@ -890,5 +921,73 @@ private crf:ChangeDetectorRef,
       this.pollingSubscription.unsubscribe();
     }
   }
-}
+  toggleCollapse(kanban: any): void {
+    kanban.isCollapsed = !kanban.isCollapsed;
+  }
 
+  fetchCardDetails(organizationId: number, modalRef: NgbModalRef): void {
+    if (!organizationId) {
+      console.error('Organization ID is required to fetch card details.');
+      return;
+    }
+
+    const requestBody = {
+      Name: 'GetCardDetails',
+      MainEntity: null,
+      Params: {
+        organizationid: organizationId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(requestBody).subscribe({
+      next: (response) => {
+        if (response.error) {
+          console.error('Error fetching card details:', response.error);
+          return;
+        }
+        this.modalContent = response; // Save the response to display in the modal
+
+        // Update the existing modal with the new content
+        if (modalRef) {
+          modalRef.componentInstance.modalContent = this.modalContent;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching card details:', error);
+      },
+    });
+  }
+
+  toggleAnswerVisibility(index: number): void {
+    this.isAnswerVisible[index] = !this.isAnswerVisible[index];
+  }
+
+  showCardDetails(organizationId: number) {
+    const requestBody = {
+      Name: 'GetCardDetails',
+      MainEntity: null,
+      Params: {
+        organizationid: organizationId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(requestBody).subscribe({
+      next: (response) => {
+        if (response.error) {
+          console.error('Error fetching card details:', response.error);
+          return;
+        }
+        this.modalContent = response;
+        this.modalService.open(this.modalTemplate, {
+          size: 'lg',
+          scrollable: true,
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching card details:', error);
+      },
+    });
+  }
+}
