@@ -4,15 +4,12 @@
     <div class="col-md-3">
       <div class="card card-filter ">
         <div
-          class="card-body position-relative "
-          
-        >
+          class="card-body position-relative">
           <div class="d-flex align-items-center justify-content-between">
             <div class="title-filter">
               <span>Filter</span>
             </div>
           </div>
-
           <div>
             <div class="mt-3 small-titlefilter">
               <span>State</span>
@@ -27,7 +24,6 @@
               <option *ngFor="let state of uniqueStates">{{ state }}</option>
             </select>
           </div>
-
           <div>
             <div class="mt-3 small-titlefilter">
               <span>City</span>
@@ -41,11 +37,8 @@
               <option *ngFor="let city of uniqueCities">{{ city.city }}</option>
             </select>
           </div>
-          
-
           <ng-container *ngIf="Filters">
             <hr class="small-line" />
-          
             <!-- Availability Filter -->
             <div>
               <div class="mt-3 small-titlefilter">
@@ -59,7 +52,6 @@
                 />
                 <label for="availabilty" class="form-check-label ms-2">Availabilty</label>
               </div>
-
               <!-- Square Footage Filter -->
               <div class="mt-3 small-titlefilter">
                 <span>Sqft</span>
@@ -71,7 +63,6 @@
                   (change)="handleSqftChange()"
                 />
               </div>
-          
               <!-- Secondary Type Filter -->
               <div class="mt-3 small-titlefilter">
                 <span>Secondary Type</span>
@@ -89,9 +80,7 @@
                 </ng-container>
               </select>
             </div>
-          
             <hr class="small-line" />
-          
             <!-- Tenants Filter -->
             <div>
               <div *ngIf="sortedTenants.length > 0">
@@ -124,13 +113,7 @@
                   </div>
                 </div>
               </div>
-              
-              
-              
-              
-            
             </div>
-          
             <!-- Tags Filter -->
             <div class="card p-3">
               <div class="d-flex align-items-center justify-content-between">
@@ -144,9 +127,6 @@
                 </button>
               </div>
             </div>
-            
-            
-          
             <!-- Management Company Filter -->
             <div *ngIf="sortedOrgs.length > 0">
               <div class="mt-3 small-titlefilter">
@@ -179,7 +159,6 @@
                 </div>
               </div>
             </div>
-            
           </ng-container>
           <div class="d-flex align-items-center justify-content-center mt-3">
             <button
@@ -196,13 +175,12 @@
     </div>
 
     <div class="col-md-9">
-      <div class="row">
-     <div *ngIf="KayakResult?.Result?.length > 0; else noDataTemplate" class="row">
+     <div class="row">
       <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-9">
+        <div class="row d-flex align-items-center justify-content-center">
+          <div class="col-md-8">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <div class="input-group mb-3">
                   <span class="input-group-text" id="basic-addon1">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -221,13 +199,12 @@
               
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="row">
-              <div class="col-md-9">
+              <div class="col-md-10">
                 <div
-                  class="d-inline-flex align-items-center border p-2 rounded gray-background"
-                >
-                  <span class="me-2 show-map">Show Map</span>
+                  class="d-inline-flex align-items-center border p-2 rounded show-map">
+                  <span class="me-2">Show Map</span>
                   <img src="../../../../assets/Images/Icons/map.png" alt="" />
                 </div>
               </div>
@@ -238,170 +215,201 @@
               </div> -->
             </div>
           </div>
-          <ng-container>
+          <div class="col-md-2">
+            <button class="btn btn-outline-primary ms-2" (click)="bindShoppingCenter()">Bind</button>
+
+          </div>
+          <ng-container >
             <!-- Loop through KayakResult -->
             <div
-class="col-md-12"
-*ngFor="let result of filteredKayakResult; let i = index"
-
->
-              <div   *ngIf="
-              result?.MainImage &&
-              result?.CenterName &&
-              result?.CenterAddress &&
-              result?.CenterCity &&
-              result?.CenterState
-            " class="card carddd mb-3 gray-background">
-                <div class="card-body">
-                  <div class="row">
-                    <!-- Left Side: Result Details -->
-                    <div class="col-md-4">
-        <!-- Wrapper with position relative -->
-        <div class="image-container position-relative">
-          <!-- Image -->
+            class="col-md-12"
+            *ngFor="let result of filteredKayakResult; let i = index"
+          >
+            <div
+            *ngIf="
+            result?.MainImage &&
+            result?.CenterName &&
+            result?.CenterAddress &&
+            result?.CenterCity &&
+            result?.CenterState &&
+            KayakResult?.Result?.length > 0; else noDataTemplate
+          "
+             class="card carddd mb-3 gray-background" 
+            >
+              <div class="card-body">
+                <!-- Add Checkbox at the top of the card -->
+                <div class="form-check d-flex align-items-center gap-2">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [id]="'center-' + result.Id"
+                    [checked]="SelectedShoppingCenterIDs.includes(result.Id)"
+                    (change)="onCardCheckboxChange($event, result, i)"
+                  />
+                
+                </div>
+                
+          
+                <div class="row">
+                  <!-- Left Side: Result Details -->
+                  <div class="col-md-4">
+                    <div class="image-container position-relative">
                       <img
                         class="kayak-img img-fluid rounded"
-            *ngIf="result?.MainImage"
-            [src]="result?.MainImage"
-            [alt]="result?.CenterName"
-          />
-          <button
-            class="view-gallery btn gallerybtn"
-            (click)="openGallery(i)"
-          >
-            View Gallery
-          </button>
+                        *ngIf="result?.MainImage"
+                        [src]="result?.MainImage"
+                        [alt]="result?.CenterName"
+                      />
+                      <button
+                        class="view-gallery btn gallerybtn"
+                        (click)="openGallery(i)"
+                      >
+                        View Gallery
+                      </button>
                     </div>
-                        </div>
-
-      <!-- Right Side -->
-      <div class="col-md-8 sizeofdata">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="me-2">
-            <div class=" shoppingcentername">
+                  </div>
+          
+                  <!-- Right Side -->
+                  <div class="col-md-8 sizeofdata">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <div class="me-2">
+                        <div class="shoppingcentername">
                           <span>{{ result.CenterName }}</span>
                         </div>
                       </div>
-
-          <!-- Circle Container -->
-          <div class="circle-container" (click)="toggleDropdown(i)">
-            <i class="fa-solid fa-ellipsis"></i>
-                        </div>
-
-          <!-- Dropdown -->
-          <div
-          *ngIf="isDropdownOpenIndex === i"
-          class="custom-dropdown"
-        >
-          <ul>
-            <!-- Street View -->
-            <li (click)="openStreetViewPlace(StreetViewPlace, result)">
-              <img src="../../../../assets/Images/Icons/Street View.png" alt="Street View" class="li-icon" />
-              Street View
-            </li>
-        
-            <!-- Map View -->
-            <li (click)="openMapViewPlace(MapViewPlace, result)">
-              <img src="../../../../assets/Images/Icons/map.png" alt="Map View" class="li-icon" />
-              Map View
-            </li>
-        
-            <!-- Tenant -->
-            <li (click)="GetShoppingCenterTenants(result.Id)">
-              <img src="../../../../assets/Images/Icons/buildings-2.png" alt="Tenant" class="li-icon" />
-              Tenant
-            </li>
-
-
-             <!-- Availability -->
-            <li (click)="GetShoppingCenterAvailability(result.Id)">
-              <img src="../../../../assets/Images/Icons/tick-square.png" alt="Availability" class="li-icon" />
-              Availability
-            </li>
-          </ul>
+                      <div class="circle-container" (click)="toggleDropdown(i)">
+                        <i class="fa-solid fa-ellipsis"></i>
                       </div>
-
-                        </div>
-
-        <div class="d-flex align-items-center mt-1">
-          <div class=" card-texts text-nowrap">
-            <span>{{ result.CenterAddress }}, {{ result.CenterCity }} {{ result.CenterState }}</span>
-                        </div>
-                      </div>
-
-                      <div *ngIf="KayakResult?.Result?.length > 0" class="d-flex align-items-center justify-content-start mt-1">
-                        <!-- Ensure ManagementOrganizations exist for the index -->
-                        <ng-container *ngIf="KayakResult?.ManagementOrganizations?.length > i">
-                          <!-- Logo -->
-                          <div>
+          
+                      <div *ngIf="isDropdownOpenIndex === i" class="custom-dropdown">
+                        <ul>
+                          <li (click)="openStreetViewPlace(StreetViewPlace, result)">
                             <img
-                              [src]="
-                                'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                                KayakResult.ManagementOrganizations[i].Id
-                              "
-                              [alt]="KayakResult.ManagementOrganizations[i]?.Name || 'No Name Available'"
-                              class="logooo me-2"
+                              src="../../../../assets/Images/Icons/Street View.png"
+                              alt="Street View"
+                              class="li-icon"
                             />
-                          </div>
-                      
-                          <!-- Name -->
-                          <div class="company-name me-2">
-                            <span>{{ KayakResult.ManagementOrganizations[i]?.Name }}</span>
-                          </div>
-                        </ng-container>
+                            Street View
+                          </li>
+                          <li (click)="openMapViewPlace(MapViewPlace, result)">
+                            <img
+                              src="../../../../assets/Images/Icons/map.png"
+                              alt="Map View"
+                              class="li-icon"
+                            />
+                            Map View
+                          </li>
+                          <li (click)="GetShoppingCenterTenants(result.Id)">
+                            <img
+                              src="../../../../assets/Images/Icons/buildings-2.png"
+                              alt="Tenant"
+                              class="li-icon"
+                            />
+                            Tenant
+                          </li>
+                          <li (click)="GetShoppingCenterAvailability(result.Id)">
+                            <img
+                              src="../../../../assets/Images/Icons/tick-square.png"
+                              alt="Availability"
+                              class="li-icon"
+                            />
+                            Availability
+                          </li>
+                        </ul>
                       </div>
-                      
-        <div class=" main-card" style="padding: 12px;">
-          <!-- Header -->
-          <span style=" font-size: 16px; font-weight: bold;">Places</span>
-      
-          <!-- Display Places -->
-       <!-- Display Places -->
-<!-- Display Places -->
-<div *ngFor="let place of getVisiblePlaces(result, i); let j = index" class="place-row">
-<div class="d-flex align-items-center justify-content-between place-details">
-  <!-- Building Size: Start -->
-  <div class="building-size">
-    <span class="label card-texts">Building Size:</span>&nbsp;&nbsp;
-    <span class="value card-strongs">{{ place?.BuildingSizeSf || 'N/A' }} SqFt</span>
-  </div>
-
-  <!-- Suite: Center -->
-  <div class="suite text-center">
-    <span class="label card-texts">Suite:</span>&nbsp;&nbsp;
-    <span class="value card-strongs">{{ place?.Suite || 'N/A' }}</span>
+                    </div>
+          
+                    <div class="d-flex align-items-center mt-1">
+                      <div class="card-texts text-nowrap">
+                        <span
+                          >{{ result.CenterAddress }}, {{ result.CenterCity }}
+                          {{ result.CenterState }}</span
+                        >
+                      </div>
+                    </div>
+                    
+          
+                    <div
+                      *ngIf="KayakResult?.Result?.length > 0"
+                      class="d-flex align-items-center justify-content-start mt-1"
+                    >
+                      <ng-container
+                        *ngIf="KayakResult?.ManagementOrganizations?.length > i"
+                      >
+                        <div>
+                          <img
+                            [src]="
+                              'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                              KayakResult.ManagementOrganizations[i].Id
+                            "
+                            [alt]="
+                              KayakResult.ManagementOrganizations[i]?.Name ||
+                              'No Name Available'
+                            "
+                            class="logooo me-2"
+                          />
+                        </div>
+                        <div class="company-name me-2">
+                          <span>{{ KayakResult.ManagementOrganizations[i]?.Name }}</span>
+                        </div>
+                      </ng-container>
+                    </div>
+          
+                    <div class="main-card" style="padding: 12px;">
+                      <span style="font-size: 16px; font-weight: bold;">Places</span>
+                      <div
+                        *ngFor="let place of getVisiblePlaces(result, i); let j = index"
+                        class="place-row"
+                      >
+                        <div
+                          class="d-flex align-items-center justify-content-between place-details"
+                        >
+                          <div class="building-size">
+                            <span class="label card-texts">Building Size:</span>&nbsp;&nbsp;
+                            <span class="value card-strongs"
+                              >{{ place?.BuildingSizeSf || 'N/A' }} SqFt</span
+                            >
                           </div>
-
-  <!-- For Lease Price: End -->
-  <div class="for-lease text-end">
-    <span class="label card-texts">For Lease Price:</span>&nbsp;&nbsp;
-    <span class="value card-strongs">{{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}</span>
+          
+                          <div class="suite text-center">
+                            <span class="label card-texts">Suite:</span>&nbsp;&nbsp;
+                            <span class="value card-strongs"
+                              >{{ place?.Suite || 'N/A' }}</span
+                            >
+                          </div>
+          
+                          <div class="for-lease text-end">
+                            <span class="label card-texts">For Lease Price:</span>&nbsp;&nbsp;
+                            <span class="value card-strongs"
+                              >{{ place?.ForLeasePrice
+                                ? ('$' + place?.ForLeasePrice + '/SqFt')
+                                : 'N/A' }}</span
+                            >
                           </div>
                         </div>
-<hr *ngIf="j !== getVisiblePlaces(result, i).length - 1" />
+                        <hr
+                          *ngIf="j !== getVisiblePlaces(result, i).length - 1"
+                        />
                       </div>
-                        
-
-<!-- See More/Show Less Link -->
-<div class="text-center mt-2" *ngIf="result?.place?.length > 2">
-<button class="btn btn-link no-underline" (click)="toggleSeeMorePlaces(i)">
-  {{ showAllPlacesIndex === i ? "Show Less ▲" : "Show More ▼" }}
-</button>
+                      <div class="text-center mt-2" *ngIf="result?.place?.length > 2">
+                        <button
+                          class="btn btn-link no-underline"
+                          (click)="toggleSeeMorePlaces(i)"
+                        >
+                          {{ showAllPlacesIndex === i ? "Show Less ▲" : "Show More ▼" }}
+                        </button>
                       </div>
-
-        </div>
-
-        
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          
           </ng-container>
         </div>
       </div>
      </div>
-      </div>
     </div>
   </div>
 </div>
@@ -533,7 +541,7 @@ class="col-md-12"
   <div class="col-md-12">
     <div class="card carddd my-3 gray-background">
       <div class="card-body text-center">
-        <span class="text-muted">No data found.</span>
+        <span class="text-muted">No results found. Try adjusting your filters.</span>
       </div>
     </div>
   </div>
