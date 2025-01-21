@@ -247,7 +247,6 @@ export class HomeComponent implements OnInit {
         this.spinner.hide();
         //this.getStandAlonePlaces(this.BuyBoxId);
         this.getBuyBoxPlaces(this.BuyBoxId);
-
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -258,7 +257,7 @@ export class HomeComponent implements OnInit {
       this.standAlone = this.stateService.getStandAlone();
       // Set selectedSS from stored value or default
       this.selectedSS =
-        this.stateService.getSelectedSS() ||
+        this.stateService.getSelectedSS() ||  
         (this.shoppingCenters?.length > 0 ? 1 : 2);
       this.getBuyBoxPlaces(buyboxId);
       return;

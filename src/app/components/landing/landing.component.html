@@ -1046,7 +1046,7 @@
         <div class="main-section" style="height: 408px; overflow-y: auto">
           <p class="main-name">Branches</p>
           <ul>
-            <li *ngFor="let place of OrganizationBranches.Branches">
+            <li *ngFor="let place of OrganizationBranches.Branches.slice(0, 5)">
               <div class="d-flex align-items-center">
                 <div>
                   <img
@@ -1095,10 +1095,10 @@
                     }}</span>
                   </div>
                 </div>
-
+<!-- 
                 <span class="ms-2 font-weight-bold"
                   >{{ branch.Distance.toFixed(2) }} MI</span
-                >
+                > -->
               </ng-container>
             </li>
           </ul>
