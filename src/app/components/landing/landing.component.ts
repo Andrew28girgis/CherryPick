@@ -215,7 +215,7 @@ export class LandingComponent {
 
         const uniqueCategoriesSet = new Set<string>();
         this.placeCotenants?.forEach((co) => {
-          co.SubCategory.forEach((c) => {
+          co.SubCategory?.forEach((c) => {
             if (c.OrganizationCategory) {
               uniqueCategoriesSet.add(c.OrganizationCategory);
             }

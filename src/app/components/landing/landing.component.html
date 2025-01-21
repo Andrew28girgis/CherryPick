@@ -74,14 +74,15 @@
                       border-radius: 50%;
                     "
                   />
+                  <p>{{ branch.RelationOrganization[0].Name }}</p>
 
-                  <span class="mx-2" style="color: #fff; font-weight: bold">
+                  <!-- <span class="mx-2" style="color: #fff; font-weight: bold">
                     {{
                       branch.RelationOrganization[0].Distance.toFixed(2) +
                         " Miles "
                     }}
-                  </span>
-                  <p class="m-0">Nearest {{ near.Name }}</p>
+                  </span> -->
+                  <p class="m-0 ps-2"><b>{{ near.Name }}</b></p>
                 </ng-container>
               </div>
             </ng-container>
@@ -226,12 +227,12 @@
                     style="height: 30px; margin-inline: 10px; width: 30px"
                   />
 
-                  <span class="mx-2" style="color: #fff; font-weight: bold">
+                  <!-- <span class="mx-2" style="color: #fff; font-weight: bold">
                     {{
                       branch.RelationOrganization[0].Distance.toFixed(2) +
                         " Miles "
                     }}
-                  </span>
+                  </span> -->
                   <p class="m-0">Nearest {{ near.Name }}</p>
                 </ng-container>
               </div>
@@ -1028,12 +1029,12 @@
                 </div>
               </div>
 
-              <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
+              <!-- <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
                 >{{
                   place.SubCategory[0].Branches[0].Distance.toFixed(2)
                 }}
                 MI</span
-              >
+              > -->
             </li>
           </ul>
         </div>

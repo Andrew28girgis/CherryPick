@@ -130,6 +130,7 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
+    this.GetBuyboxRelations();
     // this.GetPolygons(this.BuyBoxId);
   }
 
@@ -227,7 +228,7 @@ export class HomeComponent implements OnInit {
   getShoppingCenters(buyboxId: number): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
-      this.getStandAlonePlaces(buyboxId);
+      //this.getStandAlonePlaces(buyboxId);
       return;
     }
 
@@ -403,7 +404,7 @@ export class HomeComponent implements OnInit {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(this.map, markerData, type);
       // this.markerService.fetchAndDrawPolygon(th)
-    }); 
+   }); 
 
     // let centerIds: any[] = [];
     // this.shoppingCenters.forEach((center) => {
@@ -434,7 +435,7 @@ export class HomeComponent implements OnInit {
         PolygonSourceId : 0 
       },
     };
-    this.PlacesService.GenericAPI(body).subscribe((data) => {
+    this.PlacesService.GenericAPI(body).subscribe((data) => {  
       this.Polygons = data.json;
       this.markerService.drawMultiplePolygons(this.map, this.Polygons);
     });
@@ -471,7 +472,7 @@ export class HomeComponent implements OnInit {
         zoom: zoom,
       })
     );
-  }
+  } 
 
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
@@ -900,5 +901,16 @@ export class HomeComponent implements OnInit {
     this.stateService.setSelectedSS(viewValue);
   }
 
-  // Add this method to handle scroll restoration after data is loaded
-}
+  GetBuyboxRelations(){
+    let body = {
+      Name: 'GetBuyboxRelations',
+      Params: {
+        BuyBoxId : this.BuyBoxId, 
+      },
+    }
+    this.PlacesService.GenericAPI(body).subscribe((data) => {
+      console.log(data);
+    });
+  }
+
+ }
