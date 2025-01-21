@@ -245,7 +245,9 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
-        this.getStandAlonePlaces(this.BuyBoxId);
+        //this.getStandAlonePlaces(this.BuyBoxId);
+        this.getBuyBoxPlaces(this.BuyBoxId);
+
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
