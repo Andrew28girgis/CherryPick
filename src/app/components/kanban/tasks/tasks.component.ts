@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { table2 } from '../../../../models/kanbans';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { table2, TableRow } from '../../../../models/kanbans';
 import { FilterPanelComponent } from '../filter-panel/filter-panel.component';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./tasks.component.css'],
 })
 export class TasksComponent implements OnInit {
+    @Input() row!: TableRow;
   @ViewChild(FilterPanelComponent) filterPanel!: FilterPanelComponent;
   searchText: string = '';
   selectedRows: Set<number> = new Set();

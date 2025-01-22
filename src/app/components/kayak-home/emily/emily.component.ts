@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
-import {  Cotenant,
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Cotenant,
   Generated,
   ManagerOrganization,
-  ShoppingCenterManager } from 'src/models/emailGenerate';
+  ShoppingCenterManager,
+} from 'src/models/emailGenerate';
 import { RelationNames } from 'src/models/emailGenerate';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -11,9 +13,55 @@ import { PlacesService } from 'src/app/services/places.service';
 @Component({
   selector: 'app-emily',
   templateUrl: './emily.component.html',
-  styleUrls: ['./emily.component.css']
+  styleUrls: ['./emily.component.css'],
 })
 export class EmilyComponent {
+  tabs = [
+    { id: 'Details', label: 'Details' },
+    { id: 'Emily', label: 'Emily' },
+    { id: 'Shopping Centers', label: 'Shopping Centers' },
+    { id: 'Sharing', label: 'Sharing' },
+
+  ];
+
+  selectedTab: string = 'Emily';
+
+  selectTab(tabId: string): void {
+    this.selectedTab = tabId;
+  }
+
+  public text = `Center: 601 Pennsylvania Ave NW
+Manager: No Manager
+
+Manager Description: No description available
+
+Cotenants in the shopping center:
+Museum Gift Shop:
+- Hirshhorn Gift Shop
+
+New Tenant (Advance Auto Parts)
+undefined
+
+Advance Auto Parts Representative Brokerage Company: Advance Auto Parts
+Broker on Charge: Mitchell Recoon
+Broker on Charge: Nick Robinson
+Broker on Charge: Esther Foster
+Broker on Charge: Jeff White
+`;
+
+@Output() contentChange = new EventEmitter<string>();
+
+getFormattedText(): string {
+  return this.text
+    .split('\n')
+    // .filter(line => line !== '') // الأسطر الفارغة
+    .join('<br>');
+}
+
+onContentChange(event: Event): void {
+  const target = event.target as HTMLElement;
+  this.contentChange.emit(target.innerHTML);
+}
 
   buyBoxId!: number | null;
   General!: any;
@@ -31,8 +79,8 @@ export class EmilyComponent {
 
   emailBody: string = ''; // Store the email body content as a string
   manager: any;
-  ManagerOrganizationName: string='';
-  BuyBoxOrganizationName: string='';
+  ManagerOrganizationName: string = '';
+  BuyBoxOrganizationName: string = '';
   // ShoppingCenterNames: string[] = [];
 
   selectedShoppingCenter: string = ''; // To store the selected value
@@ -50,7 +98,7 @@ export class EmilyComponent {
   showCotenantsWithoutActivity: boolean = false;
   selectedPromptId: string = ''; // To store the selected prompt ID
   selectedPromptText: string = ''; // To display the prompt's text
-  selectedPromptName:string='';
+  selectedPromptName: string = '';
   prompts: any[] = []; // Array to store prompts fetched from API
   // groupedActivityTypes: any;
 
@@ -61,11 +109,12 @@ export class EmilyComponent {
   editablePromptText: string = ''; // Stores the editable prompt text
   groupedActivityTypes: any[] = []; // Each activity: {ActivityType: string, Cotenants: {CotenantName: string, selected:boolean}[]}
   showAllCotenants: boolean = false;
-  isSubjectCopied: boolean = false; isBodyCopied: boolean = false;
+  isSubjectCopied: boolean = false;
+  isBodyCopied: boolean = false;
   constructor(
     private route: ActivatedRoute,
-    private modalService: NgbModal, 
-    private PlacesService: PlacesService, 
+    private modalService: NgbModal,
+    private PlacesService: PlacesService
   ) {}
 
   ngOnInit() {
@@ -77,8 +126,7 @@ export class EmilyComponent {
     this.GetPrompts();
   }
 
-
-  GetBuyBoxInfo() { 
+  GetBuyBoxInfo() {
     const body: any = {
       Name: 'GetBuyBoxInfo',
       MainEntity: null,
@@ -111,7 +159,9 @@ export class EmilyComponent {
           this.generated?.[0]?.BuyBoxShoppingCenters?.map((center) => ({
             CenterName: center.CenterName,
             ShoppingCenterManager: center.ShoppingCenterManager || [], // Include manager info
-            CotenantsWithActivityType: (center.Cotenants?.filter(co => co.ActivityType) || []).map(co => ({...co, selected: false})),
+            CotenantsWithActivityType: (
+              center.Cotenants?.filter((co) => co.ActivityType) || []
+            ).map((co) => ({ ...co, selected: false })),
 
             CotenantsWithoutActivityType:
               center.Cotenants?.filter((cotenant) => !cotenant.ActivityType) ||
@@ -123,23 +173,25 @@ export class EmilyComponent {
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
         // }
-  
+
         // Update groupedActivityTypes now that we have selectedShoppingCenter
-        this.updateGroupedActivityTypes(); 
+        this.updateGroupedActivityTypes();
       },
     });
   }
 
   getCotenantsWithActivityType(centerName: string): any[] {
-    const center:any = this.ShoppingCenterNames.find(
+    const center: any = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
     );
-    console.log('Shopping Centers',center);
+    console.log('Shopping Centers', center);
     this.groupedActivityTypes = center.CotenantsWithActivityType.reduce(
-      (result :any, cotenant:any) => {
+      (result: any, cotenant: any) => {
         const activityType = cotenant.ActivityType || 'Other'; // If no ActivityType, group as 'Other'
         // Check if the ActivityType group already exists
-        let group = result.find((item:any) => item.ActivityType === activityType);
+        let group = result.find(
+          (item: any) => item.ActivityType === activityType
+        );
         if (!group) {
           // If the group doesn't exist, create a new group for this ActivityType
           group = { ActivityType: activityType, Cotenants: [] };
@@ -170,22 +222,26 @@ export class EmilyComponent {
     this.showCotenantsWithActivity = false;
     this.showCotenantsWithoutActivity = false;
     // Ensure all activities and cotenants start deselected
-    this.groupedActivityTypes.forEach(activity => {
+    this.groupedActivityTypes.forEach((activity) => {
       activity.selected = false;
-      activity.Cotenants.forEach((co:any) => co.selected = false);
+      activity.Cotenants.forEach((co: any) => (co.selected = false));
     });
-    const withoutActivity = this.getCotenantsWithoutActivityType(this.selectedShoppingCenter);
-    withoutActivity.forEach(co => co.selected = false);
+    const withoutActivity = this.getCotenantsWithoutActivityType(
+      this.selectedShoppingCenter
+    );
+    withoutActivity.forEach((co) => (co.selected = false));
     this.updateEmailBody();
   }
   // After GetBuyBoxInfo, once selectedShoppingCenter is known, call this to populate groupedActivityTypes:
   updateGroupedActivityTypes() {
     if (!this.selectedShoppingCenter) return;
-    this.groupedActivityTypes = this.getCotenantsWithActivityType(this.selectedShoppingCenter);
+    this.groupedActivityTypes = this.getCotenantsWithActivityType(
+      this.selectedShoppingCenter
+    );
     // Force reset
-    this.groupedActivityTypes.forEach(activity => {
+    this.groupedActivityTypes.forEach((activity) => {
       activity.selected = false;
-      activity.Cotenants.forEach((co:any) => co.selected = false);
+      activity.Cotenants.forEach((co: any) => (co.selected = false));
     });
     console.log('Updated groupedActivityTypes:', this.groupedActivityTypes);
   }
@@ -209,20 +265,23 @@ export class EmilyComponent {
   // Called when "Cotenants in the shopping center" checkbox changes
   onCotenantsWithActivityChange() {
     const newValue = this.showCotenantsWithActivity;
-    this.groupedActivityTypes.forEach(activity => {
+    this.groupedActivityTypes.forEach((activity) => {
       activity.selected = newValue;
-      activity.Cotenants.forEach((co:any) => co.selected = newValue);
+      activity.Cotenants.forEach((co: any) => (co.selected = newValue));
     });
 
     // If both groups selected, showAllCotenants = true; else false
-    this.showAllCotenants = this.showCotenantsWithActivity && this.showCotenantsWithoutActivity;
+    this.showAllCotenants =
+      this.showCotenantsWithActivity && this.showCotenantsWithoutActivity;
     this.updateEmailBody();
   }
   // Called when "Cotenants without shopping center" checkbox changes
   onCotenantsWithoutActivityChange() {
     const newValue = this.showCotenantsWithoutActivity;
-    const cotenantsWithout = this.getCotenantsWithoutActivityType(this.selectedShoppingCenter);
-    cotenantsWithout.forEach(co => co.selected = newValue);
+    const cotenantsWithout = this.getCotenantsWithoutActivityType(
+      this.selectedShoppingCenter
+    );
+    cotenantsWithout.forEach((co) => (co.selected = newValue));
 
     // If both groups selected, showAllCotenants = true; else false
     this.showAllCotenants = this.showCotenantsWithActivity && newValue;
@@ -231,14 +290,15 @@ export class EmilyComponent {
   // Called when an activity checkbox changes
   onActivityChange(activity: any) {
     const newValue = activity.selected;
-    activity.Cotenants.forEach((co:any) => co.selected = newValue);
+    activity.Cotenants.forEach((co: any) => (co.selected = newValue));
 
     // If any activity is selected, showCotenantsWithActivity = true else false
-    const anySelected = this.groupedActivityTypes.some(act => act.selected);
+    const anySelected = this.groupedActivityTypes.some((act) => act.selected);
     this.showCotenantsWithActivity = anySelected;
 
     // Update showAllCotenants accordingly
-    this.showAllCotenants = this.showCotenantsWithActivity && this.showCotenantsWithoutActivity;
+    this.showAllCotenants =
+      this.showCotenantsWithActivity && this.showCotenantsWithoutActivity;
     this.updateEmailBody();
   }
   selectAllCotenants(type: string) {
@@ -255,7 +315,7 @@ export class EmilyComponent {
       this.groupedActivityTypes.forEach((activity) => {
         activity.selected = this.showCotenantsWithActivity; // Select all activity types if the main checkbox is checked
         // Select or deselect all cotenants under the activity type
-        activity.Cotenants.forEach((cotenant:any) => {
+        activity.Cotenants.forEach((cotenant: any) => {
           cotenant.selected = this.showCotenantsWithActivity; // Match the cotenant selection with the activity type selection
         });
       });
@@ -286,7 +346,7 @@ export class EmilyComponent {
     // Update the email body when this action is performed
     this.updateEmailBody();
   }
-  
+
   getManagerName(centerName: string): string {
     const center = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
@@ -347,7 +407,7 @@ export class EmilyComponent {
       this.MangerDescription =
         this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
           ?.ManagerOrganization[0].ManagerOrganizationDescription || '';
-  
+
       // Ensure "David Dochter" and "Assistant" checkboxes are selected
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
@@ -367,11 +427,10 @@ export class EmilyComponent {
         });
       });
     }
-  
+
     // Update the email body after changes
     this.updateEmailBody();
   }
-  
 
   onRelationNamesChange() {
     this.relationCategoriesNames.forEach((relation) => {
@@ -459,9 +518,7 @@ export class EmilyComponent {
   }
   generateAssistantEmail(assistantName: string): string {
     if (!assistantName) return '';
-    return (
-      assistantName.toLowerCase().replace(/\s+/g, '') + '@cherrypick.com'
-    );
+    return assistantName.toLowerCase().replace(/\s+/g, '') + '@cherrypick.com';
   }
   onAssistantCheckboxChange(contact: any) {
     if (!contact.assistantSelected) {
@@ -470,7 +527,7 @@ export class EmilyComponent {
     this.updateEmailBody();
   }
 
-// textarea 'EmailBody'
+  // textarea 'EmailBody'
   updateEmailBody() {
     let emailContent = '';
     // Add Shopping Center and Manager Name
@@ -506,45 +563,51 @@ export class EmilyComponent {
       });
     }
 
-// Display selected cotenants with activity if showCotenantsWithActivity is true
-if (this.showCotenantsWithActivity) {
-  // Check if there's at least one selected cotenant in any activity
-  const anySelected = this.groupedActivityTypes.some((activity:any) =>
-    activity.Cotenants.some((co:any) => co.selected)
-  );
+    // Display selected cotenants with activity if showCotenantsWithActivity is true
+    if (this.showCotenantsWithActivity) {
+      // Check if there's at least one selected cotenant in any activity
+      const anySelected = this.groupedActivityTypes.some((activity: any) =>
+        activity.Cotenants.some((co: any) => co.selected)
+      );
 
-  if (anySelected) {
-    emailContent += 'Cotenants in the shopping center:\n';
-    // Iterate over each activity group
-    this.groupedActivityTypes.forEach(activity => {
-      // Filter to get only the selected cotenants in this activity
-      const selectedCotenants = activity.Cotenants.filter((co:any) => co.selected);
-      if (selectedCotenants.length > 0) {
-        // Print the activity type as a heading
-        emailContent += `${activity.ActivityType}:\n`;
-        // Print each selected cotenant under this activity
-        selectedCotenants.forEach((co:any) => {
-          emailContent += `- ${co.CotenantName}\n`;
+      if (anySelected) {
+        emailContent += 'Cotenants in the shopping center:\n';
+        // Iterate over each activity group
+        this.groupedActivityTypes.forEach((activity) => {
+          // Filter to get only the selected cotenants in this activity
+          const selectedCotenants = activity.Cotenants.filter(
+            (co: any) => co.selected
+          );
+          if (selectedCotenants.length > 0) {
+            // Print the activity type as a heading
+            emailContent += `${activity.ActivityType}:\n`;
+            // Print each selected cotenant under this activity
+            selectedCotenants.forEach((co: any) => {
+              emailContent += `- ${co.CotenantName}\n`;
+            });
+          }
         });
+        emailContent += '\n'; // Add a spacing line after all activities
       }
-    });
-    emailContent += '\n'; // Add a spacing line after all activities
-  }
-}
+    }
     // Handle Cotenants without Activity
     if (this.showCotenantsWithoutActivity) {
-      const cotenantsWithout = this.getCotenantsWithoutActivityType(this.selectedShoppingCenter).filter(co => co.selected);
+      const cotenantsWithout = this.getCotenantsWithoutActivityType(
+        this.selectedShoppingCenter
+      ).filter((co) => co.selected);
       if (cotenantsWithout.length > 0) {
         emailContent += 'Cotenants without shopping center:\n';
-        cotenantsWithout.forEach(co => {
+        cotenantsWithout.forEach((co) => {
           emailContent += `- ${co.CotenantName}\n`;
         });
       }
     }
 
     if (this.showClientProfile) {
-      emailContent += 'New Tenant (' +
-        this.BuyBoxOrganizationName + ')'+
+      emailContent +=
+        'New Tenant (' +
+        this.BuyBoxOrganizationName +
+        ')' +
         '\n' +
         this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
           ?.BuyBoxOrganizationDescription +
@@ -553,11 +616,13 @@ if (this.showCotenantsWithActivity) {
 
     if (this.showRelationNames) {
       // Get the organization name
-      const organizationName = this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]?.Name || 'No Organization Name';
-    
+      const organizationName =
+        this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]?.Name ||
+        'No Organization Name';
+
       // Initialize a map to group relations by category name
       const categoryMap: { [key: string]: string[] } = {};
-    
+
       // Iterate through selected relations
       this.relationCategoriesNames.forEach((selectedRelation) => {
         if (selectedRelation.selected) {
@@ -567,8 +632,10 @@ if (this.showCotenantsWithActivity) {
               relation.relationSelect &&
               this.isRelationCategoryMatched(relation)
             ) {
-              const categoryName = this.getRelationCategoryName(relation.RetailRelationCategoryId);
-    
+              const categoryName = this.getRelationCategoryName(
+                relation.RetailRelationCategoryId
+              );
+
               // Group relation names under their categories
               if (!categoryMap[categoryName]) {
                 categoryMap[categoryName] = [];
@@ -578,7 +645,7 @@ if (this.showCotenantsWithActivity) {
           });
         }
       });
-    
+
       // Build the email content
       for (const category in categoryMap) {
         // Add organization name and category
@@ -590,21 +657,21 @@ if (this.showCotenantsWithActivity) {
         emailContent += '\n'; // Add spacing between categories
       }
     }
-    
+
     if (this.showOrganizationManagers) {
       this.managerOrganizations.forEach((manager) => {
         emailContent +=
           this.BuyBoxOrganizationName +
           ` Representative Brokerage Company: ${manager.ManagerOrganizationName}\n`;
-  
+
         if (this.showMangerDescription && this.MangerDescription) {
           emailContent += `\n Manager Organization Description: ${this.MangerDescription}\n`;
         }
-  
+
         manager.ManagerOrganizationContacts.forEach((contact) => {
           if (contact.selected) {
             emailContent += `Broker on Charge: ${contact.Firstname} ${contact.LastName}\n`;
-  
+
             if (contact.assistantSelected) {
               const assistantEmail = this.generateAssistantEmail(
                 contact.AssistantName
@@ -621,37 +688,36 @@ if (this.showCotenantsWithActivity) {
 
     this.emailBody = emailContent; // Update the email body
   }
-// send 'EmailBody' and 'promptId' to AI and store Response
+  // send 'EmailBody' and 'promptId' to AI and store Response
   getGenericEmail() {
+    // Check if a shopping center is selected
+    if (!this.selectedShoppingCenter) {
+      alert('Please select a shopping center before generating the email.');
+      return;
+    }
 
-  // Check if a shopping center is selected
-  if (!this.selectedShoppingCenter) {
-    alert('Please select a shopping center before generating the email.');
-    return;
-  }
-
-  // Check if a prompt and email body are provided
-  if (!this.selectedPromptId || !this.emailBody) {
-    alert('Please select a prompt and provide an email body.');
-    return;
-  }
+    // Check if a prompt and email body are provided
+    if (!this.selectedPromptId || !this.emailBody) {
+      alert('Please select a prompt and provide an email body.');
+      return;
+    }
     const promptId = Number(this.selectedPromptId); // Convert to number
     const context = this.emailBody;
 
-     this.PlacesService.generateEmail(promptId, context).subscribe({
-      next: (data:any) => {
+    this.PlacesService.generateEmail(promptId, context).subscribe({
+      next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
         this.emailBodyResponse = data?.emailBody || 'No body received';
         console.log('Email Response:', {
           subject: this.emailSubject,
           body: this.emailBodyResponse,
         });
-       },
+      },
       error: (err) => {
         console.error('Error fetching generic email:', err);
         this.emailSubject = 'Error fetching email subject';
         this.emailBodyResponse = 'Error fetching email body';
-       },
+      },
     });
   }
 
@@ -677,15 +743,14 @@ if (this.showCotenantsWithActivity) {
     const body: any = {
       Name: 'GetPrompts',
       MainEntity: null,
-      params : {
-        Id: catagoryId
+      params: {
+        Id: catagoryId,
       },
       Json: null,
     };
-    
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data:any) => {
 
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
         const responsePrompts = data?.json || [];
         if (responsePrompts.length > 0) {
           this.prompts = responsePrompts.map((prompt: any) => ({
@@ -695,8 +760,6 @@ if (this.showCotenantsWithActivity) {
           }));
           console.log(`prompets`);
           console.log(this.prompts);
-          
-          
         } else {
           console.error('No prompts found in the response.');
           this.prompts = [];
@@ -710,65 +773,73 @@ if (this.showCotenantsWithActivity) {
     });
   }
   // this 2 async to the previous function
-    // Method to call the API
-    async callApi(): Promise<any> {
-      const url = 'https://api.cherrypick.com/api/GenericAPI/Execute';
-      const headers = {
-        'Content-Type': 'application/json',
-        'Cookie': 'ARRAffinity=0422a4dadbc118f9867df7ce19b008b709e8d292e137797ec5a3992788831d23; ARRAffinitySameSite=0422a4dadbc118f9867df7ce19b008b709e8d292e137797ec5a3992788831d23',
-      };
-      const body = {
-        name : 'GetPromptsCategoryId',
-        params : {
-            Name:'Availability'
-        }
+  // Method to call the API
+  async callApi(): Promise<any> {
+    const url = 'https://api.cherrypick.com/api/GenericAPI/Execute';
+    const headers = {
+      'Content-Type': 'application/json',
+      Cookie:
+        'ARRAffinity=0422a4dadbc118f9867df7ce19b008b709e8d292e137797ec5a3992788831d23; ARRAffinitySameSite=0422a4dadbc118f9867df7ce19b008b709e8d292e137797ec5a3992788831d23',
+    };
+    const body = {
+      name: 'GetPromptsCategoryId',
+      params: {
+        Name: 'Availability',
+      },
+    };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: headers,
-          body: JSON.stringify(body),
-        });
-  
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-  
-        const result = await response.json();
-        return result;
-      } catch (error) {
-        console.error('Error calling API:', error);
-        throw error;
-      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error calling API:', error);
+      throw error;
     }
-    // Method to print the result of the API call
-    async printResult(): Promise<void> {
-      try {
-        const result = await this.callApi();
-        console.log('API Response:', result);
-      } catch (error) {
-        console.error('Error printing result:', error);
-      }
+  }
+  // Method to print the result of the API call
+  async printResult(): Promise<void> {
+    try {
+      const result = await this.callApi();
+      console.log('API Response:', result);
+    } catch (error) {
+      console.error('Error printing result:', error);
     }
-    // when select from select drop down to be changed
-    updatePrompt() {
-      const selectedPrompt = this.prompts.find((prompt) => prompt.id == this.selectedPromptId);
-      if (selectedPrompt) {
-        this.selectedPromptText = selectedPrompt.promptText || 'No prompt text available';
-        this.selectedPromptName= selectedPrompt.name || 'No prompt Name available';
-      } else {
-        this.selectedPromptText = 'No prompt text available';
-      }
+  }
+  // when select from select drop down to be changed
+  updatePrompt() {
+    const selectedPrompt = this.prompts.find(
+      (prompt) => prompt.id == this.selectedPromptId
+    );
+    if (selectedPrompt) {
+      this.selectedPromptText =
+        selectedPrompt.promptText || 'No prompt text available';
+      this.selectedPromptName =
+        selectedPrompt.name || 'No prompt Name available';
+    } else {
+      this.selectedPromptText = 'No prompt text available';
     }
-    // Open Modal with Selected Prompt Text
-    openPromptTextModal(modal: any) {
-      if (!this.selectedPromptText || this.selectedPromptText === 'No prompt text available') {
-        alert('No prompt text available to display.');
-        return;
-      }
-      this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
+  }
+  // Open Modal with Selected Prompt Text
+  openPromptTextModal(modal: any) {
+    if (
+      !this.selectedPromptText ||
+      this.selectedPromptText === 'No prompt text available'
+    ) {
+      alert('No prompt text available to display.');
+      return;
     }
+    this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
+  }
 
   editPrompt() {
     this.isEditing = true;
@@ -784,7 +855,7 @@ if (this.showCotenantsWithActivity) {
       alert('Prompt text cannot be empty.');
       return;
     }
-  
+
     const body = {
       name: 'EditEmailPrompt',
       params: {
@@ -792,52 +863,55 @@ if (this.showCotenantsWithActivity) {
         PromptId: Number(this.selectedPromptId),
       },
     };
-  
-     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response:any) => {
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
         console.log('Prompt updated successfully:', response);
-        this.selectedPromptText = this.editablePromptText; 
+        this.selectedPromptText = this.editablePromptText;
         this.isEditing = false;
-        modal.close(); 
-       },
+        modal.close();
+      },
       error: (err) => {
         console.error('Error updating prompt:', err);
         alert('Failed to update the prompt. Please try again.');
-       },
+      },
     });
   }
-  
-  copyEmailBody() { 
-    const textArea = document.createElement('textarea'); 
-    const tempDiv = document.createElement('div'); 
-    tempDiv.innerHTML = this.emailBodyResponse; 
-    textArea.value = tempDiv.innerText; 
-    document.body.appendChild(textArea); 
-    textArea.select(); document.execCommand('copy'); 
-    document.body.removeChild(textArea); 
-    this.showCopiedMessage('body'); 
-  } 
-  copyEmailSubject() { 
-    const textArea = document.createElement('textarea'); 
-    textArea.value = this.emailSubject; 
-    document.body.appendChild(textArea); 
-    textArea.select(); 
-    document.execCommand('copy'); 
-    document.body.removeChild(textArea); 
-    this.showCopiedMessage('subject'); 
-  } 
-  showCopiedMessage(type: 'subject' | 'body') { 
-    if (type === 'subject') { this.isSubjectCopied = true; setTimeout(() => this.isSubjectCopied = false, 2000);
-    } else { 
-      this.isBodyCopied = true; 
-      setTimeout(() => this.isBodyCopied = false, 2000);
-       } 
+
+  copyEmailBody() {
+    const textArea = document.createElement('textarea');
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = this.emailBodyResponse;
+    textArea.value = tempDiv.innerText;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    this.showCopiedMessage('body');
+  }
+  copyEmailSubject() {
+    const textArea = document.createElement('textarea');
+    textArea.value = this.emailSubject;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    this.showCopiedMessage('subject');
+  }
+  showCopiedMessage(type: 'subject' | 'body') {
+    if (type === 'subject') {
+      this.isSubjectCopied = true;
+      setTimeout(() => (this.isSubjectCopied = false), 2000);
+    } else {
+      this.isBodyCopied = true;
+      setTimeout(() => (this.isBodyCopied = false), 2000);
+    }
   }
   clearSelections() {
     // Reset selected shopping center and prompt
     this.selectedShoppingCenter = '';
     this.selectedPromptId = ''; // or selectedPromptName = '' depending on how you track prompts
-    
+
     this.showAllCotenants = false;
     this.showCotenantsWithActivity = false;
     this.showCotenantsWithoutActivity = false;
@@ -845,7 +919,7 @@ if (this.showCotenantsWithActivity) {
     this.showClientProfile = false;
     this.showRelationNames = false;
     this.showOrganizationManagers = false;
-    
+
     this.emailBody = '';
     // Clear the groupedActivityTypes and other cotenant selections if needed
     this.groupedActivityTypes = [];
@@ -853,5 +927,5 @@ if (this.showCotenantsWithActivity) {
     // If prompts and managers or other data must be reloaded or reset to their initial states, do so here.
     // Update the email body once more to ensure everything is cleared
     // this.updateEmailBody();
-  }  
+  }
 }

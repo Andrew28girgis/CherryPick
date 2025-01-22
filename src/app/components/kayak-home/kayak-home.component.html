@@ -1,24 +1,25 @@
      <div class="row">
-        <div class="col-md-3 m-0 p-0">
+        <div class="col-md-2 m-0 p-0">
             <div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
                 <div class="nano">
                     <div class="nano-content">
                         <ul>
-                            <li class="label" (click)="setActiveComponent('search')">Search Shopping Centers</li>
-                            <li class="label">Buybox
-                                <ul>
+                            <li class="label" (click)="setActiveComponent('search')">Search Shopping Centers
+                            </li>
+                            <li class="label" (click)="setActiveComponent('emily')">Buybox Management
+                                <!-- <ul>
                                     <li><a (click)="setActiveComponent('details')">Specs</a></li>
                                     <li><a (click)="setActiveComponent('emily')">Emily</a></li>
                                     <li><a (click)="setActiveComponent('centers')">Shopping Centers</a></li>
                                     <li><a (click)="setActiveComponent('sharing')">Sharing</a></li>
-                                </ul>
+                                </ul> -->
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-10">
             <ng-container [ngSwitch]="activeComponent">
                 <app-kayak *ngSwitchCase="'search'"></app-kayak> 
                 <app-emily *ngSwitchCase="'emily'"></app-emily>

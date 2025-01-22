@@ -1,117 +1,180 @@
-.logo { 
-    display: inline-block;
-    padding: 15px 0;
-    text-align: center;
-    width: 250px;
-    transition: width 300ms ease-in-out;
-  }
-  ul{
-    list-style: none;
-  }
+.logo {
+  display: inline-block;
+  padding: 15px 0;
+  text-align: center;
+  width: 250px;
+  transition: width 300ms ease-in-out;
+}
 
-  .logo span {
-    color: rgba(160, 180, 200, 0.85);
-    font-size: 20px;
-    font-weight: 700;
-  }
+ul {
+  list-style: none;
+}
 
-  .sidebar{
-    background-color: #001f3f; 
-    color: #fff; 
-    height: 100vh;
-    padding: 30px 0;
-  }
-  .sidebar-hide .logo {
-    width: 0;
-  }
-  .sidebar-hide .logo span {
-    display: none;
-  }
-  .header-icon {
-    font-size: 18px;
-    padding: 12px 15px;
-    color: #252525;
-    position: relative;
-    transition: all 0.4s ease-in-out;
-    display: inline-block;
-    vertical-align: middle;
-  }
- 
-  .notification-heading {
-    font-size: 13px;
-    font-weight: 700;
-    color: #373757;
-  }
-  .avatar-img {
-    border-radius: 100px;
-    width: 25px;
-    position: relative;
-    top: -3px;
-  }
-  .user-avatar {
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .notification-text {
-    font-size: 12px;
-    font-family: 'Roboto', sans-serif;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-top: 3px;
-  }
-  .notification-timestamp {
-    font-size: 11px;
-  }
-  .notification-percentage {
-    font-size: 12px;
-    position: relative;
-    top: 12px;
-  }
-  .notification-unread {
-    background: #eef5f9;
-  }
-  .notification-unread .notification-heading {
-    color: #555;
-  }
-  .more-link {
-    font-size: 12px;
-    color: #5873fe;
-    display: inline-block;
-  }
-  .dropdown-profile {
-    width: 200px;
-  }
-  .dropdown-profile .trial-day {
-    font-size: 11px;
-    padding-top: 2px;
-    color: #5873fe;
-  }
-  .dropdown-profile li {
-    padding: 7px 15px;
-  }
-  .dropdown-profile li a {
-    display: block;
-    color: #373757;
-  }
-  .dropdown-profile li a.active,
-  .dropdown-profile li a:focus,
-  .dropdown-profile li a:hover {
-    color: #373757;
-  }
-  .dropdown-profile li a span {
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-  }
-  .dropdown-profile li a i {
-    margin-right: 5px;
-    font-size: 14px;
-  }
-  .dropdown-profile li:last-child {
-    padding: 7px 15px;
-  }
-  .header-link {
-    position: relative;
-    top: -3px;
-    font-size: 14px;
-  }
+.logo span {
+  color: rgba(160, 180, 200, 0.85);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.sidebar {
+  background-color: #001f3f;
+  color: #fff;
+  height: 100vh;
+  padding: 30px 0;
+  position: fixed;
+  width: inherit;
+}
+
+.sidebar-hide .logo {
+  width: 0;
+}
+
+.sidebar-hide .logo span {
+  display: none;
+}
+
+.header-icon {
+  font-size: 18px;
+  padding: 12px 15px;
+  color: #252525;
+  position: relative;
+  transition: all 0.4s ease-in-out;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.notification-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: #373757;
+}
+
+.avatar-img {
+  border-radius: 100px;
+  width: 25px;
+  position: relative;
+  top: -3px;
+}
+
+.user-avatar {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.notification-text {
+  font-size: 12px;
+  font-family: 'Roboto', sans-serif;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-top: 3px;
+}
+
+.notification-timestamp {
+  font-size: 11px;
+}
+
+.notification-percentage {
+  font-size: 12px;
+  position: relative;
+  top: 12px;
+}
+
+.notification-unread {
+  background: #eef5f9;
+}
+
+.notification-unread .notification-heading {
+  color: #555;
+}
+
+.more-link {
+  font-size: 12px;
+  color: #5873fe;
+  display: inline-block;
+}
+
+.dropdown-profile {
+  width: 200px;
+}
+
+.dropdown-profile .trial-day {
+  font-size: 11px;
+  padding-top: 2px;
+  color: #5873fe;
+}
+
+.dropdown-profile li {
+  padding: 7px 15px;
+}
+
+.dropdown-profile li a {
+  display: block;
+  color: #373757;
+}
+
+.dropdown-profile li a.active,
+.dropdown-profile li a:focus,
+.dropdown-profile li a:hover {
+  color: #373757;
+}
+
+.dropdown-profile li a span {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
+
+.dropdown-profile li a i {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.dropdown-profile li:last-child {
+  padding: 7px 15px;
+}
+
+.header-link {
+  position: relative;
+  top: -3px;
+  font-size: 14px;
+}
+
+
+.nano-content>ul {
+  display: grid;
+  gap: 10px;
+  padding: 0;
+  margin: auto;
+  width: 80%;
+}
+
+.nano-content>ul>li {
+  background-color: #c0c0c070;
+  padding: 10px 10px;
+  border-radius: 10px;
+  font-family: Montserrat;
+  color: white;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 30px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nano-content > ul > li::before {
+  content: '';
+  height: 80%;
+  width: 3px;
+  background-color: white;
+  border-radius: 2px;
+  position: absolute;
+  right: 10px; 
+  top: 10%;
+}
+
+.nano-content>ul>li:hover{
+  background: rgb(0,67,113);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, rgba(0,67,113,1) 50%, rgba(255,255,255,0.3) 100%);
+}
