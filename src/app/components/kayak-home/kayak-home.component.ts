@@ -16,7 +16,7 @@ export class KayakHomeComponent implements OnInit {
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
   }
-
+  
   ngOnInit() {
     this.setActiveComponent('emily');
   }

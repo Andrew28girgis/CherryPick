@@ -1,0 +1,88 @@
+.bold-word {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.spec-btn {
+  border-radius: var(--Radius-Radius-16, 16px);
+  border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #4d65b4);
+  background: var(--Button-Secondary-BG, #fff);
+}
+.card-title {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
+}
+.card-text {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.card-design {
+  border-radius: var(--Card-Section-Radius, 20px);
+  border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
+  background: var(--Card-Section-BG, #fff);
+}
+.edit-buyoxtext {
+  color: var(--Button-Secondary-Label-Default, #4d65b4);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.editbtn-modal {
+  color: var(--Button-Close-Label-Default, #4d65b4); /* Soft red tone */
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  border: 1px solid var(--Button-Close-Stroke-Color, #4d65b4); /* Red border for distinction */
+  background: var(
+    --Button-Close-BG,
+    #fff
+  ); /* White background for a clean look */
+  border-radius: var(--Radius-Radius-16, 16px);
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.closebtn-modal {
+  color: var(--Button-Close-Label-Default, #dc3545); /* Soft red tone */
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  border: 1px solid var(--Button-Close-Stroke-Color, #dc3545); /* Red border for distinction */
+  background: var(
+    --Button-Close-BG,
+    #fff
+  ); /* White background for a clean look */
+  border-radius: var(--Radius-Radius-16, 16px);
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.input-text {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
