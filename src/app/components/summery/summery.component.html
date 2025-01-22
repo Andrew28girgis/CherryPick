@@ -26,9 +26,9 @@
             </p>
           </div>
         </div>
-        <div class="d-flex justify-content-around pb-3" >
-         <button class="Kayack__button" [routerLink]="['/dashboard', type.id]">Kayack</button>
-         <button class="CherryPick__button" (click)="chooseType(type.id , type.organizationId , type.name)">CherryPick</button>
+        <div class="d-flex justify-content-around  mt-2 pb-3" >
+          <button class="CherryPick__button" (click)="chooseType(type.id , type.organizationId , type.name)">CherryPick</button>
+          <button class="Kayack__button" [routerLink]="['/dashboard', type.id]">Kayak</button>
         </div>
       </section>
     </div>
