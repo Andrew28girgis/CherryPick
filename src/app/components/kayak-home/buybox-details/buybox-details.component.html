@@ -1,70 +1,137 @@
-<div class="card buybox-details-card mt-3" >
-    <button 
-    class="tap" 
-    (click)="openEditProperty(BuyBoxProperty, buybox)">
-    <!-- <i class="fas fa-edit"></i> -->Edit BuyBox
-  </button>
-    <div class="card-body">
-      <h2>BuyBox ' {{ buybox?.Name }} '</h2>
-      <ul class="list list-group-flush">
-        <li class="list-group-item">
-          <strong>Description:</strong> {{ buybox?.Description || "N/A" }}
-        </li>
-        <li class="list-group-item">
-          <strong>MinBuilding Size:</strong>
-          {{ buybox?.MinBuildingSize || "N/A" }}
-        </li>
-        <li class="list-group-item">
-          <strong>MaxBuilding Size:</strong>
-          {{ buybox?.MaxBuildingSize || "N/A" }}
-        </li>
-        <li class="list-group-item">
-          <strong>Organization Id:</strong>
-          {{ buybox?.OrganizationId || "N/A" }}
-        </li>
-        <li class="list-group-item">
-          <strong>Organization Name:</strong> {{ buybox?.OrgName || "N/A" }}
-        </li>
-        <li class="list-group-item">
-          <strong>ManagerContact Id:</strong>
-          {{ buybox?.ManagerContactId || "N/A" }}
-        </li>
-        <li class="list-group-item">
-          <strong>ManagerOrganization Id:</strong>
-          {{ buybox?.ManagerOrganizationId || "N/A" }}
-        </li>
-        <li class="list-group-item">
-          <strong>ManagerOrganization Name:</strong>
-          {{ buybox?.ManagerOrganizationName || "N/A" }}
-        </li>
-        <li class="list-group-item" *ngIf="buybox?.CONTACTS">
-          <strong>Contacts:</strong>
-          <ul>
-            <li *ngFor="let contact of buybox?.CONTACTS">
-              {{ contact.FirstName || "N/A" }}
-              {{ contact.LastName || "N/A" }}
-              <span *ngIf="contact?.Email">( Email: </span>
-              {{ contact.Email || " " }}
-              <span *ngIf="contact?.Email">)</span>
-            </li>
-          </ul>
-        </li>
-      </ul>
+<div class="mt-2 py-2">
+  <div class="d-flex align-items-center justify-content-between">
+    <span class="bold-word ms-3">Specifications</span>
+
+    <button class="btn d-flex align-items-center gap-2 spec-btn" (click)="openEditProperty(BuyBoxProperty, buybox)">
+<div class="edit-buyoxtext px-2">
+  <i class="fa-regular fa-pen-to-square me-2"></i>
+  <span>Edit Buybox Specification</span>
+</div>
+    </button>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Description:</span>
+        <span class="mb-0 card-text">{{ buybox?.Description || "N/A" }}</span>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card  card-design p-3 h-100">
+        <span class="card-title">Min Building Size:</span>
+        <p class="mb-0 card-text">{{ buybox?.MinBuildingSize || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Max Building Size:</span>
+        <p class="mb-0 card-text">{{ buybox?.MaxBuildingSize || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Organization Id:</span>
+        <p class="mb-0 card-text">{{ buybox?.OrganizationId || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Organization Name:</span>
+        <p class="mb-0 card-text">{{ buybox?.OrgName || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">ManagerContact Id:</span>
+        <p class="mb-0 card-text">{{ buybox?.ManagerContactId || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">ManagerOrganization Id:</span>
+        <p class="mb-0 card-text">{{ buybox?.ManagerOrganizationId || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">ManagerOrganization Name:</span>
+        <p class="mb-0 card-text">{{ buybox?.ManagerOrganizationName || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Acquisition Type Id:</span>
+        <p class="mb-0 card-text">{{ buybox?.AcquisitionTypeId || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Comparable Type Id:</span>
+        <p class="mb-0 card-text">{{ buybox?.ComparableTypeId || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Empty Land:</span>
+        <p class="mb-0 card-text">{{ buybox?.EmptyLand || "N/A" }}</p>
+      </div>
+    </div>
+  
+    <div class="col-md-4 mb-3">
+      <div class="card card-design p-3 h-100">
+        <span class="card-title">Kanban Id:</span>
+        <p class="mb-0 card-text">{{ buybox?.kanbanId || "N/A" }}</p>
+      </div>
+    </div>
+  </div>
+  
+  <span class="bold-word ms-3">Contacts</span>
+  <div class="row mt-3" *ngIf="buybox?.CONTACTS && buybox.CONTACTS.length > 0">
+    <div class="col-md-4 mb-3" *ngFor="let contact of buybox.CONTACTS">
+      <div class="card card-design p-3 h-100">
+        <div class="mb-1">
+          <span class="card-title">First Name:</span> 
+          <span class="card-text">         
+             {{ contact.FirstName || "N/A" }}
+          </span>
+        </div>
+        <div class="mb-1">
+          <span class="card-title">Last Name:</span> 
+          <span class="card-text">
+             {{ contact.LastName || "N/A" }}
+
+          </span>       
+        </div>
+        <div class="mb-0 text-nowrap" *ngIf="contact?.Email">
+          <span class="card-title">Email:</span> 
+          <span class="card-text ">
+            {{ contact.Email }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
   
   <ng-template #BuyBoxProperty let-modal>
     <div class="modal-body">
-      <!-- <p class="small">Create a new row using this form, make sure you fill them all</p> -->
       <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
         <div class="row">
-          <!-- Name -->
-          <div class="col-sm-12">
+          <div class="col-sm-12 my-2">
             <div class="form-group form-group-default">
-              <label>Name</label>
+              <label class="card-text">Name</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control input-text"
                 name="Name"
                 [(ngModel)]="Obj.Name"
                 #name="ngModel"
@@ -73,12 +140,11 @@
               />
             </div>
           </div>
-          <!-- Description -->
-          <div class="col-sm-12">
+          <div class="col-sm-12 my-2">
             <div class="form-group form-group-default">
-              <label>Description</label>
+              <label class="card-text">Description</label>
               <input
-                class="form-control"
+                class="form-control input-text"
                 name="Description"
                 [(ngModel)]="Obj.Description"
                 #description="ngModel"
@@ -87,12 +153,12 @@
             </div>
           </div>
          
-          <div class="col-sm-12">
+          <div class="col-sm-12 my-2">
             <div class="form-group form-group-default">
-              <label>Min BuildingSize</label>
+              <label class="card-text">Min BuildingSize</label>
               <input
                 type="number"
-                class="form-control"
+                class="form-control input-text"
                 name="minBuildingSize"
                 [(ngModel)]="Obj.MinBuildingSize"
                 #minBuildingSize="ngModel"
@@ -102,12 +168,12 @@
               />
             </div>
           </div>
-          <div class="col-sm-12">
+          <div class="col-sm-12 my-2">
             <div class="form-group form-group-default">
-              <label>Max BuildingSize</label>
+              <label class="card-text">Max BuildingSize</label>
               <input
                 type="number"
-                class="form-control"
+                class="form-control input-text"
                 name="maxBuildingSize"
                 [(ngModel)]="Obj.MaxBuildingSize"
                 #maxBuildingSize="ngModel"
@@ -118,19 +184,27 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer no-bd p-0">
-          <button type="submit" id="addRowButton" class="btn btn-primary">
-             Edit  
+        <div class="modal-footer no-bd p-0 ">
+          <!-- Edit Button -->
+          <button
+            type="submit"
+            id="addRowButton"
+            class="btn spec-btn editbtn-modal"
+          >
+            Edit
           </button>
+        
+          <!-- Close Button -->
           <button
             type="button"
-            class="x-btn-close"
+            class="btn spec-btn closebtn-modal"
             data-dismiss="modal"
             (click)="closeModal()"
           >
             Close
           </button>
         </div>
+        
       </form>
     </div>
   </ng-template>

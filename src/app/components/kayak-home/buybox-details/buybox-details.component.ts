@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from '../../../../../src/app/services/places.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -56,6 +56,8 @@ export class BuyboxDetailsComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data:any) => {
         this.buybox = data.json;
+        console.log(this.buybox );
+        
         this.managerOrganizationId=data.json.ManagerOrganizationId;
         this.organizationId=data.json.OrganizationId;
          console.log('Buybox data:', this.buybox);
