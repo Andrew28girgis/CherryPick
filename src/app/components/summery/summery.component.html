@@ -9,15 +9,41 @@
   </div>
 </div>
 
+<div class="row m-0 p-0 mt-2 d-flex ps-2 pe-2">
+  <ng-container *ngFor="let type of buyboxTypes">
+    <div class="col-12 col-sm-3 p-3">
+      <section class="card__Kayak">
+        <div class="card__Kayak__img mt-3 mb-3">
+          <img class="Kayak__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{type.organizationId}}" alt="" />
+          </div>
+        <div class="card__Kayak_title">
+          {{ type.name }}
+        </div>
+        <div class="d-flex justify-content-center" >
+          <div style="width: max-content;min-width: 100px;">
+            <p class="card__Kayak_description w-auto">
+              <i class="fa-solid fa-circle"></i> {{type.description }}
+            </p>
+          </div>
+        </div>
+        <div class="d-flex justify-content-around pb-3" >
+         <button class="Kayack__button" [routerLink]="['/dashboard', type.id]">Kayack</button>
+         <button class="CherryPick__button" (click)="chooseType(type.id , type.organizationId , type.name)">CherryPick</button>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</div>
 
-<div class="container">
+<!-- <div class="container">
   <div class="row mt-2">
     <ng-container *ngFor="let type of buyboxTypes">
       <div class="col-md-12" (click)="chooseType(type.id , type.organizationId , type.name)">
-        <div class="card-bodyx" >
+        <div class="card-bodyx">
           <div class="card-title">{{ type.name }}</div>
-          <!-- <button class="btn btn-primary" [routerLink]="['/dashboard', type.id]">Go to Kayak</button> -->
+          <button class="btn btn-primary" [routerLink]="['/dashboard', type.id]">Go to Kayak</button>
         </div>
       </div>
     </ng-container>
   </div>
+</div> -->

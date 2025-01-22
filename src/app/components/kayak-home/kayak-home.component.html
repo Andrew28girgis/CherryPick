@@ -5,8 +5,11 @@
       <div style="display: flex">
         <!-- Sidebar Primary -->
         <div class="Sidbar-Primary" [ngStyle]="{ width: isCollapsed ? '100%' : '25%' }">
-            <ul class="p-0 m-0 Sidbar-Primary-ul">
-                <li routerLink="/toggleClose">
+            <ul class="p-0 m-0 Sidbar-Primary-ul" >
+                <li routerLink="/toggleClose" *ngIf="isCollapsed">
+                  <i class="fa-solid fa-arrow-right" routerLinkActive="activeIcon" (click)="toggleSidebar()"></i>
+                </li>
+                <li routerLink="/toggleClose" *ngIf="!isCollapsed">
                   <i class="fa-solid fa-arrow-left" routerLinkActive="activeIcon" (click)="toggleSidebar()"></i>
                 </li>
                 <li routerLink="/summary">
@@ -21,9 +24,13 @@
         <div class="Sidbar-Secondary" id="secondarySidebar" [style.display]="isCollapsed ? 'none' : 'block'">
           <p class="name-summary">Name Summary</p>
           <ul class="p-0 m-0 pt-3 ul-summery">
-            <li (click)="setActiveComponent('search')">Search Shopping Centers</li>
-            <li (click)="setActiveComponent('emily')">Buybox Management</li>
-          </ul>
+            <li (click)="setActiveComponent('search')" [ngClass]="{'activeTab': activeComponent === 'search'}">
+               Shopping Centers
+            </li>
+            <li (click)="setActiveComponent('emily')" [ngClass]="{'activeTab': activeComponent === 'emily'}">
+              Buybox Management
+            </li>
+          </ul>          
         </div>
       </div>
     </div>
