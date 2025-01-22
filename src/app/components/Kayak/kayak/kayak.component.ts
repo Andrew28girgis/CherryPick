@@ -176,7 +176,10 @@ export class KayakComponent implements OnInit {
       },
     });
   }
-
+  handleSecondaryTypeChange(selectedValue: string): void {
+    this.filterValues.secondarytype = selectedValue; // Update the secondary type
+    this.getResult(); // Fetch filtered results
+  }
   fetchAvailability(shoppingCenterId: number): void {
     console.log('Fetching availability for Shopping Center ID:', shoppingCenterId);
     this.GetShoppingCenterAvailability(shoppingCenterId);
@@ -557,10 +560,17 @@ export class KayakComponent implements OnInit {
     this.filterValues.city = '';
     this.getResult(); // Trigger only for shopping centers
   }
+  handleStateChange(selectedValue: string): void {
+    this.filterValues.statecode = selectedValue; // Update the state code
+    console.log('State selected:', selectedValue || 'All');
+    this.onStateChange(); // Update city dropdown if needed
+    this.getResult(); // Fetch filtered results
+  }
   
   onCityChange(): void {
     this.selectedCity = this.filterValues.city;
     this.getResult(); // Trigger only for shopping centers
+    this.selectedCity='';
   }
   
   updateCitiesForSelectedState(): void {

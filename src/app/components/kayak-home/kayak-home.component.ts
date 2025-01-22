@@ -11,7 +11,7 @@ export class KayakHomeComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.setActiveComponent('kayak');
+    this.setActiveComponent('emily');
   }
 
   setActiveComponent(componentName: string) {

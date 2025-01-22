@@ -1,51 +1,636 @@
-p {
-    color: #0C0D0E;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    margin-bottom: 0;
+.container-fluid {
+  font-family: Montserrat;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-h3{
-    vertical-align: middle;
-    text-align: start;
-    color: #7a8591;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
+.head__section>div:first-child {
+  color: #707791;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 30px;
 }
+
+.head__section>div:last-child {
+  color: #16181d;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.Nav__section>ul {
+  display: flex;
+  list-style-type: none;
+}
+
+.Nav__section>ul>li {
+  padding: 6px 12px;
+  border-radius: 12px 12px 0 0;
+  color: #707791;
+  font-size: 16px;
+  line-height: 25px;
+}
+
+.active {
+  color: #16181d;
+  background-color: white;
+  font-weight: 500;
+}
+
+.main-section {
+  background-color: white;
+  border-radius: 12px;
+}
+
+.sidbar__contant {
+  border-right: 1px solid #c6c9d3;
+  padding: 20px;
+  width: 30%;
+}
+
+.checkbox-section {
+  display: flex;
+  gap: 5px;
+}
+
+.checkbox-section-border {
+  border-bottom: 1.5px solid #c6c9d3a6;
+}
+
+.form-check-input[type="checkbox"] {
+  box-shadow: none;
+  outline: none;
+
+  &:checked {
+    border: 1px solid #001f3f;
+    background-color: #001f3f;
+  }
+
+  &:not(checked) {
+    border: 1px solid gray;
+  }
+}
+
+.checkbox-section>label {
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+}
+
+.sidbar__contant>.checkbox-section-head {
+  padding-bottom: 8px;
+}
+
+.sidbar__contant>.checkbox-section-body {
+  padding-bottom: 4px;
+  padding-top: 10px;
+}
+
+.sidbar__contant>.checkbox-section-body-first {
+  padding-inline-start: 20px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
+.sidbar__contant>.checkbox-section-body-second {
+  padding-inline-start: 40px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
+.checkbox-section-select {
+  padding-bottom: 3px;
+}
+
+.checkbox-section-select>label {
+  background: white;
+  position: relative;
+  left: 15px;
+  top: 12px;
+  padding-inline: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+}
+
+.form-select {
+  box-shadow: none;
+  outline: none;
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  border-radius: 10px;
+}
+
+select {
+  border-radius: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  cursor: pointer;
+}
+
+select option {
+  border-radius: 10px;
+  padding: 8px;
+}
+
+select option:checked {
+  background-color: #001f3f;
+  color: white;
+}
+
+.Emily__contant {
+  padding: 16px;
+  width: 70%;
+}
+
+.Emily__contant__head {
+  color: #16181D;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Emily__contant__head__p {
+  color: #FF4C4C;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.textarea {
+  position: relative;
+}
+
+.textarea>textarea {
+  box-shadow: none;
+  outline: none;
+  border-radius: 10px;
+}
+
+.textarea>label {
+  background: white;
+  position: relative;
+  left: 15px;
+  top: 12px;
+  padding-inline: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+}
+
+.textarea>.textarea_div {
+  box-shadow: none;
+  outline: none;
+  border-radius: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 250px;
+  color: #16181D;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
+}
+
+.textarea_div::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.textarea_div::-webkit-scrollbar-thumb {
+  background: transparent !important;
+  border-radius: 50px !important;
+  box-shadow: none !important;
+  width: 8px !important;
+  border: 8px solid #001f3f8c !important;
+  background-clip: padding-box !important;
+}
+
+.textarea_div::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.Emily__contant__button {
+  background: #4D65B4;
+  color: white;
+  width: 151px;
+  height: 48px;
+  padding: 14px 24px;
+  gap: 8px;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  align-items: center;
+  display: flex
+}
+
+@media (max-width: 500px) {
+  .sidbar__contant {
+    width: 100%;
+  }
+
+  .Emily__contant {
+    width: 100%;
+  }
+}
+
+/* <div class="container-fluid h-auto">
+  <div class="row">
+    <div class="col-12 d-flex" style="padding-left: 10px;">
+      <div class="col-3" style="max-height: 90vh; overflow-y: auto; scrollbar-width: thin;">
+        <!-- <button (click)="open(View)" class="x-btn">view</button> -->
+        <div class="row">
+          <div class="d-flex justify-content-center align-items-center">
+            <label class="check">
+              <input type="checkbox" style="cursor: pointer" [(ngModel)]="showClientProfile"
+                (change)="onCheckboxChange()" />
+              <p>{{ BuyBoxOrganizationName }}</p>
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="d-flex justify-content-center align-items-center">
+            <label class="check">
+              <input type="checkbox" [(ngModel)]="showRelationNames" (change)="onRelationNamesChange()" />
+              <p>Relation Name</p>
+            </label>
+          </div>
+        </div>
+
+        <div *ngIf="showRelationNames">
+          <div *ngFor="let relation of relationCategoriesNames">
+            <label class="check">
+              <input type="checkbox" [(ngModel)]="relation.selected" (change)="onRelationNamesChange()" />
+              {{ relation.name }}
+            </label>
+
+            <div class="px-2 mb-3">
+              <ng-container *ngFor="let item of generated[0]?.Releations">
+                <ng-container *ngIf="item.RetailRelationCategoryId == relation.id">
+                  <label class="check">
+                    <input type="checkbox" [(ngModel)]="item.relationSelect" (change)="updateEmailBody()" />
+
+                    {{ item.Name }}
+                  </label>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="">
+            <label class="check">
+              <input type="checkbox" [(ngModel)]="showOrganizationManagers" (change)="onOrganizationManagersChange()" />
+              <p>{{ ManagerOrganizationName }}</p>
+            </label>
+
+            <label class="check" *ngIf="showOrganizationManagers">
+              <input type="checkbox" style="cursor: pointer" [(ngModel)]="showMangerDescription"
+                (change)="onMangerDescriptionChange()" />
+              <p>Tenant Rep. Description</p>
+            </label>
+          </div>
+        </div>
+
+        <!-- Manager Organizations and Contacts -->
+        <div *ngIf="showOrganizationManagers">
+          <div *ngFor="let manager of managerOrganizations">
+            <div>
+              <div *ngFor="let contact of manager.ManagerOrganizationContacts">
+                <label class="check">
+                  <input type="checkbox" [(ngModel)]="contact.selected" (change)="onContactCheckboxChange()"
+                    [checked]="contact.selected" />
+                  {{ contact.Firstname }} {{ contact.LastName }}
+                </label>
+
+                <!-- Add Assistant Details -->
+                <div *ngIf="contact.AssistantName">
+                  <label class="check">
+                    <input type="checkbox" [(ngModel)]="contact.assistantSelected"
+                      (change)="onAssistantCheckboxChange(contact)" />
+                    Broker Assistant
+                  </label>
+                  <!-- <div *ngIf="contact.assistantSelected" class="px-4">
+                      <p>Name: {{ contact.AssistantName }}</p>
+                      <p>Email: {{ generateAssistantEmail(contact.AssistantName) }}</p>
+                    </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="padding-right: 5px;">
+            <select id="shoppingCenterDropdown" class="form-control mb-2" [(ngModel)]="selectedShoppingCenter"
+              (change)="onSelectedShoppingCenterChange()">
+              <option value="" selected>Select a Shopping Center</option>
+              <option *ngFor="let center of ShoppingCenterNames" [value]="center.CenterName">
+                {{ center.CenterName }}
+                <span>
+                  ({{ center.ShoppingCenterManager[0].Name }})
+                </span>
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div *ngIf="selectedShoppingCenter">
+          <div class="row">
+            <label class="check">
+              <input type="checkbox" [(ngModel)]="showManagerName" (change)="updateEmailBody()" />
+              <p>Landlord Rep. Description</p>
+            </label>
+          </div>
+
+          <div class="row">
+            <!-- Manager Contacts with checkboxes -->
+            <div *ngIf="showManagerName" class="px-3">
+              <div *ngFor="
+                    let contact of getManagerContacts(selectedShoppingCenter)
+                  ">
+                <label class="check">
+                  <!-- First Name Last Name checkbox -->
+                  <input type="checkbox" [(ngModel)]="contact.selectedName" (change)="updateEmailBody()" />
+                  M.Contact: {{ contact.Firstname }} {{ contact.Lastname }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- All Cotenants -->
+          <!-- <div class="row">
+              <label class="check">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="showAllCotenants"
+                  (change)="onAllCotenantsChange()"
+                />
+                <p>Select All Cotenants</p>
+              </label>
+            </div> -->
+
+          <!-- Cotenants in the shopping center -->
+          <div class="row pl-2">
+            <div>
+              <label class="check">
+                <input type="checkbox" [(ngModel)]="showCotenantsWithActivity"
+                  (change)="onCotenantsWithActivityChange()" />
+                <p>Co-tenant in the shopping center</p>
+              </label>
+
+              <!-- Add *ngIf here -->
+              <ul *ngIf="showCotenantsWithActivity" style="list-style-type: none; padding-left: 10px">
+                <li *ngFor="let activity of groupedActivityTypes">
+                  <label class="check">
+                    <input type="checkbox" [(ngModel)]="activity.selected" (change)="onActivityChange(activity)" />
+                    {{ activity.ActivityType }}
+                  </label>
+
+                  <div class="px-4">
+                    <ng-container *ngFor="let co of activity.Cotenants">
+                      <label class="check">
+                        <input type="checkbox" [(ngModel)]="co.selected" (change)="updateEmailBody()" />
+                        {{ co.CotenantName }}
+                      </label>
+                    </ng-container>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Cotenants without shopping center -->
+          <div class="row pl-2">
+            <!-- <div>
+                <label class="check">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="showCotenantsWithoutActivity"
+                    (change)="onCotenantsWithoutActivityChange()"
+                  />
+                  <p>Cotenants without shopping center</p>
+                </label>
+                <ul *ngIf="showCotenantsWithoutActivity" style="list-style-type: none; padding-left: 10px;">
+                  <li *ngFor="let cotenant of getCotenantsWithoutActivityType(selectedShoppingCenter)">
+                    <label class="check">
+                      <input
+                        type="checkbox"
+                        [(ngModel)]="cotenant.selected"
+                        (change)="updateEmailBody()"
+                      />
+                      {{ cotenant.CotenantName }}
+                    </label>
+                  </li>
+                </ul>
+              </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="col-9">
+        <p style="margin-bottom: 10px">Data</p>
+        <div class="container">
+          <!-- Select Prompt -->
+          <div class="form-group">
+            <label for="discussionDropdown">Select a Prompt:</label>
+            <select id="discussionDropdown" class="form-control" [(ngModel)]="selectedPromptId"
+              (change)="updatePrompt()">
+              <option value="" selected>Select a Prompt</option>
+              <option *ngFor="let prompt of prompts" [value]="prompt.id">
+                {{ prompt.name }}
+              </option>
+            </select>
+          </div>
+
+          <!-- Display Prompt in Separate Textarea -->
+          <div class="form-group" *ngIf="selectedPromptId">
+            <label for="selectedPromptTextarea">Selected Prompt:</label>
+            <div class="row">
+              <div class="col-12 d-flex justify-content-between align-items-center">
+                <div class="w-100">
+                  <textarea id="selectedPromptTextarea" rows="1" class="form-control" [value]="selectedPromptText"
+                    readonly></textarea>
+                </div>
+                <div>
+                  <button class="x-btn d-flex justify-content-center align-items-center"
+                    (click)="openPromptTextModal(View)" style="height: 35px">
+                    Prompt
+                    <i class="fas fa-sign-in-alt px-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email Body -->
+          <div>
+            <div class="d-flex justify-content-between align-items-center">
+              <label for="emailBodyTextarea">Email Body:</label>
+              <i class="fas fa-eraser eraser-sty" (click)="clearSelections()" *ngIf="emailBody!=''"
+                title="Clear Body"></i>
+            </div>
+            <textarea id="emailBodyTextarea" rows="20" class="form-control" [(ngModel)]="emailBody"></textarea>
+          </div>
+
+          <!-- Generic Button -->
+          <div class="form-group d-flex justify-content-between">
+            <button class="x-btn mb-0" (click)="getGenericEmail()">Generate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- API Response View -->
+    <div class="col-12">
+      <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
+        <div class="card shadow-sm border-0">
+          <div class="card-header text-white" style="background-color: #141e2a">
+            <h5 class="mb-0">Generated Email</h5>
+          </div>
+          <div class="card-body bg-light">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="fw-bold text-secondary">Email Subject:</label>
+                <span (click)="copyEmailSubject()" class="copy-icon-container">
+                  <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
+                  <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span> </span>
+              </div>
+              <div class="p-3 border rounded bg-white text-dark">
+                {{ emailSubject }}
+              </div>
+            </div>
+            <div>
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="fw-bold text-secondary">Email Body:</label>
+                <span (click)="copyEmailBody()" class="copy-icon-container">
+                  <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
+                  <span class="copied-text" *ngIf="isBodyCopied">Copied!</span> </span>
+              </div>
+              <div class="p-3 border rounded bg-white text-dark">
+                <p [innerHTML]="emailBodyResponse" class="m-0"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #View let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title text-light">{{ selectedPromptName }}</h3>
+      <!-- <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="modal.dismiss('Cross click')"
+        ></button> -->
+    </div>
+    <div class="modal-body">
+      <!-- Display or Edit Prompt Text -->
+      <textarea *ngIf="isEditing" class="form-control" rows="15" [(ngModel)]="editablePromptText"></textarea>
+      <!-- <p *ngIf="!isEditing" [innerHTML]="selectedPromptText"></p> -->
+      <textarea *ngIf="!isEditing" [innerHTML]="selectedPromptText" readonly rows="15" class="form-control"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button *ngIf="!isEditing" class="btn btn-warning" (click)="editPrompt()">
+        Edit
+      </button>
+      <button *ngIf="isEditing" class="btn btn-success" (click)="savePrompt(modal)">
+        Save
+      </button>
+      <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+p {
+  color: #0c0d0e;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  margin-bottom: 0;
+}
+
+h3 {
+  vertical-align: middle;
+  text-align: start;
+  color: #7a8591;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+}
+
 .check {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-    cursor: pointer;
-    gap: 5px;
-  }
-  .copy-sty{
-    cursor: pointer;
-    color: #6c757d;
-    font-size: 20px;
-    margin-right: 8px;
-    margin-bottom: 6px;
-    transition: color 0.3s ease;
-  }
-  .copy-sty:hover{
-    color: #53565c;
-  }
-  .eraser-sty{
-    font-size: 18px;
-    margin-right: 8px;
-    margin-bottom: 10px;
-    color: #ce0000;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  .eraser-sty:hover{
-    color: #941a1a !important;
-  }
-  .modal-title{
-    margin-bottom: 0px;
-    font-size: 18px;
-    font-weight: 400;
-  }
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.copy-sty {
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 20px;
+  margin-right: 8px;
+  margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+
+.copy-sty:hover {
+  color: #53565c;
+}
+
+.eraser-sty {
+  font-size: 18px;
+  margin-right: 8px;
+  margin-bottom: 10px;
+  color: #ce0000;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.eraser-sty:hover {
+  color: #941a1a !important;
+}
+
+.modal-title {
+  margin-bottom: 0px;
+  font-size: 18px;
+  font-weight: 400;
+} */

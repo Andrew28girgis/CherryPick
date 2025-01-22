@@ -51,6 +51,8 @@ body{
   font-weight: 400;
   line-height: 24px; 
   letter-spacing: -0.07px;
+  width: max-content;
+
 }
 
 .btn-filter {
@@ -94,9 +96,7 @@ body{
   backdrop-filter: blur(1.5px);
   cursor: pointer;
 }
-.show-map{
-  width: max-content;
-}
+
 #state-select,
 #city-select {
   border-radius: 10px;

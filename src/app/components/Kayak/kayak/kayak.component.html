@@ -15,14 +15,14 @@
               <span>State</span>
             </div>
             <select
-              id="state-select"
-              class="form-select search-inputs"
-              [(ngModel)]="filterValues.statecode"
-              (ngModelChange)="onStateChange(); searchShoppingCenter()"
-              >
-              <option selected>All</option>
-              <option *ngFor="let state of uniqueStates">{{ state }}</option>
-            </select>
+            id="state-select"
+            class="form-select search-inputs"
+            [(ngModel)]="filterValues.statecode"
+            (ngModelChange)="handleStateChange($event); searchShoppingCenter()"
+          >
+            <option value="" selected>All</option> <!-- Assign value for the "All" option -->
+            <option *ngFor="let state of uniqueStates" [value]="state">{{ state }}</option>
+          </select>
           </div>
           <div>
             <div class="mt-3 small-titlefilter">
@@ -34,6 +34,7 @@
               [(ngModel)]="filterValues.city"
               (ngModelChange)="onCityChange(); searchShoppingCenter()"
             >
+            <option selected>All</option>
               <option *ngFor="let city of uniqueCities">{{ city.city }}</option>
             </select>
           </div>
@@ -68,17 +69,17 @@
                 <span>Secondary Type</span>
               </div>
               <select
-                class="form-select search-inputs"
-                [(ngModel)]="filterValues.secondarytype"
-                (ngModelChange)="getResult()"
-              >
-                <option selected>All</option>
-                <ng-container *ngFor="let Secondary of Filters?.SecondaryType">
-                  <option value="{{ Secondary.SecondaryType }}">
-                    {{ Secondary.SecondaryType }}
-                  </option>
-                </ng-container>
-              </select>
+              class="form-select search-inputs"
+              [(ngModel)]="filterValues.secondarytype"
+              (ngModelChange)="handleSecondaryTypeChange($event)"
+            >
+              <option value="" selected>All</option> <!-- Assign value for the "All" option -->
+              <ng-container *ngFor="let Secondary of Filters?.SecondaryType">
+                <option [value]="Secondary.SecondaryType">
+                  {{ Secondary.SecondaryType }}
+                </option>
+              </ng-container>
+            </select>
             </div>
             <hr class="small-line" />
             <!-- Tenants Filter -->
@@ -216,7 +217,7 @@
             </div>
           </div>
           <div class="col-md-2">
-            <button class="btn btn-outline-primary ms-2" (click)="bindShoppingCenter()">Bind</button>
+            <button class="btn btn-secondary ms-2" (click)="bindShoppingCenter()">Bind</button>
 
           </div>
           <ng-container >

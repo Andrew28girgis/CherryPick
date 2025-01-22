@@ -50,6 +50,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
 import { ChatHttpClient } from './services/chat-http-client';
+import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-shopping-centers/buybox-shopping-centers.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -84,7 +86,9 @@ import { ChatHttpClient } from './services/chat-http-client';
     CommunicationComponent,
     KayakHomeComponent,
     EmilyComponent,
-    BuyboxDetailsComponent
+    BuyboxDetailsComponent,
+    BuyboxShoppingCentersComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -94,6 +98,7 @@ import { ChatHttpClient } from './services/chat-http-client';
     HttpClientModule,
     FormsModule,
     NgxSpinnerModule,
+    ReactiveFormsModule,
     NgbModule,
     NgbTooltipModule,
     NgbAlertModule,
