@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-kayak-home',
@@ -7,8 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class KayakHomeComponent implements OnInit {
   activeComponent: string = '';
-  constructor() {}
 
+  constructor(public router: Router) {}
+
+  isCollapsed: boolean = false; 
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+  
   ngOnInit() {
     this.setActiveComponent('emily');
   }
@@ -20,4 +28,5 @@ export class KayakHomeComponent implements OnInit {
   getActiveComponent(): string {
     return this.activeComponent;
   }
+
 }
