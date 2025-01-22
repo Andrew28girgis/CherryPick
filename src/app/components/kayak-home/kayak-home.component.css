@@ -85,14 +85,23 @@
 
 .ul-summery>li {
   color: #707791b6;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600 !important;
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
   cursor: pointer;
+  padding-inline: 5px;
 }
 
 .activeIcon{
   color: rgb(135, 176, 252);
+}
+
+.activeTab{
+  color: #001f3f !important;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding-inline: 5px;
+  font-weight: bold;
 }
