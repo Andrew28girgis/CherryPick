@@ -159,6 +159,8 @@ export class LandingComponent {
 
         if (ShoppingcenterId !== 0) {
           this.ShoppingCenter = this.CustomPlace?.ShoppingCenter?.[0];
+          this.GetShoppingCenterManager(this.ShoppingCenter.Id);
+
         }
 
         console.log(`custom place`);
@@ -178,7 +180,6 @@ export class LandingComponent {
               +this.StandAlonePlace.PopulationDensity;
         }
 
-        this.GetShoppingCenterManager(this.ShoppingCenter.Id);
         this.getMinMaxUnitSize();
 
         this.ShoppingCenter.StreetViewURL
@@ -215,7 +216,7 @@ export class LandingComponent {
 
         const uniqueCategoriesSet = new Set<string>();
         this.placeCotenants?.forEach((co) => {
-          co.SubCategory.forEach((c) => {
+          co.SubCategory?.forEach((c) => {
             if (c.OrganizationCategory) {
               uniqueCategoriesSet.add(c.OrganizationCategory);
             }
