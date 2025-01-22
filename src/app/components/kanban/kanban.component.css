@@ -46,6 +46,7 @@
   height: auto;
   max-height: none;
   overflow: hidden;
+  min-width: 250px;
 
 }
 
@@ -1297,6 +1298,7 @@ td {
   cursor: pointer;
   opacity: 0.6;
   transition: opacity 0.2s ease;
+  background-color: #d3d3d3;
 }
 
 .modal-header .btn-close:hover {
