@@ -242,7 +242,7 @@ line-height: 30px;
 }
 .btn {
   font-family: Montserrat, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   padding: 10px 20px; 
   border-radius: 5px; 
@@ -258,6 +258,10 @@ line-height: 30px;
 .btn-secondary {
   border-radius: var(--Button-Radius, 16px);
   background: linear-gradient(180deg, #013060 0%, #0051A5 83.53%);
+}
+.btn-success {
+  border-radius: var(--Button-Radius, 16px);
+  background: linear-gradient(180deg, #016034 0%, #00a560 83.53%);
 }
 
 .btn:hover {

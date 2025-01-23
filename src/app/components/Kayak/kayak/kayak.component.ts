@@ -64,6 +64,8 @@ export class KayakComponent implements OnInit {
   SelectedShoppingCenterIDs: number[] = []; // To store selected shopping center IDs
   shoppingCenters: { id: number; name: string }[] = []; // Example shopping centers list
   loading: boolean = true; // Add a loading flag
+  isBulkMode: boolean = false; // Default: Bulk mode is off
+
 
 
 
@@ -114,6 +116,9 @@ export class KayakComponent implements OnInit {
     if (this.General.modalObject?.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
+  }
+  toggleBulkMode(): void {
+    this.isBulkMode = !this.isBulkMode; // Toggle bulk mode
   }
   toggleShoppingCenterSelection(id: number): void {
     if (this.SelectedShoppingCenterIDs.includes(id)) {
