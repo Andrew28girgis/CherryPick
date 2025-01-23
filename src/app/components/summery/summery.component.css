@@ -139,7 +139,7 @@ button:active {
   background: #ccd2d9;
   display: flex;
   padding: 4px 12px;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   gap: 4px;
   color: #001f3f;
