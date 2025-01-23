@@ -9,6 +9,7 @@ import { RelationNames } from 'src/models/emailGenerate';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-emily',
@@ -16,106 +17,108 @@ import { PlacesService } from 'src/app/services/places.service';
   styleUrls: ['./emily.component.css'],
 })
 export class EmilyComponent {
+  buyBoxId!: number | null;
+  TemplatesId!: number | null;
+  General!: any;
+  generated: Generated[] = [];
+  generatedGetSavedTemplates: any[] = [];
+  relationCategoriesNames: RelationNames[] = [];
+  showClientProfile: boolean = false;
+  showMangerDescription: boolean = false;
+  clientProfileDescription: string = '';
+  MangerDescription: string = '';
+  showRelationNames: boolean = false;
+  selectedRelations: RelationNames[] = [];
+  showOrganizationManagers: boolean = false;
+  managerOrganizations: ManagerOrganization[] = [];
+  showManagerDescription: boolean = false;
+  emailBody: string = '';
+  manager: any;
+  ManagerOrganizationName: string = '';
+  BuyBoxOrganizationName: string = '';
+  selectedShoppingCenter: string = '';
+  selectedMangerName: string = '';
+  ShoppingCenterNames: {
+    CenterName: string;
+    CotenantsWithActivityType: Cotenant[];
+    CotenantsWithoutActivityType: Cotenant[];
+    ShoppingCenterManager: ShoppingCenterManager[];
+  }[] = [];
+  showShoppingCenter: boolean = false;
+  showManagerName: boolean = false;
+  showCotenantsWithActivity: boolean = false;
+  showCotenantsWithoutActivity: boolean = false;
+  selectedPromptId: string = '';
+  selectedPromptText: string = '';
+  selectedPromptName: string = '';
+  prompts: any[] = [];
+  emailSubject: string = '';
+  emailBodyResponse: string = '';
+  isEditing: boolean = false;
+  editablePromptText: string = '';
+  groupedActivityTypes: any[] = [];
+  showAllCotenants: boolean = false;
+  isSubjectCopied: boolean = false;
+  isBodyCopied: boolean = false;
+  formGroupTemplate!: FormGroup;
+
   tabs = [
     { id: 'Details', label: 'Details' },
     { id: 'Emily', label: 'Emily' },
     { id: 'Shopping Centers', label: 'Shopping Centers' },
+    { id: 'WorkSpaces', label: 'WorkSpaces' },
     { id: 'Sharing', label: 'Sharing' },
 
   ];
+  
+  selectedEmailyID: string | null = null; 
+
+  isChecked(emailyID: string): boolean {
+    return this.selectedEmailyID === emailyID;
+  }
+
+  onCheckboxChangeTemplates(emailyID: string): void {
+    if (this.selectedEmailyID === emailyID) {
+      this.selectedEmailyID = null;
+    } else {
+      this.selectedEmailyID = emailyID;
+    }
+    console.log(emailyID);
+    
+  }
 
   selectedTab: string = 'Emily';
+
+  public text = ``;
 
   selectTab(tabId: string): void {
     this.selectedTab = tabId;
   }
 
-  public text = `Center: 601 Pennsylvania Ave NW
-Manager: No Manager
+  @Output() contentChange = new EventEmitter<string>();
 
-Manager Description: No description available
+  getFormattedText(): string {
+    return this.text
+      .split('\n')
+      .join('<br>');
+  }
 
-Cotenants in the shopping center:
-Museum Gift Shop:
-- Hirshhorn Gift Shop
+  getFormattedTextTemplate(text: string): string {
+    return text
+      .split('\n')
+      .join('<br>');
+  }
 
-New Tenant (Advance Auto Parts)
-undefined
+  onContentChange(event: Event): void {
+    const target = event.target as HTMLElement;
+    this.contentChange.emit(target.innerHTML);
+  }
 
-Advance Auto Parts Representative Brokerage Company: Advance Auto Parts
-Broker on Charge: Mitchell Recoon
-Broker on Charge: Nick Robinson
-Broker on Charge: Esther Foster
-Broker on Charge: Jeff White
-`;
-
-@Output() contentChange = new EventEmitter<string>();
-
-getFormattedText(): string {
-  return this.text
-    .split('\n')
-    // .filter(line => line !== '') // الأسطر الفارغة
-    .join('<br>');
-}
-
-onContentChange(event: Event): void {
-  const target = event.target as HTMLElement;
-  this.contentChange.emit(target.innerHTML);
-}
-
-  buyBoxId!: number | null;
-  General!: any;
-  generated: Generated[] = [];
-  relationCategoriesNames: RelationNames[] = [];
-  showClientProfile: boolean = false; // Variable to track "Client Profile" checkbox state
-  showMangerDescription: boolean = false; // Variable to track "Client Profile" checkbox state
-  clientProfileDescription: string = ''; // Stores BuyBoxOrganizationDescription
-  MangerDescription: string = ''; // Stores BuyBoxOrganizationDescription
-  showRelationNames: boolean = false; // Variable to track "Relation Name" checkbox state
-  selectedRelations: RelationNames[] = [];
-  showOrganizationManagers: boolean = false;
-  managerOrganizations: ManagerOrganization[] = []; // Holds Manager Organizations data
-  showManagerDescription: boolean = false; // Track if the description is visible
-
-  emailBody: string = ''; // Store the email body content as a string
-  manager: any;
-  ManagerOrganizationName: string = '';
-  BuyBoxOrganizationName: string = '';
-  // ShoppingCenterNames: string[] = [];
-
-  selectedShoppingCenter: string = ''; // To store the selected value
-  selectedMangerName: string = ''; // To store the selected value
-  ShoppingCenterNames: {
-    CenterName: string;
-    CotenantsWithActivityType: Cotenant[];
-    CotenantsWithoutActivityType: Cotenant[];
-    ShoppingCenterManager: ShoppingCenterManager[]; // Add this field
-  }[] = [];
-
-  showShoppingCenter: boolean = false;
-  showManagerName: boolean = false;
-  showCotenantsWithActivity: boolean = false;
-  showCotenantsWithoutActivity: boolean = false;
-  selectedPromptId: string = ''; // To store the selected prompt ID
-  selectedPromptText: string = ''; // To display the prompt's text
-  selectedPromptName: string = '';
-  prompts: any[] = []; // Array to store prompts fetched from API
-  // groupedActivityTypes: any;
-
-  emailSubject: string = ''; // To store the subject of the email
-  emailBodyResponse: string = ''; // To store the body of the email from the API
-
-  isEditing: boolean = false; // Tracks whether the modal is in edit mode
-  editablePromptText: string = ''; // Stores the editable prompt text
-  groupedActivityTypes: any[] = []; // Each activity: {ActivityType: string, Cotenants: {CotenantName: string, selected:boolean}[]}
-  showAllCotenants: boolean = false;
-  isSubjectCopied: boolean = false;
-  isBodyCopied: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private PlacesService: PlacesService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -124,6 +127,7 @@ onContentChange(event: Event): void {
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetPrompts();
+    this.GetSavedTemplates();
   }
 
   GetBuyBoxInfo() {
@@ -138,7 +142,7 @@ onContentChange(event: Event): void {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.generated = data.json;
-        console.log('ALL', this.generated);
+        // console.log('ALL', this.generated);
 
         this.ManagerOrganizationName =
           this.generated[0].Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName;
@@ -158,7 +162,7 @@ onContentChange(event: Event): void {
         this.ShoppingCenterNames =
           this.generated?.[0]?.BuyBoxShoppingCenters?.map((center) => ({
             CenterName: center.CenterName,
-            ShoppingCenterManager: center.ShoppingCenterManager || [], // Include manager info
+            ShoppingCenterManager: center.ShoppingCenterManager || [],
             CotenantsWithActivityType: (
               center.Cotenants?.filter((co) => co.ActivityType) || []
             ).map((co) => ({ ...co, selected: false })),
@@ -173,8 +177,54 @@ onContentChange(event: Event): void {
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
         // }
+        this.updateGroupedActivityTypes();
+      },
+    });
+  }
 
-        // Update groupedActivityTypes now that we have selectedShoppingCenter
+  GetSavedTemplates() {
+    const body: any = {
+      Name: 'GetSavedTemplates',
+      MainEntity: null,
+      Params: {
+        buyboxid: this.buyBoxId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.generatedGetSavedTemplates = data.json;
+        console.log('ALL GetSavedTemplates', this.generatedGetSavedTemplates);
+
+        this.ManagerOrganizationName =
+          this.generatedGetSavedTemplates[0].Buybox[0]?.BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName;
+        this.BuyBoxOrganizationName =
+          this.generatedGetSavedTemplates[0].Buybox[0].BuyBoxOrganization[0].Name;
+
+        const buyBox = this.generatedGetSavedTemplates?.[0]?.Buybox?.[0];
+        if (buyBox) {
+          this.ManagerOrganizationName =
+            buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
+              ?.ManagerOrganizationName || '';
+          this.BuyBoxOrganizationName =
+            buyBox.BuyBoxOrganization?.[0]?.Name || '';
+        }
+
+        this.ShoppingCenterNames =
+          this.generated?.[0]?.BuyBoxShoppingCenters?.map((center) => ({
+            CenterName: center.CenterName,
+            ShoppingCenterManager: center.ShoppingCenterManager || [],
+            CotenantsWithActivityType: (
+              center.Cotenants?.filter((co) => co.ActivityType) || []
+            ).map((co) => ({ ...co, selected: false })),
+
+            CotenantsWithoutActivityType:
+              center.Cotenants?.filter((cotenant) => !cotenant.ActivityType) ||
+              [],
+          })) || [];
+
+        this.generated[0]?.Releations.forEach((r) => (r.relationSelect = true));
+
         this.updateGroupedActivityTypes();
       },
     });
@@ -184,7 +234,7 @@ onContentChange(event: Event): void {
     const center: any = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
     );
-    console.log('Shopping Centers', center);
+    // console.log('Shopping Centers', center);
     this.groupedActivityTypes = center.CotenantsWithActivityType.reduce(
       (result: any, cotenant: any) => {
         const activityType = cotenant.ActivityType || 'Other'; // If no ActivityType, group as 'Other'
@@ -203,7 +253,7 @@ onContentChange(event: Event): void {
       },
       [] // Initialize as an empty array
     );
-    console.log('Grouped ActivityTypes:', this.groupedActivityTypes);
+    // console.log('Grouped ActivityTypes:', this.groupedActivityTypes);
     return center ? this.groupedActivityTypes : [];
   }
 
@@ -243,7 +293,7 @@ onContentChange(event: Event): void {
       activity.selected = false;
       activity.Cotenants.forEach((co: any) => (co.selected = false));
     });
-    console.log('Updated groupedActivityTypes:', this.groupedActivityTypes);
+    // console.log('Updated groupedActivityTypes:', this.groupedActivityTypes);
   }
   // Called when "All Cotenants" checkbox changes
   onAllCotenantsChange() {
@@ -708,10 +758,10 @@ onContentChange(event: Event): void {
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
         this.emailBodyResponse = data?.emailBody || 'No body received';
-        console.log('Email Response:', {
-          subject: this.emailSubject,
-          body: this.emailBodyResponse,
-        });
+        // console.log('Email Response:', {
+        //   subject: this.emailSubject,
+        //   body: this.emailBodyResponse,
+        // });
       },
       error: (err) => {
         console.error('Error fetching generic email:', err);
@@ -758,8 +808,8 @@ onContentChange(event: Event): void {
             name: prompt?.Name || 'Unnamed Prompt',
             promptText: prompt?.PromptText || 'No prompt text available',
           }));
-          console.log(`prompets`);
-          console.log(this.prompts);
+          // console.log(`prompets`);
+          // console.log(this.prompts);
         } else {
           console.error('No prompts found in the response.');
           this.prompts = [];
@@ -810,7 +860,7 @@ onContentChange(event: Event): void {
   async printResult(): Promise<void> {
     try {
       const result = await this.callApi();
-      console.log('API Response:', result);
+      // console.log('API Response:', result);
     } catch (error) {
       console.error('Error printing result:', error);
     }
@@ -866,7 +916,7 @@ onContentChange(event: Event): void {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        console.log('Prompt updated successfully:', response);
+        // console.log('Prompt updated successfully:', response);
         this.selectedPromptText = this.editablePromptText;
         this.isEditing = false;
         modal.close();

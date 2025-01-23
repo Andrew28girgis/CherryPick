@@ -1,0 +1,105 @@
+.BuyBoxWorkSpaces_name_div {
+  display: flex;
+  align-items: center;
+}
+
+.BuyBoxWorkSpaces_name {
+  color: #16181D;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  font-family: Montserrat;
+}
+
+label,
+h5 {
+  margin: 0;
+  font-family: Montserrat;
+}
+
+label {
+  color: #707070;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.td_last {
+  text-align: center;
+}
+
+.form-control{
+    box-shadow: none;
+    outline: none;
+}
+
+thead>tr>th:nth-child(2),
+thead>tr>th:nth-child(3),
+thead>tr>th:nth-child(4) {
+  width: 20%;
+  color: #3d3d3d;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  font-family: Montserrat;
+}
+
+tbody>tr>td:nth-child(2),
+tbody>tr>td:nth-child(3),
+tbody>tr>td:nth-child(4) {
+  width: 20%;
+  color: #707070;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  font-family: Montserrat;
+}
+
+thead>tr>th:nth-child(1) {
+  width: 40%;
+  color: #3d3d3d;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  font-family: Montserrat;
+}
+
+tbody>tr>td:nth-child(1) {
+  width: 40%;
+  color: #707070;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  font-family: Montserrat;
+}
+
+
+
+.btn{
+background: #001f3f;
+color: white;
+padding-inline: 2rem;
+border: 0;
+}
+
+.btn_trash{
+    background: transparent;
+    color: rgb(224, 0, 0);
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(224, 0, 0);
+    padding-inline: 0;
+}
+.btn_trash>i{
+    display: block;
+}

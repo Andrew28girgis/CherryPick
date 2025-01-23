@@ -1,4 +1,3 @@
-
 <section class="container-fluid pt-2 pb-2">
   <!-- <div class="head__section">
     <div>Buybox Management</div>
@@ -12,113 +11,150 @@
   </div>
   <div class="main-section">
     <section *ngIf="selectedTab === 'Emily'" class="row d-flex m-0 p-0">
-      <article class="sidbar__contant">
-        <div class="checkbox-section-head checkbox-section-border checkbox-section">
-          <input type="checkbox" name="Parts" id="Parts" class="form-check-input">
-          <label for="Parts">Advance Auto Parts</label>
+      <ng-container *ngIf="generatedGetSavedTemplates.length > 0 || generatedGetSavedTemplates[0]?.BuyboxOrgEmailTemplates > 0">
+        <div class="row m-0 p-0 mt-2 d-flex ps-2 pe-2">
+          <ng-container *ngFor="let emaily of generatedGetSavedTemplates">
+            <div class="col-12 col-sm-6 p-3">
+              <section class="GeneratedTemplates">
+                <div class="row m-0 p-0 d-flex align-items-center mt-3">
+                  <div class="GeneratedTemplates__img col-3">
+                    <img class="Templates__img ms-2" src="{{ emaily?.LogoURL }}" alt="" />
+                  </div>
+                  <div class="GeneratedTemplates_title col-9">
+                    <input type="checkbox" class="form-check-input m-0" 
+                           [name]="'emailyID'+emaily?.ID"
+                           [checked]="isChecked(emaily?.ID)"
+                           (change)="onCheckboxChangeTemplates(emaily?.ID)">
+                    {{ emaily?.Name }}
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2 pb-3">
+                  <div class="form-control textarea_divT" contenteditable="false"
+                       [innerHTML]="getFormattedTextTemplate(emaily?.BuyboxOrgEmailTemplates[0].Template)">
+                  </div>
+                </div>
+              </section>
+            </div>
+          </ng-container>
         </div>
-        <div class="checkbox-section checkbox-section-body">
-          <input type="checkbox" name="Relation" id="Relation" class="form-check-input">
-          <label for="Relation">Relation Name</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-first">
-          <input type="checkbox" name="Complementary" id="Complementary" class="form-check-input">
-          <label for="Complementary">Complementary Tenants</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-first">
-          <input type="checkbox" name="Auto" id="Auto" class="form-check-input">
-          <label for="Auto">Advance Auto Parts</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-first">
-          <input type="checkbox" name="Manger" id="Manger" class="form-check-input">
-          <label for="Manger">Manger Organization Descript</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-second">
-          <input type="checkbox" name="Mitchell" id="Mitchell" class="form-check-input">
-          <label for="Mitchell">Mitchell Recoon</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-second">
-          <input type="checkbox" name="Nick" id="Nick" class="form-check-input">
-          <label for="Nick">Nick Robinson</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-second checkbox-section-border pb-2">
-          <input type="checkbox" name="Esther" id="Esther" class="form-check-input">
-          <label for="Esther">Esther Foster</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body">
-          <input type="checkbox" name="RelationTwo" id="RelationTwo" class="form-check-input">
-          <label for="RelationTwo">Relation Name</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-first checkbox-section-border pb-2">
-          <input type="checkbox" name="ComplementaryTwo" id="ComplementaryTwo" class="form-check-input">
-          <label for="ComplementaryTwo">Complementary Tenants</label>
-        </div>
-        <div class="checkbox-section-select pb-2 checkbox-section-border">
-          <label for="ShoppingCenter">Shopping Center</label>
-          <select class="form-select form-select-lg mb-3" aria-label="Large select example" id="ShoppingCenter">
-            <option value="1" selected>Jemal's Van Ness</option>
-            <option value="2">Jemal's Van Ness</option>
-            <option value="3">Jemal's Van Ness</option>
-          </select>
-        </div>
-        <div class="checkbox-section checkbox-section-body">
-          <input type="checkbox" name="MangerTwo0" id="MangerTwo0" class="form-check-input">
-          <label for="MangerTwo0">Manger Description</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body">
-          <input type="checkbox" name="CotenantsTwo0" id="CotenantsTwo0" class="form-check-input">
-          <label for="CotenantsTwo0">Cotenants in the shopping center</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-first">
-          <input type="checkbox" name="ComplementaryTenants" id="ComplementaryTenants" class="form-check-input">
-          <label for="ComplementaryTenants">Museum Gift Shop</label>
-        </div>
-        <div class="checkbox-section checkbox-section-body-second">
-          <input type="checkbox" name="HirshhornGift" id="HirshhornGift" class="form-check-input">
-          <label for="HirshhornGift">Hirshhorn Gift Shop</label>
-        </div>
-      </article>
-      <aside class="Emily__contant">
-        <div class="Emily__contant__head">Prompt</div>
-        <div class="checkbox-section-select pb-2">
-          <label for="exampleFormControlTextarea3">Select Prompt</label>
-          <select class="form-select form-select-lg" aria-label="Large select example" id="exampleFormControlTextarea3">
-            <option value="1" selected>Discuss Co-tenants</option>
-            <option value="2">Discuss Co-tenants</option>
-            <option value="3">Discuss Co-tenants</option>
-          </select>
-        </div>
-        <div class="textarea pb-3 checkbox-section-border">
-          <label for="exampleFormControlTextarea2">Selected Prompt</label>
-          <textarea class="form-control" id="exampleFormControlTextarea2"
-            rows="4">You are a CRE tenant rep broker drafting an outreach email for a tenant representative project reaching out to landlords and brokers about potential spaces for a [TENANT]. The goal is to inquire about specific properties and gather availability, terms, or co-tenancy options. </textarea>
-        </div>
-        <div class="Emily__contant__head pt-3 pb-2">Email Body <p class="Emily__contant__head__p">Clear</p>
-        </div>
-        <div class="textarea">
-          <div class="form-control textarea_div" contenteditable="true" (input)="onContentChange($event)"
-            [innerHTML]="getFormattedText()">
+      </ng-container>
+      <div class="Generate_emaily" *ngIf="generatedGetSavedTemplates.length > 0 || generatedGetSavedTemplates[0]?.BuyboxOrgEmailTemplates > 0">
+        Generate emaily
+      </div>
+      <ng-container>
+        <article class="sidbar__contant">
+          <div class="checkbox-section-head checkbox-section-border checkbox-section">
+            <input type="checkbox" name="Parts" id="Parts" class="form-check-input">
+            <label for="Parts">Advance Auto Parts</label>
           </div>
-        </div>
-        <div class="d-flex justify-content-end">
-          <button class="Emily__contant__button mt-3 mb-1">
-            <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
-                stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            Generate
-          </button>
-        </div>
-      </aside>
+          <div class="checkbox-section checkbox-section-body">
+            <input type="checkbox" name="Relation" id="Relation" class="form-check-input">
+            <label for="Relation">Relation Name</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-first">
+            <input type="checkbox" name="Complementary" id="Complementary" class="form-check-input">
+            <label for="Complementary">Complementary Tenants</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-first">
+            <input type="checkbox" name="Auto" id="Auto" class="form-check-input">
+            <label for="Auto">Advance Auto Parts</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-first">
+            <input type="checkbox" name="Manger" id="Manger" class="form-check-input">
+            <label for="Manger">Manger Organization Descript</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-second">
+            <input type="checkbox" name="Mitchell" id="Mitchell" class="form-check-input">
+            <label for="Mitchell">Mitchell Recoon</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-second">
+            <input type="checkbox" name="Nick" id="Nick" class="form-check-input">
+            <label for="Nick">Nick Robinson</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-second checkbox-section-border pb-2">
+            <input type="checkbox" name="Esther" id="Esther" class="form-check-input">
+            <label for="Esther">Esther Foster</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body">
+            <input type="checkbox" name="RelationTwo" id="RelationTwo" class="form-check-input">
+            <label for="RelationTwo">Relation Name</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-first checkbox-section-border pb-2">
+            <input type="checkbox" name="ComplementaryTwo" id="ComplementaryTwo" class="form-check-input">
+            <label for="ComplementaryTwo">Complementary Tenants</label>
+          </div>
+          <div class="checkbox-section-select pb-2 checkbox-section-border">
+            <label for="ShoppingCenter">Shopping Center</label>
+            <select class="form-select form-select-lg mb-3" aria-label="Large select example" id="ShoppingCenter">
+              <option value="1" selected>Jemal's Van Ness</option>
+              <option value="2">Jemal's Van Ness</option>
+              <option value="3">Jemal's Van Ness</option>
+            </select>
+          </div>
+          <div class="checkbox-section checkbox-section-body">
+            <input type="checkbox" name="MangerTwo0" id="MangerTwo0" class="form-check-input">
+            <label for="MangerTwo0">Manger Description</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body">
+            <input type="checkbox" name="CotenantsTwo0" id="CotenantsTwo0" class="form-check-input">
+            <label for="CotenantsTwo0">Cotenants in the shopping center</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-first">
+            <input type="checkbox" name="ComplementaryTenants" id="ComplementaryTenants" class="form-check-input">
+            <label for="ComplementaryTenants">Museum Gift Shop</label>
+          </div>
+          <div class="checkbox-section checkbox-section-body-second">
+            <input type="checkbox" name="HirshhornGift" id="HirshhornGift" class="form-check-input">
+            <label for="HirshhornGift">Hirshhorn Gift Shop</label>
+          </div>
+        </article>
+        <aside class="Emily__contant">
+          <div class="Emily__contant__head">Prompt</div>
+          <div class="checkbox-section-select pb-2">
+            <label for="exampleFormControlTextarea3">Select Prompt</label>
+            <select class="form-select form-select-lg" aria-label="Large select example"
+              id="exampleFormControlTextarea3">
+              <option value="1" selected>Discuss Co-tenants</option>
+              <option value="2">Discuss Co-tenants</option>
+              <option value="3">Discuss Co-tenants</option>
+            </select>
+          </div>
+          <div class="textarea pb-3 checkbox-section-border">
+            <label for="exampleFormControlTextarea2">Selected Prompt</label>
+            <textarea class="form-control" id="exampleFormControlTextarea2"
+              rows="4">You are a CRE tenant rep broker drafting an outreach email for a tenant representative project reaching out to landlords and brokers about potential spaces for a [TENANT]. The goal is to inquire about specific properties and gather availability, terms, or co-tenancy options. </textarea>
+          </div>
+          <div class="Emily__contant__head pt-3 pb-2">Email Body <p class="Emily__contant__head__p">Clear</p>
+          </div>
+          <div class="textarea">
+            <div class="form-control textarea_div" contenteditable="true" (input)="onContentChange($event)"
+              [innerHTML]="getFormattedText()">
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <button class="Emily__contant__button mt-3 mb-1">
+              <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
+                  stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              Generate
+            </button>
+          </div>
+        </aside>
+      </ng-container>
     </section>
     <section *ngIf="selectedTab === 'Details'" class="row d-flex m-0 p-2">
       <app-buybox-details />
     </section>
     <section *ngIf="selectedTab === 'Shopping Centers'" class="row d-flex m-0 p-2">
-      <app-buybox-shopping-centers/>
+      <app-buybox-shopping-centers />
     </section>
     <section *ngIf="selectedTab === 'Sharing'" class="row d-flex m-0 p-2">
+    </section>
+    <section *ngIf="selectedTab === 'WorkSpaces'" class="row d-flex m-0 p-2">
+      <app-work-spaces></app-work-spaces>
     </section>
   </div>
 </section>

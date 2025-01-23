@@ -53,6 +53,7 @@ import { ChatHttpClient } from './services/chat-http-client';
 import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-shopping-centers/buybox-shopping-centers.component';
 import { SidbarComponent } from './components/sidbar/sidbar.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { WorkSpacesComponent } from './components/kayak-home/work-spaces/work-spaces.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,8 @@ import { LogoutComponent } from './components/logout/logout.component';
     BuyboxDetailsComponent,
     BuyboxShoppingCentersComponent,
     SidbarComponent,
-    LogoutComponent
+    LogoutComponent,
+    WorkSpacesComponent
     
   ],
   imports: [
@@ -108,7 +110,6 @@ import { LogoutComponent } from './components/logout/logout.component';
     NgbAlertModule,
     NgxPaginationModule,
     DragDropModule,
-    ReactiveFormsModule, 
     ToastrModule.forRoot(),
     RouterModule,
     MatDatepickerModule,
