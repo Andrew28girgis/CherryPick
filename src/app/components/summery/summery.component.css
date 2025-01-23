@@ -188,3 +188,26 @@ button:active {
   border: 0;
   padding: 4px 16px;
 }
+
+.row {
+  display: flex;
+}
+
+#primaryColumn {
+  flex: 0 0 auto;
+  transition: flex-basis 0.5s ease;
+  transition: width 0.5s ease;
+}
+
+#contentColumn {
+  flex: 1 1 auto;
+  transition: flex-basis 0.5s ease;
+  transition: width 0.5s ease;
+}
+
+
+.logout_Style{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

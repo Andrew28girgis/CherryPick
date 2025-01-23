@@ -9,6 +9,8 @@ import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { StateService } from 'src/app/services/state.service';
+import { SidebarService } from '../kanban/sidebar/sidebar.service';
+import { SidbarService } from 'src/app/services/sidbar.service';
 
 @Component({
   selector: 'app-summery',
@@ -27,6 +29,8 @@ export class SummeryComponent {
   standAlone: Place[] = [];
   buyboxPlaces: BbPlace[] = [];
 
+  isCollapsed = true;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -34,8 +38,13 @@ export class SummeryComponent {
     private spinner: NgxSpinnerService,
     private propertiesService: PropertiesServiceService,
     private route: ActivatedRoute,
-    private stateService: StateService
-  ) {}
+    private stateService: StateService,
+    private sidbarService: SidbarService
+  ) {
+    this.sidbarService.isCollapsed.subscribe(
+      (state: boolean) => (this.isCollapsed = state)
+    );    
+  }
 
   ngOnInit(): void {
     this.stateService.clearAll();
