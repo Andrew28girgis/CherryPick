@@ -5,7 +5,7 @@
           <!-- Sidebar Primary -->
           <div class="Sidbar-Primary" [ngStyle]="{ width: isCollapsed ? '100%' : '25%' }">
             <ul class="p-0 m-0 Sidbar-Primary-ul">
-              <li routerLink="/toggleClose">
+              <li routerLink="/toggleClose" *ngIf="isCollapsed">
                 <i class="fa-solid fa-arrow-right" routerLinkActive="activeIcon"></i>
               </li>
               <!-- <li routerLink="/toggleClose" *ngIf="!isCollapsed">
