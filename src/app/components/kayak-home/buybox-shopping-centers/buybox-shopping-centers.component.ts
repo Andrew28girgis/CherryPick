@@ -29,7 +29,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   StateCodes: string[] = [];
   filteredCities: string[] = [];
   // Selected filters
-  selectedState: string = '';
+  selectedState: string = '0';
   selectedCity: string = '';
   // Filtered data
   filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
@@ -204,7 +204,10 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   }
   // Handle State selection
   // Handle State selection
-  onStateChange() {
+  onStateChange(event:any) {
+    let value = event.target.value ;
+    console.log(value);
+    
     if (this.selectedState) {
       this.filteredCities = Array.from(
         new Set(

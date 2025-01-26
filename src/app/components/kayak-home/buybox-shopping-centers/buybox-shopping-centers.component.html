@@ -5,8 +5,8 @@
       <div class="checkbox-section-select pb-2">
         <label for="stateFilter" class="pb-2">Filter by State</label>
         <select class="form-select form-select-lg" aria-label="Large select example" id="stateFilter"
-          [(ngModel)]="selectedState" (change)="onStateChange()">
-          <option value="">All States</option>
+          [(ngModel)]="selectedState" (change)="onStateChange($event)">
+          <option value="0" selected>All States</option>
           <option *ngFor="let state of StateCodes" [value]="state">
             {{ state }}
           </option>
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="col-6 col-md-4 pt-2 d-flex justify-content-end align-items-center">
-      <button class="Bind__button" (click)="triggerBindAction()">Bind</button>
+      <button class="Bind__button" (click)="triggerBindAction()">Manage</button>
     </div>
   </div>
 
@@ -37,7 +37,7 @@
         <tr>
           <th class="width-th-thead" style="width: 20%;">Center Name</th>
           <th class="width-th-thead" style="width: 50%;">Center Address</th>
-          <th class="width-th-thead" style="width: 20%;">Available unit</th>
+          <th class="width-th-thead" style="width: 20%;">Available Units</th>
           <th class="width-th-thead" style="width: 10%;text-align: center">Action</th>
         </tr>
       </thead>
