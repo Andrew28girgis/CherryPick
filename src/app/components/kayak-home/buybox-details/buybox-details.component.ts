@@ -15,6 +15,7 @@ export class BuyboxDetailsComponent {
   organizationId!:number| null;
   Obj:any;
   buyBoxes:any[]=[];
+  contacts:any[] = []
 
 
   constructor(    private route: ActivatedRoute,
@@ -28,6 +29,7 @@ export class BuyboxDetailsComponent {
       this.buyBoxId = +params.get('buyboxid')!;
     });
     this.GetBuyBoxInfo(); 
+    this.GetBuyBoxContacts();
   }
 
   openEditProperty(content: any, modalObject: any) {
@@ -56,6 +58,11 @@ export class BuyboxDetailsComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data:any) => {
         this.buybox = data.json;
+        console.log(`bb`);
+        console.log(this.buybox);
+        
+        
+
         console.log(this.buybox );
         
         this.managerOrganizationId=data.json.ManagerOrganizationId;
@@ -67,6 +74,9 @@ export class BuyboxDetailsComponent {
        },
     });
   }
+
+
+
 
 
   onSubmit() { 
@@ -112,4 +122,22 @@ export class BuyboxDetailsComponent {
   { 
     this.modalService.dismissAll();
   }
+  GetBuyBoxContacts() {
+    const body: any = {
+     Name: 'GetBuyBoxInfo',
+     MainEntity: null,
+     Params: {
+       buyboxid: this.buyBoxId,
+     },
+     Json: null,
+   };
+   this.PlacesService.GenericAPI(body).subscribe({
+     next: (data:any) => {
+      this.contacts = data.json?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationContacts;
+     },
+     error: (err) => {
+       console.error('Error fetching buybox info:', err);
+      },
+   });
+ }
 }
