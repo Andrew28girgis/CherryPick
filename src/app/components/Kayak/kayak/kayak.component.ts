@@ -65,6 +65,8 @@ export class KayakComponent implements OnInit {
   shoppingCenters: { id: number; name: string }[] = []; // Example shopping centers list
   loading: boolean = true; // Add a loading flag
   isBulkMode: boolean = false; // Default: Bulk mode is off
+  selectedPlaces: any[] = []; // Holds the selected places for the modal
+
 
 
 
@@ -116,6 +118,18 @@ export class KayakComponent implements OnInit {
     if (this.General.modalObject?.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
+  }
+  
+  @ViewChild('placesModal', { static: true }) placesModal!: TemplateRef<any>; // Bind the modal template
+
+  openPlacesModal(places: any[]): void {
+    this.selectedPlaces = places || []; // Assign places to selectedPlaces
+    this.modalService.open(this.placesModal, { size: 'lg', centered: true });
+  }
+  selectedButton: string = 'explore'; // Default selected button
+
+  selectButton(button: string): void {
+    this.selectedButton = button; // Update the selected button
   }
   toggleBulkMode(): void {
     this.isBulkMode = !this.isBulkMode; // Toggle bulk mode
