@@ -80,7 +80,6 @@ export class SummeryComponent {
     });
   }
 
-
   GetUserBuyBoxes() {
     this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {
       this.buyboxTypes = res;
