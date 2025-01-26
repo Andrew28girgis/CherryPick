@@ -25,16 +25,19 @@
         </select>
       </div>
     </div>
+    <div class="col-6 col-md-4 pt-2 d-flex justify-content-end align-items-center">
+      <button class="Bind__button" (click)="triggerBindAction()">Bind</button>
+    </div>
   </div>
 
   <!-- Table Section -->
   <div class="pt-2" *ngIf="filteredBuyBoxPlacesAndShoppingCenter && filteredBuyBoxPlacesAndShoppingCenter.length">
-    <table>
+    <table class="w-100">
       <thead>
         <tr>
           <th class="width-th-thead" style="width: 20%;">Center Name</th>
           <th class="width-th-thead" style="width: 50%;">Center Address</th>
-          <th class="width-th-thead" style="width: 20%;">Available Places</th>
+          <th class="width-th-thead" style="width: 20%;">Available unit</th>
           <th class="width-th-thead" style="width: 10%;text-align: center">Action</th>
         </tr>
       </thead>
@@ -42,15 +45,21 @@
         <ng-container *ngFor="let item of filteredBuyBoxPlacesAndShoppingCenter">
           <tr>
             <td class="width-th-tbody" style="width: 25%;">{{ item.CenterName }}</td>
-            <td class="width-th-tbody" style="width: 45%;">
+            <td class="width-th-tbody" style="width: 45%;" (click)="openMapViewPlace(MapViewPlace, item)">
               {{ item.CenterAddress }}, {{ item.CenterCity }},
               {{ item.CenterState }}
             </td>
-            <td class="width-th-tbody" style="width: 20%;">{{ item.MarketSurveyShoppingCenters[0].Place.length }}</td>
+            <td class="width-th-tbody" style="width: 20%;cursor: pointer;" data-bs-toggle="modal"
+              [attr.data-bs-target]="'#staticBackdrop'+item.id" (click)="toggleShortcuts(item.id , 'close')">
+              {{ item.MarketSurveyShoppingCenters[0].Place.length }}</td>
             <td class="width-th-tbody " style="width: 10%;text-align: center;position: relative;">
               <button class="ellipsis_icon" (click)="toggleShortcuts(item.id)">
                 <i class="fa-solid fa-ellipsis"></i>
               </button>
+              <!-- <button class="ellipsis_icontrash"
+                (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)">
+                <i class="fa-regular fa-trash-can"></i>
+              </button> -->
               <div class="shortcuts_icon" *ngIf="selectedId === item.id">
                 <ul>
                   <li data-bs-toggle="modal" [attr.data-bs-target]="'#staticBackdrop'+item.id"
@@ -146,6 +155,12 @@
                       Update Selection
                     </a>
                   </li>
+                  <li>
+                    <a class="target" (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)">
+                      <i class="fa-regular fa-trash-can" style="font-size: 18px;margin-top: 3px;width: 24px;"></i>
+                      Delete Shopping
+                    </a>
+                  </li>
                 </ul>
                 <i class="fa-solid fa-caret-right"></i>
               </div>
@@ -175,7 +190,7 @@
                                 <button class="ellipsis_iconT" href="javascript:void(0)"
                                   (click)="place.StreetViewURL ? openPlaceStreetViewModal(placeStreetViewModal, place.StreetViewURL) : showAlert('Street View is not available for this location.')">
                                   <i class="fas fa-street-view"></i>
-                                </button>                     
+                                </button>
                                 <button class="ellipsis_icontrash"
                                   (click)="openDeletePlaceModal(deletePlaceModal, place.Id)">
                                   <i class="fa-regular fa-trash-can"></i>
@@ -350,6 +365,10 @@
       </tbody>
     </table>
   </div>
+  <div class="pt-2 d-flex justify-content-center align-items-center" style="height: 50vh;"
+    *ngIf="filteredBuyBoxPlacesAndShoppingCenter.length == 0">
+    <p style="font-weight: 500;">No data Shopping Center</p>
+  </div>
 
   <ng-template #updateReasonModal let-modal>
     <div class="d-flex justify-content-center align-items-center view-act pt-3">
@@ -358,8 +377,8 @@
     <div class="modal-body">
       <form>
         <div class="mb-3">
-          <textarea class="form-control" style="box-shadow: none;outline: none;" id="siteSelectionReason" rows="15" [(ngModel)]="selectedSiteSelectionReason"
-            name="siteSelectionReason"></textarea>
+          <textarea class="form-control" style="box-shadow: none;outline: none;" id="siteSelectionReason" rows="15"
+            [(ngModel)]="selectedSiteSelectionReason" name="siteSelectionReason"></textarea>
         </div>
       </form>
     </div>
@@ -475,5 +494,9 @@
         Close
       </button>
     </div>
+  </ng-template>
+
+  <ng-template #MapViewPlace let-modal>
+    <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
   </ng-template>
 </div>

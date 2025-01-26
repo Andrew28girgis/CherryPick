@@ -190,6 +190,7 @@ select option:checked {
 .table-responsive>table>thead>tr>th:nth-child(3) {
   width: 20%;
 }
+
 .table-responsive>table>thead>tr>th:nth-child(4) {
   width: 10%;
 }
@@ -197,7 +198,8 @@ select option:checked {
 .table-responsive>table>tbody>tr>td:nth-child(4) {
   padding-block: 7.5px;
 }
-.table-responsive>table>tbody>tr{
+
+.table-responsive>table>tbody>tr {
   border-bottom: 1px solid #d6d6d68f !important;
 }
 
@@ -268,4 +270,16 @@ select option:checked {
   height: 30px;
   background: transparent;
   border-radius: 6px;
+}
+
+
+.Bind__button {
+  border: 0;
+  border-radius: 6px;
+  background: #4D65B4;
+  padding-inline: 24px;
+  padding-block: 8px;
+  color: white;
+  cursor: pointer;
+  margin-top: 24px;
 }

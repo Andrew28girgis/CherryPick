@@ -68,10 +68,10 @@ export class EmilyComponent {
     { id: 'Shopping Centers', label: 'Shopping Centers' },
     { id: 'WorkSpaces', label: 'WorkSpaces' },
     { id: 'Sharing', label: 'Sharing' },
-
+    { id: 'kayak', label: 'kayak' },
   ];
-  
-  selectedEmailyID: string | null = null; 
+
+  selectedEmailyID: string | null = null;
 
   isChecked(emailyID: string): boolean {
     return this.selectedEmailyID === emailyID;
@@ -84,12 +84,17 @@ export class EmilyComponent {
       this.selectedEmailyID = emailyID;
     }
     console.log(emailyID);
-    
   }
 
   selectedTab: string = 'Emily';
 
-  public text = ``;
+  getFilteredTabs() {
+    return this.tabs.filter(tab => tab.id !== 'kayak');
+  }
+
+  handleKayakClick() {
+    this.selectTab('Shopping Centers');
+  }
 
   selectTab(tabId: string): void {
     this.selectedTab = tabId;
@@ -97,16 +102,14 @@ export class EmilyComponent {
 
   @Output() contentChange = new EventEmitter<string>();
 
-  getFormattedText(): string {
-    return this.text
-      .split('\n')
-      .join('<br>');
-  }
-
   getFormattedTextTemplate(text: string): string {
     return text
       .split('\n')
       .join('<br>');
+  }
+
+  trackByRelation(index: number, relation: any): number {
+    return relation.id;
   }
 
   onContentChange(event: Event): void {
@@ -194,8 +197,6 @@ export class EmilyComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.generatedGetSavedTemplates = data.json;
-        console.log('ALL GetSavedTemplates', this.generatedGetSavedTemplates);
-
         this.ManagerOrganizationName =
           this.generatedGetSavedTemplates[0].Buybox[0]?.BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName;
         this.BuyBoxOrganizationName =
@@ -873,8 +874,7 @@ export class EmilyComponent {
     if (selectedPrompt) {
       this.selectedPromptText =
         selectedPrompt.promptText || 'No prompt text available';
-      this.selectedPromptName =
-        selectedPrompt.name || 'No prompt Name available';
+      // console.log('Selected Prompt Text:', this.selectedPromptText);
     } else {
       this.selectedPromptText = 'No prompt text available';
     }
