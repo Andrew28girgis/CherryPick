@@ -1,44 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { CallFilter, CallRecord, Source } from "../../../../models/comunication";
 
-interface CallParticipant {
-  id: string;
-  name: string;
-  avatar: string;
-  email?: string;
-  phone?: string;
-  department?: string;
-}
-
-interface CallRecord {
-  id: string;
-  participants: CallParticipant[];
-  timestamp: Date;
-  duration?: number; // in seconds
-  status: 'active' | 'completed' | 'missed';
-  type: 'audio' | 'video';
-  recording?: boolean;
-  notes?: string;
-  tags?: string[];
-}
-
-interface CallFilter {
-  search: string;
-  status: ('active' | 'completed' | 'missed')[];
-  dateRange: {
-    start: Date;
-    end: Date;
-  } | null;
-}
-
-interface Source {
-  id: number;
-  name: string;
-  description: string;
-  logo: string;
-  url: string;
-  loadError?: boolean;
-}
 
 @Component({
   selector: 'app-communication',

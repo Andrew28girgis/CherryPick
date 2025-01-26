@@ -1427,3 +1427,38 @@ td {
   border-radius: 10px;
   border-collapse: separate;
 } */
+
+
+
+
+
+
+
+
+.kanban-card.animating {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.stage-column {
+  position: relative;
+  min-height: 100px;
+}
+
+
+
+.custom-tooltip {
+  z-index: 50;
+  pointer-events: none;
+  background-color: #000;
+}
+
+.custom-tooltip-arrow {
+  pointer-events: none;
+}
+
+/* Optional: Add a subtle shadow */
+.custom-tooltip {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

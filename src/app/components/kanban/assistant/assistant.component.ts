@@ -2,59 +2,10 @@ import { Component,  OnInit, ViewChild,  ElementRef,  AfterViewChecked, HostList
 import { FormControl } from "@angular/forms"
 import { trigger, transition, style, animate } from "@angular/animations"
 import  { ChatService } from "../../../services/chat-service.service"
+import { AIResponse, Message, SuggestedPrompt, Property, PropertyAction, ChatSession, ChatGroup } from "../../../../models/chatbot"
 
-interface AnalysisResult {
-  title: string
-  value: string | number
-  trend?: "up" | "down" | "neutral"
-}
 
-interface Message {
-  id: string
-  content: string
-  sender: "user" | "assistant"
-  timestamp: Date
-  attachments?: File[]
-  properties?: Property[]
-  analysis?: AnalysisResult[]
-  suggestions?: string[]
-  isLoading?: boolean
-}
 
-interface SuggestedPrompt {
-  id: string
-  text: string
-}
-
-interface Property {
-  id: string
-  name: string
-  location: string
-  image: string
-}
-
-interface PropertyAction {
-  id: string
-  text: string
-  icon: string
-}
-interface ChatSession {
-  id: string
-  title: string
-  date: Date
-  messages: Message[]
-}
-
-interface ChatGroup {
-  label: string
-  chats: ChatSession[]
-}
-interface AIResponse {
-  type: string
-  content: string
-  data?: any
-  error?: string
-}
 
 @Component({
   selector: "app-assistant",
