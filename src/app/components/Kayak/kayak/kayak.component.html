@@ -1,26 +1,5 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="d-flex justify-content-center align-items-center">
-  <div class="card p-3 d-inline-block">
-    <div class="d-flex justify-content-center align-items-center gap-3">
-      <!-- Explore Button -->
-      <button
-        class="btn"
-        [ngClass]="{ 'selected-button': selectedButton === 'explore' }"
-        (click)="selectButton('explore')"
-      >
-        <i class="fa fa-globe me-2"></i> Explore
-      </button>
-
-      <!-- Buybox Management Button -->
-      <button
-        class="btn"
-        [ngClass]="{ 'selected-button': selectedButton === 'buybox' }"
-        (click)="selectButton('buybox')"
-      >
-        <i class="fa fa-box me-2"></i> Buybox Management
-      </button>
-    </div>
-  </div>
 </div>
 
 <div class="container-fluid my-3">
@@ -231,7 +210,7 @@
           <div class="d-flex justify-content-start align-items-center gap-3 mb-4">
             <!-- Bind Button -->
             <button
-              class="btn btn-primary bind-button"
+              class="btn bind-button"
               *ngIf="!isBulkMode"
               (click)="bindShoppingCenter()"
             >
@@ -246,6 +225,7 @@
               {{ isBulkMode ? 'Exit Bulk Bind' : 'Bulk Bind' }}
             </button>
           </div>
+          
           <ng-container>
             <div
               class="col-md-12"
@@ -269,7 +249,7 @@
                     <!-- Left Side: Result Details -->
                     <div class="col-md-5">
                       <div class="d-flex align-items-center gap-3">
-                        <!-- Select Box -->
+                        <!-- Show Checkbox in Bulk Mode -->
                         <div *ngIf="isBulkMode" class="form-check">
                           <input
                             type="checkbox"
@@ -279,7 +259,16 @@
                             (change)="onCardCheckboxChange($event, result, i)"
                           />
                         </div>
-          
+                      
+                        <!-- Bind Button (Default) -->
+                        <div *ngIf="!isBulkMode">
+                          <button
+                            class="btn bind-btn"
+                            (click)="bindShoppingCenter()"
+                          >
+                            Bind
+                          </button>
+                        </div>
                         <!-- Image Section -->
                         <div class="image-container position-relative">
                           <img
@@ -289,43 +278,21 @@
                             [alt]="result?.CenterName"
                           />
                         </div>
-          
+                  
+                    
                         <!-- Center Name and Address -->
                         <div class="d-flex flex-column text-start">
                           <!-- Shopping Center Name -->
                           <div class="shoppingcentername mb-1">
                             <span>{{ result.CenterName }}</span>
                           </div>
-          
+                    
                           <!-- Center Address -->
                           <div class="card-texts">
                             <span>
                               {{ result.CenterAddress }}, {{ result.CenterCity }}
                               {{ result.CenterState }}
                             </span>
-                          </div>
-          
-                          <!-- Management Organizations -->
-                          <div
-                            *ngIf="KayakResult?.Result?.length > 0"
-                            class="mt-1"
-                          >
-                            <ng-container
-                              *ngIf="
-                                KayakResult?.ManagementOrganizations?.length > i
-                              "
-                            >
-                              <div class="d-flex align-items-center">
-                                <!-- Organization Logo -->
-                                <img
-                                  [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + KayakResult.ManagementOrganizations[i].Id"
-                                  [alt]="KayakResult.ManagementOrganizations[i]?.Name || 'No Name Available'"
-                                  class="logooo me-2"
-                                />
-                                <!-- Organization Name -->
-                                <span class="company-name">{{ KayakResult.ManagementOrganizations[i]?.Name }}</span>
-                              </div>
-                            </ng-container>
                           </div>
                         </div>
                       </div>
@@ -391,24 +358,40 @@
                       <div class="d-flex justify-content-start">
                         <div class="chosen-places-container p-2 text-start">
                           <span class="chosen-places-label fw-bold">Chosen Places</span>
-                          <div class="d-inline-flex align-items-center flex-wrap gap-1 ms-2">
-                            <span class="place-item">12334 SF</span>
-                            <span class="place-item">12334 SF</span>
-                            <span class="place-item">12334 SF</span>
-                            <span class="place-item">12334 SF</span>
-                            <span class="place-item">12334 SF</span>
-                            <span class="place-item">12334 SF</span>
-                            <span class="me-2 eye-text">View 2 more Places</span>
-                            <img
-                              class="eye-icon"
-                              src="../../../assets/Images/Icons/eye.png"
-                              alt="View Places Details"
-                              (click)="openPlacesModal(result.place)"
-                            />
+                          <div class="d-inline-flex align-items-center flex-wrap gap-2 ms-2">
+                            <!-- Display up to 5 places initially -->
+                            <ng-container
+                              *ngFor="let place of result.place.slice(0, expandedPlacesIndex === i ? result.place.length : 5); let j = index"
+                            >
+                              <span class="place-item">{{ place?.BuildingSizeSf || 'N/A' }} SF</span>
+                    
+                              <!-- Add space between places -->
+                              <span *ngIf="j < (expandedPlacesIndex === i ? result.place.length - 1 : 4)">&nbsp;</span>
+                            </ng-container>
+                    
+                            <!-- View More / View Less -->
+                            <ng-container *ngIf="result.place.length > 4">
+                              <span
+                                class="me-2 eye-text"
+                                (click)="toggleExpandedPlaces(i)"
+                                style="cursor: pointer;"
+                              >
+                                {{ expandedPlacesIndex === i ? 'View less' : 'View ' + (result.place.length - 5) + ' more Places' }}
+                              </span>
+                              <img
+                                class="eye-icon"
+                                src="../../../assets/Images/Icons/eye.png"
+                                alt="View Places Details"
+                                (click)="openPlacesModal(result.place)"
+                              />
+                            </ng-container>
                           </div>
                         </div>
                       </div>
                     </div>
+                    
+                    
+                    
                     
                   </div>
                 </div>
@@ -565,7 +548,7 @@
           <th>Building Size</th>
           <th>Suite</th>
           <th>For Lease Price</th>
-          <th *ngIf="isBulkMode">Action</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -573,8 +556,18 @@
           <td>{{ place?.BuildingSizeSf | number }} SqFt</td>
           <td>{{ place?.Suite || 'N/A' }}</td>
           <td>{{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}</td>
-          <td *ngIf="isBulkMode">
-            <button class="btn btn-secondary btn-sm" (click)="bindShoppingCenter()">Bind</button>
+          <td>
+            <!-- Show Bind Button by Default -->
+            <div *ngIf="!isBulkMode">
+              <button class="btn bind-btn" (click)="bindShoppingCenter()">
+                Bind
+              </button>
+            </div>
+          
+            <!-- Show Checkbox in Bulk Mode -->
+            <div *ngIf="isBulkMode" class="form-check">
+              <input type="checkbox" class="form-check-input" />
+            </div>
           </td>
         </tr>
       </tbody>

@@ -52,6 +52,17 @@ background: var(--Card-Section-BG, #FFF);
   background: var(--Button-Primary-BG, #4D65B4);
   color: #fff;
 }
+.bind-btn {
+  display: flex;
+  height: 48px;
+  padding: 7px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #4D65B4);
+  color: #fff;
+}
 
 /* Bulk Bind Button */
 .bulk-button {
