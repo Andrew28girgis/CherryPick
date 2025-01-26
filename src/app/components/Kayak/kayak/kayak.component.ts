@@ -66,6 +66,8 @@ export class KayakComponent implements OnInit {
   loading: boolean = true; // Add a loading flag
   isBulkMode: boolean = false; // Default: Bulk mode is off
   selectedPlaces: any[] = []; // Holds the selected places for the modal
+  expandedPlacesIndex: number | null = null; // Keeps track of the card whose places are expanded
+
 
 
 
@@ -119,7 +121,9 @@ export class KayakComponent implements OnInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
-  
+  toggleExpandedPlaces(index: number): void {
+    this.expandedPlacesIndex = this.expandedPlacesIndex === index ? null : index; // Toggle expansion
+  }
   @ViewChild('placesModal', { static: true }) placesModal!: TemplateRef<any>; // Bind the modal template
 
   openPlacesModal(places: any[]): void {
