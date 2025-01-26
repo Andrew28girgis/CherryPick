@@ -139,5 +139,6 @@ export class BuyboxDetailsComponent {
        console.error('Error fetching buybox info:', err);
       },
    });
+  
  }
 }
