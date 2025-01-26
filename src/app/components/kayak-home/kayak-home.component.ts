@@ -11,7 +11,7 @@ export class KayakHomeComponent implements OnInit {
 
   constructor(public router: Router) {}
 
-  isCollapsed: boolean = false; 
+  isCollapsed: boolean = true; 
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
