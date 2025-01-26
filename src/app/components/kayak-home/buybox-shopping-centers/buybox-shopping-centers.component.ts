@@ -1,4 +1,12 @@
-import { Component, EventEmitter, HostListener, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/models/domain';
@@ -8,7 +16,6 @@ import {
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
 declare const google: any;
-
 
 @Component({
   selector: 'app-buybox-shopping-centers',
@@ -29,7 +36,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   StateCodes: string[] = [];
   filteredCities: string[] = [];
   // Selected filters
-  selectedState: string = '';
+  selectedState: string = '0';
   selectedCity: string = '';
   // Filtered data
   filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
@@ -83,9 +90,8 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   constructor(
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
-    private modalService: NgbModal,
-    
-  ) { }
+    private modalService: NgbModal
+  ) {}
 
   showAlert(message: string): void {
     alert(message);
@@ -204,7 +210,10 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   }
   // Handle State selection
   // Handle State selection
-  onStateChange() {
+  onStateChange(event: any) {
+    let value = event.target.value;
+    console.log(value);
+
     if (this.selectedState) {
       this.filteredCities = Array.from(
         new Set(
