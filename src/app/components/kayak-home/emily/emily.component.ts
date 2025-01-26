@@ -66,7 +66,7 @@ export class EmilyComponent {
     { id: 'Details', label: 'Details' },
     { id: 'Emily', label: 'Emily' },
     { id: 'Shopping Centers', label: 'Shopping Centers' },
-    { id: 'WorkSpaces', label: 'WorkSpaces' },
+    { id: 'Locations', label: 'Locations' },
     { id: 'Sharing', label: 'Sharing' },
     { id: 'kayak', label: 'kayak' },
   ];
