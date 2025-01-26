@@ -34,7 +34,7 @@ import { takeWhile } from "rxjs/operators"
 export class KanbanComponent implements OnInit, OnDestroy {
   @ViewChild(FilterPanelComponent) filterPanel!: FilterPanelComponent
   @Input() isInactive = false
-  isMobileMenuOpen = false
+  isMobileMenuOpen = false  
   isMobileView = false
 
   General!: General
@@ -801,13 +801,13 @@ export class KanbanComponent implements OnInit, OnDestroy {
               )
               if (previousStage) {
                 const direction = previousStage.Id < newStage.Id ? "right" : "left"
-                this.animatingCards[org.Id] = `card-move-${direction}`
-                setTimeout(() => {
-                  this.animatingCards[org.Id] = "card-appear"
-                  setTimeout(() => {
-                    delete this.animatingCards[org.Id]
-                  }, 500)
-                }, 0)
+                // this.animatingCards[org.Id] = `card-move-${direction}`
+                // setTimeout(() => {
+                //   this.animatingCards[org.Id] = "card-appear"
+                //   setTimeout(() => {
+                //     delete this.animatingCards[org.Id]
+                //   }, 500)
+                // }, 0)
 
                 // Remove the organization from the previous stage
                 previousStage.kanbanOrganizations = previousStage.kanbanOrganizations.filter(

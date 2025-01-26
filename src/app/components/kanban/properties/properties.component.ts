@@ -7,39 +7,11 @@ import { PropertiesServiceService } from '../../../services/properties-service.s
 import { PlacesService } from '../../../services/places.service';
 import { MapsService } from '../../../services/maps.service';
 import { GoogleMap, GoogleMapsMarker, GoogleMapsBounds } from '../../../../models/google-maps.types';
+import {FilterTag ,Property} from '../../../../models/properties';
 
 // Add this declaration
 declare const google: any;
 
-interface Property {
-  id: number;
-  title: string;
-  address: string;
-  image: string;
-  isFavorite: boolean;
-  coordinates?: {
-    latitude: number;
-    longitude: number;
-  };
-  metrics: {
-    nearestCompetitor: string;
-    nearestCompTenant: string;
-    purchasePrice: string;
-    availableUnits: number;
-    unitSizes: string;
-  };
-  broker: {
-    name: string;
-    logo: string;
-  };
-}
-
-interface FilterTag {
-  id: string;
-  icon: string;
-  label: string;
-  active: boolean;
-}
 
 @Component({
   selector: 'app-properties',
