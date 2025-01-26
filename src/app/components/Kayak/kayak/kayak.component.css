@@ -198,6 +198,7 @@ body{
   object-fit: cover; /* Maintain aspect ratio and cover the container */
   border-radius: 8px; /* Rounded corners */
   display: block; /* Ensure the image behaves as a block */
+  
 }
 .custom-map-btn {
   height: 48px;
