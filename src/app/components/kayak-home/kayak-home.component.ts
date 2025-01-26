@@ -8,10 +8,10 @@ import { Router } from '@angular/router';
 })
 export class KayakHomeComponent implements OnInit {
   activeComponent: string = '';
+  isCollapsed: boolean = false; 
 
   constructor(public router: Router) {}
 
-  isCollapsed: boolean = false; 
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
