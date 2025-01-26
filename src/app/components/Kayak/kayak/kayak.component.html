@@ -177,49 +177,46 @@
 
     <div class="col-md-9">
      <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 ">
         <div class="row d-flex align-items-center justify-content-center">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="input-group mb-3">
-                  <span class="input-group-text" id="basic-addon1">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                  </span>
-                  <input
-                    type="text"
-                    class="form-control search-inputs"
-                    placeholder="Search"
-                    aria-label="Search"
-                    aria-describedby="basic-addon1"
-                    [(ngModel)]="searchTerm"
-                    (input)="filterCards()"
-                  />
-                </div>
-              </div>
-              
+          <div class="col-md-4">
+            <div class="input-group mb-1">
+              <span class="input-group-text" id="basic-addon1">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control search-inputs"
+                placeholder="Search"
+                aria-label="Search"
+                aria-describedby="basic-addon1"
+                [(ngModel)]="searchTerm"
+                (input)="filterCards()"
+              />
             </div>
           </div>
-          <div class="col-md-2">
-            <div class="row">
-              <div class="col-md-10">
-                <div
-                  class="d-inline-flex align-items-center border p-2 rounded show-map">
-                  <span class="me-2">Show Map</span>
-                  <img src="../../../../assets/Images/Icons/map.png" alt="" />
-                </div>
-              </div>
-              <!-- <div class="col-md-3">
-                <button class="btn btn-secondary" (click)="searchShoppingCenter()">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-              </div> -->
+          <div class="col-md-3 d-flex justify-content-center align-items-center">
+            <div class="d-inline-flex align-items-center border p-2 rounded show-map">
+              <span class="me-2">Show Map</span>
+              <img src="../../../../assets/Images/Icons/map.png" alt="" />
             </div>
           </div>
-          <div class="col-md-2">
-            <button class="btn btn-secondary ms-2" (click)="bindShoppingCenter()">Bind</button>
-
+          <div class="col-md-5 d-flex justify-content-end align-items-center gap-3">
+            <!-- Bulk Bind Button -->
+            <button class="btn btn-success" (click)="toggleBulkMode()">
+              {{ isBulkMode ? 'Exit Bulk Bind' : 'Bulk Bind' }}
+            </button>
+        
+            <!-- Bind Button -->
+            <button
+              class="btn btn-secondary"
+              *ngIf="!isBulkMode"
+              (click)="bindShoppingCenter()"
+            >
+              Bind
+            </button>
           </div>
+        
           <ng-container >
             <!-- Loop through KayakResult -->
             <div
@@ -239,7 +236,7 @@
             >
               <div class="card-body">
                 <!-- Add Checkbox at the top of the card -->
-                <div class="form-check d-flex align-items-center gap-2">
+                <div *ngIf="!isBulkMode" class="form-check d-flex align-items-center gap-2">
                   <input
                     type="checkbox"
                     class="form-check-input"
@@ -247,9 +244,20 @@
                     [checked]="SelectedShoppingCenterIDs.includes(result.Id)"
                     (change)="onCardCheckboxChange($event, result, i)"
                   />
+                  <label class="form-check-label mb-0" [for]="'center-' + result.Id">
+                    Select
+                  </label>
                 
                 </div>
-                
+                    <!-- Show Bind This Button in Bulk Mode -->
+        <div *ngIf="isBulkMode" class="d-flex justify-content-start">
+          <button
+            class="btn btn-secondary mb-2"
+            (click)="bindShoppingCenter()"
+          >
+            Bind 
+          </button>
+        </div>
           
                 <div class="row">
                   <!-- Left Side: Result Details -->
@@ -357,50 +365,51 @@
                     </div>
           
                     <div class="main-card" style="padding: 12px;">
-                      <span style="font-size: 16px; font-weight: bold;">Places</span>
                       <div
                         *ngFor="let place of getVisiblePlaces(result, i); let j = index"
                         class="place-row"
                       >
-                        <div
-                          class="d-flex align-items-center justify-content-between place-details"
-                        >
-                          <div class="building-size">
-                            <span class="label card-texts">Building Size:</span>&nbsp;&nbsp;
-                            <span class="value card-strongs"
-                              >{{ place?.BuildingSizeSf || 'N/A' }} SqFt</span
-                            >
+                        <div class="place-details mb-3">
+                          <!-- Place Details: Building Size -->
+                          <div class="mb-2">
+                            <span class="label card-texts d-block">Building Size:</span>
+                            <span class="value card-strongs">{{ place?.BuildingSizeSf | number }} SqFt</span>
                           </div>
-          
-                          <div class="suite text-center">
-                            <span class="label card-texts">Suite:</span>&nbsp;&nbsp;
-                            <span class="value card-strongs"
-                              >{{ place?.Suite || 'N/A' }}</span
-                            >
+                    
+                          <!-- Place Details: Suite -->
+                          <div class="mb-2">
+                            <span class="label card-texts d-block">Suite:</span>
+                            <span class="value card-strongs">{{ place?.Suite || 'N/A' }}</span>
                           </div>
-          
-                          <div class="for-lease text-end">
-                            <span class="label card-texts">For Lease Price:</span>&nbsp;&nbsp;
-                            <span class="value card-strongs"
-                              >{{ place?.ForLeasePrice
-                                ? ('$' + place?.ForLeasePrice + '/SqFt')
-                                : 'N/A' }}</span
-                            >
+                    
+                          <!-- Place Details: For Lease Price -->
+                          <div class="mb-2">
+                            <span class="label card-texts d-block">For Lease Price:</span>
+                            <span class="value card-strongs">
+                              {{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}
+                            </span>
+                          </div>
+                    
+                          <!-- Bind Button in Bulk Mode -->
+                          <div *ngIf="isBulkMode" class="bind-this-button mt-2">
+                            <button class="btn btn-secondary btn-sm" (click)="bindShoppingCenter()">
+                              Bind
+                            </button>
                           </div>
                         </div>
-                        <hr
-                          *ngIf="j !== getVisiblePlaces(result, i).length - 1"
-                        />
+                    
+                        <hr *ngIf="j !== getVisiblePlaces(result, i).length - 1" />
                       </div>
+                    
+                      <!-- Show More/Show Less -->
                       <div class="text-center mt-2" *ngIf="result?.place?.length > 2">
-                        <button
-                          class="btn btn-link no-underline"
-                          (click)="toggleSeeMorePlaces(i)"
-                        >
+                        <button class="btn btn-link no-underline" (click)="toggleSeeMorePlaces(i)">
                           {{ showAllPlacesIndex === i ? "Show Less ▲" : "Show More ▼" }}
                         </button>
                       </div>
                     </div>
+                    
+                    
                   </div>
                 </div>
               </div>

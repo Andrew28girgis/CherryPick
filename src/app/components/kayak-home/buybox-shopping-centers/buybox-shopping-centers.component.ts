@@ -105,10 +105,10 @@ export class BuyboxShoppingCentersComponent implements OnInit {
       (res) => {
         this.BuyBoxPlacesAndShoppingCenter =
           (res.json as ShoppingCenter[]) || [];
-        console.log(
-          'BuyBoxPlacesAndShoppingCenter',
-          this.BuyBoxPlacesAndShoppingCenter
-        );
+        // console.log(
+        //   'BuyBoxPlacesAndShoppingCenter',
+        //   this.BuyBoxPlacesAndShoppingCenter
+        // );
         if (
           this.BuyBoxPlacesAndShoppingCenter &&
           this.BuyBoxPlacesAndShoppingCenter.length
@@ -139,7 +139,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe((res) => {
       this.BuyBoxCitiesStates = res.json as BuyBoxCityState[];
-      console.log('this.BuyBoxCitiesStates', this.BuyBoxCitiesStates);
+      // console.log('this.BuyBoxCitiesStates', this.BuyBoxCitiesStates);
 
       this.getStates(this.BuyBoxCitiesStates);
     });
@@ -155,7 +155,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
       )
     ).sort();
 
-    console.log('StateCodes:', this.StateCodes);
+    // console.log('StateCodes:', this.StateCodes);
   }
   // Handle State selection
   // Handle State selection
@@ -254,10 +254,10 @@ export class BuyboxShoppingCentersComponent implements OnInit {
         this.shoppingCenterIdToDelete
       ).subscribe(
         (res) => {
-          console.log(
-            'DeleteShoppingCenterFromBuyBox',
-            JSON.stringify(res.json)
-          );
+          // console.log(
+          //   'DeleteShoppingCenterFromBuyBox',
+          //   JSON.stringify(res.json)
+          // );
           // Remove the Shopping Center from the local array
           this.BuyBoxPlacesAndShoppingCenter =
             this.BuyBoxPlacesAndShoppingCenter.filter(
@@ -278,7 +278,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
     if (this.placeIdToDelete !== null) {
       this.DeletePlaceFromBuyBox(this.placeIdToDelete).subscribe(
         (res) => {
-          console.log('DeleteBuyBoxPlace', JSON.stringify(res.json));
+          // console.log('DeleteBuyBoxPlace', JSON.stringify(res.json));
           // Remove the Place from the corresponding MarketSurveyShoppingCenters
           this.BuyBoxPlacesAndShoppingCenter.forEach((center) => {
             center.MarketSurveyShoppingCenters.forEach((surveyCenter) => {
@@ -433,7 +433,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
       (res) => {
         // Process response
         this.nearestRetails = res.json || [];
-        console.log('Nearest Retails:', this.nearestRetails);
+        // console.log('Nearest Retails:', this.nearestRetails);
 
         // Open the modal
         this.modalService.open(content, { size: 'lg' });

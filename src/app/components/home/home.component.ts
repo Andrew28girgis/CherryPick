@@ -100,7 +100,7 @@ export class HomeComponent implements OnInit {
   shareLink: any;
   BuyBoxName: string = '';
   Permission: permission[] = [];
-  placesRepresentative:boolean | undefined;
+  placesRepresentative: boolean | undefined;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -130,6 +130,7 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
+    // this.GetBuyboxRelations();
     // this.GetPolygons(this.BuyBoxId);
   }
 
@@ -149,16 +150,19 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.Permission = data.json;
-        this.placesRepresentative = this.Permission?.find((item:permission) => item.sectionName === "PlacesRepresentative")?.visible; 
+        this.placesRepresentative = this.Permission?.find(
+          (item: permission) => item.sectionName === 'PlacesRepresentative'
+        )?.visible;
         this.stateService.setPermission(data.json);
 
         if (this.stateService.getPlacesRepresentative()) {
-          this.placesRepresentative = this.stateService.getPlacesRepresentative();
+          this.placesRepresentative =
+            this.stateService.getPlacesRepresentative();
           return;
         }
 
-        this.stateService.setPlacesRepresentative(this.placesRepresentative); 
-        this.markerService.setPlacesRepresentative(this.placesRepresentative);  
+        this.stateService.setPlacesRepresentative(this.placesRepresentative);
+        this.markerService.setPlacesRepresentative(this.placesRepresentative);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -227,7 +231,7 @@ export class HomeComponent implements OnInit {
   getShoppingCenters(buyboxId: number): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
-      this.getStandAlonePlaces(buyboxId);
+      //this.getStandAlonePlaces(buyboxId);
       return;
     }
 
@@ -244,7 +248,8 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
-        this.getStandAlonePlaces(this.BuyBoxId);
+        //this.getStandAlonePlaces(this.BuyBoxId);
+        this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -392,7 +397,7 @@ export class HomeComponent implements OnInit {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
 
-      this.getPolygons();
+      //this.getPolygons();
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
@@ -403,7 +408,7 @@ export class HomeComponent implements OnInit {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(this.map, markerData, type);
       // this.markerService.fetchAndDrawPolygon(th)
-    }); 
+    });
 
     // let centerIds: any[] = [];
     // this.shoppingCenters.forEach((center) => {
@@ -425,13 +430,12 @@ export class HomeComponent implements OnInit {
     // const centerIdsString = centerIds.join(',');
   }
 
-
   getPolygons() {
     const body: any = {
       Name: 'GetBuyBoxSCsIntersectPolys',
       Params: {
-        BuyBoxId : this.BuyBoxId,
-        PolygonSourceId : 0 
+        BuyBoxId: this.BuyBoxId,
+        PolygonSourceId: 0,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe((data) => {
@@ -582,7 +586,7 @@ export class HomeComponent implements OnInit {
       scrollable: true,
     });
     this.General.modalObject = modalObject;
-    
+
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
@@ -900,5 +904,15 @@ export class HomeComponent implements OnInit {
     this.stateService.setSelectedSS(viewValue);
   }
 
-  // Add this method to handle scroll restoration after data is loaded
+  GetBuyboxRelations() {
+    let body = {
+      Name: 'GetBuyboxRelations',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe((data) => {
+      console.log(data);
+    });
+  }
 }

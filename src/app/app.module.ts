@@ -51,6 +51,9 @@ import { MatInputModule } from '@angular/material/input';
 import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
 import { ChatHttpClient } from './services/chat-http-client';
 import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-shopping-centers/buybox-shopping-centers.component';
+import { SidbarComponent } from './components/sidbar/sidbar.component';
+import { LogoutComponent } from './components/logout/logout.component';
+import { WorkSpacesComponent } from './components/kayak-home/work-spaces/work-spaces.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +90,10 @@ import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-s
     KayakHomeComponent,
     EmilyComponent,
     BuyboxDetailsComponent,
-    BuyboxShoppingCentersComponent
+    BuyboxShoppingCentersComponent,
+    SidbarComponent,
+    LogoutComponent,
+    WorkSpacesComponent
     
   ],
   imports: [
@@ -104,7 +110,6 @@ import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-s
     NgbAlertModule,
     NgxPaginationModule,
     DragDropModule,
-    ReactiveFormsModule, 
     ToastrModule.forRoot(),
     RouterModule,
     MatDatepickerModule,
