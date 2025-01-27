@@ -126,7 +126,7 @@ button:active {
   line-height: 20px;
   height: 40px;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
   text-align: center;
   overflow: hidden;
@@ -139,7 +139,7 @@ button:active {
   background: #ccd2d9;
   display: flex;
   padding: 4px 12px;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   gap: 4px;
   color: #001f3f;
