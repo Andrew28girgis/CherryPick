@@ -56,7 +56,7 @@ select option:checked {
   padding-block: 8px;
   color: white;
   cursor: pointer;
-  margin-top: 24px;
+  /* margin-top: 24px; */
 }
 
 
@@ -65,6 +65,76 @@ select option:checked {
   padding-inline: 10px;
   font-size: 14px;
 }
+
+
+.ellipsis_icon {
+  border: 1.5px solid #7077915b;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border-radius: 6px;
+}
+
+.shortcuts_icon {
+  position: absolute;
+  background: white;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+  padding: 16px;
+  border-radius: 10px;
+  text-align: start;
+  margin: 0;
+  z-index: 1;
+  right: 75%;
+  width: max-content;
+  top: -70%;
+}
+
+.shortcuts_icon>ul {
+  text-decoration: none;
+  list-style: none;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  gap: 8px;
+  display: grid;
+
+}
+
+.shortcuts_icon>li {
+  display: flex;
+  gap: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+}
+
+.shortcuts_icon .target {
+  display: flex;
+  gap: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  text-decoration: none;
+}
+
+.shortcuts_icon>i {
+  position: absolute;
+  right: -8px;
+  top: 25%;
+  font-size: 25px;
+  color: white;
+}
+
 
 
 
@@ -102,6 +172,10 @@ select option:checked {
   border-radius: 4px;
   background-color: #ffffff;
   cursor: pointer;
+}
+
+.Button_tab{
+
 }
 
 
@@ -538,6 +612,7 @@ img[alt="logo"] {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  border: 1px solid rgb(190, 190, 190);
 }
 
 .icon-option:hover {

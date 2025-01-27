@@ -51,25 +51,25 @@ export class ShoppingCenterTableComponent implements OnInit {
   paginatedProperties: Property[] = [];
   filteredProperties: Property[] = [];
   dropdowmOptions: any = [
+    // {
+    //   text: 'Map View',
+    //   icon: '../../../assets/Images/Icons/map.png',
+    //   status: 1,
+    // }, // Add your SVG paths here
+    // {
+    //   text: 'Side List View',
+    //   icon: '../../../assets/Images/Icons/element-3.png',
+    //   status: 2,
+    // },
     {
-      text: 'Map View',
-      icon: '../../../assets/Images/Icons/map.png',
-      status: 1,
-    }, // Add your SVG paths here
-    {
-      text: 'Side List View',
-      icon: '../../../assets/Images/Icons/element-3.png',
-      status: 2,
+      text: 'Table View',
+      icon: '../../../assets/Images/Icons/grid-4.png',
+      status: 4,
     },
     {
       text: 'Cards View',
       icon: '../../../assets/Images/Icons/grid-1.png',
       status: 3,
-    },
-    {
-      text: 'Table View',
-      icon: '../../../assets/Images/Icons/grid-4.png',
-      status: 4,
     },
   ];
   isOpen = false;
@@ -149,6 +149,15 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.selectedState = '';
     this.selectedCity = '';
     this.applyFilters();
+  }
+
+  selectedId: number | null = null;
+  toggleShortcuts(id: number, close?: string): void {
+    if (close === 'close') {
+      this.selectedId = null;
+    } else {
+      this.selectedId = this.selectedId === id ? null : id;
+    }
   }
 
   @Output() bindClicked: EventEmitter<void> = new EventEmitter<void>();
@@ -439,28 +448,80 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.isOpen = !this.isOpen;
   }
   
+  // async getAllMarker() {
+  //   try {
+  //     this.spinner.show();
+  //     const { Map } = await google.maps.importLibrary('maps');
+
+  //     if (this.savedMapView) {
+  //       const { lat, lng, zoom } = JSON.parse(this.savedMapView);
+  //       this.map = new Map(document.getElementById('map') as HTMLElement, {
+  //         center: {
+  //           lat: lat,
+  //           lng: lng,
+  //         },
+  //         zoom: zoom,
+  //         mapId: '1234567890',
+  //       });
+  //       this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('bounds_changed', () =>
+  //         this.onMapDragEnd(this.map)
+  //       );
+  //     } else {
+  //       this.map = new Map(document.getElementById('map') as HTMLElement, {
+  //         center: {
+  //           lat: this.shoppingCenters
+  //             ? this.shoppingCenters[0].Latitude
+  //             : this.standAlone[0].Latitude || 0,
+  //           lng: this.shoppingCenters
+  //             ? this.shoppingCenters[0].Longitude
+  //             : this.standAlone[0].Longitude || 0,
+  //         },
+  //         zoom: 8,
+  //         mapId: '1234567890',
+  //       });
+  //       this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('bounds_changed', () =>
+  //         this.onMapDragEnd(this.map)
+  //       );
+  //     }
+
+  //     if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+  //       this.createMarkers(this.shoppingCenters, 'Shopping Center');
+  //     }
+
+  //     if (this.standAlone && this.standAlone.length > 0) {
+  //       this.createMarkers(this.standAlone, 'Stand Alone');
+  //     }
+
+  //     //this.getPolygons();
+  //     this.createCustomMarkers(this.buyboxCategories);
+  //   } finally {
+  //     this.spinner.hide();
+  //   }
+  // }
   async getAllMarker() {
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
-
+  
+      const mapElement = document.getElementById('map') as HTMLElement;
+      if (!mapElement) {
+        console.error('Element with id "map" not found.');
+        return; 
+      }
+  
       if (this.savedMapView) {
         const { lat, lng, zoom } = JSON.parse(this.savedMapView);
-        this.map = new Map(document.getElementById('map') as HTMLElement, {
-          center: {
-            lat: lat,
-            lng: lng,
-          },
+        this.map = new Map(mapElement, {
+          center: { lat: lat, lng: lng },
           zoom: zoom,
           mapId: '1234567890',
         });
-        this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
-        this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
-        this.map.addListener('bounds_changed', () =>
-          this.onMapDragEnd(this.map)
-        );
       } else {
-        this.map = new Map(document.getElementById('map') as HTMLElement, {
+        this.map = new Map(mapElement, {
           center: {
             lat: this.shoppingCenters
               ? this.shoppingCenters[0].Latitude
@@ -472,27 +533,28 @@ export class ShoppingCenterTableComponent implements OnInit {
           zoom: 8,
           mapId: '1234567890',
         });
-        this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
-        this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
-        this.map.addListener('bounds_changed', () =>
-          this.onMapDragEnd(this.map)
-        );
       }
-
+  
+      this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+      this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+      this.map.addListener('bounds_changed', () => this.onMapDragEnd(this.map));
+  
       if (this.shoppingCenters && this.shoppingCenters.length > 0) {
         this.createMarkers(this.shoppingCenters, 'Shopping Center');
       }
-
+  
       if (this.standAlone && this.standAlone.length > 0) {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
-
-      //this.getPolygons();
+  
       this.createCustomMarkers(this.buyboxCategories);
+    } catch (error) {
+      console.error('Error loading markers:', error);
     } finally {
       this.spinner.hide();
     }
   }
+  
 
   createMarkers(markerDataArray: any[], type: string) {
     markerDataArray.forEach((markerData) => {
