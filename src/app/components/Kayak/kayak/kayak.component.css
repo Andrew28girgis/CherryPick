@@ -52,6 +52,17 @@ background: var(--Card-Section-BG, #FFF);
   background: var(--Button-Primary-BG, #4D65B4);
   color: #fff;
 }
+.apply-button {
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #be2352);
+  color: #fff;
+}
 .bind-btn {
   display: flex;
   height: 48px;
@@ -299,8 +310,8 @@ body{
 }
 
 .kayak-img {
-  height: 100px;
-  width: 100px;
+  height: 135px;
+  width: 135px;
   object-fit: cover; /* Maintain aspect ratio and cover the container */
   border-radius: 8px; /* Rounded corners */
   display: block; /* Ensure the image behaves as a block */
@@ -322,13 +333,27 @@ body{
   cursor: pointer;
   transition: background-color 0.3s ease; 
 }
-
-.custom-map-btn:hover {
-  background: #3b4f92; 
-}
-
 .custom-map-btn:active {
   background: #2e3f74; 
+}
+.custom-bind-btn {
+  height: 48px;
+  padding: 14px 24px;
+  gap: 8px;
+  flex: 1 0 0; 
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #6c757d); 
+  color: #fff; 
+  font-family: 'Montserrat', sans-serif; 
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  border: none; 
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+}
+.custom-bind-btn:active {
+  background: #666c72; 
 }
 .custom-street-btn {
   height: 48px;
@@ -346,11 +371,6 @@ body{
   cursor: pointer; 
   transition: background-color 0.3s ease, transform 0.2s ease; 
 }
-
-.custom-street-btn:hover {
-  background: #13161b; 
-}
-
 .custom-street-btn:active {
   background: #0e1115; 
   transform: scale(0.98); 
