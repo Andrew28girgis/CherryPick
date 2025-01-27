@@ -34,7 +34,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
   private shouldExclude(url: string): boolean {
     const excludedUrls = [
-      'https://10.0.0.15:8082/api/BuyBox/Login', // Login API
+      'https://api.cherrypick.com/api/BuyBox/Login', // Login API
       'https://10.0.0.15:8082/api/BuyBox/GetSharedPlace',
       'https://api.capsnap.ai/api/BuyBox/GetSharedPlace',
     ];
