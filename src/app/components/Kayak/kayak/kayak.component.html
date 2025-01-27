@@ -326,9 +326,11 @@
                         <!-- Bind Button (Default) -->
                        
                         <!-- Image Section -->
-                        <div class="image-container position-relative">
+                        <div class="image-container position-relative" (click)="openGallery(i)">
                           <img
+                          
                             class="kayak-img img-fluid rounded"
+                            style="cursor: pointer;"
                             *ngIf="result?.MainImage"
                             [src]="result?.MainImage"
                             [alt]="result?.CenterName"
@@ -436,7 +438,7 @@
                       </div>
                           <div *ngIf="!isBulkMode">
                             <button
-                              class="btn bind-button"
+                              class="custom-bind-btn d-flex align-items-center justify-content-center"
                               (click)="bindShoppingCenter()"
                             >
                               Bind
@@ -668,6 +670,8 @@
     </table>
   </div>
   <div class="modal-footer">
+    <button type="button" class="btn apply-button">Apply</button>
     <button type="button" class="btn bind-button" (click)="modal.dismiss()">Close</button>
+
   </div>
 </ng-template>

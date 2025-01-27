@@ -8,33 +8,21 @@
     <div style="width: inherit; position: fixed">
       <div style="display: flex">
         <!-- Sidebar Primary -->
-        <div
-          class="Sidbar-Primary"
-          [ngStyle]="{ width: isCollapsed ? '100%' : '25%' }"
-        >
-          <ul class="p-0 m-0 Sidbar-Primary-ul">
-            <li routerLink="/toggleClose" *ngIf="isCollapsed">
-              <i
-                class="fa-solid fa-arrow-right"
-                routerLinkActive="activeIcon"
-              ></i>
-            </li>
-            <li routerLink="/toggleClose" *ngIf="!isCollapsed">
-              <i
-                class="fa-solid fa-arrow-left"
-                routerLinkActive="activeIcon"
-              ></i>
-            </li>
-            <li routerLink="/summary">
-              <i class="fa-solid fa-house" routerLinkActive="activeIcon"></i>
-            </li>
-            <li routerLink="/dashboard">
-              <i
-                class="fa-solid fa-layer-group"
-                routerLinkActive="activeIcon"
-              ></i>
-            </li>
-          </ul>
+        <div class="Sidbar-Primary" [ngStyle]="{ width: isCollapsed ? '100%' : '25%' }">
+            <ul class="p-0 m-0 Sidbar-Primary-ul" >
+                <li routerLink="/toggleClose" *ngIf="isCollapsed" (click)="BackTo()">
+                  <i class="fa-solid fa-arrow-right" routerLinkActive="activeIcon"></i>
+                </li>
+                <li routerLink="/toggleClose" *ngIf="!isCollapsed">
+                  <i class="fa-solid fa-arrow-left" routerLinkActive="activeIcon"></i>
+                </li>
+                <li routerLink="/summary">
+                  <i class="fa-solid fa-house" routerLinkActive="activeIcon"></i>
+                </li>
+                <li routerLink="/dashboard">
+                  <i class="fa-solid fa-layer-group" routerLinkActive="activeIcon"></i>
+                </li>
+              </ul>              
         </div>
         <!-- Sidebar Secondary -->
         <div

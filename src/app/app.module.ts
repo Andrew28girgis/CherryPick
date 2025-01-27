@@ -54,6 +54,7 @@ import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-s
 import { SidbarComponent } from './components/sidbar/sidbar.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { WorkSpacesComponent } from './components/kayak-home/work-spaces/work-spaces.component';
+import { ShoppingCenterTableComponent } from './components/kayak-home/shopping-center-table/shopping-center-table.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { WorkSpacesComponent } from './components/kayak-home/work-spaces/work-sp
     BuyboxShoppingCentersComponent,
     SidbarComponent,
     LogoutComponent,
-    WorkSpacesComponent
+    WorkSpacesComponent,
+    ShoppingCenterTableComponent
     
   ],
   imports: [
