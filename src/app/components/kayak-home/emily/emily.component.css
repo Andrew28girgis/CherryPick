@@ -32,6 +32,7 @@
   color: #707791;
   font-size: 16px;
   line-height: 25px;
+  cursor: pointer;
 }
 
 .active {
@@ -255,7 +256,15 @@ select option:checked {
   border: 0;
   text-align: center;
   align-items: center;
-  display: flex
+  display: flex;
+  position: relative;
+}
+.spinner-grow{
+  position: absolute;
+  left: 40%;
+}
+.backgroundcolor{
+background: #F2F3F4;
 }
 
 @media (max-width: 500px) {

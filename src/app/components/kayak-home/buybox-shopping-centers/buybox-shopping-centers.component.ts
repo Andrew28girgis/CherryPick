@@ -38,6 +38,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   // Selected filters
   selectedState: string = '0';
   selectedCity: string = '';
+
   // Filtered data
   filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
   expandedShoppingCenters: Set<number> = new Set<number>();
@@ -91,7 +92,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
   showAlert(message: string): void {
     alert(message);
@@ -104,6 +105,9 @@ export class BuyboxShoppingCentersComponent implements OnInit {
 
     this.getBuyBoxDetails();
     this.GetWizardBuyBoxCities();
+    this.selectedState = '';
+    this.selectedCity = '';
+    this.applyFilters();
   }
 
   getBuyBoxDetails() {
@@ -211,34 +215,42 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   // Handle State selection
   // Handle State selection
   onStateChange(event: any) {
-    let value = event.target.value;
+    const value = event.target.value;
     console.log(value);
 
-    if (this.selectedState) {
+    if (value === '') {
+      this.selectedState = '';
+      this.selectedCity = '';
+      this.filteredCities = [];
+      this.filteredBuyBoxPlacesAndShoppingCenter = [...this.BuyBoxPlacesAndShoppingCenter];
+    } else {
       this.filteredCities = Array.from(
         new Set(
           this.BuyBoxCitiesStates.filter(
             (item) =>
-              item.state.trim().toUpperCase() ===
-              this.selectedState.trim().toUpperCase()
+              item.state.trim().toUpperCase() === value.trim().toUpperCase()
           ).map((item) => item.city)
         )
       ).sort();
-    } else {
-      this.filteredCities = Array.from(
-        new Set(this.BuyBoxCitiesStates.map((item) => item.city))
-      ).sort();
     }
 
-    this.selectedCity = ''; // Reset selected city
+    this.selectedCity = '';
     this.applyFilters();
   }
+
+
   // Handle City selection
   onCityChange() {
     this.applyFilters();
   }
   // Apply Filters with Case-Insensitive Matching
+
   applyFilters() {
+    if (!this.selectedState && !this.selectedCity) {
+      this.filteredBuyBoxPlacesAndShoppingCenter = [...this.BuyBoxPlacesAndShoppingCenter];
+      return;
+    }
+
     this.filteredBuyBoxPlacesAndShoppingCenter =
       this.BuyBoxPlacesAndShoppingCenter.filter((center) => {
         const centerState = center.CenterState.trim().toUpperCase();

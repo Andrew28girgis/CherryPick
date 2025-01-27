@@ -61,6 +61,8 @@ export class EmilyComponent {
   isSubjectCopied: boolean = false;
   isBodyCopied: boolean = false;
   formGroupTemplate!: FormGroup;
+  shouldShowGenerateEmaily: boolean = false;
+  ShowSpinner :boolean = false;
 
   tabs = [
     { id: 'Details', label: 'Details' },
@@ -80,12 +82,25 @@ export class EmilyComponent {
   onCheckboxChangeTemplates(emailyID: string): void {
     if (this.selectedEmailyID === emailyID) {
       this.selectedEmailyID = null;
+      this.emailBody = '';
     } else {
       this.selectedEmailyID = emailyID;
+  
+      const selectedTemplate = this.generatedGetSavedTemplates.find(
+        (template) => template.ID === Number(emailyID)
+      );
+  
+      if (selectedTemplate?.BuyboxOrgEmailTemplates?.[0]?.Template) {
+        const rawText = selectedTemplate.BuyboxOrgEmailTemplates[0].Template;
+        this.emailBody = this.getFormattedTemplate(rawText);
+      } else {
+        this.emailBody = 'No Template Available';
+      }
     }
-    console.log(emailyID);
+  
+    console.log(emailyID, this.emailBody);
   }
-
+  
   selectedTab: string = 'Emily';
 
   getFilteredTabs() {
@@ -106,6 +121,18 @@ export class EmilyComponent {
     return text
       .split('\n')
       .join('<br>');
+  }
+
+  getFormattedTemplate(text: string): string {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = text;
+      const links = tempDiv.querySelectorAll('a');
+    links.forEach((link) => {
+      const href = link.getAttribute('href');
+      const linkText = link.textContent;
+      link.replaceWith(`${linkText} [${href}]`);
+    });
+      return tempDiv.textContent || tempDiv.innerText || '';
   }
 
   trackByRelation(index: number, relation: any): number {
@@ -144,13 +171,13 @@ export class EmilyComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.generated = data.json;
+        this.generated = data.json || [];
         // console.log('ALL', this.generated);
 
         this.ManagerOrganizationName =
-          this.generated[0].Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName;
+          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
-          this.generated[0].Buybox[0].BuyBoxOrganization[0].Name;
+          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
         const buyBox = this.generated?.[0]?.Buybox?.[0];
         if (buyBox) {
@@ -196,11 +223,15 @@ export class EmilyComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.generatedGetSavedTemplates = data.json;
+        this.generatedGetSavedTemplates = data?.json || [];
+        // console.log(this.generatedGetSavedTemplates);
+        
+
+        // this.generatedGetSavedTemplates = data.json;
         this.ManagerOrganizationName =
-          this.generatedGetSavedTemplates[0].Buybox[0]?.BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName;
+          this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
-          this.generatedGetSavedTemplates[0].Buybox[0].BuyBoxOrganization[0].Name;
+          this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
         const buyBox = this.generatedGetSavedTemplates?.[0]?.Buybox?.[0];
         if (buyBox) {
@@ -754,7 +785,7 @@ export class EmilyComponent {
     }
     const promptId = Number(this.selectedPromptId); // Convert to number
     const context = this.emailBody;
-
+    this.ShowSpinner = true;
     this.PlacesService.generateEmail(promptId, context).subscribe({
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
@@ -763,11 +794,13 @@ export class EmilyComponent {
         //   subject: this.emailSubject,
         //   body: this.emailBodyResponse,
         // });
+        this.ShowSpinner = false;
       },
       error: (err) => {
         console.error('Error fetching generic email:', err);
         this.emailSubject = 'Error fetching email subject';
         this.emailBodyResponse = 'Error fetching email body';
+        this.ShowSpinner = false;
       },
     });
   }
