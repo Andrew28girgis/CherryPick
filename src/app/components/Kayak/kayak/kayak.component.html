@@ -1,8 +1,14 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="d-flex justify-content-center align-items-center">
-</div>
 
 <div class="container-fluid my-3">
+ 
+  
+  
+
+
+  
+  
     <!-- <div class="col-md-3">
       <div class="card card-filter ">
         <div
@@ -207,7 +213,59 @@
               Bind
             </button>
           </div> -->
-          <div class="d-flex justify-content-start align-items-center gap-3 mb-4">
+          <div class="search-bar container ">
+            <!-- Input Group -->
+            <div class="col-md-4 d-flex align-items-start">
+              <input
+                type="text"
+                class="form-control border-0 shadow-none search-textt"
+                placeholder="Search"
+                [(ngModel)]="searchTerm"
+                (input)="filterCards()"
+                style="outline: none;"
+              />
+            </div>
+          
+            <!-- Separator -->
+            <div class="separator px-2">|</div>
+          
+            <!-- State Dropdown -->
+            <div class="col-md-4 d-flex align-items-start">
+              <select
+                id="state-select"
+                class="form-select border-0 shadow-none search-textt"
+                [(ngModel)]="filterValues.statecode"
+                (ngModelChange)="handleStateChange($event); searchShoppingCenter()"
+              >
+                <option value="" selected>State</option>
+                <option *ngFor="let state of uniqueStates" [value]="state">{{ state }}</option>
+              </select>
+            </div>
+          
+            <!-- Separator -->
+            <div class="separator px-2">|</div>
+          
+            <!-- City Dropdown and Search Button -->
+            <div class="col-md-3 d-flex align-items-start">
+              <select
+                id="city-select"
+                class="form-select border-0 shadow-none search-textt"
+                [(ngModel)]="filterValues.city"
+                (ngModelChange)="onCityChange(); searchShoppingCenter()"
+              >
+                <option value="" selected>City</option>
+                <option *ngFor="let city of uniqueCities" [value]="city.city">{{ city.city }}</option>
+              </select>
+            </div>
+            <!-- Search Button -->
+            <div class="col-md-1 d-flex align-items-center justify-content-center">
+              <button class="btn search-btn border-0" (click)="searchShoppingCenter()">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-start align-items-center gap-3 my-4">
             <!-- Bind Button -->
             <button
               class="btn bind-button"
@@ -261,14 +319,7 @@
                         </div>
                       
                         <!-- Bind Button (Default) -->
-                        <div *ngIf="!isBulkMode">
-                          <button
-                            class="btn bind-btn"
-                            (click)="bindShoppingCenter()"
-                          >
-                            Bind
-                          </button>
-                        </div>
+                       
                         <!-- Image Section -->
                         <div class="image-container position-relative">
                           <img
@@ -307,7 +358,7 @@
                           <img
                             class="eye-icon"
                             style="cursor: pointer"
-                            src="../../../assets/Images/Icons/eye.png"
+                            src="../../../assets/Images/Icons/eye2.png"
                             alt="View Places Details"
                             (click)="openPlacesModal(result.place)"
                           />
@@ -318,7 +369,7 @@
                           <span class="me-2 eye-text">Availability</span>
                           <img
                             style="cursor: pointer"
-                            src="../../../assets/Images/Icons/eye.png"
+                            src="../../../assets/Images/Icons/eye2.png"
                             alt="View Availability Details"
                             (click)="GetShoppingCenterAvailability(result.Id)"
                           />
@@ -329,7 +380,7 @@
                           <span class="me-2 eye-text">Tenants</span>
                           <img
                             style="cursor: pointer"
-                            src="../../../assets/Images/Icons/eye.png"
+                            src="../../../assets/Images/Icons/eye2.png"
                             alt="View Tenants Details"
                             (click)="GetShoppingCenterTenants(result.Id)"
                           />
@@ -337,33 +388,45 @@
           
                         <!-- Additional Buttons -->
                         <div class="d-flex align-items-center gap-2">
-                          <button
-                            class="custom-map-btn d-flex align-items-center justify-content-center"
-                            (click)="openMapViewPlace(MapViewPlace, result)"
-                          >
-                            Map
-                          </button>
-                          <button
-                            class="custom-street-btn d-flex align-items-center justify-content-center"
-                            (click)="openStreetViewPlace(StreetViewPlace, result)"
-                          >
-                            Street
-                          </button>
+                      <div>
+                        <button
+                        class="custom-map-btn d-flex align-items-center justify-content-center"
+                        (click)="openMapViewPlace(MapViewPlace, result)"
+                      >
+                        Map
+                      </button>
+                      </div>
+                      <div>
+                        <button
+                        class="custom-street-btn d-flex align-items-center justify-content-center"
+                        (click)="openStreetViewPlace(StreetViewPlace, result)"
+                      >
+                        Street
+                      </button>
+                      </div>
+                          <div *ngIf="!isBulkMode">
+                            <button
+                              class="btn bind-button"
+                              (click)="bindShoppingCenter()"
+                            >
+                              Bind
+                            </button>
+                          </div>
                         </div>
           
                      
                       </div>
                     </div>
                     <div class="col-md-12 mt-2">
-                      <div class="d-flex justify-content-start">
-                        <div class="chosen-places-container p-2 text-start">
-                          <span class="chosen-places-label fw-bold">Chosen Places</span>
+                      <div class="d-flex">
+                        <div class="chosen-places-container p-2">
+                          <span class="chosen-places-label">Chosen Places</span>
                           <div class="d-inline-flex align-items-center flex-wrap gap-2 ms-2">
                             <!-- Display up to 5 places initially -->
                             <ng-container
                               *ngFor="let place of result.place.slice(0, expandedPlacesIndex === i ? result.place.length : 5); let j = index"
                             >
-                              <span class="place-item">{{ place?.BuildingSizeSf || 'N/A' }} SF</span>
+                              <span class="place-item">{{ place?.BuildingSizeSf | number }} SF</span>
                     
                               <!-- Add space between places -->
                               <span *ngIf="j < (expandedPlacesIndex === i ? result.place.length - 1 : 4)">&nbsp;</span>
@@ -380,7 +443,8 @@
                               </span>
                               <img
                                 class="eye-icon"
-                                src="../../../assets/Images/Icons/eye.png"
+                                style="cursor: pointer;"
+                                src="../../../assets/Images/Icons/eye2.png"
                                 alt="View Places Details"
                                 (click)="openPlacesModal(result.place)"
                               />
@@ -490,17 +554,17 @@
   <div class="modal-body">
     <div *ngIf="ShoppingCenterTenants?.length > 0" class="tenants-list mt-3">
       <!-- Table for Tenants -->
-      <table class="table table-bordered table-hover">
+      <table class="table table-striped">
         <thead class="table-light">
           <tr>
-            <th>Name</th>
-            <th>Summary</th>
+            <th class="table-headd">Name</th>
+            <th class="table-headd">Summary</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let tenant of ShoppingCenterTenants">
-            <td>{{ tenant.name }}</td>
-            <td>{{ tenant.summary }}</td>
+            <td class="table-text1">{{ tenant.name }}</td>
+            <td class="table-text1">{{ tenant.summary }}</td>
           </tr>
         </tbody>
       </table>
@@ -511,7 +575,7 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+    <button type="button" class="btn bind-button" (click)="modal.close()">
       Close
     </button>
   </div>
@@ -545,17 +609,17 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Building Size</th>
-          <th>Suite</th>
-          <th>For Lease Price</th>
-          <th>Action</th>
+          <th class="table-headd">Building Size</th>
+          <th class="table-headd">Suite</th>
+          <th class="table-headd">For Lease Price</th>
+          <th class="table-headd">Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let place of selectedPlaces">
-          <td>{{ place?.BuildingSizeSf | number }} SqFt</td>
-          <td>{{ place?.Suite || 'N/A' }}</td>
-          <td>{{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}</td>
+          <td class="table-text1">{{ place?.BuildingSizeSf | number }} SqFt</td>
+          <td  class="table-text1">{{ place?.Suite || 'N/A' }}</td>
+          <td class="table-text1">{{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}</td>
           <td>
             <!-- Show Bind Button by Default -->
             <div *ngIf="!isBulkMode">
@@ -574,6 +638,6 @@
     </table>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+    <button type="button" class="btn bind-button" (click)="modal.dismiss()">Close</button>
   </div>
 </ng-template>

@@ -6,7 +6,7 @@
         <label for="stateFilter" class="pb-2">Filter by State</label>
         <select class="form-select form-select-lg" aria-label="Large select example" id="stateFilter"
           [(ngModel)]="selectedState" (change)="onStateChange($event)">
-          <option value="0" selected>All States</option>
+          <option value="" selected>All States</option>
           <option *ngFor="let state of StateCodes" [value]="state">
             {{ state }}
           </option>
@@ -155,7 +155,7 @@
                       Update Selection
                     </a>
                   </li>
-                  <li>
+                  <li style="cursor: pointer;">
                     <a class="target" (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)">
                       <i class="fa-regular fa-trash-can" style="font-size: 18px;margin-top: 3px;width: 24px;"></i>
                       Delete Shopping
