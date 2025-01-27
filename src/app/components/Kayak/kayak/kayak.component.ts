@@ -67,6 +67,8 @@ export class KayakComponent implements OnInit {
   isBulkMode: boolean = false; // Default: Bulk mode is off
   selectedPlaces: any[] = []; // Holds the selected places for the modal
   expandedPlacesIndex: number | null = null; // Keeps track of the card whose places are expanded
+  showFilters: boolean = false;
+
 
 
 
@@ -121,8 +123,15 @@ export class KayakComponent implements OnInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
+
+toggleFilters(): void {
+  this.showFilters = !this.showFilters;
+}
   toggleExpandedPlaces(index: number): void {
     this.expandedPlacesIndex = this.expandedPlacesIndex === index ? null : index; // Toggle expansion
+  }
+  openModal(content: any) {
+    this.modalService.open(content, { size: 'lg', centered: true });
   }
   @ViewChild('placesModal', { static: true }) placesModal!: TemplateRef<any>; // Bind the modal template
 
@@ -340,6 +349,9 @@ export class KayakComponent implements OnInit {
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+  openFiltersModal(content: any) {
+    this.modalService.open(content, { size: 'lg', centered: true });
+  }
   openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -389,8 +401,9 @@ export class KayakComponent implements OnInit {
   
     this.sortedTenants = this.showAllTenants ? uniqueTenants : uniqueTenants.slice(0, 12);
   
-    console.log('Updated Tenants:', this.sortedTenants);
+    console.log('Sorted Tenants:', this.sortedTenants); // Debug tenants
   }
+  
   
   updateSortedOrgs(): void {
     if (!this.Filters?.ManagementOrganization || !Array.isArray(this.Filters.ManagementOrganization)) {
@@ -411,7 +424,7 @@ export class KayakComponent implements OnInit {
   
     this.sortedOrgs = this.showAllOrgs ? uniqueOrgs : uniqueOrgs.slice(0, 10);
   
-    console.log('Updated Management Organizations:', this.sortedOrgs);
+    console.log('Sorted Organizations:', this.sortedOrgs); // Debug organizations
   }
   
   
