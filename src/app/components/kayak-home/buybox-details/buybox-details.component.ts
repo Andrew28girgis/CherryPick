@@ -73,11 +73,7 @@ export class BuyboxDetailsComponent {
         console.error('Error fetching buybox info:', err);
        },
     });
-  }
-
-
-
-
+  } 
 
   onSubmit() { 
       const body: any = {
@@ -139,5 +135,6 @@ export class BuyboxDetailsComponent {
        console.error('Error fetching buybox info:', err);
       },
    });
+  
  }
 }
