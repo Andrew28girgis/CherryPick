@@ -528,7 +528,7 @@ toggleFilters(): void {
   
     console.log('Filtered Cards:', this.filteredKayakResult);
   }
-  getResult(updateFilters: boolean = true): void {
+  getResult(): void {
     console.log('Filtering with values:', this.filterValues);
   
     const body: any = {
@@ -559,19 +559,19 @@ toggleFilters(): void {
             );
           });
   
-          // Update the filtered cards
+          // Initialize the filtered result to the full result
           this.filteredKayakResult = [...this.KayakResult.Result];
           this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
           console.log('Filtered Result:', this.KayakResult);
   
-          // Only update filters if `updateFilters` is true
-          if (updateFilters) {
-            this.GetFilters();
-          }
+          // Call GetFilters after getting the Ids
+          this.GetFilters();
         } else {
           console.warn('Data does not contain expected structure:', data);
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
           this.filteredKayakResult = []; // Reset the filtered result
+          this.sortedTenants = [];
+          this.sortedOrgs = [];
         }
   
         this.spinner.hide();
@@ -581,10 +581,11 @@ toggleFilters(): void {
         console.error('Error fetching filtered results:', error);
         this.spinner.hide();
         this.loading = false; // Set loading to false even on error
+        this.sortedTenants = [];
+        this.sortedOrgs = [];
       },
     });
   }
-  
   
   GetFilters(): void {
     if (!this.Ids) {
@@ -601,7 +602,7 @@ toggleFilters(): void {
     const body: any = {
       Name: 'GetFilters',
       Params: {
-        ids: this.Ids,
+        ids: this.Ids, // Ensure Ids are passed
         buyboxid: this.selectedbuyBox,
       },
     };
@@ -642,7 +643,6 @@ toggleFilters(): void {
       },
     });
   }
-  
   
   
   GetStatesAndCities(): void {
@@ -705,7 +705,7 @@ toggleFilters(): void {
     
   }
   toggleTenantSelection(tenant: Tenant): void {
-    const currentTenants = this.filterValues.tenants || '';
+    const currentTenants = this.filterValues.tenants || ''; // Ensure tenants is a string
     let tenantIds = currentTenants.split(',').filter((id: any) => id.trim());
   
     const tenantIdAsString = String(tenant.OrganizationId);
@@ -716,10 +716,10 @@ toggleFilters(): void {
     }
   
     this.filterValues.tenants = tenantIds.join(','); // Update tenant filters
-    this.getResult(false); // Fetch cards only
+    this.getResult(); // Fetch filtered cards
   }
   toggleOrgSelection(org: ManagementOrganization): void {
-    const currentOrgs = this.filterValues.managementOrganizationIds || '';
+    const currentOrgs = this.filterValues.managementOrganizationIds || ''; // Ensure it's a string
     let orgIds = currentOrgs.split(',').filter((id: any) => id.trim());
   
     const orgIdAsString = String(org.OrganizationId);
@@ -730,11 +730,10 @@ toggleFilters(): void {
     }
   
     this.filterValues.managementOrganizationIds = orgIds.join(','); // Update organization filters
-    this.getResult(false); // Fetch cards only
+    this.getResult(); // Fetch filtered cards
   }
-  
   toggleSecondaryTypeSelection(secondary: SecondaryType): void {
-    const currentSecondaryTypes = this.filterValues.secondarytype || '';
+    const currentSecondaryTypes = this.filterValues.secondarytype || ''; // Ensure it's a string
     let secondaryTypeList = currentSecondaryTypes.split(',').filter((type: any) => type.trim());
   
     if (!secondaryTypeList.includes(secondary.SecondaryType)) {
@@ -744,30 +743,28 @@ toggleFilters(): void {
     }
   
     this.filterValues.secondarytype = secondaryTypeList.join(','); // Update the filter
-    this.getResult(false); // Fetch cards only
+    this.getResult(); // Trigger filtering API
   }
-  
-  toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
-    if (!neighbourhood.Neighbourhood) {
-      console.warn('Neighbourhood is undefined, skipping selection.');
-      return;
-    }
-  
-    const currentNeighbourhoods = this.filterValues.neighbourhood || '';
-    let neighbourhoodList = currentNeighbourhoods.split(',').filter((name: string) => name.trim());
-  
-    if (!neighbourhoodList.includes(neighbourhood.Neighbourhood)) {
-      neighbourhoodList.push(neighbourhood.Neighbourhood);
-    } else {
-      neighbourhoodList = neighbourhoodList.filter((name: string) => name !== neighbourhood.Neighbourhood);
-    }
-  
-    this.filterValues.neighbourhood = neighbourhoodList.join(','); // Update the filter
-    this.getResult(false); // Fetch cards only
+ toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
+  if (!neighbourhood.Neighbourhood) {
+    console.warn('Neighbourhood is undefined, skipping selection.');
+    return;
   }
-  
+
+  const currentNeighbourhoods = this.filterValues.neighbourhood || ''; // Ensure it's a string
+  let neighbourhoodList = currentNeighbourhoods.split(',').filter((name: string) => name.trim());
+
+  if (!neighbourhoodList.includes(neighbourhood.Neighbourhood)) {
+    neighbourhoodList.push(neighbourhood.Neighbourhood);
+  } else {
+    neighbourhoodList = neighbourhoodList.filter((name: string) => name !== neighbourhood.Neighbourhood);
+  }
+
+  this.filterValues.neighbourhood = neighbourhoodList.join(','); // Update the filter
+  this.getResult(); // Trigger filtering API
+}
   toggleTenantCategorySelection(category: TenantsCategories): void {
-    const currentCategories = this.filterValues.tenantCategory || '';
+    const currentCategories = this.filterValues.tenantCategory || ''; // Ensure it's a string
     let categoryList = currentCategories.split(',').filter((name: any) => name.trim());
   
     if (!categoryList.includes(category.Name)) {
@@ -777,9 +774,8 @@ toggleFilters(): void {
     }
   
     this.filterValues.tenantCategory = categoryList.join(','); // Update the filter
-    this.getResult(false); // Fetch cards only
+    this.getResult(); // Trigger filtering API
   }
-  
   handleAvailabilityChange(): void {
     console.log('Availability changed:', this.filterValues.availabilty);
   
