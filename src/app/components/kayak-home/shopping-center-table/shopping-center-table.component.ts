@@ -53,16 +53,6 @@ export class ShoppingCenterTableComponent implements OnInit {
   paginatedProperties: Property[] = [];
   filteredProperties: Property[] = [];
   dropdowmOptions: any = [
-    // {
-    //   text: 'Map View',
-    //   icon: '../../../assets/Images/Icons/map.png',
-    //   status: 1,
-    // }, // Add your SVG paths here
-    // {
-    //   text: 'Side List View',
-    //   icon: '../../../assets/Images/Icons/element-3.png',
-    //   status: 2,
-    // },
     {
       text: 'Table View',
       icon: '../../../assets/Images/Icons/grid-4.png',
@@ -73,6 +63,16 @@ export class ShoppingCenterTableComponent implements OnInit {
       icon: '../../../assets/Images/Icons/grid-1.png',
       status: 3,
     },
+    {
+      text: 'Side List View',
+      icon: '../../../assets/Images/Icons/element-3.png',
+      status: 2,
+    },
+    {
+      text: 'Map View',
+      icon: '../../../assets/Images/Icons/map.png',
+      status: 1,
+    }, // Add your SVG paths here
   ];
   isOpen = false;
   allPlaces!: AllPlaces;
@@ -146,6 +146,17 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
+
+    this.currentView = localStorage.getItem('currentView') || '4';
+
+    const selectedOption = this.dropdowmOptions.find(
+      (option: any) => option.status === parseInt(this.currentView)
+    );
+
+    if (selectedOption) {
+      this.selectedOption = selectedOption.status;
+    }
+
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
@@ -193,7 +204,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
     const isInsideMenuCrad = clickedElement.closest('.shortcuts_iconCard');
     const isEllipsisButtonCrad = clickedElement.closest('.ellipsis_icont');
-  
+
     if (!isInsideMenuCrad && !isEllipsisButtonCrad) {
       this.selectedIdCard = null;
     }
@@ -814,11 +825,12 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   selectOption(option: any): void {
-    this.selectedOption = option;
+    this.selectedOption = option.status;
     this.currentView = option.status;
     this.isOpen = false;
     localStorage.setItem('currentView', this.currentView);
   }
+
 
   goToPlace(place: any) {
     if (place.CenterAddress) {
@@ -931,7 +943,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
-    });    
+    });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 

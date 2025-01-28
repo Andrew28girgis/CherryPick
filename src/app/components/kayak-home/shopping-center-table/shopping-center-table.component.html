@@ -4,7 +4,7 @@
   <div class="col-6 col-md-6 pt-2 d-flex justify-content-strat align-items-cente">
     <div class="custom-icon-container">
       <div class="icon-option" *ngFor="let option of dropdowmOptions" (click)="selectOption(option)"
-        [class.selected]="selectedOption === option">
+        [class.selected]="selectedOption === option.status">
         <img [src]="option.icon" [alt]="option.text" class="icon-image" />
         <span class="icon-text">{{ option.text }}</span>
       </div>
@@ -252,7 +252,9 @@
         <p style="font-weight: 500;">No data Shopping Center</p>
       </div>
     </ng-container>
-    <ng-container *ngIf="currentView != 4">
+    <div style="background-color: #f4f4f4" [ngClass]="{'d-none': currentView == 1 || currentView == 4,
+      'col-md-8 col-sm-12 cards ': currentView == 2,'col-12': currentView == 3}">
+    <!-- <ng-container *ngIf="currentView != 4"> -->
       <div class="row mt-2">
         <ng-container *ngFor="let shopping of shoppingCenters">
           <div style="cursor: pointer" class="card-window" [ngClass]="{'col-md-4 col-sm-4 col-12': currentView == 3}">
@@ -509,7 +511,8 @@
           </div>
         </ng-container>
       </div>
-    </ng-container>
+    <!-- </ng-container> -->
+    </div>
     <div class="p-0"
       [ngClass]="{'d-none': currentView == 4 || currentView == 3,'col-12': currentView == 1,'col-4': currentView == 2}">
       <div id="map" class="custom-map"></div>
