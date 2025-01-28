@@ -669,16 +669,19 @@ toggleFilters(): void {
   }
   handleStateChange(selectedValue: string): void {
     this.filterValues.statecode = selectedValue; // Update the selected state
+    this.filterValues.city = ''; // Clear the city filter
+    this.selectedCity = null; // Reset the selected city in the UI
     console.log('State selected:', selectedValue);
   
-    this.updateCitiesForSelectedState(); // Update cities based on selected state
+    this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
     this.getResult(); // Fetch results for the selected state
   }
   
-  onCityChange(): void {
-    this.selectedCity = this.filterValues.city;
-    this.getResult(); // Trigger only for shopping centers
-    this.selectedCity='';
+  onCityChange(selectedValue: string): void {
+    this.filterValues.city = selectedValue; // Update the selected city
+    console.log('City selected:', selectedValue);
+  
+    this.getResult(); // Fetch results for the selected city
   }
   handleNeighbourhoodChange(selectedValue: string): void {
     this.filterValues.neighbourhood = selectedValue; // Update the selected neighbourhood
@@ -693,8 +696,9 @@ toggleFilters(): void {
   
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
-      (s) => !this.filterValues.statecode || s.stateCode === this.filterValues.statecode
+      (s) => s.stateCode === this.filterValues.statecode
     );
+    console.log('Updated cities for state:', this.filterValues.statecode, this.uniqueCities);
   }
 
   getCitiesOfState() {
