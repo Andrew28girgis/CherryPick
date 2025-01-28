@@ -4,8 +4,10 @@ import {
   NgZone,
   ViewChild,
   ElementRef,
+  TemplateRef,
   Output,
   EventEmitter,
+  HostListener,
 } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +20,7 @@ import {
 } from './../../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
@@ -51,25 +53,25 @@ export class ShoppingCenterTableComponent implements OnInit {
   paginatedProperties: Property[] = [];
   filteredProperties: Property[] = [];
   dropdowmOptions: any = [
-    // {
-    //   text: 'Map View',
-    //   icon: '../../../assets/Images/Icons/map.png',
-    //   status: 1,
-    // }, // Add your SVG paths here
-    // {
-    //   text: 'Side List View',
-    //   icon: '../../../assets/Images/Icons/element-3.png',
-    //   status: 2,
-    // },
     {
-      text: 'Table View',
-      icon: '../../../assets/Images/Icons/grid-4.png',
-      status: 4,
+      text: 'Map View',
+      icon: '../../../assets/Images/Icons/map.png',
+      status: 1,
+    }, // Add your SVG paths here
+    {
+      text: 'Side List View',
+      icon: '../../../assets/Images/Icons/element-3.png',
+      status: 2,
     },
     {
       text: 'Cards View',
       icon: '../../../assets/Images/Icons/grid-1.png',
       status: 3,
+    },
+    {
+      text: 'Table View',
+      icon: '../../../assets/Images/Icons/grid-4.png',
+      status: 4,
     },
   ];
   isOpen = false;
@@ -96,6 +98,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   selectedCity: string = '';
   filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
   BuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
+  @ViewChild('deleteShoppingCenterModal')
+  deleteShoppingCenterModal!: TemplateRef<any>;
+  shoppingCenterIdToDelete: number | null = null;
 
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
@@ -141,6 +146,17 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
+
+    this.currentView = localStorage.getItem('currentView') || '4';
+
+    const selectedOption = this.dropdowmOptions.find(
+      (option: any) => option.status === parseInt(this.currentView)
+    );
+
+    if (selectedOption) {
+      this.selectedOption = selectedOption.status;
+    }
+
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
@@ -152,11 +168,49 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   selectedId: number | null = null;
-  toggleShortcuts(id: number, close?: string): void {
+  selectedIdCard: number | null = null;
+  toggleShortcutsCard(id: number, close?: string): void {
+    if (close === 'close') {
+      this.selectedIdCard = null;
+    } else {
+      this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    }
+  }
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
     if (close === 'close') {
       this.selectedId = null;
-    } else {
-      this.selectedId = this.selectedId === id ? null : id;
+      return;
+    }
+
+    // حساب الإحداثيات إذا كان العنصر محددًا
+    const targetElement = event?.target as HTMLElement;
+    const rect = targetElement.getBoundingClientRect();
+
+    const shortcutsIcon = document.querySelector('.shortcuts_icon') as HTMLElement;
+
+    if (shortcutsIcon) {
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`; // تظهر أسفل الزر مباشرة
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`; // محاذاة مع الزر
+    }
+
+    this.selectedId = this.selectedId === id ? null : id;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedElement = event.target as HTMLElement;
+    const isInsideMenu = clickedElement.closest('.shortcuts_icon');
+    const isEllipsisButton = clickedElement.closest('.ellipsis_icon');
+
+    const isInsideMenuCrad = clickedElement.closest('.shortcuts_iconCard');
+    const isEllipsisButtonCrad = clickedElement.closest('.ellipsis_icont');
+
+    if (!isInsideMenuCrad && !isEllipsisButtonCrad) {
+      this.selectedIdCard = null;
+    }
+
+    if (!isInsideMenu && !isEllipsisButton) {
+      this.selectedId = null;
     }
   }
 
@@ -449,7 +503,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   toggleDropdown() {
     this.isOpen = !this.isOpen;
   }
-  
+
   // async getAllMarker() {
   //   try {
   //     this.spinner.show();
@@ -508,13 +562,13 @@ export class ShoppingCenterTableComponent implements OnInit {
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
-  
+
       const mapElement = document.getElementById('map') as HTMLElement;
       if (!mapElement) {
         console.error('Element with id "map" not found.');
-        return; 
+        return;
       }
-  
+
       if (this.savedMapView) {
         const { lat, lng, zoom } = JSON.parse(this.savedMapView);
         this.map = new Map(mapElement, {
@@ -536,19 +590,19 @@ export class ShoppingCenterTableComponent implements OnInit {
           mapId: '1234567890',
         });
       }
-  
+
       this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
       this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
       this.map.addListener('bounds_changed', () => this.onMapDragEnd(this.map));
-  
+
       if (this.shoppingCenters && this.shoppingCenters.length > 0) {
         this.createMarkers(this.shoppingCenters, 'Shopping Center');
       }
-  
+
       if (this.standAlone && this.standAlone.length > 0) {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
-  
+
       this.createCustomMarkers(this.buyboxCategories);
     } catch (error) {
       console.error('Error loading markers:', error);
@@ -556,7 +610,72 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.spinner.hide();
     }
   }
-  
+
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenterId: number
+  ) {
+    this.shoppingCenterIdToDelete = shoppingCenterId;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
+
+  // Confirm deletion of Shopping Center
+  confirmDeleteShoppingCenter(modal: NgbModalRef) {
+    if (this.shoppingCenterIdToDelete !== null) {
+      this.DeleteShoppingCenter(
+        this.shoppingCenterIdToDelete
+      ).subscribe(
+        (res) => {
+          // console.log(
+          //   'DeleteShoppingCenter',
+          //   JSON.stringify(res.json)
+          // );
+          this.BuyBoxPlacesAndShoppingCenter =
+            this.BuyBoxPlacesAndShoppingCenter.filter(
+              (center) => center.id !== this.shoppingCenterIdToDelete
+            );
+          modal.close('Delete click');
+          this.shoppingCenterIdToDelete = null;
+          this.spinner.show();
+          const body: any = {
+            Name: 'GetMarketSurveyShoppingCenters',
+            Params: {
+              BuyBoxId: this.BuyBoxId,
+            },
+          };
+
+          this.PlacesService.GenericAPI(body).subscribe({
+            next: (data) => {
+              this.shoppingCenters = data.json;
+              this.stateService.setShoppingCenters(data.json);
+              this.spinner.hide();
+              //this.getStandAlonePlaces(this.BuyBoxId);
+              this.getBuyBoxPlaces(this.BuyBoxId);
+            },
+            error: (error) => console.error('Error fetching APIs:', error),
+          });
+        },
+        (error) => {
+          console.error('Error deleting shopping center:', error);
+          modal.dismiss('Error');
+        }
+      );
+    }
+  }
+
+  // Delete Shopping Center Function
+  DeleteShoppingCenter(ShoppingCenterId: number) {
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromBuyBox',
+      Params: {
+        BuyboxId: this.BuyBoxId,
+        ShoppingCenterId: ShoppingCenterId,
+      },
+    };
+    return this.PlacesService.GenericAPI(body);
+  }
 
   createMarkers(markerDataArray: any[], type: string) {
     markerDataArray.forEach((markerData) => {
@@ -706,11 +825,12 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   selectOption(option: any): void {
-    this.selectedOption = option;
+    this.selectedOption = option.status;
     this.currentView = option.status;
     this.isOpen = false;
     localStorage.setItem('currentView', this.currentView);
   }
+
 
   goToPlace(place: any) {
     if (place.CenterAddress) {

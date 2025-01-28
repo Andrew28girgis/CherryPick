@@ -67,15 +67,17 @@ select option:checked {
 }
 
 
-.ellipsis_icon {
+.ellipsis_icon ,.ellipsis_icont {
   border: 1.5px solid #7077915b;
   width: 30px;
   height: 30px;
   background: transparent;
   border-radius: 6px;
+  position: relative;
+  z-index: 1;
 }
 
-.shortcuts_icon {
+.shortcuts_icon,.shortcuts_iconCard {
   position: absolute;
   background: white;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
@@ -86,10 +88,19 @@ select option:checked {
   z-index: 100;
   right: 135%;
   width: max-content;
-  top: -80%;
+  top: -135%;
+}
+.shortcuts_iconCard {
+  top: -22%;
 }
 
-.shortcuts_icon>ul {
+.between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shortcuts_icon>ul ,.shortcuts_iconCard>ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -100,7 +111,7 @@ select option:checked {
 
 }
 
-.shortcuts_icon>li {
+.shortcuts_icon>li  ,.shortcuts_iconCard>li{
   display: flex;
   gap: 6px;
   color: #707791;
@@ -114,7 +125,7 @@ select option:checked {
   cursor: pointer;
 }
 
-.shortcuts_icon .target {
+.shortcuts_icon .target  ,.shortcuts_iconCard .target {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -126,16 +137,19 @@ select option:checked {
   text-align: start;
   margin: 0;
   text-decoration: none;
+  cursor: pointer;
 }
 
-.shortcuts_icon>i {
+.shortcuts_icon>i  ,.shortcuts_iconCard>i{
   position: absolute;
   right: -8px;
   top: 25%;
   font-size: 25px;
   color: white;
 }
-
+.shortcuts_iconCard>i {
+  top: 5%;
+}
 
 
 
@@ -174,11 +188,6 @@ select option:checked {
   background-color: #ffffff;
   cursor: pointer;
 }
-
-.Button_tab{
-
-}
-
 
 
 .info {
@@ -706,7 +715,7 @@ a {
 .card-content {
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  height: 330px;
+  height: max-content;
   cursor: auto;
   display: flex;
   flex-direction: column;
