@@ -54,9 +54,14 @@ export class ShoppingCenterTableComponent implements OnInit {
   filteredProperties: Property[] = [];
   dropdowmOptions: any = [
     {
-      text: 'Table View',
-      icon: '../../../assets/Images/Icons/grid-4.png',
-      status: 4,
+      text: 'Map View',
+      icon: '../../../assets/Images/Icons/map.png',
+      status: 1,
+    }, // Add your SVG paths here
+    {
+      text: 'Side List View',
+      icon: '../../../assets/Images/Icons/element-3.png',
+      status: 2,
     },
     {
       text: 'Cards View',
@@ -64,15 +69,10 @@ export class ShoppingCenterTableComponent implements OnInit {
       status: 3,
     },
     {
-      text: 'Side List View',
-      icon: '../../../assets/Images/Icons/element-3.png',
-      status: 2,
+      text: 'Table View',
+      icon: '../../../assets/Images/Icons/grid-4.png',
+      status: 4,
     },
-    {
-      text: 'Map View',
-      icon: '../../../assets/Images/Icons/map.png',
-      status: 1,
-    }, // Add your SVG paths here
   ];
   isOpen = false;
   allPlaces!: AllPlaces;
