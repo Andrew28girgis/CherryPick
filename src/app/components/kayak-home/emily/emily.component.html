@@ -1,12 +1,6 @@
 <section class="container-fluid pt-2 pb-2">
-  <!-- <div class="head__section">
-    <div>Buybox Management</div>
-    <div>Academy Sports Puls Outdoors</div>
-  </div> -->
   <div class="Nav__section">
     <ul class="pt-3 pe-2 ps-2 m-0">
-      <!-- <li id="Emily" *ngFor="let tab of tabs" [ngClass]="{'active': selectedTab === tab.id}"
-        (click)="selectTab(tab.id)">{{ tab.label }}</li> -->
       <li
         id="Emily"
         *ngFor="let tab of getFilteredTabs()"
@@ -602,9 +596,9 @@
         (bindClicked)="selectTab('kayak')"
       ></app-shopping-center-table>
     </section>
-    <section *ngIf="selectedTab === 'Locations'" class="row d-flex m-0 p-2">
+    <!-- <section *ngIf="selectedTab === 'Locations'" class="row d-flex m-0 p-2">
       <app-work-spaces></app-work-spaces>
-    </section>
+    </section> -->
     <section
       *ngIf="selectedTab === 'Sharingh'"
       class="row d-flex m-0 p-2"
