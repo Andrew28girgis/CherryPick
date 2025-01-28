@@ -1,5 +1,5 @@
 
-  <div class="modal-body" style="height: 80vh">
+  <div class="modal-body mt-3 mb-5">
     <div class="row m-0 p-0">
       <div class="col-12 mt-3">
         <form class="row m-0 p-0">
@@ -58,12 +58,12 @@
         </form>
       </div>
       <div class="col-12 mt-3">
-        <label *ngIf="this.RelationsOrganizations.length > 0">Relations</label>
+        <label *ngIf="this.RelationsOrganizations.length > 0" class="mb-2" style="font-size: 16px; font-weight: 600;">Relations</label>
         <div class="table-responsive" style="max-height: 500px; overflow-y: auto">
           <table class="table table-bordered">
             <thead class="thead-light" *ngIf="this.RelationsOrganizations.length > 0">
               <tr>
-                <th>Id</th>
+                <!-- <th>Id</th> -->
                 <th>Name</th>
                 <th>Category</th>
                 <th style="text-align: center;">Actions</th>
@@ -71,7 +71,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let relation of RelationsOrganizations; let i = index">
-                <td>{{ relation.id }}</td>
+                <!-- <td>{{ relation.id }}</td> -->
                 <td>{{ relation.name }}</td>
                 <td>{{ relation.category }}</td>
                 <td style="text-align: center;">

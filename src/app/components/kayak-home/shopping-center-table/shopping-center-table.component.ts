@@ -144,6 +144,12 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+
+      this.BuyBoxPlacesCategories(this.BuyBoxId);
+      this.GetOrganizationById(this.OrgId);
+      this.GetCustomSections(this.BuyBoxId);
+      this.getShoppingCenters(this.BuyBoxId);
+      this.getBuyBoxPlaces(this.BuyBoxId);
     });
 
 
