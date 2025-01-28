@@ -58,6 +58,10 @@
                     "
                   ></div>
                 </div>
+                <div class="d-flex justify-content-end m-3">
+                  <button class="btn edit-btn">AI Generate</button>
+                  <button class="btn send-btn ms-2 me-4">Send</button>
+                </div>
               </section>
             </div>
           </ng-container>
@@ -223,10 +227,17 @@
                 [value]="center.CenterName"
               >
                 {{ center.CenterName }}
-                <span> ({{ center.ShoppingCenterManager && center.ShoppingCenterManager[0] ? center.ShoppingCenterManager[0].Name : '' }})</span>
+                <span>
+                  ({{
+                    center.ShoppingCenterManager &&
+                    center.ShoppingCenterManager[0]
+                      ? center.ShoppingCenterManager[0].Name
+                      : ""
+                  }})</span
+                >
 
                 <!-- {{ center.CenterName }} ({{ center.ShoppingCenterManager[0]?.Name || 'No Manager' }}) -->
-                            <!-- {{ center.CenterName }} ({{ center.ShoppingCenterManager[0]?.Name || 'No Manager' }}) -->
+                <!-- {{ center.CenterName }} ({{ center.ShoppingCenterManager[0]?.Name || 'No Manager' }}) -->
               </option>
             </select>
           </div>

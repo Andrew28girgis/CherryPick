@@ -265,7 +265,7 @@ export class EmilyComponent {
   getCotenantsWithActivityType(centerName: string): any[] {
     const center: any = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
-    );
+    );  
     // console.log('Shopping Centers', center);
     this.groupedActivityTypes = center.CotenantsWithActivityType.reduce(
       (result: any, cotenant: any) => {
