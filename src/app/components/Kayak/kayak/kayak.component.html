@@ -213,9 +213,8 @@
               Bind
             </button>
           </div> -->
-          <div class="card custom-card mb-4">
+          <!-- <div class="card custom-card mb-4">
             <div class="d-flex align-items-center justify-content-center gap-2">
-              <!-- Explore Button -->
               <button 
                 class="btn explorebtn"
                 [class.selected]="selectedButton === 'explore'"
@@ -224,7 +223,6 @@
                 <i class="fas fa-globe"></i> Explore
               </button>
           
-              <!-- Buybox Management Button -->
               <button 
                 class="btn buyboxbtn"
                 [class.selected]="selectedButton === 'buybox'"
@@ -233,7 +231,7 @@
                 <i class="fas fa-box"></i> Buybox Management
               </button>
             </div>
-          </div>
+          </div> -->
           
           
           <div class="search-bar container ">
@@ -739,7 +737,7 @@
     ></button>
   </div>
   <div class="modal-body">
-    <!-- <div class="row">
+    <div class="row">
       <div class="col-md-6">
         <div class="card card-filter static-height">
           <div class="card-body position-relative">
@@ -756,18 +754,12 @@
                       name="Comp-Tenants"
                       class="form-check-input"
                       (change)="toggleTenantSelection(tenant)"
-                      [(ngModel)]="tenant.Selected"
                     />
                     <label class="form-check-label tenantorg" [for]="'tenant-' + tenant?.OrganizationId">
                       {{ tenant.Name.length > 25 ? tenant.Name.slice(0, 25) + '...' : tenant?.Name }}
                     </label>
                   </div>
                 </ng-container>
-              </div>
-              <div class="text-center mt-2">
-                <button class="btn btn-link no-underline" (click)="toggleTenantList()">
-                  {{ showAllTenants ? "Show Less ▲" : "Show More ▼" }}
-                </button>
               </div>
             </div>
             <ng-template #noTenantss>
@@ -791,13 +783,9 @@
                       [id]="'org-' + org?.OrganizationId"
                       name="Comp-ManagementCompany"
                       class="form-check-input"
-                      (change)="toggleOrgSelection(org)"
-                      [(ngModel)]="org.Selected"
+                      (change)="toggleOrgSelection(org)" 
                     />
-                    <label
-                      class="form-check-label tenantorg"
-                      [for]="'org-' + org?.OrganizationId"
-                    >
+                    <label class="form-check-label tenantorg" [for]="'org-' + org?.OrganizationId">
                       {{ org.Name.length > 25 ? org.Name.slice(0, 25) + '...' : org?.Name }}
                     </label>
                   </div>
@@ -810,30 +798,100 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 mt-2">
         <div class="card card-filter static-height">
           <div class="card-body position-relative">
-            <div class="small-titlefilter">
-              <span>Secondary Type</span>
-            </div>
-            <div class="mt-3">
-              <select
-                class="form-select"
-                [(ngModel)]="filterValues.secondarytype"
-                (ngModelChange)="handleSecondaryTypeChange($event)"
-              >
-                <option value="" selected>All</option>
-                <ng-container *ngFor="let secondary of Filters?.SecondaryType">
-                  <option [value]="secondary.SecondaryType">
-                    {{ secondary.SecondaryType }}
-                  </option>
+            <div *ngIf="secondaryTypes.length > 0; else noSecondaryTypes">
+              <div class="small-titlefilter">
+                <span>Secondary Type</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let secondary of secondaryTypes">
+                  <div class="form-check" *ngIf="secondary?.SecondaryType">
+                    <input
+                      type="checkbox"
+                      [id]="'secondary-' + secondary.SecondaryType"
+                      name="Comp-SecondaryType"
+                      class="form-check-input"
+                      (change)="toggleSecondaryTypeSelection(secondary)"
+                    />
+                    <label class="form-check-label tenantorg" [for]="'secondary-' + secondary.SecondaryType">
+                      {{ secondary.SecondaryType }}
+                    </label>
+                  </div>
                 </ng-container>
-              </select>
+              </div>
             </div>
+            <ng-template #noSecondaryTypes>
+              <div class="text-muted text-center">No secondary types available.</div>
+            </ng-template>
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      
+      <div class="col-md-6 mt-2">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div *ngIf="neighbourhoods.length > 0; else noNeighbourhoods">
+              <div class="small-titlefilter">
+                <span>Neighbourhood</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let neighbourhood of neighbourhoods">
+                  <div class="form-check" *ngIf="neighbourhood?.Neighbourhood">
+                    <input
+                      type="checkbox"
+                      [id]="'neighbourhood-' + neighbourhood.Neighbourhood"
+                      name="Comp-Neighbourhood"
+                      class="form-check-input"
+                      (change)="toggleNeighbourhoodSelection(neighbourhood)"
+                    />
+                    <label class="form-check-label tenantorg" [for]="'neighbourhood-' + neighbourhood.Neighbourhood">
+                      {{ neighbourhood.Neighbourhood }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #noNeighbourhoods>
+              <div class="text-muted text-center">No neighbourhoods available.</div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mt-2">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div *ngIf="tenantCategories.length > 0; else noTenantCategories">
+              <div class="small-titlefilter">
+                <span>Tenant Categories</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let category of tenantCategories">
+                  <div class="form-check" *ngIf="category?.Name">
+                    <input
+                      type="checkbox"
+                      [id]="'category-' + category.Name"
+                      name="Comp-TenantCategory"
+                      class="form-check-input"
+                      (change)="toggleTenantCategorySelection(category)"
+                    />
+                    <label class="form-check-label tenantorg" [for]="'category-' + category.Name">
+                      {{ category.Name }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #noTenantCategories>
+              <div class="text-muted text-center">No tenant categories available.</div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mt-2">
         <div class="card card-filter static-height">
           <div class="card-body position-relative">
             <div class="d-flex align-items-center justify-content-between">
@@ -850,157 +908,8 @@
           </div>
         </div>
       </div>
-    </div> -->
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card card-filter static-height">
-          <div class="card-body position-relative">
-            <div class="mt-3 small-titlefilter">
-              <span>Tenants</span>
-            </div>
-            <div class="mt-3">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant1"
-                  name="Comp-Tenants"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant1">
-                  Tenant 1
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant2"
-                  name="Comp-Tenants"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant2">
-                  Tenant 2
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant3"
-                  name="Comp-Tenants"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant3">
-                  Tenant 3
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant4"
-                  name="Comp-Tenants"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant4">
-                  Tenant 4
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <div class="col-md-6">
-        <div class="card card-filter static-height">
-          <div class="card-body position-relative">
-            <div class="mt-3 small-titlefilter">
-              <span>Management Company</span>
-            </div>
-            <div class="mt-3">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant1"
-                  name="Comp-ManagementCompany"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant1">
-                  Management Company 1
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant2"
-                  name="Comp-ManagementCompany"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant2">
-                  Management Company 2
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant3"
-                  name="Comp-ManagementCompany"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant3">
-                  Management Company 3
-                </label>
-              </div>
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="tenant4"
-                  name="Comp-ManagementCompany"
-                  class="form-check-input"
-                />
-                <label class="form-check-label tenantorg" for="tenant4">
-                  Management Company 4
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <div class="col-md-6">
-        <div class="card card-filter static-height">
-          <div class="card-body position-relative">
-            <div class="mt-3 small-titlefilter">
-              <span>Secondary Type</span>
-            </div>
-            <div class="mt-3">
-              <select class="form-select">
-                <option selected>Option 1</option>
-                <option>Option 2</option>
-                <option>Option 3</option>
-                <option>Option 4</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    
-      <div class="col-md-6">
-        <div class="card card-filter static-height">
-          <div class="card-body position-relative">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="small-titlefilter mb-0">
-                <span>Tenant Tags</span>
-              </div>
-              <button
-                class="btn btn-outline-primary tags px-3 py-2"
-                (click)="openTagsModal(tagsModal)"
-              >
-                Select Tags <i class="fas fa-tags ms-2"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
-    
   </div>
   <div class="modal-footer">
     <button type="button" class="btn bind-button" (click)="modal.dismiss()">Close</button>
