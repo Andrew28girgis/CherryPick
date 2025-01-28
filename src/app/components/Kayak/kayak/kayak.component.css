@@ -1,38 +1,39 @@
-.btn {
-  border: 1px solid #d3d3d3;
-  background-color: #f8f9fa;
-  color: #707791;
-  border-radius: 4px;
-  padding: 8px 12px;
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-}
-.explorebtn{
+.custom-card {
+  background-color: #ffffff; /* White Background */
+  padding: 12px;
+  border-radius: 12px; /* Rounded Corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft Shadow */
   display: flex;
-  padding: var(--Space-Space-8, 8px);
+  justify-content: center;
   align-items: center;
-  gap: var(--Space-Space-8, 4px);
-  border-radius: var(--Radius-Radius-12, 12px);
- background: var(--Card-Section-BG, #FFF);
-}
-.buyboxbtn{
-display: flex;
-height: 43px;
-padding: 6px 12px;
-align-items: center;
-gap: 8px;
-border-radius: var(--Radius-Radius-8, 8px);
-background: var(--Card-Section-BG, #FFF);
+  width: fit-content;
+  margin: auto;
 }
 
-/* Selected button styling */
-.selected-button {
-  background-color: #e0e7ff; /* Light purple background */
-  color: #4D65B4; /* Blue color for text */
-  border-color: #4D65B4; /* Blue border */
+/* Default Button Styling */
+.btn {
+  border: 1px solid #d3d3d3;
+  background-color: #ffffff;
+  color: #707791;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
 }
-.card {
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+/* Selected Button Styling */
+.btn.selected {
+  background-color: #e0e7ff; /* Light Purple Background */
+  color: #4D65B4; /* Dark Blue Text */
+  border-color: #4D65B4; /* Dark Blue Border */
+}
+
+/* Icons */
+.btn i {
+  font-size: 14px;
 }
 
 /* Container for buttons */
@@ -240,6 +241,8 @@ line-height: 24px;
 .card-body {
   overflow-y: auto; /* Add scroll behavior if content overflows */
 }
+
+
 
 
 
