@@ -16,6 +16,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   templateUrl: './emily.component.html',
   styleUrls: ['./emily.component.css'],
 })
+
 export class EmilyComponent {
   buyBoxId!: number | null;
   TemplatesId!: number | null;
