@@ -223,8 +223,7 @@
                 [value]="center.CenterName"
               >
                 {{ center.CenterName }}
-                <span> ({{ center.ShoppingCenterManager?.[0]?.Name }})</span>
-                <!-- {{ center.CenterName }} ({{ center.ShoppingCenterManager[0]?.Name || 'No Manager' }}) -->
+                <span> ({{ center.ShoppingCenterManager[0].Name }})</span>                <!-- {{ center.CenterName }} ({{ center.ShoppingCenterManager[0]?.Name || 'No Manager' }}) -->
               </option>
             </select>
           </div>
