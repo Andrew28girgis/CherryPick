@@ -65,6 +65,7 @@ export class KayakComponent implements OnInit {
   showAllSqft: boolean = false; // Toggle to show all or limited sqft results
   selectedbuyBox!: string;
   SelectedShoppingCenterIDs: number[] = []; // To store selected shopping center IDs
+  SelectedPlacesIDs: number[]=[];
   shoppingCenters: { id: number; name: string }[] = []; // Example shopping centers list
   loading: boolean = true; // Add a loading flag
   isBulkMode: boolean = false; // Default: Bulk mode is off
@@ -174,6 +175,7 @@ toggleFilters(): void {
         state: this.selectedState || '', // Ensure a value is sent, even if empty
         city: this.selectedCity || '', // Ensure a value is sent, even if empty
         shoppingcenterIds: this.SelectedShoppingCenterIDs.join(','), // Selected shopping centers
+        placeIds: this.SelectedPlacesIDs.join(',')
       },
     };
   
@@ -189,6 +191,15 @@ toggleFilters(): void {
         this.spinner.hide(); // Hide spinner on error
       },
     });
+  }
+  selectedshoppingcenterid(selectedid: number): void {
+    if (selectedid) { // Add a check to ensure selectedid is valid
+      this.SelectedShoppingCenterIDs.push(selectedid); // Push the selected ID into the array
+      console.log('Selected IDs:', this.SelectedShoppingCenterIDs); // Log the array for debugging
+      this.bindShoppingCenter(); // Call the bind function
+    } else {
+      console.error('Invalid ID:', selectedid); // Log an error if the ID is invalid
+    }
   }
   
   
