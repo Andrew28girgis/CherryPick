@@ -213,6 +213,29 @@
               Bind
             </button>
           </div> -->
+          <div class="card custom-card mb-4">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <!-- Explore Button -->
+              <button 
+                class="btn explorebtn"
+                [class.selected]="selectedButton === 'explore'"
+                (click)="selectButton('explore')"
+              >
+                <i class="fas fa-globe"></i> Explore
+              </button>
+          
+              <!-- Buybox Management Button -->
+              <button 
+                class="btn buyboxbtn"
+                [class.selected]="selectedButton === 'buybox'"
+                (click)="selectButton('buybox')"
+              >
+                <i class="fas fa-box"></i> Buybox Management
+              </button>
+            </div>
+          </div>
+          
+          
           <div class="search-bar container ">
             <!-- Input Group -->
             <div class="col-md-4 d-flex align-items-start">
