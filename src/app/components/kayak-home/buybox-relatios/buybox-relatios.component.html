@@ -1,0 +1,88 @@
+
+  <div class="modal-body" style="height: 80vh">
+    <div class="row m-0 p-0">
+      <div class="col-12 mt-3">
+        <form class="row m-0 p-0">
+          <div class="mb-1 col-4 p-2">
+            <label for="retailRelation" class="form-label">Retail Relation</label>
+            <select id="retailRelation" class="form-control" [(ngModel)]="selectedRetailRelationId" name="retailRelation" required>
+              <option value="" disabled selected>Select Retail Relation</option>
+              <option *ngFor="let relation of retailRelations" [ngValue]="relation.id">
+                {{ relation.name }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-1 position-relative col-4 p-2">
+            <label for="organizationSearch" class="form-label">Organization</label>
+            <input type="text" id="organizationSearch" name="organizationSearch" class="form-control" placeholder="Search Organization" [(ngModel)]="searchOrganizationTerm"
+              (input)="onOrganizationInput($event)" (keydown)="handleOrganizationKeydown($event)" (blur)="handleOrganizationBlur()" autocomplete="off"
+              required aria-autocomplete="list" aria-controls="organization-suggestions"/>
+            <!-- Loading Indicator -->
+            <div *ngIf="isSearchingOrganization" class="spinner-grow spinner-grow-sm text-primary position-absolute top-0 end-0 me-2 mt-3" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <!-- Suggestions List -->
+            <ul class="list-group position-absolute w-100" *ngIf="showOrganizationSuggestions && organizations.length" id="organization-suggestions" role="listbox">
+              <li *ngFor="let org of organizations; let i = index" class="list-group-item list-group-item-action" [class.active]="highlightedOrganizationIndex === i" (click)="selectOrganizationFromList(org)"
+                id="organization-suggestion-{{ i }}" role="option" [attr.aria-selected]="highlightedOrganizationIndex === i">
+                {{ org.name }}
+              </li>
+            </ul>
+          </div>
+          <div class="mb-1 position-relative col-4 p-2">
+            <label for="tagSearch" class="form-label">Tag</label>
+            <input type="text" id="tagSearch" name="tagSearch" class="form-control" placeholder="Search by Tag" [(ngModel)]="searchTagTerm" (input)="onTagInput($event)"
+              (keydown)="handleTagKeydown($event)" (blur)="handleTagBlur($event)" autocomplete="off" aria-autocomplete="list" aria-controls="tag-suggestions"/>
+            <!-- Loading Indicator -->
+            <div *ngIf="isSearchingTag" class="spinner-grow spinner-grow-sm text-primary position-absolute top-0 end-0 me-2 mt-3" role="status" >
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <!-- Tag Suggestions List -->
+            <ul class="list-group position-absolute w-100" *ngIf="showTagSuggestions && tags.length" id="tag-suggestions" role="listbox" #tagSuggestionList>
+              <!-- <li *ngIf="tags.length === 0" class="list-group-item">No results found.</li> -->
+              <li *ngFor="let tag of tags; let i = index" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                [class.active]="highlightedTagIndex === i" id="tag-suggestion-{{ i }}" role="option" [attr.aria-selected]="highlightedTagIndex === i">
+                <span (click)="selectTagFromList(tag, $event)">{{ tag.name }}</span>
+                <button class="btn btn-sm btn-primary" (mousedown)="addTag(tag, $event)">
+                  Add
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- Submit Button -->
+          <div class="d-flex justify-content-end  col-12 p-0 mt-4">
+            <button type="submit" class="btn btn-primary" (click)="submitOrganizationForm()">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-12 mt-3">
+        <label *ngIf="this.RelationsOrganizations.length > 0">Relations</label>
+        <div class="table-responsive" style="max-height: 500px; overflow-y: auto">
+          <table class="table table-bordered">
+            <thead class="thead-light" *ngIf="this.RelationsOrganizations.length > 0">
+              <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th style="text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let relation of RelationsOrganizations; let i = index">
+                <td>{{ relation.id }}</td>
+                <td>{{ relation.name }}</td>
+                <td>{{ relation.category }}</td>
+                <td style="text-align: center;">
+                  <button class="btn btn-danger btn-sm" (click)="DeleteOrganizationRelations(relation.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
