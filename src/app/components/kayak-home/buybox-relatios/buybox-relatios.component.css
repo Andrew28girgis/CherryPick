@@ -46,6 +46,18 @@
   overflow-y: auto;
   z-index: 1000; /* Ensure it appears above other elements */
 }
+.form-control{
+    box-shadow: none;
+    outline: none;
+}
+.btn-primary{
+    background: #001f3f;
+    border: 0;
+}
+.form-label{
+    font-weight: 600;
+    font-size: 16px;
+}
 
 /* Active suggestion styling */
 .list-group-item.active {
