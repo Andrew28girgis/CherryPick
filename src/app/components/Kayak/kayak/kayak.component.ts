@@ -17,6 +17,9 @@ import {
   KayakFilters,
   ManagementOrganization,
   Tenant,
+  SecondaryType, // Import SecondaryType
+  Neighbourhood, // Import Neighbourhood
+  TenantsCategories, // Import TenantsCategories
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SortByPipe } from '../../../pipes/sortBy/sort-by.pipe';
@@ -68,6 +71,10 @@ export class KayakComponent implements OnInit {
   selectedPlaces: any[] = []; // Holds the selected places for the modal
   expandedPlacesIndex: number | null = null; // Keeps track of the card whose places are expanded
   showFilters: boolean = false;
+  secondaryTypes: any[] = [];
+  neighbourhoods: any[] = [];
+tenantCategories: any[] = [];
+
 
 
 
@@ -97,15 +104,16 @@ export class KayakComponent implements OnInit {
     this.filterValues = {
       statecode: '',
       city: '',
-      neighbourhood: '',
+      neighbourhood: '', // Selected neighbourhood
       availabilty: false,
       sqft: 0,
-      secondarytype: '',
-      tenants: '',
-      tags: '',
-      managementOrganizationIds: '',
+      secondarytype: '', // Selected secondary type
+      tenants: '', // Selected tenants
+      tags: '', // Selected tags
+      managementOrganizationIds: '', // Selected management organizations
       minsize: 0,
       maxsize: 0,
+      tenantCategory: '', // New field for selected tenant category
     };
     this.getResult(); 
     this.GetStatesAndCities(); 
@@ -376,10 +384,34 @@ toggleFilters(): void {
     });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
-  toggleTenantList(): void {
-    this.showAllTenants = !this.showAllTenants;
-    this.updateSortedTenants(); // Update the tenant list based on the toggle
-  }
+  // toggleTenantList(): void {
+  //   this.showAllTenants = !this.showAllTenants;
+  //   this.updateSortedTenants(); 
+  // }
+   // toggleOrgSelect(org: ManagementOrganization): void {
+  //   const currentOrgs = this.filterValues.managementOrganizationIds || '';
+  
+  //   let orgIds = currentOrgs
+  //     .split(',')
+  //     .map((id: any) => id.trim())
+  //     .filter((id: any) => id !== '');
+  
+  //   const orgIdAsString = String(org.OrganizationId);
+  
+  //   if (org.Selected) {
+   
+  //     if (!orgIds.includes(orgIdAsString)) {
+  //       orgIds.push(orgIdAsString);
+  //     }
+  //   } else {
+  //     orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+  //   }
+  
+  //   this.filterValues.managementOrganizationIds = orgIds.join(',');
+  //   console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
+  
+  //   this.getResult();
+  // }
   
 
   updateSortedTenants(): void {
@@ -389,21 +421,26 @@ toggleFilters(): void {
       return;
     }
   
-    const sortedList = [...this.Filters.Tenants].sort((a, b) =>
+    // Copy all tenants from Filters
+    const tenantList = [...this.Filters.Tenants];
+  
+    // Sort tenants alphabetically by Name
+    const sortedList = tenantList.sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
   
+    // Remove duplicate tenants based on OrganizationId
     const uniqueTenants = Array.from(
       new Set(sortedList.map((tenant) => tenant.OrganizationId))
     )
       .map((id) => sortedList.find((tenant) => tenant.OrganizationId === id))
       .filter((tenant): tenant is Tenant => tenant !== undefined);
   
-    this.sortedTenants = this.showAllTenants ? uniqueTenants : uniqueTenants.slice(0, 12);
+    // Assign all unique, sorted tenants to sortedTenants
+    this.sortedTenants = uniqueTenants;
   
     console.log('Sorted Tenants:', this.sortedTenants); // Debug tenants
   }
-  
   
   updateSortedOrgs(): void {
     if (!this.Filters?.ManagementOrganization || !Array.isArray(this.Filters.ManagementOrganization)) {
@@ -412,55 +449,63 @@ toggleFilters(): void {
       return;
     }
   
-    const sortedList = [...this.Filters.ManagementOrganization].sort((a, b) =>
+    // Copy all organizations from Filters
+    const orgList = [...this.Filters.ManagementOrganization];
+  
+    // Sort organizations alphabetically by Name
+    const sortedList = orgList.sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
   
+    // Remove duplicate organizations based on OrganizationId
     const uniqueOrgs = Array.from(
       new Set(sortedList.map((org) => org.OrganizationId))
     )
       .map((id) => sortedList.find((org) => org.OrganizationId === id))
       .filter((org): org is ManagementOrganization => org !== undefined);
   
-    this.sortedOrgs = this.showAllOrgs ? uniqueOrgs : uniqueOrgs.slice(0, 10);
+    // Assign all unique, sorted organizations to sortedOrgs
+    this.sortedOrgs = uniqueOrgs;
   
     console.log('Sorted Organizations:', this.sortedOrgs); // Debug organizations
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  toggleOrgSelect(org: ManagementOrganization): void {
-    const currentOrgs = this.filterValues.managementOrganizationIds || '';
-  
-    // Split, trim, and remove empty entries
-    let orgIds = currentOrgs
-      .split(',')
-      .map((id: any) => id.trim())
-      .filter((id: any) => id !== '');
-  
-    const orgIdAsString = String(org.OrganizationId);
-  
-    if (org.Selected) {
-      // Add the ID if not already present
-      if (!orgIds.includes(orgIdAsString)) {
-        orgIds.push(orgIdAsString);
-      }
-    } else {
-      // Remove the ID
-      orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+  updateSecondaryTypes(): void {
+    if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
+      console.error('SecondaryType list is empty or undefined.');
+      this.secondaryTypes = [];
+      return;
     }
   
-    this.filterValues.managementOrganizationIds = orgIds.join(',');
-    console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
+    // Assign all SecondaryType values from Filters
+    this.secondaryTypes = [...this.Filters.SecondaryType];
   
-    // Trigger filtering API
-    this.getResult();
+    console.log('Secondary Types:', this.secondaryTypes); // Debug secondary types
   }
+  updateNeighbourhoods(): void {
+    if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
+      console.error('Neighbourhood list is empty or undefined.');
+      this.neighbourhoods = [];
+      return;
+    }
+  
+    // Assign all Neighbourhood values from Filters
+    this.neighbourhoods = [...this.Filters.Neighbourhood];
+  
+    console.log('Neighbourhoods:', this.neighbourhoods); // Debug neighbourhoods
+  }
+  updateTenantCategories(): void {
+    if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
+      console.error('TenantsCategories list is empty or undefined.');
+      this.tenantCategories = [];
+      return;
+    }
+  
+    // Assign all TenantCategories values from Filters
+    this.tenantCategories = [...this.Filters.TenantsCategories];
+  
+    console.log('Tenant Categories:', this.tenantCategories); // Debug tenant categories
+  }
+  
   
   toggleOrgList(): void {
     this.showAllOrgs = !this.showAllOrgs;
@@ -485,7 +530,7 @@ toggleFilters(): void {
   }
   getResult(): void {
     console.log('Filtering with values:', this.filterValues);
-    
+  
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
@@ -514,14 +559,19 @@ toggleFilters(): void {
             );
           });
   
-          // Initialize the filtered result to the full result.
+          // Initialize the filtered result to the full result
           this.filteredKayakResult = [...this.KayakResult.Result];
-  
+          this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
           console.log('Filtered Result:', this.KayakResult);
+  
+          // Call GetFilters after getting the Ids
+          this.GetFilters();
         } else {
           console.warn('Data does not contain expected structure:', data);
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
           this.filteredKayakResult = []; // Reset the filtered result
+          this.sortedTenants = [];
+          this.sortedOrgs = [];
         }
   
         this.spinner.hide();
@@ -531,21 +581,29 @@ toggleFilters(): void {
         console.error('Error fetching filtered results:', error);
         this.spinner.hide();
         this.loading = false; // Set loading to false even on error
+        this.sortedTenants = [];
+        this.sortedOrgs = [];
       },
     });
   }
   
-
-  
-  
-  
-
   GetFilters(): void {
+    if (!this.Ids) {
+      console.warn('Ids are not available, resetting tenants, organizations, secondary types, neighbourhoods, and tenant categories.');
+      this.sortedTenants = [];
+      this.sortedOrgs = [];
+      this.secondaryTypes = [];
+      this.neighbourhoods = [];
+      this.tenantCategories = [];
+      return;
+    }
+  
     this.spinner.show();
     const body: any = {
       Name: 'GetFilters',
       Params: {
-        ids: this.Ids,
+        ids: this.Ids, // Ensure Ids are passed
+        buyboxid: this.selectedbuyBox,
       },
     };
   
@@ -555,25 +613,38 @@ toggleFilters(): void {
           this.Filters = data.json[0];
           console.log('Filters loaded:', this.Filters);
   
-          // Populate tenants and organizations
+          // Update all filters dynamically
           this.updateSortedTenants();
           this.updateSortedOrgs();
+          this.updateSecondaryTypes();
+          this.updateNeighbourhoods();
+          this.updateTenantCategories();
+        } else {
+          console.warn('No filters data returned.');
+          this.sortedTenants = [];
+          this.sortedOrgs = [];
+          this.secondaryTypes = [];
+          this.neighbourhoods = [];
+          this.tenantCategories = [];
         }
+  
         this.spinner.hide();
       },
       error: (error) => {
         console.error('Error fetching filters:', error);
         this.spinner.hide();
+  
+        // Reset all filters on error
+        this.sortedTenants = [];
+        this.sortedOrgs = [];
+        this.secondaryTypes = [];
+        this.neighbourhoods = [];
+        this.tenantCategories = [];
       },
     });
   }
-
-
-
-
-
   
-
+  
   GetStatesAndCities(): void {
     this.spinner.show();
     const body: any = { Name: 'GetStates', Params: {} };
@@ -597,16 +668,27 @@ toggleFilters(): void {
     this.getResult(); // Trigger only for shopping centers
   }
   handleStateChange(selectedValue: string): void {
-    this.filterValues.statecode = selectedValue; // Update the state code
-    console.log('State selected:', selectedValue || 'All');
-    this.onStateChange(); // Update city dropdown if needed
-    this.getResult(); // Fetch filtered results
+    this.filterValues.statecode = selectedValue; // Update the selected state
+    console.log('State selected:', selectedValue);
+  
+    this.updateCitiesForSelectedState(); // Update cities based on selected state
+    this.getResult(); // Fetch results for the selected state
   }
   
   onCityChange(): void {
     this.selectedCity = this.filterValues.city;
     this.getResult(); // Trigger only for shopping centers
     this.selectedCity='';
+  }
+  handleNeighbourhoodChange(selectedValue: string): void {
+    this.filterValues.neighbourhood = selectedValue; // Update the selected neighbourhood
+    console.log('Neighbourhood selected:', selectedValue);
+    this.getResult(); // Fetch filtered results
+  }
+  handleTenantCategoryChange(selectedValue: string): void {
+    this.filterValues.tenantCategory = selectedValue; // Update the selected tenant category
+    console.log('Tenant Category selected:', selectedValue);
+    this.getResult(); // Fetch filtered results
   }
   
   updateCitiesForSelectedState(): void {
@@ -624,35 +706,74 @@ toggleFilters(): void {
   }
   toggleTenantSelection(tenant: Tenant): void {
     const currentTenants = this.filterValues.tenants || ''; // Ensure tenants is a string
-    let tenantIds = currentTenants.split(',').filter((id:any) => id.trim());
+    let tenantIds = currentTenants.split(',').filter((id: any) => id.trim());
   
     const tenantIdAsString = String(tenant.OrganizationId);
-    if (tenant.Selected) {
-      if (!tenantIds.includes(tenantIdAsString)) {
-        tenantIds.push(tenantIdAsString);
-      }
+    if (!tenantIds.includes(tenantIdAsString)) {
+      tenantIds.push(tenantIdAsString);
     } else {
-      tenantIds = tenantIds.filter((id:any) => id !== tenantIdAsString);
+      tenantIds = tenantIds.filter((id: any) => id !== tenantIdAsString);
     }
   
-    this.filterValues.tenants = tenantIds.join(',');
-    this.getResult(); // Trigger filtering API
+    this.filterValues.tenants = tenantIds.join(','); // Update tenant filters
+    this.getResult(); // Fetch filtered cards
   }
-  
   toggleOrgSelection(org: ManagementOrganization): void {
     const currentOrgs = this.filterValues.managementOrganizationIds || ''; // Ensure it's a string
-    let orgIds = currentOrgs.split(',').filter((id:any) => id.trim());
+    let orgIds = currentOrgs.split(',').filter((id: any) => id.trim());
   
     const orgIdAsString = String(org.OrganizationId);
-    if (org.Selected) {
-      if (!orgIds.includes(orgIdAsString)) {
-        orgIds.push(orgIdAsString);
-      }
+    if (!orgIds.includes(orgIdAsString)) {
+      orgIds.push(orgIdAsString);
     } else {
-      orgIds = orgIds.filter((id:any) => id !== orgIdAsString);
+      orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
     }
   
-    this.filterValues.managementOrganizationIds = orgIds.join(',');
+    this.filterValues.managementOrganizationIds = orgIds.join(','); // Update organization filters
+    this.getResult(); // Fetch filtered cards
+  }
+  toggleSecondaryTypeSelection(secondary: SecondaryType): void {
+    const currentSecondaryTypes = this.filterValues.secondarytype || ''; // Ensure it's a string
+    let secondaryTypeList = currentSecondaryTypes.split(',').filter((type: any) => type.trim());
+  
+    if (!secondaryTypeList.includes(secondary.SecondaryType)) {
+      secondaryTypeList.push(secondary.SecondaryType);
+    } else {
+      secondaryTypeList = secondaryTypeList.filter((type: any) => type !== secondary.SecondaryType);
+    }
+  
+    this.filterValues.secondarytype = secondaryTypeList.join(','); // Update the filter
+    this.getResult(); // Trigger filtering API
+  }
+ toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
+  if (!neighbourhood.Neighbourhood) {
+    console.warn('Neighbourhood is undefined, skipping selection.');
+    return;
+  }
+
+  const currentNeighbourhoods = this.filterValues.neighbourhood || ''; // Ensure it's a string
+  let neighbourhoodList = currentNeighbourhoods.split(',').filter((name: string) => name.trim());
+
+  if (!neighbourhoodList.includes(neighbourhood.Neighbourhood)) {
+    neighbourhoodList.push(neighbourhood.Neighbourhood);
+  } else {
+    neighbourhoodList = neighbourhoodList.filter((name: string) => name !== neighbourhood.Neighbourhood);
+  }
+
+  this.filterValues.neighbourhood = neighbourhoodList.join(','); // Update the filter
+  this.getResult(); // Trigger filtering API
+}
+  toggleTenantCategorySelection(category: TenantsCategories): void {
+    const currentCategories = this.filterValues.tenantCategory || ''; // Ensure it's a string
+    let categoryList = currentCategories.split(',').filter((name: any) => name.trim());
+  
+    if (!categoryList.includes(category.Name)) {
+      categoryList.push(category.Name);
+    } else {
+      categoryList = categoryList.filter((name: any) => name !== category.Name);
+    }
+  
+    this.filterValues.tenantCategory = categoryList.join(','); // Update the filter
     this.getResult(); // Trigger filtering API
   }
   handleAvailabilityChange(): void {
