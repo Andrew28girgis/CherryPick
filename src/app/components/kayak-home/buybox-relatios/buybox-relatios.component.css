@@ -1,0 +1,70 @@
+.view-act{
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 20px;
+  }
+  .view-act h4{
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--app-color);
+  }
+  .tap{
+    flex: 1 0 auto;
+    min-width: 150px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px #0000001a;
+    cursor: pointer;
+    transition: transform .2s ease-in-out;
+    background-color: #fff;
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--app-color);
+    background-color: #eee;
+}
+.tap:hover {
+    transform: translateY(-5px);
+    color: var(--secondary-color);
+  }
+  .tap.active {
+    background-color: var(--secondary-color); /* Bootstrap primary color */
+    color: white;
+  }
+  .taps{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 10px;
+    flex-wrap: nowrap;
+  }
+  /* Style for the suggestions list */
+.list-group {
+  max-height: 350px;
+  overflow-y: auto;
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Active suggestion styling */
+.list-group-item.active {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+/* Positioning classes */
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+/* Ensure the suggestions list appears below the input */
+#organization-suggestions {
+  top: 100%;
+  left: 0;
+}
