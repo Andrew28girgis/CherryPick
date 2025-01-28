@@ -101,7 +101,7 @@ export class EmilyComponent {
     console.log(emailyID, this.emailBody);
   }
   
-  selectedTab: string = 'Details';
+  selectedTab: string = 'Shopping Centers';
 
   getFilteredTabs() {
     return this.tabs.filter(tab => tab.id !== 'kayak');

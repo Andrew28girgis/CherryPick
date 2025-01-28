@@ -126,7 +126,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '2';
+    this.currentView = localStorage.getItem('currentView') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
@@ -267,7 +267,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   GetOrganizationById(orgId: number): void {
-    if (this.stateService.getShareOrg().length > 0) {
+    const shareOrg = this.stateService.getShareOrg() || [];
+
+    if (shareOrg && shareOrg.length > 0) {
       this.ShareOrg = this.stateService.getShareOrg();
       return;
     }
