@@ -421,11 +421,8 @@ toggleFilters(): void {
       return;
     }
   
-    // Copy all tenants from Filters
-    const tenantList = [...this.Filters.Tenants];
-  
     // Sort tenants alphabetically by Name
-    const sortedList = tenantList.sort((a, b) =>
+    const sortedList = [...this.Filters.Tenants].sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
   
@@ -436,11 +433,10 @@ toggleFilters(): void {
       .map((id) => sortedList.find((tenant) => tenant.OrganizationId === id))
       .filter((tenant): tenant is Tenant => tenant !== undefined);
   
-    // Assign all unique, sorted tenants to sortedTenants
     this.sortedTenants = uniqueTenants;
-  
     console.log('Sorted Tenants:', this.sortedTenants); // Debug tenants
   }
+  
   
   updateSortedOrgs(): void {
     if (!this.Filters?.ManagementOrganization || !Array.isArray(this.Filters.ManagementOrganization)) {
@@ -449,11 +445,8 @@ toggleFilters(): void {
       return;
     }
   
-    // Copy all organizations from Filters
-    const orgList = [...this.Filters.ManagementOrganization];
-  
     // Sort organizations alphabetically by Name
-    const sortedList = orgList.sort((a, b) =>
+    const sortedList = [...this.Filters.ManagementOrganization].sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
   
@@ -464,23 +457,20 @@ toggleFilters(): void {
       .map((id) => sortedList.find((org) => org.OrganizationId === id))
       .filter((org): org is ManagementOrganization => org !== undefined);
   
-    // Assign all unique, sorted organizations to sortedOrgs
     this.sortedOrgs = uniqueOrgs;
-  
     console.log('Sorted Organizations:', this.sortedOrgs); // Debug organizations
   }
   updateSecondaryTypes(): void {
     if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
-      console.error('SecondaryType list is empty or undefined.');
+      console.error('Secondary types are empty or undefined.');
       this.secondaryTypes = [];
       return;
     }
   
-    // Assign all SecondaryType values from Filters
     this.secondaryTypes = [...this.Filters.SecondaryType];
-  
     console.log('Secondary Types:', this.secondaryTypes); // Debug secondary types
   }
+  
   updateNeighbourhoods(): void {
     if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
       console.error('Neighbourhood list is empty or undefined.');
@@ -563,15 +553,10 @@ toggleFilters(): void {
           this.filteredKayakResult = [...this.KayakResult.Result];
           this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
           console.log('Filtered Result:', this.KayakResult);
-  
-          // Call GetFilters after getting the Ids
-          this.GetFilters();
         } else {
           console.warn('Data does not contain expected structure:', data);
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
           this.filteredKayakResult = []; // Reset the filtered result
-          this.sortedTenants = [];
-          this.sortedOrgs = [];
         }
   
         this.spinner.hide();
@@ -581,20 +566,15 @@ toggleFilters(): void {
         console.error('Error fetching filtered results:', error);
         this.spinner.hide();
         this.loading = false; // Set loading to false even on error
-        this.sortedTenants = [];
-        this.sortedOrgs = [];
       },
     });
   }
   
+  
   GetFilters(): void {
     if (!this.Ids) {
-      console.warn('Ids are not available, resetting tenants, organizations, secondary types, neighbourhoods, and tenant categories.');
-      this.sortedTenants = [];
-      this.sortedOrgs = [];
-      this.secondaryTypes = [];
-      this.neighbourhoods = [];
-      this.tenantCategories = [];
+      console.warn('Ids are not available, resetting filters.');
+      this.resetFilters();
       return;
     }
   
@@ -602,7 +582,7 @@ toggleFilters(): void {
     const body: any = {
       Name: 'GetFilters',
       Params: {
-        ids: this.Ids, // Ensure Ids are passed
+        ids: this.Ids,
         buyboxid: this.selectedbuyBox,
       },
     };
@@ -621,11 +601,7 @@ toggleFilters(): void {
           this.updateTenantCategories();
         } else {
           console.warn('No filters data returned.');
-          this.sortedTenants = [];
-          this.sortedOrgs = [];
-          this.secondaryTypes = [];
-          this.neighbourhoods = [];
-          this.tenantCategories = [];
+          this.resetFilters();
         }
   
         this.spinner.hide();
@@ -633,17 +609,17 @@ toggleFilters(): void {
       error: (error) => {
         console.error('Error fetching filters:', error);
         this.spinner.hide();
-  
-        // Reset all filters on error
-        this.sortedTenants = [];
-        this.sortedOrgs = [];
-        this.secondaryTypes = [];
-        this.neighbourhoods = [];
-        this.tenantCategories = [];
+        this.resetFilters();
       },
     });
   }
-  
+  resetFilters(): void {
+    this.sortedTenants = [];
+    this.sortedOrgs = [];
+    this.secondaryTypes = [];
+    this.neighbourhoods = [];
+    this.tenantCategories = [];
+  }
   
   GetStatesAndCities(): void {
     this.spinner.show();
@@ -674,6 +650,7 @@ toggleFilters(): void {
     console.log('State selected:', selectedValue);
   
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
+    this.GetFilters(); // Fetch new filters for the state
     this.getResult(); // Fetch results for the selected state
   }
   
@@ -681,6 +658,7 @@ toggleFilters(): void {
     this.filterValues.city = selectedValue; // Update the selected city
     console.log('City selected:', selectedValue);
   
+    this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
   }
   handleNeighbourhoodChange(selectedValue: string): void {
@@ -709,7 +687,7 @@ toggleFilters(): void {
     
   }
   toggleTenantSelection(tenant: Tenant): void {
-    const currentTenants = this.filterValues.tenants || ''; // Ensure tenants is a string
+    const currentTenants = this.filterValues.tenants || '';
     let tenantIds = currentTenants.split(',').filter((id: any) => id.trim());
   
     const tenantIdAsString = String(tenant.OrganizationId);
@@ -720,10 +698,11 @@ toggleFilters(): void {
     }
   
     this.filterValues.tenants = tenantIds.join(','); // Update tenant filters
-    this.getResult(); // Fetch filtered cards
+    this.getResult(); // Fetch filtered cards only
   }
+  
   toggleOrgSelection(org: ManagementOrganization): void {
-    const currentOrgs = this.filterValues.managementOrganizationIds || ''; // Ensure it's a string
+    const currentOrgs = this.filterValues.managementOrganizationIds || '';
     let orgIds = currentOrgs.split(',').filter((id: any) => id.trim());
   
     const orgIdAsString = String(org.OrganizationId);
@@ -734,7 +713,7 @@ toggleFilters(): void {
     }
   
     this.filterValues.managementOrganizationIds = orgIds.join(','); // Update organization filters
-    this.getResult(); // Fetch filtered cards
+    this.getResult(); // Fetch filtered cards only
   }
   toggleSecondaryTypeSelection(secondary: SecondaryType): void {
     const currentSecondaryTypes = this.filterValues.secondarytype || ''; // Ensure it's a string
