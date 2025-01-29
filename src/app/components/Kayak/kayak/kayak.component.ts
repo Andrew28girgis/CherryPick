@@ -187,7 +187,7 @@ toggleFilters(): void {
         this.spinner.hide(); // Hide spinner after processing
       },
       error: (err) => {
-        console.error('Error in BindShoppingCenters:', err);
+        console.error('Error in BindShoppingCسenters:', err);
         this.spinner.hide(); // Hide spinner on error
       },
     });
@@ -403,7 +403,7 @@ toggleFilters(): void {
   //   const currentOrgs = this.filterValues.managementOrganizationIds || '';
   
   //   let orgIds = currentOrgs
-  //     .split(',')
+  //     .split(',')  
   //     .map((id: any) => id.trim())
   //     .filter((id: any) => id !== '');
   
