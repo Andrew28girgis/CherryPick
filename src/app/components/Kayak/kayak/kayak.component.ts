@@ -75,6 +75,13 @@ export class KayakComponent implements OnInit {
   secondaryTypes: any[] = [];
   neighbourhoods: any[] = [];
 tenantCategories: any[] = [];
+selectedShoppingCenterId: number = 0; // You can initialize it with 0, or a default value of your choice
+boundShoppingCenterIds: number[] = [];  // This will store the shopping center IDs returned by the API
+newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
+
+
+
+
 
 
 
@@ -119,11 +126,14 @@ tenantCategories: any[] = [];
     this.getResult(); 
     this.GetStatesAndCities(); 
     this.GetFilters(); 
+
+
    // Extract the ID from the route and assign it to selectedbuyBox
    this.activatedRoute.params.subscribe((params) => {
     this.selectedbuyBox = params['buyboxid']; // 'id' matches the route configuration
     console.log('Extracted ID from URL:', this.selectedbuyBox);
   });
+
 
   }
 
@@ -144,10 +154,12 @@ toggleFilters(): void {
   }
   @ViewChild('placesModal', { static: true }) placesModal!: TemplateRef<any>; // Bind the modal template
 
-  openPlacesModal(places: any[]): void {
-    this.selectedPlaces = places || []; // Assign places to selectedPlaces
+  openPlacesModal(places: any[], shoppingCenterId: number): void {
+    this.selectedPlaces = places;  // Assign places to selectedPlaces array
+    this.selectedShoppingCenterId = shoppingCenterId;  // Store the shopping center ID
     this.modalService.open(this.placesModal, { size: 'lg', centered: true });
   }
+  
   selectedButton: string = 'explore'; // Default selected button
 
   selectButton(button: string): void {
@@ -156,26 +168,20 @@ toggleFilters(): void {
   toggleBulkMode(): void {
     this.isBulkMode = !this.isBulkMode; // Toggle bulk mode
   }
-  toggleShoppingCenterSelection(id: number): void {
-    if (this.SelectedShoppingCenterIDs.includes(id)) {
-      // Remove ID if already selected
-      this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter((selectedId) => selectedId !== id);
-    } else {
-      // Add ID if not already selected
-      this.SelectedShoppingCenterIDs.push(id);
-    }
-  }
+
   bindShoppingCenter(): void {
-    this.spinner.show(); // Show spinner while processing
+    this.spinner.show();
+  
+    console.log('Bound Shopping Center IDs:', this.boundShoppingCenterIds);
   
     const body: any = {
       Name: 'BindShoppingCenters',
       Params: {
-        buyboxid: this.selectedbuyBox, // Use the ID from the URL
-        state: this.selectedState || '', // Ensure a value is sent, even if empty
-        city: this.selectedCity || '', // Ensure a value is sent, even if empty
-        shoppingcenterIds: this.SelectedShoppingCenterIDs.join(','), // Selected shopping centers
-        placeIds: this.SelectedPlacesIDs.join(',')
+        buyboxid: this.selectedbuyBox, 
+        state: this.filterValues.statecode || '', 
+        city: this.selectedCity || '', 
+        shoppingcenterIds: this.boundShoppingCenterIds.join(','), 
+        placeIds: this.SelectedPlacesIDs.join(','), 
       },
     };
   
@@ -184,24 +190,193 @@ toggleFilters(): void {
         if (res && res.json) {
           console.log('Response from BindShoppingCenters:', res.json);
         }
-        this.spinner.hide(); // Hide spinner after processing
+        this.spinner.hide(); 
       },
       error: (err) => {
-        console.error('Error in BindShoppingCسenters:', err);
-        this.spinner.hide(); // Hide spinner on error
+        console.error('Error in BindShoppingCenters:', err);
+        this.spinner.hide(); 
       },
     });
   }
-  selectedshoppingcenterid(selectedid: number): void {
-    if (selectedid) { // Add a check to ensure selectedid is valid
-      this.SelectedShoppingCenterIDs.push(selectedid); // Push the selected ID into the array
-      console.log('Selected IDs:', this.SelectedShoppingCenterIDs); // Log the array for debugging
-      this.bindShoppingCenter(); // Call the bind function
+  
+  GetMarketSurveyShoppingCentersByBBoxId(): void {
+    this.spinner.show(); 
+  
+    console.log('Selected BuyBox ID:', this.selectedbuyBox);
+  
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCentersByBBoxId',
+      Params: {
+        buyboxid: this.selectedbuyBox,
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        if (res && res.json) {
+          this.boundShoppingCenterIds = res.json.map((item: any) => item.shoppingCenterId);
+  
+          console.log('Response from GetMarketSurveyShoppingCentersByBBoxId:', res.json);
+          console.log('Bound Shopping Center IDs:', this.boundShoppingCenterIds);
+
+        }
+        this.spinner.hide();
+      },
+      error: (err) => {
+        console.error('Error in GetMarketSurveyShoppingCentersByBBoxId:', err);
+        this.spinner.hide(); 
+      },
+    });
+  }
+  
+  toggleShoppingCenterBind(shoppingCenterId: number): void {
+    const isAlreadyBound = this.boundShoppingCenterIds.includes(shoppingCenterId);
+  
+    if (isAlreadyBound) {
+      this.boundShoppingCenterIds = this.boundShoppingCenterIds.filter(id => id !== shoppingCenterId);
+      
+      console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
     } else {
-      console.error('Invalid ID:', selectedid); // Log an error if the ID is invalid
+      this.boundShoppingCenterIds.push(shoppingCenterId);
+      console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
+    }
+  
+    this.bindShoppingCenter();
+  }
+  
+  getMarketSurveyPlacesByBBoxId(): void {
+    this.spinner.show();
+  
+    console.log('Selected BuyBox ID:', this.selectedbuyBox);
+  
+    const body: any = {
+      Name: 'GetMarketSurveyPlacesByBBoxId',
+      Params: {
+        buyboxid: this.selectedbuyBox, 
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        if (res && res.json) {
+          console.log('Response from GetMarketSurveyPlacesByBBoxId:', res.json);
+        }
+        this.spinner.hide();
+      },
+      error: (err) => {
+        console.error('Error in GetMarketSurveyPlacesByBBoxId:', err);
+        this.spinner.hide();
+      },
+    });
+  }
+  
+  selectedshoppingcenterid(selectedid: number): void {
+    if (selectedid) { 
+      this.SelectedShoppingCenterIDs.push(selectedid);
+      console.log('Selected IDs:', this.SelectedShoppingCenterIDs); 
+      this.bindShoppingCenter(); 
+    } else {
+      console.error('Invalid ID:', selectedid); 
+    }
+  }
+  onPlaceCheckboxChange(event: Event, placeId: number): void {
+    const isChecked = (event.target as HTMLInputElement).checked; 
+  
+    if (isChecked) {
+     
+      this.addPlaceId(placeId);
+      if (!this.SelectedShoppingCenterIDs.includes(this.selectedShoppingCenterId)) {
+        this.SelectedShoppingCenterIDs.push(this.selectedShoppingCenterId);
+      }
+    } else {
+      this.removePlaceId(placeId);
+      if (!this.selectedPlacesForShoppingCenter(this.selectedShoppingCenterId)) {
+        const index = this.SelectedShoppingCenterIDs.indexOf(this.selectedShoppingCenterId);
+        if (index > -1) {
+          this.SelectedShoppingCenterIDs.splice(index, 1);
+        }
+      }
+    }
+  
+    console.log('Updated Selected Places IDs:', this.SelectedPlacesIDs);
+    this.bindShoppingCenter();
+  }
+  addShoppingCenterId(shoppingCenterId: number): void {
+    if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
+      this.SelectedShoppingCenterIDs.push(shoppingCenterId);
     }
   }
   
+  removeShoppingCenterId(shoppingCenterId: number): void {
+    const index = this.SelectedShoppingCenterIDs.indexOf(shoppingCenterId);
+    if (index > -1) {
+      this.SelectedShoppingCenterIDs.splice(index, 1);
+    }
+  }
+  
+  addPlaceId(placeId: number): void {
+    if (!this.SelectedPlacesIDs.includes(placeId)) {
+      this.SelectedPlacesIDs.push(placeId);
+    }
+  }
+  
+  removePlaceId(placeId: number): void {
+    const index = this.SelectedPlacesIDs.indexOf(placeId);
+    if (index > -1) {
+      this.SelectedPlacesIDs.splice(index, 1);
+    }
+  }
+  onCardCheckboxChange(event: Event, result: any): void {
+    const isChecked = (event.target as HTMLInputElement).checked;  // Check if the checkbox is checked
+    const shoppingCenterId = result.Id;  // Get the shopping center ID
+  
+    if (isChecked) {
+      // If checked, add shopping center ID to SelectedShoppingCenterIDs
+      this.addShoppingCenterId(shoppingCenterId);
+    } else {
+      // If unchecked, remove shopping center ID from SelectedShoppingCenterIDs
+      this.removeShoppingCenterId(shoppingCenterId);
+    }
+  
+    console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+    this.bindShoppingCenter(); // Trigger API call to update
+  }
+  selectedPlacesForShoppingCenter(shoppingCenterId: number): boolean {
+    // Check if there are any places selected for this shopping center
+    return this.SelectedPlacesIDs.some(placeId => {
+      return this.selectedPlaces.some(place => place.Id === placeId && place.ShoppingCenterId === shoppingCenterId);
+    });
+  }
+  bindPlace(placeId: number, shoppingCenterId: number): void {
+    // Check if the placeId is already in the SelectedPlacesIDs array
+    const placeIndex = this.SelectedPlacesIDs.indexOf(placeId);
+  
+    if (placeIndex > -1) {
+      // If the placeId is found, remove it (unbind place)
+      this.SelectedPlacesIDs.splice(placeIndex, 1);
+      console.log(`Unbound place with ID: ${placeId}`);
+    } else {
+      // If the placeId is not found, add it (bind place)
+      this.SelectedPlacesIDs.push(placeId);
+      console.log(`Bound place with ID: ${placeId}`);
+    }
+  
+    // Check if the shoppingCenterId is already in the SelectedShoppingCenterIDs array
+    const centerIndex = this.SelectedShoppingCenterIDs.indexOf(shoppingCenterId);
+  
+    if (centerIndex > -1) {
+      // If the shoppingCenterId is found, remove it (unbind shopping center)
+      this.SelectedShoppingCenterIDs.splice(centerIndex, 1);
+      console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
+    } else {
+      // If the shoppingCenterId is not found, add it (bind shopping center)
+      this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+      console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
+    }
+  
+    // Call the method to bind shopping centers and places
+    this.bindShoppingCenter(); // Send the selected IDs to the API
+  }
   
   GetShoppingCenterAvailability(shoppingCenterId: number): void {
     this.spinner.show();
@@ -569,7 +744,7 @@ toggleFilters(): void {
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
           this.filteredKayakResult = []; // Reset the filtered result
         }
-  
+        this.GetMarketSurveyShoppingCentersByBBoxId();
         this.spinner.hide();
         this.loading = false; // Set loading to false after fetching data
       },
@@ -649,6 +824,8 @@ toggleFilters(): void {
   }
   onStateChange(): void {
     this.selectedState = this.filterValues.statecode;
+    console.log(this.selectedState);
+    
     this.updateCitiesForSelectedState();
     this.selectedCity = null; // Reset city
     this.filterValues.city = '';
@@ -659,7 +836,6 @@ toggleFilters(): void {
     this.filterValues.city = ''; // Clear the city filter
     this.selectedCity = null; // Reset the selected city in the UI
     console.log('State selected:', selectedValue);
-  
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
     this.GetFilters(); // Fetch new filters for the state
     this.getResult(); // Fetch results for the selected state
@@ -907,28 +1083,9 @@ toggleFilters(): void {
       this.isDropdownOpenIndex = null; 
     }
   }
-  getVisiblePlaces(result: any, index: number): any[] {
-    if (!result?.place) {
-      return [];
-    }
-    // Check if the current index matches the expanded card
-    return this.showAllPlacesIndex === index ? result.place : result.place.slice(0, 2);
-  }
+
   
-  toggleSeeMorePlaces(index: number): void {
-    this.showAllPlacesIndex = this.showAllPlacesIndex === index ? null : index;
-  }
   
-  onCardCheckboxChange(event: Event, result: any, index: number): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
   
-    if (isChecked) {
-      console.log(`Checkbox selected for card index ${index}`, result);
-      this.toggleShoppingCenterSelection(result.Id); // Add ID to the list
-    } else {
-      console.log(`Checkbox deselected for card index ${index}`);
-      this.toggleShoppingCenterSelection(result.Id); // Remove ID from the list
-    }
-    console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
-  }
+  
 }
