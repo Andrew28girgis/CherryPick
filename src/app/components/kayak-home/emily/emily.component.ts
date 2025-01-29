@@ -225,7 +225,7 @@ export class EmilyComponent {
           this.BuyBoxOrganizationsForEmail = [];
           console.error('Unexpected data format:', data);
         }
-        console.log(this.BuyBoxOrganizationsForEmail);
+        // console.log(this.BuyBoxOrganizationsForEmail);
       },
       error: (err) => {
         console.error('API error:', err);
