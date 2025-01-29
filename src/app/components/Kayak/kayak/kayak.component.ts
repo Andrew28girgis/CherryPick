@@ -74,10 +74,10 @@ export class KayakComponent implements OnInit {
   showFilters: boolean = false;
   secondaryTypes: any[] = [];
   neighbourhoods: any[] = [];
-tenantCategories: any[] = [];
-selectedShoppingCenterId: number = 0; // You can initialize it with 0, or a default value of your choice
-boundShoppingCenterIds: number[] = [];  // This will store the shopping center IDs returned by the API
-newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
+  tenantCategories: any[] = [];
+  selectedShoppingCenterId: number = 0; // You can initialize it with 0, or a default value of your choice
+  boundShoppingCenterIds: number[] = [];  // This will store the shopping center IDs returned by the API
+  newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
 
 
 
