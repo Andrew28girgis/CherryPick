@@ -358,6 +358,18 @@
             >
               {{ isBulkMode ? 'Exit Bulk Bind' : 'Bulk Bind' }}
             </button>
+            <button
+            class="btn bind-button"
+            (click)="GetMarketSurveyShoppingCentersByBBoxId()"
+          >
+            Shopping
+          </button>
+          <button
+          class="btn bind-button"
+          (click)="getMarketSurveyPlacesByBBoxId()"
+        >
+          Bind
+        </button>
           </div>
           
           <ng-container>
@@ -390,7 +402,7 @@
                             class="form-check-input"
                             [id]="'center-' + result.Id"
                             [checked]="SelectedShoppingCenterIDs.includes(result.Id)"
-                            (change)="onCardCheckboxChange($event, result, i)"
+                            (change)="onCardCheckboxChange($event, result)" 
                           />
                         </div>
                       
@@ -457,7 +469,7 @@
                             style="cursor: pointer"
                             src="../../../assets/Images/Icons/eye2.png"
                             alt="View Places Details"
-                            (click)="openPlacesModal(result.place)"
+                            (click)="openPlacesModal(result.place, result.Id)"
                           />
                         </div>
           
@@ -498,14 +510,16 @@
                         Street
                       </button>
                       </div>
-                          <div *ngIf="!isBulkMode">
-                            <button
-                              class="custom-bind-btn d-flex align-items-center justify-content-center"
-                              (click)="selectedshoppingcenterid(result.Id)"
-                            >
-                              Bind
-                            </button>
-                          </div>
+                      <div *ngIf="!isBulkMode">
+                        <button
+                          class="custom-bind-btn d-flex align-items-center justify-content-center"
+                          (click)="toggleShoppingCenterBind(result.Id)"
+                        >
+                          <!-- Conditionally render "Bind" or "Unbind" based on whether the shopping center ID is in the boundShoppingCenterIds array -->
+                          {{ boundShoppingCenterIds.includes(result.Id) ? 'Unbind' : 'Bind' }}
+                        </button>
+                      </div>
+                      
                         </div>
           
                      
@@ -540,7 +554,7 @@
                                 style="cursor: pointer;"
                                 src="../../../assets/Images/Icons/eye2.png"
                                 alt="View Places Details"
-                                (click)="openPlacesModal(result.place)"
+                                (click)="openPlacesModal(result.place, result.Id)"
                               />
                             </ng-container>
                           </div>
@@ -706,22 +720,27 @@
           <td  class="table-text1">{{ place?.Suite || 'N/A' }}</td>
           <td class="table-text1">{{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}</td>
           <td>
-            <div *ngIf="!isBulkMode">
-              <button class="btn bind-btn" (click)="bindShoppingCenter()">
-                Bind
-              </button>
+            <div >
+              <button class="btn bind-btn" (click)="bindPlace(place.Id, place.ShoppingCenterId)">Bind</button>
+
             </div>
           
-            <div *ngIf="isBulkMode" class="form-check">
-              <input type="checkbox" class="form-check-input" />
-            </div>
+            <!-- <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [id]="'place-' + place.Id"
+                [checked]="SelectedPlacesIDs.includes(place.Id)"
+                (change)="onPlaceCheckboxChange($event, place.Id)" 
+              />
+            </div> -->
           </td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn apply-button">Apply</button>
+    <!-- <button type="button" class="btn apply-button">Apply</button> -->
     <button type="button" class="btn bind-button" (click)="modal.dismiss()">Close</button>
 
   </div>
