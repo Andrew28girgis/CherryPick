@@ -57,7 +57,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       text: 'Map View',
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
-    }, // Add your SVG paths here
+    },
     {
       text: 'Side List View',
       icon: '../../../assets/Images/Icons/element-3.png',
@@ -163,9 +163,9 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.selectedOption = selectedOption.status;
     }
 
-    this.BuyBoxPlacesCategories(this.BuyBoxId);
-    this.GetOrganizationById(this.OrgId);
-    this.GetCustomSections(this.BuyBoxId);
+    // this.BuyBoxPlacesCategories(this.BuyBoxId);
+    // this.GetOrganizationById(this.OrgId);
+    // this.GetCustomSections(this.BuyBoxId);
     // this.GetBuyboxRelations();
     // this.GetPolygons(this.BuyBoxId);
     this.selectedState = '';
@@ -202,6 +202,11 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.selectedId = this.selectedId === id ? null : id;
   }
 
+  @Output() tabChange = new EventEmitter<{ tabId: string; shoppingCenterId: number }>();
+  redirect(IdShoppingCenter: number) {
+    this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: IdShoppingCenter });
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const clickedElement = event.target as HTMLElement;
@@ -222,7 +227,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   @Output() bindClicked: EventEmitter<void> = new EventEmitter<void>();
   triggerBindAction() {
-    this.bindClicked.emit(); // ترسل الحدث للمكون الرئيسي
+    this.bindClicked.emit();
   }
   // Extract unique states with normalization
   getStates(list: BuyBoxCityState[]) {
@@ -586,11 +591,11 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.map = new Map(mapElement, {
           center: {
             lat: this.shoppingCenters
-              ? this.shoppingCenters[0].Latitude
-              : this.standAlone[0].Latitude || 0,
+              ? this.shoppingCenters?.[0]?.Latitude
+              : this.standAlone?.[0]?.Latitude || 0,
             lng: this.shoppingCenters
-              ? this.shoppingCenters[0].Longitude
-              : this.standAlone[0].Longitude || 0,
+              ? this.shoppingCenters?.[0]?.Longitude
+              : this.standAlone?.[0]?.Longitude || 0,
           },
           zoom: 8,
           mapId: '1234567890',

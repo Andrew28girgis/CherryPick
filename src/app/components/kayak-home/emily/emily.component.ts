@@ -11,11 +11,38 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
+
+
+export interface BuyBoxOrganizationsForEmail {
+  id: number
+  Name: string
+  LogoURL: string
+  Contact: BuyBoxOrganizationsForEmailContact[]
+}
+
+export interface BuyBoxOrganizationsForEmailContact {
+  id: number
+  Firstname: string
+  LastName: string
+  Email: string
+  ShoppingCenters: Contact_ShoppingCenter[]
+}
+
+export interface Contact_ShoppingCenter {
+  id: number
+  CenterName: string
+  CenterAddress: string
+  CenterCity: string
+  CenterState: string
+}
+
+
 @Component({
   selector: 'app-emily',
   templateUrl: './emily.component.html',
   styleUrls: ['./emily.component.css'],
 })
+
 export class EmilyComponent {
   buyBoxId!: number | null;
   TemplatesId!: number | null;
@@ -74,6 +101,8 @@ export class EmilyComponent {
     { id: 'kayak', label: 'kayak' },
   ];
 
+  selectedTab: string = 'Details';
+
   selectedEmailyID: string | null = null;
 
   isChecked(emailyID: string): boolean {
@@ -102,7 +131,6 @@ export class EmilyComponent {
     console.log(emailyID, this.emailBody);
   }
   
-  selectedTab: string = 'Details';
 
   getFilteredTabs() {
     return this.tabs.filter(tab => tab.id !== 'kayak');
@@ -149,17 +177,63 @@ export class EmilyComponent {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private PlacesService: PlacesService
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = +params.get('buyboxid')!;
+      
+      this.GetBuyBoxInfo();
+      this.GetRetailRelationCategories();
+      this.GetPrompts();
+      this.GetSavedTemplates();
     });
-    this.GetBuyBoxInfo();
-    this.GetRetailRelationCategories();
-    this.GetPrompts();
-    this.GetSavedTemplates();
+   }
+   
+  ngOnInit() {
+    // this.route.paramMap.subscribe((params) => {
+    //   this.buyBoxId = +params.get('buyboxid')!;
+
+    //   this.GetBuyBoxInfo();
+    //   this.GetRetailRelationCategories();
+    //   this.GetPrompts();
+    //   this.GetSavedTemplates();
+    // });
   }
+
+  selectedShoppingCenterId!: number;
+  
+  handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
+    this.selectedTab = event.tabId; 
+    this.selectedShoppingCenterId = event.shoppingCenterId;
+    this.GetBuyBoxOrganizationsForEmail();
+  }
+
+  BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
+  GetBuyBoxOrganizationsForEmail() {
+    const body: any = {
+      Name: 'GetBuyBoxOrganizationsForEmail',
+      MainEntity: null,
+      Params: {
+        shoppingcenterid: this.selectedShoppingCenterId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data?.json && Array.isArray(data.json)) {
+          this.BuyBoxOrganizationsForEmail = data.json; // ✅
+        } else {
+          this.BuyBoxOrganizationsForEmail = [];
+          console.error('Unexpected data format:', data);
+        }
+        // console.log(this.BuyBoxOrganizationsForEmail);
+      },
+      error: (err) => {
+        console.error('API error:', err);
+        this.BuyBoxOrganizationsForEmail = [];
+      },
+    });
+  }
+
 
   GetBuyBoxInfo() {
     const body: any = {
@@ -203,7 +277,7 @@ export class EmilyComponent {
               [],
           })) || [];
 
-        this.generated[0]?.Releations.forEach((r) => (r.relationSelect = true));
+        this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
         //this for to be selected by first shopping center by defaukt
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
@@ -266,7 +340,7 @@ export class EmilyComponent {
   getCotenantsWithActivityType(centerName: string): any[] {
     const center: any = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
-    );
+    );  
     // console.log('Shopping Centers', center);
     this.groupedActivityTypes = center.CotenantsWithActivityType.reduce(
       (result: any, cotenant: any) => {

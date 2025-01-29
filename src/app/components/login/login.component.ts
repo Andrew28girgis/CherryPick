@@ -19,7 +19,7 @@ export class LoginComponent {
   t: any;
   r: any;
   private afterLoginRedirect: string | null = null;
-
+  
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -45,7 +45,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.spinner.show();
+   this.spinner.show();
     if (this.t) {
       this.adminLogin.contactToken = this.t;
     }
@@ -54,7 +54,6 @@ export class LoginComponent {
       (data: any) => {
         localStorage.setItem('token', data.token);
         this.spinner.hide();
-
         if (this.r) {
           this.router.navigateByUrl(this.r);
         } else {
