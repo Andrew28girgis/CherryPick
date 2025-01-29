@@ -55,10 +55,10 @@ export class SummeryComponent {
 
     this.route.queryParams.subscribe((params) => {
       this.Token = params['Token'];
+      this.getUserBuyBoxes();
     });
 
     //this.GetUserBuyBoxes();
-    this.getUserBuyBoxes();
   }
 
 
@@ -72,7 +72,7 @@ export class SummeryComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxTypes =  data.json ;
-        if (this.buyboxTypes.length == 1) {
+        if (this.buyboxTypes?.length == 1) {
           this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
         }
       },

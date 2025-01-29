@@ -67,10 +67,80 @@
           </ng-container>
         </div>
       </ng-container>
+      <!-- BuyBoxOrganizationsForEmail list -->
+      <ng-container *ngIf="BuyBoxOrganizationsForEmail.length > 0">
+        <div class="row m-0 p-0 mt-2 d-flex ps-2 pe-2">
+          <ng-container
+            *ngFor="
+              let OrganizationsForEmail of BuyBoxOrganizationsForEmail;
+              let i = index
+            "
+          >
+            <div class="col-12 col-sm-12 p-3">
+              <section class="OrganizationsForEmail row m-0 p-0">
+                <div style="align-items: center;flex-flow: column;gap: 20px;"
+                  class="m-0 p-0 mt-3 col-12 col-sm-3 d-flex justify-content-center row"
+                >
+                  <div class="OganirzationsForEmail__img col-10">
+                    <img
+                      class="Oganirzations__img"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        OrganizationsForEmail.id
+                      }}"
+                      alt=""
+                    />
+                  </div>
+                  <div class="OrganizationsForEmail__head col-10">
+                    <p>Company Management:</p>
+                    <p>
+                      {{ OrganizationsForEmail.Name }}
+                    </p>
+                  </div>
+                </div>
+                <div class="mt-2 pb-2 col-12 col-sm-9">
+                  <div class="row m-0 p-0 d-flex w-100">
+                    <div
+                      class="col-6 p-2"
+                      *ngFor="let item of OrganizationsForEmail?.Contact"
+                    >
+                      <div class="crad_Contact_Mange">
+                        <p class="Contact_Mange pt-2">Personal manage :</p>
+                        <p class="Contact_head pt-1">
+                          Name :
+                          <span>{{ item?.Firstname }} {{ item?.LastName }}</span>
+                        </p>
+                        <p class="Contact_head border_Contact_head">
+                          Email : <span>{{ item?.Email }}</span>
+                        </p>
+                        <div
+                          *ngFor="let shoppingCenter of item.ShoppingCenters"
+                          class="pt-2"
+                        >
+                          <p class="Contact_Mange pt-2">
+                            Shopping Center Name :
+                          </p>
+                          <p class="Contact_head pt-2">
+                            Name :
+                            <span>{{ shoppingCenter.CenterName }}</span>
+                          </p>
+                          <p class="Contact_head">
+                            Address :
+                            <span>{{ shoppingCenter.CenterAddress }}, {{ shoppingCenter.CenterCity }}, {{ shoppingCenter.CenterState }}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
       <!-- Generate emily name only-->
       <div
         class="Generate_emaily"
-        *ngIf="generatedGetSavedTemplates.length > 0 || generatedGetSavedTemplates?.[0]?.BuyboxOrgEmailTemplates > 0"
+        *ngIf="BuyBoxOrganizationsForEmail.length > 0"
       >
         Generate emaily
       </div>
@@ -606,8 +676,10 @@
     >
       <!-- <app-buybox-shopping-centers (bindClicked)="selectTab('kayak')" /> -->
       <app-shopping-center-table
+        (tabChange)="handleTabChange($event)"
         (bindClicked)="selectTab('kayak')"
-      ></app-shopping-center-table>
+      >
+      </app-shopping-center-table>
     </section>
     <!-- <section *ngIf="selectedTab === 'Locations'" class="row d-flex m-0 p-2">
       <app-work-spaces></app-work-spaces>
@@ -620,9 +692,8 @@
       <app-kayak></app-kayak>
     </section>
     <section
-    *ngIf="selectedTab === 'Relations'"
-    class="row d-flex m-0 p-2"
-  >
-</section>
+      *ngIf="selectedTab === 'Relations'"
+      class="row d-flex m-0 p-2"
+    ></section>
   </div>
 </section>
