@@ -358,21 +358,9 @@
             >
               {{ isBulkMode ? 'Exit Bulk Bind' : 'Bulk Bind' }}
             </button>
-            <button
-            class="btn bind-button"
-            (click)="GetMarketSurveyShoppingCentersByBBoxId()"
-          >
-            Shopping
-          </button>
-          <button
-          class="btn bind-button"
-          (click)="getMarketSurveyPlacesByBBoxId()"
-        >
-          Bind
-        </button>
           </div>
           
-          <ng-container>
+          <ng-container *ngIf="filterValues.statecode">
             <div
               class="col-md-12"
               *ngFor="let result of filteredKayakResult; let i = index"
