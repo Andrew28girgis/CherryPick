@@ -248,7 +248,7 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
-        this.getStandAlonePlaces(this.BuyBoxId);
+      //  this.getStandAlonePlaces(this.BuyBoxId);
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -256,9 +256,14 @@ export class HomeComponent implements OnInit {
   }
 
   getStandAlonePlaces(buyboxId: number): void {
+    console.log(`standAlone `);
+      
+    console.log(this.stateService.getStandAlone());
+
     if (this.stateService.getStandAlone()?.length > 0) {
+     
+
       this.standAlone = this.stateService.getStandAlone();
-      // Set selectedSS from stored value or default
       this.selectedSS =
         this.stateService.getSelectedSS() ||
         (this.shoppingCenters?.length > 0 ? 1 : 2);
@@ -885,11 +890,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getNeareastCategoryName(categoryId: number) {
-    console.log(`nn`);
-    
-    console.log(this.buyboxCategories);
-    
+  getNeareastCategoryName(categoryId: number) {  
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }
