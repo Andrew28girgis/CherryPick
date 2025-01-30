@@ -277,6 +277,15 @@
           </div>
         </div>
 
+        <div class="intelligent-suggestions-carousel" *ngIf="intelligentSuggestions.length > 0">
+          <button 
+            *ngFor="let suggestion of intelligentSuggestions" 
+            class="suggestion-chip"
+            (click)="selectPrompt({id: '', text: suggestion})"
+          >
+            {{suggestion}}
+          </button>
+        </div>
         <form (ngSubmit)="handleSend()" class="message-form">
           <input
             type="file"

@@ -1,0 +1,427 @@
+[
+    {
+      "id": 1,
+      "title": "Spacious Loft in SoHo",
+      "address": "120 Prince Street, New York, NY 10012",
+      "price": "$3,100,000",
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "sqft": 2800,
+      "type": "Loft",
+      "amenities": ["Exposed Brick", "Gym", "Rooftop Deck"],
+      "listingDate": "2025-01-02",
+      "images": [
+        "https://placeimg.com/320/240/tech",
+        "https://placeimg.com/320/240/business"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 2,
+      "title": "Modern Condo in Williamsburg",
+      "address": "150 Kent Avenue, Brooklyn, NY 11249",
+      "price": "$1,850,000",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "sqft": 1600,
+      "type": "Condo",
+      "amenities": ["Swimming Pool", "24/7 Security", "Concierge", "Gym"],
+      "listingDate": "2025-01-05",
+      "images": [
+        "https://placeimg.com/320/240/architecture",
+        "https://placeimg.com/320/240/business"
+      ],
+      "status": "Sold"
+    },
+    {
+      "id": 3,
+      "title": "Luxury Townhouse in Brooklyn Heights",
+      "address": "60 Remsen Street, Brooklyn, NY 11201",
+      "price": "$5,500,000",
+      "bedrooms": 5,
+      "bathrooms": 4.5,
+      "sqft": 4500,
+      "type": "Townhouse",
+      "amenities": ["Private Garden", "Fireplace", "Garage", "Home Theater"],
+      "listingDate": "2025-01-08",
+      "images": [
+        "https://placeimg.com/320/240/people",
+        "https://placeimg.com/320/240/nature"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 4,
+      "title": "Penthouse with Skyline Views",
+      "address": "211 East 53rd Street, New York, NY 10022",
+      "price": "$6,800,000",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "sqft": 3500,
+      "type": "Condo",
+      "amenities": ["Gym", "Pool", "Rooftop Terrace", "Concierge"],
+      "listingDate": "2025-01-10",
+      "images": [
+        "https://placeimg.com/320/240/architecture",
+        "https://placeimg.com/320/240/city"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 5,
+      "title": "Cozy Apartment in Chelsea",
+      "address": "212 West 23rd Street, New York, NY 10011",
+      "price": "$1,200,000",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "sqft": 750,
+      "type": "Apartment",
+      "amenities": ["Doorman", "Elevator", "Laundry in Building"],
+      "listingDate": "2025-01-12",
+      "images": [
+        "https://placeimg.com/320/240/tech",
+        "https://placeimg.com/320/240/nature"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 6,
+      "title": "Bright Studio in Midtown",
+      "address": "33 West 44th Street, New York, NY 10036",
+      "price": "$500,000",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "sqft": 400,
+      "type": "Studio",
+      "amenities": ["Elevator", "Laundry in Building"],
+      "listingDate": "2025-01-14",
+      "images": [
+        "https://placeimg.com/320/240/business",
+        "https://placeimg.com/320/240/arch"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 7,
+      "title": "Grand Estate in Upper West Side",
+      "address": "450 Central Park West, New York, NY 10024",
+      "price": "$9,300,000",
+      "bedrooms": 6,
+      "bathrooms": 5.5,
+      "sqft": 6000,
+      "type": "Estate",
+      "amenities": ["Central Park View", "Private Elevator", "Wine Cellar", "Gym"],
+      "listingDate": "2025-01-18",
+      "images": [
+        "https://placeimg.com/320/240/people",
+        "https://placeimg.com/320/240/business"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 8,
+      "title": "Luxury Loft in Tribeca",
+      "address": "120 Walker Street, New York, NY 10013",
+      "price": "$4,500,000",
+      "bedrooms": 3,
+      "bathrooms": 2.5,
+      "sqft": 3500,
+      "type": "Loft",
+      "amenities": ["High Ceilings", "Home Office", "Fireplace"],
+      "listingDate": "2025-01-20",
+      "images": [
+        "https://placeimg.com/320/240/architecture",
+        "https://placeimg.com/320/240/business"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 9,
+      "title": "Elegant Brownstone in Park Slope",
+      "address": "432 6th Avenue, Brooklyn, NY 11215",
+      "price": "$3,800,000",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "sqft": 3800,
+      "type": "Brownstone",
+      "amenities": ["Private Garden", "Fireplace", "Central A/C"],
+      "listingDate": "2025-01-23",
+      "images": [
+        "https://placeimg.com/320/240/nature",
+        "https://placeimg.com/320/240/city"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 10,
+      "title": "Sunny Apartment in Greenwich Village",
+      "address": "15 Waverly Place, New York, NY 10003",
+      "price": "$2,600,000",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "sqft": 1700,
+      "type": "Apartment",
+      "amenities": ["Doorman", "Elevator", "Laundry in Building"],
+      "listingDate": "2025-01-25",
+      "images": [
+        "https://placeimg.com/320/240/tech",
+        "https://placeimg.com/320/240/people"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 11,
+      "title": "Charming Condo in Astoria",
+      "address": "23-10 30th Avenue, Astoria, NY 11102",
+      "price": "$750,000",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "sqft": 800,
+      "type": "Condo",
+      "amenities": ["Gym", "Laundry in Building"],
+      "listingDate": "2025-01-26",
+      "images": [
+        "https://placeimg.com/320/240/city",
+        "https://placeimg.com/320/240/tech"
+      ],
+      "status": "Sold"
+    },
+    {
+      "id": 12,
+      "title": "Riverside Luxury Condo",
+      "address": "101 Riverside Drive, New York, NY 10024",
+      "price": "$4,000,000",
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "sqft": 2800,
+      "type": "Condo",
+      "amenities": ["River View", "Swimming Pool", "Gym"],
+      "listingDate": "2025-01-28",
+      "images": [
+        "https://placeimg.com/320/240/nature",
+        "https://placeimg.com/320/240/people"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 13,
+      "title": "Chic Loft in Noho",
+      "address": "222 Lafayette Street, New York, NY 10012",
+      "price": "$3,200,000",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "sqft": 2300,
+      "type": "Loft",
+      "amenities": ["Exposed Beams", "Gym", "Elevator"],
+      "listingDate": "2025-01-30",
+      "images": [
+        "https://placeimg.com/320/240/architecture",
+        "https://placeimg.com/320/240/business"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 14,
+      "title": "Luxury Apartment in Flatiron",
+      "address": "35 West 19th Street, New York, NY 10011",
+      "price": "$2,750,000",
+      "bedrooms": 2,
+      "bathrooms": 2.5,
+      "sqft": 1800,
+      "type": "Apartment",
+      "amenities": ["24/7 Doorman", "Gym", "Laundry in Building"],
+      "listingDate": "2025-01-10",
+      "images": [
+        "https://placeimg.com/320/240/city",
+        "https://placeimg.com/320/240/nature"
+      ],
+      "status": "Sold"
+    },
+    {
+      "id": 15,
+      "title": "Luxury Condo in Financial District",
+      "address": "45 Wall Street, New York, NY 10005",
+      "price": "$2,950,000",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "sqft": 2100,
+      "type": "Condo",
+      "amenities": ["Gym", "24/7 Security", "Concierge", "Elevator"],
+      "listingDate": "2025-01-15",
+      "images": [
+        "https://placeimg.com/320/240/city",
+        "https://placeimg.com/320/240/tech"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 16,
+      "title": "Stunning Condo in East Village",
+      "address": "135 2nd Avenue, New York, NY 10003",
+      "price": "$1,850,000",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "sqft": 1500,
+      "type": "Condo",
+      "amenities": ["Doorman", "Elevator", "Laundry in Building"],
+      "listingDate": "2025-01-21",
+      "images": [
+        "https://placeimg.com/320/240/business",
+        "https://placeimg.com/320/240/nature"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 17,
+      "title": "Bright Studio in Upper West Side",
+      "address": "100 West 70th Street, New York, NY 10023",
+      "price": "$600,000",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "sqft": 500,
+      "type": "Studio",
+      "amenities": ["Laundry in Building", "Elevator"],
+      "listingDate": "2025-01-17",
+      "images": [
+        "https://placeimg.com/320/240/tech",
+        "https://placeimg.com/320/240/architecture"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 18,
+      "title": "Beautiful Brownstone in Boerum Hill",
+      "address": "231 Hoyt Street, Brooklyn, NY 11217",
+      "price": "$2,200,000",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "sqft": 2500,
+      "type": "Brownstone",
+      "amenities": ["Fireplace", "Central A/C", "Garden"],
+      "listingDate": "2025-01-22",
+      "images": [
+        "https://placeimg.com/320/240/nature",
+        "https://placeimg.com/320/240/business"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 19,
+      "title": "Newly Renovated Condo in Harlem",
+      "address": "225 West 125th Street, New York, NY 10027",
+      "price": "$1,450,000",
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "sqft": 1500,
+      "type": "Condo",
+      "amenities": ["Elevator", "Laundry in Building", "Concierge"],
+      "listingDate": "2025-01-18",
+      "images": [
+        "https://placeimg.com/320/240/business",
+        "https://placeimg.com/320/240/architecture"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 20,
+      "title": "Modern Loft in Long Island City",
+      "address": "37-18 23rd Street, Queens, NY 11101",
+      "price": "$2,350,000",
+      "bedrooms": 2,
+      "bathrooms": 2.5,
+      "sqft": 2500,
+      "type": "Loft",
+      "amenities": ["Rooftop Deck", "Private Balcony", "Gym"],
+      "listingDate": "2025-01-29",
+      "images": [
+        "https://placeimg.com/320/240/tech",
+        "https://placeimg.com/320/240/people"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 21,
+      "title": "Stylish Studio in Astoria",
+      "address": "25-14 34th Avenue, Astoria, NY 11106",
+      "price": "$420,000",
+      "bedrooms": 1,
+      "bathrooms": 1,
+      "sqft": 400,
+      "type": "Studio",
+      "amenities": ["Laundry in Building", "Elevator"],
+      "listingDate": "2025-01-15",
+      "images": [
+        "https://placeimg.com/320/240/tech",
+        "https://placeimg.com/320/240/nature"
+      ],
+      "status": "Sold"
+    },
+    {
+      "id": 22,
+      "title": "Gorgeous Loft in the Flatiron District",
+      "address": "200 5th Avenue, New York, NY 10010",
+      "price": "$4,300,000",
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "sqft": 3500,
+      "type": "Loft",
+      "amenities": ["High Ceilings", "Fireplace", "Gym"],
+      "listingDate": "2025-01-13",
+      "images": [
+        "https://placeimg.com/320/240/city",
+        "https://placeimg.com/320/240/architecture"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 23,
+      "title": "Contemporary Condo in Tribeca",
+      "address": "75 Franklin Street, New York, NY 10013",
+      "price": "$5,100,000",
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "sqft": 4000,
+      "type": "Condo",
+      "amenities": ["Doorman", "24/7 Security", "Concierge", "Gym"],
+      "listingDate": "2025-01-16",
+      "images": [
+        "https://placeimg.com/320/240/people",
+        "https://placeimg.com/320/240/business"
+      ],
+      "status": "Sold"
+    },
+    {
+      "id": 24,
+      "title": "Classic Brownstone in Brooklyn Heights",
+      "address": "45 Willow Street, Brooklyn, NY 11201",
+      "price": "$3,400,000",
+      "bedrooms": 4,
+      "bathrooms": 3.5,
+      "sqft": 3800,
+      "type": "Brownstone",
+      "amenities": ["Private Garden", "Fireplace", "Central A/C"],
+      "listingDate": "2025-01-12",
+      "images": [
+        "https://placeimg.com/320/240/city",
+        "https://placeimg.com/320/240/nature"
+      ],
+      "status": "Available"
+    },
+    {
+      "id": 25,
+      "title": "Luxury Loft in Dumbo",
+      "address": "100 Jay Street, Brooklyn, NY 11201",
+      "price": "$4,200,000",
+      "bedrooms": 3,
+      "bathrooms": 3,
+      "sqft": 3200,
+      "type": "Loft",
+      "amenities": ["Rooftop Terrace", "Gym", "Garage"],
+      "listingDate": "2025-01-24",
+      "images": [
+        "https://placeimg.com/320/240/nature",
+        "https://placeimg.com/320/240/architecture"
+      ],
+      "status": "Available"
+    }
+  ]

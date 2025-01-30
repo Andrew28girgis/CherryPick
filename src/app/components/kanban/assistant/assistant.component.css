@@ -47,7 +47,7 @@
   padding: 24px;
   padding-top: 0;
   padding-bottom: 0;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
   height: 580px;
 }
 
@@ -153,7 +153,7 @@
 }
 
 .message-user .message-content {
-  background: #f2f4f7;
+  /* background: #f2f4f7; */
 }
 
 .message-text {
@@ -928,12 +928,49 @@
 
 /* Think Content Styles */
 
-
 /* Response Content Styles */
-
 
 /* Ensure these styles are not overridden by other rules */
 .message-content > div {
   width: 100%;
+}
+
+/* Intelligent Suggestions Carousel */
+.intelligent-suggestions-carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 12px 0;
+  margin-bottom: 12px;
+}
+
+.suggestion-chip {
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.suggestion-chip:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.intelligent-suggestions-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.intelligent-suggestions-carousel {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  justify-content: center;
 }
 

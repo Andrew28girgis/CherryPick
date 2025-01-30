@@ -1,10 +1,9 @@
-import { Component,  OnInit, ViewChild,  ElementRef,  AfterViewChecked, HostListener } from "@angular/core"
+import { Component, type OnInit, ViewChild, type ElementRef, type AfterViewChecked } from "@angular/core"
 import { FormControl } from "@angular/forms"
 import { trigger, transition, style, animate } from "@angular/animations"
 import  { ChatService } from "../../../services/chat-service.service"
 import  { DomSanitizer, SafeHtml } from "@angular/platform-browser"
-import  {
-  AIResponse,
+import type {
   Message,
   SuggestedPrompt,
   Property,
@@ -31,18 +30,7 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
   @ViewChild("chatHistoryContainer") chatHistoryContainer!: ElementRef
   @ViewChild("messagesEnd") private messagesEnd!: ElementRef
   @ViewChild("fileInput") private fileInput!: ElementRef<HTMLInputElement>
-  @HostListener("document:keydown.escape")
-  handleEscape() {
-    if (this.showChatHistory) {
-      this.toggleChatHistory()
-    } 
-  }
-  @HostListener("document:click", ["$event"])
-  onDocumentClick(event: MouseEvent) {
-    if (this.showChatHistory && !this.chatHistoryContainer.nativeElement.contains(event.target)) {
-      this.toggleChatHistory()
-    }
-  }
+
   messages: Message[] = []
   newMessage = new FormControl("")
   isTyping = false
@@ -55,6 +43,9 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
   chatSessions: ChatSession[] = []
   currentSession: ChatSession | null = null
   isLoading = false
+  conversationContext: string[] = []
+  showScrollButton = false
+  intelligentSuggestions: string[] = []
 
   suggestedPrompts: SuggestedPrompt[] = [
     { id: "1", text: "Show me all available properties in Manhattan with at least 2,000 square feet" },
@@ -75,7 +66,7 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     { id: "5", name: "Unit 0 Mall of America", location: "Washington, DC", image: "/assets/Images/unit2.svg" },
     { id: "6", name: "Unit 0 Mall of America", location: "Washington, DC", image: "assets/Images/unit.svg" },
     { id: "7", name: "Unit 0 Mall of America", location: "Washington, DC", image: "assets/Images/unit2.svg" },
-    { id: "7", name: "Unit 0 Mall of America", location: "Washington, DC", image: "assets/Images/unit2.svg" },
+    { id: "8", name: "Unit 0 Mall of America", location: "Washington, DC", image: "assets/Images/unit2.svg" },
   ]
 
   propertyActions: PropertyAction[] = [
@@ -95,16 +86,13 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
       icon: "users",
     },
   ]
+
   fileAnalysisPrompts: SuggestedPrompt[] = [
     { id: "1", text: "Show me all available properties in Manhattan with at least 2,000 square feet." },
     { id: "2", text: "Who are my top clients interested in commercial spaces?" },
-    { id: "3", text: '"What follow-ups are pending for my lead John Smith?' },
+    { id: "3", text: "What follow-ups are pending for my lead John Smith?" },
     { id: "4", text: "Which properties are located near Five Guys within a 1-mile radius?" },
-    { id: "5", text: "What’s the average rental rate in areas with high competition?" },
-    // { id: '6', text: '"Generate a report on properties with the highest rental yield.' },
-    // { id: '7', text: 'Show me properties flagged as high financial risk.' },
-    // { id: '8', text: 'Who are my top clients interested in commercial spaces?' },
-    // { id: '9', text: 'Create a follow-up reminder for the client meeting scheduled next week.' }
+    { id: "5", text: "What's the average rental rate in areas with high competition?" },
   ]
 
   queryAssistantPrompts: SuggestedPrompt[] = [
@@ -112,18 +100,12 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     { id: "2", text: "Who are my top clients interested in commercial spaces?" },
     { id: "3", text: "What follow-ups are pending for my last meeting?" },
   ]
+
   constructor(
     private chatService: ChatService,
     private sanitizer: DomSanitizer,
   ) {}
 
-  private loadProperties(): void {
-    this.isLoading = true
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false
-    }, 0)
-  }
   ngOnInit(): void {
     this.loadChatSessions()
     this.scrollToBottom()
@@ -136,7 +118,9 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    this.scrollToBottom()
+    if (this.messages) {
+      this.scrollToBottom()
+    }
   }
 
   private scrollToBottom(): void {
@@ -147,50 +131,11 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private async generateAIResponse(prompt: string): Promise<AIResponse> {
-    // Simulate AI processing - replace with actual API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    if (prompt.toLowerCase().includes("show") && prompt.toLowerCase().includes("properties")) {
-      return {
-        type: "properties",
-        content: "Here are the properties matching your criteria:",
-        data: this.properties,
-      }
-    } else if (prompt.toLowerCase().includes("analysis") || prompt.toLowerCase().includes("report")) {
-      return {
-        type: "analysis",
-        content: "Here's the analysis you requested:",
-        data: [
-          { title: "Average Price", value: "$2.5M", trend: "up" },
-          { title: "Total Properties", value: 127, trend: "neutral" },
-          { title: "Market Growth", value: "5.2%", trend: "up" },
-        ],
-      }
-    } else if (prompt.toLowerCase().includes("calculate") && prompt.toLowerCase().includes("yield")) {
-      return {
-        type: "analysis",
-        content: "Here are the rental yield calculations:",
-        data: [
-          { title: "Average Yield", value: "7.2%", trend: "up" },
-          { title: "Highest Yield", value: "8.5%", trend: "up" },
-          { title: "Lowest Yield", value: "5.8%", trend: "down" },
-          { title: "Market Average", value: "6.5%", trend: "neutral" },
-        ],
-      }
-    }
-
-    return {
-      type: "text",
-      content: `I understand you're asking about "${prompt}". Here's what I found...`,
-      data: {
-        suggestions: [
-          "Would you like to see related properties?",
-          "Should I generate a detailed report?",
-          "Would you like to analyze market trends?",
-        ],
-      },
-    }
+  private loadProperties(): void {
+    this.isLoading = true
+    setTimeout(() => {
+      this.isLoading = false
+    }, 0)
   }
 
   async handleSend(): Promise<void> {
@@ -219,15 +164,15 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
       if (aiResponse) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: aiResponse.content, // Store the original content
-          formattedContent: this.formatMessage(aiResponse.content), // Add this new property
+          content: aiResponse.content,
+          formattedContent: this.formatMessage(aiResponse.content),
           sender: "assistant",
           timestamp: new Date(),
           properties: aiResponse.type === "properties" ? aiResponse.data : undefined,
           analysis: aiResponse.type === "analysis" ? aiResponse.data : undefined,
-          suggestions: aiResponse.data?.suggestions,
         }
         this.messages.push(assistantMessage)
+        this.updateIntelligentSuggestions(aiResponse.content)
       } else {
         this.handleErrorResponse("AI response is undefined")
       }
@@ -237,6 +182,25 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
       this.isTyping = false
       this.updateCurrentSession(messageContent || null)
     }
+
+    this.conversationContext.push(messageContent || "")
+
+    if (this.conversationContext.length > 5) {
+      this.conversationContext.shift()
+    }
+  }
+
+  private updateIntelligentSuggestions(lastResponse: string): void {
+    this.chatService.generateSuggestions(lastResponse).subscribe(
+      (suggestions) => {
+        this.intelligentSuggestions = suggestions;
+        console.log("Intelligent Suggestions:", this.intelligentSuggestions);
+      },
+      (error) => {
+        console.error("Error generating suggestions:", error);
+        this.intelligentSuggestions = [];
+      },
+    );
   }
 
   private handleErrorResponse(errorMessage: string): void {
@@ -257,7 +221,6 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     const saved = localStorage.getItem("chatSessions")
     if (saved) {
       this.chatSessions = JSON.parse(saved)
-      // Convert string dates back to Date objects
       this.chatSessions.forEach((session) => {
         session.date = new Date(session.date)
       })
@@ -275,8 +238,9 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     this.attachments = this.attachments.filter((f) => f !== file)
   }
 
-  selectPrompt(prompt: SuggestedPrompt): void {
-    this.newMessage.setValue(prompt.text)
+  selectPrompt(prompt: string | SuggestedPrompt): void {
+    const promptText = typeof prompt === "string" ? prompt : prompt.text
+    this.newMessage.setValue(promptText)
     this.handleSend()
   }
 
@@ -296,21 +260,17 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
       this.handleSend()
     }
   }
+
   selectCard(type: "file" | "query"): void {
     this.showInitialCards = false
     this.selectedCard = type
   }
-  // Method to toggle chat history
+
   toggleChatHistory(): void {
     this.showChatHistory = !this.showChatHistory
-    if (this.showChatHistory) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
+    document.body.style.overflow = this.showChatHistory ? "hidden" : ""
   }
 
-  // Method to group chats by date
   get groupedChats(): ChatGroup[] {
     const today = new Date()
     const yesterday = new Date(today)
@@ -334,9 +294,6 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     ].filter((group) => group.chats.length > 0)
   }
 
-  // Method to select a chat session
-
-  // Update selectSession to close the dropdown after selection
   selectSession(session: ChatSession): void {
     this.currentSession = session
     this.messages = session.messages
@@ -344,7 +301,6 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     this.scrollToBottom()
   }
 
-  // Method to start a new chat
   startNewChat(): void {
     const newSession: ChatSession = {
       id: Date.now().toString(),
@@ -358,18 +314,18 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     this.messages = []
     this.showInitialCards = true
     this.showChatHistory = false
+    this.conversationContext = []
+    this.chatService.clearConversationContext()
   }
 
   private updateCurrentSession(messageContent: string | null): void {
     if (this.currentSession) {
       this.currentSession.messages = this.messages
 
-      // Update session title if it's the first message
       if (this.messages.length === 2) {
         this.currentSession.title = messageContent || "New Chat"
       }
 
-      // Save to localStorage
       this.saveChatSessions()
     }
   }
@@ -382,12 +338,8 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     if (this.isThinkContent(content)) {
       const parts = content.split("</think>")
       if (parts.length === 2) {
-        const thinkContent = parts[0].replace("<think>", "").trim()
         const responseContent = parts[1].trim()
         const formattedContent = `
-          <div class="think-content">
-            <div class="message-text">${thinkContent}</div>
-          </div>
           <div class="response-content">
             <div class="message-text">${responseContent}</div>
           </div>
