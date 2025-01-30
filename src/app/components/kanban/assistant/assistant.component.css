@@ -66,25 +66,25 @@
 }
 
 .greeting {
-  color: var(--Colors-Primary-500, #001F3F);
+  color: var(--Colors-Primary-500, #001f3f);
 
-/* Large-Headings/44/56/SemiBold */
-font-family: Montserrat;
-font-size: 44px;
-font-style: normal;
-font-weight: 600;
-line-height: 56px; /* 127.273% */
+  /* Large-Headings/44/56/SemiBold */
+  font-family: Montserrat;
+  font-size: 44px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 56px; /* 127.273% */
 }
 
 .subheading {
-  color: var(--Body-Body-Color-Text-Icons, #7A8591);
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
-/* Large-Headings/44/56/Regular */
-font-family: Montserrat;
-font-size: 44px;
-font-style: normal;
-font-weight: 400;
-line-height: 56px; /* 127.273% */
+  /* Large-Headings/44/56/Regular */
+  font-family: Montserrat;
+  font-size: 44px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 56px; /* 127.273% */
 }
 
 /* Suggested Prompts */
@@ -232,9 +232,8 @@ line-height: 56px; /* 127.273% */
 .send-button:disabled {
   cursor: not-allowed;
 }
-.sidebar{
+.sidebar {
   height: 100%;
-
 }
 /* Attachments */
 .attachments-preview {
@@ -509,15 +508,15 @@ line-height: 56px; /* 127.273% */
 }
 
 .prompt-text {
-  color: var(--Body-Body-Color-Text-Icons, #7A8591);
-text-align: center;
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  text-align: center;
 
-/* Body/16/30/Regular */
-font-family: Montserrat;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 30px; /* 187.5% */
+  /* Body/16/30/Regular */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 187.5% */
 }
 /* Property List Styles */
 .property-list {
@@ -611,10 +610,10 @@ line-height: 30px; /* 187.5% */
 /* Update action buttons */
 .property-actions {
   display: flex;
-flex-direction: column;
-align-items: center;
-gap: var(--Space-Space-16, 16px);
-align-self: stretch;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--Space-Space-16, 16px);
+  align-self: stretch;
 }
 
 .action-button {
@@ -628,16 +627,16 @@ align-self: stretch;
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.property-actions span{
-  color: var(--Body-Body-Color-Text-Icons, #7A8591);
-text-align: center;
+.property-actions span {
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  text-align: center;
 
-/* Body/16/30/Regular */
-font-family: Montserrat;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 30px; /* 187.5% */
+  /* Body/16/30/Regular */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 187.5% */
 }
 
 .action-button:hover {
@@ -897,8 +896,7 @@ line-height: 30px; /* 187.5% */
   width: 300px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
@@ -912,15 +910,15 @@ line-height: 30px; /* 187.5% */
   visibility: visible;
   transform: translateY(0);
 }
-.chat-history-button span{
-  color: var(--Body-Body-Color-Text-Icons, #7A8591);
+.chat-history-button span {
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
-/* Body/16/30/Regular */
-font-family: Montserrat;
-font-size: 16px;
-font-style: normal;
-font-weight: 400;
-line-height: 30px; /* 187.5% */
+  /* Body/16/30/Regular */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 187.5% */
 }
 
 /* Remove the overlay styles */
@@ -928,19 +926,14 @@ line-height: 30px; /* 187.5% */
   display: none;
 }
 
+/* Think Content Styles */
 
 
+/* Response Content Styles */
 
 
-
-
-
-
-
-
-
-
-
-
-
+/* Ensure these styles are not overridden by other rules */
+.message-content > div {
+  width: 100%;
+}
 
