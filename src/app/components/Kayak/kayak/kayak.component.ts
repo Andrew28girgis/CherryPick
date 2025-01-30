@@ -129,7 +129,7 @@ export class KayakComponent implements OnInit {
 
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log('Extracted ID from URL:', this.selectedbuyBox);
+      // console.log('Extracted ID from URL:', this.selectedbuyBox);
     });
   }
   ngOnChanges() {
@@ -165,9 +165,9 @@ export class KayakComponent implements OnInit {
     this.spinner.show();
     this.loading = true;
 
-    console.log('📡 Binding Shopping Centers and Places...');
-    console.log(' Shopping Center IDs:', this.SelectedShoppingCenterIDs);
-    console.log(' Place IDs:', this.SelectedPlacesIDs);
+    // console.log(' Binding Shopping Centers and Places...');
+    // console.log(' Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+    // console.log(' Place IDs:', this.SelectedPlacesIDs);
 
     const body = {
       Name: 'BindShoppingCenters',
@@ -182,7 +182,7 @@ export class KayakComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        console.log(' API Response:', res?.json);
+        // console.log(' API Response:', res?.json);
         this.spinner.hide();
         this.loading = false;
       },
@@ -197,10 +197,10 @@ export class KayakComponent implements OnInit {
   GetMarketSurveyShoppingCentersByBBoxId(): void {
     this.spinner.show();
 
-    console.log(
-      'Fetching bound shopping centers for BuyBox ID:',
-      this.selectedbuyBox
-    );
+    // console.log(
+    //   'Fetching bound shopping centers for BuyBox ID:',
+    //   this.selectedbuyBox
+    // );
 
     const body: any = {
       Name: 'GetMarketSurveyShoppingCentersByBBoxId',
@@ -217,14 +217,14 @@ export class KayakComponent implements OnInit {
           );
           this.SelectedShoppingCenterIDs = [...this.boundShoppingCenterIds];
 
-          console.log(
-            'Fetched Bound Shopping Center IDs:',
-            this.boundShoppingCenterIds
-          );
-          console.log(
-            'Updated SelectedShoppingCenterIDs:',
-            this.SelectedShoppingCenterIDs
-          );
+          // console.log(
+          //   'Fetched Bound Shopping Center IDs:',
+          //   this.boundShoppingCenterIds
+          // );
+          // console.log(
+          //   'Updated SelectedShoppingCenterIDs:',
+          //   this.SelectedShoppingCenterIDs
+          // );
         }
         this.spinner.hide();
       },
@@ -257,24 +257,24 @@ export class KayakComponent implements OnInit {
         this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
           (id) => id !== shoppingCenterId
         );
-        console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
+        // console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
       } else {
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-        console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
+        // console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
       }
     }
 
-    console.log(
-      'Updated Selected Shopping Center IDs:',
-      this.SelectedShoppingCenterIDs
-    );
+    // console.log(
+    //   'Updated Selected Shopping Center IDs:',
+    //   this.SelectedShoppingCenterIDs
+    // );
     this.bindShoppingCenter();
   }
 
   GetMarketSurveyPlacesByBBoxId(): void {
     this.spinner.show();
 
-    console.log('Fetching bound places for BuyBox ID:', this.selectedbuyBox);
+    // console.log('Fetching bound places for BuyBox ID:', this.selectedbuyBox);
 
     const body: any = {
       Name: 'GetMarketSurveyPlacesByBBoxId',
@@ -287,7 +287,7 @@ export class KayakComponent implements OnInit {
       next: (res: any) => {
         if (res && res.json) {
           this.SelectedPlacesIDs = res.json.map((item: any) => item.placeId);
-          console.log('Bound Place IDs:', this.SelectedPlacesIDs);
+          // console.log('Bound Place IDs:', this.SelectedPlacesIDs);
         }
         this.spinner.hide();
       },
@@ -301,7 +301,7 @@ export class KayakComponent implements OnInit {
   selectedshoppingcenterid(selectedid: number): void {
     if (selectedid) {
       this.SelectedShoppingCenterIDs.push(selectedid);
-      console.log('Selected IDs:', this.SelectedShoppingCenterIDs);
+      // console.log('Selected IDs:', this.SelectedShoppingCenterIDs);
       this.bindShoppingCenter();
     } else {
       console.error('Invalid ID:', selectedid);
@@ -332,7 +332,7 @@ export class KayakComponent implements OnInit {
       }
     }
 
-    console.log('Updated Selected Places IDs:', this.SelectedPlacesIDs);
+    // console.log('Updated Selected Places IDs:', this.SelectedPlacesIDs);
     this.bindShoppingCenter();
   }
   addShoppingCenterId(shoppingCenterId: number): void {
@@ -380,21 +380,21 @@ export class KayakComponent implements OnInit {
       this.SelectedPlacesIDs = this.SelectedPlacesIDs.filter(
         (id) => id !== placeId
       );
-      console.log(`Unbound place with ID: ${placeId}`);
+      // console.log(`Unbound place with ID: ${placeId}`);
     } else {
       this.SelectedPlacesIDs.push(placeId);
-      console.log(`Bound place with ID: ${placeId}`);
+      // console.log(`Bound place with ID: ${placeId}`);
     }
 
     if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
       this.SelectedShoppingCenterIDs.push(shoppingCenterId);
     }
 
-    console.log('Updated Selected Places:', this.SelectedPlacesIDs);
-    console.log(
-      'Updated Selected Shopping Centers:',
-      this.SelectedShoppingCenterIDs
-    );
+    // console.log('Updated Selected Places:', this.SelectedPlacesIDs);
+    // console.log(
+    //   'Updated Selected Shopping Centers:',
+    //   this.SelectedShoppingCenterIDs
+    // );
     this.bindShoppingCenter();
   }
 
@@ -412,10 +412,10 @@ export class KayakComponent implements OnInit {
       next: (data: any) => {
         if (data && data.json) {
           this.ShoppingCenterAvailability = data.json;
-          console.log(
-            'Shopping Center Availability:',
-            this.ShoppingCenterAvailability
-          );
+          // console.log(
+          //   'Shopping Center Availability:',
+          //   this.ShoppingCenterAvailability
+          // );
         }
         this.spinner.hide();
       },
@@ -445,7 +445,7 @@ export class KayakComponent implements OnInit {
       next: (data: any) => {
         if (data && data.json) {
           this.ShoppingCenterTenants = data.json;
-          console.log('Fetched Tenants:', this.ShoppingCenterTenants);
+          // console.log('Fetched Tenants:', this.ShoppingCenterTenants);
           this.modalService.open(this.tenantModal, {
             size: 'lg',
             centered: true,
@@ -474,7 +474,7 @@ export class KayakComponent implements OnInit {
       this.placeImage = [];
     }
 
-    console.log('Images for Gallery:', this.placeImage);
+    // console.log('Images for Gallery:', this.placeImage);
 
     this.modalService.open(this.galleryModal, { size: 'lg', centered: true });
   }
@@ -562,7 +562,7 @@ export class KayakComponent implements OnInit {
       return;
     }
 
-    console.log('🌍 Setting StreetView URL:', url);
+    // console.log('🌍 Setting StreetView URL:', url);
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
@@ -573,7 +573,7 @@ export class KayakComponent implements OnInit {
   openStreetViewPlace(content: any, modalObject?: any) {
     this.General.modalObject = modalObject || {};
 
-    console.log('✅ Opening Street View for:', this.General.modalObject);
+    // console.log('✅ Opening Street View for:', this.General.modalObject);
 
     // Open modal first
     this.modalService.open(content, {
@@ -600,36 +600,6 @@ export class KayakComponent implements OnInit {
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
-  // toggleTenantList(): void {
-  //   this.showAllTenants = !this.showAllTenants;
-  //   this.updateSortedTenants(); 
-  // }
-   // toggleOrgSelect(org: ManagementOrganization): void {
-  //   const currentOrgs = this.filterValues.managementOrganizationIds || '';
-  
-  //   let orgIds = currentOrgs
-  //     .split(',')
-  //     .map((id: any) => id.trim())
-  //     .filter((id: any) => id !== '');
-  
-  //   const orgIdAsString = String(org.OrganizationId);
-  
-  //   if (org.Selected) {
-   
-  //     if (!orgIds.includes(orgIdAsString)) {
-  //       orgIds.push(orgIdAsString);
-  //     }
-  //   } else {
-  //     orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
-  //   }
-  
-  //   this.filterValues.managementOrganizationIds = orgIds.join(',');
-  //   console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
-  
-  //   this.getResult();
-  // }
-  
-
   updateSortedTenants(): void {
     if (!this.Filters?.Tenants || !Array.isArray(this.Filters.Tenants)) {
       console.error('Tenants list is empty or undefined.');
@@ -650,7 +620,7 @@ export class KayakComponent implements OnInit {
       .filter((tenant): tenant is Tenant => tenant !== undefined);
 
     this.sortedTenants = uniqueTenants;
-    console.log('Sorted Tenants:', this.sortedTenants); // Debug tenants
+    // console.log('Sorted Tenants:', this.sortedTenants); 
   }
 
   updateSortedOrgs(): void {
@@ -676,7 +646,7 @@ export class KayakComponent implements OnInit {
       .filter((org): org is ManagementOrganization => org !== undefined);
 
     this.sortedOrgs = uniqueOrgs;
-    console.log('Sorted Organizations:', this.sortedOrgs); // Debug organizations
+    // console.log('Sorted Organizations:', this.sortedOrgs); 
   }
 
   updateSecondaryTypes(): void {
@@ -690,7 +660,7 @@ export class KayakComponent implements OnInit {
     }
 
     this.secondaryTypes = [...this.Filters.SecondaryType];
-    console.log('Secondary Types:', this.secondaryTypes); // Debug secondary types
+    // console.log('Secondary Types:', this.secondaryTypes); 
   }
 
   updateNeighbourhoods(): void {
@@ -707,7 +677,7 @@ export class KayakComponent implements OnInit {
     // Assign all Neighbourhood values from Filters
     this.neighbourhoods = [...this.Filters.Neighbourhood];
 
-    console.log('Neighbourhoods:', this.neighbourhoods); // Debug neighbourhoods
+    // console.log('Neighbourhoods:', this.neighbourhoods); 
   }
 
   updateTenantCategories(): void {
@@ -723,7 +693,7 @@ export class KayakComponent implements OnInit {
     // Assign all TenantCategories values from Filters
     this.tenantCategories = [...this.Filters.TenantsCategories];
 
-    console.log('Tenant Categories:', this.tenantCategories); // Debug tenant categories
+    // console.log('Tenant Categories:', this.tenantCategories); 
   }
 
   filterCards(): void {
@@ -742,10 +712,10 @@ export class KayakComponent implements OnInit {
         result.CenterState.toLowerCase().includes(search)
     );
 
-    console.log('Filtered Cards:', this.filteredKayakResult);
+    // console.log('Filtered Cards:', this.filteredKayakResult);
   }
   getResult(): void {
-    console.log('Filtering with values:', this.filterValues);
+    // console.log('Filtering with values:', this.filterValues);
 
     const body: any = {
       Name: 'GetResult',
@@ -783,7 +753,7 @@ export class KayakComponent implements OnInit {
           // Initialize the filtered result to the full result
           this.filteredKayakResult = [...this.KayakResult.Result];
           this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
-          console.log('Filtered Result:', this.KayakResult);
+          // console.log('Filtered Result:', this.KayakResult);
         } else {
           console.warn('Data does not contain expected structure:', data);
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
@@ -822,7 +792,7 @@ export class KayakComponent implements OnInit {
       next: (data: any) => {
         if (data && data.json && data.json.length > 0) {
           this.Filters = data.json[0];
-          console.log('Filters loaded:', this.Filters);
+          // console.log('Filters loaded:', this.Filters);
 
           // Update all filters dynamically
           this.updateSortedTenants();
@@ -873,7 +843,7 @@ export class KayakComponent implements OnInit {
   }
   onStateChange(): void {
     this.selectedState = this.filterValues.statecode;
-    console.log(this.selectedState);
+    // console.log(this.selectedState);
 
     this.updateCitiesForSelectedState();
     this.selectedCity = null; // Reset city
@@ -884,7 +854,7 @@ export class KayakComponent implements OnInit {
     this.filterValues.statecode = selectedValue; // Update the selected state
     this.filterValues.city = ''; // Clear the city filter
     this.selectedCity = null; // Reset the selected city in the UI
-    console.log('State selected:', selectedValue);
+    // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
     this.GetFilters(); // Fetch new filters for the state
     this.getResult(); // Fetch results for the selected state
@@ -892,19 +862,19 @@ export class KayakComponent implements OnInit {
 
   onCityChange(selectedValue: string): void {
     this.filterValues.city = selectedValue; // Update the selected city
-    console.log('City selected:', selectedValue);
+    // console.log('City selected:', selectedValue);
 
     this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
   }
   handleNeighbourhoodChange(selectedValue: string): void {
     this.filterValues.neighbourhood = selectedValue; // Update the selected neighbourhood
-    console.log('Neighbourhood selected:', selectedValue);
+    // console.log('Neighbourhood selected:', selectedValue);
     this.getResult(); // Fetch filtered results
   }
   handleTenantCategoryChange(selectedValue: string): void {
     this.filterValues.tenantCategory = selectedValue; // Update the selected tenant category
-    console.log('Tenant Category selected:', selectedValue);
+    // console.log('Tenant Category selected:', selectedValue);
     this.getResult(); // Fetch filtered results
   }
 
@@ -912,11 +882,11 @@ export class KayakComponent implements OnInit {
     this.uniqueCities = this.KayakCitiesandStates.filter(
       (s) => s.stateCode === this.filterValues.statecode
     );
-    console.log(
-      'Updated cities for state:',
-      this.filterValues.statecode,
-      this.uniqueCities
-    );
+    // console.log(
+    //   'Updated cities for state:',
+    //   this.filterValues.statecode,
+    //   this.uniqueCities
+    // );
   }
   toggleTenantSelection(tenant: Tenant): void {
     const currentTenants = this.filterValues.tenants || '';
