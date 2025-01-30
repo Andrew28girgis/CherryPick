@@ -249,8 +249,7 @@ body {
 .custom-map-btn:active {
   background: #2e3f74;
 }
-.custom-bind-btn {
-  height: 48px;
+.custom-bind-btn { 
   padding: 10px 15px;
   gap: 8px;
   flex: 1 0 0;
@@ -268,8 +267,7 @@ body {
 .custom-bind-btn:active {
   background: #666c72;
 }
-.custom-street-btn {
-  height: 48px;
+.custom-street-btn { 
   padding: 10px 15px;
   gap: 8px;
   flex: 1 0 0;
