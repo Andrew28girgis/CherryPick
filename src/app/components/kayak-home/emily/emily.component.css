@@ -316,7 +316,7 @@ background: #F2F3F4;
   line-height: 20px;
   height: 40px;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   /* justify-content: center; */
   text-align: center;
   overflow: hidden;
