@@ -902,10 +902,7 @@ UnBindShoppingCenter(){
     this.filterValues.city = '';
     this.getResult(); // Trigger only for shopping centers
   }
-  onStateSelectionChange(selectedValue: string): void {
-    this.handleStateChange(selectedValue);  // 🔹 First, update filters and cities
-    this.searchShoppingCenter();  // 🔹 Then, call API only once
-}
+  
   handleStateChange(selectedValue: string): void {
     this.filterValues.statecode = selectedValue; // Update the selected state
     this.filterValues.city = ''; // Clear the city filter
@@ -913,6 +910,7 @@ UnBindShoppingCenter(){
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
     this.GetFilters(); // Fetch new filters for the state
+    this.getResult(); // Fetch results for the selected state
   }
 
   onCityChange(selectedValue: string): void {
