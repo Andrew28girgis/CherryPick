@@ -31,8 +31,15 @@ export class ChatService {
 
 generateAIResponse(prompt: string): Observable<any> {
     const body = {
-      model: "llama-3.3-70b-versatile",
-      messages: [{ role: "user", content: prompt }],
+      model: "deepseek-r1-distill-llama-70b",
+      messages: [
+        {
+          role: "system",
+          content: ` dont return in your response <think></THink>,dont think
+            Generate an HTML response with inline CSS styling for real estate listings. Follow these guidelines:
+           creative design and proffesional
+          `}        ,
+          { role: "user", content: prompt }],
     }
 
     return this.chatHttpClient.post(this.apiUrl, body).pipe(

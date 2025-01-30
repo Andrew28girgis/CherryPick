@@ -5,7 +5,35 @@
   --app-color: #000000;
   --app-font: "Satoshi", sans-serif; /* Define Satoshi as a font variable */
 }
+.response-content {
+  background-color: #f8fff8!important ;
+  border-left: 4px solid #10b981!important ;
+  padding: 16px 20px!important ;
+  margin-top: 12px!important ;
+  border-radius: 8px!important ;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)!important ;
+}
 
+.response-content .message-text {
+  color: #1f2937 !important ;
+  font-size: 15px!important ;
+  line-height: 1.6!important ;
+  font-weight: 500!important ;
+}
+.think-content {
+  background-color: #f0f4f8;
+  border-left: 4px solid #4a90e2;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-style: italic;
+  color: #4a5568;
+  border-radius: 8px;
+}
+
+.think-content .message-text {
+  font-size: 14px;
+  line-height: 1.6;
+}
 body{
   font-family: var(--app-font) !important;
   background-color: #F2F3F4;
