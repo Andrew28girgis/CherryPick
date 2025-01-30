@@ -172,7 +172,9 @@ toggleFilters(): void {
   bindShoppingCenter(): void {
     this.spinner.show();
   
-    console.log('Bound Shopping Center IDs:', this.boundShoppingCenterIds);
+    console.log('Binding Shopping Centers and Places:');
+    console.log('Bound Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+    console.log('Bound Place IDs:', this.SelectedPlacesIDs);
   
     const body: any = {
       Name: 'BindShoppingCenters',
@@ -180,7 +182,7 @@ toggleFilters(): void {
         buyboxid: this.selectedbuyBox, 
         state: this.filterValues.statecode || '', 
         city: this.selectedCity || '', 
-        shoppingcenterIds: this.boundShoppingCenterIds.join(','), 
+        shoppingcenterIds: this.SelectedShoppingCenterIDs.join(','), 
         placeIds: this.SelectedPlacesIDs.join(','), 
       },
     };
@@ -200,54 +202,58 @@ toggleFilters(): void {
   }
   
   GetMarketSurveyShoppingCentersByBBoxId(): void {
-    this.spinner.show(); 
+    this.spinner.show();
   
-    console.log('Selected BuyBox ID:', this.selectedbuyBox);
+    console.log('Fetching bound shopping centers for BuyBox ID:', this.selectedbuyBox);
   
     const body: any = {
-      Name: 'GetMarketSurveyShoppingCentersByBBoxId',
-      Params: {
-        buyboxid: this.selectedbuyBox,
-      },
+        Name: 'GetMarketSurveyShoppingCentersByBBoxId',
+        Params: {
+            buyboxid: this.selectedbuyBox,
+        },
     };
   
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        if (res && res.json) {
-          this.boundShoppingCenterIds = res.json.map((item: any) => item.shoppingCenterId);
-  
-          console.log('Response from GetMarketSurveyShoppingCentersByBBoxId:', res.json);
-          console.log('Bound Shopping Center IDs:', this.boundShoppingCenterIds);
+        next: (res: any) => {
+            if (res && res.json) {
+                this.boundShoppingCenterIds = res.json.map((item: any) => item.shoppingCenterId);
+                this.SelectedShoppingCenterIDs = [...this.boundShoppingCenterIds]; 
 
-        }
-        this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error in GetMarketSurveyShoppingCentersByBBoxId:', err);
-        this.spinner.hide(); 
-      },
+                console.log('Fetched Bound Shopping Center IDs:', this.boundShoppingCenterIds);
+                console.log('Updated SelectedShoppingCenterIDs:', this.SelectedShoppingCenterIDs);
+            }
+            this.spinner.hide();
+        },
+        error: (err) => {
+            console.error('Error in GetMarketSurveyShoppingCentersByBBoxId:', err);
+            this.spinner.hide();
+        },
     });
-  }
+}
   
   toggleShoppingCenterBind(shoppingCenterId: number): void {
-    const isAlreadyBound = this.boundShoppingCenterIds.includes(shoppingCenterId);
-  
+    const isAlreadyBound = this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
+
     if (isAlreadyBound) {
-      this.boundShoppingCenterIds = this.boundShoppingCenterIds.filter(id => id !== shoppingCenterId);
-      
-      console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
+        // Unbind: Remove from both UI list and API list
+        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+        this.boundShoppingCenterIds = this.boundShoppingCenterIds.filter(id => id !== shoppingCenterId);
+        console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
     } else {
-      this.boundShoppingCenterIds.push(shoppingCenterId);
-      console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
+        // Bind: Add to both UI list and API list
+        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+        this.boundShoppingCenterIds.push(shoppingCenterId);
+        console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
     }
-  
+
+    console.log('Updated SelectedShoppingCenterIDs:', this.SelectedShoppingCenterIDs);
     this.bindShoppingCenter();
-  }
+}
   
-  getMarketSurveyPlacesByBBoxId(): void {
+  GetMarketSurveyPlacesByBBoxId(): void {
     this.spinner.show();
   
-    console.log('Selected BuyBox ID:', this.selectedbuyBox);
+    console.log('Fetching bound places for BuyBox ID:', this.selectedbuyBox);
   
     const body: any = {
       Name: 'GetMarketSurveyPlacesByBBoxId',
@@ -259,7 +265,8 @@ toggleFilters(): void {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         if (res && res.json) {
-          console.log('Response from GetMarketSurveyPlacesByBBoxId:', res.json);
+          this.SelectedPlacesIDs = res.json.map((item: any) => item.placeId); 
+          console.log('Bound Place IDs:', this.SelectedPlacesIDs);
         }
         this.spinner.hide();
       },
@@ -269,6 +276,7 @@ toggleFilters(): void {
       },
     });
   }
+  
   
   selectedshoppingcenterid(selectedid: number): void {
     if (selectedid) { 
@@ -348,36 +356,31 @@ toggleFilters(): void {
       return this.selectedPlaces.some(place => place.Id === placeId && place.ShoppingCenterId === shoppingCenterId);
     });
   }
-  bindPlace(placeId: number, shoppingCenterId: number): void {
-    // Check if the placeId is already in the SelectedPlacesIDs array
-    const placeIndex = this.SelectedPlacesIDs.indexOf(placeId);
+  togglePlaceBind(placeId: number, shoppingCenterId: number): void {
+    const isAlreadyBound = this.SelectedPlacesIDs.includes(placeId);
   
-    if (placeIndex > -1) {
-      // If the placeId is found, remove it (unbind place)
-      this.SelectedPlacesIDs.splice(placeIndex, 1);
+    if (isAlreadyBound) {
+      // If already bound, remove (Unbind)
+      this.SelectedPlacesIDs = this.SelectedPlacesIDs.filter(id => id !== placeId);
       console.log(`Unbound place with ID: ${placeId}`);
     } else {
-      // If the placeId is not found, add it (bind place)
+      // If not bound, add (Bind)
       this.SelectedPlacesIDs.push(placeId);
       console.log(`Bound place with ID: ${placeId}`);
     }
   
-    // Check if the shoppingCenterId is already in the SelectedShoppingCenterIDs array
-    const centerIndex = this.SelectedShoppingCenterIDs.indexOf(shoppingCenterId);
-  
-    if (centerIndex > -1) {
-      // If the shoppingCenterId is found, remove it (unbind shopping center)
-      this.SelectedShoppingCenterIDs.splice(centerIndex, 1);
-      console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
-    } else {
-      // If the shoppingCenterId is not found, add it (bind shopping center)
+    // Ensure the shopping center is also bound
+    if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
       this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-      console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
     }
   
-    // Call the method to bind shopping centers and places
-    this.bindShoppingCenter(); // Send the selected IDs to the API
+    console.log('Updated Selected Places:', this.SelectedPlacesIDs);
+    console.log('Updated Selected Shopping Centers:', this.SelectedShoppingCenterIDs);
+  
+    // Call API to update binding
+    this.bindShoppingCenter();
   }
+  
   
   GetShoppingCenterAvailability(shoppingCenterId: number): void {
     this.spinner.show();
@@ -583,7 +586,7 @@ toggleFilters(): void {
   //   const currentOrgs = this.filterValues.managementOrganizationIds || '';
   
   //   let orgIds = currentOrgs
-  //     .split(',')  
+  //     .split(',')
   //     .map((id: any) => id.trim())
   //     .filter((id: any) => id !== '');
   
@@ -751,6 +754,7 @@ toggleFilters(): void {
           this.filteredKayakResult = []; // Reset the filtered result
         }
         this.GetMarketSurveyShoppingCentersByBBoxId();
+        this.GetMarketSurveyPlacesByBBoxId();
         this.spinner.hide();
         this.loading = false; // Set loading to false after fetching data
       },
