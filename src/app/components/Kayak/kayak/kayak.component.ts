@@ -33,6 +33,9 @@ import {
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SortByPipe } from '../../../pipes/sortBy/sort-by.pipe';
+import { StateService } from '../../../../../src/app/services/state.service';
+import { Center } from '../../../../models/shoppingCenters';
+
 declare const google: any;
 
 @Component({
@@ -80,7 +83,8 @@ export class KayakComponent implements OnInit {
   selectedShoppingCenterId: number = 0;
   boundShoppingCenterIds: number[] = [];
   newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
-
+  deleteshoppingcenterID!:number;
+  shoppingCenters: Center[] = [];
 
 
 
@@ -103,7 +107,9 @@ export class KayakComponent implements OnInit {
     private markerService: MapsService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private stateService: StateService
+
   ) {
     this.markerService.clearMarkers();
   }
@@ -158,7 +164,7 @@ export class KayakComponent implements OnInit {
 
   bindShoppingCenter(): void {
     if (!this.SelectedShoppingCenterIDs.length) {
-      console.warn('⚠️ No shopping centers selected! Skipping API call.');
+      console.warn(' No shopping centers selected! Skipping API call.');
       return;
     }
 
@@ -185,6 +191,7 @@ export class KayakComponent implements OnInit {
         // console.log(' API Response:', res?.json);
         this.spinner.hide();
         this.loading = false;
+        this.getShoppingCenters();
       },
       error: (err) => {
         console.error(' Error in BindShoppingCenters:', err);
@@ -239,6 +246,9 @@ export class KayakComponent implements OnInit {
     shoppingCenterId: number,
     isChecked?: boolean
   ): void {
+    this.deleteshoppingcenterID=shoppingCenterId;
+    console.log('deleteshoppingcenterID',this.deleteshoppingcenterID);
+    
     const isAlreadyBound =
       this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
 
@@ -257,9 +267,11 @@ export class KayakComponent implements OnInit {
         this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
           (id) => id !== shoppingCenterId
         );
+        this.UnBindShoppingCenter();
         // console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
       } else {
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+        this.bindShoppingCenter();
         // console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
       }
     }
@@ -268,9 +280,30 @@ export class KayakComponent implements OnInit {
     //   'Updated Selected Shopping Center IDs:',
     //   this.SelectedShoppingCenterIDs
     // );
-    this.bindShoppingCenter();
   }
-
+UnBindShoppingCenter(){
+  this.spinner.show();
+  const body: any = {
+    Name: 'DeleteShoppingCenterFromBuyBox',
+    Params: {
+      BuyboxId: +this.selectedbuyBox,
+      ShoppingCenterId: this.deleteshoppingcenterID,
+    },
+  };
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (res) => {
+      // console.log(' API Response:', res?.json);
+      this.spinner.hide();
+      this.loading = false;
+      this.getShoppingCenters();
+    },
+    error: (err) => {
+      console.error(' Error in BindShoppingCenters:', err);
+      this.spinner.hide();
+      this.loading = false;
+    },
+  });
+}
   GetMarketSurveyPlacesByBBoxId(): void {
     this.spinner.show();
 
@@ -771,6 +804,25 @@ export class KayakComponent implements OnInit {
       },
     });
   }
+  getShoppingCenters(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCenters',
+      Params: {
+        BuyBoxId: this.selectedbuyBox,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.shoppingCenters = data.json;
+        this.stateService.setShoppingCenters(data.json);
+        this.spinner.hide();
+        // this.getStandAlonePlaces(this.selectedbuyBox);
+        // this.getBuyBoxPlaces(this.BuyBoxId);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
 
   GetFilters(): void {
     if (!this.Ids) {
@@ -850,6 +902,10 @@ export class KayakComponent implements OnInit {
     this.filterValues.city = '';
     this.getResult(); // Trigger only for shopping centers
   }
+  onStateSelectionChange(selectedValue: string): void {
+    this.handleStateChange(selectedValue);  // 🔹 First, update filters and cities
+    this.searchShoppingCenter();  // 🔹 Then, call API only once
+}
   handleStateChange(selectedValue: string): void {
     this.filterValues.statecode = selectedValue; // Update the selected state
     this.filterValues.city = ''; // Clear the city filter
@@ -857,7 +913,6 @@ export class KayakComponent implements OnInit {
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
     this.GetFilters(); // Fetch new filters for the state
-    this.getResult(); // Fetch results for the selected state
   }
 
   onCityChange(selectedValue: string): void {

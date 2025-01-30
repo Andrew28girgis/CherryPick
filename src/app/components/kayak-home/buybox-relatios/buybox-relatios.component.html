@@ -2,8 +2,11 @@
   <div class="modal-body mt-3 mb-5">
     <div class="row m-0 p-0">
       <div class="col-12 mt-3">
-        <form class="row m-0 p-0">
-          <div class="mb-1 col-4 p-2">
+        <form class="row m-0 p-0 d-flex align-items-center">
+          <div class="mb-1 position-relative col-2 p-2">
+            <h5 *ngIf="this.RelationsOrganizations.length > 0" class="mb-2">Relations</h5>
+          </div>
+          <div class="mb-1 position-relative col-3 p-2">
             <label for="retailRelation" class="form-label">Retail Relation</label>
             <select id="retailRelation" class="form-control" [(ngModel)]="selectedRetailRelationId" name="retailRelation" required>
               <option value="" disabled selected>Select Retail Relation</option>
@@ -12,7 +15,7 @@
               </option>
             </select>
           </div>
-          <div class="mb-1 position-relative col-4 p-2">
+          <div class="mb-1 position-relative col-3 p-2">
             <label for="organizationSearch" class="form-label">Organization</label>
             <input type="text" id="organizationSearch" name="organizationSearch" class="form-control" placeholder="Search Organization" [(ngModel)]="searchOrganizationTerm"
               (input)="onOrganizationInput($event)" (keydown)="handleOrganizationKeydown($event)" (blur)="handleOrganizationBlur()" autocomplete="off"
@@ -29,7 +32,7 @@
               </li>
             </ul>
           </div>
-          <div class="mb-1 position-relative col-4 p-2">
+          <div class="mb-1 position-relative col-3 p-2">
             <label for="tagSearch" class="form-label">Tag</label>
             <input type="text" id="tagSearch" name="tagSearch" class="form-control" placeholder="Search by Tag" [(ngModel)]="searchTagTerm" (input)="onTagInput($event)"
               (keydown)="handleTagKeydown($event)" (blur)="handleTagBlur($event)" autocomplete="off" aria-autocomplete="list" aria-controls="tag-suggestions"/>
@@ -50,7 +53,7 @@
             </ul>
           </div>
           <!-- Submit Button -->
-          <div class="d-flex justify-content-end  col-12 p-0 mt-4">
+          <div class="d-flex justify-content-end align-items-center  col-1 p-0">
             <button type="submit" class="btn btn-primary" (click)="submitOrganizationForm()">
               Submit
             </button>
@@ -58,8 +61,7 @@
         </form>
       </div>
       <div class="col-12 mt-3">
-        <label *ngIf="this.RelationsOrganizations.length > 0" class="mb-2" style="font-size: 16px; font-weight: 600;">Relations</label>
-        <div class="table-responsive" style="max-height: 500px; overflow-y: auto" *ngIf="RelationsOrganizations.length > 0 || !RelationsOrganizations">
+        <div class="table-container" *ngIf="RelationsOrganizations.length > 0 || !RelationsOrganizations">
           <table class="table table-bordered">
             <thead class="thead-light" *ngIf="this.RelationsOrganizations.length > 0">
               <tr>
@@ -74,9 +76,9 @@
                 <!-- <td>{{ relation.id }}</td> -->
                 <td>{{ relation.name }}</td>
                 <td>{{ relation.category }}</td>
-                <td style="text-align: center;">
-                  <button class="btn btn-danger btn-sm" (click)="DeleteOrganizationRelations(relation.id)">
-                    <i class="fa fa-trash"></i>
+                <td class="td_last">
+                  <button class="btn btn_trash " (click)="DeleteOrganizationRelations(relation.id)">
+                    <i class="fa fa-trash d-flex justify-content-center"></i>
                   </button>
                 </td>
               </tr>
@@ -84,8 +86,8 @@
           </table>
         </div>
 
-        <div  class="pt-2 d-flex justify-content-center align-items-center" style="height: 50vh;"  *ngIf="RelationsOrganizations?.length == 0 || !RelationsOrganizations">
-          <p style="font-weight: 500;">No data Relations</p>
+        <div  class="no-data"  *ngIf="RelationsOrganizations?.length == 0 || !RelationsOrganizations">
+          <p >No data Relations</p>
         </div>
       </div>
     </div>
