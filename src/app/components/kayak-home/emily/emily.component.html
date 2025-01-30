@@ -1,12 +1,8 @@
 <section class="container-fluid pt-2 pb-2">
   <div class="Nav__section">
     <ul class="pt-3 pe-2 ps-2 m-0">
-      <li
-        id="Emily"
-        *ngFor="let tab of getFilteredTabs()"
-        [ngClass]="{ active: selectedTab === tab.id }"
-        (click)="selectTab(tab.id)"
-      >
+      <li id="Emily" *ngFor="let tab of getFilteredTabs()" [ngClass]="{ active: selectedTab === tab.id }"
+        (click)="selectTab(tab.id)">
         {{ tab.label }}
       </li>
     </ul>
@@ -18,45 +14,27 @@
     <section *ngIf="selectedTab === 'Emily'" class="row d-flex m-0 p-0">
       <!-- emily item list -->
       <ng-container
-        *ngIf="generatedGetSavedTemplates.length > 0 || generatedGetSavedTemplates?.[0]?.BuyboxOrgEmailTemplates > 0"
-      >
+        *ngIf="generatedGetSavedTemplates.length > 0 || generatedGetSavedTemplates?.[0]?.BuyboxOrgEmailTemplates > 0">
         <div class="row m-0 p-0 mt-2 d-flex ps-2 pe-2">
           <ng-container *ngFor="let emaily of generatedGetSavedTemplates">
             <div class="col-12 col-sm-12 p-3">
               <section class="GeneratedTemplates row m-0 p-0">
-                <div
-                  class="row m-0 p-0 d-flex justify-content-center mt-3 col-12 col-sm-2"
-                >
+                <div class="row m-0 p-0 d-flex justify-content-center mt-3 col-12 col-sm-2">
                   <div class="GeneratedTemplates__img col-10">
-                    <img
-                      class="Templates__img"
-                      src="{{ emaily?.LogoURL }}"
-                      alt=""
-                    />
+                    <img class="Templates__img" src="{{ emaily?.LogoURL }}" alt="" />
                   </div>
                   <div class="GeneratedTemplates_title col-12">
-                    <input
-                      type="checkbox"
-                      class="form-check-input m-0"
-                      [name]="'emailyID' + emaily?.ID"
-                      [checked]="isChecked(emaily?.ID)"
-                      (change)="onCheckboxChangeTemplates(emaily?.ID)"
-                    />
+                    <input type="checkbox" class="form-check-input m-0" [name]="'emailyID' + emaily?.ID"
+                      [checked]="isChecked(emaily?.ID)" (change)="onCheckboxChangeTemplates(emaily?.ID)" />
                     {{ emaily?.Name }}
                   </div>
                 </div>
-                <div
-                  class="d-flex justify-content-center mt-2 pb-2 col-12 col-sm-10"
-                >
-                  <div
-                    class="form-control textarea_divT"
-                    contenteditable="false"
-                    [innerHTML]="
+                <div class="d-flex justify-content-center mt-2 pb-2 col-12 col-sm-10">
+                  <div class="form-control textarea_divT" contenteditable="false" [innerHTML]="
                       getFormattedTextTemplate(
                         emaily?.BuyboxOrgEmailTemplates[0].Template
                       )
-                    "
-                  ></div>
+                    "></div>
                 </div>
                 <div class="d-flex justify-content-end m-3">
                   <button class="btn edit-btn">AI Generate</button>
@@ -70,25 +48,18 @@
       <!-- BuyBoxOrganizationsForEmail list -->
       <ng-container *ngIf="BuyBoxOrganizationsForEmail.length > 0">
         <div class="row m-0 p-0 mt-2 d-flex ps-2 pe-2">
-          <ng-container
-            *ngFor="
+          <ng-container *ngFor="
               let OrganizationsForEmail of BuyBoxOrganizationsForEmail;
               let i = index
-            "
-          >
-            <div class="col-12 col-sm-12 p-3">
-              <section class="OrganizationsForEmail row m-0 p-0">
+            ">
+            <div class="col-12 col-sm-12 p-3" >
+              <section class="OrganizationsForEmail row m-0 p-0"  (click)="selectContact(i, OrganizationsForEmail.Id)" [class.activeSelect]="selectedIndex === i">
                 <div style="align-items: center;flex-flow: column;gap: 20px;"
-                  class="m-0 p-0 mt-3 col-12 col-sm-3 d-flex justify-content-center row"
-                >
+                  class="m-0 p-0 mt-3 col-12 col-sm-3 d-flex justify-content-center row">
                   <div class="OganirzationsForEmail__img col-10">
-                    <img
-                      class="Oganirzations__img"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        OrganizationsForEmail.id
-                      }}"
-                      alt=""
-                    />
+                    <img class="Oganirzations__img" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        OrganizationsForEmail.Id
+                      }}" alt="" />
                   </div>
                   <div class="OrganizationsForEmail__head col-10">
                     <p>Company Management:</p>
@@ -97,38 +68,32 @@
                     </p>
                   </div>
                 </div>
-                <div class="mt-2 pb-2 col-12 col-sm-9">
+                <div class="mt-2 pb-2 col-12 col-sm-9 align-items-center d-flex">
                   <div class="row m-0 p-0 d-flex w-100">
-                    <div
-                      class="col-6 p-2"
-                      *ngFor="let item of OrganizationsForEmail?.Contact"
-                    >
-                      <div class="crad_Contact_Mange">
-                        <p class="Contact_Mange pt-2">Personal manage :</p>
+                    <div class="col-4 p-2 h-100" *ngFor="let item of OrganizationsForEmail?.Contact"
+                     >
+                      <div class="crad_Contact_Mange" >
+                        <!-- <p class="Contact_Mange pt-2">Contact :</p> -->
                         <p class="Contact_head pt-1">
-                          Name :
-                          <span>{{ item?.Firstname }} {{ item?.LastName }}</span>
+                          <span>{{ item?.Firstname }} {{ item?.Lastname }}</span>
                         </p>
-                        <p class="Contact_head border_Contact_head">
-                          Email : <span>{{ item?.Email }}</span>
-                        </p>
-                        <div
-                          *ngFor="let shoppingCenter of item.ShoppingCenters"
-                          class="pt-2"
-                        >
-                          <p class="Contact_Mange pt-2">
-                            Shopping Center Name :
-                          </p>
+                           <p>
+                             <img style="cursor: pointer" class="ms-2" src="../../../assets/Images/Icons/eye.png"
+                             alt="View Manager Details" [ngbPopover]="popoverContent"
+                             popoverTitle="Shopping Center" triggers="click:outside" [placement]="'bottom'" />
+                           </p>
+                      </div>
+
+                      <ng-template #popoverContent>
+                        <div *ngFor="let shoppingCenter of item.ShoppingCenters" class="pt-2">
+                          <!-- <p class="Contact_Mange pt-2">
+                            Shopping Center :
+                          </p> -->
                           <p class="Contact_head pt-2">
-                            Name :
-                            <span>{{ shoppingCenter.CenterName }}</span>
-                          </p>
-                          <p class="Contact_head">
-                            Address :
-                            <span>{{ shoppingCenter.CenterAddress }}, {{ shoppingCenter.CenterCity }}, {{ shoppingCenter.CenterState }}</span>
+                            <span>{{ shoppingCenter?.centername }}</span>
                           </p>
                         </div>
-                      </div>
+                      </ng-template>
                     </div>
                   </div>
                 </div>
@@ -138,66 +103,35 @@
         </div>
       </ng-container>
       <!-- Generate emily name only-->
-      <div
-        class="Generate_emaily"
-        *ngIf="BuyBoxOrganizationsForEmail.length > 0"
-      >
-        Generate emaily
+      <div class="Generate_emaily" *ngIf="BuyBoxOrganizationsForEmail.length > 0">
+        <!-- Generate emaily -->
       </div>
       <!-- Generate emily -->
       <ng-container>
         <article class="sidbar__contant">
-          <div
-            class="checkbox-section-head checkbox-section-border checkbox-section"
-          >
-            <input
-              type="checkbox"
-              name="Parts"
-              id="Parts"
-              class="form-check-input"
-              [(ngModel)]="showClientProfile"
-              (change)="onCheckboxChange()"
-            />
+          <div class="checkbox-section-head checkbox-section-border checkbox-section">
+            <input type="checkbox" name="Parts" id="Parts" class="form-check-input" [(ngModel)]="showClientProfile"
+              (change)="onCheckboxChange()" />
             <label for="Parts">{{ BuyBoxOrganizationName }}</label>
           </div>
           <div class="checkbox-section checkbox-section-body">
-            <input
-              type="checkbox"
-              name="Relation"
-              id="Relation"
-              class="form-check-input"
-              [(ngModel)]="showRelationNames"
-              (change)="onRelationNamesChange()"
-            />
+            <input type="checkbox" name="Relation" id="Relation" class="form-check-input"
+              [(ngModel)]="showRelationNames" (change)="onRelationNamesChange()" />
             <label for="Relation">Relation Name</label>
           </div>
           <ng-container *ngIf="showRelationNames">
             <ng-container *ngFor="let relation of relationCategoriesNames">
               <div class="checkbox-section checkbox-section-body-first">
-                <input
-                  type="checkbox"
-                  [name]="relation.name"
-                  [id]="relation.name"
-                  class="form-check-input"
-                  [(ngModel)]="relation.selected"
-                  (change)="onRelationNamesChange()"
-                />
+                <input type="checkbox" [name]="relation.name" [id]="relation.name" class="form-check-input"
+                  [(ngModel)]="relation.selected" (change)="onRelationNamesChange()" />
                 <label [for]="relation.name">{{ relation.name }}</label>
               </div>
 
               <ng-container *ngFor="let item of generated?.[0]?.Releations">
-                <ng-container
-                  *ngIf="item.RetailRelationCategoryId == relation.id"
-                >
+                <ng-container *ngIf="item.RetailRelationCategoryId == relation.id">
                   <div class="checkbox-section checkbox-section-body-first">
-                    <input
-                      type="checkbox"
-                      [name]="item.Name"
-                      [id]="item.Name"
-                      class="form-check-input"
-                      [(ngModel)]="item.relationSelect"
-                      (change)="updateEmailBody()"
-                    />
+                    <input type="checkbox" [name]="item.Name" [id]="item.Name" class="form-check-input"
+                      [(ngModel)]="item.relationSelect" (change)="updateEmailBody()" />
                     <label [for]="item.Name">{{ item.Name }}</label>
                   </div>
                 </ng-container>
@@ -207,95 +141,49 @@
 
           <!-- Manager Organizations and Contacts -->
           <div class="checkbox-section checkbox-section-body">
-            <input
-              type="checkbox"
-              [name]="ManagerOrganizationName"
-              [id]="ManagerOrganizationName"
-              class="form-check-input"
-              [(ngModel)]="showOrganizationManagers"
-              (change)="onOrganizationManagersChange()"
-            />
+            <input type="checkbox" [name]="ManagerOrganizationName" [id]="ManagerOrganizationName"
+              class="form-check-input" [(ngModel)]="showOrganizationManagers"
+              (change)="onOrganizationManagersChange()" />
             <label [for]="ManagerOrganizationName">{{
               ManagerOrganizationName
             }}</label>
           </div>
-          <div
-            class="checkbox-section checkbox-section-body-first"
-            *ngIf="showOrganizationManagers"
-          >
-            <input
-              type="checkbox"
-              name="TenantRep"
-              id="TenantRep"
-              class="form-check-input"
-              [(ngModel)]="showMangerDescription"
-              (change)="onMangerDescriptionChange()"
-            />
+          <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
+            <input type="checkbox" name="TenantRep" id="TenantRep" class="form-check-input"
+              [(ngModel)]="showMangerDescription" (change)="onMangerDescriptionChange()" />
             <label for="TenantRep">Tenant Rep. Description</label>
           </div>
           <ng-container *ngIf="showOrganizationManagers">
             <ng-container *ngFor="let manager of managerOrganizations">
-              <ng-container
-                *ngFor="let contact of manager.ManagerOrganizationContacts"
-              >
+              <ng-container *ngFor="let contact of manager.ManagerOrganizationContacts">
                 <div class="checkbox-section checkbox-section-body-second">
-                  <input
-                    type="checkbox"
-                    [name]="contact.Firstname + contact.LastName"
-                    [id]="contact.Firstname + contact.LastName"
-                    class="form-check-input"
-                    [(ngModel)]="contact.selected"
-                    (change)="onContactCheckboxChange()"
-                    [checked]="contact.selected"
-                  />
-                  <label [for]="contact.Firstname + contact.LastName"
-                    >{{ contact.Firstname }} {{ contact.LastName }}</label
-                  >
+                  <input type="checkbox" [name]="contact.Firstname + contact.LastName"
+                    [id]="contact.Firstname + contact.LastName" class="form-check-input" [(ngModel)]="contact.selected"
+                    (change)="onContactCheckboxChange()" [checked]="contact.selected" />
+                  <label [for]="contact.Firstname + contact.LastName">{{ contact.Firstname }} {{ contact.LastName }}</label>
                 </div>
 
                 <!-- Add Assistant Details -->
-                <div
-                  class="checkbox-section checkbox-section-body-second"
-                  *ngIf="contact.AssistantName"
-                >
-                  <input
-                    type="checkbox"
-                    name="BrokerAssistant"
-                    id="BrokerAssistant"
-                    class="form-check-input"
-                    [(ngModel)]="contact.assistantSelected"
-                    (change)="onAssistantCheckboxChange(contact)"
-                  />
+                <div class="checkbox-section checkbox-section-body-second" *ngIf="contact.AssistantName">
+                  <input type="checkbox" name="BrokerAssistant" id="BrokerAssistant" class="form-check-input"
+                    [(ngModel)]="contact.assistantSelected" (change)="onAssistantCheckboxChange(contact)" />
                   <label for="BrokerAssistant">Broker Assistant</label>
                 </div>
               </ng-container>
             </ng-container>
           </ng-container>
-          <div
-            class="checkbox-section checkbox-section-body-second checkbox-section-border pb-2"
-          >
+          <div class="checkbox-section checkbox-section-body-second checkbox-section-border pb-2">
             <label for="border"></label>
           </div>
           <!-- Select a Shopping Center  -->
-          <div
-            class="checkbox-section-select pb-2 checkbox-section-border"
-            *ngIf="ShoppingCenterNames"
-          >
+          <div class="checkbox-section-select pb-2 checkbox-section-border" *ngIf="ShoppingCenterNames">
             <label for="ShoppingCenter">Shopping Center</label>
-            <select
-              class="form-select form-select-lg mb-3"
-              aria-label="Large select example"
-              id="ShoppingCenter"
-              [(ngModel)]="selectedShoppingCenter"
-              (change)="onSelectedShoppingCenterChange()"
-            >
+            <select class="form-select form-select-lg mb-3" aria-label="Large select example" id="ShoppingCenter"
+              [(ngModel)]="selectedShoppingCenter" (change)="onSelectedShoppingCenterChange()">
               <option value="" selected disabled>
                 Select a Shopping Center
               </option>
-              <option
-                *ngFor="let center of ShoppingCenterNames"
-                [value]="center.CenterName"
-              >
+              <option *ngFor="let center of ShoppingCenterNames" [value]="center.CenterName">
                 {{ center.CenterName }}
                 <span>
                   ({{
@@ -303,8 +191,7 @@
                     center.ShoppingCenterManager[0]
                       ? center.ShoppingCenterManager[0].Name
                       : ""
-                  }})</span
-                >
+                  }})</span>
 
                 <!-- {{ center.CenterName }} ({{ center.ShoppingCenterManager[0]?.Name || 'No Manager' }}) -->
                 <!-- {{ center.CenterName }} ({{ center.ShoppingCenterManager[0]?.Name || 'No Manager' }}) -->
@@ -314,37 +201,20 @@
 
           <ng-container *ngIf="selectedShoppingCenter">
             <div class="checkbox-section checkbox-section-body">
-              <input
-                type="checkbox"
-                name="LandlordDescription"
-                id="LandlordDescription"
-                class="form-check-input"
-                [(ngModel)]="showManagerName"
-                (change)="updateEmailBody()"
-              />
+              <input type="checkbox" name="LandlordDescription" id="LandlordDescription" class="form-check-input"
+                [(ngModel)]="showManagerName" (change)="updateEmailBody()" />
               <label for="LandlordDescription">Landlord Rep. Description</label>
             </div>
             <!-- Manager Contacts with checkboxes -->
             <ng-container *ngIf="showManagerName">
-              <div
-                class="checkbox-section checkbox-section-body-first"
-                *ngFor="
+              <div class="checkbox-section checkbox-section-body-first" *ngFor="
                   let contact of getManagerContacts(selectedShoppingCenter);
                   let i = index
-                "
-              >
-                <input
-                  type="checkbox"
-                  [name]="'M.Contact' + i"
-                  [id]="'M.Contact' + i"
-                  class="form-check-input"
-                  [(ngModel)]="contact.selectedName"
-                  (change)="updateEmailBody()"
-                />
-                <label [for]="'M.Contact' + i"
-                  >M.Contact: {{ contact.Firstname }}
-                  {{ contact.Lastname }}</label
-                >
+                ">
+                <input type="checkbox" [name]="'M.Contact' + i" [id]="'M.Contact' + i" class="form-check-input"
+                  [(ngModel)]="contact.selectedName" (change)="updateEmailBody()" />
+                <label [for]="'M.Contact' + i">M.Contact: {{ contact.Firstname }}
+                  {{ contact.Lastname }}</label>
               </div>
             </ng-container>
 
@@ -358,14 +228,8 @@
             <!-- Cotenants in the shopping center -->
             <ng-container>
               <div class="checkbox-section checkbox-section-body">
-                <input
-                  type="checkbox"
-                  name="Co-tenant"
-                  id="Co-tenant"
-                  class="form-check-input"
-                  [(ngModel)]="showCotenantsWithActivity"
-                  (change)="onCotenantsWithActivityChange()"
-                />
+                <input type="checkbox" name="Co-tenant" id="Co-tenant" class="form-check-input"
+                  [(ngModel)]="showCotenantsWithActivity" (change)="onCotenantsWithActivityChange()" />
                 <label for="Co-tenant">Co-tenant in the shopping center</label>
               </div>
 
@@ -373,28 +237,16 @@
               <ng-container *ngIf="showCotenantsWithActivity">
                 <ng-container *ngFor="let activity of groupedActivityTypes">
                   <div class="checkbox-section checkbox-section-body-first">
-                    <input
-                      type="checkbox"
-                      [name]="activity.ActivityType"
-                      [id]="activity.ActivityType"
-                      class="form-check-input"
-                      [(ngModel)]="activity.selected"
-                      (change)="onActivityChange(activity)"
-                    />
+                    <input type="checkbox" [name]="activity.ActivityType" [id]="activity.ActivityType"
+                      class="form-check-input" [(ngModel)]="activity.selected" (change)="onActivityChange(activity)" />
                     <label [for]="activity.ActivityType">{{
                       activity.ActivityType
                     }}</label>
                   </div>
                   <ng-container *ngFor="let co of activity.Cotenants">
                     <div class="checkbox-section checkbox-section-body-second">
-                      <input
-                        type="checkbox"
-                        [name]="co.CotenantName"
-                        [id]="co.CotenantName"
-                        class="form-check-input"
-                        [(ngModel)]="co.selected"
-                        (change)="updateEmailBody()"
-                      />
+                      <input type="checkbox" [name]="co.CotenantName" [id]="co.CotenantName" class="form-check-input"
+                        [(ngModel)]="co.selected" (change)="updateEmailBody()" />
                       <label [for]="co.CotenantName">{{
                         co.CotenantName
                       }}</label>
@@ -453,13 +305,8 @@
           <!-- Select Prompt -->
           <div class="checkbox-section-select pb-2">
             <label for="discussionDropdown">Select Prompt</label>
-            <select
-              class="form-select form-select-lg"
-              aria-label="Large select example"
-              id="discussionDropdown"
-              [(ngModel)]="selectedPromptId"
-              (change)="updatePrompt()"
-            >
+            <select class="form-select form-select-lg" aria-label="Large select example" id="discussionDropdown"
+              [(ngModel)]="selectedPromptId" (change)="updatePrompt()">
               <option value="" selected>Select Prompt</option>
               <option *ngFor="let prompt of prompts" [value]="prompt.id">
                 {{ prompt?.name }}
@@ -468,24 +315,13 @@
           </div>
           <!-- Display Prompt in Separate Textarea -->
           <!-- *ngIf="selectedPromptId" -->
-          <div
-            class="textarea pb-3 checkbox-section-border"
-            *ngIf="selectedPromptId"
-          >
+          <div class="textarea pb-3 checkbox-section-border" *ngIf="selectedPromptId">
             <label id="selectedPromptTextarea">Selected Prompt</label>
-            <textarea
-              id="selectedPromptTextarea"
-              rows="4"
-              class="form-control"
-              [(ngModel)]="selectedPromptText"
-              readonly
-            ></textarea>
+            <textarea id="selectedPromptTextarea" rows="4" class="form-control" [(ngModel)]="selectedPromptText"
+              readonly></textarea>
 
             <div class="d-flex justify-content-end mt-2">
-              <button
-                class="Emily__contant__button"
-                (click)="openPromptTextModal(View)"
-              >
+              <button class="Emily__contant__button" (click)="openPromptTextModal(View)">
                 Prompt
                 <i class="fas fa-sign-in-alt px-1"></i>
               </button>
@@ -493,12 +329,7 @@
           </div>
           <div class="Emily__contant__head pt-3 pb-2" for="emailBodyTextarea">
             Email Body
-            <p
-              class="Emily__contant__head__p"
-              (click)="clearSelections()"
-              *ngIf="emailBody != ''"
-              title="Clear Body"
-            >
+            <p class="Emily__contant__head__p" (click)="clearSelections()" *ngIf="emailBody != ''" title="Clear Body">
               Clear
             </p>
           </div>
@@ -506,12 +337,7 @@
             <!-- contenteditable="true" -->
             <!-- <div class="form-control textarea_div" id="emailBodyTextarea" rows="20"  [(ngModel)]="emailBody">
           </div> -->
-            <textarea
-              id="emailBodyTextarea"
-              rows="20"
-              class="form-control"
-              [(ngModel)]="emailBody"
-            ></textarea>
+            <textarea id="emailBodyTextarea" rows="20" class="form-control" [(ngModel)]="emailBody"></textarea>
             <!-- <div
             id="emailBodyDiv"
             class="form-control"
@@ -520,25 +346,12 @@
           </div> -->
           </div>
           <div class="d-flex justify-content-end">
-            <button
-              class="Emily__contant__button mt-3 mb-1"
-              (click)="getGenericEmail()"
-            >
-              <svg
-                width="14"
-                height="20"
-                viewBox="0 0 14 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+            <button class="Emily__contant__button mt-3 mb-1" (click)="getGenericEmail()">
+              <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
+                  stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                  stroke-linejoin="round" />
               </svg>
               Generate
               <p class="spinner-grow" *ngIf="ShowSpinner"></p>
@@ -551,37 +364,18 @@
         <div class="row">
           <!-- API Response View -->
           <div class="col-12 p-0">
-            <div
-              class="form-group mt-4"
-              *ngIf="emailSubject || emailBodyResponse"
-            >
+            <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
               <div class="card shadow-sm border-0">
-                <div
-                  class="card-header text-white"
-                  style="background-color: #141e2a"
-                >
+                <div class="card-header text-white" style="background-color: #141e2a">
                   <h5 class="mb-0">Generated Email</h5>
                 </div>
                 <div class="card-body bg-light">
                   <div class="mb-3">
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
-                      <label class="fw-bold text-secondary"
-                        >Email Subject:</label
-                      >
-                      <span
-                        (click)="copyEmailSubject()"
-                        class="copy-icon-container"
-                      >
-                        <i
-                          class="fas fa-copy copy-sty"
-                          [hidden]="isSubjectCopied"
-                          title="Copy Email Subject"
-                        ></i>
-                        <span class="copied-text" *ngIf="isSubjectCopied"
-                          >Copied!</span
-                        >
+                    <div class="d-flex justify-content-between align-items-center">
+                      <label class="fw-bold text-secondary">Email Subject:</label>
+                      <span (click)="copyEmailSubject()" class="copy-icon-container">
+                        <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
+                        <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
                       </span>
                     </div>
                     <div class="p-3 border rounded bg-white text-dark">
@@ -589,22 +383,11 @@
                     </div>
                   </div>
                   <div>
-                    <div
-                      class="d-flex justify-content-between align-items-center"
-                    >
+                    <div class="d-flex justify-content-between align-items-center">
                       <label class="fw-bold text-secondary">Email Body:</label>
-                      <span
-                        (click)="copyEmailBody()"
-                        class="copy-icon-container"
-                      >
-                        <i
-                          class="fas fa-copy copy-sty"
-                          [hidden]="isBodyCopied"
-                          title="Copy Email Body"
-                        ></i>
-                        <span class="copied-text" *ngIf="isBodyCopied"
-                          >Copied!</span
-                        >
+                      <span (click)="copyEmailBody()" class="copy-icon-container">
+                        <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
+                        <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
                       </span>
                     </div>
                     <div class="p-3 border rounded bg-white text-dark">
@@ -631,69 +414,36 @@
           </div>
           <div class="modal-body">
             <!-- Display or Edit Prompt Text -->
-            <textarea
-              *ngIf="isEditing"
-              class="form-control"
-              rows="15"
-              [(ngModel)]="editablePromptText"
-            ></textarea>
-            <textarea
-              *ngIf="!isEditing"
-              [innerHTML]="selectedPromptText"
-              readonly
-              rows="15"
-              class="form-control"
-            ></textarea>
+            <textarea *ngIf="isEditing" class="form-control" rows="15" [(ngModel)]="editablePromptText"></textarea>
+            <textarea *ngIf="!isEditing" [innerHTML]="selectedPromptText" readonly rows="15"
+              class="form-control"></textarea>
           </div>
           <div class="modal-footer">
-            <button
-              *ngIf="!isEditing"
-              class="btn btn-warning"
-              (click)="editPrompt()"
-            >
+            <button *ngIf="!isEditing" class="btn btn-warning" (click)="editPrompt()">
               Edit
             </button>
-            <button
-              *ngIf="isEditing"
-              class="btn btn-success"
-              (click)="savePrompt(modal)"
-            >
+            <button *ngIf="isEditing" class="btn btn-success" (click)="savePrompt(modal)">
               Save
             </button>
-            <button
-              class="btn btn-secondary"
-              (click)="modal.dismiss('Close click')"
-            >
+            <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">
               Close
             </button>
           </div>
         </div>
       </ng-template>
     </section>
-    <section
-      *ngIf="selectedTab === 'Properties'"
-      class="row d-flex m-0 p-2"
-    >
+    <section *ngIf="selectedTab === 'Properties'" class="row d-flex m-0 p-2">
       <!-- <app-buybox-shopping-centers (bindClicked)="selectTab('kayak')" /> -->
-      <app-shopping-center-table
-        (tabChange)="handleTabChange($event)"
-        (bindClicked)="selectTab('kayak')"
-      >
+      <app-shopping-center-table (tabChange)="handleTabChange($event)" (bindClicked)="selectTab('kayak')">
       </app-shopping-center-table>
     </section>
     <!-- <section *ngIf="selectedTab === 'Locations'" class="row d-flex m-0 p-2">
       <app-work-spaces></app-work-spaces>
     </section> -->
-    <section
-      *ngIf="selectedTab === 'Sharingh'"
-      class="row d-flex m-0 p-2"
-    ></section>
+    <section *ngIf="selectedTab === 'Sharingh'" class="row d-flex m-0 p-2"></section>
     <section *ngIf="selectedTab === 'kayak'" class="row d-flex m-0 p-2">
       <app-kayak></app-kayak>
     </section>
-    <section
-      *ngIf="selectedTab === 'Relations'"
-      class="row d-flex m-0 p-2"
-    ></section>
+    <section *ngIf="selectedTab === 'Relations'" class="row d-flex m-0 p-2"></section>
   </div>
 </section>
