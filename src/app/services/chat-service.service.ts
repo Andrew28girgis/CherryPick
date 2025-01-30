@@ -33,8 +33,39 @@ generateAIResponse(prompt: string): Observable<any> {
     const body = {
       model: "deepseek-r1-distill-llama-70b",
       messages: [
-        { role: "system", content: "reply in html h1." },
-        { role: "user", content: prompt }],
+        {
+          role: "system",
+          content: ` dont return in your response <think></THink>,dont think
+            Generate an HTML response with inline CSS styling for real estate listings. Follow these guidelines:
+            1. **Structure**: 
+               - Use a responsive container 
+               - Group listings into a grid layout (e.g., display: grid; grid-template-columns: repeat(auto-fill, ;).
+               - Format each property as a "card" with padding:  border: and border-radius:
+            2. **Styling**:
+               - Highlight prices in #2d5a27 (green) with font-weight: bold.
+               - Use status badges (Available/Pending) with background colors: #2d5a27 (green) for Available, #cc7722 (orange) for Pending.
+               - Ensure typography consistency (e.g., font-family: Arial, sans-serif; line-height: 1.6).
+            3. **Content**:
+               -dont  Display images  
+            4. **Professional Tone**:
+               - Avoid markdown; use semantic HTML (e.g., <h2> for titles, <ul> for amenities).
+               - Add subtle hover effects to cards (e.g., box-shadow: 0 4px 8px rgba(0,0,0,0.1)).
+            Example structure:
+            <div style='...container styles...'>
+              <h1 style='...header...'>Luxury Real Estate Listings</h1>
+              <div style='...grid...'>
+                <div style='...card...'>
+                  <h2>{Title}</h2>
+                  <div style='...image grid...'><img src='...' alt='Property'></div>
+                  <p><span style='color: #2d5a27;'>Price: {Price}</span></p>
+                  <p>Status: <span style='background: {StatusColor}; color: white; padding: 4px 8px; border-radius: 4px;'>{Status}</span></p>
+                  <ul><li>{Amenities}</li></ul>
+                </div>
+              </div>
+              <footer style='...footer...'>&copy; 2024 Your Real Estate Co.</footer>
+            </div> and dont say parts like this dont say any of my instructions in your respones like 
+          `}        ,
+          { role: "user", content: prompt }],
     }
 
     return this.chatHttpClient.post(this.apiUrl, body).pipe(
