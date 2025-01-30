@@ -202,49 +202,53 @@ toggleFilters(): void {
   }
   
   GetMarketSurveyShoppingCentersByBBoxId(): void {
-    this.spinner.show(); 
+    this.spinner.show();
   
-    console.log('Selected BuyBox ID:', this.selectedbuyBox);
+    console.log('Fetching bound shopping centers for BuyBox ID:', this.selectedbuyBox);
   
     const body: any = {
-      Name: 'GetMarketSurveyShoppingCentersByBBoxId',
-      Params: {
-        buyboxid: this.selectedbuyBox,
-      },
+        Name: 'GetMarketSurveyShoppingCentersByBBoxId',
+        Params: {
+            buyboxid: this.selectedbuyBox,
+        },
     };
   
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        if (res && res.json) {
-          this.boundShoppingCenterIds = res.json.map((item: any) => item.shoppingCenterId);
-  
-          console.log('Response from GetMarketSurveyShoppingCentersByBBoxId:', res.json);
-          console.log('Bound Shopping Center IDs:', this.boundShoppingCenterIds);
+        next: (res: any) => {
+            if (res && res.json) {
+                this.boundShoppingCenterIds = res.json.map((item: any) => item.shoppingCenterId);
+                this.SelectedShoppingCenterIDs = [...this.boundShoppingCenterIds]; 
 
-        }
-        this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error in GetMarketSurveyShoppingCentersByBBoxId:', err);
-        this.spinner.hide(); 
-      },
+                console.log('Fetched Bound Shopping Center IDs:', this.boundShoppingCenterIds);
+                console.log('Updated SelectedShoppingCenterIDs:', this.SelectedShoppingCenterIDs);
+            }
+            this.spinner.hide();
+        },
+        error: (err) => {
+            console.error('Error in GetMarketSurveyShoppingCentersByBBoxId:', err);
+            this.spinner.hide();
+        },
     });
-  }
+}
   
   toggleShoppingCenterBind(shoppingCenterId: number): void {
-    const isAlreadyBound = this.boundShoppingCenterIds.includes(shoppingCenterId);
-  
+    const isAlreadyBound = this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
+
     if (isAlreadyBound) {
-      this.boundShoppingCenterIds = this.boundShoppingCenterIds.filter(id => id !== shoppingCenterId);
-      
-      console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
+        // Unbind: Remove from both UI list and API list
+        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+        this.boundShoppingCenterIds = this.boundShoppingCenterIds.filter(id => id !== shoppingCenterId);
+        console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
     } else {
-      this.boundShoppingCenterIds.push(shoppingCenterId);
-      console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
+        // Bind: Add to both UI list and API list
+        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+        this.boundShoppingCenterIds.push(shoppingCenterId);
+        console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
     }
-  
+
+    console.log('Updated SelectedShoppingCenterIDs:', this.SelectedShoppingCenterIDs);
     this.bindShoppingCenter();
-  }
+}
   
   GetMarketSurveyPlacesByBBoxId(): void {
     this.spinner.show();
