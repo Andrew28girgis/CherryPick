@@ -1,10 +1,8 @@
-import { Organization } from './../../../../models/userKanban';
-import {
+ import {
   Component,
   OnInit,
   TemplateRef,
-  ChangeDetectorRef,
-  NgZone,
+  ChangeDetectorRef, 
   ViewChild,
   HostListener,
 } from '@angular/core';
@@ -13,13 +11,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from '../../../../app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { KayakResult, StatesAndCities } from '../../../../models/kayak';
-import {
-  AllPlaces,
-  AnotherPlaces,
-  General,
-  Property,
+import { 
+  General, 
 } from './../../../../../src/models/domain';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MapsService } from './../../../../../src/app/services/maps.service';
 
 import {
@@ -32,8 +27,7 @@ import {
   TenantsCategories,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SortByPipe } from '../../../pipes/sortBy/sort-by.pipe';
-import { StateService } from '../../../../../src/app/services/state.service';
+ import { StateService } from '../../../../../src/app/services/state.service';
 import { Center } from '../../../../models/shoppingCenters';
 
 declare const google: any;
@@ -84,20 +78,7 @@ export class KayakComponent implements OnInit {
   boundShoppingCenterIds: number[] = [];
   newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
   deleteshoppingcenterID!:number;
-  shoppingCenters: Center[] = [];
-
-
-
-
-
-
-
-
-
-
-
-
-
+  shoppingCenters: Center[] = []; 
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -129,24 +110,24 @@ export class KayakComponent implements OnInit {
       maxsize: 0,
       tenantCategory: '',
     };
-    this.getResult();
     this.GetStatesAndCities();
-    this.GetFilters();
-
+ 
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      // console.log('Extracted ID from URL:', this.selectedbuyBox);
-    });
+     });
   }
+
   ngOnChanges() {
     if (this.General.modalObject?.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
+
   toggleExpandedPlaces(index: number): void {
     this.expandedPlacesIndex =
       this.expandedPlacesIndex === index ? null : index;
   }
+
   openModal(content: any) {
     this.modalService.open(content, { size: 'lg', centered: true });
   }
@@ -202,13 +183,7 @@ export class KayakComponent implements OnInit {
   }
 
   GetMarketSurveyShoppingCentersByBBoxId(): void {
-    this.spinner.show();
-
-    // console.log(
-    //   'Fetching bound shopping centers for BuyBox ID:',
-    //   this.selectedbuyBox
-    // );
-
+    this.spinner.show(); 
     const body: any = {
       Name: 'GetMarketSurveyShoppingCentersByBBoxId',
       Params: {
@@ -222,23 +197,11 @@ export class KayakComponent implements OnInit {
           this.boundShoppingCenterIds = res.json.map(
             (item: any) => item.shoppingCenterId
           );
-          this.SelectedShoppingCenterIDs = [...this.boundShoppingCenterIds];
-
-          // console.log(
-          //   'Fetched Bound Shopping Center IDs:',
-          //   this.boundShoppingCenterIds
-          // );
-          // console.log(
-          //   'Updated SelectedShoppingCenterIDs:',
-          //   this.SelectedShoppingCenterIDs
-          // );
+          this.SelectedShoppingCenterIDs = [...this.boundShoppingCenterIds]; 
         }
         this.spinner.hide();
       },
-      error: (err) => {
-        console.error('Error in GetMarketSurveyShoppingCentersByBBoxId:', err);
-        this.spinner.hide();
-      },
+    
     });
   }
 
@@ -253,8 +216,7 @@ export class KayakComponent implements OnInit {
       this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
 
     if (isChecked !== undefined) {
-      // Handle checkbox event specifically
-      if (isChecked && !isAlreadyBound) {
+       if (isChecked && !isAlreadyBound) {
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
       } else if (!isChecked && isAlreadyBound) {
         this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
