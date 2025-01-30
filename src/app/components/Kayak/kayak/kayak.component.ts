@@ -264,6 +264,7 @@ export class KayakComponent implements OnInit {
         // console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
       } else {
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+        this.bindShoppingCenter();
         // console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
       }
     }
@@ -272,7 +273,6 @@ export class KayakComponent implements OnInit {
     //   'Updated Selected Shopping Center IDs:',
     //   this.SelectedShoppingCenterIDs
     // );
-    this.bindShoppingCenter();
   }
 UnBindShoppingCenter(){
   const body: any = {
