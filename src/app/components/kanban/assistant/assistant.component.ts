@@ -2,10 +2,16 @@ import { Component,  OnInit, ViewChild,  ElementRef,  AfterViewChecked, HostList
 import { FormControl } from "@angular/forms"
 import { trigger, transition, style, animate } from "@angular/animations"
 import  { ChatService } from "../../../services/chat-service.service"
-import { AIResponse, Message, SuggestedPrompt, Property, PropertyAction, ChatSession, ChatGroup } from "../../../../models/chatbot"
-
-
-
+import  { DomSanitizer, SafeHtml } from "@angular/platform-browser"
+import  {
+  AIResponse,
+  Message,
+  SuggestedPrompt,
+  Property,
+  PropertyAction,
+  ChatSession,
+  ChatGroup,
+} from "../../../../models/chatbot"
 
 @Component({
   selector: "app-assistant",
@@ -29,7 +35,7 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
   handleEscape() {
     if (this.showChatHistory) {
       this.toggleChatHistory()
-    }
+    } 
   }
   @HostListener("document:click", ["$event"])
   onDocumentClick(event: MouseEvent) {
@@ -106,7 +112,10 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     { id: "2", text: "Who are my top clients interested in commercial spaces?" },
     { id: "3", text: "What follow-ups are pending for my last meeting?" },
   ]
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private sanitizer: DomSanitizer,
+  ) {}
 
   private loadProperties(): void {
     this.isLoading = true
@@ -210,7 +219,8 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
       if (aiResponse) {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
-          content: aiResponse.content,
+          content: aiResponse.content, // Store the original content
+          formattedContent: this.formatMessage(aiResponse.content), // Add this new property
           sender: "assistant",
           timestamp: new Date(),
           properties: aiResponse.type === "properties" ? aiResponse.data : undefined,
@@ -362,6 +372,32 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
       // Save to localStorage
       this.saveChatSessions()
     }
+  }
+
+  isThinkContent(content: string): boolean {
+    return content.includes("<think>") && content.includes("</think>")
+  }
+
+  formatMessage(content: string): SafeHtml {
+    if (this.isThinkContent(content)) {
+      const parts = content.split("</think>")
+      if (parts.length === 2) {
+        const thinkContent = parts[0].replace("<think>", "").trim()
+        const responseContent = parts[1].trim()
+        const formattedContent = `
+          <div class="think-content">
+            <div class="message-text">${thinkContent}</div>
+          </div>
+          <div class="response-content">
+            <div class="message-text">${responseContent}</div>
+          </div>
+        `
+        return this.sanitizer.bypassSecurityTrustHtml(formattedContent)
+      }
+    }
+    return this.sanitizer.bypassSecurityTrustHtml(
+      `<div class="response-content"><div class="message-text">${content}</div></div>`,
+    )
   }
 }
 

@@ -31,8 +31,10 @@ export class ChatService {
 
 generateAIResponse(prompt: string): Observable<any> {
     const body = {
-      model: "llama-3.3-70b-versatile",
-      messages: [{ role: "user", content: prompt }],
+      model: "deepseek-r1-distill-llama-70b",
+      messages: [
+        { role: "system", content: "reply in html h1." },
+        { role: "user", content: prompt }],
     }
 
     return this.chatHttpClient.post(this.apiUrl, body).pipe(
