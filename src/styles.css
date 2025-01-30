@@ -159,7 +159,7 @@ body{
 
 .default-btn {
   padding: 5px 20px;
-  background-color: var(--app-color);
+  background-color: #001f3f;
   color: #fff;
   border-radius: 30px;
   border: none;

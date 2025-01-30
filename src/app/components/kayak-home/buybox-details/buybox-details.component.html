@@ -19,24 +19,18 @@
   
     <div class="col-md-4 mb-3">
       <div class="card  card-design p-3 h-100">
-        <span class="card-title">Min Building Size:</span>
-        <p class="mb-0 card-text">{{ buybox?.MinBuildingSize || "N/A" }}</p>
+        <span class="card-title">Min Unit Size:</span>
+        <p class="mb-0 card-text">{{ buybox?.MinUnitSize || "N/A" }}</p>
       </div>
     </div>
   
     <div class="col-md-4 mb-3">
       <div class="card card-design p-3 h-100">
-        <span class="card-title">Max Building Size:</span>
+        <span class="card-title">Max Unit Size:</span>
         <p class="mb-0 card-text">{{ buybox?.MaxBuildingSize || "N/A" }}</p>
       </div>
     </div>
   
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">Organization Id:</span>
-        <p class="mb-0 card-text">{{ buybox?.OrganizationId || "N/A" }}</p>
-      </div>
-    </div>
   
     <div class="col-md-4 mb-3">
       <div class="card card-design p-3 h-100">
@@ -45,73 +39,18 @@
       </div>
     </div>
   
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">ManagerContact Id:</span>
-        <p class="mb-0 card-text">{{ buybox?.ManagerContactId || "N/A" }}</p>
-      </div>
-    </div>
-  
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">ManagerOrganization Id:</span>
-        <p class="mb-0 card-text">{{ buybox?.ManagerOrganizationId || "N/A" }}</p>
-      </div>
-    </div>
-  
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">ManagerOrganization Name:</span>
-        <p class="mb-0 card-text">{{ buybox?.ManagerOrganizationName || "N/A" }}</p>
-      </div>
-    </div>
-  
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">Acquisition Type Id:</span>
-        <p class="mb-0 card-text">{{ buybox?.AcquisitionTypeId || "N/A" }}</p>
-      </div>
-    </div>
-  
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">Comparable Type Id:</span>
-        <p class="mb-0 card-text">{{ buybox?.ComparableTypeId || "N/A" }}</p>
-      </div>
-    </div>
-  
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">Empty Land:</span>
-        <p class="mb-0 card-text">{{ buybox?.EmptyLand || "N/A" }}</p>
-      </div>
-    </div>
-  
-    <div class="col-md-4 mb-3">
-      <div class="card card-design p-3 h-100">
-        <span class="card-title">Kanban Id:</span>
-        <p class="mb-0 card-text">{{ buybox?.kanbanId || "N/A" }}</p>
-      </div>
-    </div>
   </div>
   
   <span class="bold-word ms-3">Contacts</span>
-  <div class="row mt-3" *ngIf="buybox?.CONTACTS && buybox.CONTACTS.length > 0">
-    <div class="col-md-6 mb-3" *ngFor="let contact of buybox.CONTACTS">
+  <div class="row mt-3" *ngIf="contacts && contacts.length > 0">
+    <div class="col-md-6 mb-3" *ngFor="let contact of contacts">
       <div class="card card-design p-3 h-100">
         <div class="mb-1">
-          <span class="card-title">First Name:</span> 
+          <span class="card-title">Name:</span> 
           <span class="card-text">         
-             {{ contact.FirstName || "N/A" }}
+             {{ contact.Firstname   }}     {{ contact.LastName   }}
           </span>
-        </div>
-        <div class="mb-1">
-          <span class="card-title">Last Name:</span> 
-          <span class="card-text">
-             {{ contact.LastName || "N/A" }}
-
-          </span>       
-        </div>
+        </div> 
         <div class="mb-0 text-nowrap" *ngIf="contact?.Email">
           <span class="card-title">Email:</span> 
           <span class="card-text ">
@@ -121,7 +60,10 @@
       </div>
     </div>
   </div>
+  <app-buybox-relatios></app-buybox-relatios>
   
+  <app-work-spaces></app-work-spaces>
+
   <ng-template #BuyBoxProperty let-modal>
     <div class="modal-body">
       <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
@@ -155,7 +97,7 @@
          
           <div class="col-sm-12 my-2">
             <div class="form-group form-group-default">
-              <label class="card-text">Min BuildingSize</label>
+              <label class="card-text">Min Unit Size</label>
               <input
                 type="number"
                 class="form-control input-text"
@@ -170,7 +112,7 @@
           </div>
           <div class="col-sm-12 my-2">
             <div class="form-group form-group-default">
-              <label class="card-text">Max BuildingSize</label>
+              <label class="card-text">Max Unit Size</label>
               <input
                 type="number"
                 class="form-control input-text"

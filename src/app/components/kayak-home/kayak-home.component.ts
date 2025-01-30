@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-kayak-home',
@@ -8,10 +9,11 @@ import { Router } from '@angular/router';
 })
 export class KayakHomeComponent implements OnInit {
   activeComponent: string = '';
+  // isCollapsed: boolean = false; 
 
-  constructor(public router: Router) {}
+    constructor(public router: Router,private _location: Location) {}
 
-  isCollapsed: boolean = false; 
+  isCollapsed: boolean = true; 
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
@@ -27,6 +29,10 @@ export class KayakHomeComponent implements OnInit {
 
   getActiveComponent(): string {
     return this.activeComponent;
+  }
+
+  BackTo() {
+    this._location.back();
   }
 
 }

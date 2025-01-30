@@ -1,4 +1,12 @@
-import { Component, HostListener, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/models/domain';
@@ -7,7 +15,7 @@ import {
   BuyBoxCityState,
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
-
+declare const google: any;
 
 @Component({
   selector: 'app-buybox-shopping-centers',
@@ -28,12 +36,14 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   StateCodes: string[] = [];
   filteredCities: string[] = [];
   // Selected filters
-  selectedState: string = '';
+  selectedState: string = '0';
   selectedCity: string = '';
+
   // Filtered data
   filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
   expandedShoppingCenters: Set<number> = new Set<number>();
   selectedPlaceStreetViewURL: string = '';
+  mapViewOnePlacex: boolean = false;
 
   selectedSiteSelectionReason: string = '';
   selectedShoppingCenterId: number | null = null;
@@ -41,7 +51,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   selectedShoppingCenter: any = {}; // Hold the selected shopping center for editing
   // shoppingCenterEdited: NewShoppingCenter[] = [];
   nearestRetails: { name: string; distance: number; name1: string }[] = [];
-
+  // BuyBoxWorkSpaces:any;
   selectedId: number | null = null;
   toggleShortcuts(id: number, close?: string): void {
     if (close === 'close') {
@@ -50,7 +60,10 @@ export class BuyboxShoppingCentersComponent implements OnInit {
       this.selectedId = this.selectedId === id ? null : id;
     }
   }
-
+  @Output() bindClicked: EventEmitter<void> = new EventEmitter<void>();
+  triggerBindAction() {
+    this.bindClicked.emit(); // ترسل الحدث للمكون الرئيسي
+  }
   selectedIdT: number | null = null;
   toggleT(id: number, close?: string): void {
     if (close === 'closed') {
@@ -78,7 +91,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   constructor(
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
-    private modalService: NgbModal,
+    private modalService: NgbModal
   ) { }
 
   showAlert(message: string): void {
@@ -92,6 +105,9 @@ export class BuyboxShoppingCentersComponent implements OnInit {
 
     this.getBuyBoxDetails();
     this.GetWizardBuyBoxCities();
+    this.selectedState = '';
+    this.selectedCity = '';
+    this.applyFilters();
   }
 
   getBuyBoxDetails() {
@@ -144,6 +160,45 @@ export class BuyboxShoppingCentersComponent implements OnInit {
       this.getStates(this.BuyBoxCitiesStates);
     });
   }
+
+  openMapViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+  }
+
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true;
+
+    if (!lat || !lng) {
+      console.error('Latitude and longitude are required to display the map.');
+      return;
+    }
+    // Load Google Maps API libraries
+    const { Map } = (await google.maps.importLibrary('maps')) as any;
+    const mapDiv = document.getElementById('mappopup') as HTMLElement;
+
+    if (!mapDiv) {
+      console.error('Element with ID "mappopup" not found.');
+      return;
+    }
+
+    const map = new Map(mapDiv, {
+      center: { lat, lng },
+      zoom: 14,
+    });
+
+    // Create a new marker
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: map,
+      title: 'Location Marker',
+    });
+  }
   // Extract unique states with normalization
   // Extract unique states with normalization
   getStates(list: BuyBoxCityState[]) {
@@ -159,32 +214,43 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   }
   // Handle State selection
   // Handle State selection
-  onStateChange() {
-    if (this.selectedState) {
+  onStateChange(event: any) {
+    const value = event.target.value;
+    console.log(value);
+
+    if (value === '') {
+      this.selectedState = '';
+      this.selectedCity = '';
+      this.filteredCities = [];
+      this.filteredBuyBoxPlacesAndShoppingCenter = [...this.BuyBoxPlacesAndShoppingCenter];
+    } else {
       this.filteredCities = Array.from(
         new Set(
           this.BuyBoxCitiesStates.filter(
             (item) =>
-              item.state.trim().toUpperCase() ===
-              this.selectedState.trim().toUpperCase()
+              item.state.trim().toUpperCase() === value.trim().toUpperCase()
           ).map((item) => item.city)
         )
       ).sort();
-    } else {
-      this.filteredCities = Array.from(
-        new Set(this.BuyBoxCitiesStates.map((item) => item.city))
-      ).sort();
     }
 
-    this.selectedCity = ''; // Reset selected city
+    this.selectedCity = '';
     this.applyFilters();
   }
+
+
   // Handle City selection
   onCityChange() {
     this.applyFilters();
   }
   // Apply Filters with Case-Insensitive Matching
+
   applyFilters() {
+    if (!this.selectedState && !this.selectedCity) {
+      this.filteredBuyBoxPlacesAndShoppingCenter = [...this.BuyBoxPlacesAndShoppingCenter];
+      return;
+    }
+
     this.filteredBuyBoxPlacesAndShoppingCenter =
       this.BuyBoxPlacesAndShoppingCenter.filter((center) => {
         const centerState = center.CenterState.trim().toUpperCase();
@@ -265,6 +331,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
             );
           modal.close('Delete click');
           this.shoppingCenterIdToDelete = null;
+          this.getBuyBoxDetails();
         },
         (error) => {
           console.error('Error deleting shopping center:', error);

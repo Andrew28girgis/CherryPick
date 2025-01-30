@@ -17,6 +17,9 @@ import {
   KayakFilters,
   ManagementOrganization,
   Tenant,
+  SecondaryType, // Import SecondaryType
+  Neighbourhood, // Import Neighbourhood
+  TenantsCategories, // Import TenantsCategories
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SortByPipe } from '../../../pipes/sortBy/sort-by.pipe';
@@ -62,9 +65,27 @@ export class KayakComponent implements OnInit {
   showAllSqft: boolean = false; // Toggle to show all or limited sqft results
   selectedbuyBox!: string;
   SelectedShoppingCenterIDs: number[] = []; // To store selected shopping center IDs
+  SelectedPlacesIDs: number[]=[];
   shoppingCenters: { id: number; name: string }[] = []; // Example shopping centers list
   loading: boolean = true; // Add a loading flag
   isBulkMode: boolean = false; // Default: Bulk mode is off
+  selectedPlaces: any[] = []; // Holds the selected places for the modal
+  expandedPlacesIndex: number | null = null; // Keeps track of the card whose places are expanded
+  showFilters: boolean = false;
+  secondaryTypes: any[] = [];
+  neighbourhoods: any[] = [];
+  tenantCategories: any[] = [];
+  selectedShoppingCenterId: number = 0; // You can initialize it with 0, or a default value of your choice
+  boundShoppingCenterIds: number[] = [];  // This will store the shopping center IDs returned by the API
+  newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
+
+
+
+
+
+
+
+
 
 
 
@@ -91,24 +112,28 @@ export class KayakComponent implements OnInit {
     this.filterValues = {
       statecode: '',
       city: '',
-      neighbourhood: '',
+      neighbourhood: '', // Selected neighbourhood
       availabilty: false,
       sqft: 0,
-      secondarytype: '',
-      tenants: '',
-      tags: '',
-      managementOrganizationIds: '',
+      secondarytype: '', // Selected secondary type
+      tenants: '', // Selected tenants
+      tags: '', // Selected tags
+      managementOrganizationIds: '', // Selected management organizations
       minsize: 0,
       maxsize: 0,
+      tenantCategory: '', // New field for selected tenant category
     };
     this.getResult(); 
     this.GetStatesAndCities(); 
     this.GetFilters(); 
+
+
    // Extract the ID from the route and assign it to selectedbuyBox
    this.activatedRoute.params.subscribe((params) => {
     this.selectedbuyBox = params['buyboxid']; // 'id' matches the route configuration
     console.log('Extracted ID from URL:', this.selectedbuyBox);
   });
+
 
   }
 
@@ -117,28 +142,48 @@ export class KayakComponent implements OnInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
+
+toggleFilters(): void {
+  this.showFilters = !this.showFilters;
+}
+  toggleExpandedPlaces(index: number): void {
+    this.expandedPlacesIndex = this.expandedPlacesIndex === index ? null : index; // Toggle expansion
+  }
+  openModal(content: any) {
+    this.modalService.open(content, { size: 'lg', centered: true });
+  }
+  @ViewChild('placesModal', { static: true }) placesModal!: TemplateRef<any>; // Bind the modal template
+
+  openPlacesModal(places: any[], shoppingCenterId: number): void {
+    this.selectedPlaces = places;  // Assign places to selectedPlaces array
+    this.selectedShoppingCenterId = shoppingCenterId;  // Store the shopping center ID
+    this.modalService.open(this.placesModal, { size: 'lg', centered: true });
+  }
+  
+  selectedButton: string = 'explore'; // Default selected button
+
+  selectButton(button: string): void {
+    this.selectedButton = button; // Update the selected button
+  }
   toggleBulkMode(): void {
     this.isBulkMode = !this.isBulkMode; // Toggle bulk mode
   }
-  toggleShoppingCenterSelection(id: number): void {
-    if (this.SelectedShoppingCenterIDs.includes(id)) {
-      // Remove ID if already selected
-      this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter((selectedId) => selectedId !== id);
-    } else {
-      // Add ID if not already selected
-      this.SelectedShoppingCenterIDs.push(id);
-    }
-  }
+
   bindShoppingCenter(): void {
-    this.spinner.show(); // Show spinner while processing
+    this.spinner.show();
+  
+    console.log('Binding Shopping Centers and Places:');
+    console.log('Bound Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+    console.log('Bound Place IDs:', this.SelectedPlacesIDs);
   
     const body: any = {
       Name: 'BindShoppingCenters',
       Params: {
-        buyboxid: this.selectedbuyBox, // Use the ID from the URL
-        state: this.selectedState || '', // Ensure a value is sent, even if empty
-        city: this.selectedCity || '', // Ensure a value is sent, even if empty
-        shoppingcenterIds: this.SelectedShoppingCenterIDs.join(','), // Selected shopping centers
+        buyboxid: this.selectedbuyBox, 
+        state: this.filterValues.statecode || '', 
+        city: this.selectedCity || '', 
+        shoppingcenterIds: this.SelectedShoppingCenterIDs.join(','), 
+        placeIds: this.SelectedPlacesIDs.join(','), 
       },
     };
   
@@ -147,13 +192,193 @@ export class KayakComponent implements OnInit {
         if (res && res.json) {
           console.log('Response from BindShoppingCenters:', res.json);
         }
-        this.spinner.hide(); // Hide spinner after processing
+        this.spinner.hide(); 
       },
       error: (err) => {
         console.error('Error in BindShoppingCenters:', err);
-        this.spinner.hide(); // Hide spinner on error
+        this.spinner.hide(); 
       },
     });
+  }
+  
+  GetMarketSurveyShoppingCentersByBBoxId(): void {
+    this.spinner.show();
+  
+    console.log('Fetching bound shopping centers for BuyBox ID:', this.selectedbuyBox);
+  
+    const body: any = {
+        Name: 'GetMarketSurveyShoppingCentersByBBoxId',
+        Params: {
+            buyboxid: this.selectedbuyBox,
+        },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+            if (res && res.json) {
+                this.boundShoppingCenterIds = res.json.map((item: any) => item.shoppingCenterId);
+                this.SelectedShoppingCenterIDs = [...this.boundShoppingCenterIds]; 
+
+                console.log('Fetched Bound Shopping Center IDs:', this.boundShoppingCenterIds);
+                console.log('Updated SelectedShoppingCenterIDs:', this.SelectedShoppingCenterIDs);
+            }
+            this.spinner.hide();
+        },
+        error: (err) => {
+            console.error('Error in GetMarketSurveyShoppingCentersByBBoxId:', err);
+            this.spinner.hide();
+        },
+    });
+}
+  
+  toggleShoppingCenterBind(shoppingCenterId: number): void {
+    const isAlreadyBound = this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
+
+    if (isAlreadyBound) {
+        // Unbind: Remove from both UI list and API list
+        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+        this.boundShoppingCenterIds = this.boundShoppingCenterIds.filter(id => id !== shoppingCenterId);
+        console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
+    } else {
+        // Bind: Add to both UI list and API list
+        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+        this.boundShoppingCenterIds.push(shoppingCenterId);
+        console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
+    }
+
+    console.log('Updated SelectedShoppingCenterIDs:', this.SelectedShoppingCenterIDs);
+    this.bindShoppingCenter();
+}
+  
+  GetMarketSurveyPlacesByBBoxId(): void {
+    this.spinner.show();
+  
+    console.log('Fetching bound places for BuyBox ID:', this.selectedbuyBox);
+  
+    const body: any = {
+      Name: 'GetMarketSurveyPlacesByBBoxId',
+      Params: {
+        buyboxid: this.selectedbuyBox, 
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        if (res && res.json) {
+          this.SelectedPlacesIDs = res.json.map((item: any) => item.placeId); 
+          console.log('Bound Place IDs:', this.SelectedPlacesIDs);
+        }
+        this.spinner.hide();
+      },
+      error: (err) => {
+        console.error('Error in GetMarketSurveyPlacesByBBoxId:', err);
+        this.spinner.hide();
+      },
+    });
+  }
+  
+  
+  selectedshoppingcenterid(selectedid: number): void {
+    if (selectedid) { 
+      this.SelectedShoppingCenterIDs.push(selectedid);
+      console.log('Selected IDs:', this.SelectedShoppingCenterIDs); 
+      this.bindShoppingCenter(); 
+    } else {
+      console.error('Invalid ID:', selectedid); 
+    }
+  }
+  
+  onPlaceCheckboxChange(event: Event, placeId: number): void {
+    const isChecked = (event.target as HTMLInputElement).checked; 
+  
+    if (isChecked) {
+     
+      this.addPlaceId(placeId);
+      if (!this.SelectedShoppingCenterIDs.includes(this.selectedShoppingCenterId)) {
+        this.SelectedShoppingCenterIDs.push(this.selectedShoppingCenterId);
+      }
+    } else {
+      this.removePlaceId(placeId);
+      if (!this.selectedPlacesForShoppingCenter(this.selectedShoppingCenterId)) {
+        const index = this.SelectedShoppingCenterIDs.indexOf(this.selectedShoppingCenterId);
+        if (index > -1) {
+          this.SelectedShoppingCenterIDs.splice(index, 1);
+        }
+      }
+    }
+  
+    console.log('Updated Selected Places IDs:', this.SelectedPlacesIDs);
+    this.bindShoppingCenter();
+  }
+  addShoppingCenterId(shoppingCenterId: number): void {
+    if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
+      this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+    }
+  }
+  
+  removeShoppingCenterId(shoppingCenterId: number): void {
+    const index = this.SelectedShoppingCenterIDs.indexOf(shoppingCenterId);
+    if (index > -1) {
+      this.SelectedShoppingCenterIDs.splice(index, 1);
+    }
+  }
+  
+  addPlaceId(placeId: number): void {
+    if (!this.SelectedPlacesIDs.includes(placeId)) {
+      this.SelectedPlacesIDs.push(placeId);
+    }
+  }
+  
+  removePlaceId(placeId: number): void {
+    const index = this.SelectedPlacesIDs.indexOf(placeId);
+    if (index > -1) {
+      this.SelectedPlacesIDs.splice(index, 1);
+    }
+  }
+  onCardCheckboxChange(event: Event, result: any): void {
+    const isChecked = (event.target as HTMLInputElement).checked;  // Check if the checkbox is checked
+    const shoppingCenterId = result.Id;  // Get the shopping center ID
+  
+    if (isChecked) {
+      // If checked, add shopping center ID to SelectedShoppingCenterIDs
+      this.addShoppingCenterId(shoppingCenterId);
+    } else {
+      // If unchecked, remove shopping center ID from SelectedShoppingCenterIDs
+      this.removeShoppingCenterId(shoppingCenterId);
+    }
+  
+    console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+    this.bindShoppingCenter(); // Trigger API call to update
+  }
+  selectedPlacesForShoppingCenter(shoppingCenterId: number): boolean {
+    // Check if there are any places selected for this shopping center
+    return this.SelectedPlacesIDs.some(placeId => {
+      return this.selectedPlaces.some(place => place.Id === placeId && place.ShoppingCenterId === shoppingCenterId);
+    });
+  }
+  togglePlaceBind(placeId: number, shoppingCenterId: number): void {
+    const isAlreadyBound = this.SelectedPlacesIDs.includes(placeId);
+  
+    if (isAlreadyBound) {
+      // If already bound, remove (Unbind)
+      this.SelectedPlacesIDs = this.SelectedPlacesIDs.filter(id => id !== placeId);
+      console.log(`Unbound place with ID: ${placeId}`);
+    } else {
+      // If not bound, add (Bind)
+      this.SelectedPlacesIDs.push(placeId);
+      console.log(`Bound place with ID: ${placeId}`);
+    }
+  
+    // Ensure the shopping center is also bound
+    if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
+      this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+    }
+  
+    console.log('Updated Selected Places:', this.SelectedPlacesIDs);
+    console.log('Updated Selected Shopping Centers:', this.SelectedShoppingCenterIDs);
+  
+    // Call API to update binding
+    this.bindShoppingCenter();
   }
   
   
@@ -319,9 +544,15 @@ export class KayakComponent implements OnInit {
       }
     });
   }
+
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+
+  openFiltersModal(content: any) {
+    this.modalService.open(content, { size: 'lg', centered: true });
+  }
+
   openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -346,10 +577,35 @@ export class KayakComponent implements OnInit {
     });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
-  toggleTenantList(): void {
-    this.showAllTenants = !this.showAllTenants;
-    this.updateSortedTenants(); // Update the tenant list based on the toggle
-  }
+
+  // toggleTenantList(): void {
+  //   this.showAllTenants = !this.showAllTenants;
+  //   this.updateSortedTenants(); 
+  // }
+   // toggleOrgSelect(org: ManagementOrganization): void {
+  //   const currentOrgs = this.filterValues.managementOrganizationIds || '';
+  
+  //   let orgIds = currentOrgs
+  //     .split(',')
+  //     .map((id: any) => id.trim())
+  //     .filter((id: any) => id !== '');
+  
+  //   const orgIdAsString = String(org.OrganizationId);
+  
+  //   if (org.Selected) {
+   
+  //     if (!orgIds.includes(orgIdAsString)) {
+  //       orgIds.push(orgIdAsString);
+  //     }
+  //   } else {
+  //     orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+  //   }
+  
+  //   this.filterValues.managementOrganizationIds = orgIds.join(',');
+  //   console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
+  
+  //   this.getResult();
+  // }
   
 
   updateSortedTenants(): void {
@@ -359,20 +615,22 @@ export class KayakComponent implements OnInit {
       return;
     }
   
+    // Sort tenants alphabetically by Name
     const sortedList = [...this.Filters.Tenants].sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
   
+    // Remove duplicate tenants based on OrganizationId
     const uniqueTenants = Array.from(
       new Set(sortedList.map((tenant) => tenant.OrganizationId))
     )
       .map((id) => sortedList.find((tenant) => tenant.OrganizationId === id))
       .filter((tenant): tenant is Tenant => tenant !== undefined);
   
-    this.sortedTenants = this.showAllTenants ? uniqueTenants : uniqueTenants.slice(0, 12);
-  
-    console.log('Updated Tenants:', this.sortedTenants);
+    this.sortedTenants = uniqueTenants;
+    console.log('Sorted Tenants:', this.sortedTenants); // Debug tenants
   }
+  
   
   updateSortedOrgs(): void {
     if (!this.Filters?.ManagementOrganization || !Array.isArray(this.Filters.ManagementOrganization)) {
@@ -381,55 +639,58 @@ export class KayakComponent implements OnInit {
       return;
     }
   
+    // Sort organizations alphabetically by Name
     const sortedList = [...this.Filters.ManagementOrganization].sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
   
+    // Remove duplicate organizations based on OrganizationId
     const uniqueOrgs = Array.from(
       new Set(sortedList.map((org) => org.OrganizationId))
     )
       .map((id) => sortedList.find((org) => org.OrganizationId === id))
       .filter((org): org is ManagementOrganization => org !== undefined);
   
-    this.sortedOrgs = this.showAllOrgs ? uniqueOrgs : uniqueOrgs.slice(0, 10);
-  
-    console.log('Updated Management Organizations:', this.sortedOrgs);
+    this.sortedOrgs = uniqueOrgs;
+    console.log('Sorted Organizations:', this.sortedOrgs); // Debug organizations
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  toggleOrgSelect(org: ManagementOrganization): void {
-    const currentOrgs = this.filterValues.managementOrganizationIds || '';
-  
-    // Split, trim, and remove empty entries
-    let orgIds = currentOrgs
-      .split(',')
-      .map((id: any) => id.trim())
-      .filter((id: any) => id !== '');
-  
-    const orgIdAsString = String(org.OrganizationId);
-  
-    if (org.Selected) {
-      // Add the ID if not already present
-      if (!orgIds.includes(orgIdAsString)) {
-        orgIds.push(orgIdAsString);
-      }
-    } else {
-      // Remove the ID
-      orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+
+  updateSecondaryTypes(): void {
+    if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
+      console.error('Secondary types are empty or undefined.');
+      this.secondaryTypes = [];
+      return;
     }
   
-    this.filterValues.managementOrganizationIds = orgIds.join(',');
-    console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
-  
-    // Trigger filtering API
-    this.getResult();
+    this.secondaryTypes = [...this.Filters.SecondaryType];
+    console.log('Secondary Types:', this.secondaryTypes); // Debug secondary types
   }
+  
+  updateNeighbourhoods(): void {
+    if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
+      console.error('Neighbourhood list is empty or undefined.');
+      this.neighbourhoods = [];
+      return;
+    } 
+    // Assign all Neighbourhood values from Filters
+    this.neighbourhoods = [...this.Filters.Neighbourhood];
+  
+    console.log('Neighbourhoods:', this.neighbourhoods); // Debug neighbourhoods
+  }
+
+  updateTenantCategories(): void {
+    if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
+      console.error('TenantsCategories list is empty or undefined.');
+      this.tenantCategories = [];
+      return;
+    }
+  
+    // Assign all TenantCategories values from Filters
+    this.tenantCategories = [...this.Filters.TenantsCategories];
+  
+    console.log('Tenant Categories:', this.tenantCategories); // Debug tenant categories
+  }
+  
   
   toggleOrgList(): void {
     this.showAllOrgs = !this.showAllOrgs;
@@ -454,7 +715,7 @@ export class KayakComponent implements OnInit {
   }
   getResult(): void {
     console.log('Filtering with values:', this.filterValues);
-    
+  
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
@@ -483,16 +744,17 @@ export class KayakComponent implements OnInit {
             );
           });
   
-          // Initialize the filtered result to the full result.
+          // Initialize the filtered result to the full result
           this.filteredKayakResult = [...this.KayakResult.Result];
-  
+          this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
           console.log('Filtered Result:', this.KayakResult);
         } else {
           console.warn('Data does not contain expected structure:', data);
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
           this.filteredKayakResult = []; // Reset the filtered result
         }
-  
+        this.GetMarketSurveyShoppingCentersByBBoxId();
+        this.GetMarketSurveyPlacesByBBoxId();
         this.spinner.hide();
         this.loading = false; // Set loading to false after fetching data
       },
@@ -504,17 +766,20 @@ export class KayakComponent implements OnInit {
     });
   }
   
-
   
-  
-  
-
   GetFilters(): void {
+    if (!this.Ids) {
+      console.warn('Ids are not available, resetting filters.');
+      this.resetFilters();
+      return;
+    }
+  
     this.spinner.show();
     const body: any = {
       Name: 'GetFilters',
       Params: {
         ids: this.Ids,
+        buyboxid: this.selectedbuyBox,
       },
     };
   
@@ -524,25 +789,34 @@ export class KayakComponent implements OnInit {
           this.Filters = data.json[0];
           console.log('Filters loaded:', this.Filters);
   
-          // Populate tenants and organizations
+          // Update all filters dynamically
           this.updateSortedTenants();
           this.updateSortedOrgs();
+          this.updateSecondaryTypes();
+          this.updateNeighbourhoods();
+          this.updateTenantCategories();
+        } else {
+          console.warn('No filters data returned.');
+          this.resetFilters();
         }
+  
         this.spinner.hide();
       },
       error: (error) => {
         console.error('Error fetching filters:', error);
         this.spinner.hide();
+        this.resetFilters();
       },
     });
   }
-
-
-
-
-
+  resetFilters(): void {
+    this.sortedTenants = [];
+    this.sortedOrgs = [];
+    this.secondaryTypes = [];
+    this.neighbourhoods = [];
+    this.tenantCategories = [];
+  }
   
-
   GetStatesAndCities(): void {
     this.spinner.show();
     const body: any = { Name: 'GetStates', Params: {} };
@@ -560,28 +834,46 @@ export class KayakComponent implements OnInit {
   }
   onStateChange(): void {
     this.selectedState = this.filterValues.statecode;
+    console.log(this.selectedState);
+    
     this.updateCitiesForSelectedState();
     this.selectedCity = null; // Reset city
     this.filterValues.city = '';
     this.getResult(); // Trigger only for shopping centers
   }
   handleStateChange(selectedValue: string): void {
-    this.filterValues.statecode = selectedValue; // Update the state code
-    console.log('State selected:', selectedValue || 'All');
-    this.onStateChange(); // Update city dropdown if needed
-    this.getResult(); // Fetch filtered results
+    this.filterValues.statecode = selectedValue; // Update the selected state
+    this.filterValues.city = ''; // Clear the city filter
+    this.selectedCity = null; // Reset the selected city in the UI
+    console.log('State selected:', selectedValue);
+    this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
+    this.GetFilters(); // Fetch new filters for the state
+    this.getResult(); // Fetch results for the selected state
   }
   
-  onCityChange(): void {
-    this.selectedCity = this.filterValues.city;
-    this.getResult(); // Trigger only for shopping centers
-    this.selectedCity='';
+  onCityChange(selectedValue: string): void {
+    this.filterValues.city = selectedValue; // Update the selected city
+    console.log('City selected:', selectedValue);
+  
+    this.GetFilters(); // Fetch new filters for the city
+    this.getResult(); // Fetch results for the selected city
+  }
+  handleNeighbourhoodChange(selectedValue: string): void {
+    this.filterValues.neighbourhood = selectedValue; // Update the selected neighbourhood
+    console.log('Neighbourhood selected:', selectedValue);
+    this.getResult(); // Fetch filtered results
+  }
+  handleTenantCategoryChange(selectedValue: string): void {
+    this.filterValues.tenantCategory = selectedValue; // Update the selected tenant category
+    console.log('Tenant Category selected:', selectedValue);
+    this.getResult(); // Fetch filtered results
   }
   
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
-      (s) => !this.filterValues.statecode || s.stateCode === this.filterValues.statecode
+      (s) => s.stateCode === this.filterValues.statecode
     );
+    console.log('Updated cities for state:', this.filterValues.statecode, this.uniqueCities);
   }
 
   getCitiesOfState() {
@@ -592,36 +884,76 @@ export class KayakComponent implements OnInit {
     
   }
   toggleTenantSelection(tenant: Tenant): void {
-    const currentTenants = this.filterValues.tenants || ''; // Ensure tenants is a string
-    let tenantIds = currentTenants.split(',').filter((id:any) => id.trim());
+    const currentTenants = this.filterValues.tenants || '';
+    let tenantIds = currentTenants.split(',').filter((id: any) => id.trim());
   
     const tenantIdAsString = String(tenant.OrganizationId);
-    if (tenant.Selected) {
-      if (!tenantIds.includes(tenantIdAsString)) {
-        tenantIds.push(tenantIdAsString);
-      }
+    if (!tenantIds.includes(tenantIdAsString)) {
+      tenantIds.push(tenantIdAsString);
     } else {
-      tenantIds = tenantIds.filter((id:any) => id !== tenantIdAsString);
+      tenantIds = tenantIds.filter((id: any) => id !== tenantIdAsString);
     }
   
-    this.filterValues.tenants = tenantIds.join(',');
-    this.getResult(); // Trigger filtering API
+    this.filterValues.tenants = tenantIds.join(','); // Update tenant filters
+    this.getResult(); // Fetch filtered cards only
   }
   
   toggleOrgSelection(org: ManagementOrganization): void {
-    const currentOrgs = this.filterValues.managementOrganizationIds || ''; // Ensure it's a string
-    let orgIds = currentOrgs.split(',').filter((id:any) => id.trim());
+    const currentOrgs = this.filterValues.managementOrganizationIds || '';
+    let orgIds = currentOrgs.split(',').filter((id: any) => id.trim());
   
     const orgIdAsString = String(org.OrganizationId);
-    if (org.Selected) {
-      if (!orgIds.includes(orgIdAsString)) {
-        orgIds.push(orgIdAsString);
-      }
+    if (!orgIds.includes(orgIdAsString)) {
+      orgIds.push(orgIdAsString);
     } else {
-      orgIds = orgIds.filter((id:any) => id !== orgIdAsString);
+      orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
     }
   
-    this.filterValues.managementOrganizationIds = orgIds.join(',');
+    this.filterValues.managementOrganizationIds = orgIds.join(','); // Update organization filters
+    this.getResult(); // Fetch filtered cards only
+  }
+  toggleSecondaryTypeSelection(secondary: SecondaryType): void {
+    const currentSecondaryTypes = this.filterValues.secondarytype || ''; // Ensure it's a string
+    let secondaryTypeList = currentSecondaryTypes.split(',').filter((type: any) => type.trim());
+  
+    if (!secondaryTypeList.includes(secondary.SecondaryType)) {
+      secondaryTypeList.push(secondary.SecondaryType);
+    } else {
+      secondaryTypeList = secondaryTypeList.filter((type: any) => type !== secondary.SecondaryType);
+    }
+  
+    this.filterValues.secondarytype = secondaryTypeList.join(','); // Update the filter
+    this.getResult(); // Trigger filtering API
+  }
+ toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
+  if (!neighbourhood.Neighbourhood) {
+    console.warn('Neighbourhood is undefined, skipping selection.');
+    return;
+  }
+
+  const currentNeighbourhoods = this.filterValues.neighbourhood || ''; // Ensure it's a string
+  let neighbourhoodList = currentNeighbourhoods.split(',').filter((name: string) => name.trim());
+
+  if (!neighbourhoodList.includes(neighbourhood.Neighbourhood)) {
+    neighbourhoodList.push(neighbourhood.Neighbourhood);
+  } else {
+    neighbourhoodList = neighbourhoodList.filter((name: string) => name !== neighbourhood.Neighbourhood);
+  }
+
+  this.filterValues.neighbourhood = neighbourhoodList.join(','); // Update the filter
+  this.getResult(); // Trigger filtering API
+}
+  toggleTenantCategorySelection(category: TenantsCategories): void {
+    const currentCategories = this.filterValues.tenantCategory || ''; // Ensure it's a string
+    let categoryList = currentCategories.split(',').filter((name: any) => name.trim());
+  
+    if (!categoryList.includes(category.Name)) {
+      categoryList.push(category.Name);
+    } else {
+      categoryList = categoryList.filter((name: any) => name !== category.Name);
+    }
+  
+    this.filterValues.tenantCategory = categoryList.join(','); // Update the filter
     this.getResult(); // Trigger filtering API
   }
   handleAvailabilityChange(): void {
@@ -645,11 +977,8 @@ export class KayakComponent implements OnInit {
     this.getResult();
   }
   
-  
-
   searchShoppingCenter() {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
@@ -761,28 +1090,9 @@ export class KayakComponent implements OnInit {
       this.isDropdownOpenIndex = null; 
     }
   }
-  getVisiblePlaces(result: any, index: number): any[] {
-    if (!result?.place) {
-      return [];
-    }
-    // Check if the current index matches the expanded card
-    return this.showAllPlacesIndex === index ? result.place : result.place.slice(0, 2);
-  }
+
   
-  toggleSeeMorePlaces(index: number): void {
-    this.showAllPlacesIndex = this.showAllPlacesIndex === index ? null : index;
-  }
   
-  onCardCheckboxChange(event: Event, result: any, index: number): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
   
-    if (isChecked) {
-      console.log(`Checkbox selected for card index ${index}`, result);
-      this.toggleShoppingCenterSelection(result.Id); // Add ID to the list
-    } else {
-      console.log(`Checkbox deselected for card index ${index}`);
-      this.toggleShoppingCenterSelection(result.Id); // Remove ID from the list
-    }
-    console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
-  }
+  
 }

@@ -4,19 +4,23 @@ import {
   NgZone,
   ViewChild,
   ElementRef,
+  TemplateRef,
+  Output,
+  EventEmitter,
+  HostListener,
 } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from './../../../../src/app/services/places.service';
+import { PlacesService } from './../../../../../src/app/services/places.service';
 import {
   AllPlaces,
   AnotherPlaces,
   General,
   Property,
-} from './../../../../src/models/domain';
+} from './../../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place } from 'src/models/shoppingCenters';
@@ -26,13 +30,17 @@ import { Polygons } from 'src/models/polygons';
 import { ShareOrg } from 'src/models/shareOrg';
 import { StateService } from 'src/app/services/state.service';
 import { permission } from 'src/models/permission';
+import {
+  BuyBoxCityState,
+  ShoppingCenter,
+} from 'src/models/buyboxShoppingCenter';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  selector: 'app-shopping-center-table',
+  templateUrl: './shopping-center-table.component.html',
+  styleUrls: ['./shopping-center-table.component.css']
 })
-export class HomeComponent implements OnInit {
+export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mainContainer') mainContainer!: ElementRef;
   shoppingCenter: any;
   selectedView: string = 'shoppingCenters';
@@ -49,7 +57,7 @@ export class HomeComponent implements OnInit {
       text: 'Map View',
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
-    }, // Add your SVG paths here
+    },
     {
       text: 'Side List View',
       icon: '../../../assets/Images/Icons/element-3.png',
@@ -82,6 +90,17 @@ export class HomeComponent implements OnInit {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
+  BuyBoxCitiesStates!: BuyBoxCityState[];
+  StateCodes: string[] = [];
+  filteredCities: string[] = [];
+  // Selected filters
+  selectedState: string = '0';
+  selectedCity: string = '';
+  filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
+  BuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
+  @ViewChild('deleteShoppingCenterModal')
+  deleteShoppingCenterModal!: TemplateRef<any>;
+  shoppingCenterIdToDelete: number | null = null;
 
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
@@ -112,7 +131,7 @@ export class HomeComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '2';
+    this.currentView = localStorage.getItem('currentView') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
@@ -125,13 +144,157 @@ export class HomeComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+
+      this.BuyBoxPlacesCategories(this.BuyBoxId);
+      this.GetOrganizationById(this.OrgId);
+      this.GetCustomSections(this.BuyBoxId);
+      this.getShoppingCenters(this.BuyBoxId);
+      this.getBuyBoxPlaces(this.BuyBoxId);
     });
 
-    this.BuyBoxPlacesCategories(this.BuyBoxId);
-    this.GetOrganizationById(this.OrgId);
-    this.GetCustomSections(this.BuyBoxId);
+
+    this.currentView = localStorage.getItem('currentView') || '4';
+
+    const selectedOption = this.dropdowmOptions.find(
+      (option: any) => option.status === parseInt(this.currentView)
+    );
+
+    if (selectedOption) {
+      this.selectedOption = selectedOption.status;
+    }
+
+    // this.BuyBoxPlacesCategories(this.BuyBoxId);
+    // this.GetOrganizationById(this.OrgId);
+    // this.GetCustomSections(this.BuyBoxId);
     // this.GetBuyboxRelations();
     // this.GetPolygons(this.BuyBoxId);
+    this.selectedState = '';
+    this.selectedCity = '';
+    this.applyFilters();
+  }
+
+  selectedId: number | null = null;
+  selectedIdCard: number | null = null;
+  toggleShortcutsCard(id: number, close?: string): void {
+    if (close === 'close') {
+      this.selectedIdCard = null;
+    } else {
+      this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    }
+  }
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    if (close === 'close') {
+      this.selectedId = null;
+      return;
+    }
+
+    // حساب الإحداثيات إذا كان العنصر محددًا
+    const targetElement = event?.target as HTMLElement;
+    const rect = targetElement.getBoundingClientRect();
+
+    const shortcutsIcon = document.querySelector('.shortcuts_icon') as HTMLElement;
+
+    if (shortcutsIcon) {
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`; // تظهر أسفل الزر مباشرة
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`; // محاذاة مع الزر
+    }
+
+    this.selectedId = this.selectedId === id ? null : id;
+  }
+
+  @Output() tabChange = new EventEmitter<{ tabId: string; shoppingCenterId: number }>();
+  redirect(IdShoppingCenter: number) {
+    this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: IdShoppingCenter });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedElement = event.target as HTMLElement;
+    const isInsideMenu = clickedElement.closest('.shortcuts_icon');
+    const isEllipsisButton = clickedElement.closest('.ellipsis_icon');
+
+    const isInsideMenuCrad = clickedElement.closest('.shortcuts_iconCard');
+    const isEllipsisButtonCrad = clickedElement.closest('.ellipsis_icont');
+
+    if (!isInsideMenuCrad && !isEllipsisButtonCrad) {
+      this.selectedIdCard = null;
+    }
+
+    if (!isInsideMenu && !isEllipsisButton) {
+      this.selectedId = null;
+    }
+  }
+
+  @Output() bindClicked: EventEmitter<void> = new EventEmitter<void>();
+  triggerBindAction() {
+    this.bindClicked.emit();
+  }
+  // Extract unique states with normalization
+  getStates(list: BuyBoxCityState[]) {
+    this.StateCodes = Array.from(
+      new Set(
+        list
+          .map((item) => item.state.trim().toUpperCase()) // Normalize states
+          .filter((code) => !!code) // Remove empty strings
+      )
+    ).sort();
+
+    // console.log('StateCodes:', this.StateCodes);
+  }
+  // Handle State selection
+  // Handle State selection
+  onStateChange(event: any) {
+    const value = event.target.value;
+    console.log(value);
+
+    if (value === '') {
+      this.selectedState = '';
+      this.selectedCity = '';
+      this.filteredCities = [];
+      this.filteredBuyBoxPlacesAndShoppingCenter = [...this.BuyBoxPlacesAndShoppingCenter];
+    } else {
+      this.filteredCities = Array.from(
+        new Set(
+          this.BuyBoxCitiesStates.filter(
+            (item) =>
+              item.state.trim().toUpperCase() === value.trim().toUpperCase()
+          ).map((item) => item.city)
+        )
+      ).sort();
+    }
+
+    this.selectedCity = '';
+    this.applyFilters();
+  }
+
+  // Handle City selection
+  onCityChange() {
+    this.applyFilters();
+  }
+  // Apply Filters with Case-Insensitive Matching
+
+  applyFilters() {
+    if (!this.selectedState && !this.selectedCity) {
+      this.filteredBuyBoxPlacesAndShoppingCenter = [...this.BuyBoxPlacesAndShoppingCenter];
+      return;
+    }
+
+    this.filteredBuyBoxPlacesAndShoppingCenter =
+      this.BuyBoxPlacesAndShoppingCenter.filter((center) => {
+        const centerState = center.CenterState.trim().toUpperCase();
+        const selectedState = this.selectedState?.trim().toUpperCase() || '';
+        const centerCity = center.CenterCity.trim().toLowerCase();
+        const selectedCity = this.selectedCity?.trim().toLowerCase() || '';
+
+        const matchesState = this.selectedState
+          ? centerState === selectedState
+          : true;
+        const matchesCity = this.selectedCity
+          ? centerCity === selectedCity
+          : true;
+
+        return matchesState && matchesCity;
+      });
   }
 
   GetCustomSections(buyboxId: number): void {
@@ -169,7 +332,9 @@ export class HomeComponent implements OnInit {
   }
 
   GetOrganizationById(orgId: number): void {
-    if (this.stateService.getShareOrg().length > 0) {
+    const shareOrg = this.stateService.getShareOrg() || [];
+
+    if (shareOrg && shareOrg.length > 0) {
       this.ShareOrg = this.stateService.getShareOrg();
       return;
     }
@@ -248,7 +413,7 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
-        this.getStandAlonePlaces(this.BuyBoxId);
+        //this.getStandAlonePlaces(this.BuyBoxId);
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -350,44 +515,96 @@ export class HomeComponent implements OnInit {
     this.isOpen = !this.isOpen;
   }
 
+  // async getAllMarker() {
+  //   try {
+  //     this.spinner.show();
+  //     const { Map } = await google.maps.importLibrary('maps');
+
+  //     if (this.savedMapView) {
+  //       const { lat, lng, zoom } = JSON.parse(this.savedMapView);
+  //       this.map = new Map(document.getElementById('map') as HTMLElement, {
+  //         center: {
+  //           lat: lat,
+  //           lng: lng,
+  //         },
+  //         zoom: zoom,
+  //         mapId: '1234567890',
+  //       });
+  //       this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('bounds_changed', () =>
+  //         this.onMapDragEnd(this.map)
+  //       );
+  //     } else {
+  //       this.map = new Map(document.getElementById('map') as HTMLElement, {
+  //         center: {
+  //           lat: this.shoppingCenters
+  //             ? this.shoppingCenters[0].Latitude
+  //             : this.standAlone[0].Latitude || 0,
+  //           lng: this.shoppingCenters
+  //             ? this.shoppingCenters[0].Longitude
+  //             : this.standAlone[0].Longitude || 0,
+  //         },
+  //         zoom: 8,
+  //         mapId: '1234567890',
+  //       });
+  //       this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+  //       this.map.addListener('bounds_changed', () =>
+  //         this.onMapDragEnd(this.map)
+  //       );
+  //     }
+
+  //     if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+  //       this.createMarkers(this.shoppingCenters, 'Shopping Center');
+  //     }
+
+  //     if (this.standAlone && this.standAlone.length > 0) {
+  //       this.createMarkers(this.standAlone, 'Stand Alone');
+  //     }
+
+  //     //this.getPolygons();
+  //     this.createCustomMarkers(this.buyboxCategories);
+  //   } finally {
+  //     this.spinner.hide();
+  //   }
+  // }
   async getAllMarker() {
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
+
+      const mapElement = document.getElementById('map') as HTMLElement;
+      if (!mapElement) {
+        console.error('Element with id "map" not found.');
+        return;
+      }
+
       if (this.savedMapView) {
         const { lat, lng, zoom } = JSON.parse(this.savedMapView);
-        this.map = new Map(document.getElementById('map') as HTMLElement, {
-          center: {
-            lat: lat,
-            lng: lng,
-          },
+        this.map = new Map(mapElement, {
+          center: { lat: lat, lng: lng },
           zoom: zoom,
           mapId: '1234567890',
         });
-        this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
-        this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
-        this.map.addListener('bounds_changed', () =>
-          this.onMapDragEnd(this.map)
-        );
       } else {
-        this.map = new Map(document.getElementById('map') as HTMLElement, {
+        this.map = new Map(mapElement, {
           center: {
             lat: this.shoppingCenters
-              ? this.shoppingCenters[0].Latitude
-              : this.standAlone[0].Latitude || 0,
+              ? this.shoppingCenters?.[0]?.Latitude
+              : this.standAlone?.[0]?.Latitude || 0,
             lng: this.shoppingCenters
-              ? this.shoppingCenters[0].Longitude
-              : this.standAlone[0].Longitude || 0,
+              ? this.shoppingCenters?.[0]?.Longitude
+              : this.standAlone?.[0]?.Longitude || 0,
           },
           zoom: 8,
           mapId: '1234567890',
         });
-        this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
-        this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
-        this.map.addListener('bounds_changed', () =>
-          this.onMapDragEnd(this.map)
-        );
       }
+
+      this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
+      this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
+      this.map.addListener('bounds_changed', () => this.onMapDragEnd(this.map));
 
       if (this.shoppingCenters && this.shoppingCenters.length > 0) {
         this.createMarkers(this.shoppingCenters, 'Shopping Center');
@@ -397,11 +614,78 @@ export class HomeComponent implements OnInit {
         this.createMarkers(this.standAlone, 'Stand Alone');
       }
 
-      //this.getPolygons();
       this.createCustomMarkers(this.buyboxCategories);
+    } catch (error) {
+      console.error('Error loading markers:', error);
     } finally {
       this.spinner.hide();
     }
+  }
+
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenterId: number
+  ) {
+    this.shoppingCenterIdToDelete = shoppingCenterId;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
+
+  // Confirm deletion of Shopping Center
+  confirmDeleteShoppingCenter(modal: NgbModalRef) {
+    if (this.shoppingCenterIdToDelete !== null) {
+      this.DeleteShoppingCenter(
+        this.shoppingCenterIdToDelete
+      ).subscribe(
+        (res) => {
+          // console.log(
+          //   'DeleteShoppingCenter',
+          //   JSON.stringify(res.json)
+          // );
+          this.BuyBoxPlacesAndShoppingCenter =
+            this.BuyBoxPlacesAndShoppingCenter.filter(
+              (center) => center.id !== this.shoppingCenterIdToDelete
+            );
+          modal.close('Delete click');
+          this.shoppingCenterIdToDelete = null;
+          this.spinner.show();
+          const body: any = {
+            Name: 'GetMarketSurveyShoppingCenters',
+            Params: {
+              BuyBoxId: this.BuyBoxId,
+            },
+          };
+
+          this.PlacesService.GenericAPI(body).subscribe({
+            next: (data) => {
+              this.shoppingCenters = data.json;
+              this.stateService.setShoppingCenters(data.json);
+              this.spinner.hide();
+              //this.getStandAlonePlaces(this.BuyBoxId);
+              this.getBuyBoxPlaces(this.BuyBoxId);
+            },
+            error: (error) => console.error('Error fetching APIs:', error),
+          });
+        },
+        (error) => {
+          console.error('Error deleting shopping center:', error);
+          modal.dismiss('Error');
+        }
+      );
+    }
+  }
+
+  // Delete Shopping Center Function
+  DeleteShoppingCenter(ShoppingCenterId: number) {
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromBuyBox',
+      Params: {
+        BuyboxId: this.BuyBoxId,
+        ShoppingCenterId: ShoppingCenterId,
+      },
+    };
+    return this.PlacesService.GenericAPI(body);
   }
 
   createMarkers(markerDataArray: any[], type: string) {
@@ -552,11 +836,12 @@ export class HomeComponent implements OnInit {
   }
 
   selectOption(option: any): void {
-    this.selectedOption = option;
+    this.selectedOption = option.status;
     this.currentView = option.status;
     this.isOpen = false;
     localStorage.setItem('currentView', this.currentView);
   }
+
 
   goToPlace(place: any) {
     if (place.CenterAddress) {
@@ -649,7 +934,7 @@ export class HomeComponent implements OnInit {
   addMarkerToStreetView(panorama: any, lat: number, lng: number) {
     const svgPath =
       'M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z';
-    
+
     const marker = new google.maps.Marker({
       position: { lat, lng },
       map: panorama,
@@ -690,7 +975,7 @@ export class HomeComponent implements OnInit {
       this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
     }
   }
-  
+
   copyLink(link: string) {
     navigator.clipboard
       .writeText(link)
@@ -701,6 +986,7 @@ export class HomeComponent implements OnInit {
         console.error('Could not copy text: ', err);
       });
   }
+
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
 
@@ -776,11 +1062,11 @@ export class HomeComponent implements OnInit {
         const resultPrice =
           leasePrice && leasePrice !== 'On Request'
             ? appendInfoIcon(
-                `$${formatNumberWithCommas(
-                  Math.floor((parseFloat(leasePrice) * singleSize) / 12)
-                )}/month`,
-                shoppingCenter.ForLeasePrice
-              )
+              `$${formatNumberWithCommas(
+                Math.floor((parseFloat(leasePrice) * singleSize) / 12)
+              )}/month`,
+              shoppingCenter.ForLeasePrice
+            )
             : 'On Request';
         return `Unit Size: ${formatNumberWithCommas(
           singleSize
@@ -806,29 +1092,29 @@ export class HomeComponent implements OnInit {
       minSize === maxSize
         ? `${formatNumberWithCommas(minSize)} sq ft.`
         : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
-            maxSize
-          )} sq ft.`;
+          maxSize
+        )} sq ft.`;
 
     // Ensure only one price is shown if one is "On Request"
     const formattedMinPrice =
       minPrice === 'On Request'
         ? 'On Request'
         : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((parseFloat(minPrice) * minSize) / 12)
-            )}/month`,
-            minPrice
-          );
+          `$${formatNumberWithCommas(
+            Math.floor((parseFloat(minPrice) * minSize) / 12)
+          )}/month`,
+          minPrice
+        );
 
     const formattedMaxPrice =
       maxPrice === 'On Request'
         ? 'On Request'
         : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((parseFloat(maxPrice) * maxSize) / 12)
-            )}/month`,
-            maxPrice
-          );
+          `$${formatNumberWithCommas(
+            Math.floor((parseFloat(maxPrice) * maxSize) / 12)
+          )}/month`,
+          maxPrice
+        );
 
     // Handle the lease price display logic
     let leasePriceRange;
@@ -886,10 +1172,6 @@ export class HomeComponent implements OnInit {
   }
 
   getNeareastCategoryName(categoryId: number) {
-    console.log(`nn`);
-    
-    console.log(this.buyboxCategories);
-    
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }
@@ -919,3 +1201,4 @@ export class HomeComponent implements OnInit {
     });
   }
 }
+

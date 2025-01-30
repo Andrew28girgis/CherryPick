@@ -32,6 +32,7 @@
   color: #707791;
   font-size: 16px;
   line-height: 25px;
+  cursor: pointer;
 }
 
 .active {
@@ -119,6 +120,17 @@
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.005em;
+}
+
+.checkbox-section-select>textarea {
+  box-shadow: none;
+  outline: none;
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  border-radius: 10px;
 }
 
 .form-select {
@@ -244,7 +256,15 @@ select option:checked {
   border: 0;
   text-align: center;
   align-items: center;
-  display: flex
+  display: flex;
+  position: relative;
+}
+.spinner-grow{
+  position: absolute;
+  left: 40%;
+}
+.backgroundcolor{
+background: #F2F3F4;
 }
 
 @media (max-width: 500px) {
@@ -266,26 +286,24 @@ select option:checked {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
   display: flex;
   justify-content: center;
-  flex-direction: column;
-  gap: 16px;
+  /* flex-direction: column;
+  gap: 16px; */
   background-color: rgba(236, 236, 236, 0.795);
   border-radius: 10px;
 }
 
 .GeneratedTemplates__img {
-  height: 100px;
+  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .Templates__img {
-  width: auto;
-  max-width: 100%;
-  min-width: 100%;
+  width: 80%;
   border: 1px solid gainsboro;
   border-radius: 4px;
-  height: max-content;
+  height: auto;
 }
 
 .GeneratedTemplates_title {
@@ -306,17 +324,121 @@ select option:checked {
   word-break: break-word;
   gap: 5px;
 }
+
 .GeneratedTemplates_title>input{
   width: 18px;
   height: 18px;
+} 
+
+.OrganizationsForEmail {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
+  display: flex;
+  justify-content: center;
+  /* flex-direction: column;
+  gap: 16px; */
+  background-color: rgba(236, 236, 236, 0.795);
+  border-radius: 10px;
 }
+
+.OganirzationsForEmail__img {
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Oganirzations__img {
+  width: auto;
+  border: 1px solid gainsboro;
+  border-radius: 4px;
+  height: auto;
+  max-height: 100px;
+  background: white;
+}
+.OrganizationsForEmail__head{
+  padding-bottom: 16px;
+}
+.OrganizationsForEmail__head>p:nth-child(1){
+  color: #16181d;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+}
+.OrganizationsForEmail__head>p:nth-child(2){
+  color: #747474;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+}
+.Contact_head{
+  color: #16181d;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+.Contact_head>span{
+  color: #747474;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+.Contact_Mange{
+  color: #001f3f;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  /* border-bottom: 1px solid #001f3f; */
+  /* width: fit-content; */
+  /* padding-bottom: 10px; */
+}
+.border_Contact_head{
+  border-bottom: 1px solid #afaeae;
+  padding-bottom: 10px;
+  width: fit-content;
+}
+
+.crad_Contact_Mange{
+  border: 1px solid #dddddd;
+  padding: 5px;
+  border-radius: 16px;
+}
+
+/* .OrganizationsForEmail_title {
+  color: #16181d;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  height: 40px;
+  display: flex;
+  align-items: start;
+  text-align: center;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  gap: 5px;
+} */
 
 
 .textarea_divT{
   width: 95%;
   border: 1px solid #c6c9d3;
   border-radius: 5px;
-  max-height: 250px;
+  max-height: 300px;
   overflow-y: scroll;
   overflow-x: hidden;
   box-shadow: none;
@@ -676,8 +798,8 @@ select option:checked {
       </button>
     </div>
   </div>
-</ng-template>
-
+</ng-template> */
+/* 
 
 p {
   color: #0c0d0e;
@@ -735,4 +857,33 @@ h3 {
   margin-bottom: 0px;
   font-size: 18px;
   font-weight: 400;
-} */
+}  */
+
+.send-btn {
+  width: 120px;
+  border-radius: 10px;
+  background: #001f3f;
+  color: #fff;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  border: 0;
+  padding: 4px 16px;
+}
+.edit-btn{
+  width: 120px;
+  border-radius: 10px;
+  background: #001f3fc2;
+  color: #fff;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  border: 0;
+  padding: 4px 16px;
+}

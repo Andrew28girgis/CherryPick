@@ -15,6 +15,7 @@ export class BuyboxDetailsComponent {
   organizationId!:number| null;
   Obj:any;
   buyBoxes:any[]=[];
+  contacts:any[] = []
 
 
   constructor(    private route: ActivatedRoute,
@@ -28,6 +29,7 @@ export class BuyboxDetailsComponent {
       this.buyBoxId = +params.get('buyboxid')!;
     });
     this.GetBuyBoxInfo(); 
+    this.GetBuyBoxContacts();
   }
 
   openEditProperty(content: any, modalObject: any) {
@@ -41,7 +43,7 @@ export class BuyboxDetailsComponent {
       MinBuildingSize: modalObject.MinBuildingSize ?? 0, // Default to 0
       MaxBuildingSize: modalObject.MaxBuildingSize ?? 0, // Default to 0
     };
-    console.log('Modal Object:', this.Obj); // Ensure Obj has updated fields
+    // console.log('Modal Object:', this.Obj); // Ensure Obj has updated fields
   }
 
   GetBuyBoxInfo() {
@@ -56,18 +58,22 @@ export class BuyboxDetailsComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data:any) => {
         this.buybox = data.json;
-        console.log(this.buybox );
+        // console.log(`bb`);
+        // console.log(this.buybox);
+        
+        
+
+        // console.log(this.buybox );
         
         this.managerOrganizationId=data.json.ManagerOrganizationId;
         this.organizationId=data.json.OrganizationId;
-         console.log('Buybox data:', this.buybox);
+        //  console.log('Buybox data:', this.buybox);
       },
       error: (err) => {
         console.error('Error fetching buybox info:', err);
        },
     });
-  }
-
+  } 
 
   onSubmit() { 
       const body: any = {
@@ -88,7 +94,7 @@ export class BuyboxDetailsComponent {
           if (data.error) {
             alert('Failed To Update Data');
           } else {
-            console.log('Buybox updated successfully:', this.Obj);
+            // console.log('Buybox updated successfully:', this.Obj);
   
             // Update the buybox in the displayed list
             const index = this.buyBoxes.findIndex((item) => item.Id == this.Obj.Id);
@@ -112,4 +118,23 @@ export class BuyboxDetailsComponent {
   { 
     this.modalService.dismissAll();
   }
+  GetBuyBoxContacts() {
+    const body: any = {
+     Name: 'GetBuyBoxInfo',
+     MainEntity: null,
+     Params: {
+       buyboxid: this.buyBoxId,
+     },
+     Json: null,
+   };
+   this.PlacesService.GenericAPI(body).subscribe({
+     next: (data:any) => {
+      this.contacts = data.json?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationContacts;
+     },
+     error: (err) => {
+       console.error('Error fetching buybox info:', err);
+      },
+   });
+  
+ }
 }

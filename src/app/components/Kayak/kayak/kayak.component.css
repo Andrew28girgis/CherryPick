@@ -1,9 +1,264 @@
+.custom-card {
+  background-color: #ffffff; /* White Background */
+  padding: 12px;
+  border-radius: 12px; /* Rounded Corners */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft Shadow */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin: auto;
+}
+
+/* Default Button Styling */
+.btn {
+  border: 1px solid #d3d3d3;
+  background-color: #ffffff;
+  color: #707791;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Selected Button Styling */
+.btn.selected {
+  background-color: #e0e7ff; /* Light Purple Background */
+  color: #4D65B4; /* Dark Blue Text */
+  border-color: #4D65B4; /* Dark Blue Border */
+}
+
+/* Icons */
+.btn i {
+  font-size: 14px;
+}
+
+/* Container for buttons */
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+/* Bind Button */
+.bind-button {
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #4D65B4);
+  color: #fff;
+}
+.apply-button {
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #be2352);
+  color: #fff;
+}
+.bind-btn {
+  display: flex;
+  height: 48px;
+  padding: 7px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #4D65B4);
+  color: #fff;
+}
+
+/* Bulk Bind Button */
+.bulk-button {
+display: flex;
+height: 48px;
+padding: 14px 24px;
+justify-content: center;
+align-items: center;
+gap: 8px;
+border-radius: var(--Radius-Radius-16, 16px);
+border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #4D65B4);
+background: var(--Button-Secondary-BG, #FFF);
+color: #4D65B4;
+}
+
+/* Add hover effects for both buttons */
+.bind-button:hover {
+  background-color: #3c4f91;
+}
+
+.bulk-button:hover {
+  background-color: #f0f4ff;
+}
+.chosen-places-container {
+  display: inline-block; /* Make the container width fit its content */
+  padding: 0px var(--Space-Space-20, 20px);
+  gap: var(--Space-Space-12, 12px);
+  border-radius: var(--Radius-Radius-24, 24px);
+  background: var(--Body-Page-BG, #F1F1F4);
+}
+.chosen-places-label {
+  color: var(--Body-Heading-Color, #16181D);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
+}
+.place-item {
+  font-size: 14px;
+  color: var(--Body-Text-Color, #707791); /* Subtle text color */
+  margin-right: 8px; /* Spacing between items */
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+.view-more-link {
+  font-size: 14px;
+  color: var(--Button-Link-Label, #4D65B4); /* Link color */
+  text-decoration: none;
+}
+.view-more-link i {
+  font-size: 12px; /* Smaller arrow icon */
+  margin-left: 4px;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  border-radius: var(--Radius-Radius-32, 32px);
+  background: var(--Card-Section-BG, #FFF);
+  box-shadow: -2px 3px 15px -8px rgba(0, 0, 0, 0.25);
+  padding: 10px 20px;
+}
+.search-bar input[type="text"] {
+  color: var(--Inputs-Color-Hierarchy-1, #707791);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; 
+  
+}
+.search-bar select {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #9b9b9b;
+  background: none;
+  margin: 0 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.search-bar select::-ms-expand {
+  display: none;
+}
+.search-bar button {
+  background-color: #5c6bc0;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.search-bar button i {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.search-bar .separator {
+  font-size: 1.5rem; 
+  color: var(--Body-General-Body-Border, #E2E4E9);}
+
+.search-bar .search-btn {
+  display: flex;
+  padding: var(--Space-Space-16, 16px);
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--Radius-Radius-32, 32px);
+  background: var(--Colors-Primary-500, #4D65B4);
+}
+.search-textt{
+color: var(--Inputs-Color-Hierarchy-1, #707791);
+font-family: Montserrat;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 30px; 
+}
+.table-headd{
+color: var(--Table-Title-Cell-Color, #16181D);
+font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px;
+}
+.table-text1{
+color: var(--Table-Info-Cell-Color, #707791);
+font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; 
+letter-spacing: -0.07px;
+}
+.table-text2{
+color: var(--Colors-Primary-500, #4D65B4);
+font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; 
+}
+.showfilters{
+color: var(--Colors-Primary-500, #4D65B4);
+text-align: center;
+font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; 
+}
+.chevronn{
+  color: var(--Colors-Primary-500, #4D65B4);
+
+}
+.static-height {
+  height: 210px; /* Set your desired height */
+}
+
+.card-body {
+  overflow-y: auto; /* Add scroll behavior if content overflows */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 body{
   background-color: red !important;
 }
 .card-filter {
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form-select {
@@ -75,18 +330,85 @@ body{
 }
 
 .kayak-img {
-  height: 250px;
-  width: 300px;
+  height: 135px;
+  width: 135px;
   object-fit: cover; /* Maintain aspect ratio and cover the container */
   border-radius: 8px; /* Rounded corners */
   display: block; /* Ensure the image behaves as a block */
+  
 }
-
+.custom-map-btn {
+  height: 48px;
+  padding: 10px 15px;
+  gap: 8px;
+  flex: 1 0 0; 
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #4D65B4); 
+  color: #fff; 
+  font-family: 'Montserrat', sans-serif; 
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  border: none; 
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+}
+.custom-map-btn:active {
+  background: #2e3f74; 
+}
+.custom-bind-btn {
+  height: 48px;
+  padding: 10px 15px;
+  gap: 8px;
+  flex: 1 0 0; 
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #6c757d); 
+  color: #fff; 
+  font-family: 'Montserrat', sans-serif; 
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  border: none; 
+  cursor: pointer;
+  transition: background-color 0.3s ease; 
+}
+.custom-bind-btn:active {
+  background: #666c72; 
+}
+.custom-street-btn {
+  height: 48px;
+  padding: 10px 15px;
+  gap: 8px; 
+  flex: 1 0 0; 
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Body-Heading-Color, #16181D); 
+  color: #fff;
+  font-family: 'Montserrat', sans-serif; 
+  font-size: 16px; 
+  font-weight: 500; 
+  line-height: 24px; 
+  border: none;
+  cursor: pointer; 
+  transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+.custom-street-btn:active {
+  background: #0e1115; 
+  transform: scale(0.98); 
+}
+.eye-text{
+color: var(--Button-Link-Label, #4D65B4);
+text-align: center;
+font-family: Montserrat;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 30px; 
+}
 .view-gallery {
-  position: absolute; /* Absolute position relative to the container */
-  bottom: 10px; /* Place at the bottom inside the image */
-  right: 10px; /* Place at the left inside the image */
-  z-index: 10; /* Ensure button appears above the image */
+  position: absolute; 
+  bottom: 10px; 
+  right: 10px; 
+  z-index: 10; 
   padding: var(--Space-Space-12, 8px) var(--Space-Space-16, 10px);
   justify-content: center;
   align-items: center;
@@ -239,13 +561,6 @@ line-height: 30px;
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
-}
-.btn {
-  font-family: Montserrat, sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-  padding: 10px 20px; 
-  border-radius: 5px; 
 }
 
 .btn-primary {

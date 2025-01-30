@@ -2,6 +2,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidbarService } from 'src/app/services/sidbar.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-sidbar',
@@ -18,7 +19,7 @@ import { SidbarService } from 'src/app/services/sidbar.service';
 export class SidbarComponent {
   isCollapsed = true;
 
-  constructor(private sidbarService: SidbarService,public router: Router) {
+  constructor(private sidbarService: SidbarService,public router: Router,private _location: Location) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)
     );
@@ -26,5 +27,8 @@ export class SidbarComponent {
 
   toggleSidebar() {
     this.sidbarService.toggleSidebar();
+  }
+  BackTo() {
+    this._location.back();
   }
 }

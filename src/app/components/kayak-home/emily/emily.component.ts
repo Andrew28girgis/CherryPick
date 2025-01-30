@@ -11,11 +11,38 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
+
+
+export interface BuyBoxOrganizationsForEmail {
+  id: number
+  Name: string
+  LogoURL: string
+  Contact: BuyBoxOrganizationsForEmailContact[]
+}
+
+export interface BuyBoxOrganizationsForEmailContact {
+  id: number
+  Firstname: string
+  LastName: string
+  Email: string
+  ShoppingCenters: Contact_ShoppingCenter[]
+}
+
+export interface Contact_ShoppingCenter {
+  id: number
+  CenterName: string
+  CenterAddress: string
+  CenterCity: string
+  CenterState: string
+}
+
+
 @Component({
   selector: 'app-emily',
   templateUrl: './emily.component.html',
   styleUrls: ['./emily.component.css'],
 })
+
 export class EmilyComponent {
   buyBoxId!: number | null;
   TemplatesId!: number | null;
@@ -61,17 +88,22 @@ export class EmilyComponent {
   isSubjectCopied: boolean = false;
   isBodyCopied: boolean = false;
   formGroupTemplate!: FormGroup;
+  shouldShowGenerateEmaily: boolean = false;
+  ShowSpinner :boolean = false;
 
   tabs = [
     { id: 'Details', label: 'Details' },
     { id: 'Emily', label: 'Emily' },
     { id: 'Shopping Centers', label: 'Shopping Centers' },
-    { id: 'WorkSpaces', label: 'WorkSpaces' },
-    { id: 'Sharing', label: 'Sharing' },
-
+    // { id: 'Relations', label: 'Relations' },
+    // { id: 'Locations', label: 'Locations' },
+    // { id: 'Sharing', label: 'Sharing' },
+    { id: 'kayak', label: 'kayak' },
   ];
-  
-  selectedEmailyID: string | null = null; 
+
+  selectedTab: string = 'Details';
+
+  selectedEmailyID: string | null = null;
 
   isChecked(emailyID: string): boolean {
     return this.selectedEmailyID === emailyID;
@@ -80,16 +112,33 @@ export class EmilyComponent {
   onCheckboxChangeTemplates(emailyID: string): void {
     if (this.selectedEmailyID === emailyID) {
       this.selectedEmailyID = null;
+      this.emailBody = '';
     } else {
       this.selectedEmailyID = emailyID;
+  
+      const selectedTemplate = this.generatedGetSavedTemplates.find(
+        (template) => template.ID === Number(emailyID)
+      );
+  
+      if (selectedTemplate?.BuyboxOrgEmailTemplates?.[0]?.Template) {
+        const rawText = selectedTemplate.BuyboxOrgEmailTemplates[0].Template;
+        this.emailBody = this.getFormattedTemplate(rawText);
+      } else {
+        this.emailBody = 'No Template Available';
+      }
     }
-    console.log(emailyID);
-    
+  
+    console.log(emailyID, this.emailBody);
+  }
+  
+
+  getFilteredTabs() {
+    return this.tabs.filter(tab => tab.id !== 'kayak');
   }
 
-  selectedTab: string = 'Emily';
-
-  public text = ``;
+  handleKayakClick() {
+    this.selectTab('Shopping Centers');
+  }
 
   selectTab(tabId: string): void {
     this.selectedTab = tabId;
@@ -97,16 +146,26 @@ export class EmilyComponent {
 
   @Output() contentChange = new EventEmitter<string>();
 
-  getFormattedText(): string {
-    return this.text
-      .split('\n')
-      .join('<br>');
-  }
-
   getFormattedTextTemplate(text: string): string {
     return text
       .split('\n')
       .join('<br>');
+  }
+
+  getFormattedTemplate(text: string): string {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = text;
+      const links = tempDiv.querySelectorAll('a');
+    links.forEach((link) => {
+      const href = link.getAttribute('href');
+      const linkText = link.textContent;
+      link.replaceWith(`${linkText} [${href}]`);
+    });
+      return tempDiv.textContent || tempDiv.innerText || '';
+  }
+
+  trackByRelation(index: number, relation: any): number {
+    return relation.id;
   }
 
   onContentChange(event: Event): void {
@@ -118,17 +177,63 @@ export class EmilyComponent {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private PlacesService: PlacesService
-  ) { }
-
-  ngOnInit() {
+  ) {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = +params.get('buyboxid')!;
+      
+      this.GetBuyBoxInfo();
+      this.GetRetailRelationCategories();
+      this.GetPrompts();
+      this.GetSavedTemplates();
     });
-    this.GetBuyBoxInfo();
-    this.GetRetailRelationCategories();
-    this.GetPrompts();
-    this.GetSavedTemplates();
+   }
+   
+  ngOnInit() {
+    // this.route.paramMap.subscribe((params) => {
+    //   this.buyBoxId = +params.get('buyboxid')!;
+
+    //   this.GetBuyBoxInfo();
+    //   this.GetRetailRelationCategories();
+    //   this.GetPrompts();
+    //   this.GetSavedTemplates();
+    // });
   }
+
+  selectedShoppingCenterId!: number;
+  
+  handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
+    this.selectedTab = event.tabId; 
+    this.selectedShoppingCenterId = event.shoppingCenterId;
+    this.GetBuyBoxOrganizationsForEmail();
+  }
+
+  BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
+  GetBuyBoxOrganizationsForEmail() {
+    const body: any = {
+      Name: 'GetBuyBoxOrganizationsForEmail',
+      MainEntity: null,
+      Params: {
+        shoppingcenterid: this.selectedShoppingCenterId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data?.json && Array.isArray(data.json)) {
+          this.BuyBoxOrganizationsForEmail = data.json; // ✅
+        } else {
+          this.BuyBoxOrganizationsForEmail = [];
+          console.error('Unexpected data format:', data);
+        }
+        // console.log(this.BuyBoxOrganizationsForEmail);
+      },
+      error: (err) => {
+        console.error('API error:', err);
+        this.BuyBoxOrganizationsForEmail = [];
+      },
+    });
+  }
+
 
   GetBuyBoxInfo() {
     const body: any = {
@@ -141,13 +246,13 @@ export class EmilyComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.generated = data.json;
+        this.generated = data.json || [];
         // console.log('ALL', this.generated);
 
         this.ManagerOrganizationName =
-          this.generated[0].Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName;
+          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
-          this.generated[0].Buybox[0].BuyBoxOrganization[0].Name;
+          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
         const buyBox = this.generated?.[0]?.Buybox?.[0];
         if (buyBox) {
@@ -172,7 +277,7 @@ export class EmilyComponent {
               [],
           })) || [];
 
-        this.generated[0]?.Releations.forEach((r) => (r.relationSelect = true));
+        this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
         //this for to be selected by first shopping center by defaukt
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
@@ -193,13 +298,15 @@ export class EmilyComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.generatedGetSavedTemplates = data.json;
-        console.log('ALL GetSavedTemplates', this.generatedGetSavedTemplates);
+        this.generatedGetSavedTemplates = data?.json || [];
+        // console.log(this.generatedGetSavedTemplates);
+        
 
+        // this.generatedGetSavedTemplates = data.json;
         this.ManagerOrganizationName =
-          this.generatedGetSavedTemplates[0].Buybox[0]?.BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName;
+          this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
-          this.generatedGetSavedTemplates[0].Buybox[0].BuyBoxOrganization[0].Name;
+          this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
         const buyBox = this.generatedGetSavedTemplates?.[0]?.Buybox?.[0];
         if (buyBox) {
@@ -233,7 +340,7 @@ export class EmilyComponent {
   getCotenantsWithActivityType(centerName: string): any[] {
     const center: any = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
-    );
+    );  
     // console.log('Shopping Centers', center);
     this.groupedActivityTypes = center.CotenantsWithActivityType.reduce(
       (result: any, cotenant: any) => {
@@ -753,7 +860,7 @@ export class EmilyComponent {
     }
     const promptId = Number(this.selectedPromptId); // Convert to number
     const context = this.emailBody;
-
+    this.ShowSpinner = true;
     this.PlacesService.generateEmail(promptId, context).subscribe({
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
@@ -762,11 +869,13 @@ export class EmilyComponent {
         //   subject: this.emailSubject,
         //   body: this.emailBodyResponse,
         // });
+        this.ShowSpinner = false;
       },
       error: (err) => {
         console.error('Error fetching generic email:', err);
         this.emailSubject = 'Error fetching email subject';
         this.emailBodyResponse = 'Error fetching email body';
+        this.ShowSpinner = false;
       },
     });
   }
@@ -873,8 +982,7 @@ export class EmilyComponent {
     if (selectedPrompt) {
       this.selectedPromptText =
         selectedPrompt.promptText || 'No prompt text available';
-      this.selectedPromptName =
-        selectedPrompt.name || 'No prompt Name available';
+      // console.log('Selected Prompt Text:', this.selectedPromptText);
     } else {
       this.selectedPromptText = 'No prompt text available';
     }

@@ -2,7 +2,7 @@
   <div class="col-12 p-2">
     <form class="row m-0 p-0 d-flex justify-content-between mt-2 mb-3">
       <div class="col-2 p-0 BuyBoxWorkSpaces_name_div">
-        <h5 class="BuyBoxWorkSpaces_name" *ngIf="BuyBoxWorkSpaces?.length > 0 || BuyBoxWorkSpaces">WorkSpaces</h5>
+        <h5 class="BuyBoxWorkSpaces_name" *ngIf="BuyBoxWorkSpaces?.length > 0 || BuyBoxWorkSpaces">Locations</h5>
       </div>
       <!-- State Dropdown -->
       <div class="col-3 p-0 d-flex gap-4" *ngIf="uniqueStates.length > 0 || uniqueStates">
@@ -33,29 +33,34 @@
     </form>
   </div>
   <div class="col-12 p-2">
-    <div class="table-responsive" style="max-height: 550px; min-height: 400px; overflow-y: auto">
-      <table class="table table-bordered">
-        <thead class="thead-light">
-          <tr>
-            <th>Name</th>
-            <th>State</th>
-            <th>City</th>
-            <th class="td_last">Actions</th>
-          </tr>
-        </thead>
-        <tbody *ngIf="BuyBoxWorkSpaces?.length > 0 || BuyBoxWorkSpaces">
-          <tr *ngFor="let workspace of BuyBoxWorkSpaces; let i = index">
-            <td>{{ workspace.name }}</td>
-            <td>{{ workspace.state }}</td>
-            <td>{{ workspace.city }}</td>
-            <td class="td_last">
-              <button class="btn btn_trash" (click)="deleteWorkspace(workspace.id)">
-                <i class="fa fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div  *ngIf="BuyBoxWorkSpaces?.length > 0 || !BuyBoxWorkSpaces">
+      <div class="table-responsive" style="max-height: 550px; min-height: 400px; overflow-y: auto">
+        <table class="table table-bordered">
+          <thead class="thead-light">
+            <tr>
+              <!-- <th>Name</th> -->
+              <th>State</th>
+              <th>City</th>
+              <th class="td_last">Actions</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="BuyBoxWorkSpaces?.length > 0 || BuyBoxWorkSpaces">
+            <tr *ngFor="let workspace of BuyBoxWorkSpaces; let i = index">
+              <!-- <td>{{ workspace.name }}</td> -->
+              <td>{{ workspace.state }}</td>
+              <td>{{ workspace.city }}</td>
+              <td class="td_last">
+                <button class="btn btn_trash" (click)="deleteWorkspace(workspace.id)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div  class="pt-2 d-flex justify-content-center align-items-center" style="height: 50vh;"  *ngIf="BuyBoxWorkSpaces?.length == 0 || !BuyBoxWorkSpaces">
+      <p style="font-weight: 500;">No data Locations</p>
     </div>
   </div>
 </div>

@@ -1,427 +1,333 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div class="container-fluid my-3">
-  <div class="row">
-    <div class="col-md-3">
-      <div class="card card-filter ">
-        <div
-          class="card-body position-relative">
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="title-filter">
-              <span>Filter</span>
-            </div>
-          </div>
-          <div>
-            <div class="mt-3 small-titlefilter">
-              <span>State</span>
-            </div>
-            <select
-            id="state-select"
-            class="form-select search-inputs"
-            [(ngModel)]="filterValues.statecode"
-            (ngModelChange)="handleStateChange($event); searchShoppingCenter()"
-          >
-            <option value="" selected>All</option> <!-- Assign value for the "All" option -->
-            <option *ngFor="let state of uniqueStates" [value]="state">{{ state }}</option>
-          </select>
-          </div>
-          <div>
-            <div class="mt-3 small-titlefilter">
-              <span>City</span>
-            </div>
-            <select
-              id="city-select"
-              class="form-select search-inputs"
-              [(ngModel)]="filterValues.city"
-              (ngModelChange)="onCityChange(); searchShoppingCenter()"
-            >
-            <option selected>All</option>
-              <option *ngFor="let city of uniqueCities">{{ city.city }}</option>
-            </select>
-          </div>
-          <ng-container *ngIf="Filters">
-            <hr class="small-line" />
-            <!-- Availability Filter -->
-            <div>
-              <div class="mt-3 small-titlefilter">
-                <input
-                  type="checkbox"
-                  id="availabilty"
-                  name="availabilty"
-                  class="form-check-input"
-                  [(ngModel)]="filterValues.availabilty"
-                  (ngModelChange)="handleAvailabilityChange()"
-                />
-                <label for="availabilty" class="form-check-label ms-2">Availabilty</label>
-              </div>
-              <!-- Square Footage Filter -->
-              <div class="mt-3 small-titlefilter">
-                <span>Sqft</span>
-                <input
-                  type="number"
-                  class="form-control"
-                  placeholder="sqft"
-                  [(ngModel)]="filterValues.sqft"
-                  (change)="handleSqftChange()"
-                />
-              </div>
-              <!-- Secondary Type Filter -->
-              <div class="mt-3 small-titlefilter">
-                <span>Secondary Type</span>
-              </div>
-              <select
-              class="form-select search-inputs"
-              [(ngModel)]="filterValues.secondarytype"
-              (ngModelChange)="handleSecondaryTypeChange($event)"
-            >
-              <option value="" selected>All</option> <!-- Assign value for the "All" option -->
-              <ng-container *ngFor="let Secondary of Filters?.SecondaryType">
-                <option [value]="Secondary.SecondaryType">
-                  {{ Secondary.SecondaryType }}
-                </option>
-              </ng-container>
-            </select>
-            </div>
-            <hr class="small-line" />
-            <!-- Tenants Filter -->
-            <div>
-              <div *ngIf="sortedTenants.length > 0">
-                <div class="mt-3 small-titlefilter">
-                  <span>Tenants</span>
-                </div>
-                <div class="mt-3">
-                  <ng-container *ngFor="let tenant of sortedTenants">
-                    <div class="form-check" *ngIf="tenant?.Name">
-                      <input
-                        type="checkbox"
-                        [id]="'tenant-' + tenant?.OrganizationId"
-                        name="Comp-Tenants"
-                        class="form-check-input"
-                        (change)="toggleTenantSelection(tenant)"
-                        [(ngModel)]="tenant.Selected"
-                      />
-                      <label
-                        class="form-check-label tenantorg"
-                        [for]="'tenant-' + tenant?.OrganizationId"
-                      >
-                        {{ tenant.Name.length > 25 ? tenant.Name.slice(0, 25) + '...' : tenant?.Name }}
-                      </label>
-                    </div>
-                  </ng-container>
-                  <div class="text-center mt-2">
-                    <button class="btn btn-link no-underline" (click)="toggleTenantList()">
-                      {{ showAllTenants ? "Show Less ▲" : "Show More ▼" }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Tags Filter -->
-            <div class="card p-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <!-- Tenant Tags Text -->
-                <div class="small-titlefilter mb-0">
-                  <span>Tenant Tags</span>
-                </div>
-                <!-- Select Tags Button -->
-                <button class="btn btn-outline-primary tags px-3 py-2" (click)="openTagsModal(tagsModal)">
-                  Select Tags <i class="fas fa-tags ms-2"></i>
-                </button>
-              </div>
-            </div>
-            <!-- Management Company Filter -->
-            <div *ngIf="sortedOrgs.length > 0">
-              <div class="mt-3 small-titlefilter">
-                <span>Management Company</span>
-              </div>
-              <div class="mt-3">
-                <div>
-                  <div *ngFor="let Org of sortedOrgs">
-                    <div class="form-check" *ngIf="Org?.Name">
-                      <input
-                        type="checkbox"
-                        name="Comp-Mangement"
-                        class="form-check-input"
-                        (change)="toggleOrgSelection(Org)"
-                        [(ngModel)]="Org.Selected"
-                      />
-                      <label
-                        class="form-check-label tenantorg"
-                        [for]="'org-' + Org?.OrganizationId"
-                      >
-                        {{ Org.Name.length > 25 ? Org.Name.slice(0, 25) + '...' : Org?.Name }}
-                      </label>
-                    </div>
-                  </div>
-                  <div class="text-center mt-2">
-                    <button class="btn btn-link no-underline" (click)="toggleOrgList()">
-                      {{ showAllOrgs ? "Show Less ▲" : "Show More ▼" }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
-          <div class="d-flex align-items-center justify-content-center mt-3">
-            <button
-              type="button"
-              class="btn btn-secondary w-80"
-              aria-label="To"
-              (click)="searchShoppingCenter()"
-            >
-              Filter
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="d-flex justify-content-center align-items-center">
 
-    <div class="col-md-9">
+<div class="container-fluid my-3">
+
+
      <div class="row">
       <div class="col-md-12 ">
-        <div class="row d-flex align-items-center justify-content-center">
-          <div class="col-md-4">
-            <div class="input-group mb-1">
-              <span class="input-group-text" id="basic-addon1">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </span>
+        <div class="row d-flex align-items-center justify-content-center">   
+          <div class="search-bar container ">
+            <!-- Input Group -->
+            <div class="col-md-4 d-flex align-items-start">
               <input
                 type="text"
-                class="form-control search-inputs"
+                class="form-control border-0 shadow-none search-textt"
                 placeholder="Search"
-                aria-label="Search"
-                aria-describedby="basic-addon1"
                 [(ngModel)]="searchTerm"
                 (input)="filterCards()"
+                style="outline: none;"
               />
             </div>
-          </div>
-          <div class="col-md-3 d-flex justify-content-center align-items-center">
-            <div class="d-inline-flex align-items-center border p-2 rounded show-map">
-              <span class="me-2">Show Map</span>
-              <img src="../../../../assets/Images/Icons/map.png" alt="" />
+          
+            <!-- Separator -->
+            <div class="separator px-2">|</div>
+          
+            <!-- State Dropdown -->
+            <div class="col-md-4 d-flex align-items-start position-relative">
+              <!-- Select Dropdown with Custom Arrow -->
+              <select
+                id="state-select"
+                class="form-select border-0 shadow-none search-textt"
+                [(ngModel)]="filterValues.statecode"
+                (ngModelChange)="handleStateChange($event); searchShoppingCenter()"
+                style="appearance: none; padding-right: 2.5rem; background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23707991%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22 /%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem; color:#707791">                >
+                <option value="" selected>State</option>
+                <option *ngFor="let state of uniqueStates" [value]="state">{{ state }}</option>
+              </select>
+            </div>
+            
+          
+            <div class="separator px-2">|</div>
+          
+            <!-- City Dropdown and Search Button -->
+            <div class="col-md-3 d-flex align-items-start position-relative">
+              <!-- Select Dropdown with Custom Arrow -->
+              <select
+              id="city-select"
+              class="form-select border-0 shadow-none search-textt"
+              [(ngModel)]="filterValues.city"
+              (ngModelChange)="onCityChange($event); searchShoppingCenter()"
+              style="appearance: none; padding-right: 2.5rem; background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23707991%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22 /%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem; color:#707791">
+              <option value="" selected>City</option>
+              <option *ngFor="let city of uniqueCities" [value]="city.city">{{ city.city }}</option>
+            </select>
+            
+            </div>
+            
+            <!-- Search Button -->
+            <div class="col-md-1">
+              <button class="btn search-btn border-0" (click)="searchShoppingCenter()">
+                <i class="fa fa-search"></i>
+              </button>
             </div>
           </div>
-          <div class="col-md-5 d-flex justify-content-end align-items-center gap-3">
-            <!-- Bulk Bind Button -->
-            <button class="btn btn-success" (click)="toggleBulkMode()">
-              {{ isBulkMode ? 'Exit Bulk Bind' : 'Bulk Bind' }}
-            </button>
-        
-            <!-- Bind Button -->
+          <div
+          class="d-flex align-items-center justify-content-center mt-4"
+          style="cursor: pointer;"
+          (click)="openFiltersModal(filtersModal)"
+        >
+          <span class="showfilters">Show More Filters</span>
+          <i class="fa-solid fa-chevron-down ms-2 chevronn"></i>
+        </div>
+          
+          <!-- Filters Section -->
+          <div *ngIf="showFilters" class="row mt-4">
+            <!-- First col-md-6: Tenants -->
+            <!-- <div class="col-md-6">
+              <div class="card card-filter">
+                <div class="card-body position-relative">
+                  <div *ngIf="sortedTenants.length > 0">
+                    <div class="mt-3 small-titlefilter">
+                      <span>Tenants</span>
+                    </div>
+                    <div class="mt-3">
+                      <ng-container *ngFor="let tenant of sortedTenants">
+                        <div class="form-check" *ngIf="tenant?.Name">
+                          <input
+                            type="checkbox"
+                            [id]="'tenant-' + tenant?.OrganizationId"
+                            name="Comp-Tenants"
+                            class="form-check-input"
+                            (change)="toggleTenantSelection(tenant)"
+                            [(ngModel)]="tenant.Selected"
+                          />
+                          <label
+                            class="form-check-label tenantorg"
+                            [for]="'tenant-' + tenant?.OrganizationId"
+                          >
+                            {{
+                              tenant.Name.length > 25
+                                ? tenant.Name.slice(0, 25) + '...'
+                                : tenant?.Name
+                            }}
+                          </label>
+                        </div>
+                      </ng-container>
+                      <div class="text-center mt-2">
+                        <button class="btn btn-link no-underline" (click)="toggleTenantList()">
+                          {{ showAllTenants ? "Show Less ▲" : "Show More ▼" }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+         
+          </div>
+          <div class="d-flex justify-content-start align-items-center gap-3 my-4">
             <button
-              class="btn btn-secondary"
+              class="btn bind-button"
               *ngIf="!isBulkMode"
               (click)="bindShoppingCenter()"
             >
               Bind
             </button>
-          </div>
-        
-          <ng-container >
-            <!-- Loop through KayakResult -->
-            <div
-            class="col-md-12"
-            *ngFor="let result of filteredKayakResult; let i = index"
-          >
-            <div
-            *ngIf="
-            result?.MainImage &&
-            result?.CenterName &&
-            result?.CenterAddress &&
-            result?.CenterCity &&
-            result?.CenterState &&
-            KayakResult?.Result?.length > 0; else noDataTemplate
-          "
-             class="card carddd mb-3 gray-background" 
+            <button
+              class="btn btn-outline-primary bulk-button"
+              (click)="toggleBulkMode()"
             >
-              <div class="card-body">
-                <!-- Add Checkbox at the top of the card -->
-                <div *ngIf="!isBulkMode" class="form-check d-flex align-items-center gap-2">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [id]="'center-' + result.Id"
-                    [checked]="SelectedShoppingCenterIDs.includes(result.Id)"
-                    (change)="onCardCheckboxChange($event, result, i)"
-                  />
-                  <label class="form-check-label mb-0" [for]="'center-' + result.Id">
-                    Select
-                  </label>
-                
-                </div>
-                    <!-- Show Bind This Button in Bulk Mode -->
-        <div *ngIf="isBulkMode" class="d-flex justify-content-start">
-          <button
-            class="btn btn-secondary mb-2"
-            (click)="bindShoppingCenter()"
-          >
-            Bind 
-          </button>
-        </div>
+              {{ isBulkMode ? 'Exit Bulk Bind' : 'Bulk Bind' }}
+            </button>
+          </div>
           
-                <div class="row">
-                  <!-- Left Side: Result Details -->
-                  <div class="col-md-4">
-                    <div class="image-container position-relative">
-                      <img
-                        class="kayak-img img-fluid rounded"
-                        *ngIf="result?.MainImage"
-                        [src]="result?.MainImage"
-                        [alt]="result?.CenterName"
-                      />
-                      <button
-                        class="view-gallery btn gallerybtn"
-                        (click)="openGallery(i)"
-                      >
-                        View Gallery
-                      </button>
-                    </div>
-                  </div>
-          
-                  <!-- Right Side -->
-                  <div class="col-md-8 sizeofdata">
-                    <div class="d-flex align-items-center justify-content-between">
-                      <div class="me-2">
-                        <div class="shoppingcentername">
-                          <span>{{ result.CenterName }}</span>
-                        </div>
-                      </div>
-                      <div class="circle-container" (click)="toggleDropdown(i)">
-                        <i class="fa-solid fa-ellipsis"></i>
-                      </div>
-          
-                      <div *ngIf="isDropdownOpenIndex === i" class="custom-dropdown">
-                        <ul>
-                          <li (click)="openStreetViewPlace(StreetViewPlace, result)">
-                            <img
-                              src="../../../../assets/Images/Icons/Street View.png"
-                              alt="Street View"
-                              class="li-icon"
-                            />
-                            Street View
-                          </li>
-                          <li (click)="openMapViewPlace(MapViewPlace, result)">
-                            <img
-                              src="../../../../assets/Images/Icons/map.png"
-                              alt="Map View"
-                              class="li-icon"
-                            />
-                            Map View
-                          </li>
-                          <li (click)="GetShoppingCenterTenants(result.Id)">
-                            <img
-                              src="../../../../assets/Images/Icons/buildings-2.png"
-                              alt="Tenant"
-                              class="li-icon"
-                            />
-                            Tenant
-                          </li>
-                          <li (click)="GetShoppingCenterAvailability(result.Id)">
-                            <img
-                              src="../../../../assets/Images/Icons/tick-square.png"
-                              alt="Availability"
-                              class="li-icon"
-                            />
-                            Availability
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-          
-                    <div class="d-flex align-items-center mt-1">
-                      <div class="card-texts text-nowrap">
-                        <span
-                          >{{ result.CenterAddress }}, {{ result.CenterCity }}
-                          {{ result.CenterState }}</span
-                        >
-                      </div>
-                    </div>
-                    
-          
-                    <div
-                      *ngIf="KayakResult?.Result?.length > 0"
-                      class="d-flex align-items-center justify-content-start mt-1"
-                    >
-                      <ng-container
-                        *ngIf="KayakResult?.ManagementOrganizations?.length > i"
-                      >
-                        <div>
-                          <img
-                            [src]="
-                              'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                              KayakResult.ManagementOrganizations[i].Id
-                            "
-                            [alt]="
-                              KayakResult.ManagementOrganizations[i]?.Name ||
-                              'No Name Available'
-                            "
-                            class="logooo me-2"
+          <ng-container *ngIf="filterValues.statecode">
+            <div
+              class="col-md-12"
+              *ngFor="let result of filteredKayakResult; let i = index"
+            >
+            
+              <div
+                *ngIf="
+                  result?.MainImage &&
+                  result?.CenterName &&
+                  result?.CenterAddress &&
+                  result?.CenterCity &&
+                  result?.CenterState &&
+                  KayakResult?.Result?.length > 0;
+                  else noDataTemplate
+                "
+                class="card carddd mb-3 gray-background"
+              >
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <!-- Left Side: Result Details -->
+                    <div class="col-md-5">
+                      <div class="d-flex align-items-center gap-3">
+                        <!-- Show Checkbox in Bulk Mode -->
+                        <div *ngIf="isBulkMode" class="form-check">
+                          <input
+                            type="checkbox"
+                            class="form-check-input"
+                            [id]="'center-' + result.Id"
+                            [checked]="SelectedShoppingCenterIDs.includes(result.Id)"
+                            (change)="onCardCheckboxChange($event, result)" 
                           />
                         </div>
-                        <div class="company-name me-2">
-                          <span>{{ KayakResult.ManagementOrganizations[i]?.Name }}</span>
+                      
+                       
+                        <!-- Image Section -->
+                        <div class="image-container position-relative" (click)="openGallery(i)">
+                          <img
+                          
+                            class="kayak-img img-fluid rounded"
+                            style="cursor: pointer;"
+                            *ngIf="result?.MainImage"
+                            [src]="result?.MainImage"
+                            [alt]="result?.CenterName"
+                          />
                         </div>
-                      </ng-container>
-                    </div>
-          
-                    <div class="main-card" style="padding: 12px;">
-                      <div
-                        *ngFor="let place of getVisiblePlaces(result, i); let j = index"
-                        class="place-row"
-                      >
-                        <div class="place-details mb-3">
-                          <!-- Place Details: Building Size -->
-                          <div class="mb-2">
-                            <span class="label card-texts d-block">Building Size:</span>
-                            <span class="value card-strongs">{{ place?.BuildingSizeSf | number }} SqFt</span>
+                  
+                        <div class="d-flex flex-column text-start">
+                          <div class="shoppingcentername mb-1">
+                            <span>{{ result.CenterName }}</span>
                           </div>
                     
-                          <!-- Place Details: Suite -->
-                          <div class="mb-2">
-                            <span class="label card-texts d-block">Suite:</span>
-                            <span class="value card-strongs">{{ place?.Suite || 'N/A' }}</span>
-                          </div>
-                    
-                          <!-- Place Details: For Lease Price -->
-                          <div class="mb-2">
-                            <span class="label card-texts d-block">For Lease Price:</span>
-                            <span class="value card-strongs">
-                              {{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}
+                          <div class="card-texts">
+                            <span>
+                              {{ result.CenterAddress }}, {{ result.CenterCity }}
+                              {{ result.CenterState }}
                             </span>
                           </div>
-                    
-                          <!-- Bind Button in Bulk Mode -->
-                          <div *ngIf="isBulkMode" class="bind-this-button mt-2">
-                            <button class="btn btn-secondary btn-sm" (click)="bindShoppingCenter()">
-                              Bind
-                            </button>
-                          </div>
+                          <div
+                          *ngIf="KayakResult?.Result?.length > 0"
+                          class="d-flex align-items-center justify-content-start mt-1"
+                        >
+                          <ng-container
+                            *ngIf="KayakResult?.ManagementOrganizations?.length > i"
+                          >
+                            <div>
+                              <img
+                                [src]="
+                                  'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                                  KayakResult.ManagementOrganizations[i].Id
+                                "
+                                [alt]="
+                                  KayakResult.ManagementOrganizations[i]?.Name ||
+                                  'No Name Available'
+                                "
+                                class="logooo me-2"
+                              />
+                            </div>
+                            <div class="company-name me-2">
+                              <span>{{ KayakResult.ManagementOrganizations[i]?.Name }}</span>
+                            </div>
+                          </ng-container>
                         </div>
-                    
-                        <hr *ngIf="j !== getVisiblePlaces(result, i).length - 1" />
-                      </div>
-                    
-                      <!-- Show More/Show Less -->
-                      <div class="text-center mt-2" *ngIf="result?.place?.length > 2">
-                        <button class="btn btn-link no-underline" (click)="toggleSeeMorePlaces(i)">
-                          {{ showAllPlacesIndex === i ? "Show Less ▲" : "Show More ▼" }}
-                        </button>
+                        </div>
                       </div>
                     </div>
+          
+                    <div class="col-md-7">
+                      <div class="d-flex align-items-center gap-4 eye-text">
+                        <div class="d-flex align-items-center text-nowrap">
+                          <span class="me-2 eye-text">{{ result?.place?.length || 0 }} Place</span>
+                          <img
+                            class="eye-icon"
+                            style="cursor: pointer"
+                            src="../../../assets/Images/Icons/eye2.png"
+                            alt="View Places Details"
+                            (click)="openPlacesModal(result.place, result.Id)"
+                          />
+                        </div>
+          
+                        <div class="d-flex align-items-center text-nowrap gap-2">
+                          <span class="me-2 eye-text">Availability</span>
+                          <img
+                            style="cursor: pointer"
+                            src="../../../assets/Images/Icons/eye2.png"
+                            alt="View Availability Details"
+                            (click)="GetShoppingCenterAvailability(result.Id)"
+                          />
+                        </div>
+          
+                        <div class="d-flex align-items-center text-nowrap gap-2">
+                          <span class="me-2 eye-text">Tenants</span>
+                          <img
+                            style="cursor: pointer"
+                            src="../../../assets/Images/Icons/eye2.png"
+                            alt="View Tenants Details"
+                            (click)="GetShoppingCenterTenants(result.Id)"
+                          />
+                        </div>
+          
+                        <div class="d-flex align-items-center gap-2">
+                      <div>
+                        <button
+                        class="custom-map-btn d-flex align-items-center justify-content-center"
+                        (click)="openMapViewPlace(MapViewPlace, result)"
+                      >
+                        Map
+                      </button>
+                      </div>
+                      <div>
+                        <button
+                        class="custom-street-btn d-flex align-items-center justify-content-center"
+                        (click)="openStreetViewPlace(StreetViewPlace, result)"
+                      >
+                        Street
+                      </button>
+                      </div>
+                      <div *ngIf="!isBulkMode">
+                        <button
+                          class="custom-bind-btn d-flex align-items-center justify-content-center"
+                          (click)="toggleShoppingCenterBind(result.Id)"
+                        >
+                          {{ boundShoppingCenterIds.includes(result.Id) ? 'Unbind' : 'Bind' }}
+                        </button>
+                      </div>
+                      
+                        </div>
+          
+                     
+                      </div>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                      <div class="d-flex">
+                        <div class="chosen-places-container p-2">
+                          <span class="chosen-places-label">Chosen Places</span>
+                          <div class="d-inline-flex align-items-center flex-wrap gap-2 ms-2">
+                            <!-- Display up to 5 places initially -->
+                            <ng-container
+                              *ngFor="let place of result.place.slice(0, expandedPlacesIndex === i ? result.place.length : 5); let j = index"
+                            >
+                              <span class="place-item">{{ place?.BuildingSizeSf | number }} SF</span>
                     
+                              <!-- Add space between places -->
+                              <span *ngIf="j < (expandedPlacesIndex === i ? result.place.length - 1 : 4)">&nbsp;</span>
+                            </ng-container>
                     
+                            <!-- View More / View Less -->
+                            <ng-container *ngIf="result.place.length > 4">
+                              <span
+                                class="me-2 eye-text"
+                                (click)="toggleExpandedPlaces(i)"
+                                style="cursor: pointer;"
+                              >
+                                {{ expandedPlacesIndex === i ? 'View less' : 'View ' + (result.place.length - 5) + ' more Places' }}
+                              </span>
+                              <img
+                                class="eye-icon"
+                                style="cursor: pointer;"
+                                src="../../../assets/Images/Icons/eye2.png"
+                                alt="View Places Details"
+                                (click)="openPlacesModal(result.place, result.Id)"
+                              />
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>  
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          
           </ng-container>
+          
         </div>
       </div>
      </div>
-    </div>
-  </div>
 </div>
 
 <ng-template #tagsModal let-modal>
@@ -454,7 +360,6 @@
   </div>
 </ng-template>
 
-<!-- Modal Template -->
 <ng-template #galleryModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Image Gallery</h5>
@@ -462,12 +367,10 @@
   </div>
   <div class="modal-body">
     <div *ngIf="placeImage && placeImage.length > 0; else noImages">
-      <!-- Loop through and display images -->
       <div *ngFor="let img of placeImage" class="mb-3 text-center">
         <img [src]="img" alt="Image" class="img-fluid rounded modal-imgg" />
       </div>
     </div>
-    <!-- Fallback for No Images -->
     <ng-template #noImages>
       <p class="text-center">No images available for this card.</p>
     </ng-template>
@@ -509,29 +412,27 @@
   </div>
   <div class="modal-body">
     <div *ngIf="ShoppingCenterTenants?.length > 0" class="tenants-list mt-3">
-      <!-- Table for Tenants -->
-      <table class="table table-bordered table-hover">
+      <table class="table table-striped">
         <thead class="table-light">
           <tr>
-            <th>Name</th>
-            <th>Summary</th>
+            <th class="table-headd">Name</th>
+            <th class="table-headd">Summary</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let tenant of ShoppingCenterTenants">
-            <td>{{ tenant.name }}</td>
-            <td>{{ tenant.summary }}</td>
+            <td class="table-text1">{{ tenant.name }}</td>
+            <td class="table-text1">{{ tenant.summary }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!-- Fallback if no tenants -->
     <div *ngIf="!ShoppingCenterTenants || ShoppingCenterTenants.length === 0">
       <p>No tenants available for this shopping center.</p>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+    <button type="button" class="btn bind-button" (click)="modal.close()">
       Close
     </button>
   </div>
@@ -556,3 +457,232 @@
     </div>
   </div>
 </ng-template>
+<ng-template #placesModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Places Details</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="table-headd">Building Size</th>
+          <th class="table-headd">Suite</th>
+          <th class="table-headd">For Lease Price</th>
+          <th class="table-headd">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let place of selectedPlaces">
+          <td class="table-text1">{{ place?.BuildingSizeSf | number }} SqFt</td>
+          <td class="table-text1">{{ place?.Suite || 'N/A' }}</td>
+          <td class="table-text1">{{ place?.ForLeasePrice ? ('$' + place?.ForLeasePrice + '/SqFt') : 'N/A' }}</td>
+          <td>
+            <div>
+              <button
+                class="custom-bind-btn d-flex align-items-center justify-content-center"
+                (click)="togglePlaceBind(place.Id, place.ShoppingCenterId)"
+              >
+                {{ SelectedPlacesIDs.includes(place.Id) ? 'Unbind' : 'Bind' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn bind-button" (click)="modal.dismiss()">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #filtersModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Filters</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div *ngIf="sortedTenants.length > 0; else noTenantss">
+              <div class="small-titlefilter">
+                <span>Tenants</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let tenant of sortedTenants">
+                  <div class="form-check" *ngIf="tenant?.Name">
+                    <input
+                      type="checkbox"
+                      [id]="'tenant-' + tenant?.OrganizationId"
+                      name="Comp-Tenants"
+                      class="form-check-input"
+                      (change)="toggleTenantSelection(tenant)"
+                    />
+                    <label class="form-check-label tenantorg" [for]="'tenant-' + tenant?.OrganizationId">
+                      {{ tenant.Name.length > 25 ? tenant.Name.slice(0, 25) + '...' : tenant?.Name }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #noTenantss>
+              <div class="text-muted text-center">No tenants available.</div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div *ngIf="sortedOrgs.length > 0; else noManagementOrgs">
+              <div class="small-titlefilter">
+                <span>Management Company</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let org of sortedOrgs">
+                  <div class="form-check" *ngIf="org?.Name">
+                    <input
+                      type="checkbox"
+                      [id]="'org-' + org?.OrganizationId"
+                      name="Comp-ManagementCompany"
+                      class="form-check-input"
+                      (change)="toggleOrgSelection(org)" 
+                    />
+                    <label class="form-check-label tenantorg" [for]="'org-' + org?.OrganizationId">
+                      {{ org.Name.length > 25 ? org.Name.slice(0, 25) + '...' : org?.Name }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #noManagementOrgs>
+              <div class="text-muted text-center">No management companies available.</div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mt-2">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div *ngIf="secondaryTypes.length > 0; else noSecondaryTypes">
+              <div class="small-titlefilter">
+                <span>Secondary Type</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let secondary of secondaryTypes">
+                  <div class="form-check" *ngIf="secondary?.SecondaryType">
+                    <input
+                      type="checkbox"
+                      [id]="'secondary-' + secondary.SecondaryType"
+                      name="Comp-SecondaryType"
+                      class="form-check-input"
+                      (change)="toggleSecondaryTypeSelection(secondary)"
+                    />
+                    <label class="form-check-label tenantorg" [for]="'secondary-' + secondary.SecondaryType">
+                      {{ secondary.SecondaryType }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #noSecondaryTypes>
+              <div class="text-muted text-center">No secondary types available.</div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mt-2">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div *ngIf="neighbourhoods.length > 0; else noNeighbourhoods">
+              <div class="small-titlefilter">
+                <span>Neighbourhood</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let neighbourhood of neighbourhoods">
+                  <div class="form-check" *ngIf="neighbourhood?.Neighbourhood">
+                    <input
+                      type="checkbox"
+                      [id]="'neighbourhood-' + neighbourhood.Neighbourhood"
+                      name="Comp-Neighbourhood"
+                      class="form-check-input"
+                      (change)="toggleNeighbourhoodSelection(neighbourhood)"
+                    />
+                    <label class="form-check-label tenantorg" [for]="'neighbourhood-' + neighbourhood.Neighbourhood">
+                      {{ neighbourhood.Neighbourhood }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #noNeighbourhoods>
+              <div class="text-muted text-center">No neighbourhoods available.</div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 mt-2">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div *ngIf="tenantCategories.length > 0; else noTenantCategories">
+              <div class="small-titlefilter">
+                <span>Tenant Categories</span>
+              </div>
+              <div class="mt-3">
+                <ng-container *ngFor="let category of tenantCategories">
+                  <div class="form-check" *ngIf="category?.Name">
+                    <input
+                      type="checkbox"
+                      [id]="'category-' + category.Name"
+                      name="Comp-TenantCategory"
+                      class="form-check-input"
+                      (change)="toggleTenantCategorySelection(category)"
+                    />
+                    <label class="form-check-label tenantorg" [for]="'category-' + category.Name">
+                      {{ category.Name }}
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <ng-template #noTenantCategories>
+              <div class="text-muted text-center">No tenant categories available.</div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      
+      <!-- <div class="col-md-6 mt-2">
+        <div class="card card-filter static-height">
+          <div class="card-body position-relative">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="small-titlefilter mb-0">
+                <span>Tenant Tags</span>
+              </div>
+              <button
+                class="btn btn-outline-primary tags px-3 py-2"
+                (click)="openTagsModal(tagsModal)"
+              >
+                Select Tags <i class="fas fa-tags ms-2"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn bind-button" (click)="modal.dismiss()">Close</button>
+  </div>
+</ng-template>
+
