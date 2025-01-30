@@ -291,83 +291,13 @@ UnBindShoppingCenter(){
         this.spinner.hide();
       },
     });
-  }
+  }    
 
-  selectedshoppingcenterid(selectedid: number): void {
-    if (selectedid) {
-      this.SelectedShoppingCenterIDs.push(selectedid);
-      // console.log('Selected IDs:', this.SelectedShoppingCenterIDs);
-      this.bindShoppingCenter();
-    } else {
-      console.error('Invalid ID:', selectedid);
-    }
-  }
-  
-  onPlaceCheckboxChange(event: Event, placeId: number): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
-
-    if (isChecked) {
-      this.addPlaceId(placeId);
-      if (
-        !this.SelectedShoppingCenterIDs.includes(this.selectedShoppingCenterId)
-      ) {
-        this.SelectedShoppingCenterIDs.push(this.selectedShoppingCenterId);
-      }
-    } else {
-      this.removePlaceId(placeId);
-      if (
-        !this.selectedPlacesForShoppingCenter(this.selectedShoppingCenterId)
-      ) {
-        const index = this.SelectedShoppingCenterIDs.indexOf(
-          this.selectedShoppingCenterId
-        );
-        if (index > -1) {
-          this.SelectedShoppingCenterIDs.splice(index, 1);
-        }
-      }
-    }
-
-    // console.log('Updated Selected Places IDs:', this.SelectedPlacesIDs);
-    this.bindShoppingCenter();
-  }
-  addShoppingCenterId(shoppingCenterId: number): void {
-    if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
-      this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-    }
-  }
-
-  removeShoppingCenterId(shoppingCenterId: number): void {
-    const index = this.SelectedShoppingCenterIDs.indexOf(shoppingCenterId);
-    if (index > -1) {
-      this.SelectedShoppingCenterIDs.splice(index, 1);
-    }
-  }
-
-  addPlaceId(placeId: number): void {
-    if (!this.SelectedPlacesIDs.includes(placeId)) {
-      this.SelectedPlacesIDs.push(placeId);
-    }
-  }
-
-  removePlaceId(placeId: number): void {
-    const index = this.SelectedPlacesIDs.indexOf(placeId);
-    if (index > -1) {
-      this.SelectedPlacesIDs.splice(index, 1);
-    }
-  }
   onCardCheckboxChange(event: Event, result: any): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     this.toggleShoppingCenterBind(result.Id, isChecked);
-  }
-  selectedPlacesForShoppingCenter(shoppingCenterId: number): boolean {
-    // Check if there are any places selected for this shopping center
-    return this.SelectedPlacesIDs.some((placeId) => {
-      return this.selectedPlaces.some(
-        (place) =>
-          place.Id === placeId && place.ShoppingCenterId === shoppingCenterId
-      );
-    });
-  }
+  } 
+
   togglePlaceBind(placeId: number, shoppingCenterId: number): void {
     const isAlreadyBound = this.SelectedPlacesIDs.includes(placeId);
 
@@ -420,6 +350,7 @@ UnBindShoppingCenter(){
       },
     });
   }
+
   truncateText(text: string, limit: number = 25): string {
     return text.length > limit ? text.slice(0, limit) + '...' : text;
   }
@@ -520,6 +451,7 @@ UnBindShoppingCenter(){
       },
     });
   }
+
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
     const streetViewElement = document.getElementById('street-view');
     if (streetViewElement) {
@@ -536,6 +468,7 @@ UnBindShoppingCenter(){
       console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
+
   viewOnStreet() {
     this.StreetViewOnePlace = true;
     let lat = +this.General.modalObject.StreetLatitude;
@@ -765,6 +698,7 @@ UnBindShoppingCenter(){
       },
     });
   }
+  
   getShoppingCenters(): void {
     this.spinner.show();
     const body: any = {
@@ -886,17 +820,7 @@ UnBindShoppingCenter(){
 
     this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
-  }
-  handleNeighbourhoodChange(selectedValue: string): void {
-    this.filterValues.neighbourhood = selectedValue; // Update the selected neighbourhood
-    // console.log('Neighbourhood selected:', selectedValue);
-    this.getResult(); // Fetch filtered results
-  }
-  handleTenantCategoryChange(selectedValue: string): void {
-    this.filterValues.tenantCategory = selectedValue; // Update the selected tenant category
-    // console.log('Tenant Category selected:', selectedValue);
-    this.getResult(); // Fetch filtered results
-  }
+  } 
 
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
@@ -1016,14 +940,5 @@ UnBindShoppingCenter(){
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    if (
-      !target.closest('.circle-container') &&
-      !target.closest('.custom-dropdown')
-    ) {
-      this.isDropdownOpenIndex = null;
-    }
-  }
+ 
 }
