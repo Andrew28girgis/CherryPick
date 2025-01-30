@@ -134,23 +134,15 @@
           
           <ng-container *ngIf="filterValues.statecode">
             <div
+                
+                class="card carddd mb-3 gray-background" >
+                <div class="card-body">
+            <div
               class="col-md-12"
               *ngFor="let result of filteredKayakResult; let i = index"
             >
             
-              <div
-                *ngIf="
-                  result?.MainImage &&
-                  result?.CenterName &&
-                  result?.CenterAddress &&
-                  result?.CenterCity &&
-                  result?.CenterState &&
-                  KayakResult?.Result?.length > 0;
-                  else noDataTemplate
-                "
-                class="card carddd mb-3 gray-background"
-              >
-                <div class="card-body">
+              
                   <div class="row align-items-center">
                     <!-- Left Side: Result Details -->
                     <div class="col-md-5">
@@ -232,7 +224,7 @@
                           />
                         </div>
           
-                        <div class="d-flex align-items-center text-nowrap gap-2">
+                        <div class="d-flex align-items-center text-nowrap">
                           <span class="me-2 eye-text">Availability</span>
                           <img
                             style="cursor: pointer"
@@ -242,7 +234,7 @@
                           />
                         </div>
           
-                        <div class="d-flex align-items-center text-nowrap gap-2">
+                        <div class="d-flex align-items-center text-nowrap">
                           <span class="me-2 eye-text">Tenants</span>
                           <img
                             style="cursor: pointer"
@@ -255,7 +247,7 @@
                         <div class="d-flex align-items-center gap-2">
                       <div>
                         <button
-                        class="custom-map-btn d-flex align-items-center justify-content-center"
+                        class="custom-map-btn d-flex align-items-center justify-content-center ms-4"
                         (click)="openMapViewPlace(MapViewPlace, result)"
                       >
                         Map
@@ -270,12 +262,12 @@
                       </button>
                       </div>
                       <div *ngIf="!isBulkMode">
-                        <button
-                          class="custom-bind-btn d-flex align-items-center justify-content-center"
-                          (click)="toggleShoppingCenterBind(result.Id)"
-                        >
-                          {{ boundShoppingCenterIds.includes(result.Id) ? 'Unbind' : 'Bind' }}
-                        </button>
+                        <button 
+                        class="custom-bind-btn d-flex align-items-center justify-content-center"
+                        (click)="toggleShoppingCenterBind(result.Id)"
+                      >
+                        {{ SelectedShoppingCenterIDs.includes(result.Id) ? 'Unbind' : 'Bind' }}
+                      </button>
                       </div>
                       
                         </div>
@@ -283,7 +275,7 @@
                      
                       </div>
                     </div>
-                    <div class="col-md-12 mt-2">
+                    <div class="col-md-12 mt-2 mb-3">
                       <div class="d-flex">
                         <div class="chosen-places-container p-2">
                           <span class="chosen-places-label">Chosen Places</span>
@@ -319,6 +311,7 @@
                         </div>
                       </div>
                     </div>  
+                    <hr>
                   </div>
                 </div>
               </div>
@@ -330,35 +323,6 @@
      </div>
 </div>
 
-<ng-template #tagsModal let-modal>
-  <div class="modal-body">
-    <div class="custom-multiselect">
-      <!-- Search Input -->
-      <input
-        type="text"
-        placeholder="Search Tags..."
-        [(ngModel)]="searchTerm"
-        (input)="filterTags()"
-        class="search-input"
-      />
-      <!-- List of Tags -->
-      <div class="specialty-list">
-        <label *ngFor="let tag of visibleTags" class="specialty-item">
-          <input
-            type="checkbox"
-            [checked]="isTagSelected(tag)"
-            (change)="toggleTagSelection(tag)"
-          />
-          {{ tag.tag }}
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
-    <button class="btn btn-primary tags" (click)="applyTags()">Apply</button>
-  </div>
-</ng-template>
 
 <ng-template #galleryModal let-modal>
   <div class="modal-header">
@@ -444,7 +408,19 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
-    <div id="street-view" style="height: 400px; width: 100%;"></div>
+    <div *ngIf="sanitizedUrl; else noStreetView">
+      <iframe
+        [src]="sanitizedUrl"
+        width="100%"
+        height="400"
+        style="border:0;"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+    <ng-template #noStreetView>
+      <p class="text-center text-muted">🚨 No Street View available for this location.</p>
+    </ng-template>
   </div>
 </ng-template>
 
@@ -526,7 +502,7 @@
                       (change)="toggleTenantSelection(tenant)"
                     />
                     <label class="form-check-label tenantorg" [for]="'tenant-' + tenant?.OrganizationId">
-                      {{ tenant.Name.length > 25 ? tenant.Name.slice(0, 25) + '...' : tenant?.Name }}
+                      {{ truncateText(tenant.Name) }}
                     </label>
                   </div>
                 </ng-container>
@@ -556,7 +532,7 @@
                       (change)="toggleOrgSelection(org)" 
                     />
                     <label class="form-check-label tenantorg" [for]="'org-' + org?.OrganizationId">
-                      {{ org.Name.length > 25 ? org.Name.slice(0, 25) + '...' : org?.Name }}
+                      {{ truncateText(org.Name) }}
                     </label>
                   </div>
                 </ng-container>
@@ -660,25 +636,6 @@
           </div>
         </div>
       </div>
-      
-      <!-- <div class="col-md-6 mt-2">
-        <div class="card card-filter static-height">
-          <div class="card-body position-relative">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="small-titlefilter mb-0">
-                <span>Tenant Tags</span>
-              </div>
-              <button
-                class="btn btn-outline-primary tags px-3 py-2"
-                (click)="openTagsModal(tagsModal)"
-              >
-                Select Tags <i class="fas fa-tags ms-2"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> -->
-      
     </div>
   </div>
   <div class="modal-footer">
