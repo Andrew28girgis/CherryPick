@@ -635,6 +635,7 @@ export class HomeComponent implements OnInit {
   }
 
   openLink(content: any, modalObject?: any) {
+    
     this.shareLink = '';
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
