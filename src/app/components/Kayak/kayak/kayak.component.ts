@@ -743,13 +743,10 @@ UnBindShoppingCenter(){
         result.CenterAddress.toLowerCase().includes(search) ||
         result.CenterCity.toLowerCase().includes(search) ||
         result.CenterState.toLowerCase().includes(search)
-    );
-
-    // console.log('Filtered Cards:', this.filteredKayakResult);
+    ); 
   }
+  
   getResult(): void {
-    // console.log('Filtering with values:', this.filterValues);
-
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
@@ -866,6 +863,7 @@ UnBindShoppingCenter(){
       },
     });
   }
+
   resetFilters(): void {
     this.sortedTenants = [];
     this.sortedOrgs = [];
@@ -902,10 +900,12 @@ UnBindShoppingCenter(){
     this.filterValues.city = '';
     this.getResult(); // Trigger only for shopping centers
   }
+
   onStateSelectionChange(selectedValue: string): void {
     this.handleStateChange(selectedValue);  // 🔹 First, update filters and cities
     this.searchShoppingCenter();  // 🔹 Then, call API only once
-}
+  }
+
   handleStateChange(selectedValue: string): void {
     this.filterValues.statecode = selectedValue; // Update the selected state
     this.filterValues.city = ''; // Clear the city filter
@@ -1026,6 +1026,7 @@ UnBindShoppingCenter(){
     this.filterValues.tenantCategory = categoryList.join(','); // Update the filter
     this.getResult(); // Trigger filtering API
   }
+
   searchShoppingCenter() {
     this.spinner.show();
     const body: any = {
@@ -1037,7 +1038,9 @@ UnBindShoppingCenter(){
       next: (data) => {
         this.KayakResult = data.json[0];
         this.Ids = data.json[0]?.Ids;
-
+        this.filterCards();
+        console.log('Filtered Result:', this.KayakResult);
+        
         if (!this.Filters?.SecondaryType) {
           this.GetFilters();
         }
@@ -1047,6 +1050,7 @@ UnBindShoppingCenter(){
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;

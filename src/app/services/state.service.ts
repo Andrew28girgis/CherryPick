@@ -89,7 +89,6 @@ export class StateService {
   clearAll() {
     this.buyboxCategories = [];
     this.shoppingCenters = [];
-    this.standAlone = [];
     this.buyboxPlaces = [];
     this.shareOrg = [];
     this.selectedSS = null; 
