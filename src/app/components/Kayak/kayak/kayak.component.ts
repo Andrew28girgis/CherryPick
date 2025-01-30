@@ -79,6 +79,21 @@ export class KayakComponent implements OnInit {
   tenantCategories: any[] = [];
   selectedShoppingCenterId: number = 0;
   boundShoppingCenterIds: number[] = [];
+  newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -292,6 +307,7 @@ export class KayakComponent implements OnInit {
       console.error('Invalid ID:', selectedid);
     }
   }
+  
   onPlaceCheckboxChange(event: Event, placeId: number): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
@@ -539,6 +555,7 @@ export class KayakComponent implements OnInit {
       }
     });
   }
+
   setIframeUrl(url: string): void {
     if (!url) {
       console.error('🚨 Invalid StreetView URL:', url);
@@ -548,9 +565,11 @@ export class KayakComponent implements OnInit {
     console.log('🌍 Setting StreetView URL:', url);
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+
   openFiltersModal(content: any) {
     this.modalService.open(content, { size: 'lg', centered: true });
   }
+
   openStreetViewPlace(content: any, modalObject?: any) {
     this.General.modalObject = modalObject || {};
 
@@ -580,6 +599,36 @@ export class KayakComponent implements OnInit {
     });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
+
+  // toggleTenantList(): void {
+  //   this.showAllTenants = !this.showAllTenants;
+  //   this.updateSortedTenants(); 
+  // }
+   // toggleOrgSelect(org: ManagementOrganization): void {
+  //   const currentOrgs = this.filterValues.managementOrganizationIds || '';
+  
+  //   let orgIds = currentOrgs
+  //     .split(',')
+  //     .map((id: any) => id.trim())
+  //     .filter((id: any) => id !== '');
+  
+  //   const orgIdAsString = String(org.OrganizationId);
+  
+  //   if (org.Selected) {
+   
+  //     if (!orgIds.includes(orgIdAsString)) {
+  //       orgIds.push(orgIdAsString);
+  //     }
+  //   } else {
+  //     orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
+  //   }
+  
+  //   this.filterValues.managementOrganizationIds = orgIds.join(',');
+  //   console.log('Updated Management Organization Filter:', this.filterValues.managementOrganizationIds);
+  
+  //   this.getResult();
+  // }
+  
 
   updateSortedTenants(): void {
     if (!this.Filters?.Tenants || !Array.isArray(this.Filters.Tenants)) {
@@ -629,6 +678,7 @@ export class KayakComponent implements OnInit {
     this.sortedOrgs = uniqueOrgs;
     console.log('Sorted Organizations:', this.sortedOrgs); // Debug organizations
   }
+
   updateSecondaryTypes(): void {
     if (
       !this.Filters?.SecondaryType ||
@@ -651,13 +701,15 @@ export class KayakComponent implements OnInit {
       console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
-    }
+    
 
+    } 
     // Assign all Neighbourhood values from Filters
     this.neighbourhoods = [...this.Filters.Neighbourhood];
 
     console.log('Neighbourhoods:', this.neighbourhoods); // Debug neighbourhoods
   }
+
   updateTenantCategories(): void {
     if (
       !this.Filters?.TenantsCategories ||
@@ -951,7 +1003,6 @@ export class KayakComponent implements OnInit {
   }
   searchShoppingCenter() {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,

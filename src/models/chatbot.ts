@@ -1,3 +1,5 @@
+import { SafeHtml } from "@angular/platform-browser";
+
 export interface AnalysisResult {
   title: string;
   value: string | number;
@@ -6,6 +8,7 @@ export interface AnalysisResult {
 export interface Message {
   id: string;
   content: string;
+  formattedContent?: SafeHtml;
   sender: 'user' | 'assistant';
   timestamp: Date;
   attachments?: File[];

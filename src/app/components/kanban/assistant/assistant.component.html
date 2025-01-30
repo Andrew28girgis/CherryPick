@@ -127,8 +127,8 @@
             <div class="message-avatar" *ngIf="message.sender === 'assistant'">
               AI
             </div>
-            <div class="message-content">
-              <div class="message-text">{{ message.content }}</div>
+            <div class="message-content" >
+              <div class="message-think" [innerHTML]="formatMessage(message.content)" [ngClass]="{'think-content': isThinkContent(message.content)}"></div>
 
               <!-- Attachments -->
               <div class="attachments" *ngIf="message.attachments?.length">
@@ -342,22 +342,4 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

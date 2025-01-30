@@ -94,7 +94,7 @@ export class EmilyComponent {
   tabs = [
     { id: 'Details', label: 'Details' },
     { id: 'Emily', label: 'Emily' },
-    { id: 'Shopping Centers', label: 'Shopping Centers' },
+    { id: 'Properties', label: 'Properties' },
     // { id: 'Relations', label: 'Relations' },
     // { id: 'Locations', label: 'Locations' },
     // { id: 'Sharing', label: 'Sharing' },
