@@ -915,6 +915,7 @@ UnBindShoppingCenter(){
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
     this.GetFilters(); // Fetch new filters for the state
+    this.getResult(); // Fetch results for the selected state
   }
 
   onCityChange(selectedValue: string): void {
