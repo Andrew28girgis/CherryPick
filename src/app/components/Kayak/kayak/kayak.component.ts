@@ -80,7 +80,7 @@ export class KayakComponent implements OnInit {
   selectedShoppingCenterId: number = 0;
   boundShoppingCenterIds: number[] = [];
   newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
-
+  deleteshoppingcenterID!:number;
 
 
 
@@ -158,7 +158,7 @@ export class KayakComponent implements OnInit {
 
   bindShoppingCenter(): void {
     if (!this.SelectedShoppingCenterIDs.length) {
-      console.warn('⚠️ No shopping centers selected! Skipping API call.');
+      console.warn(' No shopping centers selected! Skipping API call.');
       return;
     }
 
@@ -239,6 +239,9 @@ export class KayakComponent implements OnInit {
     shoppingCenterId: number,
     isChecked?: boolean
   ): void {
+    this.deleteshoppingcenterID=shoppingCenterId;
+    console.log('deleteshoppingcenterID',this.deleteshoppingcenterID);
+    
     const isAlreadyBound =
       this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
 
@@ -257,6 +260,7 @@ export class KayakComponent implements OnInit {
         this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
           (id) => id !== shoppingCenterId
         );
+        this.UnBindShoppingCenter();
         // console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
       } else {
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
@@ -270,7 +274,27 @@ export class KayakComponent implements OnInit {
     // );
     this.bindShoppingCenter();
   }
-
+UnBindShoppingCenter(){
+  const body: any = {
+    Name: 'DeleteShoppingCenterFromBuyBox',
+    Params: {
+      BuyboxId: +this.selectedbuyBox,
+      ShoppingCenterId: this.deleteshoppingcenterID,
+    },
+  };
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (res) => {
+      // console.log(' API Response:', res?.json);
+      this.spinner.hide();
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error(' Error in BindShoppingCenters:', err);
+      this.spinner.hide();
+      this.loading = false;
+    },
+  });
+}
   GetMarketSurveyPlacesByBBoxId(): void {
     this.spinner.show();
 
