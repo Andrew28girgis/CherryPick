@@ -713,24 +713,7 @@
                     style="font-size: 15px; font-weight: 500; color: #565656"
                     [innerHTML]="getShoppingCenterUnitSize(place)"
                   ></p>
-                </div>
-                <div *ngIf="!place.CenterAddress">
-                  <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    <span>
-                      Unit Size: {{ place.BuildingSizeSf | number }} SF</span
-                    >
-                  </p>
-                  <p style="font-size: 15px; font-weight: 500; color: #565656">
-                    <span
-                      [innerHTML]="
-                        getStandAloneLeasePrice(
-                          place.ForLeasePrice,
-                          place.BuildingSizeSf
-                        )
-                      "
-                    ></span>
-                  </p>
-                </div>
+                </div> 
 
                 <div
                   class="row"
