@@ -247,51 +247,12 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
-        this.spinner.hide();
-        this.getStandAlonePlaces(this.BuyBoxId);
+        this.spinner.hide(); 
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
-  }
-
-  getStandAlonePlaces(buyboxId: number): void {
-    if (this.stateService.getStandAlone()?.length > 0) {
-      this.standAlone = this.stateService.getStandAlone();
-      // Set selectedSS from stored value or default
-      this.selectedSS =
-        this.stateService.getSelectedSS() ||
-        (this.shoppingCenters?.length > 0 ? 1 : 2);
-      this.getBuyBoxPlaces(buyboxId);
-      return;
-    }
-
-    this.spinner.show();
-    const body: any = {
-      Name: 'GetMarketSurveyStandalonePlaces',
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.standAlone = data.json;
-        this.stateService.setStandAlone(data.json);
-        // Set initial selectedSS value if not already set
-        if (!this.stateService.getSelectedSS()) {
-          const newValue = this.shoppingCenters?.length > 0 ? 1 : 2;
-          this.selectedSS = newValue;
-          this.stateService.setSelectedSS(newValue);
-        } else {
-          this.selectedSS = this.stateService.getSelectedSS();
-        }
-        this.spinner.hide();
-        this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
+  } 
 
   getBuyBoxPlaces(buyboxId: number): void {
     if (this.stateService.getBuyboxPlaces()?.length > 0) {
@@ -687,7 +648,7 @@ export class HomeComponent implements OnInit {
         this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
       }
     } else {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}/${this.BuyBoxName}`;
     }
   }
   
@@ -885,11 +846,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getNeareastCategoryName(categoryId: number) {
-    console.log(`nn`);
-    
-    console.log(this.buyboxCategories);
-    
+  getNeareastCategoryName(categoryId: number) {  
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }
