@@ -450,11 +450,6 @@ line-height: 30px;
   border-radius: 8px;
   border: none;
 }
-
-.carddd:hover {
-  transform: translateY(-1.3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
-}
 .info-background {
   display: inline-flex;
   align-items: center;
