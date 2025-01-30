@@ -99,14 +99,16 @@
                 <th>Address</th>
                 <th *ngIf="placesRepresentative != false">Leased by</th>
                 <th style="width: 250px">Unit Size & Lease Price</th>
+                <th>
                 <ng-container
                   *ngFor="
                     let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
-                    let i = index
+                    let i = index   
                   "
                 >
-                  <th>{{ getNeareastCategoryName(item.CategoryId) }}</th>
+                  {{ getNeareastCategoryName(item.CategoryId) }} 
                 </ng-container>  
+              </th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -201,36 +203,23 @@
                     class="table-text"
                     [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
                   ></td>
-                  <ng-container
-                    *ngIf="
-                      shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
-                      else emptyTd
-                    "
-                  >
-                    <td>
-                      <ng-container
-                        *ngFor="
+                  <td>
+                    <ng-container *ngIf="
+                        shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
+                        else emptyTd
+                      ">
+                      <ng-container *ngFor="
                           let item of shoppingCenter?.ShoppingCenter
                             ?.BuyBoxPlaces;
                           let i = index;
                           trackBy: trackByIndex
-                        "
-                      >
-                        <div
-                          class="d-flex align-items-center justify-content-center"
-                        >
-                          <img
-                            class="logo"
-                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        ">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <img class="logo" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                               item.RelationOrganizationId
-                            }}"
-                            [title]="item.RelationOrganizationName"
-                            alt=""
-                          />
+                            }}" [title]="item.RelationOrganizationName" alt="" />
                           <span>{{ item.RelationOrganizationName }}</span>
-                          <div
-                            class="d-flex align-items-center justify-content-center"
-                          >
+                          <div class="d-flex align-items-center justify-content-center">
                             <span class="ms-2 table-text">
                               <!-- {{ item.Distance.toFixed(2) }} -->
                             </span>
@@ -238,18 +227,10 @@
                           </div>
                         </div>
                       </ng-container>
-                    </td>
-                  </ng-container>
-                  <ng-template #emptyTd>
-                    <ng-container
-                      *ngFor="
-                        let item of shoppingCenters[0].ShoppingCenter
-                          .BuyBoxPlaces;
-                        let i = index
-                      "
-                    >
-                      <td></td>
                     </ng-container>
+                  </td>
+                  <ng-template #emptyTd>
+                      <td></td>
                   </ng-template>
                
                   <td>

@@ -279,6 +279,7 @@ toggleFilters(): void {
       console.error('Invalid ID:', selectedid); 
     }
   }
+  
   onPlaceCheckboxChange(event: Event, placeId: number): void {
     const isChecked = (event.target as HTMLInputElement).checked; 
   
@@ -540,12 +541,15 @@ toggleFilters(): void {
       }
     });
   }
+
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+
   openFiltersModal(content: any) {
     this.modalService.open(content, { size: 'lg', centered: true });
   }
+
   openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -570,6 +574,7 @@ toggleFilters(): void {
     });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
+
   // toggleTenantList(): void {
   //   this.showAllTenants = !this.showAllTenants;
   //   this.updateSortedTenants(); 
@@ -646,6 +651,7 @@ toggleFilters(): void {
     this.sortedOrgs = uniqueOrgs;
     console.log('Sorted Organizations:', this.sortedOrgs); // Debug organizations
   }
+
   updateSecondaryTypes(): void {
     if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
       console.error('Secondary types are empty or undefined.');
@@ -662,13 +668,13 @@ toggleFilters(): void {
       console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
-    }
-  
+    } 
     // Assign all Neighbourhood values from Filters
     this.neighbourhoods = [...this.Filters.Neighbourhood];
   
     console.log('Neighbourhoods:', this.neighbourhoods); // Debug neighbourhoods
   }
+
   updateTenantCategories(): void {
     if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
       console.error('TenantsCategories list is empty or undefined.');
@@ -967,11 +973,8 @@ toggleFilters(): void {
     this.getResult();
   }
   
-  
-
   searchShoppingCenter() {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
