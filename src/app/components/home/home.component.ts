@@ -87,12 +87,7 @@ export class HomeComponent implements OnInit {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
 
-  showStandalone: boolean = true; // Ensure this reflects your initial state
-  standAlone: Place[] = [];
-
-  toggleStandalone() {
-    this.showStandalone = !this.showStandalone;
-  }
+   standAlone: Place[] = []; 
 
   buyboxPlaces: BbPlace[] = [];
   Polygons: Polygons[] = [];
@@ -230,8 +225,7 @@ export class HomeComponent implements OnInit {
 
   getShoppingCenters(buyboxId: number): void {
     if (this.stateService.getShoppingCenters().length > 0) {
-      this.shoppingCenters = this.stateService.getShoppingCenters();
-      //this.getStandAlonePlaces(buyboxId);
+      this.shoppingCenters = this.stateService.getShoppingCenters(); 
       return;
     }
 
@@ -247,51 +241,12 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
-        this.spinner.hide();
-        this.getStandAlonePlaces(this.BuyBoxId);
+        this.spinner.hide(); 
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
-  }
-
-  getStandAlonePlaces(buyboxId: number): void {
-    if (this.stateService.getStandAlone()?.length > 0) {
-      this.standAlone = this.stateService.getStandAlone();
-      // Set selectedSS from stored value or default
-      this.selectedSS =
-        this.stateService.getSelectedSS() ||
-        (this.shoppingCenters?.length > 0 ? 1 : 2);
-      this.getBuyBoxPlaces(buyboxId);
-      return;
-    }
-
-    this.spinner.show();
-    const body: any = {
-      Name: 'GetMarketSurveyStandalonePlaces',
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.standAlone = data.json;
-        this.stateService.setStandAlone(data.json);
-        // Set initial selectedSS value if not already set
-        if (!this.stateService.getSelectedSS()) {
-          const newValue = this.shoppingCenters?.length > 0 ? 1 : 2;
-          this.selectedSS = newValue;
-          this.stateService.setSelectedSS(newValue);
-        } else {
-          this.selectedSS = this.stateService.getSelectedSS();
-        }
-        this.spinner.hide();
-        this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
+  } 
 
   getBuyBoxPlaces(buyboxId: number): void {
     if (this.stateService.getBuyboxPlaces()?.length > 0) {
@@ -372,12 +327,8 @@ export class HomeComponent implements OnInit {
       } else {
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
-            lat: this.shoppingCenters
-              ? this.shoppingCenters[0].Latitude
-              : this.standAlone[0].Latitude || 0,
-            lng: this.shoppingCenters
-              ? this.shoppingCenters[0].Longitude
-              : this.standAlone[0].Longitude || 0,
+            lat: this.shoppingCenters[0].Latitude,
+            lng: this.shoppingCenters[0].Longitude
           },
           zoom: 8,
           mapId: '1234567890',
@@ -393,9 +344,7 @@ export class HomeComponent implements OnInit {
         this.createMarkers(this.shoppingCenters, 'Shopping Center');
       }
 
-      if (this.standAlone && this.standAlone.length > 0) {
-        this.createMarkers(this.standAlone, 'Stand Alone');
-      }
+    
 
       //this.getPolygons();
       this.createCustomMarkers(this.buyboxCategories);
@@ -497,7 +446,6 @@ export class HomeComponent implements OnInit {
 
     const allProperties = [
       ...(this.shoppingCenters || []),
-      ...(this.standAlone || []),
     ];
 
     // Update the cardsSideList inside NgZone
@@ -674,6 +622,7 @@ export class HomeComponent implements OnInit {
   }
 
   openLink(content: any, modalObject?: any) {
+
     this.shareLink = '';
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -687,7 +636,7 @@ export class HomeComponent implements OnInit {
         this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
       }
     } else {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}/${this.BuyBoxName}`;
     }
   }
   
@@ -851,45 +800,8 @@ export class HomeComponent implements OnInit {
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
 
-  getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
-    // Ensure the values are numbers by explicitly converting them
-    const leasePrice = Number(forLeasePrice);
-    const size = Number(buildingSizeSf);
-
-    // Check if the values are valid numbers
-    if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
-      // Calculate the lease price per month
-      const calculatedPrice = Math.floor((leasePrice * size) / 12);
-
-      // Format the calculated price with commas
-      const formattedPrice = calculatedPrice.toLocaleString();
-
-      // Format the original price in $X/sqft/Year format
-      const formattedOriginalPrice = `$${leasePrice.toLocaleString()}/sq ft./year`;
-
-      // Return formatted result in a stacked layout with an info icon
-      return `
-        <div style="display:inline-block; text-align:left; line-height:1.2; vertical-align:middle;">
-        <b>Lease price:</b>
-          <div style="font-size:14px; font-weight:600; color:#333;">
-            ${formattedOriginalPrice}
-          </div>
-          <div style="font-size:12px; color:#666; margin-top:4px;">
-            $${formattedPrice}/month 
-           
-          </div>
-        </div>
-      `;
-    } else {
-      return '<b>Lease price:</b> On Request';
-    }
-  }
-
-  getNeareastCategoryName(categoryId: number) {
-    console.log(`nn`);
-    
-    console.log(this.buyboxCategories);
-    
+ 
+  getNeareastCategoryName(categoryId: number) {  
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }

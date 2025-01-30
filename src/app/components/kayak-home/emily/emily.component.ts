@@ -14,7 +14,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 
 export interface BuyBoxOrganizationsForEmail {
-  id: number
+  Id: number
   Name: string
   LogoURL: string
   Contact: BuyBoxOrganizationsForEmailContact[]
@@ -23,17 +23,13 @@ export interface BuyBoxOrganizationsForEmail {
 export interface BuyBoxOrganizationsForEmailContact {
   id: number
   Firstname: string
-  LastName: string
-  Email: string
+  Lastname: string
   ShoppingCenters: Contact_ShoppingCenter[]
 }
 
 export interface Contact_ShoppingCenter {
   id: number
-  CenterName: string
-  CenterAddress: string
-  CenterCity: string
-  CenterState: string
+  centername: string
 }
 
 
@@ -89,12 +85,12 @@ export class EmilyComponent {
   isBodyCopied: boolean = false;
   formGroupTemplate!: FormGroup;
   shouldShowGenerateEmaily: boolean = false;
-  ShowSpinner :boolean = false;
+  ShowSpinner: boolean = false;
 
   tabs = [
     { id: 'Details', label: 'Details' },
-    { id: 'Emily', label: 'Emily' },
-    { id: 'Shopping Centers', label: 'Shopping Centers' },
+    // { id: 'Emily', label: 'Emily' },
+    { id: 'Properties', label: 'Properties' },
     // { id: 'Relations', label: 'Relations' },
     // { id: 'Locations', label: 'Locations' },
     // { id: 'Sharing', label: 'Sharing' },
@@ -115,11 +111,11 @@ export class EmilyComponent {
       this.emailBody = '';
     } else {
       this.selectedEmailyID = emailyID;
-  
+
       const selectedTemplate = this.generatedGetSavedTemplates.find(
         (template) => template.ID === Number(emailyID)
       );
-  
+
       if (selectedTemplate?.BuyboxOrgEmailTemplates?.[0]?.Template) {
         const rawText = selectedTemplate.BuyboxOrgEmailTemplates[0].Template;
         this.emailBody = this.getFormattedTemplate(rawText);
@@ -127,10 +123,9 @@ export class EmilyComponent {
         this.emailBody = 'No Template Available';
       }
     }
-  
+
     console.log(emailyID, this.emailBody);
   }
-  
 
   getFilteredTabs() {
     return this.tabs.filter(tab => tab.id !== 'kayak');
@@ -155,13 +150,13 @@ export class EmilyComponent {
   getFormattedTemplate(text: string): string {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = text;
-      const links = tempDiv.querySelectorAll('a');
+    const links = tempDiv.querySelectorAll('a');
     links.forEach((link) => {
       const href = link.getAttribute('href');
       const linkText = link.textContent;
       link.replaceWith(`${linkText} [${href}]`);
     });
-      return tempDiv.textContent || tempDiv.innerText || '';
+    return tempDiv.textContent || tempDiv.innerText || '';
   }
 
   trackByRelation(index: number, relation: any): number {
@@ -180,14 +175,14 @@ export class EmilyComponent {
   ) {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = +params.get('buyboxid')!;
-      
+
       this.GetBuyBoxInfo();
       this.GetRetailRelationCategories();
       this.GetPrompts();
       this.GetSavedTemplates();
     });
-   }
-   
+  }
+
   ngOnInit() {
     // this.route.paramMap.subscribe((params) => {
     //   this.buyBoxId = +params.get('buyboxid')!;
@@ -199,10 +194,56 @@ export class EmilyComponent {
     // });
   }
 
-  selectedShoppingCenterId!: number;
+
+  selectedIndex!: number;
+  CheckGetSavedTemplates: any[] = [];
+
+  selectContact(index: number, organizationid: number) {
+    this.selectedIndex = index;
+    this.OnCheckGetSavedTemplates(organizationid);
+  }
   
+  OnCheckGetSavedTemplates(organizationid: number): void {
+    const body: any = {
+      Name: 'GetSavedTemplates',
+      MainEntity: null,
+      Params: {
+        buyboxid: this.buyBoxId,
+        organizationid: organizationid,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data?.json && Array.isArray(data.json)) {
+          this.CheckGetSavedTemplates = data.json; 
+          
+          const selectedTemplate = this.CheckGetSavedTemplates.find(
+            (Template) => Template.OrganizationId === Number(organizationid)
+          );          
+    
+          if (selectedTemplate?.Template) {
+            const rawText = selectedTemplate.Template;
+            this.emailBody = this.getFormattedTemplate(rawText);
+          } else {
+            this.emailBody = 'No Template Available';
+          }
+        } else {
+          this.CheckGetSavedTemplates = [];
+        }
+      },
+      error: (err) => {
+        console.error('API error:', err);
+        this.CheckGetSavedTemplates = [];
+      },
+    });
+  }
+
+
+  selectedShoppingCenterId!: number;
+
   handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
-    this.selectedTab = event.tabId; 
+    this.selectedTab = event.tabId;
     this.selectedShoppingCenterId = event.shoppingCenterId;
     this.GetBuyBoxOrganizationsForEmail();
   }
@@ -210,7 +251,7 @@ export class EmilyComponent {
   BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
   GetBuyBoxOrganizationsForEmail() {
     const body: any = {
-      Name: 'GetBuyBoxOrganizationsForEmail',
+      Name: 'GetShoppingCenterManagerContacts',
       MainEntity: null,
       Params: {
         shoppingcenterid: this.selectedShoppingCenterId,
@@ -300,7 +341,7 @@ export class EmilyComponent {
       next: (data) => {
         this.generatedGetSavedTemplates = data?.json || [];
         // console.log(this.generatedGetSavedTemplates);
-        
+
 
         // this.generatedGetSavedTemplates = data.json;
         this.ManagerOrganizationName =
@@ -340,7 +381,7 @@ export class EmilyComponent {
   getCotenantsWithActivityType(centerName: string): any[] {
     const center: any = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
-    );  
+    );
     // console.log('Shopping Centers', center);
     this.groupedActivityTypes = center.CotenantsWithActivityType.reduce(
       (result: any, cotenant: any) => {
