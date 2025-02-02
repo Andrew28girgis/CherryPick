@@ -87,8 +87,7 @@ export class KayakComponent implements OnInit {
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    private stateService: StateService
-
+    private stateService: StateService 
   ) {
     this.markerService.clearMarkers();
   }
