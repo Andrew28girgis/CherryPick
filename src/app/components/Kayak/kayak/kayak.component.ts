@@ -531,7 +531,7 @@ UnBindShoppingCenter(){
   }
 
   updateSortedTenants(): void {
-    if (!this.Filters?.Tenants || !Array.isArray(this.Filters.Tenants)) {
+    if (!this.Filters!.Tenants || !Array.isArray(this.Filters!.Tenants)) {
       console.error('Tenants list is empty or undefined.');
       this.sortedTenants = [];
       return;
@@ -555,8 +555,8 @@ UnBindShoppingCenter(){
 
   updateSortedOrgs(): void {
     if (
-      !this.Filters?.ManagementOrganization ||
-      !Array.isArray(this.Filters.ManagementOrganization)
+      !this.Filters!.ManagementOrganization ||
+      !Array.isArray(this.Filters!.ManagementOrganization)
     ) {
       console.error('ManagementOrganization list is empty or undefined.');
       this.sortedOrgs = [];
@@ -805,8 +805,8 @@ UnBindShoppingCenter(){
   }
 
   handleStateChange(selectedValue: string): void {
-    this.filterValues.statecode = selectedValue; // Update the selected state
-    this.filterValues.city = ''; // Clear the city filter
+    this.filterValues!.statecode = selectedValue; // Update the selected state
+    this.filterValues!.city = ''; // Clear the city filter
     this.selectedCity = null; // Reset the selected city in the UI
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
@@ -815,7 +815,7 @@ UnBindShoppingCenter(){
   }
 
   onCityChange(selectedValue: string): void {
-    this.filterValues.city = selectedValue; // Update the selected city
+    this.filterValues!.city = selectedValue; // Update the selected city
     // console.log('City selected:', selectedValue);
 
     this.GetFilters(); // Fetch new filters for the city
