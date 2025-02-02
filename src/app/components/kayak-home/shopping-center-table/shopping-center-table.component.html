@@ -661,7 +661,7 @@
             <p style="font-weight: 500" class="m-0">
               {{ cardsSideList.length }} places within map area
             </p>
-            <div class="gap-2 d-flex">
+            <div class="gap-2 d-flex" *ngIf="showbackIds.length > 0">
               <p class="Button_delete" (click)="ArrOfDelete()">
                 Delete
               </p>
