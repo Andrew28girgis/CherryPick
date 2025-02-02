@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms"
 import { trigger, transition, style, animate } from "@angular/animations"
 import  { ChatService } from "../../../services/chat-service.service"
 import  { DomSanitizer, SafeHtml } from "@angular/platform-browser"
-import type {
+import  {
   Message,
   SuggestedPrompt,
   Property,
@@ -172,7 +172,7 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
           analysis: aiResponse.type === "analysis" ? aiResponse.data : undefined,
         }
         this.messages.push(assistantMessage)
-        this.updateIntelligentSuggestions(aiResponse.content)
+        this.intelligentSuggestions = aiResponse.suggestions || []
       } else {
         this.handleErrorResponse("AI response is undefined")
       }
@@ -188,19 +188,6 @@ export class AssistantComponent implements OnInit, AfterViewChecked {
     if (this.conversationContext.length > 5) {
       this.conversationContext.shift()
     }
-  }
-
-  private updateIntelligentSuggestions(lastResponse: string): void {
-    this.chatService.generateSuggestions(lastResponse).subscribe(
-      (suggestions) => {
-        this.intelligentSuggestions = suggestions;
-        console.log("Intelligent Suggestions:", this.intelligentSuggestions);
-      },
-      (error) => {
-        console.error("Error generating suggestions:", error);
-        this.intelligentSuggestions = [];
-      },
-    );
   }
 
   private handleErrorResponse(errorMessage: string): void {
