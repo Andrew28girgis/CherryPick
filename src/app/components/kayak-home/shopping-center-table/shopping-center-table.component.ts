@@ -115,6 +115,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
 
   showbackIds: number[] = [];
+  showbackIdsJoin :any;
 
   deleteShopping(placeId: number) {
     const index = this.showbackIds.indexOf(placeId);
@@ -126,13 +127,13 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.selectedIdCard = null;
   }
 
-  ArrOfDelete() {
-    console.log(this.showbackIds);
+  ArrOfDelete(modalTemplate: TemplateRef<any>) {
+    this.showbackIdsJoin = this.showbackIds.join(',');
+    this.openDeleteShoppingCenterModal(modalTemplate,this.showbackIdsJoin);
   }
 
   CancelDelete() {
     this.showbackIds = [];
-    console.log(this.showbackIds);
   }
 
   CancelOneDelete(id: number) {
@@ -140,7 +141,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     if (index !== -1) {
       this.showbackIds.splice(index, 1);
     }
-    console.log(this.showbackIds);
   }
   
 
@@ -656,7 +656,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
-    shoppingCenterId: number
+    shoppingCenterId: any
   ) {
     this.shoppingCenterIdToDelete = shoppingCenterId;
     this.modalService.open(modalTemplate, {
@@ -714,7 +714,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       Name: 'DeleteShoppingCenterFromBuyBox',
       Params: {
         BuyboxId: this.BuyBoxId,
-        ShoppingCenterId: ShoppingCenterId,
+        ShoppingCenterId: this.showbackIdsJoin,
       },
     };
     return this.PlacesService.GenericAPI(body);
@@ -854,7 +854,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.markerService.onMouseEnter(this.map, place);
   }
 
-  onMouseLeaveHighlight(place: any) {
+  onMouseLeaveHighlight(place: any) {    
     this.markerService.onMouseLeave(this.map, place);
   }
 

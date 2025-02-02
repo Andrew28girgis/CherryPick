@@ -97,7 +97,7 @@ export class EmilyComponent {
     { id: 'kayak', label: 'kayak' },
   ];
 
-  selectedTab: string = 'Details';
+  selectedTab: string = 'Properties';
 
   selectedEmailyID: string | null = null;
 

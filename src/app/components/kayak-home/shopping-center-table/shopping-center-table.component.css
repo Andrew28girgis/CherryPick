@@ -9,8 +9,8 @@
   justify-content: center;
 }
 .card-window-back{
-position: relative;
-z-index: 10;
+ position: relative;
+ z-index: 10;
 border: 1px solid #aaaaaa66;
 border-radius: 20px;
 }

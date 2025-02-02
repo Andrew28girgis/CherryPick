@@ -529,7 +529,7 @@ UnBindShoppingCenter(){
   }
 
   updateSortedTenants(): void {
-    if (!this.Filters?.Tenants || !Array.isArray(this.Filters.Tenants)) {
+    if (!this.Filters!.Tenants || !Array.isArray(this.Filters!.Tenants)) {
       console.error('Tenants list is empty or undefined.');
       this.sortedTenants = [];
       return;
@@ -553,8 +553,8 @@ UnBindShoppingCenter(){
 
   updateSortedOrgs(): void {
     if (
-      !this.Filters?.ManagementOrganization ||
-      !Array.isArray(this.Filters.ManagementOrganization)
+      !this.Filters!.ManagementOrganization ||
+      !Array.isArray(this.Filters!.ManagementOrganization)
     ) {
       console.error('ManagementOrganization list is empty or undefined.');
       this.sortedOrgs = [];
@@ -578,51 +578,61 @@ UnBindShoppingCenter(){
   }
 
   updateSecondaryTypes(): void {
-    if (
-      !this.Filters?.SecondaryType ||
-      !Array.isArray(this.Filters.SecondaryType)
-    ) {
-      console.error('Secondary types are empty or undefined.');
-      this.secondaryTypes = [];
-      return;
+    if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
+        console.error('Secondary types are empty or undefined.');
+        this.secondaryTypes = [];
+        return;
     }
 
-    this.secondaryTypes = [...this.Filters.SecondaryType];
-    // console.log('Secondary Types:', this.secondaryTypes); 
-  }
+    // 🔹 Sort alphabetically
+    this.secondaryTypes = [...this.Filters.SecondaryType].sort((a, b) =>
+        (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
+    );
 
-  updateNeighbourhoods(): void {
-    if (
-      !this.Filters?.Neighbourhood ||
-      !Array.isArray(this.Filters.Neighbourhood)
-    ) {
+    // console.log('Sorted Secondary Types:', this.secondaryTypes);
+}
+
+updateNeighbourhoods(): void {
+  if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
       console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
-    
-
-    } 
-    // Assign all Neighbourhood values from Filters
-    this.neighbourhoods = [...this.Filters.Neighbourhood];
-
-    // console.log('Neighbourhoods:', this.neighbourhoods); 
   }
 
-  updateTenantCategories(): void {
-    if (
-      !this.Filters?.TenantsCategories ||
-      !Array.isArray(this.Filters.TenantsCategories)
-    ) {
+  // 🔹 Ensure Neighbourhood is a string and sort
+  this.neighbourhoods = [...this.Filters.Neighbourhood]
+      .filter((n) => n?.Neighbourhood) // Remove undefined/null values
+      .map((n) => ({
+          Neighbourhood: String(n.Neighbourhood || '').trim(),
+      }))
+      .sort((a, b) => a.Neighbourhood.localeCompare(b.Neighbourhood));
+
+  // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
+}
+
+
+
+updateTenantCategories(): void {
+  if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
       console.error('TenantsCategories list is empty or undefined.');
       this.tenantCategories = [];
       return;
-    }
-
-    // Assign all TenantCategories values from Filters
-    this.tenantCategories = [...this.Filters.TenantsCategories];
-
-    // console.log('Tenant Categories:', this.tenantCategories); 
   }
+
+  // 🔹 Remove duplicates and sort alphabetically
+  const sortedList = [...this.Filters.TenantsCategories]
+      .map((category) => ({
+          TenantsCategoriesId: category.TenantsCategoriesId,
+          Name: category.Name?.trim() || 'Unknown', // Ensure Name is valid
+          ChildCategory: category.ChildCategory || [], // Ensure ChildCategory exists
+          Selected: category.Selected || false,
+      }))
+      .sort((a, b) => a.Name.localeCompare(b.Name));
+
+  this.tenantCategories = Array.from(new Set(sortedList)); // Remove duplicates
+
+  // console.log('Sorted Tenant Categories:', this.tenantCategories);
+}
 
   filterCards(): void {
     if (!this.KayakResult?.Result) {
@@ -787,24 +797,10 @@ UnBindShoppingCenter(){
       },
     });
   }
-  onStateChange(): void {
-    this.selectedState = this.filterValues.statecode;
-    // console.log(this.selectedState);
-
-    this.updateCitiesForSelectedState();
-    this.selectedCity = null; // Reset city
-    this.filterValues.city = '';
-    this.getResult(); // Trigger only for shopping centers
-  }
-
-  onStateSelectionChange(selectedValue: string): void {
-    this.handleStateChange(selectedValue);  // 🔹 First, update filters and cities
-    this.searchShoppingCenter();  // 🔹 Then, call API only once
-  }
 
   handleStateChange(selectedValue: string): void {
-    this.filterValues.statecode = selectedValue; // Update the selected state
-    this.filterValues.city = ''; // Clear the city filter
+    this.filterValues!.statecode = selectedValue; // Update the selected state
+    this.filterValues!.city = ''; // Clear the city filter
     this.selectedCity = null; // Reset the selected city in the UI
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
@@ -813,9 +809,8 @@ UnBindShoppingCenter(){
   }
 
   onCityChange(selectedValue: string): void {
-    this.filterValues.city = selectedValue; // Update the selected city
+    this.filterValues!.city = selectedValue; // Update the selected city
     // console.log('City selected:', selectedValue);
-
     this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
   } 
