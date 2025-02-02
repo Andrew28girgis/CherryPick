@@ -700,10 +700,7 @@
                 Why does this location meet your requirements?
               </p>
               <p
-                [innerHtml]="
-                  !ShoppingCenter
-                    ? StandAlonePlace?.SiteSelectionReason
-                    : ShoppingCenter.SiteSelectionReason
+                [innerHtml]="ShoppingCenter.SiteSelectionReason
                 "
               ></p>
             </div>
