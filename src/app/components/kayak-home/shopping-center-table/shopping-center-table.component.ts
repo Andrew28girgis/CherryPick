@@ -113,6 +113,38 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.showStandalone = !this.showStandalone;
   }
 
+
+  showbackIds: number[] = [];
+
+  deleteShopping(placeId: number) {
+    const index = this.showbackIds.indexOf(placeId);
+    if (index === -1) {
+      this.showbackIds.push(placeId);
+    } else {
+      this.showbackIds.splice(index, 1);
+    }
+    this.selectedIdCard = null;
+  }
+
+  ArrOfDelete() {
+    console.log(this.showbackIds);
+  }
+
+  CancelDelete() {
+    this.showbackIds = [];
+    console.log(this.showbackIds);
+  }
+
+  CancelOneDelete(id: number) {
+    const index = this.showbackIds.indexOf(id);
+    if (index !== -1) {
+      this.showbackIds.splice(index, 1);
+    }
+    console.log(this.showbackIds);
+  }
+  
+
+
   buyboxPlaces: BbPlace[] = [];
   Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
