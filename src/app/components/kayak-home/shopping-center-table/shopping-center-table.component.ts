@@ -696,6 +696,7 @@ export class ShoppingCenterTableComponent implements OnInit {
               this.spinner.hide();
               //this.getStandAlonePlaces(this.BuyBoxId);
               this.getBuyBoxPlaces(this.BuyBoxId);
+              this.showbackIds = [];
             },
             error: (error) => console.error('Error fetching APIs:', error),
           });
