@@ -539,6 +539,7 @@
                   <ng-container *ngFor="let tenant of sortedTenants">
                     <div class="form-check" *ngIf="tenant?.Name">
                       <input
+                        [(ngModel)]="tenant.Selected"
                         type="checkbox"
                         [id]="'tenant-' + tenant?.OrganizationId"
                         name="Comp-Tenants"
@@ -572,6 +573,8 @@
                   <ng-container *ngFor="let org of sortedOrgs">
                     <div class="form-check" *ngIf="org?.Name">
                       <input
+                      [(ngModel)]="org.Selected"
+
                         type="checkbox"
                         [id]="'org-' + org?.OrganizationId"
                         name="Comp-ManagementCompany"
@@ -607,6 +610,8 @@
                   <ng-container *ngFor="let secondary of secondaryTypes">
                     <div class="form-check" *ngIf="secondary?.SecondaryType">
                       <input
+                      [(ngModel)]="secondary.Selected"
+
                         type="checkbox"
                         [id]="'secondary-' + secondary.SecondaryType"
                         name="Comp-SecondaryType"
@@ -646,6 +651,7 @@
                       *ngIf="neighbourhood?.Neighbourhood"
                     >
                       <input
+                      [(ngModel)]="neighbourhood.Selected" 
                         type="checkbox"
                         [id]="'neighbourhood-' + neighbourhood.Neighbourhood"
                         name="Comp-Neighbourhood"
@@ -682,6 +688,7 @@
                   <ng-container *ngFor="let category of tenantCategories">
                     <div class="form-check" *ngIf="category?.Name">
                       <input
+                        [(ngModel)]="category.Selected"  
                         type="checkbox"
                         [id]="'category-' + category.Name"
                         name="Comp-TenantCategory"
@@ -717,8 +724,7 @@
                   <span>Building Size Range</span>
                 </div>
 
-                <div class="mt-3">
-                  <!-- Min Size Slider -->
+                <div class="mt-3"> 
                   <div>
                     <label for="size-min" class="sqft"
                       > SF Min Size: {{ selectedMin | number }}</label
@@ -732,9 +738,7 @@
                       [max]="maxBuildingSize"
                       (change)="updateSliderValues()"
                     />
-                  </div>
-
-                  <!-- Max Size Slider -->
+                  </div> 
                   <div>
                     <label for="size-max" class="sqft"
                       > SF Max Size: {{ selectedMax | number }}</label
@@ -748,8 +752,7 @@
                       [max]="maxBuildingSize"
                       (change)="updateSliderValues()"
                     />
-                  </div>
-                  <!-- 🔹 Button to Fetch Results -->
+                  </div> 
                 </div>
               </div>
             </div>
