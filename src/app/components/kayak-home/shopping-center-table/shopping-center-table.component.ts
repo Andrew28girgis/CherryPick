@@ -113,6 +113,38 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.showStandalone = !this.showStandalone;
   }
 
+
+  showbackIds: number[] = [];
+  showbackIdsJoin :any;
+
+  deleteShopping(placeId: number) {
+    const index = this.showbackIds.indexOf(placeId);
+    if (index === -1) {
+      this.showbackIds.push(placeId);
+    } else {
+      this.showbackIds.splice(index, 1);
+    }
+    this.selectedIdCard = null;
+  }
+
+  ArrOfDelete(modalTemplate: TemplateRef<any>) {
+    this.showbackIdsJoin = this.showbackIds.join(',');
+    this.openDeleteShoppingCenterModal(modalTemplate,this.showbackIdsJoin);
+  }
+
+  CancelDelete() {
+    this.showbackIds = [];
+  }
+
+  CancelOneDelete(id: number) {
+    const index = this.showbackIds.indexOf(id);
+    if (index !== -1) {
+      this.showbackIds.splice(index, 1);
+    }
+  }
+  
+
+
   buyboxPlaces: BbPlace[] = [];
   Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
@@ -624,7 +656,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
-    shoppingCenterId: number
+    shoppingCenterId: any
   ) {
     this.shoppingCenterIdToDelete = shoppingCenterId;
     this.modalService.open(modalTemplate, {
@@ -664,6 +696,7 @@ export class ShoppingCenterTableComponent implements OnInit {
               this.spinner.hide();
               //this.getStandAlonePlaces(this.BuyBoxId);
               this.getBuyBoxPlaces(this.BuyBoxId);
+              this.showbackIds = [];
             },
             error: (error) => console.error('Error fetching APIs:', error),
           });
@@ -682,7 +715,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       Name: 'DeleteShoppingCenterFromBuyBox',
       Params: {
         BuyboxId: this.BuyBoxId,
-        ShoppingCenterId: ShoppingCenterId,
+        ShoppingCenterId: this.showbackIdsJoin,
       },
     };
     return this.PlacesService.GenericAPI(body);
@@ -729,7 +762,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   createCustomMarkers(markerDataArray: any[]) {
-    markerDataArray.forEach((categoryData) => {
+    markerDataArray?.forEach((categoryData) => {
       this.markerService.createCustomMarker(this.map, categoryData);
     });
   }
@@ -774,7 +807,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   private updateCardsSideList(map: any): void {
     const bounds = map.getBounds();
-    const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
+    const visibleMarkers = this.markerService?.getVisibleProspectMarkers(bounds);
     const visibleCoords = new Set(
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
@@ -822,7 +855,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.markerService.onMouseEnter(this.map, place);
   }
 
-  onMouseLeaveHighlight(place: any) {
+  onMouseLeaveHighlight(place: any) {    
     this.markerService.onMouseLeave(this.map, place);
   }
 

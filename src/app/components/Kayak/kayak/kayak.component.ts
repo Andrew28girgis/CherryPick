@@ -27,7 +27,7 @@ import {
   TenantsCategories,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
- import { StateService } from '../../../../../src/app/services/state.service';
+import { StateService } from '../../../../../src/app/services/state.service';
 import { Center } from '../../../../models/shoppingCenters';
 
 declare const google: any;
@@ -70,13 +70,11 @@ export class KayakComponent implements OnInit {
   isBulkMode: boolean = false;
   selectedPlaces: any[] = [];
   expandedPlacesIndex: number | null = null;
-  showFilters: boolean = false;
   secondaryTypes: any[] = [];
   neighbourhoods: any[] = [];
   tenantCategories: any[] = [];
   selectedShoppingCenterId: number = 0;
-  boundShoppingCenterIds: number[] = [];
-  newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
+  boundShoppingCenterIds: number[] = []; 
   deleteshoppingcenterID!:number;
   shoppingCenters: Center[] = []; 
 
@@ -89,11 +87,11 @@ export class KayakComponent implements OnInit {
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    private stateService: StateService
-
+    private stateService: StateService 
   ) {
     this.markerService.clearMarkers();
   }
+
   ngOnInit(): void {
     this.General = new General();
     this.filterValues = {
@@ -205,44 +203,35 @@ export class KayakComponent implements OnInit {
     });
   }
 
-  toggleShoppingCenterBind(
-    shoppingCenterId: number,
-    isChecked?: boolean
-  ): void {
-    this.deleteshoppingcenterID=shoppingCenterId;
-    console.log('deleteshoppingcenterID',this.deleteshoppingcenterID);
-    
-    const isAlreadyBound =
-      this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
+  toggleShoppingCenterBind(shoppingCenterId: number, isChecked?: boolean): void {
+    this.deleteshoppingcenterID = shoppingCenterId;
+    // console.log('deleteshoppingcenterID:', this.deleteshoppingcenterID);
+
+    const isAlreadyBound = this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
 
     if (isChecked !== undefined) {
-       if (isChecked && !isAlreadyBound) {
-        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-      } else if (!isChecked && isAlreadyBound) {
-        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
-          (id) => id !== shoppingCenterId
-        );
-      }
+        // If the checkbox explicitly sets the value, bind or unbind accordingly
+        if (isChecked && !isAlreadyBound) {
+            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+            this.bindShoppingCenter();
+        } else if (!isChecked && isAlreadyBound) {
+            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+            this.UnBindShoppingCenter();
+        }
     } else {
-      // Handle normal toggle event
-      if (isAlreadyBound) {
-        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
-          (id) => id !== shoppingCenterId
-        );
-        this.UnBindShoppingCenter();
-        // console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
-      } else {
-        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-        this.bindShoppingCenter();
-        // console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
-      }
+        // If `isChecked` is not provided, handle normal button toggle behavior
+        if (isAlreadyBound) {
+            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+            this.UnBindShoppingCenter();
+        } else {
+            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+            this.bindShoppingCenter();
+        }
     }
 
-    // console.log(
-    //   'Updated Selected Shopping Center IDs:',
-    //   this.SelectedShoppingCenterIDs
-    // );
-  }
+    // console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+}
+
 UnBindShoppingCenter(){
   this.spinner.show();
   const body: any = {
@@ -295,8 +284,10 @@ UnBindShoppingCenter(){
 
   onCardCheckboxChange(event: Event, result: any): void {
     const isChecked = (event.target as HTMLInputElement).checked;
+    // console.log(`Checkbox changed for ${result.Id}, checked:`, isChecked);
     this.toggleShoppingCenterBind(result.Id, isChecked);
-  } 
+}
+
 
   togglePlaceBind(placeId: number, shoppingCenterId: number): void {
     const isAlreadyBound = this.SelectedPlacesIDs.includes(placeId);
@@ -531,8 +522,8 @@ UnBindShoppingCenter(){
   }
 
   updateSortedTenants(): void {
-    if (!this.Filters?.Tenants || !Array.isArray(this.Filters.Tenants)) {
-      console.error('Tenants list is empty or undefined.');
+    if (!this.Filters!.Tenants || !Array.isArray(this.Filters!.Tenants)) {
+      // console.error('Tenants list is empty or undefined.');
       this.sortedTenants = [];
       return;
     }
@@ -555,10 +546,10 @@ UnBindShoppingCenter(){
 
   updateSortedOrgs(): void {
     if (
-      !this.Filters?.ManagementOrganization ||
-      !Array.isArray(this.Filters.ManagementOrganization)
+      !this.Filters!.ManagementOrganization ||
+      !Array.isArray(this.Filters!.ManagementOrganization)
     ) {
-      console.error('ManagementOrganization list is empty or undefined.');
+      // console.error('ManagementOrganization list is empty or undefined.');
       this.sortedOrgs = [];
       return;
     }
@@ -580,51 +571,61 @@ UnBindShoppingCenter(){
   }
 
   updateSecondaryTypes(): void {
-    if (
-      !this.Filters?.SecondaryType ||
-      !Array.isArray(this.Filters.SecondaryType)
-    ) {
-      console.error('Secondary types are empty or undefined.');
-      this.secondaryTypes = [];
-      return;
+    if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
+        // console.error('Secondary types are empty or undefined.');
+        this.secondaryTypes = [];
+        return;
     }
 
-    this.secondaryTypes = [...this.Filters.SecondaryType];
-    // console.log('Secondary Types:', this.secondaryTypes); 
-  }
+    // 🔹 Sort alphabetically
+    this.secondaryTypes = [...this.Filters.SecondaryType].sort((a, b) =>
+        (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
+    );
 
-  updateNeighbourhoods(): void {
-    if (
-      !this.Filters?.Neighbourhood ||
-      !Array.isArray(this.Filters.Neighbourhood)
-    ) {
-      console.error('Neighbourhood list is empty or undefined.');
+    // console.log('Sorted Secondary Types:', this.secondaryTypes);
+}
+
+updateNeighbourhoods(): void {
+  if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
+      // console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
-    
-
-    } 
-    // Assign all Neighbourhood values from Filters
-    this.neighbourhoods = [...this.Filters.Neighbourhood];
-
-    // console.log('Neighbourhoods:', this.neighbourhoods); 
   }
 
-  updateTenantCategories(): void {
-    if (
-      !this.Filters?.TenantsCategories ||
-      !Array.isArray(this.Filters.TenantsCategories)
-    ) {
-      console.error('TenantsCategories list is empty or undefined.');
+  // 🔹 Ensure Neighbourhood is a string and sort
+  this.neighbourhoods = [...this.Filters.Neighbourhood]
+      .filter((n) => n?.Neighbourhood) // Remove undefined/null values
+      .map((n) => ({
+          Neighbourhood: String(n.Neighbourhood || '').trim(),
+      }))
+      .sort((a, b) => a.Neighbourhood.localeCompare(b.Neighbourhood));
+
+  // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
+}
+
+
+
+updateTenantCategories(): void {
+  if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
+      // console.error('TenantsCategories list is empty or undefined.');
       this.tenantCategories = [];
       return;
-    }
-
-    // Assign all TenantCategories values from Filters
-    this.tenantCategories = [...this.Filters.TenantsCategories];
-
-    // console.log('Tenant Categories:', this.tenantCategories); 
   }
+
+  // 🔹 Remove duplicates and sort alphabetically
+  const sortedList = [...this.Filters.TenantsCategories]
+      .map((category) => ({
+          TenantsCategoriesId: category.TenantsCategoriesId,
+          Name: category.Name?.trim() || 'Unknown', // Ensure Name is valid
+          ChildCategory: category.ChildCategory || [], // Ensure ChildCategory exists
+          Selected: category.Selected || false,
+      }))
+      .sort((a, b) => a.Name.localeCompare(b.Name));
+
+  this.tenantCategories = Array.from(new Set(sortedList)); // Remove duplicates
+
+  // console.log('Sorted Tenant Categories:', this.tenantCategories);
+}
 
   filterCards(): void {
     if (!this.KayakResult?.Result) {
@@ -658,10 +659,10 @@ UnBindShoppingCenter(){
           this.KayakResult = data.json[0];
 
           if (!Array.isArray(this.KayakResult.Result)) {
-            console.warn(
-              'KayakResult.Result is not an array:',
-              this.KayakResult.Result
-            );
+            // console.warn(
+            //   'KayakResult.Result is not an array:',
+            //   this.KayakResult.Result
+            // );
             this.KayakResult.Result = []; // Default to an empty array if not valid
           }
 
@@ -682,7 +683,7 @@ UnBindShoppingCenter(){
           this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
           // console.log('Filtered Result:', this.KayakResult);
         } else {
-          console.warn('Data does not contain expected structure:', data);
+          // console.warn('Data does not contain expected structure:', data);
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
           this.filteredKayakResult = []; // Reset the filtered result
         }
@@ -721,7 +722,7 @@ UnBindShoppingCenter(){
 
   GetFilters(): void {
     if (!this.Ids) {
-      console.warn('Ids are not available, resetting filters.');
+      // console.warn('Ids are not available, resetting filters.');
       this.resetFilters();
       return;
     }
@@ -789,24 +790,10 @@ UnBindShoppingCenter(){
       },
     });
   }
-  onStateChange(): void {
-    this.selectedState = this.filterValues.statecode;
-    // console.log(this.selectedState);
-
-    this.updateCitiesForSelectedState();
-    this.selectedCity = null; // Reset city
-    this.filterValues.city = '';
-    this.getResult(); // Trigger only for shopping centers
-  }
-
-  onStateSelectionChange(selectedValue: string): void {
-    this.handleStateChange(selectedValue);  // 🔹 First, update filters and cities
-    this.searchShoppingCenter();  // 🔹 Then, call API only once
-  }
 
   handleStateChange(selectedValue: string): void {
-    this.filterValues.statecode = selectedValue; // Update the selected state
-    this.filterValues.city = ''; // Clear the city filter
+    this.filterValues!.statecode = selectedValue; // Update the selected state
+    this.filterValues!.city = ''; // Clear the city filter
     this.selectedCity = null; // Reset the selected city in the UI
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
@@ -815,9 +802,8 @@ UnBindShoppingCenter(){
   }
 
   onCityChange(selectedValue: string): void {
-    this.filterValues.city = selectedValue; // Update the selected city
+    this.filterValues!.city = selectedValue; // Update the selected city
     // console.log('City selected:', selectedValue);
-
     this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
   } 
@@ -928,12 +914,8 @@ UnBindShoppingCenter(){
         this.KayakResult = data.json[0];
         this.Ids = data.json[0]?.Ids;
         this.filterCards();
-        console.log('Filtered Result:', this.KayakResult);
-        
-        if (!this.Filters?.SecondaryType) {
-          this.GetFilters();
-        }
-
+        // console.log('Filtered Result:', this.KayakResult);
+        this.GetFilters();
         this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),

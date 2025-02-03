@@ -371,7 +371,7 @@ export class EmilyComponent {
               [],
           })) || [];
 
-        this.generated[0]?.Releations.forEach((r) => (r.relationSelect = true));
+        this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
 
         this.updateGroupedActivityTypes();
       },

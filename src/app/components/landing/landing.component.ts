@@ -48,7 +48,7 @@ export class LandingComponent {
   mapViewOnePlacex!: boolean;
   PlaceId!: number;
   CustomPlace!: LandingPlace;
-  ShoppingCenter!: ShoppingCenter;
+  ShoppingCenter!: any;
   NearByType: NearByType[] = [];
   placeImage: string[] = [];
   placeCotenants: PlaceCotenants[] = [];
@@ -156,10 +156,12 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.CustomPlace = data.json?.[0] || null;
+        console.log(`custom place`);
+        
 
         if (ShoppingcenterId !== 0) {
-          this.ShoppingCenter = this.CustomPlace?.ShoppingCenter?.[0];
-          this.GetShoppingCenterManager(this.ShoppingCenter.Id);
+          this.ShoppingCenter = this.CustomPlace;
+          this.GetShoppingCenterManager(this.ShoppingCenter?.Id);
 
         }
 
@@ -170,7 +172,7 @@ export class LandingComponent {
         console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter && this.ShoppingCenter.Images) { 
-          this.placeImage = this.ShoppingCenter.Images?.split(',').map((link) =>
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map((link :any) =>
             link.trim()
         ); 
 
@@ -1040,19 +1042,12 @@ openStreetViewPlace(content: any, modalObject?: any) {
     const capitalizeFirst = (value: string) =>
       value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : '';
 
-    const addressParts = this.ShoppingCenter
-      ? [
-          this.ShoppingCenter.CenterAddress,
-          capitalizeFirst(this.ShoppingCenter.CenterCity),
-          this.ShoppingCenter.CenterState.toUpperCase(),
-        ]
-      : this.StandAlonePlace
-      ? [
-          this.StandAlonePlace.Address,
-          this.StandAlonePlace.City,
-          this.StandAlonePlace.State.toUpperCase(),
-        ]
-      : null;
+    const addressParts = 
+    [
+      this.ShoppingCenter?.CenterAddress,
+      capitalizeFirst(this.ShoppingCenter?.CenterCity),
+      this.ShoppingCenter?.CenterState.toUpperCase(),
+    ]
 
     return addressParts
       ? addressParts.filter(Boolean).join(', ')
