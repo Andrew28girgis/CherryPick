@@ -532,7 +532,7 @@ UnBindShoppingCenter(){
 
   updateSortedTenants(): void {
     if (!this.Filters!.Tenants || !Array.isArray(this.Filters!.Tenants)) {
-      console.error('Tenants list is empty or undefined.');
+      // console.error('Tenants list is empty or undefined.');
       this.sortedTenants = [];
       return;
     }
@@ -558,7 +558,7 @@ UnBindShoppingCenter(){
       !this.Filters!.ManagementOrganization ||
       !Array.isArray(this.Filters!.ManagementOrganization)
     ) {
-      console.error('ManagementOrganization list is empty or undefined.');
+      // console.error('ManagementOrganization list is empty or undefined.');
       this.sortedOrgs = [];
       return;
     }
@@ -581,7 +581,7 @@ UnBindShoppingCenter(){
 
   updateSecondaryTypes(): void {
     if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
-        console.error('Secondary types are empty or undefined.');
+        // console.error('Secondary types are empty or undefined.');
         this.secondaryTypes = [];
         return;
     }
@@ -596,7 +596,7 @@ UnBindShoppingCenter(){
 
 updateNeighbourhoods(): void {
   if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
-      console.error('Neighbourhood list is empty or undefined.');
+      // console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
   }
@@ -616,7 +616,7 @@ updateNeighbourhoods(): void {
 
 updateTenantCategories(): void {
   if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
-      console.error('TenantsCategories list is empty or undefined.');
+      // console.error('TenantsCategories list is empty or undefined.');
       this.tenantCategories = [];
       return;
   }
@@ -668,10 +668,10 @@ updateTenantCategories(): void {
           this.KayakResult = data.json[0];
 
           if (!Array.isArray(this.KayakResult.Result)) {
-            console.warn(
-              'KayakResult.Result is not an array:',
-              this.KayakResult.Result
-            );
+            // console.warn(
+            //   'KayakResult.Result is not an array:',
+            //   this.KayakResult.Result
+            // );
             this.KayakResult.Result = []; // Default to an empty array if not valid
           }
 
@@ -692,7 +692,7 @@ updateTenantCategories(): void {
           this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
           // console.log('Filtered Result:', this.KayakResult);
         } else {
-          console.warn('Data does not contain expected structure:', data);
+          // console.warn('Data does not contain expected structure:', data);
           this.KayakResult = { Result: [] }; // Default to a structure with an empty array
           this.filteredKayakResult = []; // Reset the filtered result
         }
@@ -731,7 +731,7 @@ updateTenantCategories(): void {
 
   GetFilters(): void {
     if (!this.Ids) {
-      console.warn('Ids are not available, resetting filters.');
+      // console.warn('Ids are not available, resetting filters.');
       this.resetFilters();
       return;
     }
@@ -923,7 +923,7 @@ updateTenantCategories(): void {
         this.KayakResult = data.json[0];
         this.Ids = data.json[0]?.Ids;
         this.filterCards();
-        console.log('Filtered Result:', this.KayakResult);
+        // console.log('Filtered Result:', this.KayakResult);
         
         if (!this.Filters?.SecondaryType) {
           this.GetFilters();
