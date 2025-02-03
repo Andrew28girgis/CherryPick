@@ -205,44 +205,35 @@ export class KayakComponent implements OnInit {
     });
   }
 
-  toggleShoppingCenterBind(
-    shoppingCenterId: number,
-    isChecked?: boolean
-  ): void {
-    this.deleteshoppingcenterID=shoppingCenterId;
-    console.log('deleteshoppingcenterID',this.deleteshoppingcenterID);
-    
-    const isAlreadyBound =
-      this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
+  toggleShoppingCenterBind(shoppingCenterId: number, isChecked?: boolean): void {
+    this.deleteshoppingcenterID = shoppingCenterId;
+    // console.log('deleteshoppingcenterID:', this.deleteshoppingcenterID);
+
+    const isAlreadyBound = this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
 
     if (isChecked !== undefined) {
-       if (isChecked && !isAlreadyBound) {
-        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-      } else if (!isChecked && isAlreadyBound) {
-        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
-          (id) => id !== shoppingCenterId
-        );
-      }
+        // If the checkbox explicitly sets the value, bind or unbind accordingly
+        if (isChecked && !isAlreadyBound) {
+            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+            this.bindShoppingCenter();
+        } else if (!isChecked && isAlreadyBound) {
+            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+            this.UnBindShoppingCenter();
+        }
     } else {
-      // Handle normal toggle event
-      if (isAlreadyBound) {
-        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
-          (id) => id !== shoppingCenterId
-        );
-        this.UnBindShoppingCenter();
-        // console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
-      } else {
-        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-        this.bindShoppingCenter();
-        // console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
-      }
+        // If `isChecked` is not provided, handle normal button toggle behavior
+        if (isAlreadyBound) {
+            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+            this.UnBindShoppingCenter();
+        } else {
+            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+            this.bindShoppingCenter();
+        }
     }
 
-    // console.log(
-    //   'Updated Selected Shopping Center IDs:',
-    //   this.SelectedShoppingCenterIDs
-    // );
-  }
+    // console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+}
+
 UnBindShoppingCenter(){
   this.spinner.show();
   const body: any = {
@@ -295,8 +286,10 @@ UnBindShoppingCenter(){
 
   onCardCheckboxChange(event: Event, result: any): void {
     const isChecked = (event.target as HTMLInputElement).checked;
+    // console.log(`Checkbox changed for ${result.Id}, checked:`, isChecked);
     this.toggleShoppingCenterBind(result.Id, isChecked);
-  } 
+}
+
 
   togglePlaceBind(placeId: number, shoppingCenterId: number): void {
     const isAlreadyBound = this.SelectedPlacesIDs.includes(placeId);
