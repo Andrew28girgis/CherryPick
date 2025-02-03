@@ -12,6 +12,7 @@ import { PlacesService } from 'src/app/services/places.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Center } from 'src/models/shoppingCenters';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 export interface BuyBoxOrganizationsForEmail {
@@ -123,6 +124,8 @@ export class EmilyComponent implements OnInit {
   showSelections = true;
   constructor(
     private route: ActivatedRoute,
+        private spinner: NgxSpinnerService,
+    
     private modalService: NgbModal,
     private PlacesService: PlacesService
   ) {
@@ -137,9 +140,7 @@ export class EmilyComponent implements OnInit {
   }
 
   ngOnInit() {
-   
-
-    setTimeout(() => {
+   setTimeout(() => {
     this.showClientProfile=true;
     this.showRelationNames=true;
     this.showOrganizationManagers=true;
@@ -344,6 +345,7 @@ export class EmilyComponent implements OnInit {
 
 
   GetBuyBoxInfo() {
+    
     const body: any = {
       Name: 'GetBuyBoxInfo',
       MainEntity: null,
