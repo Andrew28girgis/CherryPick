@@ -27,7 +27,7 @@ import {
   TenantsCategories,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
- import { StateService } from '../../../../../src/app/services/state.service';
+import { StateService } from '../../../../../src/app/services/state.service';
 import { Center } from '../../../../models/shoppingCenters';
 
 declare const google: any;
@@ -70,13 +70,11 @@ export class KayakComponent implements OnInit {
   isBulkMode: boolean = false;
   selectedPlaces: any[] = [];
   expandedPlacesIndex: number | null = null;
-  showFilters: boolean = false;
   secondaryTypes: any[] = [];
   neighbourhoods: any[] = [];
   tenantCategories: any[] = [];
   selectedShoppingCenterId: number = 0;
-  boundShoppingCenterIds: number[] = [];
-  newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
+  boundShoppingCenterIds: number[] = []; 
   deleteshoppingcenterID!:number;
   shoppingCenters: Center[] = []; 
 
@@ -89,11 +87,11 @@ export class KayakComponent implements OnInit {
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    private stateService: StateService
-
+    private stateService: StateService 
   ) {
     this.markerService.clearMarkers();
   }
+
   ngOnInit(): void {
     this.General = new General();
     this.filterValues = {

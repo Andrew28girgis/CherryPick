@@ -226,6 +226,8 @@ export class HomeComponent implements OnInit {
   getShoppingCenters(buyboxId: number): void {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters(); 
+      this.getBuyBoxPlaces(this.BuyBoxId);
+
       return;
     }
 
@@ -263,6 +265,8 @@ export class HomeComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
+        console.log(`1`);
+        
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
         this.buyboxCategories.forEach((category) => {
@@ -306,6 +310,8 @@ export class HomeComponent implements OnInit {
   }
 
   async getAllMarker() {
+    console.log(`hello`);
+    
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
@@ -490,14 +496,14 @@ export class HomeComponent implements OnInit {
     this.markerService.onMouseLeave(this.map, place);
   }
 
-  getAllBuyBoxComparables(buyboxId: number) {
-    this.spinner.show();
-    this.PlacesService.GetAllBuyBoxComparables(buyboxId).subscribe((data) => {
-      this.anotherPlaces = data;
-      this.getAllMarker();
-      this.spinner.hide();
-    });
-  }
+  // getAllBuyBoxComparables(buyboxId: number) {
+  //   this.spinner.show();
+  //   this.PlacesService.GetAllBuyBoxComparables(buyboxId).subscribe((data) => {
+  //     this.anotherPlaces = data;
+  //     this.getAllMarker();
+  //     this.spinner.hide();
+  //   });
+  // }
 
   selectOption(option: any): void {
     this.selectedOption = option;

@@ -613,16 +613,13 @@
     <div
       class="main-section"
       *ngIf="
-        ShoppingCenter &&
-        CustomPlace.OtherPlaces &&
-        CustomPlace.OtherPlaces.length > 0
+        ShoppingCenter  
       "
     >
       <section id="hero">
         <ng-container>
           <div class="col-md-12">
-            <h2 class="main-heading">Units Inside</h2>
-
+            <h2 class="main-heading">Units Inside</h2> 
             <div class="another-places p-0">
               <table class="procpect-table">
                 <thead class="procpect-table-head">
@@ -636,7 +633,7 @@
                   </tr>
                 </thead>
                 <tbody class="procpect-table-body">
-                  <ng-container *ngFor="let place of CustomPlace.OtherPlaces">
+                  <ng-container *ngFor="let place of ShoppingCenter.Place">
                     <tr>
                       <td>{{ place.Suite }}</td>
                       <td>
@@ -691,7 +688,7 @@
     <div
       class="main-section"
       *ngIf="
-        StandAlonePlace?.SiteSelectionReason ||
+        
         ShoppingCenter?.SiteSelectionReason
       "
     >
@@ -703,10 +700,7 @@
                 Why does this location meet your requirements?
               </p>
               <p
-                [innerHtml]="
-                  !ShoppingCenter
-                    ? StandAlonePlace?.SiteSelectionReason
-                    : ShoppingCenter.SiteSelectionReason
+                [innerHtml]="ShoppingCenter.SiteSelectionReason
                 "
               ></p>
             </div>
@@ -920,7 +914,7 @@
                         <b>{{ ShoppingCenter.Employees | number }}</b>
                       </p>
                     </div>
-                    <div class="d-flex justify-content-between mt-2"  *ngIf="ShoppingCenter && ShoppingCenter.SubletVacantSpace">
+                    <!-- <div class="d-flex justify-content-between mt-2"  *ngIf="ShoppingCenter && ShoppingCenter.SubletVacantSpace">
                       <p
                         class="info-value"
                        
@@ -930,7 +924,7 @@
                       <p>
                         <b>{{ ShoppingCenter.SubletVacantSpace | number }}</b>
                       </p>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
