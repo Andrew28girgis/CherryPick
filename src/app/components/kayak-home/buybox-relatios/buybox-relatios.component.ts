@@ -93,7 +93,7 @@ export class BuyboxRelatiosComponent {
         // console.log('this.RelationsOrganizations', this.RelationsOrganizations);
         this.relationOrgId = res.json[0].id;
       } else {
-        console.error('Unexpected response format or empty response');
+        // console.error('Unexpected response format or empty response');
       }
       this.spinner.hide();
     });

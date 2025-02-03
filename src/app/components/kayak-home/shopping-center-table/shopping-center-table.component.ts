@@ -762,7 +762,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   createCustomMarkers(markerDataArray: any[]) {
-    markerDataArray.forEach((categoryData) => {
+    markerDataArray?.forEach((categoryData) => {
       this.markerService.createCustomMarker(this.map, categoryData);
     });
   }
@@ -807,7 +807,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   private updateCardsSideList(map: any): void {
     const bounds = map.getBounds();
-    const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
+    const visibleMarkers = this.markerService?.getVisibleProspectMarkers(bounds);
     const visibleCoords = new Set(
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
