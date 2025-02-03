@@ -174,9 +174,11 @@ export class KayakComponent implements OnInit {
        }, 
     });
   }
+  
+  
 
   getBindedShoppingCentersNumber(){
-    const count = this.KayakResult.Result.filter((result:any) => 
+    const count = this.KayakResult?.Result.filter((result:any) => 
         this.SelectedShoppingCenterIDs.includes(result.Id)
     ).length;
     return count;
@@ -595,7 +597,6 @@ export class KayakComponent implements OnInit {
     });
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
-
   updateSortedTenants(): void {
     if (!this.Filters!.Tenants || !Array.isArray(this.Filters!.Tenants)) {
       // console.error('Tenants list is empty or undefined.');
@@ -616,7 +617,7 @@ export class KayakComponent implements OnInit {
       .filter((tenant): tenant is Tenant => tenant !== undefined);
 
     this.sortedTenants = uniqueTenants;
-    // console.log('Sorted Tenants:', this.sortedTenants);
+    // console.log('Sorted Tenants:', this.sortedTenants); 
   }
 
   updateSortedOrgs(): void {
@@ -642,111 +643,95 @@ export class KayakComponent implements OnInit {
       .filter((org): org is ManagementOrganization => org !== undefined);
 
     this.sortedOrgs = uniqueOrgs;
-    // console.log('Sorted Organizations:', this.sortedOrgs);
+    // console.log('Sorted Organizations:', this.sortedOrgs); 
   }
 
   updateSecondaryTypes(): void {
-    if (
-      !this.Filters?.SecondaryType ||
-      !Array.isArray(this.Filters.SecondaryType)
-    ) {
-      // console.error('Secondary types are empty or undefined.');
-      this.secondaryTypes = [];
-      return;
+    if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
+        // console.error('Secondary types are empty or undefined.');
+        this.secondaryTypes = [];
+        return;
     }
 
     // 🔹 Sort alphabetically
     this.secondaryTypes = [...this.Filters.SecondaryType].sort((a, b) =>
-      (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
+        (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
     );
 
     // console.log('Sorted Secondary Types:', this.secondaryTypes);
-  }
+}
 
-  updateNeighbourhoods(): void {
-    if (
-      !this.Filters?.Neighbourhood ||
-      !Array.isArray(this.Filters.Neighbourhood)
-    ) {
+updateNeighbourhoods(): void {
+  if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
       // console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
-    }
+  }
 
-    // 🔹 Ensure Neighbourhood is a string and sort
-    this.neighbourhoods = [...this.Filters.Neighbourhood]
+  // 🔹 Ensure Neighbourhood is a string and sort
+  this.neighbourhoods = [...this.Filters.Neighbourhood]
       .filter((n) => n?.Neighbourhood) // Remove undefined/null values
       .map((n) => ({
-        Neighbourhood: String(n.Neighbourhood || '').trim(),
+          Neighbourhood: String(n.Neighbourhood || '').trim(),
       }))
       .sort((a, b) => a.Neighbourhood.localeCompare(b.Neighbourhood));
 
-    // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
-  }
+  // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
+}
 
-  updateTenantCategories(): void {
-    if (
-      !this.Filters?.TenantsCategories ||
-      !Array.isArray(this.Filters.TenantsCategories)
-    ) {
+updateTenantCategories(): void {
+  if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
       // console.error('TenantsCategories list is empty or undefined.');
       this.tenantCategories = [];
       return;
-    }
+  }
 
-    // 🔹 Remove duplicates and sort alphabetically
-    const sortedList = [...this.Filters.TenantsCategories]
+  // 🔹 Remove duplicates and sort alphabetically
+  const sortedList = [...this.Filters.TenantsCategories]
       .map((category) => ({
-        TenantsCategoriesId: category.TenantsCategoriesId,
-        Name: category.Name?.trim() || 'Unknown', // Ensure Name is valid
-        ChildCategory: category.ChildCategory || [], // Ensure ChildCategory exists
-        Selected: category.Selected || false,
+          TenantsCategoriesId: category.TenantsCategoriesId,
+          Name: category.Name?.trim() || 'Unknown', // Ensure Name is valid
+          ChildCategory: category.ChildCategory || [], // Ensure ChildCategory exists
+          Selected: category.Selected || false,
       }))
       .sort((a, b) => a.Name.localeCompare(b.Name));
 
-    this.tenantCategories = Array.from(new Set(sortedList)); // Remove duplicates
+  this.tenantCategories = Array.from(new Set(sortedList)); // Remove duplicates
 
-    // console.log('Sorted Tenant Categories:', this.tenantCategories);
+  // console.log('Sorted Tenant Categories:', this.tenantCategories);
+}
+applyBuildingSizeFilter(): void {
+  if (!this.Filters?.Result || !Array.isArray(this.Filters.Result)) {
+    console.warn('Building size data is missing or invalid.');
+    this.filteredKayakResult = [];
+    return;
   }
-  applyBuildingSizeFilter(): void {
-    if (!this.Filters?.Result || !Array.isArray(this.Filters.Result)) {
-      console.warn('Building size data is missing or invalid.');
-      this.filteredKayakResult = [];
-      return;
+
+  console.log(`Filtering with min: ${this.filterValues.minsize}, max: ${this.filterValues.maxsize}`);
+
+  // 🔹 Ensure `BuildingSize` exists before filtering
+  this.filteredKayakResult = this.Filters.Result.filter((item: any) => {
+    if (!item.BuildingSize || isNaN(item.BuildingSize)) {
+      console.warn(`Skipping item with missing or invalid BuildingSize:`, item);
+      return false;
     }
-
-    console.log(
-      `Filtering with min: ${this.filterValues.minsize}, max: ${this.filterValues.maxsize}`
+    return (
+      item.BuildingSize >= this.filterValues.minsize &&
+      item.BuildingSize <= this.filterValues.maxsize &&
+      item.Type === 'ShoppingCenter' // Ensure filtering only applies to shopping centers
     );
+  });
 
-    // 🔹 Ensure `BuildingSize` exists before filtering
-    this.filteredKayakResult = this.Filters.Result.filter((item: any) => {
-      if (!item.BuildingSize || isNaN(item.BuildingSize)) {
-        console.warn(
-          `Skipping item with missing or invalid BuildingSize:`,
-          item
-        );
-        return false;
-      }
-      return (
-        item.BuildingSize >= this.filterValues.minsize &&
-        item.BuildingSize <= this.filterValues.maxsize &&
-        item.Type === 'ShoppingCenter' // Ensure filtering only applies to shopping centers
-      );
-    });
+  console.log('Filtered Shopping Centers:', this.filteredKayakResult);
+}
 
-    console.log('Filtered Shopping Centers:', this.filteredKayakResult);
-  }
+updateSliderValues(): void {
+  // Update filterValues whenever the user changes the slider
+  this.filterValues.minsize = this.selectedMin;
+  this.filterValues.maxsize = this.selectedMax;
 
-  updateSliderValues(): void {
-    // Update filterValues whenever the user changes the slider
-    this.filterValues.minsize = this.selectedMin;
-    this.filterValues.maxsize = this.selectedMax;
-
-    console.log(
-      `Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`
-    );
-  }
+  console.log(`Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`);
+}
 
   filterCards(): void {
     if (!this.KayakResult?.Result) {
@@ -888,7 +873,6 @@ export class KayakComponent implements OnInit {
     this.filterValues.neighbourhood = neighbourhoodList.join(','); // Update the filter
     this.getResult(); // Trigger filtering API
   }
-
   toggleTenantCategorySelection(category: TenantsCategories): void {
     const currentCategories = this.filterValues.tenantCategory || ''; // Ensure it's a string
     let categoryList = currentCategories

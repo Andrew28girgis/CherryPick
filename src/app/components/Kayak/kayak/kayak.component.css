@@ -555,6 +555,14 @@ body {
 .tenantorg {
   font-size: 0.9rem;
 }
+.sqft{
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  font-family: Montserrat;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
 .modal-imgg {
   max-width: 700px;
   max-height: 700px;
