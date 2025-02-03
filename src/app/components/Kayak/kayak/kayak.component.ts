@@ -203,7 +203,6 @@ export class KayakComponent implements OnInit {
      this.SelectedShoppingCenterIDs.includes(result.Id)  ?  null : this.ShoppingCenters.push(result) 
     )   
   }
-
   GetFilters(): void {
 
     if (!this.Ids) {
