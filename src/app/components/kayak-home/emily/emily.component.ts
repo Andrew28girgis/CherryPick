@@ -97,7 +97,7 @@ export class EmilyComponent {
     { id: 'kayak', label: 'kayak' },
   ];
 
-  selectedTab: string = 'Properties';
+  selectedTab: string = 'Details';
 
   selectedEmailyID: string | null = null;
 
@@ -371,7 +371,7 @@ export class EmilyComponent {
               [],
           })) || [];
 
-        this.generated[0]?.Releations.forEach((r) => (r.relationSelect = true));
+        this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
 
         this.updateGroupedActivityTypes();
       },
