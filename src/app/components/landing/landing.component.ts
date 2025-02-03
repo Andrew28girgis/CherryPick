@@ -80,13 +80,11 @@ export class LandingComponent {
 
   ngOnInit(): void {
     this.windowHistrony = window.history.length   
-
     this.initializeParams();
     this.initializeDefaults();
     //this.initializeQueryParams();
   }
-
-
+  
   GetCustomSections(buyboxId: number): void { 
     const body: any = {
       Name: 'GetCustomSections',
