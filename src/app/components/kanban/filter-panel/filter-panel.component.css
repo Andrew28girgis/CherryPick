@@ -1,0 +1,203 @@
+/* Overlay backdrop when filter is open */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);; /* Semi-transparent white background */
+  /* backdrop-filter: blur(4px);  */
+  z-index: 999; /* Just below the filter panel */
+}
+
+.overlay.active {
+  display: block;
+}
+
+.filter-panel {
+  position: fixed;
+  top: 0;
+  right: -398px;
+  width: 398px;
+  height: 100vh;
+  background: #FFFFFF;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000; /* Ensure it's above the overlay */
+}
+
+.filter-panel.active {
+  right: 0;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.clear-filters {
+  color: #2563EB;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filter-content {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-section h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 0;
+}
+
+.checkbox-group {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* gap: 16px; */
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid #D1D5DB;
+  background-color: #F9FAFB;
+  cursor: pointer;
+  appearance: none;
+  position: relative;
+  margin: 0;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: #001F3F;
+  border-color: #001F3F;
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.client-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.client-input::placeholder {
+  color: #9CA3AF;
+}
+
+.selected-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: #F3F4F6;
+  border-radius: 16px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.remove-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.remove-filter svg {
+  width: 16px;
+  height: 16px;
+  color: #6B7280;
+}
+
+/* Active state styles for checkboxes */
+.checkbox-group input[type="checkbox"]:focus {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* Hover states */
+.checkbox-group label:hover input[type="checkbox"]:not(:checked) {
+  background-color: #F3F4F6;
+}
+
+.clear-filters:hover {
+  color: #1D4ED8;
+}
+
+/* Disabled state */
+.checkbox-group input[type="checkbox"]:disabled {
+  background-color: #F3F4F6;
+  border-color: #E5E7EB;
+  cursor: not-allowed;
+}
+
+.checkbox-group label:has(input:disabled) {
+  color: #9CA3AF;
+  cursor: not-allowed;
+}
+

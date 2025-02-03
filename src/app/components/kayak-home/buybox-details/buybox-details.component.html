@@ -1,0 +1,153 @@
+  <div class="mt-2 py-2">
+    <div class="d-flex align-items-center justify-content-between">
+      <span class="bold-word ms-3">Specifications</span>
+  
+      <button class="btn d-flex align-items-center gap-2 spec-btn" (click)="openEditProperty(BuyBoxProperty, buybox)">
+  <div class="edit-buyoxtext px-2">
+    <i class="fa-regular fa-pen-to-square me-2"></i>
+    <span>Edit Buybox Specification</span>
+  </div>
+      </button>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4 mb-3">
+        <div class="card card-design p-3 h-100">
+          <span class="card-title">Description:</span>
+          <span class="mb-0 card-text">{{ buybox?.Description || "N/A" }}</span>
+        </div>
+      </div>
+    
+      <div class="col-md-4 mb-3">
+        <div class="card  card-design p-3 h-100">
+          <span class="card-title">Min Unit Size:</span>
+          <p class="mb-0 card-text">{{ buybox?.MinBuildingSize || "N/A" }}</p>
+        </div>
+      </div>
+    
+      <div class="col-md-4 mb-3">
+        <div class="card card-design p-3 h-100">
+          <span class="card-title">Max Unit Size:</span>
+          <p class="mb-0 card-text">{{ buybox?.MaxBuildingSize || "N/A" }}</p>
+        </div>
+      </div>
+    
+    
+      <div class="col-md-4 mb-3">
+        <div class="card card-design p-3 h-100">
+          <span class="card-title">Organization Name:</span>
+          <p class="mb-0 card-text">{{ buybox?.OrgName || "N/A" }}</p>
+        </div>
+      </div>
+    
+    </div>
+    
+    <span class="bold-word ms-3">Contacts</span>
+    <div class="row mt-3" *ngIf="contacts && contacts.length > 0">
+      <div class="col-md-6 mb-3" *ngFor="let contact of contacts">
+        <div class="card card-design p-3 h-100">
+          <div class="mb-1">
+            <span class="card-title">Name:</span> 
+            <span class="card-text">         
+               {{ contact.Firstname   }}     {{ contact.LastName   }}
+            </span>
+          </div> 
+          <div class="mb-0 text-nowrap" *ngIf="contact?.Email">
+            <span class="card-title">Email:</span> 
+            <span class="card-text ">
+              {{ contact.Email }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  <app-buybox-relatios></app-buybox-relatios>
+  
+  <app-work-spaces></app-work-spaces>
+
+  <ng-template #BuyBoxProperty let-modal>
+    <div class="modal-body">
+      <form (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+        <div class="row">
+          <div class="col-sm-12 my-2">
+            <div class="form-group form-group-default">
+              <label class="card-text">Name</label>
+              <input
+                type="text"
+                class="form-control input-text"
+                name="Name"
+                [(ngModel)]="Obj.Name"
+                #name="ngModel"
+                [ngClass]="{ 'is-invalid': f.submitted && name.invalid }"
+                required
+              />
+            </div>
+          </div>
+          <div class="col-sm-12 my-2">
+            <div class="form-group form-group-default">
+              <label class="card-text">Description</label>
+              <input
+                class="form-control input-text"
+                name="Description"
+                [(ngModel)]="Obj.Description"
+                #description="ngModel"
+                [ngClass]="{ 'is-invalid': f.submitted && description.invalid }"
+              />
+            </div>
+          </div>
+         
+          <div class="col-sm-12 my-2">
+            <div class="form-group form-group-default">
+              <label class="card-text">Min Unit Size</label>
+              <input
+                type="number"
+                class="form-control input-text"
+                name="minBuildingSize"
+                [(ngModel)]="Obj.MinBuildingSize"
+                #minBuildingSize="ngModel"
+                [ngClass]="{
+                  'is-invalid': f.submitted && minBuildingSize.invalid
+                }"
+              />
+            </div>
+          </div>
+          <div class="col-sm-12 my-2">
+            <div class="form-group form-group-default">
+              <label class="card-text">Max Unit Size</label>
+              <input
+                type="number"
+                class="form-control input-text"
+                name="maxBuildingSize"
+                [(ngModel)]="Obj.MaxBuildingSize"
+                #maxBuildingSize="ngModel"
+                [ngClass]="{
+                  'is-invalid': f.submitted && maxBuildingSize.invalid
+                }"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer no-bd p-0 ">
+          <!-- Edit Button -->
+          <button
+            type="submit"
+            id="addRowButton"
+            class="btn spec-btn editbtn-modal"
+          >
+            Edit
+          </button>
+        
+          <!-- Close Button -->
+          <button
+            type="button"
+            class="btn spec-btn closebtn-modal"
+            data-dismiss="modal"
+            (click)="closeModal()"
+          >
+            Close
+          </button>
+        </div>
+        
+      </form>
+    </div>
+  </ng-template>

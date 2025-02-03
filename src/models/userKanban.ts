@@ -1,4 +1,5 @@
 export interface Kanban {
+    isCollapsed: boolean
     Id: number
     targetStakeholderId: number
     kanbanTemplateId: number

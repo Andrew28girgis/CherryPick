@@ -1,22 +1,36 @@
 import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
+import {
+  GoogleMap,
+  GoogleMapsOptions,
+  GoogleMapsLatLng,
+  GoogleMapsMarker,
+} from '../../models/google-maps.types';
 declare const google: any;
 import { Router } from '@angular/router';
+import { permission } from 'src/models/permission';
+import { PlacesService } from 'src/app/services/places.service';
+import { StateService } from './state.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MapsService {
   storedBuyBoxId: any;
+  storedOrgId: any;
   private markers: any[] = [];
   private prosMarkers: any[] = [];
   private markerMap: { [key: string]: any[] } = {};
   private openInfoWindow: any | null = null;
   private map: any;
+  placesRepresentative: boolean | undefined;
+  Permission: permission[] = [];
 
-  constructor(public router: Router) {
-    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
-  }
+  constructor(
+    public router: Router,
+    private PlacesService: PlacesService,
+    private stateService: StateService
+  ) {}
 
   createMarker(map: any, markerData: any, type: string): any {
     this.map = map;
@@ -33,8 +47,6 @@ export class MapsService {
     marker.markerData = markerData;
     marker.type = type;
     this.markers.push(marker);
-    console.log(`from create`);
-    console.log(this.markers);
     this.assignToMarkerArray(marker, type);
     const infoWindow = this.createInfoWindow(markerData, type);
     this.addMarkerEventListeners(marker, infoWindow);
@@ -82,7 +94,8 @@ export class MapsService {
   private addViewDetailsButtonListener(marker: any): void {
     const markerData = marker.markerData;
     let placeId: number;
-    marker.markerData.ShoppingCenter
+
+    marker.markerData.ShoppingCenter?.Places
       ? (placeId = markerData.ShoppingCenter.Places[0].Id)
       : (placeId = markerData.Id);
 
@@ -90,18 +103,47 @@ export class MapsService {
       `view-details-${placeId}`
     );
 
+    let shoppingCenterId = markerData.CenterName ? markerData.Id : 0;
     if (viewDetailsButton) {
       viewDetailsButton.addEventListener('click', () => {
-        this.handleViewDetailsClick(placeId);
+        this.handleViewDetailsClick(
+          placeId,
+          shoppingCenterId,
+          marker.markerData.CenterAddress ? 'Shopping Center' : 'Stand Alone'
+        );
       });
     } else {
       console.log(`Button for marker ${placeId} not found`);
     }
   }
 
-  private handleViewDetailsClick(markerId: any): void {
-    console.log(`View details for marker ID: ${markerId}`);
-    this.router.navigate(['/landing', markerId, 0, this.storedBuyBoxId]);
+  private handleViewDetailsClick(
+    markerId: any,
+    shoppingCenterId?: number,
+    placeType?: string
+  ): void {
+    console.log(`markerID ${markerId}`);
+    console.log(`ShoppingCenterID ${shoppingCenterId}`);
+
+    this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
+    this.storedOrgId = localStorage.getItem('OrgId');
+    if (placeType == 'Shopping Center') {
+      this.router.navigate([
+        '/landing',
+        markerId == shoppingCenterId ? 0 : markerId,
+        shoppingCenterId,
+        this.storedBuyBoxId,
+        this.storedOrgId,
+      ]);
+    } else {
+      this.router.navigate([
+        '/landing',
+        markerId,
+        0,
+        this.storedBuyBoxId,
+        this.storedOrgId,
+      ]);
+    }
   }
 
   private assignToMarkerArray(marker: any, type: string): void {
@@ -121,50 +163,99 @@ export class MapsService {
   }
 
   private shoopingCenterPopup(markerData: any): string {
-    return `
-    <div class="info-window">
-      <div class="main-img">
-        <img src="${markerData.MainImage}" alt="Main Image">
-        <span class="close-btn">&times;</span>
-      </div>
-      <div class="content-wrap">
-        ${
-          markerData.CenterName
-            ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
-            : ''
+    const managerOrgs =
+      markerData.ShoppingCenter?.ManagerOrganization?.map((org: any) => {
+        if (org.Firstname && org.LastName) {
+          return `
+            <div class="contact-container">
+             <p class="text-bold m-0">
+                ${
+                  org.Firstname.charAt(0).toUpperCase() +
+                  org.Firstname.slice(1).toLowerCase()
+                }
+                ${
+                  org.LastName.charAt(0).toUpperCase() +
+                  org.LastName.slice(1).toLowerCase()
+                }
+              </p>
+            </div>
+          `;
+        } else {
+          // If either Firstname or LastName is missing, return an empty string
+          return '';
         }
-        <p class="address-content">
-          <svg class="me-2" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.9999 11.1917C11.4358 11.1917 12.5999 10.0276 12.5999 8.5917C12.5999 7.15576 11.4358 5.9917 9.9999 5.9917C8.56396 5.9917 7.3999 7.15576 7.3999 8.5917C7.3999 10.0276 8.56396 11.1917 9.9999 11.1917Z" stroke="#817A79" stroke-width="1.5"/>
-            <path d="M3.01675 7.07484C4.65842 -0.141827 15.3501 -0.133494 16.9834 7.08317C17.9417 11.3165 15.3084 14.8998 13.0001 17.1165C11.3251 18.7332 8.67508 18.7332 6.99175 17.1165C4.69175 14.8998 2.05842 11.3082 3.01675 7.07484Z" stroke="#817A79" stroke-width="1.5"/>
-          </svg>
-          ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
+      }).join('') || '';
+
+    return `
+      <div class="info-window">
+        <div class="main-img">
+          <img src="${markerData.MainImage}" alt="Main Image">
+          <span class="close-btn">&times;</span>
+        </div>
+        <div class="content-wrap">
+          ${
+            markerData.CenterName
+              ? `<p class="content-title">${markerData.CenterName.toUpperCase()}</p>`
+              : ''
+          }
+          <p class="address-content"> 
+            ${markerData.CenterAddress}, ${markerData.CenterCity}, ${
       markerData.CenterState
     }
-        </p>
-        ${
-          this.getShoppingCenterUnitSize(markerData)
-            ? `<p class="address-content">${this.getShoppingCenterUnitSize(
-                markerData
-              )}</p>`
-            : ''
-        }
-        <div class="buttons-wrap">
-        
-          <button id="view-details-${
-            markerData.ShoppingCenter.Places
-              ? markerData.ShoppingCenter.Places[0].Id
-              : 0
-          }" class="view-details-card">View Details
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z" fill="#fff"/>
-              <path d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z" fill="#fff"/>
-              <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z" fill="#fff"/>
-            </svg>
-          </button>
+          </p>
+          ${
+            this.getShoppingCenterUnitSize(markerData)
+              ? `<p class="address-content">${this.getShoppingCenterUnitSize(
+                  markerData
+                )}</p>`
+              : ''
+          }
+  
+          ${
+            this.getPlacesRepresentative() !== false &&
+            markerData.ShoppingCenter?.ManagerOrganization &&
+            markerData.ShoppingCenter?.ManagerOrganization[0]
+              ? `
+                <div class="d-flex align-items-center">
+                  <b>${
+                    markerData.ShoppingCenter.ManagerOrganization[0]?.Name || ''
+                  }</b>
+                  <img
+                    class="logo ms-2"
+                    style="width:40px"
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${
+                      markerData.ShoppingCenter.ManagerOrganization[0]?.ID || ''
+                    }"
+                    alt="${
+                      markerData.ShoppingCenter.ManagerOrganization[0]?.Name ||
+                      ''
+                    }"
+                  />
+                </div>
+              `
+              : ''
+          }
+          
+    ${
+      managerOrgs && this.getPlacesRepresentative() !== false
+        ? `<div class="py-2">${managerOrgs}</div>`
+        : ''
+    }
+          
+          <div class="buttons-wrap">
+            <button id="view-details-${
+              markerData.ShoppingCenter?.Places
+                ? markerData.ShoppingCenter.Places[0]?.Id
+                : markerData.Id
+            }" class="view-details-card">View Details
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="..." fill="#fff"></path>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-    </div>`;
+    `;
   }
 
   private standAlonerPopup(markerData: any): string {
@@ -185,12 +276,10 @@ export class MapsService {
               markerData.BuildingSizeSf
             )} SF
           </p>
-         ${
-           `<p class="address-content">Lease price: ${this.getStandAloneLeasePrice(
-                markerData.ForLeasePrice , markerData.BuildingSizeSf
-              )}</p>`
-            
-        }
+         ${`<p class="address-content">Lease price: ${this.getStandAloneLeasePrice(
+           markerData.ForLeasePrice,
+           markerData.BuildingSizeSf
+         )}</p>`}
           <div class="buttons-wrap">
             <button id="view-details-${
               markerData.Id
@@ -210,9 +299,6 @@ export class MapsService {
   private currentlyOpenInfoWindow: any | null = null;
 
   createCustomMarker(map: any, markerData: BuyboxCategory): void {
-    console.log(`custom marker created`);
-    console.log(markerData);
-
     if (!this.markerMap[markerData.id]) {
       this.markerMap[markerData.id] = [];
     }
@@ -223,7 +309,6 @@ export class MapsService {
 
     markerData.places.forEach((place) => {
       const imgUrl = `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${place.id}`;
-
       place.RetailRelationCategories.forEach((branch) => {
         branch.Branches.forEach((b) => {
           const latitude = Number(b.Latitude);
@@ -356,8 +441,6 @@ export class MapsService {
         m.markerData.Latitude === +Latitude &&
         m.markerData.Longitude === +Longitude
     );
-    console.log(Latitude, Longitude);
-    console.log(markerIndex);
 
     // Create the InfoWindow for the existing marker
     const infoWindow = new google.maps.InfoWindow({
@@ -438,89 +521,116 @@ export class MapsService {
     );
   }
 
-  getShoppingCenterUnitSize(shoppingCenter: any): any {
+  private getShoppingCenterUnitSize(shoppingCenter: any): string | null {
     // Helper function to format numbers with commas
-    const formatNumberWithCommas = (number: number) => {
-      return number.toLocaleString(); // Format the number with commas
-    };
-  
-    // Helper function to format lease price (add $ and /month if needed)
-    const formatLeasePrice = (price: any) => {
+    const formatNumberWithCommas = (num: number) => num.toLocaleString();
+
+    // Format lease price as a whole number or "On Request"
+    const formatLeasePrice = (price: any): string => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
-      return !isNaN(priceNumber) ? Math.floor(priceNumber) : price; // Remove decimal points and return the whole number
+      return !isNaN(priceNumber)
+        ? Math.floor(priceNumber).toString()
+        : 'On Request';
     };
-  
-    // Extract the places array
+
     const places = shoppingCenter?.ShoppingCenter?.Places || [];
-  
-    // Collect building sizes if available
     const buildingSizes = places
       .map((place: any) => place.BuildingSizeSf)
-      .filter((size: any) => size !== undefined && size !== null && !isNaN(size));
-  
+      .filter(
+        (size: any) => size !== undefined && size !== null && !isNaN(size)
+      );
+
+    // If no valid building sizes from places:
     if (buildingSizes.length === 0) {
-      // Handle case for a single shopping center without valid places
+      // Fall back to single center logic
       const singleSize = shoppingCenter.BuildingSizeSf;
-      if (singleSize) {
-        const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
-        return `Unit Size: ${formatNumberWithCommas(singleSize)} SF` + 
-               (leasePrice && leasePrice !== 'On Request' ? `<br>Lease Price: $${formatNumberWithCommas(leasePrice)}/month` : '');
+      if (singleSize && !isNaN(singleSize)) {
+        const leasePriceStr = formatLeasePrice(shoppingCenter.ForLeasePrice);
+        const leasePriceDisplay =
+          leasePriceStr !== 'On Request'
+            ? `Lease Price: $${formatNumberWithCommas(
+                Math.floor((parseFloat(leasePriceStr) * singleSize) / 12)
+              )}/month`
+            : ''; // If lease price is On Request, show nothing here
+
+        return `Unit Size: ${formatNumberWithCommas(singleSize)} SF${
+          leasePriceDisplay ? `<br>${leasePriceDisplay}` : ''
+        }`;
       }
+      // No sizes at all, return null if no unit size
       return null;
     }
-  
-    // Calculate min and max size
+
+    // We have at least one building size
     const minSize = Math.min(...buildingSizes);
     const maxSize = Math.max(...buildingSizes);
-  
-    // Find corresponding lease prices for min and max sizes
-    const minPrice = places.find((place: any) => place.BuildingSizeSf === minSize)?.ForLeasePrice || 'On Request';
-    const maxPrice = places.find((place: any) => place.BuildingSizeSf === maxSize)?.ForLeasePrice || 'On Request';
-  
-    // Format unit sizes and lease price
-    const sizeRange = minSize === maxSize
-      ? `${formatNumberWithCommas(minSize)} SF`
-      : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(maxSize)} SF`;
-  
-    // Ensure only one price is shown if one is "On Request"
-    const formattedMinPrice = minPrice === 'On Request' ? 'On Request' : formatLeasePrice(minPrice);
-    const formattedMaxPrice = maxPrice === 'On Request' ? 'On Request' : formatLeasePrice(maxPrice);
-  
-    // Calculate the price by multiplying unit size by the lease price, divided by 12 (annual cost)
-    const leasePrice = (formattedMinPrice === 'On Request' && formattedMaxPrice === 'On Request') 
-      ? 'On Request' 
-      : (formattedMinPrice === 'On Request' ? formattedMaxPrice : formattedMinPrice);
-  
-    // Calculate and return the result without decimals, formatted as "$X/month"
-    const resultLeasePrice = leasePrice !== 'On Request' 
-      ? `$${formatNumberWithCommas(Math.floor(parseFloat(leasePrice) * minSize / 12))}/month` 
-      : 'On Request';
-  
+
+    // Find prices for min and max sizes
+    const findPriceForSize = (size: number): string => {
+      const place = places.find((p: any) => p.BuildingSizeSf === size);
+      return place?.ForLeasePrice ?? 'On Request';
+    };
+
+    const minPriceStr = findPriceForSize(minSize);
+    const maxPriceStr = findPriceForSize(maxSize);
+
+    // Format unit size range
+    const sizeRange =
+      minSize === maxSize
+        ? `${formatNumberWithCommas(minSize)} SF`
+        : `${formatNumberWithCommas(minSize)} SF - ${formatNumberWithCommas(
+            maxSize
+          )} SF`;
+
+    // Format the minimum and maximum prices
+    const formattedMinPrice = formatLeasePrice(minPriceStr);
+    const formattedMaxPrice = formatLeasePrice(maxPriceStr);
+
+    // Determine which lease price to use
+    let finalLeasePrice: string;
+    if (
+      formattedMinPrice === 'On Request' &&
+      formattedMaxPrice === 'On Request'
+    ) {
+      finalLeasePrice = 'On Request';
+    } else if (formattedMinPrice === 'On Request') {
+      // Only max is valid
+      finalLeasePrice = formattedMaxPrice;
+    } else if (formattedMaxPrice === 'On Request') {
+      // Only min is valid
+      finalLeasePrice = formattedMinPrice;
+    } else {
+      // Both are valid numbers: Use the min price to calculate
+      finalLeasePrice = formattedMinPrice;
+    }
+
+    // Calculate monthly lease price if possible
+    let resultLeasePrice = 'On Request';
+    if (finalLeasePrice !== 'On Request') {
+      const leaseNumeric = parseFloat(finalLeasePrice);
+      if (!isNaN(leaseNumeric)) {
+        const monthlyCost = Math.floor((leaseNumeric * minSize) / 12);
+        resultLeasePrice = `$${formatNumberWithCommas(monthlyCost)}/month`;
+      } else {
+        resultLeasePrice = 'On Request';
+      }
+    }
+
     return `Unit Size: ${sizeRange}<br>Lease Price: ${resultLeasePrice}`;
   }
-  
+
   getStandAloneLeasePrice(forLeasePrice: any, buildingSizeSf: any): string {
-    // Ensure the values are numbers by explicitly converting them
     const leasePrice = Number(forLeasePrice);
     const size = Number(buildingSizeSf);
-  
-    // Check if the values are valid numbers
     if (!isNaN(leasePrice) && !isNaN(size) && leasePrice > 0 && size > 0) {
-      // Calculate the lease price per month
-      const calculatedPrice = Math.floor(leasePrice * size / 12);
-      
-      // Format the calculated price with commas
+      const calculatedPrice = Math.floor((leasePrice * size) / 12);
       const formattedPrice = calculatedPrice.toLocaleString();
-      
-      // Return the formatted result
       return `$${formattedPrice}/month`;
     } else {
-      // If invalid values are provided, return 'On Request'
       return 'On Request';
     }
   }
-  
 
   formatNumberWithCommas(value: number | null): string {
     if (value !== null) {
@@ -529,4 +639,323 @@ export class MapsService {
       return '';
     }
   }
+
+  clearMarkers() {
+    this.markers.forEach((m) => m.setMap(null));
+    this.markers = [];
+    this.prosMarkers = [];
+    this.openInfoWindow = null;
+    this.currentlyOpenInfoWindow = null;
+  }
+
+  addPropertyMarker(
+    map: any,
+    position: { lat: number; lng: number },
+    property: any
+  ) {
+    return new google.maps.Marker({
+      position,
+      map,
+      title: property.title,
+    });
+  }
+
+  getDefaultMapConfig() {
+    return {
+      center: { lat: 39.8283, lng: -98.5795 }, // Center of USA
+      zoom: 4,
+      mapTypeControl: false,
+      streetViewControl: false,
+    };
+  }
+
+  createMap(element: HTMLElement, config: any): any {
+    return new google.maps.Map(element, config);
+  }
+
+  setPlacesRepresentative(PlacesRepresentative: any) {
+    this.placesRepresentative = PlacesRepresentative;
+  }
+
+  getPlacesRepresentative(): boolean | undefined {
+    return this.placesRepresentative;
+  } 
+
+  drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
+    polygonFeatures.forEach((feature) => {
+      this.drawSinglePolygon(map, feature);
+    });
+  }
+
+  drawSinglePolygon(map: any, feature: any): void {
+    try {
+      const geoJson = JSON.parse(feature.json);
+      const coordinates = geoJson.geometry.coordinates[0];
+      const polygonCoords = coordinates.map((coord: number[]) => ({
+        lat: coord[1],
+        lng: coord[0],
+      }));
+
+      // Create and add the polygon to the map
+      const polygon = new google.maps.Polygon({
+        paths: polygonCoords,
+        strokeColor: '#3498db',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#3498db',
+        fillOpacity: 0.35,
+        map: map,
+      });
+
+      // Calculate polygon center
+      const bounds = new google.maps.LatLngBounds();
+      polygonCoords.forEach((coord: any) => {
+        bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+      });
+      const center = bounds.getCenter();
+
+      // Add label at polygon center
+      new google.maps.Marker({
+        position: center,
+        map: map,
+        label: {
+          text: feature.name,
+          color: '#00426e',
+          fontSize: '11px',
+          fontWeight: '600',
+        },
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 0,
+        },
+      });
+    } catch (error) {
+      console.error('Error drawing polygon:', error);
+    }
+  }
+
+
+
+  
+
+  // drawPolygons(map: any, response: any): void {
+  //   if (!map || !response || !Array.isArray(response)) {
+  //     console.error('Invalid parameters provided to drawPolygons');
+  //     return;
+  //   }
+
+  //   response.forEach((polygonCoordinates: number[][][]) => {
+  //     const paths = polygonCoordinates.map((coords) => {
+  //       return coords
+  //         .map((coord: any) => {
+  //           // Ensure that latitude and longitude are numbers
+  //           const lat = parseFloat(coord[1]);
+  //           const lng = parseFloat(coord[0]);
+
+  //           // Check if they are valid numbers
+  //           if (isNaN(lat) || isNaN(lng)) {
+  //             console.error('Invalid coordinate:', coord);
+  //             return null;
+  //           }
+
+  //           return { lat, lng };
+  //         })
+  //         .filter((point) => point !== null); // Remove invalid points
+  //     });
+
+  //     // Create the polygon
+  //     const polygon = new google.maps.Polygon({
+  //       paths,
+  //       strokeColor: '#FF0000',
+  //       strokeOpacity: 0.8,
+  //       strokeWeight: 2,
+  //       fillColor: '#FF0000',
+  //       fillOpacity: 0.35,
+  //     });
+
+  //     polygon.setMap(map);
+  //   });
+  // }
+
+  
+  // async fetchAndDrawPolygon(
+  //   map: any,
+  //   city: any,
+  //   state: any,
+  //   lat?: any,
+  //   lng?: any
+  // ): Promise<void> {
+  //   console.log(state);
+
+  //   // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
+
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
+  //     data.features?.forEach((f: any) => {
+  //       if (f.geometry.type === 'Polygon') {
+  //         // && f.properties['ISO3166-2'] === `US${state}`
+  //         // Draw polygon
+  //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+  //           return {
+  //             lat: coord[1],
+  //             lng: coord[0],
+  //           };
+  //         });
+
+  //         const polygon = new google.maps.Polygon({
+  //           paths: paths,
+  //           strokeColor: '#e74c3c',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#e74c3c',
+  //           fillOpacity: 0.35,
+  //           map: map,
+  //         });
+
+  //         // Calculate polygon center for label placement
+  //         const bounds = new google.maps.LatLngBounds();
+  //         paths.forEach((path: any) => bounds.extend(path));
+  //         const center = bounds.getCenter();
+
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+  //           position: center,
+  //         });
+  //         infoWindow.open(map);
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error('Error fetching boundary data:', error);
+  //   }
+  // }
+
+  // async fetchAndDrawPolygons(
+  //   map: any,
+  //   buyboxId: any, 
+  // ): Promise<void> { 
+
+  //   // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
+
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
+  //     data.features?.forEach((f: any) => {
+  //       if (f.geometry.type === 'Polygon') {
+  //         // && f.properties['ISO3166-2'] === `US${state}`
+  //         // Draw polygon
+  //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+  //           return {
+  //             lat: coord[1],
+  //             lng: coord[0],
+  //           };
+  //         });
+
+  //         const polygon = new google.maps.Polygon({
+  //           paths: paths,
+  //           strokeColor: '#e74c3c',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#e74c3c',
+  //           fillOpacity: 0.35,
+  //           map: map,
+  //         });
+
+  //         // Calculate polygon center for label placement
+  //         const bounds = new google.maps.LatLngBounds();
+  //         paths.forEach((path: any) => bounds.extend(path));
+  //         const center = bounds.getCenter();
+
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+  //           position: center,
+  //         });
+  //         infoWindow.open(map);
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error('Error fetching boundary data:', error);
+  //   }
+  // }
+
+
+
+  
+   //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+  //   console.log(state);
+
+  //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
+  //   try {
+  //     const response = await fetch(boundaryUrl);
+  //     const data: any = await response.json();
+
+  //     data.features.forEach((f:any) => {
+  //       // if(f.geometry.type == 'Point' && f.properties.type == 'neighbourhood'  ){
+  //       //   // Draw circle only
+  //       //   const [lng, lat] = f.geometry.coordinates;
+
+  //       //   // Add circle around point
+  //       //   const circle = new google.maps.Circle({
+  //       //     strokeColor: '#3498db',
+  //       //     strokeOpacity: 0.8,
+  //       //     strokeWeight: 2,
+  //       //     fillColor: '#3498db',
+  //       //     fillOpacity: 0.35,
+  //       //     map: map,
+  //       //     center: { lat, lng },
+  //       //     radius: 1600 // 1km radius
+  //       //   });
+
+  //       //   // Show name by default
+  //       //   const infoWindow = new google.maps.InfoWindow({
+  //       //     content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent ;padding: 7px">${f.properties.name}</div>`,
+  //       //     position: { lat, lng }
+  //       //   });
+  //       //   infoWindow.open(map);
+
+  //       // }
+  //        if (
+  //         f.geometry.type === 'Polygon'
+  //       )
+  //       // && f.properties['ISO3166-2'] === `US${state}`
+  //       {
+  //         // Draw polygon
+  //         const paths = f.geometry.coordinates[0].map((coord: number[]) => {
+  //           return {
+  //             lat: coord[1],
+  //             lng: coord[0]
+  //           };
+  //         });
+
+  //         const polygon = new google.maps.Polygon({
+  //           paths: paths,
+  //           strokeColor: '#e74c3c',
+  //           strokeOpacity: 0.8,
+  //           strokeWeight: 2,
+  //           fillColor: '#e74c3c',
+  //           fillOpacity: 0.35,
+  //           map: map
+  //         });
+
+  //         // Calculate polygon center for label placement
+  //         const bounds = new google.maps.LatLngBounds();
+  //         paths.forEach((path:any) => bounds.extend(path));
+  //         const center = bounds.getCenter();
+
+  //         // Show name by default
+  //         const infoWindow = new google.maps.InfoWindow({
+  //           content: `<div style="color: #3498db; font-weight: bold ; background-color: transparent">${f.properties.name}</div>`,
+  //           position: center
+  //         });
+  //         infoWindow.open(map);
+  //       }
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching boundary data:", error);
+  //   }
+  // }
 }

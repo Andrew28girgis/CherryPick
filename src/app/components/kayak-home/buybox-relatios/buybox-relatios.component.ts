@@ -1,0 +1,375 @@
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiBody, General } from 'src/models/domain';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlacesService } from 'src/app/services/places.service';
+import { BuyBoxModel } from 'src/models/BuyBoxModel';
+import { Organization, RetailRelation, StateCity } from 'src/models/buyboxShoppingCenter';
+import { Subject } from 'rxjs';
+
+@Component({
+  selector: 'app-buybox-relatios',
+  templateUrl: './buybox-relatios.component.html',
+  styleUrls: ['./buybox-relatios.component.css']
+})
+export class BuyboxRelatiosComponent {
+  buyBoxId!: number | null;
+  buybox: any;
+  relationOrgId!: number | null;
+  // Retail Relations Data
+  retailRelations: RetailRelation[] = [];
+  selectedRetailRelationId!: number;
+  // Organization Search Data
+  organizations: Organization[] = [];
+  selectedOrganizationId!: number;
+  searchOrganizationTerm: string = '';
+  highlightedOrganizationIndex: number = -1;
+  showOrganizationSuggestions: boolean = false;
+  isSearchingOrganization!: boolean;
+  // Properties for managing tag search functionality
+  isSearchingTag: boolean = false;
+  highlightedTagIndex: number = -1;
+  showTagSuggestions: boolean = false;
+  tags: any[] = []; 
+  originalTags: any[] = [];
+  searchTagTerm: string = '';
+  addedTags: any[] = [];
+  RelationsOrganizations: any[] = [];
+  tagInputTimeout: any;
+
+
+  constructor(
+    private route: ActivatedRoute,
+    private PlacesService: PlacesService,
+    private spinner: NgxSpinnerService,
+  ) { }
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      this.buyBoxId = +params.get('buyboxid')!;
+    });
+
+    this.GetBuyBoxInfo();
+    this.GetRetailRelations();
+  }
+
+  GetBuyBoxInfo() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetWizardBuyBoxesById',
+      MainEntity: null,
+      Params: {
+        buyboxid: this.buyBoxId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.buybox = data.json;
+        this.spinner.hide();
+        // console.log('Buybox data:', this.buybox);
+        this.DisplayOrganizationRelations();
+      },
+      error: (err) => {
+        console.error('Error fetching buybox info:', err);
+        this.spinner.hide();
+      },
+    });
+  }
+
+  DisplayOrganizationRelations() {
+    this.spinner.show();
+    let body: any = {
+      Name: 'DisplayOrganizationRelations',
+      Params: {
+        orgId: this.buybox.OrganizationId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe((res) => {
+      // console.log(res); // Log the entire response
+      if (res && res.json && res.json.length > 0) {
+        this.RelationsOrganizations = res.json;
+        // console.log('this.RelationsOrganizations', this.RelationsOrganizations);
+        this.relationOrgId = res.json[0].id;
+      } else {
+        // console.error('Unexpected response format or empty response');
+      }
+      this.spinner.hide();
+    });
+  }
+
+  // Fetch Retail Relations from API
+  GetRetailRelations() {
+    let body: any = {
+      Name: 'GetRetailRelations',
+      Params: {},
+    };
+    this.PlacesService.GenericAPI(body).subscribe(
+      (res: any) => {
+        this.retailRelations = res.json as RetailRelation[];
+      },
+      (error: any) => {
+        console.error('Error fetching Retail Relations:', error);
+      }
+    );
+  }
+
+  addTag(tag: any, event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    // console.log('Selected Tag:', tag);
+
+    if (!tag || !tag.id) {
+      console.error('Invalid tag selected:', tag);
+      alert('Invalid tag selected. Please try again.');
+      return;
+    }
+    const organizationId = tag.id;
+
+    const payload = {
+      RetailRelationCategoryId: this.selectedRetailRelationId,
+      RelationOrgId: organizationId,
+      MainOrgId: this.buybox.OrganizationId,
+    };
+
+    const body: any = {
+      Name: 'CreateOrgRelation',
+      Params: payload,
+    };
+
+    // Call the API to add the organization
+    this.PlacesService.GenericAPI(body).subscribe(
+      (res: any) => {
+        // console.log('Organization added successfully:', res.json);
+        this.addedTags.push(tag);
+        this.tags = this.tags.filter((t) => t.id !== tag.id);
+        this.showTagSuggestions = this.tags.length > 0;
+        this.GetBuyBoxInfo();
+      },
+      (error: any) => {
+        console.error('Error adding organization:', error);
+        alert('Error adding organization. Please try again.');
+      }
+    );
+  }
+
+  selectTagFromList(tag: any, event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.selectTag(tag);
+  }
+
+  selectTag(tag: any) {
+    this.selectedOrganizationId = tag.id || null;
+    this.searchTagTerm = tag.name;
+    this.tags = []; 
+    this.showTagSuggestions = false;
+    this.highlightedTagIndex = -1;
+    // console.log('Selected Organization ID:', this.selectedOrganizationId);
+  }
+
+  selectOrganizationFromList(organization: Organization) {
+    this.selectOrganization(organization);
+  }
+
+  // Handle Keyboard Navigation in Organization Suggestions
+  handleOrganizationKeydown(event: KeyboardEvent) {
+    if (this.showOrganizationSuggestions && this.organizations.length > 0) {
+      if (event.key === 'ArrowDown') {
+        this.highlightedOrganizationIndex = (this.highlightedOrganizationIndex + 1) % this.organizations.length;
+        event.preventDefault();
+      } else if (event.key === 'ArrowUp') {
+        this.highlightedOrganizationIndex = (this.highlightedOrganizationIndex - 1 + this.organizations.length) % this.organizations.length;
+        event.preventDefault();
+      } else if (event.key === 'Enter') {
+        if (this.highlightedOrganizationIndex >= 0 && this.highlightedOrganizationIndex < this.organizations.length) {
+          this.selectOrganization(this.organizations[this.highlightedOrganizationIndex]);
+          event.preventDefault();
+        }
+      }
+    }
+  }
+
+  // Hide Suggestions on Blur
+  handleOrganizationBlur() {
+    setTimeout(() => {
+      this.showOrganizationSuggestions = false;
+      this.highlightedOrganizationIndex = -1;
+    }, 100);
+  }
+
+  // Select an Organization from the Suggestions
+  selectOrganization(organization: Organization) {
+    this.selectedOrganizationId = organization.id;
+    this.searchOrganizationTerm = organization.name;
+    this.organizations = [];
+    this.showOrganizationSuggestions = false;
+    this.highlightedOrganizationIndex = -1;
+  }
+
+  onOrganizationInput(event: any) {
+    const val: string = event.target.value;
+    this.searchOrganizationTerm = val;
+
+    if (val.length > 2) {
+      this.searchOrganization(val);
+    } else {
+      this.organizations = [];
+      this.showOrganizationSuggestions = false;
+      this.highlightedOrganizationIndex = -1;
+    }
+  }
+
+  // Search Organization API Call
+  searchOrganization(term: string) {
+    this.isSearchingOrganization = true;
+    let body: any = {
+      Name: 'SearchOrganizationByName',
+      Params: {
+        Name: term,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe(
+      (res: any) => {
+        this.organizations = res.json as Organization[];
+        this.showOrganizationSuggestions = true;
+        this.highlightedOrganizationIndex = -1;
+        this.isSearchingOrganization = false;
+        // console.log('organizations:', this.organizations);
+      },
+      (error: any) => {
+        console.error('Error searching organizations:', error);
+        this.organizations = [];
+        this.showOrganizationSuggestions = false;
+        this.isSearchingOrganization = false;
+      }
+    );
+  }
+
+  handleTagBlur(event: any) {
+    setTimeout(() => {
+      const relatedTarget = event.relatedTarget as HTMLElement;
+      if (relatedTarget && (relatedTarget.classList.contains('list-group-item') || relatedTarget.closest('.list-group'))) {
+        this.showTagSuggestions = true;
+      } else {
+        this.showTagSuggestions = false;
+      }
+    }, 200);
+  }
+
+  onTagInput(event: any) {
+    if (this.tagInputTimeout) {
+      clearTimeout(this.tagInputTimeout);
+    }
+
+    if (this.searchTagTerm.trim().length > 3) {
+      this.tagInputTimeout = setTimeout(() => {
+        this.searchOrganizationByTag(this.searchTagTerm);
+      }, 500);
+    } else {
+      this.tags = [];
+      this.showTagSuggestions = false;
+    }
+  }
+
+  searchOrganizationByTag(term: string) {
+    this.isSearchingTag = true;
+
+    // Prepare the API body for the search query
+    let body: any = {
+      Name: 'GetOrganizationByNameTag',
+      Params: {
+        Tags: term,
+        Name: '', 
+      },
+    };
+
+    // Call the API to search
+    this.PlacesService.GenericAPI(body).subscribe(
+      (res: any) => {
+        this.tags = res.json as any[]; 
+        // console.log('API Response:', res.json); // Debugging log
+        this.tags = this.tags.filter(tag =>
+          !this.RelationsOrganizations.some(relation => relation.id === tag.id)
+        );
+        // console.log('Filtered Tags:', this.tags); // Log filtered tags
+        this.showTagSuggestions = this.tags.length > 0;
+        this.highlightedTagIndex = -1;  // Reset highlighted tag
+        this.isSearchingTag = false;  // Done searching
+        // console.log('tags:', this.tags);
+      },
+      (error: any) => {
+        console.error('Error searching tags:', error);
+        this.tags = [];
+        this.showTagSuggestions = false;
+        this.isSearchingTag = false;
+      }
+    );
+  }
+
+  handleTagKeydown(event: KeyboardEvent) {
+    if (this.showTagSuggestions && this.tags.length > 0) {
+      if (event.key === 'ArrowDown') {
+        this.highlightedTagIndex = (this.highlightedTagIndex + 1) % this.tags.length;
+        event.preventDefault();
+      } else if (event.key === 'ArrowUp') {
+        this.highlightedTagIndex = (this.highlightedTagIndex - 1 + this.tags.length) % this.tags.length;
+        event.preventDefault();
+      } else if (event.key === 'Enter') {
+        if (this.highlightedTagIndex >= 0 && this.highlightedTagIndex < this.tags.length) {
+          this.selectTag(this.tags[this.highlightedTagIndex]);
+          event.preventDefault();
+        }
+      }
+    }
+  }
+
+  submitOrganizationForm() {
+    const payload = {
+      RetailRelationCategoryId: this.selectedRetailRelationId,
+      RelationOrgId: this.selectedOrganizationId,
+      MainOrgId: this.buybox.OrganizationId,
+    };
+
+    let body: any = {
+      Name: 'CreateOrgRelation',
+      Params: payload,
+    };
+
+    this.spinner.show();
+    this.PlacesService.GenericAPI(body).subscribe(
+      (res: any) => {
+        // console.log('Relation added successfully:', res.json);
+        this.spinner.hide();
+        this.searchTagTerm = '';
+        this.searchOrganizationTerm = '';
+        this.GetBuyBoxInfo();
+      },
+      (error: any) => {
+        console.error('Error adding relation:', error);
+        this.spinner.hide();
+        alert('Error adding relation. Please try again.');
+      }
+    );
+  }
+
+  DeleteOrganizationRelations(id: number) {
+    this.spinner.show();
+    let body: any = {
+      Name: 'DeleteOrganizationRelation',
+      Params: {
+        mainOrgId: this.buybox.OrganizationId,
+        relationOrgId: id,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe((res) => {
+      const Index = this.RelationsOrganizations.findIndex(
+        (item) => item.id == id
+      );
+      this.RelationsOrganizations.splice(Index, 1);
+      this.spinner.hide();
+      alert('Relation deleted successfully!');
+    });
+  }
+}

@@ -12,6 +12,7 @@ export class ShoppingCenter {
   CenterCity!: string
   CenterState!: string
   Latitude!: number
+  Images!:string
   Description!: string
   Longitude!: number
   MainImage!: string
@@ -24,7 +25,7 @@ export class ShoppingCenter {
   SitePlan!: string
   DocsLink!: string
   Employees!: string
-   
+  SubletVacantSpace!: any
   HouseholdIncome!: string
   PopulationDensity!: any
   SiteSelectionReason!: string

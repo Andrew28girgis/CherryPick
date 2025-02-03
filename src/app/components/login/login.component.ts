@@ -16,30 +16,49 @@ export class LoginComponent {
   wrongPassword = false;
   General!: General;
   logoUrl: string = '';
-
+  t: any;
+  r: any;
+  private afterLoginRedirect: string | null = null;
+  
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
-    localStorage.removeItem('mapView'); 
+    localStorage.clear();
+    localStorage.removeItem('mapView');
   }
 
   ngOnInit(): void {
     this.General = new General();
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
+    this.activatedRoute.queryParamMap.subscribe((params) => {
+      this.t = params.get('t');
+      this.r = params.get('r');
+      if (this.t && this.r) {
+        this.onSubmit();
+      }
+    });
   }
 
   onSubmit() {
-    this.spinner.show();
+   this.spinner.show();
+    if (this.t) {
+      this.adminLogin.contactToken = this.t;
+    }
+
     this.PlacesService.loginUser(this.adminLogin).subscribe(
       (data: any) => {
         localStorage.setItem('token', data.token);
-        this.navigateToHome();
         this.spinner.hide();
+        if (this.r) {
+          this.router.navigateByUrl(this.r);
+        } else {
+          this.navigateToHome();
+        }
       },
       (error) => {
         this.handleError(error.error);
@@ -56,5 +75,4 @@ export class LoginComponent {
   private handleError(error: any) {
     console.error('An error occurred during login:', error);
   }
-  
 }

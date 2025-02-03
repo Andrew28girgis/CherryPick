@@ -1,0 +1,948 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="row mb-3 container_border">
+  <div class="col-6 col-md-6 pt-2 d-flex justify-content-strat align-items-cente">
+    <div class="custom-icon-container">
+      <div class="icon-option" *ngFor="let option of dropdowmOptions" (click)="selectOption(option)"
+        [class.selected]="selectedOption === option.status">
+        <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+        <span class="icon-text">{{ option.text }}</span>
+      </div>
+    </div>
+    <!-- <div class="checkbox-section-select pb-2">
+      <label for="stateFilter" class="pb-2">Filter by State</label>
+      <select class="form-select form-select-lg" aria-label="Large select example" id="stateFilter"
+        [(ngModel)]="selectedState" (change)="onStateChange($event)">
+        <option value="" selected>All States</option>
+        <option *ngFor="let state of StateCodes" [value]="state">
+          {{ state }}
+        </option>
+      </select>
+    </div> -->
+  </div>
+  <!-- <div class="col-6 col-md- pt-2"> -->
+  <!-- <div class="checkbox-section-select pb-2">
+      <label for="cityFilter" class="pb-2">Filter by City</label>
+      <select class="form-select form-select-lg" aria-label="Large select example" id="cityFilter"
+        [(ngModel)]="selectedCity" (change)="onCityChange()" [disabled]="!filteredCities.length">
+        <option value="">All Cities</option>
+        <option *ngFor="let city of filteredCities" [value]="city">
+          {{ city }}
+        </option>
+      </select>
+    </div> -->
+  <!-- </div> -->
+  <div class="col-6 col-md-6 pt-2 d-flex justify-content-end align-items-center">
+    <button class="Bind__button" (click)="triggerBindAction()">Manage</button>
+  </div>
+</div>
+
+<div class="map-view">
+  <div class="row" style="background-color: #f2f3f4">
+    <ng-container *ngIf="currentView == 4">
+      <div class="container p-2">
+        <div style="margin-top: 10px" *ngIf="
+            showShoppingCenters && shoppingCenters && shoppingCenters.length > 0
+          ">
+          <table class="procpect-table">
+            <thead class="procpect-table-head">
+              <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th *ngIf="placesRepresentative != false">Leased by</th>
+                <th style="width: 250px">Unit Size & Lease Price</th>
+                <th>
+                  <ng-container *ngFor="
+                      let item of shoppingCenters[0].ShoppingCenter
+                        .BuyBoxPlaces;
+                      let i = index
+                    ">
+                    {{ getNeareastCategoryName(item.CategoryId) }}
+                  </ng-container>
+                </th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="procpect-table-body">
+              <ng-container *ngFor="let shoppingCenter of shoppingCenters">
+                <tr>
+                  <td>
+                    <span class="table-text" [innerHTML]="shoppingCenter.CenterName | titlecase"></span>
+                  </td>
+                  <td>
+                    <div class="table-text" (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                      style="cursor: pointer">
+                      {{ shoppingCenter.CenterAddress }},{{
+                        shoppingCenter.CenterCity | titlecase
+                      }},{{ shoppingCenter.CenterState }}
+                    </div>
+                  </td>
+                  <td *ngIf="placesRepresentative != false">
+                    <ng-container *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization">
+                      <div>
+                        <div class="d-flex align-items-center" style="width: 100%; justify-content: space-between">
+                          <img class="logo" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              shoppingCenter.ShoppingCenter
+                                .ManagerOrganization[0].ID
+                            }}" [title]="
+                              shoppingCenter.ShoppingCenter
+                                .ManagerOrganization[0].Name
+                            " alt="" />
+                          <div class="table-text">
+                            {{
+                              shoppingCenter.ShoppingCenter
+                                .ManagerOrganization[0].Name
+                            }}
+                          </div>
+
+                          <div>
+                            <img style="cursor: pointer" class="ms-2" src="../../../assets/Images/Icons/eye.png"
+                              alt="View Manager Details" [ngbPopover]="popoverContent"
+                              popoverTitle="Organization Contact Info" triggers="click:outside" [placement]="'right'" />
+                          </div>
+                        </div>
+                        <ng-template #popoverContent>
+                          <!-- Dynamic Content from ManagerOrganization -->
+                          <div *ngFor="
+                              let org of shoppingCenter.ShoppingCenter
+                                .ManagerOrganization
+                            " class="contact-container table-texttt">
+                            <p class="text-bold m-0">
+                              {{ org.Firstname | titlecase }}
+                              {{ org.LastName | titlecase }}
+                            </p>
+                            <p class="m-0">{{ org.CellPhone }}</p>
+                            <p class="m-0">{{ org.Email }}</p>
+                            <hr *ngIf="
+                                !isLast(
+                                  org,
+                                  shoppingCenter.ShoppingCenter
+                                    .ManagerOrganization
+                                )
+                              " />
+                          </div>
+                        </ng-template>
+                      </div>
+                    </ng-container>
+                  </td>
+                  <td class="table-text" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></td>
+                  <td>
+                    <ng-container *ngIf="
+                        shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
+                        else emptyTd
+                      ">
+                      <ng-container *ngFor="
+                          let item of shoppingCenter?.ShoppingCenter
+                            ?.BuyBoxPlaces;
+                          let i = index;
+                          trackBy: trackByIndex
+                        ">
+                        <div class="d-flex align-items-center justify-content-center">
+                          <img class="logo" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              item.RelationOrganizationId
+                            }}" [title]="item.RelationOrganizationName" alt="" />
+                          <span>{{ item.RelationOrganizationName }}</span>
+                          <div class="d-flex align-items-center justify-content-center">
+                            <span class="ms-2 table-text">
+                              <!-- {{ item.Distance.toFixed(2) }} -->
+                            </span>
+                            <!-- <span class="ms-2 table-text"> MI </span> -->
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </td>
+                  <ng-template #emptyTd>
+                      <td></td>
+                  </ng-template>
+                  <td>
+                    <div style="position: absolute; display: contents">
+                      <div class="d-flex justify-content-center align-items-center"
+                        style="cursor: pointer svg-container">
+                        <div style="display: flex; gap: 16px; position: relative">
+                          <!-- Fist SVG Containerr -->
+                          <!-- <div class="FistSVGContainerr">
+                            <a
+                              [routerLink]="['/landing',shoppingCenter?.ShoppingCenter?.Places? shoppingCenter.ShoppingCenter.Places[0].Id: 0,shoppingCenter.Id,BuyBoxId,OrgId]">
+                              <svg class="svg-icon" width="21" height="20" viewBox="0 0 21 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.1667 9.16683L18.0001 2.3335" stroke="#817A79" stroke-width="1.5"
+                                  stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M18.6667 5.6665V1.6665H14.6667" stroke="#817A79" stroke-width="1.5"
+                                  stroke-linecap="round" stroke-linejoin="round" />
+                                <path
+                                  d="M9.50024 1.6665H7.83358C3.66691 1.6665 2.00024 3.33317 2.00024 7.49984V12.4998C2.00024 16.6665 3.66691 18.3332 7.83358 18.3332H12.8336C17.0002 18.3332 18.6669 16.6665 18.6669 12.4998V10.8332"
+                                  stroke="#817A79" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                            </a>
+                          </div> -->
+                          <!-- Second SVG Container -->
+                          <!-- <div class="FistSVGContainerr" (click)="openMapViewPlace(MapViewPlace, shoppingCenter)">
+                            <svg class="svg-icon" width="21" height="20" viewBox="0 0 21 20" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <g id="vuesax/outline/location">
+                                <g id="location">
+                                  <path id="Vector"
+                                    d="M11.9999 14.1699C9.86988 14.1699 8.12988 12.4399 8.12988 10.2999C8.12988 8.15994 9.86988 6.43994 11.9999 6.43994C14.1299 6.43994 15.8699 8.16994 15.8699 10.3099C15.8699 12.4499 14.1299 14.1699 11.9999 14.1699ZM11.9999 7.93994C10.6999 7.93994 9.62988 8.99994 9.62988 10.3099C9.62988 11.6199 10.6899 12.6799 11.9999 12.6799C13.3099 12.6799 14.3699 11.6199 14.3699 10.3099C14.3699 8.99994 13.2999 7.93994 11.9999 7.93994Z"
+                                    fill="#7A8591" />
+                                  <path id="Vector_2"
+                                    d="M12.0002 22.76C10.5202 22.76 9.03018 22.2 7.87018 21.09C4.92018 18.25 1.66018 13.72 2.89018 8.33C4.00018 3.44 8.27018 1.25 12.0002 1.25C12.0002 1.25 12.0002 1.25 12.0102 1.25C15.7402 1.25 20.0102 3.44 21.1202 8.34C22.3402 13.73 19.0802 18.25 16.1302 21.09C14.9702 22.2 13.4802 22.76 12.0002 22.76ZM12.0002 2.75C9.09018 2.75 5.35018 4.3 4.36018 8.66C3.28018 13.37 6.24018 17.43 8.92018 20C10.6502 21.67 13.3602 21.67 15.0902 20C17.7602 17.43 20.7202 13.37 19.6602 8.66C18.6602 4.3 14.9102 2.75 12.0002 2.75Z"
+                                    fill="#7A8591" />
+                                </g>
+                              </g>
+                            </svg>
+                          </div> -->
+                          <!-- Third SVG Container -->
+                          <!-- <div class="FistSVGContainerr" (click)="openStreetViewPlace(StreetViewPlace, shoppingCenter)">
+                            <svg class="svg-icon" width="35" height="35" viewBox="0 0 56 48" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
+                                fill="#0D0C0C" />
+                            </svg>
+                          </div> -->
+                          <button class="ellipsis_icon" (click)="
+                              toggleShortcuts(
+                                shoppingCenter.Id,
+                                undefined,
+                                $event
+                              )
+                            ">
+                            <i class="fa-solid fa-ellipsis"></i>
+                          </button>
+                          <div class="shortcuts_icon" *ngIf="selectedId === shoppingCenter.Id">
+                            <ul>
+                              <li (click)="redirect(shoppingCenter.Id)">
+                                <a class="target">
+                                  <i class="fa-regular fa-envelope" style="
+                                      font-size: 18px;
+                                      margin-top: 3px;
+                                      width: 24px;
+                                    "></i>
+                                  Contact Email
+                                </a>
+                              </li>
+                              <li (click)="
+                                  toggleShortcuts(shoppingCenter.Id, 'close')
+                                ">
+                                <a class="target" [routerLink]="[
+                                    '/landing',
+                                    shoppingCenter?.ShoppingCenter?.Places
+                                      ? shoppingCenter.ShoppingCenter.Places[0]
+                                          .Id
+                                      : 0,
+                                    shoppingCenter.Id,
+                                    BuyBoxId,
+                                    OrgId
+                                  ]">
+                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                      d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                                      fill="#707791" />
+                                  </svg>
+                                  View Details
+                                </a>
+                              </li>
+                              <li (click)="
+                                  toggleShortcuts(shoppingCenter.Id, 'close')
+                                ">
+                                <a class="target" (click)="
+                                    openMapViewPlace(
+                                      MapViewPlace,
+                                      shoppingCenter
+                                    )
+                                  ">
+                                  <i class="fa-solid fa-map-location-dot" style="
+                                      font-size: 18px;
+                                      margin-top: 3px;
+                                      width: 24px;
+                                    "></i>
+                                  View location
+                                </a>
+                              </li>
+                              <li (click)="
+                                  toggleShortcuts(shoppingCenter.Id, 'close')
+                                ">
+                                <a class="target" (click)="
+                                    openStreetViewPlace(
+                                      StreetViewPlace,
+                                      shoppingCenter
+                                    )
+                                  ">
+                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g id="Street View">
+                                      <path id="Vector"
+                                        d="M12 3C10.3506 3 9 4.35059 9 6C9 6.83496 9.35742 7.58789 9.91406 8.13281C8.91504 8.80957 8.25 9.96094 8.25 11.25V14.7188L9.75 15.4688V18.75H14.25V15.4688L15.75 14.7188V11.25C15.75 9.96094 15.085 8.80957 14.0859 8.13281C14.6426 7.58789 15 6.83496 15 6C15 4.35059 13.6494 3 12 3ZM12 4.5C12.8379 4.5 13.5 5.16211 13.5 6C13.5 6.83789 12.8379 7.5 12 7.5C11.1621 7.5 10.5 6.83789 10.5 6C10.5 5.16211 11.1621 4.5 12 4.5ZM12 9C13.251 9 14.25 9.99902 14.25 11.25V13.7812L12.75 14.5312V17.25H11.25V14.5312L9.75 13.7812V11.25C9.75 9.99902 10.749 9 12 9ZM6.75 14.1562C4.56152 14.7686 3 15.8057 3 17.25C3 19.7109 7.52637 21 12 21C16.4736 21 21 19.7109 21 17.25C21 15.8057 19.4385 14.7686 17.25 14.1562V15.7266C18.6768 16.1865 19.5 16.7812 19.5 17.25C19.5 18.1465 16.5088 19.5 12 19.5C7.49121 19.5 4.5 18.1465 4.5 17.25C4.5 16.7812 5.32324 16.1865 6.75 15.7266V14.1562Z"
+                                        fill="#707791" />
+                                    </g>
+                                  </svg>
+                                  Street View
+                                </a>
+                              </li>
+                              <li style="cursor: pointer" (click)="
+                                  toggleShortcuts(shoppingCenter.Id, 'close')
+                                ">
+                                <!-- (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)" -->
+                                <a class="target" (click)="
+                                    openDeleteShoppingCenterModal(
+                                      deleteShoppingCenterModal,
+                                      shoppingCenter.Id
+                                    )
+                                  ">
+                                  <i class="fa-regular fa-trash-can" style="
+                                      font-size: 18px;
+                                      margin-top: 3px;
+                                      width: 24px;
+                                    "></i>
+                                  Remove Shopping
+                                </a>
+                              </li>
+                            </ul>
+                            <i class="fa-solid fa-caret-right"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="pt-2 d-flex justify-content-center align-items-center" style="height: 50vh"
+        *ngIf="shoppingCenters?.length == 0">
+        <p style="font-weight: 500">No data Shopping Center</p>
+      </div>
+    </ng-container>
+    <div style="background-color: #f4f4f4" [ngClass]="{
+        'd-none': currentView == 1 || currentView == 4,
+        'col-md-8 col-sm-12 cards ': currentView == 2,
+        'col-12': currentView == 3
+      }">
+      <div class="row mt-2">
+        <ng-container *ngIf="currentView != 2">
+          <ng-container *ngFor="let shopping of shoppingCenters">
+            <div style="cursor: pointer" class="card-window" [ngClass]="{
+                'col-md-4 col-sm-4 col-12': currentView == 3,
+                'col-12 col-sm-6 cards': currentView == 2
+              }">
+              <div style="background: white; min-height: 100%; border-radius: 20px;width: 100%;">
+                <a
+                  [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]">
+                  <div class="main-img">
+                    <img src="{{ shopping.MainImage }}" />
+                  </div>
+                </a>
+                <div class="content-wrap card-content" style="position: relative">
+                  <div>
+                    <div style="height: 220px; overflow: auto">
+                      <div class="d-flex justify-content-between">
+                        <a style="text-decoration: none"
+                          [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,BuyBoxId,OrgId]">
+                          <div class="content-title" style="cursor: pointer">
+                            {{
+                              shopping.CenterName.length > 22
+                                ? (shopping.CenterName | titlecase).slice(
+                                    0,
+                                    22
+                                  ) + "..."
+                                : (shopping.CenterName | titlecase)
+                            }}
+                          </div>
+                        </a>
+
+                        <div style="position: relative">
+                          <button class="ellipsis_icont" (click)="toggleShortcutsCard(shopping.Id)">
+                            <i class="fa-solid fa-ellipsis"></i>
+                          </button>
+                          <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shopping.Id">
+                            <ul>
+                              <li style="cursor: pointer">
+                                <!-- (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)" -->
+                                <a class="target" (click)="redirect(shopping.Id)">
+                                  <i class="fa-regular fa-envelope" style="
+                                      font-size: 18px;
+                                      margin-top: 3px;
+                                      width: 24px;
+                                    "></i>
+                                  Contact Email
+                                </a>
+                              </li>
+                              <li (click)="toggleShortcuts(shopping.Id, 'close')">
+                                <a class="target"
+                                  [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]">
+                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                      d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                                      fill="#707791" />
+                                    <path
+                                      d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                                      fill="#707791" />
+                                  </svg>
+                                  View Details
+                                </a>
+                              </li>
+                              <li (click)="toggleShortcuts(shopping.Id, 'close')">
+                                <a class="target" (click)="
+                                    openMapViewPlace(MapViewPlace, shopping)
+                                  ">
+                                  <i class="fa-solid fa-map-location-dot" style="
+                                      font-size: 18px;
+                                      margin-top: 3px;
+                                      width: 24px;
+                                    "></i>
+                                  View location
+                                </a>
+                              </li>
+                              <li (click)="toggleShortcuts(shopping.Id, 'close')">
+                                <a class="target" (click)="
+                                    openStreetViewPlace(
+                                      StreetViewPlace,
+                                      shopping
+                                    )
+                                  ">
+                                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g id="Street View">
+                                      <path id="Vector"
+                                        d="M12 3C10.3506 3 9 4.35059 9 6C9 6.83496 9.35742 7.58789 9.91406 8.13281C8.91504 8.80957 8.25 9.96094 8.25 11.25V14.7188L9.75 15.4688V18.75H14.25V15.4688L15.75 14.7188V11.25C15.75 9.96094 15.085 8.80957 14.0859 8.13281C14.6426 7.58789 15 6.83496 15 6C15 4.35059 13.6494 3 12 3ZM12 4.5C12.8379 4.5 13.5 5.16211 13.5 6C13.5 6.83789 12.8379 7.5 12 7.5C11.1621 7.5 10.5 6.83789 10.5 6C10.5 5.16211 11.1621 4.5 12 4.5ZM12 9C13.251 9 14.25 9.99902 14.25 11.25V13.7812L12.75 14.5312V17.25H11.25V14.5312L9.75 13.7812V11.25C9.75 9.99902 10.749 9 12 9ZM6.75 14.1562C4.56152 14.7686 3 15.8057 3 17.25C3 19.7109 7.52637 21 12 21C16.4736 21 21 19.7109 21 17.25C21 15.8057 19.4385 14.7686 17.25 14.1562V15.7266C18.6768 16.1865 19.5 16.7812 19.5 17.25C19.5 18.1465 16.5088 19.5 12 19.5C7.49121 19.5 4.5 18.1465 4.5 17.25C4.5 16.7812 5.32324 16.1865 6.75 15.7266V14.1562Z"
+                                        fill="#707791" />
+                                    </g>
+                                  </svg>
+                                  Street View
+                                </a>
+                              </li>
+                              <li style="cursor: pointer" (click)="toggleShortcuts(shopping.Id, 'close')">
+                                <!-- (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)" -->
+                                <a class="target" (click)="
+                                    openDeleteShoppingCenterModal(
+                                      deleteShoppingCenterModal,
+                                      shopping.Id
+                                    )
+                                  ">
+                                  <i class="fa-regular fa-trash-can" style="
+                                      font-size: 18px;
+                                      margin-top: 3px;
+                                      width: 24px;
+                                    "></i>
+                                  Remove Shopping
+                                </a>
+                              </li>
+                            </ul>
+                            <i class="fa-solid fa-caret-right"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-address" style="cursor: pointer"
+                        (click)="openMapViewPlace(MapViewPlace, shopping)">
+                        <span class="mb-5">
+                          {{ shopping.CenterAddress }},
+                          {{ shopping.CenterCity | titlecase }},
+                          {{ shopping.CenterState }}
+                        </span>
+                      </div>
+                      <div>
+                        <p style="
+                            font-size: 15px;
+                            font-weight: 500;
+                            color: #565656;
+                          " [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
+                      </div>
+                      <div class="row">
+                        <div *ngFor="
+                            let item of shopping.ShoppingCenter?.BuyBoxPlaces
+                          " class="col-12 d-flex flex-column spec">
+                          <div class="d-flex flex-column">
+                            <p class="nearset-category">
+                              <b>{{ getNeareastCategoryName(item.CategoryId) }}
+                              </b>
+                            </p>
+                            <p>
+                              {{ item.RelationOrganizationName }}
+                              <img class="logo ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                                  item.RelationOrganizationId
+                                }}" [title]="item.RelationOrganizationName" alt="" />
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 spec" *ngIf="
+                        shopping.ShoppingCenter?.ManagerOrganization &&
+                        placesRepresentative != false
+                      ">
+                      <hr class="small-hr mt-2" />
+                      <span class="managed-by">Leased by</span>
+                      <div class="spec-head between">
+                        <div>
+                          <img class="logo" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              shopping.ShoppingCenter.ManagerOrganization[0].ID
+                            }}" [title]="
+                              shopping.ShoppingCenter.ManagerOrganization[0]
+                                .Name
+                            " alt="" />
+                        </div>
+                        <div style="width: 55%">
+                          {{
+                            shopping.ShoppingCenter.ManagerOrganization[0].Name
+                          }}
+                        </div>
+                        <div>
+                          <img style="cursor: pointer" class="ms-2" src="../../../assets/Images/Icons/eye.png"
+                            alt="View Manager Details" [ngbPopover]="popoverContent"
+                            popoverTitle="Organization Contact Info" triggers="click:outside" [placement]="'top'" />
+                        </div>
+                        <br />
+                        <ng-template #popoverContent>
+                          <div *ngFor="
+                              let org of shopping.ShoppingCenter
+                                .ManagerOrganization
+                            " class="contact-container table-texttt">
+                            <p class="text-bold m-0">
+                              {{ org.Firstname | titlecase }}
+                              {{ org.LastName | titlecase }}
+                            </p>
+                            <p class="m-0">{{ org.CellPhone }}</p>
+                            <p class="m-0">{{ org.Email }}</p>
+                            <hr *ngIf="
+                                !isLast(
+                                  org,
+                                  shoppingCenter.ShoppingCenter
+                                    .ManagerOrganization
+                                )
+                              " />
+                          </div>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="buttons-wrap">
+                 <button
+                   class="view-details-card"
+                   (click)="goToPlace(shopping)"
+                 >
+                   View Details
+                   <svg
+                     width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     xmlns="http://www.w3.org/2000/svg"
+                   >
+                     <path
+                       d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                       fill="#fff"
+                     />
+                     <path
+                       d="M22.0002 7.55C21.5902 7.55 21.2502 7.21 21.2502 6.8V2.75H17.2002C16.7902 2.75 16.4502 2.41 16.4502 2C16.4502 1.59 16.7902 1.25 17.2002 1.25H22.0002C22.4102 1.25 22.7502 1.59 22.7502 2V6.8C22.7502 7.21 22.4102 7.55 22.0002 7.55Z"
+                       fill="#fff"
+                     />
+                     <path
+                       d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                       fill="#fff"
+                     />
+                   </svg>
+                 </button>
+                 <button
+                   *ngIf="ShareOrg[0]"
+                   class="view-details-card"
+                   style="background-color: rgb(41, 187, 255)"
+                   (click)="openLink(ShareLink, shopping)"
+                 >
+                   Share With {{ ShareOrg[0].name }}
+                 </button>
+                 <div
+                   style="cursor: pointer"
+                   (click)="openStreetViewPlace(StreetViewPlace, shopping)"
+                 >
+                   <svg
+                     width="56"
+                     height="48"
+                     viewBox="0 0 56 48"
+                     fill="none"
+                     xmlns="http://www.w3.org/2000/svg"
+                   >
+                     <path
+                       d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
+                       fill="#0D0C0C"
+                     />
+                   </svg>
+                 </div>
+               </div> -->
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngFor="let place of standAlone">
+            <div class="card-window" (mouseenter)="onMouseEnter(place)"
+              [ngClass]="{ 'col-md-3 col-sm-4 col-12': currentView == 3 }">
+              <a [routerLink]="['/landing', place.Id, 0, BuyBoxId, OrgId]">
+                <div class="main-img">
+                  <img src="{{ place.MainImage }}" />
+                </div>
+              </a>
+              <div class="content-wrap card-content2">
+                <div>
+                  <div>
+                    <div class="card-address" style="cursor: pointer" (click)="openMapViewPlace(MapViewPlace, place)">
+                      <span class="mb-5">
+                        {{ place.Address }}, {{ place.City | titlecase }},
+                        {{ place.State }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div *ngIf="place.BuildingSizeSf">
+                    <p style="font-size: 15px; font-weight: 500; color: #565656">
+                      {{ place.BuildingSizeSf | number }} SF
+                    </p>
+                  </div>
+
+                  <div *ngIf="place.ForLeasePrice">
+                    <p class="spec-content" [innerHTML]="
+                        getStandAloneLeasePrice(
+                          place.ForLeasePrice,
+                          place.BuildingSizeSf
+                        )
+                      "></p>
+                  </div>
+                </div>
+
+                <div *ngIf="place.Place">
+                  <div *ngFor="let item of place.Place?.BuyBoxPlaces"
+                    class="d-flex align-items-center justify-content-centermb-2">
+                    <!-- Image -->
+                    <img class="logo" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        item.RelationOrganizationId
+                      }}" [title]="item.RelationOrganizationName" alt="" />
+                    <p class="spec-head me-2 mb-0">
+                      {{ getNeareastCategoryName(item.CategoryId) }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="currentView == 2">
+          <div class="p-3 d-flex justify-content-between">
+            <p style="font-weight: 500" class="m-0">
+              {{ cardsSideList.length }} places within map area
+            </p>
+            <div class="gap-2 d-flex" *ngIf="showbackIds.length > 0">
+              <p class="Button_delete" (click)="ArrOfDelete(deleteShoppingCenterModal)">
+                Delete
+              </p>
+              <p class="Button_cancel" (click)="CancelDelete()">
+                Cancel
+              </p>
+            </div>
+          </div>
+          <ng-container *ngFor="let place of cardsSideList">
+            <div class="card-window" style="cursor: pointer" (mouseenter)="onMouseHighlight(place)"
+              (mouseleave)="onMouseLeaveHighlight(place)" [ngClass]="{ 'col-md-6 col-sm-12': currentView == 2 }">
+              <div class="card-window-back w-100">
+                <a *ngIf="place.CenterCity"
+                  [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId,OrgId]">
+                  <div class="main-img">
+                    <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
+                  </div>
+                </a>
+                <a *ngIf="!place.CenterCity" [routerLink]="['/landing', place.Id, 0, BuyBoxId, OrgId]">
+                  <div class="main-img">
+                    <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
+                  </div>
+                </a>
+                <div class="content-wrap card-sideview" style="position: relative; justify-content: space-between">
+                  <div *ngIf="place.CenterCity">
+                    <div class="d-flex justify-content-between">
+                      <a
+                        [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId,OrgId]">
+                        <p class="content-title" style="cursor: pointer">
+                          {{
+                            place.CenterName.length > 22
+                              ? (place.CenterName | titlecase).slice(0, 22) +
+                                "..."
+                              : (place.CenterName | titlecase)
+                          }}
+                        </p>
+                      </a>
+  
+                      <div style="position: relative">
+                        <button class="ellipsis_icont" (click)="toggleShortcutsCard(place.Id)">
+                          <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                        <div class="shortcuts_iconCard" *ngIf="selectedIdCard === place.Id">
+                          <ul>
+                            <li style="cursor: pointer">
+                              <!-- (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)" -->
+                              <a class="target" (click)="redirect(place.Id)">
+                                <i class="fa-regular fa-envelope" style="
+                                    font-size: 18px;
+                                    margin-top: 3px;
+                                    width: 24px;
+                                  "></i>
+                                Contact Email
+                              </a>
+                            </li>
+                            <li (click)="toggleShortcuts(place.Id, 'close')">
+                              <a class="target"
+                                [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,BuyBoxId,OrgId]">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <path
+                                    d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                                    fill="#707791" />
+                                  <path
+                                    d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                                    fill="#707791" />
+                                  <path
+                                    d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
+                                    fill="#707791" />
+                                  <path
+                                    d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                                    fill="#707791" />
+                                  <path
+                                    d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                                    fill="#707791" />
+                                  <path
+                                    d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                                    fill="#707791" />
+                                </svg>
+                                View Details
+                              </a>
+                            </li>
+                            <li (click)="toggleShortcuts(place.Id, 'close')">
+                              <a class="target" (click)="openMapViewPlace(MapViewPlace, place)">
+                                <i class="fa-solid fa-map-location-dot" style="
+                                    font-size: 18px;
+                                    margin-top: 3px;
+                                    width: 24px;
+                                  "></i>
+                                View location
+                              </a>
+                            </li>
+                            <li (click)="toggleShortcuts(place.Id, 'close')">
+                              <a class="target" (click)="
+                                  openStreetViewPlace(StreetViewPlace, place)
+                                ">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <g id="Street View">
+                                    <path id="Vector"
+                                      d="M12 3C10.3506 3 9 4.35059 9 6C9 6.83496 9.35742 7.58789 9.91406 8.13281C8.91504 8.80957 8.25 9.96094 8.25 11.25V14.7188L9.75 15.4688V18.75H14.25V15.4688L15.75 14.7188V11.25C15.75 9.96094 15.085 8.80957 14.0859 8.13281C14.6426 7.58789 15 6.83496 15 6C15 4.35059 13.6494 3 12 3ZM12 4.5C12.8379 4.5 13.5 5.16211 13.5 6C13.5 6.83789 12.8379 7.5 12 7.5C11.1621 7.5 10.5 6.83789 10.5 6C10.5 5.16211 11.1621 4.5 12 4.5ZM12 9C13.251 9 14.25 9.99902 14.25 11.25V13.7812L12.75 14.5312V17.25H11.25V14.5312L9.75 13.7812V11.25C9.75 9.99902 10.749 9 12 9ZM6.75 14.1562C4.56152 14.7686 3 15.8057 3 17.25C3 19.7109 7.52637 21 12 21C16.4736 21 21 19.7109 21 17.25C21 15.8057 19.4385 14.7686 17.25 14.1562V15.7266C18.6768 16.1865 19.5 16.7812 19.5 17.25C19.5 18.1465 16.5088 19.5 12 19.5C7.49121 19.5 4.5 18.1465 4.5 17.25C4.5 16.7812 5.32324 16.1865 6.75 15.7266V14.1562Z"
+                                      fill="#707791" />
+                                  </g>
+                                </svg>
+                                Street View
+                              </a>
+                            </li>
+                            <li style="cursor: pointer" (click)="toggleShortcuts(place.Id, 'close')">
+                              <!-- (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,place.Id)" -->
+                              <a class="target" (click)="deleteShopping(place.Id)">
+                                <i class="fa-regular fa-trash-can" style="
+                                    font-size: 18px;
+                                    margin-top: 3px;
+                                    width: 24px;
+                                  "></i>
+                                Remove Shopping
+                              </a>
+                            </li>
+                          </ul>
+                          <i class="fa-solid fa-caret-right"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="place.CenterAddress" class="card-address" style="cursor: pointer"
+                    (click)="openMapViewPlace(MapViewPlace, place)">
+                    <span>
+                      {{ place.CenterAddress }},
+                      {{ place.CenterCity | titlecase }},
+                      {{ place.CenterState }}
+                    </span>
+                  </div>
+                  <div *ngIf="place.Address" class="card-address" style="cursor: pointer"
+                    (click)="openMapViewPlace(MapViewPlace, place)">
+                    <p>
+                      {{ place.Address }}, {{ place.City | titlecase }},
+                      {{ place.State }}
+                    </p>
+                  </div>
+                  <div *ngIf="place.CenterAddress">
+                    <p style="font-size: 15px; font-weight: 500; color: #565656"
+                      [innerHTML]="getShoppingCenterUnitSize(place)"></p>
+                  </div>
+                  <div *ngIf="!place.CenterAddress">
+                    <p style="font-size: 15px; font-weight: 500; color: #565656">
+                      <span>
+                        Unit Size: {{ place.BuildingSizeSf | number }} SF
+                      </span>
+                    </p>
+                    <p style="font-size: 15px; font-weight: 500; color: #565656">
+                      <span [innerHTML]="
+                          getStandAloneLeasePrice(
+                            place.ForLeasePrice,
+                            place.BuildingSizeSf
+                          )
+                        "></span>
+                    </p>
+                  </div>
+                  <div class="row" *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place">
+                    <div *ngFor="
+                        let item of place.ShoppingCenter
+                          ? place.ShoppingCenter?.BuyBoxPlaces
+                          : place.Place?.BuyBoxPlaces
+                      " class="col-12 d-flex flex-column spec">
+                      <div class="d-flex flex-column">
+                        <p class="nearset-category">
+                          <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                        </p>
+                        <p>
+                          {{ item.RelationOrganizationName }}
+                          <img class="logo ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              item.RelationOrganizationId
+                            }}" [title]="item.RelationOrganizationName" alt="" />
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12 spec" *ngIf="
+                      place.ShoppingCenter?.ManagerOrganization &&
+                      placesRepresentative != false
+                    ">
+                    <span class="managed-by">Leased by</span>
+                    <div class="spec-head between">
+                      <div>
+                        <img class="logo" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            place.ShoppingCenter.ManagerOrganization[0].ID
+                          }}" [title]="
+                            place.ShoppingCenter.ManagerOrganization[0].Name
+                          " alt="" />
+                      </div>
+                      <div>
+                        {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
+                      </div>
+                      <div>
+                        <img style="cursor: pointer" class="ms-2" src="../../../assets/Images/Icons/eye.png"
+                          alt="View Manager Details" [ngbPopover]="popoverContent"
+                          popoverTitle="Organization Contact Info" [placement]="'top'" />
+                      </div>
+                      <br />
+                      <ng-template #popoverContent>
+                        <div *ngFor="
+                            let org of place.ShoppingCenter.ManagerOrganization
+                          " class="contact-container table-texttt">
+                          <p class="text-bold m-0">
+                            {{ org.Firstname | titlecase }}
+                            {{ org.LastName | titlecase }}
+                          </p>
+                          <p class="m-0">{{ org.CellPhone }}</p>
+                          <p class="m-0">{{ org.Email }}</p>
+                          <hr *ngIf="
+                              !isLast(
+                                org,
+                                shoppingCenter.ShoppingCenter.ManagerOrganization
+                              )
+                            " />
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-window-back2" [ngClass]="{'show': showbackIds.includes(place.Id)}">
+                <i class="fa-solid fa-trash" (click)="CancelOneDelete(place.Id)"></i>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+    <div class="p-0" [ngClass]="{
+        'd-none': currentView == 4 || currentView == 3,
+        'col-12': currentView == 1,
+        'col-4': currentView == 2
+      }">
+      <div id="map" class="custom-map"></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #MapViewPlace let-modal>
+  <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
+</ng-template>
+
+<ng-template #ShareLink let-modal>
+  <div class="d-flex p-3 m-3 align-items-center" style="border: 1px solid #ccc; border-radius: 10px">
+    <p>{{ shareLink }}</p>
+    <i style="cursor: pointer" class="fa-solid fa-copy ms-3" (click)="copyLink(shareLink)"></i>
+  </div>
+</ng-template>
+
+<ng-template #StreetViewPlace let-modal>
+  <div *ngIf="General.modalObject.StreetViewURL">
+    <iframe [src]="sanitizedUrl" height="450" style="border: 0; width: 100%; height: 700px" allowfullscreen="">
+    </iframe>
+  </div>
+  <div id="street-view" style="height: 700px" *ngIf="!General.modalObject.StreetViewURL"></div>
+</ng-template>
+
+<!-- delete-shopping-center-modal -->
+<ng-template #deleteShoppingCenterModal let-modal>
+  <div class="modal-body-general p-4 rounded" style="
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    ">
+    <h2 class="text-center mb-4" style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)">
+      Remove Shopping Center
+    </h2>
+    <p class="text-center" style="font-size: 1rem; color: #6c757d">
+      Are you sure you want to remove this Shopping Center?
+    </p>
+
+    <div class="d-flex justify-content-end mt-4">
+      <button type="button" class="btn btn-secondary me-2 px-4 py-2" (click)="modal.dismiss('Cancel click')"
+        style="border-radius: 4px">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-danger px-4 py-2" (click)="confirmDeleteShoppingCenter(modal)"
+        style="border-radius: 4px">
+        Remove
+      </button>
+    </div>
+  </div>
+</ng-template>

@@ -5,6 +5,7 @@ export interface Center {
     CenterAddress: string
     CenterCity: string
     CenterState: string
+    Neighbourhood: string
     Latitude: number
     Longitude: number
     MainImage: string
@@ -26,6 +27,8 @@ export interface Center {
     Name: string
     Firstname:string
     LastName :string
+    CellPhone : number
+    Email: string
   }
   
   export interface Place {

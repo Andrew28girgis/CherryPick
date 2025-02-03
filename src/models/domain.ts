@@ -60,6 +60,24 @@ export interface WorkSpace {
   GetFboStage: GetFboStage[];
 }
 
+export interface ApiBody{
+  Name:string;
+  Params:ApiParam;
+  MainEntity : string;
+  Json:any;
+}
+export interface ApiParam{
+  id?:number ;
+  Query?:string;
+  Name?:string;
+  Duration ?: any;
+  CreatedDate ?: any;
+  Authentication?: any;
+  categoryId?:number;
+  whereCondition?:string;
+  TopStatement?:string;
+}
+
 export interface GroupedProperties {
   city: string;
   state: string;
@@ -317,6 +335,7 @@ export class ScoutlynImages {
 export class adminLogin {
   Email!: string;
   Password!: string;
+  contactToken!:any;
 }
 
 export class Filter {

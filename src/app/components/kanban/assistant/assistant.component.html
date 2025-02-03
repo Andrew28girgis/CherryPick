@@ -1,0 +1,354 @@
+<div class="page-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+  <!-- Add overlay -->
+
+  <!-- Update chat history structure -->
+
+  <div class="main-content">
+    <app-sidebar (collapseChange)="onSidebarCollapse($event)"></app-sidebar>
+
+    <header class="dashboard-header">
+      <h1 class="title">AI Assistant</h1>
+    </header>
+
+    <div class="chat-container">
+      <div class="chat-history-container"  #chatHistoryContainer>
+        <button class="chat-history-button" (click)="toggleChatHistory()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M21 7.75H3C2.59 7.75 2.25 7.41 2.25 7C2.25 6.59 2.59 6.25 3 6.25H21C21.41 6.25 21.75 6.59 21.75 7C21.75 7.41 21.41 7.75 21 7.75Z" fill="#7A8591"/>
+            <path d="M21 12.75H3C2.59 12.75 2.25 12.41 2.25 12C2.25 11.59 2.59 11.25 3 11.25H21C21.41 11.25 21.75 11.59 21.75 12C21.75 12.41 21.41 12.75 21 12.75Z" fill="#7A8591"/>
+            <path d="M21 17.75H3C2.59 17.75 2.25 17.41 2.25 17C2.25 16.59 2.59 16.25 3 16.25H21C21.41 16.25 21.75 16.59 21.75 17C21.75 17.41 21.41 17.75 21 17.75Z" fill="#7A8591"/>
+          </svg>
+          <span>Chat History</span>
+        </button>
+      
+        <div class="chat-history-dropdown" [class.open]="showChatHistory">
+          <div class="chat-history-header">
+            <span>Chat History</span>
+            <button class="new-chat-button" (click)="startNewChat()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z" fill="#7A8591"/>
+                <path d="M16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" fill="#7A8591"/>
+                <path d="M12 16.75C11.59 16.75 11.25 16.41 11.25 16V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V16C12.75 16.41 12.41 16.75 12 16.75Z" fill="#7A8591"/>
+              </svg>
+            </button>
+          </div>
+      
+          <div class="chat-history-content">
+            <div *ngFor="let group of groupedChats" class="chat-group">
+              <div class="group-label">{{group.label}}</div>
+              <div class="chat-list">
+                <button 
+                  *ngFor="let chat of group.chats" 
+                  class="chat-item"
+                  [class.active]="currentSession?.id === chat.id"
+                  (click)="selectSession(chat)"
+                >
+                  {{chat.title}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="messages-wrapper" #scrollContainer>
+        <div class="messages">
+          <!-- Initial Cards View -->
+          <div
+            class="welcome-message"
+            *ngIf="messages.length === 0 && showInitialCards"
+            @fadeSlide
+          >
+            <h2 class="greeting">Hello, {{ userName }}.</h2>
+            <p class="subheading">How can I help you today?</p>
+
+            <div class="initial-cards">
+              <button class="card-button" (click)="selectCard('file')">
+                <img
+                  src="assets/Images/Smart File Assistant.png"
+                  alt="Smart File Analysis"
+                />
+                <h3>Smart File Analysis</h3>
+                <p>
+                  Upload your files or images, and let the assistant extract key
+                  details effortlessly
+                </p>
+              </button>
+              <button class="card-button" (click)="selectCard('query')">
+                <img
+                  src="assets/Images/System Query Assistant2.png"
+                  alt="System Query Assistant"
+                />
+                <h3>System Query Assistant</h3>
+                <p>
+                  Ask anything about your system data and get quick, accurate
+                  answers
+                </p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Welcome Message -->
+          <!-- Suggested Prompts after card selection -->
+          <div
+            class="welcome-message"
+            *ngIf="messages.length === 0 && !showInitialCards"
+            @fadeSlide
+          >
+            <h2 class="greeting">Hello, {{ userName }}.</h2>
+            <p class="subheading">How can I help you today?</p>
+
+            <div class="suggested-prompts">
+              <button
+                *ngFor="
+                  let prompt of selectedCard === 'file'
+                    ? fileAnalysisPrompts
+                    : queryAssistantPrompts
+                "
+                class="prompt-button"
+                (click)="selectPrompt(prompt)"
+              >
+                <div class="prompt-content">
+                  <span class="prompt-text">{{ prompt.text }}</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat Messages -->
+          <div
+            *ngFor="let message of messages"
+            class="message"
+            [ngClass]="{
+              'message-assistant': message.sender === 'assistant',
+              'message-user': message.sender === 'user'
+            }"
+            @fadeSlide
+          >
+            <div class="message-avatar" *ngIf="message.sender === 'assistant'">
+              AI
+            </div>
+            <div class="message-content" >
+              <div class="message-think" [innerHTML]="formatMessage(message.content)" [ngClass]="{'think-content': isThinkContent(message.content)}"></div>
+
+              <!-- Attachments -->
+              <div class="attachments" *ngIf="message.attachments?.length">
+                <div
+                  class="attachment"
+                  *ngFor="let file of message.attachments"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"
+                    />
+                    <polyline points="13 2 13 9 20 9" />
+                  </svg>
+                  <span>{{ file.name }}</span>
+                </div>
+              </div>
+
+              <!-- Properties Grid -->
+              <div class="property-list" *ngIf="message.properties?.length">
+                <div class="property-header">
+                  <div class="property-count">
+                    <span class="count">{{ message.properties?.length }}</span>
+                    properties found
+                  </div>
+                </div>
+
+                <div class="properties-grid">
+                  <div
+                    class="property-card"
+                    *ngFor="let property of message.properties"
+                  >
+                    <div class="property-image-wrapper">
+                      <img
+                        [src]="property.image"
+                        [alt]="property.name"
+                        class="property-image"
+                      />
+                    </div>
+                    <div class="property-details">
+                      <h3 class="property-name">{{ property.name }}</h3>
+                      <p class="property-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ property.location }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="property-actions">
+                  <button
+                    *ngFor="let action of propertyActions"
+                    class="action-button"
+                    (click)="handlePropertyAction(action.id)"
+                  >
+                    <i class="fas fa-{{ action.icon }}"></i>
+                    <span>{{ action.text }}</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Analysis Grid -->
+              <div class="analysis-grid" *ngIf="message.analysis?.length">
+                <div
+                  class="analysis-card"
+                  *ngFor="let item of message.analysis"
+                >
+                  <div class="analysis-header">
+                    <span class="analysis-title">{{ item.title }}</span>
+                    <span class="trend-indicator" [class]="item.trend">
+                      <i
+                        class="fas"
+                        [class.fa-arrow-up]="item.trend === 'up'"
+                        [class.fa-arrow-down]="item.trend === 'down'"
+                        [class.fa-minus]="item.trend === 'neutral'"
+                      ></i>
+                    </span>
+                  </div>
+                  <div class="analysis-value">{{ item.value }}</div>
+                </div>
+              </div>
+
+              <!-- Suggestions -->
+              <div class="suggestions" *ngIf="message.suggestions?.length">
+                <button
+                  *ngFor="let suggestion of message.suggestions"
+                  class="suggestion-button"
+                  (click)="selectPrompt({ id: '', text: suggestion })"
+                >
+                  {{ suggestion }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Typing Indicator -->
+          <div class="typing-indicator" *ngIf="isTyping" @fadeSlide>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+
+          <div #messagesEnd></div>
+        </div>
+      </div>
+
+      <!-- Input Container -->
+      <div class="input-container">
+        <div
+          class="attachments-preview"
+          *ngIf="attachments.length > 0"
+          @fadeSlide
+        >
+          <div class="attachment-item" *ngFor="let file of attachments">
+            <div class="attachment-info">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"
+                />
+                <polyline points="13 2 13 9 20 9" />
+              </svg>
+              <span>{{ file.name }}</span>
+            </div>
+            <button class="remove-attachment" (click)="removeAttachment(file)">
+              ×
+            </button>
+          </div>
+        </div>
+
+        <div class="intelligent-suggestions-carousel" *ngIf="intelligentSuggestions.length > 0">
+          <button 
+            *ngFor="let suggestion of intelligentSuggestions" 
+            class="suggestion-chip"
+            (click)="selectPrompt({id: '', text: suggestion})"
+          >
+            {{suggestion}}
+          </button>
+        </div>
+        <form (ngSubmit)="handleSend()" class="message-form">
+          <input
+            type="file"
+            #fileInput
+            (change)="handleFileInput($event)"
+            multiple
+            class="file-input"
+            hidden
+          />
+
+          <input
+            [formControl]="newMessage"
+            type="text"
+            placeholder="Enter your prompt..."
+            class="message-input"
+            [disabled]="isTyping"
+          />
+          <button
+            type="button"
+            class="attach-button"
+            (click)="triggerFileInput()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M10.9702 22.75C7.25022 22.75 4.22021 19.72 4.22021 16V10C4.22021 5.73 7.70022 2.25 11.9702 2.25C16.2402 2.25 19.7202 5.73 19.7202 10V15.5C19.7202 17.84 17.8102 19.75 15.4702 19.75C13.1302 19.75 11.2202 17.84 11.2202 15.5V12C11.2202 11.59 11.5602 11.25 11.9702 11.25C12.3802 11.25 12.7202 11.59 12.7202 12V15.5C12.7202 17.02 13.9502 18.25 15.4702 18.25C16.9902 18.25 18.2202 17.02 18.2202 15.5V10C18.2202 6.55 15.4202 3.75 11.9702 3.75C8.52022 3.75 5.72021 6.55 5.72021 10V16C5.72021 18.89 8.07022 21.25 10.9702 21.25C11.3802 21.25 11.7202 21.59 11.7202 22C11.7202 22.41 11.3902 22.75 10.9702 22.75Z"
+                fill="#7A8591"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="submit"
+            class="send-button"
+            [disabled]="
+              (!newMessage.value?.trim() && !attachments.length) || isTyping
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M5.40995 21.7492C4.28995 21.7492 3.57995 21.3692 3.12995 20.9192C2.24995 20.0392 1.62995 18.1692 3.60995 14.1992L4.47995 12.4692C4.58995 12.2392 4.58995 11.7592 4.47995 11.5292L3.60995 9.79917C1.61995 5.82917 2.24995 3.94917 3.12995 3.07917C3.99995 2.19917 5.87995 1.56917 9.83995 3.55917L18.3999 7.83917C20.5299 8.89917 21.6999 10.3792 21.6999 11.9992C21.6999 13.6192 20.5299 15.0992 18.4099 16.1592L9.84995 20.4392C7.90995 21.4092 6.46995 21.7492 5.40995 21.7492ZM5.40995 3.74917C4.86995 3.74917 4.44995 3.87917 4.18995 4.13917C3.45995 4.85917 3.74995 6.72917 4.94995 9.11917L5.81995 10.8592C6.13995 11.5092 6.13995 12.4892 5.81995 13.1392L4.94995 14.8692C3.74995 17.2692 3.45995 19.1292 4.18995 19.8492C4.90995 20.5792 6.77995 20.2892 9.17995 19.0892L17.7399 14.8092C19.3099 14.0292 20.1999 12.9992 20.1999 11.9892C20.1999 10.9792 19.2999 9.94917 17.7299 9.16917L9.16995 4.89917C7.64995 4.13917 6.33995 3.74917 5.40995 3.74917Z"
+                fill="#7A8591"
+              />
+              <path
+                d="M10.8399 12.75H5.43994C5.02994 12.75 4.68994 12.41 4.68994 12C4.68994 11.59 5.02994 11.25 5.43994 11.25H10.8399C11.2499 11.25 11.5899 11.59 11.5899 12C11.5899 12.41 11.2499 12.75 10.8399 12.75Z"
+                fill="#7A8591"
+              />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,12 +1,65 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="container">
+<section class="row m-0 p-0">
+  <div [style.width]="isCollapsed ? '5% !important' : '20% !important'" id="primaryColumn" class="p-0">
+    <app-sidbar></app-sidbar>
+  </div>
+
+  <div id="contentColumn" [style.width]="isCollapsed ? '95% !important' : '80% !important'" class="p-0">
+    <div class="row d-flex p-0 m-0">
+      <div class="d-flex justify-content-center pt-4 col-11">
+        <div class="searchBox">
+          <input class="searchInput" type="text" name="" placeholder="Search something">
+          <button class="searchButton" href="#">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+      </div>
+      <div class="pt-4 col-1 logout_Style">
+        <app-logout></app-logout>
+      </div>
+    </div>
+
+    <div class="row m-0 p-0 mt-2 d-flex ps-2 pe-2">
+      <ng-container *ngFor="let type of buyboxTypes">
+        <div class=" p-3" [ngClass]="isCollapsed ? 'col-12 col-sm-3' : 'col-12 col-sm-4'">
+          <section class="card__Kayak">
+            <div class="card__Kayak__img mt-3 mb-3">
+              <img class="Kayak__img ms-2"
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ type.organizationId }}" alt="" />
+            </div>
+            <div class="card__Kayak_title">
+              {{ type.name }}
+            </div>
+            <div class="d-flex justify-content-center">
+              <div style="width: max-content;min-width: 100px;">
+                <p class="card__Kayak_description w-auto">
+                  <i class="fa-solid fa-circle"></i> {{ type.description }}
+                </p>
+              </div>
+            </div>
+            <div class="d-flex justify-content-around  mt-2 pb-3">
+              <button class="CherryPick__button"
+                (click)="chooseType(type.id , type.organizationId , type.name)">Market Survey</button>
+              <button class="Kayack__button" [routerLink]="['/dashboard', type.id]">Dashboard</button>
+            </div>
+          </section>
+        </div>
+      </ng-container>
+      
+    </div>
+  </div>
+</section> 
+
+<!-- <div class="container">
   <div class="row mt-2">
     <ng-container *ngFor="let type of buyboxTypes">
-      <div class="col-md-12" (click)="chooseType(type.id)">
-        <div class="card-bodyx" >
+      <div class="col-md-12" (click)="chooseType(type.id , type.organizationId , type.name)">
+        <div class="card-bodyx">
           <div class="card-title">{{ type.name }}</div>
+          <button class="btn btn-primary" [routerLink]="['/dashboard', type.id]">Go to Kayak</button>
         </div>
       </div>
     </ng-container>
   </div>
+</div> -->

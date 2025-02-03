@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <nav class="navbars">
-  <div class="navbar-line m-0" s>
+  <div class="navbar-line m-0" >
     <div
       class="nav-right w-100"
       style="cursor: pointer; display: flex; justify-content: space-between"
@@ -27,28 +27,336 @@
       </ngb-alert>
     </p>
 
-    <div class="main-section">
-      <section id="hero">
-        <div class="row py-4">
-          <div class="col-md-7 col-sm-12 p-0">
-            <div class="center-name">
-              <p
-                *ngIf="!ShoppingCenter; else shoppingCenterTemplate"
-                class="m-0 procpect-name"
+    <i
+    *ngIf="windowHistrony!==1"
+      class="fa-solid fa-arrow-left"
+      style="font-size: 24px; cursor: pointer; padding: 15px 10px"
+      (click)="goBack()"
+    ></i>
+    <section id="intro" [ngStyle]="{ background: getBackgroundImage() }">
+      <div class="intro-container wow fadeIn">
+        <h1
+          class="mb-2 pb-0"
+          *ngIf="ShoppingCenter?.CenterName"
+          [innerHTML]="ShoppingCenter.CenterName | titlecase"
+        ></h1>
+        <p
+          class="mb-2 pb-0 address-city"
+          (click)="
+            openMapViewPlace(
+              mapPopup,
+              ShoppingCenter ? ShoppingCenter : StandAlonePlace
+            )
+          "
+        >
+          {{ getAddress() }}
+        </p>
+        <ng-container *ngIf="ShoppingCenter">
+          <div class="d-flex">
+            <ng-container *ngFor="let near of NearByType">
+              <div
+                class="d-flex align-items-center p-0"
+                style="margin-bottom: 5px"
               >
-                {{ StandAlonePlace?.Address }}, {{ StandAlonePlace?.City }},
-                {{ StandAlonePlace?.State }}
+                <ng-container
+                  *ngFor="let branch of near.Branches | slice : 0 : 1"
+                >
+                  <img
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      branch.OrganizationId
+                    }}"
+                    alt=""
+                    title="{{ branch.RelationOrganization[0].Name }}"
+                    style="
+                      margin-inline: 10px;
+                      width: 30px;
+                      border: 2px solid #fff;
+                      border-radius: 50%;
+                    "
+                  />
+                  <p>{{ branch.RelationOrganization[0].Name }}</p>
+
+                  <!-- <span class="mx-2" style="color: #fff; font-weight: bold">
+                    {{
+                      branch.RelationOrganization[0].Distance.toFixed(2) +
+                        " Miles "
+                    }}
+                  </span> -->
+                  <p class="m-0 ps-2"><b>{{ near.Name }}</b></p>
+                </ng-container>
+              </div>
+            </ng-container>
+
+            <div
+              class="d-flex mx-2"
+              *ngIf="
+                CustomPlace.OtherPlaces && CustomPlace.OtherPlaces.length > 0
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                  fill="white"
+                />
+                <path
+                  d="M19.8499 18.75H17.3699C16.9599 18.75 16.6199 18.41 16.6199 18C16.6199 17.59 16.9599 17.25 17.3699 17.25H19.8499C20.8699 17.25 21.2499 16.87 21.2499 15.85V4.15002C21.2499 3.13002 20.8699 2.75 19.8499 2.75H15.5499C14.5299 2.75 14.1499 3.13002 14.1499 4.15002V6C14.1499 6.41 13.8099 6.75 13.3999 6.75C12.9899 6.75 12.6499 6.41 12.6499 6V4.15002C12.6499 2.31002 13.7099 1.25 15.5499 1.25H19.8499C21.6899 1.25 22.7499 2.31002 22.7499 4.15002V15.85C22.7499 17.69 21.6899 18.75 19.8499 18.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                  fill="white"
+                />
+                <path
+                  d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                  fill="white"
+                />
+              </svg>
+
+              <p class="m-0 px-2">
+                <span
+                  style="color: #fff; font-weight: bold; padding-inline: 5px"
+                  >{{ CustomPlace.OtherPlaces.length }}</span
+                >
+
+                Available Units
+              </p>
+            </div>
+          </div>
+          <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p>
+
+          <div class="d-flex">
+            <div class="pe-2" *ngIf="ShoppingCenter?.DocsLink">
+              <div>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
+                    fill="white"
+                  />
+                </svg>
+
+                <a
+                  class="info-value text-light px-1"
+                  href="{{ ShoppingCenter.DocsLink }}"
+                  target="_blank"
+                  >Property Docs</a
+                >
+              </div>
+            </div>
+            <div class="pe-2" *ngIf="ShoppingCenter?.SitePlan">
+              <div>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 17.75C8.9 17.75 8.81 17.73 8.71 17.69C8.43 17.58 8.25 17.3 8.25 17V11C8.25 10.59 8.59 10.25 9 10.25C9.41 10.25 9.75 10.59 9.75 11V15.19L10.47 14.47C10.76 14.18 11.24 14.18 11.53 14.47C11.82 14.76 11.82 15.24 11.53 15.53L9.53 17.53C9.39 17.67 9.19 17.75 9 17.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M9 17.75C8.81 17.75 8.62 17.68 8.47 17.53L6.47 15.53C6.18 15.24 6.18 14.76 6.47 14.47C6.76 14.18 7.24 14.18 7.53 14.47L9.53 16.47C9.82 16.76 9.82 17.24 9.53 17.53C9.38 17.68 9.19 17.75 9 17.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
+                    fill="white"
+                  />
+                </svg>
+
+                <a
+                  class="info-value text-light px-1"
+                  href="{{ ShoppingCenter.SitePlan }}"
+                  target="_blank"
+                  >View Site Plan</a
+                >
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!ShoppingCenter">
+          <div class="d-flex">
+            <ng-container *ngFor="let near of NearByType">
+              <div class="d-flex align-items-center p-0">
+                <ng-container
+                  *ngFor="let branch of near.Branches | slice : 0 : 1"
+                >
+                  <img
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      branch.OrganizationId
+                    }}"
+                    alt=""
+                    title="{{ branch.RelationOrganization[0].Name }}"
+                    style="height: 30px; margin-inline: 10px; width: 30px"
+                  />
+
+                  <!-- <span class="mx-2" style="color: #fff; font-weight: bold">
+                    {{
+                      branch.RelationOrganization[0].Distance.toFixed(2) +
+                        " Miles "
+                    }}
+                  </span> -->
+                  <p class="m-0">Nearest {{ near.Name }}</p>
+                </ng-container>
+              </div>
+            </ng-container>
+
+            <div class="d-flex align-items-center">
+              <p *ngIf="StandAlonePlace?.Suite" class="info-value pe-4">
+                <b class="pe-2"> Suite: </b>{{ StandAlonePlace?.Suite }}
               </p>
 
-              <ng-template #shoppingCenterTemplate>
-                <p
-                  class="m-0 procpect-name"
-                  [innerHTML]="ShoppingCenter.CenterName | titlecase"
-                ></p>
-              </ng-template>
+              <p
+                *ngIf="StandAlonePlace?.BuildingSizeSf"
+                class="info-value px-3"
+              >
+                <b class="me-1">Unit Size:</b>
+                {{ StandAlonePlace?.BuildingSizeSf | number }} SF
+              </p>
+              <p class="info-value px-3">
+                <b class="me-1">Lease Price: </b>
+                {{
+                  StandAlonePlace?.ForLeasePrice
+                    ? getLeasePriceStandAlone(StandAlonePlace)
+                    : " On Request"
+                }}
+                <span class="pe-2" *ngIf="StandAlonePlace?.ForLeasePrice"
+                  >, ${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</span
+                >
+              </p>
             </div>
+          </div>
 
-            <div style="padding: 20px 20px 0 0">
+          <div class="d-flex align-items-center">
+            <div class="pe-3" *ngIf="StandAlonePlace?.DocsLink">
+              <div>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
+                    fill="white"
+                  />
+                </svg>
+
+                <a
+                  class="info-value text-light px-1"
+                  href="{{ StandAlonePlace?.DocsLink }}"
+                  target="_blank"
+                  >Property Docs</a
+                >
+              </div>
+            </div>
+            <div class="pe-3" *ngIf="StandAlonePlace?.SitePlan">
+              <div>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 17.75C8.9 17.75 8.81 17.73 8.71 17.69C8.43 17.58 8.25 17.3 8.25 17V11C8.25 10.59 8.59 10.25 9 10.25C9.41 10.25 9.75 10.59 9.75 11V15.19L10.47 14.47C10.76 14.18 11.24 14.18 11.53 14.47C11.82 14.76 11.82 15.24 11.53 15.53L9.53 17.53C9.39 17.67 9.19 17.75 9 17.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M9 17.75C8.81 17.75 8.62 17.68 8.47 17.53L6.47 15.53C6.18 15.24 6.18 14.76 6.47 14.47C6.76 14.18 7.24 14.18 7.53 14.47L9.53 16.47C9.82 16.76 9.82 17.24 9.53 17.53C9.38 17.68 9.19 17.75 9 17.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
+                    fill="white"
+                  />
+                </svg>
+
+                <a
+                  class="info-value text-light px-1"
+                  href="{{ StandAlonePlace?.SitePlan }}"
+                  target="_blank"
+                  >View Site Plan</a
+                >
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <div
+          class="w-100 d-flex justify-content-end"
+          *ngIf="placeImage && placeImage.length > 0"
+        >
+          <button class="view-gallery" (click)="openGallery()">
+            View Gallery
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div
+      class="main-section"
+      *ngIf="StandAlonePlace?.Description || ShoppingCenter?.Description"
+    >
+      <section id="hero">
+        <div class="row">
+          <div class="col-sm-12">
+            <div>
               <p
                 class="info-value"
                 class="rating-part"
@@ -61,207 +369,14 @@
               ></p>
             </div>
           </div>
-          <div class="col-md-5 col-sm-12 p-0">
-            <div class="row details-info" *ngIf="!ShoppingCenter">
-              <div class="col-sm-12 p-0">
-                <div class="d-flex flex-row align-items-center">
-                  <p class="info-head"></p>
-                  <p
-                    class="info-value content-address"
-                    (click)="openMapViewPlace(mapPopup, StandAlonePlace)"
-                  >
-                    {{ StandAlonePlace?.Address }},
-                    {{ StandAlonePlace?.City | titlecase }},
-                    {{ StandAlonePlace?.State }}
-                  </p>
-                </div>
-              </div>
+        </div>
+      </section>
+    </div>
 
-              <p *ngIf="StandAlonePlace?.Suite" class="info-value p-0">
-                Suite: {{ StandAlonePlace?.Suite }}
-              </p>
-
-              <p *ngIf="StandAlonePlace?.BuildingSizeSf" class="info-value p-0">
-                Unit Size: {{ StandAlonePlace?.BuildingSizeSf | number }} SF
-              </p>
-              <p *ngIf="StandAlonePlace?.ForLeasePrice" class="info-value p-0">
-                Lease Price : {{ StandAlonePlace?.ForLeasePrice }}
-              </p>
-
-              <ng-container *ngFor="let near of NearByType">
-                <div
-                  class="d-flex align-items-center p-0"
-                  style="margin-bottom: 5px"
-                >
-                  <p class="m-0">Nearest {{ near.Name }}:</p>
-                  <ng-container
-                    *ngFor="let branch of near.Branches | slice : 0 : 1"
-                  >
-                    <img
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        branch.OrganizationId
-                      }}"
-                      alt=""
-                      title="{{ branch.RelationOrganization[0].Name }}"
-                      style="height: 30px; margin-inline: 10px; width: 30px"
-                    />
-
-                    <span class="ms-2 font-weight-bold">
-                      {{ branch.RelationOrganization[0].Distance.toFixed(2) }}
-                    </span>
-                  </ng-container>
-                </div>
-              </ng-container>
-              <!-- <ng-container *ngFor="let item of ShoppingCenter.ShoppingCenter.Places"></ng-container> -->
-              <div
-                class="col-md-12 col-sm-12 p-0"
-                *ngIf="StandAlonePlace?.DocsLink"
-              >
-                <div
-                  class="d-flex flex-row align-items-center"
-                  style="padding: 12px 0"
-                >
-                  <a
-                    class="info-value gray"
-                    href="{{ StandAlonePlace?.DocsLink }}"
-                    target="_blank"
-                    >Property Docs</a
-                  >
-                </div>
-              </div>
-              <div
-                class="col-md-12 col-sm-12 p-0"
-                *ngIf="StandAlonePlace?.SitePlan"
-              >
-                <div class="d-flex flex-row align-items-center">
-                  <a
-                    class="info-value gray"
-                    href="{{ StandAlonePlace?.SitePlan }}"
-                    target="_blank"
-                    >View Site Plan</a
-                  >
-                </div>
-              </div>
-            </div>
-            <!-- End if StandAlone -->
-
-            <!-- Start if ShoppingCenter -->
-
-            <div class="row details-info" *ngIf="ShoppingCenter">
-              <div class="p-0 info-border">
-                <div>
-                  <p
-                    class="m-0 procpect-name"
-                    style="font-size: 20px"
-                    *ngIf="OrgManager && OrgManager[0]"
-                  >
-                    {{ OrgManager[0].name }}
-                  </p>
-                </div>
-                <div class="d-flex flex-column">
-                  <ng-container *ngFor="let Manager of OrgManager">
-                    <p class="m-0">
-                      {{ Manager.firstname | titlecase }} {{ Manager.lastname | titlecase}}
-                    </p>
-                  </ng-container>
-                </div>
-              </div>
-              <div class="col-sm-12 p-0" *ngIf="ShoppingCenter.CenterAddress">
-                <div class="d-flex flex-row align-items-center">
-                  <p class="info-head"></p>
-                  <p
-                    class="info-value content-address"
-                    (click)="openMapViewPlace(mapPopup, ShoppingCenter)"
-                  >
-                    {{ ShoppingCenter.CenterAddress }},
-                    {{ ShoppingCenter.CenterCity | titlecase }},
-                    {{ ShoppingCenter.CenterState }}
-                  </p>
-                </div>
-              </div>
-
-              <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p>
-
-              <ng-container *ngFor="let near of NearByType">
-                <div
-                  class="d-flex align-items-center p-0"
-                  style="margin-bottom: 5px"
-                >
-                  <p class="m-0">Nearest {{ near.Name }}:</p>
-                  <ng-container
-                    *ngFor="let branch of near.Branches | slice : 0 : 1"
-                  >
-                    <img
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        branch.OrganizationId
-                      }}"
-                      alt=""
-                      title="{{ branch.RelationOrganization[0].Name }}"
-                      style="height: 30px; margin-inline: 10px; width: 30px"
-                    />
-
-                    <span class="ms-2 font-weight-bold">
-                      {{
-                        branch.RelationOrganization[0].Distance.toFixed(2) +
-                          " MI"
-                      }}
-                    </span>
-                  </ng-container>
-                </div>
-              </ng-container>
-
-              <div
-                class="col-md-12 col-sm-12 p-0"
-                *ngIf="
-                  CustomPlace.OtherPlaces && CustomPlace.OtherPlaces.length > 0
-                "
-              >
-                <div>
-                  <p>
-                    Available Units:
-                    <span style="color: #000; font-weight: bold">{{
-                      CustomPlace.OtherPlaces.length
-                    }}</span>
-                  </p>
-                </div>
-              </div>
-              <!-- <ng-container *ngFor="let item of ShoppingCenter.ShoppingCenter.Places"></ng-container> -->
-              <div
-                class="col-md-12 col-sm-12 p-0"
-                *ngIf="ShoppingCenter?.DocsLink"
-              >
-                <div
-                  class="d-flex flex-row align-items-center"
-                  style="padding: 12px 0"
-                >
-                  <a
-                    class="info-value gray"
-                    href="{{ ShoppingCenter.DocsLink }}"
-                    target="_blank"
-                    >Property Docs</a
-                  >
-                </div>
-              </div>
-              <div
-                class="col-md-12 col-sm-12 p-0"
-                *ngIf="ShoppingCenter?.SitePlan"
-              >
-                <div class="d-flex flex-row align-items-center">
-                  <a
-                    class="info-value gray"
-                    href="{{ ShoppingCenter.SitePlan }}"
-                    target="_blank"
-                    >View Site Plan</a
-                  >
-                </div>
-              </div>
-            </div>
-            <!-- End if ShoppingCenter -->
-          </div>
-          <div
-            class="col-md-12"
-            *ngIf="StandAlonePlace && StandAlonePlace.Notes"
-          >
+    <div class="main-section" *ngIf="StandAlonePlace && StandAlonePlace.Notes">
+      <section id="hero">
+        <div class="row">
+          <div class="col-md-12">
             <h2 class="main-heading">Notes</h2>
             <p class="rating-part" style="text-align: justify; font-size: 17px">
               {{ StandAlonePlace.Notes }}
@@ -269,8 +384,184 @@
           </div>
         </div>
       </section>
-      <div class="row">
-        <div class="col-md-12">
+    </div>
+
+    <!-- <div class="col-md-5 col-sm-12 p-0">
+      <div class="row details-info" *ngIf="!ShoppingCenter">
+        <div class="col-sm-12 p-0">
+          <div class="d-flex flex-row align-items-center">
+            <p class="info-head"></p>
+            <p
+              class="info-value content-address"
+              (click)="openMapViewPlace(mapPopup, StandAlonePlace)"
+            >
+              {{ StandAlonePlace?.Address }},
+              {{ StandAlonePlace?.City | titlecase }},
+              {{ StandAlonePlace?.State }}
+            </p>
+          </div>
+        </div>
+
+        <p *ngIf="StandAlonePlace?.Suite" class="info-value p-0">
+          Suite: {{ StandAlonePlace?.Suite }}
+        </p>
+
+        <p *ngIf="StandAlonePlace?.BuildingSizeSf" class="info-value p-0">
+          Unit Size: {{ StandAlonePlace?.BuildingSizeSf | number }} SF
+        </p>
+        <p class="info-value p-0">
+          <b>Lease Price: </b> <br />
+          {{
+            StandAlonePlace?.ForLeasePrice
+              ? getLeasePriceStandAlone(StandAlonePlace)
+              : "On Request"
+          }}
+          <span *ngIf="StandAlonePlace?.ForLeasePrice"
+            ><p>${{ StandAlonePlace?.ForLeasePrice }}/sqft/Year</p></span
+          >
+        </p>
+
+        <ng-container *ngFor="let near of NearByType">
+          <div class="d-flex align-items-center p-0" style="margin-bottom: 5px">
+            <p class="m-0">Nearest {{ near.Name }}:</p>
+            <ng-container *ngFor="let branch of near.Branches | slice : 0 : 1">
+              <img
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  branch.OrganizationId
+                }}"
+                alt=""
+                title="{{ branch.RelationOrganization[0].Name }}"
+                style="height: 30px; margin-inline: 10px; width: 30px"
+              />
+
+              <span class="ms-2 font-weight-bold">
+                {{ branch.RelationOrganization[0].Distance.toFixed(2) }}
+              </span>
+            </ng-container>
+          </div>
+        </ng-container>
+         <div class="col-md-12 col-sm-12 p-0" *ngIf="StandAlonePlace?.DocsLink">
+          <div
+            class="d-flex flex-row align-items-center"
+            style="padding: 12px 0"
+          >
+            <a
+              class="info-value gray"
+              href="{{ StandAlonePlace?.DocsLink }}"
+              target="_blank"
+              >Property Docs</a
+            >
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 p-0" *ngIf="StandAlonePlace?.SitePlan">
+          <div class="d-flex flex-row align-items-center">
+            <a
+              class="info-value gray"
+              href="{{ StandAlonePlace?.SitePlan }}"
+              target="_blank"
+              >View Site Plan</a
+            >
+          </div>
+        </div>
+      </div> 
+      <div class="row details-info" *ngIf="ShoppingCenter">
+        <div class="p-0 info-border" *ngIf="OrgManager && OrgManager[0]">
+          <div>
+            <p
+              class="m-0 procpect-name"
+              style="font-size: 20px"
+              *ngIf="OrgManager && OrgManager[0]"
+            >
+              {{ OrgManager[0].name }}
+            </p>
+          </div>
+          <div class="d-flex flex-column">
+            <ng-container *ngFor="let Manager of OrgManager">
+              <p class="m-0">
+                {{ Manager.firstname | titlecase }}
+                {{ Manager.lastname | titlecase }}
+              </p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-sm-12 p-0" *ngIf="ShoppingCenter.CenterAddress">
+          <div class="d-flex flex-row align-items-center">
+            <p class="info-head"></p>
+            <p
+              class="info-value content-address"
+              (click)="openMapViewPlace(mapPopup, ShoppingCenter)"
+            >
+              {{ ShoppingCenter.CenterAddress }},
+              {{ ShoppingCenter.CenterCity | titlecase }},
+              {{ ShoppingCenter.CenterState }}
+            </p>
+          </div>
+        </div>
+
+        <p class="info-value p-0" [innerHTML]="getMinMaxUnitSize()"></p>
+
+        <ng-container *ngFor="let near of NearByType">
+          <div class="d-flex align-items-center p-0" style="margin-bottom: 5px">
+            <p class="m-0">Nearest {{ near.Name }}:</p>
+            <ng-container *ngFor="let branch of near.Branches | slice : 0 : 1">
+              <img
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  branch.OrganizationId
+                }}"
+                alt=""
+                title="{{ branch.RelationOrganization[0].Name }}"
+                style="height: 30px; margin-inline: 10px; width: 30px"
+              />
+
+              <span class="ms-2 font-weight-bold">
+                {{ branch.RelationOrganization[0].Distance.toFixed(2) + " MI" }}
+              </span>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <div
+          class="col-md-12 col-sm-12 p-0"
+          *ngIf="CustomPlace.OtherPlaces && CustomPlace.OtherPlaces.length > 0"
+        >
+          <div>
+            <p>
+              Available Units:
+              <span style="color: #000; font-weight: bold">{{
+                CustomPlace.OtherPlaces.length
+              }}</span>
+            </p>
+          </div>
+        </div>
+         <div class="col-md-12 col-sm-12 p-0" *ngIf="ShoppingCenter?.DocsLink">
+          <div
+            class="d-flex flex-row align-items-center"
+            style="padding: 12px 0"
+          >
+            <a
+              class="info-value gray"
+              href="{{ ShoppingCenter.DocsLink }}"
+              target="_blank"
+              >Property Docs</a
+            >
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 p-0" *ngIf="ShoppingCenter?.SitePlan">
+          <div class="d-flex flex-row align-items-center">
+            <a
+              class="info-value gray"
+              href="{{ ShoppingCenter.SitePlan }}"
+              target="_blank"
+              >View Site Plan</a
+            >
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="main-section">
+      <section id="hero">
+        <div class="row">
           <div class="tabs">
             <ul class="tab-headers" *ngIf="ShoppingCenter">
               <li
@@ -286,412 +577,145 @@
             </ul>
           </div>
 
-          <iframe
-            *ngIf="sanitizedUrl"
-            [src]="sanitizedUrl"
-            style="
-              border: 0;
-              width: 100%;
-              height: 450px;
-              margin-top: 20px;
-              border-radius: 20px;
-            "
-            allowfullscreen=""
-            loading="lazy"
-          >
-          </iframe>
+          <div class="col-md-6">
+            <iframe
+              *ngIf="sanitizedUrl"
+              [src]="sanitizedUrl"
+              style="
+                border: 0;
+                width: 100%;
+                height: 450px;
+                margin-top: 20px;
+                border-radius: 20px;
+              "
+              allowfullscreen=""
+              loading="lazy"
+            >
+            </iframe>
 
-          <div
-            [ngStyle]="{ display: sanitizedUrl ? 'none' : 'block' }"
-            id="street-view"
-            style="height: 450px; margin-top: 20px"
-          ></div>
+            <div
+              [ngStyle]="{ display: sanitizedUrl ? 'none' : 'block' }"
+              id="street-view"
+              style="height: 450px; margin-top: 20px"
+            ></div>
+          </div>
+          <div class="col-md-6">
+            <div
+              id="map"
+              style="height: 450px; margin-top: 20px; border-radius: 20px"
+              *ngIf="mapView"
+            ></div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
 
-    <div class="main-section" *ngIf="ShoppingCenter">
-      <p class="main-name">Gallery</p>
-      <div class="row no-gutters mt-2 text-center">
-        <div class="col-md-8">
-          <a
-            class="procpect-img"
-            href="{{ ShoppingCenter.MainImage }}"
-            target="_blank"
-          >
-            <img
-              *ngIf="ShoppingCenter.MainImage != null"
-              [src]="ShoppingCenter.MainImage"
-              class="d-block w-100 main-img"
-            />
-          </a>
-        </div>
-        <ng-container *ngFor="let img of placeImage">
-          <div class="col-md-4">
-            <div class="venue-gallery">
-              <a
-                href="{{ img }}"
-                class="procpect-img"
-                data-gall="venue-gallery"
-                target="_blank"
-              >
-                <img src="{{ img }}" alt="" class="procpect-img" />
-              </a>
+    <div
+      class="main-section"
+      *ngIf="
+        ShoppingCenter  
+      "
+    >
+      <section id="hero">
+        <ng-container>
+          <div class="col-md-12">
+            <h2 class="main-heading">Units Inside</h2> 
+            <div class="another-places p-0">
+              <table class="procpect-table">
+                <thead class="procpect-table-head">
+                  <tr>
+                    <th>Suite</th>
+                    <th>Listing Type</th>
+                    <th>Lease Price</th>
+                    <th>Unit Size (SF)</th>
+                    <th>Secondary Type</th>
+                    <th>Street View</th>
+                  </tr>
+                </thead>
+                <tbody class="procpect-table-body">
+                  <ng-container *ngFor="let place of ShoppingCenter.Place">
+                    <tr>
+                      <td>{{ place.Suite }}</td>
+                      <td>
+                        {{ place.ListingType }}
+                      </td>
+                      <td>
+                        <span *ngIf="place.ForLeasePrice != 'undefined'"
+                          >{{
+                            place.ForLeasePrice
+                              ? getLeasePriceStandAlone(place)
+                              : "On Request"
+                          }}
+                          <p *ngIf="place.ForLeasePrice">
+                            ${{ place.ForLeasePrice }}/sqft/Year
+                          </p>
+                        </span>
+                      </td>
+                      <td *ngIf="place.BuildingSizeSf">
+                        {{ place.BuildingSizeSf | number }} SF
+                      </td>
+                      <td *ngIf="!place.BuildingSizeSf">On Request</td>
+                      <td>{{ place.SecondaryType }}</td>
+                      <td>
+                        <div
+                          style="cursor: pointer"
+                          (click)="openStreetViewPlace(StreetViewPlace, place)"
+                        >
+                          <svg
+                            width="46"
+                            height="30"
+                            viewBox="0 0 46 30"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M19.4961 29.8983C19.655 29.9556 19.8212 30 20 30H23H26C26.1788 30 26.3451 29.9556 26.504 29.8983C31.8508 29.597 38 28.5817 38 25.5C38 22.6886 32.8809 21.5968 27.9231 21.1979L30.0605 19.0605C30.3418 18.7793 30.5 18.3977 30.5 18V13.5C30.5 10.7502 28.6304 8.45124 26.1025 7.7449C26.9597 6.92505 27.5 5.77698 27.5 4.5C27.5 2.01855 25.4814 0 23 0C20.5185 0 18.5 2.01855 18.5 4.5C18.5 5.77698 19.0403 6.92505 19.8975 7.7449C17.3696 8.45124 15.5 10.7502 15.5 13.5V18C15.5 18.3977 15.6582 18.7793 15.9395 19.0605L18.0769 21.1979C13.1191 21.5968 8 22.6886 8 25.5C8 28.5817 14.1493 29.597 19.4961 29.8983ZM27.5 26.825V24.175C31.0845 24.4636 33.3286 25.0481 34.4067 25.5C33.3286 25.9519 31.0845 26.5364 27.5 26.825ZM23 3C23.8276 3 24.5 3.67309 24.5 4.5C24.5 5.32691 23.8276 6 23 6C22.1724 6 21.5 5.32691 21.5 4.5C21.5 3.67309 22.1724 3 23 3ZM18.5 13.5C18.5 11.8455 19.8462 10.5 21.5 10.5H24.5C26.1538 10.5 27.5 11.8455 27.5 13.5V17.3789L24.9395 19.9395C24.6582 20.2207 24.5 20.6023 24.5 21V22.5747V26.9625C24.2734 26.9685 24.0508 26.9759 23.8203 26.9795C23.273 26.9873 22.7271 26.9873 22.1797 26.9795C21.9492 26.9759 21.7266 26.9685 21.5 26.9625V22.5747V21C21.5 20.6023 21.3418 20.2207 21.0605 19.9395L18.5 17.3789V13.5ZM18.5 24.175V26.825C14.9155 26.5364 12.6714 25.9519 11.5933 25.5C12.6714 25.0481 14.9155 24.4636 18.5 24.175Z"
+                              fill="#0D0C0C"
+                            />
+                          </svg>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
             </div>
           </div>
         </ng-container>
-      </div>
+      </section>
     </div>
 
-    <div class="main-section" *ngIf="!ShoppingCenter">
-      <p class="main-name">Gallery</p>
-      <div class="row no-gutters mt-2 text-center">
-        <div class="col-md-8">
-          <a
-            class="procpect-img"
-            href="{{ StandAlonePlace?.MainImage }}"
-            target="_blank"
-          >
-            <img
-              *ngIf="StandAlonePlace?.MainImage != null"
-              [src]="StandAlonePlace?.MainImage"
-              class="d-block w-100 main-img"
-            />
-          </a>
-        </div>
-        <ng-container *ngFor="let img of placeImage">
-          <div class="col-md-4">
-            <div class="venue-gallery">
-              <a
-                href="{{ img }}"
-                class="procpect-img"
-                data-gall="venue-gallery"
-                target="_blank"
-              >
-                <img src="{{ img }}" alt="" class="procpect-img" />
-              </a>
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-
-    <div class="row">
-      <ng-container
-        *ngIf="
-          StandAlonePlace?.SiteSelectionReason ||
-          ShoppingCenter?.SiteSelectionReason
-        "
-      >
-        <div class="col-md-12">
-          <div class="main-section">
+    <div
+      class="main-section"
+      *ngIf="
+        
+        ShoppingCenter?.SiteSelectionReason
+      "
+    >
+      <section id="hero">
+        <ng-container>
+          <div class="col-md-12">
             <div>
               <p class="main-name">
                 Why does this location meet your requirements?
               </p>
               <p
-                [innerHtml]="
-                  !ShoppingCenter
-                    ? StandAlonePlace?.SiteSelectionReason
-                    : ShoppingCenter.SiteSelectionReason
+                [innerHtml]="ShoppingCenter.SiteSelectionReason
                 "
               ></p>
             </div>
           </div>
-        </div>
-      </ng-container>
+        </ng-container>
+      </section>
+    </div>
 
-      <ng-container
-        *ngIf="
-          ShoppingCenter &&
-          CustomPlace.OtherPlaces &&
-          CustomPlace.OtherPlaces.length > 0
-        "
-      >
-        <div class="col-md-12">
-          <div class="main-section another-places p-0">
-            <table class="procpect-table">
-              <thead class="procpect-table-head">
-                <tr>
-                  <th>Suite</th>
-                  <th>Listing Type</th>
-                  <th>Lease Price</th>
-                  <th>Unit Size (SF)</th>
-                  <th>Street View</th>
-                </tr>
-              </thead>
-              <tbody class="procpect-table-body">
-                <ng-container *ngFor="let place of CustomPlace.OtherPlaces">
-                  <tr>
-                    <td>{{ place.Suite }}</td>
-                    <td>
-                      {{ place.ListingType }}
-                    </td>
-                    <td>
-                      <span *ngIf="place.ForLeasePrice != 'undefined'">{{
-                        place.ForLeasePrice
-                      }}</span>
-                    </td>
-                    <td>{{ place.BuildingSizeSf | number }} SF</td>
-                    <td>
-                      <div
-                        style="cursor: pointer"
-                        (click)="openStreetViewPlace(StreetViewPlace, place)"
-                      >
-                        <svg
-                          width="46"
-                          height="30"
-                          viewBox="0 0 46 30"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M19.4961 29.8983C19.655 29.9556 19.8212 30 20 30H23H26C26.1788 30 26.3451 29.9556 26.504 29.8983C31.8508 29.597 38 28.5817 38 25.5C38 22.6886 32.8809 21.5968 27.9231 21.1979L30.0605 19.0605C30.3418 18.7793 30.5 18.3977 30.5 18V13.5C30.5 10.7502 28.6304 8.45124 26.1025 7.7449C26.9597 6.92505 27.5 5.77698 27.5 4.5C27.5 2.01855 25.4814 0 23 0C20.5185 0 18.5 2.01855 18.5 4.5C18.5 5.77698 19.0403 6.92505 19.8975 7.7449C17.3696 8.45124 15.5 10.7502 15.5 13.5V18C15.5 18.3977 15.6582 18.7793 15.9395 19.0605L18.0769 21.1979C13.1191 21.5968 8 22.6886 8 25.5C8 28.5817 14.1493 29.597 19.4961 29.8983ZM27.5 26.825V24.175C31.0845 24.4636 33.3286 25.0481 34.4067 25.5C33.3286 25.9519 31.0845 26.5364 27.5 26.825ZM23 3C23.8276 3 24.5 3.67309 24.5 4.5C24.5 5.32691 23.8276 6 23 6C22.1724 6 21.5 5.32691 21.5 4.5C21.5 3.67309 22.1724 3 23 3ZM18.5 13.5C18.5 11.8455 19.8462 10.5 21.5 10.5H24.5C26.1538 10.5 27.5 11.8455 27.5 13.5V17.3789L24.9395 19.9395C24.6582 20.2207 24.5 20.6023 24.5 21V22.5747V26.9625C24.2734 26.9685 24.0508 26.9759 23.8203 26.9795C23.273 26.9873 22.7271 26.9873 22.1797 26.9795C21.9492 26.9759 21.7266 26.9685 21.5 26.9625V22.5747V21C21.5 20.6023 21.3418 20.2207 21.0605 19.9395L18.5 17.3789V13.5ZM18.5 24.175V26.825C14.9155 26.5364 12.6714 25.9519 11.5933 25.5C12.6714 25.0481 14.9155 24.4636 18.5 24.175Z"
-                            fill="#0D0C0C"
-                          />
-                        </svg>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </ng-container>
-
-      <div class="col-md-6">
-        <div class="main-section" style="height: 562px">
-          <div class="text-center">
-            <div>
-              <p class="area-d">Area Demographics</p>
-              <ng-container *ngIf="ShoppingCenter">
-                <ng-container
-                  *ngIf="
-                    ShoppingCenter && ShoppingCenter.PopulationDensity > 10000
-                  "
-                >
-                  <svg
-                    width="300"
-                    height="180"
-                    viewBox="0 0 353 180"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M339.049 176C346.478 176 352.553 169.969 351.986 162.562C350.216 139.444 343.891 116.856 333.327 96.1165C322.763 75.3773 308.211 56.9798 290.552 41.9545C284.894 37.1407 276.444 38.509 272.076 44.5177C267.708 50.5264 269.085 58.8945 274.676 63.7858C288.936 76.2618 300.719 91.3702 309.356 108.326C317.993 125.283 323.286 143.697 324.993 162.568C325.662 169.966 331.621 176 339.049 176Z"
-                      fill="#F4F3F3"
-                    />
-                    <path
-                      d="M14.5211 176C6.77747 176 0.441895 169.712 1.05804 161.993C3.97858 125.403 18.2853 90.5095 42.1467 62.311C69.0374 30.5326 106.322 9.31461 147.377 2.42622C188.432 -4.46218 230.6 3.42496 266.39 24.6866C298.148 43.553 323.06 71.8665 337.763 105.499C340.865 112.594 336.928 120.606 329.609 123.133C322.289 125.661 314.367 121.74 311.158 114.692C298.694 87.3135 278.121 64.273 252.068 48.7955C221.98 30.9215 186.531 24.291 152.017 30.0819C117.503 35.8727 86.1595 53.71 63.5533 80.4252C43.9781 103.558 32.052 132.052 29.2059 161.999C28.4733 169.708 22.2648 176 14.5211 176Z"
-                      fill="#CC3D3D"
-                    />
-                    <path
-                      d="M64.2661 128H60.1701V104.608H64.2661V114.272H74.6341V104.608H78.7301V128H74.6341V118.08H64.2661V128ZM85.2961 109.024C83.9521 109.024 82.8961 107.968 82.8961 106.656C82.8961 105.344 83.9521 104.32 85.2961 104.32C86.5761 104.32 87.6321 105.344 87.6321 106.656C87.6321 107.968 86.5761 109.024 85.2961 109.024ZM83.3441 128V112.192H87.2481V128H83.3441ZM90.3856 119.744C90.3856 115.136 93.3936 111.68 97.9056 111.68C100.274 111.68 102.13 112.672 103.058 114.368L103.282 112.192H106.898V127.2C106.898 132.48 103.73 135.776 98.6096 135.776C94.0656 135.776 90.9616 133.184 90.4816 128.96H94.3856C94.6416 131.008 96.2096 132.224 98.6096 132.224C101.298 132.224 103.026 130.528 103.026 127.904V125.28C102.034 126.752 100.082 127.68 97.8096 127.68C93.3296 127.68 90.3856 124.32 90.3856 119.744ZM94.3216 119.648C94.3216 122.304 96.0176 124.288 98.5776 124.288C101.266 124.288 102.93 122.4 102.93 119.648C102.93 116.96 101.298 115.104 98.5776 115.104C95.9856 115.104 94.3216 117.056 94.3216 119.648ZM114.842 128H110.938V104.192H114.874V114.24C115.866 112.704 117.722 111.712 119.994 111.712C123.898 111.712 125.946 114.176 125.946 118.272V128H122.042V119.2C122.042 116.544 120.73 115.264 118.746 115.264C116.282 115.264 114.842 116.992 114.842 119.36V128ZM138.407 135.328V112.192H142.023L142.279 114.592C143.239 112.768 145.319 111.712 147.719 111.712C152.167 111.712 155.111 114.944 155.111 119.904C155.111 124.832 152.423 128.416 147.719 128.416C145.351 128.416 143.303 127.488 142.311 125.888V135.328H138.407ZM142.343 120.096C142.343 122.944 144.103 124.896 146.791 124.896C149.543 124.896 151.175 122.912 151.175 120.096C151.175 117.28 149.543 115.264 146.791 115.264C144.103 115.264 142.343 117.248 142.343 120.096ZM157.291 120.064C157.291 115.136 160.843 111.744 165.739 111.744C170.635 111.744 174.187 115.136 174.187 120.064C174.187 124.992 170.635 128.384 165.739 128.384C160.843 128.384 157.291 124.992 157.291 120.064ZM161.195 120.064C161.195 122.944 163.051 124.896 165.739 124.896C168.427 124.896 170.283 122.944 170.283 120.064C170.283 117.184 168.427 115.232 165.739 115.232C163.051 115.232 161.195 117.184 161.195 120.064ZM177.282 135.328V112.192H180.898L181.154 114.592C182.114 112.768 184.194 111.712 186.594 111.712C191.042 111.712 193.986 114.944 193.986 119.904C193.986 124.832 191.298 128.416 186.594 128.416C184.226 128.416 182.178 127.488 181.186 125.888V135.328H177.282ZM181.218 120.096C181.218 122.944 182.978 124.896 185.666 124.896C188.418 124.896 190.05 122.912 190.05 120.096C190.05 117.28 188.418 115.264 185.666 115.264C182.978 115.264 181.218 117.248 181.218 120.096ZM207.439 112.192H211.343V128H207.727L207.439 125.888C206.479 127.392 204.431 128.416 202.319 128.416C198.671 128.416 196.527 125.952 196.527 122.08V112.192H200.431V120.704C200.431 123.712 201.615 124.928 203.791 124.928C206.255 124.928 207.439 123.488 207.439 120.48V112.192ZM219.311 128H215.439V104.192H219.311V128ZM228.111 128.416C224.751 128.416 222.703 126.464 222.703 123.488C222.703 120.576 224.815 118.752 228.559 118.464L233.295 118.112V117.76C233.295 115.616 232.015 114.752 230.031 114.752C227.727 114.752 226.447 115.712 226.447 117.376H223.119C223.119 113.952 225.935 111.712 230.223 111.712C234.479 111.712 237.103 114.016 237.103 118.4V128H233.679L233.391 125.664C232.719 127.296 230.575 128.416 228.111 128.416ZM229.391 125.472C231.791 125.472 233.327 124.032 233.327 121.6V120.768L230.031 121.024C227.599 121.248 226.671 122.048 226.671 123.328C226.671 124.768 227.631 125.472 229.391 125.472ZM246.095 128H242.191V115.456H239.151V112.192H242.191V107.264H246.095V112.192H249.167V115.456H246.095V128ZM253.546 109.024C252.202 109.024 251.146 107.968 251.146 106.656C251.146 105.344 252.202 104.32 253.546 104.32C254.826 104.32 255.882 105.344 255.882 106.656C255.882 107.968 254.826 109.024 253.546 109.024ZM251.594 128V112.192H255.498V128H251.594ZM258.604 120.064C258.604 115.136 262.156 111.744 267.052 111.744C271.948 111.744 275.5 115.136 275.5 120.064C275.5 124.992 271.948 128.384 267.052 128.384C262.156 128.384 258.604 124.992 258.604 120.064ZM262.508 120.064C262.508 122.944 264.364 124.896 267.052 124.896C269.74 124.896 271.596 122.944 271.596 120.064C271.596 117.184 269.74 115.232 267.052 115.232C264.364 115.232 262.508 117.184 262.508 120.064ZM282.498 128H278.594V112.192H282.21L282.53 114.24C283.522 112.64 285.442 111.712 287.586 111.712C291.554 111.712 293.602 114.176 293.602 118.272V128H289.698V119.2C289.698 116.544 288.386 115.264 286.37 115.264C283.97 115.264 282.498 116.928 282.498 119.488V128ZM131.59 168.416C127.014 168.416 124.166 165.056 124.166 160.16C124.166 155.232 127.046 151.712 131.814 151.712C134.022 151.712 135.974 152.64 136.966 154.208V144.192H140.838V168H137.254L136.998 165.536C136.038 167.36 133.99 168.416 131.59 168.416ZM132.454 164.832C135.174 164.832 136.934 162.88 136.934 160.032C136.934 157.184 135.174 155.2 132.454 155.2C129.734 155.2 128.07 157.216 128.07 160.032C128.07 162.848 129.734 164.832 132.454 164.832ZM151.979 168.416C147.275 168.416 143.979 164.992 143.979 160.096C143.979 155.136 147.211 151.712 151.851 151.712C156.587 151.712 159.595 154.88 159.595 159.808V160.992L147.691 161.024C147.979 163.808 149.451 165.216 152.043 165.216C154.187 165.216 155.595 164.384 156.043 162.88H159.659C158.987 166.336 156.107 168.416 151.979 168.416ZM151.883 154.912C149.579 154.912 148.171 156.16 147.787 158.528H155.723C155.723 156.352 154.219 154.912 151.883 154.912ZM166.623 168H162.719V152.192H166.335L166.655 154.24C167.647 152.64 169.567 151.712 171.711 151.712C175.679 151.712 177.727 154.176 177.727 158.272V168H173.823V159.2C173.823 156.544 172.511 155.264 170.495 155.264C168.095 155.264 166.623 156.928 166.623 159.488V168ZM180.159 163.2H183.871C183.903 164.576 184.927 165.44 186.719 165.44C188.543 165.44 189.535 164.704 189.535 163.552C189.535 162.752 189.119 162.176 187.711 161.856L184.863 161.184C182.015 160.544 180.639 159.2 180.639 156.672C180.639 153.568 183.263 151.712 186.911 151.712C190.463 151.712 192.863 153.76 192.895 156.832H189.183C189.151 155.488 188.255 154.624 186.751 154.624C185.215 154.624 184.319 155.328 184.319 156.512C184.319 157.408 185.023 157.984 186.367 158.304L189.215 158.976C191.871 159.584 193.215 160.8 193.215 163.232C193.215 166.432 190.495 168.416 186.591 168.416C182.655 168.416 180.159 166.304 180.159 163.2ZM198.14 149.024C196.796 149.024 195.74 147.968 195.74 146.656C195.74 145.344 196.796 144.32 198.14 144.32C199.42 144.32 200.476 145.344 200.476 146.656C200.476 147.968 199.42 149.024 198.14 149.024ZM196.188 168V152.192H200.092V168H196.188ZM209.501 168H205.597V155.456H202.557V152.192H205.597V147.264H209.501V152.192H212.573V155.456H209.501V168ZM213.624 175.328V172.064H215.96C217.496 172.064 218.456 171.712 219.128 169.856L219.576 168.672L213.208 152.192H217.336L221.4 163.712L225.688 152.192H229.72L221.976 171.52C220.792 174.464 219.128 175.68 216.536 175.68C215.448 175.68 214.488 175.552 213.624 175.328Z"
-                      fill="#CC3D3D"
-                    />
-                  </svg>
-                </ng-container>
-                <ng-container
-                  *ngIf="
-                    ShoppingCenter &&
-                    ShoppingCenter.PopulationDensity >= 1000 &&
-                    ShoppingCenter.PopulationDensity <= 10000
-                  "
-                >
-                  <svg
-                    width="300"
-                    height="177"
-                    viewBox="0 0 353 177"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M339.05 176C346.478 176 352.553 169.969 351.986 162.562C349.427 129.132 337.359 97.0246 317.072 70.0969C294.08 39.5777 261.78 17.3702 225.052 6.82926C188.323 -3.71165 149.162 -2.01328 113.485 11.6678C82.0057 23.7388 54.7472 44.5596 34.8489 71.5442C30.4402 77.523 32.3925 85.8582 38.6904 89.7976V89.7976C44.9883 93.737 53.2406 91.781 57.7313 85.8636C74.4736 63.8026 97.0925 46.7646 123.116 36.7854C153.341 25.1954 186.516 23.7566 217.631 32.6864C248.745 41.6162 276.108 60.4294 295.586 86.2838C312.357 108.545 322.498 134.985 324.993 162.567C325.662 169.965 331.621 176 339.05 176V176Z"
-                      fill="#F4F3F3"
-                    />
-                    <path
-                      d="M14.5211 176C6.77747 176 0.441945 169.713 1.0582 161.994C2.70927 141.312 8.00739 121.048 16.7438 102.149C27.4451 78.9998 43.0495 58.4527 62.4767 41.9303C81.904 25.4078 104.69 13.3048 129.257 6.45913C149.313 0.870397 170.166 -1.10539 190.844 0.585433C198.561 1.21652 203.75 8.47933 202.507 16.1225V16.1225C201.263 23.7657 194.057 28.8836 186.33 28.3691C169.679 27.2604 152.925 28.9746 136.784 33.4722C116.131 39.2272 96.976 49.4018 80.6442 63.2917C64.3123 77.1816 51.1941 94.4549 42.1979 113.916C35.1671 129.125 30.7852 145.386 29.2061 162C28.4734 169.709 22.2648 176 14.5211 176V176Z"
-                      fill="#FFC107"
-                    />
-                    <path
-                      d="M71.2163 128H67.2483V104.608H71.2163L78.7683 123.232L86.3203 104.608H90.3523V128H86.3843V120.8C86.3843 116.096 86.3843 114.72 86.6083 113.056L80.6562 128H76.8803L70.9603 113.088C71.1843 114.496 71.2163 116.704 71.2163 119.616V128ZM96.9055 109.024C95.5615 109.024 94.5055 107.968 94.5055 106.656C94.5055 105.344 95.5615 104.32 96.9055 104.32C98.1855 104.32 99.2415 105.344 99.2415 106.656C99.2415 107.968 98.1855 109.024 96.9055 109.024ZM94.9535 128V112.192H98.8575V128H94.9535ZM109.387 128.416C104.811 128.416 101.963 125.056 101.963 120.16C101.963 115.232 104.843 111.712 109.611 111.712C111.819 111.712 113.771 112.64 114.763 114.208V104.192H118.635V128H115.051L114.795 125.536C113.835 127.36 111.787 128.416 109.387 128.416ZM110.251 124.832C112.971 124.832 114.731 122.88 114.731 120.032C114.731 117.184 112.971 115.2 110.251 115.2C107.531 115.2 105.867 117.216 105.867 120.032C105.867 122.848 107.531 124.832 110.251 124.832ZM131.329 135.328V112.192H134.945L135.201 114.592C136.161 112.768 138.241 111.712 140.641 111.712C145.089 111.712 148.033 114.944 148.033 119.904C148.033 124.832 145.345 128.416 140.641 128.416C138.273 128.416 136.225 127.488 135.233 125.888V135.328H131.329ZM135.265 120.096C135.265 122.944 137.025 124.896 139.713 124.896C142.465 124.896 144.097 122.912 144.097 120.096C144.097 117.28 142.465 115.264 139.713 115.264C137.025 115.264 135.265 117.248 135.265 120.096ZM150.213 120.064C150.213 115.136 153.765 111.744 158.661 111.744C163.557 111.744 167.109 115.136 167.109 120.064C167.109 124.992 163.557 128.384 158.661 128.384C153.765 128.384 150.213 124.992 150.213 120.064ZM154.117 120.064C154.117 122.944 155.973 124.896 158.661 124.896C161.349 124.896 163.205 122.944 163.205 120.064C163.205 117.184 161.349 115.232 158.661 115.232C155.973 115.232 154.117 117.184 154.117 120.064ZM170.204 135.328V112.192H173.82L174.076 114.592C175.036 112.768 177.116 111.712 179.516 111.712C183.964 111.712 186.908 114.944 186.908 119.904C186.908 124.832 184.22 128.416 179.516 128.416C177.148 128.416 175.1 127.488 174.108 125.888V135.328H170.204ZM174.14 120.096C174.14 122.944 175.9 124.896 178.588 124.896C181.34 124.896 182.972 122.912 182.972 120.096C182.972 117.28 181.34 115.264 178.588 115.264C175.9 115.264 174.14 117.248 174.14 120.096ZM200.361 112.192H204.265V128H200.649L200.361 125.888C199.401 127.392 197.353 128.416 195.241 128.416C191.593 128.416 189.449 125.952 189.449 122.08V112.192H193.353V120.704C193.353 123.712 194.537 124.928 196.713 124.928C199.177 124.928 200.361 123.488 200.361 120.48V112.192ZM212.233 128H208.361V104.192H212.233V128ZM221.033 128.416C217.673 128.416 215.625 126.464 215.625 123.488C215.625 120.576 217.737 118.752 221.481 118.464L226.217 118.112V117.76C226.217 115.616 224.937 114.752 222.953 114.752C220.649 114.752 219.369 115.712 219.369 117.376H216.041C216.041 113.952 218.857 111.712 223.145 111.712C227.401 111.712 230.025 114.016 230.025 118.4V128H226.601L226.313 125.664C225.641 127.296 223.497 128.416 221.033 128.416ZM222.312 125.472C224.713 125.472 226.249 124.032 226.249 121.6V120.768L222.953 121.024C220.521 121.248 219.593 122.048 219.593 123.328C219.593 124.768 220.553 125.472 222.312 125.472ZM239.017 128H235.113V115.456H232.073V112.192H235.113V107.264H239.017V112.192H242.089V115.456H239.017V128ZM246.468 109.024C245.124 109.024 244.068 107.968 244.068 106.656C244.068 105.344 245.124 104.32 246.468 104.32C247.748 104.32 248.804 105.344 248.804 106.656C248.804 107.968 247.748 109.024 246.468 109.024ZM244.516 128V112.192H248.42V128H244.516ZM251.526 120.064C251.526 115.136 255.078 111.744 259.974 111.744C264.87 111.744 268.422 115.136 268.422 120.064C268.422 124.992 264.87 128.384 259.974 128.384C255.078 128.384 251.526 124.992 251.526 120.064ZM255.43 120.064C255.43 122.944 257.286 124.896 259.974 124.896C262.662 124.896 264.518 122.944 264.518 120.064C264.518 117.184 262.662 115.232 259.974 115.232C257.286 115.232 255.43 117.184 255.43 120.064ZM275.42 128H271.516V112.192H275.132L275.452 114.24C276.444 112.64 278.364 111.712 280.508 111.712C284.476 111.712 286.524 114.176 286.524 118.272V128H282.62V119.2C282.62 116.544 281.308 115.264 279.292 115.264C276.892 115.264 275.42 116.928 275.42 119.488V128ZM131.59 168.416C127.014 168.416 124.166 165.056 124.166 160.16C124.166 155.232 127.046 151.712 131.814 151.712C134.022 151.712 135.974 152.64 136.966 154.208V144.192H140.838V168H137.254L136.998 165.536C136.038 167.36 133.99 168.416 131.59 168.416ZM132.454 164.832C135.174 164.832 136.934 162.88 136.934 160.032C136.934 157.184 135.174 155.2 132.454 155.2C129.734 155.2 128.07 157.216 128.07 160.032C128.07 162.848 129.734 164.832 132.454 164.832ZM151.979 168.416C147.275 168.416 143.979 164.992 143.979 160.096C143.979 155.136 147.211 151.712 151.851 151.712C156.587 151.712 159.595 154.88 159.595 159.808V160.992L147.691 161.024C147.979 163.808 149.451 165.216 152.043 165.216C154.187 165.216 155.595 164.384 156.043 162.88H159.659C158.987 166.336 156.107 168.416 151.979 168.416ZM151.883 154.912C149.579 154.912 148.171 156.16 147.787 158.528H155.723C155.723 156.352 154.219 154.912 151.883 154.912ZM166.623 168H162.719V152.192H166.335L166.655 154.24C167.647 152.64 169.567 151.712 171.711 151.712C175.679 151.712 177.727 154.176 177.727 158.272V168H173.823V159.2C173.823 156.544 172.511 155.264 170.495 155.264C168.095 155.264 166.623 156.928 166.623 159.488V168ZM180.159 163.2H183.871C183.903 164.576 184.927 165.44 186.719 165.44C188.543 165.44 189.535 164.704 189.535 163.552C189.535 162.752 189.119 162.176 187.711 161.856L184.863 161.184C182.015 160.544 180.639 159.2 180.639 156.672C180.639 153.568 183.263 151.712 186.911 151.712C190.463 151.712 192.863 153.76 192.895 156.832H189.183C189.151 155.488 188.255 154.624 186.751 154.624C185.215 154.624 184.319 155.328 184.319 156.512C184.319 157.408 185.023 157.984 186.367 158.304L189.215 158.976C191.871 159.584 193.215 160.8 193.215 163.232C193.215 166.432 190.495 168.416 186.591 168.416C182.655 168.416 180.159 166.304 180.159 163.2ZM198.14 149.024C196.796 149.024 195.74 147.968 195.74 146.656C195.74 145.344 196.796 144.32 198.14 144.32C199.42 144.32 200.476 145.344 200.476 146.656C200.476 147.968 199.42 149.024 198.14 149.024ZM196.188 168V152.192H200.092V168H196.188ZM209.501 168H205.597V155.456H202.557V152.192H205.597V147.264H209.501V152.192H212.573V155.456H209.501V168ZM213.624 175.328V172.064H215.96C217.496 172.064 218.456 171.712 219.128 169.856L219.576 168.672L213.208 152.192H217.336L221.4 163.712L225.688 152.192H229.72L221.976 171.52C220.792 174.464 219.128 175.68 216.536 175.68C215.448 175.68 214.488 175.552 213.624 175.328Z"
-                      fill="#CC9A06"
-                    />
-                  </svg>
-                </ng-container>
-
-                <ng-container
-                  *ngIf="
-                    ShoppingCenter && ShoppingCenter.PopulationDensity < 1000
-                  "
-                >
-                  <svg
-                    width="300"
-                    height="177"
-                    viewBox="0 0 353 177"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M339.05 176C346.478 176 352.553 169.968 351.986 162.562C349.237 126.655 335.523 92.334 312.538 64.3326C286.699 32.8545 250.744 11.3113 210.8 3.37462C170.856 -4.56206 129.396 1.59906 93.4855 20.8079C61.5415 37.8952 35.7481 64.3665 19.4811 96.4945C16.1255 103.122 19.4336 111.018 26.2978 113.858V113.858C33.1621 116.698 40.9754 113.4 44.422 106.819C58.2462 80.4255 79.7206 58.6787 106.174 44.5284C136.595 28.2556 171.719 23.0362 205.557 29.7598C239.396 36.4834 269.856 54.7338 291.745 81.4005C310.78 104.589 322.309 132.893 324.993 162.567C325.662 169.965 331.621 176 339.05 176V176Z"
-                      fill="#F4F3F3"
-                    />
-                    <path
-                      d="M14.5211 176C6.77747 176 0.441883 169.712 1.05793 161.993C3.8912 126.492 17.4367 92.6709 39.8927 65.029C44.7754 59.0187 53.7002 58.8423 59.3029 64.1876V64.1876C64.9057 69.533 65.0547 78.3709 60.2633 84.4542C42.6797 106.779 31.894 133.709 29.2058 161.999C28.4732 169.708 22.2648 176 14.5211 176V176Z"
-                      fill="#208637"
-                    />
-                    <path
-                      d="M69.0161 104.608V124.224H78.8081V128H64.9201V104.608H69.0161ZM80.3224 120.064C80.3224 115.136 83.8744 111.744 88.7704 111.744C93.6664 111.744 97.2184 115.136 97.2184 120.064C97.2184 124.992 93.6664 128.384 88.7704 128.384C83.8744 128.384 80.3224 124.992 80.3224 120.064ZM84.2264 120.064C84.2264 122.944 86.0824 124.896 88.7704 124.896C91.4584 124.896 93.3144 122.944 93.3144 120.064C93.3144 117.184 91.4584 115.232 88.7704 115.232C86.0824 115.232 84.2264 117.184 84.2264 120.064ZM103.02 128L97.8996 112.192H101.964L104.044 118.976C104.396 120.224 104.716 121.6 105.004 123.072C105.292 121.536 105.58 120.544 106.092 118.976L108.268 112.192H112.236L114.348 118.976C114.54 119.616 115.18 121.984 115.372 123.04C115.628 121.856 116.14 119.968 116.428 118.976L118.54 112.192H122.668L117.196 128H113.548L111.372 121.152C110.732 119.072 110.38 117.568 110.252 116.768C110.092 117.504 109.804 118.624 109.004 121.216L106.828 128H103.02ZM133.657 135.328V112.192H137.273L137.529 114.592C138.489 112.768 140.569 111.712 142.969 111.712C147.417 111.712 150.361 114.944 150.361 119.904C150.361 124.832 147.673 128.416 142.969 128.416C140.601 128.416 138.553 127.488 137.561 125.888V135.328H133.657ZM137.593 120.096C137.593 122.944 139.353 124.896 142.041 124.896C144.793 124.896 146.425 122.912 146.425 120.096C146.425 117.28 144.793 115.264 142.041 115.264C139.353 115.264 137.593 117.248 137.593 120.096ZM152.541 120.064C152.541 115.136 156.093 111.744 160.989 111.744C165.885 111.744 169.437 115.136 169.437 120.064C169.437 124.992 165.885 128.384 160.989 128.384C156.093 128.384 152.541 124.992 152.541 120.064ZM156.445 120.064C156.445 122.944 158.301 124.896 160.989 124.896C163.677 124.896 165.533 122.944 165.533 120.064C165.533 117.184 163.677 115.232 160.989 115.232C158.301 115.232 156.445 117.184 156.445 120.064ZM172.532 135.328V112.192H176.148L176.404 114.592C177.364 112.768 179.444 111.712 181.844 111.712C186.292 111.712 189.236 114.944 189.236 119.904C189.236 124.832 186.548 128.416 181.844 128.416C179.476 128.416 177.428 127.488 176.436 125.888V135.328H172.532ZM176.468 120.096C176.468 122.944 178.228 124.896 180.916 124.896C183.668 124.896 185.3 122.912 185.3 120.096C185.3 117.28 183.668 115.264 180.916 115.264C178.228 115.264 176.468 117.248 176.468 120.096ZM202.689 112.192H206.593V128H202.977L202.689 125.888C201.729 127.392 199.681 128.416 197.569 128.416C193.921 128.416 191.777 125.952 191.777 122.08V112.192H195.681V120.704C195.681 123.712 196.865 124.928 199.041 124.928C201.505 124.928 202.689 123.488 202.689 120.48V112.192ZM214.561 128H210.689V104.192H214.561V128ZM223.361 128.416C220.001 128.416 217.953 126.464 217.953 123.488C217.953 120.576 220.065 118.752 223.809 118.464L228.545 118.112V117.76C228.545 115.616 227.265 114.752 225.281 114.752C222.977 114.752 221.697 115.712 221.697 117.376H218.369C218.369 113.952 221.185 111.712 225.473 111.712C229.729 111.712 232.353 114.016 232.353 118.4V128H228.929L228.641 125.664C227.969 127.296 225.825 128.416 223.361 128.416ZM224.641 125.472C227.041 125.472 228.577 124.032 228.577 121.6V120.768L225.281 121.024C222.849 121.248 221.921 122.048 221.921 123.328C221.921 124.768 222.881 125.472 224.641 125.472ZM241.345 128H237.441V115.456H234.401V112.192H237.441V107.264H241.345V112.192H244.417V115.456H241.345V128ZM248.796 109.024C247.452 109.024 246.396 107.968 246.396 106.656C246.396 105.344 247.452 104.32 248.796 104.32C250.076 104.32 251.132 105.344 251.132 106.656C251.132 107.968 250.076 109.024 248.796 109.024ZM246.844 128V112.192H250.748V128H246.844ZM253.854 120.064C253.854 115.136 257.406 111.744 262.302 111.744C267.198 111.744 270.75 115.136 270.75 120.064C270.75 124.992 267.198 128.384 262.302 128.384C257.406 128.384 253.854 124.992 253.854 120.064ZM257.758 120.064C257.758 122.944 259.614 124.896 262.302 124.896C264.99 124.896 266.846 122.944 266.846 120.064C266.846 117.184 264.99 115.232 262.302 115.232C259.614 115.232 257.758 117.184 257.758 120.064ZM277.748 128H273.844V112.192H277.46L277.78 114.24C278.772 112.64 280.692 111.712 282.836 111.712C286.804 111.712 288.852 114.176 288.852 118.272V128H284.948V119.2C284.948 116.544 283.636 115.264 281.62 115.264C279.22 115.264 277.748 116.928 277.748 119.488V128ZM131.59 168.416C127.014 168.416 124.166 165.056 124.166 160.16C124.166 155.232 127.046 151.712 131.814 151.712C134.022 151.712 135.974 152.64 136.966 154.208V144.192H140.838V168H137.254L136.998 165.536C136.038 167.36 133.99 168.416 131.59 168.416ZM132.454 164.832C135.174 164.832 136.934 162.88 136.934 160.032C136.934 157.184 135.174 155.2 132.454 155.2C129.734 155.2 128.07 157.216 128.07 160.032C128.07 162.848 129.734 164.832 132.454 164.832ZM151.979 168.416C147.275 168.416 143.979 164.992 143.979 160.096C143.979 155.136 147.211 151.712 151.851 151.712C156.587 151.712 159.595 154.88 159.595 159.808V160.992L147.691 161.024C147.979 163.808 149.451 165.216 152.043 165.216C154.187 165.216 155.595 164.384 156.043 162.88H159.659C158.987 166.336 156.107 168.416 151.979 168.416ZM151.883 154.912C149.579 154.912 148.171 156.16 147.787 158.528H155.723C155.723 156.352 154.219 154.912 151.883 154.912ZM166.623 168H162.719V152.192H166.335L166.655 154.24C167.647 152.64 169.567 151.712 171.711 151.712C175.679 151.712 177.727 154.176 177.727 158.272V168H173.823V159.2C173.823 156.544 172.511 155.264 170.495 155.264C168.095 155.264 166.623 156.928 166.623 159.488V168ZM180.159 163.2H183.871C183.903 164.576 184.927 165.44 186.719 165.44C188.543 165.44 189.535 164.704 189.535 163.552C189.535 162.752 189.119 162.176 187.711 161.856L184.863 161.184C182.015 160.544 180.639 159.2 180.639 156.672C180.639 153.568 183.263 151.712 186.911 151.712C190.463 151.712 192.863 153.76 192.895 156.832H189.183C189.151 155.488 188.255 154.624 186.751 154.624C185.215 154.624 184.319 155.328 184.319 156.512C184.319 157.408 185.023 157.984 186.367 158.304L189.215 158.976C191.871 159.584 193.215 160.8 193.215 163.232C193.215 166.432 190.495 168.416 186.591 168.416C182.655 168.416 180.159 166.304 180.159 163.2ZM198.14 149.024C196.796 149.024 195.74 147.968 195.74 146.656C195.74 145.344 196.796 144.32 198.14 144.32C199.42 144.32 200.476 145.344 200.476 146.656C200.476 147.968 199.42 149.024 198.14 149.024ZM196.188 168V152.192H200.092V168H196.188ZM209.501 168H205.597V155.456H202.557V152.192H205.597V147.264H209.501V152.192H212.573V155.456H209.501V168ZM213.624 175.328V172.064H215.96C217.496 172.064 218.456 171.712 219.128 169.856L219.576 168.672L213.208 152.192H217.336L221.4 163.712L225.688 152.192H229.72L221.976 171.52C220.792 174.464 219.128 175.68 216.536 175.68C215.448 175.68 214.488 175.552 213.624 175.328Z"
-                      fill="#28A745"
-                    />
-                  </svg>
-                </ng-container>
-
-                <div class="row mt-3">
-                  <div
-                    class="col-md-6"
-                    *ngIf="ShoppingCenter && ShoppingCenter.HouseholdIncome"
-                  >
-                    <div class="d-flex flex-column">
-                      <p class="info-head">Household Income</p>
-                      <p class="info-value">
-                        ${{ ShoppingCenter.HouseholdIncome | number }}
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    class="col-md-6"
-                    *ngIf="ShoppingCenter && ShoppingCenter.Employees"
-                  >
-                    <div class="d-flex flex-column">
-                      <p class="info-head">Employees</p>
-                      <p class="info-value">
-                        {{ ShoppingCenter.Employees | number }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="!ShoppingCenter">
-                <ng-container
-                  *ngIf="
-                    StandAlonePlace && StandAlonePlace.PopulationDensity > 10000
-                  "
-                >
-                  <svg
-                    width="300"
-                    height="180"
-                    viewBox="0 0 353 180"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M339.049 176C346.478 176 352.553 169.969 351.986 162.562C350.216 139.444 343.891 116.856 333.327 96.1165C322.763 75.3773 308.211 56.9798 290.552 41.9545C284.894 37.1407 276.444 38.509 272.076 44.5177C267.708 50.5264 269.085 58.8945 274.676 63.7858C288.936 76.2618 300.719 91.3702 309.356 108.326C317.993 125.283 323.286 143.697 324.993 162.568C325.662 169.966 331.621 176 339.049 176Z"
-                      fill="#F4F3F3"
-                    />
-                    <path
-                      d="M14.5211 176C6.77747 176 0.441895 169.712 1.05804 161.993C3.97858 125.403 18.2853 90.5095 42.1467 62.311C69.0374 30.5326 106.322 9.31461 147.377 2.42622C188.432 -4.46218 230.6 3.42496 266.39 24.6866C298.148 43.553 323.06 71.8665 337.763 105.499C340.865 112.594 336.928 120.606 329.609 123.133C322.289 125.661 314.367 121.74 311.158 114.692C298.694 87.3135 278.121 64.273 252.068 48.7955C221.98 30.9215 186.531 24.291 152.017 30.0819C117.503 35.8727 86.1595 53.71 63.5533 80.4252C43.9781 103.558 32.052 132.052 29.2059 161.999C28.4733 169.708 22.2648 176 14.5211 176Z"
-                      fill="#CC3D3D"
-                    />
-                    <path
-                      d="M64.2661 128H60.1701V104.608H64.2661V114.272H74.6341V104.608H78.7301V128H74.6341V118.08H64.2661V128ZM85.2961 109.024C83.9521 109.024 82.8961 107.968 82.8961 106.656C82.8961 105.344 83.9521 104.32 85.2961 104.32C86.5761 104.32 87.6321 105.344 87.6321 106.656C87.6321 107.968 86.5761 109.024 85.2961 109.024ZM83.3441 128V112.192H87.2481V128H83.3441ZM90.3856 119.744C90.3856 115.136 93.3936 111.68 97.9056 111.68C100.274 111.68 102.13 112.672 103.058 114.368L103.282 112.192H106.898V127.2C106.898 132.48 103.73 135.776 98.6096 135.776C94.0656 135.776 90.9616 133.184 90.4816 128.96H94.3856C94.6416 131.008 96.2096 132.224 98.6096 132.224C101.298 132.224 103.026 130.528 103.026 127.904V125.28C102.034 126.752 100.082 127.68 97.8096 127.68C93.3296 127.68 90.3856 124.32 90.3856 119.744ZM94.3216 119.648C94.3216 122.304 96.0176 124.288 98.5776 124.288C101.266 124.288 102.93 122.4 102.93 119.648C102.93 116.96 101.298 115.104 98.5776 115.104C95.9856 115.104 94.3216 117.056 94.3216 119.648ZM114.842 128H110.938V104.192H114.874V114.24C115.866 112.704 117.722 111.712 119.994 111.712C123.898 111.712 125.946 114.176 125.946 118.272V128H122.042V119.2C122.042 116.544 120.73 115.264 118.746 115.264C116.282 115.264 114.842 116.992 114.842 119.36V128ZM138.407 135.328V112.192H142.023L142.279 114.592C143.239 112.768 145.319 111.712 147.719 111.712C152.167 111.712 155.111 114.944 155.111 119.904C155.111 124.832 152.423 128.416 147.719 128.416C145.351 128.416 143.303 127.488 142.311 125.888V135.328H138.407ZM142.343 120.096C142.343 122.944 144.103 124.896 146.791 124.896C149.543 124.896 151.175 122.912 151.175 120.096C151.175 117.28 149.543 115.264 146.791 115.264C144.103 115.264 142.343 117.248 142.343 120.096ZM157.291 120.064C157.291 115.136 160.843 111.744 165.739 111.744C170.635 111.744 174.187 115.136 174.187 120.064C174.187 124.992 170.635 128.384 165.739 128.384C160.843 128.384 157.291 124.992 157.291 120.064ZM161.195 120.064C161.195 122.944 163.051 124.896 165.739 124.896C168.427 124.896 170.283 122.944 170.283 120.064C170.283 117.184 168.427 115.232 165.739 115.232C163.051 115.232 161.195 117.184 161.195 120.064ZM177.282 135.328V112.192H180.898L181.154 114.592C182.114 112.768 184.194 111.712 186.594 111.712C191.042 111.712 193.986 114.944 193.986 119.904C193.986 124.832 191.298 128.416 186.594 128.416C184.226 128.416 182.178 127.488 181.186 125.888V135.328H177.282ZM181.218 120.096C181.218 122.944 182.978 124.896 185.666 124.896C188.418 124.896 190.05 122.912 190.05 120.096C190.05 117.28 188.418 115.264 185.666 115.264C182.978 115.264 181.218 117.248 181.218 120.096ZM207.439 112.192H211.343V128H207.727L207.439 125.888C206.479 127.392 204.431 128.416 202.319 128.416C198.671 128.416 196.527 125.952 196.527 122.08V112.192H200.431V120.704C200.431 123.712 201.615 124.928 203.791 124.928C206.255 124.928 207.439 123.488 207.439 120.48V112.192ZM219.311 128H215.439V104.192H219.311V128ZM228.111 128.416C224.751 128.416 222.703 126.464 222.703 123.488C222.703 120.576 224.815 118.752 228.559 118.464L233.295 118.112V117.76C233.295 115.616 232.015 114.752 230.031 114.752C227.727 114.752 226.447 115.712 226.447 117.376H223.119C223.119 113.952 225.935 111.712 230.223 111.712C234.479 111.712 237.103 114.016 237.103 118.4V128H233.679L233.391 125.664C232.719 127.296 230.575 128.416 228.111 128.416ZM229.391 125.472C231.791 125.472 233.327 124.032 233.327 121.6V120.768L230.031 121.024C227.599 121.248 226.671 122.048 226.671 123.328C226.671 124.768 227.631 125.472 229.391 125.472ZM246.095 128H242.191V115.456H239.151V112.192H242.191V107.264H246.095V112.192H249.167V115.456H246.095V128ZM253.546 109.024C252.202 109.024 251.146 107.968 251.146 106.656C251.146 105.344 252.202 104.32 253.546 104.32C254.826 104.32 255.882 105.344 255.882 106.656C255.882 107.968 254.826 109.024 253.546 109.024ZM251.594 128V112.192H255.498V128H251.594ZM258.604 120.064C258.604 115.136 262.156 111.744 267.052 111.744C271.948 111.744 275.5 115.136 275.5 120.064C275.5 124.992 271.948 128.384 267.052 128.384C262.156 128.384 258.604 124.992 258.604 120.064ZM262.508 120.064C262.508 122.944 264.364 124.896 267.052 124.896C269.74 124.896 271.596 122.944 271.596 120.064C271.596 117.184 269.74 115.232 267.052 115.232C264.364 115.232 262.508 117.184 262.508 120.064ZM282.498 128H278.594V112.192H282.21L282.53 114.24C283.522 112.64 285.442 111.712 287.586 111.712C291.554 111.712 293.602 114.176 293.602 118.272V128H289.698V119.2C289.698 116.544 288.386 115.264 286.37 115.264C283.97 115.264 282.498 116.928 282.498 119.488V128ZM131.59 168.416C127.014 168.416 124.166 165.056 124.166 160.16C124.166 155.232 127.046 151.712 131.814 151.712C134.022 151.712 135.974 152.64 136.966 154.208V144.192H140.838V168H137.254L136.998 165.536C136.038 167.36 133.99 168.416 131.59 168.416ZM132.454 164.832C135.174 164.832 136.934 162.88 136.934 160.032C136.934 157.184 135.174 155.2 132.454 155.2C129.734 155.2 128.07 157.216 128.07 160.032C128.07 162.848 129.734 164.832 132.454 164.832ZM151.979 168.416C147.275 168.416 143.979 164.992 143.979 160.096C143.979 155.136 147.211 151.712 151.851 151.712C156.587 151.712 159.595 154.88 159.595 159.808V160.992L147.691 161.024C147.979 163.808 149.451 165.216 152.043 165.216C154.187 165.216 155.595 164.384 156.043 162.88H159.659C158.987 166.336 156.107 168.416 151.979 168.416ZM151.883 154.912C149.579 154.912 148.171 156.16 147.787 158.528H155.723C155.723 156.352 154.219 154.912 151.883 154.912ZM166.623 168H162.719V152.192H166.335L166.655 154.24C167.647 152.64 169.567 151.712 171.711 151.712C175.679 151.712 177.727 154.176 177.727 158.272V168H173.823V159.2C173.823 156.544 172.511 155.264 170.495 155.264C168.095 155.264 166.623 156.928 166.623 159.488V168ZM180.159 163.2H183.871C183.903 164.576 184.927 165.44 186.719 165.44C188.543 165.44 189.535 164.704 189.535 163.552C189.535 162.752 189.119 162.176 187.711 161.856L184.863 161.184C182.015 160.544 180.639 159.2 180.639 156.672C180.639 153.568 183.263 151.712 186.911 151.712C190.463 151.712 192.863 153.76 192.895 156.832H189.183C189.151 155.488 188.255 154.624 186.751 154.624C185.215 154.624 184.319 155.328 184.319 156.512C184.319 157.408 185.023 157.984 186.367 158.304L189.215 158.976C191.871 159.584 193.215 160.8 193.215 163.232C193.215 166.432 190.495 168.416 186.591 168.416C182.655 168.416 180.159 166.304 180.159 163.2ZM198.14 149.024C196.796 149.024 195.74 147.968 195.74 146.656C195.74 145.344 196.796 144.32 198.14 144.32C199.42 144.32 200.476 145.344 200.476 146.656C200.476 147.968 199.42 149.024 198.14 149.024ZM196.188 168V152.192H200.092V168H196.188ZM209.501 168H205.597V155.456H202.557V152.192H205.597V147.264H209.501V152.192H212.573V155.456H209.501V168ZM213.624 175.328V172.064H215.96C217.496 172.064 218.456 171.712 219.128 169.856L219.576 168.672L213.208 152.192H217.336L221.4 163.712L225.688 152.192H229.72L221.976 171.52C220.792 174.464 219.128 175.68 216.536 175.68C215.448 175.68 214.488 175.552 213.624 175.328Z"
-                      fill="#CC3D3D"
-                    />
-                  </svg>
-                </ng-container>
-                <ng-container
-                  *ngIf="
-                    StandAlonePlace &&
-                    StandAlonePlace.PopulationDensity >= 1000 &&
-                    StandAlonePlace.PopulationDensity <= 10000
-                  "
-                >
-                  <svg
-                    width="300"
-                    height="177"
-                    viewBox="0 0 353 177"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M339.05 176C346.478 176 352.553 169.969 351.986 162.562C349.427 129.132 337.359 97.0246 317.072 70.0969C294.08 39.5777 261.78 17.3702 225.052 6.82926C188.323 -3.71165 149.162 -2.01328 113.485 11.6678C82.0057 23.7388 54.7472 44.5596 34.8489 71.5442C30.4402 77.523 32.3925 85.8582 38.6904 89.7976V89.7976C44.9883 93.737 53.2406 91.781 57.7313 85.8636C74.4736 63.8026 97.0925 46.7646 123.116 36.7854C153.341 25.1954 186.516 23.7566 217.631 32.6864C248.745 41.6162 276.108 60.4294 295.586 86.2838C312.357 108.545 322.498 134.985 324.993 162.567C325.662 169.965 331.621 176 339.05 176V176Z"
-                      fill="#F4F3F3"
-                    />
-                    <path
-                      d="M14.5211 176C6.77747 176 0.441945 169.713 1.0582 161.994C2.70927 141.312 8.00739 121.048 16.7438 102.149C27.4451 78.9998 43.0495 58.4527 62.4767 41.9303C81.904 25.4078 104.69 13.3048 129.257 6.45913C149.313 0.870397 170.166 -1.10539 190.844 0.585433C198.561 1.21652 203.75 8.47933 202.507 16.1225V16.1225C201.263 23.7657 194.057 28.8836 186.33 28.3691C169.679 27.2604 152.925 28.9746 136.784 33.4722C116.131 39.2272 96.976 49.4018 80.6442 63.2917C64.3123 77.1816 51.1941 94.4549 42.1979 113.916C35.1671 129.125 30.7852 145.386 29.2061 162C28.4734 169.709 22.2648 176 14.5211 176V176Z"
-                      fill="#FFC107"
-                    />
-                    <path
-                      d="M71.2163 128H67.2483V104.608H71.2163L78.7683 123.232L86.3203 104.608H90.3523V128H86.3843V120.8C86.3843 116.096 86.3843 114.72 86.6083 113.056L80.6562 128H76.8803L70.9603 113.088C71.1843 114.496 71.2163 116.704 71.2163 119.616V128ZM96.9055 109.024C95.5615 109.024 94.5055 107.968 94.5055 106.656C94.5055 105.344 95.5615 104.32 96.9055 104.32C98.1855 104.32 99.2415 105.344 99.2415 106.656C99.2415 107.968 98.1855 109.024 96.9055 109.024ZM94.9535 128V112.192H98.8575V128H94.9535ZM109.387 128.416C104.811 128.416 101.963 125.056 101.963 120.16C101.963 115.232 104.843 111.712 109.611 111.712C111.819 111.712 113.771 112.64 114.763 114.208V104.192H118.635V128H115.051L114.795 125.536C113.835 127.36 111.787 128.416 109.387 128.416ZM110.251 124.832C112.971 124.832 114.731 122.88 114.731 120.032C114.731 117.184 112.971 115.2 110.251 115.2C107.531 115.2 105.867 117.216 105.867 120.032C105.867 122.848 107.531 124.832 110.251 124.832ZM131.329 135.328V112.192H134.945L135.201 114.592C136.161 112.768 138.241 111.712 140.641 111.712C145.089 111.712 148.033 114.944 148.033 119.904C148.033 124.832 145.345 128.416 140.641 128.416C138.273 128.416 136.225 127.488 135.233 125.888V135.328H131.329ZM135.265 120.096C135.265 122.944 137.025 124.896 139.713 124.896C142.465 124.896 144.097 122.912 144.097 120.096C144.097 117.28 142.465 115.264 139.713 115.264C137.025 115.264 135.265 117.248 135.265 120.096ZM150.213 120.064C150.213 115.136 153.765 111.744 158.661 111.744C163.557 111.744 167.109 115.136 167.109 120.064C167.109 124.992 163.557 128.384 158.661 128.384C153.765 128.384 150.213 124.992 150.213 120.064ZM154.117 120.064C154.117 122.944 155.973 124.896 158.661 124.896C161.349 124.896 163.205 122.944 163.205 120.064C163.205 117.184 161.349 115.232 158.661 115.232C155.973 115.232 154.117 117.184 154.117 120.064ZM170.204 135.328V112.192H173.82L174.076 114.592C175.036 112.768 177.116 111.712 179.516 111.712C183.964 111.712 186.908 114.944 186.908 119.904C186.908 124.832 184.22 128.416 179.516 128.416C177.148 128.416 175.1 127.488 174.108 125.888V135.328H170.204ZM174.14 120.096C174.14 122.944 175.9 124.896 178.588 124.896C181.34 124.896 182.972 122.912 182.972 120.096C182.972 117.28 181.34 115.264 178.588 115.264C175.9 115.264 174.14 117.248 174.14 120.096ZM200.361 112.192H204.265V128H200.649L200.361 125.888C199.401 127.392 197.353 128.416 195.241 128.416C191.593 128.416 189.449 125.952 189.449 122.08V112.192H193.353V120.704C193.353 123.712 194.537 124.928 196.713 124.928C199.177 124.928 200.361 123.488 200.361 120.48V112.192ZM212.233 128H208.361V104.192H212.233V128ZM221.033 128.416C217.673 128.416 215.625 126.464 215.625 123.488C215.625 120.576 217.737 118.752 221.481 118.464L226.217 118.112V117.76C226.217 115.616 224.937 114.752 222.953 114.752C220.649 114.752 219.369 115.712 219.369 117.376H216.041C216.041 113.952 218.857 111.712 223.145 111.712C227.401 111.712 230.025 114.016 230.025 118.4V128H226.601L226.313 125.664C225.641 127.296 223.497 128.416 221.033 128.416ZM222.312 125.472C224.713 125.472 226.249 124.032 226.249 121.6V120.768L222.953 121.024C220.521 121.248 219.593 122.048 219.593 123.328C219.593 124.768 220.553 125.472 222.312 125.472ZM239.017 128H235.113V115.456H232.073V112.192H235.113V107.264H239.017V112.192H242.089V115.456H239.017V128ZM246.468 109.024C245.124 109.024 244.068 107.968 244.068 106.656C244.068 105.344 245.124 104.32 246.468 104.32C247.748 104.32 248.804 105.344 248.804 106.656C248.804 107.968 247.748 109.024 246.468 109.024ZM244.516 128V112.192H248.42V128H244.516ZM251.526 120.064C251.526 115.136 255.078 111.744 259.974 111.744C264.87 111.744 268.422 115.136 268.422 120.064C268.422 124.992 264.87 128.384 259.974 128.384C255.078 128.384 251.526 124.992 251.526 120.064ZM255.43 120.064C255.43 122.944 257.286 124.896 259.974 124.896C262.662 124.896 264.518 122.944 264.518 120.064C264.518 117.184 262.662 115.232 259.974 115.232C257.286 115.232 255.43 117.184 255.43 120.064ZM275.42 128H271.516V112.192H275.132L275.452 114.24C276.444 112.64 278.364 111.712 280.508 111.712C284.476 111.712 286.524 114.176 286.524 118.272V128H282.62V119.2C282.62 116.544 281.308 115.264 279.292 115.264C276.892 115.264 275.42 116.928 275.42 119.488V128ZM131.59 168.416C127.014 168.416 124.166 165.056 124.166 160.16C124.166 155.232 127.046 151.712 131.814 151.712C134.022 151.712 135.974 152.64 136.966 154.208V144.192H140.838V168H137.254L136.998 165.536C136.038 167.36 133.99 168.416 131.59 168.416ZM132.454 164.832C135.174 164.832 136.934 162.88 136.934 160.032C136.934 157.184 135.174 155.2 132.454 155.2C129.734 155.2 128.07 157.216 128.07 160.032C128.07 162.848 129.734 164.832 132.454 164.832ZM151.979 168.416C147.275 168.416 143.979 164.992 143.979 160.096C143.979 155.136 147.211 151.712 151.851 151.712C156.587 151.712 159.595 154.88 159.595 159.808V160.992L147.691 161.024C147.979 163.808 149.451 165.216 152.043 165.216C154.187 165.216 155.595 164.384 156.043 162.88H159.659C158.987 166.336 156.107 168.416 151.979 168.416ZM151.883 154.912C149.579 154.912 148.171 156.16 147.787 158.528H155.723C155.723 156.352 154.219 154.912 151.883 154.912ZM166.623 168H162.719V152.192H166.335L166.655 154.24C167.647 152.64 169.567 151.712 171.711 151.712C175.679 151.712 177.727 154.176 177.727 158.272V168H173.823V159.2C173.823 156.544 172.511 155.264 170.495 155.264C168.095 155.264 166.623 156.928 166.623 159.488V168ZM180.159 163.2H183.871C183.903 164.576 184.927 165.44 186.719 165.44C188.543 165.44 189.535 164.704 189.535 163.552C189.535 162.752 189.119 162.176 187.711 161.856L184.863 161.184C182.015 160.544 180.639 159.2 180.639 156.672C180.639 153.568 183.263 151.712 186.911 151.712C190.463 151.712 192.863 153.76 192.895 156.832H189.183C189.151 155.488 188.255 154.624 186.751 154.624C185.215 154.624 184.319 155.328 184.319 156.512C184.319 157.408 185.023 157.984 186.367 158.304L189.215 158.976C191.871 159.584 193.215 160.8 193.215 163.232C193.215 166.432 190.495 168.416 186.591 168.416C182.655 168.416 180.159 166.304 180.159 163.2ZM198.14 149.024C196.796 149.024 195.74 147.968 195.74 146.656C195.74 145.344 196.796 144.32 198.14 144.32C199.42 144.32 200.476 145.344 200.476 146.656C200.476 147.968 199.42 149.024 198.14 149.024ZM196.188 168V152.192H200.092V168H196.188ZM209.501 168H205.597V155.456H202.557V152.192H205.597V147.264H209.501V152.192H212.573V155.456H209.501V168ZM213.624 175.328V172.064H215.96C217.496 172.064 218.456 171.712 219.128 169.856L219.576 168.672L213.208 152.192H217.336L221.4 163.712L225.688 152.192H229.72L221.976 171.52C220.792 174.464 219.128 175.68 216.536 175.68C215.448 175.68 214.488 175.552 213.624 175.328Z"
-                      fill="#CC9A06"
-                    />
-                  </svg>
-                </ng-container>
-
-                <ng-container
-                  *ngIf="
-                    StandAlonePlace && StandAlonePlace.PopulationDensity < 1000
-                  "
-                >
-                  <svg
-                    width="300"
-                    height="177"
-                    viewBox="0 0 353 177"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M339.05 176C346.478 176 352.553 169.968 351.986 162.562C349.237 126.655 335.523 92.334 312.538 64.3326C286.699 32.8545 250.744 11.3113 210.8 3.37462C170.856 -4.56206 129.396 1.59906 93.4855 20.8079C61.5415 37.8952 35.7481 64.3665 19.4811 96.4945C16.1255 103.122 19.4336 111.018 26.2978 113.858V113.858C33.1621 116.698 40.9754 113.4 44.422 106.819C58.2462 80.4255 79.7206 58.6787 106.174 44.5284C136.595 28.2556 171.719 23.0362 205.557 29.7598C239.396 36.4834 269.856 54.7338 291.745 81.4005C310.78 104.589 322.309 132.893 324.993 162.567C325.662 169.965 331.621 176 339.05 176V176Z"
-                      fill="#F4F3F3"
-                    />
-                    <path
-                      d="M14.5211 176C6.77747 176 0.441883 169.712 1.05793 161.993C3.8912 126.492 17.4367 92.6709 39.8927 65.029C44.7754 59.0187 53.7002 58.8423 59.3029 64.1876V64.1876C64.9057 69.533 65.0547 78.3709 60.2633 84.4542C42.6797 106.779 31.894 133.709 29.2058 161.999C28.4732 169.708 22.2648 176 14.5211 176V176Z"
-                      fill="#208637"
-                    />
-                    <path
-                      d="M69.0161 104.608V124.224H78.8081V128H64.9201V104.608H69.0161ZM80.3224 120.064C80.3224 115.136 83.8744 111.744 88.7704 111.744C93.6664 111.744 97.2184 115.136 97.2184 120.064C97.2184 124.992 93.6664 128.384 88.7704 128.384C83.8744 128.384 80.3224 124.992 80.3224 120.064ZM84.2264 120.064C84.2264 122.944 86.0824 124.896 88.7704 124.896C91.4584 124.896 93.3144 122.944 93.3144 120.064C93.3144 117.184 91.4584 115.232 88.7704 115.232C86.0824 115.232 84.2264 117.184 84.2264 120.064ZM103.02 128L97.8996 112.192H101.964L104.044 118.976C104.396 120.224 104.716 121.6 105.004 123.072C105.292 121.536 105.58 120.544 106.092 118.976L108.268 112.192H112.236L114.348 118.976C114.54 119.616 115.18 121.984 115.372 123.04C115.628 121.856 116.14 119.968 116.428 118.976L118.54 112.192H122.668L117.196 128H113.548L111.372 121.152C110.732 119.072 110.38 117.568 110.252 116.768C110.092 117.504 109.804 118.624 109.004 121.216L106.828 128H103.02ZM133.657 135.328V112.192H137.273L137.529 114.592C138.489 112.768 140.569 111.712 142.969 111.712C147.417 111.712 150.361 114.944 150.361 119.904C150.361 124.832 147.673 128.416 142.969 128.416C140.601 128.416 138.553 127.488 137.561 125.888V135.328H133.657ZM137.593 120.096C137.593 122.944 139.353 124.896 142.041 124.896C144.793 124.896 146.425 122.912 146.425 120.096C146.425 117.28 144.793 115.264 142.041 115.264C139.353 115.264 137.593 117.248 137.593 120.096ZM152.541 120.064C152.541 115.136 156.093 111.744 160.989 111.744C165.885 111.744 169.437 115.136 169.437 120.064C169.437 124.992 165.885 128.384 160.989 128.384C156.093 128.384 152.541 124.992 152.541 120.064ZM156.445 120.064C156.445 122.944 158.301 124.896 160.989 124.896C163.677 124.896 165.533 122.944 165.533 120.064C165.533 117.184 163.677 115.232 160.989 115.232C158.301 115.232 156.445 117.184 156.445 120.064ZM172.532 135.328V112.192H176.148L176.404 114.592C177.364 112.768 179.444 111.712 181.844 111.712C186.292 111.712 189.236 114.944 189.236 119.904C189.236 124.832 186.548 128.416 181.844 128.416C179.476 128.416 177.428 127.488 176.436 125.888V135.328H172.532ZM176.468 120.096C176.468 122.944 178.228 124.896 180.916 124.896C183.668 124.896 185.3 122.912 185.3 120.096C185.3 117.28 183.668 115.264 180.916 115.264C178.228 115.264 176.468 117.248 176.468 120.096ZM202.689 112.192H206.593V128H202.977L202.689 125.888C201.729 127.392 199.681 128.416 197.569 128.416C193.921 128.416 191.777 125.952 191.777 122.08V112.192H195.681V120.704C195.681 123.712 196.865 124.928 199.041 124.928C201.505 124.928 202.689 123.488 202.689 120.48V112.192ZM214.561 128H210.689V104.192H214.561V128ZM223.361 128.416C220.001 128.416 217.953 126.464 217.953 123.488C217.953 120.576 220.065 118.752 223.809 118.464L228.545 118.112V117.76C228.545 115.616 227.265 114.752 225.281 114.752C222.977 114.752 221.697 115.712 221.697 117.376H218.369C218.369 113.952 221.185 111.712 225.473 111.712C229.729 111.712 232.353 114.016 232.353 118.4V128H228.929L228.641 125.664C227.969 127.296 225.825 128.416 223.361 128.416ZM224.641 125.472C227.041 125.472 228.577 124.032 228.577 121.6V120.768L225.281 121.024C222.849 121.248 221.921 122.048 221.921 123.328C221.921 124.768 222.881 125.472 224.641 125.472ZM241.345 128H237.441V115.456H234.401V112.192H237.441V107.264H241.345V112.192H244.417V115.456H241.345V128ZM248.796 109.024C247.452 109.024 246.396 107.968 246.396 106.656C246.396 105.344 247.452 104.32 248.796 104.32C250.076 104.32 251.132 105.344 251.132 106.656C251.132 107.968 250.076 109.024 248.796 109.024ZM246.844 128V112.192H250.748V128H246.844ZM253.854 120.064C253.854 115.136 257.406 111.744 262.302 111.744C267.198 111.744 270.75 115.136 270.75 120.064C270.75 124.992 267.198 128.384 262.302 128.384C257.406 128.384 253.854 124.992 253.854 120.064ZM257.758 120.064C257.758 122.944 259.614 124.896 262.302 124.896C264.99 124.896 266.846 122.944 266.846 120.064C266.846 117.184 264.99 115.232 262.302 115.232C259.614 115.232 257.758 117.184 257.758 120.064ZM277.748 128H273.844V112.192H277.46L277.78 114.24C278.772 112.64 280.692 111.712 282.836 111.712C286.804 111.712 288.852 114.176 288.852 118.272V128H284.948V119.2C284.948 116.544 283.636 115.264 281.62 115.264C279.22 115.264 277.748 116.928 277.748 119.488V128ZM131.59 168.416C127.014 168.416 124.166 165.056 124.166 160.16C124.166 155.232 127.046 151.712 131.814 151.712C134.022 151.712 135.974 152.64 136.966 154.208V144.192H140.838V168H137.254L136.998 165.536C136.038 167.36 133.99 168.416 131.59 168.416ZM132.454 164.832C135.174 164.832 136.934 162.88 136.934 160.032C136.934 157.184 135.174 155.2 132.454 155.2C129.734 155.2 128.07 157.216 128.07 160.032C128.07 162.848 129.734 164.832 132.454 164.832ZM151.979 168.416C147.275 168.416 143.979 164.992 143.979 160.096C143.979 155.136 147.211 151.712 151.851 151.712C156.587 151.712 159.595 154.88 159.595 159.808V160.992L147.691 161.024C147.979 163.808 149.451 165.216 152.043 165.216C154.187 165.216 155.595 164.384 156.043 162.88H159.659C158.987 166.336 156.107 168.416 151.979 168.416ZM151.883 154.912C149.579 154.912 148.171 156.16 147.787 158.528H155.723C155.723 156.352 154.219 154.912 151.883 154.912ZM166.623 168H162.719V152.192H166.335L166.655 154.24C167.647 152.64 169.567 151.712 171.711 151.712C175.679 151.712 177.727 154.176 177.727 158.272V168H173.823V159.2C173.823 156.544 172.511 155.264 170.495 155.264C168.095 155.264 166.623 156.928 166.623 159.488V168ZM180.159 163.2H183.871C183.903 164.576 184.927 165.44 186.719 165.44C188.543 165.44 189.535 164.704 189.535 163.552C189.535 162.752 189.119 162.176 187.711 161.856L184.863 161.184C182.015 160.544 180.639 159.2 180.639 156.672C180.639 153.568 183.263 151.712 186.911 151.712C190.463 151.712 192.863 153.76 192.895 156.832H189.183C189.151 155.488 188.255 154.624 186.751 154.624C185.215 154.624 184.319 155.328 184.319 156.512C184.319 157.408 185.023 157.984 186.367 158.304L189.215 158.976C191.871 159.584 193.215 160.8 193.215 163.232C193.215 166.432 190.495 168.416 186.591 168.416C182.655 168.416 180.159 166.304 180.159 163.2ZM198.14 149.024C196.796 149.024 195.74 147.968 195.74 146.656C195.74 145.344 196.796 144.32 198.14 144.32C199.42 144.32 200.476 145.344 200.476 146.656C200.476 147.968 199.42 149.024 198.14 149.024ZM196.188 168V152.192H200.092V168H196.188ZM209.501 168H205.597V155.456H202.557V152.192H205.597V147.264H209.501V152.192H212.573V155.456H209.501V168ZM213.624 175.328V172.064H215.96C217.496 172.064 218.456 171.712 219.128 169.856L219.576 168.672L213.208 152.192H217.336L221.4 163.712L225.688 152.192H229.72L221.976 171.52C220.792 174.464 219.128 175.68 216.536 175.68C215.448 175.68 214.488 175.552 213.624 175.328Z"
-                      fill="#28A745"
-                    />
-                  </svg>
-                </ng-container>
-
-                <div class="row mt-3">
-                  <div
-                    class="col-md-6"
-                    *ngIf="StandAlonePlace && StandAlonePlace.HouseholdIncome"
-                  >
-                    <div class="d-flex flex-column">
-                      <p class="info-head">Household Income</p>
-                      <p class="info-value">
-                        ${{ StandAlonePlace.HouseholdIncome | number }}
-                      </p>
-                    </div>
-                  </div>
-                  <div
-                    class="col-md-6"
-                    *ngIf="StandAlonePlace && StandAlonePlace.Employees"
-                  >
-                    <div class="d-flex flex-column">
-                      <p class="info-head">Employees</p>
-                      <p class="info-value">
-                        {{ StandAlonePlace.Employees | number }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div class="row">
       <div class="col-md-6">
         <div class="main-section">
-          <div class="d-flex justify-content-center">
-            <p class="rate-location">Please rate this property</p>
+          <div class="d-flex justify-content-start">
+            <p class="rate-location">Please Rate This Property</p>
           </div>
-          <div class="d-flex justify-content-around">
+          <div class="d-flex justify-content-start emo-container">
             <div style="cursor: pointer" (click)="sendFeedBack('Love')">
               <div
                 [ngClass]="place.reaction == 'Love' ? 'selected-reaction' : ''"
@@ -726,7 +750,7 @@
               </div>
             </div>
           </div>
-          <div class="d-flex justify-content-center mt-4">
+          <div class="d-flex justify-content-start mt-2">
             <p class="rate-location">If not match please tell us why ?</p>
           </div>
           <p class="if-loc">
@@ -748,334 +772,344 @@
           </div>
         </div>
       </div>
+      <div class="col-md-6">
+        <div class="main-section" style="height: 525px">
+          <div class="d-flex justify-content-start">
+            <p class="rate-location">Demographics Density Rate</p>
+          </div>
 
-      <div class="row p-0">
-        <div class="col-md-4">
-          <div class="main-section" style="height: 408px; overflow-y: auto">
+          <div>
+            <div
+              *ngIf="ShoppingCenter"
+              class="d-flex"
+              [ngClass]="{
+                'justify-content-start':
+                  ShoppingCenter.PopulationDensity < 1000,
+                'justify-content-center':
+                  ShoppingCenter.PopulationDensity >= 1000 &&
+                  ShoppingCenter.PopulationDensity <= 10000,
+                'justify-content-end': ShoppingCenter.PopulationDensity > 10000
+              }"
+              style="width: 91%"
+            >
+              <p
+                *ngIf="ShoppingCenter.PopulationDensity < 1000"
+                class="low-population"
+              >
+                Low Population Density
+              </p>
+              <p
+                *ngIf="
+                  ShoppingCenter.PopulationDensity >= 1000 &&
+                  ShoppingCenter.PopulationDensity <= 10000
+                "
+                class="medium-population"
+              >
+                Medium Population Density
+              </p>
+              <p
+                *ngIf="ShoppingCenter.PopulationDensity > 10000"
+                class="high-population"
+              >
+                High Population Density
+              </p>
+            </div>
+
+            <div
+              *ngIf="!ShoppingCenter"
+              class="d-flex"
+              [ngClass]="{
+                'justify-content-start':
+                  StandAlonePlace && StandAlonePlace.PopulationDensity < 1000,
+                'justify-content-center':
+                  StandAlonePlace?.PopulationDensity >= 1000 &&
+                  StandAlonePlace?.PopulationDensity <= 10000,
+                'justify-content-end':
+                  StandAlonePlace && StandAlonePlace.PopulationDensity > 10000
+              }"
+            >
+              <p
+                *ngIf="
+                  StandAlonePlace && StandAlonePlace.PopulationDensity < 1000
+                "
+                class="low-population"
+              >
+                Low Population Density
+              </p>
+              <p
+                class="medium-population"
+                *ngIf="
+                  StandAlonePlace &&
+                  StandAlonePlace.PopulationDensity >= 1000 &&
+                  StandAlonePlace.PopulationDensity <= 10000
+                "
+              >
+                Medium Population Density
+              </p>
+              <p
+                class="high-population"
+                *ngIf="
+                  StandAlonePlace && StandAlonePlace.PopulationDensity > 10000
+                "
+              >
+                High Population Density
+              </p>
+            </div>
+            <svg
+              width="538"
+              height="25"
+              viewBox="0 0 538 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 12.5C0 5.87258 5.37258 0.5 12 0.5H526C532.627 0.5 538 5.87258 538 12.5C538 19.1274 532.627 24.5 526 24.5H12C5.37258 24.5 0 19.1274 0 12.5Z"
+                fill="url(#paint0_linear_4248_9066)"
+              />
+              <defs>
+                <linearGradient
+                  id="paint0_linear_4248_9066"
+                  x1="0"
+                  y1="12.5"
+                  x2="538"
+                  y2="12.5"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#28A745" />
+                  <stop offset="0.496278" stop-color="#FFC107" />
+                  <stop offset="1" stop-color="#FF4C4C" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <ng-container *ngIf="ShoppingCenter">
+              <div class="row mt-3">
+                <div>
+                  <div class="d-flex justify-content-start">
+                    <p class="rate-location">Demographics Statistics</p>
+                  </div>
+                  <div class="house-income">
+                    <div
+                      class="d-flex justify-content-between"
+                      style="border-bottom: 1px solid #caced3"
+                    >
+                      <p
+                        class="info-value"
+                        *ngIf="ShoppingCenter && ShoppingCenter.HouseholdIncome"
+                      >
+                        Household Income
+                      </p>
+                      <p>
+                        <b>${{ ShoppingCenter.HouseholdIncome | number }}</b>
+                      </p>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2"
+                    style="border-bottom: 1px solid #caced3">
+                      <p
+                        class="info-value"
+                        *ngIf="ShoppingCenter && ShoppingCenter.Employees"
+                      >
+                        Employees
+                      </p>
+                      <p>
+                        <b>{{ ShoppingCenter.Employees | number }}</b>
+                      </p>
+                    </div>
+                    <!-- <div class="d-flex justify-content-between mt-2"  *ngIf="ShoppingCenter && ShoppingCenter.SubletVacantSpace">
+                      <p
+                        class="info-value"
+                       
+                      >
+                      Licensed Stylists
+                      </p>
+                      <p>
+                        <b>{{ ShoppingCenter.SubletVacantSpace | number }}</b>
+                      </p>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <ng-container *ngIf="!ShoppingCenter">
+            <div class="row mt-3">
+              <div class="house-income">
+                <div
+                  class="d-flex justify-content-between"
+                  style="border-bottom: 1px solid #caced3"
+                >
+                  <p
+                    class="info-value"
+                    *ngIf="StandAlonePlace && StandAlonePlace.HouseholdIncome"
+                  >
+                    Household Income
+                  </p>
+                  <p>
+                    <b>${{ StandAlonePlace?.HouseholdIncome | number }}</b>
+                  </p>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                  <p
+                    class="info-value"
+                    *ngIf="StandAlonePlace && StandAlonePlace.Employees"
+                  >
+                    Employees
+                  </p>
+                  <p>
+                    <b>{{ StandAlonePlace?.Employees | number }}</b>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-section" *ngIf="OrgManager && OrgManager[0] && placesRepresentative != false">
+      <section id="hero">
+        <div class="p-0">
+          <div class="d-flex align-items-center">
+            <img
+              style="width: 50px;"
+              class="logo"
+              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                OrgManager[0].id
+              }}"
+              alt=""
+            />
+            <h2 class="main-heading ms-2" *ngIf="OrgManager && OrgManager[0]">
+              {{ OrgManager[0].name }}
+            </h2>
+          </div>
+        </div>
+        <div class="row py-2">
+          <ng-container *ngFor="let Manager of OrgManager">
+            <div class="col-4 contact-card text-center">
+              <p class="contact">
+                {{ Manager.firstname | titlecase }}
+                {{ Manager.lastname | titlecase }}
+              </p>
+              <p>{{ Manager.cellPhone }}</p>
+              <p>{{ Manager.email }}</p>
+            </div>
+          </ng-container>
+        </div>
+      </section>
+    </div>
+
+    <div class="row p-0">
+      <div class="col-md-4" *ngIf="placeCotenants && placeCotenants.length > 0">
+        <div class="main-section" style="height: 408px; overflow-y: auto">
+          <div>
             <p class="main-name">Co-Tenants</p>
-            <ul>
-              <li *ngFor="let place of placeCotenants">
+            <!-- <select
+              class="form-control styled-select"
+              (change)="filterCotent($event)"
+            >
+              <option *ngFor="let cat of uniqueCategories" [value]="cat">
+                {{ cat }}
+              </option>
+            </select> -->
+          </div>
+          <ul>
+            <li *ngFor="let place of filterCotenats">
+              <div class="d-flex align-items-center">
+                <div>
+                  <img
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      place.ID
+                    }}"
+                    alt=""
+                    style="margin-right: 10px; width: 35px"
+                  />
+                </div>
+
+                <div class="d-flex flex-column">
+                  <span *ngIf="place.Name" class="nearset"
+                    >{{ place.Name }}
+                  </span>
+                  <!-- <span *ngIf="place.SubCategory" class="activityType">{{
+                    place.SubCategory[0].OrganizationCategory | titlecase
+                  }}</span> -->
+                </div>
+              </div>
+
+              <!-- <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
+                >{{
+                  place.SubCategory[0].Branches[0].Distance.toFixed(2)
+                }}
+                MI</span
+              > -->
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="col-md-4"
+        *ngIf="OrganizationBranches && OrganizationBranches.Branches.length > 0"
+      >
+        <div class="main-section" style="height: 408px; overflow-y: auto">
+          <p class="main-name">Branches</p>
+          <ul>
+            <li *ngFor="let place of OrganizationBranches.Branches.slice(0, 5)">
+              <div class="d-flex align-items-center">
+                <div>
+                  <img
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      OrganizationBranches.Id
+                    }}"
+                    alt=""
+                    style="margin-right: 10px; width: 35px"
+                  />
+                </div>
+
+                <div class="d-flex flex-column">
+                  <span *ngIf="OrganizationBranches.Name" class="nearset"
+                    >{{ OrganizationBranches.Name }}
+                  </span>
+                </div>
+              </div>
+
+              <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
+                >{{ place.Distance.toFixed(2) }} MI</span
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-4" *ngFor="let near of NearByType">
+        <div class="main-section">
+          <p class="main-name">{{ near.Name }}</p>
+          <ul>
+            <li *ngFor="let place of near.Branches | slice : 0 : 5">
+              <ng-container *ngFor="let branch of place.RelationOrganization">
                 <div class="d-flex align-items-center">
                   <div>
                     <img
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        place.ID
+                        branch.id
                       }}"
                       alt=""
-                      style="height: 35px; margin-right: 10px; width: 35px"
-                      />
+                      style="margin-right: 10px; width: 35px"
+                    />
                   </div>
 
-                  <div class="d-flex flex-column">
-                    <span *ngIf="place.Name" class="nearset"
-                      >{{ place.Name }}
-                    </span>
-                    <span *ngIf="place.ActivityType" class="activityType">{{
-                      place.ActivityType | titlecase
+                  <div>
+                    <span *ngIf="branch.Name" class="nearset">{{
+                      branch.Name
                     }}</span>
                   </div>
                 </div>
-
-                <span class="ms-2 font-weight-bold" style="text-wrap: nowrap"
-                  >{{ place.Branches[0].Distance.toFixed(2) }} MI</span
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-4" *ngFor="let near of NearByType">
-          <div class="main-section">
-            <p class="main-name">{{ near.Name }}</p>
-            <ul>
-              <li *ngFor="let place of near.Branches | slice : 0 : 5">
-                <ng-container *ngFor="let branch of place.RelationOrganization">
-                  <div class="d-flex align-items-center">
-                    <div>
-                      <img
-                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          branch.id
-                        }}"
-                        alt=""
-                        style="height: 35px; margin-right: 10px; width: 35px"
-                      />
-                    </div>
-
-                    <div>
-                      <span *ngIf="branch.Name" class="nearset">{{
-                        branch.Name
-                      }}</span>
-                    </div>
-                  </div>
-
-                  <span class="ms-2 font-weight-bold"
-                    >{{ branch.Distance.toFixed(2) }} MI</span
-                  >
-                </ng-container>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12 p-0">
-          <div id="map" style="height: 600px" *ngIf="mapView"></div>
-        </div>
-      </div>
-
-      <ng-container *ngIf="PlaceFiles.length > 0">
-        <div class="section-title">
-          <h2>Documents</h2>
-        </div>
-
-        <div class="container">
-          <div class="row">
-            <div
-              style="
-                box-shadow: 0 10px 25px 0 rgba(6, 12, 34, 0.1);
-                padding: 20px 30px;
-                border-radius: 20px;
-              "
-            >
-              <ng-container *ngFor="let file of PlaceFiles">
-                <div style="display: flex">
-                  <a
-                    href="https://files.capsnap.ai/DocumentFiles/{{
-                      PlaceId
-                    }}/{{ file }}"
-                    target="_blank"
-                    style="color: #000; padding: 5px"
-                    >{{ file }}</a
-                  >
-                </div>
+<!-- 
+                <span class="ms-2 font-weight-bold"
+                  >{{ branch.Distance.toFixed(2) }} MI</span
+                > -->
               </ng-container>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-
-      <section id="schedule" class="mt-3" *ngIf="General.comparable">
-        <div class="container">
-          <div class="section-title">
-            <h2>Comparables</h2>
-          </div>
-
-          <div class="tab-content row justify-content-center">
-            <div
-              role="tabpanel"
-              class="col-lg-9 tab-pane fade show active"
-              id="day-1"
-            >
-              <!-- <table class="table">
-              <thead>
-                <tr>
-                  <th class="summery-head">Apartment Type</th>
-                  <th class="summery-head">Lowest Rent</th>
-                  <th class="summery-head">Maximum Rent</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let result of rentResults">
-                  <td class="summery-data">{{ result.appartementType }}</td>
-                  <td class="summery-data">{{ result.minRent | currency }}</td>
-                  <td class="summery-data">{{ result.maxRent | currency }}</td>
-                </tr>
-              </tbody>
-            </table> -->
-              <div
-                class="row schedule-item"
-                *ngFor="let Building of General.comparable"
-              >
-                <div class="col-md-10">
-                  <div class="row">
-                    <div class="col-md-2">
-                      <div class="speaker">
-                        <img
-                          *ngIf="Building.mainImage != null"
-                          [src]="Building.mainImage"
-                          class="d-block w-100"
-                          loading="lazy"
-                        />
-                        <img
-                          *ngIf="Building.mainImage == null"
-                          src="https://api.capsnap.ai/api/BuyBox/main?placeId={{
-                            Building.id
-                          }}"
-                          class="d-block w-100"
-                          alt="..."
-                        />
-                      </div>
-                    </div>
-                    <div class="col-md-10">
-                      <div>
-                        <h4 style="color: rgb(2, 2, 250)">
-                          {{ Building.address }}
-                        </h4>
-                        <p>Address : {{ Building.address }}</p>
-                        <p>City : {{ Building.city }}</p>
-                        <p>State : {{ Building.state }}</p>
-                        <p>Type : {{ Building.type }}</p>
-                        <p>
-                          Distance :
-                          <b
-                            >{{
-                              Building.distance * 0.000621371 | number : "1.2-2"
-                            }}
-                            Miles</b
-                          >
-                        </p>
-                        <p
-                          *ngIf="
-                            Building.forSalePrice && Building.buildingSizeSf
-                          "
-                        >
-                          Price :
-                          <b
-                            >{{
-                              Building.forSalePrice / Building.buildingSizeSf
-                                | currency
-                            }}
-                            PPSF</b
-                          >
-                        </p>
-
-                        <!-- <ng-container *ngFor="let building of Building.appartements">
-                        <p *ngIf="building.appartementType != null">
-                          {{ building.appartementType }} :
-                          {{ building.rentPerMonth | currency }}
-                        </p>
-                      </ng-container> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- <section id="contact" #feedbackk>
-      <div class="container">
-        <div class="section-title">
-          <h2>FeedBack</h2>
-        </div>
-        <div class="form">
-          <form action="" role="form" class="contactForm">
-            <div class="form-group">
-              <textarea
-                class="form-control"
-                name="message"
-                rows="5"
-                [(ngModel)]="place.notes"
-                placeholder="Please write your note"
-              ></textarea>
-            </div>
-            <div class="text-center mt-4">
-              <button type="submit" class="default-btn" (click)="sendFeedBack()">
-                Send
-              </button>
-            </div>
-          </form>
+            </li>
+          </ul>
         </div>
       </div>
-    </section> -->
-
-      <ng-template #MoreDetails let-modal>
-        <div class="container" style="padding: 5px 20px 10px">
-          <div class="row">
-            <div style="padding: 10px; text-wrap: pretty">
-              <p class="m-0 table-desc">
-                This table shows the distances between this location and your
-                nearest branches and the competitors.
-              </p>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5
-                    class="card-title text-uppercase text-center"
-                    style="color: #ff0000; font-weight: 700; font-size: 15px"
-                  >
-                    <!-- {{ place.organizationName }} Branches -->
-                  </h5>
-                  <hr />
-                  <ul>
-                    <li *ngFor="let place of General.nearsetPlaces.ourPlaces">
-                      <span class="fa-li"></span>Distance :
-                      <b>{{ place.distance / 1000 | number }} KM</b>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <!-- <h5 class="m-0">Your Branches</h5>
-            <div class="table-responsive table-hover table-sales">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Distance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <ng-container
-                    *ngFor="let place of General.nearsetPlaces.ourPlaces"
-                  >
-                    <tr class="city-row">
-                      <td class="city">{{ place.distance / 1000 | number }}KM</td>
-                    </tr>
-                  </ng-container>
-                </tbody>
-              </table>
-            </div> -->
-            </div>
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-body">
-                  <h5
-                    class="card-title text-uppercase text-center"
-                    style="color: #0652dd; font-weight: 700; font-size: 15px"
-                  >
-                    Competitor
-                  </h5>
-                  <hr />
-                  <ul>
-                    <li
-                      *ngFor="
-                        let place of General.nearsetPlaces.competitorPlaces
-                      "
-                    >
-                      <span class="fa-li"></span>{{ place.name }} :
-                      <b> {{ place.distance / 1000 | number }} KM </b>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <!-- <h5 class="m-0">Your Competitor</h5>
-            <div class="table-responsive table-hover table-sales">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Distance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <ng-container
-                    *ngFor="let place of General.nearsetPlaces.competitorPlaces"
-                  >
-                    <tr class="city-row">
-                      <td class="city">{{ place.name }}</td>
-                      <td class="city">{{ place.distance / 1000 | number }}KM</td>
-                    </tr>
-                  </ng-container>
-                </tbody>
-              </table>
-            </div> -->
-            </div>
-          </div>
-        </div>
-      </ng-template>
     </div>
   </div>
 </div>
@@ -1085,18 +1119,39 @@
 </ng-template>
 
 <ng-template #StreetViewPlace let-modal>
-  <iframe
-    *ngIf="sanitizedUrl"
-    [src]="sanitizedUrl"
-    style="border: 0; width: 100%; height: 700px"
-    allowfullscreen=""
-    loading="lazy"
-  >
-  </iframe>
+  <ng-container *ngIf="sanitizedUrlPopup; else linkView">
+    <iframe
+      [src]="sanitizedUrlPopup"
+      style="border: 0; width: 100%; height: 500px"
+      allowfullscreen=""
+      loading="lazy"
+    ></iframe>
+  </ng-container>
 
-  <div
-    id="street-view-pop"
-    style="height: 700px"
-    *ngIf="StreetViewOnePlace"
-  ></div>
+  <ng-template #linkView>
+    <div
+      id="street-view-pop"
+      style="min-height: 500px"
+      *ngIf="StreetViewOnePlace"
+    ></div>
+  </ng-template>
+</ng-template>
+
+<!-- Modal Template -->
+<ng-template #galleryModal let-modal>
+  <div class="modal-body p-0">
+    <div class="carousel-wrapper position-relative">
+      <ngb-carousel
+        class="custom-carousel"
+        [showNavigationIndicators]="true"
+        [showNavigationArrows]="true"
+      >
+        <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
+          <div class="text-center">
+            <img [src]="img" class="img-fluid p-img" alt="image" />
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+  </div>
 </ng-template>

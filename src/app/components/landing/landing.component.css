@@ -1,9 +1,11 @@
+
+
 .main-heading {
   font-size: 25px;
   padding: 5px 0;
   font-weight: 600;
-  border-bottom: 1px solid #d8d8d8;
 }
+
 #hero h1 {
   margin: 0 0 10px 0;
   font-size: 48px;
@@ -13,7 +15,6 @@
 }
 
 #hero h2 {
-  margin: 15px 0;
   font-size: 18px;
 }
 
@@ -720,42 +721,19 @@
 }
 
 .backyard {
-  background-color: #f7f7f7;
-  padding: 50px 0;
+  background-color: #f7f7f7; 
 }
+
+.fa-info {
+  padding: 0 10px;
+  font-size: 19px;
+}
+
 .main-section {
   border-radius: 20px;
   background: #fff;
-  padding: 20px 30px;
-  margin: 0 0 32px 0;
-  /* background-image: linear-gradient(
-    130deg,
-    hsl(271deg 92% 10%) 0%,
-    hsl(284deg 100% 0%) 0%,
-    hsl(294deg 100% 41%) 0%,
-    hsl(305deg 100% 41%) -1%,
-    hsl(313deg 100% 44%) -1%,
-    hsl(320deg 100% 46%) -1%,
-    hsl(325deg 100% 48%) -1%,
-    hsl(329deg 100% 49%) -1%,
-    hsl(332deg 100% 50%) -2%,
-    hsl(335deg 100% 50%) -2%,
-    hsl(343deg 100% 56%) -2%,
-    hsl(352deg 100% 61%) -2%,
-    hsl(0deg 100% 65%) -2%,
-    hsl(2deg 100% 68%) -2%,
-    hsl(3deg 100% 70%) -2%,
-    hsl(5deg 100% 73%) -2%,
-    hsl(5deg 100% 76%) -2%,
-    hsl(6deg 100% 79%) -1%,
-    hsl(7deg 100% 82%) 0%,
-    hsl(7deg 100% 85%) 1%,
-    hsl(8deg 100% 88%) 3%,
-    hsl(8deg 100% 94%) 5%,
-    hsl(9deg 100% 99%) 10%,
-    hsl(9deg 100% 102%) 18%,
-    hsl(0deg 0% 100%) 64%
-  ); */
+  margin: 20px 0 20px 0;
+  padding: 20px;
 }
 .main-head {
   font-size: 24px;
@@ -800,7 +778,7 @@
 
 .info-value {
   color: #0d0c0c;
-  font-size: 18px;
+  font-size: 16px;
   margin-bottom: 0;
   font-style: normal;
   font-weight: 400;
@@ -818,9 +796,9 @@
 }
 
 .main-img {
-  max-height: 382px;
+  max-height: 400px;
   border-radius: 20px;
-  max-width: 90%;
+  max-width: 100%;
 }
 
 .procpect-img {
@@ -835,22 +813,42 @@
   line-height: 32px;
 }
 
-.high-population {
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 40px;
-  color: #cc3d3d;
+.low-population {
+  font-size: 16px;
+  font-weight: 400;
+  background: #e4ffef;
+  color: #2ecc71;
+  border-radius: 10px;
+  padding: 10px;
 }
+
+.medium-population {
+  font-size: 16px;
+  font-weight: 400;
+  background: #fff9e0;
+  color: #f1c40f;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.high-population {
+  font-size: 16px;
+  font-weight: 400;
+  background: #ffeded;
+  color: #ff4c4c;
+  border-radius: 10px;
+  padding: 10px;
+}
+
 .why-location {
   height: 556px;
   overflow-y: scroll;
 }
 
 .rate-location {
-  font-size: 24px;
+  font-size: 20px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 32px; /* 133.333% */
 }
 
@@ -881,7 +879,6 @@ li {
 }
 
 .another-places {
-  height: 350px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #b3afaf #f1f1f1;
@@ -911,7 +908,7 @@ li {
   text-align: center;
   border-radius: 16px;
   margin: 10px 0;
-  background-color: #0d0c0c;
+  background-color: #001f3f;
   color: #fff;
 }
 
@@ -985,7 +982,6 @@ li {
 }
 #intro p {
   color: #ebebeb;
-  font-weight: 700;
   font-size: 20px;
 }
 
@@ -1112,4 +1108,198 @@ li {
 .activityType {
   font-weight: bold;
   font-size: 14px;
+}
+
+/* Applies to the select element */
+.styled-select {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  width: 100%;
+  appearance: none; /* Removes the default arrow in some browsers */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="10" height="7"><polygon points="0,0 10,0 5,7" fill="%23333"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 7px;
+  cursor: pointer;
+}
+
+/* Adjust hover and focus states */
+.styled-select:hover {
+  border-color: #999;
+}
+
+.styled-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* Option styling */
+.styled-select option {
+  padding: 8px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* Optional: Darker background for hovered options in some browsers */
+.styled-select option:hover {
+  background-color: #f4f4f4;
+}
+
+/* start intro  */
+#intro {
+  width: 100%;
+  height: 500px;
+  /* background: url(../images/intro-bg.jpg) top center; */
+  background-size: cover;
+  background-attachment: fixed;
+  overflow: hidden;
+  position: relative;
+}
+
+#intro:before {
+  content: "";
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 250, 0.15) 0%,
+    rgba(0, 0, 0, 0.8) 80%,
+    rgba(0, 0, 0, 1) 100%
+  );
+
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+#intro .intro-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 90px;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  flex-direction: column;
+  text-align: flex-start;
+  padding: 19px 40px;
+}
+
+#intro h1 {
+  color: #fff;
+  font-size: 30px;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+}
+
+#intro h1 span {
+  color: #f82249;
+}
+#intro p {
+  color: #ebebeb;
+  font-size: 16px;
+  align-items: center;
+  display: flex;
+}
+#intro .about-btn {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 5px;
+  padding: 12px 32px;
+  border-radius: 50px;
+  transition: 0.5s;
+  line-height: 1;
+  margin: 10px;
+  color: #fff;
+  animation-delay: 0.8s;
+  border: 2px solid #f82249;
+}
+
+#intro .about-btn:hover {
+  background-color: #f82249;
+  color: #fff;
+}
+.address-city {
+  cursor: pointer;
+}
+.address-city:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.emo-container {
+  border-bottom: 1px solid #caced3;
+}
+
+.house-income {
+  border: 1px solid #caced3;
+  border-radius: 10px;
+  padding: 32px;
+}
+
+.contact-card {
+  border: 1px solid #caced3;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.contact {
+  font-weight: bold;
+  margin: 0;
+}
+
+.view-gallery {
+  background-color: transparent; /* A plain white background */
+  color: #fff; /* Black text for contrast */
+  border: 1px solid #ccc; /* A light gray border */
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: filter 0.3s ease; /* Smooth transition for blur */
+}
+
+.modal-body {
+  position: relative; /* ensures the absolute positioning references this area */
+}
+
+/* Target the indicators inside your carousel */
+.custom-carousel .carousel-indicators {
+  position: absolute;
+  /* Move the indicators outside the modal body area */
+  bottom: -50px; /* adjust as needed; negative moves them below the modal content area */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Style the indicators black */
+.custom-carousel .carousel-indicators li {
+  background-color: black;
+}
+
+.custom-carousel .carousel-indicators .active {
+  background-color: #333; /* slightly different shade or keep it black as well */
+}
+
+.modal-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.modal-backdrop.show {
+  background-color: transparent !important;
+}
+
+.p-img{
+  max-height: 400px;
 }

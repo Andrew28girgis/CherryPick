@@ -1,27 +1,33 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PropertiesServiceService {
-  groupedPropertiesArray: any[] = [];
-  buyboxId: any;
+  private groupedPropertiesArray: any[] = [];
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  getbuyboxId() {
-    return this.buyboxId;
+  getbuyboxId(): number {
+    return parseInt(localStorage.getItem('buyboxId') || '0');
   }
 
-  setbuyboxId(buyboxId: any) {
-    this.buyboxId = buyboxId;
+  setbuyboxId(buyboxId: number) {
+    localStorage.setItem('buyboxId', buyboxId.toString());
   }
 
-  getGroupedPropertiesArray() {
-    return this.groupedPropertiesArray;
+  GetBuyBoxPlaces(buyboxId: number): Observable<any> {
+    return this.http.get(`${environment.api}/buybox/places/${buyboxId}`);
   }
 
   setGroupedPropertiesArray(properties: any[]) {
     this.groupedPropertiesArray = properties;
+  }
+
+  getGroupedPropertiesArray() {
+    return this.groupedPropertiesArray;
   }
 }
