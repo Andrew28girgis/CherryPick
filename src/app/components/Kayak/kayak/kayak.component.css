@@ -700,3 +700,8 @@ ul li:hover {
   background-color: #007bff;
   color: white;
 }
+
+.shopping-center-num{
+  color: #5c6bc0;
+  font-weight: 700;
+}

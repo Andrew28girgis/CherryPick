@@ -71,9 +71,7 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private authService: AuthService,
     private sanitizer: DomSanitizer,
-    private stateService: StateService
     
   ) {
     localStorage.removeItem('placeLat');
