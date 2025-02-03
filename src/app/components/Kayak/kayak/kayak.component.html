@@ -2,7 +2,7 @@
 <div class="d-flex justify-content-center align-items-center">
   <div class="container-fluid my-3">
     <div class="row">
-      <div class="col-md-12">
+      
         <div class="row d-flex align-items-center justify-content-center">
           <div class="search-bar container">
             <!-- State Dropdown -->
@@ -12,7 +12,7 @@
                 class="form-select border-0 shadow-none search-textt"
                 [(ngModel)]="filterValues.statecode"
                 (ngModelChange)="
-                  handleStateChange($event); searchShoppingCenter()
+                  handleStateChange($event);
                 "
                 style="
                   appearance: none;
@@ -41,7 +41,7 @@
                 id="city-select"
                 class="form-select border-0 shadow-none search-textt"
                 [(ngModel)]="filterValues.city"
-                (ngModelChange)="onCityChange($event); searchShoppingCenter()"
+                (ngModelChange)="onCityChange($event); "
                 style="
                   appearance: none;
                   padding-right: 2.5rem;
@@ -59,15 +59,7 @@
               </select>
             </div>
 
-            <!-- Search Button -->
-            <div class="col-md-1">
-              <button
-                class="btn search-btn border-0"
-                (click)="searchShoppingCenter()"
-              >
-                <i class="fa fa-search"></i>
-              </button>
-            </div>
+        
             <div
               *ngIf="filterValues.statecode"
               class="d-flex align-items-center justify-content-center"
@@ -81,7 +73,6 @@
               class="d-flex justify-content-start align-items-center ms-4"
               *ngIf="filterValues.statecode"
             >
-              
               <button
                 class="btn btn-outline-primary bulk-button ms-2"
                 (click)="toggleBulkMode()"
@@ -90,19 +81,35 @@
               </button>
             </div>
           </div>
+          <div class="row mt-3" *ngIf=" KayakResult && KayakResult?.Result?.length > 0 ">
+            
+            <div class="col-md-4 total" (click)="getTotalShopping()">
+              <h6>Total Shopping Centers</h6>
+              <p class="shopping-center-num">
+                {{ KayakResult?.Result?.length }}
+              </p>
+            </div>
 
-          <ng-container *ngIf="filterValues.statecode">
-            <div class="card carddd mb-3 gray-background">
-              <div class="card-body">
-                <div
-                  class="col-md-12"
-                  *ngFor="let result of filteredKayakResult; let i = index"
-                >
-                  <div class="row align-items-center">
-                    <!-- Left Side: Result Details -->
+            <div class="col-md-4 total" (click)="getBindedShopping()">
+              <h6>Binded Shopping Centers</h6>
+              <p class="shopping-center-num">
+                {{ getBindedShoppingCentersNumber() }}
+              </p>
+            </div> 
+            <div class="col-md-4 total" (click)="getUnBindedShopping()">
+              <h6>UnBinded Shopping Centers</h6>
+              <p class="shopping-center-num">
+                {{
+                  KayakResult?.Result?.length - getBindedShoppingCentersNumber() < 0  ? '0' : KayakResult?.Result?.length - getBindedShoppingCentersNumber()
+                }}
+              </p>
+            </div>
+          </div>
+          <ng-container *ngIf="filterValues.statecode && ShoppingCenters && ShoppingCenters">
+             <div class="col-md-12" *ngFor="let result of ShoppingCenters; let i = index">
+                  <div class="row align-items-center"> 
                     <div class="col-md-5">
-                      <div class="d-flex align-items-center gap-3">
-                        <!-- Show Checkbox in Bulk Mode -->
+                      <div class="d-flex align-items-center gap-3"> 
                         <div *ngIf="isBulkMode" class="form-check">
                           <input
                             type="checkbox"
@@ -179,7 +186,6 @@
                               (click)="GetShoppingCenterTenants(result.Id)"
                             />
                           </div>
-  
                         </div>
                       </div>
                     </div>
@@ -209,7 +215,6 @@
                           />
                         </div> -->
 
-                     
                         <div class="d-flex align-items-center gap-2">
                           <div>
                             <button
@@ -247,7 +252,16 @@
                     <div class="col-md-12 mt-2 mb-3">
                       <div class="d-flex">
                         <div class="chosen-places-container p-2">
-                          <span     style="cursor: pointer; color: #4d65b4; font-weight: 700;" (click)="openPlacesModal(result.place, result.Id)"> View Places</span>
+                          <span
+                            style="
+                              cursor: pointer;
+                              color: #4d65b4;
+                              font-weight: 700;
+                            "
+                            (click)="openPlacesModal(result.place, result.Id)"
+                          >
+                            View Places</span
+                          >
                           <div
                             class="d-inline-flex align-items-center flex-wrap gap-2 ms-2"
                           >
@@ -311,11 +325,11 @@
                     <hr />
                   </div>
                 </div>
-              </div>
-            </div>
+            
+            
           </ng-container>
         </div>
-      </div>
+       
     </div>
   </div>
 
@@ -514,10 +528,10 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="sortedTenants.length > 0">
           <div class="card card-filter static-height">
             <div class="card-body position-relative">
-              <div *ngIf="sortedTenants.length > 0; else noTenantss">
+              <div>
                 <div class="small-titlefilter">
                   <span>Tenants</span>
                 </div>
@@ -525,6 +539,7 @@
                   <ng-container *ngFor="let tenant of sortedTenants">
                     <div class="form-check" *ngIf="tenant?.Name">
                       <input
+                        [(ngModel)]="tenant.Selected"
                         type="checkbox"
                         [id]="'tenant-' + tenant?.OrganizationId"
                         name="Comp-Tenants"
@@ -547,10 +562,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" *ngIf="sortedOrgs.length > 0">
           <div class="card card-filter static-height">
             <div class="card-body position-relative">
-              <div *ngIf="sortedOrgs.length > 0; else noManagementOrgs">
+              <div>
                 <div class="small-titlefilter">
                   <span>Management Company</span>
                 </div>
@@ -558,6 +573,8 @@
                   <ng-container *ngFor="let org of sortedOrgs">
                     <div class="form-check" *ngIf="org?.Name">
                       <input
+                      [(ngModel)]="org.Selected"
+
                         type="checkbox"
                         [id]="'org-' + org?.OrganizationId"
                         name="Comp-ManagementCompany"
@@ -582,10 +599,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6 mt-2">
+        <div class="col-md-6 mt-2" *ngIf="secondaryTypes.length > 0">
           <div class="card card-filter static-height">
             <div class="card-body position-relative">
-              <div *ngIf="secondaryTypes.length > 0; else noSecondaryTypes">
+              <div>
                 <div class="small-titlefilter">
                   <span>Secondary Type</span>
                 </div>
@@ -593,6 +610,8 @@
                   <ng-container *ngFor="let secondary of secondaryTypes">
                     <div class="form-check" *ngIf="secondary?.SecondaryType">
                       <input
+                      [(ngModel)]="secondary.Selected"
+
                         type="checkbox"
                         [id]="'secondary-' + secondary.SecondaryType"
                         name="Comp-SecondaryType"
@@ -618,10 +637,10 @@
           </div>
         </div>
 
-        <div class="col-md-6 mt-2">
+        <div class="col-md-6 mt-2" *ngIf="neighbourhoods.length > 0">
           <div class="card card-filter static-height">
             <div class="card-body position-relative">
-              <div *ngIf="neighbourhoods.length > 0; else noNeighbourhoods">
+              <div>
                 <div class="small-titlefilter">
                   <span>Neighbourhood</span>
                 </div>
@@ -632,6 +651,7 @@
                       *ngIf="neighbourhood?.Neighbourhood"
                     >
                       <input
+                      [(ngModel)]="neighbourhood.Selected" 
                         type="checkbox"
                         [id]="'neighbourhood-' + neighbourhood.Neighbourhood"
                         name="Comp-Neighbourhood"
@@ -657,10 +677,10 @@
           </div>
         </div>
 
-        <div class="col-md-6 mt-2">
+        <div class="col-md-6 mt-2" *ngIf="tenantCategories.length > 0">
           <div class="card card-filter static-height">
             <div class="card-body position-relative">
-              <div *ngIf="tenantCategories.length > 0; else noTenantCategories">
+              <div>
                 <div class="small-titlefilter">
                   <span>Tenant Categories</span>
                 </div>
@@ -668,6 +688,7 @@
                   <ng-container *ngFor="let category of tenantCategories">
                     <div class="form-check" *ngIf="category?.Name">
                       <input
+                        [(ngModel)]="category.Selected"  
                         type="checkbox"
                         [id]="'category-' + category.Name"
                         name="Comp-TenantCategory"
@@ -692,10 +713,61 @@
             </div>
           </div>
         </div>
+        <div
+          class="col-md-6 mt-2"
+          *ngIf="minBuildingSize !== null && maxBuildingSize !== null"
+        >
+          <div class="card card-filter static-height">
+            <div class="card-body position-relative">
+              <div>
+                <div class="small-titlefilter">
+                  <span>Building Size Range</span>
+                </div>
+                <div class="mt-3"> 
+                  <div>
+                    <label for="size-min" class="sqft"
+                      > SF Min Size: {{ selectedMin | number }}</label
+                    >
+                    <input class="ms-2"
+                      type="range"
+                      id="size-min"
+                      [(ngModel)]="selectedMin"
+                      name="minSize"
+                      [min]="minBuildingSize"
+                      [max]="maxBuildingSize"
+                      (change)="updateSliderValues()"
+                    />
+                  </div> 
+                  <div>
+                    <label for="size-max" class="sqft"
+                      > SF Max Size: {{ selectedMax | number }}</label
+                    >
+                    <input class="ms-2"
+                      type="range"
+                      id="size-max"
+                      [(ngModel)]="selectedMax"
+                      name="maxSize"
+                      [min]="minBuildingSize"
+                      [max]="maxBuildingSize"
+                      (change)="updateSliderValues()"
+                    />
+                  </div> 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn bind-button" (click)="modal.dismiss()">
+      <button class="btn btn-secondary mt-3" (click)="getResult()">
+        Filter
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary mt-3"
+        (click)="modal.dismiss()"
+      >
         Close
       </button>
     </div>

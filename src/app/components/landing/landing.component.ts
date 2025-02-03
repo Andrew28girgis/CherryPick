@@ -71,9 +71,7 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private authService: AuthService,
     private sanitizer: DomSanitizer,
-    private stateService: StateService
     
   ) {
     localStorage.removeItem('placeLat');
@@ -82,13 +80,11 @@ export class LandingComponent {
 
   ngOnInit(): void {
     this.windowHistrony = window.history.length   
-
     this.initializeParams();
     this.initializeDefaults();
     //this.initializeQueryParams();
   }
-
-
+  
   GetCustomSections(buyboxId: number): void { 
     const body: any = {
       Name: 'GetCustomSections',

@@ -18,7 +18,7 @@ import { TokenInterceptor } from './token.interceptor';
 import { StartingComponent } from './components/starting/starting.component';
 import { SummeryComponent } from './components/summery/summery.component';
 import { UserBuyboxComponent } from './components/user-buybox/user-buybox.component';
-import { NgxPaginationModule } from 'ngx-pagination';
+// import { NgxPaginationModule } from 'ngx-pagination';
 import { OrganizationsComponent } from './components/organizations/organizations.component';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
@@ -112,7 +112,6 @@ import { BuyboxRelatiosComponent } from './components/kayak-home/buybox-relatios
     NgbModule,
     NgbTooltipModule,
     NgbAlertModule,
-    NgxPaginationModule,
     DragDropModule,
     ToastrModule.forRoot(),
     RouterModule,

@@ -414,6 +414,10 @@ body {
   line-height: 30px;
 }
 
+.total{
+  cursor: pointer;
+}
+
 .search-inputs::placeholder {
   color: var(--Inputs-Color-Placeholder-Label, #7a8591);
   text-align: left;
@@ -550,6 +554,14 @@ body {
 }
 .tenantorg {
   font-size: 0.9rem;
+}
+.sqft{
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  font-family: Montserrat;
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
 }
 .modal-imgg {
   max-width: 700px;
@@ -699,4 +711,9 @@ ul li:hover {
 .tags:hover {
   background-color: #007bff;
   color: white;
+}
+
+.shopping-center-num{
+  color: #5c6bc0;
+  font-weight: 700;
 }
