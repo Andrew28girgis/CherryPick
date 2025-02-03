@@ -16,6 +16,7 @@ import {
 } from './../../../../../src/models/domain';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MapsService } from './../../../../../src/app/services/maps.service';
+import { HttpClient } from '@angular/common/http';
 
 import {
   FilterValues,
@@ -77,6 +78,12 @@ export class KayakComponent implements OnInit {
   boundShoppingCenterIds: number[] = []; 
   deleteshoppingcenterID!:number;
   shoppingCenters: Center[] = []; 
+  minBuildingSize: number = 0;
+  maxBuildingSize: number = 100000; // Large default to avoid issues
+  selectedMin: number = 0;
+  selectedMax: number = 100000;
+  
+
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -87,7 +94,8 @@ export class KayakComponent implements OnInit {
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    private stateService: StateService 
+    private stateService: StateService,
+    private http: HttpClient
   ) {
     this.markerService.clearMarkers();
   }
@@ -109,6 +117,7 @@ export class KayakComponent implements OnInit {
       tenantCategory: '',
     };
     this.GetStatesAndCities();
+
  
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
@@ -120,7 +129,6 @@ export class KayakComponent implements OnInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
-
   toggleExpandedPlaces(index: number): void {
     this.expandedPlacesIndex =
       this.expandedPlacesIndex === index ? null : index;
@@ -603,8 +611,6 @@ updateNeighbourhoods(): void {
   // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
 }
 
-
-
 updateTenantCategories(): void {
   if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
       // console.error('TenantsCategories list is empty or undefined.');
@@ -626,6 +632,45 @@ updateTenantCategories(): void {
 
   // console.log('Sorted Tenant Categories:', this.tenantCategories);
 }
+applyBuildingSizeFilter(): void {
+  if (!this.Filters?.Result || !Array.isArray(this.Filters.Result)) {
+    console.warn('Building size data is missing or invalid.');
+    this.filteredKayakResult = [];
+    return;
+  }
+
+  console.log(`Filtering with min: ${this.filterValues.minsize}, max: ${this.filterValues.maxsize}`);
+
+  // 🔹 Ensure `BuildingSize` exists before filtering
+  this.filteredKayakResult = this.Filters.Result.filter((item: any) => {
+    if (!item.BuildingSize || isNaN(item.BuildingSize)) {
+      console.warn(`Skipping item with missing or invalid BuildingSize:`, item);
+      return false;
+    }
+    return (
+      item.BuildingSize >= this.filterValues.minsize &&
+      item.BuildingSize <= this.filterValues.maxsize &&
+      item.Type === 'ShoppingCenter' // Ensure filtering only applies to shopping centers
+    );
+  });
+
+  console.log('Filtered Shopping Centers:', this.filteredKayakResult);
+}
+
+updateSliderValues(): void {
+  // Update filterValues whenever the user changes the slider
+  this.filterValues.minsize = this.selectedMin;
+  this.filterValues.maxsize = this.selectedMax;
+
+  console.log(`Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`);
+}
+
+
+
+
+
+
+
 
   filterCards(): void {
     if (!this.KayakResult?.Result) {
@@ -722,11 +767,10 @@ updateTenantCategories(): void {
 
   GetFilters(): void {
     if (!this.Ids) {
-      // console.warn('Ids are not available, resetting filters.');
       this.resetFilters();
       return;
     }
-
+  
     this.spinner.show();
     const body: any = {
       Name: 'GetFilters',
@@ -735,24 +779,43 @@ updateTenantCategories(): void {
         buyboxid: this.selectedbuyBox,
       },
     };
-
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         if (data && data.json && data.json.length > 0) {
           this.Filters = data.json[0];
-          // console.log('Filters loaded:', this.Filters);
-
+          console.log('Filters loaded:', this.Filters);
+  
+          // ✅ Extract Min/Max Building Size from API and store in filterValues
+          if (this.Filters.MinMaxBuildingSize?.length > 0) {
+            const minMax = this.Filters.MinMaxBuildingSize[0];
+            this.minBuildingSize = minMax.MinSize;
+            this.maxBuildingSize = minMax.MaxSize;
+  
+            // Set min/max in filterValues for dynamic filtering
+            this.filterValues.minsize = this.minBuildingSize;
+            this.filterValues.maxsize = this.maxBuildingSize;
+  
+            // Set slider values initially
+            this.selectedMin = this.minBuildingSize;
+            this.selectedMax = this.maxBuildingSize;
+          } else {
+            console.warn('No MinMaxBuildingSize data available.');
+          }
+  
           // Update all filters dynamically
           this.updateSortedTenants();
           this.updateSortedOrgs();
           this.updateSecondaryTypes();
           this.updateNeighbourhoods();
           this.updateTenantCategories();
+          console.log(this.filterValues);
+          
         } else {
           console.warn('No filters data returned.');
           this.resetFilters();
         }
-
+  
         this.spinner.hide();
       },
       error: (error) => {
@@ -762,6 +825,8 @@ updateTenantCategories(): void {
       },
     });
   }
+  
+  
 
   resetFilters(): void {
     this.sortedTenants = [];
@@ -914,7 +979,7 @@ updateTenantCategories(): void {
         this.KayakResult = data.json[0];
         this.Ids = data.json[0]?.Ids;
         this.filterCards();
-        // console.log('Filtered Result:', this.KayakResult);
+        console.log('Filtered Result:', this.KayakResult);        
         this.GetFilters();
         this.spinner.hide();
       },
