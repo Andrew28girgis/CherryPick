@@ -27,7 +27,7 @@ import {
   TenantsCategories,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
- import { StateService } from '../../../../../src/app/services/state.service';
+import { StateService } from '../../../../../src/app/services/state.service';
 import { Center } from '../../../../models/shoppingCenters';
 
 declare const google: any;
@@ -70,13 +70,11 @@ export class KayakComponent implements OnInit {
   isBulkMode: boolean = false;
   selectedPlaces: any[] = [];
   expandedPlacesIndex: number | null = null;
-  showFilters: boolean = false;
   secondaryTypes: any[] = [];
   neighbourhoods: any[] = [];
   tenantCategories: any[] = [];
   selectedShoppingCenterId: number = 0;
-  boundShoppingCenterIds: number[] = [];
-  newBoundShoppingCenterIds: number[] = [];  // Store the shopping center IDs the user explicitly binds
+  boundShoppingCenterIds: number[] = []; 
   deleteshoppingcenterID!:number;
   shoppingCenters: Center[] = []; 
 
@@ -89,11 +87,11 @@ export class KayakComponent implements OnInit {
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    private stateService: StateService
-
+    private stateService: StateService 
   ) {
     this.markerService.clearMarkers();
   }
+
   ngOnInit(): void {
     this.General = new General();
     this.filterValues = {
@@ -205,44 +203,35 @@ export class KayakComponent implements OnInit {
     });
   }
 
-  toggleShoppingCenterBind(
-    shoppingCenterId: number,
-    isChecked?: boolean
-  ): void {
-    this.deleteshoppingcenterID=shoppingCenterId;
-    console.log('deleteshoppingcenterID',this.deleteshoppingcenterID);
-    
-    const isAlreadyBound =
-      this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
+  toggleShoppingCenterBind(shoppingCenterId: number, isChecked?: boolean): void {
+    this.deleteshoppingcenterID = shoppingCenterId;
+    // console.log('deleteshoppingcenterID:', this.deleteshoppingcenterID);
+
+    const isAlreadyBound = this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
 
     if (isChecked !== undefined) {
-       if (isChecked && !isAlreadyBound) {
-        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-      } else if (!isChecked && isAlreadyBound) {
-        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
-          (id) => id !== shoppingCenterId
-        );
-      }
+        // If the checkbox explicitly sets the value, bind or unbind accordingly
+        if (isChecked && !isAlreadyBound) {
+            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+            this.bindShoppingCenter();
+        } else if (!isChecked && isAlreadyBound) {
+            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+            this.UnBindShoppingCenter();
+        }
     } else {
-      // Handle normal toggle event
-      if (isAlreadyBound) {
-        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
-          (id) => id !== shoppingCenterId
-        );
-        this.UnBindShoppingCenter();
-        // console.log(`Unbound shopping center with ID: ${shoppingCenterId}`);
-      } else {
-        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-        this.bindShoppingCenter();
-        // console.log(`Bound shopping center with ID: ${shoppingCenterId}`);
-      }
+        // If `isChecked` is not provided, handle normal button toggle behavior
+        if (isAlreadyBound) {
+            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
+            this.UnBindShoppingCenter();
+        } else {
+            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+            this.bindShoppingCenter();
+        }
     }
 
-    // console.log(
-    //   'Updated Selected Shopping Center IDs:',
-    //   this.SelectedShoppingCenterIDs
-    // );
-  }
+    // console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+}
+
 UnBindShoppingCenter(){
   this.spinner.show();
   const body: any = {
@@ -295,8 +284,10 @@ UnBindShoppingCenter(){
 
   onCardCheckboxChange(event: Event, result: any): void {
     const isChecked = (event.target as HTMLInputElement).checked;
+    // console.log(`Checkbox changed for ${result.Id}, checked:`, isChecked);
     this.toggleShoppingCenterBind(result.Id, isChecked);
-  } 
+}
+
 
   togglePlaceBind(placeId: number, shoppingCenterId: number): void {
     const isAlreadyBound = this.SelectedPlacesIDs.includes(placeId);
@@ -924,11 +915,7 @@ updateTenantCategories(): void {
         this.Ids = data.json[0]?.Ids;
         this.filterCards();
         // console.log('Filtered Result:', this.KayakResult);
-        
-        if (!this.Filters?.SecondaryType) {
-          this.GetFilters();
-        }
-
+        this.GetFilters();
         this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),
