@@ -155,6 +155,7 @@ export class EmilyComponent implements OnInit {
     }, 2000); 
 
   }
+  
   toggleSelections() {
     this.showSelections = !this.showSelections;
   }
