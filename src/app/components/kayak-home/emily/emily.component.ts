@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   Cotenant,
   Generated,
@@ -51,7 +51,7 @@ export interface Contact_ShoppingCenter {
   ]
 })
 
-export class EmilyComponent {
+export class EmilyComponent implements OnInit {
   buyBoxId!: number | null;
   TemplatesId!: number | null;
   General!: any;
@@ -121,7 +121,39 @@ export class EmilyComponent {
   }
 
   showSelections = true;
+  constructor(
+    private route: ActivatedRoute,
+    private modalService: NgbModal,
+    private PlacesService: PlacesService
+  ) {
+    this.route.paramMap.subscribe((params) => {
+      this.buyBoxId = +params.get('buyboxid')!;
 
+      this.GetBuyBoxInfo();
+      this.GetRetailRelationCategories();
+      this.GetPrompts();
+      // this.GetSavedTemplates();
+    });
+  }
+
+  ngOnInit() {
+   
+
+    setTimeout(() => {
+    this.showClientProfile=true;
+    this.showRelationNames=true;
+    this.showOrganizationManagers=true;
+    this.showManagerName=true;
+    this.showMangerDescription = true;
+    this.onOrganizationManagersChange();
+    }, 5000); 
+
+    setTimeout(() => {
+      this.selectManagerContactsByDefault();
+      this.selectManagerTenantsByDefault();
+    }, 2000); 
+
+  }
   toggleSelections() {
     this.showSelections = !this.showSelections;
   }
@@ -189,45 +221,7 @@ export class EmilyComponent {
     this.contentChange.emit(target.innerHTML);
   }
 
-  constructor(
-    private route: ActivatedRoute,
-    private modalService: NgbModal,
-    private PlacesService: PlacesService
-  ) {
-    this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
-
-      this.GetBuyBoxInfo();
-      this.GetRetailRelationCategories();
-      this.GetPrompts();
-      // this.GetSavedTemplates();
-    });
-  }
-
-  ngOnInit() {
-    // this.route.paramMap.subscribe((params) => {
-    //   this.buyBoxId = +params.get('buyboxid')!;
-
-    //   this.GetBuyBoxInfo();
-    //   this.GetRetailRelationCategories();
-    //   this.GetPrompts();
-    //   this.GetSavedTemplates();
-    // }); 
-    setTimeout(() => {
-  //  debugger
-    this.showClientProfile=true;
-    this.showRelationNames=true;
-    this.showOrganizationManagers=true;
-    this.showManagerName=true;
-    this.showMangerDescription = true;
-    }, 5000); 
-
-    setTimeout(() => {
-      this.selectManagerContactsByDefault();
-      this.selectManagerTenantsByDefault();
-    }, 2000); 
-
-  }
+  
   
   selectManagerContactsByDefault() {
     this.getManagerContacts(this.selectedShoppingCenter).forEach((contact) => {
@@ -307,6 +301,10 @@ export class EmilyComponent {
   selectedShoppingCenterId!: number;
 
   handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
+    console.log(`hello`);
+    
+    this.emailSubject = '' ;
+    this.emailBodyResponse = ''; 
     this.selectedTab = event.tabId;
     this.selectedShoppingCenterId = event.shoppingCenterId;
     this.GetBuyBoxOrganizationsForEmail();
