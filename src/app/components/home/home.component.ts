@@ -133,7 +133,6 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = data.json;
         console.log(`shoppingCenters`);
         console.log(this.shoppingCenters);
-
         this.getStandAlonePlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
