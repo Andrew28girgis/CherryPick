@@ -168,18 +168,20 @@ export class KayakComponent implements OnInit {
         this.KayakResult = data.json[0];
         this.ShoppingCenters = this.KayakResult.Result;
         this.Ids = this.KayakResult.Ids; 
-        this.GetFilters(); 
+        if(!this.Filters){
+          this.GetFilters(); 
+
+        }
         this.getBindedShoppingCentersNumber();
         this.spinner.hide();
        }, 
     });
   }
   
-  
 
   getBindedShoppingCentersNumber(){
-    const count = this.KayakResult?.Result.filter((result:any) => 
-        this.SelectedShoppingCenterIDs.includes(result.Id)
+    const count = this.KayakResult?.Result?.filter((result:any) => 
+        this.SelectedShoppingCenterIDs?.includes(result.Id)
     ).length;
     return count;
   }
@@ -203,6 +205,7 @@ export class KayakComponent implements OnInit {
   }
 
   GetFilters(): void {
+
     if (!this.Ids) {
       this.resetFilters();
       return;
@@ -888,6 +891,7 @@ updateSliderValues(): void {
     this.filterValues.tenantCategory = categoryList.join(','); // Update the filter
     this.getResult(); // Trigger filtering API
   }
+  
 
 
 }
