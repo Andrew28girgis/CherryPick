@@ -1,8 +1,8 @@
- import {
+import {
   Component,
   OnInit,
   TemplateRef,
-  ChangeDetectorRef, 
+  ChangeDetectorRef,
   ViewChild,
   HostListener,
 } from '@angular/core';
@@ -11,9 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from '../../../../app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { KayakResult, StatesAndCities } from '../../../../models/kayak';
-import { 
-  General, 
-} from './../../../../../src/models/domain';
+import { General } from './../../../../../src/models/domain';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MapsService } from './../../../../../src/app/services/maps.service';
 import { HttpClient } from '@angular/common/http';
@@ -43,6 +41,7 @@ export class KayakComponent implements OnInit {
   placeImage: string[] = [];
   Ids!: number[];
   KayakResult!: any;
+  ShoppingCenters!: any;
   KayakCitiesandStates: StatesAndCities[] = [];
   selectedState: any;
   selectedCity: any;
@@ -75,15 +74,13 @@ export class KayakComponent implements OnInit {
   neighbourhoods: any[] = [];
   tenantCategories: any[] = [];
   selectedShoppingCenterId: number = 0;
-  boundShoppingCenterIds: number[] = []; 
-  deleteshoppingcenterID!:number;
-  shoppingCenters: Center[] = []; 
+  boundShoppingCenterIds: number[] = [];
+  deleteshoppingcenterID!: number;
+  shoppingCenters: Center[] = [];
   minBuildingSize: number = 0;
   maxBuildingSize: number = 100000; // Large default to avoid issues
   selectedMin: number = 0;
   selectedMax: number = 100000;
-  
-
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -116,12 +113,151 @@ export class KayakComponent implements OnInit {
       maxsize: 0,
       tenantCategory: '',
     };
-    this.GetStatesAndCities();
 
- 
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-     });
+    });
+    this.GetStates(); 
+    this.getBindedShoppingCenters();
+  }
+
+  GetStates(): void {
+    this.spinner.show();
+    const body: any = { Name: 'GetStates', Params: {} };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.KayakCitiesandStates = data.json;
+        this.uniqueStates = [
+          ...new Set(
+            this.KayakCitiesandStates.map((item: any) => item.stateCode.trim())
+          ),
+        ];
+        this.spinner.hide();
+      }, 
+    });
+  }
+
+  getBindedShoppingCenters(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCentersByBBoxId',
+      Params: {
+        buyboxid: this.selectedbuyBox,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.SelectedShoppingCenterIDs = res.json.map(
+          (item: any) => item.shoppingCenterId
+        ); 
+        this.spinner.hide();
+      },
+    });
+  }
+
+  getResult(): void {
+    this.spinner.show(); 
+    const body: any = {
+      Name: 'GetResult',
+      Params: this.filterValues,
+    }; 
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.KayakResult = data.json[0];
+        this.ShoppingCenters = this.KayakResult.Result;
+        this.Ids = this.KayakResult.Ids; 
+        this.GetFilters(); 
+        this.getBindedShoppingCentersNumber();
+        this.spinner.hide();
+       }, 
+    });
+  }
+
+  getBindedShoppingCentersNumber(){
+    const count = this.KayakResult.Result.filter((result:any) => 
+        this.SelectedShoppingCenterIDs.includes(result.Id)
+    ).length;
+    return count;
+  }
+
+  getTotalShopping(){
+    this.ShoppingCenters = this.KayakResult.Result ;
+  }
+
+  getBindedShopping(){ 
+    this.ShoppingCenters = [];
+    this.KayakResult.Result.forEach((result:any) =>
+     this.SelectedShoppingCenterIDs.includes(result.Id)  ? this.ShoppingCenters.push(result) : null
+    )   
+  }
+
+  getUnBindedShopping(){
+    this.ShoppingCenters = [];
+    this.KayakResult.Result.forEach((result:any) =>
+     this.SelectedShoppingCenterIDs.includes(result.Id)  ?  null : this.ShoppingCenters.push(result) 
+    )   
+  }
+
+  GetFilters(): void {
+    if (!this.Ids) {
+      this.resetFilters();
+      return;
+    }
+
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetFilters',
+      Params: {
+        ids: this.Ids,
+        buyboxid: this.selectedbuyBox,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        if (data && data.json && data.json.length > 0) {
+          this.Filters = data.json[0];
+          console.log('Filters loaded:', this.Filters);
+
+          // ✅ Extract Min/Max Building Size from API and store in filterValues
+          if (this.Filters.MinMaxBuildingSize?.length > 0) {
+            const minMax = this.Filters.MinMaxBuildingSize[0];
+            this.minBuildingSize = minMax.MinSize;
+            this.maxBuildingSize = minMax.MaxSize;
+
+            // Set min/max in filterValues for dynamic filtering
+            this.filterValues.minsize = this.minBuildingSize;
+            this.filterValues.maxsize = this.maxBuildingSize;
+
+            // Set slider values initially
+            this.selectedMin = this.minBuildingSize;
+            this.selectedMax = this.maxBuildingSize;
+          } else {
+            console.warn('No MinMaxBuildingSize data available.');
+          }
+
+          // Update all filters dynamically
+          this.updateSortedTenants();
+          this.updateSortedOrgs();
+          this.updateSecondaryTypes();
+          this.updateNeighbourhoods();
+          this.updateTenantCategories();
+          console.log(this.filterValues);
+        } else {
+          console.warn('No filters data returned.');
+          this.resetFilters();
+        }
+
+        this.spinner.hide();
+      },
+      error: (error) => {
+        console.error('Error fetching filters:', error);
+        this.spinner.hide();
+        this.resetFilters();
+      },
+    });
   }
 
   ngOnChanges() {
@@ -129,6 +265,7 @@ export class KayakComponent implements OnInit {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
+
   toggleExpandedPlaces(index: number): void {
     this.expandedPlacesIndex =
       this.expandedPlacesIndex === index ? null : index;
@@ -188,114 +325,72 @@ export class KayakComponent implements OnInit {
     });
   }
 
-  GetMarketSurveyShoppingCentersByBBoxId(): void {
-    this.spinner.show(); 
-    const body: any = {
-      Name: 'GetMarketSurveyShoppingCentersByBBoxId',
-      Params: {
-        buyboxid: this.selectedbuyBox,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        if (res && res.json) {
-          this.boundShoppingCenterIds = res.json.map(
-            (item: any) => item.shoppingCenterId
-          );
-          this.SelectedShoppingCenterIDs = [...this.boundShoppingCenterIds]; 
-        }
-        this.spinner.hide();
-      },
-    
-    });
-  }
-
-  toggleShoppingCenterBind(shoppingCenterId: number, isChecked?: boolean): void {
+  toggleShoppingCenterBind(
+    shoppingCenterId: number,
+    isChecked?: boolean
+  ): void {
     this.deleteshoppingcenterID = shoppingCenterId;
     // console.log('deleteshoppingcenterID:', this.deleteshoppingcenterID);
 
-    const isAlreadyBound = this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
+    const isAlreadyBound =
+      this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
 
     if (isChecked !== undefined) {
-        // If the checkbox explicitly sets the value, bind or unbind accordingly
-        if (isChecked && !isAlreadyBound) {
-            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-            this.bindShoppingCenter();
-        } else if (!isChecked && isAlreadyBound) {
-            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
-            this.UnBindShoppingCenter();
-        }
+      // If the checkbox explicitly sets the value, bind or unbind accordingly
+      if (isChecked && !isAlreadyBound) {
+        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+        this.bindShoppingCenter();
+      } else if (!isChecked && isAlreadyBound) {
+        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
+          (id) => id !== shoppingCenterId
+        );
+        this.UnBindShoppingCenter();
+      }
     } else {
-        // If `isChecked` is not provided, handle normal button toggle behavior
-        if (isAlreadyBound) {
-            this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(id => id !== shoppingCenterId);
-            this.UnBindShoppingCenter();
-        } else {
-            this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-            this.bindShoppingCenter();
-        }
+      // If `isChecked` is not provided, handle normal button toggle behavior
+      if (isAlreadyBound) {
+        this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
+          (id) => id !== shoppingCenterId
+        );
+        this.UnBindShoppingCenter();
+      } else {
+        this.SelectedShoppingCenterIDs.push(shoppingCenterId);
+        this.bindShoppingCenter();
+      }
     }
 
     // console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
-}
+  }
 
-UnBindShoppingCenter(){
-  this.spinner.show();
-  const body: any = {
-    Name: 'DeleteShoppingCenterFromBuyBox',
-    Params: {
-      BuyboxId: +this.selectedbuyBox,
-      ShoppingCenterId: this.deleteshoppingcenterID,
-    },
-  };
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (res) => {
-      // console.log(' API Response:', res?.json);
-      this.spinner.hide();
-      this.loading = false;
-      this.getShoppingCenters();
-    },
-    error: (err) => {
-      console.error(' Error in BindShoppingCenters:', err);
-      this.spinner.hide();
-      this.loading = false;
-    },
-  });
-}
-  GetMarketSurveyPlacesByBBoxId(): void {
+  UnBindShoppingCenter() {
     this.spinner.show();
-
-    // console.log('Fetching bound places for BuyBox ID:', this.selectedbuyBox);
-
     const body: any = {
-      Name: 'GetMarketSurveyPlacesByBBoxId',
+      Name: 'DeleteShoppingCenterFromBuyBox',
       Params: {
-        buyboxid: this.selectedbuyBox,
+        BuyboxId: +this.selectedbuyBox,
+        ShoppingCenterId: this.deleteshoppingcenterID,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        if (res && res.json) {
-          this.SelectedPlacesIDs = res.json.map((item: any) => item.placeId);
-          // console.log('Bound Place IDs:', this.SelectedPlacesIDs);
-        }
+      next: (res) => {
+        // console.log(' API Response:', res?.json);
         this.spinner.hide();
+        this.loading = false;
+        this.getShoppingCenters();
       },
       error: (err) => {
-        console.error('Error in GetMarketSurveyPlacesByBBoxId:', err);
+        console.error(' Error in BindShoppingCenters:', err);
         this.spinner.hide();
+        this.loading = false;
       },
     });
-  }    
+  }
+
 
   onCardCheckboxChange(event: Event, result: any): void {
     const isChecked = (event.target as HTMLInputElement).checked;
-    // console.log(`Checkbox changed for ${result.Id}, checked:`, isChecked);
     this.toggleShoppingCenterBind(result.Id, isChecked);
-}
-
+  }
 
   togglePlaceBind(placeId: number, shoppingCenterId: number): void {
     const isAlreadyBound = this.SelectedPlacesIDs.includes(placeId);
@@ -320,35 +415,7 @@ UnBindShoppingCenter(){
     //   this.SelectedShoppingCenterIDs
     // );
     this.bindShoppingCenter();
-  }
-
-  GetShoppingCenterAvailability(shoppingCenterId: number): void {
-    this.spinner.show();
-
-    const body: any = {
-      Name: 'GetShoppingCenterAvailability',
-      Params: {
-        shoppingcenterid: shoppingCenterId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        if (data && data.json) {
-          this.ShoppingCenterAvailability = data.json;
-          // console.log(
-          //   'Shopping Center Availability:',
-          //   this.ShoppingCenterAvailability
-          // );
-        }
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error fetching Shopping Center Availability:', error);
-        this.spinner.hide();
-      },
-    });
-  }
+  } 
 
   truncateText(text: string, limit: number = 25): string {
     return text.length > limit ? text.slice(0, limit) + '...' : text;
@@ -403,7 +470,7 @@ UnBindShoppingCenter(){
 
     this.modalService.open(this.galleryModal, { size: 'lg', centered: true });
   }
-  
+
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
 
@@ -549,7 +616,7 @@ UnBindShoppingCenter(){
       .filter((tenant): tenant is Tenant => tenant !== undefined);
 
     this.sortedTenants = uniqueTenants;
-    // console.log('Sorted Tenants:', this.sortedTenants); 
+    // console.log('Sorted Tenants:', this.sortedTenants);
   }
 
   updateSortedOrgs(): void {
@@ -575,102 +642,111 @@ UnBindShoppingCenter(){
       .filter((org): org is ManagementOrganization => org !== undefined);
 
     this.sortedOrgs = uniqueOrgs;
-    // console.log('Sorted Organizations:', this.sortedOrgs); 
+    // console.log('Sorted Organizations:', this.sortedOrgs);
   }
 
   updateSecondaryTypes(): void {
-    if (!this.Filters?.SecondaryType || !Array.isArray(this.Filters.SecondaryType)) {
-        // console.error('Secondary types are empty or undefined.');
-        this.secondaryTypes = [];
-        return;
+    if (
+      !this.Filters?.SecondaryType ||
+      !Array.isArray(this.Filters.SecondaryType)
+    ) {
+      // console.error('Secondary types are empty or undefined.');
+      this.secondaryTypes = [];
+      return;
     }
 
     // 🔹 Sort alphabetically
     this.secondaryTypes = [...this.Filters.SecondaryType].sort((a, b) =>
-        (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
+      (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
     );
 
     // console.log('Sorted Secondary Types:', this.secondaryTypes);
-}
+  }
 
-updateNeighbourhoods(): void {
-  if (!this.Filters?.Neighbourhood || !Array.isArray(this.Filters.Neighbourhood)) {
+  updateNeighbourhoods(): void {
+    if (
+      !this.Filters?.Neighbourhood ||
+      !Array.isArray(this.Filters.Neighbourhood)
+    ) {
       // console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
-  }
+    }
 
-  // 🔹 Ensure Neighbourhood is a string and sort
-  this.neighbourhoods = [...this.Filters.Neighbourhood]
+    // 🔹 Ensure Neighbourhood is a string and sort
+    this.neighbourhoods = [...this.Filters.Neighbourhood]
       .filter((n) => n?.Neighbourhood) // Remove undefined/null values
       .map((n) => ({
-          Neighbourhood: String(n.Neighbourhood || '').trim(),
+        Neighbourhood: String(n.Neighbourhood || '').trim(),
       }))
       .sort((a, b) => a.Neighbourhood.localeCompare(b.Neighbourhood));
 
-  // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
-}
+    // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
+  }
 
-updateTenantCategories(): void {
-  if (!this.Filters?.TenantsCategories || !Array.isArray(this.Filters.TenantsCategories)) {
+  updateTenantCategories(): void {
+    if (
+      !this.Filters?.TenantsCategories ||
+      !Array.isArray(this.Filters.TenantsCategories)
+    ) {
       // console.error('TenantsCategories list is empty or undefined.');
       this.tenantCategories = [];
       return;
-  }
+    }
 
-  // 🔹 Remove duplicates and sort alphabetically
-  const sortedList = [...this.Filters.TenantsCategories]
+    // 🔹 Remove duplicates and sort alphabetically
+    const sortedList = [...this.Filters.TenantsCategories]
       .map((category) => ({
-          TenantsCategoriesId: category.TenantsCategoriesId,
-          Name: category.Name?.trim() || 'Unknown', // Ensure Name is valid
-          ChildCategory: category.ChildCategory || [], // Ensure ChildCategory exists
-          Selected: category.Selected || false,
+        TenantsCategoriesId: category.TenantsCategoriesId,
+        Name: category.Name?.trim() || 'Unknown', // Ensure Name is valid
+        ChildCategory: category.ChildCategory || [], // Ensure ChildCategory exists
+        Selected: category.Selected || false,
       }))
       .sort((a, b) => a.Name.localeCompare(b.Name));
 
-  this.tenantCategories = Array.from(new Set(sortedList)); // Remove duplicates
+    this.tenantCategories = Array.from(new Set(sortedList)); // Remove duplicates
 
-  // console.log('Sorted Tenant Categories:', this.tenantCategories);
-}
-applyBuildingSizeFilter(): void {
-  if (!this.Filters?.Result || !Array.isArray(this.Filters.Result)) {
-    console.warn('Building size data is missing or invalid.');
-    this.filteredKayakResult = [];
-    return;
+    // console.log('Sorted Tenant Categories:', this.tenantCategories);
+  }
+  applyBuildingSizeFilter(): void {
+    if (!this.Filters?.Result || !Array.isArray(this.Filters.Result)) {
+      console.warn('Building size data is missing or invalid.');
+      this.filteredKayakResult = [];
+      return;
+    }
+
+    console.log(
+      `Filtering with min: ${this.filterValues.minsize}, max: ${this.filterValues.maxsize}`
+    );
+
+    // 🔹 Ensure `BuildingSize` exists before filtering
+    this.filteredKayakResult = this.Filters.Result.filter((item: any) => {
+      if (!item.BuildingSize || isNaN(item.BuildingSize)) {
+        console.warn(
+          `Skipping item with missing or invalid BuildingSize:`,
+          item
+        );
+        return false;
+      }
+      return (
+        item.BuildingSize >= this.filterValues.minsize &&
+        item.BuildingSize <= this.filterValues.maxsize &&
+        item.Type === 'ShoppingCenter' // Ensure filtering only applies to shopping centers
+      );
+    });
+
+    console.log('Filtered Shopping Centers:', this.filteredKayakResult);
   }
 
-  console.log(`Filtering with min: ${this.filterValues.minsize}, max: ${this.filterValues.maxsize}`);
+  updateSliderValues(): void {
+    // Update filterValues whenever the user changes the slider
+    this.filterValues.minsize = this.selectedMin;
+    this.filterValues.maxsize = this.selectedMax;
 
-  // 🔹 Ensure `BuildingSize` exists before filtering
-  this.filteredKayakResult = this.Filters.Result.filter((item: any) => {
-    if (!item.BuildingSize || isNaN(item.BuildingSize)) {
-      console.warn(`Skipping item with missing or invalid BuildingSize:`, item);
-      return false;
-    }
-    return (
-      item.BuildingSize >= this.filterValues.minsize &&
-      item.BuildingSize <= this.filterValues.maxsize &&
-      item.Type === 'ShoppingCenter' // Ensure filtering only applies to shopping centers
+    console.log(
+      `Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`
     );
-  });
-
-  console.log('Filtered Shopping Centers:', this.filteredKayakResult);
-}
-
-updateSliderValues(): void {
-  // Update filterValues whenever the user changes the slider
-  this.filterValues.minsize = this.selectedMin;
-  this.filterValues.maxsize = this.selectedMax;
-
-  console.log(`Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`);
-}
-
-
-
-
-
-
-
+  }
 
   filterCards(): void {
     if (!this.KayakResult?.Result) {
@@ -686,65 +762,11 @@ updateSliderValues(): void {
         result.CenterAddress.toLowerCase().includes(search) ||
         result.CenterCity.toLowerCase().includes(search) ||
         result.CenterState.toLowerCase().includes(search)
-    ); 
+    );
   }
 
-  getResult(): void {
-    const body: any = {
-      Name: 'GetResult',
-      Params: this.filterValues,
-    };
+ 
 
-    this.spinner.show();
-    this.loading = true; // Set loading to true while fetching data
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        if (data?.json?.[0]) {
-          this.KayakResult = data.json[0];
-
-          if (!Array.isArray(this.KayakResult.Result)) {
-            // console.warn(
-            //   'KayakResult.Result is not an array:',
-            //   this.KayakResult.Result
-            // );
-            this.KayakResult.Result = []; // Default to an empty array if not valid
-          }
-
-          this.KayakResult.Result = this.KayakResult.Result.filter(
-            (result: any) => {
-              return (
-                result.MainImage &&
-                result.CenterName &&
-                result.CenterAddress &&
-                result.CenterCity &&
-                result.CenterState
-              );
-            }
-          );
-
-          // Initialize the filtered result to the full result
-          this.filteredKayakResult = [...this.KayakResult.Result];
-          this.Ids = this.KayakResult.Ids; // Update Ids for GetFilters
-          // console.log('Filtered Result:', this.KayakResult);
-        } else {
-          // console.warn('Data does not contain expected structure:', data);
-          this.KayakResult = { Result: [] }; // Default to a structure with an empty array
-          this.filteredKayakResult = []; // Reset the filtered result
-        }
-        this.GetMarketSurveyShoppingCentersByBBoxId();
-        this.GetMarketSurveyPlacesByBBoxId();
-        this.spinner.hide();
-        this.loading = false; // Set loading to false after fetching data
-      },
-      error: (error) => {
-        console.error('Error fetching filtered results:', error);
-        this.spinner.hide();
-        this.loading = false; // Set loading to false even on error
-      },
-    });
-  }
-  
   getShoppingCenters(): void {
     this.spinner.show();
     const body: any = {
@@ -765,68 +787,7 @@ updateSliderValues(): void {
     });
   }
 
-  GetFilters(): void {
-    if (!this.Ids) {
-      this.resetFilters();
-      return;
-    }
-  
-    this.spinner.show();
-    const body: any = {
-      Name: 'GetFilters',
-      Params: {
-        ids: this.Ids,
-        buyboxid: this.selectedbuyBox,
-      },
-    };
-  
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        if (data && data.json && data.json.length > 0) {
-          this.Filters = data.json[0];
-          console.log('Filters loaded:', this.Filters);
-  
-          // ✅ Extract Min/Max Building Size from API and store in filterValues
-          if (this.Filters.MinMaxBuildingSize?.length > 0) {
-            const minMax = this.Filters.MinMaxBuildingSize[0];
-            this.minBuildingSize = minMax.MinSize;
-            this.maxBuildingSize = minMax.MaxSize;
-  
-            // Set min/max in filterValues for dynamic filtering
-            this.filterValues.minsize = this.minBuildingSize;
-            this.filterValues.maxsize = this.maxBuildingSize;
-  
-            // Set slider values initially
-            this.selectedMin = this.minBuildingSize;
-            this.selectedMax = this.maxBuildingSize;
-          } else {
-            console.warn('No MinMaxBuildingSize data available.');
-          }
-  
-          // Update all filters dynamically
-          this.updateSortedTenants();
-          this.updateSortedOrgs();
-          this.updateSecondaryTypes();
-          this.updateNeighbourhoods();
-          this.updateTenantCategories();
-          console.log(this.filterValues);
-          
-        } else {
-          console.warn('No filters data returned.');
-          this.resetFilters();
-        }
-  
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error fetching filters:', error);
-        this.spinner.hide();
-        this.resetFilters();
-      },
-    });
-  }
-  
-  
+
 
   resetFilters(): void {
     this.sortedTenants = [];
@@ -836,25 +797,7 @@ updateSliderValues(): void {
     this.tenantCategories = [];
   }
 
-  GetStatesAndCities(): void {
-    this.spinner.show();
-    const body: any = { Name: 'GetStates', Params: {} };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.KayakCitiesandStates = data.json;
-        this.uniqueStates = [
-          ...new Set(
-            this.KayakCitiesandStates.map((item: any) => item.stateCode.trim())
-          ),
-        ];
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error fetching states and cities:', error);
-        this.spinner.hide();
-      },
-    });
-  }
+ 
 
   handleStateChange(selectedValue: string): void {
     this.filterValues!.statecode = selectedValue; // Update the selected state
@@ -862,27 +805,21 @@ updateSliderValues(): void {
     this.selectedCity = null; // Reset the selected city in the UI
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
-    this.GetFilters(); // Fetch new filters for the state
     this.getResult(); // Fetch results for the selected state
   }
 
   onCityChange(selectedValue: string): void {
     this.filterValues!.city = selectedValue; // Update the selected city
-    // console.log('City selected:', selectedValue);
-    this.GetFilters(); // Fetch new filters for the city
+     this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
-  } 
+  }
 
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
       (s) => s.stateCode === this.filterValues.statecode
     );
-    // console.log(
-    //   'Updated cities for state:',
-    //   this.filterValues.statecode,
-    //   this.uniqueCities
-    // );
   }
+
   toggleTenantSelection(tenant: Tenant): void {
     const currentTenants = this.filterValues.tenants || '';
     let tenantIds = currentTenants.split(',').filter((id: any) => id.trim());
@@ -951,6 +888,7 @@ updateSliderValues(): void {
     this.filterValues.neighbourhood = neighbourhoodList.join(','); // Update the filter
     this.getResult(); // Trigger filtering API
   }
+
   toggleTenantCategorySelection(category: TenantsCategories): void {
     const currentCategories = this.filterValues.tenantCategory || ''; // Ensure it's a string
     let categoryList = currentCategories
@@ -967,25 +905,5 @@ updateSliderValues(): void {
     this.getResult(); // Trigger filtering API
   }
 
-  searchShoppingCenter() {
-    this.spinner.show();
-    const body: any = {
-      Name: 'GetResult',
-      Params: this.filterValues,
-    };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.KayakResult = data.json[0];
-        this.Ids = data.json[0]?.Ids;
-        this.filterCards();
-        console.log('Filtered Result:', this.KayakResult);        
-        this.GetFilters();
-        this.spinner.hide();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
-
- 
 }

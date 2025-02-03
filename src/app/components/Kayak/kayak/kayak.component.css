@@ -414,6 +414,10 @@ body {
   line-height: 30px;
 }
 
+.total{
+  cursor: pointer;
+}
+
 .search-inputs::placeholder {
   color: var(--Inputs-Color-Placeholder-Label, #7a8591);
   text-align: left;
