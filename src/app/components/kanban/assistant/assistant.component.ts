@@ -1,4 +1,4 @@
-import { Component, type OnInit, ViewChild, type ElementRef, type AfterViewChecked } from "@angular/core"
+import { Component,  OnInit, ViewChild,  ElementRef,  AfterViewChecked } from "@angular/core"
 import { FormControl } from "@angular/forms"
 import { trigger, transition, style, animate } from "@angular/animations"
 import  { ChatService } from "../../../services/chat-service.service"
