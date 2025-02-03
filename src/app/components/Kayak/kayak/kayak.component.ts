@@ -923,12 +923,8 @@ updateTenantCategories(): void {
         this.KayakResult = data.json[0];
         this.Ids = data.json[0]?.Ids;
         this.filterCards();
-        console.log('Filtered Result:', this.KayakResult);
-        
-        if (!this.Filters?.SecondaryType) {
-          this.GetFilters();
-        }
-
+        // console.log('Filtered Result:', this.KayakResult);
+        this.GetFilters();
         this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),
