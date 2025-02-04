@@ -247,6 +247,10 @@ button:active {
 }
 
 @media (max-width: 767px) {
+  .responsive{
+    margin-right: 20px;
+    margin-left: 32px;
+  }
   .searchBox {
     width: 100%;
   }
@@ -272,6 +276,10 @@ button:active {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
+  .responsive{
+    margin-right: 20px;
+    margin-left: 32px;
+  }
   .searchBox {
     width: 100%;
   }
@@ -282,4 +290,9 @@ button:active {
     width: 100%;
   }
 }
+
+
+
+
+
 
