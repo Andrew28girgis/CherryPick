@@ -91,6 +91,7 @@ export class EmilyComponent implements OnInit {
   emailSubject: string = '';
   emailBodyResponse: string = '';
   isEditing: boolean = false;
+  isEditingBody: boolean = false;
   editablePromptText: string = '';
   groupedActivityTypes: any[] = [];
   showAllCotenants: boolean = false;
@@ -101,6 +102,7 @@ export class EmilyComponent implements OnInit {
   ShowSpinner: boolean = false;
   shoppingCenters: Center[] = [];
   shoppingCentersSelected: Center | undefined = undefined;
+  generatedGetSavedTemplates:any;
   contactidsJoin :any;
   selectedOrg!:Number;
   tabs = [
@@ -147,13 +149,13 @@ export class EmilyComponent implements OnInit {
     this.showManagerName=true;
     this.showMangerDescription = true;
     this.onOrganizationManagersChange();
+    this.onMangerDescriptionChange();
     }, 5000); 
 
     setTimeout(() => {
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();
     }, 2000); 
-
   }
   
   toggleSelections() {
@@ -222,8 +224,6 @@ export class EmilyComponent implements OnInit {
     const target = event.target as HTMLElement;
     this.contentChange.emit(target.innerHTML);
   }
-
-  
   
   selectManagerContactsByDefault() {
     this.getManagerContacts(this.selectedShoppingCenter).forEach((contact) => {
@@ -235,33 +235,36 @@ export class EmilyComponent implements OnInit {
   }
 
   selectManagerTenantsByDefault() {
-
     this.managerOrganizations.forEach((manager: any) => {
       manager.ManagerOrganizationContacts.forEach((contact: any) => {
         contact.assistantSelected = true;
       });
     });
-    // setTimeout(() => {
 
+    // this.onOrganizationManagersChange();
     this.onAssistantCheckboxChange(this.managerOrganizations);
-    
     this.onContactCheckboxChange();
-    // this.updateEmailBody();
-  // }, 2000); 
-
   }
-
   
   selectedIndex!: number;
   CheckGetSavedTemplates: any[] = [];
+  isEmailSectionVisible: boolean = false;
   // organizationid! : number ;
-  selectContact(index: number, organizationid: number) {
-    // this.organizationid =organizationid
+  selectContact(index: number, organizationId: number) {
     this.selectedIndex = index;
-    this.OnCheckGetSavedTemplates(organizationid);
+    this.isEmailSectionVisible = !this.isEmailSectionVisible;
+  
+    if (this.isEmailSectionVisible) {
+      this.OnCheckGetSavedTemplates(organizationId);
+  } else {
+      this.CheckGetSavedTemplates = [];
+    }
   }
   
+  
   OnCheckGetSavedTemplates(organizationid: number): void {
+    this.ShowSpinner = true;
+
     const body: any = {
       Name: 'GetSavedTemplates',
       MainEntity: null,
@@ -284,8 +287,9 @@ export class EmilyComponent implements OnInit {
           if (selectedTemplate?.Template) {
             const rawText = this.getFormattedTemplate(selectedTemplate.Template);
   
-            // ✅ إضافة النص الجديد دون مسح `emailBody`
             this.emailBody += `\n\n${rawText}`;
+            this.ShowSpinner = false;
+
           } else {
             this.emailBody += `\n\nNo Template Available`;
           }
@@ -303,7 +307,7 @@ export class EmilyComponent implements OnInit {
   selectedShoppingCenterId!: number;
 
   handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
-    console.log(`hello`);
+    // console.log(`hello`);
     
     this.emailSubject = '' ;
     this.emailBodyResponse = ''; 
@@ -328,7 +332,7 @@ export class EmilyComponent implements OnInit {
         if (data?.json && Array.isArray(data.json)) {
           this.BuyBoxOrganizationsForEmail = data.json; // ✅
           this.selectedOrg=data.json[0].Id;
-        console.log('selectedOrg',this.selectedOrg);
+        // console.log('selectedOrg',this.selectedOrg);
 
 
         } else {
@@ -345,8 +349,7 @@ export class EmilyComponent implements OnInit {
   }
 
 
-  GetBuyBoxInfo() {
-    
+  GetBuyBoxInfo() {   
     const body: any = {
       Name: 'GetBuyBoxInfo',
       MainEntity: null,
@@ -435,7 +438,7 @@ export class EmilyComponent implements OnInit {
   //   this.PlacesService.GenericAPI(body).subscribe({
   //     next: (data) => {
   //       this.generatedGetSavedTemplates = data?.json || [];
-  //       // console.log(this.generatedGetSavedTemplates);
+  //       console.log(this.generatedGetSavedTemplates);
 
 
   //       // this.generatedGetSavedTemplates = data.json;
@@ -472,6 +475,8 @@ export class EmilyComponent implements OnInit {
   //     },
   //   });
   // }
+
+
   SaveTemplate() {
     let contacts =  this.selectedContact.join(`,`)
     const body: any = {
@@ -887,16 +892,16 @@ export class EmilyComponent implements OnInit {
     let emailContent = ''; 
     if (this.selectedShoppingCenter) {
       emailContent += `Shopping Center: ${this.selectedShoppingCenter}\n`;
-      emailContent += `Manager: ${this.getManagerName(
+      emailContent += `Shopping Center Representative Organization: ${this.getManagerName(
         this.selectedShoppingCenter
       )}\n\n`;
     }
     // Add Manager Description if checkbox is selected
-    if (this.showManagerName) {
-      emailContent += `Manager Description: ${this.getManagerDescription(
-        this.selectedShoppingCenter
-      )}\n`;
-    }
+    // if (this.showManagerName) {
+    //   emailContent += `Manager Description: ${this.getManagerDescription(
+    //     this.selectedShoppingCenter
+    //   )}\n`;
+    // }
     // Add Manager Contacts if selected
     const selectedContacts = this.getManagerContacts(
       this.selectedShoppingCenter
@@ -910,7 +915,7 @@ export class EmilyComponent implements OnInit {
 
     if (selectedContacts.length > 0) {
       this.selectedContact = [];
-      emailContent += 'Manager Contacts:\n';
+      emailContent += 'Representative Organization Contacts that will receive this email:\n';
       selectedContacts.forEach((contact) => {
         if (contact.selectedName) {
           emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n`;
@@ -963,7 +968,7 @@ export class EmilyComponent implements OnInit {
 
     if (this.showClientProfile) {
       emailContent +=
-        'New Tenant (' +
+        'New Tenant that wish to open on this shopping center: (' +
         this.BuyBoxOrganizationName +
         ')' +
         '\n' +
@@ -1028,7 +1033,7 @@ export class EmilyComponent implements OnInit {
 
         manager.ManagerOrganizationContacts.forEach((contact) => {
           if (contact.selected) {
-            emailContent += `Broker on Charge: ${contact.Firstname} ${contact.LastName}\n`;
+            emailContent += `Broker on Charge Assistant that is sending this email: ${contact.Firstname} ${contact.LastName}\n`;
 
             if (contact.assistantSelected) {
               const assistantEmail = this.generateAssistantEmail(
@@ -1214,6 +1219,10 @@ export class EmilyComponent implements OnInit {
     this.isEditing = true;
     this.editablePromptText = this.selectedPromptText; // Copy current text for editing
   }
+  // editPromptbody() {
+  //   this.isEditingBody = true;
+  //   this.emailBody = this.emailBody; // Copy current text for editing
+  // }
   // Save Updated Prompt
   savePrompt(modal: any) {
     if (!this.selectedPromptId) {
