@@ -509,12 +509,12 @@ export class EmilyComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.spinner.hide();
-        console.log(data); 
         this.showToast('Email Saved successfully!');
+        console.log(data); 
         this.expressionEmail = false;
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         this.isEmailSectionVisible = true
+        this.spinner.hide();
       },
     });
   }
