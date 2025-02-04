@@ -145,7 +145,6 @@ export class EmilyComponent implements OnInit {
       this.GetRetailRelationCategories();
       this.GetPrompts();
       this.GetBuyBoxInfoDetails();
-       // this.GetSavedTemplates();
     });
   }
 
@@ -393,8 +392,8 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.generated = data.json || [];
-        console.log('ALL', this.generated);
 
+        
         this.ManagerOrganizationName =
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
@@ -520,10 +519,6 @@ export class EmilyComponent implements OnInit {
         contactId = c.ContactId ;
       }
     })
-    console.log(`a`);
-    
-    console.log(contactId);
-    
     let contacts =  this.selectedContact.join(`,`)
     const body: any = {
       Name: 'SaveTemplate',
@@ -833,11 +828,7 @@ export class EmilyComponent implements OnInit {
     const center = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
     ) 
-    console.log(`rr`);
-    
-    console.log(center?.ShoppingCenterManager?.[0].ShoppingCenterManagerContact);
-    
-    
+ 
     return (
       center?.ShoppingCenterManager?.[0]?.ShoppingCenterManagerContact || []
     );
@@ -1090,9 +1081,7 @@ export class EmilyComponent implements OnInit {
    
     const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact ;
 
-    console.log(`88`);
-    console.log(selectedContacts);
-    
+ 
     
 
     if (selectedContacts?.length > 0) {
