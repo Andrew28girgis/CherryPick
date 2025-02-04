@@ -850,3 +850,17 @@ p {
   cursor: pointer;
 }
 
+
+
+
+@media (max-width: 991px) {  
+
+  .info-window { 
+    width: 300px;
+    height: 520px;
+
+    padding: 0px 0px 24px 0px;
+    gap: 0px;
+    border-radius: 20px;
+  }
+}
