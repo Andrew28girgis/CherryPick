@@ -81,30 +81,50 @@
               </button>
             </div>
           </div>
-          <div class="row mt-3" *ngIf=" KayakResult && KayakResult?.Result?.length > 0 ">
-            
-            <div class="col-md-4 total" (click)="getTotalShopping()">
-              <h6>Total Shopping Centers</h6>
-              <p class="shopping-center-num">
-                {{ KayakResult?.Result?.length }}
-              </p>
+          <div class="row my-3" *ngIf="KayakResult && KayakResult?.Result?.length > 0">
+  
+            <!-- Total Shopping Centers Card -->
+            <div class="col-md-4">
+              <div class="card shopping-card" [ngClass]="{'selected': selectedCenter === 'total'}" (click)="selectShoppingCenter('total')">
+                <div class="card-body text-center">
+                  <h6>Total Shopping Centers</h6>
+                  <p class="shopping-center-num">
+                    {{ KayakResult?.Result?.length }}
+                  </p>
+                </div>
+              </div>
             </div>
-
-            <div class="col-md-4 total" (click)="getBindedShopping()">
-              <h6>Binded Shopping Centers</h6>
-              <p class="shopping-center-num">
-                {{ getBindedShoppingCentersNumber() }}
-              </p>
+          
+            <!-- Binded Shopping Centers Card -->
+            <div class="col-md-4">
+              <div class="card shopping-card" [ngClass]="{'selected': selectedCenter === 'binded'}" (click)="selectShoppingCenter('binded')">
+                <div class="card-body text-center">
+                  <h6>Binded Shopping Centers</h6>
+                  <p class="shopping-center-num">
+                    {{ getBindedShoppingCentersNumber() }}
+                  </p>
+                </div>
+              </div>
             </div> 
-            <div class="col-md-4 total" (click)="getUnBindedShopping()">
-              <h6>UnBinded Shopping Centers</h6>
-              <p class="shopping-center-num">
-                {{
-                  KayakResult?.Result?.length - getBindedShoppingCentersNumber() < 0  ? '0' : KayakResult?.Result?.length - getBindedShoppingCentersNumber()
-                }}
-              </p>
+          
+            <!-- UnBinded Shopping Centers Card -->
+            <div class="col-md-4">
+              <div class="card shopping-card" [ngClass]="{'selected': selectedCenter === 'unBinded'}" (click)="selectShoppingCenter('unBinded')">
+                <div class="card-body text-center">
+                  <h6>UnBinded Shopping Centers</h6>
+                  <p class="shopping-center-num">
+                    {{
+                      KayakResult?.Result?.length - getBindedShoppingCentersNumber() < 0  
+                      ? '0' 
+                      : KayakResult?.Result?.length - getBindedShoppingCentersNumber()
+                    }}
+                  </p>
+                </div>
+              </div>
             </div>
+          
           </div>
+          
           <ng-container *ngIf="filterValues.statecode && ShoppingCenters && ShoppingCenters">
              <div class="col-md-12" *ngFor="let result of ShoppingCenters; let i = index">
                   <div class="row align-items-center"> 
@@ -177,7 +197,7 @@
                               </div>
                             </ng-container>
                           </div>
-                          <div class="d-flex align-items-center text-nowrap">
+                          <div class="d-flex align-items-center text-nowrap" *ngIf="GetShoppingCenterTenants(result.Id)">
                             <span class="me-2 eye-text">Tenants</span>
                             <img
                               style="cursor: pointer"

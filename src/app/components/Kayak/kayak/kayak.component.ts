@@ -81,6 +81,8 @@ export class KayakComponent implements OnInit {
   maxBuildingSize: number = 100000; // Large default to avoid issues
   selectedMin: number = 0;
   selectedMax: number = 100000;
+  selectedCenter: string = '';
+
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -890,7 +892,12 @@ updateSliderValues(): void {
     this.filterValues.tenantCategory = categoryList.join(','); // Update the filter
     this.getResult(); // Trigger filtering API
   }
-  
+  selectShoppingCenter(type: string): void {
+    this.selectedCenter = type;
+    if (type === 'total') this.getTotalShopping();
+    else if (type === 'binded') this.getBindedShopping();
+    else if (type === 'unBinded') this.getUnBindedShopping();
+  }
 
 
 }
