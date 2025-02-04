@@ -102,6 +102,7 @@ export class EmilyComponent implements OnInit {
   formGroupTemplate!: FormGroup;
   shouldShowGenerateEmaily: boolean = false;
   ShowSpinner: boolean = false;
+  expressionEmail: boolean = true;
   shoppingCenters: Center[] = [];
   shoppingCentersSelected: Center | undefined = undefined;
   generatedGetSavedTemplates:any;
@@ -511,6 +512,9 @@ export class EmilyComponent implements OnInit {
         this.spinner.hide();
         console.log(data); 
         this.showToast('Email Saved successfully!');
+        this.expressionEmail = false;
+        this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+        this.isEmailSectionVisible = true
       },
     });
   }
