@@ -418,7 +418,15 @@ background: #F2F3F4;
   line-height: 20px;
 }
 .Contact_head>span{
-  color: #747474;
+  color: black;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+.Contact_headD>span{
+  color: gray;
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
@@ -446,7 +454,7 @@ background: #F2F3F4;
   border: 1px solid #dddddd;
   padding: 8px;
   border-radius: 16px;
-  display: flex;
+  display: block;
   justify-content: space-between;
 }
 
@@ -580,5 +588,5 @@ textarea{
   border-radius: 10px;
   /* border: 1px solid rgba(220, 220, 220, 0.4); */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
-  min-height: 100%;
+  /* min-height: 100%; */
 }
