@@ -150,11 +150,13 @@ export class EmilyComponent implements OnInit {
     this.showOrganizationManagers=true;
     this.showManagerName=true;
     this.showMangerDescription = true;
+    this.showMinBuildingSize=true;
+    this.showMaxBuildingSize=true;
     this.onOrganizationManagersChange();
     this.onMangerDescriptionChange();
     this.GetBuyBoxInfoDetails();
-    this.onCheckboxdetailsChangeMin();
-    this.onCheckboxdetailsChangeMax();
+    this.onCheckboxdetailsChangeMin(true);
+    this.onCheckboxdetailsChangeMax(true);
     }, 3000); 
 
     setTimeout(() => {
@@ -358,6 +360,7 @@ export class EmilyComponent implements OnInit {
 
 
   GetBuyBoxInfo() {   
+    this.spinner.show();
     const body: any = {
       Name: 'GetBuyBoxInfo',
       MainEntity: null,
@@ -407,11 +410,13 @@ export class EmilyComponent implements OnInit {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
         // }
         this.updateGroupedActivityTypes();
+        this.spinner.hide();
       },
     });
   }
 
   getShoppingCenters(buyboxId: number): void {
+    this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -429,6 +434,7 @@ export class EmilyComponent implements OnInit {
           (center) => center.CenterName === this.shoppingCentersSelected?.CenterName
         )?.CenterName || '';
         this.onSelectedShoppingCenterChange();
+        this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -739,6 +745,8 @@ export class EmilyComponent implements OnInit {
   }
 
   GetRetailRelationCategories() {
+    this.spinner.show();
+
     const body: any = {
       Name: 'GetRetailRelationCategories',
       MainEntity: null,
@@ -751,6 +759,8 @@ export class EmilyComponent implements OnInit {
       next: (data) => {
         this.relationCategoriesNames = data.json;
         this.relationCategoriesNames.forEach((r) => (r.selected = true));
+        this.spinner.hide();
+
       },
     });
   }
@@ -765,13 +775,23 @@ export class EmilyComponent implements OnInit {
     }
   }
   
-  onCheckboxdetailsChangeMin() {
-    this.showMinBuildingSize = true;
-    this.updateEmailBody();
+  onCheckboxdetailsChangeMin(showMinBuildingSize :any) {
+    if(showMinBuildingSize.target.showMinBuildingSize = true){
+      this.updateEmailBody();
+    }
+    else  {
+      showMinBuildingSize.target.showMinBuildingSize=!showMinBuildingSize.target.showMinBuildingSize;
+      this.updateEmailBody();
+      }
   }
-  onCheckboxdetailsChangeMax() {
-    this.showMaxBuildingSize = true;
-    this.updateEmailBody();
+  onCheckboxdetailsChangeMax(showMaxBuildingSize :any) {
+    if(showMaxBuildingSize.target.showMaxBuildingSize = true){
+      this.updateEmailBody();
+    }
+    else  {
+      showMaxBuildingSize.target.showMaxBuildingSize=!showMaxBuildingSize.target.showMaxBuildingSize;
+      this.updateEmailBody();
+      }
   }
 
   onMangerDescriptionChange() {
