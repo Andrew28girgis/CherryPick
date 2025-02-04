@@ -332,7 +332,7 @@
   display: flex;
   align-items: center; 
   justify-content: end;
-  margin-left: -10px;
+  margin-left: -20px;
 
 }
 
@@ -557,6 +557,9 @@ color: #7A8591  ;
 
 
 @media (max-width: 576px) {  
+  .titleResponsive{
+    font-size: 14px;
+  }
   .nav-right {
     .nav-right {
       display: flex; 
