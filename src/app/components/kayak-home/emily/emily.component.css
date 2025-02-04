@@ -261,21 +261,29 @@ select option:checked {
   background: transparent !important;
 }
 
-.Emily__contant__button {
+.saved_email_button{
   background: #4D65B4;
   color: white;
-  width: 151px;
-  height: 48px;
+  width: max-content;
+  height: 40px;
   padding: 14px 24px;
-  gap: 8px;
   border-radius: 10px;
   border: 0;
   text-align: center;
   align-items: center;
   display: flex;
-  position: relative;
-  margin-top: 20px;
 }
+
+.Emily__contant__button {
+  background: #4D65B4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+
 .Emily__body__button {
   background: #001f3f;
   width: max-content;
