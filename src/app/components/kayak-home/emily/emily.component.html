@@ -168,12 +168,12 @@
                     </div>
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="detailsMin" id="detailsMin" class="form-check-input"
-                        [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin()"/>
+                        [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin($event)"/>
                       <label for="detailsMin">Min Unit Size: {{ buybox?.MinBuildingSize || "N/A" }}</label>
                     </div>
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="detailsMax" id="detailsMax" class="form-check-input"
-                        [(ngModel)]="showMaxBuildingSize" (change)="onCheckboxdetailsChangeMax()" />
+                        [(ngModel)]="showMaxBuildingSize" (change)="onCheckboxdetailsChangeMax($event)" />
                       <label for="detailsMax">Max Unit Size: {{ buybox?.MaxBuildingSize || "N/A" }}</label>
                     </div>
                   </div>
@@ -291,7 +291,7 @@
         </div>
       </ng-container>
       <!-- API Response View -->
-      <div class="container-fluid h-auto backgroundcolor p-0">
+      <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
         <div class="row">
           <!-- API Response View -->
           <div class="col-12 p-0">
@@ -449,3 +449,10 @@
     <!-- <section *ngIf="selectedTab === 'Relations'" class="row d-flex m-0 p-2"></section> -->
   </div>
 </section>
+
+
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
