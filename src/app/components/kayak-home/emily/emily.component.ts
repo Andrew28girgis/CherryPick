@@ -92,6 +92,7 @@ export class EmilyComponent implements OnInit {
   prompts: any[] = [];
   emailSubject: string = '';
   emailBodyResponse: string = '';
+  emailId!:number;
   isEditing: boolean = false;
   isEditingBody: boolean = false;
   editablePromptText: string = '';
@@ -156,8 +157,9 @@ export class EmilyComponent implements OnInit {
     this.onOrganizationManagersChange();
     this.onMangerDescriptionChange();
     this.GetBuyBoxInfoDetails();
-    this.onCheckboxdetailsChangeMin(true);
-    this.onCheckboxdetailsChangeMax(true);
+    this.onCheckboxdetailsChangeMin(true,true);
+    // this.onCheckboxdetailsChangeMax(true);
+    // this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
     }, 3000); 
 
     setTimeout(() => {
@@ -256,7 +258,7 @@ export class EmilyComponent implements OnInit {
   
   selectedIndex!: number;
   CheckGetSavedTemplates: any[] = [];
-  isEmailSectionVisible: boolean = false;
+  isEmailSectionVisible: boolean = true;
   // organizationid! : number ;
   selectContact(index: number, organizationId: number) {
     this.selectedIndex = index;
@@ -345,7 +347,7 @@ export class EmilyComponent implements OnInit {
           this.selectedOrg=data.json[0].Id;
         // console.log('selectedOrg',this.selectedOrg);
 
-
+        this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         } else {
           this.BuyBoxOrganizationsForEmail = [];
           console.error('Unexpected data format:', data);
@@ -491,7 +493,7 @@ export class EmilyComponent implements OnInit {
   //   });
   // }
 
-
+  objectEmailSavedtemplate:any;
   SaveTemplate() {
     this.spinner.show();
     let contacts =  this.selectedContact.join(`,`)
@@ -511,10 +513,57 @@ export class EmilyComponent implements OnInit {
       next: (data) => {
         this.showToast('Email Saved successfully!');
         console.log(data); 
+        this.objectEmailSavedtemplate = data?.json[0];
+        console.log("objectEmailSavedtemplate.column1 ",this.objectEmailSavedtemplate.column1);
+        
         this.expressionEmail = false;
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         this.isEmailSectionVisible = true
         this.spinner.hide();
+      },
+    });
+  }
+  SaveAndSendTemplate(){
+    this.SaveTemplate();
+
+    setTimeout(() => {
+      const body = {
+        name: 'SendTemplate',
+        params: {
+          id: +this.objectEmailSavedtemplate?.column1,
+        },
+      };
+      // console.log(body);
+  
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (response: any) => {
+          // this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+        },
+        error: (err) => {
+          console.error('Error updating prompt:', err);
+          alert('Failed to update the prompt. Please try again.');
+        },
+      });
+    }, 2000);
+    
+  }
+
+  SendEmailTemplate(email:any){
+    const body = {
+      name: 'SendTemplate',
+      params: {
+        id:email.Id,
+      },
+    };
+    console.log(body);
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        // this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+      },
+      error: (err) => {
+        console.error('Error updating prompt:', err);
+        alert('Failed to update the prompt. Please try again.');
       },
     });
   }
@@ -532,9 +581,6 @@ export class EmilyComponent implements OnInit {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
-
-
-
 
   getCotenantsWithActivityType(centerName: string): any[] {
     const center: any = this.ShoppingCenterNames.find(
@@ -799,24 +845,27 @@ export class EmilyComponent implements OnInit {
     }
   }
   
-  onCheckboxdetailsChangeMin(showMinBuildingSize :any) {
-    if(showMinBuildingSize.target.showMinBuildingSize = true){
+  onCheckboxdetailsChangeMin(showMinBuildingSize :any,showMaxBuildingSize:any) {
+    if(showMinBuildingSize.target.showMinBuildingSize && showMaxBuildingSize.target.showMinBuildingSize ){
       this.updateEmailBody();
     }
     else  {
       showMinBuildingSize.target.showMinBuildingSize=!showMinBuildingSize.target.showMinBuildingSize;
+      showMaxBuildingSize.target.showMinBuildingSize=!showMaxBuildingSize.target.showMinBuildingSize;
+
       this.updateEmailBody();
       }
+
+      // if(){
+      //   this.updateEmailBody();
+      // }
+      // else  {
+      //   this.updateEmailBody();
+      //   }
   }
-  onCheckboxdetailsChangeMax(showMaxBuildingSize :any) {
-    if(showMaxBuildingSize.target.showMaxBuildingSize = true){
-      this.updateEmailBody();
-    }
-    else  {
-      showMaxBuildingSize.target.showMaxBuildingSize=!showMaxBuildingSize.target.showMaxBuildingSize;
-      this.updateEmailBody();
-      }
-  }
+  // onCheckboxdetailsChangeMax(showMaxBuildingSize :any) {
+    
+  // }
 
   onMangerDescriptionChange() {
     if (this.showMangerDescription) {
@@ -1066,7 +1115,7 @@ export class EmilyComponent implements OnInit {
         '\n' 
     }
 
-    if(this.showMaxBuildingSize){
+    if(this.showMinBuildingSize){
       emailContent +=
         'The Required Max Unit Size for Lease (' +
         this.buybox?.MaxBuildingSize + ' Sqft)' +
@@ -1167,6 +1216,7 @@ export class EmilyComponent implements OnInit {
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
         this.emailBodyResponse = data?.emailBody || 'No body received';
+        this.emailId = data?.id || 'No body received';
         // console.log('Email Response:', {
         //   subject: this.emailSubject,
         //   body: this.emailBodyResponse,
@@ -1178,6 +1228,29 @@ export class EmilyComponent implements OnInit {
         this.emailSubject = 'Error fetching email subject';
         this.emailBodyResponse = 'Error fetching email body';
         this.ShowSpinner = false;
+      },
+    });
+  }
+
+
+  UpdateEmailTemplate(email :any){
+    const body = {
+      name: 'EditEmailTemplate',
+      params: {
+        id:email.Id,
+        subject: email.Subject,
+        template: email.Template,
+      },
+    };
+    // console.log(body);
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+      },
+      error: (err) => {
+        console.error('Error updating prompt:', err);
+        alert('Failed to update the prompt. Please try again.');
       },
     });
   }

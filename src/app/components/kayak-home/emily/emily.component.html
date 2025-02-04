@@ -16,7 +16,6 @@
   </div>
   <div class="main-section-emily">
     <section *ngIf="selectedTab === 'Emily'">
-
       <ng-container *ngIf="BuyBoxOrganizationsForEmail.length > 0">
         <div class="row m-0 p-0 mb-3 d-flex">
           <ng-container *ngFor="let OrganizationsForEmail of BuyBoxOrganizationsForEmail;let i = index">
@@ -62,10 +61,10 @@
                       </ng-template>
                     </div>
                     <div class="col-12 p-2 d-flex justify-content-center">
-                      <p class="saved_email_button" (click)="selectContact(i, OrganizationsForEmail.Id)"
+                      <!-- <p class="saved_email_button" (click)="selectContact(i, OrganizationsForEmail.Id)"
                         [class.activeSelect]="selectedIndex === i">
                         {{ isEmailSectionVisible ? 'Hide Saved Email' : 'Show Saved Email' }}
-                      </p>
+                      </p> -->
                       <!-- <p class="saved_email_button" (click)="selectContact(i, OrganizationsForEmail.Id)" [class.activeSelect]="selectedIndex === i">Show Saved Email</p> -->
                     </div>
                   </div>
@@ -168,14 +167,14 @@
                     </div>
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="detailsMin" id="detailsMin" class="form-check-input"
-                        [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin($event)"/>
-                      <label for="detailsMin">Min Unit Size: {{ buybox?.MinBuildingSize || "N/A" }}</label>
+                        [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin($event,$event)"/>
+                      <label for="detailsMin">Min & Max Unit Size: {{ buybox?.MinBuildingSize || "N/A" }} ,{{ buybox?.MaxBuildingSize || "N/A" }}</label>
                     </div>
-                    <div class="checkbox-section-head checkbox-section">
+                    <!-- <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="detailsMax" id="detailsMax" class="form-check-input"
                         [(ngModel)]="showMaxBuildingSize" (change)="onCheckboxdetailsChangeMax($event)" />
                       <label for="detailsMax">Max Unit Size: {{ buybox?.MaxBuildingSize || "N/A" }}</label>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="col-3 p-2">
@@ -310,7 +309,8 @@
                       </span>
                     </div>
                     <div class="p-3 border rounded bg-white text-dark">
-                      {{ emailSubject }}
+                      <!-- {{ emailSubject }} -->
+                      <textarea  [innerHTML]="emailSubject" rows="1" class="form-control"></textarea>
                     </div>
                   </div>
                   <div>
@@ -322,10 +322,13 @@
                       </span>
                     </div>
                     <div class="p-3 border rounded bg-white text-dark">
-                      <p [innerHTML]="emailBodyResponse" class="m-0"></p>
+                      <!-- <p [innerHTML]="emailBodyResponse" class="m-0"></p> -->
+                     <textarea  [innerHTML]="emailBodyResponse" rows="15" class="form-control"></textarea>
+
                     </div>
-                    <div class="d-flex justify-content-end">
-                      <button class="btn btn-success m-3" (click)="SaveTemplate()">Save</button>
+                    <div class="d-flex justify-content-end gap-2">
+                      <button class="btn btn-success mt-3" (click)="SaveTemplate()">Save</button>
+                      <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">Save and Send</button>
                     </div>
                   </div>
                 </div>
@@ -341,7 +344,7 @@
             <div class="form-group mt-4">
               <div class="card shadow-sm border-0">
                 <div class="card-header text-white" style="background-color: #141e2a">
-                  <h5 class="mb-0">Saved Email</h5>
+                  <h5 class="mb-0">Saved Template</h5>
                 </div>
                 <div class="card-body bg-light">
                   <div class="mb-3">
@@ -353,7 +356,9 @@
                       </span>
                     </div>
                     <div class="p-3 border rounded bg-white text-dark">
-                      {{ item.Subject }}
+                      <!-- {{ item.Subject }} -->
+                      <textarea [(ngModel)]="item.Subject"  rows="1" class="form-control"></textarea>
+
                     </div>
                   </div>
                   <div>
@@ -365,8 +370,14 @@
                       </span>
                     </div>
                     <div class="p-3 border rounded bg-white text-dark">
-                      <p [innerHTML]="item.Template" class="m-0"></p>
+                      <!-- <p [innerHTML]="item.Template" class="m-0"></p> -->
+                      <textarea  [(ngModel)]="item.Template" [innerHTML]="item.Template" rows="15" class="form-control"></textarea>
                     </div>
+                    <div class="d-flex justify-content-end mt-2 gap-2">
+                     <button class="Button_Update" (click)="UpdateEmailTemplate(item)">Update Email</button>
+                     <button class="Button_Update_S" (click)="SendEmailTemplate(item)">Send</button>
+                    </div>
+                    
                   </div>
                 </div>
               </div>

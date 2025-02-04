@@ -472,6 +472,28 @@ background: #F2F3F4;
   line-height: normal;
   font-family: Montserrat;
 }
+textarea{
+  box-shadow: none;
+  outline: none;
+}
+.Button_Update{
+  background: #4D65B4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+.Button_Update_S{
+  background: green;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
 
 .textarea_divT::-webkit-scrollbar {
   width: 5px;
