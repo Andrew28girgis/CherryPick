@@ -1,15 +1,4 @@
-.custom-card {
-  background-color: #ffffff; /* White Background */
-  padding: 12px;
-  border-radius: 12px; /* Rounded Corners */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft Shadow */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: fit-content;
-  margin: auto;
-} 
- 
+
 .chosen-places-container {
   display: inline-block; /* Make the container width fit its content */
   padding: 0px var(--Space-Space-20, 20px);
@@ -30,16 +19,6 @@
   color: var(--Body-Text-Color, #707791); /* Subtle text color */
   margin-right: 8px; /* Spacing between items */
   white-space: nowrap; /* Prevent wrapping */
-}
-
-.view-more-link {
-  font-size: 14px;
-  color: var(--Button-Link-Label, #4d65b4); /* Link color */
-  text-decoration: none;
-}
-.view-more-link i {
-  font-size: 12px; /* Smaller arrow icon */
-  margin-left: 4px;
 }
 .search-bar {
   display: flex;
@@ -148,9 +127,31 @@
 .card-body {
   overflow-y: auto; /* Add scroll behavior if content overflows */
 }
+.shopping-card {
+  border: 1px solid lightgray;
+  background-color: #f8f9fa; /* Light gray */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
 
-body {
-  background-color: red !important;
+.shopping-card:hover {
+  transform: scale(1.05);
+}
+
+.selected {
+  background-color: #5c6bc0;
+  color: white;
+  border-color: #5c6bc0;
+}
+
+.shopping-center-num {
+  color: #5c6bc0;
+  font-weight: 700;
+}
+
+.selected .shopping-center-num {
+  color: white;
 }
 .card-filter {
   border-radius: 8px;
@@ -164,59 +165,8 @@ body {
 .d-flex .input-group {
   flex-grow: 1;
 }
-
 .d-flex {
   gap: 0;
-}
-
-.blue-box {
-  background-color: #013060;
-  padding: 13px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  cursor: pointer;
-}
-
-.blue-box i {
-  color: white;
-  transition: color 0.3s ease;
-}
-
-.blue-box:hover {
-  background-color: #00509e;
-  transform: scale(1.1);
-}
-
-.show-map {
-  color: var(--Colors-Neutral-900, #0c0d0e);
-  text-align: center;
-  font-family: Montserrat;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: -0.07px;
-  width: max-content;
-}
-
-.btn-filter {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-filter:hover {
-  background-color: #0056b3;
 }
 .image-container {
   position: relative; /* Set the container relative for absolute positioning of the button */
@@ -317,11 +267,6 @@ body {
 .card-body {
   position: relative;
 }
-
-.btn-filter {
-  width: 80%;
-  border-radius: 15px;
-}
 .text-center {
   text-align: center;
   margin-top: 10px;
@@ -339,49 +284,9 @@ body {
   border-radius: 8px;
   border: none;
 }
-.info-background {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s ease;
-  padding: 5px 15px;
-  border-radius: 20px;
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.info-background:hover {
-  background-color: rgba(0, 0, 0, 0.08);
-}
-
-.black-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background-color: black;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.info-text {
-  font-family: Montserrat;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: -0.005em;
-  text-align: center;
-  text-underline-position: from-font;
-  text-decoration-skip-ink: none;
-}
 .small-line {
   height: 1px;
 }
-.input-group-text {
-  background-color: #f8f9fa;
-  border: 1px solid #ced4da;
-}
-
 .form-check-input {
   width: 20px;
   height: 20px;
@@ -396,14 +301,6 @@ body {
   font-weight: 400;
   line-height: 30px;
 }
-.title-filter {
-  color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
-}
 .small-titlefilter {
   color: var(--Body-Heading-Color, #0c0d0e);
 
@@ -413,43 +310,9 @@ body {
   font-weight: 500;
   line-height: 30px;
 }
-
 .total{
   cursor: pointer;
 }
-
-.search-inputs::placeholder {
-  color: var(--Inputs-Color-Placeholder-Label, #7a8591);
-  text-align: left;
-  font-family: Montserrat;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-}
-.search-inputs {
-  color: var(--Inputs-Color-Placeholder-Label, #7a8591);
-  text-align: left;
-  font-family: Montserrat;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-  background-clip: padding-box;
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-radius: var(--bs-border-radius);
-}
-
-.search-inputs option {
-  color: var(--Inputs-Color-Placeholder-Label, #7a8591);
-  text-align: left;
-  font-family: Montserrat;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-}
-
 .btn-primary {
   border-radius: var(--Button-Radius, 16px);
   border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #001f3f);
@@ -486,71 +349,14 @@ body {
   text-overflow: ellipsis;
   max-width: 300px;
 }
-.text-managementorg {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px;
-}
 .card-texts {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-
   font-family: Montserrat;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.07px;
-}
-.card-strongs {
-  color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px;
-}
-
-.tags {
-  background-color: var(--secondary-color);
-  border: var(--secondary-color);
-  margin-left: 0;
-}
-
-.selected-tags {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.custom-multiselect {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-.search-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.specialty-list {
-  display: flex;
-  flex-direction: column;
-}
-.specialty-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-  cursor: pointer;
-}
-.specialty-item input {
-  margin-right: 10px;
-}
-.no-underline {
-  text-decoration: none !important; /* Remove underline */
 }
 .tenantorg {
   font-size: 0.9rem;
@@ -569,7 +375,6 @@ body {
 }
 .shoppingcentername {
   color: var(--Body-Heading-Color, #0c0d0e);
-
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
@@ -581,77 +386,6 @@ body {
   height: 24px;
   border-radius: 50%;
 }
-.main-card {
-  gap: var(--Space-Space-16, 16px);
-  max-width: 800px;
-  margin: 0px -8px;
-  position: relative;
-}
-
-.gallerybtn {
-  font-size: 0.8rem;
-  opacity: 0.8; /* Softer look */
-  transition: opacity 0.3s ease, transform 0.2s ease, backdrop-filter 0.3s ease; /* Smooth transitions */
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.5
-  ); /* Semi-transparent background for blur effect */
-  color: white;
-  backdrop-filter: blur(5px); /* Add blur effect */
-  cursor: pointer;
-  border-radius: 20px;
-}
-
-.gallerybtn:hover {
-  opacity: 1; /* Fully visible on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
-  backdrop-filter: blur(8px); /* Increase blur effect on hover */
-}
-
-.gallerybtn:active {
-  opacity: 0.9; /* Slightly dimmed when clicked */
-  transform: scale(0.95); /* Add a press effect */
-}
-.svg-container {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: 1px solid #817a79;
-  border-radius: 50%;
-  background-color: #ffffff;
-  cursor: pointer;
-}
-.circle-container {
-  display: flex; /* Use Flexbox for centering */
-  align-items: center; /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
-  width: 25px; /* Set width for the circle */
-  height: 25px; /* Set height for the circle */
-  border-radius: 50%; /* Make it circular */
-  border: 1px solid #ccc; /* Optional border */
-  cursor: pointer; /* Optional pointer cursor */
-}
-
-.circle-container i {
-  font-size: 16px; /* Adjust icon size */
-  color: #555; /* Icon color */
-}
-.custom-dropdown {
-  position: absolute;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 6px;
-  top: 50px;
-  right: 26px;
-  z-index: 1000;
-}
-
 ul {
   list-style: none; /* Remove default bullets */
   padding: 0;
@@ -663,57 +397,4 @@ ul li {
   align-items: center;
   padding: 5px 10px; /* Add some padding for better spacing */
   cursor: pointer; /* Change cursor to pointer for interactivity */
-}
-
-ul li:hover {
-  background-color: #f5f5f5; /* Optional: Highlight on hover */
-}
-
-.li-icon {
-  width: 20px; /* Set image size */
-  height: 20px;
-  margin-right: 10px; /* Space between image and text */
-  object-fit: contain; /* Ensure image fits within the bounds */
-}
-.place-details {
-  display: flex;
-  align-items: center; /* Vertically center all items */
-  justify-content: space-between; /* Distribute space evenly */
-  gap: 10px; /* Add spacing between items */
-}
-
-.building-size {
-  flex: 1; /* Push to the start */
-  text-align: start; /* Align text to the left */
-}
-
-.suite {
-  flex: 1; /* Center in the card */
-  text-align: center; /* Center text horizontally */
-}
-
-.for-lease {
-  flex: 1; /* Push to the end */
-  text-align: end; /* Align text to the right */
-}
-
-.tags {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.tags:hover {
-  background-color: #007bff;
-  color: white;
-}
-
-.shopping-center-num{
-  color: #5c6bc0;
-  font-weight: 700;
 }
