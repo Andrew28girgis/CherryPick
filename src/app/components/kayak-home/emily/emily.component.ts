@@ -900,7 +900,7 @@ export class EmilyComponent implements OnInit {
   }
   
   onCheckboxdetailsChangeMin(showMinBuildingSize :any,showMaxBuildingSize:any) {
-    if(showMinBuildingSize.target.showMinBuildingSize && showMaxBuildingSize.target.showMinBuildingSize ){
+    if(showMinBuildingSize.target?.showMinBuildingSize && showMaxBuildingSize.target?.showMinBuildingSize ){
       this.updateEmailBody();
     }
     else  {
@@ -1088,14 +1088,14 @@ export class EmilyComponent implements OnInit {
     // }
     // Add Manager Contacts if selected
    
-    const selectedContacts = this.BuyBoxOrganizationsForEmail[0].Contact ;
+    const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact ;
 
     console.log(`88`);
     console.log(selectedContacts);
     
     
 
-    if (selectedContacts.length > 0) {
+    if (selectedContacts?.length > 0) {
       this.selectedContact = [];
       emailContent += 'Representative Organization Contacts that will receive this email:\n';
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
@@ -1190,7 +1190,7 @@ export class EmilyComponent implements OnInit {
       // Iterate through selected relations
       this.relationCategoriesNames.forEach((selectedRelation) => {
         if (selectedRelation.selected) {
-          this.generated[0]?.Releations.forEach((relation) => {
+          this.generated[0]?.Releations?.forEach((relation) => {
             if (
               relation.RetailRelationCategoryId === selectedRelation.id &&
               relation.relationSelect &&
