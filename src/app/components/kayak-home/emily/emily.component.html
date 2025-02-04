@@ -344,7 +344,10 @@
             <div class="form-group mt-4">
               <div class="card shadow-sm border-0">
                 <div class="card-header text-white" style="background-color: #141e2a">
-                  <h5 class="mb-0">Saved Template</h5>
+                  <h5 class="mb-0 d-flex justify-content-between">Saved Template <p>
+                    <span style="font-size: 13px;align-items: center;display: block;">Creation Date : {{item.CreationDate|date:'medium'}}</span>
+                    <span *ngIf="item.SentDate!=='0001-01-01T00:00:00'" style="font-size: 13px;align-items: center;display: block;margin-top: 4px;">Sent Date : {{item.SentDate|date:'medium'}}</span>
+                  </p></h5>
                 </div>
                 <div class="card-body bg-light">
                   <div class="mb-3">
@@ -375,7 +378,7 @@
                     </div>
                     <div class="d-flex justify-content-end mt-2 gap-2">
                      <button class="Button_Update" (click)="UpdateEmailTemplate(item)">Update Email</button>
-                     <button class="Button_Update_S" (click)="SendEmailTemplate(item)">Send</button>
+                     <button class="Button_Update_S" *ngIf="item.SentDate=='0001-01-01T00:00:00'" (click)="SendEmailTemplate(item)">Send</button>
                     </div>
                     
                   </div>
