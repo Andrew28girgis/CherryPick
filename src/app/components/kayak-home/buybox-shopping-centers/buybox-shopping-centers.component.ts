@@ -62,7 +62,7 @@ export class BuyboxShoppingCentersComponent implements OnInit {
   }
   @Output() bindClicked: EventEmitter<void> = new EventEmitter<void>();
   triggerBindAction() {
-    this.bindClicked.emit(); // ترسل الحدث للمكون الرئيسي
+    this.bindClicked.emit(); 
   }
   selectedIdT: number | null = null;
   toggleT(id: number, close?: string): void {

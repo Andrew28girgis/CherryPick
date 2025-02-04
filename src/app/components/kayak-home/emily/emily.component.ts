@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   Cotenant,
   Generated,
@@ -10,7 +10,9 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
 import { FormControl, FormGroup } from '@angular/forms';
-
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Center } from 'src/models/shoppingCenters';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 export interface BuyBoxOrganizationsForEmail {
@@ -37,14 +39,25 @@ export interface Contact_ShoppingCenter {
   selector: 'app-emily',
   templateUrl: './emily.component.html',
   styleUrls: ['./emily.component.css'],
+  animations: [
+    trigger('slideAnimation', [
+      transition(':enter', [
+        style({ height: '0px', opacity: 0 }),
+        animate('500ms ease-out', style({ height: '*', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('500ms ease-in', style({ height: '0px', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 
-export class EmilyComponent {
+export class EmilyComponent implements OnInit {
   buyBoxId!: number | null;
   TemplatesId!: number | null;
   General!: any;
   generated: Generated[] = [];
-  generatedGetSavedTemplates: any[] = [];
+  // generatedGetSavedTemplates: any[] = [];
   relationCategoriesNames: RelationNames[] = [];
   showClientProfile: boolean = false;
   showMangerDescription: boolean = false;
@@ -86,7 +99,10 @@ export class EmilyComponent {
   formGroupTemplate!: FormGroup;
   shouldShowGenerateEmaily: boolean = false;
   ShowSpinner: boolean = false;
-
+  shoppingCenters: Center[] = [];
+  shoppingCentersSelected: Center | undefined = undefined;
+  contactidsJoin :any;
+  selectedOrg!:Number;
   tabs = [
     { id: 'Details', label: 'Details' },
     // { id: 'Emily', label: 'Emily' },
@@ -105,27 +121,66 @@ export class EmilyComponent {
     return this.selectedEmailyID === emailyID;
   }
 
-  onCheckboxChangeTemplates(emailyID: string): void {
-    if (this.selectedEmailyID === emailyID) {
-      this.selectedEmailyID = null;
-      this.emailBody = '';
-    } else {
-      this.selectedEmailyID = emailyID;
+  showSelections = true;
+  constructor(
+    private route: ActivatedRoute,
+        private spinner: NgxSpinnerService,
+    
+    private modalService: NgbModal,
+    private PlacesService: PlacesService
+  ) {
+    this.route.paramMap.subscribe((params) => {
+      this.buyBoxId = +params.get('buyboxid')!;
 
-      const selectedTemplate = this.generatedGetSavedTemplates.find(
-        (template) => template.ID === Number(emailyID)
-      );
-
-      if (selectedTemplate?.BuyboxOrgEmailTemplates?.[0]?.Template) {
-        const rawText = selectedTemplate.BuyboxOrgEmailTemplates[0].Template;
-        this.emailBody = this.getFormattedTemplate(rawText);
-      } else {
-        this.emailBody = 'No Template Available';
-      }
-    }
-
-    console.log(emailyID, this.emailBody);
+      this.GetBuyBoxInfo();
+      this.GetRetailRelationCategories();
+      this.GetPrompts();
+      // this.GetSavedTemplates();
+    });
   }
+
+  ngOnInit() {
+   setTimeout(() => {
+    this.showClientProfile=true;
+    this.showRelationNames=true;
+    this.showOrganizationManagers=true;
+    this.showManagerName=true;
+    this.showMangerDescription = true;
+    this.onOrganizationManagersChange();
+    }, 5000); 
+
+    setTimeout(() => {
+      this.selectManagerContactsByDefault();
+      this.selectManagerTenantsByDefault();
+    }, 2000); 
+
+  }
+  
+  toggleSelections() {
+    this.showSelections = !this.showSelections;
+  }
+
+  // onCheckboxChangeTemplates(emailyID: string): void {
+  //   if (this.selectedEmailyID === emailyID) {
+  //     this.selectedEmailyID = null;
+  //     this.emailBody = '';
+  //   } else {
+  //     this.selectedEmailyID = emailyID;
+
+  //     const selectedTemplate = this.generatedGetSavedTemplates.find(
+  //       (template) => template.ID === Number(emailyID)
+  //     );
+
+  //     if (selectedTemplate?.BuyboxOrgEmailTemplates?.[0]?.Template) {
+  //       const rawText = selectedTemplate.BuyboxOrgEmailTemplates[0].Template;
+  //       this.emailBody = this.getFormattedTemplate(rawText);
+  //     } else {
+  //       this.emailBody = 'No Template Available';
+  //     }
+  //   }
+
+  //   console.log(emailyID, this.emailBody);
+  // }
 
   getFilteredTabs() {
     return this.tabs.filter(tab => tab.id !== 'kayak');
@@ -168,37 +223,40 @@ export class EmilyComponent {
     this.contentChange.emit(target.innerHTML);
   }
 
-  constructor(
-    private route: ActivatedRoute,
-    private modalService: NgbModal,
-    private PlacesService: PlacesService
-  ) {
-    this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
-
-      this.GetBuyBoxInfo();
-      this.GetRetailRelationCategories();
-      this.GetPrompts();
-      this.GetSavedTemplates();
+  
+  
+  selectManagerContactsByDefault() {
+    this.getManagerContacts(this.selectedShoppingCenter).forEach((contact) => {
+      contact.selectedName = true;
     });
+
+    this.onContactCheckboxChange();
+    this.updateEmailBody();
   }
 
-  ngOnInit() {
-    // this.route.paramMap.subscribe((params) => {
-    //   this.buyBoxId = +params.get('buyboxid')!;
+  selectManagerTenantsByDefault() {
 
-    //   this.GetBuyBoxInfo();
-    //   this.GetRetailRelationCategories();
-    //   this.GetPrompts();
-    //   this.GetSavedTemplates();
-    // });
+    this.managerOrganizations.forEach((manager: any) => {
+      manager.ManagerOrganizationContacts.forEach((contact: any) => {
+        contact.assistantSelected = true;
+      });
+    });
+    // setTimeout(() => {
+
+    this.onAssistantCheckboxChange(this.managerOrganizations);
+    
+    this.onContactCheckboxChange();
+    // this.updateEmailBody();
+  // }, 2000); 
+
   }
 
-
+  
   selectedIndex!: number;
   CheckGetSavedTemplates: any[] = [];
-
+  // organizationid! : number ;
   selectContact(index: number, organizationid: number) {
+    // this.organizationid =organizationid
     this.selectedIndex = index;
     this.OnCheckGetSavedTemplates(organizationid);
   }
@@ -213,20 +271,23 @@ export class EmilyComponent {
       },
       Json: null,
     };
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data?.json && Array.isArray(data.json)) {
-          this.CheckGetSavedTemplates = data.json; 
-          
+          this.CheckGetSavedTemplates = data.json;
+  
           const selectedTemplate = this.CheckGetSavedTemplates.find(
             (Template) => Template.OrganizationId === Number(organizationid)
-          );          
-    
+          );
+  
           if (selectedTemplate?.Template) {
-            const rawText = selectedTemplate.Template;
-            this.emailBody = this.getFormattedTemplate(rawText);
+            const rawText = this.getFormattedTemplate(selectedTemplate.Template);
+  
+            // ✅ إضافة النص الجديد دون مسح `emailBody`
+            this.emailBody += `\n\n${rawText}`;
           } else {
-            this.emailBody = 'No Template Available';
+            this.emailBody += `\n\nNo Template Available`;
           }
         } else {
           this.CheckGetSavedTemplates = [];
@@ -238,14 +299,18 @@ export class EmilyComponent {
       },
     });
   }
-
-
+  
   selectedShoppingCenterId!: number;
 
   handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
+    console.log(`hello`);
+    
+    this.emailSubject = '' ;
+    this.emailBodyResponse = ''; 
     this.selectedTab = event.tabId;
     this.selectedShoppingCenterId = event.shoppingCenterId;
     this.GetBuyBoxOrganizationsForEmail();
+    this.getShoppingCenters(this.buyBoxId!);
   }
 
   BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
@@ -262,6 +327,10 @@ export class EmilyComponent {
       next: (data) => {
         if (data?.json && Array.isArray(data.json)) {
           this.BuyBoxOrganizationsForEmail = data.json; // ✅
+          this.selectedOrg=data.json[0].Id;
+        console.log('selectedOrg',this.selectedOrg);
+
+
         } else {
           this.BuyBoxOrganizationsForEmail = [];
           console.error('Unexpected data format:', data);
@@ -277,6 +346,7 @@ export class EmilyComponent {
 
 
   GetBuyBoxInfo() {
+    
     const body: any = {
       Name: 'GetBuyBoxInfo',
       MainEntity: null,
@@ -317,6 +387,8 @@ export class EmilyComponent {
               center.Cotenants?.filter((cotenant) => !cotenant.ActivityType) ||
               [],
           })) || [];
+          // console.log(this.ShoppingCenterNames);
+          
 
         this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
         //this for to be selected by first shopping center by defaukt
@@ -328,52 +400,95 @@ export class EmilyComponent {
     });
   }
 
-  GetSavedTemplates() {
+  getShoppingCenters(buyboxId: number): void {
     const body: any = {
-      Name: 'GetSavedTemplates',
+      Name: 'GetMarketSurveyShoppingCenters',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.shoppingCenters = data.json;        
+        this.shoppingCentersSelected = this.shoppingCenters.find(
+          (S: Center) => S.Id == this.selectedShoppingCenterId
+        );
+        this.selectedShoppingCenter = this.ShoppingCenterNames.find(
+          (center) => center.CenterName === this.shoppingCentersSelected?.CenterName
+        )?.CenterName || '';
+        this.onSelectedShoppingCenterChange();
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+  // GetSavedTemplates() {
+  //   const body: any = {
+  //     Name: 'GetSavedTemplates',
+  //     MainEntity: null,
+  //     Params: {
+  //       buyboxid: this.buyBoxId,
+  //     },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.generatedGetSavedTemplates = data?.json || [];
+  //       // console.log(this.generatedGetSavedTemplates);
+
+
+  //       // this.generatedGetSavedTemplates = data.json;
+  //       this.ManagerOrganizationName =
+  //         this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
+  //       this.BuyBoxOrganizationName =
+  //         this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
+
+  //       const buyBox = this.generatedGetSavedTemplates?.[0]?.Buybox?.[0];
+  //       if (buyBox) {
+  //         this.ManagerOrganizationName =
+  //           buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
+  //             ?.ManagerOrganizationName || '';
+  //         this.BuyBoxOrganizationName =
+  //           buyBox.BuyBoxOrganization?.[0]?.Name || '';
+  //       }
+
+  //       this.ShoppingCenterNames =
+  //         this.generated?.[0]?.BuyBoxShoppingCenters?.map((center) => ({
+  //           CenterName: center.CenterName,
+  //           ShoppingCenterManager: center.ShoppingCenterManager || [],
+  //           CotenantsWithActivityType: (
+  //             center.Cotenants?.filter((co) => co.ActivityType) || []
+  //           ).map((co) => ({ ...co, selected: false })),
+
+  //           CotenantsWithoutActivityType:
+  //             center.Cotenants?.filter((cotenant) => !cotenant.ActivityType) ||
+  //             [],
+  //         })) || [];
+
+  //       this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
+
+  //       this.updateGroupedActivityTypes();
+  //     },
+  //   });
+  // }
+  SaveTemplate() {
+    let contacts =  this.selectedContact.join(`,`)
+    const body: any = {
+      Name: 'SaveTemplate',
       MainEntity: null,
       Params: {
+        organizationid :this.selectedOrg,
+        template: this.emailBodyResponse,
+        subject: this.emailSubject,
         buyboxid: this.buyBoxId,
+        contactids: contacts
       },
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.generatedGetSavedTemplates = data?.json || [];
-        // console.log(this.generatedGetSavedTemplates);
-
-
-        // this.generatedGetSavedTemplates = data.json;
-        this.ManagerOrganizationName =
-          this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
-        this.BuyBoxOrganizationName =
-          this.generatedGetSavedTemplates?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
-
-        const buyBox = this.generatedGetSavedTemplates?.[0]?.Buybox?.[0];
-        if (buyBox) {
-          this.ManagerOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
-              ?.ManagerOrganizationName || '';
-          this.BuyBoxOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.Name || '';
-        }
-
-        this.ShoppingCenterNames =
-          this.generated?.[0]?.BuyBoxShoppingCenters?.map((center) => ({
-            CenterName: center.CenterName,
-            ShoppingCenterManager: center.ShoppingCenterManager || [],
-            CotenantsWithActivityType: (
-              center.Cotenants?.filter((co) => co.ActivityType) || []
-            ).map((co) => ({ ...co, selected: false })),
-
-            CotenantsWithoutActivityType:
-              center.Cotenants?.filter((cotenant) => !cotenant.ActivityType) ||
-              [],
-          })) || [];
-
-        this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
-
-        this.updateGroupedActivityTypes();
+        console.log(data); 
       },
     });
   }
@@ -412,24 +527,62 @@ export class EmilyComponent {
     return center ? center.CotenantsWithoutActivityType : [];
   }
   // Called when the selectedShoppingCenter changes (e.g., dropdown selection changes)
+  // onSelectedShoppingCenterChange() {
+  //   if (!this.selectedShoppingCenter) return;
+  
+  //   this.updateGroupedActivityTypes();
+  
+  //   // تحديث البيانات الأخرى ذات الصلة
+  //   this.showAllCotenants = false;
+  //   this.showCotenantsWithActivity = false;
+  //   this.showCotenantsWithoutActivity = false;
+  
+  //   const withoutActivity = this.getCotenantsWithoutActivityType(this.selectedShoppingCenter);
+  //   withoutActivity.forEach((co) => (co.selected = false));
+  
+  //   this.updateEmailBody();
+  // }
+  
   onSelectedShoppingCenterChange() {
     if (!this.selectedShoppingCenter) return;
     this.updateGroupedActivityTypes();
-    // Reset all flags
     this.showAllCotenants = false;
     this.showCotenantsWithActivity = false;
     this.showCotenantsWithoutActivity = false;
-    // Ensure all activities and cotenants start deselected
+    
     this.groupedActivityTypes.forEach((activity) => {
       activity.selected = false;
       activity.Cotenants.forEach((co: any) => (co.selected = false));
     });
+  
     const withoutActivity = this.getCotenantsWithoutActivityType(
       this.selectedShoppingCenter
     );
     withoutActivity.forEach((co) => (co.selected = false));
+  
+    this.selectManagerContactsByDefault();
+  
     this.updateEmailBody();
   }
+  
+  // onSelectedShoppingCenterChange() {
+  //   if (!this.selectedShoppingCenter) return;
+  //   this.updateGroupedActivityTypes();
+  //   // Reset all flags
+  //   this.showAllCotenants = false;
+  //   this.showCotenantsWithActivity = false;
+  //   this.showCotenantsWithoutActivity = false;
+  //   // Ensure all activities and cotenants start deselected
+  //   this.groupedActivityTypes.forEach((activity) => {
+  //     activity.selected = false;
+  //     activity.Cotenants.forEach((co: any) => (co.selected = false));
+  //   });
+  //   const withoutActivity = this.getCotenantsWithoutActivityType(
+  //     this.selectedShoppingCenter
+  //   );
+  //   withoutActivity.forEach((co) => (co.selected = false));
+  //   this.updateEmailBody();
+  // }
   // After GetBuyBoxInfo, once selectedShoppingCenter is known, call this to populate groupedActivityTypes:
   updateGroupedActivityTypes() {
     if (!this.selectedShoppingCenter) return;
@@ -565,7 +718,8 @@ export class EmilyComponent {
   getManagerContacts(centerName: string): any[] {
     const center = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
-    );
+    ) 
+    
     return (
       center?.ShoppingCenterManager?.[0]?.ShoppingCenterManagerContact || []
     );
@@ -680,7 +834,7 @@ export class EmilyComponent {
     return category ? category.name : 'Unknown Category';
   }
 
-  onContactCheckboxChange() {
+  onContactCheckboxChange( ) {
     this.updateEmailBody();
   }
   onOrganizationManagersChange() {
@@ -725,10 +879,12 @@ export class EmilyComponent {
     this.updateEmailBody();
   }
 
+  selectedContact:number[]=[];
+
   // textarea 'EmailBody'
-  updateEmailBody() {
-    let emailContent = '';
-    // Add Shopping Center and Manager Name
+  updateEmailBody() { 
+
+    let emailContent = ''; 
     if (this.selectedShoppingCenter) {
       emailContent += `Shopping Center: ${this.selectedShoppingCenter}\n`;
       emailContent += `Manager: ${this.getManagerName(
@@ -753,12 +909,16 @@ export class EmilyComponent {
     );
 
     if (selectedContacts.length > 0) {
+      this.selectedContact = [];
       emailContent += 'Manager Contacts:\n';
       selectedContacts.forEach((contact) => {
         if (contact.selectedName) {
           emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n`;
+          this.selectedContact.push(contact.ID);
+
         }
-      });
+      });      
+      
     }
 
     // Display selected cotenants with activity if showCotenantsWithActivity is true
@@ -1039,7 +1199,17 @@ export class EmilyComponent {
     }
     this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
   }
-
+  openBodyModal(modal: any) {
+    if (
+      !this.selectedPromptText ||
+      this.selectedPromptText === 'No prompt text available'
+    ) {
+      alert('No prompt text available to display.');
+      return;
+    }
+    this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
+    this.updateEmailBody();
+  }
   editPrompt() {
     this.isEditing = true;
     this.editablePromptText = this.selectedPromptText; // Copy current text for editing
