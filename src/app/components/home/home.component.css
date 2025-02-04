@@ -619,8 +619,15 @@ color: #7A8591  ;
 
 
 @media (max-width: 991px) {
+.card-content{
+  height: fit-content !important;
+
+}
+
   .share-button {
     padding: 8px 12px;
+    margin-left: 3px;
+
   }
   img[alt="logo"] {
     margin-right: 137px; 
@@ -632,17 +639,19 @@ color: #7A8591  ;
   .navbar-collapse {
     position: absolute;
     top: 100%;
-    left: 0;
-    right: 0;
+    /* left: 0;
+    right: 0; */
     background-color: white;
     padding: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     z-index: 1000;
+    width: 150%;
 
   }
 
   .icon-option {
     margin: 10px 0;
+    padding: 2px;
   }
 }
 
