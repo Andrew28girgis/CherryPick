@@ -647,3 +647,10 @@ color: #7A8591  ;
 }
 
 
+
+
+@media (max-width: 991px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
