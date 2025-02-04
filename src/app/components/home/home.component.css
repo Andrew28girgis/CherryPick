@@ -331,6 +331,9 @@
 .nav-right > div {
   display: flex;
   align-items: center; 
+  justify-content: end;
+  margin-left: -10px;
+
 }
 
 img[alt="logo"] {
@@ -612,53 +615,7 @@ color: #7A8591  ;
 .nearset-category{
   font-size: 14px;
   margin-top: 10px;
-}
-
-
-
-
-
-
-.navbar {
-  padding: 10px;
-}
-
-/* .icon-option {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 5px 10px;
-  margin: 5px 0;
-}
-
-.icon-option.selected {
-  background-color: #f0f0f0;
-}
-
-.icon-image {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
-
-.icon-text {
-  font-size: 14px;
-} */
-
-
-/* .share-button {
-  background-color: #001f3f;
-  padding: 8px 30px;
-  border: none;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.share-button:hover {
-  background-color: #003366;
-} */
-
+} 
 
 
 @media (max-width: 991px) {
