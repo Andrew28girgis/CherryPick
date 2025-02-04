@@ -247,6 +247,10 @@ button:active {
 }
 
 @media (max-width: 767px) {
+  .ssss{
+    margin-right: 20px;
+    margin-left: 32px;
+  }
   .searchBox {
     width: 100%;
   }
@@ -272,6 +276,10 @@ button:active {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
+  .ssss{
+    margin-right: 20px;
+    margin-left: 32px;
+  }
   .searchBox {
     width: 100%;
   }
