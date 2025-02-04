@@ -492,6 +492,7 @@ export class EmilyComponent implements OnInit {
 
 
   SaveTemplate() {
+    this.spinner.show();
     let contacts =  this.selectedContact.join(`,`)
     const body: any = {
       Name: 'SaveTemplate',
@@ -507,10 +508,29 @@ export class EmilyComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
+        this.spinner.hide();
         console.log(data); 
+        this.showToast('Email Saved successfully!');
       },
     });
   }
+
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage!.innerText = message;
+    toast!.classList.add('show');
+    setTimeout(() => {
+      toast!.classList.remove('show');
+    }, 3000);
+  }
+   closeToast() {
+    const toast = document.getElementById('customToast');
+    toast!.classList.remove('show');
+  }
+
+
+
 
   getCotenantsWithActivityType(centerName: string): any[] {
     const center: any = this.ShoppingCenterNames.find(
@@ -1125,6 +1145,7 @@ export class EmilyComponent implements OnInit {
   }
   // send 'EmailBody' and 'promptId' to AI and store Response
   getGenericEmail() {
+    this.spinner.show();
     // Check if a shopping center is selected
     if (!this.selectedShoppingCenter) {
       alert('Please select a shopping center before generating the email.');
@@ -1138,7 +1159,6 @@ export class EmilyComponent implements OnInit {
     }
     const promptId = Number(this.selectedPromptId); // Convert to number
     const context = this.emailBody;
-    this.ShowSpinner = true;
     this.PlacesService.generateEmail(promptId, context).subscribe({
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
@@ -1147,7 +1167,7 @@ export class EmilyComponent implements OnInit {
         //   subject: this.emailSubject,
         //   body: this.emailBodyResponse,
         // });
-        this.ShowSpinner = false;
+        this.spinner.hide();
       },
       error: (err) => {
         console.error('Error fetching generic email:', err);
