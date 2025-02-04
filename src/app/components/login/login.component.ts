@@ -27,7 +27,6 @@ export class LoginComponent {
     private spinner: NgxSpinnerService,
     private configService: ConfigService
   ) {
-    localStorage.clear();
     localStorage.removeItem('mapView');
   }
 
@@ -37,28 +36,27 @@ export class LoginComponent {
     this.logoUrl = this.configService.getLogoUrl();
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.t = params.get('t');
-      this.r = params.get('r');
-      if (this.t && this.r) {
+      if (this.t) {
+        localStorage.clear(); 
         this.onSubmit();
+      }else{
+        localStorage.getItem('token') && this.navigateToHome();
       }
     });
   }
 
   onSubmit() {
-   this.spinner.show();
+   this.spinner.show(); 
     if (this.t) {
       this.adminLogin.contactToken = this.t;
-    }
-
+    } 
     this.PlacesService.loginUser(this.adminLogin).subscribe(
       (data: any) => {
         localStorage.setItem('token', data.token);
-        this.spinner.hide();
-        if (this.r) {
-          this.router.navigateByUrl(this.r);
-        } else {
-          this.navigateToHome();
+        if(data.token){
+          this.navigateToHome(); 
         }
+        this.spinner.hide();
       },
       (error) => {
         this.handleError(error.error);
@@ -69,7 +67,6 @@ export class LoginComponent {
 
   private navigateToHome() {
     this.router.navigate(['/summary']);
-    //this.router.navigate(['/CherryPickExpansion']);
   }
 
   private handleError(error: any) {
