@@ -168,12 +168,12 @@
                     </div>
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="detailsMin" id="detailsMin" class="form-check-input"
-                        [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin()"/>
+                        [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin($event)"/>
                       <label for="detailsMin">Min Unit Size: {{ buybox?.MinBuildingSize || "N/A" }}</label>
                     </div>
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="detailsMax" id="detailsMax" class="form-check-input"
-                        [(ngModel)]="showMaxBuildingSize" (change)="onCheckboxdetailsChangeMax()" />
+                        [(ngModel)]="showMaxBuildingSize" (change)="onCheckboxdetailsChangeMax($event)" />
                       <label for="detailsMax">Max Unit Size: {{ buybox?.MaxBuildingSize || "N/A" }}</label>
                     </div>
                   </div>
