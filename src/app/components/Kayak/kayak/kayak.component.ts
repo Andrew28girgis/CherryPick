@@ -174,6 +174,7 @@ export class KayakComponent implements OnInit {
           this.GetFilters(); 
 
         }
+        
         this.getBindedShoppingCentersNumber();
         this.spinner.hide();
        }, 
@@ -531,7 +532,7 @@ export class KayakComponent implements OnInit {
         streetViewElement as HTMLElement,
         {
           position: { lat: lat, lng: lng },
-          pov: { heading: heading, pitch: 0 }, // Dynamic heading and pitch
+          pov: { heading: heading, pitch: 0 }, 
           zoom: 1,
         }
       );
@@ -564,7 +565,6 @@ export class KayakComponent implements OnInit {
       return;
     }
 
-    // console.log('🌍 Setting StreetView URL:', url);
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
@@ -608,12 +608,10 @@ export class KayakComponent implements OnInit {
       return;
     }
 
-    // Sort tenants alphabetically by Name
     const sortedList = [...this.Filters.Tenants].sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
 
-    // Remove duplicate tenants based on OrganizationId
     const uniqueTenants = Array.from(
       new Set(sortedList.map((tenant) => tenant.OrganizationId))
     )
@@ -634,12 +632,10 @@ export class KayakComponent implements OnInit {
       return;
     }
 
-    // Sort organizations alphabetically by Name
     const sortedList = [...this.Filters.ManagementOrganization].sort((a, b) =>
       (a.Name || '').localeCompare(b.Name || '')
     );
 
-    // Remove duplicate organizations based on OrganizationId
     const uniqueOrgs = Array.from(
       new Set(sortedList.map((org) => org.OrganizationId))
     )
@@ -657,7 +653,6 @@ export class KayakComponent implements OnInit {
         return;
     }
 
-    // 🔹 Sort alphabetically
     this.secondaryTypes = [...this.Filters.SecondaryType].sort((a, b) =>
         (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
     );
@@ -672,9 +667,8 @@ updateNeighbourhoods(): void {
       return;
   }
 
-  // 🔹 Ensure Neighbourhood is a string and sort
   this.neighbourhoods = [...this.Filters.Neighbourhood]
-      .filter((n) => n?.Neighbourhood) // Remove undefined/null values
+      .filter((n) => n?.Neighbourhood) 
       .map((n) => ({
           Neighbourhood: String(n.Neighbourhood || '').trim(),
       }))
@@ -690,17 +684,16 @@ updateTenantCategories(): void {
       return;
   }
 
-  // 🔹 Remove duplicates and sort alphabetically
   const sortedList = [...this.Filters.TenantsCategories]
       .map((category) => ({
           TenantsCategoriesId: category.TenantsCategoriesId,
-          Name: category.Name?.trim() || 'Unknown', // Ensure Name is valid
-          ChildCategory: category.ChildCategory || [], // Ensure ChildCategory exists
+          Name: category.Name?.trim() || 'Unknown',
+          ChildCategory: category.ChildCategory || [], 
           Selected: category.Selected || false,
       }))
       .sort((a, b) => a.Name.localeCompare(b.Name));
 
-  this.tenantCategories = Array.from(new Set(sortedList)); // Remove duplicates
+  this.tenantCategories = Array.from(new Set(sortedList)); 
 
   // console.log('Sorted Tenant Categories:', this.tenantCategories);
 }
@@ -728,23 +721,18 @@ applyBuildingSizeFilter(): void {
 
   console.log('Filtered Shopping Centers:', this.filteredKayakResult);
 }
-
 updateSliderValues(): void {
   // Update filterValues whenever the user changes the slider
   this.filterValues.minsize = this.selectedMin;
   this.filterValues.maxsize = this.selectedMax;
-
   console.log(`Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`);
 }
-
   filterCards(): void {
     if (!this.KayakResult?.Result) {
       this.filteredKayakResult = []; // Ensure filtered result is empty if no data.
       return;
     }
-
     const search = this.searchTerm.toLowerCase();
-
     this.filteredKayakResult = this.KayakResult.Result.filter(
       (result: any) =>
         result.CenterName.toLowerCase().includes(search) ||
@@ -753,9 +741,6 @@ updateSliderValues(): void {
         result.CenterState.toLowerCase().includes(search)
     );
   }
-
- 
-
   getShoppingCenters(): void {
     this.spinner.show();
     const body: any = {
@@ -775,9 +760,6 @@ updateSliderValues(): void {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
-
-
-
   resetFilters(): void {
     this.sortedTenants = [];
     this.sortedOrgs = [];
@@ -785,9 +767,6 @@ updateSliderValues(): void {
     this.neighbourhoods = [];
     this.tenantCategories = [];
   }
-
- 
-
   handleStateChange(selectedValue: string): void {
     this.filterValues!.statecode = selectedValue; // Update the selected state
     this.filterValues!.city = ''; // Clear the city filter
@@ -795,24 +774,22 @@ updateSliderValues(): void {
     // console.log('State selected:', selectedValue);
     this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
     this.getResult(); // Fetch results for the selected state
+    this.GetFilters();
   }
-
   onCityChange(selectedValue: string): void {
     this.filterValues!.city = selectedValue; // Update the selected city
      this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
+    this.GetFilters();
   }
-
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
       (s) => s.stateCode === this.filterValues.statecode
     );
   }
-
   toggleTenantSelection(tenant: Tenant): void {
     const currentTenants = this.filterValues.tenants || '';
-    let tenantIds = currentTenants.split(',').filter((id: any) => id.trim());
-
+    let tenantIds = currentTenants.split(',').filter((id: any) => id.trim())
     const tenantIdAsString = String(tenant.OrganizationId);
     if (!tenantIds.includes(tenantIdAsString)) {
       tenantIds.push(tenantIdAsString);
@@ -820,10 +797,9 @@ updateSliderValues(): void {
       tenantIds = tenantIds.filter((id: any) => id !== tenantIdAsString);
     }
 
-    this.filterValues.tenants = tenantIds.join(','); // Update tenant filters
-    this.getResult(); // Fetch filtered cards only
+    this.filterValues.tenants = tenantIds.join(','); 
+    this.getResult(); 
   }
-
   toggleOrgSelection(org: ManagementOrganization): void {
     const currentOrgs = this.filterValues.managementOrganizationIds || '';
     let orgIds = currentOrgs.split(',').filter((id: any) => id.trim());
@@ -834,12 +810,11 @@ updateSliderValues(): void {
     } else {
       orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
     }
-
-    this.filterValues.managementOrganizationIds = orgIds.join(','); // Update organization filters
-    this.getResult(); // Fetch filtered cards only
+    this.filterValues.managementOrganizationIds = orgIds.join(','); 
+    this.getResult(); 
   }
   toggleSecondaryTypeSelection(secondary: SecondaryType): void {
-    const currentSecondaryTypes = this.filterValues.secondarytype || ''; // Ensure it's a string
+    const currentSecondaryTypes = this.filterValues.secondarytype || ''; 
     let secondaryTypeList = currentSecondaryTypes
       .split(',')
       .filter((type: any) => type.trim());
@@ -852,8 +827,8 @@ updateSliderValues(): void {
       );
     }
 
-    this.filterValues.secondarytype = secondaryTypeList.join(','); // Update the filter
-    this.getResult(); // Trigger filtering API
+    this.filterValues.secondarytype = secondaryTypeList.join(','); 
+    this.getResult(); 
   }
   toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
     if (!neighbourhood.Neighbourhood) {
@@ -861,7 +836,7 @@ updateSliderValues(): void {
       return;
     }
 
-    const currentNeighbourhoods = this.filterValues.neighbourhood || ''; // Ensure it's a string
+    const currentNeighbourhoods = this.filterValues.neighbourhood || ''; 
     let neighbourhoodList = currentNeighbourhoods
       .split(',')
       .filter((name: string) => name.trim());
@@ -874,11 +849,11 @@ updateSliderValues(): void {
       );
     }
 
-    this.filterValues.neighbourhood = neighbourhoodList.join(','); // Update the filter
-    this.getResult(); // Trigger filtering API
+    this.filterValues.neighbourhood = neighbourhoodList.join(','); 
+    this.getResult();
   }
   toggleTenantCategorySelection(category: TenantsCategories): void {
-    const currentCategories = this.filterValues.tenantCategory || ''; // Ensure it's a string
+    const currentCategories = this.filterValues.tenantCategory || ''; 
     let categoryList = currentCategories
       .split(',')
       .filter((name: any) => name.trim());
@@ -889,8 +864,8 @@ updateSliderValues(): void {
       categoryList = categoryList.filter((name: any) => name !== category.Name);
     }
 
-    this.filterValues.tenantCategory = categoryList.join(','); // Update the filter
-    this.getResult(); // Trigger filtering API
+    this.filterValues.tenantCategory = categoryList.join(','); 
+    this.getResult(); 
   }
   selectShoppingCenter(type: string): void {
     this.selectedCenter = type;
