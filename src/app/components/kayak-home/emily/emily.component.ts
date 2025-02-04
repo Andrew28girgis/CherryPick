@@ -138,6 +138,8 @@ export class EmilyComponent implements OnInit {
     private modalService: NgbModal,
     private PlacesService: PlacesService
   ) {
+    console.log(`w`);
+    
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = +params.get('buyboxid')!;
 
