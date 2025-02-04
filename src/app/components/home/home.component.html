@@ -69,9 +69,12 @@
             *ngFor="let option of dropdowmOptions"
             (click)="selectOption(option)"
             [class.selected]="selectedOption === option"
+            [ngClass]="{'d-none d-lg-block': option.text === 'Table View' || option.text === 'Side List View'}"
           >
+          
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text">{{ option.text }}</span>
+         
           </div>
           <div class="">
             <button
@@ -154,6 +157,9 @@
               <tr>
                 <th>Name</th>
                 <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+
                 <th *ngIf="placesRepresentative != false">Leased by</th>
                 <th style="width: 250px">Unit Size & Lease Price</th>
                 <th>
@@ -184,8 +190,21 @@
                       class="table-text"
                       (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
                     >
-                      {{ shoppingCenter.CenterAddress }},
-                      {{ shoppingCenter.CenterCity | titlecase }},
+                      {{ shoppingCenter.CenterAddress }}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      class="table-text" 
+                    > 
+                      {{ shoppingCenter.CenterCity | titlecase }}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      class="table-text"
+                      
+                    > 
                       {{ shoppingCenter.CenterState }}
                     </div>
                   </td>
