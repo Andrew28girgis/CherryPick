@@ -32,16 +32,18 @@ const routes: Routes = [
   },
   { path: 'summary', component: SummeryComponent },
   { path: 'summary/:orgId', component: SummeryComponent },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
+  { path: 'home', component: HomeComponent, 
+    // canActivate: [AuthGuardService] 
+  },
   {
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
-    canActivate: [AuthGuardService],
+    // canActivate: [AuthGuardService],
   },
   {
     path: 'home/:contactId/:buyboxid/:city/:State/:MatchStatus',
     component: HomeComponent,
-    canActivate: [AuthGuardService],
+    // canActivate: [AuthGuardService],
   },
   { path: 'landing/:id/:shoppiongCenterId/:buyboxid/:orgId', component: LandingComponent },
   { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },

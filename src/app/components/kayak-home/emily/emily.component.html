@@ -1,3 +1,5 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
 <section class="container-fluid pt-2 pb-2">
   <div class="Nav__section">
     <ul class="pt-3 pe-2 ps-2 m-0">
@@ -253,14 +255,6 @@
                  </select>
                </div>
                <div class="col-6 d-flex justify-content-between">
-                 <button class="Emily__contant__button" (click)="openPromptTextModal(View)">
-                   Prompt
-                   <i class="fas fa-sign-in-alt px-1"></i>
-                 </button>
-                 <button class="Emily__contant__button Emily__body__button ms-2" (click)="openBodyModal(ViewBody)">
-                  Show Context
-                  <i class="fa-regular fa-eye px-1"></i>
-                </button>
                 <button class="Emily__contant__button ms-2" (click)="getGenericEmail()">
                   <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -271,6 +265,15 @@
                   Generate
                   <p class="spinner-grow" *ngIf="ShowSpinner"></p>
                 </button>
+                 <button class="Emily__contant__button" (click)="openPromptTextModal(View)">
+                   Prompt
+                   <i class="fas fa-sign-in-alt px-1"></i>
+                 </button>
+                 <button class="Emily__contant__button Emily__body__button ms-2" (click)="openBodyModal(ViewBody)">
+                  Show Context
+                  <i class="fa-regular fa-eye px-1"></i>
+                </button>
+         
                </div>
              </div>
 
