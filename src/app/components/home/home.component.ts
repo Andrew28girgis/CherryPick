@@ -113,7 +113,6 @@ export class HomeComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '3';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
@@ -131,7 +130,7 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
-    this.currentView = localStorage.getItem('currentView') || '4';
+    this.currentView = localStorage.getItem('currentView') || '3';
 
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
