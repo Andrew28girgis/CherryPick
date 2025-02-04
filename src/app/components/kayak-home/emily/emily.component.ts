@@ -556,6 +556,8 @@ export class EmilyComponent implements OnInit {
       };
       this.PlacesService.GenericAPI(body).subscribe({
         next: (response: any) => {
+          this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+
         this.showToast('Email Save and Send successfully!');
         },
         error: (err) => {
