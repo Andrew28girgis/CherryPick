@@ -69,9 +69,12 @@
             *ngFor="let option of dropdowmOptions"
             (click)="selectOption(option)"
             [class.selected]="selectedOption === option"
+            [ngClass]="{'d-none d-lg-block': option.text === 'Table View' || option.text === 'Side List View'}"
           >
+          
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text">{{ option.text }}</span>
+         
           </div>
           <div class="">
             <button
