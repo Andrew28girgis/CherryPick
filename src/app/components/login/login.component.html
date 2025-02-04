@@ -28,8 +28,8 @@
               [(ngModel)]="adminLogin.Password"
             />
           </div>
-          <div>
-            <p class="forget">Forgot Password</p>
+          <div *ngIf="logining" class="alert alert-danger">
+            <p class="forget">loging successfuly</p>
           </div>
           <div class="text-center mt-3">
             <button class="btn login" type="submit">Login</button>

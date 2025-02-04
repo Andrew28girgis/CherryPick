@@ -18,6 +18,7 @@ export class LoginComponent {
   logoUrl: string = '';
   t: any;
   r: any;
+  logining:boolean = false;
   private afterLoginRedirect: string | null = null;
   
   constructor(
@@ -47,11 +48,14 @@ export class LoginComponent {
 
   onSubmit() {
    this.spinner.show(); 
+   setTimeout(() => {
+    this.logining = true;
     if (this.t) {
       this.adminLogin.contactToken = this.t;
     } 
     this.PlacesService.loginUser(this.adminLogin).subscribe(
       (data: any) => {
+        this.logining = false;
         localStorage.setItem('token', data.token);
         if(data.token){
           this.navigateToHome(); 
@@ -63,6 +67,9 @@ export class LoginComponent {
         this.spinner.hide();
       }
     );
+   }, 1000);
+   
+ 
   }
 
   private navigateToHome() {
