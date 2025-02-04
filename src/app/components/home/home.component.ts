@@ -82,7 +82,13 @@ export class HomeComponent implements OnInit {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
+  navbarOpen: any;
 
+  toggleNavbar() {
+    this.navbarOpen = !this.navbarOpen;
+  }
+
+  
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
