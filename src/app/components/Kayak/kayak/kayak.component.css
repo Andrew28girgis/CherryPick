@@ -1,3 +1,53 @@
+/* General Styles for Sliders */
+.slider-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.slider:focus {
+  box-shadow: 0 0 5px #2196f3;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 10px;
+  background: #2196f3;
+  border-radius: 5px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #4caf50;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider::-moz-range-track {
+  height: 10px;
+  background: #2196f3;
+  border-radius: 5px;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #4caf50;
+  border-radius: 50%;
+  cursor: pointer;
+}
 
 .chosen-places-container {
   display: inline-block; /* Make the container width fit its content */
@@ -303,7 +353,6 @@
 }
 .small-titlefilter {
   color: var(--Body-Heading-Color, #0c0d0e);
-
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
