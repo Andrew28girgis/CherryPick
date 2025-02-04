@@ -697,30 +697,6 @@ updateTenantCategories(): void {
 
   // console.log('Sorted Tenant Categories:', this.tenantCategories);
 }
-applyBuildingSizeFilter(): void {
-  if (!this.Filters?.Result || !Array.isArray(this.Filters.Result)) {
-    console.warn('Building size data is missing or invalid.');
-    this.filteredKayakResult = [];
-    return;
-  }
-
-  console.log(`Filtering with min: ${this.filterValues.minsize}, max: ${this.filterValues.maxsize}`);
-
-  // 🔹 Ensure `BuildingSize` exists before filtering
-  this.filteredKayakResult = this.Filters.Result.filter((item: any) => {
-    if (!item.BuildingSize || isNaN(item.BuildingSize)) {
-      console.warn(`Skipping item with missing or invalid BuildingSize:`, item);
-      return false;
-    }
-    return (
-      item.BuildingSize >= this.filterValues.minsize &&
-      item.BuildingSize <= this.filterValues.maxsize &&
-      item.Type === 'ShoppingCenter' // Ensure filtering only applies to shopping centers
-    );
-  });
-
-  console.log('Filtered Shopping Centers:', this.filteredKayakResult);
-}
 updateSliderValues(): void {
   // Update filterValues whenever the user changes the slider
   this.filterValues.minsize = this.selectedMin;
