@@ -82,7 +82,13 @@ export class HomeComponent implements OnInit {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
+  navbarOpen: any;
 
+  toggleNavbar() {
+    this.navbarOpen = !this.navbarOpen;
+  }
+
+  
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
@@ -107,7 +113,6 @@ export class HomeComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '2';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
@@ -125,6 +130,15 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
+    this.currentView = localStorage.getItem('currentView') || '3';
+
+    const selectedOption = this.dropdowmOptions.find(
+      (option: any) => option.status === parseInt(this.currentView)
+    );
+
+    if (selectedOption) {
+      this.selectedOption = selectedOption.status;
+    }
     // this.GetBuyboxRelations();
     // this.GetPolygons(this.BuyBoxId);
   }
@@ -637,13 +651,22 @@ export class HomeComponent implements OnInit {
     });
     if (modalObject) {
       if (modalObject.CenterAddress) {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}`;
       } else {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}`;
       }
     } else {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}/${this.BuyBoxName}`;
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}`;
     }
+    // if (modalObject) {
+    //   if (modalObject.CenterAddress) {
+    //     this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
+    //   } else {
+    //     this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
+    //   }
+    // } else {
+    //   this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}/${this.BuyBoxName}`;
+    // }
   }
   
   copyLink(link: string) {

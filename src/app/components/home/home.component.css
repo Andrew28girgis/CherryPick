@@ -331,6 +331,9 @@
 .nav-right > div {
   display: flex;
   align-items: center; 
+  justify-content: end;
+  margin-left: -20px;
+
 }
 
 img[alt="logo"] {
@@ -554,6 +557,9 @@ color: #7A8591  ;
 
 
 @media (max-width: 576px) {  
+  .titleResponsive{
+    font-size: 14px;
+  }
   .nav-right {
     .nav-right {
       display: flex; 
@@ -571,7 +577,7 @@ color: #7A8591  ;
     width:170px;
   }
   .custom-map {
-    height: 100%;
+    /* height: 100%; */
     
   }
 }
@@ -612,5 +618,51 @@ color: #7A8591  ;
 .nearset-category{
   font-size: 14px;
   margin-top: 10px;
+} 
+
+
+@media (max-width: 991px) {
+.card-content{
+  height: fit-content !important;
+
 }
 
+  .share-button {
+    padding: 8px 12px;
+    margin-left: 3px;
+
+  }
+  img[alt="logo"] {
+    margin-right: 137px; 
+  }
+  .nav-right-responsive{
+    flex-direction: column;
+  }
+
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    /* left: 0;
+    right: 0; */
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    width: 150%;
+
+  }
+
+  .icon-option {
+    margin: 10px 0;
+    padding: 2px;
+  }
+}
+
+
+
+
+@media (max-width: 991px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}

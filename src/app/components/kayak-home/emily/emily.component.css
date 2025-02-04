@@ -202,6 +202,8 @@ select option:checked {
   font-weight: 500;
   line-height: 30px;
   cursor: pointer;
+  align-items: center;
+  display: flex;
 }
 
 .textarea {
@@ -261,21 +263,29 @@ select option:checked {
   background: transparent !important;
 }
 
-.Emily__contant__button {
+.saved_email_button{
   background: #4D65B4;
   color: white;
-  width: 151px;
-  height: 48px;
+  width: max-content;
+  height: 40px;
   padding: 14px 24px;
-  gap: 8px;
   border-radius: 10px;
   border: 0;
   text-align: center;
   align-items: center;
   display: flex;
-  position: relative;
-  margin-top: 20px;
 }
+
+.Emily__contant__button {
+  background: #4D65B4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+
 .Emily__body__button {
   background: #001f3f;
   width: max-content;
@@ -408,7 +418,15 @@ background: #F2F3F4;
   line-height: 20px;
 }
 .Contact_head>span{
-  color: #747474;
+  color: black;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+.Contact_headD>span{
+  color: gray;
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
@@ -436,7 +454,7 @@ background: #F2F3F4;
   border: 1px solid #dddddd;
   padding: 8px;
   border-radius: 16px;
-  display: flex;
+  display: block;
   justify-content: space-between;
 }
 
@@ -461,6 +479,28 @@ background: #F2F3F4;
   font-weight: 500;
   line-height: normal;
   font-family: Montserrat;
+}
+textarea{
+  box-shadow: none;
+  outline: none;
+}
+.Button_Update{
+  background: #4D65B4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+.Button_Update_S{
+  background: green;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
 }
 
 .textarea_divT::-webkit-scrollbar {
@@ -548,5 +588,5 @@ background: #F2F3F4;
   border-radius: 10px;
   /* border: 1px solid rgba(220, 220, 220, 0.4); */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
-  max-height: fit-content;
+  /* min-height: 100%; */
 }

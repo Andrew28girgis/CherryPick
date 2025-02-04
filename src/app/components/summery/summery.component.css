@@ -52,7 +52,8 @@
 
 .searchBox {
   display: flex;
-  width: 40%;
+  width: 100%;
+  max-width: 500px;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -60,6 +61,7 @@
   border-radius: 50px;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
+  margin: 0 auto;
 }
 
 .searchButton {
@@ -99,10 +101,12 @@ button:active {
   gap: 16px;
   background-color: white;
   border-radius: 10px;
+  height: 100%;
 }
 
 .card__Kayak__img {
-  height: 100px;
+  height: auto;
+  min-height: 100px;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -124,7 +128,7 @@ button:active {
   font-style: normal;
   font-weight: 600;
   line-height: 20px;
-  height: 40px;
+  min-height: 40px;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -159,7 +163,8 @@ button:active {
 }
 
 .Kayack__button {
-  width: 120px;
+  width: auto;
+  min-width: 120px;
   border-radius: 10px;
   background: #001f3fc2;
   color: #fff;
@@ -171,11 +176,12 @@ button:active {
   line-height: 30px;
   border: 0;
   padding: 4px 16px;
+  white-space: nowrap;
 }
 
 .CherryPick__button {
-  width: 120px;
-
+  width: auto;
+  min-width: 120px;
   border-radius: 10px;
   background: #001f3f;
   color: #fff;
@@ -187,27 +193,106 @@ button:active {
   line-height: 30px;
   border: 0;
   padding: 4px 16px;
+  white-space: nowrap;
 }
 
 .row {
   display: flex;
+  flex-wrap: wrap;
 }
 
 #primaryColumn {
   flex: 0 0 auto;
-  transition: flex-basis 0.5s ease;
-  transition: width 0.5s ease;
+  transition: flex-basis 0.5s ease, width 0.5s ease;
 }
 
 #contentColumn {
   flex: 1 1 auto;
-  transition: flex-basis 0.5s ease;
-  transition: width 0.5s ease;
+  transition: flex-basis 0.5s ease, width 0.5s ease;
 }
 
-
-.logout_Style{
+.logout_Style {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
+
+.card__Kayak_buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.Kayack__button,
+.CherryPick__button {
+  width: auto;
+  min-width: 120px;
+  border-radius: 10px;
+  background: #001f3f;
+  color: #fff;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  border: 0;
+  padding: 4px 16px;
+  white-space: nowrap;
+}
+
+.Kayack__button {
+  background: #001f3fc2;
+}
+
+@media (max-width: 767px) {
+  .responsive{
+    margin-right: 20px;
+    margin-left: 32px;
+  }
+  .searchBox {
+    width: 100%;
+  }
+
+  .logout_Style {
+    justify-content: center;
+  }
+
+  .card__Kayak {
+    margin-bottom: 1rem;
+  }
+
+  .card__Kayak_buttons {
+    justify-content: space-between;
+  }
+
+  .Kayack__button,
+  .CherryPick__button {
+    font-size: 10px;
+    padding: 4px 8px;
+    min-width: 90px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .responsive{
+    margin-right: 20px;
+    margin-left: 32px;
+  }
+  .searchBox {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .searchBox {
+    width: 100%;
+  }
+}
+
+
+
+
+
+

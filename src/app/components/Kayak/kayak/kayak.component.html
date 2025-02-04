@@ -5,7 +5,6 @@
       
         <div class="row d-flex align-items-center justify-content-center">
           <div class="search-bar container">
-            <!-- State Dropdown -->
             <div class="col-md-4 d-flex align-items-start position-relative">
               <select
                 id="state-select"
@@ -34,9 +33,7 @@
 
             <div class="separator px-2">|</div>
 
-            <!-- City Dropdown and Search Button -->
-            <div class="col-md-3 d-flex align-items-start position-relative">
-              <!-- Select Dropdown with Custom Arrow -->
+            <div class="col-md-4 d-flex align-items-start position-relative">
               <select
                 id="city-select"
                 class="form-select border-0 shadow-none search-textt"
@@ -58,6 +55,7 @@
                 </option>
               </select>
             </div>
+            
 
         
             <div
@@ -66,45 +64,64 @@
               style="cursor: pointer"
               (click)="openFiltersModal(filtersModal)"
             >
-              <span class="showfilters">Show More Filters</span>
+            <div class="separator px-2">|</div>
+
+              <span class="showfilters ms-4">Show More Filters</span>
               <i class="fa-solid fa-chevron-down ms-2 chevronn"></i>
             </div>
-            <div
+            <!-- <div
               class="d-flex justify-content-start align-items-center ms-4"
               *ngIf="filterValues.statecode"
             >
               <button
-                class="btn btn-outline-primary bulk-button ms-2"
+                class="btn btn-outline-primary bulk-button"
                 (click)="toggleBulkMode()"
               >
                 {{ isBulkMode ? "Exit Bulk Bind" : "Bulk Bind" }}
               </button>
-            </div>
+            </div> -->
           </div>
-          <div class="row mt-3" *ngIf=" KayakResult && KayakResult?.Result?.length > 0 ">
-            
-            <div class="col-md-4 total" (click)="getTotalShopping()">
-              <h6>Total Shopping Centers</h6>
-              <p class="shopping-center-num">
-                {{ KayakResult?.Result?.length }}
-              </p>
+          <div class="row my-3" *ngIf="KayakResult && KayakResult?.Result?.length > 0">
+  
+            <div class="col-md-4">
+              <div class="card shopping-card" [ngClass]="{'selected': selectedCenter === 'total'}" (click)="selectShoppingCenter('total')">
+                <div class="card-body text-center">
+                  <h6>Total Shopping Centers</h6>
+                  <p class="shopping-center-num">
+                    {{ KayakResult?.Result?.length }}
+                  </p>
+                </div>
+              </div>
             </div>
-
-            <div class="col-md-4 total" (click)="getBindedShopping()">
-              <h6>Binded Shopping Centers</h6>
-              <p class="shopping-center-num">
-                {{ getBindedShoppingCentersNumber() }}
-              </p>
+          
+            <div class="col-md-4">
+              <div class="card shopping-card" [ngClass]="{'selected': selectedCenter === 'binded'}" (click)="selectShoppingCenter('binded')">
+                <div class="card-body text-center">
+                  <h6>Binded Shopping Centers</h6>
+                  <p class="shopping-center-num">
+                    {{ getBindedShoppingCentersNumber() }}
+                  </p>
+                </div>
+              </div>
             </div> 
-            <div class="col-md-4 total" (click)="getUnBindedShopping()">
-              <h6>UnBinded Shopping Centers</h6>
-              <p class="shopping-center-num">
-                {{
-                  KayakResult?.Result?.length - getBindedShoppingCentersNumber() < 0  ? '0' : KayakResult?.Result?.length - getBindedShoppingCentersNumber()
-                }}
-              </p>
+          
+            <div class="col-md-4">
+              <div class="card shopping-card" [ngClass]="{'selected': selectedCenter === 'unBinded'}" (click)="selectShoppingCenter('unBinded')">
+                <div class="card-body text-center">
+                  <h6>Not Binded Shopping Centers</h6>
+                  <p class="shopping-center-num">
+                    {{
+                      KayakResult?.Result?.length - getBindedShoppingCentersNumber() < 0  
+                      ? '0' 
+                      : KayakResult?.Result?.length - getBindedShoppingCentersNumber()
+                    }}
+                  </p>
+                </div>
+              </div>
             </div>
+          
           </div>
+          
           <ng-container *ngIf="filterValues.statecode && ShoppingCenters && ShoppingCenters">
              <div class="col-md-12" *ngFor="let result of ShoppingCenters; let i = index">
                   <div class="row align-items-center"> 
@@ -177,7 +194,7 @@
                               </div>
                             </ng-container>
                           </div>
-                          <div class="d-flex align-items-center text-nowrap">
+                          <div class="d-flex align-items-center text-nowrap" >
                             <span class="me-2 eye-text">Tenants</span>
                             <img
                               style="cursor: pointer"
