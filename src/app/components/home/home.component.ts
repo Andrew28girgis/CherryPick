@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '2';
+    this.currentView = localStorage.getItem('currentView') || '3';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
