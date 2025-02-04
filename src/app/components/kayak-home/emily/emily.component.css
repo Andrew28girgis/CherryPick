@@ -202,6 +202,8 @@ select option:checked {
   font-weight: 500;
   line-height: 30px;
   cursor: pointer;
+  align-items: center;
+  display: flex;
 }
 
 .textarea {
@@ -556,5 +558,5 @@ background: #F2F3F4;
   border-radius: 10px;
   /* border: 1px solid rgba(220, 220, 220, 0.4); */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
-  max-height: fit-content;
+  min-height: 100%;
 }
