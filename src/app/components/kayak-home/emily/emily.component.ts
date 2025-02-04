@@ -60,6 +60,8 @@ export class EmilyComponent implements OnInit {
   // generatedGetSavedTemplates: any[] = [];
   relationCategoriesNames: RelationNames[] = [];
   showClientProfile: boolean = false;
+  showMinBuildingSize: boolean = false;
+  showMaxBuildingSize: boolean = false;
   showMangerDescription: boolean = false;
   clientProfileDescription: string = '';
   MangerDescription: string = '';
@@ -114,7 +116,7 @@ export class EmilyComponent implements OnInit {
     // { id: 'Sharing', label: 'Sharing' },
     { id: 'kayak', label: 'kayak' },
   ];
-
+  buybox:any;
   selectedTab: string = 'Details';
 
   selectedEmailyID: string | null = null;
@@ -150,12 +152,15 @@ export class EmilyComponent implements OnInit {
     this.showMangerDescription = true;
     this.onOrganizationManagersChange();
     this.onMangerDescriptionChange();
-    }, 5000); 
+    this.GetBuyBoxInfoDetails();
+    this.onCheckboxdetailsChangeMin();
+    this.onCheckboxdetailsChangeMax();
+    }, 3000); 
 
     setTimeout(() => {
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();
-    }, 2000); 
+    }, 500); 
   }
   
   toggleSelections() {
@@ -263,7 +268,9 @@ export class EmilyComponent implements OnInit {
   
   
   OnCheckGetSavedTemplates(organizationid: number): void {
-    this.ShowSpinner = true;
+    // this.ShowSpinner = true;
+    this.spinner.show();
+
 
     const body: any = {
       Name: 'GetSavedTemplates',
@@ -288,13 +295,14 @@ export class EmilyComponent implements OnInit {
             const rawText = this.getFormattedTemplate(selectedTemplate.Template);
   
             this.emailBody += `\n\n${rawText}`;
-            this.ShowSpinner = false;
+            this.spinner.hide();
 
           } else {
             this.emailBody += `\n\nNo Template Available`;
           }
         } else {
           this.CheckGetSavedTemplates = [];
+          this.spinner.hide();
         }
       },
       error: (err) => {
@@ -755,6 +763,14 @@ export class EmilyComponent implements OnInit {
     } else {
       this.clientProfileDescription = ''; // Clear it if unchecked
     }
+  }
+  
+  onCheckboxdetailsChangeMin() {
+    this.showMinBuildingSize = true;
+    this.updateEmailBody();
+  }
+  onCheckboxdetailsChangeMax() {
+    this.showMaxBuildingSize = true;
     this.updateEmailBody();
   }
 
@@ -884,6 +900,27 @@ export class EmilyComponent implements OnInit {
     this.updateEmailBody();
   }
 
+  GetBuyBoxInfoDetails() {
+    const body: any = {
+     Name: 'GetWizardBuyBoxesById',
+     MainEntity: null,
+     Params: {
+       buyboxid: this.buyBoxId,
+     },
+     Json: null,
+   };
+   this.PlacesService.GenericAPI(body).subscribe({
+     next: (data:any) => {
+       this.buybox = data.json;
+       console.log(this.buybox);
+       
+     },
+     error: (err) => {
+       console.error('Error fetching buybox info:', err);
+      },
+   });
+ } 
+
   selectedContact:number[]=[];
 
   // textarea 'EmailBody'
@@ -923,6 +960,7 @@ export class EmilyComponent implements OnInit {
 
         }
       });      
+      emailContent += '\n'; // Add a spacing line after all activities
       
     }
 
@@ -971,10 +1009,24 @@ export class EmilyComponent implements OnInit {
         'New Tenant that wish to open on this shopping center: (' +
         this.BuyBoxOrganizationName +
         ')' +
-        '\n' +
-        this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
-          ?.BuyBoxOrganizationDescription +
-        '\n\n';
+        '\n\n' ;
+        //+this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
+        // ?.BuyBoxOrganizationDescription +
+        // '\n\n'
+      }
+
+    if(this.showMinBuildingSize){
+      emailContent +=
+        'The Required Min Unit Size for Lease (' +
+        this.buybox?.MinBuildingSize + ' Sqft)' +
+        '\n' 
+    }
+
+    if(this.showMaxBuildingSize){
+      emailContent +=
+        'The Required Max Unit Size for Lease (' +
+        this.buybox?.MaxBuildingSize + ' Sqft)' +
+        '\n\n' 
     }
 
     if (this.showRelationNames) {
