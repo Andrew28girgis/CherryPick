@@ -64,6 +64,7 @@
           [ngClass]="{ show: navbarOpen }"
           id="navbarNav"
         >
+        
           <div
             class="icon-option"
             *ngFor="let option of dropdowmOptions"
@@ -76,10 +77,10 @@
             <span class="icon-text">{{ option.text }}</span>
          
           </div>
-          <div class="">
+          <!-- <div class=""> -->
             <button
               *ngIf="ShareOrg[0]"
-              class="view-details-card me-0 mt-2 share-button"
+              class="view-details-card me-0 mt-2 share-button "
               (click)="openLink(ShareLink)"
             >
               <span class="share-text d-none d-lg-inline">Share</span>
@@ -102,7 +103,7 @@
                 <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
               </svg>
             </button>
-          </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
