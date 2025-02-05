@@ -113,44 +113,32 @@ export class EmilyComponent implements OnInit {
   contactidsJoin :any;
   selectedOrg!:Number;
   tabs = [
-    { id: 'Details', label: 'Details' },
-    // { id: 'Emily', label: 'Emily' },
-    { id: 'Properties', label: 'Properties' },
-    // { id: 'Relations', label: 'Relations' },
-    // { id: 'Locations', label: 'Locations' },
-    // { id: 'Sharing', label: 'Sharing' },
-    { id: 'kayak', label: 'kayak' },
+    { id: 'Details', label: 'Details' }, 
+    { id: 'Properties', label: 'Properties' }, 
   ];
   buybox:any;
-  selectedTab: string = 'Details';
-
+  selectedTab: string = 'Details'; 
   selectedEmailyID: string | null = null;
 
-  isChecked(emailyID: string): boolean {
-    return this.selectedEmailyID === emailyID;
-  }
-
+ 
   showSelections = true;
   constructor(
     private route: ActivatedRoute,
-        private spinner: NgxSpinnerService,
-    
+    private spinner: NgxSpinnerService, 
     private modalService: NgbModal,
     private PlacesService: PlacesService
-  ) {
-    console.log(`w`);
-    
+  ) {  
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
-
-      this.GetBuyBoxInfo();
-      this.GetRetailRelationCategories();
-      this.GetPrompts();
-      this.GetBuyBoxInfoDetails();
+      this.buyBoxId = +params.get('buyboxid')!;  
     });
   }
 
   ngOnInit() {
+    this.GetBuyBoxInfo();
+    this.GetRetailRelationCategories();
+    this.GetPrompts();
+    this.GetBuyBoxInfoDetails();
+
    setTimeout(() => {
     this.showClientProfile=true;
     this.showRelationNames=true;
@@ -173,35 +161,13 @@ export class EmilyComponent implements OnInit {
     }, 500); 
   }
   
+  isChecked(emailyID: string): boolean {
+    return this.selectedEmailyID === emailyID;
+  }
+
   toggleSelections() {
     this.showSelections = !this.showSelections;
-  }
-
-  // onCheckboxChangeTemplates(emailyID: string): void {
-  //   if (this.selectedEmailyID === emailyID) {
-  //     this.selectedEmailyID = null;
-  //     this.emailBody = '';
-  //   } else {
-  //     this.selectedEmailyID = emailyID;
-
-  //     const selectedTemplate = this.generatedGetSavedTemplates.find(
-  //       (template) => template.ID === Number(emailyID)
-  //     );
-
-  //     if (selectedTemplate?.BuyboxOrgEmailTemplates?.[0]?.Template) {
-  //       const rawText = selectedTemplate.BuyboxOrgEmailTemplates[0].Template;
-  //       this.emailBody = this.getFormattedTemplate(rawText);
-  //     } else {
-  //       this.emailBody = 'No Template Available';
-  //     }
-  //   }
-
-  //   console.log(emailyID, this.emailBody);
-  // }
-
-  getFilteredTabs() {
-    return this.tabs.filter(tab => tab.id !== 'kayak');
-  }
+  } 
 
   handleKayakClick() {
     this.selectTab('Shopping Centers');
