@@ -46,7 +46,7 @@
 </div>
 
 <div class="map-view">
-  <div class="row" style="background-color: #f2f3f4">
+  <div class="row" style="background-color: #fff">
     <ng-container *ngIf="currentView == 4">
       <div class="container p-2">
         <div style="margin-top: 10px" *ngIf="
@@ -340,11 +340,12 @@
         <p style="font-weight: 500">No data Shopping Center</p>
       </div>
     </ng-container>
-    <div style="background-color: #f4f4f4" [ngClass]="{
+    <div style="background-color: #fff" [ngClass]="{
         'd-none': currentView == 1 || currentView == 4,
         'col-md-8 col-sm-12 cards ': currentView == 2,
         'col-12': currentView == 3
-      }">
+      }"
+      class="responsiveMain">
       <div class="row mt-2">
         <ng-container *ngIf="currentView != 2">
           <ng-container *ngFor="let shopping of shoppingCenters">
@@ -352,7 +353,7 @@
                 'col-md-4 col-sm-4 col-12': currentView == 3,
                 'col-12 col-sm-6 cards': currentView == 2
               }">
-              <div style="background: white; min-height: 100%; border-radius: 20px;width: 100%;">
+              <div style="background: white; min-height: 100%; border-radius: 20px;width: 100%;" class="cardResponsive">
                 <a
                   [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]">
                   <div class="main-img">
@@ -361,7 +362,7 @@
                 </a>
                 <div class="content-wrap card-content" style="position: relative">
                   <div>
-                    <div style="height: 220px; overflow: auto">
+                    <div style=" overflow: auto">
                       <div class="d-flex justify-content-between">
                         <a style="text-decoration: none"
                           [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,BuyBoxId,OrgId]">
