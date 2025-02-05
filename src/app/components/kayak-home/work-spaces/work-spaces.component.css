@@ -1,14 +1,15 @@
-.modal-body{
+.modal-body {
   border: 1px solid #001f3f2b;
   border-radius: 10px;
 }
+
 .BuyBoxWorkSpaces_name_div {
   display: flex;
   align-items: center;
 }
 
 .BuyBoxWorkSpaces_name {
-  color: #16181D;
+  color: #16181d;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -38,14 +39,14 @@ label {
   text-align: center;
 }
 
-.form-control{
-    box-shadow: none;
-    outline: none;
+.form-control {
+  box-shadow: none;
+  outline: none;
 }
 
-thead>tr>th:nth-child(2),
-thead>tr>th:nth-child(3),
-thead>tr>th:nth-child(4) {
+thead > tr > th:nth-child(2),
+thead > tr > th:nth-child(3),
+thead > tr > th:nth-child(4) {
   width: 20%;
   color: #3d3d3d;
   font-size: 14px;
@@ -55,9 +56,9 @@ thead>tr>th:nth-child(4) {
   font-family: Montserrat;
 }
 
-tbody>tr>td:nth-child(2),
-tbody>tr>td:nth-child(3),
-tbody>tr>td:nth-child(4) {
+tbody > tr > td:nth-child(2),
+tbody > tr > td:nth-child(3),
+tbody > tr > td:nth-child(4) {
   width: 20%;
   color: #707070;
   font-size: 14px;
@@ -67,7 +68,7 @@ tbody>tr>td:nth-child(4) {
   font-family: Montserrat;
 }
 
-thead>tr>th:nth-child(1) {
+thead > tr > th:nth-child(1) {
   width: 40%;
   color: #3d3d3d;
   font-size: 14px;
@@ -77,7 +78,7 @@ thead>tr>th:nth-child(1) {
   font-family: Montserrat;
 }
 
-tbody>tr>td:nth-child(1) {
+tbody > tr > td:nth-child(1) {
   width: 40%;
   color: #707070;
   font-size: 14px;
@@ -87,23 +88,89 @@ tbody>tr>td:nth-child(1) {
   font-family: Montserrat;
 }
 
-
-
-.btn{
-background: #001f3f;
-color: white;
-padding-inline: 2rem;
-border: 0;
+.btn {
+  background: #001f3f;
+  color: white;
+  padding-inline: 2rem;
+  border: 0;
 }
 
-.btn_trash{
-    background: transparent;
-    color: rgb(224, 0, 0);
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgb(224, 0, 0);
-    padding-inline: 0;
+.btn_trash {
+  background: transparent;
+  color: rgb(224, 0, 0);
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgb(224, 0, 0);
+  padding-inline: 0;
 }
-.btn_trash>i{
-    display: block;
+
+.btn_trash > i {
+  display: block;
 }
+
+/* State and City cards specific styling */
+.locations-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  padding: 15px;
+}
+
+.locations-card .location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.locations-card .location-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Mobile specific styles */
+@media (max-width: 768px) {
+  .locations-card {
+    width: 100%;
+  }
+
+  .location-content {
+    align-items: stretch;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .locations-list .locations-card {
+    padding: 10px;
+  }
+
+  .locations-list .location-content {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .location-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .location-state {
+    font-weight: 600;
+    color: #3d3d3d;
+  }
+
+  .location-city {
+    color: #707070;
+  }
+
+  .btn_trash {
+    margin-left: auto;
+  }
+}
+

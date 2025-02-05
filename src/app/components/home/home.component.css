@@ -420,6 +420,8 @@ img[alt="logo"] {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  margin-right: 10px;
+
 }
 
 .icon-option:hover {
