@@ -1050,6 +1050,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
+  
+    
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
     };
