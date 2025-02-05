@@ -662,52 +662,77 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.modalService.open(modalTemplate, {
       ariaLabelledBy: 'modal-basic-title',
     });
+  
   }
 
+  deleteShCenter(){
+    this.spinner.show();
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromBuyBox',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+        ShoppingCenterId: this.shoppingCenterIdToDelete, 
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.modalService.dismissAll()
+
+        this.getMarketSurveyShoppingCenter();
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+  getMarketSurveyShoppingCenter() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCenters',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => this.handleSuccessResponse(data),
+     });
+  }
+  
+  private handleSuccessResponse(data: any) {
+    this.shoppingCenters = data.json;
+    this.stateService.setShoppingCenters(data.json);
+    
+    this.getBuyBoxPlaces(this.BuyBoxId);
+    this.showbackIds = [];
+    this.spinner.hide();
+  }
+  
+ 
+  
   // Confirm deletion of Shopping Center
   confirmDeleteShoppingCenter(modal: NgbModalRef) {
+    console.log(this.shoppingCenterIdToDelete);
+    
     if (this.shoppingCenterIdToDelete !== null) {
       this.DeleteShoppingCenter(
         this.shoppingCenterIdToDelete
       ).subscribe(
         (res) => {
-          // console.log(
-          //   'DeleteShoppingCenter',
-          //   JSON.stringify(res.json)
-          // );
+          this.getMarketSurveyShoppingCenter();
+
           this.BuyBoxPlacesAndShoppingCenter =
             this.BuyBoxPlacesAndShoppingCenter.filter(
               (center) => center.id !== this.shoppingCenterIdToDelete
             );
           modal.close('Delete click');
           this.shoppingCenterIdToDelete = null;
-          this.spinner.show();
-          const body: any = {
-            Name: 'GetMarketSurveyShoppingCenters',
-            Params: {
-              BuyBoxId: this.BuyBoxId,
-            },
-          };
-
-          this.PlacesService.GenericAPI(body).subscribe({
-            next: (data) => {
-              this.shoppingCenters = data.json;
-              this.stateService.setShoppingCenters(data.json);
-              this.spinner.hide();
-              //this.getStandAlonePlaces(this.BuyBoxId);
-              this.getBuyBoxPlaces(this.BuyBoxId);
-              this.showbackIds = [];
-            },
-            error: (error) => console.error('Error fetching APIs:', error),
-          });
-        },
-        (error) => {
-          console.error('Error deleting shopping center:', error);
-          modal.dismiss('Error');
-        }
+          }
       );
     }
   }
+
+
 
   // Delete Shopping Center Function
   DeleteShoppingCenter(ShoppingCenterId: number) {
