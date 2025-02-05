@@ -257,6 +257,7 @@ export class EmilyComponent implements OnInit {
       MainEntity: null,
       Params: {
         shoppingcenterid: this.selectedShoppingCenterId,
+        buyboxid:this.buyBoxId,
       },
       Json: null,
     };
