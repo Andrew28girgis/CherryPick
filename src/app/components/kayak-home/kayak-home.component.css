@@ -1,4 +1,4 @@
-.Sidbar-Primary {
+/* .Sidbar-Primary {
   background-color: #001f3f;
   color: #fff;
   height: 100vh;
@@ -24,7 +24,7 @@
   box-shadow: 1px 0px 3px 0px rgba(0, 0, 0, 0.31);
   transition: opacity 0.5s ease, transform 0.5s ease; 
   user-select: none;
-}
+} */
 
 #primaryColumn {
   transition: width 0.5s ease;
@@ -97,3 +97,197 @@
   padding-inline: 5px;
   font-weight: bold;
 }
+
+#primaryColumn {
+  flex: 0 0 auto;
+  transition: flex-basis 0.5s ease, width 0.5s ease;
+}
+
+
+
+.container-fluid{
+  margin-left: 11px;
+
+}
+
+
+
+/* Table to Cards transformation for mobile */
+@media (max-width: 768px) {
+  /* Hide table headers on mobile */
+  .table thead {
+    display: none;
+  }
+
+  /* Convert table rows to cards */
+  .table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+  }
+
+  /* Convert table cells to flex items */
+  .table tbody td {
+    display: flex;
+    padding: 8px 0;
+    border: none;
+    align-items: center;
+  }
+
+  /* Add labels for each cell */
+  .table tbody td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    width: 40%;
+    min-width: 120px;
+    color: #001f3f;
+  }
+
+  /* Style for the cell content */
+  .table tbody td span {
+    flex: 1;
+  }
+
+  /* Actions column styling */
+  .table tbody td.actions {
+    justify-content: flex-end;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+  }
+
+  /* Category styling in card view */
+  .table tbody td .category-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    background: #f0f0f0;
+    font-size: 12px;
+  }
+
+  /* State and City cards specific styling */
+  .locations-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 15px;
+  }
+
+  .locations-card .location-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .locations-card .location-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Search and filter section adjustments */
+  .search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .search-inputs {
+    display: grid;
+    gap: 10px;
+  }
+
+  .search-inputs select,
+  .search-inputs input {
+    width: 100%;
+    height: 44px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0 12px;
+  }
+
+  /* Submit button styling */
+  .submit-btn {
+    width: 100%;
+    height: 44px;
+    background: #001f3f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  /* Relations section card styling */
+  .relations-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 15px;
+  }
+
+  .relations-card .relation-header {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .relations-card .relation-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .relations-card .category {
+    color: #707791;
+    font-size: 0.9em;
+  }
+
+  /* Action buttons in cards */
+  .action-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    border: none;
+    color: #001f3f;
+  }
+
+  /* Specifications section card styling */
+  .specs-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    padding: 15px;
+  }
+
+  .specs-card .specs-header {
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .specs-card .specs-content {
+    display: grid;
+    gap: 10px;
+  }
+
+  .specs-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .specs-item:last-child {
+    border-bottom: none;
+  }
+} 
