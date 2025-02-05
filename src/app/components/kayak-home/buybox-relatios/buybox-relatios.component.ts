@@ -4,6 +4,7 @@ import { ApiBody, General } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
+import * as bootstrap from 'bootstrap';
 import { BuyBoxModel } from 'src/models/BuyBoxModel';
 import { Organization, RetailRelation, StateCity } from 'src/models/buyboxShoppingCenter';
 import { Subject } from 'rxjs';
@@ -52,6 +53,8 @@ export class BuyboxRelatiosComponent {
 
     this.GetBuyBoxInfo();
     this.GetRetailRelations();
+    
+  
   }
 
   GetBuyBoxInfo() {
