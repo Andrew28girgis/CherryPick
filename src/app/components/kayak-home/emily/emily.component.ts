@@ -131,15 +131,9 @@ export class EmilyComponent implements OnInit {
       this.onOrganizationManagersChange();
       this.onMangerDescriptionChange();
       this.onCheckboxdetailsChangeMin(true, true);
-      // this.onCheckboxdetailsChangeMax(true);
-      // this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-    }, 3000);
-
-    setTimeout(() => {
       this.selectManagerContactsByDefault();
-      this.selectManagerTenantsByDefault();
-      this.selectedCenter();
-    }, 500);
+      this.selectManagerTenantsByDefault();  
+    }, 3000); 
   }
 
   toggleSelections() {
@@ -148,18 +142,6 @@ export class EmilyComponent implements OnInit {
 
   selectTab(tabId: string): void {
     this.selectedTab = tabId;
-  }
-
-  getFormattedTemplate(text: string): string {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = text;
-    const links = tempDiv.querySelectorAll('a');
-    links.forEach((link) => {
-      const href = link.getAttribute('href');
-      const linkText = link.textContent;
-      link.replaceWith(`${linkText} [${href}]`);
-    });
-    return tempDiv.textContent || tempDiv.innerText || '';
   }
 
   trackByRelation(index: number, relation: any): number {
@@ -180,10 +162,7 @@ export class EmilyComponent implements OnInit {
     this.updateEmailBody();
   }
 
-  selectedCenter() {
-    this.getManagerContacts(this.selectedShoppingCenter).forEach((CenterName) => {});
-  }
-
+ 
   selectManagerTenantsByDefault() {
     this.managerOrganizations.forEach((manager: any) => {
       manager.ManagerOrganizationContacts.forEach((contact: any) => {
@@ -192,16 +171,6 @@ export class EmilyComponent implements OnInit {
     });
     this.onAssistantCheckboxChange(this.managerOrganizations);
     this.onContactCheckboxChange();
-  }
-
-  selectContact(index: number, organizationId: number) {
-    this.selectedIndex = index;
-    this.isEmailSectionVisible = !this.isEmailSectionVisible;
-    if (this.isEmailSectionVisible) {
-      this.OnCheckGetSavedTemplates(organizationId);
-    } else {
-      this.CheckGetSavedTemplates = [];
-    }
   }
 
   OnCheckGetSavedTemplates(organizationid: number): void {
@@ -217,27 +186,9 @@ export class EmilyComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if (data?.json && Array.isArray(data.json)) {
-          this.CheckGetSavedTemplates = data.json;
-          const selectedTemplate = this.CheckGetSavedTemplates.find(
-            (Template) => Template.OrganizationId === Number(organizationid)
-          );
-          if (selectedTemplate?.Template) {
-            const rawText = this.getFormattedTemplate(selectedTemplate.Template);
-            this.emailBody += `\n\n${rawText}`;
-            this.spinner.hide();
-          } else {
-            this.emailBody += `\n\nNo Template Available`;
-          }
-        } else {
-          this.CheckGetSavedTemplates = [];
-          this.spinner.hide();
-        }
-      },
-      error: (err) => {
-        console.error('API error:', err);
-        this.CheckGetSavedTemplates = [];
-      },
+        this.CheckGetSavedTemplates = data.json; 
+        this.spinner.hide();
+      }
     });
   }
 
@@ -246,7 +197,6 @@ export class EmilyComponent implements OnInit {
     this.emailBodyResponse = '';
     this.selectedTab = event.tabId;
     this.shoppingCenterOrganization = event.shoppingCenterId; 
-    
     this.GetBuyBoxOrganizationsForEmail();
     this.getShoppingCenters(this.buyBoxId!);
   }
@@ -266,7 +216,6 @@ export class EmilyComponent implements OnInit {
       next: (data) => {
         if (data?.json && Array.isArray(data.json)) {
           this.BuyBoxOrganizationsForEmail = data.json;
-          console.log("All", this.BuyBoxOrganizationsForEmail);
 
           this.BuyBoxOrganizationsForEmail[0].Contact.forEach((c: any) => {
             c.selected = true;
@@ -274,7 +223,7 @@ export class EmilyComponent implements OnInit {
               ShoppingCenter.selected = true;
             });
           })
- 
+          this.updateEmailBody();
 
           this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         } else {
@@ -970,9 +919,6 @@ export class EmilyComponent implements OnInit {
         this.BuyBoxOrganizationName +
         ')' +
         '\n\n';
-      //+this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
-      // ?.BuyBoxOrganizationDescription +
-      // '\n\n'
     }
 
     if (this.showMinBuildingSize) {
@@ -1060,12 +1006,16 @@ export class EmilyComponent implements OnInit {
         });
       });
     }
-
+    console.log(`ssw`);
+    
+    console.log(this.emailBody);
+    
     this.emailBody = emailContent; // Update the email body
   } 
 
   getGenericEmail() {
     this.spinner.show();  
+    this.updateEmailBody();
     if (!this.selectedPromptId || !this.emailBody) {
       alert('Please select a prompt and provide an email body.');
       return;
@@ -1079,13 +1029,7 @@ export class EmilyComponent implements OnInit {
         this.emailBodyResponse = data?.emailBody || 'No body received';
         this.emailId = data?.id || 'No body received';
         this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching generic email:', err);
-        this.emailSubject = 'Error fetching email subject';
-        this.emailBodyResponse = 'Error fetching email body';
-        this.spinner.hide();
-      },
+      }
     });
   }
 

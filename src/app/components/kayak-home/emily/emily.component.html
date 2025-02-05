@@ -358,6 +358,7 @@
       </ng-template>
     </section>
   </div>
+  
   <div class="main-section">
     <section *ngIf="selectedTab === 'Properties'" class="row d-flex m-0 p-2">
       <app-shopping-center-table (tabChange)="handleTabChange($event)" (bindClicked)="selectTab('kayak')" />
