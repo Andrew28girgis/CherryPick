@@ -78,7 +78,7 @@ export class KayakComponent implements OnInit {
   deleteshoppingcenterID!: number;
   shoppingCenters: Center[] = [];
   minBuildingSize: number = 0;
-  maxBuildingSize: number = 100000; // Large default to avoid issues
+  maxBuildingSize: number = 100000;
   selectedMin: number = 0;
   selectedMax: number = 100000;
   selectedCenter: string = '';
@@ -168,13 +168,14 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.KayakResult = data.json[0];
-        this.ShoppingCenters = this.KayakResult.Result;
         this.Ids = this.KayakResult.Ids; 
+        console.log(this.Ids);
+        this.ShoppingCenters = this.KayakResult.Result;
+        console.log('shop',this.ShoppingCenters);
+        
         if(!this.Filters){
           this.GetFilters(); 
-
         }
-        
         this.getBindedShoppingCentersNumber();
         this.spinner.hide();
        }, 
@@ -207,7 +208,7 @@ export class KayakComponent implements OnInit {
     )   
   }
   GetFilters(): void {
-
+    
     if (!this.Ids) {
       this.resetFilters();
       return;
@@ -225,6 +226,8 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         if (data && data.json && data.json.length > 0) {
+          this.Ids = this.KayakResult.Ids; 
+
           this.Filters = data.json[0];
           console.log('Filters loaded:', this.Filters);
 
@@ -234,9 +237,6 @@ export class KayakComponent implements OnInit {
             this.minBuildingSize = minMax.MinSize;
             this.maxBuildingSize = minMax.MaxSize;
 
-            // Set min/max in filterValues for dynamic filtering
-            this.filterValues.minsize = this.minBuildingSize;
-            this.filterValues.maxsize = this.maxBuildingSize;
 
             // Set slider values initially
             this.selectedMin = this.minBuildingSize;
@@ -754,7 +754,6 @@ updateSliderValues(): void {
   }
   onCityChange(selectedValue: string): void {
     this.filterValues!.city = selectedValue; // Update the selected city
-     this.GetFilters(); // Fetch new filters for the city
     this.getResult(); // Fetch results for the selected city
     this.GetFilters();
   }
