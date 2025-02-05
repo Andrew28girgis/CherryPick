@@ -859,7 +859,7 @@ export class EmilyComponent implements OnInit {
       this.selectedContact = [];
       emailContent += 'Representative Organization Contacts that will receive this email:\n';
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
-        if (contact.selected) {
+        if (contact.selected && contact?.Centers?.length > 0) {
           emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
           this.selectedContact.push(contact.id);
         }
