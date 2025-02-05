@@ -113,43 +113,32 @@ export class EmilyComponent implements OnInit {
   contactidsJoin :any;
   selectedOrg!:Number;
   tabs = [
-    { id: 'Details', label: 'Details' },
-    // { id: 'Emily', label: 'Emily' },
-    { id: 'Properties', label: 'Properties' },
-    // { id: 'Relations', label: 'Relations' },
-    // { id: 'Locations', label: 'Locations' },
-    // { id: 'Sharing', label: 'Sharing' },
-    { id: 'kayak', label: 'kayak' },
+    { id: 'Details', label: 'Details' }, 
+    { id: 'Properties', label: 'Properties' }, 
   ];
   buybox:any;
-  selectedTab: string = 'Details';
-
+  selectedTab: string = 'Details'; 
   selectedEmailyID: string | null = null;
 
-  isChecked(emailyID: string): boolean {
-    return this.selectedEmailyID === emailyID;
-  }
-
+ 
   showSelections = true;
   constructor(
     private route: ActivatedRoute,
-        private spinner: NgxSpinnerService,
-    
+    private spinner: NgxSpinnerService, 
     private modalService: NgbModal,
     private PlacesService: PlacesService
-  ) {
+  ) {  
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
-
-      this.GetBuyBoxInfo();
-      this.GetRetailRelationCategories();
-      this.GetPrompts();
-      this.GetBuyBoxInfoDetails();
-       // this.GetSavedTemplates();
+      this.buyBoxId = +params.get('buyboxid')!;  
     });
   }
 
   ngOnInit() {
+    this.GetBuyBoxInfo();
+    this.GetRetailRelationCategories();
+    this.GetPrompts();
+    this.GetBuyBoxInfoDetails();
+
    setTimeout(() => {
     this.showClientProfile=true;
     this.showRelationNames=true;
@@ -172,35 +161,13 @@ export class EmilyComponent implements OnInit {
     }, 500); 
   }
   
+  isChecked(emailyID: string): boolean {
+    return this.selectedEmailyID === emailyID;
+  }
+
   toggleSelections() {
     this.showSelections = !this.showSelections;
-  }
-
-  // onCheckboxChangeTemplates(emailyID: string): void {
-  //   if (this.selectedEmailyID === emailyID) {
-  //     this.selectedEmailyID = null;
-  //     this.emailBody = '';
-  //   } else {
-  //     this.selectedEmailyID = emailyID;
-
-  //     const selectedTemplate = this.generatedGetSavedTemplates.find(
-  //       (template) => template.ID === Number(emailyID)
-  //     );
-
-  //     if (selectedTemplate?.BuyboxOrgEmailTemplates?.[0]?.Template) {
-  //       const rawText = selectedTemplate.BuyboxOrgEmailTemplates[0].Template;
-  //       this.emailBody = this.getFormattedTemplate(rawText);
-  //     } else {
-  //       this.emailBody = 'No Template Available';
-  //     }
-  //   }
-
-  //   console.log(emailyID, this.emailBody);
-  // }
-
-  getFilteredTabs() {
-    return this.tabs.filter(tab => tab.id !== 'kayak');
-  }
+  } 
 
   handleKayakClick() {
     this.selectTab('Shopping Centers');
@@ -393,8 +360,8 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.generated = data.json || [];
-        console.log('ALL', this.generated);
 
+        
         this.ManagerOrganizationName =
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
@@ -520,10 +487,6 @@ export class EmilyComponent implements OnInit {
         contactId = c.ContactId ;
       }
     })
-    console.log(`a`);
-    
-    console.log(contactId);
-    
     let contacts =  this.selectedContact.join(`,`)
     const body: any = {
       Name: 'SaveTemplate',
@@ -561,6 +524,8 @@ export class EmilyComponent implements OnInit {
       };
       this.PlacesService.GenericAPI(body).subscribe({
         next: (response: any) => {
+          this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+
         this.showToast('Email Save and Send successfully!');
         },
         error: (err) => {
@@ -833,11 +798,7 @@ export class EmilyComponent implements OnInit {
     const center = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
     ) 
-    console.log(`rr`);
-    
-    console.log(center?.ShoppingCenterManager?.[0].ShoppingCenterManagerContact);
-    
-    
+ 
     return (
       center?.ShoppingCenterManager?.[0]?.ShoppingCenterManagerContact || []
     );
@@ -900,7 +861,7 @@ export class EmilyComponent implements OnInit {
   }
   
   onCheckboxdetailsChangeMin(showMinBuildingSize :any,showMaxBuildingSize:any) {
-    if(showMinBuildingSize.target.showMinBuildingSize && showMaxBuildingSize.target.showMinBuildingSize ){
+    if(showMinBuildingSize.target?.showMinBuildingSize && showMaxBuildingSize.target?.showMinBuildingSize ){
       this.updateEmailBody();
     }
     else  {
@@ -1088,14 +1049,12 @@ export class EmilyComponent implements OnInit {
     // }
     // Add Manager Contacts if selected
    
-    const selectedContacts = this.BuyBoxOrganizationsForEmail[0].Contact ;
+    const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact ;
 
-    console.log(`88`);
-    console.log(selectedContacts);
-    
+ 
     
 
-    if (selectedContacts.length > 0) {
+    if (selectedContacts?.length > 0) {
       this.selectedContact = [];
       emailContent += 'Representative Organization Contacts that will receive this email:\n';
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
@@ -1190,7 +1149,7 @@ export class EmilyComponent implements OnInit {
       // Iterate through selected relations
       this.relationCategoriesNames.forEach((selectedRelation) => {
         if (selectedRelation.selected) {
-          this.generated[0]?.Releations.forEach((relation) => {
+          this.generated[0]?.Releations?.forEach((relation) => {
             if (
               relation.RetailRelationCategoryId === selectedRelation.id &&
               relation.relationSelect &&

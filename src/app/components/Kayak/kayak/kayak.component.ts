@@ -293,44 +293,6 @@ export class KayakComponent implements OnInit {
     this.isBulkMode = !this.isBulkMode;
   }
 
-  bindShoppingCenter(): void {
-    if (!this.SelectedShoppingCenterIDs.length) {
-      console.warn(' No shopping centers selected! Skipping API call.');
-      return;
-    }
-
-    this.spinner.show();
-    this.loading = true;
-
-    // console.log(' Binding Shopping Centers and Places...');
-    // console.log(' Shopping Center IDs:', this.SelectedShoppingCenterIDs);
-    // console.log(' Place IDs:', this.SelectedPlacesIDs);
-
-    const body = {
-      Name: 'BindShoppingCenters',
-      Params: {
-        buyboxid: this.selectedbuyBox,
-        state: this.filterValues.statecode || '',
-        city: this.selectedCity || '',
-        shoppingcenterIds: this.SelectedShoppingCenterIDs.join(','),
-        placeIds: this.SelectedPlacesIDs.join(','),
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (res) => {
-        // console.log(' API Response:', res?.json);
-        this.spinner.hide();
-        this.loading = false;
-        this.getShoppingCenters();
-      },
-      error: (err) => {
-        console.error(' Error in BindShoppingCenters:', err);
-        this.spinner.hide();
-        this.loading = false;
-      },
-    });
-  }
 
   toggleShoppingCenterBind(
     shoppingCenterId: number,
@@ -354,21 +316,61 @@ export class KayakComponent implements OnInit {
         this.UnBindShoppingCenter();
       }
     } else {
-      // If `isChecked` is not provided, handle normal button toggle behavior
       if (isAlreadyBound) {
         this.SelectedShoppingCenterIDs = this.SelectedShoppingCenterIDs.filter(
           (id) => id !== shoppingCenterId
         );
         this.UnBindShoppingCenter();
       } else {
+        console.log(`hello`);
+        
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
-        this.bindShoppingCenter();
+        this.bindShoppingCenter(shoppingCenterId);
       }
     }
 
     // console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
   }
 
+  
+  bindShoppingCenter(id?:number): void {
+    if (!this.SelectedShoppingCenterIDs.length) {
+      console.warn(' No shopping centers selected! Skipping API call.');
+      return;
+    }
+
+    this.spinner.show();
+    this.loading = true;
+
+    // console.log(' Binding Shopping Centers and Places...');
+    // console.log(' Shopping Center IDs:', this.SelectedShoppingCenterIDs);
+    // console.log(' Place IDs:', this.SelectedPlacesIDs);
+
+    const body = {
+      Name: 'BindShoppingCenters',
+      Params: {
+        buyboxid: this.selectedbuyBox,
+        state: this.filterValues.statecode || '',
+        city: this.selectedCity || '',
+        shoppingcenterId: id,
+        placeIds: this.SelectedPlacesIDs.join(','),
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res) => {
+        // console.log(' API Response:', res?.json);
+        this.spinner.hide();
+        this.loading = false;
+        this.getShoppingCenters();
+      },
+      error: (err) => {
+        console.error(' Error in BindShoppingCenters:', err);
+        this.spinner.hide();
+        this.loading = false;
+      },
+    });
+  }
   UnBindShoppingCenter() {
     this.spinner.show();
     const body: any = {
