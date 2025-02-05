@@ -1014,7 +1014,7 @@ export class EmilyComponent implements OnInit {
     this.spinner.show();  
     this.updateEmailBody();
     if (!this.selectedPromptId || !this.emailBody) {
-      alert('Please select a prompt and provide an email body.');
+      alert('Please select a prompt and provide an email body');
       return;
     }
 
