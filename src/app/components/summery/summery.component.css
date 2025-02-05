@@ -259,8 +259,9 @@ button:active {
     justify-content: center;
   }
   .ResContainer {
-    width: fit-content;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .card__Kayak {
     margin-bottom: 1rem;
@@ -280,7 +281,9 @@ button:active {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
- 
+  .ResContainer {
+    align-items: center;
+  }
   .responsive {
     margin-right: 20px;
     margin-left: 32px;
@@ -291,6 +294,7 @@ button:active {
 }
 
 @media (min-width: 992px) {
+  
   .searchBox {
     width: 100%;
   }
