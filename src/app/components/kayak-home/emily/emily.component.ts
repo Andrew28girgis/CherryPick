@@ -834,6 +834,7 @@ export class EmilyComponent implements OnInit {
   onContactCheckboxChange() {
     this.updateEmailBody();
   }
+  
   onOrganizationManagersChange() {
     if (this.showOrganizationManagers) {
       this.loadManagerOrganizations();
