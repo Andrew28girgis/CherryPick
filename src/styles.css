@@ -699,11 +699,11 @@ body{
     padding: 8px;
   }
 
-  /* Stack content vertically for smaller screens */
-  .d-flex {
-    flex-direction: column; /* Stack items in a column on small screens */
-    align-items: flex-start; /* Align items to the left */
-  }
+ 
+  /* .d-flex {
+    flex-direction: column; 
+    align-items: flex-start; 
+  } */
 
   /* Make sure images inside table cells do not stretch */
   .procpect-table-body td img {
