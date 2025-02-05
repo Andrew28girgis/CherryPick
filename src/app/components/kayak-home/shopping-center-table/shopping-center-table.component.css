@@ -883,3 +883,12 @@ a {
   font-size: 14px;
   margin-top: 10px;
 }
+
+
+
+
+@media (max-width: 991px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}

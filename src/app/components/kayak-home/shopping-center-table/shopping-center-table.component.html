@@ -3,12 +3,20 @@
 <div class="row mb-3 container_border">
   <div class="col-6 col-md-6 pt-2 d-flex justify-content-strat align-items-cente">
     <div class="custom-icon-container">
-      <div class="icon-option" *ngFor="let option of dropdowmOptions" (click)="selectOption(option)"
-        [class.selected]="selectedOption === option.status">
+      <!-- <div class="icon-option" *ngFor="let option of dropdowmOptions" (click)="selectOption(option)"
+        [class.selected]="selectedOption === option.status"> -->
+        <div
+            class="icon-option"
+            *ngFor="let option of dropdowmOptions"
+            (click)="selectOption(option)"
+            [class.selected]="selectedOption === option.status || selectedOption === option"
+            [ngClass]="{'hide-on-mobile': option.text === 'Table View' || option.text === 'Side List View'}"
+          >
         <img [src]="option.icon" [alt]="option.text" class="icon-image" />
         <span class="icon-text">{{ option.text }}</span>
       </div>
     </div>
+
     <!-- <div class="checkbox-section-select pb-2">
       <label for="stateFilter" class="pb-2">Filter by State</label>
       <select class="form-select form-select-lg" aria-label="Large select example" id="stateFilter"
