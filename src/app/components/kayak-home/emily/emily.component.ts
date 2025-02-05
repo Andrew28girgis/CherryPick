@@ -113,11 +113,11 @@ export class EmilyComponent implements OnInit {
   contactidsJoin :any;
   selectedOrg!:Number;
   tabs = [
-    { id: 'Details', label: 'Details' }, 
     { id: 'Properties', label: 'Properties' }, 
+    { id: 'Details', label: 'Details' }, 
   ];
   buybox:any;
-  selectedTab: string = 'Details'; 
+  selectedTab: string = 'Properties'; 
   selectedEmailyID: string | null = null;
 
  
@@ -217,9 +217,7 @@ export class EmilyComponent implements OnInit {
 
   selectedCenter(){
     this.getManagerContacts(this.selectedShoppingCenter).forEach((CenterName) => {
-      // CenterName.selectedName = true;
-      console.log('CenterName',CenterName);
-      
+        
     });
   }
 
@@ -299,8 +297,7 @@ export class EmilyComponent implements OnInit {
   selectedShoppingCenterId!: number;
 
   handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
-    // console.log(`hello`);
-    
+     
     this.emailSubject = '' ;
     this.emailBodyResponse = ''; 
     this.selectedTab = event.tabId;
@@ -337,8 +334,7 @@ export class EmilyComponent implements OnInit {
           this.BuyBoxOrganizationsForEmail = [];
           console.error('Unexpected data format:', data);
         }
-        // console.log(this.BuyBoxOrganizationsForEmail);
-      },
+       },
       error: (err) => {
         console.error('API error:', err);
         this.BuyBoxOrganizationsForEmail = [];
@@ -346,7 +342,43 @@ export class EmilyComponent implements OnInit {
     });
   }
 
+  onContactChange(item: any, newValue: boolean): void {
+    // When item.selected is unchecked (false), uncheck all shopping centers.
+    if (!newValue) {
+      item.ShoppingCenters.forEach((center: any) => {
+        center.selected = false;
+      });
+    }
+    // Optionally, if you want to check all shopping centers when the contact is checked,
+    // you could add an else branch:
+    else {
+      item.ShoppingCenters.forEach((center: any) => {
+        center.selected = true;
+      });
+    }
+  }
 
+  onShoppingCenterChange(c: any ,  shoppingCenter :any ): void {  
+
+    this.BuyBoxOrganizationsForEmail[0].Contact.forEach(contact => {
+      if(contact != c){ 
+        contact.ShoppingCenters.forEach(sp => {
+          if (sp.id === shoppingCenter.id) {
+            sp.selected = shoppingCenter.selected; 
+          } 
+        }); 
+      } 
+    });
+     
+
+
+    if (c.ShoppingCenters.some((sc: any) => sc.selected)) {
+      c.selected = true;
+    } else { 
+      c.selected = false;
+    }
+  }
+  
   GetBuyBoxInfo() {   
     this.spinner.show();
     const body: any = {
@@ -360,7 +392,8 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.generated = data.json || [];
-
+       console.log("All" ,this.generated );
+       
         
         this.ManagerOrganizationName =
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
@@ -391,8 +424,11 @@ export class EmilyComponent implements OnInit {
           })) || [];
           // console.log(this.ShoppingCenterNames);
           
-
+         
         this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
+
+        console.log("Releations",this.generated?.[0]?.Releations);
+        
         //this for to be selected by first shopping center by defaukt
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
@@ -543,12 +579,10 @@ export class EmilyComponent implements OnInit {
       params: {
         id:email.Id,
       },
-    };
-    console.log(body);
-
+    }; 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        // this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+        this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         this.showToast('Email Send successfully!');
       },
       error: (err) => {
@@ -595,8 +629,7 @@ export class EmilyComponent implements OnInit {
       },
       [] // Initialize as an empty array
     );
-    // console.log('Grouped ActivityTypes:', this.groupedActivityTypes);
-    return center ? this.groupedActivityTypes : [];
+     return center ? this.groupedActivityTypes : [];
   }
 
   getCotenantsWithoutActivityType(centerName: string): Cotenant[] {
@@ -673,8 +706,7 @@ export class EmilyComponent implements OnInit {
       activity.selected = false;
       activity.Cotenants.forEach((co: any) => (co.selected = false));
     });
-    // console.log('Updated groupedActivityTypes:', this.groupedActivityTypes);
-  }
+   }
   // Called when "All Cotenants" checkbox changes
   onAllCotenantsChange() {
     if (this.showAllCotenants) {
@@ -813,9 +845,6 @@ export class EmilyComponent implements OnInit {
     const center = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
     ) 
-    console.log(`rr`);
-    
-    console.log(center?.ShoppingCenterManager?.[0].ShoppingCenterManagerContact);
     
     
     return (
@@ -860,24 +889,21 @@ export class EmilyComponent implements OnInit {
     }
   }
   
-  onCheckboxdetailsChangeMin(showMinBuildingSize :any,showMaxBuildingSize:any) {
-    if(showMinBuildingSize.target?.showMinBuildingSize && showMaxBuildingSize.target?.showMinBuildingSize ){
+  onCheckboxdetailsChangeMin(showMinBuildingSize: any, showMaxBuildingSize: any) {
+    if (showMinBuildingSize?.target?.checked && showMaxBuildingSize?.target?.checked) {
+      this.updateEmailBody();
+    } else {
+      // Check if the target and the property exist before toggling
+      if (showMinBuildingSize?.target && typeof showMinBuildingSize.target.showMinBuildingSize !== 'undefined') {
+        showMinBuildingSize.target.showMinBuildingSize = !showMinBuildingSize.target.showMinBuildingSize;
+      }
+      if (showMaxBuildingSize?.target && typeof showMaxBuildingSize.target.showMinBuildingSize !== 'undefined') {
+        showMaxBuildingSize.target.showMinBuildingSize = !showMaxBuildingSize.target.showMinBuildingSize;
+      }
       this.updateEmailBody();
     }
-    else  {
-      showMinBuildingSize.target.showMinBuildingSize=!showMinBuildingSize.target.showMinBuildingSize;
-      showMaxBuildingSize.target.showMinBuildingSize=!showMaxBuildingSize.target.showMinBuildingSize;
-
-      this.updateEmailBody();
-      }
-
-      // if(){
-      //   this.updateEmailBody();
-      // }
-      // else  {
-      //   this.updateEmailBody();
-      //   }
   }
+  
   // onCheckboxdetailsChangeMax(showMaxBuildingSize :any) {
     
   // }
@@ -1019,8 +1045,7 @@ export class EmilyComponent implements OnInit {
    };
    this.PlacesService.GenericAPI(body).subscribe({
      next: (data:any) => {
-       this.buybox = data.json;
-       console.log(this.buybox);
+       this.buybox = data.json; 
        
      },
      error: (err) => {
@@ -1231,18 +1256,14 @@ export class EmilyComponent implements OnInit {
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
         this.emailBodyResponse = data?.emailBody || 'No body received';
-        this.emailId = data?.id || 'No body received';
-        // console.log('Email Response:', {
-        //   subject: this.emailSubject,
-        //   body: this.emailBodyResponse,
-        // });
+        this.emailId = data?.id || 'No body received'; 
         this.spinner.hide();
       },
       error: (err) => {
         console.error('Error fetching generic email:', err);
         this.emailSubject = 'Error fetching email subject';
         this.emailBodyResponse = 'Error fetching email body';
-        this.ShowSpinner = false;
+        this.spinner.hide();
       },
     });
   }
@@ -1305,14 +1326,11 @@ export class EmilyComponent implements OnInit {
             id: prompt?.Id || null,
             name: prompt?.Name || 'Unnamed Prompt',
             promptText: prompt?.PromptText || 'No prompt text available',
-          }));
-          // console.log(`prompets`);
-          // console.log(this.prompts);
+          })); 
         } else {
           console.error('No prompts found in the response.');
           this.prompts = [];
-        }
-        // console.log('Prompts:', this.prompts);
+        } 
       },
       error: (err) => {
         console.error('Error fetching prompts:', err);
@@ -1427,8 +1445,7 @@ export class EmilyComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        // console.log('Prompt updated successfully:', response);
-        this.selectedPromptText = this.editablePromptText;
+         this.selectedPromptText = this.editablePromptText;
         this.isEditing = false;
         modal.close();
       },

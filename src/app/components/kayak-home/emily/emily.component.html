@@ -36,28 +36,27 @@
                 </div>
                 <div class="p-0 col-12 align-items-center d-flex">
                   <div class="row m-0 p-0 d-flex w-100 d-flex justify-content-center">
-                    <div class="col-10 p-2 h-100" *ngFor="let item of OrganizationsForEmail?.Contact">
+                    <div class="col-10 p-2 h-100" *ngFor="let contact of OrganizationsForEmail?.Contact">
                       <div class="crad_Contact_Mange">
                         <p class="Contact_head pt-1">
-                          <input type="checkbox" name="" class="me-2" [(ngModel)]="item.selected">
-                          <span>{{ item?.Firstname }} {{ item?.Lastname }}</span>
+                          <input type="checkbox" name="" class="me-2" [(ngModel)]="contact.selected" (ngModelChange)="onContactChange(contact, $event)">
+                          <span>{{ contact?.Firstname }} {{ contact?.Lastname }}</span>
                         </p>
-                        <div *ngFor="let shoppingCenter of item.ShoppingCenters" class="pt-2">
-
+                        <div *ngFor="let shoppingCenter of contact.ShoppingCenters" class="pt-2">
                           <p class="Contact_headD pt-2">
-                            <input type="checkbox" name="" class="me-2" [(ngModel)]="shoppingCenter.selected">
+                            <input type="checkbox" name="" class="me-2" [(ngModel)]="shoppingCenter.selected"  (ngModelChange)="onShoppingCenterChange(contact ,  shoppingCenter )">
                             <span>{{ shoppingCenter?.centername }}</span>
                           </p>
                         </div>
                       </div>
 
-                      <ng-template #popoverContent>
+                      <!-- <ng-template #popoverContent>
                         <div *ngFor="let shoppingCenter of item.ShoppingCenters" class="pt-2">
                           <p class="Contact_head pt-2">
                             <span>{{ shoppingCenter?.centername }}</span>
                           </p>
                         </div>
-                      </ng-template>
+                      </ng-template> -->
                     </div>
                     <div class="col-12 p-2 d-flex justify-content-center">
                       <!-- <p class="saved_email_button" (click)="selectContact(i, OrganizationsForEmail.Id)"
@@ -99,7 +98,7 @@
                     </div> -->
                   </div>
                 </div>
-                <div class="col-4 p-2">
+                <div class="col-4 p-2" *ngIf="(generated?.[0]?.Releations || []).length > 0">
                   <div class="box p-2">
                     <div class="checkbox-section">
                       <input type="checkbox" name="Relation" id="Relation" class="form-check-input"
@@ -309,11 +308,11 @@
                               <button class="Button_Update" *ngIf="emailBodyResponsetogale"
                                 (click)="emailBodyResponsetogale = false">Cancel</button>
         
-                              <button class="Button_Update"
+                              <button class="Button_Update" *ngIf="item.SentDate == '0001-01-01T00:00:00'"
                                 (click)="!emailBodyResponsetogale ? toggleSwitch(): UpdateEmailTemplate(item);">{{ !emailBodyResponsetogale? 'Edit' : 'Update' }}
                               </button>
                                 
-                              <button class="Button_Update_S" *ngIf="item.SentDate=='0001-01-01T00:00:00'"
+                              <button class="Button_Update_S" *ngIf="item.SentDate == '0001-01-01T00:00:00'"
                                 (click)="SendEmailTemplate(item)">Send</button>
         
                             </div>
