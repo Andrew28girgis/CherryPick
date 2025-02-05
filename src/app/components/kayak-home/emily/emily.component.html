@@ -32,7 +32,7 @@
                 <div class="p-0 col-12 align-items-center d-flex">
                   <div class="row m-0 p-0 d-flex w-100 d-flex justify-content-center">
                     <div class="col-10 p-2 h-100" *ngFor="let contact of OrganizationsForEmail?.Contact">
-                      <div class="crad_Contact_Mange">
+                      <div class="crad_Contact_Mange" *ngIf="contact.Centers && contact.Centers.length > 0">
                         <p class="Contact_head pt-1">
                           <input type="checkbox" name="" class="me-2 form-check-input" [(ngModel)]="contact.selected"
                             (ngModelChange)="onContactChange(contact, $event)">
@@ -241,7 +241,7 @@
               </div>
 
               <!-- API Response View Saved Template-->
-              <div *ngIf="CheckGetSavedTemplates.length > 0" class="row m-0 p-0 d-flex justify-content-center">
+              <div *ngIf="CheckGetSavedTemplates && CheckGetSavedTemplates.length > 0" class="row m-0 p-0 d-flex justify-content-center">
                 <div class="col-12 p-0 mt-3" *ngFor="let item of CheckGetSavedTemplates">
                   <div class="col-12 p-0">
                     <div class="form-group mt-4">
