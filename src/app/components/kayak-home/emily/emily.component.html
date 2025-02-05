@@ -175,7 +175,7 @@
                       </select>
                     </div>
                     <div class="col-6 d-flex justify-content-between mt-3 align-items-center                      ">
-                      <button class="Emily__contant__button ms-2" (click)="getGenericEmail()">
+                      <button class="Emily__contant__button ms-2" (click)="GenerateEmail()">
                         <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path
                             d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
@@ -358,7 +358,7 @@
       </ng-template>
     </section>
   </div>
-  
+
   <div class="main-section">
     <section *ngIf="selectedTab === 'Properties'" class="row d-flex m-0 p-2">
       <app-shopping-center-table (tabChange)="handleTabChange($event)" (bindClicked)="selectTab('kayak')" />

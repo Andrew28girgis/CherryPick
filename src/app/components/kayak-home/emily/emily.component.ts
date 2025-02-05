@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter,  OnInit, Output } from '@angular/core';
 import {
   Cotenant,
   Generated,
@@ -9,11 +9,11 @@ import { RelationNames } from 'src/models/emailGenerate';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
-import { FormControl, FormGroup } from '@angular/forms';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import {  FormGroup } from '@angular/forms';
+import { trigger,  style, transition, animate } from '@angular/animations';
 import { Center } from 'src/models/shoppingCenters';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Contact_ShoppingCenter ,BuyBoxOrganizationsForEmailContact ,BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
+import {BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
 
 @Component({
   selector: 'app-emily',
@@ -1006,14 +1006,11 @@ export class EmilyComponent implements OnInit {
         });
       });
     }
-    console.log(`ssw`);
     
-    console.log(this.emailBody);
-    
-    this.emailBody = emailContent; // Update the email body
+    this.emailBody = emailContent; 
   } 
 
-  getGenericEmail() {
+  GenerateEmail() {
     this.spinner.show();  
     this.updateEmailBody();
     if (!this.selectedPromptId || !this.emailBody) {
