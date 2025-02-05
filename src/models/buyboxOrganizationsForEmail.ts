@@ -11,11 +11,11 @@ export interface BuyBoxOrganizationsForEmailContact {
   Lastname: string
   selected: boolean
   selectedName: string
-  ShoppingCenters: Contact_ShoppingCenter[]
+  Centers: Contact_ShoppingCenter[]
 }
 
 export interface Contact_ShoppingCenter {
   id: number
   selected: boolean
-  centername: string
+  CenterName: string
 }

@@ -173,7 +173,7 @@
                           </button>
                           <div class="shortcuts_icon" *ngIf="selectedId === shoppingCenter.Id">
                             <ul>
-                              <li (click)="redirect(shoppingCenter.Id)">
+                              <li (click)="redirect(shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID)">
                                 <a class="target">
                                   <i class="fa-regular fa-envelope" style="
                                       font-size: 18px;
@@ -666,7 +666,6 @@
                         <div class="shortcuts_iconCard" *ngIf="selectedIdCard === place.Id">
                           <ul>
                             <li style="cursor: pointer">
-                              <!-- (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)" -->
                               <a class="target" (click)="redirect(place.Id)">
                                 <i class="fa-regular fa-envelope" style="
                                     font-size: 18px;
