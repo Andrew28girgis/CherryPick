@@ -870,7 +870,6 @@ export class EmilyComponent implements OnInit {
         })
       });
       emailContent += '\n';
-
     }
 
     // Display selected cotenants with activity if showCotenantsWithActivity is true
