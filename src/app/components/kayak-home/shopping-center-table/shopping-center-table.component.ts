@@ -194,12 +194,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
     }
-
-    // this.BuyBoxPlacesCategories(this.BuyBoxId);
-    // this.GetOrganizationById(this.OrgId);
-    // this.GetCustomSections(this.BuyBoxId);
-    // this.GetBuyboxRelations();
-    // this.GetPolygons(this.BuyBoxId);
     this.selectedState = '';
     this.selectedCity = '';
     this.applyFilters();
@@ -235,8 +229,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   @Output() tabChange = new EventEmitter<{ tabId: string; shoppingCenterId: number }>();
-  redirect(IdShoppingCenter: number) {
-    this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: IdShoppingCenter });
+
+  redirect(organizationId: any) {
+    this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: organizationId });
   }
 
   @HostListener('document:click', ['$event'])
@@ -1075,6 +1070,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
+  
+    
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
     };

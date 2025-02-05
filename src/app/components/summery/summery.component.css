@@ -247,7 +247,7 @@ button:active {
 }
 
 @media (max-width: 767px) {
-  .responsive{
+  .responsive {
     margin-right: 20px;
     margin-left: 32px;
   }
@@ -258,7 +258,11 @@ button:active {
   .logout_Style {
     justify-content: center;
   }
-
+  .ResContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .card__Kayak {
     margin-bottom: 1rem;
     width: 284px;
@@ -277,7 +281,10 @@ button:active {
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
-  .responsive{
+  .ResContainer {
+    align-items: center;
+  }
+  .responsive {
     margin-right: 20px;
     margin-left: 32px;
   }
@@ -287,13 +294,8 @@ button:active {
 }
 
 @media (min-width: 992px) {
+  
   .searchBox {
     width: 100%;
   }
 }
-
-
-
-
-
-
