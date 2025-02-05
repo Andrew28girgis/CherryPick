@@ -40,13 +40,13 @@
                         </p>
                         <div *ngFor="let shoppingCenter of contact.ShoppingCenters;let i = index" class="pt-2 ">
                           <p class="Contact_headD pt-2 row align-items-center" style="cursor: pointer;">
-                            <input type="checkbox" [name]="'shoppingCenter'+shoppingCenter.id" [id]="shoppingCenter.id" class="m-0 p-0 ps-2 pe-2 form-check-input col-1 "
-                              [(ngModel)]="shoppingCenter.selected"
+                            <input type="checkbox" [name]="'shoppingCenter'+shoppingCenter.id" [id]="shoppingCenter.id" class="m-0 p-0 form-check-input col-1 "
+                              [(ngModel)]="shoppingCenter.selected"  style="cursor: pointer;"
                               (ngModelChange)="onShoppingCenterChange(contact ,  shoppingCenter )">
-                            <label [for]="shoppingCenter.id" class="col-11 m-0 p-0">
+                            <label [for]="shoppingCenter.id" class="col-11 m-0 p-0 ps-2 pe-2 d-flex justify-content-between"  style="cursor: pointer;">
                               {{ shoppingCenter?.centername }} 
                               <i class="fa-solid fa-location-dot ps-2 pe-2" style="color: #007bff;font-size: 14px;font-weight: 600;"
-                              [routerLink]="['/landing',undefined,shoppingCenter.id,buyBoxId ,selectedOrg]"></i>
+                              [routerLink]="['/landing',undefined,shoppingCenter.id,buyBoxId ,selectedOrg]"  style="cursor: pointer;"></i>
                             </label>
                           </p>
                         </div>
