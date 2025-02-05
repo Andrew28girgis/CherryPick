@@ -9,11 +9,6 @@
       </li>
     </ul>
   </div>
-  <div class="main-section">
-    <section *ngIf="selectedTab === 'Details'" class="row d-flex m-0 p-2">
-      <app-buybox-details />
-    </section>
-  </div>
   <div class="main-section-emily">
     <section *ngIf="selectedTab === 'Emily'">
       <ng-container *ngIf="BuyBoxOrganizationsForEmail.length > 0">
@@ -23,9 +18,9 @@
               <section class="OrganizationsForEmail row m-0 p-0">
                 <div style="align-items: center;" class="m-0 p-0 col-12 d-flex justify-content-center row">
                   <div class="OganirzationsForEmail__img col-8">
-                    <img class="Oganirzations__img" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                  OrganizationsForEmail.Id
-                }}" alt="" />
+                    <img class="Oganirzations__img"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ OrganizationsForEmail.Id }}"
+                      alt="" />
                   </div>
                   <div class="OrganizationsForEmail__head col-12">
                     <p>Company Management:</p>
@@ -39,45 +34,31 @@
                     <div class="col-10 p-2 h-100" *ngFor="let contact of OrganizationsForEmail?.Contact">
                       <div class="crad_Contact_Mange">
                         <p class="Contact_head pt-1">
-                          <input type="checkbox" name="" class="me-2" [(ngModel)]="contact.selected" (ngModelChange)="onContactChange(contact, $event)">
-                          <span>{{ contact?.Firstname }} {{ contact?.Lastname }}</span>
+                          <input type="checkbox" name="" class="me-2 form-check-input" [(ngModel)]="contact.selected"
+                            (ngModelChange)="onContactChange(contact, $event)">
+                          <span style="font-weight: 600;">{{ contact?.Firstname }} {{ contact?.Lastname }}</span>
                         </p>
-                        <div *ngFor="let shoppingCenter of contact.ShoppingCenters" class="pt-2">
-                          <p class="Contact_headD pt-2">
-                            <input type="checkbox" name="" class="me-2" [(ngModel)]="shoppingCenter.selected"  (ngModelChange)="onShoppingCenterChange(contact ,  shoppingCenter )">
-                            <span>{{ shoppingCenter?.centername }}</span>
+                        <div *ngFor="let shoppingCenter of contact.ShoppingCenters;let i = index" class="pt-2 ">
+                          <p class="Contact_headD pt-2 row align-items-center" style="cursor: pointer;">
+                            <input type="checkbox" [name]="'shoppingCenter'+shoppingCenter.id" [id]="shoppingCenter.id" class="m-0 p-0 ps-2 pe-2 form-check-input col-1 "
+                              [(ngModel)]="shoppingCenter.selected"
+                              (ngModelChange)="onShoppingCenterChange(contact ,  shoppingCenter )">
+                            <label [for]="shoppingCenter.id" class="col-11 m-0 p-0">
+                              {{ shoppingCenter?.centername }} 
+                              <i class="fa-solid fa-location-dot ps-2 pe-2" style="color: #007bff;font-size: 14px;font-weight: 600;"
+                              [routerLink]="['/landing',undefined,shoppingCenter.id,buyBoxId ,selectedOrg]"></i>
+                            </label>
                           </p>
                         </div>
                       </div>
-
-                      <!-- <ng-template #popoverContent>
-                        <div *ngFor="let shoppingCenter of item.ShoppingCenters" class="pt-2">
-                          <p class="Contact_head pt-2">
-                            <span>{{ shoppingCenter?.centername }}</span>
-                          </p>
-                        </div>
-                      </ng-template> -->
-                    </div>
-                    <div class="col-12 p-2 d-flex justify-content-center">
-                      <!-- <p class="saved_email_button" (click)="selectContact(i, OrganizationsForEmail.Id)"
-                        [class.activeSelect]="selectedIndex === i">
-                        {{ isEmailSectionVisible ? 'Hide Saved Email' : 'Show Saved Email' }}
-                      </p> -->
-                      <!-- <p class="saved_email_button" (click)="selectContact(i, OrganizationsForEmail.Id)" [class.activeSelect]="selectedIndex === i">Show Saved Email</p> -->
                     </div>
                   </div>
                 </div>
               </section>
             </div>
             <div class="col-9">
-              <!-- <div class="d-flex justify-content-center mb-3 mt-3">
-                <p (click)="toggleSelections()" class="toggle-btn">
-                  {{ showSelections ? 'Hide Selections' : 'Show Selections' }}
-                  <i [ngClass]="showSelections ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down'"></i>
-                </p>
-              </div> -->
               <div class="row d-flex p-3 m-0 Selections-body" *ngIf="showSelections" [@slideAnimation]>
-
+                <!-- Selections-filters -->
                 <div class="col-4 p-2">
                   <div class="box p-2">
                     <div class="checkbox-section-head checkbox-section">
@@ -91,11 +72,6 @@
                       <label for="detailsMin">Min & Max Unit Size: {{ buybox?.MinBuildingSize }}
                         ,{{ buybox?.MaxBuildingSize }}</label>
                     </div>
-                    <!-- <div class="checkbox-section-head checkbox-section">
-                      <input type="checkbox" name="detailsMax" id="detailsMax" class="form-check-input"
-                        [(ngModel)]="showMaxBuildingSize" (change)="onCheckboxdetailsChangeMax($event)" />
-                      <label for="detailsMax">Max Unit Size: {{ buybox?.MaxBuildingSize || "N/A" }}</label>
-                    </div> -->
                   </div>
                 </div>
                 <div class="col-4 p-2" *ngIf="(generated?.[0]?.Releations || []).length > 0">
@@ -112,9 +88,7 @@
                             [(ngModel)]="relation.selected" (change)="onRelationNamesChange()" />
                           <label [for]="relation.name">{{ relation.name }}</label>
                         </div>
-
                         <ng-container *ngFor="let item of generated?.[0]?.Releations">
-
                           <ng-container *ngIf="generated?.[0]?.Releations">
                             <ng-container *ngIf="item.RetailRelationCategoryId == relation.id">
                               <div class="checkbox-section checkbox-section-body-first">
@@ -125,7 +99,6 @@
                             </ng-container>
                           </ng-container>
                         </ng-container>
-
                       </ng-container>
                     </ng-container>
                   </div>
@@ -157,101 +130,83 @@
                             <label [for]="contact.Firstname + contact.LastName">{{ contact.Firstname }}
                               {{ contact.LastName }}</label>
                           </div>
-
-                          <!-- Add Assistant Details -->
-                          <!-- <div class="checkbox-section checkbox-section-body-second" *ngIf="contact.AssistantName">
-                            <input type="checkbox" name="BrokerAssistant" id="BrokerAssistant" class="form-check-input"
-                              [(ngModel)]="contact.assistantSelected" (change)="onAssistantCheckboxChange(contact)" />
-                            <label for="BrokerAssistant">Broker Assistant</label>
-                          </div> -->
                         </ng-container>
                       </ng-container>
                     </ng-container>
                   </div>
                 </div>
+                <!-- Button-Prompet & Show Context & Prompt & Generate-->
                 <ng-container>
-                  <aside>
-                    <div class="row m-0 p-0 ">
-                      <div class="checkbox-section-select pb-2 col-6">
-                        <label for="discussionDropdown">Select Prompt</label>
-                        <select class="form-select form-select-lg" aria-label="Large select example"
-                          id="discussionDropdown" [(ngModel)]="selectedPromptId" (change)="updatePrompt()">
-                          <option value="" selected>Select Prompt</option>
-                          <option *ngFor="let prompt of prompts" [value]="prompt.id">
-                            {{ prompt?.name }}
-                          </option>
-                        </select>
-                      </div>
-                      <div class="col-6 d-flex justify-content-between mt-3 align-items-center                      ">
-                        <button class="Emily__contant__button ms-2" (click)="getGenericEmail()">
-                          <svg width="14" height="20" viewBox="0 0 14 20" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                              d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
-                              stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                              stroke-linejoin="round" />
-                          </svg>
-                          Generate
-                          <p class="spinner-grow" *ngIf="ShowSpinner"></p>
-                        </button>
-                        <button class="Emily__contant__button" (click)="openPromptTextModal(View)">
-                          Prompt
-                          <i class="fas fa-sign-in-alt px-1"></i>
-                        </button>
-                        <button class="Emily__contant__button Emily__body__button ms-2"
-                          (click)="openBodyModal(ViewBody)">
-                          Show Context
-                          <i class="fa-regular fa-eye px-1"></i>
-                        </button>
-
-                      </div>
+                  <div class="row m-0 p-0 ">
+                    <div class="col-6 checkbox-section-select pb-2">
+                      <label for="discussionDropdown">Select Prompt</label>
+                      <select class="form-select form-select-lg" aria-label="Large select example"
+                        id="discussionDropdown" [(ngModel)]="selectedPromptId" (change)="updatePrompt()">
+                        <option value="" selected>Select Prompt</option>
+                        <option *ngFor="let prompt of prompts" [value]="prompt.id">
+                          {{ prompt?.name }}
+                        </option>
+                      </select>
                     </div>
-                  </aside>
+                    <div class="col-6 d-flex justify-content-between mt-3 align-items-center                      ">
+                      <button class="Emily__contant__button ms-2" (click)="getGenericEmail()">
+                        <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
+                            stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        </svg>
+                        Generate
+                        <p class="spinner-grow" *ngIf="ShowSpinner"></p>
+                      </button>
+                      <button class="Emily__contant__button" (click)="openPromptTextModal(View)">
+                        Prompt
+                        <i class="fas fa-sign-in-alt px-1"></i>
+                      </button>
+                      <button class="Emily__contant__button Emily__body__button ms-2" (click)="openBodyModal(ViewBody)">
+                        Show Context
+                        <i class="fa-regular fa-eye px-1"></i>
+                      </button>
+                    </div>
+                  </div>
                 </ng-container>
               </div>
-              <!-- API Response View -->
-              <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
-                <div class="row">
-                  <!-- API Response View -->
-                  <div class="col-12 p-0">
-                    <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
-                      <div class="card shadow-sm border-0">
-                        <div class="card-header text-white" style="background-color: #141e2a">
-                          <h5 class="mb-0">Generated Email</h5>
-                        </div>
-                        <div class="card-body bg-light">
-                          <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <label class="fw-bold text-secondary">Email Subject:</label>
-                              <span (click)="copyEmailSubject()" class="copy-icon-container">
-                                <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied"
-                                  title="Copy Email Subject"></i>
-                                <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
-                              </span>
-                            </div>
-                            <div class="p-3 border rounded bg-white text-dark">
-                              <!-- {{ emailSubject }} -->
-                              <textarea [innerHTML]="emailSubject" rows="1" class="form-control"></textarea>
-                            </div>
-                          </div>
-                          <div>
-                            <div class="d-flex justify-content-between align-items-center">
-                              <label class="fw-bold text-secondary">Email Body:</label>
-                              <span (click)="copyEmailBody()" class="copy-icon-container">
-                                <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
-                                <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
-                              </span>
-                            </div>
-                            <div class="p-3 border rounded bg-white text-dark">
-                              <p [innerHTML]="emailBodyResponse" class="m-0"></p>
 
-                            </div>
-                            <div class="d-flex justify-content-end gap-2">
-                              <button class="btn btn-success mt-3" (click)="SaveTemplate()">Save</button>
-                              <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">Save and
-                                Send</button>
-                            </div>
-                          </div>
+              <!-- API Response View  Generated Email-->
+              <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
+                <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
+                  <div class="card shadow-sm border-0">
+                    <div class="card-header text-white" style="background-color: #141e2a">
+                      <h5 class="mb-0">Generated Email</h5>
+                    </div>
+                    <div class="card-body bg-light">
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                          <label class="fw-bold text-secondary">Email Subject:</label>
+                          <span (click)="copyEmailSubject()" class="copy-icon-container">
+                            <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
+                            <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
+                          </span>
+                        </div>
+                        <div class="p-3 border rounded bg-white text-dark">
+                          <textarea [innerHTML]="emailSubject" rows="1" class="form-control"></textarea>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <label class="fw-bold text-secondary">Email Body:</label>
+                          <span (click)="copyEmailBody()" class="copy-icon-container">
+                            <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
+                            <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
+                          </span>
+                        </div>
+                        <div class="p-3 border rounded bg-white text-dark">
+                          <p [innerHTML]="emailBodyResponse" class="m-0"></p>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                          <button class="btn btn-success mt-3" (click)="SaveTemplate()">Save</button>
+                          <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">Save and
+                            Send</button>
                         </div>
                       </div>
                     </div>
@@ -259,6 +214,7 @@
                 </div>
               </div>
 
+              <!-- API Response View Saved Template-->
               <div *ngIf="CheckGetSavedTemplates.length > 0" class="row m-0 p-0 d-flex justify-content-center">
                 <div class="col-12 p-0 mt-3" *ngFor="let item of CheckGetSavedTemplates">
                   <div class="col-12 p-0">
@@ -279,14 +235,13 @@
                             <div class="d-flex justify-content-between align-items-center">
                               <label class="fw-bold text-secondary">Email Subject:</label>
                               <span (click)="copyEmailSubject()" class="copy-icon-container">
-                                <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
+                                <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied"
+                                  title="Copy Email Subject"></i>
                                 <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
                               </span>
                             </div>
                             <div class="p-3 border rounded bg-white text-dark">
-                              <!-- {{ item.Subject }} -->
                               <textarea [(ngModel)]="item.Subject" rows="1" class="form-control"></textarea>
-        
                             </div>
                           </div>
                           <div>
@@ -299,24 +254,18 @@
                             </div>
                             <div class="p-3 border rounded bg-white text-dark">
                               <p [innerHTML]="item.Template" class="m-0" *ngIf="!emailBodyResponsetogale"></p>
-                              <textarea [(ngModel)]="item.Template" [innerHTML]="item.Template" rows="15" class="form-control"
-                                *ngIf="emailBodyResponsetogale"></textarea>
+                              <textarea [(ngModel)]="item.Template" [innerHTML]="item.Template" rows="15"
+                                class="form-control" *ngIf="emailBodyResponsetogale"></textarea>
                             </div>
-                            
                             <div class="d-flex justify-content-end mt-2 gap-2">
-        
                               <button class="Button_Update" *ngIf="emailBodyResponsetogale"
                                 (click)="emailBodyResponsetogale = false">Cancel</button>
-        
                               <button class="Button_Update" *ngIf="item.SentDate == '0001-01-01T00:00:00'"
                                 (click)="!emailBodyResponsetogale ? toggleSwitch(): UpdateEmailTemplate(item);">{{ !emailBodyResponsetogale? 'Edit' : 'Update' }}
                               </button>
-                                
                               <button class="Button_Update_S" *ngIf="item.SentDate == '0001-01-01T00:00:00'"
                                 (click)="SendEmailTemplate(item)">Send</button>
-        
                             </div>
-        
                           </div>
                         </div>
                       </div>
@@ -324,27 +273,18 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </ng-container>
         </div>
       </ng-container>
 
-    
       <!-- editor selectedPrompt -->
       <ng-template #View let-modal>
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title text-light">{{ selectedPromptName }}</h3>
-            <!-- <button
-              type="button"
-              class="btn-close"
-              aria-label="Close"
-              (click)="modal.dismiss('Cross click')"
-            ></button> -->
           </div>
           <div class="modal-body">
-            <!-- Display or Edit Prompt Text -->
             <textarea *ngIf="isEditing" class="form-control" rows="15" [(ngModel)]="editablePromptText"></textarea>
             <textarea *ngIf="!isEditing" [innerHTML]="selectedPromptText" readonly rows="15"
               class="form-control"></textarea>
@@ -363,6 +303,7 @@
         </div>
       </ng-template>
 
+      <!-- Show Context Email Body -->
       <ng-template #ViewBody let-modal>
         <div class="modal-content">
           <div class="modal-header">
@@ -376,12 +317,6 @@
             <textarea *ngIf="!isEditingBody" [innerHTML]="emailBody" rows="15" class="form-control"></textarea>
           </div>
           <div class="modal-footer">
-            <!-- <button *ngIf="!isEditingBody" class="btn btn-warning">
-              Edit
-            </button>
-            <button *ngIf="isEditingBody" class="btn btn-success" >
-              Save
-            </button> -->
             <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">
               Close
             </button>
@@ -392,22 +327,18 @@
   </div>
   <div class="main-section">
     <section *ngIf="selectedTab === 'Properties'" class="row d-flex m-0 p-2">
-      <!-- <app-buybox-shopping-centers (bindClicked)="selectTab('kayak')" /> -->
-      <app-shopping-center-table (tabChange)="handleTabChange($event)" (bindClicked)="selectTab('kayak')">
-      </app-shopping-center-table>
+      <app-shopping-center-table (tabChange)="handleTabChange($event)" (bindClicked)="selectTab('kayak')" />
     </section>
-    <!-- <section *ngIf="selectedTab === 'Locations'" class="row d-flex m-0 p-2">
-      <app-work-spaces></app-work-spaces>
-    </section> -->
-    <!-- <section *ngIf="selectedTab === 'Sharingh'" class="row d-flex m-0 p-2"></section> -->
     <section *ngIf="selectedTab === 'kayak'" class="row d-flex m-0 p-2">
-      <app-kayak></app-kayak>
+      <app-kayak />
     </section>
-    <!-- <section *ngIf="selectedTab === 'Relations'" class="row d-flex m-0 p-2"></section> -->
+    <section *ngIf="selectedTab === 'Details'" class="row d-flex m-0 p-2">
+      <app-buybox-details />
+    </section>
   </div>
 </section>
 
-
+<!-- toast -->
 <div id="customToast" class="custom-toast">
   <div class="toast-content">
     <p id="toastMessage"></p>
