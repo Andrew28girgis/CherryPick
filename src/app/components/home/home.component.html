@@ -12,6 +12,9 @@
           src="../../../assets/Images/logo.png"
         />
         <p class="titleResponsive" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
+
+        <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i>
+    
       </div>
 
       <!-- <div
@@ -76,34 +79,10 @@
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text">{{ option.text }}</span>
          
-          </div>
-          <!-- <div class=""> -->
-            <button
-              *ngIf="ShareOrg[0]"
-              class="view-details-card me-0 mt-2 share-button "
-              (click)="openLink(ShareLink)"
-            >
-              <span class="share-text d-none d-lg-inline">Share</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#ffffff"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-share-2 d-lg-none"
-              >
-                <circle cx="18" cy="5" r="3" />
-                <circle cx="6" cy="12" r="3" />
-                <circle cx="18" cy="19" r="3" />
-                <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
-                <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
-              </svg>
-            </button>
-          <!-- </div> -->
+          </div> 
+           
+
+            <app-logout></app-logout> 
         </div>
       </div>
     </div>

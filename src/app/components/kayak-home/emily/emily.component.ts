@@ -82,10 +82,9 @@ export class EmilyComponent implements OnInit {
   shoppingCentersSelected: Center | undefined = undefined;
   generatedGetSavedTemplates: any;
   contactidsJoin: any;
-  selectedOrg!: Number;
   buybox: any;
   selectedTab: string = 'Properties';
-  selectedShoppingCenterId!: number;
+  shoppingCenterOrganization!: number;
   selectedEmailyID: string | null = null;
   showSelections = true;
   selectedIndex!: number;
@@ -132,15 +131,9 @@ export class EmilyComponent implements OnInit {
       this.onOrganizationManagersChange();
       this.onMangerDescriptionChange();
       this.onCheckboxdetailsChangeMin(true, true);
-      // this.onCheckboxdetailsChangeMax(true);
-      // this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-    }, 3000);
-
-    setTimeout(() => {
       this.selectManagerContactsByDefault();
-      this.selectManagerTenantsByDefault();
-      this.selectedCenter();
-    }, 500);
+      this.selectManagerTenantsByDefault();  
+    }, 3000); 
   }
 
   toggleSelections() {
@@ -149,18 +142,6 @@ export class EmilyComponent implements OnInit {
 
   selectTab(tabId: string): void {
     this.selectedTab = tabId;
-  }
-
-  getFormattedTemplate(text: string): string {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = text;
-    const links = tempDiv.querySelectorAll('a');
-    links.forEach((link) => {
-      const href = link.getAttribute('href');
-      const linkText = link.textContent;
-      link.replaceWith(`${linkText} [${href}]`);
-    });
-    return tempDiv.textContent || tempDiv.innerText || '';
   }
 
   trackByRelation(index: number, relation: any): number {
@@ -181,10 +162,7 @@ export class EmilyComponent implements OnInit {
     this.updateEmailBody();
   }
 
-  selectedCenter() {
-    this.getManagerContacts(this.selectedShoppingCenter).forEach((CenterName) => {});
-  }
-
+ 
   selectManagerTenantsByDefault() {
     this.managerOrganizations.forEach((manager: any) => {
       manager.ManagerOrganizationContacts.forEach((contact: any) => {
@@ -193,16 +171,6 @@ export class EmilyComponent implements OnInit {
     });
     this.onAssistantCheckboxChange(this.managerOrganizations);
     this.onContactCheckboxChange();
-  }
-
-  selectContact(index: number, organizationId: number) {
-    this.selectedIndex = index;
-    this.isEmailSectionVisible = !this.isEmailSectionVisible;
-    if (this.isEmailSectionVisible) {
-      this.OnCheckGetSavedTemplates(organizationId);
-    } else {
-      this.CheckGetSavedTemplates = [];
-    }
   }
 
   OnCheckGetSavedTemplates(organizationid: number): void {
@@ -218,27 +186,9 @@ export class EmilyComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if (data?.json && Array.isArray(data.json)) {
-          this.CheckGetSavedTemplates = data.json;
-          const selectedTemplate = this.CheckGetSavedTemplates.find(
-            (Template) => Template.OrganizationId === Number(organizationid)
-          );
-          if (selectedTemplate?.Template) {
-            const rawText = this.getFormattedTemplate(selectedTemplate.Template);
-            this.emailBody += `\n\n${rawText}`;
-            this.spinner.hide();
-          } else {
-            this.emailBody += `\n\nNo Template Available`;
-          }
-        } else {
-          this.CheckGetSavedTemplates = [];
-          this.spinner.hide();
-        }
-      },
-      error: (err) => {
-        console.error('API error:', err);
-        this.CheckGetSavedTemplates = [];
-      },
+        this.CheckGetSavedTemplates = data.json; 
+        this.spinner.hide();
+      }
     });
   }
 
@@ -246,18 +196,19 @@ export class EmilyComponent implements OnInit {
     this.emailSubject = '';
     this.emailBodyResponse = '';
     this.selectedTab = event.tabId;
-    this.selectedShoppingCenterId = event.shoppingCenterId;
+    this.shoppingCenterOrganization = event.shoppingCenterId; 
     this.GetBuyBoxOrganizationsForEmail();
     this.getShoppingCenters(this.buyBoxId!);
   }
 
   GetBuyBoxOrganizationsForEmail() {
+     
     const body: any = {
       Name: 'GetShoppingCenterManagerContacts',
       MainEntity: null,
       Params: {
-        shoppingcenterid: this.selectedShoppingCenterId,
         buyboxid:this.buyBoxId,
+        organizationid:this.shoppingCenterOrganization
       },
       Json: null,
     };
@@ -265,16 +216,14 @@ export class EmilyComponent implements OnInit {
       next: (data) => {
         if (data?.json && Array.isArray(data.json)) {
           this.BuyBoxOrganizationsForEmail = data.json;
-          console.log("All", this.BuyBoxOrganizationsForEmail);
 
           this.BuyBoxOrganizationsForEmail[0].Contact.forEach((c: any) => {
             c.selected = true;
-            c.ShoppingCenters.forEach((ShoppingCenter: any) => {
+            c.Centers?.forEach((ShoppingCenter: any) => {
               ShoppingCenter.selected = true;
             });
           })
-
-          this.selectedOrg = data.json[0].Id;
+          this.updateEmailBody();
 
           this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         } else {
@@ -289,17 +238,14 @@ export class EmilyComponent implements OnInit {
     });
   }
 
-  onContactChange(item: any, newValue: boolean): void {
-    // When item.selected is unchecked (false), uncheck all shopping centers.
+  onContactChange(item: any, newValue: boolean): void { 
     if (!newValue) {
-      item.ShoppingCenters.forEach((center: any) => {
+      item.Centers?.forEach((center: any) => {
         center.selected = false;
       });
-    }
-    // Optionally, if you want to check all shopping centers when the contact is checked,
-    // you could add an else branch:
+    } 
     else {
-      item.ShoppingCenters.forEach((center: any) => {
+      item.Centers?.forEach((center: any) => {
         center.selected = true;
       });
     }
@@ -308,7 +254,7 @@ export class EmilyComponent implements OnInit {
   onShoppingCenterChange(c: any, shoppingCenter: any): void {
     this.BuyBoxOrganizationsForEmail[0].Contact.forEach(contact => {
       if (contact != c) {
-        contact.ShoppingCenters.forEach(sp => {
+        contact.Centers?.forEach(sp => {
           if (sp.id === shoppingCenter.id) {
             sp.selected = shoppingCenter.selected;
           }
@@ -371,8 +317,7 @@ export class EmilyComponent implements OnInit {
 
         this.generated?.[0]?.Releations?.forEach((r) => (r.relationSelect = true));
 
-        console.log("Releations", this.generated?.[0]?.Releations);
-
+   
         //this for to be selected by first shopping center by defaukt
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
@@ -396,7 +341,7 @@ export class EmilyComponent implements OnInit {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.shoppingCentersSelected = this.shoppingCenters.find(
-          (S: Center) => S.Id == this.selectedShoppingCenterId
+          (S: Center) => S.Id == this.shoppingCenterOrganization
         );
         this.selectedShoppingCenter = this.ShoppingCenterNames.find(
           (center) => center.CenterName === this.shoppingCentersSelected?.CenterName
@@ -422,7 +367,7 @@ export class EmilyComponent implements OnInit {
       Name: 'SaveTemplate',
       MainEntity: null,
       Params: {
-        organizationid: this.selectedOrg,
+        organizationid: this.shoppingCenterOrganization,
         template: this.emailBodyResponse,
         subject: this.emailSubject,
         buyboxid: this.buyBoxId,
@@ -445,7 +390,6 @@ export class EmilyComponent implements OnInit {
 
   SaveAndSendTemplate() {
     this.SaveTemplate();
-
     setTimeout(() => {
       const body = {
         name: 'SendTemplate',
@@ -834,6 +778,7 @@ export class EmilyComponent implements OnInit {
   onContactCheckboxChange() {
     this.updateEmailBody();
   }
+  
   onOrganizationManagersChange() {
     if (this.showOrganizationManagers) {
       this.loadManagerOrganizations();
@@ -898,19 +843,18 @@ export class EmilyComponent implements OnInit {
 
   selectedContact: number[] = [];
 
-  // textarea 'EmailBody'
   updateEmailBody() {
 
     let emailContent = '';
     if (this.selectedShoppingCenter) {
-      // emailContent += `Shopping Center: ${this.selectedShoppingCenter}\n`;
       emailContent += `Shopping Center Representative Organization: ${this.getManagerName(
         this.selectedShoppingCenter
       )}\n\n`;
     }
 
     const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact;
-
+    
+    
     if (selectedContacts?.length > 0) {
       this.selectedContact = [];
       emailContent += 'Representative Organization Contacts that will receive this email:\n';
@@ -919,9 +863,9 @@ export class EmilyComponent implements OnInit {
           emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
           this.selectedContact.push(contact.id);
         }
-        contact.ShoppingCenters.forEach((sp) => {
+        contact.Centers?.forEach((sp) => {
           if (sp.selected) {
-            emailContent += ` Shopping Center: ${sp.centername} \n `;
+            emailContent += ` Shopping Center: ${sp.CenterName} \n `;
           }
         })
       });
@@ -975,9 +919,6 @@ export class EmilyComponent implements OnInit {
         this.BuyBoxOrganizationName +
         ')' +
         '\n\n';
-      //+this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
-      // ?.BuyBoxOrganizationDescription +
-      // '\n\n'
     }
 
     if (this.showMinBuildingSize) {
@@ -1065,23 +1006,21 @@ export class EmilyComponent implements OnInit {
         });
       });
     }
-
+    console.log(`ssw`);
+    
+    console.log(this.emailBody);
+    
     this.emailBody = emailContent; // Update the email body
-  }
-  // send 'EmailBody' and 'promptId' to AI and store Response
-  getGenericEmail() {
-    this.spinner.show();
-    // Check if a shopping center is selected
-    if (!this.selectedShoppingCenter) {
-      alert('Please select a shopping center before generating the email.');
-      return;
-    }
+  } 
 
-    // Check if a prompt and email body are provided
+  getGenericEmail() {
+    this.spinner.show();  
+    this.updateEmailBody();
     if (!this.selectedPromptId || !this.emailBody) {
       alert('Please select a prompt and provide an email body.');
       return;
     }
+
     const promptId = Number(this.selectedPromptId); // Convert to number
     const context = this.emailBody;
     this.PlacesService.generateEmail(promptId, context).subscribe({
@@ -1090,13 +1029,7 @@ export class EmilyComponent implements OnInit {
         this.emailBodyResponse = data?.emailBody || 'No body received';
         this.emailId = data?.id || 'No body received';
         this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching generic email:', err);
-        this.emailSubject = 'Error fetching email subject';
-        this.emailBodyResponse = 'Error fetching email body';
-        this.spinner.hide();
-      },
+      }
     });
   }
 
