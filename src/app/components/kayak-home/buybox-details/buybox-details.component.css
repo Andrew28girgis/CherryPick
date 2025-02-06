@@ -1,4 +1,4 @@
-.modal-body {
+.modal-body{
   border: 1px solid #001f3f2b;
   border-radius: 10px;
 }
@@ -16,7 +16,7 @@
   background: var(--Button-Secondary-BG, #fff);
   white-space: nowrap;
   padding-right: 0 !important;
-  padding-left: 0 !important;
+  padding-left: 0 !important; 
 }
 .card-title {
   color: var(--Body-Text-and-Icons, #707791);
@@ -92,11 +92,4 @@
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
-}
-
-@media screen and (max-width: 768px) {
-  .responsiveEdit {
-    flex-direction: column;
-    gap: 10px;
-  }
 }

@@ -42,7 +42,6 @@ import {
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mainContainer') mainContainer!: ElementRef;
-  showReactions: { [key: number]: boolean } = {};
   shoppingCenter: any;
   selectedView: string = 'shoppingCenters';
   General!: General;
@@ -74,18 +73,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
-    {
-      text: 'Social Media View',
-      icon: '../../../assets/Images/Icons/facebook.svg',
-      status: 5,
-    },
   ];
-
-  likes: { [key: string]: number } = {}
-  comments: { [key: string]: string[] } = {}
-  showComments: { [key: string]: boolean } = {}
-  newComments: { [key: string]: string } = {}
-
   isOpen = false;
   allPlaces!: AllPlaces;
   anotherPlaces!: AnotherPlaces;
@@ -175,7 +163,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '5';
+    this.currentView = localStorage.getItem('currentView') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
@@ -197,7 +185,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     });
 
 
-    this.currentView = localStorage.getItem('currentView') || '5';
+    this.currentView = localStorage.getItem('currentView') || '4';
 
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
@@ -1267,67 +1255,5 @@ export class ShoppingCenterTableComponent implements OnInit {
       console.log(data);
     });
   }
-
-
-
-  toggleReactions(shoppingId: number) {
-    this.showReactions[shoppingId] = !this.showReactions[shoppingId];
-  }
-
-  // react(shopping: any, reactionType: string) {
-  //   if (!this.likes[shopping.Id]) {
-  //     this.likes[shopping.Id] = 0
-  //   }
-  //   this.likes[shopping.Id]++
-  //       console.log(`Reacted with ${reactionType} to ${shopping.CenterName}`);
-  //   this.showReactions[shopping.Id] = false;
-  // }
-
-  react(shopping: any): void {
-    if (!this.likes[shopping.Id]) {
-      this.likes[shopping.Id] = 0
-    }
-    this.likes[shopping.Id]++
-  }
-
-  share(shopping: any): void {
-    // Implement share functionality
-    console.log("Sharing:", shopping.CenterName)
-  }
-
-  toggleComments(shopping: any): void {
-    this.showComments[shopping.Id] = !this.showComments[shopping.Id]
-  }
-
-  addComment(shopping: any): void {
-    if (!this.comments[shopping.Id]) {
-      this.comments[shopping.Id] = []
-    }
-    if (this.newComments[shopping.Id]) {
-      this.comments[shopping.Id].push(this.newComments[shopping.Id])
-      this.newComments[shopping.Id] = ""
-    }
-  }
-
-  getLikes(shopping: any): number {
-    return this.likes[shopping.Id] || 0
-  }
-
-  getComments(shopping: any): string[] {
-    return this.comments[shopping.Id] || []
-  }
-
-  getShowComments(shopping: any): boolean {
-    return this.showComments[shopping.Id] || false
-  }
-
-  getNewComment(shopping: any): string {
-    return this.newComments[shopping.Id] || ""
-  }
-
-  setNewComment(shopping: any, comment: string): void {
-    this.newComments[shopping.Id] = comment
-  }
-
 }
 

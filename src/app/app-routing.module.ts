@@ -9,7 +9,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
-import { KayakComponent } from './components/Kayak/kayak/kayak.component';
+import { KayakComponent } from './components/kayak-home/kayak/kayak.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
@@ -97,16 +97,13 @@ const routes: Routes = [
     component: CommunicationComponent,
     canActivate: [AuthGuardService],
   },
-  {
-    path: 'kayak',
-    component: KayakComponent,
-    canActivate: [AuthGuardService],
-  },
+
   {
     path: 'dashboard/:buyboxid',
-    component: KayakHomeComponent,
+    loadChildren: () => import('./components/kayak-home/kayak.module').then(m => m.KayakModule), 
     canActivate: [AuthGuardService],
   },
+  
 ];
 
 @NgModule({
@@ -119,3 +116,5 @@ const routes: Routes = [
 })
 
 export class AppRoutingModule {}
+
+

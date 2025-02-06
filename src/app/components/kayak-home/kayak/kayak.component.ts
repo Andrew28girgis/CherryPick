@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from '../../../../app/services/places.service';
+import { PlacesService } from '../../../services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { KayakResult, StatesAndCities } from '../../../../models/kayak';
-import { General } from './../../../../../src/models/domain';
+import { General } from '../../../../models/domain';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MapsService } from './../../../../../src/app/services/maps.service';
+import { MapsService } from '../../../services/maps.service';
 import { HttpClient } from '@angular/common/http';
 
 import {
@@ -26,7 +26,7 @@ import {
   TenantsCategories,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StateService } from '../../../../../src/app/services/state.service';
+import { StateService } from '../../../services/state.service';
 import { Center } from '../../../../models/shoppingCenters';
 
 declare const google: any;

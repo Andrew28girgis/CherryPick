@@ -4,30 +4,30 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NavbarComponent } from './components/navbar/navbar.component'; 
+import { NavbarComponent } from './components/navbar/navbar.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NumberFormatDirective } from './app-number-format.directive';
 import { NumberWithCommasPipe } from './pipes/number-with-commas.pipe';
-import { NgbModule, NgbTooltipModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModule,
+  NgbTooltipModule,
+  NgbAlertModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { TokenInterceptor } from './token.interceptor';
-import { StartingComponent } from './components/starting/starting.component';
 import { SummeryComponent } from './components/summery/summery.component';
 import { UserBuyboxComponent } from './components/user-buybox/user-buybox.component';
-// import { NgxPaginationModule } from 'ngx-pagination';
 import { OrganizationsComponent } from './components/organizations/organizations.component';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
-import { SidebarComponent } from './components/kanban/sidebar/sidebar.component'; 
+import { SidebarComponent } from './components/kanban/sidebar/sidebar.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { KayakComponent } from './components/Kayak/kayak/kayak.component';
-import { SortByPipe } from './pipes/sortBy/sort-by.pipe';
+import { KayakModule } from './components/kayak-home/kayak.module';
 import { ToastrModule } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
 import { AssistantComponent } from './components/kanban/assistant/assistant.component';
@@ -42,20 +42,12 @@ import { StakeHolderComponent } from './components/kanban/stake-holders/stake-ho
 import { SourcesComponent } from './components/kanban/sources/sources.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
-import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
-import { EmilyComponent } from './components/kayak-home/emily/emily.component';
-import { BuyboxDetailsComponent } from './components/kayak-home/buybox-details/buybox-details.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
-import { ChatHttpClient } from './services/chat-http-client';
-import { BuyboxShoppingCentersComponent } from './components/kayak-home/buybox-shopping-centers/buybox-shopping-centers.component';
-import { SidbarComponent } from './components/sidbar/sidbar.component';
-import { LogoutComponent } from './components/logout/logout.component';
-import { WorkSpacesComponent } from './components/kayak-home/work-spaces/work-spaces.component';
-import { ShoppingCenterTableComponent } from './components/kayak-home/shopping-center-table/shopping-center-table.component';
-import { BuyboxRelatiosComponent } from './components/kayak-home/buybox-relatios/buybox-relatios.component';
+ import { LogoutComponent } from './components/logout/logout.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -66,7 +58,6 @@ import { BuyboxRelatiosComponent } from './components/kayak-home/buybox-relatios
     NumberFormatDirective,
     LandingComponent,
     NumberWithCommasPipe,
-    StartingComponent,
     SummeryComponent,
     UserBuyboxComponent,
     OrganizationsComponent,
@@ -75,8 +66,6 @@ import { BuyboxRelatiosComponent } from './components/kayak-home/buybox-relatios
     KanbanComponent,
     KanbanHomeComponent,
     SidebarComponent,
-    KayakComponent,
-    SortByPipe,
     AssistantComponent,
     FilterPanelComponent,
     EditPopupComponent,
@@ -89,36 +78,28 @@ import { BuyboxRelatiosComponent } from './components/kayak-home/buybox-relatios
     SourcesComponent,
     TasksComponent,
     CommunicationComponent,
-    KayakHomeComponent,
-    EmilyComponent,
-    BuyboxDetailsComponent,
-    BuyboxShoppingCentersComponent,
-    SidbarComponent,
-    LogoutComponent,
-    WorkSpacesComponent,
-    ShoppingCenterTableComponent,
-    BuyboxRelatiosComponent
-    
+    LogoutComponent, 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CommonModule,
+    RouterModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    NgxSpinnerModule,
     ReactiveFormsModule,
+    NgxSpinnerModule,
     NgbModule,
     NgbTooltipModule,
     NgbAlertModule,
     DragDropModule,
     ToastrModule.forRoot(),
-    RouterModule,
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
-    BrowserAnimationsModule
+    KayakModule,
+    SharedModule   ,
+
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
@@ -132,12 +113,7 @@ import { BuyboxRelatiosComponent } from './components/kayak-home/buybox-relatios
       useClass: GroqApiInterceptor,
       multi: true,
     },
-  ],
+  ], 
   bootstrap: [AppComponent],
-  exports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule
-  ]
 })
 export class AppModule {}

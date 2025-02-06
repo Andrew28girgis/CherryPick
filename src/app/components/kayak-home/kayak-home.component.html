@@ -1,62 +1,33 @@
 <div class="row m-0 p-0">
-  <!-- Sidebar -->
-  <div
-    class="m-0 p-0"
-    [style.width]="isCollapsed ? '5% !important' : '20% !important'"
-    id="primaryColumn"
-  >
-    <div style="width: inherit; position: fixed">
-      <div style="display: flex">
-        <!-- Sidebar Primary -->
-        <div
-    [style.width]="isCollapsed ? '5% !important' : '20% !important'"
-    id="primaryColumn"
-    class="p-0 col-12 col-md-3 col-lg-2"
-  >
+  <div class="col-1 p-0">
     <app-sidbar></app-sidbar>
   </div>
-        <!-- Sidebar Secondary -->
-        <div
-          class="Sidbar-Secondary"
-          id="secondarySidebar"
-          [style.display]="isCollapsed ? 'none' : 'block'"
+  <div class="col-11">
+    <div class="Nav__section">
+      <ul class="p-0 mt-3 m-0">
+        <li
+          *ngFor="let tab of tabs"
+          [ngClass]="{ active: selectedTab === tab.id }"
+          (click)="selectTab(tab.id)"
         >
-          <!-- <p class="name-summary">Name Summary</p> -->
-          <ul class="p-0 m-0 pt-3 ul-summery">
-            <li
-              (click)="setActiveComponent('search')"
-              [ngClass]="{ activeTab: activeComponent === 'search' }"
-            >
-              Shopping centers
-            </li>
-            
-            <li
-              (click)="setActiveComponent('emily')"
-              [ngClass]="{ activeTab: activeComponent === 'emily' }"
-            >
-              Buybox Management
-            </li>
-          </ul>
-        </div>
-      </div>
+          {{ tab.label }}
+        </li>
+      </ul>
     </div>
-  </div>
+    <div style="background-color: #fff; padding: 10px;min-height: 85vh;border-radius: 2px;">
+      
+      <ng-container [ngSwitch]="activeComponent">
+        <app-shopping-center-table *ngSwitchCase="'Properties'"></app-shopping-center-table>
+        <app-buybox-details *ngSwitchCase="'Details'"></app-buybox-details>
+        <app-kayak *ngSwitchCase="'Manage'"></app-kayak>     
+         <!-- <app-kayak *ngSwitchCase="'search'"></app-kayak> -->
+        <!-- <app-kayak *ngSwitchCase="'search'"></app-kayak>
+            <app-wizard *ngSwitchCase="'wizard'"></app-wizard>
+            <app-shopping-centers *ngSwitchCase="'centers'"></app-shopping-centers>
+            <app-edit-specs *ngSwitchCase="'specs'"></app-edit-specs>
+            <app-sharing *ngSwitchCase="'sharing'"></app-sharing> -->
+      </ng-container>
+    </div>
 
-  <!-- Main Content -->
-  <div
-    class=""
-    id="contentColumn"
-    [style.width]="isCollapsed ? '95% !important' : '80% !important'"
-  >
-    <ng-container [ngSwitch]="activeComponent">
-      <app-kayak *ngSwitchCase="'search'"></app-kayak>
-      <app-emily *ngSwitchCase="'emily'"></app-emily>
-      <app-buybox-details *ngSwitchCase="'details'"></app-buybox-details>
-      <!-- <app-kayak *ngSwitchCase="'search'"></app-kayak>
-          <app-wizard *ngSwitchCase="'wizard'"></app-wizard>
-          <app-shopping-centers *ngSwitchCase="'centers'"></app-shopping-centers>
-          <app-edit-specs *ngSwitchCase="'specs'"></app-edit-specs>
-          <app-sharing *ngSwitchCase="'sharing'"></app-sharing> -->
-    </ng-container>
   </div>
 </div>

@@ -34,7 +34,9 @@ import {BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEma
 
 export class EmilyComponent implements OnInit {
   @Output() contentChange = new EventEmitter<string>();
-  buyBoxId!: number | null;
+  buyBoxId!: any;
+  orgId!: any;
+
   TemplatesId!: number | null;
   General!: any;
   generated: Generated[] = [];
@@ -82,8 +84,7 @@ export class EmilyComponent implements OnInit {
   shoppingCentersSelected: Center | undefined = undefined;
   generatedGetSavedTemplates: any;
   contactidsJoin: any;
-  buybox: any;
-  selectedTab: string = 'Properties';
+  buybox: any; 
   shoppingCenterOrganization!: number;
   selectedEmailyID: string | null = null;
   showSelections = true;
@@ -110,15 +111,17 @@ export class EmilyComponent implements OnInit {
     private PlacesService: PlacesService
   ) {
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
+      this.buyBoxId = params.get('buyboxId');
+      this.orgId = params.get('orgId');
+      this.shoppingCenterOrganization = this.orgId; 
+      this.GetBuyBoxOrganizationsForEmail(); 
     });
   }
 
   ngOnInit() {
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
-    this.GetPrompts();
-    this.GetBuyBoxInfoDetails();
+    this.GetPrompts(); 
 
     setTimeout(() => {
       this.showClientProfile = true;
@@ -134,24 +137,7 @@ export class EmilyComponent implements OnInit {
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();  
     }, 3000); 
-  }
-
-  toggleSelections() {
-    this.showSelections = !this.showSelections;
-  }
-
-  selectTab(tabId: string): void {
-    this.selectedTab = tabId;
-  }
-
-  trackByRelation(index: number, relation: any): number {
-    return relation.id;
-  }
-
-  onContentChange(event: Event): void {
-    const target = event.target as HTMLElement;
-    this.contentChange.emit(target.innerHTML);
-  }
+  }   
 
   selectManagerContactsByDefault() {
     this.getManagerContacts(this.selectedShoppingCenter).forEach((contact) => {
@@ -192,15 +178,7 @@ export class EmilyComponent implements OnInit {
     });
   }
 
-  handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
-    this.emailSubject = '';
-    this.emailBodyResponse = '';
-    this.selectedTab = event.tabId;
-    this.shoppingCenterOrganization = event.shoppingCenterId; 
-    this.GetBuyBoxOrganizationsForEmail();
-    this.getShoppingCenters(this.buyBoxId!);
-  }
-
+ 
   GetBuyBoxOrganizationsForEmail() {
      
     const body: any = {
@@ -327,31 +305,7 @@ export class EmilyComponent implements OnInit {
       },
     });
   }
-
-  getShoppingCenters(buyboxId: number): void {
-    this.spinner.show();
-    const body: any = {
-      Name: 'GetMarketSurveyShoppingCenters',
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.shoppingCenters = data.json;
-        this.shoppingCentersSelected = this.shoppingCenters.find(
-          (S: Center) => S.Id == this.shoppingCenterOrganization
-        );
-        this.selectedShoppingCenter = this.ShoppingCenterNames.find(
-          (center) => center.CenterName === this.shoppingCentersSelected?.CenterName
-        )?.CenterName || '';
-        this.onSelectedShoppingCenterChange();
-        this.spinner.hide();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
+ 
 
   objectEmailSavedtemplate: any;
   SaveTemplate() {
@@ -805,41 +759,23 @@ export class EmilyComponent implements OnInit {
         });
       }
     }
-  }
-  //checkbox select 'Description' and update in textarea
+  } 
+
   onManagerDescriptionChange() {
     this.updateEmailBody();
   }
+  
   generateAssistantEmail(assistantName: string): string {
     if (!assistantName) return '';
     return assistantName.toLowerCase().replace(/\s+/g, '') + '@cherrypick.com';
   }
+
   onAssistantCheckboxChange(contact: any) {
     if (!contact.assistantSelected) {
       contact.selectedAssistantName = false; // Reset selection
     }
     this.updateEmailBody();
-  }
-
-  GetBuyBoxInfoDetails() {
-    const body: any = {
-      Name: 'GetWizardBuyBoxesById',
-      MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.buybox = data.json;
-
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-      },
-    });
-  }
+  } 
 
   selectedContact: number[] = [];
 
@@ -872,34 +808,28 @@ export class EmilyComponent implements OnInit {
       emailContent += '\n';
     }
 
-    // Display selected cotenants with activity if showCotenantsWithActivity is true
     if (this.showCotenantsWithActivity) {
-      // Check if there's at least one selected cotenant in any activity
       const anySelected = this.groupedActivityTypes.some((activity: any) =>
         activity.Cotenants.some((co: any) => co.selected)
       );
 
       if (anySelected) {
         emailContent += 'Cotenants in the shopping center:\n';
-        // Iterate over each activity group
         this.groupedActivityTypes.forEach((activity) => {
-          // Filter to get only the selected cotenants in this activity
           const selectedCotenants = activity.Cotenants.filter(
             (co: any) => co.selected
           );
           if (selectedCotenants.length > 0) {
-            // Print the activity type as a heading
             emailContent += `${activity.ActivityType}:\n`;
-            // Print each selected cotenant under this activity
             selectedCotenants.forEach((co: any) => {
               emailContent += `- ${co.CotenantName}\n`;
             });
           }
         });
-        emailContent += '\n'; // Add a spacing line after all activities
+        emailContent += '\n'; 
       }
     }
-    // Handle Cotenants without Activity
+
     if (this.showCotenantsWithoutActivity) {
       const cotenantsWithout = this.getCotenantsWithoutActivityType(
         this.selectedShoppingCenter

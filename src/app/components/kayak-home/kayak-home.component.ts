@@ -5,34 +5,31 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-kayak-home',
   templateUrl: './kayak-home.component.html',
-  styleUrls: ['./kayak-home.component.css']
+  styleUrls: ['./kayak-home.component.css'],
 })
 export class KayakHomeComponent implements OnInit {
-  activeComponent: string = '';
-  // isCollapsed: boolean = false; 
+  tabs = [
+    { id: 'Properties', label: 'Properties' },
+    { id: 'Details', label: 'Details' },
+    { id: 'Manage', label: 'Manage' },
+  ];
 
-    constructor(public router: Router,private _location: Location) {}
+  activeComponent: string = 'Properties';  
+  selectedTab: string = 'Properties';  
 
-  isCollapsed: boolean = true; 
+  constructor(public router: Router, private _location: Location) {}
 
-  toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
-  }
-  
   ngOnInit() {
-    this.setActiveComponent('emily');
-  }
-
-  setActiveComponent(componentName: string) {
-    this.activeComponent = componentName;
-  }
-
-  getActiveComponent(): string {
-    return this.activeComponent;
-  }
-
+    this.activeComponent = 'Properties';
+    this.selectedTab = 'Properties';
+   } 
+   
+  selectTab(tabId: string): void {
+    this.selectedTab = tabId; 
+    this.activeComponent = tabId; 
+  } 
+ 
   BackTo() {
     this._location.back();
   }
-
 }

@@ -1,42 +1,15 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<section class="row m-0 p-0 container-fluid">
-  <div
-    [style.width]="isCollapsed ? '5% !important' : '20% !important'"
-    id="primaryColumn"
-    class="p-0 col-12 col-md-3 col-lg-2"
-  >
+<section class="row m-0 p-0">
+  <div class="col-md-1 p-0">
     <app-sidbar></app-sidbar>
   </div>
-
-  <div
-    id="contentColumn"
-    [style.width]="isCollapsed ? '90% !important' : '80% !important'"
-    class="p-0 col-12 col-md-9 col-lg-10"
-  >
-    <div class="row p-0 m-0 align-items-center" style="justify-content: center">
-      <div
-        class="pt-4 col-8 col-md-11 responsive"
-        style="padding-right: 0; padding-left: 0;"
-      >
-        <!-- <div class="searchBox w-100">
-          <input
-            class="searchInput"
-            type="text"
-            name=""
-            placeholder="Search something"
-          />
-          <button class="searchButton" href="#">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </div> -->
-      </div>
-      <div class="pt-4 col-2 col-md-1 logout_Style">
+  <div class="col-md-11 p-0">
+    <div class="row container m-0">
+      <div class="d-flex justify-content-end">
         <app-logout></app-logout>
       </div>
-    </div>
-    
-    <div class="row m-0 p-0 mt-2 ps-2 pe-2">
+
       <ng-container *ngFor="let type of buyboxTypes">
         <div
           class="col-12 col-sm-6 col-md-4 col-lg-3 p-3 ResContainer"
@@ -88,16 +61,3 @@
     </div>
   </div>
 </section>
-
-<!-- <div class="container">
-  <div class="row mt-2">
-    <ng-container *ngFor="let type of buyboxTypes">
-      <div class="col-md-12" (click)="chooseType(type.id , type.organizationId , type.name)">
-        <div class="card-bodyx">
-          <div class="card-title">{{ type.name }}</div>
-          <button class="btn btn-primary" [routerLink]="['/dashboard', type.id]">Go to Kayak</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-</div> -->

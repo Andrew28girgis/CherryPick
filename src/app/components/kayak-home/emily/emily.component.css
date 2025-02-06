@@ -592,10 +592,6 @@ textarea{
 }
 
 
-.border{
-  border-top-left-radius: 0;
-}
-
 
 @media (max-width: 768px) {
   .mobileResponsive{
