@@ -4,6 +4,7 @@
   <div class="Nav__section">
     <ul class="pt-3 pe-2 ps-2 m-0">
       <li id="Emily" *ngFor="let tab of tabs" [ngClass]="{ active: selectedTab === tab.id }"
+      [ngClass]="{'border': tab.id === 'Properties'}"
         (click)="selectTab(tab.id)">
         {{ tab.label }}
       </li>

@@ -1,4 +1,6 @@
 export interface Center {
+likes: any
+comments: any
     Id: number
     CenterName: string
     CenterType: string

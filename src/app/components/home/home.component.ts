@@ -27,6 +27,15 @@ import { ShareOrg } from 'src/models/shareOrg';
 import { StateService } from 'src/app/services/state.service';
 import { permission } from 'src/models/permission';
 
+
+interface SocialMediaData {
+  likes: number;
+  comments: string[];
+  showComments: boolean;
+  newComment: string;
+}
+
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -34,6 +43,7 @@ import { permission } from 'src/models/permission';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('mainContainer') mainContainer!: ElementRef;
+  socialMediaData: { [key: number]: SocialMediaData } = {};
   shoppingCenter: any;
   selectedView: string = 'shoppingCenters';
   General!: General;
@@ -64,6 +74,11 @@ export class HomeComponent implements OnInit {
       text: 'Table View',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
+    },
+    {
+      text: 'Social Media View',
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>',
+      status: 5,
     },
   ];
   isOpen = false;
@@ -130,7 +145,7 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
-    this.currentView = localStorage.getItem('currentView') || '3';
+    this.currentView = localStorage.getItem('currentView') || '5';
 
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
@@ -524,6 +539,13 @@ export class HomeComponent implements OnInit {
     this.currentView = option.status;
     this.isOpen = false;
     localStorage.setItem('currentView', this.currentView);
+    if (this.currentView === 5) {
+      // Initialize comments array for each shopping center
+      this.shoppingCenters.forEach((center: any) => {
+        center.comments = []
+        center.showComments = false
+      })
+    }
   }
 
   goToPlace(place: any) {
@@ -858,5 +880,68 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe((data) => {
       console.log(data);
     });
+  }
+
+
+
+
+
+  initSocialMediaData(centerId: number) {
+    if (!this.socialMediaData[centerId]) {
+      this.socialMediaData[centerId] = {
+        likes: 0,
+        comments: [],
+        showComments: false,
+        newComment: ''
+      };
+    }
+  }
+
+  react(center: Center) {
+    this.initSocialMediaData(center.Id);
+    this.socialMediaData[center.Id].likes++;
+    // TODO: Implement API call to save the reaction
+  }
+
+  share(center: Center) {
+    // TODO: Implement sharing functionality
+    console.log('Sharing', center.CenterName);
+    // This could open a modal with sharing options or use a third-party sharing library
+  }
+
+  toggleComments(center: Center) {
+    this.initSocialMediaData(center.Id);
+    this.socialMediaData[center.Id].showComments = !this.socialMediaData[center.Id].showComments;
+  }
+
+  addComment(center: Center) {
+    this.initSocialMediaData(center.Id);
+    const data = this.socialMediaData[center.Id];
+    if (data.newComment && data.newComment.trim()) {
+      data.comments.push(data.newComment);
+      data.newComment = '';
+      // TODO: Implement API call to save the comment
+    }
+  }
+
+  getLikes(center: Center): number {
+    return this.socialMediaData[center.Id]?.likes || 0;
+  }
+
+  getComments(center: Center): string[] {
+    return this.socialMediaData[center.Id]?.comments || [];
+  }
+
+  getShowComments(center: Center): boolean {
+    return this.socialMediaData[center.Id]?.showComments || false;
+  }
+
+  getNewComment(center: Center): string {
+    return this.socialMediaData[center.Id]?.newComment || '';
+  }
+
+  setNewComment(center: Center, comment: string) {
+    this.initSocialMediaData(center.Id);
+    this.socialMediaData[center.Id].newComment = comment;
   }
 }
