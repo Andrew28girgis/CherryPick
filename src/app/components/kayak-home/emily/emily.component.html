@@ -1,16 +1,9 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <section class="container-fluid pt-2 pb-2 mobileResponsive">
-  <div class="Nav__section">
-    <ul class="pt-3 pe-2 ps-2 m-0">
-      <li id="Emily" *ngFor="let tab of tabs" [ngClass]="{ active: selectedTab === tab.id }"
-        (click)="selectTab(tab.id)">
-        {{ tab.label }}
-      </li>
-    </ul>
-  </div>
+ 
   <div class="main-section-emily">
-    <section *ngIf="selectedTab === 'Emily'">
+    <section>
       <ng-container *ngIf="BuyBoxOrganizationsForEmail.length > 0">
         <div class="row m-0 p-0 mb-3 d-flex">
           <ng-container *ngFor="let OrganizationsForEmail of BuyBoxOrganizationsForEmail;let i = index">
@@ -356,18 +349,6 @@
           </div>
         </div>
       </ng-template>
-    </section>
-  </div>
-
-  <div class="main-section">
-    <section *ngIf="selectedTab === 'Properties'" class="row d-flex m-0 p-2">
-      <app-shopping-center-table (tabChange)="handleTabChange($event)" (bindClicked)="selectTab('kayak')" />
-    </section>
-    <section *ngIf="selectedTab === 'kayak'" class="row d-flex m-0 p-2">
-      <app-kayak />
-    </section>
-    <section *ngIf="selectedTab === 'Details'" class="row d-flex m-0 p-2">
-      <app-buybox-details />
     </section>
   </div>
 </section>

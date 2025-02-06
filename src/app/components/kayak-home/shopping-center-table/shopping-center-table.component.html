@@ -36,9 +36,9 @@
       </select>
     </div> -->
   <!-- </div> -->
-  <div class="col-6 col-md-6 pt-2 d-flex justify-content-end align-items-center">
-    <button class="Bind__button" (click)="triggerBindAction()">Manage</button>
-  </div>
+  <!-- <div class="col-6 col-md-6 pt-2 d-flex justify-content-end align-items-center">
+    <button class="Bind__button" [routerLink]="['/kayak']">Manage</button>
+  </div> -->
 </div>
 
 <div class="map-view">
@@ -173,16 +173,13 @@
                           </button>
                           <div class="shortcuts_icon" *ngIf="selectedId === shoppingCenter.Id">
                             <ul>
-                              <li (click)="redirect(shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID)">
-                                <a class="target">
-                                  <i class="fa-regular fa-envelope" style="
-                                      font-size: 18px;
-                                      margin-top: 3px;
-                                      width: 24px;
-                                    "></i>
+                              <li>
+                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID" target="_blank">
+                                  <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
                                   Emily
                                 </a>
                               </li>
+                              
                               <li (click)="
                                   toggleShortcuts(shoppingCenter.Id, 'close')
                                 ">
@@ -336,12 +333,8 @@
                           <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shopping.Id">
                             <ul>
                               <li style="cursor: pointer">
-                                 <a class="target" (click)="redirect(shopping.Id)">
-                                  <i class="fa-regular fa-envelope" style="
-                                      font-size: 18px;
-                                      margin-top: 3px;
-                                      width: 24px;
-                                    "></i>
+                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shopping.ShoppingCenter.ManagerOrganization[0].ID" target="_blank">
+                                  <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
                                   Emily
                                 </a>
                               </li>
@@ -613,14 +606,10 @@
                         <div class="shortcuts_iconCard" *ngIf="selectedIdCard === place.Id">
                           <ul>
                             <li style="cursor: pointer">
-                              <a class="target" (click)="redirect(place.Id)">
-                                <i class="fa-regular fa-envelope" style="
-                                    font-size: 18px;
-                                    margin-top: 3px;
-                                    width: 24px;
-                                  "></i>
-                                Emily
-                              </a>
+                             <a class="target" [href]="'/emily/' + BuyBoxId + '/' + place.ShoppingCenter.ManagerOrganization[0].ID" target="_blank">
+                                  <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
+                                  Emily
+                                </a>
                             </li>
                             <li (click)="toggleShortcuts(place.Id, 'close')">
                               <a class="target"

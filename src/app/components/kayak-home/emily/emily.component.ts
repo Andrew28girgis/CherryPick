@@ -34,7 +34,9 @@ import {BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEma
 
 export class EmilyComponent implements OnInit {
   @Output() contentChange = new EventEmitter<string>();
-  buyBoxId!: number | null;
+  buyBoxId!: any;
+  orgId!: any;
+
   TemplatesId!: number | null;
   General!: any;
   generated: Generated[] = [];
@@ -82,8 +84,7 @@ export class EmilyComponent implements OnInit {
   shoppingCentersSelected: Center | undefined = undefined;
   generatedGetSavedTemplates: any;
   contactidsJoin: any;
-  buybox: any;
-  selectedTab: string = 'Properties';
+  buybox: any; 
   shoppingCenterOrganization!: number;
   selectedEmailyID: string | null = null;
   showSelections = true;
@@ -110,7 +111,11 @@ export class EmilyComponent implements OnInit {
     private PlacesService: PlacesService
   ) {
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
+      this.buyBoxId = params.get('buyboxId');
+      this.orgId = params.get('orgId');
+      this.shoppingCenterOrganization = this.orgId; 
+      this.GetBuyBoxOrganizationsForEmail();
+      this.getShoppingCenters(this.buyBoxId!);
     });
   }
 
@@ -138,10 +143,6 @@ export class EmilyComponent implements OnInit {
 
   toggleSelections() {
     this.showSelections = !this.showSelections;
-  }
-
-  selectTab(tabId: string): void {
-    this.selectedTab = tabId;
   }
 
   trackByRelation(index: number, relation: any): number {
@@ -192,15 +193,7 @@ export class EmilyComponent implements OnInit {
     });
   }
 
-  handleTabChange(event: { tabId: string; shoppingCenterId: number }) {
-    this.emailSubject = '';
-    this.emailBodyResponse = '';
-    this.selectedTab = event.tabId;
-    this.shoppingCenterOrganization = event.shoppingCenterId; 
-    this.GetBuyBoxOrganizationsForEmail();
-    this.getShoppingCenters(this.buyBoxId!);
-  }
-
+ 
   GetBuyBoxOrganizationsForEmail() {
      
     const body: any = {
