@@ -149,6 +149,12 @@
                          ManagerOrganizationName
                        }}</label>
                     </div>
+                    <div class="checkbox-section checkbox-section-body-first">
+                      <input type="checkbox" name="ManagerOrganizationDescriptionDetails" id="ManagerOrganizationDescriptionDetails"
+                        class="form-check-input" [(ngModel)]="showMangerDescriptionDetails"
+                        (change)="onMangerDescriptionChange()" />
+                      <label for="ManagerOrganizationDescriptionDetails">{{ManagerOrganizationName}} Description</label>
+                    </div>
                     <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
                       <input type="checkbox" name="TenantRep" id="TenantRep" class="form-check-input"
                         [(ngModel)]="showMangerDescription" (change)="onMangerDescriptionChange()" />
@@ -168,13 +174,6 @@
                         </ng-container>
                       </ng-container>
                     </ng-container>
-
-                    <div class="checkbox-section">
-                      <input type="checkbox" name="ManagerOrganizationDescriptionDetails" id="ManagerOrganizationDescriptionDetails"
-                        class="form-check-input" [(ngModel)]="showMangerDescriptionDetails"
-                        (change)="onMangerDescriptionChange()" />
-                      <label for="ManagerOrganizationDescriptionDetails">{{ManagerOrganizationName}} Description</label>
-                    </div>
                   </div>
                 </div>
                 <!-- Button-Prompet & Show Context & Prompt & Generate-->
