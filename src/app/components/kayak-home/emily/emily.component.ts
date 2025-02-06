@@ -112,6 +112,7 @@ export class EmilyComponent implements OnInit {
   ShoppingCenterAfterLoopDescription: any;
   ShoppingCenterDescriptionText: any;
   ShoppingCenterName: any;
+  ShoppingCenterNameText: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -718,6 +719,7 @@ export class EmilyComponent implements OnInit {
           const managerDescription = this.ShoppingCenterDescription.ShoppingCenterManager?.[0]?.Description;
           const managerName = this.ShoppingCenterDescription.ShoppingCenterManager?.[0]?.Name;
           this.ShoppingCenterName = managerName || 'No name available';
+          this.ShoppingCenterNameText = this.ShoppingCenterName;
           this.ShoppingCenterDescriptionText = managerDescription || 'No description available';
         } else {
           this.ShoppingCenterName = 'No name available';
