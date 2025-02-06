@@ -118,14 +118,20 @@
                     </div>
                     <ng-container *ngIf="showRelationNames">
                       <ng-container *ngFor="let relation of relationCategoriesNames">
+                        
+                        <!-- Relation checkbox section -->
                         <div class="checkbox-section checkbox-section-body-first">
                           <input type="checkbox" [name]="relation.name" [id]="relation.name" class="form-check-input"
                             [(ngModel)]="relation.selected" (change)="onRelationNamesChange()" />
                           <label [for]="relation.name">{{ relation.name }}</label>
                         </div>
-                        <ng-container *ngFor="let item of generated?.[0]?.Releations">
-                          <ng-container *ngIf="generated?.[0]?.Releations">
-                            <ng-container *ngIf="item.RetailRelationCategoryId == relation.id">
+                    
+                        <!-- Only show this part if there are more than 5 relations -->
+                        <ng-container *ngIf="generated[0].Releations.length > 5">
+                    
+                          <!-- Display up to 3 items or all items based on showAllRelations -->
+                          <ng-container *ngFor="let item of generated[0].Releations; let i = index">
+                            <ng-container *ngIf="item.RetailRelationCategoryId == relation.id && (showAllRelations || i < 3)">
                               <div class="checkbox-section checkbox-section-body-first">
                                 <input type="checkbox" [name]="item.Name" [id]="item.Name" class="form-check-input"
                                   [(ngModel)]="item.relationSelect" (change)="updateEmailBody()" />
@@ -133,9 +139,19 @@
                               </div>
                             </ng-container>
                           </ng-container>
+                          <div class="d-flex justify-content-end">
+                            <!-- Show More / Show Less Button -->
+                            <span (click)="toggleRelations()" style="font-size: 13px; font-weight: 700;cursor: pointer;">
+                              {{ showAllRelations ? 'Show Less' : 'Show More' }}
+                            </span>
+                          </div>
+                    
+                    
                         </ng-container>
+                    
                       </ng-container>
                     </ng-container>
+                    
                   </div>
                 </div>
                 <div class="col-4 p-2">
@@ -153,7 +169,7 @@
                       <input type="checkbox" name="ManagerOrganizationDescriptionDetails" id="ManagerOrganizationDescriptionDetails"
                         class="form-check-input" [(ngModel)]="showMangerDescriptionDetails"
                         (change)="onMangerDescriptionChange()" />
-                      <label for="ManagerOrganizationDescriptionDetails">{{ManagerOrganizationName}} Description</label>
+                      <label for="ManagerOrganizationDescriptionDetails">{{ManagerOrganizationName}} Profile</label>
                     </div>
                     <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
                       <input type="checkbox" name="TenantRep" id="TenantRep" class="form-check-input"
