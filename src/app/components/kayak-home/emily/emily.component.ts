@@ -122,6 +122,7 @@ export class EmilyComponent implements OnInit {
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetPrompts(); 
+    this.GetBuyBoxInfoDetails();
 
     setTimeout(() => {
       this.showClientProfile = true;
@@ -137,7 +138,51 @@ export class EmilyComponent implements OnInit {
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();  
     }, 3000); 
-  }   
+  }  
+
+  GetBuyBoxInfoDetails() {
+    const body: any = {
+      Name: 'GetWizardBuyBoxesById',
+      MainEntity: null,
+      Params: {
+        buyboxid: this.buyBoxId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.buybox = data.json;
+
+      },
+      error: (err) => {
+        console.error('Error fetching buybox info:', err);
+      },
+    });
+  }
+  getShoppingCenters(buyboxId: number): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCenters',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.shoppingCenters = data.json;
+        this.shoppingCentersSelected = this.shoppingCenters.find(
+          (S: Center) => S.Id == this.shoppingCenterOrganization
+        );
+        this.selectedShoppingCenter = this.ShoppingCenterNames.find(
+          (center) => center.CenterName === this.shoppingCentersSelected?.CenterName
+        )?.CenterName || '';
+        this.onSelectedShoppingCenterChange();
+        this.spinner.hide();
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
 
   selectManagerContactsByDefault() {
     this.getManagerContacts(this.selectedShoppingCenter).forEach((contact) => {
