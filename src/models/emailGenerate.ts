@@ -39,6 +39,7 @@ export interface Generated {
     relationSelect:boolean
     category: string
     id: number
+    showMore? : boolean
     Name: string
     RetailRelationCategoryId: number
   }

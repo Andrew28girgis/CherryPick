@@ -113,6 +113,12 @@ export class EmilyComponent implements OnInit {
   ShoppingCenterDescriptionText: any;
   ShoppingCenterName: any;
   ShoppingCenterNameText: any;
+  showAllRelations = false;
+
+  // This method will toggle the showAllRelations flag
+  toggleRelations() {
+    this.showAllRelations = !this.showAllRelations;
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -353,9 +359,9 @@ export class EmilyComponent implements OnInit {
         // console.log(this.ShoppingCenterNames);
 
         this.generated?.[0]?.Releations?.forEach(
-          (r) => (r.relationSelect = true)
+          (r) => {r.relationSelect = true}
         );
-
+ 
         //this for to be selected by first shopping center by defaukt
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
@@ -665,7 +671,7 @@ export class EmilyComponent implements OnInit {
       Name: 'GetRetailRelationCategories',
       MainEntity: null,
       Params: {
-        buyboxid: 85,
+        buyboxid: this.buyBoxId,
       },
       Json: null,
     };
