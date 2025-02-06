@@ -22,13 +22,11 @@ export class SummeryComponent {
   buyboxTypes: any[] = [];
   showSummery: boolean = false;
   Token: any;
-  orgId!: number;
-
+  orgId!: number; 
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
   standAlone: Place[] = [];
-  buyboxPlaces: BbPlace[] = [];
-
+  buyboxPlaces: BbPlace[] = []; 
   isCollapsed = true;
 
   constructor(
