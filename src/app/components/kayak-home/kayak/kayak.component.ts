@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from '../../../services/places.service';
+import { PlacesService } from '../../../../app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { KayakResult, StatesAndCities } from '../../../../models/kayak';
-import { General } from '../../../../models/domain';
+import { General } from './../../../../../src/models/domain';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MapsService } from '../../../services/maps.service';
+import { MapsService } from './../../../../../src/app/services/maps.service';
 import { HttpClient } from '@angular/common/http';
 
 import {
@@ -26,7 +26,7 @@ import {
   TenantsCategories,
 } from '../../../../models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StateService } from '../../../services/state.service';
+import { StateService } from '../../../../../src/app/services/state.service';
 import { Center } from '../../../../models/shoppingCenters';
 
 declare const google: any;
@@ -169,9 +169,9 @@ export class KayakComponent implements OnInit {
       next: (data) => {
         this.KayakResult = data.json[0];
         this.Ids = this.KayakResult.Ids; 
-        console.log(this.Ids);
+        // console.log(this.Ids);
         this.ShoppingCenters = this.KayakResult.Result;
-        console.log('shop',this.ShoppingCenters);
+        // console.log('shop',this.ShoppingCenters);
         
         if(!this.Filters){
           this.GetFilters(); 
@@ -229,7 +229,7 @@ export class KayakComponent implements OnInit {
           this.Ids = this.KayakResult.Ids; 
 
           this.Filters = data.json[0];
-          console.log('Filters loaded:', this.Filters);
+          // console.log('Filters loaded:', this.Filters);
 
           // ✅ Extract Min/Max Building Size from API and store in filterValues
           if (this.Filters.MinMaxBuildingSize?.length > 0) {
@@ -251,7 +251,7 @@ export class KayakComponent implements OnInit {
           this.updateSecondaryTypes();
           this.updateNeighbourhoods();
           this.updateTenantCategories();
-          console.log(this.filterValues);
+          // console.log(this.filterValues);
         } else {
           console.warn('No filters data returned.');
           this.resetFilters();

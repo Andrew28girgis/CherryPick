@@ -1,10 +1,8 @@
-/* General Styles for Sliders */
 .slider-container {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
-
 .slider {
   -webkit-appearance: none;
   width: 100%;
@@ -14,17 +12,14 @@
   outline: none;
   transition: all 0.3s ease;
 }
-
 .slider:focus {
   box-shadow: 0 0 5px #2196f3;
 }
-
 .slider::-webkit-slider-runnable-track {
   height: 10px;
   background: #2196f3;
   border-radius: 5px;
 }
-
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -34,13 +29,11 @@
   border-radius: 50%;
   cursor: pointer;
 }
-
 .slider::-moz-range-track {
   height: 10px;
   background: #2196f3;
   border-radius: 5px;
 }
-
 .slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
@@ -48,10 +41,35 @@
   border-radius: 50%;
   cursor: pointer;
 }
-
+.custom-select {
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23707991%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22 /%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  color: #707791;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.modal-title {
+  font-size: 17px;
+  font-weight: bold; /* Makes the text bold */
+}
+.view-places {
+  cursor: pointer;
+  color: #4d65b4;
+  font-weight: 700;
+}
 .chosen-places-container {
   display: inline-block; /* Make the container width fit its content */
-  padding: 0px var(--Space-Space-20, 20px);
+  padding: 10px;
   gap: var(--Space-Space-12, 12px);
   border-radius: var(--Radius-Radius-24, 24px);
   background: var(--Body-Page-BG, #f1f1f4);
@@ -108,12 +126,10 @@
   align-items: center;
   cursor: pointer;
 }
-
 .search-bar .separator {
   font-size: 1.5rem;
   color: var(--Body-General-Body-Border, #e2e4e9);
 }
-
 .search-bar .search-btn {
   display: flex;
   padding: var(--Space-Space-16, 16px);
@@ -169,42 +185,36 @@
   color: var(--Colors-Primary-500, #4d65b4);
 }
 .static-height {
-  height: 210px; /* Set your desired height */
+  height: 210px;
 }
-
 .card-body {
-  overflow-y: auto; /* Add scroll behavior if content overflows */
+  overflow-y: auto;
 }
 .shopping-card {
   border: 1px solid lightgray;
-  background-color: #f8f9fa; /* Light gray */
+  background-color: #f8f9fa;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
-
 .shopping-card:hover {
   transform: scale(1.05);
 }
-
 .selected {
   background-color: #5c6bc0;
   color: white;
   border-color: #5c6bc0;
 }
-
 .shopping-center-num {
   color: #5c6bc0;
   font-weight: 700;
 }
-
 .selected .shopping-center-num {
   color: white;
 }
 .card-filter {
   border-radius: 8px;
 }
-
 .form-select {
   border-radius: 0;
   padding: 7px 19px;
@@ -217,16 +227,21 @@
   gap: 0;
 }
 .image-container {
-  position: relative; /* Set the container relative for absolute positioning of the button */
-  display: inline-block; /* Ensure the image and button wrap together */
+  position: relative;
+  display: inline-block;
 }
-
 .kayak-img {
   height: 135px;
   width: 135px;
-  object-fit: cover; /* Maintain aspect ratio and cover the container */
-  border-radius: 8px; /* Rounded corners */
-  display: block; /* Ensure the image behaves as a block */
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+.kayak-img:hover {
+  transform: scale(1.05);
 }
 .custom-map-btn {
   padding: 10px 15px;
@@ -246,7 +261,7 @@
 .custom-map-btn:active {
   background: #2e3f74;
 }
-.custom-bind-btn { 
+.custom-bind-btn {
   padding: 10px 15px;
   gap: 8px;
   flex: 1 0 0;
@@ -264,7 +279,7 @@
 .custom-bind-btn:active {
   background: #666c72;
 }
-.custom-street-btn { 
+.custom-street-btn {
   padding: 10px 15px;
   gap: 8px;
   flex: 1 0 0;
@@ -308,7 +323,6 @@
   backdrop-filter: blur(1.5px);
   cursor: pointer;
 }
-
 #state-select,
 #city-select {
   border-radius: 10px;
@@ -320,7 +334,6 @@
   text-align: center;
   margin-top: 10px;
 }
-
 .company-name {
   color: var(--Body-Heading-Color, #0c0d0e);
   font-family: Montserrat;
@@ -340,10 +353,8 @@
   width: 20px;
   height: 20px;
 }
-
 .form-check-label {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
@@ -358,7 +369,7 @@
   font-weight: 500;
   line-height: 30px;
 }
-.total{
+.total {
   cursor: pointer;
 }
 .btn-primary {
@@ -376,7 +387,6 @@
   border-radius: var(--Button-Radius, 16px);
   background: linear-gradient(180deg, #016034 0%, #00a560 83.53%);
 }
-
 .btn:hover {
   opacity: 0.9;
 }
@@ -384,7 +394,6 @@
   width: 80%;
   max-width: 400px;
 }
-
 .d-flex.justify-content-center {
   text-align: center;
 }
@@ -409,7 +418,7 @@
 .tenantorg {
   font-size: 0.9rem;
 }
-.sqft{
+.sqft {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
   font-family: Montserrat;
   font-size: 0.9rem;
@@ -435,92 +444,416 @@
   border-radius: 50%;
 }
 ul {
-  list-style: none; /* Remove default bullets */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
 
 ul li {
-  display: flex; /* Use flexbox to align image and text */
+  display: flex;
   align-items: center;
-  padding: 5px 10px; /* Add some padding for better spacing */
-  cursor: pointer; /* Change cursor to pointer for interactivity */
+  padding: 5px 10px;
+  cursor: pointer;
 }
-.statee{
+.statee {
   appearance: none;
   padding-right: 2.5rem;
-  background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23707991%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22 /%3E%3C/svg%3E');
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%23707991%22%3E%3Cpath stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%222%22 d=%22M19 9l-7 7-7-7%22 /%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1rem;
   color: #707791;
 }
-.no-wrap{
+.no-wrap {
   flex-wrap: nowrap;
 }
-
 @media (max-width: 576px) {
+  .table-headd {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .table-text1 {
+    font-size: 11px;
+    line-height: 22px;
+  }
+  .modal-title {
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .sqft {
+    font-size: 0.8rem;
+    line-height: 10px;
+  }
+  .form-check-input {
+    width: 17px;
+    height: 17px;
+  }
+  .tenantorg {
+    font-size: 0.8rem;
+  }
+  .small-titlefilter {
+    font-size: 14px;
+    line-height: 0px;
+  }
+  .chosen-places-container {
+    padding: 5px;
+  }
+  .view-places {
+    font-size: 13px;
+  }
+  .place-item {
+    font-size: 12px;
+    margin-right: 0px;
+  }
   .custom-map-btn {
-    padding: 7px 13px;
+    padding: 5px 11px;
+    font-size: 12px;
   }
 
-  .custom-bind-btn { 
-    padding: 7px 13px;
+  .custom-bind-btn {
+    padding: 5px 11px;
+    font-size: 12px;
   }
-  .custom-street-btn { 
-    padding: 7px 13px; 
+  .custom-street-btn {
+    padding: 5px 11px;
+    font-size: 12px;
   }
   .shoppingcentername {
-    font-size: 15px;
+    font-size: 13px;
+    line-height: 15px;
   }
-  .company-name{
-    font-size: 15px;
+  .card-texts {
+    font-size: 12px;
+    line-height: 17px;
   }
- .separator{
-  display: none;
- }
- .totalll{
-  font-size: 13px;
-}
-.shopping-center-num{
-  font-size: 14px;
+  .logooo {
+    width: 20px;
+    height: 20px;
+  }
+  .company-name {
+    font-size: 13px;
+    line-height: 15px;
+  }
+  .separator {
+    display: none;
+  }
+  .totalll {
+    font-size: 13px;
+  }
+  .shopping-center-num {
+    font-size: 14px;
+  }
+  .eye-text {
+    font-size: 13px;
+    line-height: 15px;
+  }
+  .form-select {
+    border-radius: 0;
+    padding: 3px 0px;
+  }
+  .showfilters {
+    font-size: 13px;
+  }
+  .kayak-img {
+    height: 160px;
+    width: 250px;
+  }
+  .search-bar select {
+    font-size: 14px;
+    margin: 0px;
+  }
+  .modal-imgg {
+    max-width: 200px;
+    max-height: 200px;
 }
 }
 @media (min-width: 576px) {
-  .separator{
+  .search-bar select {
+    font-size: 15px;
+    margin: 0px;
+  }
+  .search-bar {
+    padding: 0px 7px;
+  }
+  .table-headd {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .table-text1 {
+    font-size: 13px;
+    line-height: 14px;
+  }
+  .form-check-label {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .modal-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .view-places {
+    font-size: 14px;
+  }
+  .place-item {
+    font-size: 13px;
+    margin-right: 0px;
+  }
+  .sqft {
+    font-size: 0.9rem;
+    line-height: 10px;
+  }
+  .form-check-input {
+    width: 18px;
+    height: 18px;
+  }
+  .small-titlefilter {
+    font-size: 13px;
+    line-height: 0px;
+  }
+  .tenantorg {
+    font-size: 0.8rem;
+  }
+  .custom-map-btn {
+    padding: 5px 20px;
+    font-size: 12px;
+  }
+
+  .custom-bind-btn {
+    padding: 5px 20px;
+    font-size: 12px;
+  }
+  .custom-street-btn {
+    padding: 5px 20px;
+    font-size: 12px;
+  }
+  .separator {
     display: none;
-   }
-   .totalll{
-    font-size: 16px;
   }
-  .shopping-center-num{
-    font-size: 16px;
+  .totalll {
+    font-size: 14px;
   }
+  .shopping-center-num {
+    font-size: 14px;
+  }
+  .shoppingcentername {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .card-texts {
+    font-size: 13px;
+    line-height: 18px;
+  }
+  .logooo {
+    width: 20px;
+    height: 20px;
+  }
+  .company-name {
+    font-size: 13px;
+    line-height: 15px;
+  }
+  .eye-text {
+    font-size: 15px;
+    line-height: 25px;
+    margin-top: 2px;
+    margin-bottom: 6px;
+  }
+  .modal-imgg {
+    max-width: 350px;
+    max-height: 350px;
+}
 }
 
 @media (min-width: 768px) {
-  .totalll{
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+  }
+  .small-titlefilter {
+    font-size: 13px;
+    line-height: 0px;
+  }
+  .tenantorg {
+    font-size: 0.8rem;
+    line-height: 19px;
+  }
+  .search-bar {
+    padding: 7px 26px;
+  }
+  .custom-map-btn {
+    padding: 10px 17px;
+    font-size: 13px;
+  }
+  .custom-bind-btn {
+    padding: 10px 17px;
+    font-size: 13px;
+  }
+  .custom-street-btn {
+    padding: 10px 17px;
+    font-size: 13px;
+  }
+  .totalll {
     font-size: 12px;
   }
-  .shopping-card{
+  .shopping-card {
     height: 90px;
   }
-  .shopping-center-num{
+  .shopping-center-num {
     font-size: 16px;
   }
+  .separator {
+    display: block;
+  }
+  .shopping-center-num {
+    font-size: 14px;
+  }
+  .shoppingcentername {
+    font-size: 15px;
+    line-height: 20px;
+  }
+  .card-texts {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .logooo {
+    width: 22px;
+    height: 22px;
+  }
+  .company-name {
+    font-size: 14px;
+    line-height: 15px;
+  }
+  .eye-text {
+    font-size: 16px;
+    line-height: 25px;
+    margin-top: 2px;
+    margin-bottom: 6px;
+  }
+  .modal-imgg {
+    max-width: 400px;
+    max-height: 400px;
+}
 }
 
 @media (min-width: 992px) {
-  .totalll{
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+  }
+  .small-titlefilter {
+    font-size: 15px;
+    line-height: 0px;
+  }
+  .tenantorg {
+    font-size: 0.9rem;
+    line-height: 22px;
+  }
+  .modal-imgg{
+    max-width: 700px;
+    max-height: 700px;
+}
+  .search-bar {
+    padding: 10px 20px;
+  }
+  .custom-map-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .custom-bind-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+  .custom-street-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+  .separator {
+    display: block;
+  }
+  .totalll {
     font-size: 14px;
   }
-  .shopping-center-num{
+  .shopping-center-num {
     font-size: 14px;
+  }
+  .shoppingcentername {
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .card-texts {
+    font-size: 15px;
+    line-height: 18px;
+  }
+  .logooo {
+    width: 25px;
+    height: 25px;
+  }
+  .company-name {
+    font-size: 15px;
+    line-height: 15px;
+  }
+  .eye-text {
+    font-size: 16px;
+    line-height: 25px;
+    margin-top: 2px;
+    margin-bottom: 6px;
   }
 }
 @media (min-width: 1200px) {
-  .totalll{
+  .form-check-input {
+    width: 20px;
+    height: 20px;
+  }
+  .small-titlefilter {
+    font-size: 15px;
+    line-height: 0px;
+  }
+  .tenantorg {
+    font-size: 0.9rem;
+    line-height: 22px;
+  }
+  .shoppingcentername {
+    font-size: 17px;
+    line-height: 20px;
+  }
+  .card-texts {
+    font-size: 16px;
+    line-height: 18px;
+  }
+  .logooo {
+    width: 25px;
+    height: 25px;
+  }
+  .company-name {
+    font-size: 16px;
+    line-height: 15px;
+  }
+  .eye-text {
+    font-size: 17px;
+    line-height: 25px;
+    margin-top: 2px;
+    margin-bottom: 6px;
+  }
+  .search-bar {
+    padding: 10px 20px;
+  }
+  .custom-map-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .custom-bind-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+  .custom-street-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+  .separator {
+    display: block;
+  }
+  .totalll {
     font-size: 16px;
   }
- 
 }
