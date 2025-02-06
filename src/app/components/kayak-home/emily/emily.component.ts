@@ -111,6 +111,7 @@ export class EmilyComponent implements OnInit {
   ];
   ShoppingCenterAfterLoopDescription: any;
   ShoppingCenterDescriptionText: any;
+  ShoppingCenterManagerName: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -710,25 +711,43 @@ export class EmilyComponent implements OnInit {
   }
 
   onCheckShoppingCenterDescriptionChange() {
-    // console.log('CenterId:', this.CenterId);  // Check if the CenterId is correct
+    console.log('CenterId:', this.CenterId);  // Check if the CenterId is correct
+  
     if (this.showShoppingCenterDescription) {
       if (this.generated?.[0]?.BuyBoxShoppingCenters) {
+        // Logging BuyBoxShoppingCenters to see the data
+        console.log('BuyBoxShoppingCenters:', this.generated[0].BuyBoxShoppingCenters);
+  
+        // Search for the shopping center with the matching CenterId (ensuring both IDs are numbers)
         this.ShoppingCenterDescription = this.generated[0].BuyBoxShoppingCenters.find((center) => Number(center.ID) === Number(this.CenterId));
-          if (this.ShoppingCenterDescription) {
+  
+        // Check if we found the shopping center and extract the description and name from the ShoppingCenterManager array
+        if (this.ShoppingCenterDescription) {
           const managerDescription = this.ShoppingCenterDescription.ShoppingCenterManager?.[0]?.Description;
+          const managerName = this.ShoppingCenterDescription.ShoppingCenterManager?.[0]?.Name;
+  
+          // Log the name and description to verify they're correct
+          console.log('Manager Name:', managerName);
+          console.log('Description:', managerDescription);
+  
+          // Set the name and description in the component variables (you can display this in your template)
+          this.ShoppingCenterManagerName = managerName || 'No name available';
           this.ShoppingCenterDescriptionText = managerDescription || 'No description available';
         } else {
+          console.log('No matching shopping center found.');
+          this.ShoppingCenterManagerName = 'No name available';
           this.ShoppingCenterDescriptionText = 'No description available';
         }
       } else {
+        console.log('No BuyBoxShoppingCenters data available.');
+        this.ShoppingCenterManagerName = 'No name available';
         this.ShoppingCenterDescriptionText = 'No description available';
       }
     } else {
+      this.ShoppingCenterManagerName = '';  // Clear the name if checkbox is unchecked
       this.ShoppingCenterDescriptionText = '';  // Clear the description if checkbox is unchecked
     }
   }
-  
-  
   
   
 
@@ -793,6 +812,7 @@ export class EmilyComponent implements OnInit {
     // Update the email body after changes
     this.updateEmailBody();
   }
+  
 
   onRelationNamesChange() {
     this.relationCategoriesNames.forEach((relation) => {

@@ -94,17 +94,17 @@
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="BuyBoxOrganizationDescription" id="BuyBoxOrganizationDescription" class="form-check-input"
                       [(ngModel)]="showBuyBoxDescriptionDetails" (change)="onCheckboxBuyBoxDescriptionDetailsChange()"/>
-                      <label for="BuyBoxOrganizationDescription">{{BuyBoxOrganizationName}} Details</label>
+                      <label for="BuyBoxOrganizationDescription">{{BuyBoxOrganizationName}} Profile</label>
                     </div>
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="showBuyBoxDescription" id="showBuyBoxDescription" class="form-check-input"
                       [(ngModel)]="showBuyBoxDescription" (change)="onCheckboxBuyBoxDescriptionChange()"/>
-                      <label for="showBuyBoxDescription">BuyBox Description:</label>
+                      <label for="showBuyBoxDescription">BuyBox Profile</label>
                     </div>
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="showShoppingCenterDescription" id="showShoppingCenterDescription" class="form-check-input"
                       [(ngModel)]="showShoppingCenterDescription" (change)="onCheckShoppingCenterDescriptionChange()"/>
-                      <label for="showShoppingCenterDescription">Shopping Center Description</label>
+                      <label for="showShoppingCenterDescription">{{ShoppingCenterManagerName}} Profile</label>
                     </div>
 
                   </div>
@@ -173,7 +173,7 @@
                       <input type="checkbox" name="ManagerOrganizationDescriptionDetails" id="ManagerOrganizationDescriptionDetails"
                         class="form-check-input" [(ngModel)]="showMangerDescriptionDetails"
                         (change)="onMangerDescriptionChange()" />
-                      <label for="ManagerOrganizationDescriptionDetails">Include Description</label>
+                      <label for="ManagerOrganizationDescriptionDetails">{{ManagerOrganizationName}} Description</label>
                     </div>
                   </div>
                 </div>
