@@ -163,7 +163,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '4';
+    this.currentView = localStorage.getItem('currentView') || '3';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
   }
@@ -185,7 +185,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     });
 
 
-    this.currentView = localStorage.getItem('currentView') || '4';
+    this.currentView = localStorage.getItem('currentView') || '3';
 
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
