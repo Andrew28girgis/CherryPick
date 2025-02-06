@@ -174,7 +174,7 @@
                           <div class="shortcuts_icon" *ngIf="selectedId === shoppingCenter.Id">
                             <ul>
                               <li>
-                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID" target="_blank">
+                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID + '/' + shoppingCenter.Id" target="_blank">
                                   <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
                                   Emily
                                 </a>
@@ -333,7 +333,7 @@
                           <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shopping.Id">
                             <ul>
                               <li style="cursor: pointer">
-                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shopping.ShoppingCenter.ManagerOrganization[0].ID" target="_blank">
+                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shopping.ShoppingCenter.ManagerOrganization[0].ID + '/' + shoppingCenter.Id" target="_blank">
                                   <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
                                   Emily
                                 </a>
@@ -606,7 +606,7 @@
                         <div class="shortcuts_iconCard" *ngIf="selectedIdCard === place.Id">
                           <ul>
                             <li style="cursor: pointer">
-                             <a class="target" [href]="'/emily/' + BuyBoxId + '/' + place.ShoppingCenter.ManagerOrganization[0].ID" target="_blank">
+                             <a class="target" [href]="'/emily/' + BuyBoxId + '/' + place.ShoppingCenter.ManagerOrganization[0].ID + '/' + shoppingCenter.Id" target="_blank">
                                   <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
                                   Emily
                                 </a>

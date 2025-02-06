@@ -11,7 +11,7 @@ import { EmilyComponent } from './emily/emily.component';
 const routes: Routes = [
   { path: '', component: KayakHomeComponent }, 
   { path: 'details', component: BuyboxDetailsComponent },
-  { path: 'emily/:buyboxId/:orgId', component: EmilyComponent },
+  { path: 'emily/:buyboxId/:orgId/:CenterId', component: EmilyComponent },
   { path: 'work-spaces', component: WorkSpacesComponent },
   { path: 'shopping-table', component: ShoppingCenterTableComponent },
   { path: 'relations', component: BuyboxRelatiosComponent },
