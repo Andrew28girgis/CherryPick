@@ -9,12 +9,12 @@
       <div style="display: flex">
         <!-- Sidebar Primary -->
         <div
-    [style.width]="isCollapsed ? '5% !important' : '20% !important'"
-    id="primaryColumn"
-    class="p-0 col-12 col-md-3 col-lg-2"
-  >
-    <app-sidbar></app-sidbar>
-  </div>
+          [style.width]="isCollapsed ? '5% !important' : '20% !important'"
+          id="primaryColumn"
+          class="p-0 col-12 col-md-3 col-lg-2"
+        >
+          <app-sidbar></app-sidbar>
+        </div>
         <!-- Sidebar Secondary -->
         <div
           class="Sidbar-Secondary"
@@ -29,7 +29,7 @@
             >
               Shopping centers
             </li>
-            
+
             <li
               (click)="setActiveComponent('emily')"
               [ngClass]="{ activeTab: activeComponent === 'emily' }"
@@ -42,7 +42,6 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div
     class=""
     id="contentColumn"

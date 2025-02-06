@@ -46,22 +46,22 @@ export class HomeComponent implements OnInit {
   filteredProperties: Property[] = [];
   dropdowmOptions: any = [
     {
-      text: 'Map View',
+      text: 'Map',
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
     }, // Add your SVG paths here
     {
-      text: 'Side List View',
-      icon: '../../../assets/Images/Icons/element-3.png',
+      text: 'Side List',
+      icon: '../../../assets/Images/Icons/element-3.png', 
       status: 2,
     },
     {
-      text: 'Cards View',
+      text: 'Cards',
       icon: '../../../assets/Images/Icons/grid-1.png',
       status: 3,
     },
     {
-      text: 'Table View',
+      text: 'Table',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
@@ -87,14 +87,12 @@ export class HomeComponent implements OnInit {
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
   }
-
   
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
 
-   standAlone: Place[] = []; 
-
+  standAlone: Place[] = []; 
   buyboxPlaces: BbPlace[] = [];
   Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];

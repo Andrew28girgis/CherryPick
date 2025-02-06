@@ -805,11 +805,12 @@ export class EmilyComponent implements OnInit {
         });
       }
     }
-  }
-  //checkbox select 'Description' and update in textarea
+  } 
+
   onManagerDescriptionChange() {
     this.updateEmailBody();
   }
+  
   generateAssistantEmail(assistantName: string): string {
     if (!assistantName) return '';
     return assistantName.toLowerCase().replace(/\s+/g, '') + '@cherrypick.com';
@@ -872,34 +873,28 @@ export class EmilyComponent implements OnInit {
       emailContent += '\n';
     }
 
-    // Display selected cotenants with activity if showCotenantsWithActivity is true
     if (this.showCotenantsWithActivity) {
-      // Check if there's at least one selected cotenant in any activity
       const anySelected = this.groupedActivityTypes.some((activity: any) =>
         activity.Cotenants.some((co: any) => co.selected)
       );
 
       if (anySelected) {
         emailContent += 'Cotenants in the shopping center:\n';
-        // Iterate over each activity group
         this.groupedActivityTypes.forEach((activity) => {
-          // Filter to get only the selected cotenants in this activity
           const selectedCotenants = activity.Cotenants.filter(
             (co: any) => co.selected
           );
           if (selectedCotenants.length > 0) {
-            // Print the activity type as a heading
             emailContent += `${activity.ActivityType}:\n`;
-            // Print each selected cotenant under this activity
             selectedCotenants.forEach((co: any) => {
               emailContent += `- ${co.CotenantName}\n`;
             });
           }
         });
-        emailContent += '\n'; // Add a spacing line after all activities
+        emailContent += '\n'; 
       }
     }
-    // Handle Cotenants without Activity
+
     if (this.showCotenantsWithoutActivity) {
       const cotenantsWithout = this.getCotenantsWithoutActivityType(
         this.selectedShoppingCenter
