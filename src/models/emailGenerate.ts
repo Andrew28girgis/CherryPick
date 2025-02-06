@@ -7,6 +7,7 @@ export interface Generated {
   export interface Buybox {
     Buyboxid: number
     BuyBoxOrganization: BuyBoxOrganization[]
+    Description:string
   }
   
   export interface BuyBoxOrganization {
