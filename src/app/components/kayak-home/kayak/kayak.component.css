@@ -568,6 +568,9 @@ ul li {
 }
 }
 @media (min-width: 576px) {
+  .showfilters {
+    font-size: 13px;
+  }
   .search-bar select {
     font-size: 15px;
     margin: 0px;
@@ -614,17 +617,17 @@ ul li {
     font-size: 0.8rem;
   }
   .custom-map-btn {
-    padding: 5px 20px;
-    font-size: 12px;
+    padding: 6px 20px;
+    font-size: 14px;
   }
 
   .custom-bind-btn {
-    padding: 5px 20px;
-    font-size: 12px;
+    padding: 6px 20px;
+    font-size: 14px;
   }
   .custom-street-btn {
-    padding: 5px 20px;
-    font-size: 12px;
+    padding: 6px 20px;
+    font-size: 14px;
   }
   .separator {
     display: none;
@@ -661,9 +664,32 @@ ul li {
     max-width: 350px;
     max-height: 350px;
 }
+.chosen-places-container {
+  padding: 8px;
+}
+.view-places {
+  font-size: 14px;
+}
 }
 
 @media (min-width: 768px) {
+  .showfilters {
+    font-size: 14px;
+  }
+  .place-item {
+    font-size: 14px;
+    margin-right: 0px;
+  }
+  .sqft {
+    font-size: 0.8rem;
+    line-height: 10px;
+  }
+  .chosen-places-container {
+    padding: 14px;
+  }
+  .view-places {
+    font-size: 16px;
+  }
   .form-check-input {
     width: 20px;
     height: 20px;
@@ -681,30 +707,27 @@ ul li {
   }
   .custom-map-btn {
     padding: 10px 17px;
-    font-size: 13px;
+    font-size: 14px;
   }
   .custom-bind-btn {
     padding: 10px 17px;
-    font-size: 13px;
+    font-size: 14px;
   }
   .custom-street-btn {
     padding: 10px 17px;
-    font-size: 13px;
+    font-size: 14px;
   }
   .totalll {
     font-size: 12px;
   }
   .shopping-card {
-    height: 90px;
+    height: 80px;
   }
   .shopping-center-num {
-    font-size: 16px;
+    font-size: 15px;
   }
   .separator {
     display: block;
-  }
-  .shopping-center-num {
-    font-size: 14px;
   }
   .shoppingcentername {
     font-size: 15px;
@@ -723,7 +746,7 @@ ul li {
     line-height: 15px;
   }
   .eye-text {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 25px;
     margin-top: 2px;
     margin-bottom: 6px;
@@ -735,6 +758,20 @@ ul li {
 }
 
 @media (min-width: 992px) {
+  .place-item {
+    font-size: 14px;
+    margin-right: 0px;
+  }
+  .sqft {
+    font-size: 0.9rem;
+    line-height: 10px;
+  }
+  .chosen-places-container {
+    padding: 14px;
+  }
+  .view-places {
+    font-size: 16px;
+  }
   .form-check-input {
     width: 20px;
     height: 20px;
@@ -774,7 +811,7 @@ ul li {
     font-size: 14px;
   }
   .shopping-center-num {
-    font-size: 14px;
+    font-size: 16px;
   }
   .shoppingcentername {
     font-size: 16px;
@@ -800,6 +837,23 @@ ul li {
   }
 }
 @media (min-width: 1200px) {
+  .shopping-center-num {
+    font-size: 16px;
+  }
+  .place-item {
+    font-size: 14px;
+    margin-right: 0px;
+  }
+  .sqft {
+    font-size: 0.9rem;
+    line-height: 10px;
+  }
+  .chosen-places-container {
+    padding: 14px;
+  }
+  .view-places {
+    font-size: 16px;
+  }
   .form-check-input {
     width: 20px;
     height: 20px;
