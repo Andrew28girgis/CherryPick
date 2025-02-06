@@ -83,6 +83,7 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    RouterModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
@@ -93,7 +94,6 @@ import { SharedModule } from './shared/shared.module';
     NgbAlertModule,
     DragDropModule,
     ToastrModule.forRoot(),
-    RouterModule,
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,

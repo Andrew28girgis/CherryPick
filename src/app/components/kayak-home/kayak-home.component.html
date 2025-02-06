@@ -4,7 +4,7 @@
   </div>
   <div class="col-11">
     <div class="Nav__section">
-      <ul class="pt-3 pe-2 ps-2 m-0">
+      <ul class="p-0 mt-3 m-0">
         <li
           *ngFor="let tab of tabs"
           [ngClass]="{ active: selectedTab === tab.id }"
@@ -14,7 +14,7 @@
         </li>
       </ul>
     </div>
-    <div style="background-color: #fff;">
+    <div style="background-color: #fff; padding: 10px;min-height: 85vh;border-radius: 2px;">
       
       <ng-container [ngSwitch]="activeComponent">
         <app-shopping-center-table *ngSwitchCase="'Properties'"></app-shopping-center-table>
