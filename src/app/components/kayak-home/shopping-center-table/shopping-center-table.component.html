@@ -330,10 +330,10 @@
                           <button class="ellipsis_icont" (click)="toggleShortcutsCard(shopping.Id)">
                             <i class="fa-solid fa-ellipsis"></i>
                           </button>
-                          <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shopping.Id">
+                          <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shopping.Id" >
                             <ul>
                               <li style="cursor: pointer">
-                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shopping.ShoppingCenter.ManagerOrganization[0].ID + '/' + shoppingCenter.Id" target="_blank">
+                                <a class="target" [href]="'/emily/' + BuyBoxId + '/' + shopping.ShoppingCenter.ManagerOrganization[0].ID + '/' + shopping?.Id" target="_blank">
                                   <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
                                   Emily
                                 </a>
@@ -606,10 +606,11 @@
                         <div class="shortcuts_iconCard" *ngIf="selectedIdCard === place.Id">
                           <ul>
                             <li style="cursor: pointer">
-                             <a class="target" [href]="'/emily/' + BuyBoxId + '/' + place.ShoppingCenter.ManagerOrganization[0].ID + '/' + shoppingCenter.Id" target="_blank">
-                                  <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
-                                  Emily
-                                </a>
+
+                              <a class="target" [href]="'/emily/' + BuyBoxId + '/' + place.ShoppingCenter.ManagerOrganization[0].ID + '/' + place?.Id" target="_blank">
+                                <i class="fa-regular fa-envelope" style="font-size: 18px; margin-top: 3px; width: 24px;"></i>
+                                Emily
+                              </a>
                             </li>
                             <li (click)="toggleShortcuts(place.Id, 'close')">
                               <a class="target"
