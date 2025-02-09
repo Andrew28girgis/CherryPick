@@ -76,9 +76,9 @@
                   <td>
                     <div class="table-text" (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
                       style="cursor: pointer">
-                      {{ shoppingCenter.CenterAddress }},{{
+                      {{ shoppingCenter.CenterAddress }}, {{
                         shoppingCenter.CenterCity | titlecase
-                      }},{{ shoppingCenter.CenterState }}
+                      }}, {{ shoppingCenter.CenterState }}
                     </div>
                   </td>
                   <td *ngIf="placesRepresentative != false">
@@ -155,7 +155,7 @@
                     </ng-container>
                   </td>
                   <ng-template #emptyTd>
-                    <td></td>
+                    
                   </ng-template>
                   <td>
                     <div style="position: absolute; display: contents">
