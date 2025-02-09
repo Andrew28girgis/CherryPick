@@ -28,6 +28,7 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StateService } from '../../../../../src/app/services/state.service';
 import { Center } from '../../../../models/shoppingCenters';
+import { finalize, Observable, of, switchMap, tap } from 'rxjs';
 
 declare const google: any;
 
@@ -158,29 +159,27 @@ export class KayakComponent implements OnInit {
     });
   }
 
-  getResult(): void {
-    this.spinner.show(); 
-    const body: any = {
-      Name: 'GetResult',
-      Params: this.filterValues,
-    }; 
+// Refactor getResult() to return an Observable instead of void
+getResult(): Observable<any> {
+  this.spinner.show();
+  const body: any = {
+    Name: 'GetResult',
+    Params: this.filterValues,
+  };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.KayakResult = data.json[0];
-        this.Ids = this.KayakResult.Ids; 
-        // console.log(this.Ids);
-        this.ShoppingCenters = this.KayakResult.Result;
-        // console.log('shop',this.ShoppingCenters);
-        
-        if(!this.Filters){
-          this.GetFilters(); 
-        }
-        this.getBindedShoppingCentersNumber();
-        this.spinner.hide();
-       }, 
-    });
-  }
+  return this.PlacesService.GenericAPI(body).pipe(
+    tap((data: any) => {
+      // Process the result
+      this.KayakResult = data.json[0];
+      this.Ids = this.KayakResult.Ids || [];
+      this.ShoppingCenters = this.KayakResult.Result;
+      this.getBindedShoppingCentersNumber();
+    }),
+    finalize(() => this.spinner.hide())
+  );
+  
+}
+
   
 
   getBindedShoppingCentersNumber(){
@@ -226,8 +225,6 @@ export class KayakComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         if (data && data.json && data.json.length > 0) {
-          this.Ids = this.KayakResult.Ids; 
-
           this.Filters = data.json[0];
           // console.log('Filters loaded:', this.Filters);
 
@@ -251,7 +248,7 @@ export class KayakComponent implements OnInit {
           this.updateSecondaryTypes();
           this.updateNeighbourhoods();
           this.updateTenantCategories();
-          // console.log(this.filterValues);
+          // console.log('fv',this.filterValues);
         } else {
           console.warn('No filters data returned.');
           this.resetFilters();
@@ -570,9 +567,10 @@ export class KayakComponent implements OnInit {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  openFiltersModal(content: any) {
-    this.modalService.open(content, { size: 'lg', centered: true });
-  }
+ openFiltersModal(content: any) {
+  this.modalService.open(content, { size: 'xl', centered: true });
+}
+
 
   openStreetViewPlace(content: any, modalObject?: any) {
     this.General.modalObject = modalObject || {};
@@ -746,19 +744,124 @@ updateSliderValues(): void {
     this.tenantCategories = [];
   }
   handleStateChange(selectedValue: string): void {
-    this.filterValues!.statecode = selectedValue; // Update the selected state
-    this.filterValues!.city = ''; // Clear the city filter
-    this.selectedCity = null; // Reset the selected city in the UI
-    // console.log('State selected:', selectedValue);
-    this.updateCitiesForSelectedState(); // Update city dropdown based on the selected state
-    this.getResult(); // Fetch results for the selected state
-    this.GetFilters();
+    // Update state and reset city
+    this.filterValues!.statecode = selectedValue;
+    this.filterValues!.city = '';
+    this.selectedCity = null;
+    this.updateCitiesForSelectedState();
+  
+    // Chain getResult() and then GetFilters()
+    this.getResult().pipe(
+      // Once getResult() completes, switch to the GetFilters() API call
+      switchMap(() => {
+        // Only call GetFilters if there are valid Ids
+        if (this.Ids && this.Ids.length) {
+          const filtersBody: any = {
+            Name: 'GetFilters',
+            Params: {
+              ids: this.Ids,
+              buyboxid: this.selectedbuyBox,
+            },
+          };
+          // Return the observable from GenericAPI for filters
+          return this.PlacesService.GenericAPI(filtersBody);
+        } else {
+          // If no IDs, return an empty observable or handle accordingly
+          return of(null);
+        }
+      })
+    )
+    .subscribe({
+      next: (data: any) => {
+        if (data && data.json && data.json.length > 0) {
+          this.Filters = data.json[0];
+          // Update filter values from API data
+          if (this.Filters.MinMaxBuildingSize?.length > 0) {
+            const minMax = this.Filters.MinMaxBuildingSize[0];
+            this.minBuildingSize = minMax.MinSize;
+            this.maxBuildingSize = minMax.MaxSize;
+            this.selectedMin = this.minBuildingSize;
+            this.selectedMax = this.maxBuildingSize;
+          } else {
+            console.warn('No MinMaxBuildingSize data available.');
+          }
+          // Call additional update functions if needed
+          this.updateSortedTenants();
+          this.updateSortedOrgs();
+          this.updateSecondaryTypes();
+          this.updateNeighbourhoods();
+          this.updateTenantCategories();
+          
+          
+        } else {
+          console.warn('No filters data returned.');
+          this.resetFilters();
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching filters:', error);
+        this.resetFilters();
+      }
+    });
   }
+  
   onCityChange(selectedValue: string): void {
-    this.filterValues!.city = selectedValue; // Update the selected city
-    this.getResult(); // Fetch results for the selected city
-    this.GetFilters();
+    // Update the selected city filter
+    this.filterValues!.city = selectedValue;
+  
+    // Chain getResult() with the GetFilters() API call
+    this.getResult().pipe(
+      switchMap(() => {
+        // Only call GetFilters if there are valid IDs from getResult()
+        if (this.Ids && this.Ids.length) {
+          const filtersBody: any = {
+            Name: 'GetFilters',
+            Params: {
+              ids: this.Ids,
+              buyboxid: this.selectedbuyBox,
+            },
+          };
+          return this.PlacesService.GenericAPI(filtersBody);
+        } else {
+          // If there are no IDs, return an observable of null (or handle accordingly)
+          return of(null);
+        }
+      })
+    )
+    .subscribe({
+      next: (data: any) => {
+        if (data && data.json && data.json.length > 0) {
+          this.Filters = data.json[0];
+  
+          // Update filter values from API data
+          if (this.Filters.MinMaxBuildingSize?.length > 0) {
+            const minMax = this.Filters.MinMaxBuildingSize[0];
+            this.minBuildingSize = minMax.MinSize;
+            this.maxBuildingSize = minMax.MaxSize;
+            this.selectedMin = this.minBuildingSize;
+            this.selectedMax = this.maxBuildingSize;
+          } else {
+            console.warn('No MinMaxBuildingSize data available.');
+          }
+  
+          // Call additional update functions as needed
+          this.updateSortedTenants();
+          this.updateSortedOrgs();
+          this.updateSecondaryTypes();
+          this.updateNeighbourhoods();
+          this.updateTenantCategories();
+        } else {
+          console.warn('No filters data returned.');
+          this.resetFilters();
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching filters:', error);
+        this.resetFilters();
+      }
+    });
   }
+  
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
       (s) => s.stateCode === this.filterValues.statecode
@@ -775,8 +878,10 @@ updateSliderValues(): void {
     }
 
     this.filterValues.tenants = tenantIds.join(','); 
-    this.getResult(); 
-  }
+    this.getResult().subscribe({
+      next: (data) => {
+      }
+    });  }
   toggleOrgSelection(org: ManagementOrganization): void {
     const currentOrgs = this.filterValues.managementOrganizationIds || '';
     let orgIds = currentOrgs.split(',').filter((id: any) => id.trim());
@@ -788,8 +893,10 @@ updateSliderValues(): void {
       orgIds = orgIds.filter((id: any) => id !== orgIdAsString);
     }
     this.filterValues.managementOrganizationIds = orgIds.join(','); 
-    this.getResult(); 
-  }
+    this.getResult().subscribe({
+      next: (data) => {
+      }
+    });  }
   toggleSecondaryTypeSelection(secondary: SecondaryType): void {
     const currentSecondaryTypes = this.filterValues.secondarytype || ''; 
     let secondaryTypeList = currentSecondaryTypes
@@ -805,8 +912,10 @@ updateSliderValues(): void {
     }
 
     this.filterValues.secondarytype = secondaryTypeList.join(','); 
-    this.getResult(); 
-  }
+    this.getResult().subscribe({
+      next: (data) => {
+      }
+    });  }
   toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
     if (!neighbourhood.Neighbourhood) {
       console.warn('Neighbourhood is undefined, skipping selection.');
@@ -827,8 +936,10 @@ updateSliderValues(): void {
     }
 
     this.filterValues.neighbourhood = neighbourhoodList.join(','); 
-    this.getResult();
-  }
+    this.getResult().subscribe({
+      next: (data) => {
+      }
+    });  }
   toggleTenantCategorySelection(category: TenantsCategories): void {
     const currentCategories = this.filterValues.tenantCategory || ''; 
     let categoryList = currentCategories
@@ -842,8 +953,12 @@ updateSliderValues(): void {
     }
 
     this.filterValues.tenantCategory = categoryList.join(','); 
-    this.getResult(); 
-  }
+    console.log('tenant',this.filterValues.tenantCategory);
+    this.getResult().subscribe({
+      next: (data) => {
+      }
+    });
+    }
   selectShoppingCenter(type: string): void {
     this.selectedCenter = type;
     if (type === 'total') this.getTotalShopping();
