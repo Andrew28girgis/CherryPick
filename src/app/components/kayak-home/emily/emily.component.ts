@@ -36,7 +36,7 @@ export class EmilyComponent implements OnInit {
   buyBoxId!: any;
   orgId!: any;
   CenterId!: any;
-
+  showMoreRelations: { [key: number]: boolean } = {};
   TemplatesId!: number | null;
   General!: any;
   generated: Generated[] = [];
@@ -45,7 +45,7 @@ export class EmilyComponent implements OnInit {
   showMinBuildingSize: boolean = false;
   showMaxBuildingSize: boolean = false;
   showMangerDescription: boolean = false;
-  showMangerDescriptionDetails: boolean = false;
+  showMangerDescriptionDetails: boolean = false; /////////////
   showBuyBoxDescriptionDetails:boolean = false;
   showShoppingCenterDescription:boolean = false;
   showBuyBoxDescription:boolean = false;
@@ -56,7 +56,7 @@ export class EmilyComponent implements OnInit {
   MangerDescription: string = '';
   showRelationNames: boolean = false;
   selectedRelations: RelationNames[] = [];
-  showOrganizationManagers: boolean = false;
+  showOrganizationManagers: boolean = false; ////////////
   managerOrganizations: ManagerOrganization[] = [];
   showManagerDescription: boolean = false;
   emailBody: string = '';
@@ -114,12 +114,7 @@ export class EmilyComponent implements OnInit {
   ShoppingCenterName: any;
   ShoppingCenterNameText: any;
   showAllRelations = false;
-
-  // This method will toggle the showAllRelations flag
-  toggleRelations() {
-    this.showAllRelations = !this.showAllRelations;
-  }
-
+  
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
@@ -158,6 +153,7 @@ export class EmilyComponent implements OnInit {
       this.onCheckboxBuyBoxDescriptionDetailsChange();
       this.onCheckboxBuyBoxDescriptionChange();
       this.onCheckShoppingCenterDescriptionChange();
+      this.onMangerDescriptionDetailsChange();
       this.onCheckboxdetailsChangeMin(true, true);
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();
@@ -296,24 +292,18 @@ export class EmilyComponent implements OnInit {
     }
   }
 
-  onShoppingCenterChange(c: any, shoppingCenter: any): void {
+  onShoppingCenterChange(selectedContact: any, shoppingCenter: any): void {
     this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
-      if (contact != c) {
-        contact.Centers?.forEach((sp) => {
-          if (sp.id === shoppingCenter.id) {
-            sp.selected = shoppingCenter.selected;
-          }
-        });
-      }
+      contact.Centers?.forEach((center) => {
+        if (center.id === shoppingCenter.id) {
+          center.selected = shoppingCenter.selected;
+        }
+      });
+  
+      contact.selected = contact.Centers.some((sc: any) => sc.selected);
     });
-
-    if (c.ShoppingCenters.some((sc: any) => sc.selected)) {
-      c.selected = true;
-    } else {
-      c.selected = false;
-    }
   }
-
+  
   GetBuyBoxInfo() {
     this.spinner.show();
     const body: any = {
@@ -678,6 +668,8 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.relationCategoriesNames = data.json;
+        console.log(' this.relationCategoriesNames ', this.relationCategoriesNames );
+        
         this.relationCategoriesNames.forEach((r) => (r.selected = true));
         this.spinner.hide();
       },
@@ -769,10 +761,32 @@ export class EmilyComponent implements OnInit {
       this.updateEmailBody();
     }
   }
+  
+  onOrganizationManagersChange() {
+    if (this.showOrganizationManagers) {
+      this.loadManagerOrganizations();
+      this.showMangerDescription = true;
+    }
+     else {
+      this.managerOrganizations = [];
+    }
+    this.updateEmailBody();
+  }
+
+  onMangerDescriptionDetailsChange() {
+    if (this.showMangerDescriptionDetails){
+      this.MangerDescription =
+        this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
+          ?.ManagerOrganization[0].ManagerOrganizationDescription || '';
+    }else{
+      this.MangerDescription = '';
+    }
+    // Update the email body after changes
+    this.updateEmailBody();
+  }
 
   onMangerDescriptionChange() {
     if (this.showMangerDescription) {
-      // Ensure "David Dochter" and "Assistant" checkboxes are selected
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = true; // Select the manager checkbox
@@ -782,7 +796,6 @@ export class EmilyComponent implements OnInit {
         });
       });
     } else {
-      // Clear the manager description and deselect checkboxes
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = false; // Deselect the manager checkbox
@@ -790,22 +803,13 @@ export class EmilyComponent implements OnInit {
         });
       });
     }
-    if (this.showMangerDescriptionDetails){
-      // Set the manager description
-      this.MangerDescription =
-        this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
-          ?.ManagerOrganization[0].ManagerOrganizationDescription || '';
-    }else{
-      this.MangerDescription = '';
-    }
-
     // Update the email body after changes
     this.updateEmailBody();
   }
-  
+
   onRelationNamesChange() {
     this.relationCategoriesNames.forEach((relation) => {
-      // If the parent checkbox is selected, select all its children
+      // If the parent checkbox is selected, select all its children      
       if (relation.selected) {
         this.generated[0]?.Releations.forEach((item) => {
           if (item.RetailRelationCategoryId === relation.id) {
@@ -824,6 +828,24 @@ export class EmilyComponent implements OnInit {
     // Update email body and selected relations
     this.updateSelectedRelations();
     this.updateEmailBody();
+  }
+
+  getRelationsForCategory(categoryId: number) {
+    if (!this.generated || this.generated.length === 0 || !this.generated[0].Releations) {
+      return [];// Avoid errors caused by undefined
+    }
+    return this.generated[0].Releations.filter(item => item.RetailRelationCategoryId === categoryId);
+  }
+
+ // Returns only the first 3 relationships or all of them depending on the condition of Show More
+  getVisibleRelations(categoryId: number) {
+    const relations = this.getRelationsForCategory(categoryId);
+    return this.showMoreRelations[categoryId] ? relations : relations.slice(0, 3);
+  }
+
+// Toggle the Show More status for each category
+  toggleShowMore(categoryId: number) {
+    this.showMoreRelations[categoryId] = !this.showMoreRelations[categoryId];
   }
 
   updateSelectedRelations() {
@@ -854,16 +876,6 @@ export class EmilyComponent implements OnInit {
   }
 
   onContactCheckboxChange() {
-    this.updateEmailBody();
-  }
-
-  onOrganizationManagersChange() {
-    if (this.showOrganizationManagers) {
-      this.loadManagerOrganizations();
-      this.showMangerDescription = true;
-    } else {
-      this.managerOrganizations = []; // Clear the data when unchecked
-    }
     this.updateEmailBody();
   }
 
@@ -1039,10 +1051,6 @@ export class EmilyComponent implements OnInit {
           this.BuyBoxOrganizationName +
           ` Representative Brokerage Company: ${manager.ManagerOrganizationName}\n\n`;
 
-        if (this.showMangerDescriptionDetails && this.MangerDescription) {
-          emailContent +=  `${manager.ManagerOrganizationName} Description: ${this.MangerDescription}\n`;
-        }
-
         manager.ManagerOrganizationContacts.forEach((contact) => {
           if (contact.selected) {
             emailContent += `Broker on Charge Assistant that is sending this email: ${contact.Firstname} ${contact.LastName}\n\n`;
@@ -1060,6 +1068,13 @@ export class EmilyComponent implements OnInit {
         });
       });
     }
+
+    if (this.showMangerDescriptionDetails) {
+      this.managerOrganizations.forEach((manager) => {
+        emailContent += `${manager.ManagerOrganizationName} Description: ${this.MangerDescription}\n`;
+      });
+    }
+  
     if(this.showBuyBoxDescriptionDetails){
       emailContent +=
        this.BuyBoxOrganizationName +' Description: (' +
@@ -1330,6 +1345,7 @@ export class EmilyComponent implements OnInit {
     this.showClientProfile = false;
     this.showRelationNames = false;
     this.showOrganizationManagers = false;
+    this.showMangerDescriptionDetails = false;
 
     this.emailBody = '';
     // Clear the groupedActivityTypes and other cotenant selections if needed

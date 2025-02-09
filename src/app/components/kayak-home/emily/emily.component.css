@@ -598,3 +598,23 @@ textarea{
     margin-left: 11px;
   }
 }
+
+input{
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+.Button_all{
+  justify-content: center !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: normal !important;
+  gap: 6px;
+}
+.Emily__contant__button{
+  margin: 0 !important;
+}
+.Emily__body__button{
+  width: 100% !important;
+}
+}
