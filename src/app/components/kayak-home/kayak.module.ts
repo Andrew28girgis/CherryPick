@@ -13,6 +13,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 import { KayakComponent } from './kayak/kayak.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { EmilyOrgComponent } from './emily-org/emily-org.component';
  
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     WorkSpacesComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
-    KayakComponent, 
+    KayakComponent,
+    EmilyOrgComponent, 
   ],
   imports: [
     CommonModule,
@@ -41,6 +43,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     WorkSpacesComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
+    EmilyOrgComponent, 
   ],
 })
 export class KayakModule {}

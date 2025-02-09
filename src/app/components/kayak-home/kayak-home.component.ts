@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
@@ -12,12 +12,14 @@ export class KayakHomeComponent implements OnInit {
     { id: 'Properties', label: 'Properties' },
     { id: 'Details', label: 'Details' },
     { id: 'Manage', label: 'Manage' },
+    // { id: 'Emily', label: 'Emily' },
   ];
 
   activeComponent: string = 'Properties';  
   selectedTab: string = 'Properties';  
 
-  constructor(public router: Router, private _location: Location) {}
+  constructor(public router: Router, private _location: Location,private route: ActivatedRoute,) {
+  }
 
   ngOnInit() {
     this.activeComponent = 'Properties';

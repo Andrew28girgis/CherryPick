@@ -797,13 +797,16 @@ export class KayakComponent implements OnInit {
   }
 
   onCityChange(selectedValue: string): void {
-    this.filterValues!.city = selectedValue;
-    this.filterValues.city = '';
+    // Set the selected city (do not reset it afterwards)
+    this.filterValues.city = selectedValue;
+    
+    // Reset other filters as needed
     this.filterValues.tenants = '';
     this.filterValues.managementOrganizationIds = '';
     this.filterValues.secondarytype = '';
     this.filterValues.neighbourhood = '';
     this.filterValues.tenantCategory = '';
+    
     // Chain getResult() with the GetFilters() API call
     this.getResult()
       .pipe(
@@ -819,7 +822,7 @@ export class KayakComponent implements OnInit {
             };
             return this.PlacesService.GenericAPI(filtersBody);
           } else {
-            // If there are no IDs, return an observable of null (or handle accordingly)
+            // If there are no IDs, return an observable of null
             return of(null);
           }
         })
@@ -845,6 +848,7 @@ export class KayakComponent implements OnInit {
         },
       });
   }
+  
 
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(

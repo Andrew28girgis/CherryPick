@@ -7,11 +7,13 @@ import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-c
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KayakComponent } from './kayak/kayak.component';
 import { EmilyComponent } from './emily/emily.component';
+import { EmilyOrgComponent } from './emily-org/emily-org.component';
 
 const routes: Routes = [
   { path: '', component: KayakHomeComponent }, 
   { path: 'details', component: BuyboxDetailsComponent },
   { path: 'emily/:buyboxId/:orgId/:CenterId', component: EmilyComponent },
+  { path: 'emily-org/:buyboxId/:orgId', component: EmilyOrgComponent },
   { path: 'work-spaces', component: WorkSpacesComponent },
   { path: 'shopping-table', component: ShoppingCenterTableComponent },
   { path: 'relations', component: BuyboxRelatiosComponent },
