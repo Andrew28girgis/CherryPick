@@ -135,6 +135,8 @@ export class EmilyComponent implements OnInit {
     this.GetRetailRelationCategories();
     this.GetPrompts();
     this.GetBuyBoxInfoDetails();
+    this.spinner.show();
+
     
     setTimeout(() => {
       this.showClientProfile = true;
@@ -157,11 +159,12 @@ export class EmilyComponent implements OnInit {
       this.onCheckboxdetailsChangeMin(true, true);
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();
-
+      this.spinner.hide();
     }, 3000);
   }
 
   GetBuyBoxInfoDetails() {
+    this.spinner.show();
     const body: any = {
       Name: 'GetWizardBuyBoxesById',
       MainEntity: null,
@@ -173,9 +176,11 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.buybox = data.json;
+        this.spinner.hide();
       },
       error: (err) => {
         console.error('Error fetching buybox info:', err);
+        this.spinner.hide();
       },
     });
   }
@@ -207,8 +212,10 @@ export class EmilyComponent implements OnInit {
   }
 
   selectManagerContactsByDefault() {
+    this.spinner.show();
     this.getManagerContacts(this.selectedShoppingCenter).forEach((contact) => {
       contact.selectedName = true;
+      this.spinner.hide();
     });
 
     this.onContactCheckboxChange();
@@ -245,6 +252,7 @@ export class EmilyComponent implements OnInit {
   }
 
   GetBuyBoxOrganizationsForEmail() {
+    this.spinner.show();
     const body: any = {
       Name: 'GetShoppingCenterManagerContacts',
       MainEntity: null,
@@ -266,16 +274,18 @@ export class EmilyComponent implements OnInit {
             });
           });
           this.updateEmailBody();
-
           this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+          this.spinner.hide();
         } else {
           this.BuyBoxOrganizationsForEmail = [];
           console.error('Unexpected data format:', data);
+          this.spinner.hide();
         }
       },
       error: (err) => {
         console.error('API error:', err);
         this.BuyBoxOrganizationsForEmail = [];
+        this.spinner.hide();
       },
     });
   }
@@ -763,12 +773,15 @@ export class EmilyComponent implements OnInit {
   }
   
   onOrganizationManagersChange() {
+    this.spinner.show();
     if (this.showOrganizationManagers) {
       this.loadManagerOrganizations();
       this.showMangerDescription = true;
+      this.spinner.hide();
     }
      else {
       this.managerOrganizations = [];
+      this.spinner.hide();
     }
     this.updateEmailBody();
   }
@@ -786,12 +799,14 @@ export class EmilyComponent implements OnInit {
   }
 
   onMangerDescriptionChange() {
+    this.spinner.show();
     if (this.showMangerDescription) {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = true; // Select the manager checkbox
           if (contact.AssistantName) {
             contact.assistantSelected = true; // Select the assistant checkbox
+            this.spinner.hide();
           }
         });
       });
@@ -800,6 +815,7 @@ export class EmilyComponent implements OnInit {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = false; // Deselect the manager checkbox
           contact.assistantSelected = false; // Deselect the assistant checkbox
+          this.spinner.hide();
         });
       });
     }
@@ -1158,6 +1174,7 @@ export class EmilyComponent implements OnInit {
 
   // prompts to be displayed in select dropdown
   async GetPrompts() {
+    this.spinner.show();
     const response = await this.callApi();
     const catagoryId = response.json[0].Id;
 
@@ -1179,14 +1196,17 @@ export class EmilyComponent implements OnInit {
             name: prompt?.Name || 'Unnamed Prompt',
             promptText: prompt?.PromptText || 'No prompt text available',
           }));
+          this.spinner.hide();
         } else {
           console.error('No prompts found in the response.');
           this.prompts = [];
+          this.spinner.hide();
         }
       },
       error: (err) => {
         console.error('Error fetching prompts:', err);
         this.prompts = [];
+        this.spinner.hide();
       },
     });
   }
