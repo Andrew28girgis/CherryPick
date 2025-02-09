@@ -3,47 +3,50 @@
   padding-bottom: 10px;
 }
 
-.card-window{
+.card-window {
   position: relative;
   display: flex;
   justify-content: center;
 }
-.card-window-back{
- position: relative;
- z-index: 10;
-border: 1px solid #aaaaaa66;
-border-radius: 20px;
-}
-.card-window-back2{
-position: absolute;
-width: 94%;
-height: 100%;
-border-radius: 16px;
-background: #0000006e;
-justify-content: center;
-align-items: center;
-font-size: 24px;
-color: red;
-z-index: 100;
-display: none;
+
+.card-window-back {
+  position: relative;
+  z-index: 10;
+  border: 1px solid #aaaaaa66;
+  border-radius: 20px;
 }
 
-.card-window-back2.show { 
+.card-window-back2 {
+  position: absolute;
+  width: 94%;
+  height: 100%;
+  border-radius: 16px;
+  background: #0000006e;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: red;
+  z-index: 100;
+  display: none;
+}
+
+.card-window-back2.show {
   display: flex;
 }
 
-.Button_delete{
+.Button_delete {
   background: rgb(180, 0, 0);
-  color : white;
+  color: white;
   font-size: 16px;
   font-weight: 600;
   border-radius: 20px;
   padding-inline: 26px;
   padding-block: 10px;
 }
-.Button_cancel{
+
+.Button_cancel {
   background: rgb(134, 134, 134);
-  color : white;
+  color: white;
   font-size: 16px;
   font-weight: 600;
   border-radius: 20px;
@@ -115,7 +118,8 @@ select option:checked {
 }
 
 
-.ellipsis_icon ,.ellipsis_icont {
+.ellipsis_icon,
+.ellipsis_icont {
   border: 1.5px solid #7077915b;
   width: 30px;
   height: 30px;
@@ -125,7 +129,8 @@ select option:checked {
   z-index: 1;
 }
 
-.shortcuts_icon,.shortcuts_iconCard {
+.shortcuts_icon,
+.shortcuts_iconCard {
   position: absolute;
   background: white;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
@@ -138,6 +143,7 @@ select option:checked {
   width: max-content;
   top: -135%;
 }
+
 .shortcuts_iconCard {
   top: -22%;
 }
@@ -148,7 +154,8 @@ select option:checked {
   align-items: center;
 }
 
-.shortcuts_icon>ul ,.shortcuts_iconCard>ul {
+.shortcuts_icon>ul,
+.shortcuts_iconCard>ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -159,7 +166,8 @@ select option:checked {
 
 }
 
-.shortcuts_icon>li  ,.shortcuts_iconCard>li{
+.shortcuts_icon>li,
+.shortcuts_iconCard>li {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -173,7 +181,8 @@ select option:checked {
   cursor: pointer;
 }
 
-.shortcuts_icon .target  ,.shortcuts_iconCard .target {
+.shortcuts_icon .target,
+.shortcuts_iconCard .target {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -188,13 +197,15 @@ select option:checked {
   cursor: pointer;
 }
 
-.shortcuts_icon>i  ,.shortcuts_iconCard>i{
+.shortcuts_icon>i,
+.shortcuts_iconCard>i {
   position: absolute;
   right: -8px;
   top: 25%;
   font-size: 25px;
   color: white;
 }
+
 .shortcuts_iconCard>i {
   top: 5%;
 }
@@ -769,6 +780,12 @@ a {
   flex-direction: column;
 }
 
+@media (max-width: 768px) {
+  .card-content_view {
+    height: max-content !important;
+  }
+}
+
 .card-sideview {
   background-color: #fff;
   border-radius: 0 0 20px 20px;
@@ -776,6 +793,11 @@ a {
   cursor: auto;
   display: flex;
   flex-direction: column;
+}
+@media (max-width: 768px) {
+  .card-sideview {
+    height: max-content !important;
+  }
 }
 
 .card-sideview2 {
@@ -888,19 +910,21 @@ a {
 
 
 @media (max-width: 991px) {
-  .cardResponsive{
+  .cardResponsive {
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
 
   }
-  .responsiveMain{
+
+  .responsiveMain {
     padding-right: 2px !important;
     padding-left: 2px !important;
   }
+
   .hide-on-mobile {
     display: none !important;
   }
 }
 
-.cardResponsive{
+.cardResponsive {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
 }

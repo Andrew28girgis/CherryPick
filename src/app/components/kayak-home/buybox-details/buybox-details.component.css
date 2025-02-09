@@ -10,6 +10,25 @@
   font-weight: 600;
   line-height: 24px;
 }
+@media (max-width: 768px) {
+  .div_head{
+   display: block !important;
+   justify-content: flex-end;
+  }
+  .bold-word{
+    width: 100%;
+  }
+  .spec-btn{
+
+    margin-top: 5px;
+  }
+
+  .Button__f{
+    display: flex;
+    justify-content: end;
+  }
+}
+
 .spec-btn {
   border-radius: var(--Radius-Radius-16, 16px);
   border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #4d65b4);

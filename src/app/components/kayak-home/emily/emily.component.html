@@ -7,7 +7,7 @@
       <ng-container *ngIf="BuyBoxOrganizationsForEmail.length > 0">
         <div class="row m-0 p-0 mb-3 d-flex">
           <ng-container *ngFor="let OrganizationsForEmail of BuyBoxOrganizationsForEmail;let i = index">
-            <div class="col-3 p-0">
+            <div class="col-12 col-sm-3">
               <section class="OrganizationsForEmail row m-0 p-0">
                 <div style="align-items: center;" class="m-0 p-0 col-12 d-flex justify-content-center row">
                   <div class="OganirzationsForEmail__img col-8">
@@ -29,7 +29,7 @@
                         <p class="Contact_head pt-1">
                           <input type="checkbox" [name]="'D'+contact?.Firstname" [id]="'D'+contact?.Firstname" class="me-2 form-check-input" [(ngModel)]="contact.selected"
                             (ngModelChange)="onContactChange(contact, $event)">
-                          <label style="font-weight: 600;" [for]="'D'+contact?.Firstname">{{ contact?.Firstname }} {{ contact?.Lastname }}</label>
+                          <label style="font-weight: 600;cursor: pointer;" [for]="'D'+contact?.Firstname">{{ contact?.Firstname }} {{ contact?.Lastname }}</label>
                         </p>
                         <div *ngFor="let shoppingCenter of contact.Centers;let i = index" class="pt-2 ">
                           <p class="Contact_headD pt-2 row align-items-center" style="cursor: pointer;">
@@ -75,10 +75,10 @@
                 </div>
               </section>
             </div>
-            <div class="col-9">
+            <div class="col-12 col-sm-9">
               <div class="row d-flex p-3 m-0 Selections-body" *ngIf="showSelections" [@slideAnimation]>
                 <!-- Selections-filters -->
-                <div class="col-4 p-2">
+                <div class="col-12 col-sm-4 p-2">
                   <div class="box p-2">
                     <div class="checkbox-section-head checkbox-section">
                       <input type="checkbox" name="Parts" id="Parts" class="form-check-input"
@@ -109,52 +109,46 @@
 
                   </div>
                 </div>
-                <div class="col-4 p-2" *ngIf="(generated?.[0]?.Releations || []).length > 0">
+                <div class="col-12 col-sm-4 p-2" *ngIf="(generated?.[0]?.Releations || []).length > 0">
                   <div class="box p-2">
                     <div class="checkbox-section">
                       <input type="checkbox" name="Relation" id="Relation" class="form-check-input"
                         [(ngModel)]="showRelationNames" (change)="onRelationNamesChange()" />
                       <label for="Relation">Relation Name</label>
                     </div>
-                    <ng-container *ngIf="showRelationNames">
+                    <ng-container *ngIf="generated.length > 0 && generated[0].Releations">
                       <ng-container *ngFor="let relation of relationCategoriesNames">
                         
-                        <!-- Relation checkbox section -->
+                        <!-- Main Checkbox for each category -->
                         <div class="checkbox-section checkbox-section-body-first">
                           <input type="checkbox" [name]="relation.name" [id]="relation.name" class="form-check-input"
                             [(ngModel)]="relation.selected" (change)="onRelationNamesChange()" />
                           <label [for]="relation.name">{{ relation.name }}</label>
                         </div>
                     
-                        <!-- Only show this part if there are more than 5 relations -->
-                        <ng-container *ngIf="generated[0].Releations.length > 5">
-                    
-                          <!-- Display up to 3 items or all items based on showAllRelations -->
-                          <ng-container *ngFor="let item of generated[0].Releations; let i = index">
-                            <ng-container *ngIf="item.RetailRelationCategoryId == relation.id && (showAllRelations || i < 3)">
-                              <div class="checkbox-section checkbox-section-body-first">
-                                <input type="checkbox" [name]="item.Name" [id]="item.Name" class="form-check-input"
-                                  [(ngModel)]="item.relationSelect" (change)="updateEmailBody()" />
-                                <label [for]="item.Name">{{ item.Name }}</label>
-                              </div>
-                            </ng-container>
+                        <!-- Show relationships only if there are relationships in the category -->
+                        <ng-container *ngIf="getRelationsForCategory(relation.id).length > 0">
+                          <ng-container *ngFor="let item of getVisibleRelations(relation.id)">
+                            <div class="checkbox-section checkbox-section-body-first">
+                              <input type="checkbox" [name]="item.Name" [id]="item.Name" class="form-check-input"
+                                [(ngModel)]="item.relationSelect" (change)="updateEmailBody()" />
+                              <label [for]="item.Name">{{ item.Name }}</label>
+                            </div>
                           </ng-container>
-                          <div class="d-flex justify-content-end">
-                            <!-- Show More / Show Less Button -->
-                            <span (click)="toggleRelations()" style="font-size: 13px; font-weight: 700;cursor: pointer;">
-                              {{ showAllRelations ? 'Show Less' : 'Show More' }}
+                    
+                          <!-- Show More/Show Less button only if the number of relationships is more than 3 -->
+                          <div class="d-flex justify-content-end" *ngIf="getRelationsForCategory(relation.id).length > 3">
+                            <span (click)="toggleShowMore(relation.id)" style="font-size: 13px; font-weight: 700; cursor: pointer;">
+                              {{ showMoreRelations[relation.id] ? 'Show Less' : 'Show More' }}
                             </span>
                           </div>
-                    
-                    
                         </ng-container>
                     
                       </ng-container>
                     </ng-container>
-                    
                   </div>
                 </div>
-                <div class="col-4 p-2">
+                <div class="col-12 col-sm-4 p-2">
                   <div class="box p-2">
                     <!-- Manager Organizations and Contacts -->
                     <div class="checkbox-section">
@@ -165,10 +159,10 @@
                          ManagerOrganizationName
                        }}</label>
                     </div>
-                    <div class="checkbox-section checkbox-section-body-first">
+                    <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
                       <input type="checkbox" name="ManagerOrganizationDescriptionDetails" id="ManagerOrganizationDescriptionDetails"
                         class="form-check-input" [(ngModel)]="showMangerDescriptionDetails"
-                        (change)="onMangerDescriptionChange()" />
+                        (change)="onMangerDescriptionDetailsChange()" />
                       <label for="ManagerOrganizationDescriptionDetails">{{ManagerOrganizationName}} Profile</label>
                     </div>
                     <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
@@ -195,7 +189,7 @@
                 <!-- Button-Prompet & Show Context & Prompt & Generate-->
                 <ng-container>
                   <div class="row m-0 p-0 ">
-                    <div class="col-6 checkbox-section-select pb-2">
+                    <div class="col-12 col-sm-6 checkbox-section-select pb-2">
                       <label for="discussionDropdown">Select Prompt</label>
                       <select class="form-select form-select-lg" aria-label="Large select example"
                         id="discussionDropdown" [(ngModel)]="selectedPromptId" (change)="updatePrompt()">
@@ -205,7 +199,7 @@
                         </option>
                       </select>
                     </div>
-                    <div class="col-6 d-flex justify-content-between mt-3 align-items-center                      ">
+                    <div class="col-12 col-sm-6 d-flex justify-content-between mt-3 align-items-center Button_all">
                       <button class="Emily__contant__button ms-2" (click)="GenerateEmail()">
                         <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path
