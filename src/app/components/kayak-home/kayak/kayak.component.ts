@@ -177,41 +177,11 @@ export class KayakComponent implements OnInit {
       finalize(() => this.spinner.hide())
     );
   }
-
-  getBindedShoppingCentersNumber() {
-    const count = this.KayakResult?.Result?.filter((result: any) =>
-      this.SelectedShoppingCenterIDs?.includes(result.Id)
-    ).length;
-    return count;
-  }
-
-  getTotalShopping() {
-    this.ShoppingCenters = this.KayakResult.Result;
-  }
-
-  getBindedShopping() {
-    this.ShoppingCenters = [];
-    this.KayakResult.Result.forEach((result: any) =>
-      this.SelectedShoppingCenterIDs.includes(result.Id)
-        ? this.ShoppingCenters.push(result)
-        : null
-    );
-  }
-
-  getUnBindedShopping() {
-    this.ShoppingCenters = [];
-    this.KayakResult.Result.forEach((result: any) =>
-      this.SelectedShoppingCenterIDs.includes(result.Id)
-        ? null
-        : this.ShoppingCenters.push(result)
-    );
-  }
   GetFilters(): void {
     if (!this.Ids) {
       this.resetFilters();
       return;
     }
-
     this.spinner.show();
     const body: any = {
       Name: 'GetFilters',
@@ -220,38 +190,22 @@ export class KayakComponent implements OnInit {
         buyboxid: this.selectedbuyBox,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         if (data && data.json && data.json.length > 0) {
           this.Filters = data.json[0];
-          // console.log('Filters loaded:', this.Filters);
-
-          // ✅ Extract Min/Max Building Size from API and store in filterValues
-          if (this.Filters.MinMaxBuildingSize?.length > 0) {
-            const minMax = this.Filters.MinMaxBuildingSize[0];
-            this.minBuildingSize = minMax.MinSize;
-            this.maxBuildingSize = minMax.MaxSize;
-
-            // Set slider values initially
-            this.selectedMin = this.minBuildingSize;
-            this.selectedMax = this.maxBuildingSize;
-          } else {
-            console.warn('No MinMaxBuildingSize data available.');
-          }
-
-          // Update all filters dynamically
+          // Update all filters dynamically      
           this.updateSortedTenants();
           this.updateSortedOrgs();
           this.updateSecondaryTypes();
           this.updateNeighbourhoods();
           this.updateTenantCategories();
+          this.updateMinMaxBuildingSize();
           // console.log('fv',this.filterValues);
         } else {
           console.warn('No filters data returned.');
           this.resetFilters();
         }
-
         this.spinner.hide();
       },
       error: (error) => {
@@ -262,17 +216,40 @@ export class KayakComponent implements OnInit {
     });
   }
 
+  getBindedShoppingCentersNumber() {
+    const count = this.KayakResult?.Result?.filter((result: any) =>
+      this.SelectedShoppingCenterIDs?.includes(result.Id)
+    ).length;
+    return count;
+  }
+  getTotalShopping() {
+    this.ShoppingCenters = this.KayakResult.Result;
+  }
+  getBindedShopping() {
+    this.ShoppingCenters = [];
+    this.KayakResult.Result.forEach((result: any) =>
+      this.SelectedShoppingCenterIDs.includes(result.Id)
+        ? this.ShoppingCenters.push(result)
+        : null
+    );
+  }
+  getUnBindedShopping() {
+    this.ShoppingCenters = [];
+    this.KayakResult.Result.forEach((result: any) =>
+      this.SelectedShoppingCenterIDs.includes(result.Id)
+        ? null
+        : this.ShoppingCenters.push(result)
+    );
+  }
   ngOnChanges() {
     if (this.General.modalObject?.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     }
   }
-
   toggleExpandedPlaces(index: number): void {
     this.expandedPlacesIndex =
       this.expandedPlacesIndex === index ? null : index;
   }
-
   openModal(content: any) {
     this.modalService.open(content, { size: 'lg', centered: true });
   }
@@ -283,11 +260,9 @@ export class KayakComponent implements OnInit {
     this.selectedShoppingCenterId = shoppingCenterId;
     this.modalService.open(this.placesModal, { size: 'lg', centered: true });
   }
-
   toggleBulkMode(): void {
     this.isBulkMode = !this.isBulkMode;
   }
-
   toggleShoppingCenterBind(
     shoppingCenterId: number,
     isChecked?: boolean
@@ -700,6 +675,29 @@ export class KayakComponent implements OnInit {
 
     // console.log('Sorted Tenant Categories:', this.tenantCategories);
   }
+  updateMinMaxBuildingSize(): void {
+    if (!this.Filters?.MinMaxBuildingSize || 
+        !Array.isArray(this.Filters.MinMaxBuildingSize) || 
+        this.Filters.MinMaxBuildingSize.length === 0) {
+      console.warn('MinMaxBuildingSize data is empty or undefined.');
+      return;
+    }
+  
+    const minMax = this.Filters.MinMaxBuildingSize[0];
+  
+    // Ensure that both MinSize and MaxSize are defined
+    if (minMax.MinSize != null && minMax.MaxSize != null) {
+      this.minBuildingSize = minMax.MinSize;
+      this.maxBuildingSize = minMax.MaxSize;
+      
+      // Set the slider values initially
+      this.selectedMin = this.minBuildingSize;
+      this.selectedMax = this.maxBuildingSize;
+    } else {
+      console.warn('MinSize or MaxSize data is missing.');
+    }
+  }
+  
   updateSliderValues(): void {
     // Update filterValues whenever the user changes the slider
     this.filterValues.minsize = this.selectedMin;
@@ -780,20 +778,12 @@ export class KayakComponent implements OnInit {
         next: (data: any) => {
           if (data && data.json && data.json.length > 0) {
             this.Filters = data.json[0];
-            if (this.Filters.MinMaxBuildingSize?.length > 0) {
-              const minMax = this.Filters.MinMaxBuildingSize[0];
-              this.minBuildingSize = minMax.MinSize;
-              this.maxBuildingSize = minMax.MaxSize;
-              this.selectedMin = this.minBuildingSize;
-              this.selectedMax = this.maxBuildingSize;
-            } else {
-              console.warn('No MinMaxBuildingSize data available.');
-            }
             this.updateSortedTenants();
             this.updateSortedOrgs();
             this.updateSecondaryTypes();
             this.updateNeighbourhoods();
             this.updateTenantCategories();
+            this.updateMinMaxBuildingSize();
           } else {
             console.warn('No filters data returned.');
             this.resetFilters();
@@ -838,22 +828,12 @@ export class KayakComponent implements OnInit {
         next: (data: any) => {
           if (data && data.json && data.json.length > 0) {
             this.Filters = data.json[0];
-
-            // Update filter values from API data
-            if (this.Filters.MinMaxBuildingSize?.length > 0) {
-              const minMax = this.Filters.MinMaxBuildingSize[0];
-              this.minBuildingSize = minMax.MinSize;
-              this.maxBuildingSize = minMax.MaxSize;
-              this.selectedMin = this.minBuildingSize;
-              this.selectedMax = this.maxBuildingSize;
-            } else {
-              console.warn('No MinMaxBuildingSize data available.');
-            }
             this.updateSortedTenants();
             this.updateSortedOrgs();
             this.updateSecondaryTypes();
             this.updateNeighbourhoods();
             this.updateTenantCategories();
+            this.updateMinMaxBuildingSize();
           } else {
             console.warn('No filters data returned.');
             this.resetFilters();
@@ -967,5 +947,12 @@ export class KayakComponent implements OnInit {
     if (type === 'total') this.getTotalShopping();
     else if (type === 'binded') this.getBindedShopping();
     else if (type === 'unBinded') this.getUnBindedShopping();
+  }
+  applyFilter(): void {
+    this.getResult().subscribe({
+      next: (data) => {
+
+      }
+    });
   }
 }
