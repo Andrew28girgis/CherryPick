@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/services/places.service';
-import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
+import { OrganizationsForEmail } from 'src/models/emailyOrganization';
 
 @Component({
   selector: 'app-emily-org',
@@ -11,8 +11,8 @@ import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEm
   styleUrls: ['./emily-org.component.css']
 })
 export class EmilyOrgComponent {
-  buyBoxId!: number | null;
-    BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
+    buyBoxId!: number | null;
+    BuyBoxOrganizationsForEmail: OrganizationsForEmail[] = [];
   
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +29,6 @@ export class EmilyOrgComponent {
 
   ngOnInit() {
     this.GetBuyBoxOrganizationsForEmail();
-    console.log(this.buyBoxId);
   }
 
   GetBuyBoxOrganizationsForEmail() {
@@ -47,7 +46,6 @@ export class EmilyOrgComponent {
         if (data?.json && Array.isArray(data.json)) {
           this.BuyBoxOrganizationsForEmail = data.json;
           console.log(this.BuyBoxOrganizationsForEmail);
-          
           this.spinner.hide();
         } else {
           this.BuyBoxOrganizationsForEmail = [];

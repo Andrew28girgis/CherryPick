@@ -12,7 +12,7 @@ export class KayakHomeComponent implements OnInit {
     { id: 'Properties', label: 'Properties' },
     { id: 'Details', label: 'Details' },
     { id: 'Manage', label: 'Manage' },
-    // { id: 'Emily', label: 'Emily' },
+    { id: 'Emily', label: 'Emily' },
   ];
 
   activeComponent: string = 'Properties';  
