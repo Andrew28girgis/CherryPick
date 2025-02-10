@@ -63,9 +63,7 @@ export class EmilyComponent implements OnInit {
   manager: any;
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
-  selectedShoppingCenter: string = '';
-  selectedMangerName: string = '';
-  showShoppingCenter: boolean = false;
+  selectedShoppingCenter: string = ''; 
   showManagerName: boolean = false;
   showCotenantsWithActivity: boolean = false;
   showCotenantsWithoutActivity: boolean = false;
@@ -105,10 +103,6 @@ export class EmilyComponent implements OnInit {
     CotenantsWithoutActivityType: Cotenant[];
     ShoppingCenterManager: ShoppingCenterManager[];
   }[] = [];
-  tabs = [
-    { id: 'Properties', label: 'Properties' },
-    { id: 'Details', label: 'Details' },
-  ];
   ShoppingCenterAfterLoopDescription: any;
   ShoppingCenterDescriptionText: any;
   ShoppingCenterName: any;
@@ -184,6 +178,7 @@ export class EmilyComponent implements OnInit {
       },
     });
   }
+  
   getShoppingCenters(buyboxId: number): void {
     this.spinner.show();
     const body: any = {

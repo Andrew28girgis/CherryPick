@@ -99,7 +99,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'dashboard/:buyboxid',
+    path: 'dashboard/:buyboxid/:buyboxName',
     loadChildren: () => import('./components/kayak-home/kayak.module').then(m => m.KayakModule), 
     canActivate: [AuthGuardService],
   },

@@ -2,9 +2,13 @@
   <div class="col-1 p-0">
     <app-sidbar></app-sidbar>
   </div>
+  
   <div class="col-11">
+    <div>
+      <h3 class="bb-name">{{BuyboxName}}</h3>
+    </div>
     <div class="Nav__section">
-      <ul class="p-0 mt-3 m-0">
+      <ul class="p-0 m-0">
         <li
           *ngFor="let tab of tabs"
           [ngClass]="{ active: selectedTab === tab.id }"

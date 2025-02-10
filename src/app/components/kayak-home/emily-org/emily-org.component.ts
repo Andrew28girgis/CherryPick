@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router'; 
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/services/places.service';
-import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
+import { OrganizationsForEmail } from 'src/models/emailyOrganization';
 
 @Component({
   selector: 'app-emily-org',
@@ -11,25 +10,21 @@ import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEm
   styleUrls: ['./emily-org.component.css']
 })
 export class EmilyOrgComponent {
-  buyBoxId!: number | null;
-    BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
+    buyBoxId!: number | null;
+    BuyBoxOrganizationsForEmail: OrganizationsForEmail[] = [];
   
   constructor(
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService,
-    private modalService: NgbModal,
+    private spinner: NgxSpinnerService, 
     private PlacesService: PlacesService
   ) {
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
-      console.log('emily',this.buyBoxId);
-      
+      this.buyBoxId = +params.get('buyboxid')!; 
     });
   }
 
   ngOnInit() {
     this.GetBuyBoxOrganizationsForEmail();
-    console.log(this.buyBoxId);
   }
 
   GetBuyBoxOrganizationsForEmail() {
@@ -46,17 +41,13 @@ export class EmilyOrgComponent {
       next: (data) => {
         if (data?.json && Array.isArray(data.json)) {
           this.BuyBoxOrganizationsForEmail = data.json;
-          console.log(this.BuyBoxOrganizationsForEmail);
-          
           this.spinner.hide();
         } else {
           this.BuyBoxOrganizationsForEmail = [];
-          console.error('Unexpected data format:', data);
           this.spinner.hide();
         }
       },
       error: (err) => {
-        console.error('API error:', err);
         this.BuyBoxOrganizationsForEmail = [];
         this.spinner.hide();
       },
