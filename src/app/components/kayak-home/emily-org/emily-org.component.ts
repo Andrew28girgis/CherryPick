@@ -20,7 +20,6 @@ export class EmilyOrgComponent {
   ) {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = +params.get('buyboxid')!; 
-      
     });
   }
 
@@ -45,12 +44,10 @@ export class EmilyOrgComponent {
           this.spinner.hide();
         } else {
           this.BuyBoxOrganizationsForEmail = [];
-          console.error('Unexpected data format:', data);
           this.spinner.hide();
         }
       },
       error: (err) => {
-        console.error('API error:', err);
         this.BuyBoxOrganizationsForEmail = [];
         this.spinner.hide();
       },
