@@ -534,7 +534,10 @@ textarea{
   background: #F2F3F4;
 }
 
-
+.highlighted{
+  border-radius: 20px;
+  background: #c4e1ff !important;
+}
 .send-btn {
   width: 120px;
   border-radius: 10px;

@@ -103,7 +103,10 @@
 }
 
 
-
+.bb-name{
+  padding: 10px 0; 
+  font-weight: 600  ;
+}
 /* Table to Cards transformation for mobile */
 @media (max-width: 768px) {
   /* Hide table headers on mobile */

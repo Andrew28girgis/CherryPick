@@ -17,14 +17,20 @@ export class KayakHomeComponent implements OnInit {
 
   activeComponent: string = 'Properties';  
   selectedTab: string = 'Properties';  
-
-  constructor(public router: Router, private _location: Location,private route: ActivatedRoute,) {
-  }
+  BuyboxName: string | null = '';
+  Buyboxid: any | null = '';
+  constructor(public router: Router, private _location: Location,private route: ActivatedRoute) {}
 
   ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.BuyboxName = params.get('buyboxName');
+      this.Buyboxid = params.get('buyboxid');
+
+    });
+
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
-   } 
+  } 
    
   selectTab(tabId: string): void {
     this.selectedTab = tabId; 
