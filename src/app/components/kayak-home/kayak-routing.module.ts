@@ -10,7 +10,7 @@ import { EmilyComponent } from './emily/emily.component';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
 
 const routes: Routes = [
-  { path: '', component: KayakHomeComponent }, 
+  { path: '', component: KayakHomeComponent },
   { path: 'details', component: BuyboxDetailsComponent },
   { path: 'emily/:buyboxId/:orgId/:CenterId', component: EmilyComponent },
   { path: 'emily-org/:buyboxId/:orgId', component: EmilyOrgComponent },
@@ -21,7 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)], 
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 

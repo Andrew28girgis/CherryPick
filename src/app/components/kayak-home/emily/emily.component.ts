@@ -46,9 +46,9 @@ export class EmilyComponent implements OnInit {
   showMaxBuildingSize: boolean = false;
   showMangerDescription: boolean = false;
   showMangerDescriptionDetails: boolean = false; /////////////
-  showBuyBoxDescriptionDetails:boolean = false;
-  showShoppingCenterDescription:boolean = false;
-  showBuyBoxDescription:boolean = false;
+  showBuyBoxDescriptionDetails: boolean = false;
+  showShoppingCenterDescription: boolean = false;
+  showBuyBoxDescription: boolean = false;
   clientProfileDescription: string = '';
   BuyBoxDescriptionDetails: string = '';
   BuyBoxDescription: string = '';
@@ -114,7 +114,7 @@ export class EmilyComponent implements OnInit {
   ShoppingCenterName: any;
   ShoppingCenterNameText: any;
   showAllRelations = false;
-  
+
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
@@ -135,32 +135,26 @@ export class EmilyComponent implements OnInit {
     this.GetRetailRelationCategories();
     this.GetPrompts();
     this.GetBuyBoxInfoDetails();
-    this.spinner.show();
-
-    
-    setTimeout(() => {
-      this.showClientProfile = true;
-      this.showRelationNames = true;
-      this.showOrganizationManagers = true;
-      this.showManagerName = true;
-      this.showMangerDescription = true;
-      this.showMangerDescriptionDetails=true;
-      this.showMinBuildingSize = true;
-      this.showMaxBuildingSize = true;
-      this.showBuyBoxDescription = true;
-      this.showBuyBoxDescriptionDetails =true;
-      this.showShoppingCenterDescription =true;
-      this.onOrganizationManagersChange();
-      this.onMangerDescriptionChange();
-      this.onCheckboxBuyBoxDescriptionDetailsChange();
-      this.onCheckboxBuyBoxDescriptionChange();
-      this.onCheckShoppingCenterDescriptionChange();
-      this.onMangerDescriptionDetailsChange();
-      this.onCheckboxdetailsChangeMin(true, true);
-      this.selectManagerContactsByDefault();
-      this.selectManagerTenantsByDefault();
-      this.spinner.hide();
-    }, 3000);
+    this.showClientProfile = true;
+    this.showRelationNames = true;
+    this.showOrganizationManagers = true;
+    this.showManagerName = true;
+    this.showMangerDescription = true;
+    this.showMangerDescriptionDetails = true;
+    this.showMinBuildingSize = true;
+    this.showMaxBuildingSize = true;
+    this.showBuyBoxDescription = true;
+    this.showBuyBoxDescriptionDetails = true;
+    this.showShoppingCenterDescription = true;
+    this.onOrganizationManagersChange();
+    this.onMangerDescriptionChange();
+    this.onCheckboxBuyBoxDescriptionDetailsChange();
+    this.onCheckboxBuyBoxDescriptionChange();
+    this.onCheckShoppingCenterDescriptionChange();
+    this.onMangerDescriptionDetailsChange();
+    this.onCheckboxdetailsChangeMin(true, true);
+    this.selectManagerContactsByDefault();
+    this.selectManagerTenantsByDefault();
   }
 
   GetBuyBoxInfoDetails() {
@@ -309,11 +303,11 @@ export class EmilyComponent implements OnInit {
           center.selected = shoppingCenter.selected;
         }
       });
-  
+
       contact.selected = contact.Centers.some((sc: any) => sc.selected);
     });
   }
-  
+
   GetBuyBoxInfo() {
     this.spinner.show();
     const body: any = {
@@ -358,10 +352,10 @@ export class EmilyComponent implements OnInit {
           })) || [];
         // console.log(this.ShoppingCenterNames);
 
-        this.generated?.[0]?.Releations?.forEach(
-          (r) => {r.relationSelect = true}
-        );
- 
+        this.generated?.[0]?.Releations?.forEach((r) => {
+          r.relationSelect = true;
+        });
+
         //this for to be selected by first shopping center by defaukt
         // if (this.ShoppingCenterNames.length > 0) {
         //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
@@ -678,8 +672,11 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.relationCategoriesNames = data.json;
-        console.log(' this.relationCategoriesNames ', this.relationCategoriesNames );
-        
+        console.log(
+          ' this.relationCategoriesNames ',
+          this.relationCategoriesNames
+        );
+
         this.relationCategoriesNames.forEach((r) => (r.selected = true));
         this.spinner.hide();
       },
@@ -698,11 +695,9 @@ export class EmilyComponent implements OnInit {
 
   onCheckboxBuyBoxDescriptionDetailsChange() {
     if (this.showBuyBoxDescriptionDetails) {
-      
       this.BuyBoxDescriptionDetails =
         this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
           ?.BuyBoxOrganizationDescription || '';
-
     } else {
       this.BuyBoxDescriptionDetails = ''; // Clear it if unchecked
     }
@@ -710,25 +705,29 @@ export class EmilyComponent implements OnInit {
 
   onCheckboxBuyBoxDescriptionChange() {
     if (this.showBuyBoxDescription) {
-      
-      this.BuyBoxDescription =
-        this.generated[0]?.Buybox[0]?.Description || '';
-
+      this.BuyBoxDescription = this.generated[0]?.Buybox[0]?.Description || '';
     } else {
-      this.BuyBoxDescription = ''; 
+      this.BuyBoxDescription = '';
     }
   }
 
   onCheckShoppingCenterDescriptionChange() {
     if (this.showShoppingCenterDescription) {
       if (this.generated?.[0]?.BuyBoxShoppingCenters) {
-        this.ShoppingCenterDescription = this.generated[0].BuyBoxShoppingCenters.find((center) => Number(center.ID) === Number(this.CenterId));
+        this.ShoppingCenterDescription =
+          this.generated[0].BuyBoxShoppingCenters.find(
+            (center) => Number(center.ID) === Number(this.CenterId)
+          );
         if (this.ShoppingCenterDescription) {
-          const managerDescription = this.ShoppingCenterDescription.ShoppingCenterManager?.[0]?.Description;
-          const managerName = this.ShoppingCenterDescription.ShoppingCenterManager?.[0]?.Name;
+          const managerDescription =
+            this.ShoppingCenterDescription.ShoppingCenterManager?.[0]
+              ?.Description;
+          const managerName =
+            this.ShoppingCenterDescription.ShoppingCenterManager?.[0]?.Name;
           this.ShoppingCenterName = managerName || 'No name available';
           this.ShoppingCenterNameText = this.ShoppingCenterName;
-          this.ShoppingCenterDescriptionText = managerDescription || 'No description available';
+          this.ShoppingCenterDescriptionText =
+            managerDescription || 'No description available';
         } else {
           this.ShoppingCenterName = 'No name available';
           this.ShoppingCenterDescriptionText = 'No description available';
@@ -742,7 +741,7 @@ export class EmilyComponent implements OnInit {
       this.ShoppingCenterDescriptionText = '';
     }
   }
-  
+
   onCheckboxdetailsChangeMin(
     showMinBuildingSize: any,
     showMaxBuildingSize: any
@@ -771,15 +770,14 @@ export class EmilyComponent implements OnInit {
       this.updateEmailBody();
     }
   }
-  
+
   onOrganizationManagersChange() {
     this.spinner.show();
     if (this.showOrganizationManagers) {
       this.loadManagerOrganizations();
       this.showMangerDescription = true;
       this.spinner.hide();
-    }
-     else {
+    } else {
       this.managerOrganizations = [];
       this.spinner.hide();
     }
@@ -787,11 +785,11 @@ export class EmilyComponent implements OnInit {
   }
 
   onMangerDescriptionDetailsChange() {
-    if (this.showMangerDescriptionDetails){
+    if (this.showMangerDescriptionDetails) {
       this.MangerDescription =
         this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
           ?.ManagerOrganization[0].ManagerOrganizationDescription || '';
-    }else{
+    } else {
       this.MangerDescription = '';
     }
     // Update the email body after changes
@@ -825,7 +823,7 @@ export class EmilyComponent implements OnInit {
 
   onRelationNamesChange() {
     this.relationCategoriesNames.forEach((relation) => {
-      // If the parent checkbox is selected, select all its children      
+      // If the parent checkbox is selected, select all its children
       if (relation.selected) {
         this.generated[0]?.Releations.forEach((item) => {
           if (item.RetailRelationCategoryId === relation.id) {
@@ -847,19 +845,27 @@ export class EmilyComponent implements OnInit {
   }
 
   getRelationsForCategory(categoryId: number) {
-    if (!this.generated || this.generated.length === 0 || !this.generated[0].Releations) {
-      return [];// Avoid errors caused by undefined
+    if (
+      !this.generated ||
+      this.generated.length === 0 ||
+      !this.generated[0].Releations
+    ) {
+      return []; // Avoid errors caused by undefined
     }
-    return this.generated[0].Releations.filter(item => item.RetailRelationCategoryId === categoryId);
+    return this.generated[0].Releations.filter(
+      (item) => item.RetailRelationCategoryId === categoryId
+    );
   }
 
- // Returns only the first 3 relationships or all of them depending on the condition of Show More
+  // Returns only the first 3 relationships or all of them depending on the condition of Show More
   getVisibleRelations(categoryId: number) {
     const relations = this.getRelationsForCategory(categoryId);
-    return this.showMoreRelations[categoryId] ? relations : relations.slice(0, 3);
+    return this.showMoreRelations[categoryId]
+      ? relations
+      : relations.slice(0, 3);
   }
 
-// Toggle the Show More status for each category
+  // Toggle the Show More status for each category
   toggleShowMore(categoryId: number) {
     this.showMoreRelations[categoryId] = !this.showMoreRelations[categoryId];
   }
@@ -1090,27 +1096,26 @@ export class EmilyComponent implements OnInit {
         emailContent += `${manager.ManagerOrganizationName} Description: ${this.MangerDescription}\n`;
       });
     }
-  
-    if(this.showBuyBoxDescriptionDetails){
+
+    if (this.showBuyBoxDescriptionDetails) {
       emailContent +=
-       this.BuyBoxOrganizationName +' Description: (' +
-      this.BuyBoxDescriptionDetails +
-      ')' +
-      '\n\n';
+        this.BuyBoxOrganizationName +
+        ' Description: (' +
+        this.BuyBoxDescriptionDetails +
+        ')' +
+        '\n\n';
     }
-    if(this.showBuyBoxDescription){
+    if (this.showBuyBoxDescription) {
       emailContent +=
-       'BuyBox Description: (' +
-      this.BuyBoxDescription +
-      ')' +
-      '\n\n';
+        'BuyBox Description: (' + this.BuyBoxDescription + ')' + '\n\n';
     }
-    if(this.showShoppingCenterDescription){
+    if (this.showShoppingCenterDescription) {
       emailContent +=
-       this.ShoppingCenterName +' Description: (' +
-      this.ShoppingCenterDescriptionText +
-      ')' +
-      '\n\n';
+        this.ShoppingCenterName +
+        ' Description: (' +
+        this.ShoppingCenterDescriptionText +
+        ')' +
+        '\n\n';
     }
 
     this.emailBody = emailContent;
