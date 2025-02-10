@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: '', component: KayakHomeComponent }, 
   { path: 'details', component: BuyboxDetailsComponent },
   { path: 'emily/:buyboxId/:orgId/:CenterId', component: EmilyComponent },
-  { path: 'emily-org/:buyboxId/:orgId', component: EmilyOrgComponent },
+  { path: 'emily-org/:buyboxId/:orgId', component: EmilyComponent },
   { path: 'work-spaces', component: WorkSpacesComponent },
   { path: 'shopping-table', component: ShoppingCenterTableComponent },
   { path: 'relations', component: BuyboxRelatiosComponent },

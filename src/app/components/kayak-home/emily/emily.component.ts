@@ -680,7 +680,7 @@ export class EmilyComponent implements OnInit {
         this.relationCategoriesNames = data.json;
         console.log(' this.relationCategoriesNames ', this.relationCategoriesNames );
         
-        this.relationCategoriesNames.forEach((r) => (r.selected = true));
+        this.relationCategoriesNames?.forEach((r) => (r.selected = true));
         this.spinner.hide();
       },
     });
@@ -1027,7 +1027,7 @@ export class EmilyComponent implements OnInit {
       const categoryMap: { [key: string]: string[] } = {};
 
       // Iterate through selected relations
-      this.relationCategoriesNames.forEach((selectedRelation) => {
+      this.relationCategoriesNames?.forEach((selectedRelation) => {
         if (selectedRelation.selected) {
           this.generated[0]?.Releations?.forEach((relation) => {
             if (

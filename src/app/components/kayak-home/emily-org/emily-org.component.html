@@ -1,4 +1,39 @@
-<p>emily-org works!</p>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-
-{{BuyBoxOrganizationsForEmail | json}}
+<div class="row">
+  <div
+    *ngFor="let organization of BuyBoxOrganizationsForEmail; let i = index"
+    class="col-3 mb-4"
+  >
+    <a
+      class="card"
+      target="_blank"
+      [routerLink]="['/emily-org', buyBoxId, organization.id]"
+    >
+      <div class="d-flex justify-content-center pt-2">
+        <img
+          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+            organization.id
+          }}"
+          class="card-img-top"
+          alt="Organization Image"
+        />
+      </div>
+      <div class="card-body">
+        <div class="d-flex justify-content-center">
+          <h5 class="card-title">{{ organization.Name }}</h5>
+        </div>
+        <div
+          *ngFor="let center of organization.ShoppingCenters; let last = last"
+          class="center-info"
+          [ngClass]="{ 'with-border': !last }"
+        >
+          <p class="card-text">
+            <strong>Center:</strong> {{ center.CenterName }}<br />
+            <strong>Address:</strong> {{ center.CenterCity }},{{ center.CenterState }}<br />
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
