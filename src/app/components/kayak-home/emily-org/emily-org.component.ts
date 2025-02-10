@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router'; 
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/services/places.service';
 import { OrganizationsForEmail } from 'src/models/emailyOrganization';
@@ -16,13 +15,11 @@ export class EmilyOrgComponent {
   
   constructor(
     private route: ActivatedRoute,
-    private spinner: NgxSpinnerService,
-    private modalService: NgbModal,
+    private spinner: NgxSpinnerService, 
     private PlacesService: PlacesService
   ) {
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = +params.get('buyboxid')!;
-      console.log('emily',this.buyBoxId);
+      this.buyBoxId = +params.get('buyboxid')!; 
       
     });
   }
@@ -45,7 +42,6 @@ export class EmilyOrgComponent {
       next: (data) => {
         if (data?.json && Array.isArray(data.json)) {
           this.BuyBoxOrganizationsForEmail = data.json;
-          console.log(this.BuyBoxOrganizationsForEmail);
           this.spinner.hide();
         } else {
           this.BuyBoxOrganizationsForEmail = [];

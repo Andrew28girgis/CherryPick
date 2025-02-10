@@ -23,16 +23,7 @@
         <div class="d-flex justify-content-center">
           <h5 class="card-title">{{ organization.Name }}</h5>
         </div>
-        <div
-          *ngFor="let center of organization.ShoppingCenters; let last = last"
-          class="center-info"
-          [ngClass]="{ 'with-border': !last }"
-        >
-          <p class="card-text">
-           {{ center.CenterName }}<br />
-            {{ center.CenterCity }}, {{ center.CenterState }}<br />
-          </p>
-        </div>
+      
       </div>
     </a>
   </div>
