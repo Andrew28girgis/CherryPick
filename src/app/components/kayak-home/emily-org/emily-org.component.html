@@ -1,6 +1,10 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <div class="row">
+    <div class="p-3" *ngIf="!BuyBoxOrganizationsForEmail || BuyBoxOrganizationsForEmail.length === 0">
+        No Organization Found.
+      </div>
+    
   <div
     *ngFor="let organization of BuyBoxOrganizationsForEmail; let i = index"
     class="col-4 mb-4"

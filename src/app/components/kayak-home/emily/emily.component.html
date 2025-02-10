@@ -223,8 +223,7 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  class="col-12 col-sm-4 p-2"
+                <div class="col-12 col-sm-4 p-2"
                   *ngIf="(generated?.[0]?.Releations || []).length > 0"
                 >
                   <div class="box p-2">
@@ -239,11 +238,9 @@
                       />
                       <label for="Relation">Relation Name</label>
                     </div>
-                    <ng-container
-                      *ngIf="generated.length > 0 && generated[0].Releations"
-                    >
-                      <ng-container
-                        *ngFor="let relation of relationCategoriesNames"
+                    <ng-container *ngIf="showRelationNames" >
+                      <ng-container *ngIf="generated.length > 0 && generated[0].Releations">
+                      <ng-container *ngFor="let relation of relationCategoriesNames"
                       >
                         <!-- Main Checkbox for each category -->
                         <div
@@ -312,7 +309,8 @@
                           </div>
                         </ng-container>
                       </ng-container>
-                    </ng-container>
+                      </ng-container>
+                  </ng-container>
                   </div>
                 </div>
                 <div class="col-12 col-sm-4 p-2">
@@ -331,9 +329,7 @@
                         ManagerOrganizationName
                       }}</label>
                     </div>
-                    <div
-                      class="checkbox-section checkbox-section-body-first"
-                      *ngIf="showOrganizationManagers"
+                    <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers"             
                     >
                       <input
                         type="checkbox"
@@ -347,9 +343,7 @@
                         >{{ ManagerOrganizationName }} Profile</label
                       >
                     </div>
-                    <div
-                      class="checkbox-section checkbox-section-body-first"
-                      *ngIf="showOrganizationManagers"
+                    <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers"
                     >
                       <input
                         type="checkbox"
@@ -370,7 +364,7 @@
                             let contact of manager.ManagerOrganizationContacts
                           "
                         >
-                          <div
+                          <div *ngIf="showOrganizationManagers"
                             class="checkbox-section checkbox-section-body-second"
                           >
                             <input
