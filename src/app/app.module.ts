@@ -48,6 +48,7 @@ import { MatInputModule } from '@angular/material/input';
 import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
  import { LogoutComponent } from './components/logout/logout.component';
 import { SharedModule } from './shared/shared.module';
+import { TermsComponent } from './components/terms/terms.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { SharedModule } from './shared/shared.module';
     SourcesComponent,
     TasksComponent,
     CommunicationComponent,
-    LogoutComponent, 
+    LogoutComponent,
+    TermsComponent, 
   ],
   imports: [
     BrowserModule,

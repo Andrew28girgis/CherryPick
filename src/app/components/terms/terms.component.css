@@ -1,0 +1,28 @@
+h1, h2, h3 {
+    margin-top: 1.5em;
+}
+h1 {
+    font-size: 1.75em;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.5em;
+}
+h2 {
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+h3 {
+    font-size: 1.25em;
+}
+p {
+    margin: 1em 0;
+}
+ul {
+    margin-left: 1.5em;
+    list-style-type: disc;
+}
+code {
+    background-color: #f4f4f4;
+    padding: 0.2em 0.4em;
+    font-size: 90%;
+}
