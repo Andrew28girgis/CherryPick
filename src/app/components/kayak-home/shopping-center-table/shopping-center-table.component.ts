@@ -214,15 +214,14 @@ export class ShoppingCenterTableComponent implements OnInit {
       return;
     }
 
-    // حساب الإحداثيات إذا كان العنصر محددًا
     const targetElement = event?.target as HTMLElement;
     const rect = targetElement.getBoundingClientRect();
 
     const shortcutsIcon = document.querySelector('.shortcuts_icon') as HTMLElement;
 
     if (shortcutsIcon) {
-      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`; // تظهر أسفل الزر مباشرة
-      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`; // محاذاة مع الزر
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
 
     this.selectedId = this.selectedId === id ? null : id;

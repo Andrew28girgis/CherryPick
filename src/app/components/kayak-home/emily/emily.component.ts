@@ -794,7 +794,7 @@ export class EmilyComponent implements OnInit {
   }
 
   onMangerDescriptionChange() {
-    this.spinner.show();
+    // this.spinner.show();
     if (this.showMangerDescription) {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {

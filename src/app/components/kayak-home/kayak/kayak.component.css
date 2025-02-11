@@ -555,7 +555,7 @@ ul li {
     font-size: 13px;
   }
   .kayak-img {
-    height: 140px;
+    height: 125px;
     width: 140px;
   }
   .search-bar select {
@@ -673,6 +673,10 @@ ul li {
 }
 
 @media (min-width: 768px) {
+  .kayak-img {
+    height: 135px;
+    width: 190px;
+  }
   .showfilters {
     font-size: 14px;
   }
@@ -758,6 +762,10 @@ ul li {
 }
 
 @media (min-width: 992px) {
+  .kayak-img {
+    height: 135px;
+    width: 170px;
+  }
   .place-item {
     font-size: 14px;
     margin-right: 0px;
@@ -785,8 +793,8 @@ ul li {
     line-height: 22px;
   }
   .modal-imgg{
-    max-width: 700px;
-    max-height: 700px;
+    max-width: 550px;
+    max-height: 500px;
 }
   .search-bar {
     padding: 10px 20px;
