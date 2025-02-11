@@ -833,6 +833,34 @@ export class LandingComponent {
     );
   }
 
+  sendEmojFeedBack(reaction: number) { 
+    const body: any = {
+      Name: 'CreatePropertyReaction',
+      Params: {
+        reactionId: reaction,
+        // marketsurveyid: this.marketsurveyid, 
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+     next: (data) => {
+     
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+    // this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
+    //   (data) => {
+    //     this.showAlert = true;
+    //     if (reaction == '') {
+    //       setTimeout(() => {
+    //         this.showAlert = false;
+    //       }, 3000);
+    //       window.scrollTo({ top: 0, behavior: 'smooth' });
+    //     }
+    //   }
+    // );
+  }
+
   sendFeedBack(reaction: string) {
     this.place.reaction = reaction;
     let feedback: any = {};

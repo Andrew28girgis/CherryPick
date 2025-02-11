@@ -11,7 +11,7 @@ export class KayakHomeComponent implements OnInit {
   tabs = [
     { id: 'Properties', label: 'Properties' },
     { id: 'Details', label: 'Details' },
-    { id: 'Manage', label: 'Manage' },
+    // { id: 'Manage', label: 'Manage' },
     { id: 'Emily', label: 'Emily' },
   ];
 

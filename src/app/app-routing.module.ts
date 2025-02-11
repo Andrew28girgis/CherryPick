@@ -20,6 +20,7 @@ import { PropertiesspilitviewComponent } from './components/kanban/properties/wi
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
 import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
+import { TermsComponent } from './components/terms/terms.component';
 
 
 const routes: Routes = [
@@ -97,6 +98,11 @@ const routes: Routes = [
     component: CommunicationComponent,
     canActivate: [AuthGuardService],
   },
+  {
+    path: 'tos',
+    component: TermsComponent, 
+  },
+
 
   {
     path: 'dashboard/:buyboxid/:buyboxName',
