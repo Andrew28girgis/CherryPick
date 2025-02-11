@@ -46,6 +46,7 @@ export class EmilyComponent implements OnInit {
   showMaxBuildingSize: boolean = false;
   showMangerDescription: boolean = false;
   showMangerDescriptionDetails: boolean = false; /////////////
+  showMangerContactSignature: boolean = false; /////////////
   showBuyBoxDescriptionDetails:boolean = false;
   showShoppingCenterDescription:boolean = false;
   showBuyBoxDescription:boolean = false;
@@ -54,6 +55,7 @@ export class EmilyComponent implements OnInit {
   BuyBoxDescription: string = '';
   ShoppingCenterDescription: any;
   MangerDescription: string = '';
+  MangerSignature: string = '';
   showRelationNames: boolean = false;
   selectedRelations: RelationNames[] = [];
   showOrganizationManagers: boolean = false; ////////////
@@ -63,7 +65,9 @@ export class EmilyComponent implements OnInit {
   manager: any;
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
-  selectedShoppingCenter: string = ''; 
+  selectedShoppingCenter: string = '';
+  selectedMangerName: string = '';
+  showShoppingCenter: boolean = false;
   showManagerName: boolean = false;
   showCotenantsWithActivity: boolean = false;
   showCotenantsWithoutActivity: boolean = false;
@@ -103,6 +107,10 @@ export class EmilyComponent implements OnInit {
     CotenantsWithoutActivityType: Cotenant[];
     ShoppingCenterManager: ShoppingCenterManager[];
   }[] = [];
+  tabs = [
+    { id: 'Properties', label: 'Properties' },
+    { id: 'Details', label: 'Details' },
+  ];
   ShoppingCenterAfterLoopDescription: any;
   ShoppingCenterDescriptionText: any;
   ShoppingCenterName: any;
@@ -139,6 +147,7 @@ export class EmilyComponent implements OnInit {
       this.showManagerName = true;
       this.showMangerDescription = true;
       this.showMangerDescriptionDetails=true;
+      this.showMangerContactSignature=true;
       this.showMinBuildingSize = true;
       this.showMaxBuildingSize = true;
       this.showBuyBoxDescription = true;
@@ -150,6 +159,7 @@ export class EmilyComponent implements OnInit {
       this.onCheckboxBuyBoxDescriptionChange();
       this.onCheckShoppingCenterDescriptionChange();
       this.onMangerDescriptionDetailsChange();
+      this.onMangerContactSignatureChange();
       this.onCheckboxdetailsChangeMin(true, true);
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();
@@ -178,7 +188,6 @@ export class EmilyComponent implements OnInit {
       },
     });
   }
-  
   getShoppingCenters(buyboxId: number): void {
     this.spinner.show();
     const body: any = {
@@ -792,16 +801,27 @@ export class EmilyComponent implements OnInit {
     // Update the email body after changes
     this.updateEmailBody();
   }
+  onMangerContactSignatureChange() {
+    if (this.showMangerContactSignature){
+      this.MangerSignature =
+        this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
+          ?.ManagerOrganization[0].ManagerOrganizationDescription || '';
+    }else{
+      this.MangerSignature = '';
+    }
+    // Update the email body after changes
+    this.updateEmailBody();
+  }
 
   onMangerDescriptionChange() {
-    this.spinner.show();
+    // this.spinner.show();
     if (this.showMangerDescription) {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = true; // Select the manager checkbox
           if (contact.AssistantName) {
             contact.assistantSelected = true; // Select the assistant checkbox
-            this.spinner.hide();
+            // this.spinner.hide();
           }
         });
       });
@@ -810,7 +830,7 @@ export class EmilyComponent implements OnInit {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = false; // Deselect the manager checkbox
           contact.assistantSelected = false; // Deselect the assistant checkbox
-          this.spinner.hide();
+          // this.spinner.hide();
         });
       });
     }
@@ -1106,6 +1126,18 @@ export class EmilyComponent implements OnInit {
       this.ShoppingCenterDescriptionText +
       ')' +
       '\n\n';
+    }
+    
+    if (this.showMangerContactSignature) {
+      this.managerOrganizations.forEach((manager) => {
+        manager.ManagerOrganizationContacts.forEach((contact) => {
+          if (contact.selected) {
+              emailContent += `\nUse This Email Signature:\n`;
+              // emailContent += `Title: ${contact.Firstname} ${contact.LastName} Assistant\n`;
+              emailContent += `${contact.EmailSignature}\n\n`;
+          }
+        });
+      });
     }
 
     this.emailBody = emailContent;

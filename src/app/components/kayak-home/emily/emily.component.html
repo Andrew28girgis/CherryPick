@@ -381,6 +381,20 @@
                               {{ contact.LastName }}</label
                             >
                           </div>
+                          <div class="checkbox-section checkbox-section-body-second" *ngIf="showOrganizationManagers"             
+                          >
+                            <input
+                              type="checkbox"
+                              name="MangerContactSignature"
+                              id="MangerContactSignature"
+                              class="form-check-input"
+                              [(ngModel)]="showMangerContactSignature"
+                              (change)="onMangerContactSignatureChange()"
+                            />
+                            <label for="MangerContactSignature"
+                              >{{ contact.Firstname }} {{ contact.LastName }} Signature</label
+                            >
+                          </div>
                         </ng-container>
                       </ng-container>
                     </ng-container>
@@ -609,7 +623,7 @@
                               <label class="fw-bold text-secondary"
                                 >Email Subject:</label
                               >
-                              <span
+                              <!-- <span
                                 (click)="copyEmailSubject()"
                                 class="copy-icon-container"
                               >
@@ -623,7 +637,7 @@
                                   *ngIf="isSubjectCopied"
                                   >Copied!</span
                                 >
-                              </span>
+                              </span> -->
                             </div>
                             <div class="p-3 border rounded bg-white text-dark">
                               <textarea
@@ -640,7 +654,7 @@
                               <label class="fw-bold text-secondary"
                                 >Email Body:</label
                               >
-                              <span
+                              <!-- <span
                                 (click)="copyEmailBody()"
                                 class="copy-icon-container"
                               >
@@ -652,7 +666,7 @@
                                 <span class="copied-text" *ngIf="isBodyCopied"
                                   >Copied!</span
                                 >
-                              </span>
+                              </span> -->
                             </div>
                             <div class="p-3 border rounded bg-white text-dark">
                               <p
