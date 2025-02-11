@@ -783,7 +783,7 @@ a {
   position: relative;
   justify-content: space-between;
   /* height: 340px; */
-  min-height: 250px;
+  min-height: 280px;
   max-height: 350px;
 }
 
@@ -804,7 +804,7 @@ a {
   cursor: auto;
   display: flex;
   flex-direction: column;
-  min-height: 250px;
+  min-height: 280px;
   max-height: 350px;
 }
 @media (max-width: 768px) {
