@@ -780,25 +780,40 @@ a {
   cursor: auto;
   display: flex;
   flex-direction: column;
+  position: relative;
+  justify-content: space-between;
+  /* height: 340px; */
+  min-height: 250px;
+  max-height: 350px;
 }
 
 @media (max-width: 768px) {
   .card-content_view {
-    height: max-content !important;
+    /* height: max-content !important; */
+    height: max-content;
+    min-height: max-content;
+    max-height: max-content;
+    gap: 5px;
   }
 }
 
 .card-sideview {
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  height: 300px;
+  /* height: 300px; */
   cursor: auto;
   display: flex;
   flex-direction: column;
+  min-height: 250px;
+  max-height: 350px;
 }
 @media (max-width: 768px) {
   .card-sideview {
-    height: max-content !important;
+    /* height: max-content !important; */
+    height: max-content;
+    min-height: max-content;
+    max-height: max-content;
+    gap: 5px;
   }
 }
 

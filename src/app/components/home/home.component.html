@@ -191,7 +191,7 @@
                       *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization"
                     >
                       <div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center justify-content-between">
                           <img
                             class="logo"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -715,87 +715,89 @@
               </a>
 
               <div class="content-wrap card-sideview">
-                <div *ngIf="place.CenterCity">
-                  <a
-                    [routerLink]="[
-                      '/landing',
-                      place.ShoppingCenter?.Places
-                        ? place.ShoppingCenter.Places?.[0].Id
-                        : 0,
-                      place.Id,
-                      BuyBoxId,
-                      OrgId
-                    ]"
-                  >
-                    <p class="content-title" style="cursor: pointer">
-                      {{
-                        place.CenterName.length > 22
-                          ? (place.CenterName | titlecase).slice(0, 22) + "..."
-                          : (place.CenterName | titlecase)
-                      }}
-                    </p>
-                  </a>
-                </div>
-
-                <div
-                  *ngIf="place.CenterAddress"
-                  class="card-address"
-                  style="cursor: pointer"
-                  (click)="openMapViewPlace(MapViewPlace, place)"
-                >
-                  <span>
-                    {{ place.CenterAddress }},
-                    {{ place.CenterCity | titlecase }},
-                    {{ place.CenterState }}
-                  </span>
-                </div>
-
-                <div
-                  *ngIf="place.Address"
-                  class="card-address"
-                  style="cursor: pointer"
-                  (click)="openMapViewPlace(MapViewPlace, place)"
-                >
-                  <p>
-                    {{ place.Address }}, {{ place.City | titlecase }},
-                    {{ place.State }}
-                  </p>
-                </div>
-
-                <div *ngIf="place.CenterAddress">
-                  <p
-                    style="font-size: 15px; font-weight: 500; color: #565656"
-                    [innerHTML]="getShoppingCenterUnitSize(place)"
-                  ></p>
-                </div>
-
-                <div
-                  class="row"
-                  *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
-                >
+                <div>
+                  <div *ngIf="place.CenterCity">
+                    <a
+                      [routerLink]="[
+                        '/landing',
+                        place.ShoppingCenter?.Places
+                          ? place.ShoppingCenter.Places?.[0].Id
+                          : 0,
+                        place.Id,
+                        BuyBoxId,
+                        OrgId
+                      ]"
+                    >
+                      <p class="content-title" style="cursor: pointer">
+                        {{
+                          place.CenterName.length > 22
+                            ? (place.CenterName | titlecase).slice(0, 22) + "..."
+                            : (place.CenterName | titlecase)
+                        }}
+                      </p>
+                    </a>
+                  </div>
+  
                   <div
-                    *ngFor="
-                      let item of place.ShoppingCenter
-                        ? place.ShoppingCenter?.BuyBoxPlaces
-                        : place.Place?.BuyBoxPlaces
-                    "
-                    class="col-12 d-flex flex-column spec"
+                    *ngIf="place.CenterAddress"
+                    class="card-address"
+                    style="cursor: pointer"
+                    (click)="openMapViewPlace(MapViewPlace, place)"
                   >
-                    <div class="d-flex flex-column">
-                      <p class="nearset-category">
-                        <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
-                      </p>
-                      <p>
-                        {{ item.RelationOrganizationName }}
-                        <img
-                          class="logo ms-2"
-                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                            item.RelationOrganizationId
-                          }}"
-                          [title]="item.RelationOrganizationName"
-                          alt=""
-                        />
-                      </p>
+                    <span>
+                      {{ place.CenterAddress }},
+                      {{ place.CenterCity | titlecase }},
+                      {{ place.CenterState }}
+                    </span>
+                  </div>
+  
+                  <div
+                    *ngIf="place.Address"
+                    class="card-address"
+                    style="cursor: pointer"
+                    (click)="openMapViewPlace(MapViewPlace, place)"
+                  >
+                    <p>
+                      {{ place.Address }}, {{ place.City | titlecase }},
+                      {{ place.State }}
+                    </p>
+                  </div>
+  
+                  <div *ngIf="place.CenterAddress">
+                    <p
+                      style="font-size: 15px; font-weight: 500; color: #565656"
+                      [innerHTML]="getShoppingCenterUnitSize(place)"
+                    ></p>
+                  </div>
+  
+                  <div
+                    class="row"
+                    *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
+                  >
+                    <div
+                      *ngFor="
+                        let item of place.ShoppingCenter
+                          ? place.ShoppingCenter?.BuyBoxPlaces
+                          : place.Place?.BuyBoxPlaces
+                      "
+                      class="col-12 d-flex flex-column spec"
+                    >
+                      <div class="d-flex flex-column">
+                        <p class="nearset-category">
+                          <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                        </p>
+                        <p>
+                          {{ item.RelationOrganizationName }}
+                          <img
+                            class="logo ms-2"
+                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              item.RelationOrganizationId
+                            }}"
+                            [title]="item.RelationOrganizationName"
+                            alt=""
+                          />
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -892,7 +894,7 @@
       [ngClass]="{
         'd-none': currentView == 4 || currentView == 3,
         'col-12': currentView == 1,
-        'col-4': currentView == 2
+        'col-12 col-sm-4': currentView == 2
       }"
     >
       <div id="map" class="custom-map"></div>

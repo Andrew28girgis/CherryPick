@@ -39,6 +39,7 @@ export class SidbarComponent {
     this.sidbarService.toggleSidebar();
   }
   BackTo() {
-    this._location.back();
+    // this._location.back();
+    this.router.navigate(['/summary']);
   }
 }
