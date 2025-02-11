@@ -716,9 +716,9 @@
             <p class="rate-location">Please Rate This Property</p>
           </div>
           <div class="d-flex justify-content-start emo-container">
-            <div style="cursor: pointer" (click)="sendFeedBack('Love')">
+            <div style="cursor: pointer" (click)="sendEmojFeedBack(1)">
               <div
-                [ngClass]="place.reaction == 'Love' ? 'selected-reaction' : ''"
+                [ngClass]="place.reaction == '1' ? 'selected-reaction' : ''"
               >
                 <img
                   src="../../../assets/Images/Gif/love.gif"
@@ -727,9 +727,9 @@
                 />
               </div>
             </div>
-            <div style="cursor: pointer" (click)="sendFeedBack('Happy')">
+            <div style="cursor: pointer" (click)="sendEmojFeedBack(2)">
               <div
-                [ngClass]="place.reaction == 'Happy' ? 'selected-reaction' : ''"
+                [ngClass]="place.reaction == '2' ? 'selected-reaction' : ''"
               >
                 <img
                   src="../../../assets/Images/Gif/happy.gif"
@@ -738,9 +738,9 @@
                 />
               </div>
             </div>
-            <div style="cursor: pointer" (click)="sendFeedBack('Sad')">
+            <div style="cursor: pointer" (click)="sendEmojFeedBack(3)">
               <div
-                [ngClass]="place.reaction == 'Sad' ? 'selected-reaction' : ''"
+                [ngClass]="place.reaction == '3' ? 'selected-reaction' : ''"
               >
                 <img
                   src="../../../assets/Images/Gif/sad.gif"
