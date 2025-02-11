@@ -606,6 +606,13 @@ color: #7A8591  ;
   gap: 5px;
 }
 }
+
+.main-img{
+  height: 250px;
+  background: white;
+  border-radius: 18px 18px 0 0;
+}
+
 @media (min-width: 576px) {  
   .nav-right {
     .nav-right {
@@ -620,7 +627,9 @@ color: #7A8591  ;
     height: 40px; 
     width: 165px
   }
- 
+  /* .main-img{
+    height: 200px;
+  } */
 }
 
 @media (min-width: 768px) {

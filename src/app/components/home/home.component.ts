@@ -254,7 +254,8 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
-        this.stateService.setShoppingCenters(data.json);
+        this.shoppingCenters = this.shoppingCenters.sort((a, b) => a.CenterCity.localeCompare(b.CenterCity));
+        this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide(); 
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
