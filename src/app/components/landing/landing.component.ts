@@ -97,8 +97,7 @@ export class LandingComponent {
       next: (data) => {
         this.Permission = data.json;
         this.placesRepresentative = this.Permission?.find((item:permission) => item.sectionName === "PlacesRepresentative")?.visible; 
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
