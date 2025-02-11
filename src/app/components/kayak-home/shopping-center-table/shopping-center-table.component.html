@@ -304,7 +304,7 @@
                 <a
                   [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]">
                   <div class="main-img">
-                    <img src="{{ shopping.MainImage }}" />
+                    <img src="{{ shopping.MainImage }}" [title]="shopping.CenterName"/>
                   </div>
                 </a>
                 <div class="content-wrap card-content card-content_view">
@@ -575,7 +575,7 @@
                 <a *ngIf="place.CenterCity"
                   [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId,OrgId]">
                   <div class="main-img">
-                    <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
+                    <img *ngIf="place.MainImage" src="{{ place.MainImage }}" [title]="place.CenterName"/>
                   </div>
                 </a>
                 <a *ngIf="!place.CenterCity" [routerLink]="['/landing', place.Id, 0, BuyBoxId, OrgId]">
