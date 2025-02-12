@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit {
     },
     {
       text: 'Social View',
-      icon: '../../../assets/Images/Icons/facebook.svg',
+      icon: '../../../assets/Images/Icons/globe-solid.svg',
       status: 5,
     }, 
   ];
