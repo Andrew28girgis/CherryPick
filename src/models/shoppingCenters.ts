@@ -13,7 +13,9 @@ export interface Center {
     Pitch: number
     StreetLatitude: number
     StreetLongitude: number
+    MarketSurveyId:number
     ShoppingCenter: ShoppingCenter
+    ParentCommentId: number 
   }
   
   export interface ShoppingCenter {
