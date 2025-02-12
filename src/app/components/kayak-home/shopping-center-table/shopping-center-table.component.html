@@ -79,12 +79,12 @@
             </div>
           </div>
           <div style="position: relative">
-            <button
+            <!-- <button
               class="ellipsis_icont"
               (click)="toggleShortcutsCard(shopping.Id)"
             >
               <i class="fa-solid fa-ellipsis"></i>
-            </button>
+            </button> -->
             <div
               class="shortcuts_iconCard"
               *ngIf="selectedIdCard === shopping.Id"
@@ -277,6 +277,7 @@
             (click)="toggleComments(shopping)"
           >
             <!-- <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span> -->
+             <i class="far fa-comment"></i> 
             <span class="reactionMobile"> Comment </span>
           </button>
           <button class="action-btn share-btn" (click)="openContactsModal(contactsModal)">
@@ -288,7 +289,7 @@
           </button> -->
         </div>
         <!-- *ngIf="showComments[shopping.Id]" -->
-        <div class="comments-section" >
+        <div class="comments-section" *ngIf="showComments[shopping.Id]">
           <div class="comment-input">
             <input
               type="text"

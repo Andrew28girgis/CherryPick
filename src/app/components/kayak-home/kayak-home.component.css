@@ -291,3 +291,11 @@
 } 
 
 
+
+
+@media (max-width: 768px) {
+  .Responsive{
+    margin-left: 9%;
+
+  }
+}
