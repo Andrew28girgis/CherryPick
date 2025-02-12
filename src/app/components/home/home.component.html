@@ -112,9 +112,20 @@
         <div class="card-header">
           <div class="header-info">
             <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-            <div (click)="openMapViewPlace(MapViewPlace, shopping)" style="width: fit-content;">
-              <p class="center-address" style="cursor: pointer; width: fit-content;">{{ shopping.CenterAddress }}</p>
-              <p class="center-location" style="cursor: pointer; width: fit-content;">
+            <div
+              (click)="openMapViewPlace(MapViewPlace, shopping)"
+              style="width: fit-content"
+            >
+              <p
+                class="center-address"
+                style="cursor: pointer; width: fit-content"
+              >
+                {{ shopping.CenterAddress }}
+              </p>
+              <p
+                class="center-location"
+                style="cursor: pointer; width: fit-content"
+              >
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
               </p>
@@ -141,10 +152,32 @@
                     Emily
                   </a>
                 </li>
-                
+
                 <li>
-                  <a class=" target" (click)="copyLinkSocial(shopping);toggleShortcuts(shopping.Id, 'close')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> 
+                  <a
+                    class="target"
+                    (click)="
+                      copyLinkSocial(shopping);
+                      toggleShortcuts(shopping.Id, 'close')
+                    "
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="lucide lucide-copy"
+                    >
+                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                      <path
+                        d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+                      />
+                    </svg>
                     Copy Link
                   </a>
                 </li>
@@ -249,18 +282,19 @@
             </div>
           </div>
         </div>
-        <a [routerLink]="['/landing', 0, shopping.Id, BuyBoxId, OrgId]">
-          <div class="card-image" (dblclick)="doubleTapLike(shopping)">
-            <img [src]="shopping.MainImage" [alt]="shopping.CenterName" />
-          </div>
-        </a>
+        <!-- <a [routerLink]="['/landing', 0, shopping.Id, BuyBoxId, OrgId]"> -->
+        <div class="card-image"   (touchstart)="onTouchStart($event)"
+        (touchend)="doubleTapLike(shopping, $event)">
+          <img [src]="shopping.MainImage" [alt]="shopping.CenterName" />
+        </div>
+        <div class="heart-animation-container"></div>
+      <!-- </a>  -->
         <div class="card-body">
-          <div class="social-stats">
+          <div class="social-stats " >
             <span class="reactions"
-              >{{ getTotalReactions(shopping) }} reactions</span
-            >
+              >{{ getTotalReactions(shopping) }} reactions</span  >
             <!-- <span class="comments"
-              >{{ comments[shopping.Id].length || 0 }} comments</span
+              >{{ comments[shopping.Id]?.length || 0 }} comments</span
             > -->
           </div>
         </div>
@@ -271,7 +305,7 @@
             (mouseleave)="hideReactions(shopping.Id)"
           >
             <button
-              class="action-btn like-btn "
+              class="action-btn like-btn"
               (click)="likeDirectly(shopping)"
               (mouseenter)="startReactionTimer(shopping.Id)"
               (mouseleave)="stopReactionTimer(shopping.Id)"
@@ -282,15 +316,16 @@
                   'fa-thumbs-up': getPrimaryReaction(shopping) === 'Like',
                   
                 }"
-              ></i>
+              ></i>              <span class="d-block d-sm-none" >{{ getTotalReactions(shopping) }}</span>
 
-<!-- 'fa-heart': getPrimaryReaction(shopping) === 'love',
+              <!-- 'fa-heart': getPrimaryReaction(shopping) === 'love',
                   'fa-laugh': getPrimaryReaction(shopping) === 'haha',
                   'fa-surprise': getPrimaryReaction(shopping) === 'wow',
                   'fa-sad-tear': getPrimaryReaction(shopping) === 'sad',
                   'fa-angry': getPrimaryReaction(shopping) === 'angry' -->
-
-              {{ getPrimaryReaction(shopping) }}
+              <span class="reactionMobile">
+                {{ getPrimaryReaction(shopping) }}
+              </span>
             </button>
             <!-- <div
               class="reaction-options"
@@ -324,37 +359,43 @@
             class="action-btn comment-btn"
             (click)="toggleComments(shopping)"
           >
-            <i class="far fa-comment"></i> Comment
+            <!-- <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span> -->
+            <span class="reactionMobile"> Comment </span>
           </button>
           <button class="action-btn share-btn" (click)="shareContent(shopping)">
-            <i class="far fa-share-square"></i> Share
+            <i class="far fa-share-square"></i>
+            <span class="reactionMobile"> Share </span>
           </button>
           <!-- <button class="action-btn copy-link-btn" (click)="copyLinkSocial(shopping)">
             <i class="far fa-copy"></i> Copy Link
           </button> -->
         </div>
-
         <div class="comments-section" *ngIf="showComments[shopping.Id]">
           <div class="comment-input">
             <input
               type="text"
               placeholder="Write a comment..."
-              [(ngModel)]="newComments[shopping.Id]"
+              [(ngModel)]="newComments[shopping.MarketSurveyId]"
             />
-            <button class="post-comment-btn" (click)="addComment(shopping)">
+            <button
+              class="post-comment-btn"
+              (click)="addComment(shopping.MarketSurveyId)"
+            >
               Comment
             </button>
           </div>
 
           <ul class="comment-list">
-            <ng-container *ngFor="let comment of comments[shopping.Id]">
+            <ng-container
+              *ngFor="let comment of comments[shopping.MarketSurveyId]"
+            >
               <li>
                 <div class="comment-content">
                   <strong>{{ comment.user }}</strong>
                   <p>{{ comment.text }}</p>
                   <button
                     class="reply-btn"
-                    (click)="toggleReply(shopping, comment.id)"
+                    (click)="toggleReply(shopping.MarketSurveyId, comment.id)"
                   >
                     Reply
                   </button>
@@ -362,22 +403,25 @@
 
                 <div
                   class="reply-input"
-                  *ngIf="replyingTo[shopping.Id] === comment.id"
+                  *ngIf="replyingTo[shopping.MarketSurveyId] === comment.id"
                 >
                   <input
                     type="text"
                     placeholder="Write a reply..."
-                    [(ngModel)]="newReplies[shopping.Id]"
+                    [(ngModel)]="newReplies[comment.id]"
                   />
                   <button
                     class="post-reply-btn"
-                    (click)="addReply(shopping, comment.id)"
+                    (click)="addReply(shopping.MarketSurveyId, comment.id)"
                   >
                     Reply
                   </button>
                 </div>
 
-                <ul class="reply-list" *ngIf="comment.replies.length > 0">
+                <ul
+                  class="reply-list"
+                  *ngIf="comment.replies && comment.replies.length > 0"
+                >
                   <li *ngFor="let reply of comment.replies">
                     <div class="comment-content">
                       <strong>{{ reply.user }}</strong>
