@@ -421,8 +421,7 @@
                         </option>
                       </select>
                     </div>
-                    <div
-                      class="col-12 col-sm-6 d-flex justify-content-between mt-3 align-items-center Button_all"
+                    <div class="col-12 col-sm-6 d-flex justify-content-between mt-3 align-items-center Button_all"
                     >
                       <button
                         class="Emily__contant__button ms-2"
@@ -454,8 +453,11 @@
                         Prompt
                         <i class="fas fa-sign-in-alt px-1"></i>
                       </button>
+                      <!-- <button class="Emily__contant__button" (click)="openAddPrompt(AddPrompt)">
+                        Add Prompt <i class="fa-solid fa-circle-plus ms-1"></i>
+                      </button> -->
                       <button
-                        class="Emily__contant__button Emily__body__button ms-2"
+                        class="Emily__contant__button Emily__body__button"
                         (click)="openBodyModal(ViewBody)"
                       >
                         Show Context
@@ -821,3 +823,26 @@
     <p id="toastMessage"></p>
   </div>
 </div>
+
+<ng-template #AddPrompt let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title text-dark">Add New Prompt</h3>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Close click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <input type="text" class="form-control mb-2"
+      [(ngModel)]="newPromptName"
+      placeholder="Enter the name of the prompt..."
+      >
+      <textarea class="form-control" rows="15"
+      [(ngModel)]="newPromptText"
+      placeholder="Enter your prompt here..."
+      ></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success" (click)="addPrompt(modal)">Save</button>
+      <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
+    </div>
+  </div>
+</ng-template>
