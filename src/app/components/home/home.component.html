@@ -143,44 +143,6 @@
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul>
-                <li style="cursor: pointer">
-                  <a class="target" (click)="redirect(shopping.Id)">
-                    <i
-                      class="fa-regular fa-envelope"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
-                    ></i>
-                    Emily
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    class="target"
-                    (click)="
-                      copyLinkSocial(shopping);
-                      toggleShortcuts(shopping.Id, 'close')
-                    "
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-copy"
-                    >
-                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                      <path
-                        d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
-                      />
-                    </svg>
-                    Copy Link
-                  </a>
-                </li>
                 <li (click)="toggleShortcuts(shopping.Id, 'close')">
                   <a
                     class="target"
@@ -318,12 +280,42 @@
                 }"
               ></i>              <span class="d-block d-sm-none" >{{ getTotalReactions(shopping) }}</span>
 
-              
+              <!-- 'fa-heart': getPrimaryReaction(shopping) === 'love',
+                  'fa-laugh': getPrimaryReaction(shopping) === 'haha',
+                  'fa-surprise': getPrimaryReaction(shopping) === 'wow',
+                  'fa-sad-tear': getPrimaryReaction(shopping) === 'sad',
+                  'fa-angry': getPrimaryReaction(shopping) === 'angry' -->
               <span class="reactionMobile">
                 {{ getPrimaryReaction(shopping) }}
               </span>
             </button>
-          
+            <!-- <div
+              class="reaction-options"
+              *ngIf="showReactions[shopping.Id]"
+              (mouseleave)="toggleReactions(shopping.Id)"
+            >
+              <button class="reaction-option" (click)="react(shopping, 'like')">
+                👍
+              </button>
+              <button class="reaction-option" (click)="react(shopping, 'love')">
+                ❤️
+              </button>
+               <button class="reaction-option" (click)="react(shopping, 'haha')">
+                😂
+              </button>
+              <button class="reaction-option" (click)="react(shopping, 'wow')">
+                😮
+              </button> 
+              <button class="reaction-option" (click)="react(shopping, 'sad')">
+                😢
+              </button>
+              <button
+                class="reaction-option"
+                (click)="react(shopping, 'angry')"
+              >
+                😠
+              </button>
+            </div> -->
           </div>
           <button
             class="action-btn comment-btn"
@@ -340,8 +332,7 @@
             <i class="far fa-copy"></i> Copy Link
           </button> -->
         </div>
-        <!-- *ngIf="showComments[shopping.Id]" -->
-        <div class="comments-section" >
+        <div class="comments-section" *ngIf="showComments[shopping.Id]">
           <div class="comment-input">
             <input
               type="text"
@@ -350,7 +341,7 @@
             />
             <button
               class="post-comment-btn"
-              (click)="addComment(shopping.MarketSurveyId)"
+              (click)="addComment(shopping , shopping.MarketSurveyId)"
             >
               Comment
             </button>
@@ -358,21 +349,21 @@
 
           <ul class="comment-list">
             <ng-container
-              *ngFor="let comment of comments[shopping.MarketSurveyId]"
+              *ngFor="let comment of shopping.ShoppingCenter.Comments"
             >
               <li>
-                <div class="comment-content">
-                  <strong>{{ comment.user }}</strong>
-                  <p>{{ comment.text }}</p>
-                  <button
+                <div class="comment-content d-flex justify-content-between">
+                  <p>{{ comment.Comment }}</p>
+                  <p>{{ comment.CommentDate | date}}</p>
+                  <!-- <button
                     class="reply-btn"
                     (click)="toggleReply(shopping.MarketSurveyId, comment.id)"
                   >
                     Reply
-                  </button>
+                  </button> -->
                 </div>
 
-                <div
+                <!-- <div
                   class="reply-input"
                   *ngIf="replyingTo[shopping.MarketSurveyId] === comment.id"
                 >
@@ -387,9 +378,9 @@
                   >
                     Reply
                   </button>
-                </div>
+                </div> -->
 
-                <ul
+                <!-- <ul
                   class="reply-list"
                   *ngIf="comment.replies && comment.replies.length > 0"
                 >
@@ -399,7 +390,7 @@
                       <p>{{ reply.text }}</p>
                     </div>
                   </li>
-                </ul>
+                </ul> -->
               </li>
             </ng-container>
           </ul>
