@@ -12,7 +12,7 @@
           src="../../../assets/Images/logo.png"
         />
         <p class="titleResponsive" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
-        <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i>
+        <!-- <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i> -->
         <button class="btn btn-secondary ms-4" (click)="openContactsModal(contactsModal)">
           Contacts
         </button>
@@ -908,20 +908,13 @@
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
-
 <ng-template #ShareLink let-modal>
-  <div
-    class="d-flex p-3 m-3 align-items-center"
-    style="border: 1px solid #ccc; border-radius: 10px"
-  >
+  <div class="d-flex p-3 m-3 align-items-center" style="border: 1px solid #ccc; border-radius: 10px">
     <p>{{ shareLink }}</p>
-    <i
-      style="cursor: pointer"
-      class="fa-solid fa-copy ms-3"
-      (click)="copyLink(shareLink)"
-    ></i>
+    <i style="cursor: pointer" class="fa-solid fa-copy ms-3" (click)="copyLink(shareLink)"></i>
   </div>
 </ng-template>
+
 
 <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
@@ -940,30 +933,40 @@
   ></div>
 </ng-template>
 <ng-template #contactsModal let-modal>
-  <div class="modal-header">
+  <div class="modal-header d-flex justify-content-between align-items-center">
     <h4 class="modal-title" id="modal-basic-title">Contacts</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <div>
+      <button type="button" class="btn btn-primary me-2" (click)="openAddContactModal(addContactModal)">Add</button>
+      <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
   </div>
-  <div class="modal-body">
-    <div *ngFor="let contact of OrganizationContacts" class="mb-3 border-bottom pb-2">
-      <div><strong>{{ contact.firstname }} {{ contact.lastname }}</strong></div>
-      <div>{{ contact.email }}</div>
+  <!-- Added inline styles for vertical scrolling -->
+  <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+    <div *ngFor="let contact of OrganizationContacts" class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-center">
+      <div>
+        <div><strong>{{ contact.firstname }} {{ contact.lastname }}</strong></div>
+        <div>{{ contact.email }}</div>
+      </div>
+      <!-- Pass the contact to openLink -->
+      <i 
+        class="fa-solid fa-share ms-2" 
+        style="font-size: 20px; cursor: pointer;"  
+        (click)="openLink(ShareLink, contact)">
+      </i>
     </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-    <button type="button" class="btn btn-primary" (click)="openAddContactModal(addContactModal)">Add</button>
   </div>
 </ng-template>
 
+
 <ng-template #addContactModal let-modal>
-  <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm" style="max-height: 100vh; overflow-y: auto;">
+  <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm">
     <div class="modal-header d-flex justify-content-between align-items-center">
       <h4 class="modal-title" id="modal-add-contact">Add Contact</h4>
       <div>
-        <button type="submit" class="btn btn-primary me-2" [disabled]="!addContactForm.form.valid">
-          Add Contact
-        </button>
+        
         <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>
     </div>
@@ -986,6 +989,9 @@
       </div>
     </div>
     <div class="modal-footer">
+      <button type="submit" class="btn btn-primary me-2" [disabled]="!addContactForm.form.valid">
+        Save
+      </button>
       <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
     </div>
   </form>

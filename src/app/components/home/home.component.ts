@@ -732,33 +732,23 @@ export class HomeComponent implements OnInit {
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
-  openLink(content: any, modalObject?: any) {
-
-    this.shareLink = '';
+  openLink(content: any, contact?: any) {
+    // Use the contact's token if provided, otherwise fallback
+    if (contact && contact.token) {
+      this.shareLink = `https://cp.cherrypick.com/?t=${contact.token}`;
+    } else if (this.ShareOrg && this.ShareOrg[0]) {
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}`;
+    } else {
+      this.shareLink = '';
+    }
+  
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-    if (modalObject) {
-      if (modalObject.CenterAddress) {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}`;
-      } else {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}`;
-      }
-    } else {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}`;
-    }
-    // if (modalObject) {
-    //   if (modalObject.CenterAddress) {
-    //     this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
-    //   } else {
-    //     this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
-    //   }
-    // } else {
-    //   this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}/${this.BuyBoxName}`;
-    // }
   }
+  
   
   copyLink(link: string) {
     navigator.clipboard
