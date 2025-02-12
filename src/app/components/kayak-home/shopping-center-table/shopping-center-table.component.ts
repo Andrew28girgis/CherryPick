@@ -11,7 +11,7 @@ import {
   HostListener,
   Renderer2,
 } from "@angular/core"
-
+import { NgForm } from '@angular/forms'; // <-- Import NgForm
 import  { ActivatedRoute, Router } from "@angular/router"
 import  { PlacesService } from "./../../../../../src/app/services/places.service"
 import {  AllPlaces, type AnotherPlaces, General, type Property } from "./../../../../../src/models/domain"
@@ -125,7 +125,14 @@ export class ShoppingCenterTableComponent implements OnInit {
   comments: { [key: number]: Comment[] } = {}
   likes: { [key: string]: number } = {}
   showComments: { [key: number]: boolean } = {}
-
+  OrganizationContacts: any[] = [];
+  newContact: any = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+  };
+  
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters
   }
@@ -1369,27 +1376,57 @@ export class ShoppingCenterTableComponent implements OnInit {
     // and update this.comments[marketSurveyId] accordingly
   }
   // `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}
-
-  async shareContent(shopping: any) {
-    const shareData = {
-      title: shopping.CenterName,
-      text: `Check out ${shopping.CenterName}!`,
-      adress: shopping.CenterAddress,
-      url: `${window.location.origin}/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}`,
-    }
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData)
-        console.log(shareData)
-      } catch (err) {
-        console.error("Error sharing content:", err)
-      }
-    } else {
-      // Fallback for browsers that don't support Web Share API
-      this.copyLink(shopping)
-    }
+  openAddContactModal(content: any): void {
+    // Reset the form model
+    this.newContact = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-add-contact',
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+    });
   }
+  @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
+  addContact(form: NgForm): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'AddContactToOrganization',
+      Params: {
+        FirstName: this.newContact.firstName,
+        LastName: this.newContact.lastName,
+        OrganizationId: this.OrgId,
+        email: this.newContact.email,
+        password: this.newContact.password,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.spinner.hide();
+        console.log('Contact added successfully:', data);
+        this.newContact = {
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+        };
+        form.resetForm();
+        this.modalService.dismissAll();
+        // Refresh and reopen the contacts modal using the stored template reference
+        this.openContactsModal(this.contactsModalTemplate);
+      },
+      error: (error: any) => {
+        console.error('Error adding contact:', error);
+        this.spinner.hide();
+      },
+    });
+  }
+
 
   // common
 
@@ -1405,6 +1442,33 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.lastTap = currentTime
   }
 
+  openContactsModal(content: any): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetOrganizationContacts',
+      Params: {
+        organizationId: this.OrgId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        if (data && data.json) {
+          this.OrganizationContacts = data.json;
+        } else {
+          this.OrganizationContacts = [];
+        }
+        this.spinner.hide();
+        this.modalService.open(content, {
+          size: 'lg',
+          centered: true,
+        });
+      },
+      error: (error: any) => {
+        console.error('Error fetching Organization Contacts:', error);
+        this.spinner.hide();
+      },
+    });
+  }
   // createHeartAnimation(x: number, y: number) {
   //   const animationContainer = this.el.nativeElement.querySelector(".heart-animation-container")
   //   if (!animationContainer) return
