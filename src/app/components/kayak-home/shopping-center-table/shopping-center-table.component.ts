@@ -1272,86 +1272,71 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.showComments[shopping.Id] = !this.showComments[shopping.Id]
   }
 
-  addComment(marketSurveyId: number): void {
+  addComment(shopping: Center, marketSurveyId: number): void {
     if (this.newComments[marketSurveyId]) {
       const body = {
-        Name: "CreateComment",
+        Name: 'CreateComment',
         Params: {
-          MarketSurveyId: marketSurveyId,
+          MarketSurveyId: shopping.MarketSurveyId,
           Comment: this.newComments[marketSurveyId],
-          ParentCommentId: 0 // 0 for main comments
-        }
+          ParentCommentId: 0,
+        },
       };
-  
+
       this.PlacesService.GenericAPI(body).subscribe({
         next: (response: any) => {
-          const newComment: Comment = {
-            id: response.id,
-            text: this.newComments[marketSurveyId],
-            user: 'Current User',
-            parentId: null,
-            replies: [],
-            MarketSurveyId: marketSurveyId
-          };
-  
-          if (!this.comments[marketSurveyId]) {
-            this.comments[marketSurveyId] = [];
-          }
-  
-          this.comments[marketSurveyId].push(newComment);
-          this.newComments[marketSurveyId] = '';
-          
-          this.getMarketSurveyShoppingCenter();
-        },
-        error: (error: any) => {
-          console.error('Error adding comment:', error);
-        }
+          shopping.ShoppingCenter.Comments.push({
+            Comment: this.newComments[marketSurveyId],
+            CommentDate: new Date().toISOString(),
+          });
+        }, 
       });
     }
   }
   
-  log(id:number){
-    console.log(id)
+  og(id: number) {
+    console.log(id);
   }
 
   addReply(marketSurveyId: number, parentCommentId: number): void {
     if (this.newReplies[parentCommentId]) {
       const body = {
-        Name: "CreateComment",
+        Name: 'CreateComment',
         Params: {
           MarketSurveyId: marketSurveyId,
           Comment: this.newReplies[parentCommentId],
           ParentCommentId: parentCommentId,
         },
-          
       };
       console.log(body),
+        this.PlacesService.GenericAPI(body).subscribe({
+          next: (response: any) => {
+            const newReply: Comment = {
+              id: response.id,
+              text: this.newReplies[parentCommentId],
+              user: 'Current User',
+              parentId: parentCommentId,
+              replies: [],
+              MarketSurveyId: marketSurveyId,
+            };
 
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (response: any) => {
-          const newReply: Comment = {
-            id: response.id,
-            text: this.newReplies[parentCommentId],
-            user: 'Current User',
-            parentId: parentCommentId,
-            replies: [],
-            MarketSurveyId: marketSurveyId
-          };
-  
-          const parentComment = this.findCommentById(this.comments[marketSurveyId], parentCommentId);
-          if (parentComment) {
-            parentComment.replies.push(newReply);
-          }
-  
-          this.newReplies[parentCommentId] = '';
-          this.replyingTo[marketSurveyId] = null;
-  
-          this.getMarketSurveyShoppingCenter();
-        },
-        error: (error: any) => {
-          console.error('Error adding reply:', error);
-        }
-      });
+            const parentComment = this.findCommentById(
+              this.comments[marketSurveyId],
+              parentCommentId
+            );
+            if (parentComment) {
+              parentComment.replies.push(newReply);
+            }
+
+            this.newReplies[parentCommentId] = '';
+            this.replyingTo[marketSurveyId] = null;
+
+            this.getMarketSurveyShoppingCenter();
+          },
+          error: (error: any) => {
+            console.error('Error adding reply:', error);
+          },
+        });
     }
   }
   

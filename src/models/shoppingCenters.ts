@@ -17,9 +17,17 @@ export interface Center {
     ShoppingCenter: ShoppingCenter
     ParentCommentId: number 
   }
+  export interface Comment {
+    Id?: number
+    ContactId?: number
+    MarketSurveyId?: number
+    Comment?: string
+    CommentDate?: string
+  }
   
   export interface ShoppingCenter {
     Places: Place[]
+    Comments: Comment[]
     BuyBoxPlaces: BuyBoxPlace[]
     ManagerOrganization: ManagerOrganization[]
   }
