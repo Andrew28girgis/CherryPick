@@ -104,7 +104,14 @@ export class HomeComponent implements OnInit {
   shoppingCenters: Center[] = [];
   navbarOpen: any;
 
-
+  OrganizationContacts: any[] = [];
+  contactModal: any; 
+  newContact: any = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
+  };
   showbackIds: number[] = [];
   showbackIdsJoin :any;
   @ViewChild('deleteShoppingCenterModal')
