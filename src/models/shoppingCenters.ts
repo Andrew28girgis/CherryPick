@@ -20,10 +20,19 @@ export interface Center {
   
   export interface ShoppingCenter {
     Places: Place[]
+    Comments: Comment[]
     BuyBoxPlaces: BuyBoxPlace[]
     ManagerOrganization: ManagerOrganization[]
   }
 
+  export interface Comment {
+    Id?: number
+    ContactId?: number
+    MarketSurveyId?: number
+    Comment?: string
+    CommentDate?: string
+  }
+  
   export interface ManagerOrganization{
     ID: number
     Name: string

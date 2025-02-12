@@ -38,8 +38,7 @@ interface Comment {
   user: string;
   parentId: number | null;
   replies: Comment[];
-  MarketSurveyId: number
-
+  MarketSurveyId: number;
 }
 
 @Component({
@@ -131,8 +130,8 @@ export class HomeComponent implements OnInit {
   comments: { [key: number]: Comment[] } = {};
   likes: { [key: string]: number } = {};
   showComments: { [key: number]: boolean } = {};
-  MarketSurveyId: Center[] = []
-  lastTap = 0
+  MarketSurveyId: Center[] = [];
+  lastTap = 0;
 
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
@@ -1022,61 +1021,43 @@ export class HomeComponent implements OnInit {
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
 
-  addComment(marketSurveyId: number): void {
-      if (this.newComments[marketSurveyId]) {
-        const body = {
-          Name: "CreateComment",
-          Params: {
-            MarketSurveyId: marketSurveyId,
+  addComment(shopping: Center, marketSurveyId: number): void {
+    if (this.newComments[marketSurveyId]) {
+      const body = {
+        Name: 'CreateComment',
+        Params: {
+          MarketSurveyId: shopping.MarketSurveyId,
+          Comment: this.newComments[marketSurveyId],
+          ParentCommentId: 0,
+        },
+      };
+
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (response: any) => {
+          shopping.ShoppingCenter.Comments.push({
             Comment: this.newComments[marketSurveyId],
-            ParentCommentId: 0 // 0 for main comments
-          }
-        };
-    
-        this.PlacesService.GenericAPI(body).subscribe({
-          next: (response: any) => {
-            const newComment: Comment = {
-              id: response.id,
-              text: this.newComments[marketSurveyId],
-              user: 'Current User',
-              parentId: null,
-              replies: [],
-              MarketSurveyId: marketSurveyId
-            };
-    
-            if (!this.comments[marketSurveyId]) {
-              this.comments[marketSurveyId] = [];
-            }
-    
-            this.comments[marketSurveyId].push(newComment);
-            this.newComments[marketSurveyId] = '';
-            
-            this.getMarketSurveyShoppingCenter();
-          },
-          error: (error: any) => {
-            console.error('Error adding comment:', error);
-          }
-        });
-      }
+            CommentDate: new Date().toISOString(),
+          });
+        }, 
+      });
     }
-    
-    log(id:number){
-      console.log(id)
-    }
-  
-    addReply(marketSurveyId: number, parentCommentId: number): void {
-      if (this.newReplies[parentCommentId]) {
-        const body = {
-          Name: "CreateComment",
-          Params: {
-            MarketSurveyId: marketSurveyId,
-            Comment: this.newReplies[parentCommentId],
-            ParentCommentId: parentCommentId,
-          },
-            
-        };
-        console.log(body),
-  
+  }
+
+  log(id: number) {
+    console.log(id);
+  }
+
+  addReply(marketSurveyId: number, parentCommentId: number): void {
+    if (this.newReplies[parentCommentId]) {
+      const body = {
+        Name: 'CreateComment',
+        Params: {
+          MarketSurveyId: marketSurveyId,
+          Comment: this.newReplies[parentCommentId],
+          ParentCommentId: parentCommentId,
+        },
+      };
+      console.log(body),
         this.PlacesService.GenericAPI(body).subscribe({
           next: (response: any) => {
             const newReply: Comment = {
@@ -1085,41 +1066,43 @@ export class HomeComponent implements OnInit {
               user: 'Current User',
               parentId: parentCommentId,
               replies: [],
-              MarketSurveyId: marketSurveyId
+              MarketSurveyId: marketSurveyId,
             };
-    
-            const parentComment = this.findCommentById(this.comments[marketSurveyId], parentCommentId);
+
+            const parentComment = this.findCommentById(
+              this.comments[marketSurveyId],
+              parentCommentId
+            );
             if (parentComment) {
               parentComment.replies.push(newReply);
             }
-    
+
             this.newReplies[parentCommentId] = '';
             this.replyingTo[marketSurveyId] = null;
-    
+
             this.getMarketSurveyShoppingCenter();
           },
           error: (error: any) => {
             console.error('Error adding reply:', error);
-          }
+          },
         });
-      }
     }
-
+  }
 
   doubleTapLike(shopping: any, event: TouchEvent) {
-    const currentTime = new Date().getTime()
-    const tapLength = currentTime - this.lastTap
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - this.lastTap;
     if (tapLength < 300 && tapLength > 0) {
-      this.likeDirectly(shopping)
-      const touch = event.touches[0]
+      this.likeDirectly(shopping);
+      const touch = event.touches[0];
       //this.createHeartAnimation(touch.clientX, touch.clientY)
-      event.preventDefault()
+      event.preventDefault();
     }
-    this.lastTap = currentTime
+    this.lastTap = currentTime;
   }
 
   onTouchStart(event: TouchEvent) {
-    event.preventDefault()
+    event.preventDefault();
   }
   showToastMessage(message: string) {
     this.toastMessage = message;

@@ -280,42 +280,11 @@
                 }"
               ></i>              <span class="d-block d-sm-none" >{{ getTotalReactions(shopping) }}</span>
 
-              <!-- 'fa-heart': getPrimaryReaction(shopping) === 'love',
-                  'fa-laugh': getPrimaryReaction(shopping) === 'haha',
-                  'fa-surprise': getPrimaryReaction(shopping) === 'wow',
-                  'fa-sad-tear': getPrimaryReaction(shopping) === 'sad',
-                  'fa-angry': getPrimaryReaction(shopping) === 'angry' -->
+            
               <span class="reactionMobile">
                 {{ getPrimaryReaction(shopping) }}
               </span>
             </button>
-            <!-- <div
-              class="reaction-options"
-              *ngIf="showReactions[shopping.Id]"
-              (mouseleave)="toggleReactions(shopping.Id)"
-            >
-              <button class="reaction-option" (click)="react(shopping, 'like')">
-                👍
-              </button>
-              <button class="reaction-option" (click)="react(shopping, 'love')">
-                ❤️
-              </button>
-               <button class="reaction-option" (click)="react(shopping, 'haha')">
-                😂
-              </button>
-              <button class="reaction-option" (click)="react(shopping, 'wow')">
-                😮
-              </button> 
-              <button class="reaction-option" (click)="react(shopping, 'sad')">
-                😢
-              </button>
-              <button
-                class="reaction-option"
-                (click)="react(shopping, 'angry')"
-              >
-                😠
-              </button>
-            </div> -->
           </div>
           <button
             class="action-btn comment-btn"
@@ -341,7 +310,7 @@
             />
             <button
               class="post-comment-btn"
-              (click)="addComment(shopping.MarketSurveyId)"
+              (click)="addComment(shopping , shopping.MarketSurveyId)"
             >
               Comment
             </button>
@@ -349,21 +318,21 @@
 
           <ul class="comment-list">
             <ng-container
-              *ngFor="let comment of comments[shopping.MarketSurveyId]"
+              *ngFor="let comment of shopping.ShoppingCenter.Comments"
             >
               <li>
-                <div class="comment-content">
-                  <strong>{{ comment.user }}</strong>
-                  <p>{{ comment.text }}</p>
-                  <button
+                <div class="comment-content d-flex justify-content-between">
+                  <p>{{ comment.Comment }}</p>
+                  <p>{{ comment.CommentDate | date}}</p>
+                  <!-- <button
                     class="reply-btn"
                     (click)="toggleReply(shopping.MarketSurveyId, comment.id)"
                   >
                     Reply
-                  </button>
+                  </button> -->
                 </div>
 
-                <div
+                <!-- <div
                   class="reply-input"
                   *ngIf="replyingTo[shopping.MarketSurveyId] === comment.id"
                 >
@@ -378,9 +347,9 @@
                   >
                     Reply
                   </button>
-                </div>
+                </div> -->
 
-                <ul
+                <!-- <ul
                   class="reply-list"
                   *ngIf="comment.replies && comment.replies.length > 0"
                 >
@@ -390,7 +359,7 @@
                       <p>{{ reply.text }}</p>
                     </div>
                   </li>
-                </ul>
+                </ul> -->
               </li>
             </ng-container>
           </ul>
