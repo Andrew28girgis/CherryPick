@@ -38,6 +38,8 @@ interface Comment {
   user: string;
   parentId: number | null;
   replies: Comment[];
+  MarketSurveyId: number
+
 }
 
 @Component({
@@ -129,6 +131,8 @@ export class HomeComponent implements OnInit {
   comments: { [key: number]: Comment[] } = {};
   likes: { [key: string]: number } = {};
   showComments: { [key: number]: boolean } = {};
+  MarketSurveyId: Center[] = []
+  lastTap = 0
 
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
@@ -1018,52 +1022,88 @@ export class HomeComponent implements OnInit {
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
 
-  addComment(shopping: any): void {
-    if (!this.comments[shopping.Id]) {
-      this.comments[shopping.Id] = [];
-    }
-
-    if (this.newComments[shopping.Id]) {
-      const newComment: Comment = {
-        id: Date.now(),
-        text: this.newComments[shopping.Id],
-        user: 'Current User',
-        parentId: null,
-        replies: [],
-      };
-
-      // Add new comment to the comment list for the shopping item
-      this.comments[shopping.Id].push(newComment);
-
-      // Reset the input field after the comment is added
-      this.newComments[shopping.Id] = '';
-    }
-  }
-
-  addReply(shopping: any, parentId: number): void {
-    if (this.newReplies[shopping.Id]) {
-      const newReply: Comment = {
-        id: Date.now(),
-        text: this.newReplies[shopping.Id],
-        user: 'Current User',
-        parentId: parentId,
-        replies: [],
-      };
-
-      // Find the parent comment and add the new reply to it
-      const parentComment = this.findCommentById(
-        this.comments[shopping.Id],
-        parentId
-      );
-      if (parentComment) {
-        parentComment.replies.push(newReply);
+  addComment(marketSurveyId: number): void {
+      if (this.newComments[marketSurveyId]) {
+        const body = {
+          Name: "CreateComment",
+          Params: {
+            MarketSurveyId: marketSurveyId,
+            Comment: this.newComments[marketSurveyId],
+            ParentCommentId: 0 // 0 for main comments
+          }
+        };
+    
+        this.PlacesService.GenericAPI(body).subscribe({
+          next: (response: any) => {
+            const newComment: Comment = {
+              id: response.id,
+              text: this.newComments[marketSurveyId],
+              user: 'Current User',
+              parentId: null,
+              replies: [],
+              MarketSurveyId: marketSurveyId
+            };
+    
+            if (!this.comments[marketSurveyId]) {
+              this.comments[marketSurveyId] = [];
+            }
+    
+            this.comments[marketSurveyId].push(newComment);
+            this.newComments[marketSurveyId] = '';
+            
+            this.getMarketSurveyShoppingCenter();
+          },
+          error: (error: any) => {
+            console.error('Error adding comment:', error);
+          }
+        });
       }
-
-      // Reset the input field and stop replying
-      this.newReplies[shopping.Id] = '';
-      this.replyingTo[shopping.Id] = null;
     }
-  }
+    
+    log(id:number){
+      console.log(id)
+    }
+  
+    addReply(marketSurveyId: number, parentCommentId: number): void {
+      if (this.newReplies[parentCommentId]) {
+        const body = {
+          Name: "CreateComment",
+          Params: {
+            MarketSurveyId: marketSurveyId,
+            Comment: this.newReplies[parentCommentId],
+            ParentCommentId: parentCommentId,
+          },
+            
+        };
+        console.log(body),
+  
+        this.PlacesService.GenericAPI(body).subscribe({
+          next: (response: any) => {
+            const newReply: Comment = {
+              id: response.id,
+              text: this.newReplies[parentCommentId],
+              user: 'Current User',
+              parentId: parentCommentId,
+              replies: [],
+              MarketSurveyId: marketSurveyId
+            };
+    
+            const parentComment = this.findCommentById(this.comments[marketSurveyId], parentCommentId);
+            if (parentComment) {
+              parentComment.replies.push(newReply);
+            }
+    
+            this.newReplies[parentCommentId] = '';
+            this.replyingTo[marketSurveyId] = null;
+    
+            this.getMarketSurveyShoppingCenter();
+          },
+          error: (error: any) => {
+            console.error('Error adding reply:', error);
+          }
+        });
+      }
+    }
 
   // `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}
 
@@ -1090,13 +1130,21 @@ export class HomeComponent implements OnInit {
 
   // common
 
-  doubleTapLike(shopping: any) {
-    // Implement double-tap like logic here
-    console.log('Double tapped to like', shopping);
-    this.likeDirectly(shopping);
-    // You might want to add some visual feedback for the double-tap like
+  doubleTapLike(shopping: any, event: TouchEvent) {
+    const currentTime = new Date().getTime()
+    const tapLength = currentTime - this.lastTap
+    if (tapLength < 300 && tapLength > 0) {
+      this.likeDirectly(shopping)
+      const touch = event.touches[0]
+      //this.createHeartAnimation(touch.clientX, touch.clientY)
+      event.preventDefault()
+    }
+    this.lastTap = currentTime
   }
 
+  onTouchStart(event: TouchEvent) {
+    event.preventDefault()
+  }
   showToastMessage(message: string) {
     this.toastMessage = message;
     this.showToast = true;
