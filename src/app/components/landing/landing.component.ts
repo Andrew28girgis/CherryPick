@@ -108,7 +108,6 @@ export class LandingComponent {
       this.ShoppingCenterId = params.shoppiongCenterId;
       this.OrgId = params.orgId;
       this.GetCustomSections(this.BuyBoxId);
-
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(
           this.ShoppingCenterId,
