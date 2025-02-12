@@ -28,13 +28,26 @@ export interface Center {
   export interface ShoppingCenter {
     Places: Place[]
     Comments: Comment[]
+    Reactions: Reaction[]
     BuyBoxPlaces: BuyBoxPlace[]
     ManagerOrganization: ManagerOrganization[]
   }
+  export interface Reaction {
+    Id: number
+    ContactId: number
+    MarketSurveyId: number
+    ReactionId: number
+    ReactionDate: string
+    Firstname: string
+    Lastname: string
+  }
+  
 
   export interface Comment {
     Id?: number
     ContactId?: number
+    Firstname?: string
+    Lastname?: string
     MarketSurveyId?: number
     Comment?: string
     CommentDate?: string

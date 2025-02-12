@@ -79,11 +79,11 @@ export class HomeComponent implements OnInit {
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
-    {
-      text: 'Social View',
-      icon: '../../../assets/Images/Icons/globe-solid.svg',
-      status: 5,
-    },
+    // {
+    //   text: 'Social View',
+    //   icon: '../../../assets/Images/Icons/globe-solid.svg',
+    //   status: 5,
+    // },
   ];
   isOpen = false;
   allPlaces!: AllPlaces;
@@ -384,7 +384,7 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
-        this.shoppingCenters = this.shoppingCenters.sort((a, b) =>
+        this.shoppingCenters = this.shoppingCenters?.sort((a, b) =>
           a.CenterCity.localeCompare(b.CenterCity)
         );
         this.stateService.setShoppingCenters(this.shoppingCenters);
@@ -986,11 +986,6 @@ export class HomeComponent implements OnInit {
     this.showReactions[shopping.Id] = false;
   }
 
-  likeDirectly(shopping: any): void {
-    this.react(shopping, this.reactions[shopping.Id] === 'Like' ? '' : 'Like');
-    this.showReactions[shopping.Id] = false;
-  }
-
   getReaction(shopping: any): string {
     return this.reactions[shopping.Id] || '';
   }
@@ -1021,6 +1016,21 @@ export class HomeComponent implements OnInit {
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
 
+  addLike(shopping: Center): void {
+    const body = {
+      Name: 'CreatePropertyReaction',
+      Params: {
+        MarketSurveyId: shopping.MarketSurveyId,
+        reactionId: 1,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+      },
+    });
+  }
+
   addComment(shopping: Center, marketSurveyId: number): void {
     if (this.newComments[marketSurveyId]) {
       const body = {
@@ -1038,13 +1048,9 @@ export class HomeComponent implements OnInit {
             Comment: this.newComments[marketSurveyId],
             CommentDate: new Date().toISOString(),
           });
-        }, 
+        },
       });
     }
-  }
-
-  log(id: number) {
-    console.log(id);
   }
 
   addReply(marketSurveyId: number, parentCommentId: number): void {
@@ -1093,7 +1099,7 @@ export class HomeComponent implements OnInit {
     const currentTime = new Date().getTime();
     const tapLength = currentTime - this.lastTap;
     if (tapLength < 300 && tapLength > 0) {
-      this.likeDirectly(shopping);
+      //  this.likeDirectly(shopping);
       const touch = event.touches[0];
       //this.createHeartAnimation(touch.clientX, touch.clientY)
       event.preventDefault();
