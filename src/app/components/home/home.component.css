@@ -3,6 +3,11 @@
   background-color: red;
   color: #000;
 }
+.custom-share-btn {
+  background-color: #001f3f !important;
+  border-color: #001f3f !important;
+  color: #fff !important;
+}
 
 .info-container {
   padding: 16px;

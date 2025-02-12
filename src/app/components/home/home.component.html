@@ -13,9 +13,10 @@
         />
         <p class="titleResponsive" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
         <!-- <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i> -->
-        <button class="btn btn-secondary ms-4" (click)="openContactsModal(contactsModal)">
-          Contacts
+        <button class="btn custom-share-btn ms-4" (click)="openContactsModal(contactsModal)">
+          Share
         </button>
+        
       </div>
 
       <!-- <div
@@ -936,7 +937,7 @@
   <div class="modal-header d-flex justify-content-between align-items-center">
     <h4 class="modal-title" id="modal-basic-title">Contacts</h4>
     <div>
-      <button type="button" class="btn btn-primary me-2" (click)="openAddContactModal(addContactModal)">Add</button>
+      <button type="button" class="btn btn-primary me-2" (click)="openAddContactModal(addContactModal)">Add New Contact</button>
       <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
   </div>
