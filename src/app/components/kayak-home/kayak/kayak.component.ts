@@ -157,8 +157,6 @@ export class KayakComponent implements OnInit {
       },
     });
   }
-
-  // Refactor getResult() to return an Observable instead of void
   getResult(): Observable<any> {
     this.spinner.show();
     const body: any = {
@@ -168,7 +166,6 @@ export class KayakComponent implements OnInit {
 
     return this.PlacesService.GenericAPI(body).pipe(
       tap((data: any) => {
-        // Process the result
         this.KayakResult = data.json[0];
         this.Ids = this.KayakResult.Ids || [];
         this.ShoppingCenters = this.KayakResult.Result;
@@ -755,6 +752,8 @@ export class KayakComponent implements OnInit {
     this.filterValues.secondarytype = '';
     this.filterValues.neighbourhood = '';
     this.filterValues.tenantCategory = '';
+    this.filterValues.minsize=0;
+    this.filterValues.maxsize=0;
     this.selectedCity = null;
     this.updateCitiesForSelectedState();
     this.getResult()
@@ -806,6 +805,8 @@ export class KayakComponent implements OnInit {
     this.filterValues.secondarytype = '';
     this.filterValues.neighbourhood = '';
     this.filterValues.tenantCategory = '';
+    this.filterValues.minsize=0;
+    this.filterValues.maxsize=0;
     
     // Chain getResult() with the GetFilters() API call
     this.getResult()

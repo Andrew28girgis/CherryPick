@@ -97,8 +97,7 @@ export class LandingComponent {
       next: (data) => {
         this.Permission = data.json;
         this.placesRepresentative = this.Permission?.find((item:permission) => item.sectionName === "PlacesRepresentative")?.visible; 
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -109,7 +108,6 @@ export class LandingComponent {
       this.ShoppingCenterId = params.shoppiongCenterId;
       this.OrgId = params.orgId;
       this.GetCustomSections(this.BuyBoxId);
-
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(
           this.ShoppingCenterId,
@@ -831,6 +829,34 @@ export class LandingComponent {
 
     `)
     );
+  }
+
+  sendEmojFeedBack(reaction: number) { 
+    const body: any = {
+      Name: 'CreatePropertyReaction',
+      Params: {
+        reactionId: reaction,
+        // marketsurveyid: this.marketsurveyid, 
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+     next: (data) => {
+     
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+    // this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
+    //   (data) => {
+    //     this.showAlert = true;
+    //     if (reaction == '') {
+    //       setTimeout(() => {
+    //         this.showAlert = false;
+    //       }, 3000);
+    //       window.scrollTo({ top: 0, behavior: 'smooth' });
+    //     }
+    //   }
+    // );
   }
 
   sendFeedBack(reaction: string) {

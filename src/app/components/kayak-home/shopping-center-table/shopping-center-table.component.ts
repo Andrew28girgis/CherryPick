@@ -240,14 +240,14 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
 
     // حساب الإحداثيات إذا كان العنصر محددًا
-    const targetElement = event?.target as HTMLElement
-    const rect = targetElement.getBoundingClientRect()
+    const targetElement = event?.target as HTMLElement;
+    const rect = targetElement.getBoundingClientRect();
 
     const shortcutsIcon = document.querySelector(".shortcuts_icon") as HTMLElement
 
     if (shortcutsIcon) {
-      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px` // تظهر أسفل الزر مباشرة
-      shortcutsIcon.style.left = `${rect.left + window.scrollX}px` // محاذاة مع الزر
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`; // تظهر أسفل الزر مباشرة
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`; // محاذاة مع الزر
     }
 
     this.selectedId = this.selectedId === id ? null : id
@@ -455,9 +455,9 @@ export class ShoppingCenterTableComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.shoppingCenters = data.json
-        this.stateService.setShoppingCenters(data.json)
-        this.spinner.hide()
+        this.shoppingCenters = data.json;
+        this.stateService.setShoppingCenters(data.json);
+        this.spinner.hide();
         //this.getStandAlonePlaces(this.BuyBoxId);
         this.getBuyBoxPlaces(this.BuyBoxId)
       },

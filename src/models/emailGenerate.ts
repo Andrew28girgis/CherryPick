@@ -33,6 +33,7 @@ export interface Generated {
     LastName: string
     AssistantName:string
     assistantSelected?: boolean; 
+    EmailSignature:string;
   }
   
   export interface Releation {

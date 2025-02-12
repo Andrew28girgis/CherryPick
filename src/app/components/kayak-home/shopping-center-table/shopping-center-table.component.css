@@ -15,6 +15,7 @@
   /* border: 1px solid #aaaaaa66; */
   border-radius: 20px;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+
 }
 
 .card-window-back2 {
@@ -767,25 +768,40 @@ a {
   cursor: auto;
   display: flex;
   flex-direction: column;
+  position: relative;
+  justify-content: space-between;
+  /* height: 340px; */
+  min-height: 280px;
+  max-height: 350px;
 }
 
 @media (max-width: 768px) {
   .card-content_view {
-    height: max-content !important;
+    /* height: max-content !important; */
+    height: max-content;
+    min-height: max-content;
+    max-height: max-content;
+    gap: 5px;
   }
 }
 
 .card-sideview {
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  height: 300px;
+  /* height: 300px; */
   cursor: auto;
   display: flex;
   flex-direction: column;
+  min-height: 280px;
+  max-height: 350px;
 }
 @media (max-width: 768px) {
   .card-sideview {
-    height: max-content !important;
+    /* height: max-content !important; */
+    height: max-content;
+    min-height: max-content;
+    max-height: max-content;
+    gap: 5px;
   }
 }
 
@@ -852,6 +868,9 @@ a {
 
   .custom-map {
     height: 100vh;
+  }
+  .main-img{
+    min-height: 200px;
   }
 }
 

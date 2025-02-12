@@ -381,6 +381,20 @@
                               {{ contact.LastName }}</label
                             >
                           </div>
+                          <div class="checkbox-section checkbox-section-body-second" *ngIf="showOrganizationManagers"             
+                          >
+                            <input
+                              type="checkbox"
+                              name="MangerContactSignature"
+                              id="MangerContactSignature"
+                              class="form-check-input"
+                              [(ngModel)]="showMangerContactSignature"
+                              (change)="onMangerContactSignatureChange()"
+                            />
+                            <label for="MangerContactSignature"
+                              >{{ contact.Firstname }} {{ contact.LastName }} Signature</label
+                            >
+                          </div>
                         </ng-container>
                       </ng-container>
                     </ng-container>
@@ -407,8 +421,7 @@
                         </option>
                       </select>
                     </div>
-                    <div
-                      class="col-12 col-sm-6 d-flex justify-content-between mt-3 align-items-center Button_all"
+                    <div class="col-12 col-sm-6 d-flex justify-content-between mt-3 align-items-center Button_all"
                     >
                       <button
                         class="Emily__contant__button ms-2"
@@ -440,8 +453,11 @@
                         Prompt
                         <i class="fas fa-sign-in-alt px-1"></i>
                       </button>
+                      <!-- <button class="Emily__contant__button" (click)="openAddPrompt(AddPrompt)">
+                        Add Prompt <i class="fa-solid fa-circle-plus ms-1"></i>
+                      </button> -->
                       <button
-                        class="Emily__contant__button Emily__body__button ms-2"
+                        class="Emily__contant__button Emily__body__button"
                         (click)="openBodyModal(ViewBody)"
                       >
                         Show Context
@@ -609,7 +625,7 @@
                               <label class="fw-bold text-secondary"
                                 >Email Subject:</label
                               >
-                              <span
+                              <!-- <span
                                 (click)="copyEmailSubject()"
                                 class="copy-icon-container"
                               >
@@ -623,7 +639,7 @@
                                   *ngIf="isSubjectCopied"
                                   >Copied!</span
                                 >
-                              </span>
+                              </span> -->
                             </div>
                             <div class="p-3 border rounded bg-white text-dark">
                               <textarea
@@ -640,7 +656,7 @@
                               <label class="fw-bold text-secondary"
                                 >Email Body:</label
                               >
-                              <span
+                              <!-- <span
                                 (click)="copyEmailBody()"
                                 class="copy-icon-container"
                               >
@@ -652,7 +668,7 @@
                                 <span class="copied-text" *ngIf="isBodyCopied"
                                   >Copied!</span
                                 >
-                              </span>
+                              </span> -->
                             </div>
                             <div class="p-3 border rounded bg-white text-dark">
                               <p
@@ -807,3 +823,26 @@
     <p id="toastMessage"></p>
   </div>
 </div>
+
+<ng-template #AddPrompt let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title text-dark">Add New Prompt</h3>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Close click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <input type="text" class="form-control mb-2"
+      [(ngModel)]="newPromptName"
+      placeholder="Enter the name of the prompt..."
+      >
+      <textarea class="form-control" rows="15"
+      [(ngModel)]="newPromptText"
+      placeholder="Enter your prompt here..."
+      ></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-success" (click)="addPrompt(modal)">Save</button>
+      <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
+    </div>
+  </div>
+</ng-template>

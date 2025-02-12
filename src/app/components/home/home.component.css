@@ -3,6 +3,11 @@
   background-color: red;
   color: #000;
 }
+.custom-share-btn {
+  background-color: #001f3f !important;
+  border-color: #001f3f !important;
+  color: #fff !important;
+}
 
 .info-container {
   padding: 16px;
@@ -293,7 +298,6 @@
 
 .nav-right {
   width: 100%;
-  cursor: pointer;
   display: flex;
   justify-content: space-between;
 }
@@ -500,18 +504,29 @@ a{
 .card-content{
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  height: 330px;
+  /* height: 330px; */
+  min-height: 250px;
+  max-height: 350px;
   cursor: auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+.card-content>div{
+height: 100%;
+display: contents;
+
 }
 .card-sideview{
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  height: 300px;
+  /* height: 300px; */
+  min-height: 250px;
+  max-height: 350px;
   cursor: auto;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 .card-sideview2{
   background-color: #fff;
@@ -582,7 +597,26 @@ color: #7A8591  ;
     /* height: 100%; */
     
   }
+  .card-sideview{
+  height: max-content;
+  min-height: max-content;
+  max-height: max-content;
+  gap: 5px;
+  }
+.card-content{
+  height: max-content;
+  min-height: max-content;
+  max-height: max-content;
+  gap: 5px;
 }
+}
+
+.main-img{
+  height: 250px;
+  background: white;
+  border-radius: 18px 18px 0 0;
+}
+
 @media (min-width: 576px) {  
   .nav-right {
     .nav-right {
@@ -597,7 +631,9 @@ color: #7A8591  ;
     height: 40px; 
     width: 165px
   }
- 
+  /* .main-img{
+    height: 200px;
+  } */
 }
 
 @media (min-width: 768px) {

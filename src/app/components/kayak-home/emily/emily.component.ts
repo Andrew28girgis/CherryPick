@@ -46,6 +46,7 @@ export class EmilyComponent implements OnInit {
   showMaxBuildingSize: boolean = false;
   showMangerDescription: boolean = false;
   showMangerDescriptionDetails: boolean = false; /////////////
+  showMangerContactSignature: boolean = false; /////////////
   showBuyBoxDescriptionDetails:boolean = false;
   showShoppingCenterDescription:boolean = false;
   showBuyBoxDescription:boolean = false;
@@ -54,6 +55,7 @@ export class EmilyComponent implements OnInit {
   BuyBoxDescription: string = '';
   ShoppingCenterDescription: any;
   MangerDescription: string = '';
+  MangerSignature: string = '';
   showRelationNames: boolean = false;
   selectedRelations: RelationNames[] = [];
   showOrganizationManagers: boolean = false; ////////////
@@ -63,7 +65,9 @@ export class EmilyComponent implements OnInit {
   manager: any;
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
-  selectedShoppingCenter: string = ''; 
+  selectedShoppingCenter: string = '';
+  selectedMangerName: string = '';
+  showShoppingCenter: boolean = false;
   showManagerName: boolean = false;
   showCotenantsWithActivity: boolean = false;
   showCotenantsWithoutActivity: boolean = false;
@@ -103,12 +107,20 @@ export class EmilyComponent implements OnInit {
     CotenantsWithoutActivityType: Cotenant[];
     ShoppingCenterManager: ShoppingCenterManager[];
   }[] = [];
+  tabs = [
+    { id: 'Properties', label: 'Properties' },
+    { id: 'Details', label: 'Details' },
+  ];
   ShoppingCenterAfterLoopDescription: any;
   ShoppingCenterDescriptionText: any;
   ShoppingCenterName: any;
   ShoppingCenterNameText: any;
   showAllRelations = false;
-  
+  newPromptText: string = '';
+  newPromptName: string = '';
+  selectedContactId: number = 0;
+  RepresentativeOrganizationContactsThatWillReceiveThisEmail:
+  string = 'Representative Organization Contacts that will receive this email:'; // Default text
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
@@ -120,7 +132,7 @@ export class EmilyComponent implements OnInit {
       this.orgId = params.get('orgId');
       this.CenterId = params.get('CenterId');
       this.shoppingCenterOrganization = this.orgId;
-      this.GetBuyBoxOrganizationsForEmail();
+      
     });
   }
 
@@ -129,6 +141,7 @@ export class EmilyComponent implements OnInit {
     this.GetRetailRelationCategories();
     this.GetPrompts();
     this.GetBuyBoxInfoDetails();
+    this.GetBuyBoxOrganizationsForEmail();
     this.spinner.show();
 
     
@@ -139,6 +152,7 @@ export class EmilyComponent implements OnInit {
       this.showManagerName = true;
       this.showMangerDescription = true;
       this.showMangerDescriptionDetails=true;
+      this.showMangerContactSignature=true;
       this.showMinBuildingSize = true;
       this.showMaxBuildingSize = true;
       this.showBuyBoxDescription = true;
@@ -150,6 +164,7 @@ export class EmilyComponent implements OnInit {
       this.onCheckboxBuyBoxDescriptionChange();
       this.onCheckShoppingCenterDescriptionChange();
       this.onMangerDescriptionDetailsChange();
+      this.onMangerContactSignatureChange();
       this.onCheckboxdetailsChangeMin(true, true);
       this.selectManagerContactsByDefault();
       this.selectManagerTenantsByDefault();
@@ -178,7 +193,6 @@ export class EmilyComponent implements OnInit {
       },
     });
   }
-  
   getShoppingCenters(buyboxId: number): void {
     this.spinner.show();
     const body: any = {
@@ -328,7 +342,9 @@ export class EmilyComponent implements OnInit {
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
-
+        this.selectedContactId = 
+          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationContacts?.[0]?.ContactId;
+  
         const buyBox = this.generated?.[0]?.Buybox?.[0];
         if (buyBox) {
           this.ManagerOrganizationName =
@@ -419,7 +435,7 @@ export class EmilyComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error updating prompt:', err);
-          alert('Failed to update the prompt. Please try again.');
+          this.showToast('Failed to update the prompt. Please try again.');
         },
       });
     }, 2000);
@@ -439,7 +455,7 @@ export class EmilyComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating prompt:', err);
-        alert('Failed to update the prompt. Please try again.');
+        this.showToast('Failed to Send the Email. Please try again.');
       },
     });
   }
@@ -673,7 +689,7 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.relationCategoriesNames = data.json;
-        console.log(' this.relationCategoriesNames ', this.relationCategoriesNames );
+        // console.log(' this.relationCategoriesNames ', this.relationCategoriesNames );
         
         this.relationCategoriesNames.forEach((r) => (r.selected = true));
         this.spinner.hide();
@@ -686,6 +702,7 @@ export class EmilyComponent implements OnInit {
       this.clientProfileDescription =
         this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
           ?.BuyBoxOrganizationDescription || '';
+          this.RepresentativeOrganizationContactsThatWillReceiveThisEmail='Representative Organization Contacts that will receive this email:';
     } else {
       this.clientProfileDescription = ''; // Clear it if unchecked
     }
@@ -792,16 +809,27 @@ export class EmilyComponent implements OnInit {
     // Update the email body after changes
     this.updateEmailBody();
   }
+  onMangerContactSignatureChange() {
+    if (this.showMangerContactSignature){
+      this.MangerSignature =
+        this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]
+          ?.ManagerOrganization[0].ManagerOrganizationDescription || '';
+    }else{
+      this.MangerSignature = '';
+    }
+    // Update the email body after changes
+    this.updateEmailBody();
+  }
 
   onMangerDescriptionChange() {
-    this.spinner.show();
+    // this.spinner.show();
     if (this.showMangerDescription) {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = true; // Select the manager checkbox
           if (contact.AssistantName) {
             contact.assistantSelected = true; // Select the assistant checkbox
-            this.spinner.hide();
+            // this.spinner.hide();
           }
         });
       });
@@ -810,7 +838,7 @@ export class EmilyComponent implements OnInit {
         manager.ManagerOrganizationContacts.forEach((contact) => {
           contact.selected = false; // Deselect the manager checkbox
           contact.assistantSelected = false; // Deselect the assistant checkbox
-          this.spinner.hide();
+          // this.spinner.hide();
         });
       });
     }
@@ -939,7 +967,7 @@ export class EmilyComponent implements OnInit {
     if (selectedContacts?.length > 0) {
       this.selectedContact = [];
       emailContent +=
-        'Representative Organization Contacts that will receive this email:\n';
+        `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
         if (contact.selected && contact?.Centers?.length > 0) {
           emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
@@ -1107,6 +1135,18 @@ export class EmilyComponent implements OnInit {
       ')' +
       '\n\n';
     }
+    
+    if (this.showMangerContactSignature) {
+      this.managerOrganizations.forEach((manager) => {
+        manager.ManagerOrganizationContacts.forEach((contact) => {
+          if (contact.selected) {
+              emailContent += `\nUse This Email Signature:\n`;
+              // emailContent += `Title: ${contact.Firstname} ${contact.LastName} Assistant\n`;
+              emailContent += `${contact.EmailSignature}\n\n`;
+          }
+        });
+      });
+    }
 
     this.emailBody = emailContent;
   }
@@ -1115,7 +1155,7 @@ export class EmilyComponent implements OnInit {
     this.spinner.show();
     this.updateEmailBody();
     if (!this.selectedPromptId || !this.emailBody) {
-      alert('Please select a prompt and provide an email body');
+      this.showToast('Please select a prompt to Generate.');
       this.spinner.hide();
       return;
     }
@@ -1148,7 +1188,7 @@ export class EmilyComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating prompt:', err);
-        alert('Failed to update the prompt. Please try again.');
+        this.showToast('Failed to update the Email template. Please try again.');
       },
     });
   }
@@ -1267,19 +1307,12 @@ export class EmilyComponent implements OnInit {
       !this.selectedPromptText ||
       this.selectedPromptText === 'No prompt text available'
     ) {
-      alert('No prompt text available to display.');
+      this.showToast('No prompt text available to display.');
       return;
     }
     this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
   }
   openBodyModal(modal: any) {
-    if (
-      !this.selectedPromptText ||
-      this.selectedPromptText === 'No prompt text available'
-    ) {
-      alert('No prompt text available to display.');
-      return;
-    }
     this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
     this.updateEmailBody();
   }
@@ -1290,11 +1323,11 @@ export class EmilyComponent implements OnInit {
 
   savePrompt(modal: any) {
     if (!this.selectedPromptId) {
-      alert('No prompt selected to update.');
+      this.showToast('No prompt selected to update.');
       return;
     }
     if (!this.editablePromptText.trim()) {
-      alert('Prompt text cannot be empty.');
+      this.showToast('Prompt text cannot be empty.');
       return;
     }
 
@@ -1314,7 +1347,37 @@ export class EmilyComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error updating prompt:', err);
-        alert('Failed to update the prompt. Please try again.');
+        this.showToast('Failed to update the prompt. Please try again.');
+      },
+    });
+  }
+  openAddPrompt(modal: any) {
+    this.modalService.open(modal, { size: 'lg', backdrop: true });
+  }
+
+  addPrompt(modal: any) {
+    if (!this.newPromptText.trim() || !this.newPromptName.trim()) {
+      this.showToast('Prompt text cannot be empty.');
+      return;
+    }
+    const body = {
+      name: 'AddPrompt',
+      params: {
+        promptText: this.newPromptText,
+        promptName: this.newPromptName,
+        contactId : this.selectedContactId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        this.showToast('Prompt added successfully!');
+        modal.close();
+        this.GetPrompts();
+        this.newPromptText = '';
+        this.newPromptName = '';
+      },
+      error: (err) => {
+        this.showToast('Failed to add the prompt. Please try again.');
       },
     });
   }
@@ -1361,6 +1424,26 @@ export class EmilyComponent implements OnInit {
     this.showRelationNames = false;
     this.showOrganizationManagers = false;
     this.showMangerDescriptionDetails = false;
+
+    this.showMinBuildingSize = false;
+    this.showMaxBuildingSize = false;
+    this.showBuyBoxDescription = false;
+    this.showBuyBoxDescriptionDetails =false;
+    this.showShoppingCenterDescription =false;
+    this.RepresentativeOrganizationContactsThatWillReceiveThisEmail='';
+
+    this.BuyBoxOrganizationsForEmail[0].Contact.forEach((c: any) => {
+      c.selected = false;
+      c.Centers?.forEach((ShoppingCenter: any) => {
+        ShoppingCenter.selected = false;
+      });
+    });
+
+    this.managerOrganizations.forEach((manager) => {
+      manager.ManagerOrganizationContacts.forEach((contact) => {
+        contact.selected = false;
+      });
+    });
 
     this.emailBody = '';
     // Clear the groupedActivityTypes and other cotenant selections if needed

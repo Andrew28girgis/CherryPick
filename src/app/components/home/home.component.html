@@ -12,7 +12,11 @@
           src="../../../assets/Images/logo.png"
         />
         <p class="titleResponsive" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
-        <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i>
+        <!-- <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i> -->
+        <button class="btn custom-share-btn ms-4" (click)="openContactsModal(contactsModal)">
+          Share
+        </button>
+        
       </div>
 
       <!-- <div
@@ -492,7 +496,7 @@
                       *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization"
                     >
                       <div>
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center justify-content-between">
                           <img
                             class="logo"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -1016,87 +1020,89 @@
               </a>
 
               <div class="content-wrap card-sideview">
-                <div *ngIf="place.CenterCity">
-                  <a
-                    [routerLink]="[
-                      '/landing',
-                      place.ShoppingCenter?.Places
-                        ? place.ShoppingCenter.Places?.[0].Id
-                        : 0,
-                      place.Id,
-                      BuyBoxId,
-                      OrgId
-                    ]"
-                  >
-                    <p class="content-title" style="cursor: pointer">
-                      {{
-                        place.CenterName.length > 22
-                          ? (place.CenterName | titlecase).slice(0, 22) + "..."
-                          : (place.CenterName | titlecase)
-                      }}
-                    </p>
-                  </a>
-                </div>
-
-                <div
-                  *ngIf="place.CenterAddress"
-                  class="card-address"
-                  style="cursor: pointer"
-                  (click)="openMapViewPlace(MapViewPlace, place)"
-                >
-                  <span>
-                    {{ place.CenterAddress }},
-                    {{ place.CenterCity | titlecase }},
-                    {{ place.CenterState }}
-                  </span>
-                </div>
-
-                <div
-                  *ngIf="place.Address"
-                  class="card-address"
-                  style="cursor: pointer"
-                  (click)="openMapViewPlace(MapViewPlace, place)"
-                >
-                  <p>
-                    {{ place.Address }}, {{ place.City | titlecase }},
-                    {{ place.State }}
-                  </p>
-                </div>
-
-                <div *ngIf="place.CenterAddress">
-                  <p
-                    style="font-size: 15px; font-weight: 500; color: #565656"
-                    [innerHTML]="getShoppingCenterUnitSize(place)"
-                  ></p>
-                </div>
-
-                <div
-                  class="row"
-                  *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
-                >
+                <div>
+                  <div *ngIf="place.CenterCity">
+                    <a
+                      [routerLink]="[
+                        '/landing',
+                        place.ShoppingCenter?.Places
+                          ? place.ShoppingCenter.Places?.[0].Id
+                          : 0,
+                        place.Id,
+                        BuyBoxId,
+                        OrgId
+                      ]"
+                    >
+                      <p class="content-title" style="cursor: pointer">
+                        {{
+                          place.CenterName.length > 22
+                            ? (place.CenterName | titlecase).slice(0, 22) + "..."
+                            : (place.CenterName | titlecase)
+                        }}
+                      </p>
+                    </a>
+                  </div>
+  
                   <div
-                    *ngFor="
-                      let item of place.ShoppingCenter
-                        ? place.ShoppingCenter?.BuyBoxPlaces
-                        : place.Place?.BuyBoxPlaces
-                    "
-                    class="col-12 d-flex flex-column spec"
+                    *ngIf="place.CenterAddress"
+                    class="card-address"
+                    style="cursor: pointer"
+                    (click)="openMapViewPlace(MapViewPlace, place)"
                   >
-                    <div class="d-flex flex-column">
-                      <p class="nearset-category">
-                        <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
-                      </p>
-                      <p>
-                        {{ item.RelationOrganizationName }}
-                        <img
-                          class="logo ms-2"
-                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                            item.RelationOrganizationId
-                          }}"
-                          [title]="item.RelationOrganizationName"
-                          alt=""
-                        />
-                      </p>
+                    <span>
+                      {{ place.CenterAddress }},
+                      {{ place.CenterCity | titlecase }},
+                      {{ place.CenterState }}
+                    </span>
+                  </div>
+  
+                  <div
+                    *ngIf="place.Address"
+                    class="card-address"
+                    style="cursor: pointer"
+                    (click)="openMapViewPlace(MapViewPlace, place)"
+                  >
+                    <p>
+                      {{ place.Address }}, {{ place.City | titlecase }},
+                      {{ place.State }}
+                    </p>
+                  </div>
+  
+                  <div *ngIf="place.CenterAddress">
+                    <p
+                      style="font-size: 15px; font-weight: 500; color: #565656"
+                      [innerHTML]="getShoppingCenterUnitSize(place)"
+                    ></p>
+                  </div>
+  
+                  <div
+                    class="row"
+                    *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
+                  >
+                    <div
+                      *ngFor="
+                        let item of place.ShoppingCenter
+                          ? place.ShoppingCenter?.BuyBoxPlaces
+                          : place.Place?.BuyBoxPlaces
+                      "
+                      class="col-12 d-flex flex-column spec"
+                    >
+                      <div class="d-flex flex-column">
+                        <p class="nearset-category">
+                          <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                        </p>
+                        <p>
+                          {{ item.RelationOrganizationName }}
+                          <img
+                            class="logo ms-2"
+                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              item.RelationOrganizationId
+                            }}"
+                            [title]="item.RelationOrganizationName"
+                            alt=""
+                          />
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1193,7 +1199,7 @@
       [ngClass]="{
         'd-none': currentView == 4 || currentView == 3,
         'col-12': currentView == 1,
-        'col-4': currentView == 2
+        'col-12 col-sm-4': currentView == 2
       }"
     >
       <div id="map" class="custom-map"></div>
@@ -1204,20 +1210,13 @@
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
-
 <ng-template #ShareLink let-modal>
-  <div
-    class="d-flex p-3 m-3 align-items-center"
-    style="border: 1px solid #ccc; border-radius: 10px"
-  >
+  <div class="d-flex p-3 m-3 align-items-center" style="border: 1px solid #ccc; border-radius: 10px">
     <p>{{ shareLink }}</p>
-    <i
-      style="cursor: pointer"
-      class="fa-solid fa-copy ms-3"
-      (click)="copyLink(shareLink)"
-    ></i>
+    <i style="cursor: pointer" class="fa-solid fa-copy ms-3" (click)="copyLink(shareLink)"></i>
   </div>
 </ng-template>
+
 
 <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
@@ -1235,6 +1234,72 @@
     *ngIf="!General.modalObject.StreetViewURL"
   ></div>
 </ng-template>
+<ng-template #contactsModal let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h4 class="modal-title" id="modal-basic-title">Contacts</h4>
+    <div>
+      <button type="button" class="btn btn-primary me-2" (click)="openAddContactModal(addContactModal)">Add New Contact</button>
+      <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+  </div>
+  <!-- Added inline styles for vertical scrolling -->
+  <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+    <div *ngFor="let contact of OrganizationContacts" class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-center">
+      <div>
+        <div><strong>{{ contact.firstname }} {{ contact.lastname }}</strong></div>
+        <div>{{ contact.email }}</div>
+      </div>
+      <!-- Pass the contact to openLink -->
+      <i 
+        class="fa-solid fa-share ms-2" 
+        style="font-size: 20px; cursor: pointer;"  
+        (click)="openLink(ShareLink, contact)">
+      </i>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #addContactModal let-modal>
+  <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm">
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h4 class="modal-title" id="modal-add-contact">Add Contact</h4>
+      <div>
+        
+        <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+    </div>
+    <div class="modal-body" >
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" id="firstName" class="form-control" required [(ngModel)]="newContact.firstName" name="firstName" />
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" id="lastName" class="form-control" required [(ngModel)]="newContact.lastName" name="lastName" />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" required [(ngModel)]="newContact.email" name="email" />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" required [(ngModel)]="newContact.password" name="password" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary me-2" [disabled]="!addContactForm.form.valid">
+        Save
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    </div>
+  </form>
+</ng-template>
+
+
 
 
 <ng-template #deleteSingleShoppingCenterModal let-modal>

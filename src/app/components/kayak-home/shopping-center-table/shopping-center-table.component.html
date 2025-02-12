@@ -404,6 +404,9 @@
               <tr>
                 <th>Name</th>
                 <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+
                 <th *ngIf="placesRepresentative != false">Leased by</th>
                 <th style="width: 250px">Unit Size & Lease Price</th>
                 <th>
@@ -439,6 +442,13 @@
                       {{ shoppingCenter.CenterCity | titlecase }},
                       {{ shoppingCenter.CenterState }}
                     </div>
+                  </td>
+                  <td>
+                    {{ shoppingCenter.CenterCity | titlecase
+                  }}
+                  </td>
+                  <td>
+                    {{ shoppingCenter.CenterState }}
                   </td>
                   <td *ngIf="placesRepresentative != false">
                     <ng-container
@@ -793,19 +803,12 @@
                   [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
                 >
                   <div class="main-img">
-                    <img src="{{ shopping.MainImage }}" />
+                    <img src="{{ shopping.MainImage }}" [title]="shopping.CenterName"/>
                   </div>
                   <div class="-container"></div>
 
                 </a>
-                <div
-                  class="content-wrap card-content card-content_view"
-                  style="
-                    position: relative;
-                    justify-content: space-between;
-                    height: 340px;
-                  "
-                >
+                <div class="content-wrap card-content card-content_view" style="position: relative;justify-content: space-between;height: 340px;">
                   <!-- <div> -->
                   <div>
                     <div class="d-flex justify-content-between">
@@ -1193,7 +1196,7 @@
                   [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId,OrgId]"
                 >
                   <div class="main-img">
-                    <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
+                    <img *ngIf="place.MainImage" src="{{ place.MainImage }}" [title]="place.CenterName"/>
                   </div>
                 </a>
                 <a
@@ -1547,10 +1550,8 @@
       [ngClass]="{
         'd-none': currentView == 4 || currentView == 3 || currentView == 5,
         'col-12': currentView == 1,
-        'col-4': currentView == 2,
-
-      }"
-    >
+        'col-4': currentView == 2
+      }">
       <div id="map" class="custom-map"></div>
     </div>
   </div>
