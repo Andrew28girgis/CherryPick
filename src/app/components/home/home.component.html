@@ -2,18 +2,18 @@
 <nav class="navbars container-fluid">
   <div class="navbar-line m-0">
     <div class="nav-right">
-      <div style="display: flex; margin-left: 8px;" class="nav-right-responsive">
+      <div class="nav-right-responsive">
         <img
           alt="logo"
-          style="width: 184px"
+          class="cherry-logo"
           [routerLink]="['/summary']"
           decoding="async"
           data-nimg="1"
           src="../../../assets/Images/logo.png"
         />
-        <p class="titleResponsive" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
+        <p class="titleResponsive ms-2" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
         <!-- <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i> -->
-        <button class="btn custom-share-btn ms-4" (click)="openContactsModal(contactsModal)">
+        <button class="btn custom-share-btn mx-sm-3 mx-2" (click)="openContactsModal(contactsModal)">
           Share
         </button>
         
