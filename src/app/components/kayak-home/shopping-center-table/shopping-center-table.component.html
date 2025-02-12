@@ -240,9 +240,9 @@
           <div class="social-stats " >
             <span class="reactions"
               >{{ getTotalReactions(shopping) }} reactions</span  >
-            <span class="comments"
+            <!-- <span class="comments"
               >{{ comments[shopping.Id]?.length || 0 }} comments</span
-            >
+            > -->
           </div>
         </div>
 
@@ -306,7 +306,7 @@
             class="action-btn comment-btn"
             (click)="toggleComments(shopping)"
           >
-            <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span>
+            <!-- <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span> -->
             <span class="reactionMobile"> Comment </span>
           </button>
           <button class="action-btn share-btn" (click)="shareContent(shopping)">
