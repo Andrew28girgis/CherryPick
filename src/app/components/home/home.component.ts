@@ -1,9 +1,13 @@
+import { SocialMedialService } from 'src/app/services/socialMedia.service';
 import {
   Component,
   OnInit,
   NgZone,
   ViewChild,
   ElementRef,
+  EventEmitter,
+  Output,
+  TemplateRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms'; // <-- Import NgForm
 
@@ -27,6 +31,14 @@ import { Polygons } from '../../../../src/models/polygons';
 import { ShareOrg } from '../../../../src/models/shareOrg';
 import { StateService } from '../../../../src/app/services/state.service';
 import { permission } from '../../../../src/models/permission';
+
+interface Comment {
+  id: number;
+  text: string;
+  user: string;
+  parentId: number | null;
+  replies: Comment[];
+}
 
 @Component({
   selector: 'app-home',
@@ -53,7 +65,7 @@ export class HomeComponent implements OnInit {
     }, // Add your SVG paths here
     {
       text: 'Side List',
-      icon: '../../../assets/Images/Icons/element-3.png', 
+      icon: '../../../assets/Images/Icons/element-3.png',
       status: 2,
     },
     {
@@ -65,6 +77,11 @@ export class HomeComponent implements OnInit {
       text: 'Table',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
+    },
+    {
+      text: 'Social View',
+      icon: '../../../assets/Images/Icons/globe-solid.svg',
+      status: 5,
     },
   ];
   isOpen = false;
@@ -86,24 +103,42 @@ export class HomeComponent implements OnInit {
   navbarOpen: any;
 
   OrganizationContacts: any[] = [];
-  contactModal: any; 
+  contactModal: any;
   newContact: any = {
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    password: '',
   };
-
+  showbackIds: number[] = [];
+  showbackIdsJoin: any;
+  @ViewChild('deleteShoppingCenterModal')
+  deleteShoppingCenterModal!: TemplateRef<any>;
+  selectedId: number | null = null;
+  selectedIdCard: number | null = null;
+  shoppingCenterIdToDelete: number | null = null;
+  showToast = false;
+  toastMessage = '';
+  reactions: { [key: number]: string } = {};
+  showReactions: { [key: number]: boolean } = {};
+  replyingTo: { [key: number]: number | null } = {};
+  reactionTimers: { [key: number]: any } = {};
+  newComments: { [key: number]: string } = {};
+  newReplies: { [key: number]: string } = {};
+  Comments: { [key: number]: string } = {};
+  comments: { [key: number]: Comment[] } = {};
+  likes: { [key: string]: number } = {};
+  showComments: { [key: number]: boolean } = {};
 
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
   }
-  
+
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
 
-  standAlone: Place[] = []; 
+  standAlone: Place[] = [];
   buyboxPlaces: BbPlace[] = [];
   Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
@@ -187,7 +222,7 @@ export class HomeComponent implements OnInit {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
     };
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-add-contact',
@@ -219,7 +254,7 @@ export class HomeComponent implements OnInit {
           firstName: '',
           lastName: '',
           email: '',
-          password: ''
+          password: '',
         };
         form.resetForm();
         this.modalService.dismissAll();
@@ -329,7 +364,7 @@ export class HomeComponent implements OnInit {
 
   getShoppingCenters(buyboxId: number): void {
     if (this.stateService.getShoppingCenters().length > 0) {
-      this.shoppingCenters = this.stateService.getShoppingCenters(); 
+      this.shoppingCenters = this.stateService.getShoppingCenters();
       this.getBuyBoxPlaces(this.BuyBoxId);
 
       return;
@@ -346,14 +381,16 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
-        this.shoppingCenters = this.shoppingCenters.sort((a, b) => a.CenterCity.localeCompare(b.CenterCity));
+        this.shoppingCenters = this.shoppingCenters.sort((a, b) =>
+          a.CenterCity.localeCompare(b.CenterCity)
+        );
         this.stateService.setShoppingCenters(this.shoppingCenters);
-        this.spinner.hide(); 
+        this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
-  } 
+  }
 
   getBuyBoxPlaces(buyboxId: number): void {
     if (this.stateService.getBuyboxPlaces()?.length > 0) {
@@ -371,7 +408,7 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         console.log(`1`);
-        
+
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
         this.buyboxCategories.forEach((category) => {
@@ -416,7 +453,7 @@ export class HomeComponent implements OnInit {
 
   async getAllMarker() {
     console.log(`hello`);
-    
+
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
@@ -439,7 +476,7 @@ export class HomeComponent implements OnInit {
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
             lat: this.shoppingCenters[0].Latitude,
-            lng: this.shoppingCenters[0].Longitude
+            lng: this.shoppingCenters[0].Longitude,
           },
           zoom: 8,
           mapId: '1234567890',
@@ -454,8 +491,6 @@ export class HomeComponent implements OnInit {
       if (this.shoppingCenters && this.shoppingCenters.length > 0) {
         this.createMarkers(this.shoppingCenters, 'Shopping Center');
       }
-
-    
 
       //this.getPolygons();
       this.createCustomMarkers(this.buyboxCategories);
@@ -555,9 +590,7 @@ export class HomeComponent implements OnInit {
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
 
-    const allProperties = [
-      ...(this.shoppingCenters || []),
-    ];
+    const allProperties = [...(this.shoppingCenters || [])];
 
     // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
@@ -708,7 +741,7 @@ export class HomeComponent implements OnInit {
   addMarkerToStreetView(panorama: any, lat: number, lng: number) {
     const svgPath =
       'M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z';
-    
+
     const marker = new google.maps.Marker({
       position: { lat, lng },
       map: panorama,
@@ -741,15 +774,14 @@ export class HomeComponent implements OnInit {
     } else {
       this.shareLink = '';
     }
-  
+
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
   }
-  
-  
+
   copyLink(link: string) {
     navigator.clipboard
       .writeText(link)
@@ -910,8 +942,7 @@ export class HomeComponent implements OnInit {
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
 
- 
-  getNeareastCategoryName(categoryId: number) {  
+  getNeareastCategoryName(categoryId: number) {
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }
@@ -939,5 +970,266 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe((data) => {
       console.log(data);
     });
+  }
+
+  // old
+
+  toggleReactions(shoppingId: number): void {
+    this.showReactions[shoppingId] = !this.showReactions[shoppingId];
+  }
+
+  react(shopping: any, reactionType: string): void {
+    this.reactions[shopping.Id] = reactionType;
+    this.showReactions[shopping.Id] = false;
+  }
+
+  likeDirectly(shopping: any): void {
+    this.react(shopping, this.reactions[shopping.Id] === 'Like' ? '' : 'Like');
+    this.showReactions[shopping.Id] = false;
+  }
+
+  getReaction(shopping: any): string {
+    return this.reactions[shopping.Id] || '';
+  }
+
+  getTotalReactions(shopping: any): number {
+    return this.reactions[shopping.Id] ? 1 : 0;
+  }
+  copyLinkSocial(shopping: any) {
+    // Generate a unique link for the shopping center
+    const link = `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}`;
+    // [RouterLink]="['/landing', 0, shopping.Id, BuyBoxId, OrgId]"
+    // Copy the link to clipboard
+    navigator.clipboard.writeText(link).then(
+      () => {
+        this.showToastMessage('Link copied to clipboard!');
+      },
+      (err) => {
+        console.error('Could not copy text: ', err);
+      }
+    );
+  }
+
+  getPrimaryReaction(shopping: any): string {
+    return this.reactions[shopping.Id] || 'Like';
+  }
+
+  toggleComments(shopping: any): void {
+    this.showComments[shopping.Id] = !this.showComments[shopping.Id];
+  }
+
+  addComment(shopping: any): void {
+    if (!this.comments[shopping.Id]) {
+      this.comments[shopping.Id] = [];
+    }
+
+    if (this.newComments[shopping.Id]) {
+      const newComment: Comment = {
+        id: Date.now(),
+        text: this.newComments[shopping.Id],
+        user: 'Current User',
+        parentId: null,
+        replies: [],
+      };
+
+      // Add new comment to the comment list for the shopping item
+      this.comments[shopping.Id].push(newComment);
+
+      // Reset the input field after the comment is added
+      this.newComments[shopping.Id] = '';
+    }
+  }
+
+  addReply(shopping: any, parentId: number): void {
+    if (this.newReplies[shopping.Id]) {
+      const newReply: Comment = {
+        id: Date.now(),
+        text: this.newReplies[shopping.Id],
+        user: 'Current User',
+        parentId: parentId,
+        replies: [],
+      };
+
+      // Find the parent comment and add the new reply to it
+      const parentComment = this.findCommentById(
+        this.comments[shopping.Id],
+        parentId
+      );
+      if (parentComment) {
+        parentComment.replies.push(newReply);
+      }
+
+      // Reset the input field and stop replying
+      this.newReplies[shopping.Id] = '';
+      this.replyingTo[shopping.Id] = null;
+    }
+  }
+
+  // `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}
+
+  async shareContent(shopping: any) {
+    const shareData = {
+      title: shopping.CenterName,
+      text: `Check out ${shopping.CenterName}!`,
+      // adress: shopping.CenterAddress,
+      url: `${window.location.origin}/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        console.log(shareData);
+      } catch (err) {
+        console.error('Error sharing content:', err);
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      this.copyLink(shopping);
+    }
+  }
+
+  // common
+
+  doubleTapLike(shopping: any) {
+    // Implement double-tap like logic here
+    console.log('Double tapped to like', shopping);
+    this.likeDirectly(shopping);
+    // You might want to add some visual feedback for the double-tap like
+  }
+
+  showToastMessage(message: string) {
+    this.toastMessage = message;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide the toast after 3 seconds
+  }
+
+  findCommentById(comments: Comment[], id: number): Comment | null {
+    for (const comment of comments) {
+      if (comment.id === id) {
+        return comment;
+      }
+      const foundInReplies = this.findCommentById(comment.replies, id);
+      if (foundInReplies) {
+        return foundInReplies;
+      }
+    }
+    return null;
+  }
+
+  toggleReply(shopping: any, commentId: number): void {
+    this.replyingTo[shopping.Id] =
+      this.replyingTo[shopping.Id] === commentId ? null : commentId;
+  }
+
+  hideReactions(shoppingId: number): void {
+    setTimeout(() => {
+      this.showReactions[shoppingId] = false;
+    }, 3000);
+  }
+
+  startReactionTimer(shoppingId: number): void {
+    this.showReactions[shoppingId] = true;
+  }
+
+  stopReactionTimer(shoppingId: number): void {
+    clearTimeout(this.reactionTimers[shoppingId]);
+    delete this.reactionTimers[shoppingId];
+  }
+
+  toggleShortcutsCard(id: number, close?: string): void {
+    if (close === 'close') {
+      this.selectedIdCard = null;
+    } else {
+      this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    }
+  }
+
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    if (close === 'close') {
+      this.selectedId = null;
+      this.selectedIdCard = null;
+      return;
+    }
+
+    const targetElement = event?.target as HTMLElement;
+    const rect = targetElement.getBoundingClientRect();
+
+    const shortcutsIcon = document.querySelector(
+      '.shortcuts_icon'
+    ) as HTMLElement;
+
+    if (shortcutsIcon) {
+      shortcutsIcon.style.top = `${
+        rect.top + window.scrollY + targetElement.offsetHeight
+      }px`; // تظهر أسفل الزر مباشرة
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`; // محاذاة مع الزر
+    }
+
+    this.selectedId = this.selectedId === id ? null : id;
+  }
+
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenterId: any
+  ) {
+    this.shoppingCenterIdToDelete = shoppingCenterId;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
+  redirect(organizationId: any) {
+    this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: organizationId });
+  }
+  @Output() tabChange = new EventEmitter<{
+    tabId: string;
+    shoppingCenterId: number;
+  }>();
+
+  ArrOfDelete(modalTemplate: TemplateRef<any>) {
+    this.showbackIdsJoin = this.showbackIds.join(',');
+    this.openDeleteShoppingCenterModal(modalTemplate, this.showbackIdsJoin);
+  }
+
+  deleteShCenter() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromBuyBox',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+        ShoppingCenterId: this.shoppingCenterIdToDelete,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.modalService.dismissAll();
+
+        this.getMarketSurveyShoppingCenter();
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+  getMarketSurveyShoppingCenter() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCenters',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => this.handleSuccessResponse(data),
+    });
+  }
+  private handleSuccessResponse(data: any) {
+    this.shoppingCenters = data.json;
+    this.stateService.setShoppingCenters(data.json);
+
+    this.getBuyBoxPlaces(this.BuyBoxId);
+    this.showbackIds = [];
+    this.spinner.hide();
   }
 }

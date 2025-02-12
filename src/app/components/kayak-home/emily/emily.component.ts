@@ -1208,86 +1208,61 @@ export class EmilyComponent implements OnInit {
   }
 
   // prompts to be displayed in select dropdown
-  async GetPrompts() {
+  GetPrompts() {
     this.spinner.show();
-    const response = await this.callApi();
-    const catagoryId = response.json[0].Id;
-
-    const body: any = {
-      Name: 'GetPrompts',
-      MainEntity: null,
-      params: {
-        Id: catagoryId,
-      },
-      Json: null,
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        const responsePrompts = data?.json || [];
-        if (responsePrompts.length > 0) {
-          this.prompts = responsePrompts.map((prompt: any) => ({
-            id: prompt?.Id || null,
-            name: prompt?.Name || 'Unnamed Prompt',
-            promptText: prompt?.PromptText || 'No prompt text available',
-          }));
-          this.spinner.hide();
-        } else {
-          console.error('No prompts found in the response.');
-          this.prompts = [];
-          this.spinner.hide();
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching prompts:', err);
-        this.prompts = [];
-        this.spinner.hide();
-      },
-    });
-  }
-  // this 2 async to the previous function
-  // Method to call the API
-  async callApi(): Promise<any> {
-    const url = 'https://api.cherrypick.com/api/GenericAPI/Execute';
-    const headers = {
-      'Content-Type': 'application/json',
-      Cookie:
-        'ARRAffinity=0422a4dadbc118f9867df7ce19b008b709e8d292e137797ec5a3992788831d23; ARRAffinitySameSite=0422a4dadbc118f9867df7ce19b008b709e8d292e137797ec5a3992788831d23',
-    };
-    const body = {
+    // 1. Get the Category ID
+    const categoryBody = {
       name: 'GetPromptsCategoryId',
       params: {
         Name: 'Availability',
       },
     };
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(body),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error calling API:', error);
-      throw error;
-    }
+    this.PlacesService.GenericAPI(categoryBody).subscribe({
+      next: (catResponse: any) => {
+        const categoryId = catResponse?.json?.[0]?.Id;
+        if (!categoryId) {
+          console.error('Category ID not found.');
+          this.spinner.hide();
+          return;
+        }
+        // 2. With the Category ID, get the Prompts
+        const promptsBody = {
+          name: 'GetPrompts',
+          MainEntity: null,
+          params: {
+            Id: categoryId,
+          },
+          Json: null,
+        };
+        this.PlacesService.GenericAPI(promptsBody).subscribe({
+          next: (promptsResponse: any) => {
+            const promptsData = promptsResponse?.json || [];
+            if (promptsData.length > 0) {
+              this.prompts = promptsData.map((prompt: any) => ({
+                id: prompt?.Id || null,
+                name: prompt?.Name || 'Unnamed Prompt',
+                promptText: prompt?.PromptText || 'No prompt text available',
+              }));
+            } else {
+              console.error('No prompts found in the response.');
+              this.prompts = [];
+            }
+            this.spinner.hide();
+          },
+          error: (err: any) => {
+            console.error('Error fetching prompts:', err);
+            this.prompts = [];
+            this.spinner.hide();
+          },
+        });
+      },
+      error: (err: any) => {
+        console.error('Error fetching category ID:', err);
+        this.spinner.hide();
+      },
+    });
   }
-  // Method to print the result of the API call
-  async printResult(): Promise<void> {
-    try {
-      const result = await this.callApi();
-      // console.log('API Response:', result);
-    } catch (error) {
-      console.error('Error printing result:', error);
-    }
-  }
+  
   // when select from select drop down to be changed
   updatePrompt() {
     const selectedPrompt = this.prompts.find(
