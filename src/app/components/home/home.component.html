@@ -11,12 +11,19 @@
           data-nimg="1"
           src="../../../assets/Images/logo.png"
         />
-        <p class="titleResponsive ms-2" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
+        <p
+          class="titleResponsive ms-2"
+          style="font-weight: 600; color: #5e5e5e"
+        >
+          {{ BuyBoxName }}
+        </p>
         <!-- <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i> -->
-        <button class="btn custom-share-btn mx-sm-3 mx-2" (click)="openContactsModal(contactsModal)">
+        <button
+          class="btn custom-share-btn mx-sm-3 mx-2"
+          (click)="openContactsModal(contactsModal)"
+        >
           Share
         </button>
-        
       </div>
 
       <!-- <div
@@ -69,22 +76,23 @@
           [ngClass]="{ show: navbarOpen }"
           id="navbarNav"
         >
-        
           <div
             class="icon-option"
             *ngFor="let option of dropdowmOptions"
             (click)="selectOption(option)"
-            [class.selected]="selectedOption === option.status || selectedOption === option"
-            [ngClass]="{'hide-on-mobile': option.text === 'Table View' || option.text === 'Side List View'}"
+            [class.selected]="
+              selectedOption === option.status || selectedOption === option
+            "
+            [ngClass]="{
+              'hide-on-mobile':
+                option.text === 'Table View' || option.text === 'Side List View'
+            }"
           >
-          
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text">{{ option.text }}</span>
-         
-          </div> 
-           
+          </div>
 
-            <app-logout></app-logout> 
+          <app-logout></app-logout>
         </div>
       </div>
     </div>
@@ -100,10 +108,6 @@
     </div> -->
   </div>
 </nav>
-
-
-
-
 
 <ng-container *ngIf="currentView == 5">
   <div class="card-container">
@@ -245,16 +249,20 @@
           </div>
         </div>
         <!-- <a [routerLink]="['/landing', 0, shopping.Id, BuyBoxId, OrgId]"> -->
-        <div class="card-image"   (touchstart)="onTouchStart($event)"
-        (touchend)="doubleTapLike(shopping, $event)">
+        <div
+          class="card-image"
+          (touchstart)="onTouchStart($event)"
+          (touchend)="doubleTapLike(shopping, $event)"
+        >
           <img [src]="shopping.MainImage" [alt]="shopping.CenterName" />
         </div>
         <div class="heart-animation-container"></div>
-      <!-- </a>  -->
+        <!-- </a>  -->
         <div class="card-body">
-          <div class="social-stats " >
-            <span class="reactions"
-              >{{ getTotalReactions(shopping) }} reactions</span  >
+          <div class="social-stats">
+            <span class="reactions" *ngIf="shopping.ShoppingCenter.Reactions"
+              >{{ shopping.ShoppingCenter.Reactions.length }} reactions</span
+            >
             <!-- <span class="comments"
               >{{ comments[shopping.Id]?.length || 0 }} comments</span
             > -->
@@ -262,30 +270,23 @@
         </div>
 
         <div class="card-footer">
-          <div
-            class="reaction-buttons"
-            (mouseleave)="hideReactions(shopping.Id)"
-          >
-            <button
-              class="action-btn like-btn"
-              (click)="likeDirectly(shopping)"
-              (mouseenter)="startReactionTimer(shopping.Id)"
-              (mouseleave)="stopReactionTimer(shopping.Id)"
-            >
-              <i
-                class="far"
-                [ngClass]="{
+          <button class="action-btn like-btn" (click)="addLike(shopping)">
+            <i
+              class="far"
+              [ngClass]="{
                   'fa-thumbs-up': getPrimaryReaction(shopping) === 'Like',
                   
                 }"
-              ></i>              <span class="d-block d-sm-none" >{{ getTotalReactions(shopping) }}</span>
+            ></i>
+            <span class="d-block d-sm-none">{{
+              getTotalReactions(shopping)
+            }}</span>
 
-            
-              <span class="reactionMobile">
-                {{ getPrimaryReaction(shopping) }}
-              </span>
-            </button>
-          </div>
+            <span class="reactionMobile">
+              {{ getPrimaryReaction(shopping) }}
+            </span>
+          </button>
+
           <button
             class="action-btn comment-btn"
             (click)="toggleComments(shopping)"
@@ -293,7 +294,10 @@
             <!-- <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span> -->
             <span class="reactionMobile"> Comment </span>
           </button>
-          <button class="action-btn share-btn" (click)="openContactsModal(contactsModal)">
+          <button
+            class="action-btn share-btn"
+            (click)="openContactsModal(contactsModal)"
+          >
             <i class="far fa-share-square"></i>
             <span class="reactionMobile"> Share </span>
           </button>
@@ -310,7 +314,7 @@
             />
             <button
               class="post-comment-btn"
-              (click)="addComment(shopping , shopping.MarketSurveyId)"
+              (click)="addComment(shopping, shopping.MarketSurveyId)"
             >
               Comment
             </button>
@@ -321,9 +325,12 @@
               *ngFor="let comment of shopping.ShoppingCenter.Comments"
             >
               <li>
+                <div>
+                  {{ comment.Firstname }} {{ comment.Lastname }}
+                </div>
                 <div class="comment-content d-flex justify-content-between">
                   <p>{{ comment.Comment }}</p>
-                  <p>{{ comment.CommentDate | date}}</p>
+                  <p>{{ comment.CommentDate | date : "medium" }}</p>
                   <!-- <button
                     class="reply-btn"
                     (click)="toggleReply(shopping.MarketSurveyId, comment.id)"
@@ -371,11 +378,6 @@
     {{ toastMessage }}
   </div> -->
 </ng-container>
-
-
-
-
-
 
 <div class="map-view" *ngIf="currentView != 5">
   <div class="row" style="background-color: #f2f3f4">
@@ -452,17 +454,12 @@
                     </div>
                   </td>
                   <td>
-                    <div
-                      class="table-text" 
-                    > 
+                    <div class="table-text">
                       {{ shoppingCenter.CenterCity | titlecase }}
                     </div>
                   </td>
                   <td>
-                    <div
-                      class="table-text"
-                      
-                    > 
+                    <div class="table-text">
                       {{ shoppingCenter.CenterState }}
                     </div>
                   </td>
@@ -471,7 +468,9 @@
                       *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization"
                     >
                       <div>
-                        <div class="d-flex align-items-center justify-content-between">
+                        <div
+                          class="d-flex align-items-center justify-content-between"
+                        >
                           <img
                             class="logo"
                             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -577,8 +576,7 @@
                       </ng-container>
                     </ng-container>
                   </td>
-                  <ng-template #emptyTd> 
-                  </ng-template>
+                  <ng-template #emptyTd> </ng-template>
 
                   <td>
                     <div
@@ -1011,13 +1009,14 @@
                       <p class="content-title" style="cursor: pointer">
                         {{
                           place.CenterName.length > 22
-                            ? (place.CenterName | titlecase).slice(0, 22) + "..."
+                            ? (place.CenterName | titlecase).slice(0, 22) +
+                              "..."
                             : (place.CenterName | titlecase)
                         }}
                       </p>
                     </a>
                   </div>
-  
+
                   <div
                     *ngIf="place.CenterAddress"
                     class="card-address"
@@ -1030,7 +1029,7 @@
                       {{ place.CenterState }}
                     </span>
                   </div>
-  
+
                   <div
                     *ngIf="place.Address"
                     class="card-address"
@@ -1042,14 +1041,14 @@
                       {{ place.State }}
                     </p>
                   </div>
-  
+
                   <div *ngIf="place.CenterAddress">
                     <p
                       style="font-size: 15px; font-weight: 500; color: #565656"
                       [innerHTML]="getShoppingCenterUnitSize(place)"
                     ></p>
                   </div>
-  
+
                   <div
                     class="row"
                     *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
@@ -1186,12 +1185,18 @@
   <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
 <ng-template #ShareLink let-modal>
-  <div class="d-flex p-3 m-3 align-items-center" style="border: 1px solid #ccc; border-radius: 10px">
+  <div
+    class="d-flex p-3 m-3 align-items-center"
+    style="border: 1px solid #ccc; border-radius: 10px"
+  >
     <p class="share-link">{{ shareLink }}</p>
-    <i style="cursor: pointer" class="fa-solid fa-copy ms-3" (click)="copyLink(shareLink)"></i>
+    <i
+      style="cursor: pointer"
+      class="fa-solid fa-copy ms-3"
+      (click)="copyLink(shareLink)"
+    ></i>
   </div>
 </ng-template>
-
 
 <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
@@ -1213,85 +1218,149 @@
   <div class="modal-header d-flex justify-content-between align-items-center">
     <span class="modal-title" id="modal-basic-title">Contacts</span>
     <div>
-      <button type="button" class="btn btn-primary me-2 contact-btn" (click)="openAddContactModal(addContactModal)">Add New Contact</button>
-      <button type="button" class="btn btn-close contact-btn" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      <button
+        type="button"
+        class="btn btn-primary me-2 contact-btn"
+        (click)="openAddContactModal(addContactModal)"
+      >
+        Add New Contact
+      </button>
+      <button
+        type="button"
+        class="btn btn-close contact-btn"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
     </div>
   </div>
   <!-- Added inline styles for vertical scrolling -->
-  <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-    <div *ngFor="let contact of OrganizationContacts" class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-center">
+  <div class="modal-body" style="max-height: 70vh; overflow-y: auto">
+    <div
+      *ngFor="let contact of OrganizationContacts"
+      class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-center"
+    >
       <div>
         <div>
-          <span class="first-last">{{ contact.firstname }} {{ contact.lastname }}
-
+          <span class="first-last"
+            >{{ contact.firstname }} {{ contact.lastname }}
           </span>
         </div>
         <div>
-             <span class="email">
-              {{ contact.email }}
-
-            </span>        
+          <span class="email">
+            {{ contact.email }}
+          </span>
         </div>
       </div>
       <!-- Pass the contact to openLink -->
-      <i 
-        class="fa-solid fa-share ms-2 sharee-link" 
-        (click)="openLink(ShareLink, contact)">
+      <i
+        class="fa-solid fa-share ms-2 sharee-link"
+        (click)="openLink(ShareLink, contact)"
+      >
       </i>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary contact-btn" (click)="modal.close()">Close</button>
+    <button
+      type="button"
+      class="btn btn-secondary contact-btn"
+      (click)="modal.close()"
+    >
+      Close
+    </button>
   </div>
 </ng-template>
-
 
 <ng-template #addContactModal let-modal>
   <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm">
     <div class="modal-header d-flex justify-content-between align-items-center">
       <span class="modal-title" id="modal-add-contact">Add Contact</span>
       <div>
-        
-        <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button
+          type="button"
+          class="btn btn-close"
+          aria-label="Close"
+          (click)="modal.dismiss('Cross click')"
+        ></button>
       </div>
     </div>
-    <div class="modal-body" >
+    <div class="modal-body">
       <div class="mb-3">
         <label for="firstName" class="form-label">First Name</label>
-        <input type="text" id="firstName" class="form-control" required [(ngModel)]="newContact.firstName" name="firstName" />
+        <input
+          type="text"
+          id="firstName"
+          class="form-control"
+          required
+          [(ngModel)]="newContact.firstName"
+          name="firstName"
+        />
       </div>
       <div class="mb-3">
         <label for="lastName" class="form-label">Last Name</label>
-        <input type="text" id="lastName" class="form-control" required [(ngModel)]="newContact.lastName" name="lastName" />
+        <input
+          type="text"
+          id="lastName"
+          class="form-control"
+          required
+          [(ngModel)]="newContact.lastName"
+          name="lastName"
+        />
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" class="form-control" required [(ngModel)]="newContact.email" name="email" />
+        <input
+          type="email"
+          id="email"
+          class="form-control"
+          required
+          [(ngModel)]="newContact.email"
+          name="email"
+        />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" id="password" class="form-control" required [(ngModel)]="newContact.password" name="password" />
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          required
+          [(ngModel)]="newContact.password"
+          name="password"
+        />
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary me-2 contact-btn" [disabled]="!addContactForm.form.valid">
+      <button
+        type="submit"
+        class="btn btn-primary me-2 contact-btn"
+        [disabled]="!addContactForm.form.valid"
+      >
         Save
       </button>
-      <button type="button" class="btn btn-secondary contact-btn" (click)="modal.close()">Close</button>
+      <button
+        type="button"
+        class="btn btn-secondary contact-btn"
+        (click)="modal.close()"
+      >
+        Close
+      </button>
     </div>
   </form>
 </ng-template>
 
-
-
-
 <ng-template #deleteSingleShoppingCenterModal let-modal>
-  <div class="modal-body-general p-4 rounded" style="
+  <div
+    class="modal-body-general p-4 rounded"
+    style="
       background-color: #f8f9fa;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    ">
-    <h2 class="text-center mb-4" style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)">
+    "
+  >
+    <h2
+      class="text-center mb-4"
+      style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)"
+    >
       Remove Shopping Center
     </h2>
     <p class="text-center" style="font-size: 1rem; color: #6c757d">
@@ -1299,11 +1368,20 @@
     </p>
 
     <div class="d-flex justify-content-end mt-4">
-      <button type="button" class="btn btn-secondary me-2 px-4 py-2" (click)="modal.dismiss('Cancel click')"
-        style="border-radius: 4px">
+      <button
+        type="button"
+        class="btn btn-secondary me-2 px-4 py-2"
+        (click)="modal.dismiss('Cancel click')"
+        style="border-radius: 4px"
+      >
         Cancel
       </button>
-      <button type="button" class="btn btn-danger px-4 py-2" (click)="deleteShCenter()" style="border-radius: 4px">
+      <button
+        type="button"
+        class="btn btn-danger px-4 py-2"
+        (click)="deleteShCenter()"
+        style="border-radius: 4px"
+      >
         Remove
       </button>
     </div>
