@@ -1063,21 +1063,12 @@ a {
 @media (max-width: 991px) {
 .card-content{
   height: fit-content !important;
-
 }
-
   .share-button {
     padding: 8px 12px;
     margin-left: 3px;
 
   }
-  img[alt="logo"] {
-    margin-right: 137px; 
-  }
-  .nav-right-responsive{
-    flex-direction: column;
-  }
-
   .navbar-collapse {
     position: absolute;
     top: 100%;
@@ -1095,16 +1086,12 @@ a {
     margin: 10px 0;
     padding: 2px;
   }
-}
-
-
-
-
-@media (max-width: 991px) {
   .hide-on-mobile {
     display: none !important;
   }
 }
+
+
 
 
 
