@@ -97,8 +97,7 @@ export class LandingComponent {
       next: (data) => {
         this.Permission = data.json;
         this.placesRepresentative = this.Permission?.find((item:permission) => item.sectionName === "PlacesRepresentative")?.visible; 
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -109,7 +108,6 @@ export class LandingComponent {
       this.ShoppingCenterId = params.shoppiongCenterId;
       this.OrgId = params.orgId;
       this.GetCustomSections(this.BuyBoxId);
-
       if (this.ShoppingCenterId != 0) {
         this.GetBuyBoxOrganizationDetails(
           this.ShoppingCenterId,
