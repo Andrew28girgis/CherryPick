@@ -293,7 +293,6 @@
 
 .nav-right {
   width: 100%;
-  cursor: pointer;
   display: flex;
   justify-content: space-between;
 }

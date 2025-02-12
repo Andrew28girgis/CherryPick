@@ -13,6 +13,9 @@
         />
         <p class="titleResponsive" style="font-weight: 600; color: #5e5e5e">{{ BuyBoxName }}</p>
         <i class="fa-solid fa-share ms-2 " style="font-size: 20px; cursor: pointer;"  *ngIf="ShareOrg[0]" (click)="openLink(ShareLink)"></i>
+        <button class="btn btn-secondary ms-4" (click)="openContactsModal(contactsModal)">
+          Contacts
+        </button>
       </div>
 
       <!-- <div
@@ -936,3 +939,56 @@
     *ngIf="!General.modalObject.StreetViewURL"
   ></div>
 </ng-template>
+<ng-template #contactsModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Contacts</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div *ngFor="let contact of OrganizationContacts" class="mb-3 border-bottom pb-2">
+      <div><strong>{{ contact.firstname }} {{ contact.lastname }}</strong></div>
+      <div>{{ contact.email }}</div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="openAddContactModal(addContactModal)">Add</button>
+  </div>
+</ng-template>
+
+<ng-template #addContactModal let-modal>
+  <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm" style="max-height: 100vh; overflow-y: auto;">
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <h4 class="modal-title" id="modal-add-contact">Add Contact</h4>
+      <div>
+        <button type="submit" class="btn btn-primary me-2" [disabled]="!addContactForm.form.valid">
+          Add Contact
+        </button>
+        <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+    </div>
+    <div class="modal-body" >
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" id="firstName" class="form-control" required [(ngModel)]="newContact.firstName" name="firstName" />
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" id="lastName" class="form-control" required [(ngModel)]="newContact.lastName" name="lastName" />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" required [(ngModel)]="newContact.email" name="email" />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" required [(ngModel)]="newContact.password" name="password" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    </div>
+  </form>
+</ng-template>
+
+
