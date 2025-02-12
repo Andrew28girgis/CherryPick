@@ -935,29 +935,37 @@
 </ng-template>
 <ng-template #contactsModal let-modal>
   <div class="modal-header d-flex justify-content-between align-items-center">
-    <h4 class="modal-title" id="modal-basic-title">Contacts</h4>
+    <span class="modal-title" id="modal-basic-title">Contacts</span>
     <div>
-      <button type="button" class="btn btn-primary me-2" (click)="openAddContactModal(addContactModal)">Add New Contact</button>
-      <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      <button type="button" class="btn btn-primary me-2 contact-btn" (click)="openAddContactModal(addContactModal)">Add New Contact</button>
+      <button type="button" class="btn btn-close contact-btn" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
   </div>
   <!-- Added inline styles for vertical scrolling -->
   <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
     <div *ngFor="let contact of OrganizationContacts" class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-center">
       <div>
-        <div><strong>{{ contact.firstname }} {{ contact.lastname }}</strong></div>
-        <div>{{ contact.email }}</div>
+        <div>
+          <span class="first-last">{{ contact.firstname }} {{ contact.lastname }}
+
+          </span>
+        </div>
+        <div>
+             <span class="email">
+              {{ contact.email }}
+
+            </span>        
+        </div>
       </div>
       <!-- Pass the contact to openLink -->
       <i 
-        class="fa-solid fa-share ms-2" 
-        style="font-size: 20px; cursor: pointer;"  
+        class="fa-solid fa-share ms-2 sharee-link" 
         (click)="openLink(ShareLink, contact)">
       </i>
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-secondary contact-btn" (click)="modal.close()">Close</button>
   </div>
 </ng-template>
 
@@ -965,7 +973,7 @@
 <ng-template #addContactModal let-modal>
   <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm">
     <div class="modal-header d-flex justify-content-between align-items-center">
-      <h4 class="modal-title" id="modal-add-contact">Add Contact</h4>
+      <span class="modal-title" id="modal-add-contact">Add Contact</span>
       <div>
         
         <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -990,10 +998,10 @@
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary me-2" [disabled]="!addContactForm.form.valid">
+      <button type="submit" class="btn btn-primary me-2 contact-btn" [disabled]="!addContactForm.form.valid">
         Save
       </button>
-      <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+      <button type="button" class="btn btn-secondary contact-btn" (click)="modal.close()">Close</button>
     </div>
   </form>
 </ng-template>
