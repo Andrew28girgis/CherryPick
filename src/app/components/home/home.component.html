@@ -277,16 +277,45 @@
                   'fa-thumbs-up': getPrimaryReaction(shopping) === 'Like',
                   
                 }"
-            ></i>
-            <span class="d-block d-sm-none">{{
-              getTotalReactions(shopping)
-            }}</span>
+              ></i>              <span class="d-block d-sm-none" >{{ getTotalReactions(shopping) }}</span>
 
-            <span class="reactionMobile">
-              {{ getPrimaryReaction(shopping) }}
-            </span>
-          </button>
-
+              <!-- 'fa-heart': getPrimaryReaction(shopping) === 'love',
+                  'fa-laugh': getPrimaryReaction(shopping) === 'haha',
+                  'fa-surprise': getPrimaryReaction(shopping) === 'wow',
+                  'fa-sad-tear': getPrimaryReaction(shopping) === 'sad',
+                  'fa-angry': getPrimaryReaction(shopping) === 'angry' -->
+              <span class="reactionMobile">
+                {{ getPrimaryReaction(shopping) }}
+              </span>
+            </button>
+            <!-- <div
+              class="reaction-options"
+              *ngIf="showReactions[shopping.Id]"
+              (mouseleave)="toggleReactions(shopping.Id)"
+            >
+              <button class="reaction-option" (click)="react(shopping, 'like')">
+                👍
+              </button>
+              <button class="reaction-option" (click)="react(shopping, 'love')">
+                ❤️
+              </button>
+               <button class="reaction-option" (click)="react(shopping, 'haha')">
+                😂
+              </button>
+              <button class="reaction-option" (click)="react(shopping, 'wow')">
+                😮
+              </button> 
+              <button class="reaction-option" (click)="react(shopping, 'sad')">
+                😢
+              </button>
+              <button
+                class="reaction-option"
+                (click)="react(shopping, 'angry')"
+              >
+                😠
+              </button>
+            </div> -->
+          </div>
           <button
             class="action-btn comment-btn"
             (click)="toggleComments(shopping)"
@@ -305,7 +334,7 @@
             <i class="far fa-copy"></i> Copy Link
           </button> -->
         </div>
-        <div class="comments-section">
+        <div class="comments-section" *ngIf="showComments[shopping.Id]">
           <div class="comment-input">
             <input
               type="text"
