@@ -1105,30 +1105,6 @@ export class HomeComponent implements OnInit {
       }
     }
 
-  // `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}
-
-  async shareContent(shopping: any) {
-    const shareData = {
-      title: shopping.CenterName,
-      text: `Check out ${shopping.CenterName}!`,
-      // adress: shopping.CenterAddress,
-      url: `${window.location.origin}/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}`,
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        console.log(shareData);
-      } catch (err) {
-        console.error('Error sharing content:', err);
-      }
-    } else {
-      // Fallback for browsers that don't support Web Share API
-      this.copyLink(shopping);
-    }
-  }
-
-  // common
 
   doubleTapLike(shopping: any, event: TouchEvent) {
     const currentTime = new Date().getTime()

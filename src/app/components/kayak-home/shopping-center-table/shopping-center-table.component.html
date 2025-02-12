@@ -309,7 +309,7 @@
             <!-- <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span> -->
             <span class="reactionMobile"> Comment </span>
           </button>
-          <button class="action-btn share-btn" (click)="shareContent(shopping)">
+          <button class="action-btn share-btn" (click)="openContactsModal(contactsModal)">
             <i class="far fa-share-square"></i>
             <span class="reactionMobile"> Share </span>
           </button>
@@ -1671,4 +1671,77 @@
       </button>
     </div>
   </div>
+</ng-template>
+
+<ng-template #contactsModal let-modal>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <span class="modal-title" id="modal-basic-title">Contacts</span>
+    <div>
+      <button type="button" class="btn btn-primary me-2 contact-btn" (click)="openAddContactModal(addContactModal)">Add New Contact</button>
+      <button type="button" class="btn btn-close contact-btn" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+  </div>
+  <!-- Added inline styles for vertical scrolling -->
+  <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+    <div *ngFor="let contact of OrganizationContacts" class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-center">
+      <div>
+        <div>
+          <span class="first-last">{{ contact.firstname }} {{ contact.lastname }}
+
+          </span>
+        </div>
+        <div>
+             <span class="email">
+              {{ contact.email }}
+
+            </span>        
+        </div>
+      </div>
+      <!-- Pass the contact to openLink -->
+      <i 
+        class="fa-solid fa-share ms-2 sharee-link" 
+        (click)="openLink(ShareLink, contact)">
+      </i>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary contact-btn" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+
+
+<ng-template #addContactModal let-modal>
+  <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm">
+    <div class="modal-header d-flex justify-content-between align-items-center">
+      <span class="modal-title" id="modal-add-contact">Add Contact</span>
+      <div>
+        
+        <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+    </div>
+    <div class="modal-body" >
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" id="firstName" class="form-control" required [(ngModel)]="newContact.firstName" name="firstName" />
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" id="lastName" class="form-control" required [(ngModel)]="newContact.lastName" name="lastName" />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" required [(ngModel)]="newContact.email" name="email" />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" required [(ngModel)]="newContact.password" name="password" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary me-2 contact-btn" [disabled]="!addContactForm.form.valid">
+        Save
+      </button>
+      <button type="button" class="btn btn-secondary contact-btn" (click)="modal.close()">Close</button>
+    </div>
+  </form>
 </ng-template>
