@@ -1,9 +1,13 @@
+import { SocialMedialService } from 'src/app/services/socialMedia.service';
 import {
   Component,
   OnInit,
   NgZone,
   ViewChild,
   ElementRef,
+  EventEmitter,
+  Output,
+  TemplateRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms'; // <-- Import NgForm
 
@@ -27,6 +31,16 @@ import { Polygons } from '../../../../src/models/polygons';
 import { ShareOrg } from '../../../../src/models/shareOrg';
 import { StateService } from '../../../../src/app/services/state.service';
 import { permission } from '../../../../src/models/permission';
+
+
+
+interface Comment {
+  id: number;
+  text: string;
+  user: string;
+  parentId: number | null;
+  replies: Comment[];
+}
 
 @Component({
   selector: 'app-home',
@@ -66,6 +80,11 @@ export class HomeComponent implements OnInit {
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
+    {
+      text: 'Social View',
+      icon: '../../../assets/Images/Icons/globe-solid.svg',
+      status: 5,
+    }, 
   ];
   isOpen = false;
   allPlaces!: AllPlaces;
@@ -93,6 +112,25 @@ export class HomeComponent implements OnInit {
     email: '',
     password: ''
   };
+  showbackIds: number[] = [];
+  showbackIdsJoin :any;
+  @ViewChild('deleteShoppingCenterModal')
+  deleteShoppingCenterModal!: TemplateRef<any>;
+  selectedId: number | null = null;
+  selectedIdCard: number | null = null;
+  shoppingCenterIdToDelete: number | null = null;
+  showToast = false;
+  toastMessage = '';
+  reactions: { [key: number]: string } = {};
+  showReactions: { [key: number]: boolean } = {};
+  replyingTo: { [key: number]: number | null } = {};
+  reactionTimers: { [key: number]: any } = {};
+  newComments: { [key: number]: string } = {};
+  newReplies: { [key: number]: string } = {};
+  Comments: { [key: number]: string } = {};
+  comments: { [key: number]: Comment[] } = {};
+  likes: { [key: string]: number } = {};
+  showComments: { [key: number]: boolean } = {};
 
 
   toggleNavbar() {
@@ -120,7 +158,9 @@ export class HomeComponent implements OnInit {
     private markerService: MapsService,
     private ngZone: NgZone,
     private sanitizer: DomSanitizer,
-    private stateService: StateService
+    private stateService: StateService,
+    private socialService: SocialMedialService,
+
   ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
@@ -940,4 +980,367 @@ export class HomeComponent implements OnInit {
       console.log(data);
     });
   }
+
+
+
+
+
+
+
+
+
+
+  
+// old
+
+
+
+
+toggleReactions(shoppingId: number): void {
+  this.showReactions[shoppingId] = !this.showReactions[shoppingId];
 }
+
+react(shopping: any, reactionType: string): void {
+  this.reactions[shopping.Id] = reactionType;
+  this.showReactions[shopping.Id] = false;
+}
+
+likeDirectly(shopping: any): void {
+  this.react(shopping, this.reactions[shopping.Id] === 'Like' ? '' : 'Like');
+  this.showReactions[shopping.Id] = false;
+}
+
+getReaction(shopping: any): string {
+  return this.reactions[shopping.Id] || '';
+}
+
+getTotalReactions(shopping: any): number {
+    return this.reactions[shopping.Id] ? 1 : 0;
+  }
+copyLinkSocial(shopping: any) {
+    // Generate a unique link for the shopping center
+  const link = `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}`;
+  // [RouterLink]="['/landing', 0, shopping.Id, BuyBoxId, OrgId]"
+  // Copy the link to clipboard
+  navigator.clipboard.writeText(link).then(() => {
+    this.showToastMessage('Link copied to clipboard!');
+  }, (err) => {
+    console.error('Could not copy text: ', err);
+  });
+}
+
+getPrimaryReaction(shopping: any): string {
+  return this.reactions[shopping.Id] || 'Like';
+}
+
+toggleComments(shopping: any): void {
+  this.showComments[shopping.Id] = !this.showComments[shopping.Id];
+}
+
+addComment(shopping: any): void {
+    if (!this.comments[shopping.Id]) {
+        this.comments[shopping.Id] = [];
+      }
+    
+      if (this.newComments[shopping.Id]) {
+          const newComment: Comment = {
+              id: Date.now(),
+      text: this.newComments[shopping.Id],
+      user: 'Current User',
+      parentId: null,
+      replies: [],
+    };
+
+    // Add new comment to the comment list for the shopping item
+    this.comments[shopping.Id].push(newComment);
+
+    // Reset the input field after the comment is added
+    this.newComments[shopping.Id] = '';
+  }
+}
+
+addReply(shopping: any, parentId: number): void {
+    if (this.newReplies[shopping.Id]) {
+        const newReply: Comment = {
+            id: Date.now(),
+            text: this.newReplies[shopping.Id],
+            user: 'Current User',
+            parentId: parentId,
+            replies: [],
+          };
+      
+          // Find the parent comment and add the new reply to it
+          const parentComment = this.findCommentById(this.comments[shopping.Id], parentId);
+          if (parentComment) {
+      parentComment.replies.push(newReply);
+    }
+
+    // Reset the input field and stop replying
+    this.newReplies[shopping.Id] = '';
+    this.replyingTo[shopping.Id] = null;
+  }
+}
+
+
+// `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}
+
+async shareContent(shopping: any) {
+const shareData = {
+  title: shopping.CenterName,
+  text: `Check out ${shopping.CenterName}!`,
+  // adress: shopping.CenterAddress,
+  url: `${window.location.origin}/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}`
+};
+
+if (navigator.share) {
+  try {
+    await navigator.share(shareData);
+    console.log(shareData);
+  } catch (err) {
+    console.error('Error sharing content:', err);
+  }
+} else {
+    // Fallback for browsers that don't support Web Share API
+    this.copyLink(shopping);
+  }
+}
+
+
+
+
+
+// common
+
+
+
+  doubleTapLike(shopping: any) {
+    // Implement double-tap like logic here
+    console.log('Double tapped to like', shopping);
+    this.likeDirectly(shopping);
+    // You might want to add some visual feedback for the double-tap like
+  }
+
+
+  showToastMessage(message: string) {
+    this.toastMessage = message;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000); // Hide the toast after 3 seconds
+  }
+
+findCommentById(comments: Comment[], id: number): Comment | null {
+for (const comment of comments) {
+  if (comment.id === id) {
+    return comment;
+  }
+  const foundInReplies = this.findCommentById(comment.replies, id);
+  if (foundInReplies) {
+    return foundInReplies;
+  }
+}
+return null;
+}
+
+toggleReply(shopping: any, commentId: number): void {
+this.replyingTo[shopping.Id] =
+  this.replyingTo[shopping.Id] === commentId ? null : commentId;
+}
+
+hideReactions(shoppingId: number): void {
+setTimeout(() => {
+this.showReactions[shoppingId] = false;
+}, 3000);  
+}
+
+startReactionTimer(shoppingId: number): void {
+  this.showReactions[shoppingId] = true;
+}
+
+stopReactionTimer(shoppingId: number): void {
+clearTimeout(this.reactionTimers[shoppingId]);
+delete this.reactionTimers[shoppingId];
+}
+
+private formatShareText(shopping: any): string {
+return `
+${shopping.CenterName}
+
+Check out ${shopping.CenterName} in ${shopping.CenterCity}, ${shopping.CenterState}!
+
+Learn more at: ${window.location.href}
+`.trim();
+}
+
+
+
+
+
+
+// new
+
+// private copyToClipboard(text: string) {
+//   const textArea = document.createElement("textarea");
+//   textArea.value = text;
+//   document.body.appendChild(textArea);
+//   textArea.select();
+//   document.execCommand("copy");
+//   document.body.removeChild(textArea);
+//   alert("Content copied to clipboard!");
+// }
+
+//   toggleReactions(shoppingId: number): void {
+//     this.socialService.toggleReactions(shoppingId)
+//   }
+
+//   react(shopping: any, reactionType: string): void {
+//     this.socialService.react(shopping.Id, reactionType)
+//   }
+
+//   likeDirectly(shopping: any): void {
+//     this.socialService.likeDirectly(shopping.Id)
+//   }
+
+//   getReaction(shopping: any): string {
+//     return this.socialService.getReaction(shopping.Id)
+//   }
+
+//   getTotalReactions(shopping: any): number {
+//     return this.socialService.getTotalReactions(shopping.Id)
+//   }
+
+//   getPrimaryReaction(shopping: any): string {
+//     return this.socialService.getPrimaryReaction(shopping.Id)
+//   }
+
+//   toggleComments(shopping: any): void {
+//     this.socialService.toggleComments(shopping.Id)
+//   }
+
+//   addComment(shopping: any): void {
+//     if (this.newComments[shopping.Id]) {
+//       this.socialService.addComment(shopping.Id, this.newComments[shopping.Id])
+//       this.newComments[shopping.Id] = ""
+//     }
+//   }
+
+//   addReply(shopping: any, parentId: number): void {
+//     if (this.newComments[shopping.Id]) {
+//       this.socialService.addReply(shopping.Id, parentId, this.newComments[shopping.Id])
+//       this.newComments[shopping.Id] = ""
+//       this.replyingTo[shopping.Id] = null
+//     }
+//   }
+
+//   shareContent(shopping: any): void {
+//     this.socialService.shareContent(shopping)
+//   }
+
+//   copyLinkSocial(shopping: any): void {
+//     this.socialService.copyLinkSocial(shopping)
+//   }
+
+
+
+
+
+toggleShortcutsCard(id: number, close?: string): void {
+  if (close === 'close') {
+    this.selectedIdCard = null;
+  } else {
+    this.selectedIdCard = this.selectedIdCard === id ? null : id;
+  }
+}
+
+toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+  if (close === 'close') {
+    this.selectedId = null;
+    this.selectedIdCard = null;
+    return;
+  }
+
+  // حساب الإحداثيات إذا كان العنصر محددًا
+  const targetElement = event?.target as HTMLElement;
+  const rect = targetElement.getBoundingClientRect();
+
+  const shortcutsIcon = document.querySelector('.shortcuts_icon') as HTMLElement;
+
+  if (shortcutsIcon) {
+    shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`; // تظهر أسفل الزر مباشرة
+    shortcutsIcon.style.left = `${rect.left + window.scrollX}px`; // محاذاة مع الزر
+  }
+
+  this.selectedId = this.selectedId === id ? null : id;
+}
+
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenterId: any
+  ) {
+    this.shoppingCenterIdToDelete = shoppingCenterId;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  
+  }
+  redirect(organizationId: any) {
+    this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: organizationId });
+  }
+  @Output() tabChange = new EventEmitter<{ tabId: string; shoppingCenterId: number }>();
+
+
+
+  ArrOfDelete(modalTemplate: TemplateRef<any>) {
+    this.showbackIdsJoin = this.showbackIds.join(',');
+    this.openDeleteShoppingCenterModal(modalTemplate,this.showbackIdsJoin);
+  }
+
+
+  deleteShCenter(){
+    this.spinner.show();
+    const body: any = {
+      Name: 'DeleteShoppingCenterFromBuyBox',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+        ShoppingCenterId: this.shoppingCenterIdToDelete, 
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.modalService.dismissAll()
+
+        this.getMarketSurveyShoppingCenter();
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+  getMarketSurveyShoppingCenter() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetMarketSurveyShoppingCenters',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => this.handleSuccessResponse(data),
+     });
+  }
+  private handleSuccessResponse(data: any) {
+    this.shoppingCenters = data.json;
+    this.stateService.setShoppingCenters(data.json);
+    
+    this.getBuyBoxPlaces(this.BuyBoxId);
+    this.showbackIds = [];
+    this.spinner.hide();
+  }
+
+
+
+}
+
+
+
+
