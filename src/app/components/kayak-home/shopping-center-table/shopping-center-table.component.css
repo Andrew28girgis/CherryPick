@@ -1330,6 +1330,7 @@ a {
   }
 
   .card-header {
+    background-color: #000;
     flex-direction: row;
     align-items: flex-start;
   }
@@ -1472,7 +1473,8 @@ a {
 
 .toast.show {
   opacity: 1;
-}@media (max-width: 768px) {
+}
+@media (max-width: 768px) {
   /* Card container adjustments */
   .card-container {
     padding: 0;
