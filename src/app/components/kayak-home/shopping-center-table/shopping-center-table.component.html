@@ -632,8 +632,7 @@
                                           .Id
                                       : 0,
                                     shoppingCenter.Id,
-                                    BuyBoxId,
-                                    OrgId
+                                    BuyBoxId
                                   ]"
                                 >
                                   <svg
@@ -805,7 +804,7 @@
                 class="cardResponsive"
               >
                 <a
-                  [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
+                  [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId]"
                 >
                   <div class="main-img">
                     <img src="{{ shopping.MainImage }}" [title]="shopping.CenterName"/>
@@ -819,7 +818,7 @@
                     <div class="d-flex justify-content-between">
                       <a
                         style="text-decoration: none"
-                        [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,BuyBoxId,OrgId]"
+                        [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,BuyBoxId]"
                       >
                         <div class="content-title" style="cursor: pointer">
                           {{
@@ -871,7 +870,7 @@
                             <li (click)="toggleShortcuts(shopping.Id, 'close')">
                               <a
                                 class="target"
-                                [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
+                                [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId]"
                               >
                                 <svg
                                   width="24"
@@ -1108,7 +1107,7 @@
               (mouseenter)="onMouseEnter(place)"
               [ngClass]="{ 'col-md-3 col-sm-4 col-12': currentView == 3 }"
             >
-              <a [routerLink]="['/landing', place.Id, 0, BuyBoxId, OrgId]">
+              <a [routerLink]="['/landing', place.Id, 0, BuyBoxId]">
                 <div class="main-img">
                   <img src="{{ place.MainImage }}" />
                 </div>
@@ -1198,7 +1197,7 @@
               <div class="card-window-back w-100">
                 <a
                   *ngIf="place.CenterCity"
-                  [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId,OrgId]"
+                  [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId]"
                 >
                   <div class="main-img">
                     <img *ngIf="place.MainImage" src="{{ place.MainImage }}" [title]="place.CenterName"/>
@@ -1206,7 +1205,7 @@
                 </a>
                 <a
                   *ngIf="!place.CenterCity"
-                  [routerLink]="['/landing', place.Id, 0, BuyBoxId, OrgId]"
+                  [routerLink]="['/landing', place.Id, 0, BuyBoxId]"
                 >
                   <div class="main-img">
                     <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
@@ -1220,7 +1219,7 @@
                     <div *ngIf="place.CenterCity">
                       <div class="d-flex justify-content-between">
                         <a
-                          [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId,OrgId]"
+                          [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId]"
                         >
                           <p class="content-title" style="cursor: pointer">
                             {{
@@ -1272,7 +1271,7 @@
                               <li (click)="toggleShortcuts(place.Id, 'close')">
                                 <a
                                   class="target"
-                                  [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,BuyBoxId,OrgId]"
+                                  [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,BuyBoxId]"
                                 >
                                   <svg
                                     width="24"
