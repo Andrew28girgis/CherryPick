@@ -518,6 +518,7 @@ export class LandingComponent {
       map,
       position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
       icon: icon,
+      zIndex: 999999
     });
   }
 
@@ -572,12 +573,12 @@ export class LandingComponent {
     if (type === 'Shopping Center' || type === 'Stand Alone') {
       return {
         url: defaultIconUrl,
-        scaledSize: new google.maps.Size(40, 40),
+        scaledSize: new google.maps.Size(60, 60),
       };
     } else {
       return {
         url: `https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=${markerData.OrganizationId}`,
-        scaledSize: new google.maps.Size(40, 40),
+        scaledSize: new google.maps.Size(30, 30),
       };
     }
   }

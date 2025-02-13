@@ -463,6 +463,9 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
+           this.shoppingCenters = this.shoppingCenters?.sort((a, b) =>
+          a.CenterCity.localeCompare(b.CenterCity)
+        );
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
         //this.getStandAlonePlaces(this.BuyBoxId);

@@ -42,17 +42,21 @@ export class MapsService {
         lng: Number(markerData.Longitude),
       },
       icon: icon,
+      // Use a higher zIndex to bring the marker “on top” of others
+      zIndex: 999999
     });
-
+  
     marker.markerData = markerData;
     marker.type = type;
     this.markers.push(marker);
     this.assignToMarkerArray(marker, type);
+  
     const infoWindow = this.createInfoWindow(markerData, type);
     this.addMarkerEventListeners(marker, infoWindow);
+  
     return marker;
   }
-
+  
   private addMarkerEventListeners(marker: any, infoWindow: any): void {
     marker.addListener('click', () => {
       this.handleMarkerClick(marker, infoWindow);

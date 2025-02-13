@@ -9,7 +9,8 @@ export interface Center {
     Latitude: number
     Longitude: number
     MainImage: string
-    Heading: number
+    Heading: number 
+    DocsLink: string
     Pitch: number
     StreetLatitude: number
     StreetLongitude: number
