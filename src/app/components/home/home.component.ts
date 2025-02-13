@@ -252,7 +252,6 @@ export class HomeComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.spinner.hide();
-        console.log('Contact added successfully:', data);
         this.newContact = {
           firstName: '',
           lastName: '',
