@@ -645,6 +645,7 @@ body{
   width: 100%; 
   border-collapse: collapse; /* Ensure there's no space between cells */
   table-layout: auto; /* Table adjusts dynamically based on content */
+  overflow-x: auto; margin-top: 10px
 }
 
 .procpect-table-head {
