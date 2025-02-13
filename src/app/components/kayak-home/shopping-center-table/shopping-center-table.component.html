@@ -409,17 +409,15 @@
                       (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
                       style="cursor: pointer"
                     >
-                      {{ shoppingCenter.CenterAddress }},
-                      {{ shoppingCenter.CenterCity | titlecase }},
-                      {{ shoppingCenter.CenterState }}
+                      {{ shoppingCenter.CenterAddress }}
                     </div>
                   </td>
                   <td>
-                    {{ shoppingCenter.CenterCity | titlecase
-                  }}
+                  <span  class="table-text">  {{ shoppingCenter.CenterCity | titlecase
+                  }}</span>
                   </td>
                   <td>
-                    {{ shoppingCenter.CenterState }}
+                    <span  class="table-text">   {{ shoppingCenter.CenterState }} </span>
                   </td>
                   <td *ngIf="placesRepresentative != false">
                     <ng-container
