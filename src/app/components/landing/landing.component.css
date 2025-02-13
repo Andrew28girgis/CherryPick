@@ -1303,3 +1303,30 @@ li {
 .p-img{
   max-height: 400px;
 }
+
+
+.enriche {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background: #0068cf; /* Primary blue color */
+  border: none;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.enriche:hover {
+  background: #001f3f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.enriche:active {
+  background: #001f3f;
+  transform: translateY(0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

@@ -19,6 +19,7 @@ import { BuyboxOrg } from 'src/models/buyboxOrg';
 import { OrgBranch } from 'src/models/branches';
 import { StateService } from 'src/app/services/state.service';
 import { permission } from 'src/models/permission';
+import { Enriche } from 'src/models/enriche';
 
 @Component({
   selector: 'app-landing',
@@ -65,6 +66,7 @@ export class LandingComponent {
   placesRepresentative:boolean | undefined;
   Permission: permission[] = [];
   windowHistrony:any;
+  enriche!:Enriche;
    constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -937,6 +939,16 @@ export class LandingComponent {
     }
   }
 
+  open(content: any, modalObject?: any) {
+    this.enriche = new Enriche();
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.enriche.section = modalObject;
+  }
+
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -1075,4 +1087,24 @@ openStreetViewPlace(content: any, modalObject?: any) {
       ? addressParts.filter(Boolean).join(', ')
       : 'Address not available';
   }
+
+
+  onFileChange(event: any) {
+    if (event.target.files && event.target.files.length) {
+      this.enriche.file = event.target.files[0];
+    }
+  }
+
+  submitEnriche(x: any) {
+  const formData = new FormData();
+  formData.append('context', this.enriche.context);
+  formData.append('url', this.enriche.url);
+  formData.append('fileUpload', this.enriche.file); // key must match what backend expects
+
+  // Using type assertion to bypass the error
+  for (const [key, value] of (formData as any).entries()) {
+    console.log(key, value);
+  }
+}
+
 }
