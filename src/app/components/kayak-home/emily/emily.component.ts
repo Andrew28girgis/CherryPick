@@ -48,7 +48,6 @@ export class EmilyComponent implements OnInit {
   showMangerDescription: boolean = false;
   showMangerDescriptionDetails: boolean = false;
   showMangerContactSignature: boolean = false;
-  showNameMangerContactSignature: boolean = false;
   showBuyBoxDescriptionDetails:boolean = false;
   showShoppingCenterDescription:boolean = false;
   showBuyBoxDescription:boolean = false;
@@ -62,13 +61,11 @@ export class EmilyComponent implements OnInit {
   selectedRelations: RelationNames[] = [];
   showOrganizationManagers: boolean = false;
   managerOrganizations: ManagerOrganization[] = [];
-  showManagerDescription: boolean = false;
   emailBody: string = '';
   manager: any;
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
   selectedShoppingCenter: string = '';
-  selectedMangerName: string = '';
   showShoppingCenter: boolean = false;
   showCotenantsWithActivity: boolean = false;
   showCotenantsWithoutActivity: boolean = false;
@@ -86,21 +83,13 @@ export class EmilyComponent implements OnInit {
   showAllCotenants: boolean = false;
   isSubjectCopied: boolean = false;
   isBodyCopied: boolean = false;
-  formGroupTemplate!: FormGroup;
-  shouldShowGenerateEmaily: boolean = false;
-  ShowSpinner: boolean = false;
   expressionEmail: boolean = true;
   shoppingCenters: Center[] = [];
   shoppingCentersSelected: Center | undefined = undefined;
-  generatedGetSavedTemplates: any;
-  contactidsJoin: any;
   buybox: any;
   shoppingCenterOrganization!: number;
-  selectedEmailyID: string | null = null;
   showSelections = true;
-  selectedIndex!: number;
   CheckGetSavedTemplates: any[] = [];
-  isEmailSectionVisible: boolean = true;
   BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
   ShoppingCenterNames: {
     CenterName: string;
@@ -108,15 +97,9 @@ export class EmilyComponent implements OnInit {
     CotenantsWithoutActivityType: Cotenant[];
     ShoppingCenterManager: ShoppingCenterManager[];
   }[] = [];
-  tabs = [
-    { id: 'Properties', label: 'Properties' },
-    { id: 'Details', label: 'Details' },
-  ];
-  ShoppingCenterAfterLoopDescription: any;
   ShoppingCenterDescriptionText: any;
   ShoppingCenterName: any;
   ShoppingCenterNameText: any;
-  showAllRelations = false;
   newPromptText: string = '';
   newPromptName: string = '';
   selectedContactId: number = 0;
@@ -407,7 +390,6 @@ export class EmilyComponent implements OnInit {
         this.objectEmailSavedtemplate = data?.json[0];
         this.expressionEmail = false;
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-        this.isEmailSectionVisible = true;
         this.spinner.hide();
       },
     });
@@ -910,7 +892,6 @@ export class EmilyComponent implements OnInit {
   }
 
   onContactCheckboxChange() {
-   this.showNameMangerContactSignature = !this.showNameMangerContactSignature;
     this.updateEmailBody();
   }
 
@@ -931,10 +912,6 @@ export class EmilyComponent implements OnInit {
       }
     }
     this.selectManagerTenantsByDefault();
-  }
-
-  onManagerDescriptionChange() {
-    this.updateEmailBody();
   }
 
   generateAssistantEmail(assistantName: string): string {
