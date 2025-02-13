@@ -355,46 +355,50 @@
                       />
                       <label for="TenantRep">Tenant Rep. Description</label>
                     </div>
-                    <ng-container *ngIf="showOrganizationManagers">
-                      <ng-container
-                        *ngFor="let manager of managerOrganizations"
-                      >
+                    <ng-container *ngIf="showMangerDescription">
+                      <ng-container *ngIf="showOrganizationManagers">
                         <ng-container
-                          *ngFor="
-                            let contact of manager.ManagerOrganizationContacts
-                          "
+                          *ngFor="let manager of managerOrganizations"
                         >
-                          <div *ngIf="showOrganizationManagers"
-                            class="checkbox-section checkbox-section-body-second"
+                          <ng-container
+                            *ngFor="
+                              let contact of manager.ManagerOrganizationContacts
+                            "
                           >
-                            <input
-                              type="checkbox"
-                              [name]="contact.Firstname + contact.LastName"
-                              [id]="contact.Firstname + contact.LastName"
-                              class="form-check-input"
-                              [(ngModel)]="contact.selected"
-                              (change)="onContactCheckboxChange()"
-                              [checked]="contact.selected"
-                            />
-                            <label [for]="contact.Firstname + contact.LastName"
-                              >{{ contact.Firstname }}
-                              {{ contact.LastName }}</label
+                            <div *ngIf="showOrganizationManagers"
+                              class="checkbox-section checkbox-section-body-second"
                             >
-                          </div>
-                          <div class="checkbox-section checkbox-section-body-second" *ngIf="showOrganizationManagers"             
-                          >
-                            <input
-                              type="checkbox"
-                              name="MangerContactSignature"
-                              id="MangerContactSignature"
-                              class="form-check-input"
-                              [(ngModel)]="showMangerContactSignature"
-                              (change)="onMangerContactSignatureChange()"
-                            />
-                            <label for="MangerContactSignature"
-                              >{{ contact.Firstname }} {{ contact.LastName }} Signature</label
-                            >
-                          </div>
+                              <input
+                                type="checkbox"
+                                [name]="contact.Firstname + contact.LastName"
+                                [id]="contact.Firstname + contact.LastName"
+                                class="form-check-input"
+                                [(ngModel)]="contact.selected"
+                                (change)="onContactCheckboxChange()"
+                                [checked]="contact.selected"
+                              />
+                              <label [for]="contact.Firstname + contact.LastName"
+                                >{{ contact.Firstname }}
+                                {{ contact.LastName }}</label
+                              >
+                            </div>
+                              <ng-container *ngIf="contact.selected">
+                                <div class="checkbox-section checkbox-section-body-second" *ngIf="showOrganizationManagers"             
+                                >
+                                  <input
+                                    type="checkbox"
+                                    name="MangerContactSignature"
+                                    id="MangerContactSignature"
+                                    class="form-check-input"
+                                    [(ngModel)]="showMangerContactSignature"
+                                    (change)="onMangerContactSignatureChange()"
+                                  />
+                                  <label for="MangerContactSignature"
+                                    >{{ contact.Firstname }} {{ contact.LastName }} Signature</label
+                                  >
+                                </div>
+                              </ng-container>
+                          </ng-container>
                         </ng-container>
                       </ng-container>
                     </ng-container>

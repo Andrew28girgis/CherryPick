@@ -41,7 +41,13 @@
     transition: width 0.5s ease;
   }
   
-  
+  .Sidbar-Primary-ul{
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+  }
+
   .Sidbar-Primary-ul>li {
     height: 60px;
     align-items: center;
@@ -124,6 +130,7 @@
 
   }
   .logout{
-    margin-top: 620px;
-
+    /* margin-top: 620px; */
+    /* flex-direction: column;
+    display: flex; */
   }
