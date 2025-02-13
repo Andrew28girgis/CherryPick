@@ -268,46 +268,46 @@ a {
   font-size: 17px;
   font-weight: bold; /* Makes the text bold */
 }
-.first-last{
+.first-last {
   font-size: 17px;
-  font-weight: bold; 
+  font-weight: bold;
 }
-.email{
+.email {
   font-size: 16px;
 }
-.sharee-link{
-  font-size: 20px; 
+.sharee-link {
+  font-size: 20px;
   cursor: pointer;
 }
-.contact-btn{
+.contact-btn {
   font-size: 1rem;
 }
-.form-label{
+.form-label {
   font-size: 16px;
 }
-.form-control{
+.form-control {
   font-size: 16px;
 }
 @media (max-width: 576px) {
-  .share-link{
+  .share-link {
     font-size: 13px;
   }
-  .form-control{
+  .form-control {
     font-size: 13px;
   }
-  .form-label{
+  .form-label {
     font-size: 14px;
   }
-  .first-last{
+  .first-last {
     font-size: 14px;
   }
-  .email{
+  .email {
     font-size: 13px;
   }
-  .sharee-link{
-    font-size: 13px; 
+  .sharee-link {
+    font-size: 13px;
   }
-  .contact-btn{
+  .contact-btn {
     font-size: 0.7rem;
   }
   .modal-title {
@@ -325,6 +325,8 @@ a {
   }
   .titleResponsive {
     font-size: 12px;
+    font-weight: 600 !important;
+    color: #5e5e5e;
   }
 
   .custom-dropdown {
@@ -350,25 +352,25 @@ a {
 }
 
 @media (min-width: 576px) {
-  .share-link{
+  .share-link {
     font-size: 14px;
   }
-  .form-control{
+  .form-control {
     font-size: 14px;
   }
-  .form-label{
+  .form-label {
     font-size: 15px;
   }
-  .first-last{
+  .first-last {
     font-size: 15px;
   }
-  .email{
+  .email {
     font-size: 14px;
   }
-  .sharee-link{
-    font-size: 14px; 
+  .sharee-link {
+    font-size: 14px;
   }
-  .contact-btn{
+  .contact-btn {
     font-size: 0.8rem;
   }
   .modal-title {
@@ -390,25 +392,25 @@ a {
 }
 
 @media (min-width: 768px) {
-  .share-link{
+  .share-link {
     font-size: 15px;
   }
-  .form-control{
+  .form-control {
     font-size: 15px;
   }
-  .form-label{
+  .form-label {
     font-size: 16px;
   }
-  .first-last{
+  .first-last {
     font-size: 16px;
   }
-  .email{
+  .email {
     font-size: 15px;
   }
-  .sharee-link{
-    font-size: 17px; 
+  .sharee-link {
+    font-size: 17px;
   }
-  .contact-btn{
+  .contact-btn {
     font-size: 0.9rem;
   }
   .modal-title {
@@ -466,7 +468,6 @@ a {
   }
 }
 
-
 .card-container {
   overflow-y: hidden;
   background-color: #fff;
@@ -857,11 +858,8 @@ a {
 }
 
 @media (max-width: 768px) {
-
   .nav-right > div {
-
     justify-content: center;
-  
   }
 
   .Bind__button {
@@ -999,18 +997,6 @@ a {
   opacity: 1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 .ellipsis_icon,
 .ellipsis_icont {
   border: 1.5px solid #7077915b;
@@ -1047,8 +1033,8 @@ a {
   align-items: center;
 }
 
-.shortcuts_icon>ul,
-.shortcuts_iconCard>ul {
+.shortcuts_icon > ul,
+.shortcuts_iconCard > ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -1056,27 +1042,24 @@ a {
   margin: 0;
   gap: 8px;
   display: grid;
-
 }
 
-.shortcuts_icon>li,
-.shortcuts_iconCard>li {
+.shortcuts_icon > li,
+.shortcuts_iconCard > li {
   display: flex;
   gap: 6px;
   color: #707791;
   font-size: 14px;
   margin-top: 10px;
-} 
-
+}
 
 @media (max-width: 991px) {
-.card-content{
-  height: fit-content !important;
-}
+  .card-content {
+    height: fit-content !important;
+  }
   .share-button {
     padding: 8px 12px;
     margin-left: 3px;
-
   }
   .navbar-collapse {
     position: absolute;
@@ -1085,10 +1068,9 @@ a {
     right: 0; */
     background-color: white;
     padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     width: 150%;
-
   }
 
   .icon-option {
@@ -1100,24 +1082,6 @@ a {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .card-container {
   overflow-y: hidden;
   background-color: #fff;
@@ -1508,11 +1472,8 @@ a {
 }
 
 @media (max-width: 768px) {
-
   .nav-right > div {
-
     justify-content: center;
-  
   }
 
   .Bind__button {
@@ -1650,18 +1611,6 @@ a {
   opacity: 1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 .ellipsis_icon,
 .ellipsis_icont {
   border: 1.5px solid #7077915b;
@@ -1698,8 +1647,8 @@ a {
   align-items: center;
 }
 
-.shortcuts_icon>ul,
-.shortcuts_iconCard>ul {
+.shortcuts_icon > ul,
+.shortcuts_iconCard > ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -1707,11 +1656,10 @@ a {
   margin: 0;
   gap: 8px;
   display: grid;
-
 }
 
-.shortcuts_icon>li,
-.shortcuts_iconCard>li {
+.shortcuts_icon > li,
+.shortcuts_iconCard > li {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -1741,8 +1689,8 @@ a {
   cursor: pointer;
 }
 
-.shortcuts_icon>i,
-.shortcuts_iconCard>i {
+.shortcuts_icon > i,
+.shortcuts_iconCard > i {
   position: absolute;
   right: -8px;
   top: 25%;
@@ -1750,16 +1698,10 @@ a {
   color: white;
 }
 
-.shortcuts_iconCard>i {
+.shortcuts_iconCard > i {
   top: 5%;
 }
 
-
-
-
-.copy-link-btn {
-  /* Add any specific styles for the copy link button */
-}
 
 .toast {
   position: fixed;
