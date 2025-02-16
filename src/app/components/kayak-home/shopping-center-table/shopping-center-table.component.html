@@ -1013,76 +1013,7 @@
                 </div>
               </div>
             </div>
-          </ng-container>
-          <ng-container *ngFor="let place of standAlone">
-            <div
-              class="card-window"
-              (mouseenter)="onMouseEnter(place)"
-              [ngClass]="{ 'col-md-3 col-sm-4 col-12': currentView == 3 }"
-            >
-              <a [routerLink]="['/landing', place.Id, 0, BuyBoxId, OrgId]">
-                <div class="main-img">
-                  <img src="{{ place.MainImage }}" />
-                </div>
-              </a>
-              <div class="content-wrap card-content2">
-                <div>
-                  <div>
-                    <div
-                      class="card-address"
-                      style="cursor: pointer"
-                      (click)="openMapViewPlace(MapViewPlace, place)"
-                    >
-                      <span class="mb-5">
-                        {{ place.Address }}, {{ place.City | titlecase }},
-                        {{ place.State }}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div *ngIf="place.BuildingSizeSf">
-                    <p
-                      style="font-size: 15px; font-weight: 500; color: #565656"
-                    >
-                      {{ place.BuildingSizeSf | number }} SF
-                    </p>
-                  </div>
-
-                  <div *ngIf="place.ForLeasePrice">
-                    <p
-                      class="spec-content"
-                      [innerHTML]="
-                        getStandAloneLeasePrice(
-                          place.ForLeasePrice,
-                          place.BuildingSizeSf
-                        )
-                      "
-                    ></p>
-                  </div>
-                </div>
-
-                <div *ngIf="place.Place">
-                  <div
-                    *ngFor="let item of place.Place?.BuyBoxPlaces"
-                    class="d-flex align-items-center justify-content-centermb-2"
-                  >
-                    <!-- Image -->
-                    <img
-                      class="logo"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        item.RelationOrganizationId
-                      }}"
-                      [title]="item.RelationOrganizationName"
-                      alt=""
-                    />
-                    <p class="spec-head me-2 mb-0">
-                      {{ getNeareastCategoryName(item.CategoryId) }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ng-container>
+          </ng-container> 
         </ng-container>
         <ng-container *ngIf="currentView == 2">
           <div class="p-3 d-flex justify-content-between">
@@ -1326,35 +1257,7 @@
                         [innerHTML]="getShoppingCenterUnitSize(place)"
                       ></p>
                     </div>
-                    <div *ngIf="!place.CenterAddress">
-                      <p
-                        style="
-                          font-size: 15px;
-                          font-weight: 500;
-                          color: #565656;
-                        "
-                      >
-                        <span>
-                          Unit Size: {{ place.BuildingSizeSf | number }} SF
-                        </span>
-                      </p>
-                      <p
-                        style="
-                          font-size: 15px;
-                          font-weight: 500;
-                          color: #565656;
-                        "
-                      >
-                        <span
-                          [innerHTML]="
-                            getStandAloneLeasePrice(
-                              place.ForLeasePrice,
-                              place.BuildingSizeSf
-                            )
-                          "
-                        ></span>
-                      </p>
-                    </div>
+
                     <div
                       class="row"
                       *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
