@@ -13,8 +13,35 @@
   top: -135%;
 }
 
+:host ::ng-deep .p-carousel .p-carousel-content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep .p-carousel .p-carousel-item {
+  flex: 0 0 100%;
+}
+
+@media screen and (min-width: 561px) {
+  :host ::ng-deep .p-carousel .p-carousel-item {
+    flex: 0 0 50%;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  :host ::ng-deep .p-carousel .p-carousel-item {
+    flex: 0 0 33.33%;
+  }
+}
+
+
+
 .shortcuts_iconCard {
   top: -22%;
+}
+
+:host ::ng-deep .p-carousel-indicators {
+  display: none;
 }
 
 .between {
@@ -701,7 +728,7 @@ img[alt="logo"] {
 
   .social-card { 
     width: 60%;
-    height: 100%;
+    /* height: 100%; */
     position: relative;
     display: flex;
     flex-direction: column; 
@@ -1028,6 +1055,51 @@ img[alt="logo"] {
     filter: blur(15px) brightness(0.7);
     z-index: 0;
   }
+
+
+  :host ::ng-deep .p-carousel {
+    width: 100%;
+    height: 100vh;
+  }
+  
+  :host ::ng-deep .p-carousel .p-carousel-content {
+    height: 100%;
+  }
+  
+  :host ::ng-deep .p-carousel .p-carousel-container {
+    height: 100%;
+  }
+  
+  :host ::ng-deep .p-carousel-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  :host ::ng-deep .p-carousel-prev,
+  :host ::ng-deep .p-carousel-next {
+    display: none  !important;
+  }
+   .p-carousel-prev,
+   .p-carousel-next {
+    display: none  !important;
+  }  
+  
+  .social-card {
+    width: 100%;
+    /* height: 100%; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  :host ::ng-deep .p-carousel-indicators {
+    display: none;
+  }
+  
+  /* ... rest of your existing styles ... */
 }
 
 @keyframes likeAnimation {

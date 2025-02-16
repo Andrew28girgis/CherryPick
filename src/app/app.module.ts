@@ -46,10 +46,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
- import { LogoutComponent } from './components/logout/logout.component';
+import { LogoutComponent } from './components/logout/logout.component';
 import { SharedModule } from './shared/shared.module';
 import { TermsComponent } from './components/terms/terms.component';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,7 +79,7 @@ import { TermsComponent } from './components/terms/terms.component';
     TasksComponent,
     CommunicationComponent,
     LogoutComponent,
-    TermsComponent, 
+    TermsComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,8 +99,7 @@ import { TermsComponent } from './components/terms/terms.component';
     MatInputModule,
     MatNativeDateModule,
     KayakModule,
-    SharedModule   ,
-
+    SharedModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
@@ -115,7 +113,7 @@ import { TermsComponent } from './components/terms/terms.component';
       useClass: GroqApiInterceptor,
       multi: true,
     },
-  ], 
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
