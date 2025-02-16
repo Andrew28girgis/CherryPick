@@ -1120,11 +1120,9 @@ onFileChange(event: any) {
 
 uploadFile(id:number) {
   const formData = new FormData();
-  formData.append('file', this.enriche.file); 
-
+  formData.append('file', this.enriche.file);  
   this.PlacesService.UploadFile(formData ,id).subscribe({
     next: (data) => {
-     
     },
    error: (error) => console.error('Error fetching APIs:', error),
    });
