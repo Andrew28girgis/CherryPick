@@ -13,11 +13,8 @@ steps:
 
 # 2. Install project dependencies
 - script: |
-    npm install --legacy-peer-deps
-    npm install -g @angular/cli      
-    npm install @fortawesome/angular-fontawesome
-    npm install @fortawesome/free-brands-svg-icons
-    npm install @fortawesome/free-solid-svg-icons
+    npm install
+    npm install -g @angular/cli@17
   displayName: 'Install Dependencies'
 
 # 3. Run lint analysis
@@ -25,12 +22,12 @@ steps:
     ng lint
   displayName: 'Run Lint Analysis'
 
-# 4. Run unit tests with code coverage (ensure your Angular project is configured for tests)
+# 4. Run unit tests
 - script: |
-    ng test --watch=false --code-coverage
+    ng test --watch=false --browsers=ChromeHeadless --code-coverage
   displayName: 'Run Unit Tests'
 
-# 5. Publish test results (assuming test results are output as XML; adjust the pattern if needed)
+# 5. Publish test results
 - task: PublishTestResults@2
   inputs:
     testResultsFiles: '**/TEST-*.xml'
@@ -38,38 +35,24 @@ steps:
   condition: succeededOrFailed()
   displayName: 'Publish Test Results'
 
-# 6. Publish code coverage results (adjust the summary file path if necessary)
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: 'coverage/cobertura-coverage.xml'
-  condition: succeededOrFailed()
-  displayName: 'Publish Code Coverage Results'
-
-# 7. Build the Angular application (using production configuration)
+# 6. Build the Angular application
 - script: |
-    ng build --prod
+    ng build --configuration=production
   displayName: 'Build Angular App'
 
-# 8. Prepare build artifacts by copying the output to the staging directory
-- script: |
-    mkdir -p $(Build.ArtifactStagingDirectory)
-    cp -r ./dist/comman/* $(Build.ArtifactStagingDirectory)
-  displayName: 'Prepare Build Artifacts'
-
-# 9. Publish the build artifacts
+# 7. Prepare and publish build artifacts
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: 'dist/comman'
     ArtifactName: 'drop'
     publishLocation: 'Container'
   displayName: 'Publish Build Artifacts'
 
-# 10. Deploy to Azure Static Web Apps
+# 8. Deploy to Azure Static Web Apps
 - task: AzureStaticWebApp@0
   inputs:
-    app_location: '/'         # Location of your app code, typically the root folder
-    api_location: ''          # Leave empty if you don't have an API
-    output_location: './dist/comman'  # Update with your Angular app's output directory
-    azure_static_web_apps_api_token: '320fa325d155a34e053d32d2b575288264ce4fca54ae3b65fa09b6e6bb14c06d5-0c403a97-ae78-42b4-a6d8-89ecfc38155a00f397685'
+    app_location: '/'
+    api_location: ''
+    output_location: 'dist/comman'
+    azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APP_TOKEN)
   displayName: 'Deploy to Azure Static Web Apps'
