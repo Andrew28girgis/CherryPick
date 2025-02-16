@@ -46,5 +46,8 @@ export class PlacesService {
     return this.http.post<any>(apiUrl, body);
   }
 
-  // Add other methods as needed from your original service
+
+  public UploadFile(formData: FormData ,id: number) {
+    return this.http.post<any>(`${environment.api}/HelperUpload/UploadFile//Enrich/${id}`, formData);
+  } 
 }

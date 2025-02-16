@@ -947,7 +947,7 @@ export class LandingComponent {
       size: 'lg',
       scrollable: true,
     });
-    this.enriche.section = modalObject;
+    this.enriche.taskId = modalObject;
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
@@ -1090,22 +1090,44 @@ openStreetViewPlace(content: any, modalObject?: any) {
   }
 
 
-  onFileChange(event: any) {
-    if (event.target.files && event.target.files.length) {
-      this.enriche.file = event.target.files[0];
-    }
-  }
 
-  submitEnriche(x: any) {
+
+ 
+  submitEnriche() {
+    const body: any = {
+      Name: 'CreateEnrichmentRequest',
+      Params: {
+        taskid : this.enriche.taskId,
+        shoppingcenterid :+this.ShoppingCenterId,
+        context :this.enriche.context ,
+        url :this.enriche.url
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+     next: (data) => {
+      this.uploadFile(data.json[0].requestId);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    }); 
+}
+
+onFileChange(event: any) {
+  if (event.target.files && event.target.files.length) {
+    this.enriche.file = event.target.files[0];
+  }
+}
+
+uploadFile(id:number) {
   const formData = new FormData();
-  formData.append('context', this.enriche.context);
-  formData.append('url', this.enriche.url);
-  formData.append('fileUpload', this.enriche.file); // key must match what backend expects
+  formData.append('file', this.enriche.file); 
 
-  // Using type assertion to bypass the error
-  for (const [key, value] of (formData as any).entries()) {
-    console.log(key, value);
-  }
+  this.PlacesService.UploadFile(formData ,id).subscribe({
+    next: (data) => {
+     
+    },
+   error: (error) => console.error('Error fetching APIs:', error),
+   });
 }
 
 }
