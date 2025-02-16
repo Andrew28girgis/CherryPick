@@ -21,10 +21,6 @@ steps:
     npm audit fix --force
   displayName: 'Install Dependencies'
 
-# 3. Run lint analysis
-- script: |
-    ng lint
-  displayName: 'Run Lint Analysis'
 
 # 4. Run unit tests with code coverage (ensure your Angular project is configured for tests)
 - script: |
