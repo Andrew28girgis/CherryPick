@@ -4,7 +4,7 @@ import { KayakRoutingModule } from './kayak-routing.module';
 import { KayakHomeComponent } from './kayak-home.component';
 import { EmilyComponent } from './emily/emily.component';
 import { BuyboxDetailsComponent } from './buybox-details/buybox-details.component';
- import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
+import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
 import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-center-table.component';
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
@@ -15,7 +15,8 @@ import { KayakComponent } from './kayak/kayak.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
 import { ButtonModule } from 'primeng/button';
- 
+import { CarouselModule } from 'primeng/carousel';
+
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -25,7 +26,7 @@ import { ButtonModule } from 'primeng/button';
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     KayakComponent,
-    EmilyOrgComponent, 
+    EmilyOrgComponent,
   ],
   imports: [
     CommonModule,
@@ -35,8 +36,9 @@ import { ButtonModule } from 'primeng/button';
     NgbTooltipModule,
     NgxSpinnerModule,
     ToastrModule.forRoot(),
-    SharedModule ,
-    ButtonModule  , 
+    SharedModule,
+    ButtonModule,
+    CarouselModule,
   ],
   exports: [
     KayakHomeComponent,
@@ -45,7 +47,7 @@ import { ButtonModule } from 'primeng/button';
     WorkSpacesComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
-    EmilyOrgComponent, 
+    EmilyOrgComponent,
   ],
 })
 export class KayakModule {}

@@ -150,6 +150,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   showStandalone = true;
   standAlone: Place[] = [];
   sanitizedUrl!: any;
+  responsiveOptions: any[];
+  isMobile = false
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -165,9 +167,27 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.currentView = localStorage.getItem('currentView') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
+    this.responsiveOptions = [
+      {
+        breakpoint: '1024px',
+        numVisible: 1,
+        numScroll: 1
+      },
+      {
+        breakpoint: '768px',
+        numVisible: 1,
+        numScroll: 1
+      },
+      {
+        breakpoint: '560px',
+        numVisible: 1,
+        numScroll: 1
+      }
+    ];
   }
 
   ngOnInit(): void {
+    this.checkScreenSize()
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -1086,5 +1106,23 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.replyingTo[shopping.Id] =
       this.replyingTo[shopping.Id] === commentId ? null : commentId;
     console.log(commentId);
+  }
+
+
+
+
+  @HostListener("window:resize", ["$event"])
+  onResize(event: any) {
+    this.checkScreenSize()
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 768 // Adjust this breakpoint as needed
+  }
+
+
+
+  get carouselHeight(): string {
+    return this.isMobile ? "100vh" : `${this.shoppingCenters.length * 70}vh`
   }
 }
