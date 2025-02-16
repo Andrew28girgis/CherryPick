@@ -13,11 +13,12 @@ steps:
 
 # 2. Install project dependencies
 - script: |
-    npm install --legacy-peer-deps
+    npm install --force --legacy-peer-deps
     npm install -g @angular/cli      
     npm install @fortawesome/angular-fontawesome
     npm install @fortawesome/free-brands-svg-icons
     npm install @fortawesome/free-solid-svg-icons
+    npm audit fix --force
   displayName: 'Install Dependencies'
 
 # 3. Run lint analysis
