@@ -5,6 +5,9 @@
   --app-color: #000000;
   --app-font: "Satoshi", sans-serif; /* Define Satoshi as a font variable */
 }
+a {
+  text-decoration: none;
+}
 .response-content {
   background-color: #f8fff8!important ;
   border-left: 4px solid #0077b5 ;

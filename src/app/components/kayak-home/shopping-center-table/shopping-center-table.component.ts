@@ -10,6 +10,8 @@ import {
   EventEmitter,
   HostListener,
   Renderer2,
+  AfterViewInit,
+  OnDestroy,
 } from "@angular/core"
 import { NgForm } from '@angular/forms'; // <-- Import NgForm
 import  { ActivatedRoute, Router } from "@angular/router"
@@ -27,8 +29,7 @@ import  { Polygons } from "src/models/polygons"
 import  { ShareOrg } from "src/models/shareOrg"
 import  { StateService } from "src/app/services/state.service"
 import  { permission } from "src/models/permission"
-import  { BuyBoxCityState, ShoppingCenter } from "src/models/buyboxShoppingCenter"
-
+import  { BuyBoxCityState, ShoppingCenter } from "src/models/buyboxShoppingCenter"  
 interface Comment {
   id: number
   text: string
@@ -43,7 +44,7 @@ interface Comment {
   templateUrl: "./shopping-center-table.component.html",
   styleUrls: ["./shopping-center-table.component.css"],
 })
-export class ShoppingCenterTableComponent implements OnInit {
+export class ShoppingCenterTableComponent  implements OnInit {
   @ViewChild("mainContainer") mainContainer!: ElementRef
   shoppingCenter: any
   selectedView = "shoppingCenters"
@@ -87,8 +88,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   anotherPlaces!: AnotherPlaces
   currentView: any
   centerPoints: any[] = []
-  map: any // Add this property to your class
-  isCompetitorChecked = false // Track the checkbox state
+  map: any 
+  isCompetitorChecked = false 
   isCoTenantChecked = false
   cardsSideList: any[] = []
   selectedOption!: number
@@ -96,22 +97,20 @@ export class ShoppingCenterTableComponent implements OnInit {
   savedMapView: any
   mapViewOnePlacex = false
   buyboxCategories: BuyboxCategory[] = []
-  showShoppingCenters = true // Ensure this reflects your initial state
+  showShoppingCenters = true 
   shoppingCenters: Center[] = []
   MarketSurveyId: Center[] = []
   BuyBoxCitiesStates!: BuyBoxCityState[]
   StateCodes: string[] = []
   filteredCities: string[] = []
-  // Selected filters
   selectedState = "0"
   selectedCity = ""
   filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = []
   BuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = []
   @ViewChild("deleteShoppingCenterModal")
   deleteShoppingCenterModal!: TemplateRef<any>
-  shoppingCenterIdToDelete: number | null = null
-
-
+  shoppingCenterIdToDelete: number | null = null 
+  @ViewChild('cardContainer') cardContainer!: ElementRef;
   lastTap = 0
   showToast = false
   toastMessage = ""
@@ -132,20 +131,73 @@ export class ShoppingCenterTableComponent implements OnInit {
     email: '',
     password: '',
   };
+  showbackIds: number[] = []
+  showbackIdsJoin: any 
+  buyboxPlaces: BbPlace[] = []
+  Polygons: Polygons[] = []
+  ShareOrg: ShareOrg[] = []
+  shareLink: any
+  BuyBoxName = ""
+  Permission: permission[] = []
+  placesRepresentative: boolean | undefined  
+  selectedId: number | null = null
+  selectedIdCard: number | null = null
+  showStandalone = true 
+  standAlone: Place[] = []
+ 
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    public router: Router,
+    private modalService: NgbModal,
+    private PlacesService: PlacesService,
+    private spinner: NgxSpinnerService,
+    private markerService: MapsService,
+    private ngZone: NgZone,
+    private sanitizer: DomSanitizer,
+    private stateService: StateService 
+  
+  ) {
+    this.currentView = localStorage.getItem("currentView") || "4"
+    this.savedMapView = localStorage.getItem("mapView")
+    this.markerService.clearMarkers()
+  }
+
+  ngOnInit(): void {
+    this.General = new General()
+    this.activatedRoute.params.subscribe((params: any) => {
+      this.BuyBoxId = params.buyboxid
+      this.OrgId = params.orgId
+      this.BuyBoxName = params.buyboxName
+      localStorage.setItem("BuyBoxId", this.BuyBoxId)
+      localStorage.setItem("OrgId", this.OrgId)
+      this.BuyBoxPlacesCategories(this.BuyBoxId)
+      this.GetOrganizationById(this.OrgId)
+      this.GetCustomSections(this.BuyBoxId)
+      this.getShoppingCenters(this.BuyBoxId)
+      this.getBuyBoxPlaces(this.BuyBoxId)
+    })
+
+    this.currentView = localStorage.getItem("currentView") || "4"
+
+    const selectedOption = this.dropdowmOptions.find(
+      (option: any) => option.status === Number.parseInt(this.currentView),
+    )
+
+    if (selectedOption) {
+      this.selectedOption = selectedOption.status
+    }
+    this.selectedState = ""
+    this.selectedCity = ""
+    this.applyFilters();
+  }
   
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters
   }
 
-  showStandalone = true // Ensure this reflects your initial state
-  standAlone: Place[] = []
-
   toggleStandalone() {
     this.showStandalone = !this.showStandalone
-  }
-
-  showbackIds: number[] = []
-  showbackIdsJoin: any
+  } 
 
   deleteShopping(placeId: number) {
     const index = this.showbackIds.indexOf(placeId)
@@ -173,65 +225,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-  buyboxPlaces: BbPlace[] = []
-  Polygons: Polygons[] = []
-  ShareOrg: ShareOrg[] = []
-  shareLink: any
-  BuyBoxName = ""
-  Permission: permission[] = []
-  placesRepresentative: boolean | undefined
-  constructor(
-    public activatedRoute: ActivatedRoute,
-    public router: Router,
-    private modalService: NgbModal,
-    private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService,
-    private markerService: MapsService,
-    private ngZone: NgZone,
-    private sanitizer: DomSanitizer,
-    private stateService: StateService,
-    private socialService: SocialMedialService,
-    private renderer: Renderer2,
-    private el: ElementRef,
 
-  ) {
-    this.currentView = localStorage.getItem("currentView") || "4"
-    this.savedMapView = localStorage.getItem("mapView")
-    this.markerService.clearMarkers()
-  }
-
-  ngOnInit(): void {
-    this.General = new General()
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid
-      this.OrgId = params.orgId
-      this.BuyBoxName = params.buyboxName
-      localStorage.setItem("BuyBoxId", this.BuyBoxId)
-      localStorage.setItem("OrgId", this.OrgId)
-
-      this.BuyBoxPlacesCategories(this.BuyBoxId)
-      this.GetOrganizationById(this.OrgId)
-      this.GetCustomSections(this.BuyBoxId)
-      this.getShoppingCenters(this.BuyBoxId)
-      this.getBuyBoxPlaces(this.BuyBoxId)
-    })
-
-    this.currentView = localStorage.getItem("currentView") || "4"
-
-    const selectedOption = this.dropdowmOptions.find(
-      (option: any) => option.status === Number.parseInt(this.currentView),
-    )
-
-    if (selectedOption) {
-      this.selectedOption = selectedOption.status
-    }
-    this.selectedState = ""
-    this.selectedCity = ""
-    this.applyFilters()
-  }
-
-  selectedId: number | null = null
-  selectedIdCard: number | null = null
   toggleShortcutsCard(id: number, close?: string): void {
     if (close === "close") {
       this.selectedIdCard = null
@@ -239,6 +233,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.selectedIdCard = this.selectedIdCard === id ? null : id
     }
   }
+
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
     if (close === "close") {
       this.selectedId = null
@@ -463,9 +458,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
-           this.shoppingCenters = this.shoppingCenters?.sort((a, b) =>
-          a.CenterCity.localeCompare(b.CenterCity)
-        );
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
         //this.getStandAlonePlaces(this.BuyBoxId);
@@ -1222,49 +1214,19 @@ export class ShoppingCenterTableComponent implements OnInit {
     })
   }
 
-  // Comment functionality updated to include MarketSurveyId and prepare for API integration
-  toggleReactions(shoppingId: number): void {
-    this.showReactions[shoppingId] = !this.showReactions[shoppingId]
-  }
+
 
   react(shopping: any, reactionType: string): void {
     this.reactions[shopping.Id] = reactionType
     this.showReactions[shopping.Id] = false
   }
-
-  likeDirectly(shopping: any): void {
-    this.react(shopping, this.reactions[shopping.Id] === "Like" ? "" : "Like")
-    this.showReactions[shopping.Id] = false
-    
-    const likeButton = document.querySelector(`[data-shopping-id="${shopping.Id}"] .like-btn`)
-    if (likeButton) {
-      likeButton.classList.add("liked")
-      setTimeout(() => {
-        likeButton.classList.remove("liked")
-      }, 300)
-    }
-  }
-
+ 
   getReaction(shopping: any): string {
     return this.reactions[shopping.Id] || ""
   }
 
   getTotalReactions(shopping: any): number {
     return this.reactions[shopping.Id] ? 1 : 0
-  }
-  copyLinkSocial(shopping: any) {
-    // Generate a unique link for the shopping center
-    const link = `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}`
-    // [RouterLink]="['/landing', 0, shopping.Id, BuyBoxId, OrgId]"
-    // Copy the link to clipboard
-    navigator.clipboard.writeText(link).then(
-      () => {
-        this.showToastMessage("Link copied to clipboard!")
-      },
-      (err) => {
-        console.error("Could not copy text: ", err)
-      },
-    )
   }
 
   getPrimaryReaction(shopping: any): string {
@@ -1296,10 +1258,6 @@ export class ShoppingCenterTableComponent implements OnInit {
       });
     }
   }
-  
-  og(id: number) {
-    console.log(id);
-  }
 
   addReply(marketSurveyId: number, parentCommentId: number): void {
     if (this.newReplies[parentCommentId]) {
@@ -1322,15 +1280,6 @@ export class ShoppingCenterTableComponent implements OnInit {
               replies: [],
               MarketSurveyId: marketSurveyId,
             };
-
-            const parentComment = this.findCommentById(
-              this.comments[marketSurveyId],
-              parentCommentId
-            );
-            if (parentComment) {
-              parentComment.replies.push(newReply);
-            }
-
             this.newReplies[parentCommentId] = '';
             this.replyingTo[marketSurveyId] = null;
 
@@ -1342,30 +1291,8 @@ export class ShoppingCenterTableComponent implements OnInit {
         });
     }
   }
-  
-    findCommentById(comments: Comment[], id: number): Comment | null {
-    if (!comments) return null;
-    
-    for (const comment of comments) {
-      if (comment.id === id) {
-        return comment;
-      }
-      const foundInReplies = this.findCommentById(comment.replies, id);
-      if (foundInReplies) {
-        return foundInReplies;
-      }
-    }
-    return null;
-  }
-  
-  // You might need a method to fetch comments for each MarketSurveyId
-  fetchComments(marketSurveyId: number) {
-    // Implement the logic to fetch comments for a specific MarketSurveyId
-    // and update this.comments[marketSurveyId] accordingly
-  }
-  // `localhost:4200/landing/0/${shopping.Id}/${this.BuyBoxId}/${this.OrgId}
+
   openAddContactModal(content: any): void {
-    // Reset the form model
     this.newContact = {
       firstName: '',
       lastName: '',
@@ -1379,6 +1306,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       scrollable: true,
     });
   }
+
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   addContact(form: NgForm): void {
     this.spinner.show();
@@ -1405,7 +1333,6 @@ export class ShoppingCenterTableComponent implements OnInit {
         };
         form.resetForm();
         this.modalService.dismissAll();
-        // Refresh and reopen the contacts modal using the stored template reference
         this.openContactsModal(this.contactsModalTemplate);
       },
       error: (error: any) => {
@@ -1413,22 +1340,7 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.spinner.hide();
       },
     });
-  }
-
-
-  // common
-
-  doubleTapLike(shopping: any, event: TouchEvent) {
-    const currentTime = new Date().getTime()
-    const tapLength = currentTime - this.lastTap
-    if (tapLength < 300 && tapLength > 0) {
-      this.likeDirectly(shopping)
-      const touch = event.touches[0]
-      //this.createHeartAnimation(touch.clientX, touch.clientY)
-      event.preventDefault()
-    }
-    this.lastTap = currentTime
-  }
+  } 
 
   openContactsModal(content: any): void {
     this.spinner.show();
@@ -1456,104 +1368,13 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.spinner.hide();
       },
     });
-  }
-  // createHeartAnimation(x: number, y: number) {
-  //   const animationContainer = this.el.nativeElement.querySelector(".heart-animation-container")
-  //   if (!animationContainer) return
-
-  //   const svgNS = "http://www.w3.org/2000/svg"
-  //   const svg = this.renderer.createElement("svg", svgNS)
-  //   this.renderer.setAttribute(svg, "viewBox", "0 0 24 24")
-  //   this.renderer.setAttribute(svg, "width", "100")
-  //   this.renderer.setAttribute(svg, "height", "100")
-  //   this.renderer.addClass(svg, "heart-animation")
-
-  //   const path = this.renderer.createElement("path", svgNS)
-  //   this.renderer.setAttribute(
-  //     path,
-  //     "d",
-  //     "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
-  //   )
-  //   this.renderer.setAttribute(path, "fill", "#ff4081")
-
-  //   this.renderer.appendChild(svg, path)
-  //   this.renderer.setStyle(svg, "position", "absolute")
-  //   this.renderer.setStyle(svg, "left", `${x - 50}px`)
-  //   this.renderer.setStyle(svg, "top", `${y - 50}px`)
-
-  //   this.renderer.appendChild(animationContainer, svg)
-
-  //   setTimeout(() => {
-  //     this.renderer.removeChild(animationContainer, svg)
-  //   }, 1000)
-  // }
-
-  onTouchStart(event: TouchEvent) {
-    event.preventDefault()
-  }
-
-  showToastMessage(message: string) {
-    this.toastMessage = message
-    this.showToast = true
-    setTimeout(() => {
-      this.showToast = false
-    }, 3000) // Hide the toast after 3 seconds
-  }
-
-  private CreateComment(shoppingId:any,comment: Comment, parentId:any) {
-    // Implement your API call here using your service
-    const body = {
-      Name: "CreateComment",
-      Params: {
-        MarketSurveyId: comment.MarketSurveyId,
-        Comment: comment.text,
-        ParentCommentId: comment.parentId || 0
-      }
-    };
-    return this.PlacesService.GenericAPI(body);
-  }
-
-  // findCommentById(comments: Comment[], id: number): Comment | null {
-  //   for (const comment of comments) {
-  //     if (comment.id === id) {
-  //       return comment
-  //     }
-  //     const foundInReplies = this.findCommentById(comment.replies, id)
-  //     if (foundInReplies) {
-  //       return foundInReplies
-  //     }
-  //   }
-  //   return null
-  // }
+  }  
 
   toggleReply(shopping: any, commentId: number): void {
     this.replyingTo[shopping.Id] = this.replyingTo[shopping.Id] === commentId ? null : commentId
     console.log(commentId)
   }
 
-  hideReactions(shoppingId: number): void {
-    setTimeout(() => {
-      this.showReactions[shoppingId] = false
-    }, 3000)
-  }
 
-  startReactionTimer(shoppingId: number): void {
-    this.showReactions[shoppingId] = true
-  }
-
-  stopReactionTimer(shoppingId: number): void {
-    clearTimeout(this.reactionTimers[shoppingId])
-    delete this.reactionTimers[shoppingId]
-  }
-
-  private formatShareText(shopping: any): string {
-    return `
-${shopping.CenterName}
-
-Check out ${shopping.CenterName} in ${shopping.CenterCity}, ${shopping.CenterState}!
-
-Learn more at: ${window.location.href}
-    `.trim()
-  }
 }
 

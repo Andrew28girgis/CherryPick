@@ -99,6 +99,7 @@
 </nav>
 
  <div class="row" style="background-color: #f2f3f4">
+
     <ng-container *ngIf="currentView == 4">
         <table class="procpect-table" 
                *ngIf=" showShoppingCenters && shoppingCenters && shoppingCenters.length > 0">
@@ -143,12 +144,12 @@
                 </td>
                 <td>
                   <div class="table-text">
-                    {{ shoppingCenter.CenterCity | titlecase }}
+                    <span  class="table-text">  {{ shoppingCenter.CenterCity | titlecase }}   </span>
                   </div>
                 </td>
                 <td>
                   <div class="table-text">
-                    {{ shoppingCenter.CenterState }}
+                    <span  class="table-text">     {{ shoppingCenter.CenterState }} </span>
                   </div>
                 </td>
                 <td *ngIf="placesRepresentative != false">
@@ -325,8 +326,7 @@
                               ? shoppingCenter.ShoppingCenter.Places[0].Id
                               : 0,
                             shoppingCenter.Id,
-                            BuyBoxId,
-                            OrgId
+                            BuyBoxId
                           ]"
                         >
                           <svg
@@ -463,8 +463,7 @@
                       '/landing',
                       shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,
                       shopping?.Id,
-                      BuyBoxId,
-                      OrgId
+                      BuyBoxId 
                     ]"
               >
                 <div class="main-img">
@@ -482,8 +481,7 @@
                           ? shopping?.ShoppingCenter?.Places?.[0]?.Id
                           : 0,
                         shopping.Id,
-                        BuyBoxId,
-                        OrgId
+                        BuyBoxId 
                       ]"
                     >
                       <p class="content-title" style="cursor: pointer">
@@ -688,8 +686,7 @@
                  ? place.ShoppingCenter.Places?.[0].Id
                   : 0,
                  place.Id,
-                BuyBoxId,
-                OrgId
+                BuyBoxId 
                ]"
               >
                 <div class="main-img">
@@ -698,7 +695,7 @@
               </a>
               <a
                 *ngIf="!place.CenterCity"
-                [routerLink]="['/landing', place.Id, 0, BuyBoxId, OrgId]"
+                [routerLink]="['/landing', place.Id, 0, BuyBoxId]"
               >
                 <div class="main-img">
                   <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
@@ -715,8 +712,7 @@
                           ? place.ShoppingCenter.Places?.[0].Id
                           : 0,
                         place.Id,
-                        BuyBoxId,
-                        OrgId
+                        BuyBoxId
                       ]"
                     >
                       <p class="content-title" style="cursor: pointer">

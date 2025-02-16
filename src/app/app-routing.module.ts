@@ -44,7 +44,7 @@ const routes: Routes = [
     component: HomeComponent,
     // canActivate: [AuthGuardService],
   },
-  { path: 'landing/:id/:shoppiongCenterId/:buyboxid/:orgId', component: LandingComponent },
+  { path: 'landing/:id/:shoppiongCenterId/:buyboxid', component: LandingComponent },
   { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
   {
