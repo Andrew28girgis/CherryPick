@@ -1143,3 +1143,11 @@ img[alt="logo"] {
 
 
 
+:host ::ng-deep .p-carousel-prev,
+:host ::ng-deep .p-carousel-next {
+  display: none  !important;
+}
+ .p-carousel-prev,
+ .p-carousel-next {
+  display: none  !important;
+}  
