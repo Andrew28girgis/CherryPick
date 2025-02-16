@@ -16,7 +16,7 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
-    npm install --legacy-peer-deps
+    npm install --legacy-peer-deps --force
     npm install -g @angular/cli      
     npm install @fortawesome/angular-fontawesome
     npm install @fortawesome/free-brands-svg-icons
