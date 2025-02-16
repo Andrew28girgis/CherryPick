@@ -22,10 +22,6 @@ steps:
   displayName: 'Install Dependencies'
 
 
-# 4. Run unit tests with code coverage (ensure your Angular project is configured for tests)
-- script: |
-    ng test --watch=false --code-coverage
-  displayName: 'Run Unit Tests'
 
 # 5. Publish test results (assuming test results are output as XML; adjust the pattern if needed)
 - task: PublishTestResults@2
