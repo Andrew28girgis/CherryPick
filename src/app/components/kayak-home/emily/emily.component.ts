@@ -9,8 +9,6 @@ import { RelationNames } from 'src/models/emailGenerate';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
-import { FormGroup } from '@angular/forms';
-import { trigger, style, transition, animate } from '@angular/animations';
 import { Center } from 'src/models/shoppingCenters';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
@@ -241,13 +239,11 @@ export class EmilyComponent implements OnInit {
           this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
           this.spinner.hide();
         } else {
-          this.BuyBoxOrganizationsForEmail = [];
-          console.error('Unexpected data format:', data);
+          this.BuyBoxOrganizationsForEmail = []; 
           this.spinner.hide();
         }
       },
-      error: (err) => {
-        console.error('API error:', err);
+      error: (err) => { 
         this.BuyBoxOrganizationsForEmail = [];
         this.spinner.hide();
       },
