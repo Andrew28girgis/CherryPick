@@ -13,14 +13,30 @@ steps:
 
 # 2. Install project dependencies
 - script: |
-    npm install --force --legacy-peer-deps
+    npm install --legacy-peer-deps
     npm install -g @angular/cli      
     npm install @fortawesome/angular-fontawesome
     npm install @fortawesome/free-brands-svg-icons
     npm install @fortawesome/free-solid-svg-icons
-    npm audit fix --force
   displayName: 'Install Dependencies'
 
+# 3. Run lint analysis
+- script: |
+    ng lint
+  displayName: 'Run Lint Analysis'
+
+# 4. Run unit tests with code coverage (ensure your Angular project is configured for tests)
+- script: |
+    ng test --watch=false --code-coverage
+  displayName: 'Run Unit Tests'
+
+# 5. Publish test results (assuming test results are output as XML; adjust the pattern if needed)
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/TEST-*.xml'
+    testRunTitle: 'Angular Unit Tests'
+  condition: succeededOrFailed()
+  displayName: 'Publish Test Results'
 
 # 6. Publish code coverage results (adjust the summary file path if necessary)
 - task: PublishCodeCoverageResults@1
