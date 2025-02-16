@@ -34,8 +34,8 @@ steps:
 # 5. Deploy to Azure Static Web Apps
 - task: AzureStaticWebApp@0
   inputs:
-    app_location: '/'
-    api_location: ''
-    output_location: 'dist/comman'
-    azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APP_TOKEN)
+    app_location: '/'         # Location of your app code, typically the root folder
+    api_location: ''          # Leave empty if you don't have an API
+    output_location: './dist/comman'  # Update with your Angular app's output directory
+    azure_static_web_apps_api_token: '320fa325d155a34e053d32d2b575288264ce4fca54ae3b65fa09b6e6bb14c06d5-0c403a97-ae78-42b4-a6d8-89ecfc38155a00f397685'
   displayName: 'Deploy to Azure Static Web Apps'
