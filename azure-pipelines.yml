@@ -22,15 +22,6 @@ steps:
   displayName: 'Install Dependencies'
 
 
-
-# 5. Publish test results (assuming test results are output as XML; adjust the pattern if needed)
-- task: PublishTestResults@2
-  inputs:
-    testResultsFiles: '**/TEST-*.xml'
-    testRunTitle: 'Angular Unit Tests'
-  condition: succeededOrFailed()
-  displayName: 'Publish Test Results'
-
 # 6. Publish code coverage results (adjust the summary file path if necessary)
 - task: PublishCodeCoverageResults@1
   inputs:
