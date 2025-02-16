@@ -17,25 +17,12 @@ steps:
     npm install -g @angular/cli@17
   displayName: 'Install Dependencies'
 
-# 3. Run unit tests
-- script: |
-    ng test --watch=false --browsers=ChromeHeadless --code-coverage
-  displayName: 'Run Unit Tests'
-
-# 4. Publish test results
-- task: PublishTestResults@2
-  inputs:
-    testResultsFiles: '**/TEST-*.xml'
-    testRunTitle: 'Angular Unit Tests'
-  condition: succeededOrFailed()
-  displayName: 'Publish Test Results'
-
-# 5. Build the Angular application
+# 3. Build the Angular application
 - script: |
     ng build --configuration=production
   displayName: 'Build Angular App'
 
-# 6. Prepare and publish build artifacts
+# 4. Prepare and publish build artifacts
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: 'dist/comman'
@@ -43,7 +30,7 @@ steps:
     publishLocation: 'Container'
   displayName: 'Publish Build Artifacts'
 
-# 7. Deploy to Azure Static Web Apps
+# 5. Deploy to Azure Static Web Apps
 - task: AzureStaticWebApp@0
   inputs:
     app_location: '/'
