@@ -113,7 +113,7 @@ export interface Message {
   text: string;
   sender: 'user' | 'assistant';
   timestamp: Date;
-  attachments?: File[];
+  attachments?: any[];
 }
 
 export interface Card {
