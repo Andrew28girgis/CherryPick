@@ -18,18 +18,7 @@ import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEm
 @Component({
   selector: 'app-emily',
   templateUrl: './emily.component.html',
-  styleUrls: ['./emily.component.css'],
-  animations: [
-    trigger('slideAnimation', [
-      transition(':enter', [
-        style({ height: '0px', opacity: 0 }),
-        animate('500ms ease-out', style({ height: '*', opacity: 1 })),
-      ]),
-      transition(':leave', [
-        animate('500ms ease-in', style({ height: '0px', opacity: 0 })),
-      ]),
-    ]),
-  ],
+  styleUrls: ['./emily.component.css']
 })
 
 export class EmilyComponent implements OnInit {
@@ -38,7 +27,6 @@ export class EmilyComponent implements OnInit {
   orgId!: any;
   CenterId!: any;
   showMoreRelations: { [key: number]: boolean } = {};
-  TemplatesId!: number | null;
   General!: any;
   generated: Generated[] = [];
   relationCategoriesNames: RelationNames[] = [];
@@ -88,7 +76,6 @@ export class EmilyComponent implements OnInit {
   shoppingCentersSelected: Center | undefined = undefined;
   buybox: any;
   shoppingCenterOrganization!: number;
-  showSelections = true;
   CheckGetSavedTemplates: any[] = [];
   BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
   ShoppingCenterNames: {
@@ -103,8 +90,11 @@ export class EmilyComponent implements OnInit {
   newPromptText: string = '';
   newPromptName: string = '';
   selectedContactId: number = 0;
+  emailBodyResponsetogale: boolean = false;
+  objectEmailSavedtemplate: any;
+  selectedContact: number[] = [];
   RepresentativeOrganizationContactsThatWillReceiveThisEmail:
-  string = 'Representative Organization Contacts that will receive this email:'; // Default text
+  string = 'Representative Organization Contacts that will receive this email:';
 
   constructor(
     private route: ActivatedRoute,
@@ -301,7 +291,6 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.generated = data.json || [];
-        // console.log('All', this.generated);
 
         this.ManagerOrganizationName =
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
@@ -351,17 +340,12 @@ export class EmilyComponent implements OnInit {
         this.onCheckboxBuyBoxDescriptionDetailsChange();
         this.showBuyBoxDescription = true;
         this.onCheckboxBuyBoxDescriptionChange();
-        //this for to be selected by first shopping center by defaukt
-        // if (this.ShoppingCenterNames.length > 0) {
-        //   this.selectedShoppingCenter = this.ShoppingCenterNames[0].CenterName;
-        // }
         this.updateGroupedActivityTypes();
         this.spinner.hide();
       },
     });
   }
 
-  objectEmailSavedtemplate: any;
   SaveTemplate() {
     this.spinner.show();
     let contactId: any;
@@ -379,7 +363,7 @@ export class EmilyComponent implements OnInit {
         template: this.emailBodyResponse,
         subject: this.emailSubject,
         buyboxid: this.buyBoxId,
-        contactid: contactId, //andrew
+        contactid: contactId,
         contactids: contacts,
       },
       Json: null,
@@ -443,21 +427,18 @@ export class EmilyComponent implements OnInit {
     );
     this.groupedActivityTypes = center.CotenantsWithActivityType.reduce(
       (result: any, cotenant: any) => {
-        const activityType = cotenant.ActivityType || 'Other'; // If no ActivityType, group as 'Other'
-        // Check if the ActivityType group already exists
+        const activityType = cotenant.ActivityType || 'Other';
         let group = result.find(
           (item: any) => item.ActivityType === activityType
         );
         if (!group) {
-          // If the group doesn't exist, create a new group for this ActivityType
           group = { ActivityType: activityType, Cotenants: [] };
           result.push(group);
         }
-        // Add the cotenant to the corresponding group
         group.Cotenants.push(cotenant);
         return result;
       },
-      [] // Initialize as an empty array
+      []
     );
     return center ? this.groupedActivityTypes : [];
   }
@@ -502,7 +483,7 @@ export class EmilyComponent implements OnInit {
       activity.Cotenants.forEach((co: any) => (co.selected = false));
     });
   }
-  // Called when "All Cotenants" checkbox changes
+
   onAllCotenantsChange() {
     if (this.showAllCotenants) {
       // Select both types
@@ -514,12 +495,10 @@ export class EmilyComponent implements OnInit {
       this.showCotenantsWithoutActivity = false;
     }
 
-    // Apply the changes by calling the individual handlers
     this.onCotenantsWithActivityChange();
     this.onCotenantsWithoutActivityChange();
-    // updateEmailBody() will be called inside these methods
   }
-  // Called when "Cotenants in the shopping center" checkbox changes
+
   onCotenantsWithActivityChange() {
     const newValue = this.showCotenantsWithActivity;
     this.groupedActivityTypes.forEach((activity) => {
@@ -532,7 +511,7 @@ export class EmilyComponent implements OnInit {
       this.showCotenantsWithActivity && this.showCotenantsWithoutActivity;
     this.updateEmailBody();
   }
-  // Called when "Cotenants without shopping center" checkbox changes
+
   onCotenantsWithoutActivityChange() {
     const newValue = this.showCotenantsWithoutActivity;
     const cotenantsWithout = this.getCotenantsWithoutActivityType(
@@ -544,7 +523,7 @@ export class EmilyComponent implements OnInit {
     this.showAllCotenants = this.showCotenantsWithActivity && newValue;
     this.updateEmailBody();
   }
-  // Called when an activity checkbox changes
+
   onActivityChange(activity: any) {
     const newValue = activity.selected;
     activity.Cotenants.forEach((co: any) => (co.selected = newValue));
@@ -558,22 +537,19 @@ export class EmilyComponent implements OnInit {
       this.showCotenantsWithActivity && this.showCotenantsWithoutActivity;
     this.updateEmailBody();
   }
+
   selectAllCotenants(type: string) {
     if (type === 'withActivity') {
-      // Get all cotenants for the selected shopping center
       const cotenants = this.getCotenantsWithActivityType(
         this.selectedShoppingCenter
       );
-      // If 'showCotenantsWithActivity' is true, select all cotenants
       cotenants.forEach((cotenant) => {
-        cotenant.selected = this.showCotenantsWithActivity; // Select or deselect all cotenants
+        cotenant.selected = this.showCotenantsWithActivity; 
       });
-      // Now select/deselect all activity types as well
       this.groupedActivityTypes.forEach((activity) => {
-        activity.selected = this.showCotenantsWithActivity; // Select all activity types if the main checkbox is checked
-        // Select or deselect all cotenants under the activity type
+        activity.selected = this.showCotenantsWithActivity; 
         activity.Cotenants.forEach((cotenant: any) => {
-          cotenant.selected = this.showCotenantsWithActivity; // Match the cotenant selection with the activity type selection
+          cotenant.selected = this.showCotenantsWithActivity; 
         });
       });
     }
@@ -586,21 +562,17 @@ export class EmilyComponent implements OnInit {
         (cotenant) => (cotenant.selected = this.showCotenantsWithoutActivity)
       );
     }
-    this.updateEmailBody(); // Update the email body after selection
+    this.updateEmailBody(); 
   }
-  // Function to select/deselect all cotenants within a specific ActivityType
+
   selectAllCotenantsForActivity(activity: any) {
-    // Update the selection state of cotenants in the activity
     activity.Cotenants.forEach((cotenant: any) => {
       cotenant.selected = activity.selected;
     });
-    // Check if any activity is selected after this change
     const anyActivitySelected = this.groupedActivityTypes.some(
       (act) => act.selected
     );
-    // Update the main "Cotenants with Activity Type" checkbox based on selection state
     this.showCotenantsWithActivity = anyActivitySelected;
-    // Update the email body when this action is performed
     this.updateEmailBody();
   }
 
@@ -610,7 +582,7 @@ export class EmilyComponent implements OnInit {
     );
     return center?.ShoppingCenterManager?.[0]?.Name || 'No Manager';
   }
-  // Get Manager Description
+
   getManagerDescription(centerName: string): string {
     const center = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
@@ -620,7 +592,7 @@ export class EmilyComponent implements OnInit {
       'No description available'
     );
   }
-  // Get Manager Contacts
+
   getManagerContacts(centerName: any): any[] {
     const center = this.ShoppingCenterNames.find(
       (c) => c.CenterName === centerName
@@ -645,8 +617,6 @@ export class EmilyComponent implements OnInit {
     );
   }
 
-  emailBodyResponsetogale: boolean = false;
-
   toggleSwitch() {
     this.emailBodyResponsetogale = !this.emailBodyResponsetogale;
   }
@@ -664,9 +634,7 @@ export class EmilyComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.relationCategoriesNames = data.json;
-        // console.log(' this.relationCategoriesNames ', this.relationCategoriesNames );
-        
+        this.relationCategoriesNames = data.json;        
         this.relationCategoriesNames.forEach((r) => (r.selected = true));
         this.spinner.hide();
       },
@@ -680,7 +648,7 @@ export class EmilyComponent implements OnInit {
           ?.BuyBoxOrganizationDescription || '';
           this.RepresentativeOrganizationContactsThatWillReceiveThisEmail='Representative Organization Contacts that will receive this email:';
     } else {
-      this.clientProfileDescription = ''; // Clear it if unchecked
+      this.clientProfileDescription = '';
     }
   }
 
@@ -692,7 +660,7 @@ export class EmilyComponent implements OnInit {
           ?.BuyBoxOrganizationDescription || '';
 
     } else {
-      this.BuyBoxDescriptionDetails = ''; // Clear it if unchecked
+      this.BuyBoxDescriptionDetails = '';
     }
   }
 
@@ -741,7 +709,6 @@ export class EmilyComponent implements OnInit {
     ) {
       this.updateEmailBody();
     } else {
-      // Check if the target and the property exist before toggling
       if (
         showMinBuildingSize?.target &&
         typeof showMinBuildingSize.target.showMinBuildingSize !== 'undefined'
@@ -782,7 +749,6 @@ export class EmilyComponent implements OnInit {
     }else{
       this.MangerDescription = '';
     }
-    // Update the email body after changes
     this.updateEmailBody();
   }
 
@@ -794,38 +760,32 @@ export class EmilyComponent implements OnInit {
     }else{
       this.MangerSignature = '';
     }
-    // Update the email body after changes
     this.updateEmailBody();
   }
 
   onMangerDescriptionChange() {
-    // this.spinner.show();
     if (this.showMangerDescription) {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
-          contact.selected = true; // Select the manager checkbox
+          contact.selected = true; 
           if (contact.AssistantName) {
-            contact.assistantSelected = true; // Select the assistant checkbox
-            // this.spinner.hide();
+            contact.assistantSelected = true;
           }
         });
       });
     } else {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
-          contact.selected = false; // Deselect the manager checkbox
-          contact.assistantSelected = false; // Deselect the assistant checkbox
-          // this.spinner.hide();
+          contact.selected = false;
+          contact.assistantSelected = false; 
         });
       });
     }
-    // Update the email body after changes
     this.updateEmailBody();
   }
 
   onRelationNamesChange() {
     this.relationCategoriesNames.forEach((relation) => {
-      // If the parent checkbox is selected, select all its children      
       if (relation.selected) {
         this.generated[0]?.Releations.forEach((item) => {
           if (item.RetailRelationCategoryId === relation.id) {
@@ -833,7 +793,6 @@ export class EmilyComponent implements OnInit {
           }
         });
       } else {
-        // If the parent checkbox is deselected, deselect all its children
         this.generated[0]?.Releations.forEach((item) => {
           if (item.RetailRelationCategoryId === relation.id) {
             item.relationSelect = false;
@@ -841,25 +800,22 @@ export class EmilyComponent implements OnInit {
         });
       }
     });
-    // Update email body and selected relations
     this.updateSelectedRelations();
     this.updateEmailBody();
   }
 
   getRelationsForCategory(categoryId: number) {
     if (!this.generated || this.generated.length === 0 || !this.generated[0].Releations) {
-      return [];// Avoid errors caused by undefined
+      return [];
     }
     return this.generated[0].Releations.filter(item => item.RetailRelationCategoryId === categoryId);
   }
 
- // Returns only the first 3 relationships or all of them depending on the condition of Show More
   getVisibleRelations(categoryId: number) {
     const relations = this.getRelationsForCategory(categoryId);
     return this.showMoreRelations[categoryId] ? relations : relations.slice(0, 3);
   }
 
-// Toggle the Show More status for each category
   toggleShowMore(categoryId: number) {
     this.showMoreRelations[categoryId] = !this.showMoreRelations[categoryId];
   }
@@ -877,13 +833,12 @@ export class EmilyComponent implements OnInit {
     this.updateEmailBody();
   }
 
-  // Check if the RetailRelationCategoryId matches any id in the relationCategoriesNames array
   isRelationCategoryMatched(relation: any): boolean {
     return this.relationCategoriesNames.some(
       (category) => category.id === relation.RetailRelationCategoryId
     );
   }
-  // Get the name of the relation category based on RetailRelationCategoryId
+
   getRelationCategoryName(id: number): string {
     const category = this.relationCategoriesNames.find(
       (category) => category.id === id
@@ -896,7 +851,6 @@ export class EmilyComponent implements OnInit {
   }
 
   loadManagerOrganizations() {
-    // Extract the manager data from the generated BuyBox object
     const buyBoxOrganization = this.generated[0]?.Buybox[0]?.BuyBoxOrganization;
 
     if (buyBoxOrganization && buyBoxOrganization.length > 0) {
@@ -921,12 +875,11 @@ export class EmilyComponent implements OnInit {
 
   onAssistantCheckboxChange(contact: any) {
     if (!contact.assistantSelected) {
-      contact.selectedAssistantName = false; // Reset selection
+      contact.selectedAssistantName = false;
     }
     this.updateEmailBody();
   }
 
-  selectedContact: number[] = [];
 
   updateEmailBody() {
     let emailContent = '';
@@ -1015,15 +968,11 @@ export class EmilyComponent implements OnInit {
     }
 
     if (this.showRelationNames) {
-      // Get the organization name
       const organizationName =
         this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]?.Name ||
         'No Organization Name';
 
-      // Initialize a map to group relations by category name
       const categoryMap: { [key: string]: string[] } = {};
-
-      // Iterate through selected relations
       this.relationCategoriesNames.forEach((selectedRelation) => {
         if (selectedRelation.selected) {
           this.generated[0]?.Releations?.forEach((relation) => {
@@ -1036,7 +985,6 @@ export class EmilyComponent implements OnInit {
                 relation.RetailRelationCategoryId
               );
 
-              // Group relation names under their categories
               if (!categoryMap[categoryName]) {
                 categoryMap[categoryName] = [];
               }
@@ -1095,6 +1043,7 @@ export class EmilyComponent implements OnInit {
       ')' +
       '\n\n';
     }
+
     if(this.showBuyBoxDescription){
       emailContent +=
        'BuyBox Description: (' +
@@ -1102,6 +1051,7 @@ export class EmilyComponent implements OnInit {
       ')' +
       '\n\n';
     }
+
     if(this.showShoppingCenterDescription){
       emailContent +=
        this.ShoppingCenterName +' Description: (' +
@@ -1134,7 +1084,7 @@ export class EmilyComponent implements OnInit {
       return;
     }
 
-    const promptId = Number(this.selectedPromptId); // Convert to number
+    const promptId = Number(this.selectedPromptId); 
     const context = this.emailBody;
     this.PlacesService.generateEmail(promptId, context).subscribe({
       next: (data: any) => {
@@ -1173,6 +1123,7 @@ export class EmilyComponent implements OnInit {
     }
     this.openDialog(content);
   }
+
   openDialog(content: any, size: string = 'lg') {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -1181,10 +1132,8 @@ export class EmilyComponent implements OnInit {
     });
   }
 
-  // prompts to be displayed in select dropdown
   GetPrompts() {
     this.spinner.show();
-    // 1. Get the Category ID
     const categoryBody = {
       name: 'GetPromptsCategoryId',
       params: {
@@ -1199,7 +1148,6 @@ export class EmilyComponent implements OnInit {
           this.spinner.hide();
           return;
         }
-        // 2. With the Category ID, get the Prompts
         const promptsBody = {
           name: 'GetPrompts',
           MainEntity: null,
@@ -1237,7 +1185,6 @@ export class EmilyComponent implements OnInit {
     });
   }
   
-  // when select from select drop down to be changed
   updatePrompt() {
     const selectedPrompt = this.prompts.find(
       (prompt) => prompt.id == this.selectedPromptId
@@ -1245,12 +1192,11 @@ export class EmilyComponent implements OnInit {
     if (selectedPrompt) {
       this.selectedPromptText =
         selectedPrompt.promptText || 'No prompt text available';
-      // console.log('Selected Prompt Text:', this.selectedPromptText);
     } else {
       this.selectedPromptText = 'No prompt text available';
     }
   }
-  // Open Modal with Selected Prompt Text
+
   openPromptTextModal(modal: any) {
     if (
       !this.selectedPromptText ||
@@ -1259,15 +1205,17 @@ export class EmilyComponent implements OnInit {
       this.showToast('No prompt text available to display.');
       return;
     }
-    this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
+    this.modalService.open(modal, { size: 'lg', backdrop: true });
   }
+
   openBodyModal(modal: any) {
-    this.modalService.open(modal, { size: 'lg', backdrop: true }); // Enable click outside to close
+    this.modalService.open(modal, { size: 'lg', backdrop: true });
     this.updateEmailBody();
   }
+
   editPrompt() {
     this.isEditing = true;
-    this.editablePromptText = this.selectedPromptText; // Copy current text for editing
+    this.editablePromptText = this.selectedPromptText;
   }
 
   savePrompt(modal: any) {
@@ -1300,6 +1248,7 @@ export class EmilyComponent implements OnInit {
       },
     });
   }
+
   openAddPrompt(modal: any) {
     this.modalService.open(modal, { size: 'lg', backdrop: true });
   }
@@ -1342,6 +1291,7 @@ export class EmilyComponent implements OnInit {
     document.body.removeChild(textArea);
     this.showCopiedMessage('body');
   }
+
   copyEmailSubject() {
     const textArea = document.createElement('textarea');
     textArea.value = this.emailSubject;
@@ -1351,6 +1301,7 @@ export class EmilyComponent implements OnInit {
     document.body.removeChild(textArea);
     this.showCopiedMessage('subject');
   }
+
   showCopiedMessage(type: 'subject' | 'body') {
     if (type === 'subject') {
       this.isSubjectCopied = true;
@@ -1360,11 +1311,10 @@ export class EmilyComponent implements OnInit {
       setTimeout(() => (this.isBodyCopied = false), 2000);
     }
   }
-  clearSelections() {
-    // Reset selected shopping center and prompt
-    this.selectedShoppingCenter = '';
-    this.selectedPromptId = ''; // or selectedPromptName = '' depending on how you track prompts
 
+  clearSelections() {
+    this.selectedShoppingCenter = '';
+    this.selectedPromptId = '';
     this.showAllCotenants = false;
     this.showCotenantsWithActivity = false;
     this.showCotenantsWithoutActivity = false;
@@ -1372,34 +1322,25 @@ export class EmilyComponent implements OnInit {
     this.showRelationNames = false;
     this.showOrganizationManagers = false;
     this.showMangerDescriptionDetails = false;
-
     this.showMinBuildingSize = false;
     this.showMaxBuildingSize = false;
     this.showBuyBoxDescription = false;
     this.showBuyBoxDescriptionDetails =false;
     this.showShoppingCenterDescription =false;
     this.RepresentativeOrganizationContactsThatWillReceiveThisEmail='';
-
     this.BuyBoxOrganizationsForEmail[0].Contact.forEach((c: any) => {
       c.selected = false;
       c.Centers?.forEach((ShoppingCenter: any) => {
         ShoppingCenter.selected = false;
       });
     });
-
     this.managerOrganizations.forEach((manager) => {
       manager.ManagerOrganizationContacts.forEach((contact) => {
         contact.selected = false;
       });
     });
-
     this.emailBody = '';
-    // Clear the groupedActivityTypes and other cotenant selections if needed
     this.groupedActivityTypes = [];
-    // For without activity cotenants, since no center is selected, they won't appear anyway.
-    // If prompts and managers or other data must be reloaded or reset to their initial states, do so here.
-    // Update the email body once more to ensure everything is cleared
-    // this.updateEmailBody();
   }
 
   showToast(message: string) {
