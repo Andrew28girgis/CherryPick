@@ -25,7 +25,7 @@
                 </div>
                 <div class="p-0 col-12 align-items-center d-flex">
                   <div class="row m-0 p-0 d-flex w-100 d-flex justify-content-center">
-                    <div class="col-10 p-2 h-100" *ngFor="let contact of OrganizationsForEmail?.Contact">
+                    <div class="col-11 col-sm-11 p-2 h-100" *ngFor="let contact of OrganizationsForEmail?.Contact">
                       <div class="crad_Contact_Mange" *ngIf="contact.Centers && contact.Centers.length > 0">
                         <p class="Contact_head pt-1">
                           <input type="checkbox" [name]="'D' + contact?.Firstname" [id]="'D' + contact?.Firstname"
@@ -92,8 +92,8 @@
                 </div>
               </section>
             </div>
-            <div class="col-12 col-sm-9">
-              <div class="row d-flex p-3 m-0 Selections-body">
+            <div class="col-12 col-sm-9 mt-3 mt-sm-0">
+              <div class="row d-flex p-1 p-sm-0 m-0 Selections-body">
                 <!-- Selections-filters -->
                 <div class="col-12 col-sm-4 p-2">
                   <div class="box p-2">
@@ -248,7 +248,7 @@
                         </option>
                       </select>
                     </div>
-                    <div class="col-12 col-sm-6 d-flex justify-content-between mt-3 align-items-center Button_all">
+                    <div class="col-12 col-sm-6 d-flex justify-content-between mt-3 align-items-center Button_all pb-2 pb-sm-0">
                       <button class="Emily__contant__button ms-2" (click)="GenerateEmail()">
                         <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path
