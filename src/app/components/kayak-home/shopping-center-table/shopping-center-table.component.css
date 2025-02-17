@@ -692,6 +692,13 @@ img[alt="logo"] {
 }
 
 @media (min-width: 769px) {
+  :host ::ng-deep .p-carousel .p-carousel-container {
+border-radius: 20px;  }
+
+  :host ::ng-deep .p-carousel-item {
+    border-radius: 20px;  
+
+  }
   .card-container {
     padding: 0;
     gap: 0;
