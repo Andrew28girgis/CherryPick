@@ -27,11 +27,9 @@
   padding: 10px;
   cursor: pointer;
 }
-
 .option:hover {
   background-color: #f0f0f0;
 }
-
 .option-icon img {
   margin-right: 10px;
 }
@@ -56,33 +54,28 @@
   background-color: #ffffff;
   border-bottom: 1px solid #e4e4e4;
 }
-
 .navbar-line {
   display: flex;
   align-items: center;
   width: 100%;
 }
-
 .nav-right {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 }
-
 .nav-right > div {
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-
 .custom-icon-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 7px;
 }
-
 .icon-option {
   display: flex;
   flex-direction: column;
@@ -102,36 +95,29 @@
   background-color: #001f3f;
   color: #fff;
 }
-
 .icon-option.selected .icon-image {
   filter: brightness(0) invert(1);
 }
-
 .icon-option.selected .icon-text {
   color: #fff;
 }
-
 .icon-image {
   width: 24px;
   height: 24px;
 }
-
 .icon-text {
   font-size: 0.7rem;
   text-align: center;
   margin-top: 5px;
 }
-
 .custom-icon-container {
   display: flex;
   gap: 15px;
 }
-
 .svg-container {
   display: flex;
   align-items: center;
 }
-
 .svg-icon:last-child {
   margin-right: 0; 
 }
