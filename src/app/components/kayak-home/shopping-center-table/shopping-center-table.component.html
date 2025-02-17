@@ -37,11 +37,11 @@
       [showIndicators]="true"
     >
       <ng-template pTemplate="item" let-shopping>
-        <div [ngClass]="{ 'd-sm-flex justify-content-center': !isMobile }">
+        <div [ngClass]="{ 'd-sm-flex justify-content-center': !isMobile ,'w-100': isMobile}">
           <div
             class="social-card mb-0 mb-sm-5"
             [ngClass]="{ 'full-height': isMobile }"
-            [style.backgroundImage]="'url(' + shopping.MainImage + ')'"
+            [style.backgroundImage]="'url(' + (shopping.MainImage || 'assets/Images/skeltonImage.png') + ')'"
           >
             <div class="card-header">
               <div class="header-info">
