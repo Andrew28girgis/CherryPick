@@ -25,7 +25,7 @@
                 </div>
                 <div class="p-0 col-12 align-items-center d-flex">
                   <div class="row m-0 p-0 d-flex w-100 d-flex justify-content-center">
-                    <div class="col-11 col-sm-10 p-2 h-100" *ngFor="let contact of OrganizationsForEmail?.Contact">
+                    <div class="col-11 col-sm-11 p-2 h-100" *ngFor="let contact of OrganizationsForEmail?.Contact">
                       <div class="crad_Contact_Mange" *ngIf="contact.Centers && contact.Centers.length > 0">
                         <p class="Contact_head pt-1">
                           <input type="checkbox" [name]="'D' + contact?.Firstname" [id]="'D' + contact?.Firstname"
