@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="row mb-3  d-sm-flex">
+<div class="row mb-3 d-sm-flex d-none">
   <div
     class="col-6 col-md-6 pt-2 d-flex justify-content-strat align-items-cente"
   >
@@ -18,201 +18,283 @@
         }"
       >
         <img [src]="option.icon" [alt]="option.text" class="icon-image" />
-        <span class="icon-text">{{ option.text }}</span>
+        <span class="icon-text hide-on-mobile">{{ option.text }}</span>
       </div>
     </div>
   </div>
 </div>
 <ng-container *ngIf="currentView == 5">
-  <p-carousel
-    [value]="shoppingCenters"
-    [numVisible]="isMobile ? 1 : shoppingCenters.length"
-    [numScroll]="1"
-    orientation="vertical"
-    [verticalViewPortHeight]="carouselHeight"
-    [circular]="true"
-    [responsiveOptions]="responsiveOptions"
-  >
-    <ng-template pTemplate="item" let-shopping>
-      <div [ngClass]="{ 'd-sm-flex justify-content-center': !isMobile }">
-        <div
-          class="social-card mb-0 mb-sm-5"
-          [ngClass]="{ 'full-height': isMobile }"
-          [style.backgroundImage]="'url(' + shopping.MainImage + ')'"
-        >
-          <div class="card-header">
-            <div class="header-info">
-              <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-              <div
-                (click)="openMapViewPlace(MapViewPlace, shopping)"
-                class="shoppingcenterdata"
-              >
-                <p
-                  class="center-address shoppingcenterdata cursor">
-                  {{ shopping.CenterAddress }}
-                </p>
-                <p
-                  class="center-location shoppingcenterdata cursor">
-                  {{ shopping.CenterCity | titlecase }},
-                  {{ shopping.CenterState }}
-                </p>
-              </div>
-            </div>
-            <div class="relativee">
-              <div
-                class="shortcuts_iconCard"
-                *ngIf="selectedIdCard === shopping.Id"
-              >
-                <ul>
-                  <li class="cursor">
-                    <a class="target" (click)="redirect(shopping.Id)">
-                      <i
-                        class="fa-regular fa-envelope emily"></i>
-                      Emily
-                    </a>
-                  </li>
+  <div class="containerMobileView">
 
-                  <li>
-                    <a
-                      class="target"
-                      (click)="toggleShortcuts(shopping.Id, 'close')"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        class="lucide lucide-copy"
+    <p-carousel
+    orientation="vertical"
+      [value]="shoppingCenters"
+      [numVisible]="isMobile ? 1 : shoppingCenters.length"
+      [numScroll]="1"
+      [verticalViewPortHeight]="carouselHeight"
+      [circular]="true"
+      [responsiveOptions]="responsiveOptions"
+      [showNavigators]="false"
+      [showIndicators]="true"
+    >
+      <ng-template pTemplate="item" let-shopping>
+        <div [ngClass]="{ 'd-sm-flex justify-content-center': !isMobile }">
+          <div
+            class="social-card mb-0 mb-sm-5"
+            [ngClass]="{ 'full-height': isMobile }"
+            [style.backgroundImage]="'url(' + shopping.MainImage + ')'"
+          >
+            <div class="card-header">
+              <div class="header-info">
+                <h3 class="center-name">
+                  {{ shopping.CenterName | titlecase }}
+                </h3>
+                <div
+                  (click)="openMapViewPlace(MapViewPlace, shopping)"
+                  style="width: fit-content"
+                >
+                  <p
+                    class="center-address"
+                    style="cursor: pointer; width: fit-content"
+                  >
+                    {{ shopping.CenterAddress }}
+                  </p>
+                  <p
+                    class="center-location"
+                    style="cursor: pointer; width: fit-content"
+                  >
+                    {{ shopping.CenterCity | titlecase }},
+                    {{ shopping.CenterState }}
+                  </p>
+                </div>
+              </div>
+              <div style="position: relative">
+                <div
+                  class="shortcuts_iconCard"
+                  *ngIf="selectedIdCard === shopping.Id"
+                >
+                  <ul>
+                    <li style="cursor: pointer">
+                      <a class="target" (click)="redirect(shopping.Id)">
+                        <i
+                          class="fa-regular fa-envelope"
+                          style="font-size: 18px; margin-top: 3px; width: 24px"
+                        ></i>
+                        Emily
+                      </a>
+                    </li>
+
+                    <li>
+                      <a
+                        class="target"
+                        (click)="toggleShortcuts(shopping.Id, 'close')"
                       >
-                        <rect
-                          width="14"
-                          height="14"
-                          x="8"
-                          y="8"
-                          rx="2"
-                          ry="2"
-                        />
-                        <path
-                          d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
-                        />
-                      </svg>
-                      Copy Link
-                    </a>
-                  </li>
-                  <li (click)="toggleShortcuts(shopping.Id, 'close')">
-                    <a
-                      class="target"
-                      [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
-                          fill="#707791"
-                        />
-                      </svg>
-                      View Details
-                    </a>
-                  </li>
-                  <li (click)="toggleShortcuts(shopping.Id, 'close')">
-                    <a
-                      class="target"
-                      (click)="openMapViewPlace(MapViewPlace, shopping)"
-                    >
-                      <i
-                        class="fa-solid fa-map-location-dot emily"></i>
-                      View location
-                    </a>
-                  </li>
-                  <li (click)="toggleShortcuts(shopping.Id, 'close')">
-                    <a
-                      class="target"
-                      (click)="openStreetViewPlace(StreetViewPlace, shopping)"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g id="Street View">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-copy"
+                        >
+                          <rect
+                            width="14"
+                            height="14"
+                            x="8"
+                            y="8"
+                            rx="2"
+                            ry="2"
+                          />
                           <path
-                            id="Vector"
-                            d="M12 3C10.3506 3 9 4.35059 9 6C9 6.83496 9.35742 7.58789 9.91406 8.13281C8.91504 8.80957 8.25 9.96094 8.25 11.25V14.7188L9.75 15.4688V18.75H14.25V15.4688L15.75 14.7188V11.25C15.75 9.96094 15.085 8.80957 14.0859 8.13281C14.6426 7.58789 15 6.83496 15 6C15 4.35059 13.6494 3 12 3ZM12 4.5C12.8379 4.5 13.5 5.16211 13.5 6C13.5 6.83789 12.8379 7.5 12 7.5C11.1621 7.5 10.5 6.83789 10.5 6C10.5 5.16211 11.1621 4.5 12 4.5ZM12 9C13.251 9 14.25 9.99902 14.25 11.25V13.7812L12.75 14.5312V17.25H11.25V14.5312L9.75 13.7812V11.25C9.75 9.99902 10.749 9 12 9ZM6.75 14.1562C4.56152 14.7686 3 15.8057 3 17.25C3 19.7109 7.52637 21 12 21C16.4736 21 21 19.7109 21 17.25C21 15.8057 19.4385 14.7686 17.25 14.1562V15.7266C18.6768 16.1865 19.5 16.7812 19.5 17.25C19.5 18.1465 16.5088 19.5 12 19.5C7.49121 19.5 4.5 18.1465 4.5 17.25C4.5 16.7812 5.32324 16.1865 6.75 15.7266V14.1562Z"
+                            d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+                          />
+                        </svg>
+                        Copy Link
+                      </a>
+                    </li>
+                    <li (click)="toggleShortcuts(shopping.Id, 'close')">
+                      <a
+                        class="target"
+                        [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6.70001 18.75H4.15002C2.31002 18.75 1.25 17.69 1.25 15.85V4.15002C1.25 2.31002 2.31002 1.25 4.15002 1.25H8.45001C10.29 1.25 11.35 2.31002 11.35 4.15002V6C11.35 6.41 11.01 6.75 10.6 6.75C10.19 6.75 9.84998 6.41 9.84998 6V4.15002C9.84998 3.13002 9.47001 2.75 8.45001 2.75H4.15002C3.13002 2.75 2.75 3.13002 2.75 4.15002V15.85C2.75 16.87 3.13002 17.25 4.15002 17.25H6.70001C7.11001 17.25 7.45001 17.59 7.45001 18C7.45001 18.41 7.11001 18.75 6.70001 18.75Z"
                             fill="#707791"
                           />
-                        </g>
-                      </svg>
-                      Street View
-                    </a>
-                  </li>
-                  <li
-                    class="cursor"
-                    (click)="toggleShortcuts(shopping.Id, 'close')"
-                  >
-                    <a
-                      class="target"
-                      (click)="
-                        openDeleteShoppingCenterModal(
-                          deleteSingleShoppingCenterModal,
-                          shopping.Id
-                        )
-                      "
+                          <path
+                            d="M14.9602 22.75H9.12018C7.11018 22.75 5.9502 21.59 5.9502 19.58V8.41998C5.9502 6.40998 7.11018 5.25 9.12018 5.25H14.9602C16.9702 5.25 18.1202 6.40998 18.1202 8.41998V19.58C18.1202 21.59 16.9702 22.75 14.9602 22.75ZM9.12018 6.75C7.92018 6.75 7.4502 7.21998 7.4502 8.41998V19.58C7.4502 20.78 7.92018 21.25 9.12018 21.25H14.9602C16.1502 21.25 16.6202 20.78 16.6202 19.58V8.41998C16.6202 7.21998 16.1502 6.75 14.9602 6.75H9.12018Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M19.8503 18.75H17.3704C16.9604 18.75 16.6204 18.41 16.6204 18C16.6204 17.59 16.9604 17.25 17.3704 17.25H19.8503C20.8703 17.25 21.2504 16.87 21.2504 15.85V4.15002C21.2504 3.13002 20.8703 2.75 19.8503 2.75H15.5504C14.5304 2.75 14.1504 3.13002 14.1504 4.15002V6C14.1504 6.41 13.8104 6.75 13.4004 6.75C12.9904 6.75 12.6504 6.41 12.6504 6V4.15002C12.6504 2.31002 13.7104 1.25 15.5504 1.25H19.8503C21.6903 1.25 22.7504 2.31002 22.7504 4.15002V15.85C22.7504 17.69 21.6903 18.75 19.8503 18.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14 11.75H10C9.59 11.75 9.25 11.41 9.25 11C9.25 10.59 9.59 10.25 10 10.25H14C14.41 10.25 14.75 10.59 14.75 11C14.75 11.41 14.41 11.75 14 11.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M14 14.75H10C9.59 14.75 9.25 14.41 9.25 14C9.25 13.59 9.59 13.25 10 13.25H14C14.41 13.25 14.75 13.59 14.75 14C14.75 14.41 14.41 14.75 14 14.75Z"
+                            fill="#707791"
+                          />
+                          <path
+                            d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
+                            fill="#707791"
+                          />
+                        </svg>
+                        View Details
+                      </a>
+                    </li>
+                    <li (click)="toggleShortcuts(shopping.Id, 'close')">
+                      <a
+                        class="target"
+                        (click)="openMapViewPlace(MapViewPlace, shopping)"
+                      >
+                        <i
+                          class="fa-solid fa-map-location-dot"
+                          style="font-size: 18px; margin-top: 3px; width: 24px"
+                        ></i>
+                        View location
+                      </a>
+                    </li>
+                    <li (click)="toggleShortcuts(shopping.Id, 'close')">
+                      <a
+                        class="target"
+                        (click)="openStreetViewPlace(StreetViewPlace, shopping)"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g id="Street View">
+                            <path
+                              id="Vector"
+                              d="M12 3C10.3506 3 9 4.35059 9 6C9 6.83496 9.35742 7.58789 9.91406 8.13281C8.91504 8.80957 8.25 9.96094 8.25 11.25V14.7188L9.75 15.4688V18.75H14.25V15.4688L15.75 14.7188V11.25C15.75 9.96094 15.085 8.80957 14.0859 8.13281C14.6426 7.58789 15 6.83496 15 6C15 4.35059 13.6494 3 12 3ZM12 4.5C12.8379 4.5 13.5 5.16211 13.5 6C13.5 6.83789 12.8379 7.5 12 7.5C11.1621 7.5 10.5 6.83789 10.5 6C10.5 5.16211 11.1621 4.5 12 4.5ZM12 9C13.251 9 14.25 9.99902 14.25 11.25V13.7812L12.75 14.5312V17.25H11.25V14.5312L9.75 13.7812V11.25C9.75 9.99902 10.749 9 12 9ZM6.75 14.1562C4.56152 14.7686 3 15.8057 3 17.25C3 19.7109 7.52637 21 12 21C16.4736 21 21 19.7109 21 17.25C21 15.8057 19.4385 14.7686 17.25 14.1562V15.7266C18.6768 16.1865 19.5 16.7812 19.5 17.25C19.5 18.1465 16.5088 19.5 12 19.5C7.49121 19.5 4.5 18.1465 4.5 17.25C4.5 16.7812 5.32324 16.1865 6.75 15.7266V14.1562Z"
+                              fill="#707791"
+                            />
+                          </g>
+                        </svg>
+                        Street View
+                      </a>
+                    </li>
+                    <li
+                      style="cursor: pointer"
+                      (click)="toggleShortcuts(shopping.Id, 'close')"
                     >
-                      <i
-                        class="fa-regular fa-trash-can emily"></i>
-                      Remove Shopping
-                    </a>
-                  </li>
-                </ul>
-                <i class="fa-solid fa-caret-right"></i>
+                      <a
+                        class="target"
+                        (click)="
+                          openDeleteShoppingCenterModal(
+                            deleteSingleShoppingCenterModal,
+                            shopping.Id
+                          )
+                        "
+                      >
+                        <i
+                          class="fa-regular fa-trash-can"
+                          style="font-size: 18px; margin-top: 3px; width: 24px"
+                        ></i>
+                        Remove Shopping
+                      </a>
+                    </li>
+                  </ul>
+                  <i class="fa-solid fa-caret-right"></i>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card-image">
-            <img [src]="shopping.MainImage" [alt]="shopping.CenterName" />
-          </div>
+            <div class="card-image">
+              <img
+                [src]="
+                  shopping.MainImage && shopping.MainImage !== ''
+                    ? shopping.MainImage
+                    : 'assets/Images/skeltonImage.png'
+                "
+                [alt]="shopping.CenterName"
+              />
+            </div>
 
-          <div class="card-footer">
-            <div class="reaction-buttons">
-              <button class="action-btn like-btn">
-                <svg
-                  class="far"
-                  [ngClass]="{
+            <div class="card-footer">
+              <div class="reaction-buttons">
+                <button class="action-btn like-btn">
+                  <svg
+                    class="far"
+                    [ngClass]="{
                       'fa-thumbs-up': getPrimaryReaction(shopping) === 'Like',
                       
                     }"
+                    width="33"
+                    height="32"
+                    viewBox="0 0 33 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M22.2067 29.4667H17.14C16.3933 29.4667 14.7667 29.24 13.9 28.3733L9.86 25.2533L11.0867 23.6667L15.22 26.8667C15.5533 27.1867 16.3933 27.4533 17.14 27.4533H22.2067C23.4067 27.4533 24.7 26.4933 24.9667 25.4133L28.1933 15.6133C28.4067 15.0267 28.3667 14.4933 28.0867 14.1067C27.7933 13.6933 27.26 13.4533 26.6067 13.4533H21.2733C20.58 13.4533 19.94 13.16 19.5 12.6533C19.0467 12.1333 18.8467 11.44 18.9533 10.72L19.62 6.44C19.78 5.69333 19.2733 4.85333 18.5533 4.61333C17.9 4.37333 17.06 4.72 16.7667 5.14666L11.3 13.28L9.64667 12.1733L15.1133 4.04C15.9533 2.78666 17.7933 2.18666 19.2333 2.73333C20.9 3.28 21.9667 5.12 21.5933 6.82666L20.94 11.0267C20.9267 11.12 20.9267 11.2533 21.02 11.36C21.0867 11.4267 21.18 11.4667 21.2867 11.4667H26.62C27.9267 11.4667 29.06 12.0133 29.7267 12.96C30.38 13.88 30.5133 15.0933 30.0867 16.2667L26.9 25.9733C26.4067 27.9067 24.3533 29.4667 22.2067 29.4667Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M7.67334 28H6.34001C3.87334 28 2.67334 26.84 2.67334 24.4667V11.4C2.67334 9.02667 3.87334 7.86667 6.34001 7.86667H7.67334C10.14 7.86667 11.34 9.02667 11.34 11.4V24.4667C11.34 26.84 10.14 28 7.67334 28ZM6.34001 9.86667C4.88667 9.86667 4.67334 10.2133 4.67334 11.4V24.4667C4.67334 25.6533 4.88667 26 6.34001 26H7.67334C9.12667 26 9.34001 25.6533 9.34001 24.4667V11.4C9.34001 10.2133 9.12667 9.86667 7.67334 9.86667H6.34001Z"
+                      fill="white"
+                    />
+                  </svg>
+
+                  <span class="d-block d-sm-block">{{
+                    getTotalReactions(shopping)
+                  }}</span>
+
+                  <!-- <span class="reactionMobile">
+                  {{ getPrimaryReaction(shopping) }}
+                </span> -->
+                </button>
+              </div>
+              <div>
+                <button class="action-btn like-btn">
+                  <svg
+                    width="33"
+                    height="32"
+                    viewBox="0 0 33 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M14.9 29.4667C14.5133 29.4667 14.1267 29.4 13.7667 29.2667C12.1 28.72 11.0333 26.88 11.4067 25.1733L12.06 20.9733C12.0733 20.88 12.0733 20.7467 11.98 20.64C11.9133 20.5733 11.82 20.5333 11.7133 20.5333H6.38C5.07333 20.5333 3.94 19.9867 3.27333 19.04C2.62 18.12 2.48667 16.9067 2.91333 15.7333L6.1 6.02666C6.59333 4.09333 8.66 2.53333 10.7933 2.53333H15.86C16.6067 2.53333 18.2333 2.75999 19.1 3.62666L23.14 6.74666L21.9133 8.33333L17.78 5.13333C17.4467 4.79999 16.6067 4.53333 15.86 4.53333H10.7933C9.59333 4.53333 8.3 5.49332 8.03333 6.57333L4.80667 16.3733C4.59333 16.96 4.63333 17.4933 4.91333 17.88C5.20667 18.2933 5.74 18.5333 6.39333 18.5333H11.7267C12.42 18.5333 13.06 18.8267 13.5 19.3333C13.9533 19.8533 14.1533 20.5467 14.0467 21.2667L13.38 25.5467C13.22 26.2933 13.7267 27.1333 14.4467 27.3733C15.0867 27.6133 15.94 27.2667 16.2333 26.84L21.7 18.7067L23.3533 19.8267L17.8867 27.96C17.26 28.8933 16.0733 29.4667 14.9 29.4667Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M26.66 24.1333H25.3267C22.86 24.1333 21.66 22.9733 21.66 20.6V7.53333C21.66 5.16 22.86 4 25.3267 4H26.66C29.1267 4 30.3267 5.16 30.3267 7.53333V20.6C30.3267 22.9733 29.1267 24.1333 26.66 24.1333ZM25.3267 6C23.8733 6 23.66 6.34667 23.66 7.53333V20.6C23.66 21.7867 23.8733 22.1333 25.3267 22.1333H26.66C28.1133 22.1333 28.3267 21.7867 28.3267 20.6V7.53333C28.3267 6.34667 28.1133 6 26.66 6H25.3267Z"
+                      fill="white"
+                    />
+                  </svg>
+
+                  <span class="d-block d-sm-none">{{
+                    getTotalReactions(shopping)
+                  }}</span>
+
+                  <!-- <span class="reactionMobile">
+                  Dislike
+                </span> -->
+                </button>
+              </div>
+              <button
+                class="action-btn comment-btn"
+                (click)="toggleComments(shopping, $event)"
+              >
+                <!-- <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span> -->
+                <svg
                   width="33"
                   height="32"
                   viewBox="0 0 33 32"
@@ -220,97 +302,80 @@
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M22.2067 29.4667H17.14C16.3933 29.4667 14.7667 29.24 13.9 28.3733L9.86 25.2533L11.0867 23.6667L15.22 26.8667C15.5533 27.1867 16.3933 27.4533 17.14 27.4533H22.2067C23.4067 27.4533 24.7 26.4933 24.9667 25.4133L28.1933 15.6133C28.4067 15.0267 28.3667 14.4933 28.0867 14.1067C27.7933 13.6933 27.26 13.4533 26.6067 13.4533H21.2733C20.58 13.4533 19.94 13.16 19.5 12.6533C19.0467 12.1333 18.8467 11.44 18.9533 10.72L19.62 6.44C19.78 5.69333 19.2733 4.85333 18.5533 4.61333C17.9 4.37333 17.06 4.72 16.7667 5.14666L11.3 13.28L9.64667 12.1733L15.1133 4.04C15.9533 2.78666 17.7933 2.18666 19.2333 2.73333C20.9 3.28 21.9667 5.12 21.5933 6.82666L20.94 11.0267C20.9267 11.12 20.9267 11.2533 21.02 11.36C21.0867 11.4267 21.18 11.4667 21.2867 11.4667H26.62C27.9267 11.4667 29.06 12.0133 29.7267 12.96C30.38 13.88 30.5133 15.0933 30.0867 16.2667L26.9 25.9733C26.4067 27.9067 24.3533 29.4667 22.2067 29.4667Z"
+                    d="M24.3268 29.16C23.9134 29.16 23.5001 29.0533 23.1268 28.8266L17.7801 25.6533C17.2201 25.64 16.6601 25.6 16.1268 25.52C15.7668 25.4667 15.4601 25.2266 15.3268 24.8799C15.1934 24.5333 15.2601 24.1599 15.5001 23.8799C16.3801 22.8533 16.8334 21.6266 16.8334 20.32C16.8334 17.0933 13.9934 14.4666 10.5001 14.4666C9.19343 14.4666 7.94009 14.8267 6.88676 15.52C6.59343 15.7067 6.23343 15.7333 5.91343 15.5866C5.60677 15.44 5.38011 15.1466 5.34011 14.7999C5.30011 14.4266 5.27344 14.0533 5.27344 13.6666C5.27344 7.05331 11.0068 1.67999 18.0468 1.67999C25.0868 1.67999 30.8201 7.05331 30.8201 13.6666C30.8201 17.2933 29.1401 20.6266 26.1801 22.9066L26.6334 26.5333C26.7401 27.44 26.3401 28.2934 25.5801 28.7867C25.2068 29.0267 24.7668 29.16 24.3268 29.16ZM18.0334 23.64C18.2201 23.6266 18.4068 23.68 18.5668 23.7867L24.1534 27.1067C24.3001 27.2 24.4201 27.16 24.5001 27.1067C24.5668 27.0667 24.6734 26.96 24.6468 26.7733L24.1268 22.56C24.0868 22.1866 24.2468 21.8267 24.5401 21.6133C27.2601 19.7067 28.8201 16.8 28.8201 13.64C28.8201 8.13329 23.9934 3.6533 18.0468 3.6533C12.3268 3.6533 7.63343 7.81335 7.28676 13.04C8.28676 12.6534 9.36678 12.44 10.4868 12.44C15.0868 12.44 18.8201 15.9599 18.8201 20.2933C18.8334 21.4666 18.5534 22.6 18.0334 23.64Z"
                     fill="white"
                   />
                   <path
-                    d="M7.67334 28H6.34001C3.87334 28 2.67334 26.84 2.67334 24.4667V11.4C2.67334 9.02667 3.87334 7.86667 6.34001 7.86667H7.67334C10.14 7.86667 11.34 9.02667 11.34 11.4V24.4667C11.34 26.84 10.14 28 7.67334 28ZM6.34001 9.86667C4.88667 9.86667 4.67334 10.2133 4.67334 11.4V24.4667C4.67334 25.6533 4.88667 26 6.34001 26H7.67334C9.12667 26 9.34001 25.6533 9.34001 24.4667V11.4C9.34001 10.2133 9.12667 9.86667 7.67334 9.86667H6.34001Z"
+                    d="M6.60636 30.3334C6.2597 30.3334 5.92636 30.2401 5.61969 30.0401C5.01969 29.6534 4.6997 28.9868 4.7797 28.2801L5.04637 26.2267C3.24637 24.76 2.17969 22.5867 2.17969 20.3067C2.17969 17.7067 3.5397 15.2801 5.8197 13.8267C7.19304 12.9334 8.81969 12.4534 10.513 12.4534C15.113 12.4534 18.8464 15.9734 18.8464 20.3067C18.8464 22.0667 18.2064 23.8001 17.033 25.1734C15.5264 27.0001 13.273 28.0667 10.793 28.1467L7.53969 30.0801C7.24636 30.2534 6.92636 30.3334 6.60636 30.3334ZM10.4997 14.4534C9.19303 14.4534 7.93969 14.8134 6.88635 15.5067C5.17969 16.6001 4.16636 18.3867 4.16636 20.3067C4.16636 22.16 5.07303 23.8534 6.67303 24.9468C6.9797 25.1601 7.13969 25.52 7.09969 25.8934L6.80636 28.1734L9.99302 26.2801C10.153 26.1868 10.3264 26.1334 10.4997 26.1334C12.4597 26.1334 14.313 25.2934 15.4864 23.8668C16.3664 22.8268 16.833 21.6 16.833 20.2934C16.833 17.08 13.993 14.4534 10.4997 14.4534Z"
                     fill="white"
                   />
                 </svg>
-
-                <span class="d-block d-sm-block">{{
-                  getTotalReactions(shopping)
-                }}</span>
-
-                <!-- <span class="reactionMobile">
-                  {{ getPrimaryReaction(shopping) }}
-                </span> -->
+                <span class="reactionMobile"> {{ shopping.ShoppingCenter.Comments?.length }} </span>
               </button>
-
-              
-            </div>
-            <div>
-              <button class="action-btn like-btn">
-                <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14.9 29.4667C14.5133 29.4667 14.1267 29.4 13.7667 29.2667C12.1 28.72 11.0333 26.88 11.4067 25.1733L12.06 20.9733C12.0733 20.88 12.0733 20.7467 11.98 20.64C11.9133 20.5733 11.82 20.5333 11.7133 20.5333H6.38C5.07333 20.5333 3.94 19.9867 3.27333 19.04C2.62 18.12 2.48667 16.9067 2.91333 15.7333L6.1 6.02666C6.59333 4.09333 8.66 2.53333 10.7933 2.53333H15.86C16.6067 2.53333 18.2333 2.75999 19.1 3.62666L23.14 6.74666L21.9133 8.33333L17.78 5.13333C17.4467 4.79999 16.6067 4.53333 15.86 4.53333H10.7933C9.59333 4.53333 8.3 5.49332 8.03333 6.57333L4.80667 16.3733C4.59333 16.96 4.63333 17.4933 4.91333 17.88C5.20667 18.2933 5.74 18.5333 6.39333 18.5333H11.7267C12.42 18.5333 13.06 18.8267 13.5 19.3333C13.9533 19.8533 14.1533 20.5467 14.0467 21.2667L13.38 25.5467C13.22 26.2933 13.7267 27.1333 14.4467 27.3733C15.0867 27.6133 15.94 27.2667 16.2333 26.84L21.7 18.7067L23.3533 19.8267L17.8867 27.96C17.26 28.8933 16.0733 29.4667 14.9 29.4667Z" fill="white"/>
-                <path d="M26.66 24.1333H25.3267C22.86 24.1333 21.66 22.9733 21.66 20.6V7.53333C21.66 5.16 22.86 4 25.3267 4H26.66C29.1267 4 30.3267 5.16 30.3267 7.53333V20.6C30.3267 22.9733 29.1267 24.1333 26.66 24.1333ZM25.3267 6C23.8733 6 23.66 6.34667 23.66 7.53333V20.6C23.66 21.7867 23.8733 22.1333 25.3267 22.1333H26.66C28.1133 22.1333 28.3267 21.7867 28.3267 20.6V7.53333C28.3267 6.34667 28.1133 6 26.66 6H25.3267Z" fill="white"/>
-                </svg>
-                
-
-                <span class="d-block d-sm-none">{{
-                  getTotalReactions(shopping)
-                }}</span>
-
-                <!-- <span class="reactionMobile">
-                  Dislike
-                </span> -->
-              </button>
-            </div>
-            <button
-              class="action-btn comment-btn"
-              (click)="toggleComments(shopping)"
-            >
-              <!-- <i class="far fa-comment"></i> <span class="d-block d-sm-none" > {{ comments[shopping.Id]?.length || 0 }} </span> -->
-              <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24.3268 29.16C23.9134 29.16 23.5001 29.0533 23.1268 28.8266L17.7801 25.6533C17.2201 25.64 16.6601 25.6 16.1268 25.52C15.7668 25.4667 15.4601 25.2266 15.3268 24.8799C15.1934 24.5333 15.2601 24.1599 15.5001 23.8799C16.3801 22.8533 16.8334 21.6266 16.8334 20.32C16.8334 17.0933 13.9934 14.4666 10.5001 14.4666C9.19343 14.4666 7.94009 14.8267 6.88676 15.52C6.59343 15.7067 6.23343 15.7333 5.91343 15.5866C5.60677 15.44 5.38011 15.1466 5.34011 14.7999C5.30011 14.4266 5.27344 14.0533 5.27344 13.6666C5.27344 7.05331 11.0068 1.67999 18.0468 1.67999C25.0868 1.67999 30.8201 7.05331 30.8201 13.6666C30.8201 17.2933 29.1401 20.6266 26.1801 22.9066L26.6334 26.5333C26.7401 27.44 26.3401 28.2934 25.5801 28.7867C25.2068 29.0267 24.7668 29.16 24.3268 29.16ZM18.0334 23.64C18.2201 23.6266 18.4068 23.68 18.5668 23.7867L24.1534 27.1067C24.3001 27.2 24.4201 27.16 24.5001 27.1067C24.5668 27.0667 24.6734 26.96 24.6468 26.7733L24.1268 22.56C24.0868 22.1866 24.2468 21.8267 24.5401 21.6133C27.2601 19.7067 28.8201 16.8 28.8201 13.64C28.8201 8.13329 23.9934 3.6533 18.0468 3.6533C12.3268 3.6533 7.63343 7.81335 7.28676 13.04C8.28676 12.6534 9.36678 12.44 10.4868 12.44C15.0868 12.44 18.8201 15.9599 18.8201 20.2933C18.8334 21.4666 18.5534 22.6 18.0334 23.64Z" fill="white"/>
-                <path d="M6.60636 30.3334C6.2597 30.3334 5.92636 30.2401 5.61969 30.0401C5.01969 29.6534 4.6997 28.9868 4.7797 28.2801L5.04637 26.2267C3.24637 24.76 2.17969 22.5867 2.17969 20.3067C2.17969 17.7067 3.5397 15.2801 5.8197 13.8267C7.19304 12.9334 8.81969 12.4534 10.513 12.4534C15.113 12.4534 18.8464 15.9734 18.8464 20.3067C18.8464 22.0667 18.2064 23.8001 17.033 25.1734C15.5264 27.0001 13.273 28.0667 10.793 28.1467L7.53969 30.0801C7.24636 30.2534 6.92636 30.3334 6.60636 30.3334ZM10.4997 14.4534C9.19303 14.4534 7.93969 14.8134 6.88635 15.5067C5.17969 16.6001 4.16636 18.3867 4.16636 20.3067C4.16636 22.16 5.07303 23.8534 6.67303 24.9468C6.9797 25.1601 7.13969 25.52 7.09969 25.8934L6.80636 28.1734L9.99302 26.2801C10.153 26.1868 10.3264 26.1334 10.4997 26.1334C12.4597 26.1334 14.313 25.2934 15.4864 23.8668C16.3664 22.8268 16.833 21.6 16.833 20.2934C16.833 17.08 13.993 14.4534 10.4997 14.4534Z" fill="white"/>
-                </svg>
-                              <span class="reactionMobile"> Comment </span>
-            </button>
-            <button
-              class="action-btn share-btn"
-              (click)="openContactsModal(contactsModal)"
-            >
-            <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19.46 28.84C17.8867 28.84 15.66 27.7333 13.9 22.44L12.94 19.56L10.06 18.6C4.78001 16.84 3.67334 14.6133 3.67334 13.04C3.67334 11.48 4.78001 9.23997 10.06 7.46664L21.38 3.69331C24.2067 2.74664 26.5667 3.02664 28.02 4.46664C29.4733 5.90664 29.7533 8.27997 28.8067 11.1066L25.0333 22.4266C23.26 27.7333 21.0333 28.84 19.46 28.84ZM10.6867 9.37331C6.98001 10.6133 5.66001 12.08 5.66001 13.04C5.66001 14 6.98001 15.4666 10.6867 16.6933L14.0467 17.8133C14.34 17.9066 14.58 18.1466 14.6733 18.44L15.7933 21.8C17.02 25.5066 18.5 26.8266 19.46 26.8266C20.42 26.8266 21.8867 25.5066 23.1267 21.8L26.9 10.48C27.58 8.42664 27.46 6.74664 26.5933 5.87997C25.7267 5.01331 24.0467 4.90664 22.0067 5.58664L10.6867 9.37331Z" fill="white"/>
-              <path d="M13.98 19.2C13.7267 19.2 13.4733 19.1067 13.2733 18.9067C12.8867 18.52 12.8867 17.88 13.2733 17.4934L18.0467 12.7067C18.4333 12.32 19.0733 12.32 19.46 12.7067C19.8467 13.0934 19.8467 13.7334 19.46 14.12L14.6867 18.9067C14.5 19.1067 14.2333 19.2 13.98 19.2Z" fill="white"/>
-              </svg>
-                            <span class="share"> Share </span>
-            </button>
-          </div>
-          <div class="comments-section" *ngIf="showComments[shopping.Id]">
-            <div class="comment-input">
-              <input
-                type="text"
-                placeholder="Write a comment..."
-                [(ngModel)]="newComments[shopping.MarketSurveyId]"
-              />
               <button
-                class="post-comment-btn"
-                (click)="addComment(shopping, shopping.MarketSurveyId)"
+                class="action-btn share-btn"
+                (click)="openContactsModal(contactsModal)"
               >
-                Comment
+                <svg
+                  width="33"
+                  height="32"
+                  viewBox="0 0 33 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19.46 28.84C17.8867 28.84 15.66 27.7333 13.9 22.44L12.94 19.56L10.06 18.6C4.78001 16.84 3.67334 14.6133 3.67334 13.04C3.67334 11.48 4.78001 9.23997 10.06 7.46664L21.38 3.69331C24.2067 2.74664 26.5667 3.02664 28.02 4.46664C29.4733 5.90664 29.7533 8.27997 28.8067 11.1066L25.0333 22.4266C23.26 27.7333 21.0333 28.84 19.46 28.84ZM10.6867 9.37331C6.98001 10.6133 5.66001 12.08 5.66001 13.04C5.66001 14 6.98001 15.4666 10.6867 16.6933L14.0467 17.8133C14.34 17.9066 14.58 18.1466 14.6733 18.44L15.7933 21.8C17.02 25.5066 18.5 26.8266 19.46 26.8266C20.42 26.8266 21.8867 25.5066 23.1267 21.8L26.9 10.48C27.58 8.42664 27.46 6.74664 26.5933 5.87997C25.7267 5.01331 24.0467 4.90664 22.0067 5.58664L10.6867 9.37331Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M13.98 19.2C13.7267 19.2 13.4733 19.1067 13.2733 18.9067C12.8867 18.52 12.8867 17.88 13.2733 17.4934L18.0467 12.7067C18.4333 12.32 19.0733 12.32 19.46 12.7067C19.8467 13.0934 19.8467 13.7334 19.46 14.12L14.6867 18.9067C14.5 19.1067 14.2333 19.2 13.98 19.2Z"
+                    fill="white"
+                  />
+                </svg>
+                <span class="share"> Share </span>
               </button>
             </div>
+            <div
+              class="comments-section"
+              *ngIf="showComments[shopping.Id]"
+              #commentsContainer
+              (click)="$event.stopPropagation()"
+            >
+              <div class="comment-input">
+                <input
+                  type="text"
+                  placeholder="Write a comment..."
+                  [(ngModel)]="newComments[shopping.MarketSurveyId]"
+                />
+                <button
+                  class="post-comment-btn"
+                  (click)="addComment(shopping, shopping.MarketSurveyId)"
+                >
+                  Comment
+                </button>
+              </div>
 
-            <ul class="comment-list">
-              <ng-container
-                *ngFor="let comment of shopping.ShoppingCenter.Comments"
-              >
-                <li>
-                  <div class="comment-content d-flex justify-content-between">
-                    <p>{{ comment.Comment }}</p>
-                    <p>{{ comment.CommentDate | date }}</p>
-                    <!-- <button
+              <ul class="comment-list">
+                <ng-container 
+                  *ngFor="
+                    let comment of sortCommentsByDate(
+                      shopping.ShoppingCenter.Comments
+                    )
+                  "
+                >
+                  <li>
+                    <div class="comment-content d-flex justify-content-between">
+                      <p>{{ comment.Comment }}</p>
+                      <p>{{ comment.CommentDate | date }}</p>
+                      <!-- <button
                           class="reply-btn"
                           (click)="toggleReply(shopping.MarketSurveyId, comment.id)"
                         >
                           Reply
                         </button> -->
-                  </div>
+                    </div>
 
-                  <!-- <div
+                    <!-- <div
                         class="reply-input"
                         *ngIf="replyingTo[shopping.MarketSurveyId] === comment.id"
                       >
@@ -327,7 +392,7 @@
                         </button>
                       </div> -->
 
-                  <!-- <ul
+                    <!-- <ul
                         class="reply-list"
                         *ngIf="comment.replies && comment.replies.length > 0"
                       >
@@ -338,14 +403,48 @@
                           </div>
                         </li>
                       </ul> -->
-                </li>
-              </ng-container>
-            </ul>
+                  </li>
+                </ng-container>
+              </ul>
+            </div>
           </div>
         </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+  <div class="row d-sm-none fixed-bottom-mobile">
+    <div class="col-12 d-flex justify-content-around align-items-center">
+      <div class="custom-icon-container">
+        <div
+          class="icon-option"
+          *ngFor="let option of dropdowmOptions"
+          (click)="selectOption(option)"
+          [class.selected]="
+            selectedOption === option.status || selectedOption === option
+          "
+          [ngClass]="{
+            'hide-on-mobile':
+              option.text === 'Table View' || option.text === 'Side List View'
+          }"
+        >
+          <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+        </div>
       </div>
-    </ng-template>
-  </p-carousel>
+      <div class="options-menu">
+        <button (click)="toggleMenu()" class="options-icon">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+        <ul class="options-list" [class.show]="isOpen">
+          <li *ngFor="let tab of tabs"
+              [class.active]="selectedTab === tab.id"
+              (click)="selectTab(tab.id)">
+            {{ tab.label }}
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </div>
 </ng-container>
 <div class="row whitee">
   <ng-container *ngIf="currentView == 4">
@@ -686,6 +785,26 @@
         </table>
       </div>
     </div>
+    <div class="row d-sm-none fixed-bottom-mobile">
+      <div class="col-12 d-flex justify-content-around align-items-center">
+        <div class="custom-icon-container">
+          <div
+            class="icon-option"
+            *ngFor="let option of dropdowmOptions"
+            (click)="selectOption(option)"
+            [class.selected]="
+              selectedOption === option.status || selectedOption === option
+            "
+            [ngClass]="{
+              'hide-on-mobile':
+                option.text === 'Table View' || option.text === 'Side List View'
+            }"
+          >
+            <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="pt-2 d-flex justify-content-center align-items-center heightt" *ngIf="shoppingCenters?.length == 0">
       <p class="fontweight">No data Shopping Center</p>
@@ -995,6 +1114,7 @@
             <p class="Button_cancel" (click)="CancelDelete()">Cancel</p>
           </div>
         </div>
+        
         <ng-container *ngFor="let place of cardsSideList">
           <div
             class="card-window cursor"
@@ -1300,6 +1420,26 @@
         </ng-container>
       </ng-container>
     </div>
+    <div class="row d-sm-none fixed-bottom-mobile">
+      <div class="col-12 d-flex justify-content-around align-items-center">
+        <div class="custom-icon-container">
+          <div
+            class="icon-option"
+            *ngFor="let option of dropdowmOptions"
+            (click)="selectOption(option)"
+            [class.selected]="
+              selectedOption === option.status || selectedOption === option
+            "
+            [ngClass]="{
+              'hide-on-mobile':
+                option.text === 'Table View' || option.text === 'Side List View'
+            }"
+          >
+            <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div
     class="p-0"
@@ -1310,6 +1450,26 @@
     }"
   >
     <div id="map" class="custom-map"></div>
+    <div class="row d-sm-none fixed-bottom-mobile">
+      <div class="col-12 d-flex justify-content-around align-items-center">
+        <div class="custom-icon-container">
+          <div
+            class="icon-option"
+            *ngFor="let option of dropdowmOptions"
+            (click)="selectOption(option)"
+            [class.selected]="
+              selectedOption === option.status || selectedOption === option
+            "
+            [ngClass]="{
+              'hide-on-mobile':
+                option.text === 'Table View' || option.text === 'Side List View'
+            }"
+          >
+            <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

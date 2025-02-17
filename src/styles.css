@@ -869,3 +869,8 @@ p {
     border-radius: 20px;
   }
 }
+@media (min-width: 769px) {
+.p-carousel-items-container{
+  display: contents !important;
+}
+}
