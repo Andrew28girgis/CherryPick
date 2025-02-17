@@ -428,19 +428,7 @@
         >
           <img [src]="option.icon" [alt]="option.text" class="icon-image" />
         </div>
-      </div>
-      <div class="options-menu">
-        <button (click)="toggleMenu()" class="options-icon">
-          <i class="fas fa-ellipsis-v"></i>
-        </button>
-        <ul class="options-list" [class.show]="isOpen">
-          <li *ngFor="let tab of tabs"
-              [class.active]="selectedTab === tab.id"
-              (click)="selectTab(tab.id)">
-            {{ tab.label }}
-          </li>
-        </ul>
-      </div>
+      </div> 
       
     </div>
   </div>
