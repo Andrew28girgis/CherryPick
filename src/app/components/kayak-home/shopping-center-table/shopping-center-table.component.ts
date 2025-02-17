@@ -82,12 +82,12 @@ export class ShoppingCenterTableComponent implements OnInit {
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
-    
-    // {
-    //   text: 'Social View',
-    //   icon: '../../../assets/Images/Icons/globe-solid.svg',
-    //   status: 5,
-    // },
+
+    {
+      text: 'Social View',
+      icon: '../../../assets/Images/Icons/globe-solid.svg',
+      status: 5,
+    },
   ];
   isOpen = false;
   allPlaces!: AllPlaces;
