@@ -57,17 +57,9 @@ export class BuyboxDetailsComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data:any) => {
-        this.buybox = data.json;
-        // console.log(`bb`);
-        // console.log(this.buybox);
-        
-        
-
-        // console.log(this.buybox );
-        
+        this.buybox = data.json; 
         this.managerOrganizationId=data.json.ManagerOrganizationId;
         this.organizationId=data.json.OrganizationId;
-        //  console.log('Buybox data:', this.buybox);
       },
       error: (err) => {
         console.error('Error fetching buybox info:', err);

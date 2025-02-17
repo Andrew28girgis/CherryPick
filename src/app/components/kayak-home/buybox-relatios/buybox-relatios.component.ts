@@ -1,13 +1,8 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ApiBody, General } from 'src/models/domain';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
-import * as bootstrap from 'bootstrap';
-import { BuyBoxModel } from 'src/models/BuyBoxModel';
-import { Organization, RetailRelation, StateCity } from 'src/models/buyboxShoppingCenter';
-import { Subject } from 'rxjs';
+import { Organization, RetailRelation } from 'src/models/buyboxShoppingCenter';
 
 @Component({
   selector: 'app-buybox-relatios',
