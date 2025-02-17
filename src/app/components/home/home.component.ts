@@ -1,11 +1,9 @@
-
 import {
   Component,
   OnInit,
   NgZone,
   ViewChild,
   ElementRef,
-  TemplateRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms'; // <-- Import NgForm
 import { ActivatedRoute, Router } from '@angular/router';
@@ -95,8 +93,7 @@ export class HomeComponent implements OnInit {
   selectedSS!: any;
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
-  buyboxCategories: BuyboxCategory[] = [];
-  showShoppingCenters: boolean = true; // Ensure this reflects your initial state
+  buyboxCategories: BuyboxCategory[] = []; 
   shoppingCenters: Center[] = [];
   navbarOpen: any; 
   OrganizationContacts: any[] = [];
@@ -106,20 +103,7 @@ export class HomeComponent implements OnInit {
     lastName: '',
     email: '',
     password: '',
-  };
-  showbackIds: number[] = [];
-  showbackIdsJoin: any; 
-  selectedId: number | null = null; 
-
-  toggleNavbar() {
-    this.navbarOpen = !this.navbarOpen;
-  }
-
-  toggleShoppingCenters() {
-    this.showShoppingCenters = !this.showShoppingCenters;
-  }
-
-  standAlone: Place[] = [];
+  }; 
   buyboxPlaces: BbPlace[] = [];
   Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
@@ -127,6 +111,12 @@ export class HomeComponent implements OnInit {
   BuyBoxName: string = '';
   Permission: permission[] = [];
   placesRepresentative: boolean | undefined;
+
+  toggleNavbar() {
+    this.navbarOpen = !this.navbarOpen;
+  }
+
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -163,8 +153,7 @@ export class HomeComponent implements OnInit {
 
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
-    }
-    // this.GetBuyboxRelations();
+    } 
     // this.GetPolygons(this.BuyBoxId);
   }
 
@@ -938,18 +927,6 @@ export class HomeComponent implements OnInit {
   setDefaultView(viewValue: number) {
     this.selectedSS = viewValue;
     this.stateService.setSelectedSS(viewValue);
-  }
-
-  GetBuyboxRelations() {
-    let body = {
-      Name: 'GetBuyboxRelations',
-      Params: {
-        BuyBoxId: this.BuyBoxId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe((data) => {
-      console.log(data);
-    });
   }
 
 
