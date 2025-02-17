@@ -34,8 +34,6 @@
   }
 }
 
-
-
 .shortcuts_iconCard {
   top: -22%;
 }
@@ -612,7 +610,7 @@ img[alt="logo"] {
 
 .reaction-buttons {
   position: relative;
-} 
+}
 
 .reaction-buttons {
   position: relative;
@@ -714,7 +712,7 @@ img[alt="logo"] {
   .comment-content p {
     font-size: 0.85rem;
   }
-} 
+}
 
 @media (min-width: 769px) {
   .card-container {
@@ -726,15 +724,15 @@ img[alt="logo"] {
     scroll-behavior: smooth;
   }
 
-  .social-card { 
+  .social-card {
     width: 60%;
     /* height: 100%; */
     position: relative;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     box-shadow: none;
-    margin: 0; 
-    scroll-snap-align: start;  
+    margin: 0;
+    scroll-snap-align: start;
     scroll-snap-stop: always;
   }
 
@@ -778,7 +776,7 @@ img[alt="logo"] {
     transform: translateY(-50%);
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
     background: none;
     border: none;
     padding: 0;
@@ -803,7 +801,7 @@ img[alt="logo"] {
 
   .action-btn .reactionMobile {
     font-size: 12px;
-  } 
+  }
   /* Comments section adjustments */
   .comments-section {
     position: fixed;
@@ -919,6 +917,7 @@ img[alt="logo"] {
   .reaction-options {
     left: 50%;
     transform: translateX(-50%);
+
   }
 
   .social-card {
@@ -991,11 +990,11 @@ img[alt="logo"] {
   .card-footer {
     position: absolute;
     right: 16px;
-    top: 50%;
+    top: 74%;
     transform: translateY(-50%);
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
     background: none;
     border: none;
     padding: 0;
@@ -1020,6 +1019,7 @@ img[alt="logo"] {
 
   .action-btn .reactionMobile {
     font-size: 12px;
+
   }
 
   /* Hide unnecessary elements */
@@ -1056,20 +1056,19 @@ img[alt="logo"] {
     z-index: 0;
   }
 
-
   :host ::ng-deep .p-carousel {
     width: 100%;
     height: 100vh;
   }
-  
+
   :host ::ng-deep .p-carousel .p-carousel-content {
     height: 100%;
   }
-  
+
   :host ::ng-deep .p-carousel .p-carousel-container {
     height: 100%;
   }
-  
+
   :host ::ng-deep .p-carousel-item {
     display: flex;
     justify-content: center;
@@ -1078,13 +1077,13 @@ img[alt="logo"] {
   }
   :host ::ng-deep .p-carousel-prev,
   :host ::ng-deep .p-carousel-next {
-    display: none  !important;
+    display: none !important;
   }
-   .p-carousel-prev,
-   .p-carousel-next {
-    display: none  !important;
-  }  
-  
+  .p-carousel-prev,
+  .p-carousel-next {
+    display: none !important;
+  }
+
   .social-card {
     width: 100%;
     /* height: 100%; */
@@ -1094,11 +1093,11 @@ img[alt="logo"] {
     background-size: cover;
     background-position: center;
   }
-  
+
   :host ::ng-deep .p-carousel-indicators {
     display: none;
   }
-  
+
   /* ... rest of your existing styles ... */
 }
 
@@ -1141,13 +1140,30 @@ img[alt="logo"] {
   }
 }
 
-
-
 :host ::ng-deep .p-carousel-prev,
 :host ::ng-deep .p-carousel-next {
-  display: none  !important;
+  display: none !important;
 }
- .p-carousel-prev,
- .p-carousel-next {
-  display: none  !important;
-}  
+.p-carousel-prev,
+.p-carousel-next {
+  display: none !important;
+}
+
+.share{
+  display: flex;
+  padding: 0px var(--Space-Space-4, 4px);
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--Radius-Radius-12, 12px);
+  background: var(--Card-Section-BG, #fff);
+  color: var(--Colors-Primary-500, #001F3F);
+text-align: center;
+
+/* Body/12/20/Regular */
+font-family: Montserrat;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 20px; /* 166.667% */
+}
