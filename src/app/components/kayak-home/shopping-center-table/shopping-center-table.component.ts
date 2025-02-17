@@ -8,6 +8,7 @@ import {
   Output,
   EventEmitter,
   HostListener,
+  Renderer2
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -51,6 +52,7 @@ interface Comment {
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mainContainer') mainContainer!: ElementRef;
+  @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   shoppingCenter: any;
   selectedView = 'shoppingCenters';
   General!: General;
@@ -81,6 +83,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       text: 'Table View',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
+      
     },
 
     {
@@ -153,8 +156,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   sanitizedUrl!: any;
   responsiveOptions: any[];
   isMobile = false
-
+  private globalClickListener: (() => void) | undefined;
   constructor(
+    private renderer: Renderer2,
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private modalService: NgbModal,
@@ -165,6 +169,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
+    
     this.currentView = localStorage.getItem('currentView') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
@@ -172,17 +177,23 @@ export class ShoppingCenterTableComponent implements OnInit {
       {
         breakpoint: '1024px',
         numVisible: 1,
-        numScroll: 1
+        numScroll: 1,
+        effect: 'fade'
+
       },
       {
         breakpoint: '768px',
         numVisible: 1,
-        numScroll: 1
+        numScroll: 1,
+        effect: 'fade'
+
       },
       {
         breakpoint: '560px',
         numVisible: 1,
-        numScroll: 1
+        numScroll: 1,
+        effect: 'fade'
+
       }
     ];
   }
@@ -212,6 +223,31 @@ export class ShoppingCenterTableComponent implements OnInit {
 
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // Listen for clicks on the document
+    this.globalClickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
+      // If the container exists and the click target is not inside it...
+      if (this.commentsContainer && !this.commentsContainer.nativeElement.contains(event.target)) {
+        // Hide all comments lists (or adjust logic to hide only the currently open one)
+        this.hideAllComments();
+      }
+    });
+  }
+  hideAllComments(): void {
+    // Example: Hide comments for all shopping items.
+    for (const key in this.showComments) {
+      if (this.showComments.hasOwnProperty(key)) {
+        this.showComments[key] = false;
+      }
+    }
+  }
+  ngOnDestroy(): void {
+    // Remove the event listener to avoid memory leaks
+    if (this.globalClickListener) {
+      this.globalClickListener();
     }
   }
 
@@ -966,7 +1002,8 @@ export class ShoppingCenterTableComponent implements OnInit {
     return this.reactions[shopping.Id] || 'Like';
   }
 
-  toggleComments(shopping: any): void {
+  toggleComments(shopping: any, event: MouseEvent): void {
+    event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
 
@@ -987,6 +1024,8 @@ export class ShoppingCenterTableComponent implements OnInit {
             Comment: this.newComments[marketSurveyId],
             CommentDate: new Date().toISOString(),
           });
+          shopping.ShoppingCenter.Comments = this.sortCommentsByDate(shopping.ShoppingCenter.Comments);
+
         },
       });
     }
@@ -1125,5 +1164,11 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   get carouselHeight(): string {
     return this.isMobile ? "100vh" : `${this.shoppingCenters.length * 70}vh`
+  }
+  closeComments(shopping: any): void {
+    this.showComments[shopping.Id] = false;
+  }
+  sortCommentsByDate(comments: any[]): any[] {
+    return comments.sort((a, b) => new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime());
   }
 }
