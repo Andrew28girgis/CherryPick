@@ -35,6 +35,7 @@ import {
   BuyBoxCityState,
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
+import { Enriche } from 'src/models/enriche';
 
 interface Comment {
   id: number;
@@ -157,6 +158,10 @@ export class ShoppingCenterTableComponent implements OnInit {
   isMobile = false;
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
+  enriche!: Enriche;
+  ShoppingCenterId!: number;
+  placeImage: string[] = [];
+
   private globalClickListener: (() => void) | undefined;
   constructor(
     private renderer: Renderer2,
@@ -229,7 +234,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
-
   }
 
   ngAfterViewInit(): void {
@@ -390,7 +394,9 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.shoppingCenters = this.stateService.getShoppingCenters();
       return;
     }
-
+    if (this.shoppingCenters.length > 0) {
+      this.fetchImages(this.shoppingCenters[0]);
+    }
     this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
@@ -1188,8 +1194,59 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.activeComponent = tabId;
   }
   toggleMenu() {
-    this.isOpen = !this.isOpen
+    this.isOpen = !this.isOpen;
   }
 
+  @ViewChild('galleryModal', { static: true }) galleryModal: any;
+  openGallery() {
+    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
+  }
+  open(content: any, modalObject?: any) {
+    this.enriche = new Enriche();
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.enriche.taskId = modalObject;
+  }
+  submitEnriche() {
+    const body: any = {
+      Name: 'CreateEnrichmentRequest',
+      Params: {
+        taskid: this.enriche.taskId,
+        shoppingcenterid: +this.ShoppingCenterId,
+        context: this.enriche.context,
+        url: this.enriche.url,
+      },
+    };
 
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.uploadFile(data.json[0].requestId);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+  onFileChange(event: any) {
+    if (event.target.files && event.target.files.length) {
+      this.enriche.file = event.target.files[0];
+    }
+  }
+
+  uploadFile(id: number) {
+    const formData = new FormData();
+    formData.append('file', this.enriche.file);
+    this.PlacesService.UploadFile(formData, id).subscribe({
+      next: (data) => {},
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+  fetchImages(shoppingCenter: any) {
+    if (shoppingCenter && shoppingCenter.Images) {
+      this.placeImage = shoppingCenter.Images.split(",").map((link: string) => link.trim())
+    } else {
+      this.placeImage = []
+    }
+  }
 }
