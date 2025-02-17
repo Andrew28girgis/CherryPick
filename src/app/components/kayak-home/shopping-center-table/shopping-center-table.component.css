@@ -1106,7 +1106,7 @@ img[alt="logo"] {
 
   :host ::ng-deep .p-carousel {
     width: 100%;
-    height: calc(100vh - 58px);
+    height: calc(97vh - 58px);
   }
 
   :host ::ng-deep .p-carousel .p-carousel-content {
