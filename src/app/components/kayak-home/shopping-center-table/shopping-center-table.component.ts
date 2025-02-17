@@ -227,6 +227,9 @@ export class ShoppingCenterTableComponent implements OnInit {
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
     }
+    this.activeComponent = 'Properties';
+    this.selectedTab = 'Properties';
+
   }
 
   ngAfterViewInit(): void {
