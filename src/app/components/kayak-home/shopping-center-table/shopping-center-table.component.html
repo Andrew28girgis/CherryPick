@@ -35,20 +35,21 @@
       [responsiveOptions]="responsiveOptions"
       [showNavigators]="false"
       [showIndicators]="true"
+      [styleClass]="disableCarousel ? 'carousel-disabled' : ''"
+      [disabled]="true"
     >
       <!--autoplayInterval="3000"-->
       <ng-template pTemplate="item" let-shopping>
         <div
-        style="border-radius: 20px !important;"
-          [ngClass]="{
+        class="Res"
+        [ngClass]="{
             'd-sm-flex justify-content-center': !isMobile,
             'w-100': isMobile
           }"
         >
           <div
-            class="social-card mb-0 mb-sm-5"
+            class="social-card mb-0 mb-sm-5 Res" 
             [ngClass]="{ 'full-height': isMobile }"
-            style="border-radius: 20px !important;"
             [style.backgroundImage]="
               'url(' +
               (shopping.MainImage || 'assets/Images/skeltonImage.png') +
@@ -56,7 +57,7 @@
             "
           >
             <div class="card-header">
-              <div class="header-info" style="border-radius: 20px !important;">
+              <div class="header-info Res" >
                 <h3 class="center-name">
                   {{ shopping.CenterName | titlecase }}
                 </h3>
@@ -106,12 +107,10 @@
                 </div>
               </div>
             </div>
-            <div class="card-image" style="border-radius: 20px !important;">
-              <a
-                [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
-              >
+            <div class="card-image Res">
+             
                 <img
-                style="border-radius: 20px !important;"
+                class="Res"
                   [src]="
                     shopping.MainImage && shopping.MainImage !== ''
                       ? shopping.MainImage
@@ -119,13 +118,13 @@
                   "
                   [alt]="shopping.CenterName"
                 />
-              </a>
             </div>
 
             <div class="card-footer">
               <div class="reaction-buttons">
                 <button class="action-btn like-btn">
                   <svg
+                  class="iconResponsive"
                     width="33"
                     height="32"
                     viewBox="0 0 33 32"
@@ -408,7 +407,7 @@
                 </button>
               </div>
 
-              <ul class="comment-list">
+              <ul #commentsList class="comment-list ">
                 <ng-container
                   *ngFor="
                     let comment of sortCommentsByDate(

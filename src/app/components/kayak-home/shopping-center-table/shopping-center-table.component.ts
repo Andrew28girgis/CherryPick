@@ -161,7 +161,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   enriche!: Enriche;
   ShoppingCenterId!: number;
   placeImage: string[] = [];
-
+  disableCarousel: boolean = false;
+  carouselDisabled:boolean=false;
   private globalClickListener: (() => void) | undefined;
   constructor(
     private renderer: Renderer2,
@@ -1024,7 +1025,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
-  }
+    this.carouselDisabled = this.showComments[shopping.Id];
+    }
 
   addComment(shopping: Center, marketSurveyId: number): void {
     if (this.newComments[marketSurveyId]) {
@@ -1249,4 +1251,5 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.placeImage = []
     }
   }
+
 }
