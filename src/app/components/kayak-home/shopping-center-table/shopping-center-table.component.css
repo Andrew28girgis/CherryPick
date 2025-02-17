@@ -1010,7 +1010,7 @@ img[alt="logo"] {
   }
   .header-info {
     position: absolute;
-    bottom: 69px;
+    bottom: 7%;
     left: 16px;
     right: 16px;
     z-index: 2;
