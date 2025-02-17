@@ -5,8 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
 import { AuthGuardService } from './services/auth-guard.service';
-import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
-import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
+ import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KayakComponent } from './components/kayak-home/kayak/kayak.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
@@ -37,8 +36,7 @@ const routes: Routes = [
     component: HomeComponent,
     // canActivate: [AuthGuardService],
   },
-  { path: 'landing/:id/:shoppiongCenterId/:buyboxid', component: LandingComponent },
-  { path: 'organizationDetails/:id', component: OrganizationDetailsComponent },
+  { path: 'landing/:id/:shoppiongCenterId/:buyboxid', component: LandingComponent }, 
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
   {
     path: 'Kanban',

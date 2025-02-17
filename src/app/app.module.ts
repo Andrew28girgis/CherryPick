@@ -19,8 +19,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { TokenInterceptor } from './token.interceptor';
 import { SummeryComponent } from './components/summery/summery.component';
-import { OrganizationsComponent } from './components/organizations/organizations.component';
-import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
@@ -56,9 +54,7 @@ import { TermsComponent } from './components/terms/terms.component';
     NumberFormatDirective,
     LandingComponent,
     NumberWithCommasPipe,
-    SummeryComponent,
-    OrganizationsComponent,
-    OrganizationDetailsComponent,
+    SummeryComponent, 
     CherryExpansionComponent,
     KanbanComponent,
     KanbanHomeComponent,
