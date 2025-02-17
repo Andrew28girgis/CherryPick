@@ -8,7 +8,7 @@ import {
   Output,
   EventEmitter,
   HostListener,
-  Renderer2
+  Renderer2,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -83,7 +83,6 @@ export class ShoppingCenterTableComponent implements OnInit {
       text: 'Table View',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
-      
     },
 
     {
@@ -155,7 +154,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   standAlone: Place[] = [];
   sanitizedUrl!: any;
   responsiveOptions: any[];
-  isMobile = false
+  isMobile = false;
+  activeComponent: string = 'Properties';
+  selectedTab: string = 'Properties';
   private globalClickListener: (() => void) | undefined;
   constructor(
     private renderer: Renderer2,
@@ -169,7 +170,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    
     this.currentView = localStorage.getItem('currentView') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
@@ -178,28 +178,31 @@ export class ShoppingCenterTableComponent implements OnInit {
         breakpoint: '1024px',
         numVisible: 1,
         numScroll: 1,
-        effect: 'fade'
-
+        effect: 'fade',
       },
       {
         breakpoint: '768px',
         numVisible: 1,
         numScroll: 1,
-        effect: 'fade'
-
+        effect: 'fade',
       },
       {
         breakpoint: '560px',
         numVisible: 1,
         numScroll: 1,
-        effect: 'fade'
-
-      }
+        effect: 'fade',
+      },
     ];
   }
+  tabs = [
+    { id: 'Properties', label: 'Properties' },
+    { id: 'Details', label: 'Details' },
+    // { id: 'Manage', label: 'Manage' },
+    { id: 'Emily', label: 'Emily' },
+  ];
 
   ngOnInit(): void {
-    this.checkScreenSize()
+    this.checkScreenSize();
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -228,13 +231,20 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   ngAfterViewInit(): void {
     // Listen for clicks on the document
-    this.globalClickListener = this.renderer.listen('document', 'click', (event: MouseEvent) => {
-      // If the container exists and the click target is not inside it...
-      if (this.commentsContainer && !this.commentsContainer.nativeElement.contains(event.target)) {
-        // Hide all comments lists (or adjust logic to hide only the currently open one)
-        this.hideAllComments();
+    this.globalClickListener = this.renderer.listen(
+      'document',
+      'click',
+      (event: MouseEvent) => {
+        // If the container exists and the click target is not inside it...
+        if (
+          this.commentsContainer &&
+          !this.commentsContainer.nativeElement.contains(event.target)
+        ) {
+          // Hide all comments lists (or adjust logic to hide only the currently open one)
+          this.hideAllComments();
+        }
       }
-    });
+    );
   }
   hideAllComments(): void {
     // Example: Hide comments for all shopping items.
@@ -983,7 +993,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   setDefaultView(viewValue: number) {
     this.selectedSS = viewValue;
     this.stateService.setSelectedSS(viewValue);
-  } 
+  }
 
   react(shopping: any, reactionType: string): void {
     this.reactions[shopping.Id] = reactionType;
@@ -1024,8 +1034,9 @@ export class ShoppingCenterTableComponent implements OnInit {
             Comment: this.newComments[marketSurveyId],
             CommentDate: new Date().toISOString(),
           });
-          shopping.ShoppingCenter.Comments = this.sortCommentsByDate(shopping.ShoppingCenter.Comments);
-
+          shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
+            shopping.ShoppingCenter.Comments
+          );
         },
       });
     }
@@ -1148,27 +1159,34 @@ export class ShoppingCenterTableComponent implements OnInit {
     console.log(commentId);
   }
 
-
-
-
-  @HostListener("window:resize", ["$event"])
+  @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.checkScreenSize()
+    this.checkScreenSize();
   }
 
   checkScreenSize() {
-    this.isMobile = window.innerWidth <= 768 // Adjust this breakpoint as needed
+    this.isMobile = window.innerWidth <= 768; // Adjust this breakpoint as needed
   }
 
-
-
   get carouselHeight(): string {
-    return this.isMobile ? "100vh" : `${this.shoppingCenters.length * 70}vh`
+    return this.isMobile ? '100vh' : `${this.shoppingCenters.length * 70}vh`;
   }
   closeComments(shopping: any): void {
     this.showComments[shopping.Id] = false;
   }
   sortCommentsByDate(comments: any[]): any[] {
-    return comments.sort((a, b) => new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime());
+    return comments.sort(
+      (a, b) =>
+        new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
+    );
   }
+  selectTab(tabId: string): void {
+    this.selectedTab = tabId;
+    this.activeComponent = tabId;
+  }
+  toggleMenu() {
+    this.isOpen = !this.isOpen
+  }
+
+
 }
