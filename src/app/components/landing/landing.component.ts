@@ -5,7 +5,6 @@ import { Fbo, General, nearsetPlaces, Property } from 'src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from 'src/app/services/auth.service';
 import {
   LandingPlace,
   OtherPlace,
@@ -17,7 +16,6 @@ import { PlaceCotenants } from 'src/models/PlaceCo';
 import { OrgManager } from 'src/models/organization';
 import { BuyboxOrg } from 'src/models/buyboxOrg';
 import { OrgBranch } from 'src/models/branches';
-import { StateService } from 'src/app/services/state.service';
 import { permission } from 'src/models/permission';
 import { Enriche } from 'src/models/enriche';
 
