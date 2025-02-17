@@ -2,8 +2,7 @@ import {
   Component,
   OnInit,
   NgZone,
-  ViewChild,
-  ElementRef,
+  ViewChild, 
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,8 +38,7 @@ interface Comment {
   styleUrls: ['./home.component.css'],
 })
 
-export class HomeComponent implements OnInit {
-  @ViewChild('mainContainer') mainContainer!: ElementRef;
+export class HomeComponent implements OnInit { 
   shoppingCenter: any;
   General!: General;
   BuyBoxId!: any;
@@ -75,8 +73,7 @@ export class HomeComponent implements OnInit {
   currentView: any;
   map: any; 
   cardsSideList: any[] = [];
-  selectedOption!: number;
-  selectedSS!: any;
+  selectedOption!: number; 
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
   buyboxCategories: BuyboxCategory[] = []; 
@@ -97,6 +94,7 @@ export class HomeComponent implements OnInit {
   BuyBoxName: string = '';
   Permission: permission[] = [];
   placesRepresentative: boolean | undefined;
+  @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -184,7 +182,6 @@ export class HomeComponent implements OnInit {
       scrollable: true,
     });
   }
-  @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
 
   addContact(form: NgForm): void {
     this.spinner.show();
@@ -891,12 +888,5 @@ export class HomeComponent implements OnInit {
     } else {
       return '';
     }
-  }
-
-  setDefaultView(viewValue: number) {
-    this.selectedSS = viewValue;
-    this.stateService.setSelectedSS(viewValue);
-  }
-
-
+  } 
 }
