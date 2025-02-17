@@ -4,7 +4,6 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
-import { UserBuyboxComponent } from './components/user-buybox/user-buybox.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
@@ -13,7 +12,6 @@ import { KayakComponent } from './components/kayak-home/kayak/kayak.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
- import { AssistantComponent } from './components/kanban/assistant/assistant.component';
 import { SourcesComponent } from './components/kanban/sources/sources.component';
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
@@ -26,11 +24,6 @@ import { TermsComponent } from './components/terms/terms.component';
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
-  {
-    path: 'BuyboxType',
-    component: UserBuyboxComponent,
-    canActivate: [AuthGuardService],
-  },
   { path: 'summary', component: SummeryComponent },
   { path: 'summary/:orgId', component: SummeryComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
@@ -68,11 +61,6 @@ const routes: Routes = [
     component: TasksComponent,
     canActivate: [AuthGuardService],
   }, 
-  {
-    path: 'assistant',
-    component: AssistantComponent,
-    canActivate: [AuthGuardService],
-  },
   {
     path: 'Sources',
     component: SourcesComponent,
