@@ -36,13 +36,22 @@
       [showNavigators]="false"
       [showIndicators]="true"
     >
-    <!--autoplayInterval="3000"-->
+      <!--autoplayInterval="3000"-->
       <ng-template pTemplate="item" let-shopping>
-        <div [ngClass]="{ 'd-sm-flex justify-content-center': !isMobile ,'w-100': isMobile}">
+        <div
+          [ngClass]="{
+            'd-sm-flex justify-content-center': !isMobile,
+            'w-100': isMobile
+          }"
+        >
           <div
             class="social-card mb-0 mb-sm-5"
             [ngClass]="{ 'full-height': isMobile }"
-            [style.backgroundImage]="'url(' + (shopping.MainImage || 'assets/Images/skeltonImage.png') + ')'"
+            [style.backgroundImage]="
+              'url(' +
+              (shopping.MainImage || 'assets/Images/skeltonImage.png') +
+              ')'
+            "
           >
             <div class="card-header">
               <div class="header-info">
@@ -57,47 +66,143 @@
                     class="center-address"
                     style="cursor: pointer; width: fit-content"
                   >
-                    {{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }},
+                    {{ shopping.CenterAddress }},
+                    {{ shopping.CenterCity | titlecase }},
                     {{ shopping.CenterState }}
                   </p>
                 </div>
-             
-              <div>
-                <p
-                class=""
-                style="color: white;"
-                  [innerHTML]="getShoppingCenterUnitSize(shopping)"
-                ></p>
-              </div>
-              <div class="row">
-                <div
-                  *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
-                  class="col-12 d-flex flex-column spec"
-                >
-                  <div class="d-flex flex-column">
-                    <p class=""                 style="color: white;"
-                    >
-                      <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
-                    </p>
-                    <p                 style="color: white;"
-                    >
-                      {{ item.RelationOrganizationName }}
-                      <img
-                        class="logo ms-2"
-                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          item.RelationOrganizationId
-                        }}"
-                        [title]="item.RelationOrganizationName"
-                        alt=""
-                      />
-                    </p>
+
+                <div>
+                  <p
+                    class=""
+                    style="color: white"
+                    [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                  ></p>
+                </div>
+                <div class="row">
+                  <div
+                    *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+                    class="col-12 d-flex flex-column spec"
+                  >
+                    <div class="d-flex flex-column">
+                      <p class="" style="color: white">
+                        <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                      </p>
+                      <p style="color: white">
+                        {{ item.RelationOrganizationName }}
+                        <img
+                          class="logo ms-2"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            item.RelationOrganizationId
+                          }}"
+                          [title]="item.RelationOrganizationName"
+                          alt=""
+                        />
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="card-image">
+              <a
+                [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
+              >
+              <img
+                [src]="
+                  shopping.MainImage && shopping.MainImage !== ''
+                    ? shopping.MainImage
+                    : 'assets/Images/skeltonImage.png'
+                "
+                [alt]="shopping.CenterName"
+              />
+              </a>
+            </div>
+
+            <div class="card-footer">
+              <div class="reaction-buttons">
+                <button class="action-btn like-btn">
+                  <svg
+                    width="33"
+                    height="32"
+                    viewBox="0 0 33 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M11.6867 24.6533V11.1067C11.6867 10.5733 11.8467 10.0533 12.14 9.61334L15.78 4.20001C16.3533 3.33334 17.78 2.72001 18.9933 3.17334C20.3 3.61334 21.1667 5.08001 20.8867 6.38667L20.1933 10.7467C20.14 11.1467 20.2467 11.5067 20.4733 11.7867C20.7 12.04 21.0333 12.2 21.3933 12.2H26.8733C27.9267 12.2 28.8333 12.6267 29.3667 13.3733C29.8733 14.0933 29.9667 15.0267 29.6333 15.9733L26.3533 25.96C25.94 27.6133 24.14 28.96 22.3533 28.96H17.1533C16.26 28.96 15.0067 28.6533 14.4333 28.08L12.7267 26.76C12.0733 26.2667 11.6867 25.48 11.6867 24.6533Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M7.44666 8.50671H6.07332C4.00666 8.50671 3.16666 9.30671 3.16666 11.28V24.6934C3.16666 26.6667 4.00666 27.4667 6.07332 27.4667H7.44666C9.51332 27.4667 10.3533 26.6667 10.3533 24.6934V11.28C10.3533 9.30671 9.51332 8.50671 7.44666 8.50671Z"
+                      fill="white"
+                    />
+                  </svg>
+
+                  <span class="d-block d-sm-block">{{
+                    getTotalReactions(shopping)
+                  }}</span>
+
+                  <!-- <span class="reactionMobile">
+                  {{ getPrimaryReaction(shopping) }}
+                </span> -->
+                </button>
               </div>
+              <button
+                class="action-btn comment-btn"
+                (click)="toggleComments(shopping, $event)"
+              >
+                <svg
+                  width="33"
+                  height="32"
+                  viewBox="0 0 33 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M25.1267 22.44L25.6467 26.6533C25.78 27.76 24.5933 28.5333 23.6467 27.96L19.0333 25.2133C18.7133 25.0266 18.6333 24.6266 18.8067 24.3066C19.4733 23.08 19.8333 21.6933 19.8333 20.3066C19.8333 15.4266 15.6467 11.4533 10.5 11.4533C9.44668 11.4533 8.42001 11.6133 7.46001 11.9333C6.96668 12.0933 6.48668 11.64 6.60668 11.1333C7.82001 6.27996 12.4867 2.66663 18.06 2.66663C24.5667 2.66663 29.8333 7.58663 29.8333 13.6533C29.8333 17.2533 27.98 20.44 25.1267 22.44Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M17.8333 20.3067C17.8333 21.8934 17.2467 23.36 16.26 24.52C14.94 26.12 12.8467 27.1467 10.5 27.1467L7.01999 29.2134C6.43332 29.5734 5.68666 29.08 5.76666 28.4L6.09999 25.7734C4.31332 24.5334 3.16666 22.5467 3.16666 20.3067C3.16666 17.96 4.41999 15.8934 6.33999 14.6667C7.52666 13.8934 8.95332 13.4534 10.5 13.4534C14.5533 13.4534 17.8333 16.52 17.8333 20.3067Z"
+                    fill="white"
+                  />
+                </svg>
+
+                <span class="reactionMobile">
+                  {{ shopping.ShoppingCenter.Comments?.length }}
+                </span>
+              </button>
+              <button
+                class="action-btn share-btn"
+                (click)="openContactsModal(contactsModal)"
+              >
+                <svg
+                  width="33"
+                  height="32"
+                  viewBox="0 0 33 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M22.02 3.94672L9.98 7.94672C1.88667 10.6534 1.88667 15.0667 9.98 17.7601L13.5533 18.9467L14.74 22.5201C17.4333 30.6134 21.86 30.6134 24.5533 22.5201L28.5667 10.4934C30.3533 5.09339 27.42 2.14672 22.02 3.94672ZM22.4467 11.1201L17.38 16.2134C17.18 16.4134 16.9267 16.5067 16.6733 16.5067C16.42 16.5067 16.1667 16.4134 15.9667 16.2134C15.58 15.8267 15.58 15.1867 15.9667 14.8001L21.0333 9.70672C21.42 9.32006 22.06 9.32006 22.4467 9.70672C22.8333 10.0934 22.8333 10.7334 22.4467 11.1201Z"
+                    fill="white"
+                  />
+                </svg>
+
+                <span class="share"> Share </span>
+              </button>
               <div style="position: relative">
+                <button
+                  style="background: #fff; border-radius: 20px"
+                  class="ellipsis_icont"
+                  (click)="toggleShortcutsCard(shopping.Id)"
+                >
+                  <i class="fa-solid fa-ellipsis"></i>
+                </button>
                 <div
                   class="shortcuts_iconCard"
+                  style="bottom: 0% !important ; top: auto !important"
                   *ngIf="selectedIdCard === shopping.Id"
                 >
                   <ul>
@@ -111,7 +216,7 @@
                       </a>
                     </li>
 
-                    <li>
+                    <!-- <li>
                       <a
                         class="target"
                         (click)="toggleShortcuts(shopping.Id, 'close')"
@@ -142,7 +247,7 @@
                         </svg>
                         Copy Link
                       </a>
-                    </li>
+                    </li> -->
                     <li (click)="toggleShortcuts(shopping.Id, 'close')">
                       <a
                         class="target"
@@ -239,60 +344,9 @@
                       </a>
                     </li>
                   </ul>
-                  <i class="fa-solid fa-caret-right"></i>
+                  <i class="fa-solid fa-caret-right" style="top: 86%"></i>
                 </div>
               </div>
-            </div>
-            <div class="card-image">
-              <img
-                [src]="
-                  shopping.MainImage && shopping.MainImage !== ''
-                    ? shopping.MainImage
-                    : 'assets/Images/skeltonImage.png'
-                "
-                [alt]="shopping.CenterName"
-              />
-            </div>
-
-            <div class="card-footer">
-              <div class="reaction-buttons">
-                <button class="action-btn like-btn">
-                  <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.6867 24.6533V11.1067C11.6867 10.5733 11.8467 10.0533 12.14 9.61334L15.78 4.20001C16.3533 3.33334 17.78 2.72001 18.9933 3.17334C20.3 3.61334 21.1667 5.08001 20.8867 6.38667L20.1933 10.7467C20.14 11.1467 20.2467 11.5067 20.4733 11.7867C20.7 12.04 21.0333 12.2 21.3933 12.2H26.8733C27.9267 12.2 28.8333 12.6267 29.3667 13.3733C29.8733 14.0933 29.9667 15.0267 29.6333 15.9733L26.3533 25.96C25.94 27.6133 24.14 28.96 22.3533 28.96H17.1533C16.26 28.96 15.0067 28.6533 14.4333 28.08L12.7267 26.76C12.0733 26.2667 11.6867 25.48 11.6867 24.6533Z" fill="white"/>
-                    <path d="M7.44666 8.50671H6.07332C4.00666 8.50671 3.16666 9.30671 3.16666 11.28V24.6934C3.16666 26.6667 4.00666 27.4667 6.07332 27.4667H7.44666C9.51332 27.4667 10.3533 26.6667 10.3533 24.6934V11.28C10.3533 9.30671 9.51332 8.50671 7.44666 8.50671Z" fill="white"/>
-                    </svg>
-                    
-                    
-                  <span class="d-block d-sm-block">{{
-                    getTotalReactions(shopping)
-                  }}</span>
-
-                  <!-- <span class="reactionMobile">
-                  {{ getPrimaryReaction(shopping) }}
-                </span> -->
-                </button>
-              </div>
-              <button
-                class="action-btn comment-btn"
-                (click)="toggleComments(shopping, $event)"
-              >
-              <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M25.1267 22.44L25.6467 26.6533C25.78 27.76 24.5933 28.5333 23.6467 27.96L19.0333 25.2133C18.7133 25.0266 18.6333 24.6266 18.8067 24.3066C19.4733 23.08 19.8333 21.6933 19.8333 20.3066C19.8333 15.4266 15.6467 11.4533 10.5 11.4533C9.44668 11.4533 8.42001 11.6133 7.46001 11.9333C6.96668 12.0933 6.48668 11.64 6.60668 11.1333C7.82001 6.27996 12.4867 2.66663 18.06 2.66663C24.5667 2.66663 29.8333 7.58663 29.8333 13.6533C29.8333 17.2533 27.98 20.44 25.1267 22.44Z" fill="white"/>
-                <path d="M17.8333 20.3067C17.8333 21.8934 17.2467 23.36 16.26 24.52C14.94 26.12 12.8467 27.1467 10.5 27.1467L7.01999 29.2134C6.43332 29.5734 5.68666 29.08 5.76666 28.4L6.09999 25.7734C4.31332 24.5334 3.16666 22.5467 3.16666 20.3067C3.16666 17.96 4.41999 15.8934 6.33999 14.6667C7.52666 13.8934 8.95332 13.4534 10.5 13.4534C14.5533 13.4534 17.8333 16.52 17.8333 20.3067Z" fill="white"/>
-              </svg>
-                    
-                <span class="reactionMobile"> {{ shopping.ShoppingCenter.Comments?.length }} </span>
-              </button>
-              <button
-                class="action-btn share-btn"
-                (click)="openContactsModal(contactsModal)"
-              >
-              <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.02 3.94672L9.98 7.94672C1.88667 10.6534 1.88667 15.0667 9.98 17.7601L13.5533 18.9467L14.74 22.5201C17.4333 30.6134 21.86 30.6134 24.5533 22.5201L28.5667 10.4934C30.3533 5.09339 27.42 2.14672 22.02 3.94672ZM22.4467 11.1201L17.38 16.2134C17.18 16.4134 16.9267 16.5067 16.6733 16.5067C16.42 16.5067 16.1667 16.4134 15.9667 16.2134C15.58 15.8267 15.58 15.1867 15.9667 14.8001L21.0333 9.70672C21.42 9.32006 22.06 9.32006 22.4467 9.70672C22.8333 10.0934 22.8333 10.7334 22.4467 11.1201Z" fill="white"/>
-                </svg>
-                
-                <span class="share"> Share </span>
-              </button>
             </div>
             <div
               class="comments-section"
@@ -315,7 +369,7 @@
               </div>
 
               <ul class="comment-list">
-                <ng-container 
+                <ng-container
                   *ngFor="
                     let comment of sortCommentsByDate(
                       shopping.ShoppingCenter.Comments
@@ -388,8 +442,7 @@
         >
           <img [src]="option.icon" [alt]="option.text" class="icon-image" />
         </div>
-      </div> 
-      
+      </div>
     </div>
   </div>
 </ng-container>
@@ -411,7 +464,7 @@
               <th>State</th>
 
               <th *ngIf="placesRepresentative != false">Leased by</th>
-              <th >Unit Size & Lease Price</th>
+              <th>Unit Size & Lease Price</th>
               <th>
                 <ng-container
                   *ngFor="
@@ -437,7 +490,8 @@
                 <td>
                   <div
                     class="table-text cursor"
-                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)">
+                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                  >
                     {{ shoppingCenter.CenterAddress }},
                     {{ shoppingCenter.CenterCity | titlecase }},
                     {{ shoppingCenter.CenterState }}
@@ -455,7 +509,8 @@
                   >
                     <div>
                       <div
-                        class="d-flex align-items-center justify-content-between w-100">
+                        class="d-flex align-items-center justify-content-between w-100"
+                      >
                         <img
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -560,7 +615,8 @@
                 <td>
                   <div class="absolutee">
                     <div
-                      class="d-flex justify-content-center align-items-center cursor">
+                      class="d-flex justify-content-center align-items-center cursor"
+                    >
                       <div class="d-flex toggy">
                         <button
                           class="ellipsis_icon"
@@ -593,8 +649,7 @@
                                 "
                                 target="_blank"
                               >
-                                <i
-                                  class="fa-regular fa-envelope emily"></i>
+                                <i class="fa-regular fa-envelope emily"></i>
                                 Emily
                               </a>
                             </li>
@@ -663,7 +718,8 @@
                                 "
                               >
                                 <i
-                                  class="fa-solid fa-map-location-dot emily"></i>
+                                  class="fa-solid fa-map-location-dot emily"
+                                ></i>
                                 View location
                               </a>
                             </li>
@@ -714,8 +770,7 @@
                                   )
                                 "
                               >
-                                <i
-                                  class="fa-regular fa-trash-can emily" ></i>
+                                <i class="fa-regular fa-trash-can emily"></i>
                                 Remove Shopping
                               </a>
                             </li>
@@ -753,7 +808,9 @@
       </div>
     </div>
     <div
-      class="pt-2 d-flex justify-content-center align-items-center heightt" *ngIf="shoppingCenters?.length == 0">
+      class="pt-2 d-flex justify-content-center align-items-center heightt"
+      *ngIf="shoppingCenters?.length == 0"
+    >
       <p class="fontweight">No data Shopping Center</p>
     </div>
   </ng-container>
@@ -777,8 +834,7 @@
               'col-12 col-sm-6 cards': currentView == 2
             }"
           >
-            <div
-              class="cardResponsive">
+            <div class="cardResponsive">
               <a
                 [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
               >
@@ -791,7 +847,8 @@
                 <div class="-container"></div>
               </a>
               <div
-                class="content-wrap card-content card-content_view view-cont">
+                class="content-wrap card-content card-content_view view-cont"
+              >
                 <!-- <div> -->
                 <div>
                   <div class="d-flex justify-content-between">
@@ -835,8 +892,7 @@
                               "
                               target="_blank"
                             >
-                              <i
-                                class="fa-regular fa-envelope emily"></i>
+                              <i class="fa-regular fa-envelope emily"></i>
                               Emily
                             </a>
                           </li>
@@ -885,8 +941,7 @@
                               class="target"
                               (click)="openMapViewPlace(MapViewPlace, shopping)"
                             >
-                              <i
-                                class="fa-solid fa-map-location-dot emily"></i>
+                              <i class="fa-solid fa-map-location-dot emily"></i>
                               View location
                             </a>
                           </li>
@@ -929,8 +984,7 @@
                                 )
                               "
                             >
-                              <i
-                                class="fa-regular fa-trash-can emily"></i>
+                              <i class="fa-regular fa-trash-can emily"></i>
                               Remove Shopping
                             </a>
                           </li>
@@ -941,7 +995,8 @@
                   </div>
                   <div
                     class="card-address cursor"
-                    (click)="openMapViewPlace(MapViewPlace, shopping)">
+                    (click)="openMapViewPlace(MapViewPlace, shopping)"
+                  >
                     <span class="mb-5">
                       {{ shopping.CenterAddress }},
                       {{ shopping.CenterCity | titlecase }},
@@ -950,7 +1005,7 @@
                   </div>
                   <div>
                     <p
-                    class="ShoppingCenterUnitSize"
+                      class="ShoppingCenterUnitSize"
                       [innerHTML]="getShoppingCenterUnitSize(shopping)"
                     ></p>
                   </div>
@@ -1061,7 +1116,7 @@
             <p class="Button_cancel" (click)="CancelDelete()">Cancel</p>
           </div>
         </div>
-        
+
         <ng-container *ngFor="let place of cardsSideList">
           <div
             class="card-window cursor"
@@ -1091,7 +1146,8 @@
                 </div>
               </a>
               <div
-                class="content-wrap card-sideview justify-content-between relativee">
+                class="content-wrap card-sideview justify-content-between relativee"
+              >
                 <div>
                   <div *ngIf="place.CenterCity">
                     <div class="d-flex justify-content-between">
@@ -1134,8 +1190,7 @@
                                 "
                                 target="_blank"
                               >
-                                <i
-                                  class="fa-regular fa-envelope emily"></i>
+                                <i class="fa-regular fa-envelope emily"></i>
                                 Emily
                               </a>
                             </li>
@@ -1185,7 +1240,8 @@
                                 (click)="openMapViewPlace(MapViewPlace, place)"
                               >
                                 <i
-                                  class="fa-solid fa-map-location-dot emily"></i>
+                                  class="fa-solid fa-map-location-dot emily"
+                                ></i>
                                 View location
                               </a>
                             </li>
@@ -1222,8 +1278,7 @@
                                 class="target"
                                 (click)="deleteShopping(place.Id)"
                               >
-                                <i
-                                  class="fa-regular fa-trash-can emily"></i>
+                                <i class="fa-regular fa-trash-can emily"></i>
                                 Remove Shopping
                               </a>
                             </li>
@@ -1300,7 +1355,9 @@
                   "
                 >
                   <span class="managed-by">Leased by</span>
-                  <div class="spec-head d-flex align-items-center justify-content-between">
+                  <div
+                    class="spec-head d-flex align-items-center justify-content-between"
+                  >
                     <div>
                       <img
                         class="logo"
@@ -1425,13 +1482,9 @@
 </ng-template>
 
 <ng-template #ShareLink let-modal>
-  <div
-    class="d-flex p-3 m-3 align-items-center shareelink">
+  <div class="d-flex p-3 m-3 align-items-center shareelink">
     <p>{{ shareLink }}</p>
-    <i
-      class="fa-solid fa-copy ms-3 cursor"
-      (click)="copyLink(shareLink)"
-    ></i>
+    <i class="fa-solid fa-copy ms-3 cursor" (click)="copyLink(shareLink)"></i>
   </div>
 </ng-template>
 
@@ -1453,12 +1506,8 @@
 </ng-template>
 
 <ng-template #deleteShoppingCenterModal let-modal>
-  <div
-    class="modal-body-general p-4 rounded deleteShopping">
-    <h2
-      class="text-center mb-4 RemoveShopping">
-      Remove Shopping Center
-    </h2>
+  <div class="modal-body-general p-4 rounded deleteShopping">
+    <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
     <p class="text-center Areyou">
       Are you sure you want to remove this Shopping Center?
     </p>
@@ -1483,12 +1532,8 @@
 </ng-template>
 
 <ng-template #deleteSingleShoppingCenterModal let-modal>
-  <div
-    class="modal-body-general p-4 rounded deleteShopping">
-    <h2
-      class="text-center mb-4 RemoveShopping">
-      Remove Shopping Center
-    </h2>
+  <div class="modal-body-general p-4 rounded deleteShopping">
+    <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
     <p class="text-center Areyou">
       Are you sure you want to remove this Shopping Center?
     </p>
@@ -1497,13 +1542,15 @@
       <button
         type="button"
         class="btn btn-secondary me-2 px-4 py-2 btnborder"
-        (click)="modal.dismiss('Cancel click')">
+        (click)="modal.dismiss('Cancel click')"
+      >
         Cancel
       </button>
       <button
         type="button"
         class="btn btn-danger px-4 py-2 btnborder"
-        (click)="deleteShCenter()">
+        (click)="deleteShCenter()"
+      >
         Remove
       </button>
     </div>
