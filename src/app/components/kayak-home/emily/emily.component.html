@@ -11,7 +11,7 @@
             ">
             <div class="col-12 col-sm-3">
               <section class="OrganizationsForEmail row m-0 p-0">
-                <div style="align-items: center" class="m-0 p-0 col-12 d-flex justify-content-center row">
+                <div class="m-0 p-0 col-12 d-flex justify-content-center align-items-center row">
                   <div class="OganirzationsForEmail__img col-8">
                     <img class="Oganirzations__img" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         OrganizationsForEmail.Id
@@ -31,7 +31,7 @@
                           <input type="checkbox" [name]="'D' + contact?.Firstname" [id]="'D' + contact?.Firstname"
                             class="me-2 form-check-input" [(ngModel)]="contact.selected"
                             (ngModelChange)="onContactChange(contact, $event)" />
-                          <label style="font-weight: 600; cursor: pointer" [for]="'D' + contact?.Firstname">{{
+                          <label class="contactname" [for]="'D' + contact?.Firstname">{{
                             contact?.Firstname }}
                             {{ contact?.Lastname }}</label>
                         </p>
@@ -39,28 +39,24 @@
                             let shoppingCenter of contact.Centers;
                             let i = index
                           " class="pt-2">
-                          <p class="Contact_headD pt-2 row align-items-center" style="cursor: pointer">
+                          <p class="Contact_headD pt-2 row align-items-center cursor">
                             <input type="checkbox" [name]="'shoppingCenter' + shoppingCenter.id"
-                              [id]="shoppingCenter.id" class="m-0 p-0 form-check-input col-1"
-                              [(ngModel)]="shoppingCenter.selected" style="cursor: pointer" (ngModelChange)="
+                              [id]="shoppingCenter.id" class="m-0 p-0 form-check-input col-1 cursor"
+                              [(ngModel)]="shoppingCenter.selected" (ngModelChange)="
                                 onShoppingCenterChange(contact, shoppingCenter)
                               " />
                             <label [for]="shoppingCenter.id" [ngClass]="{
                               'highlighted': CenterId == shoppingCenter.id,
-                            }" class="col-11 m-0 p-0 ps-2 pe-2 d-flex justify-content-between" style="cursor: pointer">
+                            }" class="col-11 m-0 p-0 ps-2 pe-2 d-flex justify-content-between cursor">
                               {{ shoppingCenter?.CenterName }}
 
-                              <div class="ps-2" [routerLink]="[
+                              <div class="ps-2 d-flex align-items-center cursor" [routerLink]="[
                                   '/landing',
                                   undefined,
                                   shoppingCenter.id,
                                   buyBoxId,
                                   shoppingCenterOrganization
-                                ]" style="
-                                  cursor: pointer;
-                                  align-items: center;
-                                  display: flex;
-                                ">
+                                ]" >
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                   xmlns="http://www.w3.org/2000/svg">
                                   <path
@@ -165,11 +161,7 @@
                             <div class="d-flex justify-content-end" *ngIf="
                               getRelationsForCategory(relation.id).length > 3
                             ">
-                              <span (click)="toggleShowMore(relation.id)" style="
-                                font-size: 13px;
-                                font-weight: 700;
-                                cursor: pointer;
-                              ">
+                              <span (click)="toggleShowMore(relation.id)" class="showMoreRelations">
                                 {{
                                 showMoreRelations[relation.id]
                                 ? "Show Less"
@@ -275,7 +267,7 @@
               <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
                 <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
                   <div class="card shadow-sm border-0">
-                    <div class="card-header text-white" style="background-color: #141e2a">
+                    <div class="card-header text-white GeneratedEmail">
                       <h5 class="mb-0">Generated Email</h5>
                     </div>
                     <div class="card-body bg-light">
@@ -324,32 +316,18 @@
                   <div class="col-12 p-0">
                     <div class="form-group mt-4">
                       <div class="card shadow-sm border-0">
-                        <div class="card-header text-white" style="background-color: #141e2a">
+                        <div class="card-header text-white GeneratedEmail">
                           <h5 class="mb-0 d-flex justify-content-between">
                             <p>
-                              <span style="align-items: center; display: block">Saved Template</span>
-                              <span style="
-                                  font-size: 13px;
-                                  align-items: center;
-                                  display: block;
-                                  margin-top: 4px;
-                                " *ngFor="let contact of item.Contact">
+                              <span class="SavedTemplate">Saved Template</span>
+                              <span class="firstlast" *ngFor="let contact of item.Contact">
                                 {{ contact.Firstname }} {{ contact.LastName }}
                               </span>
                             </p>
                             <p>
-                              <span style="
-                                  font-size: 13px;
-                                  align-items: center;
-                                  display: block;
-                                ">Creation Date :
+                              <span class="creationdate">Creation Date :
                                 {{ item.CreationDate | date : "medium" }}</span>
-                              <span *ngIf="item.SentDate !== '0001-01-01T00:00:00'" style="
-                                  font-size: 13px;
-                                  align-items: center;
-                                  display: block;
-                                  margin-top: 4px;
-                                ">Sent Date :
+                              <span *ngIf="item.SentDate !== '0001-01-01T00:00:00'" class="firstlast">Sent Date :
                                 {{ item.SentDate | date : "medium" }}</span>
                             </p>
                           </h5>
