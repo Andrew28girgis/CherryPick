@@ -25,9 +25,8 @@
 </div>
 <ng-container *ngIf="currentView == 5">
   <div class="containerMobileView">
-
     <p-carousel
-    orientation="vertical"
+      orientation="vertical"
       [value]="shoppingCenters"
       [numVisible]="isMobile ? 1 : shoppingCenters.length"
       [numScroll]="1"
