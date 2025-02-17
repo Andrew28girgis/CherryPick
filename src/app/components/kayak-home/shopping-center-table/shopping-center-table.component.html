@@ -445,11 +445,11 @@
     </div>
   </div>
 </ng-container>
-<div class="row" style="background-color: #fff">
+<div class="row whitee">
   <ng-container *ngIf="currentView == 4">
     <div class="container p-2">
       <div
-        style="margin-top: 10px"
+        class="mtopp"
         *ngIf="
           showShoppingCenters && shoppingCenters && shoppingCenters.length > 0
         "
@@ -463,7 +463,7 @@
               <th>State</th>
 
               <th *ngIf="placesRepresentative != false">Leased by</th>
-              <th style="width: 250px">Unit Size & Lease Price</th>
+              <th >Unit Size & Lease Price</th>
               <th>
                 <ng-container
                   *ngFor="
@@ -488,10 +488,8 @@
                 </td>
                 <td>
                   <div
-                    class="table-text"
-                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
-                    style="cursor: pointer"
-                  >
+                    class="table-text cursor"
+                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)">
                     {{ shoppingCenter.CenterAddress }},
                     {{ shoppingCenter.CenterCity | titlecase }},
                     {{ shoppingCenter.CenterState }}
@@ -509,9 +507,7 @@
                   >
                     <div>
                       <div
-                        class="d-flex align-items-center"
-                        style="width: 100%; justify-content: space-between"
-                      >
+                        class="d-flex align-items-center justify-content-between w-100">
                         <img
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -533,8 +529,7 @@
 
                         <div>
                           <img
-                            style="cursor: pointer"
-                            class="ms-2"
+                            class="ms-2 cursor"
                             src="../../../assets/Images/Icons/eye.png"
                             alt="View Manager Details"
                             [ngbPopover]="popoverContent"
@@ -615,12 +610,10 @@
                 </td>
                 <ng-template #emptyTd> </ng-template>
                 <td>
-                  <div style="position: absolute; display: contents">
+                  <div class="absolutee">
                     <div
-                      class="d-flex justify-content-center align-items-center"
-                      style="cursor: pointer svg-container"
-                    >
-                      <div style="display: flex; gap: 16px; position: relative">
+                      class="d-flex justify-content-center align-items-center cursor">
+                      <div class="d-flex toggy">
                         <button
                           class="ellipsis_icon"
                           (click)="
@@ -653,13 +646,7 @@
                                 target="_blank"
                               >
                                 <i
-                                  class="fa-regular fa-envelope"
-                                  style="
-                                    font-size: 18px;
-                                    margin-top: 3px;
-                                    width: 24px;
-                                  "
-                                ></i>
+                                  class="fa-regular fa-envelope emily"></i>
                                 Emily
                               </a>
                             </li>
@@ -728,13 +715,7 @@
                                 "
                               >
                                 <i
-                                  class="fa-solid fa-map-location-dot"
-                                  style="
-                                    font-size: 18px;
-                                    margin-top: 3px;
-                                    width: 24px;
-                                  "
-                                ></i>
+                                  class="fa-solid fa-map-location-dot emily"></i>
                                 View location
                               </a>
                             </li>
@@ -771,7 +752,7 @@
                               </a>
                             </li>
                             <li
-                              style="cursor: pointer"
+                              class="cursor"
                               (click)="
                                 toggleShortcuts(shoppingCenter.Id, 'close')
                               "
@@ -786,13 +767,7 @@
                                 "
                               >
                                 <i
-                                  class="fa-regular fa-trash-can"
-                                  style="
-                                    font-size: 18px;
-                                    margin-top: 3px;
-                                    width: 24px;
-                                  "
-                                ></i>
+                                  class="fa-regular fa-trash-can emily" ></i>
                                 Remove Shopping
                               </a>
                             </li>
@@ -830,16 +805,13 @@
       </div>
     </div>
     <div
-      class="pt-2 d-flex justify-content-center align-items-center"
-      style="height: 50vh"
-      *ngIf="shoppingCenters?.length == 0"
-    >
-      <p style="font-weight: 500">No data Shopping Center</p>
+      class="pt-2 d-flex justify-content-center align-items-center heightt" *ngIf="shoppingCenters?.length == 0">
+      <p class="fontweight">No data Shopping Center</p>
     </div>
   </ng-container>
 
   <div
-    style="background-color: #fff"
+    class="whitee"
     [ngClass]="{
       'd-none': currentView == 1 || currentView == 4 || currentView == 5,
       'col-md-8 col-sm-12 cards ': currentView == 2,
@@ -851,22 +823,14 @@
       <ng-container *ngIf="currentView != 2">
         <ng-container *ngFor="let shopping of shoppingCenters">
           <div
-            style="cursor: pointer"
-            class="card-window"
+            class="card-window cursor"
             [ngClass]="{
               'col-md-4 col-sm-4 col-12': currentView == 3,
               'col-12 col-sm-6 cards': currentView == 2
             }"
           >
             <div
-              style="
-                background: white;
-                min-height: 100%;
-                border-radius: 20px;
-                width: 100%;
-              "
-              class="cardResponsive"
-            >
+              class="cardResponsive">
               <a
                 [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId,OrgId]"
               >
@@ -879,21 +843,15 @@
                 <div class="-container"></div>
               </a>
               <div
-                class="content-wrap card-content card-content_view"
-                style="
-                  position: relative;
-                  justify-content: space-between;
-                  height: 340px;
-                "
-              >
+                class="content-wrap card-content card-content_view view-cont">
                 <!-- <div> -->
                 <div>
                   <div class="d-flex justify-content-between">
                     <a
-                      style="text-decoration: none"
+                      class="textdecoration"
                       [routerLink]="[ '/landing', shopping?.ShoppingCenter?.Places ? shopping?.ShoppingCenter?.Places?.[0]?.Id : 0,shopping.Id,BuyBoxId,OrgId]"
                     >
-                      <div class="content-title" style="cursor: pointer">
+                      <div class="content-title cursor">
                         {{
                           shopping.CenterName.length > 22
                             ? (shopping.CenterName | titlecase).slice(0, 22) +
@@ -903,7 +861,7 @@
                       </div>
                     </a>
 
-                    <div style="position: relative">
+                    <div class="relativee">
                       <button
                         class="ellipsis_icont"
                         (click)="toggleShortcutsCard(shopping.Id)"
@@ -915,7 +873,7 @@
                         *ngIf="selectedIdCard === shopping.Id"
                       >
                         <ul>
-                          <li style="cursor: pointer">
+                          <li class="cursor">
                             <a
                               class="target"
                               [href]="
@@ -930,13 +888,7 @@
                               target="_blank"
                             >
                               <i
-                                class="fa-regular fa-envelope"
-                                style="
-                                  font-size: 18px;
-                                  margin-top: 3px;
-                                  width: 24px;
-                                "
-                              ></i>
+                                class="fa-regular fa-envelope emily"></i>
                               Emily
                             </a>
                           </li>
@@ -986,13 +938,7 @@
                               (click)="openMapViewPlace(MapViewPlace, shopping)"
                             >
                               <i
-                                class="fa-solid fa-map-location-dot"
-                                style="
-                                  font-size: 18px;
-                                  margin-top: 3px;
-                                  width: 24px;
-                                "
-                              ></i>
+                                class="fa-solid fa-map-location-dot emily"></i>
                               View location
                             </a>
                           </li>
@@ -1022,7 +968,7 @@
                             </a>
                           </li>
                           <li
-                            style="cursor: pointer"
+                            class="cursor"
                             (click)="toggleShortcuts(shopping.Id, 'close')"
                           >
                             <!-- (click)="openDeleteShoppingCenterModal(deleteShoppingCenterModal,item.id)" -->
@@ -1036,13 +982,7 @@
                               "
                             >
                               <i
-                                class="fa-regular fa-trash-can"
-                                style="
-                                  font-size: 18px;
-                                  margin-top: 3px;
-                                  width: 24px;
-                                "
-                              ></i>
+                                class="fa-regular fa-trash-can emily"></i>
                               Remove Shopping
                             </a>
                           </li>
@@ -1052,10 +992,8 @@
                     </div>
                   </div>
                   <div
-                    class="card-address"
-                    style="cursor: pointer"
-                    (click)="openMapViewPlace(MapViewPlace, shopping)"
-                  >
+                    class="card-address cursor"
+                    (click)="openMapViewPlace(MapViewPlace, shopping)">
                     <span class="mb-5">
                       {{ shopping.CenterAddress }},
                       {{ shopping.CenterCity | titlecase }},
@@ -1064,7 +1002,7 @@
                   </div>
                   <div>
                     <p
-                      style="font-size: 15px; font-weight: 500; color: #565656"
+                    class="ShoppingCenterUnitSize"
                       [innerHTML]="getShoppingCenterUnitSize(shopping)"
                     ></p>
                   </div>
@@ -1114,13 +1052,12 @@
                         alt=""
                       />
                     </div>
-                    <div style="width: 55%">
+                    <div class="width55">
                       {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
                     </div>
                     <div>
                       <img
-                        style="cursor: pointer"
-                        class="ms-2"
+                        class="ms-2 cursor"
                         src="../../../assets/Images/Icons/eye.png"
                         alt="View Manager Details"
                         [ngbPopover]="popoverContent"
@@ -1163,7 +1100,7 @@
       </ng-container>
       <ng-container *ngIf="currentView == 2">
         <div class="p-3 d-flex justify-content-between">
-          <p style="font-weight: 500" class="m-0">
+          <p class="m-0 fontweight">
             {{ cardsSideList.length }} places within map area
           </p>
           <div class="gap-2 d-flex" *ngIf="showbackIds.length > 0">
@@ -1179,8 +1116,7 @@
         
         <ng-container *ngFor="let place of cardsSideList">
           <div
-            class="card-window"
-            style="cursor: pointer"
+            class="card-window cursor"
             (mouseenter)="onMouseHighlight(place)"
             (mouseleave)="onMouseLeaveHighlight(place)"
             [ngClass]="{ 'col-md-6 col-sm-12': currentView == 2 }"
@@ -1207,16 +1143,14 @@
                 </div>
               </a>
               <div
-                class="content-wrap card-sideview"
-                style="position: relative; justify-content: space-between"
-              >
+                class="content-wrap card-sideview justify-content-between relativee">
                 <div>
                   <div *ngIf="place.CenterCity">
                     <div class="d-flex justify-content-between">
                       <a
                         [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id: 0,place.Id,BuyBoxId,OrgId]"
                       >
-                        <p class="content-title" style="cursor: pointer">
+                        <p class="content-title cursor">
                           {{
                             place.CenterName.length > 22
                               ? (place.CenterName | titlecase).slice(0, 22) +
@@ -1226,7 +1160,7 @@
                         </p>
                       </a>
 
-                      <div style="position: relative">
+                      <div class="relativee">
                         <button
                           class="ellipsis_icont"
                           (click)="toggleShortcutsCard(place.Id)"
@@ -1238,7 +1172,7 @@
                           *ngIf="selectedIdCard === place.Id"
                         >
                           <ul>
-                            <li style="cursor: pointer">
+                            <li class="cursor">
                               <a
                                 class="target"
                                 [href]="
@@ -1253,13 +1187,7 @@
                                 target="_blank"
                               >
                                 <i
-                                  class="fa-regular fa-envelope"
-                                  style="
-                                    font-size: 18px;
-                                    margin-top: 3px;
-                                    width: 24px;
-                                  "
-                                ></i>
+                                  class="fa-regular fa-envelope emily"></i>
                                 Emily
                               </a>
                             </li>
@@ -1309,13 +1237,7 @@
                                 (click)="openMapViewPlace(MapViewPlace, place)"
                               >
                                 <i
-                                  class="fa-solid fa-map-location-dot"
-                                  style="
-                                    font-size: 18px;
-                                    margin-top: 3px;
-                                    width: 24px;
-                                  "
-                                ></i>
+                                  class="fa-solid fa-map-location-dot emily"></i>
                                 View location
                               </a>
                             </li>
@@ -1345,7 +1267,7 @@
                               </a>
                             </li>
                             <li
-                              style="cursor: pointer"
+                              class="cursor"
                               (click)="toggleShortcuts(place.Id, 'close')"
                             >
                               <a
@@ -1353,13 +1275,7 @@
                                 (click)="deleteShopping(place.Id)"
                               >
                                 <i
-                                  class="fa-regular fa-trash-can"
-                                  style="
-                                    font-size: 18px;
-                                    margin-top: 3px;
-                                    width: 24px;
-                                  "
-                                ></i>
+                                  class="fa-regular fa-trash-can emily"></i>
                                 Remove Shopping
                               </a>
                             </li>
@@ -1371,8 +1287,7 @@
                   </div>
                   <div
                     *ngIf="place.CenterAddress"
-                    class="card-address"
-                    style="cursor: pointer"
+                    class="card-address cursor"
                     (click)="openMapViewPlace(MapViewPlace, place)"
                   >
                     <span>
@@ -1383,8 +1298,7 @@
                   </div>
                   <div
                     *ngIf="place.Address"
-                    class="card-address"
-                    style="cursor: pointer"
+                    class="card-address cursor"
                     (click)="openMapViewPlace(MapViewPlace, place)"
                   >
                     <p>
@@ -1394,7 +1308,7 @@
                   </div>
                   <div *ngIf="place.CenterAddress">
                     <p
-                      style="font-size: 15px; font-weight: 500; color: #565656"
+                      class="ShoppingCenterUnitSize"
                       [innerHTML]="getShoppingCenterUnitSize(place)"
                     ></p>
                   </div>
@@ -1438,7 +1352,7 @@
                   "
                 >
                   <span class="managed-by">Leased by</span>
-                  <div class="spec-head between">
+                  <div class="spec-head d-flex align-items-center justify-content-between">
                     <div>
                       <img
                         class="logo"
@@ -1456,8 +1370,7 @@
                     </div>
                     <div>
                       <img
-                        style="cursor: pointer"
-                        class="ms-2"
+                        class="ms-2 cursor"
                         src="../../../assets/Images/Icons/eye.png"
                         alt="View Manager Details"
                         [ngbPopover]="popoverContent"
@@ -1560,18 +1473,15 @@
 </div>
 
 <ng-template #MapViewPlace let-modal>
-  <div id="mappopup" style="height: 700px" *ngIf="mapViewOnePlacex"></div>
+  <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
 
 <ng-template #ShareLink let-modal>
   <div
-    class="d-flex p-3 m-3 align-items-center"
-    style="border: 1px solid #ccc; border-radius: 10px"
-  >
+    class="d-flex p-3 m-3 align-items-center shareelink">
     <p>{{ shareLink }}</p>
     <i
-      style="cursor: pointer"
-      class="fa-solid fa-copy ms-3"
+      class="fa-solid fa-copy ms-3 cursor"
       (click)="copyLink(shareLink)"
     ></i>
   </div>
@@ -1582,51 +1492,41 @@
     <iframe
       [src]="sanitizedUrl"
       height="450"
-      style="border: 0; width: 100%; height: 700px"
+      class="sanitizedUrl"
       allowfullscreen=""
     >
     </iframe>
   </div>
   <div
     id="street-view"
-    style="height: 700px"
+    class="h700"
     *ngIf="!General.modalObject.StreetViewURL"
   ></div>
 </ng-template>
 
 <ng-template #deleteShoppingCenterModal let-modal>
   <div
-    class="modal-body-general p-4 rounded"
-    style="
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    "
-  >
+    class="modal-body-general p-4 rounded deleteShopping">
     <h2
-      class="text-center mb-4"
-      style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)"
-    >
+      class="text-center mb-4 RemoveShopping">
       Remove Shopping Center
     </h2>
-    <p class="text-center" style="font-size: 1rem; color: #6c757d">
+    <p class="text-center Areyou">
       Are you sure you want to remove this Shopping Center?
     </p>
 
     <div class="d-flex justify-content-end mt-4">
       <button
         type="button"
-        class="btn btn-secondary me-2 px-4 py-2"
+        class="btn btn-secondary me-2 px-4 py-2 btnborder"
         (click)="modal.dismiss('Cancel click')"
-        style="border-radius: 4px"
       >
         Cancel
       </button>
       <button
         type="button"
-        class="btn btn-danger px-4 py-2"
+        class="btn btn-danger px-4 py-2 btnborder"
         (click)="confirmDeleteShoppingCenter(modal)"
-        style="border-radius: 4px"
       >
         Remove
       </button>
@@ -1636,38 +1536,26 @@
 
 <ng-template #deleteSingleShoppingCenterModal let-modal>
   <div
-    class="modal-body-general p-4 rounded"
-    style="
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    "
-  >
+    class="modal-body-general p-4 rounded deleteShopping">
     <h2
-      class="text-center mb-4"
-      style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)"
-    >
+      class="text-center mb-4 RemoveShopping">
       Remove Shopping Center
     </h2>
-    <p class="text-center" style="font-size: 1rem; color: #6c757d">
+    <p class="text-center Areyou">
       Are you sure you want to remove this Shopping Center?
     </p>
 
     <div class="d-flex justify-content-end mt-4">
       <button
         type="button"
-        class="btn btn-secondary me-2 px-4 py-2"
-        (click)="modal.dismiss('Cancel click')"
-        style="border-radius: 4px"
-      >
+        class="btn btn-secondary me-2 px-4 py-2 btnborder"
+        (click)="modal.dismiss('Cancel click')">
         Cancel
       </button>
       <button
         type="button"
-        class="btn btn-danger px-4 py-2"
-        (click)="deleteShCenter()"
-        style="border-radius: 4px"
-      >
+        class="btn btn-danger px-4 py-2 btnborder"
+        (click)="deleteShCenter()">
         Remove
       </button>
     </div>
@@ -1694,7 +1582,7 @@
     </div>
   </div>
   <!-- Added inline styles for vertical scrolling -->
-  <div class="modal-body" style="max-height: 70vh; overflow-y: auto">
+  <div class="modal-body modalbodyy">
     <div
       *ngFor="let contact of OrganizationContacts"
       class="mb-3 border-bottom pb-2 d-flex justify-content-between align-items-center"

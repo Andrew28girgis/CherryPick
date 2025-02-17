@@ -292,7 +292,36 @@ input {
   margin: 0;
   padding: 0;
 }
-
+.contactname{
+  font-weight: 600; 
+  cursor: pointer
+}
+.cursor{
+  cursor: pointer;
+}
+.showMoreRelations{
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.GeneratedEmail{
+  background-color: #141e2a
+}
+.SavedTemplate{
+  align-items: center;
+  display: block
+}
+.firstlast{
+  font-size: 13px;
+  align-items: center;
+  display: block;
+  margin-top: 4px;
+}
+.creationdate{
+  font-size: 13px;
+  align-items: center;
+  display: block;
+}
 @media (max-width: 768px) {
   .mobileResponsive {
     margin-left: 11px;
