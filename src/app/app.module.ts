@@ -19,9 +19,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { TokenInterceptor } from './token.interceptor';
 import { SummeryComponent } from './components/summery/summery.component';
-import { UserBuyboxComponent } from './components/user-buybox/user-buybox.component';
-import { OrganizationsComponent } from './components/organizations/organizations.component';
-import { OrganizationDetailsComponent } from './components/organizations/organization-details/organization-details.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
@@ -30,7 +27,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { KayakModule } from './components/kayak-home/kayak.module';
 import { ToastrModule } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
-import { AssistantComponent } from './components/kanban/assistant/assistant.component';
 import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
 import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
@@ -58,15 +54,11 @@ import { TermsComponent } from './components/terms/terms.component';
     NumberFormatDirective,
     LandingComponent,
     NumberWithCommasPipe,
-    SummeryComponent,
-    UserBuyboxComponent,
-    OrganizationsComponent,
-    OrganizationDetailsComponent,
+    SummeryComponent, 
     CherryExpansionComponent,
     KanbanComponent,
     KanbanHomeComponent,
     SidebarComponent,
-    AssistantComponent,
     FilterPanelComponent,
     EditPopupComponent,
     DetailsComponent,

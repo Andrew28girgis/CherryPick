@@ -1,33 +1,41 @@
-# Node.js with Angular
-# Build a Node.js project that uses Angular.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
+# 1. Install Node.js
 - task: NodeTool@0
   inputs:
     versionSpec: '20.x'
   displayName: 'Install Node.js'
 
+# 2. Install project dependencies
 - script: |
     npm install --legacy-peer-deps
-    npm install -g @angular/cli      
-    npm install @fortawesome/angular-fontawesome
-    npm install @fortawesome/free-brands-svg-icons
-    npm install @fortawesome/free-solid-svg-icons
-    ng build 
-  displayName: 'npm install and build'
+    npm install -g @angular/cli@17
+    npm install --save-dev @angular-devkit/build-angular
+  displayName: 'Install Dependencies'
 
+# 3. Build the Angular application
+- script: |
+    ng build --configuration=production
+  displayName: 'Build Angular App'
+
+# 4. Prepare and publish build artifacts
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'dist/comman'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  displayName: 'Publish Build Artifacts'
+
+# 5. Deploy to Azure Static Web Apps
 - task: AzureStaticWebApp@0
   inputs:
-    app_location: '/' # Location of your app code, typically the root folder
-    api_location: ''   # Leave empty if you don't have an API
-    output_location: './dist/comman' # Replace with your Angular app's output directory
-    azure_static_web_apps_api_token: 320fa325d155a34e053d32d2b575288264ce4fca54ae3b65fa09b6e6bb14c06d5-0c403a97-ae78-42b4-a6d8-89ecfc38155a00f397685
+    app_location: '/'         # Location of your app code, typically the root folder
+    api_location: ''          # Leave empty if you don't have an API
+    output_location: './dist/comman'  # Update with your Angular app's output directory
+    azure_static_web_apps_api_token: '320fa325d155a34e053d32d2b575288264ce4fca54ae3b65fa09b6e6bb14c06d5-0c403a97-ae78-42b4-a6d8-89ecfc38155a00f397685'
   displayName: 'Deploy to Azure Static Web Apps'

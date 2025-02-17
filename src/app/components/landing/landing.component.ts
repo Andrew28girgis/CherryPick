@@ -197,6 +197,7 @@ export class LandingComponent {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+  
   GetPlaceCotenants(placeId: number): void {
     const body: any = {
       Name: 'GetPlaceCotenants',
