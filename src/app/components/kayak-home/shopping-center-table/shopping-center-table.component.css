@@ -993,7 +993,7 @@ img[alt="logo"] {
   .header-info .center-name {
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 24px;
+    font-size: 22px;
     margin-bottom: 4px;
     font-weight: 500;
   }
@@ -1002,7 +1002,7 @@ img[alt="logo"] {
   .header-info .center-location {
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 18px;
+    font-size: 12px;
     margin: 0;
     opacity: 0.9;
     line-height: 1.4;
