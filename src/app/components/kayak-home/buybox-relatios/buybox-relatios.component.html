@@ -32,7 +32,7 @@
             <span class="visually-hidden">Loading...</span>
           </div>
         </div>
-        <div class="d-flex justify-content-end align-items-center col-1 p-0" style="margin-top: 30px;">
+        <div class="d-flex justify-content-end align-items-center col-1 p-0 subtop">
           <button type="submit" class="btn btn-primary" (click)="submitOrganizationForm()">
             Submit
           </button>
@@ -45,7 +45,7 @@
             <tr>
               <th>Name</th>
               <th>Category</th>
-              <th style="text-align: center;">Actions</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody *ngIf="RelationsOrganizations.length > 0">
@@ -62,8 +62,8 @@
         </table>
       </div>
 
-      <div class="pt-2 d-flex justify-content-center align-items-center" style="height: 20vh;" *ngIf="RelationsOrganizations?.length == 0 || !RelationsOrganizations">
-        <p style="font-weight: 500;">No data Relations</p>
+      <div class="pt-2 d-flex justify-content-center align-items-center relationsorg" *ngIf="RelationsOrganizations?.length == 0 || !RelationsOrganizations">
+        <p class="nodatarelations">No data Relations</p>
       </div>
     </div>
 

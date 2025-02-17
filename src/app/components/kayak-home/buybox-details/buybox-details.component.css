@@ -1,4 +1,4 @@
-.modal-body{
+.modal-body {
   border: 1px solid #001f3f2b;
   border-radius: 10px;
 }
@@ -12,32 +12,13 @@
   line-height: 24px;
 }
 
-@media (max-width: 768px) {
-  .div_head{
-   display: block !important;
-   justify-content: flex-end;
-  }
-  .bold-word{
-    width: 100%;
-  }
-  .spec-btn{
-
-    margin-top: 5px;
-  }
-
-  .Button__f{
-    display: flex;
-    justify-content: end;
-  }
-}
-
 .spec-btn {
   border-radius: var(--Radius-Radius-16, 16px);
   border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #4d65b4);
   background: var(--Button-Secondary-BG, #fff);
   white-space: nowrap;
   padding-right: 0 !important;
-  padding-left: 0 !important; 
+  padding-left: 0 !important;
 }
 
 .card-title {
@@ -80,29 +61,23 @@
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
-  border: 1px solid var(--Button-Close-Stroke-Color, #4d65b4); /* Red border for distinction */
-  background: var(
-    --Button-Close-BG,
-    #fff
-  ); /* White background for a clean look */
+  border: 1px solid var(--Button-Close-Stroke-Color, #4d65b4);
+  background: var(--Button-Close-BG, #fff);
   border-radius: var(--Radius-Radius-16, 16px);
   padding: 0.5rem 1rem;
   transition: all 0.3s ease-in-out;
 }
 
 .closebtn-modal {
-  color: var(--Button-Close-Label-Default, #dc3545); /* Soft red tone */
+  color: var(--Button-Close-Label-Default, #dc3545);
   text-align: center;
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
-  border: 1px solid var(--Button-Close-Stroke-Color, #dc3545); /* Red border for distinction */
-  background: var(
-    --Button-Close-BG,
-    #fff
-  ); /* White background for a clean look */
+  border: 1px solid var(--Button-Close-Stroke-Color, #dc3545);
+  background: var(--Button-Close-BG, #fff);
   border-radius: var(--Radius-Radius-16, 16px);
   padding: 0.5rem 1rem;
   transition: all 0.3s ease-in-out;
@@ -115,4 +90,25 @@
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
+}
+.whitee-space{
+  white-space: pre-line;
+}
+
+@media (max-width: 768px) {
+  .div_head {
+    display: block !important;
+    justify-content: flex-end;
+  }
+  .bold-word {
+    width: 100%;
+  }
+  .spec-btn {
+    margin-top: 5px;
+  }
+
+  .Button__f {
+    display: flex;
+    justify-content: end;
+  }
 }
