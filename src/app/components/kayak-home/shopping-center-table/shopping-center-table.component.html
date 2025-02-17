@@ -60,6 +60,39 @@
                     {{ shopping.CenterState }}
                   </p>
                 </div>
+             
+              <div>
+                <p
+                class=""
+                style="color: white;"
+                  [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                ></p>
+              </div>
+              <div class="row">
+                <div
+                  *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+                  class="col-12 d-flex flex-column spec"
+                >
+                  <div class="d-flex flex-column">
+                    <p class=""                 style="color: white;"
+                    >
+                      <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                    </p>
+                    <p                 style="color: white;"
+                    >
+                      {{ item.RelationOrganizationName }}
+                      <img
+                        class="logo ms-2"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
+                        alt=""
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
               </div>
               <div style="position: relative">
                 <div
