@@ -2,14 +2,12 @@ import {
   Component,
   OnInit,
   NgZone,
-  ViewChild,
-  ElementRef,
+  ViewChild, 
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from './../../../../src/app/services/places.service';
 import {
-  AllPlaces,
   General,
 } from './../../../../src/models/domain';
 declare const google: any;
@@ -17,7 +15,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from '../../../../src/app/services/maps.service';
 import { BuyboxCategory } from '../../../../src/models/buyboxCategory';
-import { Center, Place } from '../../../../src/models/shoppingCenters';
+import { Center } from '../../../../src/models/shoppingCenters';
 import { BbPlace } from '../../../../src/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Polygons } from '../../../../src/models/polygons';
@@ -39,8 +37,7 @@ interface Comment {
   styleUrls: ['./home.component.css'],
 })
 
-export class HomeComponent implements OnInit {
-  @ViewChild('mainContainer') mainContainer!: ElementRef;
+export class HomeComponent implements OnInit { 
   shoppingCenter: any;
   General!: General;
   BuyBoxId!: any;
@@ -75,8 +72,7 @@ export class HomeComponent implements OnInit {
   currentView: any;
   map: any; 
   cardsSideList: any[] = [];
-  selectedOption!: number;
-  selectedSS!: any;
+  selectedOption!: number; 
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
   buyboxCategories: BuyboxCategory[] = []; 
@@ -97,6 +93,9 @@ export class HomeComponent implements OnInit {
   BuyBoxName: string = '';
   Permission: permission[] = [];
   placesRepresentative: boolean | undefined;
+  @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
+  StreetViewOnePlace!: boolean;
+  sanitizedUrl!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -122,20 +121,16 @@ export class HomeComponent implements OnInit {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
-
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
     this.currentView = localStorage.getItem('currentView') || '3';
-
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
     );
-
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
     } 
-    // this.GetPolygons(this.BuyBoxId);
   }
 
   toggleNavbar() {
@@ -184,7 +179,6 @@ export class HomeComponent implements OnInit {
       scrollable: true,
     });
   }
-  @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
 
   addContact(form: NgForm): void {
     this.spinner.show();
@@ -198,7 +192,6 @@ export class HomeComponent implements OnInit {
         password: this.newContact.password,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.spinner.hide();
@@ -210,7 +203,6 @@ export class HomeComponent implements OnInit {
         };
         form.resetForm();
         this.modalService.dismissAll();
-        // Refresh and reopen the contacts modal using the stored template reference
         this.openContactsModal(this.contactsModalTemplate);
       },
       error: (error: any) => {
@@ -225,14 +217,12 @@ export class HomeComponent implements OnInit {
       this.Permission = this.stateService.getPermission();
       return;
     }
-
     const body: any = {
       Name: 'GetCustomSections',
       Params: {
         BuyBoxId: buyboxId,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.Permission = data.json;
@@ -240,13 +230,11 @@ export class HomeComponent implements OnInit {
           (item: permission) => item.sectionName === 'PlacesRepresentative'
         )?.visible;
         this.stateService.setPermission(data.json);
-
         if (this.stateService.getPlacesRepresentative()) {
           this.placesRepresentative =
             this.stateService.getPlacesRepresentative();
           return;
         }
-
         this.stateService.setPlacesRepresentative(this.placesRepresentative);
         this.markerService.setPlacesRepresentative(this.placesRepresentative);
       },
@@ -259,7 +247,6 @@ export class HomeComponent implements OnInit {
       this.ShareOrg = this.stateService.getShareOrg();
       return;
     }
-
     const body: any = {
       Name: 'GetOrganizationById',
       Params: {
@@ -281,7 +268,6 @@ export class HomeComponent implements OnInit {
       this.getShoppingCenters(buyboxId);
       return;
     }
-
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
@@ -305,7 +291,6 @@ export class HomeComponent implements OnInit {
         buyboxid: buyboxId,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.Polygons = data.json;
@@ -318,10 +303,8 @@ export class HomeComponent implements OnInit {
     if (this.stateService.getShoppingCenters().length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
       this.getBuyBoxPlaces(this.BuyBoxId);
-
       return;
     }
-
     this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
@@ -329,7 +312,6 @@ export class HomeComponent implements OnInit {
         BuyBoxId: buyboxId,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
@@ -350,7 +332,6 @@ export class HomeComponent implements OnInit {
       this.getAllMarker();
       return;
     }
-
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
@@ -523,10 +504,8 @@ export class HomeComponent implements OnInit {
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
       this.shoppingCenters?.forEach((center) => {
-        // if (center.ShoppingCenter?.Places) {
         center.Latitude = center.Latitude;
         center.Longitude = center.Longitude;
-        // }
       });
     }
   }
@@ -537,10 +516,7 @@ export class HomeComponent implements OnInit {
     const visibleCoords = new Set(
       visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
     );
-
     const allProperties = [...(this.shoppingCenters || [])];
-
-    // Update the cardsSideList inside NgZone
     this.ngZone.run(() => {
       this.cardsSideList = allProperties.filter(
         (property) =>
@@ -553,21 +529,17 @@ export class HomeComponent implements OnInit {
   private isWithinBounds(property: any, bounds: any): boolean {
     const lat = parseFloat(property.Latitude);
     const lng = parseFloat(property.Longitude);
-
     if (isNaN(lat) || isNaN(lng)) {
       console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
-
     return bounds?.contains({ lat, lng });
   }
 
   onMouseEnter(place: any): void {
     const { Latitude, Longitude } = place;
     const mapElement = document.getElementById('map') as HTMLElement;
-
     if (!mapElement) return;
-
     if (this.map) {
       this.map.setCenter({ lat: +Latitude, lng: +Longitude });
       this.map.setZoom(17);
@@ -608,7 +580,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  sanitizedUrl!: any;
   openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -639,8 +610,6 @@ export class HomeComponent implements OnInit {
   trackByIndex(index: number, item: any): number {
     return index; // Return the index to track by the position
   }
-
-  StreetViewOnePlace!: boolean;
 
   viewOnStreet() {
     this.StreetViewOnePlace = true;
@@ -730,28 +699,23 @@ export class HomeComponent implements OnInit {
         console.error('Could not copy text: ', err);
       });
   }
+
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
-
     if (!lat || !lng) {
       console.error('Latitude and longitude are required to display the map.');
       return;
     }
-    // Load Google Maps API libraries
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
-
     if (!mapDiv) {
       console.error('Element with ID "mappopup" not found.');
       return;
     }
-
     const map = new Map(mapDiv, {
       center: { lat, lng },
       zoom: 14,
     });
-
-    // Create a new marker
     const marker = new google.maps.Marker({
       position: { lat, lng },
       map: map,
@@ -762,8 +726,7 @@ export class HomeComponent implements OnInit {
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
-    };
-
+    }; 
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
@@ -777,8 +740,6 @@ export class HomeComponent implements OnInit {
       const formattedOriginalPrice = `$${parseFloat(
         originalPrice
       ).toLocaleString()}/sq ft./year`;
-
-      // Inline styles can be adjusted as desired
       return `
         <div style="display:inline-block; text-align:left; line-height:1.2;">
           <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
@@ -786,11 +747,7 @@ export class HomeComponent implements OnInit {
         </div>
       `;
     };
-
-    // Extract the places array
     const places = shoppingCenter?.ShoppingCenter?.Places || [];
-
-    // Collect building sizes if available
     const buildingSizes = places
       .map((place: any) => place.BuildingSizeSf)
       .filter(
@@ -798,7 +755,6 @@ export class HomeComponent implements OnInit {
       );
 
     if (buildingSizes.length === 0) {
-      // Handle case for a single shopping center without valid places
       const singleSize = shoppingCenter.BuildingSizeSf;
       if (singleSize) {
         const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
@@ -817,20 +773,14 @@ export class HomeComponent implements OnInit {
       }
       return null;
     }
-
-    // Calculate min and max size
     const minSize = Math.min(...buildingSizes);
     const maxSize = Math.max(...buildingSizes);
-
-    // Find corresponding lease prices for min and max sizes
     const minPrice =
       places.find((place: any) => place.BuildingSizeSf === minSize)
         ?.ForLeasePrice || 'On Request';
     const maxPrice =
       places.find((place: any) => place.BuildingSizeSf === maxSize)
         ?.ForLeasePrice || 'On Request';
-
-    // Format unit sizes
     const sizeRange =
       minSize === maxSize
         ? `${formatNumberWithCommas(minSize)} sq ft.`
@@ -858,8 +808,6 @@ export class HomeComponent implements OnInit {
             )}/month`,
             maxPrice
           );
-
-    // Handle the lease price display logic
     let leasePriceRange;
     if (
       formattedMinPrice === 'On Request' &&
@@ -891,12 +839,5 @@ export class HomeComponent implements OnInit {
     } else {
       return '';
     }
-  }
-
-  setDefaultView(viewValue: number) {
-    this.selectedSS = viewValue;
-    this.stateService.setSelectedSS(viewValue);
-  }
-
-
+  } 
 }
