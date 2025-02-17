@@ -1,16 +1,13 @@
-import { SocialMedialService } from 'src/app/services/socialMedia.service';
+
 import {
   Component,
   OnInit,
   NgZone,
   ViewChild,
   ElementRef,
-  EventEmitter,
-  Output,
   TemplateRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms'; // <-- Import NgForm
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from './../../../../src/app/services/places.service';
 import {
@@ -101,8 +98,7 @@ export class HomeComponent implements OnInit {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters: boolean = true; // Ensure this reflects your initial state
   shoppingCenters: Center[] = [];
-  navbarOpen: any;
-
+  navbarOpen: any; 
   OrganizationContacts: any[] = [];
   contactModal: any;
   newContact: any = {
@@ -112,26 +108,8 @@ export class HomeComponent implements OnInit {
     password: '',
   };
   showbackIds: number[] = [];
-  showbackIdsJoin: any;
-  @ViewChild('deleteShoppingCenterModal')
-  deleteShoppingCenterModal!: TemplateRef<any>;
-  selectedId: number | null = null;
-  selectedIdCard: number | null = null;
-  shoppingCenterIdToDelete: number | null = null;
-  showToast = false;
-  toastMessage = '';
-  reactions: { [key: number]: string } = {};
-  showReactions: { [key: number]: boolean } = {};
-  replyingTo: { [key: number]: number | null } = {};
-  reactionTimers: { [key: number]: any } = {};
-  newComments: { [key: number]: string } = {};
-  newReplies: { [key: number]: string } = {};
-  Comments: { [key: number]: string } = {};
-  comments: { [key: number]: Comment[] } = {};
-  likes: { [key: string]: number } = {};
-  showComments: { [key: number]: boolean } = {};
-  MarketSurveyId: Center[] = [];
-  lastTap = 0;
+  showbackIdsJoin: any; 
+  selectedId: number | null = null; 
 
   toggleNavbar() {
     this.navbarOpen = !this.navbarOpen;
