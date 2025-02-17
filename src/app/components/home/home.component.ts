@@ -5,14 +5,12 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import { NgForm } from '@angular/forms'; // <-- Import NgForm
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from './../../../../src/app/services/places.service';
 import {
   AllPlaces,
-  AnotherPlaces,
   General,
-  Property,
 } from './../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -35,24 +33,18 @@ interface Comment {
   replies: Comment[];
   MarketSurveyId: number;
 }
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
+
 export class HomeComponent implements OnInit {
   @ViewChild('mainContainer') mainContainer!: ElementRef;
   shoppingCenter: any;
-  selectedView: string = 'shoppingCenters';
   General!: General;
-  pageTitle!: string;
   BuyBoxId!: any;
-  OrgId!: any;
-  page: number = 1;
-  pageSize: number = 25;
-  paginatedProperties: Property[] = [];
-  filteredProperties: Property[] = [];
+  OrgId!: any;  
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -80,14 +72,8 @@ export class HomeComponent implements OnInit {
     //   status: 5,
     // },
   ];
-  isOpen = false;
-  allPlaces!: AllPlaces;
-  anotherPlaces!: AnotherPlaces;
   currentView: any;
-  centerPoints: any[] = [];
-  map: any; // Add this property to your class
-  isCompetitorChecked = false; // Track the checkbox state
-  isCoTenantChecked = false;
+  map: any; 
   cardsSideList: any[] = [];
   selectedOption!: number;
   selectedSS!: any;
@@ -111,11 +97,6 @@ export class HomeComponent implements OnInit {
   BuyBoxName: string = '';
   Permission: permission[] = [];
   placesRepresentative: boolean | undefined;
-
-  toggleNavbar() {
-    this.navbarOpen = !this.navbarOpen;
-  }
-
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -157,6 +138,10 @@ export class HomeComponent implements OnInit {
     // this.GetPolygons(this.BuyBoxId);
   }
 
+  toggleNavbar() {
+    this.navbarOpen = !this.navbarOpen;
+  }
+
   openContactsModal(content: any): void {
     this.spinner.show();
     const body: any = {
@@ -185,9 +170,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // Method to open the add-contact modal
   openAddContactModal(content: any): void {
-    // Reset the form model
     this.newContact = {
       firstName: '',
       lastName: '',
@@ -416,10 +399,6 @@ export class HomeComponent implements OnInit {
     return undefined;
   }
 
-  toggleDropdown() {
-    this.isOpen = !this.isOpen;
-  }
-
   async getAllMarker() {
     console.log(`hello`);
 
@@ -603,19 +582,9 @@ export class HomeComponent implements OnInit {
     this.markerService.onMouseLeave(this.map, place);
   }
 
-  // getAllBuyBoxComparables(buyboxId: number) {
-  //   this.spinner.show();
-  //   this.PlacesService.GetAllBuyBoxComparables(buyboxId).subscribe((data) => {
-  //     this.anotherPlaces = data;
-  //     this.getAllMarker();
-  //     this.spinner.hide();
-  //   });
-  // }
-
   selectOption(option: any): void {
     this.selectedOption = option;
     this.currentView = option.status;
-    this.isOpen = false;
     localStorage.setItem('currentView', this.currentView);
   }
 
