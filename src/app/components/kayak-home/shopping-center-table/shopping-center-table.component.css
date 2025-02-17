@@ -721,11 +721,9 @@ img[alt="logo"] {
     width: 100%;
     padding-bottom: 16px;
     background: rgb(0, 0, 0);
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 0) 100%
-    );
+
+      background: linear-gradient(0deg, rgba(0, 0, 0, 1) 19%, rgba(0, 0, 0, 0) 100%);
+    
   }
 
   .header-info .center-name {
@@ -1010,6 +1008,10 @@ img[alt="logo"] {
     line-height: 1.4;
   }
 
+
+
+
+
   /* Right side action buttons */
   .card-footer {
     position: absolute;
@@ -1126,7 +1128,7 @@ img[alt="logo"] {
     display: none;
   }
   :host ::ng-deep .p-carousel-item {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.5s ease-in-out;
   }
   
   :host ::ng-deep .p-carousel-item.p-carousel-item-active {
