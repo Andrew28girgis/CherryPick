@@ -36,6 +36,7 @@
       [showNavigators]="false"
       [showIndicators]="true"
     >
+    <!--autoplayInterval="3000"-->
       <ng-template pTemplate="item" let-shopping>
         <div [ngClass]="{ 'd-sm-flex justify-content-center': !isMobile ,'w-100': isMobile}">
           <div
@@ -60,6 +61,39 @@
                     {{ shopping.CenterState }}
                   </p>
                 </div>
+             
+              <div>
+                <p
+                class=""
+                style="color: white;"
+                  [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                ></p>
+              </div>
+              <div class="row">
+                <div
+                  *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+                  class="col-12 d-flex flex-column spec"
+                >
+                  <div class="d-flex flex-column">
+                    <p class=""                 style="color: white;"
+                    >
+                      <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                    </p>
+                    <p                 style="color: white;"
+                    >
+                      {{ item.RelationOrganizationName }}
+                      <img
+                        class="logo ms-2"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
+                        alt=""
+                      />
+                    </p>
+                  </div>
+                </div>
+              </div>
               </div>
               <div style="position: relative">
                 <div
@@ -245,9 +279,8 @@
               <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M25.1267 22.44L25.6467 26.6533C25.78 27.76 24.5933 28.5333 23.6467 27.96L19.0333 25.2133C18.7133 25.0266 18.6333 24.6266 18.8067 24.3066C19.4733 23.08 19.8333 21.6933 19.8333 20.3066C19.8333 15.4266 15.6467 11.4533 10.5 11.4533C9.44668 11.4533 8.42001 11.6133 7.46001 11.9333C6.96668 12.0933 6.48668 11.64 6.60668 11.1333C7.82001 6.27996 12.4867 2.66663 18.06 2.66663C24.5667 2.66663 29.8333 7.58663 29.8333 13.6533C29.8333 17.2533 27.98 20.44 25.1267 22.44Z" fill="white"/>
                 <path d="M17.8333 20.3067C17.8333 21.8934 17.2467 23.36 16.26 24.52C14.94 26.12 12.8467 27.1467 10.5 27.1467L7.01999 29.2134C6.43332 29.5734 5.68666 29.08 5.76666 28.4L6.09999 25.7734C4.31332 24.5334 3.16666 22.5467 3.16666 20.3067C3.16666 17.96 4.41999 15.8934 6.33999 14.6667C7.52666 13.8934 8.95332 13.4534 10.5 13.4534C14.5533 13.4534 17.8333 16.52 17.8333 20.3067Z" fill="white"/>
-                </svg>
-                
-                  
+              </svg>
+                    
                 <span class="reactionMobile"> {{ shopping.ShoppingCenter.Comments?.length }} </span>
               </button>
               <button

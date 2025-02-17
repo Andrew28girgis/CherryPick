@@ -721,11 +721,9 @@ img[alt="logo"] {
     width: 100%;
     padding-bottom: 16px;
     background: rgb(0, 0, 0);
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 0) 100%
-    );
+
+      background: linear-gradient(0deg, rgba(0, 0, 0, 1) 19%, rgba(0, 0, 0, 0) 100%);
+    
   }
 
   .header-info .center-name {
@@ -936,7 +934,7 @@ img[alt="logo"] {
   }
 
   .comment-list {
-    max-height: 150px;
+    max-height: 300px;
   }
 
   .reaction-options {
@@ -986,7 +984,7 @@ img[alt="logo"] {
   }
   .header-info {
     position: absolute;
-    top: 15%;
+    top: 10%;
     left: 16px;
     right: 16px;
     z-index: 2; 
@@ -995,7 +993,7 @@ img[alt="logo"] {
   .header-info .center-name {
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 30px;
+    font-size: 24px;
     margin-bottom: 4px;
     font-weight: 500;
   }
@@ -1009,6 +1007,10 @@ img[alt="logo"] {
     opacity: 0.9;
     line-height: 1.4;
   }
+
+
+
+
 
   /* Right side action buttons */
   .card-footer {
@@ -1063,6 +1065,11 @@ img[alt="logo"] {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
+  .comment-list {
+    overflow-y: auto; /* Make the comments list scrollable */
+    flex-grow: 1;
+  }
+  
 
   .social-card::before {
     content: "";
