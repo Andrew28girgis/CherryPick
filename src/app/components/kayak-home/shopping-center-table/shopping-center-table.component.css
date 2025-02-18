@@ -1317,3 +1317,33 @@ fill: white;
 :host ::ng-deep .p-carousel-items-content{
   overflow-y: scroll !important;
 }
+
+.scroll-container {
+  height: 100vh; 
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth; 
+  -webkit-overflow-scrolling: touch; 
+}
+
+.card {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  border-bottom: 1px solid #ddd;
+  background: white;
+  transition: transform 0.5s ease-in-out;
+}
+
+.scroll-container:active .card,
+.scroll-container:focus .card {
+  transform: scale(0.98); 
+}
+
+@supports (-webkit-touch-callout: none) {
+  .scroll-container {
+    overflow: auto;
+  }
+}

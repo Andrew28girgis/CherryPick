@@ -24,30 +24,10 @@
   </div>
 </div>
 <ng-container *ngIf="currentView == 5">
-  <div class="containerMobileView" #carouselContainer>
-    <p-carousel
-     #carousel
 
-      orientation="vertical"
-      [value]="shoppingCenters"
-      [numVisible]="1"
-      [numScroll]="1"
-      [verticalViewPortHeight]="carouselHeight"
-      [circular]="true"
-      [responsiveOptions]="responsiveOptions"
-      [showNavigators]="true"
-      [showIndicators]="false"
-    >
-      <!--autoplayInterval="3000"-->
-      <ng-template pTemplate="item" let-shopping>
-        <div
-        class="Res"
-        [ngClass]="{
-            'd-sm-flex justify-content-center': !isMobile,
-            'w-100': isMobile
-          }"
-        >
-          <div
+  <div class="scroll-container">
+    <div class="card" *ngFor="let shopping of shoppingCenters">
+      <div
             class="social-card mb-0 mb-sm-5 Res" 
             [ngClass]="{ 'full-height': isMobile }"
             [style.backgroundImage]="
@@ -172,7 +152,7 @@
                 </svg>
 
                 <span class="reactionMobile">
-                  {{ shopping.ShoppingCenter.Comments?.length }}
+                  <!-- {{ shopping.ShoppingCenter.Comments.length }} -->
                 </span>
               </button>
               <button
@@ -459,9 +439,7 @@
               </ul>
             </div>
           </div>
-        </div>
-      </ng-template>
-    </p-carousel>
+    </div>
   </div>
   <div class="row d-sm-none fixed-bottom-mobile">
     <div class="col-12 d-flex justify-content-around align-items-center">
