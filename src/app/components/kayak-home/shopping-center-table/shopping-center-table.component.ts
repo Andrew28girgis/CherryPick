@@ -9,6 +9,7 @@ import {
   EventEmitter,
   HostListener,
   Renderer2,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,9 +36,7 @@ import {
   BuyBoxCityState,
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
-import {
-  LandingPlace,
-} from 'src/models/landingPlace';
+import { LandingPlace } from 'src/models/landingPlace';
 import { Carousel } from 'primeng/carousel';
 
 interface Comment {
@@ -162,11 +161,11 @@ export class ShoppingCenterTableComponent implements OnInit {
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
   ShoppingCenterId!: number;
-  placeImage: string[] = [];  
+  placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
- 
-  constructor( 
+
+  constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private modalService: NgbModal,
@@ -176,7 +175,8 @@ export class ShoppingCenterTableComponent implements OnInit {
     private ngZone: NgZone,
     private sanitizer: DomSanitizer,
     private stateService: StateService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef
   ) {
     this.currentView = localStorage.getItem('currentViewDashBord') || '4';
     this.savedMapView = localStorage.getItem('mapView');
@@ -209,7 +209,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     { id: 'Emily', label: 'Emily' },
   ];
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -236,14 +236,14 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
-  } 
-  hideAllComments(): void { 
+  }
+  hideAllComments(): void {
     for (const key in this.showComments) {
       if (this.showComments.hasOwnProperty(key)) {
         this.showComments[key] = false;
       }
     }
-  } 
+  }
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
@@ -998,7 +998,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
-    }
+  }
 
   addComment(shopping: Center, marketSurveyId: number): void {
     if (this.newComments[marketSurveyId]) {
@@ -1012,14 +1012,21 @@ export class ShoppingCenterTableComponent implements OnInit {
       };
 
       this.PlacesService.GenericAPI(body).subscribe({
-        next: (response: any) => {
+        next: (response: any) => { 
+          if (!shopping.ShoppingCenter.Comments) {
+            shopping.ShoppingCenter.Comments = [];
+          }
+
+          // Now safely push the new comment
           shopping.ShoppingCenter.Comments.push({
             Comment: this.newComments[marketSurveyId],
             CommentDate: new Date().toISOString(),
           });
+
           shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
             shopping.ShoppingCenter.Comments
           );
+          this.newComments[marketSurveyId] = '';
         },
       });
     }
@@ -1140,7 +1147,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.replyingTo[shopping.Id] =
       this.replyingTo[shopping.Id] === commentId ? null : commentId;
     console.log(commentId);
-  } 
+  }
   closeComments(shopping: any): void {
     this.showComments[shopping.Id] = false;
   }
@@ -1159,18 +1166,19 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
-  openGallery(shpping : number) {
+  openGallery(shpping: number) {
     this.GetPlaceDetails(0, shpping);
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
 
   fetchImages(shoppingCenter: any) {
     if (shoppingCenter && shoppingCenter.Images) {
-      this.placeImage = shoppingCenter.Images.split(",").map((link: string) => link.trim())
-    console.log(this.placeImage);
-    
+      this.placeImage = shoppingCenter.Images.split(',').map((link: string) =>
+        link.trim()
+      );
+      console.log(this.placeImage);
     } else {
-      this.placeImage = []
+      this.placeImage = [];
     }
   }
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
@@ -1188,14 +1196,14 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.CustomPlace = data.json?.[0] || null;
         this.ShoppingCenter = this.CustomPlace;
 
-        if (this.ShoppingCenter && this.ShoppingCenter.Images) { 
-          this.placeImage = this.ShoppingCenter.Images?.split(',').map((link :any) =>
-            link.trim()          
-        ); 
-      }}
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) {
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
+            (link: any) => link.trim()
+          );
+        }
+      },
     });
   }
-
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   scrollUp() {
@@ -1203,7 +1211,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     const cardHeight = container.querySelector('.card')?.clientHeight || 0;
     container.scrollBy({
       top: -cardHeight,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 
@@ -1212,10 +1220,9 @@ export class ShoppingCenterTableComponent implements OnInit {
     const cardHeight = container.querySelector('.card')?.clientHeight || 0;
     container.scrollBy({
       top: cardHeight,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
-
 
   ngAfterViewInit(): void {
     this.globalClickListener = this.renderer.listen(
@@ -1231,5 +1238,4 @@ export class ShoppingCenterTableComponent implements OnInit {
       }
     );
   }
-
 }
