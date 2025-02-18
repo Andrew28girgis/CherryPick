@@ -352,6 +352,7 @@ img[alt="logo"] {
   align-items: center;
   padding: 0px;
   background-color: #f8f9fa;
+  border: none;
 }
 
 .header-info {
@@ -784,16 +785,12 @@ img[alt="logo"] {
   }
   /* Comments section adjustments */
   .comments-section {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: sticky;
     background: #fff;
     max-height: 50vh;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+    bottom: 180px;
   }
   .p-carousel-items-container {
     display: contents;
@@ -1017,7 +1014,7 @@ img[alt="logo"] {
   .card-footer {
     position: absolute;
     right: 16px;
-    top: 63%;
+    top: 50%;
     transform: translateY(-50%);
     flex-direction: column;
     align-items: center;
@@ -1228,11 +1225,13 @@ img[alt="logo"] {
   height: 100vh; /* Each card takes the full viewport height */
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
+  padding-top: 20px;
   scroll-snap-align: start; /* Ensure snap behavior */
   border-bottom: 1px solid #ddd;
   background: white;
   transition: transform 0.5s ease-in-out;
+  border: none;
 }
 
 scroll-container {
@@ -1242,8 +1241,7 @@ scroll-container {
   overflow-x: hidden;
 }
 
-.scroll-indicator {
-  position: fixed;
+.scroll-indicator { 
   left: 50%;
   transform: translateX(-50%);
   width: 50px;
@@ -1265,14 +1263,17 @@ scroll-container {
   pointer-events: auto;
 }
 
-.up-indicator {
-  top: 20px;
-}
-
-.down-indicator {
-  bottom: 20px;
-}
-
+ 
 .card {
   margin-bottom: 20px;
+}
+.indicators-container{
+  position: absolute;
+  gap: 25px;
+  bottom: 36%;
+  z-index: 9999999;
+  right: 10%;
+  display: flex
+;
+  flex-direction: column;
 }
