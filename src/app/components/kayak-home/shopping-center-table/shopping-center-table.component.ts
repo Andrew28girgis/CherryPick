@@ -176,7 +176,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService
   ) {
-    this.currentView = localStorage.getItem('currentView') || '4';
+    this.currentView = localStorage.getItem('currentViewDashBord') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
     this.responsiveOptions = [
@@ -219,7 +219,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
-    this.currentView = localStorage.getItem('currentView') || '5';
+    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.getShoppingCenters(this.BuyBoxId);
@@ -662,7 +662,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.selectedOption = option.status;
     this.currentView = option.status;
     this.isOpen = false;
-    localStorage.setItem('currentView', this.currentView);
+    localStorage.setItem('currentViewDashBord', this.currentView);
   }
 
   goToPlace(place: any) {
