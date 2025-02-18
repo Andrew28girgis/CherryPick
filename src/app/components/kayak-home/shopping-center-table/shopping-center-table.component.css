@@ -1296,69 +1296,45 @@ img[alt="logo"] {
   max-height: 400px;
 } 
 
-/* Force GPU acceleration and enable hardware optimization */
-.carousel {
-  -webkit-transform: translateZ(0);  /* For Safari */
+/* General improvements for carousel on mobile */
+p-carousel {
+  -webkit-transform: translateZ(0);  /* Safari-specific for GPU acceleration */
   transform: translateZ(0);          /* For other browsers */
   will-change: transform, opacity;  /* Optimize rendering */
-  transition: transform 0.5s ease-in-out; /* Fallback smooth transition */
+  transition: transform 0.5s ease-in-out; /* Smooth transition on movement */
 }
 
-/* Add vendor-specific prefixes for animations */
-.carousel .carousel-item {
-  -webkit-animation: slideAnimation 1s ease-in-out;
-  animation: slideAnimation 1s ease-in-out;
+/* Card Item Section */
+p-carousel .Res {
+  transition: transform 0.3s ease-in-out; /* Smooth scaling for items */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Define animation */
-@keyframes slideAnimation {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-/* Ensure elements are fully optimized for mobile */
-.carousel .social-card {
-  -webkit-transition: transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-}
-
-/* Ensure smooth scaling transitions */
-.carousel .card-image img {
+/* Ensure image scaling and transition */
+p-carousel .card-image img {
+  width: 100%;
+  height: auto;
   transition: transform 0.3s ease-in-out;
   -webkit-transition: transform 0.3s ease-in-out;
 }
 
-/* Add height adjustments for mobile devices */
-@media (max-width: 767px) {
-  .carousel .Res {
-    height: auto;
-    flex-direction: column;
-  }
-
-  .carousel .social-card {
-    height: auto;
-  }
-}
-
-.carousel .Res {
-  will-change: transform;
-  transition: transform 0.3s ease-in-out;
-}
-
-.carousel .card-footer {
+/* Card Footer with Action Buttons */
+p-carousel .card-footer {
   display: flex;
   justify-content: space-between;
   padding: 15px;
-  background-color: rgba(0, 0, 0, 0.6); /* Add transparency for better readability */
+  background-color: rgba(0, 0, 0, 0.6); /* Transparency for better contrast */
 }
 
-.carousel .reaction-buttons {
+p-carousel .reaction-buttons {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-.carousel .action-btn {
+p-carousel .action-btn {
   background-color: transparent;
   border: none;
   color: white;
@@ -1366,46 +1342,51 @@ img[alt="logo"] {
   cursor: pointer;
 }
 
-.carousel .action-btn svg {
+p-carousel .action-btn svg {
   width: 24px;
   height: 24px;
   fill: white;
 }
 
-/* Adjustments for iOS Safari devices */
-@media screen and (max-width: 1024px) {
-  .carousel {
-    height: 100%;
-  }
-
-  /* Enable better performance on Safari */
-  .carousel-item {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-
-  .carousel-item:focus, .carousel-item:active {
-    outline: none;
-  }
-}
-
-/* Improve mobile responsiveness */
+/* Mobile responsiveness */
 @media (max-width: 767px) {
-  .carousel .social-card {
-    width: 100%;
-    margin-bottom: 10px;
+  p-carousel .Res {
+    height: auto; /* Allow flexible height on mobile */
+    flex-direction: column;
   }
 
-  .carousel .card-footer {
+  p-carousel .social-card {
+    height: auto;
+    margin-bottom: 10px; /* Adding space between carousel items */
+  }
+
+  p-carousel .card-footer {
     flex-direction: column;
     align-items: center;
   }
 
-  .carousel .action-btn {
-    margin-bottom: 10px;
+  p-carousel .action-btn {
+    margin-bottom: 10px; /* Space for action buttons */
   }
 
-  .carousel .comments-section {
+  p-carousel .comments-section {
     padding: 10px;
+  }
+}
+
+/* Safari-specific optimizations for carousel on smaller screens */
+@media screen and (max-width: 1024px) {
+  p-carousel {
+    height: 100%;
+  }
+
+  /* Enable better performance on Safari */
+  p-carousel .carousel-item {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  p-carousel .carousel-item:focus, p-carousel .carousel-item:active {
+    outline: none;
   }
 }
