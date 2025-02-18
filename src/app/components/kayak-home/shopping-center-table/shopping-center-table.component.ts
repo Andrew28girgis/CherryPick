@@ -1218,17 +1218,14 @@ export class ShoppingCenterTableComponent implements OnInit {
 
 
   ngAfterViewInit(): void {
-    // Listen for clicks on the document
     this.globalClickListener = this.renderer.listen(
       'document',
       'click',
       (event: MouseEvent) => {
-        // If the container exists and the click target is not inside it...
         if (
           this.commentsContainer &&
           !this.commentsContainer.nativeElement.contains(event.target)
         ) {
-          // Hide all comments lists (or adjust logic to hide only the currently open one)
           this.hideAllComments();
         }
       }
