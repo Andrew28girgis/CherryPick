@@ -16,6 +16,10 @@
   top: -22%;
 }
 
+.mtopp {
+  overflow-y: scroll;
+}
+
 .shortcuts_icon > ul,
 .shortcuts_iconCard > ul {
   text-decoration: none;
@@ -552,6 +556,7 @@ img[alt="logo"] {
 }
 .mtopp {
   margin-top: 10px;
+  overflow-x: scroll;
 }
 .UnitSize {
   width: 250px;
@@ -755,10 +760,9 @@ img[alt="logo"] {
     z-index: 3;
     display: flex;
     justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
     padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 16px;
   }
 
   .action-btn {
@@ -795,6 +799,10 @@ img[alt="logo"] {
 }
 
 @media (max-width: 768px) {
+  .mtopp {
+    overflow-y: scroll;
+  }
+
   .fixed-bottom-mobile {
     position: fixed;
     bottom: 0;
@@ -1020,6 +1028,12 @@ img[alt="logo"] {
     border: none;
     padding: 0;
     z-index: 3;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0px;
   }
 
   .action-btn {
@@ -1254,7 +1268,10 @@ scroll-container {
   font-size: 20px;
   color: white;
 }
-
+.scroll-indicator:hover {
+  background: #003366;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
 .scroll-indicator.visible {
   opacity: 1;
   pointer-events: auto;
@@ -1271,4 +1288,10 @@ scroll-container {
   right: 10%;
   display: flex;
   flex-direction: column;
+}
+
+.ellipsis_icont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
