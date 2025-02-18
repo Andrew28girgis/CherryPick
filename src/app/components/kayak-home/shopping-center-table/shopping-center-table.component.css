@@ -1254,7 +1254,10 @@ scroll-container {
   font-size: 20px;
   color: white;
 }
-
+.scroll-indicator:hover {
+  background: #003366;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
 .scroll-indicator.visible {
   opacity: 1;
   pointer-events: auto;
@@ -1273,4 +1276,6 @@ scroll-container {
   display: flex
 ;
   flex-direction: column;
+
+  
 }
