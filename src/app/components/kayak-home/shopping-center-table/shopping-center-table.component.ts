@@ -1182,7 +1182,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   get carouselHeight(): string {
-    return this.isMobile ? '100vh' : `${this.shoppingCenters.length * 70}vh`;
+    return this.isMobile ? '100vh' : `65vh`;
   }
   closeComments(shopping: any): void {
     this.showComments[shopping.Id] = false;
