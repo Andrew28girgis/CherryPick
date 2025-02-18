@@ -221,7 +221,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
-    this.currentView = localStorage.getItem('currentView') || '4';
+    this.currentView = localStorage.getItem('currentView') || '5';
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.getShoppingCenters(this.BuyBoxId);
