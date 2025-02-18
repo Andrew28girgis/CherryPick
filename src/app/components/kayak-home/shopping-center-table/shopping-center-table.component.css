@@ -1148,7 +1148,7 @@ img[alt="logo"] {
     background-position: center;
   }
 
-  :host ::ng-deep .p-carousel-item {
+  /* :host ::ng-deep .p-carousel-item {
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
@@ -1163,7 +1163,7 @@ img[alt="logo"] {
   :host ::ng-deep .p-carousel-item:not(.p-carousel-item-active) {
     opacity: 0.5;
     transform: scale(0.9);
-  }
+  } */
   
   .icon-option {
     border: none;
