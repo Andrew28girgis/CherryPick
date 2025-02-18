@@ -1193,4 +1193,24 @@ export class ShoppingCenterTableComponent implements OnInit {
       }}
     });
   }
+
+
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  scrollUp() {
+    const container = this.scrollContainer.nativeElement;
+    const cardHeight = container.querySelector('.card')?.clientHeight || 0;
+    container.scrollBy({
+      top: -cardHeight,
+      behavior: 'smooth'
+    });
+  }
+
+  scrollDown() {
+    const container = this.scrollContainer.nativeElement;
+    const cardHeight = container.querySelector('.card')?.clientHeight || 0;
+    container.scrollBy({
+      top: cardHeight,
+      behavior: 'smooth'
+    });
+  }
 }

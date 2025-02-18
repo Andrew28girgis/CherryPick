@@ -25,7 +25,10 @@
 </div>
 <ng-container *ngIf="currentView == 5">
 
-  <div class="scroll-container">
+  <div class="scroll-container"  #scrollContainer>
+    <div class="scroll-indicator up-indicator" (click)="scrollUp()" #upIndicator>
+      <i class="fas fa-chevron-up"></i>
+    </div>
     <div class="card" *ngFor="let shopping of shoppingCenters">
       <div
             class="social-card mb-0 mb-sm-5 Res" 
@@ -438,6 +441,9 @@
               </ul>
             </div>
           </div>
+    </div>
+    <div class="scroll-indicator down-indicator" (click)="scrollDown()" #downIndicator>
+      <i class="fas fa-chevron-down"></i>
     </div>
   </div>
   <div class="row d-sm-none fixed-bottom-mobile">
