@@ -18,7 +18,7 @@ export interface Center {
     ShoppingCenter: ShoppingCenter
     ParentCommentId: number 
   }
-  export interface Comment {
+  export class Comment {
     Id?: number
     ContactId?: number
     MarketSurveyId?: number
