@@ -212,7 +212,17 @@
                 >
                   <ul>
                     <li style="cursor: pointer">
-                      <a class="target" (click)="redirect(shopping.Id)">
+                      <a class="target"
+                      [href]="
+                        '/emily/' +
+                        BuyBoxId +
+                        '/' +
+                        shopping.ShoppingCenter
+                          .ManagerOrganization[0].ID +
+                        '/' +
+                        shopping.Id
+                      "
+                      target="_blank">
                         <i
                           class="fa-regular fa-envelope"
                           style="font-size: 18px; margin-top: 3px; width: 24px"

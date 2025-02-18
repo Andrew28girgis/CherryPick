@@ -338,9 +338,9 @@ export class ShoppingCenterTableComponent implements OnInit {
     shoppingCenterId: number;
   }>();
 
-  redirect(organizationId: any) {
-    this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: organizationId });
-  }
+  // redirect(organizationId: any) {
+  //   this.tabChange.emit({ tabId: 'Emily', shoppingCenterId: organizationId });
+  // }
 
   GetOrganizationById(orgId: number): void {
     const shareOrg = this.stateService.getShareOrg() || [];
