@@ -1148,24 +1148,23 @@ img[alt="logo"] {
     background-position: center;
   }
 
-  :host ::ng-deep .p-carousel-indicators {
-    display: none;
-  }
   :host ::ng-deep .p-carousel-item {
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
-    -webkit-transition: all 0.5s ease-in-out;
   }
   
   :host ::ng-deep .p-carousel-item.p-carousel-item-active {
     opacity: 1;
     transform: scale(1);
   }
-
+  
   :host ::ng-deep .p-carousel-item:not(.p-carousel-item-active) {
     opacity: 0.5;
     transform: scale(0.9);
   }
+  
   .icon-option {
     border: none;
   }
