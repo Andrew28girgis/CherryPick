@@ -705,6 +705,15 @@ img[alt="logo"] {
   .comment-content p {
     font-size: 0.85rem;
   }
+
+  .mtopp{
+    overflow-y: scroll;
+  }
+
+  .procpect-table{
+    margin-bottom: 8rem;
+    width: max-content;
+  }
 }
 
 @media (min-width: 769px) {
