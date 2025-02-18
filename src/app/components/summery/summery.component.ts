@@ -62,7 +62,6 @@ export class SummeryComponent  {
 
 
   getUserBuyBoxes(): void {
-    this.spinner.show();
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {
@@ -79,9 +78,7 @@ export class SummeryComponent  {
           this.spinner.hide();
         } else{
           this.router.navigate(['/login']);
-          this.spinner.hide();
-        }
-      
+        } 
       } 
     });
   }
