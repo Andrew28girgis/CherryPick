@@ -231,18 +231,19 @@
                       </a>
                     </li>
                     <li>
-                      <button class="view-gallery" (click)="openGallery()">
+                      <a class="target" (click)="openGallery(shopping.Id)" >
+                        <i
+                          class="fa-solid fa-images"
+                          style="font-size: 18px; margin-top: 3px; width: 24px"
+                        ></i>
                         View Gallery
-                      </button>
+                      </a>
+
                       <div
                         class="w-100 d-flex justify-content-end"
                         *ngIf="placeImage && placeImage.length > 0"
                       >
-                        <button class="view-gallery" (click)="openGallery()">
-                          View Gallery
-                        </button>
-                     
-                        
+            
                       </div>
                     </li>
 
@@ -283,10 +284,10 @@
                                 class="target"
                                 [routerLink]="[
                                   '/landing',
-                                  shoppingCenter?.ShoppingCenter?.Places
-                                    ? shoppingCenter.ShoppingCenter.Places[0].Id
+                                  shopping?.ShoppingCenter?.Places
+                                    ? shopping.ShoppingCenter.Places[0].Id
                                     : 0,
-                                  shoppingCenter.Id,
+                                    shopping.Id,
                                   BuyBoxId
                                 ]"
                               ><svg
@@ -1736,6 +1737,7 @@
         [showNavigationIndicators]="true"
         [showNavigationArrows]="true"
       >
+      
         <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
           <div class="text-center">
             <img [src]="img" class="img-fluid p-img" alt="image" />

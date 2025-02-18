@@ -1290,3 +1290,6 @@ img[alt="logo"] {
   pointer-events: none;  /* Prevent mouse and touch interactions */
   touch-action: none;    /* Disable touch scrolling */
 }
+.p-img{
+  max-height: 400px;
+} 

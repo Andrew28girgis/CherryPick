@@ -35,6 +35,9 @@ import {
   BuyBoxCityState,
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
+import {
+  LandingPlace,
+} from 'src/models/landingPlace';
 
 interface Comment {
   id: number;
@@ -161,6 +164,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   placeImage: string[] = [];
   disableCarousel: boolean = false;
   carouselDisabled:boolean=false;
+    CustomPlace!: LandingPlace;
+    ShoppingCenter!: any;
+
   private globalClickListener: (() => void) | undefined;
   constructor(
     private renderer: Renderer2,
@@ -393,9 +399,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.shoppingCenters = this.stateService.getShoppingCenters();
       return;
     }
-    if (this.shoppingCenters.length > 0) {
-      this.fetchImages(this.shoppingCenters[0]);
-    }
+
     this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
@@ -1198,16 +1202,46 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
-  openGallery() {
+  openGallery(shpping : number) {
+    this.GetPlaceDetails(0, shpping);
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
 
   fetchImages(shoppingCenter: any) {
     if (shoppingCenter && shoppingCenter.Images) {
       this.placeImage = shoppingCenter.Images.split(",").map((link: string) => link.trim())
+    console.log(this.placeImage);
+    
     } else {
       this.placeImage = []
     }
+  }
+
+
+  GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
+    const body: any = {
+      Name: 'GetShoppingCenterDetails',
+      Params: {
+        PlaceID: placeId,
+        shoppingcenterId: ShoppingcenterId,
+        buyboxid: this.BuyBoxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.CustomPlace = data.json?.[0] || null;
+        this.ShoppingCenter = this.CustomPlace;
+
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) { 
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map((link :any) =>
+            link.trim()          
+        ); 
+        console.log("hhhhh");
+        
+        console.log(this.placeImage);
+      }}
+    });
   }
 
 }
