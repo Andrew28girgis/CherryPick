@@ -16,6 +16,10 @@
   top: -22%;
 }
 
+.mtopp{
+  overflow-y: scroll;
+}
+
 .shortcuts_icon > ul,
 .shortcuts_iconCard > ul {
   text-decoration: none;
