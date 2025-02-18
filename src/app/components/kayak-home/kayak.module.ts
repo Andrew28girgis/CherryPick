@@ -14,8 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { KayakComponent } from './kayak/kayak.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
-import { ButtonModule } from 'primeng/button';
-import { CarouselModule } from 'primeng/carousel';
 
 @NgModule({
   declarations: [
@@ -37,8 +35,6 @@ import { CarouselModule } from 'primeng/carousel';
     NgxSpinnerModule,
     ToastrModule.forRoot(),
     SharedModule,
-    ButtonModule,
-    CarouselModule,
   ],
   exports: [
     KayakHomeComponent,

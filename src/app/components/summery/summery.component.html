@@ -52,18 +52,3 @@
     </div>
   </div>
 </section>
-
-<div class="scroll-container">
-  <div class="card" *ngFor="let type of buyboxTypes">
-    <div class="card__Kayak__img mt-3 mb-3">
-      <img
-        class="Kayak__img ms-2"
-        [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + type.organizationId"
-        alt=""
-      />
-    </div>
-    <div class="card__Kayak_title">
-      {{ type.name }}
-    </div>
-  </div>
-</div>
