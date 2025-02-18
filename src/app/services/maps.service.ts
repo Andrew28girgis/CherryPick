@@ -136,16 +136,14 @@ export class MapsService {
         '/landing',
         markerId == shoppingCenterId ? 0 : markerId,
         shoppingCenterId,
-        this.storedBuyBoxId,
-        this.storedOrgId,
+        this.storedBuyBoxId
       ]);
     } else {
       this.router.navigate([
         '/landing',
         markerId,
         0,
-        this.storedBuyBoxId,
-        this.storedOrgId,
+        this.storedBuyBoxId
       ]);
     }
   }

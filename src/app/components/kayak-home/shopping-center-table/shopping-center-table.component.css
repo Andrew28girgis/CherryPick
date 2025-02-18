@@ -11,7 +11,7 @@
   right: 135%;
   width: max-content;
   top: -135%;
-}  
+}
 .shortcuts_iconCard {
   top: -22%;
 }
@@ -383,7 +383,6 @@ img[alt="logo"] {
   margin-bottom: 12px;
 }
 
-
 .action-btn {
   background: none;
   border: none;
@@ -553,6 +552,7 @@ img[alt="logo"] {
 }
 .mtopp {
   margin-top: 10px;
+  overflow-x: scroll;
 }
 .UnitSize {
   width: 250px;
@@ -675,18 +675,17 @@ img[alt="logo"] {
     font-size: 0.85rem;
   }
 
-  .mtopp{
+  .mtopp {
     overflow-y: scroll;
   }
 
-  .procpect-table{
+  .procpect-table {
     margin-bottom: 8rem;
     width: max-content;
   }
 }
 
 @media (min-width: 769px) {
- 
   .Res {
     border-radius: 20px !important;
   }
@@ -749,13 +748,15 @@ img[alt="logo"] {
     position: absolute;
     right: 16px;
     top: 20%;
-    /* transform: translateY(-50%); */
     flex-direction: column;
     align-items: center;
     gap: 20px;
     background: none;
     border: none;
     z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   padding: 12px 16px;
@@ -795,6 +796,10 @@ img[alt="logo"] {
 }
 
 @media (max-width: 768px) {
+  .mtopp{
+    overflow-y: scroll;
+  }
+  
   .fixed-bottom-mobile {
     position: fixed;
     bottom: 0;
@@ -1238,7 +1243,7 @@ scroll-container {
   overflow-x: hidden;
 }
 
-.scroll-indicator { 
+.scroll-indicator {
   left: 50%;
   transform: translateX(-50%);
   width: 50px;
@@ -1247,7 +1252,7 @@ scroll-container {
   border-radius: 50%;
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
   transition: opacity 0.3s ease-in-out;
   cursor: pointer;
   z-index: 1000;
@@ -1263,18 +1268,16 @@ scroll-container {
   pointer-events: auto;
 }
 
- 
 .card {
   margin-bottom: 20px;
 }
-.indicators-container{
+.indicators-container {
   position: absolute;
   gap: 25px;
   bottom: 33%;
   z-index: 9999999;
   right: 10%;
-  display: flex
-;
+  display: flex;
   flex-direction: column;
 
   
