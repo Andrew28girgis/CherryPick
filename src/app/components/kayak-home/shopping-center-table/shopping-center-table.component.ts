@@ -158,19 +158,14 @@ export class ShoppingCenterTableComponent implements OnInit {
   standAlone: Place[] = [];
   sanitizedUrl!: any;
   responsiveOptions: any[];
-  isMobile = false;
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
   ShoppingCenterId!: number;
-  placeImage: string[] = [];
-  disableCarousel: boolean = false;
-  carouselDisabled:boolean=false;
-    CustomPlace!: LandingPlace;
-    ShoppingCenter!: any;
-
-  private globalClickListener: (() => void) | undefined;
-  constructor(
-    private renderer: Renderer2,
+  placeImage: string[] = [];  
+  CustomPlace!: LandingPlace;
+  ShoppingCenter!: any;
+ 
+  constructor( 
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private modalService: NgbModal,
@@ -212,8 +207,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     { id: 'Emily', label: 'Emily' },
   ];
 
-  ngOnInit(): void {
-    this.checkScreenSize();
+  ngOnInit(): void { 
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -240,40 +234,14 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
-  }
-
-  // ngAfterViewInit(): void {
-  //   // Listen for clicks on the document
-  //   this.globalClickListener = this.renderer.listen(
-  //     'document',
-  //     'click',
-  //     (event: MouseEvent) => {
-  //       // If the container exists and the click target is not inside it...
-  //       if (
-  //         this.commentsContainer &&
-  //         !this.commentsContainer.nativeElement.contains(event.target)
-  //       ) {
-  //         // Hide all comments lists (or adjust logic to hide only the currently open one)
-  //         this.hideAllComments();
-  //       }
-  //     }
-  //   );
-  // }
-  hideAllComments(): void {
-    // Example: Hide comments for all shopping items.
+  } 
+  hideAllComments(): void { 
     for (const key in this.showComments) {
       if (this.showComments.hasOwnProperty(key)) {
         this.showComments[key] = false;
       }
     }
-  }
-  ngOnDestroy(): void {
-    // Remove the event listener to avoid memory leaks
-    if (this.globalClickListener) {
-      this.globalClickListener();
-    }
-  }
-
+  } 
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
@@ -1028,7 +996,6 @@ export class ShoppingCenterTableComponent implements OnInit {
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
-    this.carouselDisabled = this.showComments[shopping.Id];
     }
 
   addComment(shopping: Center, marketSurveyId: number): void {
@@ -1171,20 +1138,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.replyingTo[shopping.Id] =
       this.replyingTo[shopping.Id] === commentId ? null : commentId;
     console.log(commentId);
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth <= 768; // Adjust this breakpoint as needed
-  }
-
-  get carouselHeight(): string {
-    return this.isMobile ? '100vh' : `514px`;
-  }
+  } 
   closeComments(shopping: any): void {
     this.showComments[shopping.Id] = false;
   }
@@ -1217,8 +1171,6 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.placeImage = []
     }
   }
-
-
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     const body: any = {
       Name: 'GetShoppingCenterDetails',
@@ -1238,81 +1190,7 @@ export class ShoppingCenterTableComponent implements OnInit {
           this.placeImage = this.ShoppingCenter.Images?.split(',').map((link :any) =>
             link.trim()          
         ); 
-        console.log("hhhhh");
-        
-        console.log(this.placeImage);
       }}
     });
-  }
-  @ViewChild('carousel') carousel!: Carousel;
-  @ViewChild('carouselContainer') carouselContainer!: ElementRef;
-
-  private scrollTimeout: any;
-  private lastScrollTime = 0;
-  private scrollThreshold = 50; // Minimum scroll amount to trigger slide change
-  private scrollCooldown = 500; // Milliseconds to wait between scroll actions
-  ngAfterViewInit() {
-    this.initializeScrollListener();
-  }
-
-  private initializeScrollListener() {
-    // Add wheel event listener to the carousel container
-    this.carouselContainer.nativeElement.addEventListener('wheel', (event: WheelEvent) => {
-      event.preventDefault();
-      this.handleScroll(event);
-    }, { passive: false });
-  }
-
-  private handleScroll(event: WheelEvent) {
-    const currentTime = Date.now();
-    
-    // Check if enough time has passed since last scroll
-    if (currentTime - this.lastScrollTime < this.scrollCooldown) {
-      return;
-    }
-
-    // Clear any existing scroll timeout
-    if (this.scrollTimeout) {
-      clearTimeout(this.scrollTimeout);
-    }
-
-    // Determine scroll direction and amount
-    const scrollAmount = event.deltaY;
-
-    // Only trigger if scroll amount exceeds threshold
-    if (Math.abs(scrollAmount) > this.scrollThreshold) {
-      this.scrollTimeout = setTimeout(() => {
-        if (scrollAmount > 0) {
-          (this.carousel as any).next();
-        } else {
-          (this.carousel as any).prev();
-        }
-        this.lastScrollTime = currentTime;
-      }, 50); // Small delay to prevent rapid firing
-    }
-  }
-
-  // Method to handle touch events for mobile
-  @HostListener('touchstart', ['$event'])
-  @HostListener('touchmove', ['$event'])
-  @HostListener('touchend', ['$event'])
-  handleTouch(event: TouchEvent) {
-    // Implement touch handling logic here if needed
-    // This would enable smooth scrolling on mobile devices
-  }
-
-  // Optional: Add keyboard navigation
-  @HostListener('window:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowUp':
-        event.preventDefault();
-        (this.carousel as any).prev();
-        break;
-      case 'ArrowDown':
-        event.preventDefault();
-        (this.carousel as any).next();
-        break;
-    }
   }
 }

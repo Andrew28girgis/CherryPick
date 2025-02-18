@@ -11,29 +11,7 @@
   right: 135%;
   width: max-content;
   top: -135%;
-}
-
-/* :host ::ng-deep .p-carousel .p-carousel-content {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  :host ::ng-deep .p-carousel .p-carousel-item {
-    flex: 0 0 100%;
-  } */
-
-@media screen and (min-width: 561px) {
-  /* :host ::ng-deep .p-carousel .p-carousel-item {
-      flex: 0 0 50%;
-    } */
-}
-
-@media screen and (min-width: 1025px) {
-  /* :host ::ng-deep .p-carousel .p-carousel-item {
-      flex: 0 0 33.33%;
-    } */
-}
-
+}  
 .shortcuts_iconCard {
   top: -22%;
 }
@@ -713,46 +691,11 @@ img[alt="logo"] {
 }
 
 @media (min-width: 769px) {
-  :host ::ng-deep .p-carousel-prev,
-  :host ::ng-deep .p-carousel-next {
-    z-index: 1000; /* Ensure they are clickable */
-    z-index: 1000;
-    display: flex;
-    justify-content: end;
-    width: 100%;
-    position: sticky;
-    bottom: 42%;
-    top: 31%;
-    margin-left: 75%;
-    width: 50px; /* Adjust width */
-    height: 50px;
-    background: #f7f7f7;
-    border-radius: 50%;
-    padding: 10px;
-    justify-content: center;
-    align-items: center;
-  }
-  :host ::ng-deep .p-carousel-prev:hover ,
-  :host ::ng-deep .p-carousel-next:hover {
-    background: none;
-
-  }
-  :host ::ng-deep .p-carousel-prev svg ,
-  :host ::ng-deep .p-carousel-next svg  {
-    background: #F7F7F7;
-fill: white;
-  }
-
+ 
   .Res {
     border-radius: 20px !important;
   }
-  :host ::ng-deep .p-carousel .p-carousel-container {
-    border-radius: 20px;
-  }
 
-  :host ::ng-deep .p-carousel-item {
-    border-radius: 20px;
-  }
   .card-container {
     padding: 0;
     gap: 0;
@@ -858,14 +801,6 @@ fill: white;
 }
 
 @media (max-width: 768px) {
-  :host ::ng-deep .p-carousel-prev,
-  :host ::ng-deep .p-carousel-next {
-    display: none !important;
-  }
-  .p-carousel-prev,
-  .p-carousel-next {
-    display: none !important;
-  }
   .fixed-bottom-mobile {
     position: fixed;
     bottom: 0;
@@ -1150,27 +1085,6 @@ fill: white;
     filter: blur(15px) brightness(0.7);
     z-index: 0;
   }
-
-  :host ::ng-deep .p-carousel {
-    width: 100%;
-    height: calc(97vh - 58px);
-  }
-
-  :host ::ng-deep .p-carousel .p-carousel-content {
-    height: 100%;
-  }
-
-  :host ::ng-deep .p-carousel .p-carousel-container {
-    height: 100%;
-  }
-
-  :host ::ng-deep .p-carousel-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-
   .social-card {
     width: 100%;
     /* height: 100%; */
@@ -1180,24 +1094,6 @@ fill: white;
     background-size: cover;
     background-position: center;
   }
-
-  /* :host ::ng-deep .p-carousel-item {
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
-  }
-
-  :host ::ng-deep .p-carousel-item.p-carousel-item-active {
-    opacity: 1;
-    transform: scale(1);
-  }
-  
-  :host ::ng-deep .p-carousel-item:not(.p-carousel-item-active) {
-    opacity: 0.5;
-    transform: scale(0.9);
-  } */
-  
   .icon-option {
     border: none;
   }
@@ -1313,17 +1209,20 @@ fill: white;
   max-height: 400px;
 }
 
-
-:host ::ng-deep .p-carousel-items-content{
-  overflow-y: scroll !important;
-}
-
 .scroll-container {
-  height: 100vh; 
+  height: 100vh;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth; 
-  -webkit-overflow-scrolling: touch; 
+  scroll-behavior: smooth; /* Enables smooth scrolling */
+  -webkit-overflow-scrolling: touch; /* Ensures smooth scrolling on iOS */
+  overscroll-behavior: contain; /* Prevents iOS bounce effect */
+  scrollbar-width: none; /* Hides scrollbar on Firefox */
+  -ms-overflow-style: none; /* Hides scrollbar on IE/Edge */
+}
+
+/* Hide scrollbar for Webkit-based browsers (Safari, Chrome) */
+.scroll-container::-webkit-scrollbar {
+  display: none;
 }
 
 .card {
@@ -1337,11 +1236,13 @@ fill: white;
   transition: transform 0.5s ease-in-out;
 }
 
+/* Adds a subtle scale effect for smooth scrolling feel */
 .scroll-container:active .card,
 .scroll-container:focus .card {
-  transform: scale(0.98); 
+  transform: scale(0.98);
 }
 
+/* Safari iOS Fix */
 @supports (-webkit-touch-callout: none) {
   .scroll-container {
     overflow: auto;
