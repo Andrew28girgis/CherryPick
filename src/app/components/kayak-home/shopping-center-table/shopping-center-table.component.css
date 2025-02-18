@@ -795,6 +795,10 @@ img[alt="logo"] {
 }
 
 @media (max-width: 768px) {
+  .mtopp{
+    overflow-y: scroll;
+  }
+  
   .fixed-bottom-mobile {
     position: fixed;
     bottom: 0;
