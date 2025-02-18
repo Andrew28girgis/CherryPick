@@ -239,9 +239,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
   hideAllComments(): void {
     for (const key in this.showComments) {
-      if (this.showComments.hasOwnProperty(key)) {
         this.showComments[key] = false;
-      }
+      
     }
   }
   toggleShoppingCenters() {
@@ -1229,13 +1228,10 @@ export class ShoppingCenterTableComponent implements OnInit {
       'document',
       'click',
       (event: MouseEvent) => {
-        if (
-          this.commentsContainer &&
-          !this.commentsContainer.nativeElement.contains(event.target)
-        ) {
+       
           this.hideAllComments();
         }
-      }
+      
     );
   }
 }

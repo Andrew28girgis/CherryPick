@@ -1284,7 +1284,7 @@ scroll-container {
   position: absolute;
   gap: 25px;
   bottom: 33%;
-  z-index: 9999999;
+  z-index: 1000;
   right: 10%;
   display: flex;
   flex-direction: column;
