@@ -26,16 +26,17 @@
 <ng-container *ngIf="currentView == 5">
   <div class="containerMobileView">
     <p-carousel
-      orientation="vertical"
-      [value]="shoppingCenters"
-      [numVisible]="isMobile ? 1 : shoppingCenters.length"
-      [numScroll]="1"
-      [verticalViewPortHeight]="carouselHeight"
-      [circular]="true"
-      [responsiveOptions]="responsiveOptions"
-      [showNavigators]="false"
-      [showIndicators]="true"
-      [styleClass]="disableCarousel ? 'carousel-disabled' : ''"
+    orientation="vertical"
+    [value]="shoppingCenters"
+    [numVisible]="isMobile ? 1 : shoppingCenters.length"
+    [numScroll]="1"
+    [verticalViewPortHeight]="carouselHeight"
+    [circular]="true"
+    [responsiveOptions]="responsiveOptions"
+    [showNavigators]="false"
+    [showIndicators]="true"
+    [styleClass]="disableCarousel ? 'carousel-disabled' : ''"
+    [style]="{ height: carouselHeight + 'px' }"
     >
       <!--autoplayInterval="3000"-->
       <ng-template pTemplate="item" let-shopping>
