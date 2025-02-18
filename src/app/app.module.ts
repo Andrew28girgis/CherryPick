@@ -45,6 +45,8 @@ import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
 import { LogoutComponent } from './components/logout/logout.component';
 import { SharedModule } from './shared/shared.module';
 import { TermsComponent } from './components/terms/terms.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -92,6 +94,7 @@ import { TermsComponent } from './components/terms/terms.component';
     MatNativeDateModule,
     KayakModule,
     SharedModule,
+    ScrollingModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

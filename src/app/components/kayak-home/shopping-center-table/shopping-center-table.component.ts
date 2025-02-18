@@ -38,6 +38,7 @@ import {
 import {
   LandingPlace,
 } from 'src/models/landingPlace';
+import { Carousel } from 'primeng/carousel';
 
 interface Comment {
   id: number;
@@ -157,19 +158,14 @@ export class ShoppingCenterTableComponent implements OnInit {
   standAlone: Place[] = [];
   sanitizedUrl!: any;
   responsiveOptions: any[];
-  isMobile = false;
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
   ShoppingCenterId!: number;
-  placeImage: string[] = [];
-  disableCarousel: boolean = false;
-  carouselDisabled:boolean=false;
-    CustomPlace!: LandingPlace;
-    ShoppingCenter!: any;
-
-  private globalClickListener: (() => void) | undefined;
-  constructor(
-    private renderer: Renderer2,
+  placeImage: string[] = [];  
+  CustomPlace!: LandingPlace;
+  ShoppingCenter!: any;
+ 
+  constructor( 
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private modalService: NgbModal,
@@ -184,24 +180,24 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
     this.responsiveOptions = [
-      {
-        breakpoint: '1024px',
-        numVisible: 1,
-        numScroll: 1,
-        effect: 'fade',
-      },
-      {
-        breakpoint: '768px',
-        numVisible: 1,
-        numScroll: 1,
-        effect: 'fade',
-      },
-      {
-        breakpoint: '560px',
-        numVisible: 1,
-        numScroll: 1,
-        effect: 'fade',
-      },
+      // {
+      //   breakpoint: '1024px',
+      //   numVisible: 1,
+      //   numScroll: 1,
+      //   effect: 'fade',
+      // },
+      // {
+      //   breakpoint: '768px',
+      //   numVisible: 1,
+      //   numScroll: 1,
+      //   effect: 'fade',
+      // },
+      // {
+      //   breakpoint: '560px',
+      //   numVisible: 1,
+      //   numScroll: 1,
+      //   effect: 'fade',
+      // },
     ];
   }
   tabs = [
@@ -211,8 +207,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     { id: 'Emily', label: 'Emily' },
   ];
 
-  ngOnInit(): void {
-    this.checkScreenSize();
+  ngOnInit(): void { 
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -239,40 +234,14 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
-  }
-
-  ngAfterViewInit(): void {
-    // Listen for clicks on the document
-    this.globalClickListener = this.renderer.listen(
-      'document',
-      'click',
-      (event: MouseEvent) => {
-        // If the container exists and the click target is not inside it...
-        if (
-          this.commentsContainer &&
-          !this.commentsContainer.nativeElement.contains(event.target)
-        ) {
-          // Hide all comments lists (or adjust logic to hide only the currently open one)
-          this.hideAllComments();
-        }
-      }
-    );
-  }
-  hideAllComments(): void {
-    // Example: Hide comments for all shopping items.
+  } 
+  hideAllComments(): void { 
     for (const key in this.showComments) {
       if (this.showComments.hasOwnProperty(key)) {
         this.showComments[key] = false;
       }
     }
-  }
-  ngOnDestroy(): void {
-    // Remove the event listener to avoid memory leaks
-    if (this.globalClickListener) {
-      this.globalClickListener();
-    }
-  }
-
+  } 
   toggleShoppingCenters() {
     this.showShoppingCenters = !this.showShoppingCenters;
   }
@@ -1027,7 +996,6 @@ export class ShoppingCenterTableComponent implements OnInit {
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
-    this.carouselDisabled = this.showComments[shopping.Id];
     }
 
   addComment(shopping: Center, marketSurveyId: number): void {
@@ -1170,20 +1138,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.replyingTo[shopping.Id] =
       this.replyingTo[shopping.Id] === commentId ? null : commentId;
     console.log(commentId);
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth <= 768; // Adjust this breakpoint as needed
-  }
-
-  get carouselHeight(): string {
-    return this.isMobile ? '100vh' : `65vh`;
-  }
+  } 
   closeComments(shopping: any): void {
     this.showComments[shopping.Id] = false;
   }
@@ -1216,8 +1171,6 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.placeImage = []
     }
   }
-
-
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     const body: any = {
       Name: 'GetShoppingCenterDetails',
@@ -1237,11 +1190,7 @@ export class ShoppingCenterTableComponent implements OnInit {
           this.placeImage = this.ShoppingCenter.Images?.split(',').map((link :any) =>
             link.trim()          
         ); 
-        console.log("hhhhh");
-        
-        console.log(this.placeImage);
       }}
     });
   }
-
 }

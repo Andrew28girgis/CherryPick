@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit, ElementRef, HostListener, ViewChild, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { General, GroupedProperties, Property } from 'src/models/domain';
@@ -17,7 +17,7 @@ import { SidbarService } from 'src/app/services/sidbar.service';
   templateUrl: './summery.component.html',
   styleUrls: ['./summery.component.css'],
 })
-export class SummeryComponent {
+export class SummeryComponent  {
   General!: General;
   buyboxTypes: any[] = [];
   showSummery: boolean = false;
@@ -37,7 +37,8 @@ export class SummeryComponent {
     private propertiesService: PropertiesServiceService,
     private route: ActivatedRoute,
     private stateService: StateService,
-    private sidbarService: SidbarService
+    private sidbarService: SidbarService,
+    private renderer: Renderer2
   ) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)
@@ -99,5 +100,5 @@ export class SummeryComponent {
   goToAllPlaces(buyboxId: number , orgId:number , name:string) {
     this.router.navigate(['/home', buyboxId , orgId , name]);
   }
-  
+
 }
