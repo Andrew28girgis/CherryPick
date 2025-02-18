@@ -14,6 +14,9 @@
         <div class="d-flex justify-content-center">
           <h5 class="card-title">{{ organization.Name }}</h5>
         </div>
+        <div class="d-flex justify-content-center">
+          <p class="card-date mb-1">Last Activity :</p>
+        </div>
         <div class="d-flex justify-content-evenly w-100" *ngIf="organization.dates && organization.dates.length > 0">
             <h5 *ngFor="let date of organization.dates" class="card-date">
               {{ date | date: 'short' }}
