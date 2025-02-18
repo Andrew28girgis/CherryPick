@@ -38,7 +38,7 @@ export class LoginComponent {
         localStorage.clear(); 
         this.onSubmit();
       }else{
-        localStorage.getItem('token') && this.navigateToHome();
+        localStorage.getItem('token');
       }
     });
   }
