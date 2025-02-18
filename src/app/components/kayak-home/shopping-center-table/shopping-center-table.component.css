@@ -1210,41 +1210,70 @@ img[alt="logo"] {
 }
 
 .scroll-container {
-  height: 100vh;
+  height: 100vh; /* Full height for the scroll container */
   overflow-y: auto;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth; /* Enables smooth scrolling */
-  -webkit-overflow-scrolling: touch; /* Ensures smooth scrolling on iOS */
-  overscroll-behavior: contain; /* Prevents iOS bounce effect */
-  scrollbar-width: none; /* Hides scrollbar on Firefox */
-  -ms-overflow-style: none; /* Hides scrollbar on IE/Edge */
+  scroll-behavior: smooth; /* Smooth scrolling behavior */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+  overscroll-behavior: contain; /* Prevent bounce effect */
+  position: relative; /* For indicator positioning */
 }
 
-/* Hide scrollbar for Webkit-based browsers (Safari, Chrome) */
+/* Hide the scrollbar */
 .scroll-container::-webkit-scrollbar {
   display: none;
 }
 
 .card {
-  height: 100vh;
+  height: 100vh; /* Each card takes the full viewport height */
   display: flex;
   align-items: center;
   justify-content: center;
-  scroll-snap-align: start;
+  scroll-snap-align: start; /* Ensure snap behavior */
   border-bottom: 1px solid #ddd;
   background: white;
   transition: transform 0.5s ease-in-out;
 }
 
-/* Adds a subtle scale effect for smooth scrolling feel */
-.scroll-container:active .card,
-.scroll-container:focus .card {
-  transform: scale(0.98);
+scroll-container {
+  position: relative;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* Safari iOS Fix */
-@supports (-webkit-touch-callout: none) {
-  .scroll-container {
-    overflow: auto;
-  }
+.scroll-indicator {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  transition: opacity 0.3s ease-in-out;
+  cursor: pointer;
+  z-index: 1000;
+  font-size: 20px;
+  color: white;
+}
+
+.scroll-indicator.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.up-indicator {
+  top: 20px;
+}
+
+.down-indicator {
+  bottom: 20px;
+}
+
+.card {
+  /* Add any specific card styling */
+  margin-bottom: 20px;
 }

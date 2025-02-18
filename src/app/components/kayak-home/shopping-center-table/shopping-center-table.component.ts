@@ -1193,4 +1193,61 @@ export class ShoppingCenterTableComponent implements OnInit {
       }}
     });
   }
+
+
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('upIndicator') upIndicator!: ElementRef;
+  @ViewChild('downIndicator') downIndicator!: ElementRef;
+
+  private scrollThreshold = 100; // pixels from top/bottom to show indicators
+  ngAfterViewInit() {
+    // Initial check for indicators
+    this.updateIndicators();
+  }
+
+  @HostListener('scroll', ['$event'])
+  onScroll(event: Event) {
+    this.updateIndicators();
+  }
+
+  private updateIndicators() {
+    if (!this.scrollContainer || !this.upIndicator || !this.downIndicator) return;
+
+    const container = this.scrollContainer.nativeElement;
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+
+    // Show/hide up indicator
+    if (scrollTop > this.scrollThreshold) {
+      this.upIndicator.nativeElement.classList.add('visible');
+    } else {
+      this.upIndicator.nativeElement.classList.remove('visible');
+    }
+
+    // Show/hide down indicator
+    if (scrollHeight - scrollTop - clientHeight > this.scrollThreshold) {
+      this.downIndicator.nativeElement.classList.add('visible');
+    } else {
+      this.downIndicator.nativeElement.classList.remove('visible');
+    }
+  }
+
+  scrollUp() {
+    const container = this.scrollContainer.nativeElement;
+    const cardHeight = container.querySelector('.card')?.clientHeight || 0;
+    container.scrollBy({
+      top: -cardHeight,
+      behavior: 'smooth'
+    });
+  }
+
+  scrollDown() {
+    const container = this.scrollContainer.nativeElement;
+    const cardHeight = container.querySelector('.card')?.clientHeight || 0;
+    container.scrollBy({
+      top: cardHeight,
+      behavior: 'smooth'
+    });
+  }
 }
