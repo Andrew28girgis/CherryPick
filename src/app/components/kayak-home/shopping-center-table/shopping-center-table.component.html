@@ -28,15 +28,13 @@
     <p-carousel
       orientation="vertical"
       [value]="shoppingCenters"
-      [numVisible]="isMobile ? 1 : shoppingCenters.length"
+      [numVisible]="1"
       [numScroll]="1"
       [verticalViewPortHeight]="carouselHeight"
       [circular]="true"
       [responsiveOptions]="responsiveOptions"
-      [showNavigators]="false"
-      
-      [showIndicators]="true"
-      [styleClass]="disableCarousel ? 'carousel-disabled' : ''"
+      [showNavigators]="true"
+      [showIndicators]="false"
     >
       <!--autoplayInterval="3000"-->
       <ng-template pTemplate="item" let-shopping>
