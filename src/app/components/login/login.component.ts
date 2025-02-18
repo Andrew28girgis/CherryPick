@@ -18,8 +18,6 @@ export class LoginComponent {
   logoUrl: string = '';
   t: any;
   r: any; 
-  private afterLoginRedirect: string | null = null;
-  
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,

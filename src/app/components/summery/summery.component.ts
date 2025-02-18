@@ -71,13 +71,18 @@ export class SummeryComponent  {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.buyboxTypes =  data.json ;
-        if (this.buyboxTypes?.length == 1) {
-          this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
+        if(data.json!=null){
+          this.buyboxTypes =  data.json ;
+          if (this.buyboxTypes?.length == 1) {
+            this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
+          }
+          this.spinner.hide();
+        } else{
+          this.router.navigate(['/login']);
+          this.spinner.hide();
         }
-        this.spinner.hide();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      
+      } 
     });
   }
 
