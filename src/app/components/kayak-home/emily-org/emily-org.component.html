@@ -1,33 +1,24 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <div class="row pt-4">
-    <div class="p-3" *ngIf="!BuyBoxOrganizationsForEmail || BuyBoxOrganizationsForEmail.length === 0">
-        No Organization Found.
-      </div>
-    
-  <div
-    *ngFor="let organization of BuyBoxOrganizationsForEmail; let i = index"
-    class="col-sm-4 mb-4"
-  >
-    <a
-      class="card"
-      target="_blank"
-      [routerLink]="['/emily', buyBoxId, organization.id]"
-    >
-      <div class="d-flex justify-content-center pt-2">
-        <img
-          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-            organization.id
-          }}"
-          class="card-img-top"
-          alt="Organization Image"
-        />
+  <div class="p-3" *ngIf="!BuyBoxOrganizationsForEmail || BuyBoxOrganizationsForEmail.length === 0">
+    No Organization Found.
+  </div>
+  <div *ngFor="let organization of BuyBoxOrganizationsForEmail; let i = index" class="col-sm-4 mb-4">
+    <a class="card" target="_blank" [routerLink]="['/emily', buyBoxId, organization.id]">
+      <div class="d-flex justify-content-center pt-2 img_div">
+        <img src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ organization.id }}" class="card-img-top"
+          alt="Organization Image" />
       </div>
       <div class="card-body">
         <div class="d-flex justify-content-center">
           <h5 class="card-title">{{ organization.Name }}</h5>
         </div>
-      
+        <div class="d-flex justify-content-evenly w-100" *ngIf="organization.dates && organization.dates.length > 0">
+            <h5 *ngFor="let date of organization.dates" class="card-date">
+              {{ date | date: 'short' }}
+            </h5>
+        </div>
       </div>
     </a>
   </div>
