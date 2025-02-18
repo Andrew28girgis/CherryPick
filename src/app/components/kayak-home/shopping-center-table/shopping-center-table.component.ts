@@ -157,6 +157,10 @@ export class ShoppingCenterTableComponent implements OnInit {
   isMobile = false;
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
+  ShoppingCenterId!: number;
+  placeImage: string[] = [];
+  disableCarousel: boolean = false;
+  carouselDisabled:boolean=false;
   private globalClickListener: (() => void) | undefined;
   constructor(
     private renderer: Renderer2,
@@ -229,7 +233,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
-
   }
 
   ngAfterViewInit(): void {
@@ -390,7 +393,9 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.shoppingCenters = this.stateService.getShoppingCenters();
       return;
     }
-
+    if (this.shoppingCenters.length > 0) {
+      this.fetchImages(this.shoppingCenters[0]);
+    }
     this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
@@ -1018,7 +1023,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
-  }
+    this.carouselDisabled = this.showComments[shopping.Id];
+    }
 
   addComment(shopping: Center, marketSurveyId: number): void {
     if (this.newComments[marketSurveyId]) {
@@ -1188,8 +1194,20 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.activeComponent = tabId;
   }
   toggleMenu() {
-    this.isOpen = !this.isOpen
+    this.isOpen = !this.isOpen;
   }
 
+  @ViewChild('galleryModal', { static: true }) galleryModal: any;
+  openGallery() {
+    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
+  }
+
+  fetchImages(shoppingCenter: any) {
+    if (shoppingCenter && shoppingCenter.Images) {
+      this.placeImage = shoppingCenter.Images.split(",").map((link: string) => link.trim())
+    } else {
+      this.placeImage = []
+    }
+  }
 
 }

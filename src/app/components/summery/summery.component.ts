@@ -61,6 +61,7 @@ export class SummeryComponent {
 
 
   getUserBuyBoxes(): void {
+    this.spinner.show();
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {
@@ -73,6 +74,7 @@ export class SummeryComponent {
         if (this.buyboxTypes?.length == 1) {
           this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
         }
+        this.spinner.hide();
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
