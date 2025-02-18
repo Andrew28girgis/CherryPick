@@ -219,12 +219,12 @@
           <button class="view-gallery" (click)="openGallery()">
             View Gallery
           </button>
-          <button class="enriche ms-2" (click)="open(enricheModal , 1)">
+          <!-- <button class="enriche ms-2" (click)="open(enricheModal , 1)">
            <i class="fa-solid fa-tag me-1"></i>  Enriche Description
           </button>
           <button class="enriche ms-2" (click)="open(enricheModal , 2)">
            <i class="fa-solid fa-tag me-1"></i> Enriche Demographics
-          </button>
+          </button> -->
         </div>
       </div>
     </section>
@@ -476,9 +476,9 @@
           <div class="col-md-12">
             <div class="d-flex justify-content-between">
               <h2 class="main-heading">Units Inside</h2> 
-              <button class="enriche ms-auto" (click)="open(enricheModal , 3)">
+              <!-- <button class="enriche ms-auto" (click)="open(enricheModal , 3)">
                 <i class="fa-solid fa-tag me-1"></i>   Enriche Availability
-              </button>
+              </button> -->
             </div>
             <div class="another-places p-0">
               <table class="procpect-table">
@@ -853,9 +853,9 @@
           <div class="d-flex justify-content-between">
 
             <p class="main-name">Co-Tenants</p>
-            <button class="enriche ms-2" (click)="open(enricheModal , 4)">
+            <!-- <button class="enriche ms-2" (click)="open(enricheModal , 4)">
               <i class="fa-solid fa-tag me-1"></i> Enriche Co-Tenants
-            </button>
+            </button> -->
             <!-- <select
               class="form-control styled-select"
               (change)="filterCotent($event)"
@@ -1013,7 +1013,7 @@
 <ng-template #enricheModal let-modal>
   <form (ngSubmit)="submitEnriche()" #enricheForm="ngForm">
     <div class="modal-header d-flex justify-content-between align-items-center">
-      <span class="modal-title" id="modal-add-contact"><b>Enriche {{enriche.section}}</b></span>
+      <!-- <span class="modal-title" id="modal-add-contact"><b>Enriche {{enriche.section}}</b></span> -->
       <div>
         <button
           type="button"
