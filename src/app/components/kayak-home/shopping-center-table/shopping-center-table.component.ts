@@ -184,24 +184,24 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
     this.responsiveOptions = [
-      {
-        breakpoint: '1024px',
-        numVisible: 1,
-        numScroll: 1,
-        effect: 'fade',
-      },
-      {
-        breakpoint: '768px',
-        numVisible: 1,
-        numScroll: 1,
-        effect: 'fade',
-      },
-      {
-        breakpoint: '560px',
-        numVisible: 1,
-        numScroll: 1,
-        effect: 'fade',
-      },
+      // {
+      //   breakpoint: '1024px',
+      //   numVisible: 1,
+      //   numScroll: 1,
+      //   effect: 'fade',
+      // },
+      // {
+      //   breakpoint: '768px',
+      //   numVisible: 1,
+      //   numScroll: 1,
+      //   effect: 'fade',
+      // },
+      // {
+      //   breakpoint: '560px',
+      //   numVisible: 1,
+      //   numScroll: 1,
+      //   effect: 'fade',
+      // },
     ];
   }
   tabs = [
