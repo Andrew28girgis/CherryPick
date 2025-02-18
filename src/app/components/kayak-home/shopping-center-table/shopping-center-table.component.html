@@ -36,7 +36,6 @@
       [showNavigators]="false"
       [showIndicators]="true"
       [styleClass]="disableCarousel ? 'carousel-disabled' : ''"
-      [disabled]="true"
     >
       <!--autoplayInterval="3000"-->
       <ng-template pTemplate="item" let-shopping>
@@ -232,20 +231,8 @@
                         <button class="view-gallery" (click)="openGallery()">
                           View Gallery
                         </button>
-                        <button
-                          class="enriche ms-2"
-                          (click)="open(enricheModal, 1)"
-                        >
-                          <i class="fa-solid fa-tag me-1"></i> Enriche
-                          Description
-                        </button>
-                        <button
-                          class="enriche ms-2"
-                          (click)="open(enricheModal, 2)"
-                        >
-                          <i class="fa-solid fa-tag me-1"></i> Enriche
-                          Demographics
-                        </button>
+                     
+                        
                       </div>
                     </li>
 
@@ -283,16 +270,16 @@
                     </li> -->
                     <li (click)="toggleShortcuts(shopping.Id, 'close')">
                       <a
-                        class="target"
-                        [routerLink]="[
-                          '/landing',
-                          shoppingCenter?.ShoppingCenter?.Places
-                            ? shoppingCenter.ShoppingCenter.Places[0].Id
-                            : 0,
-                          shoppingCenter.Id
-                        ]"
-                      >
-                        <svg
+                                class="target"
+                                [routerLink]="[
+                                  '/landing',
+                                  shoppingCenter?.ShoppingCenter?.Places
+                                    ? shoppingCenter.ShoppingCenter.Places[0].Id
+                                    : 0,
+                                  shoppingCenter.Id,
+                                  BuyBoxId
+                                ]"
+                              ><svg
                           width="24"
                           height="24"
                           viewBox="0 0 24 24"
@@ -1729,68 +1716,22 @@
   </form>
 </ng-template>
 
-<ng-template #enricheModal let-modal>
-  <form (ngSubmit)="submitEnriche()" #enricheForm="ngForm">
-    <div class="modal-header d-flex justify-content-between align-items-center">
-      <span class="modal-title" id="modal-add-contact"
-        ><b>Enriche {{ enriche.section }}</b></span
+
+
+<ng-template #galleryModal let-modal>
+  <div class="modal-body p-0">
+    <div class="carousel-wrapper position-relative">
+      <ngb-carousel
+        class="custom-carousel"
+        [showNavigationIndicators]="true"
+        [showNavigationArrows]="true"
       >
-      <div>
-        <button
-          type="button"
-          class="btn btn-close"
-          aria-label="Close"
-          (click)="modal.dismiss('Cross click')"
-        ></button>
-      </div>
+        <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
+          <div class="text-center">
+            <img [src]="img" class="img-fluid p-img" alt="image" />
+          </div>
+        </ng-template>
+      </ngb-carousel>
     </div>
-    <div class="modal-body">
-      <div class="mb-3">
-        <label for="context" class="form-label">Context</label>
-        <textarea
-          type="text"
-          id="context"
-          [(ngModel)]="enriche.context"
-          rows="5"
-          class="form-control"
-          required
-          name="context"
-        ></textarea>
-      </div>
-      <div class="mb-3">
-        <label for="lastName" class="form-label">URL</label>
-        <input
-          type="url"
-          id="url"
-          [(ngModel)]="enriche.url"
-          class="form-control"
-          required
-          name="url"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="fileUpload" class="form-label">Upload File</label>
-        <input
-          type="file"
-          id="fileUpload"
-          class="form-control"
-          (change)="onFileChange($event)"
-          name="fileUpload"
-          required
-        />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-primary me-2 contact-btn">
-        Save
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary contact-btn"
-        (click)="modal.close()"
-      >
-        Close
-      </button>
-    </div>
-  </form>
+  </div>
 </ng-template>

@@ -1152,9 +1152,11 @@ img[alt="logo"] {
     display: none;
   }
   :host ::ng-deep .p-carousel-item {
+    -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
   }
-
+  
   :host ::ng-deep .p-carousel-item.p-carousel-item-active {
     opacity: 1;
     transform: scale(1);
@@ -1284,8 +1286,7 @@ img[alt="logo"] {
   font-weight: bold;
 }
 
-:host ::ng-deep .p-carousel  {
+:host ::ng-deep .carousel-disabled {
   pointer-events: none;  /* Prevent mouse and touch interactions */
   touch-action: none;    /* Disable touch scrolling */
 }
-
