@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit, ElementRef, HostListener, ViewChild, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { General, GroupedProperties, Property } from 'src/models/domain';
@@ -17,7 +17,7 @@ import { SidbarService } from 'src/app/services/sidbar.service';
   templateUrl: './summery.component.html',
   styleUrls: ['./summery.component.css'],
 })
-export class SummeryComponent {
+export class SummeryComponent  implements AfterViewInit{
   General!: General;
   buyboxTypes: any[] = [];
   showSummery: boolean = false;
@@ -37,7 +37,8 @@ export class SummeryComponent {
     private propertiesService: PropertiesServiceService,
     private route: ActivatedRoute,
     private stateService: StateService,
-    private sidbarService: SidbarService
+    private sidbarService: SidbarService,
+    private renderer: Renderer2
   ) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)
@@ -99,5 +100,66 @@ export class SummeryComponent {
   goToAllPlaces(buyboxId: number , orgId:number , name:string) {
     this.router.navigate(['/home', buyboxId , orgId , name]);
   }
-  
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  items = Array.from({ length: 10 }, (_, i) => `Card ${i + 1}`);
+  currentIndex = 0;
+  isInsideScrollContainer = false;
+ 
+
+  ngAfterViewInit() {
+    this.scrollToCard(this.currentIndex);
+  }
+
+  scrollToNext() {
+    if (this.currentIndex < this.items.length - 1) {
+      this.currentIndex++;
+      this.scrollToCard(this.currentIndex);
+    }
+  }
+
+  scrollToPrev() {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.scrollToCard(this.currentIndex);
+    }
+  }
+
+  private scrollToCard(index: number) {
+    const target = document.getElementById(`card-${index}`);
+    target?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  @HostListener('wheel', ['$event'])
+  onWheelScroll(event: WheelEvent) {
+    if (this.isInsideScrollContainer) {
+      event.preventDefault(); // Prevent body scroll
+      if (event.deltaY > 0) {
+        this.scrollToNext();
+      } else if (event.deltaY < 0) {
+        this.scrollToPrev();
+      }
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    if (this.isInsideScrollContainer) {
+      event.preventDefault(); // Prevent body scroll
+      if (event.key === 'ArrowDown') {
+        this.scrollToNext();
+      } else if (event.key === 'ArrowUp') {
+        this.scrollToPrev();
+      }
+    }
+  }
+
+  disableBodyScroll() {
+    this.isInsideScrollContainer = true;
+    this.renderer.setStyle(document.body, 'overflow', 'hidden');
+  }
+
+  enableBodyScroll() {
+    this.isInsideScrollContainer = false;
+    this.renderer.setStyle(document.body, 'overflow', 'auto');
+  }
 }

@@ -324,3 +324,34 @@ button:active {
     }
 }
 }
+.scroll-container {
+  height: 100vh; /* Full screen height */
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth; /* Enables smooth scrolling */
+  -webkit-overflow-scrolling: touch; /* Ensures smooth scrolling on iOS */
+}
+
+.card {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  border-bottom: 1px solid #ddd;
+  background: white;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Add a slight scale effect for smooth scrolling feel */
+.scroll-container:active .card,
+.scroll-container:focus .card {
+  transform: scale(0.98); /* Gives a smooth effect */
+}
+
+/* iPhone Safari Fix */
+@supports (-webkit-touch-callout: none) {
+  .scroll-container {
+    overflow: auto;
+  }
+}
