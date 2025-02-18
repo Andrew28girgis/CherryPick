@@ -701,6 +701,15 @@ img[alt="logo"] {
   .comment-content p {
     font-size: 0.85rem;
   }
+
+  .mtopp{
+    overflow-y: scroll;
+  }
+
+  .procpect-table{
+    margin-bottom: 8rem;
+    width: max-content;
+  }
 }
 
 @media (min-width: 769px) {
@@ -708,11 +717,30 @@ img[alt="logo"] {
   :host ::ng-deep .p-carousel-next {
     z-index: 1000; /* Ensure they are clickable */
     z-index: 1000;
-    position: relative;
     display: flex;
     justify-content: end;
-    margin-right: 20%;
     width: 100%;
+    position: sticky;
+    bottom: 42%;
+    top: 31%;
+    margin-left: 75%;
+    width: 50px; /* Adjust width */
+    height: 50px;
+    background: #f7f7f7;
+    border-radius: 50%;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  :host ::ng-deep .p-carousel-prev:hover ,
+  :host ::ng-deep .p-carousel-next:hover {
+    background: none;
+
+  }
+  :host ::ng-deep .p-carousel-prev svg ,
+  :host ::ng-deep .p-carousel-next svg  {
+    background: #F7F7F7;
+fill: white;
   }
 
   .Res {
@@ -1283,4 +1311,9 @@ img[alt="logo"] {
 
 .p-img {
   max-height: 400px;
+}
+
+
+:host ::ng-deep .p-carousel-items-content{
+  overflow-y: scroll !important;
 }
