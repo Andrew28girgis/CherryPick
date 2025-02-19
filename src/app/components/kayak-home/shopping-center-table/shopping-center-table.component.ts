@@ -238,15 +238,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.selectedTab = 'Properties';
   }
   hideAllComments(): void {
-      // Don't hide comments if focus is on comment input
-    const activeElement = document.activeElement;
-    if (activeElement && 
-        (activeElement.classList.contains('comment-input') || 
-         activeElement.closest('.comments-section'))) {
-      return;
-    }
-    
-    // Otherwise hide all comments
+    console.log('Closing all comment sections');
     for (const key in this.showComments) {
       this.showComments[key] = false;
     }
@@ -1242,31 +1234,26 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    const events = ['click', 'scroll', 'wheel', 'touchstart'];
-
+    const events = ['click', 'wheel', 'touchstart'];
+    // Listen for clicks anywhere in the document
     this.globalClickListener = events.map(eventType =>
       this.renderer.listen('document', eventType, (event: Event) => {
         const target = event.target as HTMLElement;
         const commentsContainer = this.commentsContainer?.nativeElement;
-
-        // Check if click is inside comments section or on input
-        const isCommentsClick = commentsContainer?.contains(target);
-        const isInputClick = target.classList.contains('comment-input');
-        const isCommentsSection = target.closest('.comments-section');
-
-        if (isCommentsClick || isInputClick || isCommentsSection) {
-          return; // Do nothing if click is within comments area
+        const isInsideComments = commentsContainer?.contains(target);
+        const isInputFocused = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+        const isClickOnLikeOrPhoto = target.classList.contains('like-button') || target.classList.contains('photo');
+        if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
+          return; // Do NOT close if clicking inside the comment box, input field, or like/photo
         }
-
-        // Only hide comments if click is outside
         this.hideAllComments();
       })
     );
-  }
-  ngOnDestroy(): void {
-    if (this.globalClickListener) {
-      this.globalClickListener.forEach(unsub => unsub()); // Remove all listeners
-    }
+    // Listen for scroll and close comments
+    this.renderer.listen('window', 'scroll', () => {
+      console.log('Scroll detected, closing comments');
+      this.hideAllComments();
+    });
   }
   trimComment(value: string, marketSurveyId: number): void {
     if (value) {
