@@ -24,14 +24,16 @@
   </div>
 </div>
 <ng-container *ngIf="currentView == 5">
-  <div class="indicators-container">
-    <div class="scroll-indicator up-indicator d-none d-sm-flex" (click)="scrollUp()" #upIndicator>
-      <i class="fas fa-chevron-up"></i>
+  @if (shoppingCenters.length > 0) {
+    <div class="indicators-container" >
+      <div class="scroll-indicator up-indicator d-none d-sm-flex" (click)="scrollUp()" #upIndicator>
+        <i class="fas fa-chevron-up"></i>
+      </div>
+      <div class="scroll-indicator down-indicator d-none d-sm-flex" (click)="scrollDown()" #downIndicator>
+        <i class="fas fa-chevron-down"></i>
+      </div>
     </div>
-    <div class="scroll-indicator down-indicator d-none d-sm-flex" (click)="scrollDown()" #downIndicator>
-      <i class="fas fa-chevron-down"></i>
-    </div>
-  </div>
+  }
   <div class="scroll-container"  #scrollContainer>
     
     <div class="card" *ngFor="let shopping of shoppingCenters">
