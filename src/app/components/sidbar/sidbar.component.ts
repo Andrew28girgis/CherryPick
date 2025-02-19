@@ -8,8 +8,6 @@ import {
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidbarService } from 'src/app/services/sidbar.service';
-import { Location } from '@angular/common';
-import { LogoutComponent } from '../logout/logout.component';
 
 @Component({
   selector: 'app-sidbar',
@@ -28,8 +26,7 @@ export class SidbarComponent {
 
   constructor(
     private sidbarService: SidbarService,
-    public router: Router,
-    private _location: Location
+    public router: Router, 
   ) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)
@@ -39,12 +36,11 @@ export class SidbarComponent {
   toggleSidebar() {
     this.sidbarService.toggleSidebar();
   }
+
   BackTo() {
-    // this._location.back();
     this.router.navigate(['/summary']);
   }
 
-  
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);

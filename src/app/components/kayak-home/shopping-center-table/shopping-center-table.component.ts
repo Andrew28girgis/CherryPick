@@ -1041,6 +1041,30 @@ export class ShoppingCenterTableComponent implements OnInit {
     });
   }
   
+
+  addLike(shopping: Center, reactionId: number): void {
+    const body = {
+      Name: 'CreatePropertyReaction',
+      Params: {
+        MarketSurveyId: shopping.MarketSurveyId,
+        ReactionId:reactionId,
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        // Ensure the Reactions array exists
+        if (!shopping.ShoppingCenter.Reactions) {
+          shopping.ShoppingCenter.Reactions = [];
+        }
+  
+        // Instead of specifying reactionType, simply increment the like count
+        shopping.ShoppingCenter.Reactions.length++;
+      }
+    });
+  }
+  
+
   addReply(marketSurveyId: number, parentCommentId: number): void {
     if (this.newReplies[parentCommentId]) {
       const body = {
