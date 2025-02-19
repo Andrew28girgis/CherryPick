@@ -3,7 +3,7 @@
 <nav class="container-fluid">
   <div class="navbar-line m-0">
     <div class="nav-right row m-0">
-      <div class="nav-right-responsive col-9">
+      <div class="nav-right-responsive col-9 justify-content-strat justify-content-sm-strat">
         <img
           alt="logo"
           class="cherry-logo"
@@ -16,7 +16,7 @@
           {{ BuyBoxName }}
         </p>
         <button
-          class="btn custom-share-btn mx-sm-3 mx-2"
+          class="btn custom-share-btn mx-sm-3 mx-2 d-none d-sm-flex"
           (click)="openContactsModal(contactsModal)"
         >
           Share
@@ -55,7 +55,7 @@
         </div>
       </div> -->
 
-      <div class="navbar navbar-expand-lg navbar-light col-3">
+      <div class="navbar navbar-expand-lg navbar-light col-3 justify-content-end justify-content-sm-between">
         <button
           class="navbar-toggler"
           type="button"
@@ -92,10 +92,13 @@
           <app-logout></app-logout>
         </div>
       </div>
-      <div class="col-12 mt-2 mt-sm-0 d-flex d-sm-none">
+      <div class="col-12 mt-2 mt-sm-0 d-flex d-sm-none p-0 justify-content-between">
         <p class="titleResponsive ms-2">
           {{ BuyBoxName }}
         </p>
+        <button class="btn custom-share-btn mx-sm-3 mx-2 d-flex d-sm-none m-0" (click)="openContactsModal(contactsModal)">
+        Share
+      </button>
       </div>
     </div>
   </div>

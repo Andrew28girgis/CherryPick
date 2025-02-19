@@ -6,6 +6,7 @@
   background-color: #001f3f !important;
   border-color: #001f3f !important;
   color: #fff !important;
+  margin: 0 !important;
 }
 .cards {
   height: 100vh;
@@ -260,7 +261,7 @@
 }
 @media (max-width: 768px) {
   .nav-right > div {
-    justify-content: center;
+    /* justify-content: center; */
   }
 
   .Bind__button {
