@@ -1382,3 +1382,10 @@ scroll-container {
   justify-content: space-between;
   align-items: center;
 }
+
+.liked svg path {
+  color: #0066cc;
+  font-weight: bold;
+  fill: #0066cc;
+
+}
