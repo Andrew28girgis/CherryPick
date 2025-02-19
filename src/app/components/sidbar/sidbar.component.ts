@@ -9,7 +9,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidbarService } from 'src/app/services/sidbar.service';
 import { Location } from '@angular/common';
-import { LogoutComponent } from '../logout/logout.component';
 
 @Component({
   selector: 'app-sidbar',

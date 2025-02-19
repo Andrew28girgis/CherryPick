@@ -50,7 +50,7 @@ export class LoginComponent {
     } 
     this.PlacesService.loginUser(this.adminLogin).subscribe(
       (data: any) => {
-         localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.token);
         if(data.token){
           this.navigateToHome(); 
         }
