@@ -442,7 +442,7 @@ img[alt="logo"] {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  max-height: 200px;
+  height: 200px;
   overflow-y: auto;
 }
 
@@ -982,7 +982,7 @@ img[alt="logo"] {
   }
 
   .comment-list {
-    max-height: 50vh;
+    height: 50vh;
     margin-bottom: 50px;
 
   }
