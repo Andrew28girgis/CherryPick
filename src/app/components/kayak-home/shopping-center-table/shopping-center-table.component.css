@@ -1043,7 +1043,7 @@ img[alt="logo"] {
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     font-size: 22px;
-    margin-bottom: 4px;
+    margin-bottom: 13px;
     font-weight: 500;
   }
 
@@ -1051,7 +1051,7 @@ img[alt="logo"] {
   .header-info .center-location {
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 12px;
+    font-size: 1rem;
     margin: 0;
     opacity: 0.9;
     line-height: 1.4;
