@@ -401,9 +401,9 @@ img[alt="logo"] {
   transition: color 0.2s ease;
 }
 
-/* .action-btn:hover {
+.action-btn:hover {
   color: #3498db;
-} */
+}
 
 .comments-section {
   padding: 16px;
@@ -469,15 +469,15 @@ img[alt="logo"] {
   animation: likeAnimation 0.3s ease;
 }
 
-/* .action-btn:hover svg path {
+.action-btn:hover svg path {
   fill: #2980b9;
   /* Orange color for active state */
-/* } */
+}
 
-/* .like-btn:hover svg path {
+.like-btn:hover svg path {
   fill: #2980b9;
   /* Red color for active like button */
-/* } */ 
+}
 
 .comment-btn:hover svg path {
   fill: #2980b9;
@@ -980,7 +980,12 @@ img[alt="logo"] {
     width: 100%;
     margin-left: 0;
   }
- 
+
+  .comment-list {
+    max-height: 50vh;
+    margin-bottom: 50px;
+
+  }
 
   .reaction-options {
     left: 50%;
@@ -1028,16 +1033,17 @@ img[alt="logo"] {
 
   .header-info {
     position: absolute;
-    top: 4%;
+    top: 10%;
     left: 16px;
     right: 16px;
     z-index: 2;
   }
+
   .header-info .center-name {
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     font-size: 22px;
-    margin-bottom: 13px;
+    margin-bottom: 4px;
     font-weight: 500;
   }
 
@@ -1045,7 +1051,7 @@ img[alt="logo"] {
   .header-info .center-location {
     color: #fff;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 1rem;
+    font-size: 12px;
     margin: 0;
     opacity: 0.9;
     line-height: 1.4;
@@ -1095,26 +1101,25 @@ img[alt="logo"] {
   /* Hide unnecessary elements */
   .social-stats {
     display: none;
-  } 
-  
+  }
+
+  /* Comments section adjustments */
   .comments-section {
     position: fixed;
-    bottom: 60px;
-    min-height: 75%;
+    bottom: 0;
     left: 0;
     right: 0;
-    background: #fff; 
+    background: #fff;
+    min-height: 33%;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
   }
 
   .comment-list {
-    overflow-y: auto; 
+    overflow-y: auto;
+    /* Make the comments list scrollable */
     flex-grow: 1;
   }
 
@@ -1269,9 +1274,9 @@ img[alt="logo"] {
   height: 80vh;
   /* Full height for the scroll container */
   overflow-y: auto;
-  overflow-x: hidden;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth; 
+  scroll-behavior: smooth;
+  /* Smooth scrolling behavior */
   -webkit-overflow-scrolling: touch;
   /* Smooth scrolling for iOS */
   overscroll-behavior: contain;
@@ -1287,9 +1292,13 @@ img[alt="logo"] {
 
 .card {
   height: 100%;
+  /* Each card takes the full viewport height */
   display: flex;
   align-items: center;
+  /* justify-content: center; */
+  padding-top: 20px;
   scroll-snap-align: start;
+  /* Ensure snap behavior */
   border-bottom: 1px solid #ddd;
   background: white;
   transition: transform 0.5s ease-in-out;
@@ -1367,25 +1376,11 @@ scroll-container {
   .scroll-container {
     height: 100vh;
   }
-}
 
+
+}
 .spec-head{
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-
-
-
-/* .like-btn:hover svg path {
-  fill: #2980b9;
-  /* Red color for active like button */
-/* } */ 
-
-.liked svg path {
-  color: #0066cc;
-  font-weight: bold;
-  fill: #0066cc;
-
 }
