@@ -1008,37 +1008,47 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addComment(shopping: Center, marketSurveyId: number): void {
-    if (this.newComments[marketSurveyId]) {
-      const body = {
-        Name: 'CreateComment',
-        Params: {
-          MarketSurveyId: shopping.MarketSurveyId,
-          Comment: this.newComments[marketSurveyId],
-          ParentCommentId: 0,
-        },
-      };
-
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (response: any) => { 
-          if (!shopping.ShoppingCenter.Comments) {
-            shopping.ShoppingCenter.Comments = [];
-          }
-
-          // Now safely push the new comment
-          shopping.ShoppingCenter.Comments.push({
-            Comment: this.newComments[marketSurveyId],
-            CommentDate: new Date().toISOString(),
-          });
-
-          shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
-            shopping.ShoppingCenter.Comments
-          );
-          this.newComments[marketSurveyId] = '';
-        },
-      });
+    // Early return if comment is empty
+    if (!this.newComments[marketSurveyId]?.trim()) {
+      return;
     }
+  
+    // Store comment text and clear input immediately to prevent double submission
+    const commentText = this.newComments[marketSurveyId];
+    this.newComments[marketSurveyId] = '';
+  
+    const body = {
+      Name: 'CreateComment',
+      Params: {
+        MarketSurveyId: shopping.MarketSurveyId,
+        Comment: commentText,
+        ParentCommentId: 0,
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        if (!shopping.ShoppingCenter.Comments) {
+          shopping.ShoppingCenter.Comments = [];
+        }
+  
+        shopping.ShoppingCenter.Comments.push({
+          Comment: commentText,
+          CommentDate: new Date().toISOString(),
+        });
+  
+        shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
+          shopping.ShoppingCenter.Comments
+        );
+      },
+      error: (error) => {
+        // Restore the comment text if API call fails
+        this.newComments[marketSurveyId] = commentText;
+        console.error('Error adding comment:', error);
+      }
+    });
   }
-
+  
   addReply(marketSurveyId: number, parentCommentId: number): void {
     if (this.newReplies[parentCommentId]) {
       const body = {
@@ -1256,6 +1266,14 @@ export class ShoppingCenterTableComponent implements OnInit {
   ngOnDestroy(): void {
     if (this.globalClickListener) {
       this.globalClickListener.forEach(unsub => unsub()); // Remove all listeners
+    }
+  }
+  trimComment(value: string, marketSurveyId: number): void {
+    if (value) {
+      // Only update if the trimmed value is different from empty string
+      this.newComments[marketSurveyId] = value.trimLeft();
+    } else {
+      this.newComments[marketSurveyId] = '';
     }
   }
 }
