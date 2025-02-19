@@ -114,7 +114,7 @@
 
         <div class="card-footer">
           <div class="reaction-buttons">
-            <button class="action-btn like-btn">
+            <button class="action-btn like-btn" (click)="addLike(shopping,1)">
               <svg
                 class="iconResponsive"
                 width="33"
@@ -133,9 +133,9 @@
                 />
               </svg>
 
-              <span class="d-block d-sm-block">{{
-                getTotalReactions(shopping)
-              }}</span>
+              <span class="d-block d-sm-block">
+                    {{shopping.ShoppingCenter.Reactions ? shopping.ShoppingCenter.Reactions.length : 0}}
+                  </span>
 
               <!-- <span class="reactionMobile">
                   {{ getPrimaryReaction(shopping) }}
