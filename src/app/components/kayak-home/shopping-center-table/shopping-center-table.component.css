@@ -1274,11 +1274,10 @@ img[alt="logo"] {
   height: 80vh;
   /* Full height for the scroll container */
   overflow-y: auto;
+  overflow-x: hidden;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  /* Smooth scrolling behavior */
-  -webkit-overflow-scrolling: touch;
-  /* Smooth scrolling for iOS */
+  scroll-behavior: smooth; 
+  -webkit-overflow-scrolling: touch; 
   overscroll-behavior: contain;
   /* Prevent bounce effect */
   position: relative;
