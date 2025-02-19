@@ -241,9 +241,14 @@ button:active {
   padding: 4px 16px;
   white-space: nowrap;
 }
-
 .Kayack__button {
   background: #001f3fc2;
+}
+.width6{
+  width: 6%;
+}
+.mtop42{
+  margin-top: 42px !important;
 }
 
 @media (max-width: 767px) {
@@ -262,6 +267,8 @@ button:active {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-right: 0 !important; 
+    padding-left: 19px !important
   }
   .card__Kayak {
     margin-bottom: 1rem;
@@ -270,6 +277,10 @@ button:active {
 
   .card__Kayak_buttons {
     justify-content: space-between;
+    flex-direction: row;
+  }
+  .mtop42{
+    margin-top: 42px !important;
   }
 
   .Kayack__button,
