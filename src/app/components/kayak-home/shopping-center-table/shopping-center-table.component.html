@@ -117,6 +117,8 @@
               [class.liked]="shopping.ShoppingCenter.Reactions.length>=1"
               class="action-btn like-btn"
               (click)="addLike(shopping, 1)"
+              [disabled]="isLikeInProgress"
+
             >
               <svg
                 class="iconResponsive"

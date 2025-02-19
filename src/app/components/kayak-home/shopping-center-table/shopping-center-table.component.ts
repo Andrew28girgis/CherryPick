@@ -165,7 +165,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
   likedShoppings: { [key: number]: boolean } = {};  // Track liked state by MarketSurveyId
-
+  isLikeInProgress = false;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -177,7 +177,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService,
     private renderer: Renderer2,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.currentView = localStorage.getItem('currentViewDashBord') || '4';
     this.savedMapView = localStorage.getItem('mapView');
@@ -1043,35 +1043,52 @@ export class ShoppingCenterTableComponent implements OnInit {
 
 // Add this to your component's properties
 
+// Add this property to your component class
+
+// Replace your existing addLike method with this version
 addLike(shopping: Center, reactionId: number): void {
-    // Check if this shopping center was already liked
+    // Prevent multiple rapid clicks
+    if (this.isLikeInProgress) {
+        return;
+    }
+
+    this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
     
     const body = {
-      Name: 'CreatePropertyReaction',
-      Params: {
-        MarketSurveyId: shopping.MarketSurveyId,
-        ReactionId: reactionId,
-      },
+        Name: 'CreatePropertyReaction',
+        Params: {
+            MarketSurveyId: shopping.MarketSurveyId,
+            ReactionId: reactionId,
+        },
     };
   
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-        // Ensure the Reactions array exists
-        if (!shopping.ShoppingCenter.Reactions) {
-          shopping.ShoppingCenter.Reactions = [];
+        next: (response: any) => {
+            // Ensure the Reactions array exists
+            if (!shopping.ShoppingCenter.Reactions) {
+                shopping.ShoppingCenter.Reactions = [];
+            }
+    
+            if (isLiked) {
+                // If already liked, decrease the count
+                shopping.ShoppingCenter.Reactions.length--;
+                delete this.likedShoppings[shopping.MarketSurveyId];
+            } else {
+                // If not liked, increase the count
+                shopping.ShoppingCenter.Reactions.length++;
+                this.likedShoppings[shopping.MarketSurveyId] = true;
+            }
+        },
+        error: (error) => {
+            console.error('Error processing like:', error);
+        },
+        complete: () => {
+            // Reset the flag after a short delay
+            setTimeout(() => {
+                this.isLikeInProgress = false;
+            }, 500); // 500ms debounce
         }
-  
-        if (isLiked) {
-          // If already liked, decrease the count
-          shopping.ShoppingCenter.Reactions.length--;
-          delete this.likedShoppings[shopping.MarketSurveyId];
-        } else {
-          // If not liked, increase the count
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
-      }
     });
 }
   
