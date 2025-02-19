@@ -1376,14 +1376,16 @@ scroll-container {
 }
 
 
+
+
+/* .like-btn:hover svg path {
+  fill: #2980b9;
+  /* Red color for active like button */
+/* } */ 
+
 .liked svg path {
   color: #0066cc;
   font-weight: bold;
   fill: #0066cc;
 
 }
-
-/* .like-btn:hover svg path {
-  fill: #2980b9;
-  /* Red color for active like button */
-/* } */ 
