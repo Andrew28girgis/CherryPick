@@ -285,6 +285,12 @@
     font-size: 0.85rem;
   }
 }
+.spec-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @media (max-width: 768px) {
   .modal-title {
     font-size: 15px;
