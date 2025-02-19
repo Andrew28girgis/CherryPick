@@ -1100,9 +1100,8 @@ img[alt="logo"] {
   /* Hide unnecessary elements */
   .social-stats {
     display: none;
-  }
-
-  /* Comments section adjustments */
+  } 
+  
   .comments-section {
     position: fixed;
     bottom: 0;
@@ -1117,8 +1116,7 @@ img[alt="logo"] {
   }
 
   .comment-list {
-    overflow-y: auto;
-    /* Make the comments list scrollable */
+    overflow-y: auto; 
     flex-grow: 1;
   }
 

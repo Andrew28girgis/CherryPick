@@ -386,21 +386,6 @@
           #commentsContainer
           (click)="$event.stopPropagation()"
         >
-          <div #inputField class="comment-input">
-            <input
-              type="text"
-              placeholder="Write a comment..."
-              [(ngModel)]="newComments[shopping.MarketSurveyId]"
-              (ngModelChange)="trimComment($event, shopping.MarketSurveyId)"
-            />
-            <button
-              class="post-comment-btn"
-              (click)="addComment(shopping, shopping.MarketSurveyId)"
-            >
-              Comment
-            </button>
-          </div>
-
           <ul #commentsList class="comment-list">
             <ng-container
               *ngFor="
@@ -452,6 +437,20 @@
               </li>
             </ng-container>
           </ul>
+          <div #inputField class="comment-input">
+            <input
+              type="text"
+              placeholder="Write a comment..."
+              [(ngModel)]="newComments[shopping.MarketSurveyId]"
+              (ngModelChange)="trimComment($event, shopping.MarketSurveyId)"
+            />
+            <button
+              class="post-comment-btn"
+              (click)="addComment(shopping, shopping.MarketSurveyId)"
+            >
+              Comment
+            </button>
+          </div>
         </div>
       </div>
     </div>
