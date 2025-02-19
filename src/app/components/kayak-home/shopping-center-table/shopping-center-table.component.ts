@@ -1161,7 +1161,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.showComments[shopping.Id] = false;
   }
   sortCommentsByDate(comments: any[]): any[] {
-    return comments.sort(
+    return comments?.sort(
       (a, b) =>
         new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
     );
