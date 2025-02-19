@@ -1377,9 +1377,10 @@ scroll-container {
     height: 100vh;
   }
 
-  .spec-head{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+
+}
+.spec-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
