@@ -1072,8 +1072,8 @@ addLike(shopping: Center, reactionId: number): void {
     
             if (isLiked) {
                 // If already liked, decrease the count
-                shopping.ShoppingCenter.Reactions.length--;
-                delete this.likedShoppings[shopping.MarketSurveyId];
+                // shopping.ShoppingCenter.Reactions.length--;
+                // delete this.likedShoppings[shopping.MarketSurveyId];
             } else {
                 // If not liked, increase the count
                 shopping.ShoppingCenter.Reactions.length++;
