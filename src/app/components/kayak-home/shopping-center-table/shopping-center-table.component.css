@@ -1277,7 +1277,8 @@ img[alt="logo"] {
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth; 
-  -webkit-overflow-scrolling: touch; 
+  -webkit-overflow-scrolling: touch;
+  /* Smooth scrolling for iOS */
   overscroll-behavior: contain;
   /* Prevent bounce effect */
   position: relative;
@@ -1291,13 +1292,9 @@ img[alt="logo"] {
 
 .card {
   height: 100%;
-  /* Each card takes the full viewport height */
   display: flex;
   align-items: center;
-  /* justify-content: center; */
-  padding-top: 20px;
   scroll-snap-align: start;
-  /* Ensure snap behavior */
   border-bottom: 1px solid #ddd;
   background: white;
   transition: transform 0.5s ease-in-out;
