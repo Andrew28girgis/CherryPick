@@ -379,9 +379,10 @@
               #commentsContainer
               (click)="$event.stopPropagation()"
             >
-              <div class="comment-input">
+              <div                 #inputField
+              class="comment-input">
                 <input
-                  type="text"
+                                  type="text"
                   placeholder="Write a comment..."
                   [(ngModel)]="newComments[shopping.MarketSurveyId]"
                 />
