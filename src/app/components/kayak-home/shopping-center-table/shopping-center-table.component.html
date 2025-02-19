@@ -382,13 +382,17 @@
               <div                 #inputField
               class="comment-input">
                 <input
-                                  type="text"
+                  type="text"
                   placeholder="Write a comment..."
                   [(ngModel)]="newComments[shopping.MarketSurveyId]"
+                  (ngModelChange)="trimComment($event, shopping.MarketSurveyId)"
+
                 />
                 <button
                   class="post-comment-btn"
                   (click)="addComment(shopping, shopping.MarketSurveyId)"
+                  [disabled]="!newComments[shopping.MarketSurveyId]?.trim()"
+
                 >
                   Comment
                 </button>
