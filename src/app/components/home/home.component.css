@@ -235,7 +235,6 @@
 }
 .first-last {
   font-size: 15px;
-  font-weight: bold;
 }
 .email{
   font-size: 14px;
@@ -391,7 +390,7 @@
   }
 }
 
-@media (max-width: 991px) {
+@media (min-width: 992px) {
   .modal-title {
     font-size: 16px;
 }
@@ -400,7 +399,6 @@
 }
 .first-last {
   font-size: 17px;
-  font-weight: bold;
 }
 .email{
   font-size: 16px;
@@ -414,6 +412,16 @@
 .form-control {
   font-size: 16px;
 }
+  .navbar-expand-lg .navbar-collapse {
+      display: flex !important;
+      flex-basis: auto;
+      justify-content: flex-end;
+      gap: 5px;
+  }
+}
+
+@media (max-width: 991px) {
+ 
   .card-content {
     height: fit-content !important;
   }
@@ -437,14 +445,5 @@
   }
   .hide-on-mobile {
     display: none !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .navbar-expand-lg .navbar-collapse {
-      display: flex !important;
-      flex-basis: auto;
-      justify-content: flex-end;
-      gap: 5px;
   }
 }
