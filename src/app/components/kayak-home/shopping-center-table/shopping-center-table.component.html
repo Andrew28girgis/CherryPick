@@ -113,11 +113,7 @@
 
         <div class="card-footer">
           <div class="reaction-buttons">
-            <button
-              [class.liked]="shopping.ShoppingCenter.Reactions.length>=1"
-              class="action-btn like-btn"
-              (click)="addLike(shopping, 1)"
-            >
+            <button class="action-btn like-btn" (click)="addLike(shopping,1)">
               <svg
                 class="iconResponsive"
                 width="33"
@@ -146,7 +142,6 @@
             </button>
           </div>
           <button
-          [class.liked]="shopping.ShoppingCenter.Comments.length>=1"
             class="action-btn comment-btn"
             (click)="toggleComments(shopping, $event)"
           >
@@ -391,6 +386,21 @@
           #commentsContainer
           (click)="$event.stopPropagation()"
         >
+          <div #inputField class="comment-input">
+            <input
+              type="text"
+              placeholder="Write a comment..."
+              [(ngModel)]="newComments[shopping.MarketSurveyId]"
+              (ngModelChange)="trimComment($event, shopping.MarketSurveyId)"
+            />
+            <button
+              class="post-comment-btn"
+              (click)="addComment(shopping, shopping.MarketSurveyId)"
+            >
+              Comment
+            </button>
+          </div>
+
           <ul #commentsList class="comment-list">
             <ng-container
               *ngFor="
@@ -442,20 +452,6 @@
               </li>
             </ng-container>
           </ul>
-          <div #inputField class="comment-input">
-            <input
-              type="text"
-              placeholder="Write a comment..."
-              [(ngModel)]="newComments[shopping.MarketSurveyId]"
-              (ngModelChange)="trimComment($event, shopping.MarketSurveyId)"
-            />
-            <button
-              class="post-comment-btn"
-              (click)="addComment(shopping, shopping.MarketSurveyId)"
-            >
-              Comment
-            </button>
-          </div>
         </div>
       </div>
     </div>

@@ -401,9 +401,9 @@ img[alt="logo"] {
   transition: color 0.2s ease;
 }
 
-/* .action-btn:hover {
+.action-btn:hover {
   color: #3498db;
-} */
+}
 
 .comments-section {
   padding: 16px;
@@ -469,15 +469,15 @@ img[alt="logo"] {
   animation: likeAnimation 0.3s ease;
 }
 
-/* .action-btn:hover svg path {
+.action-btn:hover svg path {
   fill: #2980b9;
   /* Orange color for active state */
-/* } */
+}
 
-/* .like-btn:hover svg path {
+.like-btn:hover svg path {
   fill: #2980b9;
   /* Red color for active like button */
-/* } */ 
+}
 
 .comment-btn:hover svg path {
   fill: #2980b9;
@@ -980,7 +980,12 @@ img[alt="logo"] {
     width: 100%;
     margin-left: 0;
   }
- 
+
+  .comment-list {
+    max-height: 50vh;
+    margin-bottom: 50px;
+
+  }
 
   .reaction-options {
     left: 50%;
@@ -1095,25 +1100,25 @@ img[alt="logo"] {
   /* Hide unnecessary elements */
   .social-stats {
     display: none;
-  } 
-  
+  }
+
+  /* Comments section adjustments */
   .comments-section {
-    overflow-y: scroll;
-    min-height: 75%;
+    position: fixed;
+    bottom: 0;
     left: 0;
     right: 0;
     background: #fff;
+    min-height: 75%;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
   }
 
   .comment-list {
-    overflow-y: auto; 
+    overflow-y: auto;
+    /* Make the comments list scrollable */
     flex-grow: 1;
   }
 
@@ -1373,16 +1378,3 @@ scroll-container {
   justify-content: space-between;
   align-items: center;
 }
-
-
-.liked svg path {
-  color: #0066cc;
-  font-weight: bold;
-  fill: #0066cc;
-
-}
-
-/* .like-btn:hover svg path {
-  fill: #2980b9;
-  /* Red color for active like button */
-/* } */ 
