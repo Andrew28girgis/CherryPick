@@ -78,21 +78,22 @@
             </div>
             <div class="row">
               <ng-container
-                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces" 
               >
                 <div style="color: white; font-weight: bold ; padding: 0; display: flex; align-items: center; font-size: 1rem;">
                   <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
+  
+                    <img
+                      class="logo"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        item.RelationOrganizationId
+                      }}"
+                      [title]="item.RelationOrganizationName"
+                      alt=""
+                    />
 
-                  <img
-                    class="logo"
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      item.RelationOrganizationId
-                    }}"
-                    [title]="item.RelationOrganizationName"
-                    alt=""
-                  />
-
-                  <span> {{ item.RelationOrganizationName }}</span>
+                    <span> {{ item.RelationOrganizationName }}</span>
+               
                 </div>
               </ng-container>
             </div>
@@ -136,12 +137,8 @@
               </svg>
 
               <span class="d-block d-sm-block">
-                {{
-                  shopping.ShoppingCenter.Reactions
-                    ? shopping.ShoppingCenter.Reactions.length
-                    : 0
-                }}
-              </span>
+                    {{shopping.ShoppingCenter.Reactions ? shopping.ShoppingCenter.Reactions.length : 0}}
+                  </span>
 
               <!-- <span class="reactionMobile">
                   {{ getPrimaryReaction(shopping) }}
@@ -397,9 +394,9 @@
           <ul #commentsList class="comment-list">
             <ng-container
               *ngFor="
-                let comment of 
+                let comment of sortCommentsByDate(
                   shopping.ShoppingCenter.Comments
-                
+                )
               "
             >
               <li>

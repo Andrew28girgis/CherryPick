@@ -164,7 +164,6 @@ export class ShoppingCenterTableComponent implements OnInit {
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  likedShoppings: { [key: number]: boolean } = {};  // Track liked state by MarketSurveyId
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -1030,7 +1029,9 @@ export class ShoppingCenterTableComponent implements OnInit {
           CommentDate: new Date().toISOString(),
         });
   
-     
+        shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
+          shopping.ShoppingCenter.Comments
+        );
       },
       error: (error) => {
         // Restore the comment text if API call fails
@@ -1041,17 +1042,12 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
   
 
-// Add this to your component's properties
-
-addLike(shopping: Center, reactionId: number): void {
-    // Check if this shopping center was already liked
-    const isLiked = this.likedShoppings[shopping.MarketSurveyId];
-    
+  addLike(shopping: Center, reactionId: number): void {
     const body = {
       Name: 'CreatePropertyReaction',
       Params: {
         MarketSurveyId: shopping.MarketSurveyId,
-        ReactionId: reactionId,
+        ReactionId:reactionId,
       },
     };
   
@@ -1062,18 +1058,11 @@ addLike(shopping: Center, reactionId: number): void {
           shopping.ShoppingCenter.Reactions = [];
         }
   
-        if (isLiked) {
-          // If already liked, decrease the count
-          shopping.ShoppingCenter.Reactions.length--;
-          delete this.likedShoppings[shopping.MarketSurveyId];
-        } else {
-          // If not liked, increase the count
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
+        // Instead of specifying reactionType, simply increment the like count
+        shopping.ShoppingCenter.Reactions.length++;
       }
     });
-}
+  }
   
 
   addReply(marketSurveyId: number, parentCommentId: number): void {
@@ -1196,7 +1185,7 @@ addLike(shopping: Center, reactionId: number): void {
     this.showComments[shopping.Id] = false;
   }
   sortCommentsByDate(comments: any[]): any[] {
-    return comments.sort(
+    return comments?.sort(
       (a, b) =>
         new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
     );
