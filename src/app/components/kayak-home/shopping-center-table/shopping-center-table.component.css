@@ -1295,3 +1295,11 @@ scroll-container {
   align-items: center;
   justify-content: center;
 }
+
+
+:host ::ng-deep  .carousel-control-next{
+right: 0;
+}
+:host ::ng-deep  .carousel-control-prev{
+  left: 0;
+  }

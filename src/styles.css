@@ -778,7 +778,14 @@ p {
 
 
 
-
+@media (max-width: 768px) {
+  .carousel-control-next{
+    right: 0 !important;
+    }
+    .carousel-control-prev{
+      left: 0 !important;
+      }
+}
 /* .................... */
 
 
