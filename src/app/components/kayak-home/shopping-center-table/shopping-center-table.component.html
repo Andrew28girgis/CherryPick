@@ -79,22 +79,29 @@
             </div>
             <div class="row">
               <ng-container
-                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces" 
+                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
               >
-                <div style="color: white; font-weight: bold ; padding: 0; display: flex; align-items: center;">
+                <div
+                  style="
+                    color: white;
+                    font-weight: bold;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                  "
+                >
                   <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
-  
-                    <img
-                      class="logo"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        item.RelationOrganizationId
-                      }}"
-                      [title]="item.RelationOrganizationName"
-                      alt=""
-                    />
 
-                    <span> {{ item.RelationOrganizationName }}</span>
-               
+                  <img
+                    class="logo"
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      item.RelationOrganizationId
+                    }}"
+                    [title]="item.RelationOrganizationName"
+                    alt=""
+                  />
+
+                  <span> {{ item.RelationOrganizationName }}</span>
                 </div>
               </ng-container>
             </div>
@@ -114,7 +121,11 @@
 
         <div class="card-footer">
           <div class="reaction-buttons">
-            <button class="action-btn like-btn" (click)="addLike(shopping,1)">
+            <button
+              [class.liked]="likedShoppings[shopping.MarketSurveyId]"
+              class="action-btn like-btn"
+              (click)="addLike(shopping, 1)"
+            >
               <svg
                 class="iconResponsive"
                 width="33"
@@ -134,8 +145,12 @@
               </svg>
 
               <span class="d-block d-sm-block">
-                    {{shopping.ShoppingCenter.Reactions ? shopping.ShoppingCenter.Reactions.length : 0}}
-                  </span>
+                {{
+                  shopping.ShoppingCenter.Reactions
+                    ? shopping.ShoppingCenter.Reactions.length
+                    : 0
+                }}
+              </span>
 
               <!-- <span class="reactionMobile">
                   {{ getPrimaryReaction(shopping) }}

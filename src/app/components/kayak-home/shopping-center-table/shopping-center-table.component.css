@@ -401,9 +401,9 @@ img[alt="logo"] {
   transition: color 0.2s ease;
 }
 
-.action-btn:hover {
+/* .action-btn:hover {
   color: #3498db;
-}
+} */
 
 .comments-section {
   padding: 16px;
@@ -469,15 +469,15 @@ img[alt="logo"] {
   animation: likeAnimation 0.3s ease;
 }
 
-.action-btn:hover svg path {
+/* .action-btn:hover svg path {
   fill: #2980b9;
   /* Orange color for active state */
-}
+/* } */
 
-.like-btn:hover svg path {
+/* .like-btn:hover svg path {
   fill: #2980b9;
   /* Red color for active like button */
-}
+/* } */ 
 
 .comment-btn:hover svg path {
   fill: #2980b9;
@@ -1379,3 +1379,17 @@ scroll-container {
   justify-content: space-between;
   align-items: center;
 }
+
+
+.liked svg path {
+  color: #0066cc;
+  font-weight: bold;
+  fill: #0066cc;
+
+}
+
+
+/* .like-btn:hover svg path {
+  fill: #2980b9;
+  /* Red color for active like button */
+/* } */ 
