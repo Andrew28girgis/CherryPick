@@ -238,9 +238,17 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.selectedTab = 'Properties';
   }
   hideAllComments(): void {
+      // Don't hide comments if focus is on comment input
+    const activeElement = document.activeElement;
+    if (activeElement && 
+        (activeElement.classList.contains('comment-input') || 
+         activeElement.closest('.comments-section'))) {
+      return;
+    }
+    
+    // Otherwise hide all comments
     for (const key in this.showComments) {
-        this.showComments[key] = false;
-      
+      this.showComments[key] = false;
     }
   }
   toggleShoppingCenters() {
@@ -1224,17 +1232,23 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    const events = ['click', 'scroll', 'wheel', 'touchstart']; // List of events
-  
+    const events = ['click', 'scroll', 'wheel', 'touchstart'];
+
     this.globalClickListener = events.map(eventType =>
       this.renderer.listen('document', eventType, (event: Event) => {
-        // Check if the event target is inside the comments container
+        const target = event.target as HTMLElement;
         const commentsContainer = this.commentsContainer?.nativeElement;
-        if (commentsContainer && commentsContainer.contains(event.target as Node)) {
-          return; // If the event is inside the comments section, do nothing
+
+        // Check if click is inside comments section or on input
+        const isCommentsClick = commentsContainer?.contains(target);
+        const isInputClick = target.classList.contains('comment-input');
+        const isCommentsSection = target.closest('.comments-section');
+
+        if (isCommentsClick || isInputClick || isCommentsSection) {
+          return; // Do nothing if click is within comments area
         }
-        
-        // If the event is outside the comments container, hide the comments
+
+        // Only hide comments if click is outside
         this.hideAllComments();
       })
     );
