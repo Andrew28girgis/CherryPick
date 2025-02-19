@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { General, adminLogin } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Title } from '@angular/platform-browser';
 import { ConfigService } from 'src/app/services/config.service';
 
 @Component({
@@ -33,7 +32,7 @@ export class LoginComponent {
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
     this.activatedRoute.queryParamMap.subscribe((params) => {
-      this.t = params.get('t');
+    this.t = params.get('t');
       if (this.t) {
         localStorage.clear(); 
         this.onSubmit();
@@ -57,19 +56,13 @@ export class LoginComponent {
         }
         this.spinner.hide();
       },
-      (error) => {
-        this.handleError(error.error);
+      (error) => { 
         this.spinner.hide();
       }
     );
- 
   }
 
   private navigateToHome() {
     this.router.navigate(['/summary']);
-  }
-
-  private handleError(error: any) {
-    console.error('An error occurred during login:', error);
-  }
+  } 
 }
