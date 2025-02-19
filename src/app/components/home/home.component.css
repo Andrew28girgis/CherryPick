@@ -68,7 +68,7 @@
 .nav-right > div {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .custom-icon-container {
   display: flex;
@@ -341,6 +341,7 @@
     transform: translateX(-50%);
   }
 }
+
 @media (max-width: 991px) {
   .card-content {
     height: fit-content !important;
@@ -356,7 +357,7 @@
     padding: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    width: 150%;
+    width: 100%;
   }
 
   .icon-option {
@@ -365,5 +366,14 @@
   }
   .hide-on-mobile {
     display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-expand-lg .navbar-collapse {
+      display: flex !important;
+      flex-basis: auto;
+      justify-content: flex-end;
+      gap: 5px;
   }
 }
