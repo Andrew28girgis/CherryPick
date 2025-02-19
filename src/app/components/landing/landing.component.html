@@ -1,11 +1,11 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <nav class="navbars">
-  <div class="navbar-line m-0" >
+  <div class="navbar-line m-0">
     <div
       class="nav-right w-100"
       style="cursor: pointer; display: flex; justify-content: space-between"
     >
-      <div style="margin-left: 8px;">
+      <div style="margin-left: 8px">
         <img
           alt="logo"
           loading="lazy"
@@ -27,7 +27,7 @@
       </ngb-alert>
     </p>
     <i
-      *ngIf="windowHistrony!==1"
+      *ngIf="windowHistrony !== 1"
       class="fa-solid fa-arrow-left"
       style="font-size: 24px; cursor: pointer; padding: 15px 10px"
       (click)="goBack()"
@@ -81,7 +81,9 @@
                         " Miles "
                     }}
                   </span> -->
-                  <p class="m-0 ps-2"><b>{{ near.Name }}</b></p>
+                  <p class="m-0 ps-2">
+                    <b>{{ near.Name }}</b>
+                  </p>
                 </ng-container>
               </div>
             </ng-container>
@@ -464,17 +466,12 @@
       </section>
     </div>
 
-    <div
-      class="main-section"
-      *ngIf="
-        ShoppingCenter  
-      "
-    >
+    <div class="main-section" *ngIf="ShoppingCenter">
       <section id="hero">
         <ng-container>
           <div class="col-md-12">
             <div class="d-flex justify-content-between">
-              <h2 class="main-heading">Units Inside</h2> 
+              <h2 class="main-heading">Units Inside</h2>
               <!-- <button class="enriche ms-auto" (click)="open(enricheModal , 3)">
                 <i class="fa-solid fa-tag me-1"></i>   Enriche Availability
               </button> -->
@@ -544,13 +541,7 @@
       </section>
     </div>
 
-    <div
-      class="main-section"
-      *ngIf="
-        
-        ShoppingCenter?.SiteSelectionReason
-      "
-    >
+    <div class="main-section" *ngIf="ShoppingCenter?.SiteSelectionReason">
       <section id="hero">
         <ng-container>
           <div class="col-md-12">
@@ -558,10 +549,7 @@
               <p class="main-name">
                 Why does this location meet your requirements?
               </p>
-              <p
-                [innerHtml]="ShoppingCenter.SiteSelectionReason
-                "
-              ></p>
+              <p [innerHtml]="ShoppingCenter.SiteSelectionReason"></p>
             </div>
           </div>
         </ng-container>
@@ -576,9 +564,7 @@
           </div>
           <div class="d-flex justify-content-start emo-container">
             <div style="cursor: pointer" (click)="sendEmojFeedBack(1)">
-              <div
-                [ngClass]="place.reaction == '1' ? 'selected-reaction' : ''"
-              >
+              <div [ngClass]="place.reaction == '1' ? 'selected-reaction' : ''">
                 <img
                   src="../../../assets/Images/Gif/love.gif"
                   alt="love"
@@ -587,9 +573,7 @@
               </div>
             </div>
             <div style="cursor: pointer" (click)="sendEmojFeedBack(2)">
-              <div
-                [ngClass]="place.reaction == '2' ? 'selected-reaction' : ''"
-              >
+              <div [ngClass]="place.reaction == '2' ? 'selected-reaction' : ''">
                 <img
                   src="../../../assets/Images/Gif/happy.gif"
                   alt="happy"
@@ -598,9 +582,7 @@
               </div>
             </div>
             <div style="cursor: pointer" (click)="sendEmojFeedBack(3)">
-              <div
-                [ngClass]="place.reaction == '3' ? 'selected-reaction' : ''"
-              >
+              <div [ngClass]="place.reaction == '3' ? 'selected-reaction' : ''">
                 <img
                   src="../../../assets/Images/Gif/sad.gif"
                   alt="sad"
@@ -814,12 +796,15 @@
       </div> -->
     </div>
 
-    <div class="main-section" *ngIf="OrgManager && OrgManager[0] && placesRepresentative != false">
+    <div
+      class="main-section"
+      *ngIf="OrgManager && OrgManager[0] && placesRepresentative != false"
+    >
       <section id="hero">
         <div class="p-0">
           <div class="d-flex align-items-center">
             <img
-              style="width: 50px;"
+              style="width: 50px"
               class="logo"
               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                 OrgManager[0].id
@@ -850,7 +835,6 @@
       <div class="col-md-4" *ngIf="placeCotenants && placeCotenants.length > 0">
         <div class="main-section" style="height: 408px; overflow-y: auto">
           <div class="d-flex justify-content-between">
-
             <p class="main-name">Co-Tenants</p>
             <!-- <button class="enriche ms-2" (click)="open(enricheModal , 4)">
               <i class="fa-solid fa-tag me-1"></i> Enriche Co-Tenants
@@ -953,7 +937,7 @@
                     }}</span>
                   </div>
                 </div>
-<!-- 
+                <!-- 
                 <span class="ms-2 font-weight-bold"
                   >{{ branch.Distance.toFixed(2) }} MI</span
                 > -->
@@ -988,8 +972,6 @@
     ></div>
   </ng-template>
 </ng-template>
-
-<!-- Modal Template -->
 <ng-template #galleryModal let-modal>
   <div class="modal-body p-0">
     <div class="carousel-wrapper position-relative">
@@ -1008,7 +990,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #enricheModal let-modal>
   <form (ngSubmit)="submitEnriche()" #enricheForm="ngForm">
     <div class="modal-header d-flex justify-content-between align-items-center">
@@ -1021,7 +1002,7 @@
           (click)="modal.dismiss('Cross click')"
         ></button>
       </div>
-    </div> 
+    </div>
     <div class="modal-body">
       <div class="mb-3">
         <label for="context" class="form-label">Context</label>
@@ -1031,31 +1012,30 @@
           [(ngModel)]="enriche.context"
           rows="5"
           class="form-control"
-          required 
+          required
           name="context"
         ></textarea>
       </div>
       <div class="mb-3">
         <label for="lastName" class="form-label">URL</label>
         <input
-         type="url"
+          type="url"
           id="url"
           [(ngModel)]="enriche.url"
-
           class="form-control"
-          required 
+          required
           name="url"
         />
       </div>
       <div class="mb-3">
         <label for="fileUpload" class="form-label">Upload File</label>
-        <input 
-          type="file" 
-          id="fileUpload" 
-          class="form-control" 
-          (change)="onFileChange($event)" 
+        <input
+          type="file"
+          id="fileUpload"
+          class="form-control"
+          (change)="onFileChange($event)"
           name="fileUpload"
-          required 
+          required
         />
       </div>
     </div>
@@ -1072,5 +1052,4 @@
       </button>
     </div>
   </form>
-  
 </ng-template>
