@@ -1098,12 +1098,11 @@ img[alt="logo"] {
   } 
   
   .comments-section {
-    position: fixed;
-    bottom: 60px;
+    overflow-y: scroll;
     min-height: 75%;
     left: 0;
     right: 0;
-    background: #fff; 
+    background: #fff;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
