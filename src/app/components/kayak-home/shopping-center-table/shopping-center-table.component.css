@@ -1033,7 +1033,7 @@ img[alt="logo"] {
 
   .header-info {
     position: absolute;
-    top: 10%;
+    top: 2%;
     left: 16px;
     right: 16px;
     z-index: 2;
@@ -1372,9 +1372,8 @@ scroll-container {
   .scroll-container {
     height: 100vh;
   }
-
-
 }
+
 .spec-head{
   display: flex;
   justify-content: space-between;
