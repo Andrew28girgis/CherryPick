@@ -65,7 +65,7 @@ export class SummeryComponent  {
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {
-      },
+      }, 
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
