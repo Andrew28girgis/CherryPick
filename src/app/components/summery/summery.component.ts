@@ -37,8 +37,7 @@ export class SummeryComponent  {
     private propertiesService: PropertiesServiceService,
     private route: ActivatedRoute,
     private stateService: StateService,
-    private sidbarService: SidbarService,
-    private renderer: Renderer2
+    private sidbarService: SidbarService
   ) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)

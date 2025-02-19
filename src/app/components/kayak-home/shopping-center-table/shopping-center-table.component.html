@@ -393,8 +393,7 @@
                 <button
                   class="post-comment-btn"
                   (click)="addComment(shopping, shopping.MarketSurveyId)"
-                  [disabled]="!newComments[shopping.MarketSurveyId]?.trim()"
-
+                  [disabled]="!(newComments[shopping.MarketSurveyId] && newComments[shopping.MarketSurveyId].trim())"
                 >
                   Comment
                 </button>
