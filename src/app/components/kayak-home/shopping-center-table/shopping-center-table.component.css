@@ -982,7 +982,7 @@ img[alt="logo"] {
   }
 
   .comment-list {
-    max-height: 50vh;
+    max-height: 20vh;
     margin-bottom: 50px;
 
   }
@@ -1110,7 +1110,7 @@ img[alt="logo"] {
     left: 0;
     right: 0;
     background: #fff;
-    min-height: 33%;
+    min-height: 62%;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
