@@ -1029,9 +1029,7 @@ export class ShoppingCenterTableComponent implements OnInit {
           CommentDate: new Date().toISOString(),
         });
   
-        shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
-          shopping.ShoppingCenter.Comments
-        );
+     
       },
       error: (error) => {
         // Restore the comment text if API call fails
