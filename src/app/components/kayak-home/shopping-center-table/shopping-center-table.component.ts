@@ -1308,7 +1308,7 @@ export class ShoppingCenterTableComponent implements OnInit {
             // Reset the flag after a short delay
             setTimeout(() => {
                 this.isLikeInProgress = false;
-            }, 500); // 500ms debounce
+            }, 50); // 500ms debounce
         }
     });
 }
