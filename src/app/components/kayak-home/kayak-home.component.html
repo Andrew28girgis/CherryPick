@@ -7,7 +7,7 @@
     <div>
       <h3 class="bb-name d-none d-sm-flex">{{BuyboxName}}</h3>
     </div>
-    <div class="Nav__section">
+    <div class="Nav__section d-flex justify-content-between">
       <ul class="p-0 m-0 d-sm-flex">
         <li
           *ngFor="let tab of tabs"
@@ -17,6 +17,9 @@
           {{ tab.label }}
         </li>
       </ul>
+      <p routerLink="/summary" class="d-flex d-sm-none Home-icon">
+          <i class="fa-solid fa-house"></i>
+      </p>
     </div>
     <div style="background-color: #fff; padding: 0px;min-height: 85vh;border-radius: 2px;">
       

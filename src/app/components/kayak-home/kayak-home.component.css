@@ -290,7 +290,17 @@
   
 } 
 
-
+.Home-icon{
+  padding: 0px 6px;
+  line-height: 25px;
+  align-items: center;
+}
+.Home-icon>i{
+  padding: 6px 6px;
+  background-color: #001f3f;
+  color: #fff;
+  border-radius: 5px;
+}
 
 
 @media (max-width: 768px) {

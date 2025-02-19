@@ -13,6 +13,8 @@ export class LogoutComponent {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 10);
   }
 }
