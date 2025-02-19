@@ -56,7 +56,7 @@ interface Comment {
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mainContainer') mainContainer!: ElementRef;
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
-  globalClickListener!: () => void;
+  globalClickListener!: (() => void)[];
   shoppingCenter: any;
   selectedView = 'shoppingCenters';
   General!: General;
@@ -1224,14 +1224,24 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.globalClickListener = this.renderer.listen(
-      'document',
-      'click',
-      (event: MouseEvent) => {
-       
-          this.hideAllComments();
+    const events = ['click', 'scroll', 'wheel', 'touchstart']; // List of events
+  
+    this.globalClickListener = events.map(eventType =>
+      this.renderer.listen('document', eventType, (event: Event) => {
+        // Check if the event target is inside the comments container
+        const commentsContainer = this.commentsContainer?.nativeElement;
+        if (commentsContainer && commentsContainer.contains(event.target as Node)) {
+          return; // If the event is inside the comments section, do nothing
         }
-      
+        
+        // If the event is outside the comments container, hide the comments
+        this.hideAllComments();
+      })
     );
+  }
+  ngOnDestroy(): void {
+    if (this.globalClickListener) {
+      this.globalClickListener.forEach(unsub => unsub()); // Remove all listeners
+    }
   }
 }
