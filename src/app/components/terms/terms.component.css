@@ -26,3 +26,16 @@ code {
     padding: 0.2em 0.4em;
     font-size: 90%;
 }
+.total{
+    cursor: pointer;
+}
+.imglogo{
+    width: 184px;
+}
+.termss{
+    background-color: #fff; 
+    border-radius: 10px;
+}
+.margin-left{
+    margin-left: 8px;
+}

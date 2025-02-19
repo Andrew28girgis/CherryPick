@@ -393,8 +393,8 @@
                 <button
                   class="post-comment-btn"
                   (click)="addComment(shopping, shopping.MarketSurveyId)"
-                  [disabled]="!(newComments[shopping.MarketSurveyId] && newComments[shopping.MarketSurveyId].trim())"
-                >
+
+                > 
                   Comment
                 </button>
               </div>
@@ -874,7 +874,7 @@
               >
                 <div class="main-img">
                   <img
-                    src="{{ shopping.MainImage }}"
+                    src="{{ shopping.MainImage || 'assets/Images/skeltonImage.png'}}"
                     [title]="shopping.CenterName"
                   />
                 </div>
@@ -1165,8 +1165,8 @@
               >
                 <div class="main-img">
                   <img
-                    *ngIf="place.MainImage"
-                    src="{{ place.MainImage }}"
+                    
+                    src="{{ place.MainImage || 'assets/Images/skeltonImage.png'}}"
                     [title]="place.CenterName"
                   />
                 </div>
@@ -1176,7 +1176,7 @@
                 [routerLink]="['/landing', place.Id, 0, BuyBoxId]"
               >
                 <div class="main-img">
-                  <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
+                  <img  src="{{ place.MainImage || 'assets/Images/skeltonImage.png'}}" />
                 </div>
               </a>
               <div

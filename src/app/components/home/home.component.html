@@ -460,6 +460,7 @@
               'col-12 col-sm-4 ': currentView == 3
             }"
           >
+          <div class="card-window_c">
             <a
               [routerLink]="[
                       '/landing',
@@ -469,7 +470,7 @@
                     ]"
             >
               <div class="main-img">
-                <img src="{{ shopping.MainImage }}" />
+                <img src="{{ shopping.MainImage || 'assets/Images/skeltonImage.png' }}" />
               </div>
             </a>
             <div class="content-wrap card-content">
@@ -652,6 +653,7 @@
                 </div> -->
             </div>
           </div>
+          </div>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="currentView == 2">
@@ -670,6 +672,7 @@
               'col-md-6 col-sm-12': currentView == 2
             }"
           >
+          <div class="card-window_c">
             <a
               *ngIf="place.CenterCity"
               [routerLink]="[
@@ -682,11 +685,9 @@
                ]"
             >
               <div class="main-img">
-                <img *ngIf="place.MainImage" src="{{ place.MainImage }}" />
+                <img src="{{ place.MainImage || 'assets/Images/skeltonImage.png' }}" />
               </div>
             </a>
-
-
             <div class="content-wrap card-sideview">
               <div>
                 <div *ngIf="place.CenterCity">
@@ -856,6 +857,7 @@
               </div>
             </div>
           </div>
+          </div>
         </ng-container>
       </ng-container>
     </div>
@@ -971,7 +973,7 @@
       <div>
         <button
           type="button"
-          class="btn btn-close"
+          class="btn btn-close contact-btn"
           aria-label="Close"
           (click)="modal.dismiss('Cross click')"
         ></button>
