@@ -113,7 +113,7 @@
         <div class="card-footer">
           <div class="reaction-buttons">
             <button
-              [class.liked]="likedShoppings[shopping.MarketSurveyId]"
+              [class.liked]="shopping.ShoppingCenter.Reactions.length>=1"
               class="action-btn like-btn"
               (click)="addLike(shopping, 1)"
             >
@@ -149,6 +149,7 @@
             </button>
           </div>
           <button
+          [class.liked]="shopping.ShoppingCenter.Comments.length>=1"
             class="action-btn comment-btn"
             (click)="toggleComments(shopping, $event)"
           >
