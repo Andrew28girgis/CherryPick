@@ -113,12 +113,8 @@
               <!-- Expanded Info, shown when showMore is true -->
 
               <!-- Initial Display -->
-              <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-              <p style="color: #fff">{{ shopping.CenterAddress }}</p>
-              <p class="center-address">
-                {{ shopping.CenterCity | titlecase }},
-                {{ shopping.CenterState }}
-              </p>
+              <h3 class="center-name m-0" >{{ shopping.CenterName | titlecase }}</h3>
+              <p style="color: #fff ;font-size: 13px;">{{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }}, {{ shopping.CenterState }}</p> 
               <p
                 style="color: #fff"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
@@ -126,6 +122,7 @@
 
               <!-- See More Button -->
               <p
+                 *ngIf="shopping?.ShoppingCenter?.BuyBoxPlaces"
                 (click)="openDetails(shoppingDetails, shopping)"
                 class="see-more-btn"
               >
@@ -1712,8 +1709,7 @@
 <ng-template #shoppingDetails let-modal>
   <div class="modal-body p-0">
     <div class="carousel-wrapper position-relative">
-      <div  class="expanded-info">
-        <h4>Details:</h4>
+      <div  class="expanded-info"> 
         <p>{{ General.modalObject.CenterAddress }}</p>
         <p>{{ General.modalObject.CenterCity | titlecase }}</p>
         <p>{{ General.modalObject.CenterState }}</p>
