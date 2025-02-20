@@ -1268,30 +1268,7 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.hideAllComments();
       })
     );
-    // Listen for scroll and close comments
-    this.renderer.listen('window', 'scroll', () => {
-      console.log('Scroll detected, closing comments');
-      this.hideAllComments();
-    });
-
-    this.globalClickListener = events.map((eventType) =>
-      this.renderer.listen('document', eventType, (event: Event) => {
-        const target = event.target as HTMLElement;
-        const shortcutsContainer = this.shortcutsContainer?.nativeElement;
-        if (
-          (shortcutsContainer && shortcutsContainer.contains(target)) ||
-          target.classList.contains('ellipsis_icont')
-        ) {
-          return; // Do NOT close if clicking inside the shortcuts box
-        }
-        this.toggleShortcutsCard(this.shoppingCenter, 'close');
-      })
-    );
-    // Listen for scroll and close comments
-    // this.renderer.listen('window', 'scroll', () => {
-    //   console.log('Scroll detected, closing comments');
-    //   this.toggleShortcutsCard(null, 'close');
-    // });
+   
   }
 
   trimComment(value: string, marketSurveyId: number): void {

@@ -1064,6 +1064,8 @@ img[alt="logo"] {
     left: 16px;
     right: 16px;
     z-index: 5;
+    width: fit-content;
+
   }
 
   .header-info .center-name {
