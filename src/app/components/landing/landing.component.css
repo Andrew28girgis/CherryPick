@@ -347,6 +347,79 @@ li {
   transform: translateY(0);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 } 
+.total{
+  cursor: pointer;
+}
+.ml8{
+  margin-left: 8px
+}
+.logowidth{
+  width: 184px
+}
+.goback{
+  font-size: 24px; 
+  cursor: pointer; 
+  padding: 15px 10px
+}
+.mbottom{
+  margin-bottom: 5px
+}
+.RelationOrganization{
+  margin-inline: 10px;
+  width: 30px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+}
+.CustomPlace{
+  color: #fff; 
+  font-weight: bold; 
+  padding-inline: 5px
+}
+.StandAlonePlace{
+  text-align: justify; 
+  font-size: 17px
+}
+.sanitizedUrll{
+  border: 0;
+  width: 100%;
+  height: 450px;
+  margin-top: 20px;
+  border-radius: 20px;
+}
+.streetview{
+  height: 450px; 
+  margin-top: 20px
+}
+.mapView{
+  height: 450px; 
+  margin-top: 20px; 
+  border-radius: 20px
+}
+.OrgManagerwidth{
+  width: 50px
+}
+.heightt{
+  height: 408px; 
+  overflow-y: auto
+}
+.nowrap{
+  text-wrap: nowrap
+}
+.orgbranches{
+  margin-right: 10px; 
+  width: 35px
+}
+.mapViewOneheight{
+  height: 700px
+}
+.UrlPopup{
+  border: 0; 
+  width: 100%; 
+  height: 500px
+}
+.StreetViewOneheight{
+  min-height: 500px
+}
 @media (min-width: 1024px) {
   #hero {
     background-attachment: fixed;
