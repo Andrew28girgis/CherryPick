@@ -114,14 +114,15 @@
 
               <!-- Initial Display -->
               <h3 class="center-name m-0" >{{ shopping.CenterName | titlecase }}</h3>
-              <p style="color: #fff ;font-size: 13px;">{{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }}, {{ shopping.CenterState }}</p> 
+              <p style="color: #fff ;font-size: 14px;">{{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }}, {{ shopping.CenterState }}</p> 
               <p
-                style="color: #fff"
+                style="color: #fff;font-size: 14px;"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
               ></p>
 
               <!-- See More Button -->
               <p
+              style="color: #fff;font-size: 14px;"
                  *ngIf="shopping?.ShoppingCenter?.BuyBoxPlaces"
                 (click)="openDetails(shoppingDetails, shopping)"
                 class="see-more-btn"
