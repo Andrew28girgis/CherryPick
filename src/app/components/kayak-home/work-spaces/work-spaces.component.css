@@ -129,6 +129,12 @@ tbody > tr > td:nth-child(1) {
   flex-direction: column;
   gap: 8px;
 }
+.heighty{
+  height: 20vh;
+}
+.NodataLocations{
+  font-weight: 500;
+}
 
 /* Mobile specific styles */
 @media (max-width: 768px) {

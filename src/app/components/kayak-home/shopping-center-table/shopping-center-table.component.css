@@ -1060,11 +1060,12 @@ img[alt="logo"] {
 
   .header-info {
     position: absolute;
-    bottom: 17%;
+    bottom: 21%;
     left: 16px;
     right: 16px;
     z-index: 5;
-    margin-bottom: 17%;
+    width: fit-content;
+
   }
 
   .header-info .center-name {
@@ -1395,7 +1396,40 @@ scroll-container {
 :host ::ng-deep .carousel-control-prev {
   left: 0;
 }
-
+.getNeareastCategoryName{
+  color: black; 
+  font-weight: bold; 
+  padding: 0; 
+  display: flex; 
+  align-items: center; 
+  font-size: 1rem;
+}
+.backgroundd{
+  color: #fff;
+}
+.relative{
+  position: relative
+}
+.shortcutcard{
+  background: #fff;
+  border-radius: 20px;
+  color: var(--Colors-Primary-500, #001f3f);
+}
+.iconic-card{
+  bottom: 0% !important ; 
+  top: auto !important
+}
+.total{
+  cursor: pointer;
+}
+.big-text{
+  font-size: 18px; 
+  margin-top: 3px; 
+  width: 24px
+}
+.caret{
+  top: 86%;
+}
 @media (max-width: 768px) {
   .card {
     height: 100vh;

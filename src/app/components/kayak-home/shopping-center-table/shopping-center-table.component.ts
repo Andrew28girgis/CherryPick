@@ -776,6 +776,17 @@ export class ShoppingCenterTableComponent implements OnInit {
     });
   }
 
+  openDetails(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+   
+    this.General.modalObject = modalObject ;
+  }
+
+
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -1257,30 +1268,7 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.hideAllComments();
       })
     );
-    // Listen for scroll and close comments
-    this.renderer.listen('window', 'scroll', () => {
-      console.log('Scroll detected, closing comments');
-      this.hideAllComments();
-    });
-
-    this.globalClickListener = events.map((eventType) =>
-      this.renderer.listen('document', eventType, (event: Event) => {
-        const target = event.target as HTMLElement;
-        const shortcutsContainer = this.shortcutsContainer?.nativeElement;
-        if (
-          (shortcutsContainer && shortcutsContainer.contains(target)) ||
-          target.classList.contains('ellipsis_icont')
-        ) {
-          return; // Do NOT close if clicking inside the shortcuts box
-        }
-        // this.toggleShortcutsCard(this.shoppingCenter, 'close');
-      })
-    );
-    // Listen for scroll and close comments
-    // this.renderer.listen('window', 'scroll', () => {
-    //   console.log('Scroll detected, closing comments');
-    //   this.toggleShortcutsCard(null, 'close');
-    // });
+   
   }
 
   trimComment(value: string, marketSurveyId: number): void {
@@ -1341,8 +1329,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  toggleMoreInfo(index: number): void {
-    this.showMore[index] = !this.showMore[index]; 
-  }
+ 
 
 }

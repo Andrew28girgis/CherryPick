@@ -43,7 +43,7 @@
   </div>
   }
   <div class="scroll-container" #scrollContainer>
-    <div class="card" *ngFor="let shopping of shoppingCenters;let i =index">
+    <div class="card" *ngFor="let shopping of shoppingCenters; let i = index">
       <div
         class="social-card mb-0 mb-sm-5 Res"
         [style.backgroundImage]="
@@ -111,53 +111,28 @@
           <div class="header-info Res d-sm-none d-flex">
             <div class="info-header">
               <!-- Expanded Info, shown when showMore is true -->
-              <div *ngIf="showMore[i]" class="expanded-info">
-                <h4>Details:</h4>
-                <p>{{ shopping.CenterAddress }}</p>
-                <p>{{ shopping.CenterCity | titlecase }}</p>
-                <p>{{ shopping.CenterState }}</p>
-                <p [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
-          
-                <div class="row">
-                  <ng-container *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces">
-                    <div
-                      style="color: black; font-weight: bold; padding: 0; display: flex; align-items: center; font-size: 1rem;"
-                    >
-                      <span>{{ getNeareastCategoryName(item.CategoryId) }}: </span>
-                      <img
-                        class="logo"
-                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ item.RelationOrganizationId }}"
-                        [title]="item.RelationOrganizationName"
-                        alt=""
-                      />
-                      <span>{{ item.RelationOrganizationName }}</span>
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-          
+
               <!-- Initial Display -->
               <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-              <p style="color: #fff;">{{ shopping.CenterAddress }}</p>
-              <p class="center-address">   
+              <p style="color: #fff">{{ shopping.CenterAddress }}</p>
+              <p class="center-address">
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
               </p>
-              <p style="color: #fff;" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
+              <p
+                style="color: #fff"
+                [innerHTML]="getShoppingCenterUnitSize(shopping)"
+              ></p>
 
-
-           
-          
               <!-- See More Button -->
-              <p (click)="toggleMoreInfo(i)" class="see-more-btn">
-                {{ showMore[i] ? 'Show Less' : 'See More' }}
+              <p
+                (click)="openDetails(shoppingDetails, shopping)"
+                class="see-more-btn"
+              >
+                {{ showMore[i] ? "Show Less" : "See More" }}
               </p>
             </div>
           </div>
-          
-          
-          
-          
         </div>
         <div class="card-image Res">
           <img
@@ -198,7 +173,11 @@
               </svg>
 
               <span class="d-block d-sm-block">
-                {{ shopping.ShoppingCenter.Reactions ?shopping.ShoppingCenter.Reactions.length : 0}}
+                {{
+                  shopping.ShoppingCenter.Reactions
+                    ? shopping.ShoppingCenter.Reactions.length
+                    : 0
+                }}
               </span>
 
               <!-- <span class="reactionMobile">
@@ -267,12 +246,11 @@
               <i class="fa-solid fa-ellipsis"></i>
             </button>
             <div
-            
               class="shortcuts_iconCard"
               style="bottom: 0% !important ; top: auto !important"
               *ngIf="selectedIdCard === shopping.Id"
             >
-              <ul >
+              <ul>
                 <li style="cursor: pointer">
                   <a
                     class="target"
@@ -287,18 +265,14 @@
                     target="_blank"
                   >
                     <i
-                      class="fa-regular fa-envelope"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
-                    ></i>
+                      class="fa-regular fa-envelope big-text"></i>
                     Emily
                   </a>
                 </li>
                 <li>
                   <a class="target" (click)="openGallery(shopping.Id)">
                     <i
-                      class="fa-solid fa-images"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
-                    ></i>
+                      class="fa-solid fa-images big-text"></i>
                     View Gallery
                   </a>
 
@@ -392,8 +366,7 @@
                     (click)="openMapViewPlace(MapViewPlace, shopping)"
                   >
                     <i
-                      class="fa-solid fa-map-location-dot"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
+                      class="fa-solid fa-map-location-dot big-text"
                     ></i>
                     View location
                   </a>
@@ -422,7 +395,7 @@
                   </a>
                 </li>
                 <li
-                  style="cursor: pointer"
+                  class="total"
                   (click)="toggleShortcuts(shopping.Id, 'close')"
                 >
                   <a
@@ -435,14 +408,13 @@
                     "
                   >
                     <i
-                      class="fa-regular fa-trash-can"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
+                      class="fa-regular fa-trash-can big-text"
                     ></i>
                     Remove Shopping
                   </a>
                 </li>
               </ul>
-              <i class="fa-solid fa-caret-right" style="top: 86%"></i>
+              <i class="fa-solid fa-caret-right caret"></i>
             </div>
           </div>
         </div>
@@ -1733,6 +1705,48 @@
       >
         Remove
       </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #shoppingDetails let-modal>
+  <div class="modal-body p-0">
+    <div class="carousel-wrapper position-relative">
+      <div  class="expanded-info">
+        <h4>Details:</h4>
+        <p>{{ General.modalObject.CenterAddress }}</p>
+        <p>{{ General.modalObject.CenterCity | titlecase }}</p>
+        <p>{{ General.modalObject.CenterState }}</p>
+        <p [innerHTML]="getShoppingCenterUnitSize(General.modalObject)"></p>
+
+        <div class="row">
+          <ng-container
+            *ngFor="let item of General.modalObject.ShoppingCenter?.BuyBoxPlaces"
+          >
+            <div
+              style="
+                color: black;
+                font-weight: bold;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                font-size: 1rem;
+              "
+            >
+              <span>{{ getNeareastCategoryName(item.CategoryId) }}: </span>
+              <img
+                class="logo"
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  item.RelationOrganizationId
+                }}"
+                [title]="item.RelationOrganizationName"
+                alt=""
+              />
+              <span>{{ item.RelationOrganizationName }}</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
