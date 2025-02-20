@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { Fbo, General, nearsetPlaces, Property } from 'src/models/domain';
+import { Branch } from 'src/models/branches';
+
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -466,11 +468,25 @@ export class LandingComponent {
         this.OrganizationBranches.Branches.length > 0
       ) {
         this.OrganizationBranches.Branches.forEach((Branch) => {
+          this.getCityAndState(Branch);
           this.createMarker(map, Branch, 'Branch');
         });
       }
     } finally {
-    }
+    } 
+  }
+  getCityAndState(Branch: Branch) {
+    const lat = Branch.Latitude;
+    const lon = Branch.Longitude;
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        Branch.City = data.address.city || data.address.town || data.address.village;
+        Branch.State = data.address.state;
+      })
+      .catch(error => console.error('Error fetching city and state:', error));
   }
 
   getLatitude(): any {

@@ -10,5 +10,7 @@ export interface OrgBranch {
     Longitude: number
     OrganizationId: number
     Distance: number
+    City  : string
+    State : string
   }
   
