@@ -339,6 +339,10 @@
   .comment-content p {
     font-size: 0.85rem;
   }
+
+  .backgroundd{
+    overflow-x: scroll;
+  }
 }
 .spec-head{
   display: flex;
