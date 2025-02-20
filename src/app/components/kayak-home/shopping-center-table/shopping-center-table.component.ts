@@ -164,6 +164,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
+  likedShoppings: { [key: number]: boolean } = {};  // Track liked state by MarketSurveyId
+  isLikeInProgress = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -1264,4 +1266,54 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.newComments[marketSurveyId] = '';
     }
   }
+
+
+  addLike(shopping: Center, reactionId: number): void {
+    // Prevent multiple rapid clicks
+    if (this.isLikeInProgress) {
+        return;
+    }
+
+    this.isLikeInProgress = true;
+    const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+    
+    const body = {
+        Name: 'CreatePropertyReaction',
+        Params: {
+            MarketSurveyId: shopping.MarketSurveyId,
+            ReactionId: reactionId,
+        },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+        next: (response: any) => {
+            // Ensure the Reactions array exists
+            if (!shopping.ShoppingCenter.Reactions) {
+                shopping.ShoppingCenter.Reactions = [];
+            }
+    
+            if (isLiked) {
+                // If already liked, decrease the count
+                // shopping.ShoppingCenter.Reactions.length--;
+                // delete this.likedShoppings[shopping.MarketSurveyId];
+            } else {
+                // If not liked, increase the count
+                shopping.ShoppingCenter.Reactions.length++;
+                this.likedShoppings[shopping.MarketSurveyId] = true;
+            }
+        },
+        error: (error) => {
+            console.error('Error processing like:', error);
+        },
+        complete: () => {
+            // Reset the flag after a short delay
+            setTimeout(() => {
+                this.isLikeInProgress = false;
+            }, 50); // 500ms debounce
+        }
+    });
+}
+isLiked(shopping: any): boolean {
+  return shopping?.ShoppingCenter?.Reactions?.length >= 1;
+}
 }
