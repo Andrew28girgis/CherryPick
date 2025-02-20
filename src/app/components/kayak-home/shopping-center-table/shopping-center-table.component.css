@@ -1065,7 +1065,6 @@ img[alt="logo"] {
     right: 16px;
     z-index: 5;
     width: fit-content;
-
   }
 
   .header-info .center-name {
@@ -1396,39 +1395,39 @@ scroll-container {
 :host ::ng-deep .carousel-control-prev {
   left: 0;
 }
-.getNeareastCategoryName{
-  color: black; 
-  font-weight: bold; 
-  padding: 0; 
-  display: flex; 
-  align-items: center; 
+.getNeareastCategoryName {
+  color: black;
+  font-weight: bold;
+  padding: 0;
+  display: flex;
+  align-items: center;
   font-size: 1rem;
 }
-.backgroundd{
+.backgroundd {
   color: #fff;
 }
-.relative{
-  position: relative
+.relative {
+  position: relative;
 }
-.shortcutcard{
+.shortcutcard {
   background: #fff;
   border-radius: 20px;
   color: var(--Colors-Primary-500, #001f3f);
 }
-.iconic-card{
-  bottom: 0% !important ; 
-  top: auto !important
+.iconic-card {
+  bottom: 0% !important ;
+  top: auto !important;
 }
-.total{
+.total {
   cursor: pointer;
 }
-.big-text{
-  font-size: 18px; 
-  margin-top: 3px; 
-  width: 24px
+.big-text {
+  font-size: 18px;
+  margin-top: 3px;
+  width: 24px;
 }
-.caret{
-  top: 86%;
+.caret {
+  top: 86% !important;
 }
 @media (max-width: 768px) {
   .card {
@@ -1514,4 +1513,256 @@ scroll-container {
   width: 20px;
   height: 20px;
   margin-right: 10px;
+}
+
+.modal-header {
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem;
+}
+
+.location-image {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--Radius-Radius-12, 12px);
+}
+
+.location-address {
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+
+  /* Body/16/30/Regular */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 187.5% */
+}
+.modal-title {
+  color: var(--Body-Heading-Color, #0c0d0e);
+
+  /* Body/16/30/SemiBold */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; /* 187.5% */
+}
+.head {
+  gap: 12px;
+}
+.question {
+  color: var(--Body-Heading-Color, #0c0d0e);
+  text-align: center;
+
+  /* Body/16/30/SemiBold */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; /* 187.5% */
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+.btn-rating {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  white-space: normal;
+  text-align: center;
+  padding: 0;
+}
+
+textarea.form-control {
+  resize: none;
+}
+.reactions-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  row-gap: 16px;
+  align-self: stretch;
+  flex-wrap: wrap;
+}
+
+.reactions-caption {
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  /* Body/14/24/Regular */
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 171.429% */
+  letter-spacing: -0.07px;
+}
+.or-divider {
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+.location-card {
+  display: flex;
+  padding: 11px 6px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: var(--Radius-Radius-12, 12px);
+  border: 1px solid var(--Body-General-Body-Border, #caced3);
+  background: #fff;
+}
+
+.location-card:hover {
+  transform: translateY(-2px);
+}
+
+.location-card h4 {
+  color: var(--Body-Heading-Color, #0c0d0e);
+  text-align: center;
+
+  /* Body/16/30/SemiBold */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; /* 187.5% */
+}
+
+.location-card .address,
+.location-card .city {
+  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  text-align: center;
+
+  /* Body/16/30/Regular */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; /* 187.5% */
+}
+.reaction{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+
+.editable-div {
+  width: 100%;
+  border: 1px solid #d3d3d3;
+  padding: 10px;
+  display: flex;
+  padding: var(--Space-Space-12, 12px) var(--Space-Space-16, 16px);
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+  align-self: stretch;
+  margin-bottom: 20px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: #FFF;
+  border-radius: var(--Radius-Radius-16, 16px);
+background: #FFF;
+display: flex;
+flex-direction: row;
+}
+
+/* Icon styling */
+.editable-div svg {
+  margin-right: 8px;
+}
+
+/* Placeholder styling */
+.editable-div[aria-placeholder]:empty:before {
+  content: attr(aria-placeholder);
+  color: #000;
+  font-style: italic;
+}
+
+/* Previous CSS remains the same */
+
+.rating-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.rating-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rating-label {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.rating-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.rating-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.rating-button:hover .rating-circle {
+  transform: scale(1.05);
+}
+
+.rating-circle.dislike {
+  background-color: #ff9999;
+}
+
+.rating-circle.neutral {
+  background-color: #ffd93d;
+}
+
+.rating-circle.like {
+  background-color: #90EE90;
+}
+
+.inner-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  visibility: hidden;
+}
+
+.rating-button.selected .inner-circle {
+  visibility: visible;
+}
+
+/* Optional: Add focus state for accessibility */
+.rating-button:focus .rating-circle {
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
 }

@@ -169,7 +169,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   likedShoppings: { [key: number]: boolean } = {}; // Track liked state by MarketSurveyId
   isLikeInProgress = false;
   showMore: boolean[] = []; // Track the expanded state for each card
-
+  selectedRating: string | null = null;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1329,6 +1329,15 @@ export class ShoppingCenterTableComponent implements OnInit {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
- 
+  open(content: any, modalObject?: any) {
+    this.modalService.open(content);
+    this.General.modalObject = modalObject ;
+
+  }
+
+rate(rating: 'dislike' | 'neutral' | 'like') {
+    this.selectedRating = rating;
+    console.log(`User rated: ${rating}`);
+  }
 
 }
