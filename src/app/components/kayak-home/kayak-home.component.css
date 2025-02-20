@@ -101,6 +101,15 @@
   margin-left: 11px;
 
 }
+.widthh{
+  width: 6.7%;
+}
+.backgroundd{
+  background-color: #fff; 
+  padding: 0px;
+  min-height: 85vh;
+  border-radius: 2px;
+}
 
 
 .bb-name{
