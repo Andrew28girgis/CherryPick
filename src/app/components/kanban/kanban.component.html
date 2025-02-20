@@ -416,9 +416,7 @@
           <!-- Display Filtered Results -->
           <ul
             *ngIf="filteredNames.length > 0"
-            class="list-group"
-            style="max-height: 350px; overflow-y: auto"
-          >
+            class="list-group listtt">
             <li
               *ngFor="let name of filteredNames"
               class="list-group-item broker-name"
@@ -490,7 +488,7 @@
     <ng-container *ngFor="let action of TargetActions">
       <ng-container *ngIf="action.actionLevel == 'Stage'">
         <a
-          style="cursor: pointer"
+          class="total"
           *ngIf="action.actionType == 'Popup'"
           (click)="openModel(addOrganization)"
           target="_blank"

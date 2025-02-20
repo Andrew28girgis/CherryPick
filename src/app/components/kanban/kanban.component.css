@@ -1217,46 +1217,19 @@ td {
   background: #a0aec0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 .name {
   display: inline-block;
   max-width: 200px;
   vertical-align: bottom;
 }
-
 .name.truncate {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .name:hover {
   cursor: default;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 .modal-content {
   width: fit-content;
   max-width: 900px;
@@ -1420,21 +1393,6 @@ td {
   background: #a0aec0;
 }
 
-
-
-/* .content-answer table{
-  border: 1px solid #000;
-  border-radius: 10px;
-  border-collapse: separate;
-} */
-
-
-
-
-
-
-
-
 .kanban-card.animating {
   position: absolute;
   pointer-events: none;
@@ -1463,10 +1421,6 @@ td {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-
-
-
-
   .card-move-right {
     animation: moveRight 0.5s ease-out;
   }
@@ -1477,6 +1431,13 @@ td {
 
   .card-appear {
     animation: appear 0.5s ease-out;
+  }
+  .listtt{
+    max-height: 350px; 
+    overflow-y: auto
+  }
+  .total{
+    cursor: pointer;
   }
 
   @keyframes moveRight {
