@@ -1325,10 +1325,9 @@ export class ShoppingCenterTableComponent implements OnInit {
       },
     });
   }
+  
   isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
-
- 
 
 }
