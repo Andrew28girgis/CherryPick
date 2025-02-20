@@ -52,7 +52,62 @@
         "
       >
         <div class="card-header">
-          <div class="header-info Res">
+          <div class="header-info Res d-sm-flex d-none">
+            <h3 class="center-name">
+              {{ shopping.CenterName | titlecase }}
+            </h3>
+            <div
+              (click)="openMapViewPlace(MapViewPlace, shopping)"
+              style="width: fit-content"
+            >
+              <p
+                class="center-address"
+                style="cursor: pointer; width: fit-content"
+              >
+                {{ shopping.CenterAddress }},
+                {{ shopping.CenterCity | titlecase }},
+                {{ shopping.CenterState }}
+              </p>
+            </div>
+
+            <div>
+              <p
+                style="color: white; font-size: 1rem"
+                [innerHTML]="getShoppingCenterUnitSize(shopping)"
+              ></p>
+            </div>
+            <div class="row">
+              <ng-container
+                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+              >
+                <div
+                  style="
+                    color: white;
+                    font-weight: bold;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    font-size: 1rem;
+                  "
+                >
+                  <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
+
+                  <img
+                    class="logo"
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      item.RelationOrganizationId
+                    }}"
+                    [title]="item.RelationOrganizationName"
+                    alt=""
+                  />
+
+                  <span> {{ item.RelationOrganizationName }}</span>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="header-info Res d-sm-none d-flex">
             <div class="info-header">
               <!-- Expanded Info, shown when showMore is true -->
               <div *ngIf="showMore[i]" class="expanded-info">

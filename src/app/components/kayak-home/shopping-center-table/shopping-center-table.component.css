@@ -768,7 +768,7 @@ img[alt="logo"] {
     width: 100%;
     padding-bottom: 16px;
     background: rgb(0, 0, 0);
-
+    flex-direction: column;
     background: linear-gradient(
       0deg,
       rgba(0, 0, 0, 1) 19%,
@@ -1041,7 +1041,6 @@ img[alt="logo"] {
     object-fit: cover;
     object-position: center;
     margin-bottom: 50%;
-
   }
 
   .card-image::after {
