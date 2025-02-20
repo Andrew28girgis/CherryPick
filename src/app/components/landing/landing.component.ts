@@ -473,7 +473,7 @@ export class LandingComponent {
         });
       }
     } finally {
-    }
+    } 
   }
   getCityAndState(Branch: Branch) {
     const lat = Branch.Latitude;
@@ -488,7 +488,7 @@ export class LandingComponent {
       })
       .catch(error => console.error('Error fetching city and state:', error));
   }
-  
+
   getLatitude(): any {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.Latitude
