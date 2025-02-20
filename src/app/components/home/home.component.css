@@ -226,6 +226,62 @@
   background: white;
   border-radius: 18px 18px 0 0;
 }
+.backgroundd{
+  background-color: #f2f3f4
+}
+.w250{
+  width: 250px
+}
+.total{
+  cursor: pointer;
+}
+.gap16{
+  gap: 16px
+}
+.framee{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #817a79;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+.background2{
+  background-color: #f4f4f4
+}
+.fitcontent{
+  height: fit-content; 
+  overflow: auto;
+}
+.ShoppingCenterUnit{
+  font-size: 15px; 
+  font-weight: 500; 
+  color: #565656
+}
+.f500{
+  font-weight: 500
+}
+.h700{
+  height: 700px
+}
+.shareborder{
+  border: 1px solid #ccc; border-radius: 10px
+}
+.santiurl{
+  border: 0; 
+  width: 100%; 
+  height: 700px
+}
+.bodymodal{
+  max-height: 70vh; 
+  overflow-y: auto
+}
+.textdecoration{
+  text-decoration: none
+}
 @media (max-width: 480px) {
   .modal-title {
     font-size: 15px;
