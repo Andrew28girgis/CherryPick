@@ -835,6 +835,10 @@ img[alt="logo"] {
 }
 
 @media (max-width: 768px) {
+
+  .Home-icon svg {
+    margin-bottom: 4px;
+  }
   .mtopp {
     overflow-y: scroll;
   }
