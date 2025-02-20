@@ -536,6 +536,21 @@ tbody tr:hover {
   white-space: nowrap;
   z-index: 1000;
 }
+.widthsm{
+  width: 110px;
+}
+.widthmd{
+  width: 165px;
+}
+.widthlg{
+  width: 270px;
+}
+.widthxlg{
+  width: 280px;
+}
+.widthxxlg{
+  width: 500px;
+}
 
 
 

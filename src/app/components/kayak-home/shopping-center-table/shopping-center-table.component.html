@@ -87,6 +87,8 @@
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
               </p>
+              <p style="color: #fff;" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
+
 
            
           
@@ -196,7 +198,7 @@
 
             <span class="share"> Share </span>
           </button>
-          <div style="position: relative" #shortcutsContainer>
+          <div style="position: relative" >
             <button
               style="
                 background: #fff;

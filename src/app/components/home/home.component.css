@@ -339,6 +339,10 @@
   .comment-content p {
     font-size: 0.85rem;
   }
+
+  .backgroundd{
+    overflow-x: scroll;
+  }
 }
 .spec-head{
   display: flex;
@@ -369,9 +373,6 @@
 .form-control {
   font-size: 15px;
 }
-  .nav-right > div {
-    /* justify-content: center; */
-  }
 
   .Bind__button {
     padding-inline: 0px;
