@@ -400,10 +400,10 @@ img[alt="logo"] {
   cursor: pointer;
   transition: color 0.2s ease;
 }
-
+/* 
 .action-btn:hover {
   color: #3498db;
-}
+} */
 
 .comments-section {
   padding: 16px;
