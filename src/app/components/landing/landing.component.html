@@ -904,7 +904,7 @@
                   <span *ngIf="OrganizationBranches.Name" class="nearset"
                     >{{ OrganizationBranches.Name }} 
                   </span>
-                  <span  class="nearset"> {{place.City}}, {{place.State}}</span>
+                  <span  class="nearset">{{place.City}}<span *ngIf="place.City">,</span> {{place.State}}</span>
                 </div>
               </div>
 
