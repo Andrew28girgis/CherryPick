@@ -65,8 +65,7 @@
                 <div class="row">
                   <ng-container *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces">
                     <div
-                      style="color: black; font-weight: bold; padding: 0; display: flex; align-items: center; font-size: 1rem;"
-                    >
+                      class="getNeareastCategoryName">
                       <span>{{ getNeareastCategoryName(item.CategoryId) }}: </span>
                       <img
                         class="logo"
@@ -82,12 +81,12 @@
           
               <!-- Initial Display -->
               <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-              <p style="color: #fff;">{{ shopping.CenterAddress }}</p>
+              <p class="backgroundd">{{ shopping.CenterAddress }}</p>
               <p class="center-address">   
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
               </p>
-              <p style="color: #fff;" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
+              <p class="backgroundd" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
 
 
            
@@ -198,26 +197,20 @@
 
             <span class="share"> Share </span>
           </button>
-          <div style="position: relative" >
-            <button
-              style="
-                background: #fff;
-                border-radius: 20px;
-                color: var(--Colors-Primary-500, #001f3f);
-              "
-              class="ellipsis_icont"
+          <div class="relative" >
+            <button 
+              class="ellipsis_icont shortcutcard"
               (click)="toggleShortcutsCard(shopping.Id)"
             >
               <i class="fa-solid fa-ellipsis"></i>
             </button>
             <div
             
-              class="shortcuts_iconCard"
-              style="bottom: 0% !important ; top: auto !important"
+              class="shortcuts_iconCard iconic-card"
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul >
-                <li style="cursor: pointer">
+                <li class="total">
                   <a
                     class="target"
                     [href]="
@@ -231,18 +224,14 @@
                     target="_blank"
                   >
                     <i
-                      class="fa-regular fa-envelope"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
-                    ></i>
+                      class="fa-regular fa-envelope big-text"></i>
                     Emily
                   </a>
                 </li>
                 <li>
                   <a class="target" (click)="openGallery(shopping.Id)">
                     <i
-                      class="fa-solid fa-images"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
-                    ></i>
+                      class="fa-solid fa-images big-text"></i>
                     View Gallery
                   </a>
 
@@ -336,8 +325,7 @@
                     (click)="openMapViewPlace(MapViewPlace, shopping)"
                   >
                     <i
-                      class="fa-solid fa-map-location-dot"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
+                      class="fa-solid fa-map-location-dot big-text"
                     ></i>
                     View location
                   </a>
@@ -366,7 +354,7 @@
                   </a>
                 </li>
                 <li
-                  style="cursor: pointer"
+                  class="total"
                   (click)="toggleShortcuts(shopping.Id, 'close')"
                 >
                   <a
@@ -379,14 +367,13 @@
                     "
                   >
                     <i
-                      class="fa-regular fa-trash-can"
-                      style="font-size: 18px; margin-top: 3px; width: 24px"
+                      class="fa-regular fa-trash-can big-text"
                     ></i>
                     Remove Shopping
                   </a>
                 </li>
               </ul>
-              <i class="fa-solid fa-caret-right" style="top: 86%"></i>
+              <i class="fa-solid fa-caret-right caret"></i>
             </div>
           </div>
         </div>

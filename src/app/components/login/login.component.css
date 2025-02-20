@@ -76,6 +76,10 @@ input::placeholder {
   color: #707791;
   font-size: 16px;
 }
+.termsofservice{
+  text-decoration: underline; 
+  cursor: pointer;
+}
 
 @media (max-width: 576px) {
   .total-height {
