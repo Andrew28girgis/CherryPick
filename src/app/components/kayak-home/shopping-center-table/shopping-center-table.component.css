@@ -1348,7 +1348,7 @@ scroll-container {
 .indicators-container {
   position: absolute;
   gap: 25px;
-  bottom: 25%;
+  bottom: 35%;
   z-index: 1000;
   right: 10%;
   display: flex;
