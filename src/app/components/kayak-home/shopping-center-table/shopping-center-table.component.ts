@@ -123,6 +123,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   deleteShoppingCenterModal!: TemplateRef<any>;
   shoppingCenterIdToDelete: number | null = null;
   @ViewChild('cardContainer') cardContainer!: ElementRef;
+  @ViewChild('shortcutsCard') shortcutsCard!: ElementRef;
+
   lastTap = 0;
   showToast = false;
   toastMessage = '';
@@ -279,7 +281,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-  toggleShortcutsCard(id: number, close?: string): void {
+  toggleShortcutsCard(id: number |null, close?: string): void {
     if (close === 'close') {
       this.selectedIdCard = null;
     } else {
@@ -1256,7 +1258,34 @@ export class ShoppingCenterTableComponent implements OnInit {
       console.log('Scroll detected, closing comments');
       this.hideAllComments();
     });
+
+    this.renderer.listen('document', 'click', (event: MouseEvent) => {
+      this.handleOutsideEvent(event);
+    });
+    
+    this.renderer.listen('document', 'touchstart', (event: TouchEvent) => {
+      this.handleOutsideEvent(event);
+    });
+    
+    this.renderer.listen('document', 'scroll', (event: Event) => {
+      this.handleOutsideEvent(event);
+    });
+    this.renderer.listen('document', 'wheel', (event: Event) => {
+      this.handleOutsideEvent(event);
+    });
+
   }
+  ngOnDestroy() {
+    // Clean up event listeners when the component is destroyed
+    this.globalClickListener.forEach(unlisten => unlisten());
+  }
+  private handleOutsideEvent(event: Event): void {
+    // Check if the click or touch event was outside the shortcutsCard element
+    if (this.shortcutsCard && !this.shortcutsCard.nativeElement.contains(event.target)) {
+      this.toggleShortcutsCard(null);  // Close the card if clicked or touched outside
+    }
+  }
+  
   trimComment(value: string, marketSurveyId: number): void {
     if (value) {
       // Only update if the trimmed value is different from empty string
