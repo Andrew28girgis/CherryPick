@@ -59,12 +59,10 @@
             </h3>
             <div
               (click)="openMapViewPlace(MapViewPlace, shopping)"
-              style="width: fit-content"
+              class="shoppingcenterdata"
             >
               <p
-                class="center-address"
-                style="cursor: pointer; width: fit-content"
-              >
+                class="center-address shoppingcenterdata total">
                 {{ shopping.CenterAddress }},
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
@@ -72,8 +70,7 @@
             </div>
 
             <div>
-              <p
-                style="color: white; font-size: 1rem"
+              <p class="getShoppingCenterr"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
               ></p>
             </div>
@@ -82,14 +79,7 @@
                 *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
               >
                 <div
-                  style="
-                    color: white;
-                    font-weight: bold;
-                    padding: 0;
-                    display: flex;
-                    align-items: center;
-                    font-size: 1rem;
-                  "
+                 class="nearestt"
                 >
                   <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
 
@@ -114,13 +104,13 @@
 
               <!-- Initial Display -->
               <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-              <p style="color: #fff">{{ shopping.CenterAddress }}</p>
+              <p class="colorr">{{ shopping.CenterAddress }}</p>
               <p class="center-address">
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
               </p>
               <p
-                style="color: #fff"
+                class="colorr"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
               ></p>
 
@@ -233,25 +223,18 @@
 
             <span class="share"> Share </span>
           </button>
-          <div style="position: relative" >
-            <button
-              style="
-                background: #fff;
-                border-radius: 20px;
-                color: var(--Colors-Primary-500, #001f3f);
-              "
-              class="ellipsis_icont"
+          <div class="reaction-buttons" >
+            <button class="ellipsis_icont shortcutcard"
               (click)="toggleShortcutsCard(shopping.Id)"
             >
               <i class="fa-solid fa-ellipsis"></i>
             </button>
             <div
-              class="shortcuts_iconCard"
-              style="bottom: 0% !important ; top: auto !important"
+              class="shortcuts_iconCard iconic-card"
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul>
-                <li style="cursor: pointer">
+                <li class="total">
                   <a
                     class="target"
                     [href]="
@@ -1724,14 +1707,7 @@
             *ngFor="let item of General.modalObject.ShoppingCenter?.BuyBoxPlaces"
           >
             <div
-              style="
-                color: black;
-                font-weight: bold;
-                padding: 0;
-                display: flex;
-                align-items: center;
-                font-size: 1rem;
-              "
+              class="getNeareastCategoryName"
             >
               <span>{{ getNeareastCategoryName(item.CategoryId) }}: </span>
               <img
