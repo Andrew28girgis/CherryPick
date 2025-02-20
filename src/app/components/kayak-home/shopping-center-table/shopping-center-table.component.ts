@@ -1255,6 +1255,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.hideAllComments();
     });
   }
+  
   trimComment(value: string, marketSurveyId: number): void {
     if (value) {
       // Only update if the trimmed value is different from empty string
