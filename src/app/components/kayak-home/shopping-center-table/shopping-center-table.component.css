@@ -1060,11 +1060,10 @@ img[alt="logo"] {
 
   .header-info {
     position: absolute;
-    bottom: 17%;
+    bottom: 21%;
     left: 16px;
     right: 16px;
     z-index: 5;
-    margin-bottom: 17%;
   }
 
   .header-info .center-name {

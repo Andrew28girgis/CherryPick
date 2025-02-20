@@ -776,6 +776,17 @@ export class ShoppingCenterTableComponent implements OnInit {
     });
   }
 
+  openDetails(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+   
+    this.General.modalObject = modalObject ;
+  }
+
+
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -1273,7 +1284,7 @@ export class ShoppingCenterTableComponent implements OnInit {
         ) {
           return; // Do NOT close if clicking inside the shortcuts box
         }
-        // this.toggleShortcutsCard(this.shoppingCenter, 'close');
+        this.toggleShortcutsCard(this.shoppingCenter, 'close');
       })
     );
     // Listen for scroll and close comments
@@ -1341,8 +1352,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  toggleMoreInfo(index: number): void {
-    this.showMore[index] = !this.showMore[index]; 
-  }
+ 
 
 }
