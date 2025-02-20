@@ -123,7 +123,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   deleteShoppingCenterModal!: TemplateRef<any>;
   shoppingCenterIdToDelete: number | null = null;
   @ViewChild('cardContainer') cardContainer!: ElementRef;
-  @ViewChild('shortcutsCard') shortcutsCard!: ElementRef;
+  @ViewChild('shortcutsContainer') shortcutsContainer!: ElementRef;
 
   lastTap = 0;
   showToast = false;
@@ -166,8 +166,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  likedShoppings: { [key: number]: boolean } = {};  // Track liked state by MarketSurveyId
+  likedShoppings: { [key: number]: boolean } = {}; // Track liked state by MarketSurveyId
   isLikeInProgress = false;
+  showMore: boolean[] = []; // Track the expanded state for each card
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -281,7 +282,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-  toggleShortcutsCard(id: number |null, close?: string): void {
+  toggleShortcutsCard(id: number | null, close?: string): void {
     if (close === 'close') {
       this.selectedIdCard = null;
     } else {
@@ -1008,11 +1009,11 @@ export class ShoppingCenterTableComponent implements OnInit {
     if (!this.newComments[marketSurveyId]?.trim()) {
       return;
     }
-  
+
     // Store comment text and clear input immediately to prevent double submission
     const commentText = this.newComments[marketSurveyId];
     this.newComments[marketSurveyId] = '';
-  
+
     const body = {
       Name: 'CreateComment',
       Params: {
@@ -1021,18 +1022,18 @@ export class ShoppingCenterTableComponent implements OnInit {
         ParentCommentId: 0,
       },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
         if (!shopping.ShoppingCenter.Comments) {
           shopping.ShoppingCenter.Comments = [];
         }
-  
+
         shopping.ShoppingCenter.Comments.push({
           Comment: commentText,
           CommentDate: new Date().toISOString(),
         });
-  
+
         shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
           shopping.ShoppingCenter.Comments
         );
@@ -1041,10 +1042,10 @@ export class ShoppingCenterTableComponent implements OnInit {
         // Restore the comment text if API call fails
         this.newComments[marketSurveyId] = commentText;
         console.error('Error adding comment:', error);
-      }
+      },
     });
   }
-  
+
   addReply(marketSurveyId: number, parentCommentId: number): void {
     if (this.newReplies[parentCommentId]) {
       const body = {
@@ -1240,13 +1241,16 @@ export class ShoppingCenterTableComponent implements OnInit {
   ngAfterViewInit(): void {
     const events = ['click', 'wheel', 'touchstart'];
     // Listen for clicks anywhere in the document
-    this.globalClickListener = events.map(eventType =>
+    this.globalClickListener = events.map((eventType) =>
       this.renderer.listen('document', eventType, (event: Event) => {
         const target = event.target as HTMLElement;
         const commentsContainer = this.commentsContainer?.nativeElement;
         const isInsideComments = commentsContainer?.contains(target);
-        const isInputFocused = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
-        const isClickOnLikeOrPhoto = target.classList.contains('like-button') || target.classList.contains('photo');
+        const isInputFocused =
+          target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+        const isClickOnLikeOrPhoto =
+          target.classList.contains('like-button') ||
+          target.classList.contains('photo');
         if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
           return; // Do NOT close if clicking inside the comment box, input field, or like/photo
         }
@@ -1259,33 +1263,26 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.hideAllComments();
     });
 
-    this.renderer.listen('document', 'click', (event: MouseEvent) => {
-      this.handleOutsideEvent(event);
-    });
-    
-    this.renderer.listen('document', 'touchstart', (event: TouchEvent) => {
-      this.handleOutsideEvent(event);
-    });
-    
-    this.renderer.listen('document', 'scroll', (event: Event) => {
-      this.handleOutsideEvent(event);
-    });
-    this.renderer.listen('document', 'wheel', (event: Event) => {
-      this.handleOutsideEvent(event);
-    });
+    this.globalClickListener = events.map((eventType) =>
+      this.renderer.listen('document', eventType, (event: Event) => {
+        const target = event.target as HTMLElement;
+        const shortcutsContainer = this.shortcutsContainer?.nativeElement;
+        if (
+          (shortcutsContainer && shortcutsContainer.contains(target)) ||
+          target.classList.contains('ellipsis_icont')
+        ) {
+          return; // Do NOT close if clicking inside the shortcuts box
+        }
+        // this.toggleShortcutsCard(this.shoppingCenter, 'close');
+      })
+    );
+    // Listen for scroll and close comments
+    // this.renderer.listen('window', 'scroll', () => {
+    //   console.log('Scroll detected, closing comments');
+    //   this.toggleShortcutsCard(null, 'close');
+    // });
+  }
 
-  }
-  ngOnDestroy() {
-    // Clean up event listeners when the component is destroyed
-    this.globalClickListener.forEach(unlisten => unlisten());
-  }
-  private handleOutsideEvent(event: Event): void {
-    // Check if the click or touch event was outside the shortcutsCard element
-    if (this.shortcutsCard && !this.shortcutsCard.nativeElement.contains(event.target)) {
-      this.toggleShortcutsCard(null);  // Close the card if clicked or touched outside
-    }
-  }
-  
   trimComment(value: string, marketSurveyId: number): void {
     if (value) {
       // Only update if the trimmed value is different from empty string
@@ -1295,53 +1292,57 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-
   addLike(shopping: Center, reactionId: number): void {
     // Prevent multiple rapid clicks
     if (this.isLikeInProgress) {
-        return;
+      return;
     }
 
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
-    
+
     const body = {
-        Name: 'CreatePropertyReaction',
-        Params: {
-            MarketSurveyId: shopping.MarketSurveyId,
-            ReactionId: reactionId,
-        },
+      Name: 'CreatePropertyReaction',
+      Params: {
+        MarketSurveyId: shopping.MarketSurveyId,
+        ReactionId: reactionId,
+      },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
-        next: (response: any) => {
-            // Ensure the Reactions array exists
-            if (!shopping.ShoppingCenter.Reactions) {
-                shopping.ShoppingCenter.Reactions = [];
-            }
-    
-            if (isLiked) {
-                // If already liked, decrease the count
-                // shopping.ShoppingCenter.Reactions.length--;
-                // delete this.likedShoppings[shopping.MarketSurveyId];
-            } else {
-                // If not liked, increase the count
-                shopping.ShoppingCenter.Reactions.length++;
-                this.likedShoppings[shopping.MarketSurveyId] = true;
-            }
-        },
-        error: (error) => {
-            console.error('Error processing like:', error);
-        },
-        complete: () => {
-            // Reset the flag after a short delay
-            setTimeout(() => {
-                this.isLikeInProgress = false;
-            }, 50); // 500ms debounce
+      next: (response: any) => {
+        // Ensure the Reactions array exists
+        if (!shopping.ShoppingCenter.Reactions) {
+          shopping.ShoppingCenter.Reactions = [];
         }
+
+        if (isLiked) {
+          // If already liked, decrease the count
+          // shopping.ShoppingCenter.Reactions.length--;
+          // delete this.likedShoppings[shopping.MarketSurveyId];
+        } else {
+          // If not liked, increase the count
+          shopping.ShoppingCenter.Reactions.length++;
+          this.likedShoppings[shopping.MarketSurveyId] = true;
+        }
+      },
+      error: (error) => {
+        console.error('Error processing like:', error);
+      },
+      complete: () => {
+        // Reset the flag after a short delay
+        setTimeout(() => {
+          this.isLikeInProgress = false;
+        }, 50); // 500ms debounce
+      },
     });
-}
-isLiked(shopping: any): boolean {
-  return shopping?.ShoppingCenter?.Reactions?.length >= 1;
-}
+  }
+  isLiked(shopping: any): boolean {
+    return shopping?.ShoppingCenter?.Reactions?.length >= 1;
+  }
+
+  toggleMoreInfo(index: number): void {
+    this.showMore[index] = !this.showMore[index]; 
+  }
+
 }

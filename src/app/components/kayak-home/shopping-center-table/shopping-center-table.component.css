@@ -21,8 +21,8 @@
   overflow-y: scroll;
 }
 
-.shortcuts_icon>ul,
-.shortcuts_iconCard>ul {
+.shortcuts_icon > ul,
+.shortcuts_iconCard > ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -32,8 +32,8 @@
   display: grid;
 }
 
-.shortcuts_icon>li,
-.shortcuts_iconCard>li {
+.shortcuts_icon > li,
+.shortcuts_iconCard > li {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -63,8 +63,8 @@
   cursor: pointer;
 }
 
-.shortcuts_icon>i,
-.shortcuts_iconCard>i {
+.shortcuts_icon > i,
+.shortcuts_iconCard > i {
   position: absolute;
   right: -8px;
   top: 25%;
@@ -72,7 +72,7 @@
   color: white;
 }
 
-.shortcuts_iconCard>i {
+.shortcuts_iconCard > i {
   top: 5%;
 }
 
@@ -367,10 +367,14 @@ img[alt="logo"] {
 }
 
 .center-name {
-  font-size: 1.2rem;
+  color: var(--Colors-Pure-White, #fff);
+
+  /* Body/16/30/SemiBold */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
   font-weight: 600;
-  margin: 0;
-  color: #2c3e50;
+  line-height: 30px; /* 187.5% */
 }
 
 .center-location {
@@ -475,11 +479,10 @@ img[alt="logo"] {
 /* } */
 
 /* .like-btn:hover svg path { */
-  /* fill: #2980b9; */
-  /* Red color for active like button */
-/* } */ */
-
-.comment-btn:hover svg path {
+/* fill: #2980b9; */
+/* Red color for active like button */
+/* } */
+*/ .comment-btn:hover svg path {
   fill: #2980b9;
   /* Green color for active comment button */
 }
@@ -688,7 +691,14 @@ img[alt="logo"] {
 
 @media (max-width: 480px) {
   .center-name {
-    font-size: 1rem;
+    color: var(--Colors-Pure-White, #fff);
+
+    /* Body/16/30/SemiBold */
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px; /* 187.5% */
   }
 
   .center-location {
@@ -759,17 +769,22 @@ img[alt="logo"] {
     padding-bottom: 16px;
     background: rgb(0, 0, 0);
 
-    background: linear-gradient(0deg,
-        rgba(0, 0, 0, 1) 19%,
-        rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 1) 19%,
+      rgba(0, 0, 0, 0) 100%
+    );
   }
 
   .header-info .center-name {
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 18px;
-    margin-bottom: 4px;
-    font-weight: 500;
+    color: var(--Colors-Pure-White, #fff);
+
+    /* Body/16/30/SemiBold */
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px; /* 187.5% */
   }
 
   .header-info .center-address,
@@ -835,7 +850,6 @@ img[alt="logo"] {
 }
 
 @media (max-width: 768px) {
-
   .Home-icon svg {
     margin-bottom: 4px;
   }
@@ -934,7 +948,14 @@ img[alt="logo"] {
   }
 
   .center-name {
-    font-size: 1.1rem;
+    color: var(--Colors-Pure-White, #fff);
+
+    /* Body/16/30/SemiBold */
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px; /* 187.5% */
   }
 
   .center-location {
@@ -988,7 +1009,6 @@ img[alt="logo"] {
   .comment-list {
     height: 50vh;
     margin-bottom: 50px;
-
   }
 
   .reaction-options {
@@ -1020,6 +1040,8 @@ img[alt="logo"] {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    margin-bottom: 50%;
+
   }
 
   .card-image::after {
@@ -1029,26 +1051,32 @@ img[alt="logo"] {
     left: 0;
     right: 0;
     height: 35%;
-    background: linear-gradient(to top,
-        rgba(0, 0, 0, 0.7) 0%,
-        transparent 100%);
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.7) 0%,
+      transparent 100%
+    );
     pointer-events: none;
   }
 
   .header-info {
     position: absolute;
-    top: 4%;
+    bottom: 17%;
     left: 16px;
     right: 16px;
-    z-index: 2;
+    z-index: 5;
+    margin-bottom: 17%;
   }
 
   .header-info .center-name {
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    font-size: 22px;
-    margin-bottom: 4px;
-    font-weight: 500;
+    color: var(--Colors-Pure-White, #fff);
+
+    /* Body/16/30/SemiBold */
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px; /* 187.5% */
   }
 
   .header-info .center-address,
@@ -1065,7 +1093,7 @@ img[alt="logo"] {
   .card-footer {
     position: absolute;
     right: 16px;
-    top: 50%;
+    top: 38%;
     transform: translateY(-50%);
     flex-direction: column;
     align-items: center;
@@ -1280,7 +1308,7 @@ img[alt="logo"] {
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
-  scroll-behavior: smooth; 
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   /* Smooth scrolling for iOS */
   overscroll-behavior: contain;
@@ -1298,7 +1326,7 @@ img[alt="logo"] {
   height: 100%;
   /* Each card takes the full viewport height */
   display: flex;
-  align-items: center; 
+  align-items: center;
   scroll-snap-align: start;
   /* Ensure snap behavior */
   border-bottom: 1px solid #ddd;
@@ -1361,7 +1389,6 @@ scroll-container {
   justify-content: center;
 }
 
-
 :host ::ng-deep .carousel-control-next {
   right: 0;
 }
@@ -1370,7 +1397,6 @@ scroll-container {
   left: 0;
 }
 
-
 @media (max-width: 768px) {
   .card {
     height: 100vh;
@@ -1378,10 +1404,8 @@ scroll-container {
   .scroll-container {
     height: 100vh;
   }
-
-
 }
-.spec-head{
+.spec-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1391,5 +1415,70 @@ scroll-container {
   color: #0066cc;
   font-weight: bold;
   fill: #0066cc;
+}
 
+.center-name {
+  color: var(--Colors-Pure-White, #fff);
+
+  /* Body/16/30/SemiBold */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; /* 187.5% */
+}
+
+.center-address,
+.center-additional-info {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* .see-more-btn {
+  background-color: transparent;
+  color: #4CAF50;
+  border: 1px solid #4CAF50;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.see-more-btn:hover {
+  background-color: #4CAF50;
+  color: white;
+} */
+
+/* Styling when expanded */
+.see-more-btn {
+  background: none;
+  text-decoration: underline;
+  color: white;
+  cursor: pointer;
+}
+.expanded-info {
+  background-color: white; /* White background for the expanded view */
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 10px;
+  width: fit-content;
+}
+
+.expanded-info h4 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.expanded-info p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.row {
+  margin-top: 10px;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }

@@ -42,7 +42,7 @@
   </div>
   }
   <div class="scroll-container" #scrollContainer>
-    <div class="card" *ngFor="let shopping of shoppingCenters">
+    <div class="card" *ngFor="let shopping of shoppingCenters;let i =index">
       <div
         class="social-card mb-0 mb-sm-5 Res"
         [style.backgroundImage]="
@@ -53,59 +53,55 @@
       >
         <div class="card-header">
           <div class="header-info Res">
-            <h3 class="center-name">
-              {{ shopping.CenterName | titlecase }}
-            </h3>
-            <div
-              (click)="openMapViewPlace(MapViewPlace, shopping)"
-              style="width: fit-content"
-            >
-              <p
-                class="center-address"
-                style="cursor: pointer; width: fit-content"
-              >
-                {{ shopping.CenterAddress }},
+            <div class="info-header">
+              <!-- Expanded Info, shown when showMore is true -->
+              <div *ngIf="showMore[i]" class="expanded-info">
+                <h4>Details:</h4>
+                <p>{{ shopping.CenterAddress }}</p>
+                <p>{{ shopping.CenterCity | titlecase }}</p>
+                <p>{{ shopping.CenterState }}</p>
+                <p [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
+          
+                <div class="row">
+                  <ng-container *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces">
+                    <div
+                      style="color: black; font-weight: bold; padding: 0; display: flex; align-items: center; font-size: 1rem;"
+                    >
+                      <span>{{ getNeareastCategoryName(item.CategoryId) }}: </span>
+                      <img
+                        class="logo"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ item.RelationOrganizationId }}"
+                        [title]="item.RelationOrganizationName"
+                        alt=""
+                      />
+                      <span>{{ item.RelationOrganizationName }}</span>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+          
+              <!-- Initial Display -->
+              <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
+              <p style="color: #fff;">{{ shopping.CenterAddress }}</p>
+              <p class="center-address">   
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
               </p>
-            </div>
+              <p style="color: #fff;" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
 
-            <div>
-              <p
-                style="color: white; font-size: 1rem"
-                [innerHTML]="getShoppingCenterUnitSize(shopping)"
-              ></p>
-            </div>
-            <div class="row">
-              <ng-container
-                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
-              >
-                <div
-                  style="
-                    color: white;
-                    font-weight: bold;
-                    padding: 0;
-                    display: flex;
-                    align-items: center;
-                    font-size: 1rem;
-                  "
-                >
-                  <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
 
-                  <img
-                    class="logo"
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      item.RelationOrganizationId
-                    }}"
-                    [title]="item.RelationOrganizationName"
-                    alt=""
-                  />
-
-                  <span> {{ item.RelationOrganizationName }}</span>
-                </div>
-              </ng-container>
+           
+          
+              <!-- See More Button -->
+              <p (click)="toggleMoreInfo(i)" class="see-more-btn">
+                {{ showMore[i] ? 'Show Less' : 'See More' }}
+              </p>
             </div>
           </div>
+          
+          
+          
+          
         </div>
         <div class="card-image Res">
           <img
@@ -202,7 +198,7 @@
 
             <span class="share"> Share </span>
           </button>
-          <div style="position: relative" #shortcutsCard>
+          <div style="position: relative" >
             <button
               style="
                 background: #fff;
@@ -215,11 +211,12 @@
               <i class="fa-solid fa-ellipsis"></i>
             </button>
             <div
+            
               class="shortcuts_iconCard"
               style="bottom: 0% !important ; top: auto !important"
               *ngIf="selectedIdCard === shopping.Id"
             >
-              <ul>
+              <ul >
                 <li style="cursor: pointer">
                   <a
                     class="target"
