@@ -150,7 +150,7 @@
             <button
               class="action-btn like-btn"
               [class.liked]="isLiked(shopping)"
-              (click)="addLike(shopping, 1); open(Like, shopping)"
+              (click)="handleClick(shopping, Like)"
               [disabled]="isLikeInProgress"
             >
               <svg
@@ -1855,11 +1855,10 @@
     </div>
   </div>
 </ng-template>
-
 <ng-template #Like let-modal>
-  <div class="modal-main">
+  <div class="modal-main like-modal">
     <!-- Header Section -->
-    <div class="modal-header">
+    <div class="modal-header tiktok-header">
       <div class="d-flex align-items-center head">
         <img
           [src]="
