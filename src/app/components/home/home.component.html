@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<nav class="container-fluid">
+<nav class="container-fluid d-none d-sm-flex">
   <div class="navbar-line m-0">
     <div class="nav-right row m-0">
       <div class="nav-right-responsive col-9 justify-content-strat justify-content-sm-strat gap-0 gap-sm-2">
@@ -218,7 +218,7 @@
           </div> -->
         </div>
         <div class="card-image Res">
-          <div [ngClass]="{ 'image-shadow': showDetails[i] }">
+          <div [ngClass]="{ 'image-shadow': showDetails[i] }" style="width: 100%;">
             <img
               class="Res"
               [src]="
@@ -860,6 +860,44 @@
         </ng-container>
       </tbody>
     </table>
+    <div class="row d-sm-none fixed-bottom-mobile">
+      <div class="col-12 d-flex justify-content-around align-items-center">
+        <div class="custom-icon-container">
+          <p routerLink="/summary" class="d-flex d-sm-none Home-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#7A8591"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-house"
+            >
+              <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+              <path
+                d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+              />
+            </svg>
+          </p>
+          <div
+            class="icon-option"
+            *ngFor="let option of dropdowmOptions"
+            (click)="selectOption(option)"
+            [class.selected]="
+              selectedOption === option.status || selectedOption === option
+            "
+            [ngClass]="{
+              'hide-on-mobile': option.text === 'Side List View'
+            }"
+          >
+            <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
 
   <div
@@ -1068,6 +1106,44 @@
             </div>
           </div>
           </div>
+          <div class="row d-sm-none fixed-bottom-mobile">
+            <div class="col-12 d-flex justify-content-around align-items-center">
+              <div class="custom-icon-container">
+                <p routerLink="/summary" class="d-flex d-sm-none Home-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#7A8591"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-house"
+                  >
+                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                    <path
+                      d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                    />
+                  </svg>
+                </p>
+                <div
+                  class="icon-option"
+                  *ngFor="let option of dropdowmOptions"
+                  (click)="selectOption(option)"
+                  [class.selected]="
+                    selectedOption === option.status || selectedOption === option
+                  "
+                  [ngClass]="{
+                    'hide-on-mobile': option.text === 'Side List View'
+                  }"
+                >
+                  <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+                </div>
+              </div>
+            </div>
+          </div>
         </ng-container>
       </ng-container>
       <ng-container *ngIf="currentView == 2">
@@ -1268,6 +1344,44 @@
           </div>
           </div>
         </ng-container>
+        <div class="row d-sm-none fixed-bottom-mobile">
+          <div class="col-12 d-flex justify-content-around align-items-center">
+            <div class="custom-icon-container">
+              <p routerLink="/summary" class="d-flex d-sm-none Home-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#7A8591"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-house"
+                >
+                  <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                  <path
+                    d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                  />
+                </svg>
+              </p>
+              <div
+                class="icon-option"
+                *ngFor="let option of dropdowmOptions"
+                (click)="selectOption(option)"
+                [class.selected]="
+                  selectedOption === option.status || selectedOption === option
+                "
+                [ngClass]="{
+                  'hide-on-mobile': option.text === 'Side List View'
+                }"
+              >
+                <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+              </div>
+            </div>
+          </div>
+        </div>
       </ng-container>
     </div>
   </div>
@@ -1281,6 +1395,44 @@
     }"
   >
     <div id="map" class="custom-map"></div>
+    <div class="row d-sm-none fixed-bottom-mobile">
+      <div class="col-12 d-flex justify-content-around align-items-center">
+        <div class="custom-icon-container">
+          <p routerLink="/summary" class="d-flex d-sm-none Home-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#7A8591"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-house"
+            >
+              <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+              <path
+                d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+              />
+            </svg>
+          </p>
+          <div
+            class="icon-option"
+            *ngFor="let option of dropdowmOptions"
+            (click)="selectOption(option)"
+            [class.selected]="
+              selectedOption === option.status || selectedOption === option
+            "
+            [ngClass]="{
+              'hide-on-mobile': option.text === 'Side List View'
+            }"
+          >
+            <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
