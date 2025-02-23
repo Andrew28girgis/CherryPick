@@ -918,6 +918,10 @@ img[alt="logo"] {
   .cardResponsive {
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
   }
+  .tiktok-imgg {
+    position: absolute;
+    top: 15%;
+  }
 
   .responsiveMain {
     padding-right: 2px !important;
@@ -1814,7 +1818,7 @@ textarea.form-control {
 }
 
 .tiktok-body {
-  padding: 0 !important;  
+  padding: 0 !important;
 }
 
 .preference-options {
@@ -1840,7 +1844,7 @@ textarea.form-control {
 .or-divider::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid #CACED3;
+  border-bottom: 1px solid #caced3;
 }
 
 .or-divider::before {
@@ -1851,6 +1855,6 @@ textarea.form-control {
   margin-left: 15px;
 }
 .location-card.selected {
-  border: 4px solid var(--Colors-Primary-500, #001F3F);
-  background: var(--Colors-Primary-50, #E6E9EC);
+  border: 4px solid var(--Colors-Primary-500, #001f3f);
+  background: var(--Colors-Primary-50, #e6e9ec);
 }

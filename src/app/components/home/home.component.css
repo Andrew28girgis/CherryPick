@@ -354,6 +354,10 @@
 }
 
 @media (max-width: 768px) {
+  .tiktok-imgg {
+    position: absolute;
+    top: 15%;
+  }
   .modal-title {
     font-size: 15px;
   }
@@ -1265,7 +1269,7 @@
 
   .header-info {
     position: absolute;
-    bottom: 26%;
+    bottom: 27%;
     left: 16px;
     right: 16px;
     z-index: 5;
@@ -1297,7 +1301,7 @@
   .card-footer {
     position: absolute;
     right: 16px;
-    bottom: 1%;
+    bottom: 8%;
     transform: translateY(-50%);
     flex-direction: column;
     align-items: center;
