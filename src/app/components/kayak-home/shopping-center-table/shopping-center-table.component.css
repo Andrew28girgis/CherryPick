@@ -500,7 +500,6 @@ img[alt="logo"] {
   position: relative;
 }
 
-
 .reply-btn {
   background: none;
   border: none;
@@ -1649,7 +1648,7 @@ textarea.form-control {
   font-weight: 400;
   line-height: 30px; /* 187.5% */
 }
-.reaction{
+.reaction {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1662,6 +1661,7 @@ textarea.form-control {
 }
 
 .input-container {
+  margin-bottom: 20px;
   position: relative;
   display: inline-block;
   width: 400px; /* Adjust width as needed */
@@ -1725,15 +1725,15 @@ textarea.form-control {
 }
 
 .rating-circle.dislike {
-  background-color: #ff9999;
+  background-color: #ff9494;
 }
 
 .rating-circle.neutral {
-  background-color: #ffd93d;
+  background-color: #ffda6a;
 }
 
 .rating-circle.like {
-  background-color: #90EE90;
+  background-color: #7eca8f;
 }
 
 .inner-circle {
@@ -1750,5 +1750,5 @@ textarea.form-control {
 
 /* Optional: Add focus state for accessibility */
 .rating-button:focus .rating-circle {
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
