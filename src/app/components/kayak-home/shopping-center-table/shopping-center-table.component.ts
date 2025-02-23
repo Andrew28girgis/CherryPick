@@ -247,7 +247,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.selectedTab = 'Properties';
   }
   hideAllComments(): void {
-    console.log('Closing all comment sections');
     for (const key in this.showComments) {
       this.showComments[key] = false;
     }
@@ -1174,9 +1173,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   toggleReply(shopping: any, commentId: number): void {
     this.replyingTo[shopping.Id] =
       this.replyingTo[shopping.Id] === commentId ? null : commentId;
-    console.log(commentId);
-  }
-  
+
+    }
   closeComments(shopping: any): void {
     this.showComments[shopping.Id] = false;
   }
@@ -1205,7 +1203,6 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.placeImage = shoppingCenter.Images.split(',').map((link: string) =>
         link.trim()
       );
-      console.log(this.placeImage);
     } else {
       this.placeImage = [];
     }

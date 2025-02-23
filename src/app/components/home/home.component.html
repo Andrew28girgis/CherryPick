@@ -887,7 +887,7 @@
   <div
     class="background2"
     [ngClass]="{
-      'd-none': currentView == 1 || currentView == 4,
+      'd-none': currentView == 1 || currentView == 4 || currentView == 5,
       'col-md-8 col-sm-12 cards ': currentView == 2,
       'col-12': currentView == 3
     }"
@@ -957,10 +957,10 @@
                       class="col-12 d-flex flex-column spec"
                     >
                       <div class="d-flex flex-column">
-                        <p class="nearset-category">
+                        <p class="nearset-category" style="color: #000;">
                           <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
                         </p>
-                        <p>
+                        <p style="color: #000;">
                           {{ item.RelationOrganizationName }}
                           <img
                             class="logo ms-2"
@@ -1227,7 +1227,7 @@
                       <p class="nearset-category">
                         <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
                       </p>
-                      <p>
+                      <p style="color: #000;">
                         {{ item.RelationOrganizationName }}
                         <img
                           class="logo ms-2"
@@ -1373,7 +1373,7 @@
   <div
     class="p-0"
     [ngClass]="{
-      'd-none': currentView == 4 || currentView == 3,
+      'd-none': currentView == 4 || currentView == 3 || currentView == 5,
       'col-12': currentView == 1,
       'col-12 col-sm-4': currentView == 2
     }"
