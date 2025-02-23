@@ -110,7 +110,7 @@ function initializeMsal() {
     SharedModule,
     ScrollingModule,
     MsalModule.forRoot(
-      msalInstance, // ✅ Pass the initialized instance
+      msalInstance, 
       {
         interactionType: InteractionType.Redirect, 
         authRequest: {

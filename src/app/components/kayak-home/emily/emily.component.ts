@@ -1369,13 +1369,13 @@ export class EmilyComponent implements OnInit {
   // login
   user: any = null;
 
-  async waitForMsalInitialization() {
+ async waitForMsalInitialization() {
     if (!this.msalService.instance) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
 
-  async loginMicrosoft() {
+ async loginMicrosoft() {
     try {
       if (this.msalService.instance.getActiveAccount()) {
         console.log("User already logged in.");
