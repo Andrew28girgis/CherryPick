@@ -52,31 +52,27 @@
           ')'
         "
       >
-        <div class="card-header" (click)="toggleDetails(i)">
+        <div class="card-header" (click)="toggleDetails(i,shopping)">
           <div class="header-info Res">
             <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-  
-           
-          
+            <p
+              class="center-address shoppingcenterdata total"
+              style="color: #fff"
+            >
+              {{ shopping.CenterAddress }},
+              {{ shopping.CenterCity | titlecase }},
+              {{ shopping.CenterState }}
+            </p>
+
+            <div>
+              <p
+                style="color: #fff"
+                class="getShoppingCenterr"
+                [innerHTML]="getShoppingCenterUnitSize(shopping)"
+              ></p>
+            </div>
+
             <div *ngIf="showDetails[i]" class="shopping-center-details">
-              <div class="shoppingcenterdata">
-                <p
-                  class="center-address shoppingcenterdata total"
-                  style="color: #fff"
-                >
-                  {{ shopping.CenterAddress }},
-                  {{ shopping.CenterCity | titlecase }},
-                  {{ shopping.CenterState }}
-                </p>
-              </div>
-  
-              <div>
-                <p
-                  style="color: #fff"
-                  class="getShoppingCenterr"
-                  [innerHTML]="getShoppingCenterUnitSize(shopping)"
-                ></p>
-              </div>
               <div class="row">
                 <ng-container
                   *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
@@ -85,8 +81,10 @@
                     class="nearestt"
                     style="color: #fff; padding: 0 !important"
                   >
-                    <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
-  
+                    <span>
+                      {{ getNeareastCategoryName(item.CategoryId) }}:
+                    </span>
+
                     <img
                       class="logo"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -95,15 +93,19 @@
                       [title]="item.RelationOrganizationName"
                       alt=""
                     />
-  
+
                     <span> {{ item.RelationOrganizationName }}</span>
                   </div>
                 </ng-container>
               </div>
-          </div>
-          <p class="see-more-btn" (click)="toggleDetails(i); $event.stopPropagation()">
-            {{ showDetails[i] ? 'See less' : 'See more' }}
-          </p>
+            </div>
+            <p
+            *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
+              class="see-more-btn"
+              (click)="toggleDetails(i,shopping); $event.stopPropagation()"
+            >
+              {{ showDetails[i] ? "See less" : "See more" }}
+            </p>
           </div>
 
           <!-- <div class="header-info Res d-sm-none d-flex">
@@ -135,18 +137,17 @@
           </div> -->
         </div>
         <div class="card-image Res">
-          <div    [ngClass]="{'image-shadow': showDetails[i]}">
-          <img
-       
-            class="Res"
-            [src]="
-              shopping.MainImage && shopping.MainImage !== ''
-                ? shopping.MainImage
-                : 'assets/Images/skeltonImage.png'
-            "
-            [alt]="shopping.CenterName"
-          />
-        </div>
+          <div [ngClass]="{ 'image-shadow': showDetails[i] }">
+            <img
+              class="Res"
+              [src]="
+                shopping.MainImage && shopping.MainImage !== ''
+                  ? shopping.MainImage
+                  : 'assets/Images/skeltonImage.png'
+              "
+              [alt]="shopping.CenterName"
+            />
+          </div>
         </div>
 
         <div class="card-footer">

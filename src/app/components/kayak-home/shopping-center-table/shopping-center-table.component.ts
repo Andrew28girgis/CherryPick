@@ -1356,8 +1356,9 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-  toggleDetails(index: number): void {
-    // Toggle the detail state for the specific shopping center
+  toggleDetails(index: number,shopping:any): void {
+    if(shopping.ShoppingCenter?.BuyBoxPlaces){
     this.showDetails[index] = !this.showDetails[index];
+  }
   }
 }
