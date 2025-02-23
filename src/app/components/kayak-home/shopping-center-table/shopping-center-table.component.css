@@ -1082,7 +1082,7 @@ img[alt="logo"] {
 
   .header-info {
     position: absolute;
-    bottom: 16%;
+    bottom: 26%;
     left: 16px;
     right: 16px;
     z-index: 5;
@@ -1849,4 +1849,8 @@ textarea.form-control {
 
 .or-divider::after {
   margin-left: 15px;
+}
+.location-card.selected {
+  border: 4px solid var(--Colors-Primary-500, #001F3F);
+  background: var(--Colors-Primary-50, #E6E9EC);
 }

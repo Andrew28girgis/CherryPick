@@ -1976,7 +1976,8 @@
 
       <!-- Location Preference Section -->
       <div class="preference-options mb-4">
-        <div class="location-card">
+        <div class="location-card"  [class.selected]="selectedCenterId === General.modalObject.Places.Id"
+        (click)="selectCenter(General.modalObject.Places.Id)">
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">
@@ -1986,7 +1987,8 @@
 
         <div class="or-divider">or</div>
 
-        <div class="location-card">
+        <div class="location-card" [class.selected]="selectedCenterId === General.modalObject.Places.Id"
+        (click)="selectCenter(General.modalObject.Places.Id)">
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">
