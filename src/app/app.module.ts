@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -46,6 +46,20 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { SharedModule } from './shared/shared.module';
 import { TermsComponent } from './components/terms/terms.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MsalModule, MsalService, MsalGuard, MsalBroadcastService } from '@azure/msal-angular';
+import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
+// Initialize MSAL before Angular loads
+const msalInstance = new PublicClientApplication({
+  auth: {
+    clientId: '0405c49c-ebe8-4fef-9ae7-87305ad01f8e', // Replace with your Azure AD Client ID
+    authority: 'https://login.microsoftonline.com/fdfd5c3f-1883-4d75-9dc4-dbbda9b8ce8d', // Replace with your Tenant ID
+    redirectUri: 'http://localhost:4200/summary', // Must match your Azure AD redirect URI
+  }
+});
+
+function initializeMsal() {
+  return () => msalInstance.initialize();
+}
 
 @NgModule({
   declarations: [
@@ -88,16 +102,40 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     NgbTooltipModule,
     NgbAlertModule,
     DragDropModule,
-    ToastrModule.forRoot(),
+    ToastrModule,
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
     KayakModule,
     SharedModule,
     ScrollingModule,
+    MsalModule.forRoot(
+      msalInstance, // ✅ Pass the initialized instance
+      {
+        interactionType: InteractionType.Redirect, 
+        authRequest: {
+          scopes: ['User.Read'],
+        }
+      },
+      {
+        interactionType: InteractionType.Redirect,
+        protectedResourceMap: new Map([
+          ['https://graph.microsoft.com/v1.0/me/sendMail', ['https://graph.microsoft.com/Mail.Send']]
+        ])
+      }
+    )
   ],
+ 
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
+    MsalService,
+    MsalGuard,
+    MsalBroadcastService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeMsal,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

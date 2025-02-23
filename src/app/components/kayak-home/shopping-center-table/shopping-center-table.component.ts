@@ -782,10 +782,9 @@ export class ShoppingCenterTableComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-   
-    this.General.modalObject = modalObject ;
-  }
 
+    this.General.modalObject = modalObject;
+  }
 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
@@ -1268,7 +1267,6 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.hideAllComments();
       })
     );
-   
   }
 
   trimComment(value: string, marketSurveyId: number): void {
@@ -1325,20 +1323,18 @@ export class ShoppingCenterTableComponent implements OnInit {
       },
     });
   }
-  
+
   isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
   open(content: any, modalObject?: any) {
     this.modalService.open(content);
-    this.General.modalObject = modalObject ;
-
+    this.General.modalObject = modalObject;
   }
 
-rate(rating: 'dislike' | 'neutral' | 'like') {
+  rate(rating: 'dislike' | 'neutral' | 'like') {
     this.selectedRating = rating;
     console.log(`User rated: ${rating}`);
   }
-
 }
