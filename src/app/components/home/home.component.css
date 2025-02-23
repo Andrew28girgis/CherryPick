@@ -194,6 +194,7 @@
   font-size: 1rem;
 }
 .nearset-category {
+  color: #000;
   font-size: 14px;
   margin-top: 10px;
 }
@@ -345,6 +346,7 @@
   }
 }
 .spec-head{
+  color: #000;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1211,7 +1213,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 19%;
+    margin-bottom: 17%;
   }
 
   .card-image img {
@@ -1506,7 +1508,8 @@
 }
 
 .scroll-container {
-  height: 80vh;
+
+  height: 88vh;
   /* Full height for the scroll container */
   overflow-y: auto;
   overflow-x: hidden;
@@ -1579,7 +1582,7 @@ scroll-container {
 .indicators-container {
   position: absolute;
   gap: 25px;
-  bottom: 35%;
+  bottom: 47%;
   z-index: 1000;
   right: 10%;
   display: flex;
@@ -1642,6 +1645,7 @@ scroll-container {
   }
 }
 .spec-head {
+  color: #000;
   display: flex;
   justify-content: space-between;
   align-items: center;
