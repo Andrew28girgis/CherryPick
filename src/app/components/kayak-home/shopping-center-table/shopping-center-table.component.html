@@ -22,7 +22,7 @@
     </div>
   </div>
 </div>
- 
+
 <ng-container *ngIf="currentView == 5">
   @if (shoppingCenters.length > 0) {
   <div class="indicators-container">
@@ -54,16 +54,16 @@
       >
         <div class="card-header">
           <div class="header-info Res d-sm-flex d-none">
-            <h3 class="center-name" style="color: #fff;">
+            <h3 class="center-name" style="color: #fff">
               {{ shopping.CenterName | titlecase }}
             </h3>
-            
+
             <!-- (click)="openMapViewPlace(MapViewPlace, shopping)" -->
-            <div
-              class="shoppingcenterdata"
-            >
+            <div class="shoppingcenterdata">
               <p
-                class="center-address shoppingcenterdata total" style="color: #fff;">
+                class="center-address shoppingcenterdata total"
+                style="color: #fff"
+              >
                 {{ shopping.CenterAddress }},
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
@@ -71,7 +71,8 @@
             </div>
 
             <div>
-              <p class="getShoppingCenterr"
+              <p
+                class="getShoppingCenterr"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
               ></p>
             </div>
@@ -79,9 +80,7 @@
               <ng-container
                 *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
               >
-                <div
-                 class="nearestt"
-                >
+                <div class="nearestt">
                   <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
 
                   <img
@@ -107,14 +106,18 @@
               <!-- Expanded Info, shown when showMore is true -->
 
               <!-- Initial Display -->
-              <h3 class="center-name" style="color: #fff;">{{ shopping.CenterName | titlecase }}</h3>
-              <p class="colorr" style="color: #fff;">{{ shopping.CenterAddress }}</p>
-              <p class="center-address" style="color: #fff;">
+              <h3 class="center-name" style="color: #fff">
+                {{ shopping.CenterName | titlecase }}
+              </h3>
+              <p class="colorr" style="color: #fff">
+                {{ shopping.CenterAddress }}
+              </p>
+              <p class="center-address" style="color: #fff">
                 {{ shopping.CenterCity | titlecase }},
                 {{ shopping.CenterState }}
               </p>
               <p
-              style="color: #fff;"
+                style="color: #fff"
                 class="colorr"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
               ></p>
@@ -519,9 +522,8 @@
     </div>
   </div>
 </ng-container>
-  
+
 <div class="row whitee">
-  
   <ng-container *ngIf="currentView == 4">
     <div class="container p-2">
       <div
@@ -1711,9 +1713,7 @@
               let item of General.modalObject.ShoppingCenter?.BuyBoxPlaces
             "
           >
-            <div
-              class="getNeareastCategoryName"
-            >
+            <div class="getNeareastCategoryName">
               <span>{{ getNeareastCategoryName(item.CategoryId) }}: </span>
               <img
                 class="logo"
@@ -1997,7 +1997,7 @@
         </svg>
         <input type="text" placeholder="Add a note" />
       </div>
-      
+
       <!-- Location Preference Section -->
       <div class="preference-options mb-4">
         <div class="location-card">
