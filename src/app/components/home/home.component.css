@@ -1211,8 +1211,7 @@
   }
 
   .card-image {
-    flex: 1;
-    position: relative;
+    flex: 1; 
     display: flex;
     align-items: center;
     justify-content: center;
