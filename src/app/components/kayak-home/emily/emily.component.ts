@@ -12,6 +12,8 @@ import { PlacesService } from 'src/app/services/places.service';
 import { Center } from 'src/models/shoppingCenters';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
+import { MsalService } from '@azure/msal-angular';
+import { AuthenticationResult, BrowserAuthError } from '@azure/msal-browser';
 
 @Component({
   selector: 'app-emily',
@@ -98,7 +100,9 @@ export class EmilyComponent implements OnInit {
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private PlacesService: PlacesService
+    private PlacesService: PlacesService,
+    private msalService: MsalService
+
   ) {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = params.get('buyboxId');
@@ -108,13 +112,20 @@ export class EmilyComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.spinner.show();
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetPrompts();
     this.GetBuyBoxInfoDetails();
     this.GetBuyBoxOrganizationsForEmail();
+
+    this.msalService.instance.handleRedirectPromise().then((response) => {
+      if (response) {
+        this.msalService.instance.setActiveAccount(response.account);
+      }
+      this.getUser();
+    });
     this.spinner.hide();
   }
 
@@ -1353,4 +1364,50 @@ export class EmilyComponent implements OnInit {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
+
+
+  // login
+  user: any = null;
+
+  async waitForMsalInitialization() {
+    if (!this.msalService.instance) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+  }
+
+  async loginMicrosoft() {
+    try {
+      if (this.msalService.instance.getActiveAccount()) {
+        console.log("User already logged in.");
+        return;
+      }
+
+      const response = await this.msalService.instance.loginPopup({
+        scopes: ['User.Read']
+      });
+
+      this.msalService.instance.setActiveAccount(response.account);
+      this.getUser();
+    } catch (error) {
+      if (error instanceof BrowserAuthError && error.errorCode === "interaction_in_progress") {
+        console.warn("Authentication interaction already in progress.");
+      } else {
+        console.error("Login error:", error);
+      }
+    }
+  }
+
+  logoutMicrosoft() {
+    this.msalService.logout();
+  }
+
+  getUser() {
+    const account = this.msalService.instance.getActiveAccount();
+    if (account) {
+      this.user = account;
+      console.log(`user: ${this.user.name}`); 
+      
+    }
+  }
 }
+

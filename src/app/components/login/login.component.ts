@@ -4,8 +4,7 @@ import { PlacesService } from 'src/app/services/places.service';
 import { General, adminLogin } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfigService } from 'src/app/services/config.service';
-import { MsalService } from '@azure/msal-angular';
-import { AuthenticationResult, BrowserAuthError } from '@azure/msal-browser';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -24,7 +23,6 @@ export class LoginComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private configService: ConfigService,
-    private msalService: MsalService
   ) {
     localStorage.removeItem('mapView');
   }
@@ -45,12 +43,7 @@ export class LoginComponent {
       }
     });
 
-    this.msalService.instance.handleRedirectPromise().then((response) => {
-      if (response) {
-        this.msalService.instance.setActiveAccount(response.account);
-      }
-      this.getUser();
-    });
+
   }
 
   onSubmit() {
@@ -76,47 +69,5 @@ export class LoginComponent {
     this.router.navigate(['/summary']);
   } 
 
-  user: any = null;
-
-  async waitForMsalInitialization() {
-    if (!this.msalService.instance) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-  }
-
-  async loginMicrosoft() {
-    try {
-      // ✅ Check if an interaction is already in progress before calling loginPopup()
-      if (this.msalService.instance.getActiveAccount()) {
-        console.log("User already logged in.");
-        return;
-      }
-
-      const response = await this.msalService.instance.loginPopup({
-        scopes: ['User.Read']
-      });
-
-      this.msalService.instance.setActiveAccount(response.account);
-      this.getUser();
-    } catch (error) {
-      if (error instanceof BrowserAuthError && error.errorCode === "interaction_in_progress") {
-        console.warn("Authentication interaction already in progress.");
-      } else {
-        console.error("Login error:", error);
-      }
-    }
-  }
-
-  logoutMicrosoft() {
-    this.msalService.logout();
-  }
-
-  getUser() {
-    const account = this.msalService.instance.getActiveAccount();
-    if (account) {
-      this.user = account;
-      console.log(`user: ${this.user.name}`); 
-      
-    }
-  }
+  
 }

@@ -30,14 +30,11 @@
           </div> 
           <div class="text-center mt-3">
             <button class="btn login" type="submit">Login</button>
-            <button class="btn login mt-3" *ngIf="!user" (click)="loginMicrosoft()">Continue with Microsoft</button>
-            <button  class="btn login mt-3"  (click)="logoutMicrosoft()">Logout</button>
-
 
           </div>
           <div class="text-center mt-3">
             <span class="termsofservice" [routerLink]="['/tos']">Terms of Service</span>
-          </div>
+          </div>  
         </form>
       </div>
     </div>
