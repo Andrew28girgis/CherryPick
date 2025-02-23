@@ -1686,7 +1686,7 @@ textarea.form-control {
 .rating-container {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 16px;
   margin-bottom: 2rem;
 }
 
@@ -1751,4 +1751,28 @@ textarea.form-control {
 /* Optional: Add focus state for accessibility */
 .rating-button:focus .rating-circle {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+::ng-deep .custom-modal .modal-content {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+::ng-deep .custom-modal  {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+ .custom-modal {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.tiktok-header {
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: #fff;
+  display: flex;
+  padding: var(--Space-Space-12, 12px) var(--Space-Space-16, 16px);
+  align-items: center;
+  gap: var(--Space-Space-12, 12px);
+  align-self: stretch;
 }

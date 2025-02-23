@@ -170,6 +170,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   isLikeInProgress = false;
   showMore: boolean[] = []; // Track the expanded state for each card
   selectedRating: string | null = null;
+  clickTimeout: any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1336,5 +1338,20 @@ export class ShoppingCenterTableComponent implements OnInit {
   rate(rating: 'dislike' | 'neutral' | 'like') {
     this.selectedRating = rating;
     console.log(`User rated: ${rating}`);
+  }
+
+  handleClick(shopping: any, likeTpl: TemplateRef<any>): void {
+    if (this.clickTimeout) {
+      // Second click detected: cancel single-click action and execute double-click action.
+      clearTimeout(this.clickTimeout);
+      this.clickTimeout = null;
+      this.addLike(shopping, 1);
+    } else {
+      // First click: set a timer. If no second click occurs within 250ms, execute single-click action.
+      this.clickTimeout = setTimeout(() => {
+        this.open(likeTpl, shopping);
+        this.clickTimeout = null;
+      }, 250);
+    }
   }
 }
