@@ -172,7 +172,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   selectedRating: string | null = null;
   clickTimeout: any;
   showDetails: boolean[] = [];
- 
+  selectedCenterId: number | null = null;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1332,7 +1333,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   open(content: any, modalObject?: any) {
-    this.modalService.open(content);
+    this.modalService.open(content,{
+      windowClass: 'custom-modal'
+    });
     this.General.modalObject = modalObject;
   }
 
@@ -1360,5 +1363,9 @@ export class ShoppingCenterTableComponent implements OnInit {
     if(shopping.ShoppingCenter?.BuyBoxPlaces){
     this.showDetails[index] = !this.showDetails[index];
   }
+  }
+
+  selectCenter(centerId: number): void {
+    this.selectedCenterId = centerId;
   }
 }
