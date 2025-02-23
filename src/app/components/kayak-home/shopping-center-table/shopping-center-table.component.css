@@ -1661,38 +1661,27 @@ textarea.form-control {
   transition: background-color 0.2s ease;
 }
 
-
-.editable-div {
-  width: 100%;
-  border: 1px solid #d3d3d3;
-  padding: 10px;
-  display: flex;
-  padding: var(--Space-Space-12, 12px) var(--Space-Space-16, 16px);
-  align-items: center;
-  gap: var(--Space-Space-8, 8px);
-  align-self: stretch;
-  margin-bottom: 20px;
-  border-radius: var(--Radius-Radius-16, 16px);
-  background: #FFF;
-  border-radius: var(--Radius-Radius-16, 16px);
-background: #FFF;
-display: flex;
-flex-direction: row;
+.input-container {
+  position: relative;
+  display: inline-block;
+  width: 400px; /* Adjust width as needed */
 }
 
-/* Icon styling */
-.editable-div svg {
-  margin-right: 8px;
+.input-container .input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-/* Placeholder styling */
-.editable-div[aria-placeholder]:empty:before {
-  content: attr(aria-placeholder);
-  color: #000;
-  font-style: italic;
+.input-container input {
+  width: 75%;
+  padding: 8px 10px 8px 40px; /* add left padding to make space for the icon */
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
 }
-
-/* Previous CSS remains the same */
 
 .rating-container {
   display: flex;
