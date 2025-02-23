@@ -1082,7 +1082,7 @@ img[alt="logo"] {
 
   .header-info {
     position: absolute;
-    bottom: 30%;
+    bottom: 21%;
     left: 16px;
     right: 16px;
     z-index: 5;
@@ -1114,7 +1114,7 @@ img[alt="logo"] {
   .card-footer {
     position: absolute;
     right: 16px;
-    bottom: 15%;
+    bottom: 0%;
     transform: translateY(-50%);
     flex-direction: column;
     align-items: center;
