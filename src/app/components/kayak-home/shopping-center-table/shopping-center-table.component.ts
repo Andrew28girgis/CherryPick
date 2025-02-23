@@ -171,7 +171,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   showMore: boolean[] = []; // Track the expanded state for each card
   selectedRating: string | null = null;
   clickTimeout: any;
-
+  showDetails: boolean[] = [];
+ 
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1353,5 +1354,10 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.clickTimeout = null;
       }, 250);
     }
+  }
+
+  toggleDetails(index: number): void {
+    // Toggle the detail state for the specific shopping center
+    this.showDetails[index] = !this.showDetails[index];
   }
 }

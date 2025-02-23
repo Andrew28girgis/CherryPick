@@ -52,64 +52,66 @@
           ')'
         "
       >
-        <div class="card-header">
-          <div class="header-info Res d-sm-flex d-none">
-            <h3 class="center-name" style="color: #fff">
-              {{ shopping.CenterName | titlecase }}
-            </h3>
-
-            <!-- (click)="openMapViewPlace(MapViewPlace, shopping)" -->
-            <div class="shoppingcenterdata">
-              <p
-                class="center-address shoppingcenterdata total"
-                style="color: #fff"
-              >
-                {{ shopping.CenterAddress }},
-                {{ shopping.CenterCity | titlecase }},
-                {{ shopping.CenterState }}
-              </p>
-            </div>
-
-            <div>
-              <p
-                style="color: #fff"
-                class="getShoppingCenterr"
-                [innerHTML]="getShoppingCenterUnitSize(shopping)"
-              ></p>
-            </div>
-            <div class="row">
-              <ng-container
-                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
-              >
-                <div
-                  class="nearestt"
-                  style="color: #fff; padding-left: none !important"
+        <div class="card-header" (click)="toggleDetails(i)">
+          <div class="header-info Res">
+            <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
+  
+           
+          
+            <div *ngIf="showDetails[i]" class="shopping-center-details">
+              <div class="shoppingcenterdata">
+                <p
+                  class="center-address shoppingcenterdata total"
+                  style="color: #fff"
                 >
-                  <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
-
-                  <img
-                    class="logo"
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      item.RelationOrganizationId
-                    }}"
-                    [title]="item.RelationOrganizationName"
-                    alt=""
-                  />
-
-                  <span> {{ item.RelationOrganizationName }}</span>
-                </div>
-              </ng-container>
-            </div>
+                  {{ shopping.CenterAddress }},
+                  {{ shopping.CenterCity | titlecase }},
+                  {{ shopping.CenterState }}
+                </p>
+              </div>
+  
+              <div>
+                <p
+                  style="color: #fff"
+                  class="getShoppingCenterr"
+                  [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                ></p>
+              </div>
+              <div class="row">
+                <ng-container
+                  *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+                >
+                  <div
+                    class="nearestt"
+                    style="color: #fff; padding: 0 !important"
+                  >
+                    <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
+  
+                    <img
+                      class="logo"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        item.RelationOrganizationId
+                      }}"
+                      [title]="item.RelationOrganizationName"
+                      alt=""
+                    />
+  
+                    <span> {{ item.RelationOrganizationName }}</span>
+                  </div>
+                </ng-container>
+              </div>
+          </div>
+          <p class="see-more-btn" (click)="toggleDetails(i); $event.stopPropagation()">
+            {{ showDetails[i] ? 'See less' : 'See more' }}
+          </p>
           </div>
 
-          <div class="header-info Res d-sm-none d-flex">
+          <!-- <div class="header-info Res d-sm-none d-flex">
             <div
               class="info-header"
               (click)="openDetails(shoppingDetails, shopping)"
             >
-              <!-- Expanded Info, shown when showMore is true -->
 
-              <!-- Initial Display -->
               <h3 class="center-name" style="color: #fff">
                 {{ shopping.CenterName | titlecase }}
               </h3>
@@ -126,15 +128,16 @@
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
               ></p>
 
-              <!-- See More Button -->
               <p class="see-more-btn">
                 {{ showMore[i] ? "Show Less" : "See More" }}
               </p>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="card-image Res">
+          <div    [ngClass]="{'image-shadow': showDetails[i]}">
           <img
+       
             class="Res"
             [src]="
               shopping.MainImage && shopping.MainImage !== ''
@@ -143,6 +146,7 @@
             "
             [alt]="shopping.CenterName"
           />
+        </div>
         </div>
 
         <div class="card-footer">
@@ -1894,7 +1898,7 @@
     <!-- Feedback Section -->
     <div class="modal-body">
       <p class="text-center mb-3 question">How do you find it?</p>
-      <div class="d-flex reactions-div mb-4">
+      <div class="d-flex reactions-div">
         <div class="rating-container">
           <div class="rating-option">
             <span class="rating-label">I don't like it</span>
