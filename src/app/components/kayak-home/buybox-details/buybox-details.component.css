@@ -109,6 +109,6 @@
 
   .Button__f {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
   }
 }
