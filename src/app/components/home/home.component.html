@@ -336,23 +336,7 @@
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul>
-                <li class="total">
-                  <a
-                    class="target"
-                    [href]="
-                      '/emily/' +
-                      BuyBoxId +
-                      '/' +
-                      shopping.ShoppingCenter.ManagerOrganization[0].ID +
-                      '/' +
-                      shopping.Id
-                    "
-                    target="_blank"
-                  >
-                    <i class="fa-regular fa-envelope big-text"></i>
-                    Emily
-                  </a>
-                </li>
+  
                 <li>
                   <a class="target" (click)="openGallery(shopping.Id)">
                     <i class="fa-solid fa-images big-text"></i>
@@ -1437,7 +1421,7 @@
 </div>
 
 <ng-template #MapViewPlace let-modal>
-  <div id="mappopup h700" *ngIf="mapViewOnePlacex"></div>
+  <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
 
 <ng-template #ShareLink let-modal>
@@ -1736,6 +1720,24 @@
           </p>
         </div>
       </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #galleryModal let-modal>
+  <div class="modal-body p-0">
+    <div class="carousel-wrapper position-relative">
+      <ngb-carousel
+        class="custom-carousel"
+        [showNavigationIndicators]="true"
+        [showNavigationArrows]="true"
+      >
+        <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
+          <div class="text-center">
+            <img [src]="img" class="img-fluid p-img" alt="image" />
+          </div>
+        </ng-template>
+      </ngb-carousel>
     </div>
   </div>
 </ng-template>

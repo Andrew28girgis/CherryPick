@@ -1176,6 +1176,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.replyingTo[shopping.Id] === commentId ? null : commentId;
     console.log(commentId);
   }
+  
   closeComments(shopping: any): void {
     this.showComments[shopping.Id] = false;
   }
