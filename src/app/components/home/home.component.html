@@ -3,7 +3,9 @@
 <nav class="container-fluid d-none d-sm-flex">
   <div class="navbar-line m-0">
     <div class="nav-right row m-0">
-      <div class="nav-right-responsive col-9 justify-content-strat justify-content-sm-strat gap-0 gap-sm-2">
+      <div
+        class="nav-right-responsive col-9 justify-content-strat justify-content-sm-strat gap-0 gap-sm-2"
+      >
         <img
           alt="logo"
           class="cherry-logo"
@@ -55,7 +57,9 @@
         </div>
       </div> -->
 
-      <div class="navbar navbar-expand-lg navbar-light col-3 justify-content-end justify-content-sm-between">
+      <div
+        class="navbar navbar-expand-lg navbar-light col-3 justify-content-end justify-content-sm-between"
+      >
         <button
           class="navbar-toggler"
           type="button"
@@ -92,13 +96,18 @@
           <app-logout></app-logout>
         </div>
       </div>
-      <div class="col-12 mt-2 mt-sm-0 d-flex d-sm-none p-0 justify-content-between">
+      <div
+        class="col-12 mt-2 mt-sm-0 d-flex d-sm-none p-0 justify-content-between"
+      >
         <p class="titleResponsive ms-2">
           {{ BuyBoxName }}
         </p>
-        <button class="btn custom-share-btn mx-sm-3 mx-2 d-flex d-sm-none m-0" (click)="openContactsModal(contactsModal)">
-        Share
-      </button>
+        <button
+          class="btn custom-share-btn mx-sm-3 mx-2 d-flex d-sm-none m-0"
+          (click)="openContactsModal(contactsModal)"
+        >
+          Share
+        </button>
       </div>
     </div>
   </div>
@@ -133,7 +142,7 @@
           ')'
         "
       >
-        <div class="card-header" (click)="toggleDetails(i,shopping)">
+        <div class="card-header" (click)="toggleDetails(i, shopping)">
           <div class="header-info Res">
             <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
             <p
@@ -160,7 +169,8 @@
                 >
                   <div
                     class="nearestt"
-                    style="color: #fff; padding: 0 !important"
+                    style="color: #fff; padding: 0 !important;    max-width: 60%;
+"
                   >
                     <span>
                       {{ getNeareastCategoryName(item.CategoryId) }}:
@@ -181,9 +191,9 @@
               </div>
             </div>
             <p
-            *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
+              *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
               class="see-more-btn"
-              (click)="toggleDetails(i,shopping); $event.stopPropagation()"
+              (click)="toggleDetails(i, shopping); $event.stopPropagation()"
             >
               {{ showDetails[i] ? "See less" : "See more" }}
             </p>
@@ -217,8 +227,11 @@
             </div>
           </div> -->
         </div>
-        <div class="card-image Res">
-          <div [ngClass]="{ 'image-shadow': showDetails[i] }" style="width: 100%;">
+        <div class="card-image Res tiktok-imgg">
+          <div
+            [ngClass]="{ 'image-shadow': showDetails[i] }"
+            style="width: 100%"
+          >
             <img
               class="Res"
               [src]="
@@ -336,7 +349,6 @@
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul>
-  
                 <li>
                   <a class="target" (click)="openGallery(shopping.Id)">
                     <i class="fa-solid fa-images big-text"></i>
@@ -426,7 +438,7 @@
                     </svg>
                     Street View
                   </a>
-                </li> 
+                </li>
               </ul>
               <i class="fa-solid fa-caret-right caret"></i>
             </div>
@@ -444,6 +456,7 @@
               placeholder="Write a comment..."
               [(ngModel)]="newComments[shopping.MarketSurveyId]"
               (ngModelChange)="trimComment($event, shopping.MarketSurveyId)"
+              (keyup.enter)="addComment(shopping, shopping.MarketSurveyId)"
             />
             <button
               class="post-comment-btn"
@@ -461,46 +474,68 @@
                 )
               "
             >
-              <li>
-                <div class="comment-content d-flex justify-content-between">
-                  <p>{{ comment.Comment }}</p>
-                  <p>{{ comment.CommentDate | date }}</p>
-                  <!-- <button
-                          class="reply-btn"
-                          (click)="toggleReply(shopping.MarketSurveyId, comment.id)"
-                        >
-                          Reply
-                        </button> -->
+              <li *ngIf="!comment.ParentCommentId">
+                <div class="comment-content d-flex flex-column">
+                  <div class="justify-content-between d-flex">
+                    <p>{{ comment.Comment }}</p>
+                    <p>{{ comment.CommentDate | date }}</p>
+                  </div>
+                  <button
+                    class="reply-btn d-flex"
+                    style="justify-content: right"
+                    (click)="toggleReply(shopping, comment.Id)"
+                  >
+                    Reply
+                  </button>
                 </div>
 
-                <!-- <div
-                        class="reply-input"
-                        *ngIf="replyingTo[shopping.MarketSurveyId] === comment.id"
+                <div
+                  class="reply-input"
+                  *ngIf="replyingTo[shopping.MarketSurveyId] === comment.Id"
+                >
+                  <input
+                    type="text"
+                    placeholder="Write a reply..."
+                    [(ngModel)]="newReplies[comment.Id]"
+                    (keyup.enter)="
+                      addReply(shopping.MarketSurveyId, comment.Id)
+                    "
+                  />
+                  <button
+                    class="post-reply-btn"
+                    (click)="addReply(shopping.MarketSurveyId, comment.Id)"
+                  >
+                    Reply
+                  </button>
+                </div>
+
+                <ul class="reply-list">
+                  <ng-container
+                    *ngFor="
+                      let reply of sortCommentsByDate(
+                        shopping.ShoppingCenter.Comments
+                      )
+                    "
+                  >
+                    <li *ngIf="reply.ParentCommentId === comment.Id">
+                      <div
+                        class="comment-content reply-content d-flex flex-column"
                       >
-                        <input
-                          type="text"
-                          placeholder="Write a reply..."
-                          [(ngModel)]="newReplies[comment.id]"
-                        />
+                        <div class="justify-content-between d-flex">
+                          <p>{{ reply.Comment }}</p>
+                          <p>{{ reply.CommentDate | date }}</p>
+                        </div>
                         <button
-                          class="post-reply-btn"
-                          (click)="addReply(shopping.MarketSurveyId, comment.id)"
+                          class="reply-btn d-flex"
+                          style="justify-content: right"
+                          (click)="toggleReply(shopping, comment.Id)"
                         >
                           Reply
                         </button>
-                      </div> -->
-
-                <!-- <ul
-                        class="reply-list"
-                        *ngIf="comment.replies && comment.replies.length > 0"
-                      >
-                        <li *ngFor="let reply of comment.replies">
-                          <div class="comment-content">
-                            <strong>{{ reply.user }}</strong>
-                            <p>{{ reply.text }}</p>
-                          </div>
-                        </li>
-                      </ul> -->
+                      </div>
+                    </li>
+                  </ng-container>
+                </ul>
               </li>
             </ng-container>
           </ul>
@@ -553,9 +588,7 @@
  <ng-container *ngIf="currentView == 4">
     <table
       class="procpect-table"
-      *ngIf="
-        shoppingCenters && shoppingCenters.length > 0
-      "
+      *ngIf="shoppingCenters && shoppingCenters.length > 0"
     >
       <thead class="procpect-table-head">
         <tr>
@@ -751,7 +784,8 @@
 
             <td>
               <div
-                class="d-flex justify-content-center align-items-center total">
+                class="d-flex justify-content-center align-items-center total"
+              >
                 <div class="d-flex gap16">
                   <div class="framee">
                     <a
@@ -796,8 +830,10 @@
                       </svg>
                     </a>
                   </div>
-                  <div class="framee"
-                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)">
+                  <div
+                    class="framee"
+                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                  >
                     <svg
                       class="svg-icon"
                       width="21"
@@ -822,9 +858,12 @@
                       </g>
                     </svg>
                   </div>
-                  <div class="framee"
+                  <div
+                    class="framee"
                     (click)="
-                      openStreetViewPlace(StreetViewPlace, shoppingCenter)">
+                      openStreetViewPlace(StreetViewPlace, shoppingCenter)
+                    "
+                  >
                     <svg
                       class="svg-icon"
                       width="35"
@@ -903,25 +942,29 @@
               'col-12 col-sm-4 ': currentView == 3
             }"
           >
-          <div class="card-window_c">
-            <a
-              [routerLink]="[
+            <div class="card-window_c">
+              <a
+                [routerLink]="[
                       '/landing',
                       shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,
                       shopping?.Id,
                       BuyBoxId 
                     ]"
-            >
-              <div class="main-img">
-                <img src="{{ shopping.MainImage || 'assets/Images/skeltonImage.png' }}" />
-              </div>
-            </a>
-            <div class="content-wrap card-content">
-              <div>
-                <div class="fitcontent">
-                  <a
-                    class="textdecoration"
-                    [routerLink]="[
+              >
+                <div class="main-img">
+                  <img
+                    src="{{
+                      shopping.MainImage || 'assets/Images/skeltonImage.png'
+                    }}"
+                  />
+                </div>
+              </a>
+              <div class="content-wrap card-content">
+                <div>
+                  <div class="fitcontent">
+                    <a
+                      class="textdecoration"
+                      [routerLink]="[
                         '/landing',
                         shopping?.ShoppingCenter?.Places
                           ? shopping?.ShoppingCenter?.Places?.[0]?.Id
@@ -929,114 +972,123 @@
                         shopping.Id,
                         BuyBoxId 
                       ]"
-                  >
-                    <p class="content-title total">
-                      {{
-                        shopping.CenterName.length > 22
-                          ? (shopping.CenterName | titlecase).slice(0, 22) +
-                            "..."
-                          : (shopping.CenterName | titlecase)
-                      }}
-                    </p>
-                  </a>
-
-                  <div
-                    class="card-address total"
-                    (click)="openMapViewPlace(MapViewPlace, shopping)"
-                  >
-                    <span class="mb-5">
-                      {{ shopping.CenterAddress }},
-                      {{ shopping.CenterCity | titlecase }},
-                      {{ shopping.CenterState }}
-                    </span>
-                  </div>
-                  <div>
-                    <p class="ShoppingCenterUnit" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
-                  </div>
-                  <div class="row">
-                    <div
-                      *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
-                      class="col-12 d-flex flex-column spec"
                     >
-                      <div class="d-flex flex-column">
-                        <p class="nearset-category" style="color: #000;">
-                          <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
-                        </p>
-                        <p style="color: #000;">
-                          {{ item.RelationOrganizationName }}
-                          <img
-                            class="logo ms-2"
-                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                              item.RelationOrganizationId
-                            }}"
-                            [title]="item.RelationOrganizationName"
-                            alt=""
-                          />
-                        </p>
+                      <p class="content-title total">
+                        {{
+                          shopping.CenterName.length > 22
+                            ? (shopping.CenterName | titlecase).slice(0, 22) +
+                              "..."
+                            : (shopping.CenterName | titlecase)
+                        }}
+                      </p>
+                    </a>
+
+                    <div
+                      class="card-address total"
+                      (click)="openMapViewPlace(MapViewPlace, shopping)"
+                    >
+                      <span class="mb-5">
+                        {{ shopping.CenterAddress }},
+                        {{ shopping.CenterCity | titlecase }},
+                        {{ shopping.CenterState }}
+                      </span>
+                    </div>
+                    <div>
+                      <p
+                        class="ShoppingCenterUnit"
+                        [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                      ></p>
+                    </div>
+                    <div class="row">
+                      <div
+                        *ngFor="
+                          let item of shopping.ShoppingCenter?.BuyBoxPlaces
+                        "
+                        class="col-12 d-flex flex-column spec"
+                      >
+                        <div class="d-flex flex-column">
+                          <p class="nearset-category" style="color: #000">
+                            <b
+                              >{{ getNeareastCategoryName(item.CategoryId) }}
+                            </b>
+                          </p>
+                          <p style="color: #000">
+                            {{ item.RelationOrganizationName }}
+                            <img
+                              class="logo ms-2"
+                              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                                item.RelationOrganizationId
+                              }}"
+                              [title]="item.RelationOrganizationName"
+                              alt=""
+                            />
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="col-md-12 spec"
-                  *ngIf="
-                    shopping.ShoppingCenter?.ManagerOrganization &&
-                    placesRepresentative != false
-                  "
-                >
-                  <hr class="small-hr mt-2" />
-                  <span class="managed-by">Leased by</span>
-                  <p class="spec-head">
-                    <img
-                      class="logo"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        shopping.ShoppingCenter.ManagerOrganization[0].ID
-                      }}"
-                      [title]="
-                        shopping.ShoppingCenter.ManagerOrganization[0].Name
-                      "
-                      alt=""
-                    />
-                    {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
-
-                    <img
-                      class="ms-2 total"
-                      src="../../../assets/Images/Icons/eye.png"
-                      alt="View Manager Details"
-                      [ngbPopover]="popoverContent"
-                      popoverTitle="Organization Contact Info"
-                      triggers="click:outside"
-                      [placement]="'top'"
-                    />
-                    <br />
-                    <ng-template #popoverContent>
-                      <div
-                        *ngFor="
-                          let org of shopping.ShoppingCenter.ManagerOrganization
+                  <div
+                    class="col-md-12 spec"
+                    *ngIf="
+                      shopping.ShoppingCenter?.ManagerOrganization &&
+                      placesRepresentative != false
+                    "
+                  >
+                    <hr class="small-hr mt-2" />
+                    <span class="managed-by">Leased by</span>
+                    <p class="spec-head">
+                      <img
+                        class="logo"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          shopping.ShoppingCenter.ManagerOrganization[0].ID
+                        }}"
+                        [title]="
+                          shopping.ShoppingCenter.ManagerOrganization[0].Name
                         "
-                        class="contact-container table-texttt"
-                      >
-                        <p class="text-bold m-0">
-                          {{ org.Firstname | titlecase }}
-                          {{ org.LastName | titlecase }}
-                        </p>
-                        <p class="m-0">{{ org.CellPhone }}</p>
-                        <p class="m-0">{{ org.Email }}</p>
-                        <hr
-                          *ngIf="
-                            !isLast(
-                              org,
-                              shoppingCenter.ShoppingCenter.ManagerOrganization
-                            )
-                          "
-                        />
-                      </div>
-                    </ng-template>
-                  </p>
-                </div>
-              </div>
+                        alt=""
+                      />
+                      {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
 
-              <!-- <div class="buttons-wrap">
+                      <img
+                        class="ms-2 total"
+                        src="../../../assets/Images/Icons/eye.png"
+                        alt="View Manager Details"
+                        [ngbPopover]="popoverContent"
+                        popoverTitle="Organization Contact Info"
+                        triggers="click:outside"
+                        [placement]="'top'"
+                      />
+                      <br />
+                      <ng-template #popoverContent>
+                        <div
+                          *ngFor="
+                            let org of shopping.ShoppingCenter
+                              .ManagerOrganization
+                          "
+                          class="contact-container table-texttt"
+                        >
+                          <p class="text-bold m-0">
+                            {{ org.Firstname | titlecase }}
+                            {{ org.LastName | titlecase }}
+                          </p>
+                          <p class="m-0">{{ org.CellPhone }}</p>
+                          <p class="m-0">{{ org.Email }}</p>
+                          <hr
+                            *ngIf="
+                              !isLast(
+                                org,
+                                shoppingCenter.ShoppingCenter
+                                  .ManagerOrganization
+                              )
+                            "
+                          />
+                        </div>
+                      </ng-template>
+                    </p>
+                  </div>
+                </div>
+
+                <!-- <div class="buttons-wrap">
                   <button
                     class="view-details-card"
                     (click)="goToPlace(shopping)"
@@ -1089,11 +1141,13 @@
                     </svg>
                   </div>
                 </div> -->
+              </div>
             </div>
           </div>
-          </div>
           <div class="row d-sm-none fixed-bottom-mobile">
-            <div class="col-12 d-flex justify-content-around align-items-center">
+            <div
+              class="col-12 d-flex justify-content-around align-items-center"
+            >
               <div class="custom-icon-container">
                 <p routerLink="/summary" class="d-flex d-sm-none Home-icon">
                   <svg
@@ -1119,13 +1173,18 @@
                   *ngFor="let option of dropdowmOptions"
                   (click)="selectOption(option)"
                   [class.selected]="
-                    selectedOption === option.status || selectedOption === option
+                    selectedOption === option.status ||
+                    selectedOption === option
                   "
                   [ngClass]="{
                     'hide-on-mobile': option.text === 'Side List View'
                   }"
                 >
-                  <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+                  <img
+                    [src]="option.icon"
+                    [alt]="option.text"
+                    class="icon-image"
+                  />
                 </div>
               </div>
             </div>
@@ -1147,10 +1206,10 @@
               'col-md-6 col-sm-12': currentView == 2
             }"
           >
-          <div class="card-window_c">
-            <a
-              *ngIf="place.CenterCity"
-              [routerLink]="[
+            <div class="card-window_c">
+              <a
+                *ngIf="place.CenterCity"
+                [routerLink]="[
                  '/landing',
                  place.ShoppingCenter?.Places
                  ? place.ShoppingCenter.Places?.[0].Id
@@ -1158,16 +1217,20 @@
                  place.Id,
                 BuyBoxId 
                ]"
-            >
-              <div class="main-img">
-                <img src="{{ place.MainImage || 'assets/Images/skeltonImage.png' }}" />
-              </div>
-            </a>
-            <div class="content-wrap card-sideview">
-              <div>
-                <div *ngIf="place.CenterCity">
-                  <a
-                    [routerLink]="[
+              >
+                <div class="main-img">
+                  <img
+                    src="{{
+                      place.MainImage || 'assets/Images/skeltonImage.png'
+                    }}"
+                  />
+                </div>
+              </a>
+              <div class="content-wrap card-sideview">
+                <div>
+                  <div *ngIf="place.CenterCity">
+                    <a
+                      [routerLink]="[
                         '/landing',
                         place.ShoppingCenter?.Places
                           ? place.ShoppingCenter.Places?.[0].Id
@@ -1175,77 +1238,81 @@
                         place.Id,
                         BuyBoxId
                       ]"
-                  >
-                    <p class="content-title total">
-                      {{
-                        place.CenterName.length > 22
-                          ? (place.CenterName | titlecase).slice(0, 22) + "..."
-                          : (place.CenterName | titlecase)
-                      }}
-                    </p>
-                  </a>
-                </div>
+                    >
+                      <p class="content-title total">
+                        {{
+                          place.CenterName.length > 22
+                            ? (place.CenterName | titlecase).slice(0, 22) +
+                              "..."
+                            : (place.CenterName | titlecase)
+                        }}
+                      </p>
+                    </a>
+                  </div>
 
-                <div
-                  *ngIf="place.CenterAddress"
-                  class="card-address total"
-                  (click)="openMapViewPlace(MapViewPlace, place)"
-                >
-                  <span>
-                    {{ place.CenterAddress }},
-                    {{ place.CenterCity | titlecase }},
-                    {{ place.CenterState }}
-                  </span>
-                </div>
-
-                <div
-                  *ngIf="place.Address"
-                  class="card-address total"
-                  (click)="openMapViewPlace(MapViewPlace, place)"
-                >
-                  <p>
-                    {{ place.Address }}, {{ place.City | titlecase }},
-                    {{ place.State }}
-                  </p>
-                </div>
-
-                <div *ngIf="place.CenterAddress">
-                  <p class="ShoppingCenterUnit" [innerHTML]="getShoppingCenterUnitSize(place)"></p>
-                </div>
-
-                <div
-                  class="row"
-                  *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
-                >
                   <div
-                    *ngFor="
-                      let item of place.ShoppingCenter
-                        ? place.ShoppingCenter?.BuyBoxPlaces
-                        : place.Place?.BuyBoxPlaces
-                    "
-                    class="col-12 d-flex flex-column spec"
+                    *ngIf="place.CenterAddress"
+                    class="card-address total"
+                    (click)="openMapViewPlace(MapViewPlace, place)"
                   >
-                    <div class="d-flex flex-column">
-                      <p class="nearset-category">
-                        <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
-                      </p>
-                      <p style="color: #000;">
-                        {{ item.RelationOrganizationName }}
-                        <img
-                          class="logo ms-2"
-                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                            item.RelationOrganizationId
-                          }}"
-                          [title]="item.RelationOrganizationName"
-                          alt=""
-                        />
-                      </p>
+                    <span>
+                      {{ place.CenterAddress }},
+                      {{ place.CenterCity | titlecase }},
+                      {{ place.CenterState }}
+                    </span>
+                  </div>
+
+                  <div
+                    *ngIf="place.Address"
+                    class="card-address total"
+                    (click)="openMapViewPlace(MapViewPlace, place)"
+                  >
+                    <p>
+                      {{ place.Address }}, {{ place.City | titlecase }},
+                      {{ place.State }}
+                    </p>
+                  </div>
+
+                  <div *ngIf="place.CenterAddress">
+                    <p
+                      class="ShoppingCenterUnit"
+                      [innerHTML]="getShoppingCenterUnitSize(place)"
+                    ></p>
+                  </div>
+
+                  <div
+                    class="row"
+                    *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place"
+                  >
+                    <div
+                      *ngFor="
+                        let item of place.ShoppingCenter
+                          ? place.ShoppingCenter?.BuyBoxPlaces
+                          : place.Place?.BuyBoxPlaces
+                      "
+                      class="col-12 d-flex flex-column spec"
+                    >
+                      <div class="d-flex flex-column">
+                        <p class="nearset-category">
+                          <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                        </p>
+                        <p style="color: #000">
+                          {{ item.RelationOrganizationName }}
+                          <img
+                            class="logo ms-2"
+                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              item.RelationOrganizationId
+                            }}"
+                            [title]="item.RelationOrganizationName"
+                            alt=""
+                          />
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- <div class="buttons-wrap">
+                <!-- <div class="buttons-wrap">
                   <button class="view-details-card" (click)="goToPlace(place)">
                     View Details
                     <svg
@@ -1271,63 +1338,63 @@
                   </button>
                 </div> -->
 
-              <div
-                class="col-md-12 spec"
-                *ngIf="
-                  place.ShoppingCenter?.ManagerOrganization &&
-                  placesRepresentative != false
-                "
-              >
-                <span class="managed-by">Leased by</span>
-                <p class="spec-head">
-                  <img
-                    class="logo"
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      place.ShoppingCenter.ManagerOrganization[0].ID
-                    }}"
-                    [title]="place.ShoppingCenter.ManagerOrganization[0].Name"
-                    alt=""
-                  />
-                  <span>
-                    {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
-                  </span>
+                <div
+                  class="col-md-12 spec"
+                  *ngIf="
+                    place.ShoppingCenter?.ManagerOrganization &&
+                    placesRepresentative != false
+                  "
+                >
+                  <span class="managed-by">Leased by</span>
+                  <p class="spec-head">
+                    <img
+                      class="logo"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        place.ShoppingCenter.ManagerOrganization[0].ID
+                      }}"
+                      [title]="place.ShoppingCenter.ManagerOrganization[0].Name"
+                      alt=""
+                    />
+                    <span>
+                      {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
+                    </span>
 
-                  <img
-                    class="ms-2 total"
-                    src="../../../assets/Images/Icons/eye.png"
-                    alt="View Manager Details"
-                    [ngbPopover]="popoverContent"
-                    popoverTitle="Organization Contact Info"
-                    [placement]="'top'"
-                  />
-                  <br />
-                  <ng-template #popoverContent>
-                    <div
-                      *ngFor="
-                        let org of place.ShoppingCenter.ManagerOrganization
-                      "
-                      class="contact-container table-texttt"
-                    >
-                      <p class="text-bold m-0">
-                        {{ org.Firstname | titlecase }}
-                        {{ org.LastName | titlecase }}
-                      </p>
-                      <p class="m-0">{{ org.CellPhone }}</p>
-                      <p class="m-0">{{ org.Email }}</p>
-                      <hr
-                        *ngIf="
-                          !isLast(
-                            org,
-                            shoppingCenter.ShoppingCenter.ManagerOrganization
-                          )
+                    <img
+                      class="ms-2 total"
+                      src="../../../assets/Images/Icons/eye.png"
+                      alt="View Manager Details"
+                      [ngbPopover]="popoverContent"
+                      popoverTitle="Organization Contact Info"
+                      [placement]="'top'"
+                    />
+                    <br />
+                    <ng-template #popoverContent>
+                      <div
+                        *ngFor="
+                          let org of place.ShoppingCenter.ManagerOrganization
                         "
-                      />
-                    </div>
-                  </ng-template>
-                </p>
+                        class="contact-container table-texttt"
+                      >
+                        <p class="text-bold m-0">
+                          {{ org.Firstname | titlecase }}
+                          {{ org.LastName | titlecase }}
+                        </p>
+                        <p class="m-0">{{ org.CellPhone }}</p>
+                        <p class="m-0">{{ org.Email }}</p>
+                        <hr
+                          *ngIf="
+                            !isLast(
+                              org,
+                              shoppingCenter.ShoppingCenter.ManagerOrganization
+                            )
+                          "
+                        />
+                      </div>
+                    </ng-template>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </ng-container>
         <div class="row d-sm-none fixed-bottom-mobile">
@@ -1363,7 +1430,11 @@
                   'hide-on-mobile': option.text === 'Side List View'
                 }"
               >
-                <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+                <img
+                  [src]="option.icon"
+                  [alt]="option.text"
+                  class="icon-image"
+                />
               </div>
             </div>
           </div>
@@ -1427,13 +1498,9 @@
 </ng-template>
 
 <ng-template #ShareLink let-modal>
-  <div
-    class="d-flex p-3 m-3 align-items-center shareborder">
+  <div class="d-flex p-3 m-3 align-items-center shareborder">
     <p class="share-link">{{ shareLink }}</p>
-    <i
-      class="fa-solid fa-copy ms-3 total"
-      (click)="copyLink(shareLink)"
-    ></i>
+    <i class="fa-solid fa-copy ms-3 total" (click)="copyLink(shareLink)"></i>
   </div>
 </ng-template>
 
@@ -1626,7 +1693,7 @@
 
     <!-- Feedback Section -->
     <div class="modal-body tiktok-body">
-      <div class="d-flex reactions-div" style="margin-top: 20px;">
+      <div class="d-flex reactions-div" style="margin-top: 20px">
         <p class="text-center mb-3 question">How do you find it?</p>
         <div class="rating-container">
           <div class="rating-option">
@@ -1704,7 +1771,11 @@
 
       <!-- Location Preference Section -->
       <div class="preference-options mb-4">
-        <div class="location-card">
+        <div
+          class="location-card"
+          [class.selected]="selectedCenterId === 1"
+          (click)="selectCenter(1)"
+        >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">
@@ -1714,7 +1785,11 @@
 
         <div class="or-divider">or</div>
 
-        <div class="location-card">
+        <div
+          class="location-card"
+          [class.selected]="selectedCenterId === 2"
+          (click)="selectCenter(2)"
+        >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">

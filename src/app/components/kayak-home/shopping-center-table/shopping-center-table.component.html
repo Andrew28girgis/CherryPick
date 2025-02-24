@@ -52,7 +52,7 @@
           ')'
         "
       >
-        <div class="card-header" (click)="toggleDetails(i,shopping)">
+        <div class="card-header" (click)="toggleDetails(i, shopping)">
           <div class="header-info Res">
             <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
             <p
@@ -79,7 +79,8 @@
                 >
                   <div
                     class="nearestt"
-                    style="color: #fff; padding: 0 !important"
+                    style="color: #fff; padding: 0 !important;    max-width: 60%;
+"
                   >
                     <span>
                       {{ getNeareastCategoryName(item.CategoryId) }}:
@@ -100,9 +101,9 @@
               </div>
             </div>
             <p
-            *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
+              *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
               class="see-more-btn"
-              (click)="toggleDetails(i,shopping); $event.stopPropagation()"
+              (click)="toggleDetails(i, shopping); $event.stopPropagation()"
             >
               {{ showDetails[i] ? "See less" : "See more" }}
             </p>
@@ -136,8 +137,11 @@
             </div>
           </div> -->
         </div>
-        <div class="card-image Res tiktok-imgg" >
-          <div [ngClass]="{ 'image-shadow': showDetails[i] }" style="width: 100%;">
+        <div class="card-image Res tiktok-imgg">
+          <div
+            [ngClass]="{ 'image-shadow': showDetails[i] }"
+            style="width: 100%"
+          >
             <img
               class="Res"
               [src]="
@@ -183,10 +187,6 @@
                     : 0
                 }}
               </span>
-
-              <!-- <span class="reactionMobile">
-                  {{ getPrimaryReaction(shopping) }}
-                </span> -->
             </button>
           </div>
 
@@ -396,6 +396,7 @@
               placeholder="Write a comment..."
               [(ngModel)]="newComments[shopping.MarketSurveyId]"
               (ngModelChange)="trimComment($event, shopping.MarketSurveyId)"
+              (keyup.enter)="addComment(shopping, shopping.MarketSurveyId)"
             />
             <button
               class="post-comment-btn"
@@ -404,7 +405,6 @@
               Comment
             </button>
           </div>
-
           <ul #commentsList class="comment-list">
             <ng-container
               *ngFor="
@@ -413,46 +413,68 @@
                 )
               "
             >
-              <li>
-                <div class="comment-content d-flex justify-content-between">
-                  <p>{{ comment.Comment }}</p>
-                  <p>{{ comment.CommentDate | date }}</p>
-                  <!-- <button
-                          class="reply-btn"
-                          (click)="toggleReply(shopping.MarketSurveyId, comment.id)"
-                        >
-                          Reply
-                        </button> -->
+              <li *ngIf="!comment.ParentCommentId">
+                <div class="comment-content d-flex flex-column">
+                  <div class="justify-content-between d-flex">
+                    <p>{{ comment.Comment }}</p>
+                    <p>{{ comment.CommentDate | date }}</p>
+                  </div>
+                  <button
+                    class="reply-btn d-flex"
+                    style="justify-content: right"
+                    (click)="toggleReply(shopping, comment.Id)"
+                  >
+                    Reply
+                  </button>
                 </div>
 
-                <!-- <div
-                        class="reply-input"
-                        *ngIf="replyingTo[shopping.MarketSurveyId] === comment.id"
+                <div
+                  class="reply-input"
+                  *ngIf="replyingTo[shopping.MarketSurveyId] === comment.Id"
+                >
+                  <input
+                    type="text"
+                    placeholder="Write a reply..."
+                    [(ngModel)]="newReplies[comment.Id]"
+                    (keyup.enter)="
+                      addReply(shopping.MarketSurveyId, comment.Id)
+                    "
+                  />
+                  <button
+                    class="post-reply-btn"
+                    (click)="addReply(shopping.MarketSurveyId, comment.Id)"
+                  >
+                    Reply
+                  </button>
+                </div>
+
+                <ul class="reply-list">
+                  <ng-container
+                    *ngFor="
+                      let reply of sortCommentsByDate(
+                        shopping.ShoppingCenter.Comments
+                      )
+                    "
+                  >
+                    <li *ngIf="reply.ParentCommentId === comment.Id">
+                      <div
+                        class="comment-content reply-content d-flex flex-column"
                       >
-                        <input
-                          type="text"
-                          placeholder="Write a reply..."
-                          [(ngModel)]="newReplies[comment.id]"
-                        />
+                        <div class="justify-content-between d-flex">
+                          <p>{{ reply.Comment }}</p>
+                          <p>{{ reply.CommentDate | date }}</p>
+                        </div>
                         <button
-                          class="post-reply-btn"
-                          (click)="addReply(shopping.MarketSurveyId, comment.id)"
+                          class="reply-btn d-flex"
+                          style="justify-content: right"
+                          (click)="toggleReply(shopping, comment.Id)"
                         >
                           Reply
                         </button>
-                      </div> -->
-
-                <!-- <ul
-                        class="reply-list"
-                        *ngIf="comment.replies && comment.replies.length > 0"
-                      >
-                        <li *ngFor="let reply of comment.replies">
-                          <div class="comment-content">
-                            <strong>{{ reply.user }}</strong>
-                            <p>{{ reply.text }}</p>
-                          </div>
-                        </li>
-                      </ul> -->
+                      </div>
+                    </li>
+                  </ng-container>
+                </ul>
               </li>
             </ng-container>
           </ul>
@@ -1898,7 +1920,7 @@
 
     <!-- Feedback Section -->
     <div class="modal-body tiktok-body">
-      <div class="d-flex reactions-div" style="margin-top: 20px;">
+      <div class="d-flex reactions-div" style="margin-top: 20px">
         <p class="text-center mb-3 question">How do you find it?</p>
         <div class="rating-container">
           <div class="rating-option">
@@ -1976,8 +1998,11 @@
 
       <!-- Location Preference Section -->
       <div class="preference-options mb-4">
-        <div class="location-card"  [class.selected]="selectedCenterId === General.modalObject.Places.Id"
-        (click)="selectCenter(General.modalObject.Places.Id)">
+        <div
+          class="location-card"
+          [class.selected]="selectedCenterId === 1"
+          (click)="selectCenter(1)"
+        >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">
@@ -1987,8 +2012,11 @@
 
         <div class="or-divider">or</div>
 
-        <div class="location-card" [class.selected]="selectedCenterId === General.modalObject.Places.Id"
-        (click)="selectCenter(General.modalObject.Places.Id)">
+        <div
+          class="location-card"
+          [class.selected]="selectedCenterId === 2"
+          (click)="selectCenter(2)"
+        >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">

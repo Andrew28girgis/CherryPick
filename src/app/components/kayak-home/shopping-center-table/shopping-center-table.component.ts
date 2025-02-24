@@ -982,36 +982,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     return categories[0]?.name;
   }
 
-  formatNumberWithCommas(value: number | null): string {
-    if (value !== null) {
-      return value?.toLocaleString();
-    } else {
-      return '';
-    }
-  }
-
-  setDefaultView(viewValue: number) {
-    this.selectedSS = viewValue;
-    this.stateService.setSelectedSS(viewValue);
-  }
-
-  react(shopping: any, reactionType: string): void {
-    this.reactions[shopping.Id] = reactionType;
-    this.showReactions[shopping.Id] = false;
-  }
-
-  getReaction(shopping: any): string {
-    return this.reactions[shopping.Id] || '';
-  }
-
-  getTotalReactions(shopping: any): number {
-    return this.reactions[shopping.Id] ? 1 : 0;
-  }
-
-  getPrimaryReaction(shopping: any): string {
-    return this.reactions[shopping.Id] || 'Like';
-  }
-
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
@@ -1059,37 +1029,49 @@ export class ShoppingCenterTableComponent implements OnInit {
     });
   }
 
-  addReply(marketSurveyId: number, parentCommentId: number): void {
-    if (this.newReplies[parentCommentId]) {
-      const body = {
-        Name: 'CreateComment',
-        Params: {
-          MarketSurveyId: marketSurveyId,
-          Comment: this.newReplies[parentCommentId],
-          ParentCommentId: parentCommentId,
-        },
-      };
-      console.log(body),
-        this.PlacesService.GenericAPI(body).subscribe({
-          next: (response: any) => {
-            const newReply: Comment = {
-              id: response.id,
-              text: this.newReplies[parentCommentId],
-              user: 'Current User',
-              parentId: parentCommentId,
-              replies: [],
-              MarketSurveyId: marketSurveyId,
-            };
-            this.newReplies[parentCommentId] = '';
-            this.replyingTo[marketSurveyId] = null;
-
-            this.getMarketSurveyShoppingCenter();
-          },
-          error: (error: any) => {
-            console.error('Error adding reply:', error);
-          },
-        });
+  addReply(marketSurveyId: number, commentId: number): void {
+    if (!this.newReplies[commentId]?.trim()) {
+      console.error('Reply text is empty');
+      return;
     }
+  
+    // Store reply text and clear input immediately
+    const replyText = this.newReplies[commentId];
+    this.newReplies[commentId] = '';
+  
+    const body = {
+      Name: 'CreateComment',
+      Params: {
+        MarketSurveyId: marketSurveyId,
+        Comment: replyText,
+        ParentCommentId: commentId
+      }
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        // Reset the replying state
+        this.replyingTo[marketSurveyId] = null;
+  
+        // Find the shopping center and update its comments
+        const shoppingCenter = this.shoppingCenters.find(sc => sc.MarketSurveyId === marketSurveyId);
+        if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
+          shoppingCenter.ShoppingCenter.Comments.push({
+            Comment: replyText,
+            CommentDate: new Date().toISOString(),
+            ParentCommentId: commentId
+          });
+  
+          // Sort the comments
+          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(shoppingCenter.ShoppingCenter.Comments);
+        }
+      },
+      error: (error: any) => {
+        console.error('Error adding reply:', error);
+        // Restore the reply text if API call fails
+        this.newReplies[commentId] = replyText;
+      }
+    });
   }
 
   openAddContactModal(content: any): void {
@@ -1171,23 +1153,21 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   toggleReply(shopping: any, commentId: number): void {
-    this.replyingTo[shopping.Id] =
-      this.replyingTo[shopping.Id] === commentId ? null : commentId;
-
+    if (!this.replyingTo[shopping.MarketSurveyId]) {
+      this.replyingTo[shopping.MarketSurveyId] = null;
     }
-  closeComments(shopping: any): void {
-    this.showComments[shopping.Id] = false;
+    
+    this.replyingTo[shopping.MarketSurveyId] = 
+      this.replyingTo[shopping.MarketSurveyId] === commentId ? null : commentId;
   }
+
   sortCommentsByDate(comments: any[]): any[] {
     return comments?.sort(
       (a, b) =>
         new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
     );
   }
-  selectTab(tabId: string): void {
-    this.selectedTab = tabId;
-    this.activeComponent = tabId;
-  }
+
   toggleMenu() {
     this.isOpen = !this.isOpen;
   }
@@ -1331,8 +1311,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   open(content: any, modalObject?: any) {
-    this.modalService.open(content,{
-      windowClass: 'custom-modal'
+    this.modalService.open(content, {
+      windowClass: 'custom-modal',
     });
     this.General.modalObject = modalObject;
   }
@@ -1357,13 +1337,14 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-  toggleDetails(index: number,shopping:any): void {
-    if(shopping.ShoppingCenter?.BuyBoxPlaces){
-    this.showDetails[index] = !this.showDetails[index];
-  }
+  toggleDetails(index: number, shopping: any): void {
+    if (shopping.ShoppingCenter?.BuyBoxPlaces) {
+      this.showDetails[index] = !this.showDetails[index];
+    }
   }
 
   selectCenter(centerId: number): void {
+    console.log(centerId);
     this.selectedCenterId = centerId;
   }
 }
