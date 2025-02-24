@@ -233,9 +233,8 @@
 .w250 {
   width: 250px;
 }
-.total {
-  cursor: pointer;
-}
+
+
 .gap16 {
   gap: 16px;
 }
@@ -973,7 +972,7 @@
   .header-info .center-address,
   .header-info .center-location {
     color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); */
     font-size: 14px;
     margin: 0;
     opacity: 0.9;
@@ -1290,7 +1289,7 @@
   .header-info .center-address,
   .header-info .center-location {
     color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); */
     font-size: 12px;
     margin: 0;
     opacity: 0.9;
@@ -1627,9 +1626,7 @@ scroll-container {
   bottom: 0% !important ;
   top: auto !important;
 }
-.total {
-  cursor: pointer;
-}
+
 .big-text {
   font-size: 18px;
   margin-top: 3px;
@@ -2148,4 +2145,8 @@ textarea.form-control {
 
 .or-divider::after {
   margin-left: 15px;
+}
+.location-card.selected {
+  border: 4px solid var(--Colors-Primary-500, #001f3f);
+  background: var(--Colors-Primary-50, #e6e9ec);
 }
