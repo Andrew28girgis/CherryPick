@@ -5,7 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
 import { AuthGuardService } from './services/auth-guard.service';
- import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
+import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KayakComponent } from './components/kayak-home/kayak/kayak.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
@@ -18,8 +18,7 @@ import { PropertiesgridviewComponentComponent } from './components/kanban/proper
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
 import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
 import { TermsComponent } from './components/terms/terms.component';
-import { ManagePropertiesComponent } from './components/kayak-home/manage-properties/manage-properties.component';
-
+import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -38,7 +37,10 @@ const routes: Routes = [
     component: HomeComponent,
     // canActivate: [AuthGuardService],
   },
-  { path: 'landing/:id/:shoppiongCenterId/:buyboxid', component: LandingComponent }, 
+  {
+    path: 'landing/:id/:shoppiongCenterId/:buyboxid',
+    component: LandingComponent,
+  },
   { path: 'CherryPickExpansion', component: CherryExpansionComponent },
   {
     path: 'Kanban',
@@ -55,12 +57,12 @@ const routes: Routes = [
     component: StakeHolderComponent,
     canActivate: [AuthGuardService],
   },
-  
+
   {
     path: 'tasks',
     component: TasksComponent,
     canActivate: [AuthGuardService],
-  }, 
+  },
   {
     path: 'Sources',
     component: SourcesComponent,
@@ -88,27 +90,24 @@ const routes: Routes = [
   },
   {
     path: 'tos',
-    component: TermsComponent, 
+    component: TermsComponent,
   },
-
 
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName',
-    loadChildren: () => import('./components/kayak-home/kayak.module').then(m => m.KayakModule), 
+    loadChildren: () =>
+      import('./components/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService],
   },
-  
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      scrollPositionRestoration: 'enabled' ,
+      scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',
-    })
-  ],  exports: [RouterModule],
+    }),
+  ],
+  exports: [RouterModule],
 })
-
 export class AppRoutingModule {}
-
-
