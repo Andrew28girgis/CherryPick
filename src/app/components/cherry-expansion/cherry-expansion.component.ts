@@ -36,6 +36,7 @@ export class CherryExpansionComponent {
     private configService: ConfigService,
     private route: ActivatedRoute
   ) {}
+  
   ngOnInit(): void {
     this.GetBrokerCategories();
     this.GetOrganizationss();
@@ -58,7 +59,5 @@ export class CherryExpansionComponent {
     this.Brokerorganizations = this.BrokerData.filter(
       (b) => b.categoryId === categoryId
     )[0].organizations;
-
-    console.log(this.Brokerorganizations);
   }
 }

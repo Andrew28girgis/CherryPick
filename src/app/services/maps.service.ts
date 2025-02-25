@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
-import {
-  GoogleMap,
-  GoogleMapsOptions,
-  GoogleMapsLatLng,
-  GoogleMapsMarker,
-} from '../../models/google-maps.types';
 declare const google: any;
 import { Router } from '@angular/router';
 import { permission } from 'src/models/permission';
