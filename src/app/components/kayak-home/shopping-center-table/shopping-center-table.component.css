@@ -251,7 +251,7 @@ img[alt="logo"] {
 }
 
 .table-text {
-  color: var(--Table-Info-Cell-Color, #7a8591);
+  color: #7a8591;
   font-family: Montserrat;
   font-size: 1rem;
   font-style: normal;
@@ -260,7 +260,7 @@ img[alt="logo"] {
 }
 
 .table-texttt {
-  color: var(--Table-Info-Cell-Color, #7a8591);
+  color: #7a8591;
   font-family: Montserrat;
   font-size: 0.8rem;
   font-style: normal;
@@ -367,7 +367,7 @@ img[alt="logo"] {
 }
 
 .center-name {
-  color: var(--Colors-Pure-White, #fff);
+  color: #fff;
 
   /* Body/16/30/SemiBold */
   font-family: Montserrat;
@@ -687,7 +687,7 @@ img[alt="logo"] {
 
 @media (max-width: 480px) {
   .center-name {
-    color: var(--Colors-Pure-White, #fff);
+    color:#fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -773,7 +773,7 @@ img[alt="logo"] {
   }
 
   .header-info .center-name {
-    color: var(--Colors-Pure-White, #fff);
+    color:  #fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -948,7 +948,7 @@ img[alt="logo"] {
   }
 
   .center-name {
-    color: var(--Colors-Pure-White, #fff);
+    color:  #fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -1093,7 +1093,7 @@ img[alt="logo"] {
   }
 
   .header-info .center-name {
-    color: var(--Colors-Pure-White, #fff);
+    color:  #fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -1258,13 +1258,13 @@ img[alt="logo"] {
 
 .share {
   display: flex;
-  padding: 0px var(--Space-Space-4, 4px);
+  padding:  4px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border-radius: var(--Radius-Radius-12, 12px);
-  background: var(--Card-Section-BG, #fff);
-  color: var(--Colors-Primary-500, #001f3f);
+  border-radius:  12px;
+  background: #fff;
+  color:  #001f3f;
   text-align: center;
 
   /* Body/12/20/Regular */
@@ -1438,7 +1438,7 @@ scroll-container {
 .shortcutcard {
   background: #fff;
   border-radius: 20px;
-  color: var(--Colors-Primary-500, #001f3f);
+  color: #001f3f;
 }
 .iconic-card {
   bottom: 0% !important ;
@@ -1476,7 +1476,7 @@ scroll-container {
 }
 
 .center-name {
-  color: var(--Colors-Pure-White, #fff);
+  color:  #fff;
 
   /* Body/16/30/SemiBold */
   font-family: Montserrat;
@@ -1549,11 +1549,11 @@ scroll-container {
 .location-image {
   width: 80px;
   height: 80px;
-  border-radius: var(--Radius-Radius-12, 12px);
+  border-radius:  12px;
 }
 
 .location-address {
-  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  color:  #7a8591;
 
   /* Body/16/30/Regular */
   font-family: Montserrat;
@@ -1563,7 +1563,7 @@ scroll-container {
   line-height: 30px; /* 187.5% */
 }
 .modal-title {
-  color: var(--Body-Heading-Color, #0c0d0e);
+  color:  #0c0d0e;
 
   /* Body/16/30/SemiBold */
   font-family: Montserrat;
@@ -1576,7 +1576,7 @@ scroll-container {
   gap: 12px;
 }
 .question {
-  color: var(--Body-Heading-Color, #0c0d0e);
+  color: #0c0d0e;
   text-align: center;
 
   /* Body/16/30/SemiBold */
@@ -1614,18 +1614,18 @@ textarea.form-control {
   align-content: center;
   align-self: stretch;
   flex-wrap: wrap;
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius:  16px;
   background: #fff;
   display: flex;
-  padding: var(--Space-Space-12, 12px) var(--Space-Space-16, 16px);
+  padding:  12px  16px;
   flex-direction: column;
   align-items: center;
-  gap: var(--Space-Space-8, 8px);
+  gap:  8px;
   margin-bottom: 20px;
 }
 
 .reactions-caption {
-  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  color: #7a8591;
   text-align: center;
   justify-content: center;
   display: flex;
@@ -1652,8 +1652,8 @@ textarea.form-control {
   align-items: center;
   gap: 10px;
   align-self: stretch;
-  border-radius: var(--Radius-Radius-12, 12px);
-  border: 1px solid var(--Body-General-Body-Border, #caced3);
+  border-radius:  12px;
+  border: 1px solid  #caced3;
   background: #fff;
 }
 
@@ -1662,7 +1662,7 @@ textarea.form-control {
 }
 
 .location-card h4 {
-  color: var(--Body-Heading-Color, #0c0d0e);
+  color:  #0c0d0e;
   text-align: center;
 
   /* Body/16/30/SemiBold */
@@ -1675,7 +1675,7 @@ textarea.form-control {
 
 .location-card .address,
 .location-card .city {
-  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+  color: #7a8591;
   text-align: center;
 
   /* Body/16/30/Regular */
@@ -1719,7 +1719,7 @@ textarea.form-control {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius: 16px;
   background: #fff;
 }
 
@@ -1808,12 +1808,12 @@ textarea.form-control {
   box-shadow: none !important;
 }
 .tiktok-header {
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius:  16px;
   background: #fff;
   display: flex;
-  padding: var(--Space-Space-12, 12px) var(--Space-Space-16, 16px);
+  padding: 12px  16px;
   align-items: center;
-  gap: var(--Space-Space-12, 12px);
+  gap:  12px;
   align-self: stretch;
 }
 
@@ -1823,12 +1823,12 @@ textarea.form-control {
 
 .preference-options {
   background-color: #fff;
-  border-radius: var(--Radius-Radius-16, 16px);
+  border-radius: 16px;
   background: #fff;
   display: flex;
-  padding: var(--Space-Space-16, 16px);
+  padding:  16px;
   flex-direction: column;
-  gap: var(--Space-Space-20, 20px);
+  gap:  20px;
   align-self: stretch;
 }
 .or-divider {
@@ -1855,8 +1855,8 @@ textarea.form-control {
   margin-left: 15px;
 }
 .location-card.selected {
-  border: 4px solid var(--Colors-Primary-500, #001f3f);
-  background: var(--Colors-Primary-50, #e6e9ec);
+  border: 4px  #001f3f;
+  background:#e6e9ec;
 }
 
 .reply-content {
