@@ -1160,25 +1160,13 @@ export class ShoppingCenterTableComponent implements OnInit {
     );
   }
 
-  toggleMenu() {
-    this.isOpen = !this.isOpen;
-  }
-
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
   openGallery(shpping: number) {
     this.GetPlaceDetails(0, shpping);
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
 
-  fetchImages(shoppingCenter: any) {
-    if (shoppingCenter && shoppingCenter.Images) {
-      this.placeImage = shoppingCenter.Images.split(',').map((link: string) =>
-        link.trim()
-      );
-    } else {
-      this.placeImage = [];
-    }
-  }
+ 
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     const body: any = {
       Name: 'GetShoppingCenterDetails',
