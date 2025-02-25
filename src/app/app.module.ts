@@ -53,6 +53,7 @@ import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
 import { MsalModule, MsalService, MsalGuard, MsalBroadcastService } from '@azure/msal-angular';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { ManagePropertiesComponent } from './components/kayak-home/manage-properties/manage-properties.component';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 const msalConfig = {
   auth: {
@@ -123,6 +124,7 @@ const loginRequest = {
     KayakModule,
     SharedModule,
     ScrollingModule,
+    NgxFileDropModule,
     MsalModule.forRoot(
       new PublicClientApplication(msalConfig),
       {

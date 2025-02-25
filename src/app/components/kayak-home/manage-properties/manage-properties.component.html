@@ -6,7 +6,12 @@
   <div class="p-0" style="width: 95%">
     <div class="background">
       <div class="container-fluid">
-        <h3 class="my-prop">My Properties</h3>
+          <div class="pt-3 d-flex justify-content-between">
+            <h3 class="my-prop">My Properties</h3>
+          <button class="upload" (click)="openUploadModal()">
+            Upload PDF
+          </button>
+        </div>
         <table class="procpect-table">
           <thead class="t-head">
             <tr class="padd-20">
@@ -14,18 +19,17 @@
               <th>Name</th>
               <th>Address</th>
               <th>ZipCode</th>
-              <!-- <th>Main Image</th> -->
             </tr>
           </thead>
           <tbody class="procpect-table-body">
             <tr *ngFor="let property of properties">
               <td>{{ property.id }}</td>
               <td>{{ property.centerName }}</td>
-              <td>{{ property.centerAddress }}, {{ property.centerCity }}, {{ property.centerState }}</td>
+              <td>
+                {{ property.centerAddress }}, {{ property.centerCity }},
+                {{ property.centerState }}
+              </td>
               <td>{{ property.zipCode }}</td>
-              <!-- <td>
-                <img class="mainImg" src="{{ property.mainImage }}" alt="" />
-              </td> -->
             </tr>
           </tbody>
         </table>
@@ -33,3 +37,56 @@
     </div>
   </div>
 </section>
+
+<ng-template #uploadPDF let-modal>
+  <div class="d-flex justify-content-between align-items-center view-act">
+    <h4 class="mb-0">Upload PDF file</h4>
+    <button type="button" class="close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-12 mr-1">
+      <div style="width: 100%">
+        <h1 class="modal-header mb-0" *ngIf="!fileName">
+          Import PDF File
+        </h1>
+        <h1
+          class="modal-header head mb-0"
+          *ngIf="fileName"
+          style="justify-content: start"
+        >
+          {{ fileName }} Uploaded!
+        </h1>
+      </div>
+      <div class="col-md-12 p-0">
+        <ngx-file-drop
+          dropZoneLabel="Drop files here"
+          (onFileDrop)="uploadFile($event)"
+          [dropZoneClassName]="'upload-background-image'"
+        >
+          <ng-template
+            ngx-file-drop-content-tmp
+            let-openFileSelector="openFileSelector"
+          >
+            <b>
+              <span class="text-dark drop-sty mx-2"> Drop File Here </span>
+            </b>
+            <button
+              type="button"
+              class="btn btn-success ml-2 secondary-color"
+              (click)="openFileSelector()"
+            >
+              Browse Files
+            </button>
+          </ng-template>
+        </ngx-file-drop>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="closeModal(modal)">
+      Cancel
+    </button>
+  </div>
+</ng-template>

@@ -1,32 +1,61 @@
-.t-head{
-    border-radius: 20px;
-    padding: 10px;
-    background-color: #E4E7E9;
-    font-size: 16px;
-    font-weight: 500;
-    color: #0d0c0c;
+.t-head {
+  border-radius: 20px;
+  padding: 10px;
+  background-color: #e4e7e9;
+  font-size: 16px;
+  font-weight: 500;
+  color: #0d0c0c;
 }
-.padd-20 th{
-    padding: 20px;
+.padd-20 th {
+  padding: 20px;
 }
-.padd-20 th:first-child{
-    border-top-left-radius: 12px;
+.padd-20 th:first-child {
+  border-top-left-radius: 12px;
 }
-.padd-20 th:last-child{
-    border-top-right-radius: 12px;
+.padd-20 th:last-child {
+  border-top-right-radius: 12px;
 }
 
 .background {
-    background-color: #ffffff;
-  }
-.mainImg{
-    width: 100px;
-    height: 100px;
-    margin: 0 10px;
+  background-color: #ffffff;
 }
-.my-prop{
-    padding-top: 10px;
-    padding-left: 20px;
-    font-size: 24px;
-    font-weight: 500;
+.my-prop {
+  padding-left: 20px;
+  font-size: 24px;
+  font-weight: 500;
+}
+.upload {
+  width: auto;
+  min-width: 110px;
+  border-radius: 10px;
+  background: #001f3f;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  border: 0;
+  padding: 4px 16px;
+  white-space: nowrap;
+}
+.view-act {
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 20px;
+}
+.view-act h4 {
+  font-weight: 700;
+  font-size: 20px;
+  color: #001f3f;
+}
+.close {
+  background-color: white;
+  border: none;
+}
+.modal-header {
+  padding: 20px;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  background: #e4e7e9;
 }
