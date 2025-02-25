@@ -18,12 +18,14 @@ import { PropertiesgridviewComponentComponent } from './components/kanban/proper
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
 import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
 import { TermsComponent } from './components/terms/terms.component';
+import { ManagePropertiesComponent } from './components/kayak-home/manage-properties/manage-properties.component';
 
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'summary', component: SummeryComponent },
+  { path: 'manage-properties', component: ManagePropertiesComponent },
   { path: 'summary/:orgId', component: SummeryComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
   {
