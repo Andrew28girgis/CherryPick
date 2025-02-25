@@ -62,6 +62,7 @@ export interface Center {
     LastName :string
     CellPhone : number
     Email: string
+    ContactId: number
   }
   
   export interface Place {

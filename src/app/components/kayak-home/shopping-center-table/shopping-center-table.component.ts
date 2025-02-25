@@ -25,7 +25,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center, Place } from 'src/models/shoppingCenters';
+import { Center, Place, Reaction } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Polygons } from 'src/models/polygons';
@@ -988,12 +988,10 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addComment(shopping: Center, marketSurveyId: number): void {
-    // Early return if comment is empty
     if (!this.newComments[marketSurveyId]?.trim()) {
       return;
     }
 
-    // Store comment text and clear input immediately to prevent double submission
     const commentText = this.newComments[marketSurveyId];
     this.newComments[marketSurveyId] = '';
 
@@ -1022,7 +1020,6 @@ export class ShoppingCenterTableComponent implements OnInit {
         );
       },
       error: (error) => {
-        // Restore the comment text if API call fails
         this.newComments[marketSurveyId] = commentText;
         console.error('Error adding comment:', error);
       },
@@ -1035,7 +1032,6 @@ export class ShoppingCenterTableComponent implements OnInit {
       return;
     }
   
-    // Store reply text and clear input immediately
     const replyText = this.newReplies[commentId];
     this.newReplies[commentId] = '';
   
@@ -1050,10 +1046,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        // Reset the replying state
         this.replyingTo[marketSurveyId] = null;
   
-        // Find the shopping center and update its comments
         const shoppingCenter = this.shoppingCenters.find(sc => sc.MarketSurveyId === marketSurveyId);
         if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
           shoppingCenter.ShoppingCenter.Comments.push({
@@ -1062,13 +1056,11 @@ export class ShoppingCenterTableComponent implements OnInit {
             ParentCommentId: commentId
           });
   
-          // Sort the comments
           shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(shoppingCenter.ShoppingCenter.Comments);
         }
       },
       error: (error: any) => {
         console.error('Error adding reply:', error);
-        // Restore the reply text if API call fails
         this.newReplies[commentId] = replyText;
       }
     });
@@ -1232,7 +1224,6 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   ngAfterViewInit(): void {
     const events = ['click', 'wheel', 'touchstart'];
-    // Listen for clicks anywhere in the document
     this.globalClickListener = events.map((eventType) =>
       this.renderer.listen('document', eventType, (event: Event) => {
         const target = event.target as HTMLElement;
@@ -1244,7 +1235,7 @@ export class ShoppingCenterTableComponent implements OnInit {
           target.classList.contains('like-button') ||
           target.classList.contains('photo');
         if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
-          return; // Do NOT close if clicking inside the comment box, input field, or like/photo
+          return; 
         }
         this.hideAllComments();
       })
@@ -1253,7 +1244,6 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   trimComment(value: string, marketSurveyId: number): void {
     if (value) {
-      // Only update if the trimmed value is different from empty string
       this.newComments[marketSurveyId] = value.trimLeft();
     } else {
       this.newComments[marketSurveyId] = '';
@@ -1261,6 +1251,18 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
+    
+    const contactIdStr = localStorage.getItem('contactId');
+    if (!contactIdStr) {
+      return;
+    }
+    const contactId = parseInt(contactIdStr, 10);
+    
+    if (shopping.ShoppingCenter.Reactions && shopping.ShoppingCenter.Reactions.some(
+          (reaction: Reaction) => reaction.ContactId === contactId)) {
+      return;
+    }
+    
     if (this.isLikeInProgress) {
       return;
     }
@@ -1268,7 +1270,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
 
-    // Optimistic update
     if (!shopping.ShoppingCenter.Reactions) {
       shopping.ShoppingCenter.Reactions = [];
     }
@@ -1282,7 +1283,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     //   delete this.likedShoppings[shopping.MarketSurveyId];
     // }
 
-    // Trigger change detection
     this.cdr.detectChanges();
 
     const body = {
@@ -1295,7 +1295,6 @@ export class ShoppingCenterTableComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        // API call successful, no need to update UI again
       },
       error: (error) => {
         if (!isLiked) {
@@ -1334,12 +1333,10 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
     if (this.clickTimeout) {
-      // Second click detected: cancel single-click action and execute double-click action.
       clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
       this.addLike(shopping, 1);
     } else {
-      // First click: set a timer. If no second click occurs within 250ms, execute single-click action.
       this.clickTimeout = setTimeout(() => {
         const nextShopping = this.getNextShopping(index);
         this.open(likeTpl, shopping, nextShopping);
