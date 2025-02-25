@@ -975,15 +975,6 @@ export class HomeComponent implements OnInit {
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
 
-  fetchImages(shoppingCenter: any) {
-    if (shoppingCenter && shoppingCenter.Images) {
-      this.placeImage = shoppingCenter.Images.split(',').map((link: string) =>
-        link.trim()
-      );
-    } else {
-      this.placeImage = [];
-    }
-  }
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     const body: any = {
       Name: 'GetShoppingCenterDetails',
