@@ -26,14 +26,7 @@ import { StateService } from '../../../../src/app/services/state.service';
 import { permission } from '../../../../src/models/permission';
 import { LandingPlace } from 'src/models/landingPlace';
 
-interface Comment {
-  id: number;
-  text: string;
-  user: string;
-  parentId: number | null;
-  replies: Comment[];
-  MarketSurveyId: number;
-}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -49,7 +42,7 @@ export class HomeComponent implements OnInit {
       text: 'Map',
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
-    }, // Add your SVG paths here
+    }, 
     {
       text: 'Side List',
       icon: '../../../assets/Images/Icons/element-3.png',
@@ -81,7 +74,6 @@ export class HomeComponent implements OnInit {
   shoppingCenters: Center[] = [];
   navbarOpen: any;
   OrganizationContacts: any[] = [];
-  contactModal: any;
   newContact: any = {
     firstName: '',
     lastName: '',
@@ -98,34 +90,24 @@ export class HomeComponent implements OnInit {
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   StreetViewOnePlace!: boolean;
   sanitizedUrl!: any;
-  activeComponent: string = 'Properties';
-  selectedTab: string = 'Properties';
-  ShoppingCenterId!: number;
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  likedShoppings: { [key: number]: boolean } = {}; // Track liked state by MarketSurveyId
+  likedShoppings: { [key: number]: boolean } = {}; 
   isLikeInProgress = false;
-  showMore: boolean[] = []; // Track the expanded state for each card
   selectedRating: string | null = null;
   clickTimeout: any;
   showDetails: boolean[] = [];
   selectedCenterId: number | null = null;
-  reactions: { [key: number]: string } = {};
-  showReactions: { [key: number]: boolean } = {};
   replyingTo: { [key: number]: number | null } = {};
-  reactionTimers: { [key: number]: any } = {};
   newComments: { [key: number]: string } = {};
   newReplies: { [key: number]: string } = {};
-  Comments: { [key: number]: string } = {};
-  comments: { [key: number]: Comment[] } = {};
-  likes: { [key: string]: number } = {};
   showComments: { [key: number]: boolean } = {};
   globalClickListener!: (() => void)[];
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
-  showbackIds: number[] = [];
+  currentIndex = -1;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -1157,7 +1139,24 @@ export class HomeComponent implements OnInit {
 
   selectCenter(centerId: number): void {
     console.log(centerId);
+
     this.selectedCenterId = centerId;
+
+    const selectedIndex = this.shoppingCenters.findIndex(
+      (center) => center.Id === centerId
+    );
+
+    if (selectedIndex !== -1) {
+      this.General.modalObject = this.shoppingCenters[selectedIndex];
+
+      this.currentIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+
+      let nextIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+      while (nextIndex === selectedIndex) {
+        nextIndex = (nextIndex + 1) % this.shoppingCenters.length;
+      }
+      this.General.nextModalObject = this.shoppingCenters[nextIndex];
+    }
   }
 
   hideAllComments(): void {

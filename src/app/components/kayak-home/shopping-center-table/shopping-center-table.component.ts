@@ -7,7 +7,6 @@ import {
   TemplateRef,
   Output,
   EventEmitter,
-  HostListener,
   Renderer2,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -15,10 +14,7 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from './../../../../../src/app/services/places.service';
 import {
-  AllPlaces,
-  type AnotherPlaces,
-  General,
-  type Property,
+  General
 } from './../../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -28,25 +24,13 @@ import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place, Reaction } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Polygons } from 'src/models/polygons';
 import { ShareOrg } from 'src/models/shareOrg';
 import { StateService } from 'src/app/services/state.service';
-import { permission } from 'src/models/permission';
 import {
-  BuyBoxCityState,
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
 import { LandingPlace } from 'src/models/landingPlace';
-import { Carousel } from 'primeng/carousel';
 
-interface Comment {
-  id: number;
-  text: string;
-  user: string;
-  parentId: number | null;
-  replies: Comment[];
-  MarketSurveyId: number;
-}
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -58,15 +42,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   globalClickListener!: (() => void)[];
   shoppingCenter: any;
-  selectedView = 'shoppingCenters';
   General!: General;
-  pageTitle!: string;
   BuyBoxId!: any;
   OrgId!: any;
-  page = 1;
-  pageSize = 25;
-  paginatedProperties: Property[] = [];
-  filteredProperties: Property[] = [];
   dropdowmOptions: any = [
     {
       text: 'Map View',
@@ -96,28 +74,17 @@ export class ShoppingCenterTableComponent implements OnInit {
     },
   ];
   isOpen = false;
-  allPlaces!: AllPlaces;
-  anotherPlaces!: AnotherPlaces;
   currentView: any;
-  centerPoints: any[] = [];
   map: any;
-  isCompetitorChecked = false;
-  isCoTenantChecked = false;
   cardsSideList: any[] = [];
   selectedOption!: number;
-  selectedSS!: any;
   savedMapView: any;
   mapViewOnePlacex = false;
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
-  MarketSurveyId: Center[] = [];
-  BuyBoxCitiesStates!: BuyBoxCityState[];
-  StateCodes: string[] = [];
-  filteredCities: string[] = [];
   selectedState = '0';
   selectedCity = '';
-  filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
   BuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
   @ViewChild('deleteShoppingCenterModal')
   deleteShoppingCenterModal!: TemplateRef<any>;
@@ -125,18 +92,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('cardContainer') cardContainer!: ElementRef;
   @ViewChild('shortcutsContainer') shortcutsContainer!: ElementRef;
 
-  lastTap = 0;
-  showToast = false;
-  toastMessage = '';
-  reactions: { [key: number]: string } = {};
-  showReactions: { [key: number]: boolean } = {};
   replyingTo: { [key: number]: number | null } = {};
-  reactionTimers: { [key: number]: any } = {};
   newComments: { [key: number]: string } = {};
   newReplies: { [key: number]: string } = {};
-  Comments: { [key: number]: string } = {};
-  comments: { [key: number]: Comment[] } = {};
-  likes: { [key: string]: number } = {};
   showComments: { [key: number]: boolean } = {};
   OrganizationContacts: any[] = [];
   newContact: any = {
@@ -148,31 +106,27 @@ export class ShoppingCenterTableComponent implements OnInit {
   showbackIds: number[] = [];
   showbackIdsJoin: any;
   buyboxPlaces: BbPlace[] = [];
-  Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
   shareLink: any;
   BuyBoxName = '';
-  Permission: permission[] = [];
   placesRepresentative: boolean | undefined;
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   showStandalone = true;
   standAlone: Place[] = [];
   sanitizedUrl!: any;
-  responsiveOptions: any[];
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
-  ShoppingCenterId!: number;
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  likedShoppings: { [key: number]: boolean } = {}; // Track liked state by MarketSurveyId
+  likedShoppings: { [key: number]: boolean } = {};
   isLikeInProgress = false;
-  showMore: boolean[] = []; // Track the expanded state for each card
   selectedRating: string | null = null;
   clickTimeout: any;
   showDetails: boolean[] = [];
   selectedCenterId: number | null = null;
+  currentIndex = -1;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -190,26 +144,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.currentView = localStorage.getItem('currentViewDashBord') || '4';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
-    this.responsiveOptions = [
-      // {
-      //   breakpoint: '1024px',
-      //   numVisible: 1,
-      //   numScroll: 1,
-      //   effect: 'fade',
-      // },
-      // {
-      //   breakpoint: '768px',
-      //   numVisible: 1,
-      //   numScroll: 1,
-      //   effect: 'fade',
-      // },
-      // {
-      //   breakpoint: '560px',
-      //   numVisible: 1,
-      //   numScroll: 1,
-      //   effect: 'fade',
-      // },
-    ];
+
   }
   tabs = [
     { id: 'Properties', label: 'Properties' },
@@ -1031,38 +966,42 @@ export class ShoppingCenterTableComponent implements OnInit {
       console.error('Reply text is empty');
       return;
     }
-  
+
     const replyText = this.newReplies[commentId];
     this.newReplies[commentId] = '';
-  
+
     const body = {
       Name: 'CreateComment',
       Params: {
         MarketSurveyId: marketSurveyId,
         Comment: replyText,
-        ParentCommentId: commentId
-      }
+        ParentCommentId: commentId,
+      },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
         this.replyingTo[marketSurveyId] = null;
-  
-        const shoppingCenter = this.shoppingCenters.find(sc => sc.MarketSurveyId === marketSurveyId);
+
+        const shoppingCenter = this.shoppingCenters.find(
+          (sc) => sc.MarketSurveyId === marketSurveyId
+        );
         if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
           shoppingCenter.ShoppingCenter.Comments.push({
             Comment: replyText,
             CommentDate: new Date().toISOString(),
-            ParentCommentId: commentId
+            ParentCommentId: commentId,
           });
-  
-          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(shoppingCenter.ShoppingCenter.Comments);
+
+          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(
+            shoppingCenter.ShoppingCenter.Comments
+          );
         }
       },
       error: (error: any) => {
         console.error('Error adding reply:', error);
         this.newReplies[commentId] = replyText;
-      }
+      },
     });
   }
 
@@ -1148,8 +1087,8 @@ export class ShoppingCenterTableComponent implements OnInit {
     if (!this.replyingTo[shopping.MarketSurveyId]) {
       this.replyingTo[shopping.MarketSurveyId] = null;
     }
-    
-    this.replyingTo[shopping.MarketSurveyId] = 
+
+    this.replyingTo[shopping.MarketSurveyId] =
       this.replyingTo[shopping.MarketSurveyId] === commentId ? null : commentId;
   }
 
@@ -1166,7 +1105,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
 
- 
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     const body: any = {
       Name: 'GetShoppingCenterDetails',
@@ -1223,7 +1161,7 @@ export class ShoppingCenterTableComponent implements OnInit {
           target.classList.contains('like-button') ||
           target.classList.contains('photo');
         if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
-          return; 
+          return;
         }
         this.hideAllComments();
       })
@@ -1239,18 +1177,21 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
-    
     const contactIdStr = localStorage.getItem('contactId');
     if (!contactIdStr) {
       return;
     }
     const contactId = parseInt(contactIdStr, 10);
-    
-    if (shopping.ShoppingCenter.Reactions && shopping.ShoppingCenter.Reactions.some(
-          (reaction: Reaction) => reaction.ContactId === contactId)) {
+
+    if (
+      shopping.ShoppingCenter.Reactions &&
+      shopping.ShoppingCenter.Reactions.some(
+        (reaction: Reaction) => reaction.ContactId === contactId
+      )
+    ) {
       return;
     }
-    
+
     if (this.isLikeInProgress) {
       return;
     }
@@ -1261,11 +1202,11 @@ export class ShoppingCenterTableComponent implements OnInit {
     if (!shopping.ShoppingCenter.Reactions) {
       shopping.ShoppingCenter.Reactions = [];
     }
-    
+
     if (!isLiked) {
       shopping.ShoppingCenter.Reactions.length++;
       this.likedShoppings[shopping.MarketSurveyId] = true;
-    } 
+    }
     // else {
     //   shopping.ShoppingCenter.Reactions.length--;
     //   delete this.likedShoppings[shopping.MarketSurveyId];
@@ -1282,8 +1223,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-      },
+      next: (response: any) => {},
       error: (error) => {
         if (!isLiked) {
           // shopping.ShoppingCenter.Reactions.length--;
@@ -1301,7 +1241,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     });
   }
 
-
   isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
@@ -1311,7 +1250,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       windowClass: 'custom-modal',
     });
     this.General.modalObject = currentShopping;
-    this.General.nextModalObject = nextShopping;    
+    this.General.nextModalObject = nextShopping;
   }
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
@@ -1346,10 +1285,25 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-  selectCenter(centerId: number): void {
-    console.log(centerId);
-    this.selectedCenterId = centerId;
-  }
+    selectCenter(centerId: number): void {
+      console.log(centerId);
 
-  
+      this.selectedCenterId = centerId;
+
+      const selectedIndex = this.shoppingCenters.findIndex(
+        (center) => center.Id === centerId
+      );
+
+      if (selectedIndex !== -1) {
+        this.General.modalObject = this.shoppingCenters[selectedIndex];
+
+        this.currentIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+
+        let nextIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+        while (nextIndex === selectedIndex) {
+          nextIndex = (nextIndex + 1) % this.shoppingCenters.length;
+        }
+        this.General.nextModalObject = this.shoppingCenters[nextIndex];
+      }
+    }
 }
