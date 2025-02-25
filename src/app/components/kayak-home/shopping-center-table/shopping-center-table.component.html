@@ -2000,6 +2000,8 @@
       <div class="preference-options mb-4">
         <div
           class="location-card"
+          style="cursor: pointer;"
+
           [class.selected]="selectedCenterId === General.modalObject.Id"
           (click)="selectCenter(General.modalObject.Id)"
         >
@@ -2015,6 +2017,7 @@
 
         <div
           class="location-card next-center"
+          style="cursor: pointer;"
           [class.selected]="selectedCenterId === General.nextModalObject.Id"
           (click)="selectCenter(General.nextModalObject.Id)"
         >
