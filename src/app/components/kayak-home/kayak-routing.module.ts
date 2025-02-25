@@ -7,7 +7,6 @@ import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-c
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KayakComponent } from './kayak/kayak.component';
 import { EmilyComponent } from './emily/emily.component';
-import { ManagePropertiesComponent } from './manage-properties/manage-properties.component';
 
 const routes: Routes = [
   { path: '', component: KayakHomeComponent },
@@ -18,7 +17,6 @@ const routes: Routes = [
   { path: 'shopping-table', component: ShoppingCenterTableComponent },
   { path: 'relations', component: BuyboxRelatiosComponent },
   { path: 'kayak', component: KayakComponent },
-  { path: 'manage-properties', component: ManagePropertiesComponent },
 ];
 
 @NgModule({

@@ -52,6 +52,7 @@ import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
 // MSAL Imports
 import { MsalModule, MsalService, MsalGuard, MsalBroadcastService } from '@azure/msal-angular';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
+import { ManagePropertiesComponent } from './components/kayak-home/manage-properties/manage-properties.component';
 
 const msalConfig = {
   auth: {
@@ -100,6 +101,7 @@ const loginRequest = {
     TermsComponent,
     NumberFormatDirective,
     NumberWithCommasPipe,
+    ManagePropertiesComponent,
   ],
   imports: [
     BrowserModule,
