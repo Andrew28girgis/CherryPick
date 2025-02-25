@@ -8,6 +8,7 @@ import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.compo
 import { KayakComponent } from './kayak/kayak.component';
 import { EmilyComponent } from './emily/emily.component';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
+import { ManagePropertiesComponent } from './manage-properties/manage-properties.component';
 
 const routes: Routes = [
   { path: '', component: KayakHomeComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'shopping-table', component: ShoppingCenterTableComponent },
   { path: 'relations', component: BuyboxRelatiosComponent },
   { path: 'kayak', component: KayakComponent },
+  { path: 'manage-properties', component: ManagePropertiesComponent },
 ];
 
 @NgModule({
