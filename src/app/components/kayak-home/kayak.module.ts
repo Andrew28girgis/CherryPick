@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { KayakComponent } from './kayak/kayak.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
+import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { EmilyOrgComponent } from './emily-org/emily-org.component';
     BuyboxRelatiosComponent,
     KayakComponent,
     EmilyOrgComponent,
+    PolygonsControllerComponent,
   ],
   imports: [
     CommonModule,
