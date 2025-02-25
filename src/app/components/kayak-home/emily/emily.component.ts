@@ -1369,26 +1369,37 @@ export class EmilyComponent implements OnInit {
   // login
   user: any = null;
 
- async waitForMsalInitialization() {
+async waitForMsalInitialization() {
     if (!this.msalService.instance) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
 
- async loginMicrosoft() {
+
+  async loginMicrosoft(): Promise<void> {
+    const msalInstance = this.msalService.instance;
+    
+    // If an active account already exists, no need to log in again.
+    if (msalInstance.getActiveAccount()) {
+      console.log("User already logged in.");
+      return;
+    }
+  
     try {
-      if (this.msalService.instance.getActiveAccount()) {
-        console.log("User already logged in.");
-        return;
+      // Initiate login popup with the required scope.
+      const response = await msalInstance.loginPopup({ scopes: ['User.Read'] });
+      const account = response?.account;
+  
+      // Ensure that account information is present.
+      if (!account) {
+        throw new Error("Login succeeded, but no account information was returned.");
       }
-
-      const response = await this.msalService.instance.loginPopup({
-        scopes: ['User.Read']
-      });
-
-      this.msalService.instance.setActiveAccount(response.account);
+  
+      // Set the active account and fetch user details.
+      msalInstance.setActiveAccount(account);
       this.getUser();
     } catch (error) {
+      // Check for specific MSAL error when an interaction is already in progress.
       if (error instanceof BrowserAuthError && error.errorCode === "interaction_in_progress") {
         console.warn("Authentication interaction already in progress.");
       } else {

@@ -1,32 +1,22 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
+import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+// Components & Directives
+import { AppComponent } from './app.component';
+import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LandingComponent } from './components/landing/landing.component';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { NumberFormatDirective } from './app-number-format.directive';
-import { NumberWithCommasPipe } from './pipes/number-with-commas.pipe';
-import {
-  NgbModule,
-  NgbTooltipModule,
-  NgbAlertModule,
-} from '@ng-bootstrap/ng-bootstrap';
-import { TokenInterceptor } from './token.interceptor';
 import { SummeryComponent } from './components/summery/summery.component';
 import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { KayakModule } from './components/kayak-home/kayak.module';
-import { ToastrModule } from 'ngx-toastr';
-import { RouterModule } from '@angular/router';
 import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
 import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
@@ -38,28 +28,50 @@ import { StakeHolderComponent } from './components/kanban/stake-holders/stake-ho
 import { SourcesComponent } from './components/kanban/sources/sources.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
+import { LogoutComponent } from './components/logout/logout.component';
+import { TermsComponent } from './components/terms/terms.component';
+import { NumberFormatDirective } from './app-number-format.directive';
+import { NumberWithCommasPipe } from './pipes/number-with-commas.pipe';
+
+// Third-Party Modules
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { NgbModule, NgbTooltipModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ToastrModule } from 'ngx-toastr';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
-import { LogoutComponent } from './components/logout/logout.component';
-import { SharedModule } from './shared/shared.module';
-import { TermsComponent } from './components/terms/terms.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+
+// Custom Modules & Interceptors
+import { KayakModule } from './components/kayak-home/kayak.module';
+import { SharedModule } from './shared/shared.module';
+import { TokenInterceptor } from './token.interceptor';
+import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
+
+// MSAL Imports
 import { MsalModule, MsalService, MsalGuard, MsalBroadcastService } from '@azure/msal-angular';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
-// Initialize MSAL before Angular loads
-const msalInstance = new PublicClientApplication({
+
+const msalConfig = {
   auth: {
     clientId: '0405c49c-ebe8-4fef-9ae7-87305ad01f8e', // Replace with your Azure AD Client ID
-    authority: 'https://login.microsoftonline.com/fdfd5c3f-1883-4d75-9dc4-dbbda9b8ce8d', // Replace with your Tenant ID
+    authority: 'https://login.microsoftonline.com/common', // Replace with your Tenant ID if needed
     redirectUri: 'http://localhost:4200/summary', // Must match your Azure AD redirect URI
+  },
+  cache: {
+    cacheLocation: 'localStorage', // or 'sessionStorage'
+    storeAuthStateInCookie: false,
   }
-});
+};
 
-function initializeMsal() {
-  return () => msalInstance.initialize();
+export function initializeMsal(msalService: MsalService) {
+  return () => msalService.instance.initialize();
 }
+
+const loginRequest = {
+  scopes: ['User.Read', 'Mail.Send', 'offline_access']
+};
 
 @NgModule({
   declarations: [
@@ -67,10 +79,8 @@ function initializeMsal() {
     LoginComponent,
     HomeComponent,
     NavbarComponent,
-    NumberFormatDirective,
     LandingComponent,
-    NumberWithCommasPipe,
-    SummeryComponent, 
+    SummeryComponent,
     CherryExpansionComponent,
     KanbanComponent,
     KanbanHomeComponent,
@@ -88,6 +98,8 @@ function initializeMsal() {
     CommunicationComponent,
     LogoutComponent,
     TermsComponent,
+    NumberFormatDirective,
+    NumberWithCommasPipe,
   ],
   imports: [
     BrowserModule,
@@ -102,7 +114,7 @@ function initializeMsal() {
     NgbTooltipModule,
     NgbAlertModule,
     DragDropModule,
-    ToastrModule,
+    ToastrModule.forRoot(), // Configuration for toastr can be added here if needed
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
@@ -110,32 +122,31 @@ function initializeMsal() {
     SharedModule,
     ScrollingModule,
     MsalModule.forRoot(
-      msalInstance, 
+      new PublicClientApplication(msalConfig),
       {
-        interactionType: InteractionType.Redirect, 
-        authRequest: {
-          scopes: ['User.Read'],
-        }
+        interactionType: InteractionType.Redirect,
+        authRequest: loginRequest,
       },
       {
         interactionType: InteractionType.Redirect,
         protectedResourceMap: new Map([
-          ['https://graph.microsoft.com/v1.0/me/sendMail', ['https://graph.microsoft.com/Mail.Send']]
+          ['https://graph.microsoft.com/v1.0/me', ['User.Read']],
+          ['https://graph.microsoft.com/v1.0/me/sendMail', ['Mail.Send']]
         ])
       }
     )
   ],
- 
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    MsalService,
-    MsalGuard,
-    MsalBroadcastService,
     {
       provide: APP_INITIALIZER,
       useFactory: initializeMsal,
-      multi: true
+      deps: [MsalService],
+      multi: true,
     },
+    MsalService,
+    MsalGuard,
+    MsalBroadcastService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

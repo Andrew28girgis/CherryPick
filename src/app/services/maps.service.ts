@@ -125,9 +125,7 @@ export class MapsService {
     markerId: any,
     shoppingCenterId?: number,
     placeType?: string
-  ): void {
-    console.log(`markerID ${markerId}`);
-    console.log(`ShoppingCenterID ${shoppingCenterId}`);
+  ): void { 
 
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedOrgId = localStorage.getItem('OrgId');
