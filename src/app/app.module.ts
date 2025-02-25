@@ -1,4 +1,8 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, APP_INITIALIZER } from '@angular/core';
+import {
+  NgModule,
+  CUSTOM_ELEMENTS_SCHEMA,
+  APP_INITIALIZER,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
@@ -35,7 +39,11 @@ import { NumberWithCommasPipe } from './pipes/number-with-commas.pipe';
 
 // Third-Party Modules
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { NgbModule, NgbTooltipModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModule,
+  NgbTooltipModule,
+  NgbAlertModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -50,9 +58,14 @@ import { TokenInterceptor } from './token.interceptor';
 import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
 
 // MSAL Imports
-import { MsalModule, MsalService, MsalGuard, MsalBroadcastService } from '@azure/msal-angular';
+import {
+  MsalModule,
+  MsalService,
+  MsalGuard,
+  MsalBroadcastService,
+} from '@azure/msal-angular';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
-import { ManagePropertiesComponent } from './components/kayak-home/manage-properties/manage-properties.component';
+import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 const msalConfig = {
@@ -64,7 +77,7 @@ const msalConfig = {
   cache: {
     cacheLocation: 'localStorage', // or 'sessionStorage'
     storeAuthStateInCookie: false,
-  }
+  },
 };
 
 export function initializeMsal(msalService: MsalService) {
@@ -72,7 +85,7 @@ export function initializeMsal(msalService: MsalService) {
 }
 
 const loginRequest = {
-  scopes: ['User.Read', 'Mail.Send', 'offline_access']
+  scopes: ['User.Read', 'Mail.Send', 'offline_access'],
 };
 
 @NgModule({
@@ -135,10 +148,10 @@ const loginRequest = {
         interactionType: InteractionType.Redirect,
         protectedResourceMap: new Map([
           ['https://graph.microsoft.com/v1.0/me', ['User.Read']],
-          ['https://graph.microsoft.com/v1.0/me/sendMail', ['Mail.Send']]
-        ])
+          ['https://graph.microsoft.com/v1.0/me/sendMail', ['Mail.Send']],
+        ]),
       }
-    )
+    ),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

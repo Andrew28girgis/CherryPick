@@ -15,7 +15,6 @@
         <table class="procpect-table">
           <thead class="t-head">
             <tr class="padd-20">
-              <th>ID</th>
               <th>Name</th>
               <th>Address</th>
               <th>ZipCode</th>
@@ -23,7 +22,6 @@
           </thead>
           <tbody class="procpect-table-body">
             <tr *ngFor="let property of properties">
-              <td>{{ property.id }}</td>
               <td>{{ property.centerName }}</td>
               <td>
                 {{ property.centerAddress }}, {{ property.centerCity }},
