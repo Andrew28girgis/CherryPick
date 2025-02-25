@@ -6,6 +6,7 @@ import {
   ElementRef,
   Renderer2,
   TemplateRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -136,7 +137,8 @@ export class HomeComponent implements OnInit {
     private ngZone: NgZone,
     private sanitizer: DomSanitizer,
     private stateService: StateService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef
   ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
@@ -900,43 +902,47 @@ export class HomeComponent implements OnInit {
       console.error('Reply text is empty');
       return;
     }
-  
+
     // Store reply text and clear input immediately
     const replyText = this.newReplies[commentId];
     this.newReplies[commentId] = '';
-  
+
     const body = {
       Name: 'CreateComment',
       Params: {
         MarketSurveyId: marketSurveyId,
         Comment: replyText,
-        ParentCommentId: commentId
-      }
+        ParentCommentId: commentId,
+      },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
         // Reset the replying state
         this.replyingTo[marketSurveyId] = null;
-  
+
         // Find the shopping center and update its comments
-        const shoppingCenter = this.shoppingCenters.find(sc => sc.MarketSurveyId === marketSurveyId);
+        const shoppingCenter = this.shoppingCenters.find(
+          (sc) => sc.MarketSurveyId === marketSurveyId
+        );
         if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
           shoppingCenter.ShoppingCenter.Comments.push({
             Comment: replyText,
             CommentDate: new Date().toISOString(),
-            ParentCommentId: commentId
+            ParentCommentId: commentId,
           });
-  
+
           // Sort the comments
-          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(shoppingCenter.ShoppingCenter.Comments);
+          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(
+            shoppingCenter.ShoppingCenter.Comments
+          );
         }
       },
       error: (error: any) => {
         console.error('Error adding reply:', error);
         // Restore the reply text if API call fails
         this.newReplies[commentId] = replyText;
-      }
+      },
     });
   }
 
@@ -959,11 +965,10 @@ export class HomeComponent implements OnInit {
     if (!this.replyingTo[shopping.MarketSurveyId]) {
       this.replyingTo[shopping.MarketSurveyId] = null;
     }
-    
-    this.replyingTo[shopping.MarketSurveyId] = 
+
+    this.replyingTo[shopping.MarketSurveyId] =
       this.replyingTo[shopping.MarketSurveyId] === commentId ? null : commentId;
   }
-
 
   sortCommentsByDate(comments: any[]): any[] {
     return comments?.sort(
@@ -1061,13 +1066,29 @@ export class HomeComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
-    // Prevent multiple rapid clicks
     if (this.isLikeInProgress) {
       return;
     }
 
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+
+    // Optimistic update
+    if (!shopping.ShoppingCenter.Reactions) {
+      shopping.ShoppingCenter.Reactions = [];
+    }
+
+    if (!isLiked) {
+      shopping.ShoppingCenter.Reactions.length++;
+      this.likedShoppings[shopping.MarketSurveyId] = true;
+    } 
+    // else {
+    //   shopping.ShoppingCenter.Reactions.length--;
+    //   delete this.likedShoppings[shopping.MarketSurveyId];
+    // }
+      
+    // Trigger change detection
+    this.cdr.detectChanges();
 
     const body = {
       Name: 'CreatePropertyReaction',
@@ -1079,29 +1100,24 @@ export class HomeComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        // Ensure the Reactions array exists
-        if (!shopping.ShoppingCenter.Reactions) {
-          shopping.ShoppingCenter.Reactions = [];
-        }
-
-        if (isLiked) {
-          // If already liked, decrease the count
-          // shopping.ShoppingCenter.Reactions.length--;
-          // delete this.likedShoppings[shopping.MarketSurveyId];
-        } else {
-          // If not liked, increase the count
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
+        // API call successful, no need to update UI again
       },
       error: (error) => {
         console.error('Error processing like:', error);
+        // Revert the optimistic update
+        if (!isLiked) {
+          // shopping.ShoppingCenter.Reactions.length--;
+          // delete this.likedShoppings[shopping.MarketSurveyId];
+        } 
+        else {
+          shopping.ShoppingCenter.Reactions.length++;
+          this.likedShoppings[shopping.MarketSurveyId] = true;
+        }
+        this.cdr.detectChanges();
       },
       complete: () => {
-        // Reset the flag after a short delay
-        setTimeout(() => {
-          this.isLikeInProgress = false;
-        }, 50); // 500ms debounce
+        this.isLikeInProgress = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -1110,11 +1126,12 @@ export class HomeComponent implements OnInit {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  open(content: any, modalObject?: any) {
+  open(content: any, currentShopping: any, nextShopping: any) {
     this.modalService.open(content, {
       windowClass: 'custom-modal',
     });
-    this.General.modalObject = modalObject;
+    this.General.modalObject = currentShopping;
+    this.General.nextModalObject = nextShopping;    
   }
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
@@ -1122,7 +1139,7 @@ export class HomeComponent implements OnInit {
     console.log(`User rated: ${rating}`);
   }
 
-  handleClick(shopping: any, likeTpl: TemplateRef<any>): void {
+  handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
     if (this.clickTimeout) {
       // Second click detected: cancel single-click action and execute double-click action.
       clearTimeout(this.clickTimeout);
@@ -1131,11 +1148,20 @@ export class HomeComponent implements OnInit {
     } else {
       // First click: set a timer. If no second click occurs within 250ms, execute single-click action.
       this.clickTimeout = setTimeout(() => {
-        this.open(likeTpl, shopping);
+        const nextShopping = this.getNextShopping(index);
+        this.open(likeTpl, shopping, nextShopping);
         this.clickTimeout = null;
       }, 250);
     }
   }
+  getNextShopping(currentIndex: number): any {
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
+      return this.shoppingCenters[nextIndex];
+    }
+    return null;
+  }
+
 
   toggleDetails(index: number, shopping: any): void {
     if (shopping.ShoppingCenter?.BuyBoxPlaces) {
@@ -1144,6 +1170,7 @@ export class HomeComponent implements OnInit {
   }
 
   selectCenter(centerId: number): void {
+    console.log(centerId);
     this.selectedCenterId = centerId;
   }
 

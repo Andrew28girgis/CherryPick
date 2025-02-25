@@ -1261,13 +1261,29 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
-    // Prevent multiple rapid clicks
     if (this.isLikeInProgress) {
       return;
     }
 
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+
+    // Optimistic update
+    if (!shopping.ShoppingCenter.Reactions) {
+      shopping.ShoppingCenter.Reactions = [];
+    }
+    
+    if (!isLiked) {
+      shopping.ShoppingCenter.Reactions.length++;
+      this.likedShoppings[shopping.MarketSurveyId] = true;
+    } 
+    // else {
+    //   shopping.ShoppingCenter.Reactions.length--;
+    //   delete this.likedShoppings[shopping.MarketSurveyId];
+    // }
+
+    // Trigger change detection
+    this.cdr.detectChanges();
 
     const body = {
       Name: 'CreatePropertyReaction',
@@ -1279,42 +1295,36 @@ export class ShoppingCenterTableComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        // Ensure the Reactions array exists
-        if (!shopping.ShoppingCenter.Reactions) {
-          shopping.ShoppingCenter.Reactions = [];
-        }
-
-        if (isLiked) {
-          // If already liked, decrease the count
+        // API call successful, no need to update UI again
+      },
+      error: (error) => {
+        if (!isLiked) {
           // shopping.ShoppingCenter.Reactions.length--;
           // delete this.likedShoppings[shopping.MarketSurveyId];
         } else {
-          // If not liked, increase the count
           shopping.ShoppingCenter.Reactions.length++;
           this.likedShoppings[shopping.MarketSurveyId] = true;
         }
-      },
-      error: (error) => {
-        console.error('Error processing like:', error);
+        this.cdr.detectChanges();
       },
       complete: () => {
-        // Reset the flag after a short delay
-        setTimeout(() => {
-          this.isLikeInProgress = false;
-        }, 50); // 500ms debounce
+        this.isLikeInProgress = false;
+        this.cdr.detectChanges();
       },
     });
   }
+
 
   isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  open(content: any, modalObject?: any) {
+  open(content: any, currentShopping: any, nextShopping: any) {
     this.modalService.open(content, {
       windowClass: 'custom-modal',
     });
-    this.General.modalObject = modalObject;
+    this.General.modalObject = currentShopping;
+    this.General.nextModalObject = nextShopping;    
   }
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
@@ -1322,7 +1332,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     console.log(`User rated: ${rating}`);
   }
 
-  handleClick(shopping: any, likeTpl: TemplateRef<any>): void {
+  handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
     if (this.clickTimeout) {
       // Second click detected: cancel single-click action and execute double-click action.
       clearTimeout(this.clickTimeout);
@@ -1331,10 +1341,18 @@ export class ShoppingCenterTableComponent implements OnInit {
     } else {
       // First click: set a timer. If no second click occurs within 250ms, execute single-click action.
       this.clickTimeout = setTimeout(() => {
-        this.open(likeTpl, shopping);
+        const nextShopping = this.getNextShopping(index);
+        this.open(likeTpl, shopping, nextShopping);
         this.clickTimeout = null;
       }, 250);
     }
+  }
+  getNextShopping(currentIndex: number): any {
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
+      return this.shoppingCenters[nextIndex];
+    }
+    return null;
   }
 
   toggleDetails(index: number, shopping: any): void {
@@ -1347,4 +1365,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     console.log(centerId);
     this.selectedCenterId = centerId;
   }
+
+  
 }

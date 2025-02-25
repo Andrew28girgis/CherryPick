@@ -1400,11 +1400,12 @@ scroll-container {
 .indicators-container {
   position: absolute;
   gap: 25px;
-  bottom: 35%;
   z-index: 1000;
   right: 10%;
   display: flex;
   flex-direction: column;
+  height: 60.2vh;
+    justify-content: center;
 }
 
 .ellipsis_icont {
