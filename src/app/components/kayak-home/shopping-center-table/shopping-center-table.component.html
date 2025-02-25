@@ -79,8 +79,7 @@
                 >
                   <div
                     class="nearestt"
-                    style="color: #fff; padding: 0 !important;    max-width: 60%;
-"
+                    style="color: #fff; padding: 0 !important; max-width: 60%"
                   >
                     <span>
                       {{ getNeareastCategoryName(item.CategoryId) }}:
@@ -159,7 +158,7 @@
             <button
               class="action-btn like-btn"
               [class.liked]="isLiked(shopping)"
-              (click)="handleClick(shopping, Like)"
+              (click)="handleClick(shopping, Like, i)"
               [disabled]="isLikeInProgress"
             >
               <svg
@@ -1882,6 +1881,7 @@
     </div>
   </div>
 </ng-template>
+
 <ng-template #Like let-modal>
   <div class="modal-main like-modal">
     <!-- Header Section -->
@@ -1997,30 +1997,34 @@
       </div>
 
       <!-- Location Preference Section -->
+      <!-- Location Preference Section -->
       <div class="preference-options mb-4">
         <div
           class="location-card"
-          [class.selected]="selectedCenterId === 1"
-          (click)="selectCenter(1)"
+          [class.selected]="selectedCenterId === General.modalObject.Id"
+          (click)="selectCenter(General.modalObject.Id)"
         >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">
             {{ General.modalObject.CenterCity | titlecase }},
+            {{ General.modalObject.CenterState }}
           </p>
         </div>
 
         <div class="or-divider">or</div>
 
         <div
-          class="location-card"
-          [class.selected]="selectedCenterId === 2"
-          (click)="selectCenter(2)"
+          class="location-card next-center"
+          [class.selected]="selectedCenterId === General.nextModalObject.Id"
+          (click)="selectCenter(General.nextModalObject.Id)"
         >
-          <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
-          <p class="address">{{ General.modalObject.CenterAddress }}</p>
+          <div class="next-badge">Next Center</div>
+          <h4 class="modal-title">{{ General.nextModalObject.CenterName }}</h4>
+          <p class="address">{{ General.nextModalObject.CenterAddress }}</p>
           <p class="address">
-            {{ General.modalObject.CenterCity | titlecase }},
+            {{ General.nextModalObject.CenterCity | titlecase }},
+            {{ General.nextModalObject.CenterState }}
           </p>
         </div>
       </div>

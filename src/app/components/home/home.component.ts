@@ -6,6 +6,7 @@ import {
   ElementRef,
   Renderer2,
   TemplateRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +17,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from '../../../../src/app/services/maps.service';
 import { BuyboxCategory } from '../../../../src/models/buyboxCategory';
-import { Center } from '../../../../src/models/shoppingCenters';
+import { Center, Reaction } from '../../../../src/models/shoppingCenters';
 import { BbPlace } from '../../../../src/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Polygons } from '../../../../src/models/polygons';
@@ -136,7 +137,8 @@ export class HomeComponent implements OnInit {
     private ngZone: NgZone,
     private sanitizer: DomSanitizer,
     private stateService: StateService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef
   ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
@@ -854,12 +856,10 @@ export class HomeComponent implements OnInit {
   }
 
   addComment(shopping: Center, marketSurveyId: number): void {
-    // Early return if comment is empty
     if (!this.newComments[marketSurveyId]?.trim()) {
       return;
     }
 
-    // Store comment text and clear input immediately to prevent double submission
     const commentText = this.newComments[marketSurveyId];
     this.newComments[marketSurveyId] = '';
 
@@ -888,7 +888,6 @@ export class HomeComponent implements OnInit {
         );
       },
       error: (error) => {
-        // Restore the comment text if API call fails
         this.newComments[marketSurveyId] = commentText;
         console.error('Error adding comment:', error);
       },
@@ -900,43 +899,42 @@ export class HomeComponent implements OnInit {
       console.error('Reply text is empty');
       return;
     }
-  
-    // Store reply text and clear input immediately
+
     const replyText = this.newReplies[commentId];
     this.newReplies[commentId] = '';
-  
+
     const body = {
       Name: 'CreateComment',
       Params: {
         MarketSurveyId: marketSurveyId,
         Comment: replyText,
-        ParentCommentId: commentId
-      }
+        ParentCommentId: commentId,
+      },
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
-        // Reset the replying state
         this.replyingTo[marketSurveyId] = null;
-  
-        // Find the shopping center and update its comments
-        const shoppingCenter = this.shoppingCenters.find(sc => sc.MarketSurveyId === marketSurveyId);
+
+        const shoppingCenter = this.shoppingCenters.find(
+          (sc) => sc.MarketSurveyId === marketSurveyId
+        );
         if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
           shoppingCenter.ShoppingCenter.Comments.push({
             Comment: replyText,
             CommentDate: new Date().toISOString(),
-            ParentCommentId: commentId
+            ParentCommentId: commentId,
           });
-  
-          // Sort the comments
-          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(shoppingCenter.ShoppingCenter.Comments);
+
+          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(
+            shoppingCenter.ShoppingCenter.Comments
+          );
         }
       },
       error: (error: any) => {
         console.error('Error adding reply:', error);
-        // Restore the reply text if API call fails
         this.newReplies[commentId] = replyText;
-      }
+      },
     });
   }
 
@@ -959,11 +957,10 @@ export class HomeComponent implements OnInit {
     if (!this.replyingTo[shopping.MarketSurveyId]) {
       this.replyingTo[shopping.MarketSurveyId] = null;
     }
-    
-    this.replyingTo[shopping.MarketSurveyId] = 
+
+    this.replyingTo[shopping.MarketSurveyId] =
       this.replyingTo[shopping.MarketSurveyId] === commentId ? null : commentId;
   }
-
 
   sortCommentsByDate(comments: any[]): any[] {
     return comments?.sort(
@@ -1032,7 +1029,6 @@ export class HomeComponent implements OnInit {
 
   ngAfterViewInit(): void {
     const events = ['click', 'wheel', 'touchstart'];
-    // Listen for clicks anywhere in the document
     this.globalClickListener = events.map((eventType) =>
       this.renderer.listen('document', eventType, (event: Event) => {
         const target = event.target as HTMLElement;
@@ -1044,7 +1040,7 @@ export class HomeComponent implements OnInit {
           target.classList.contains('like-button') ||
           target.classList.contains('photo');
         if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
-          return; // Do NOT close if clicking inside the comment box, input field, or like/photo
+          return; 
         }
         this.hideAllComments();
       })
@@ -1053,68 +1049,86 @@ export class HomeComponent implements OnInit {
 
   trimComment(value: string, marketSurveyId: number): void {
     if (value) {
-      // Only update if the trimmed value is different from empty string
       this.newComments[marketSurveyId] = value.trimLeft();
     } else {
       this.newComments[marketSurveyId] = '';
     }
   }
 
-  addLike(shopping: Center, reactionId: number): void {
-    // Prevent multiple rapid clicks
-    if (this.isLikeInProgress) {
-      return;
-    }
-
-    this.isLikeInProgress = true;
-    const isLiked = this.likedShoppings[shopping.MarketSurveyId];
-
-    const body = {
-      Name: 'CreatePropertyReaction',
-      Params: {
-        MarketSurveyId: shopping.MarketSurveyId,
-        ReactionId: reactionId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-        // Ensure the Reactions array exists
-        if (!shopping.ShoppingCenter.Reactions) {
-          shopping.ShoppingCenter.Reactions = [];
-        }
-
-        if (isLiked) {
-          // If already liked, decrease the count
-          // shopping.ShoppingCenter.Reactions.length--;
-          // delete this.likedShoppings[shopping.MarketSurveyId];
-        } else {
-          // If not liked, increase the count
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
-      },
-      error: (error) => {
-        console.error('Error processing like:', error);
-      },
-      complete: () => {
-        // Reset the flag after a short delay
-        setTimeout(() => {
-          this.isLikeInProgress = false;
-        }, 50); // 500ms debounce
-      },
-    });
-  }
+   addLike(shopping: Center, reactionId: number): void {
+     
+     const contactIdStr = localStorage.getItem('contactId');
+     if (!contactIdStr) {
+       return;
+     }
+     const contactId = parseInt(contactIdStr, 10);
+     
+     if (shopping.ShoppingCenter.Reactions && shopping.ShoppingCenter.Reactions.some(
+           (reaction: Reaction) => reaction.ContactId === contactId)) {
+       return;
+     }
+     
+     if (this.isLikeInProgress) {
+       return;
+     }
+ 
+     this.isLikeInProgress = true;
+     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+ 
+     if (!shopping.ShoppingCenter.Reactions) {
+       shopping.ShoppingCenter.Reactions = [];
+     }
+     
+     if (!isLiked) {
+       shopping.ShoppingCenter.Reactions.length++;
+       this.likedShoppings[shopping.MarketSurveyId] = true;
+     } 
+     // else {
+     //   shopping.ShoppingCenter.Reactions.length--;
+     //   delete this.likedShoppings[shopping.MarketSurveyId];
+     // }
+ 
+     this.cdr.detectChanges();
+ 
+     const body = {
+       Name: 'CreatePropertyReaction',
+       Params: {
+         MarketSurveyId: shopping.MarketSurveyId,
+         ReactionId: reactionId,
+       },
+     };
+ 
+     this.PlacesService.GenericAPI(body).subscribe({
+       next: (response: any) => {
+       },
+       error: (error) => {
+         if (!isLiked) {
+           // shopping.ShoppingCenter.Reactions.length--;
+           // delete this.likedShoppings[shopping.MarketSurveyId];
+         } else {
+           shopping.ShoppingCenter.Reactions.length++;
+           this.likedShoppings[shopping.MarketSurveyId] = true;
+         }
+         this.cdr.detectChanges();
+       },
+       complete: () => {
+         this.isLikeInProgress = false;
+         this.cdr.detectChanges();
+       },
+     });
+   }
+ 
 
   isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  open(content: any, modalObject?: any) {
+  open(content: any, currentShopping: any, nextShopping: any) {
     this.modalService.open(content, {
       windowClass: 'custom-modal',
     });
-    this.General.modalObject = modalObject;
+    this.General.modalObject = currentShopping;
+    this.General.nextModalObject = nextShopping;    
   }
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
@@ -1122,20 +1136,27 @@ export class HomeComponent implements OnInit {
     console.log(`User rated: ${rating}`);
   }
 
-  handleClick(shopping: any, likeTpl: TemplateRef<any>): void {
+  handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
     if (this.clickTimeout) {
-      // Second click detected: cancel single-click action and execute double-click action.
       clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
       this.addLike(shopping, 1);
     } else {
-      // First click: set a timer. If no second click occurs within 250ms, execute single-click action.
       this.clickTimeout = setTimeout(() => {
-        this.open(likeTpl, shopping);
+        const nextShopping = this.getNextShopping(index);
+        this.open(likeTpl, shopping, nextShopping);
         this.clickTimeout = null;
       }, 250);
     }
   }
+  getNextShopping(currentIndex: number): any {
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
+      return this.shoppingCenters[nextIndex];
+    }
+    return null;
+  }
+
 
   toggleDetails(index: number, shopping: any): void {
     if (shopping.ShoppingCenter?.BuyBoxPlaces) {
@@ -1144,6 +1165,7 @@ export class HomeComponent implements OnInit {
   }
 
   selectCenter(centerId: number): void {
+    console.log(centerId);
     this.selectedCenterId = centerId;
   }
 
