@@ -6,17 +6,21 @@ declare const google: any;
   providedIn: 'root',
 })
 export class MapDrawingService {
+  // any commented code is a worked code for drawing circle with radius manually
+
   private drawingManager!: google.maps.drawing.DrawingManager;
   private drawnPolygons: google.maps.Polygon[] = [];
   private drawnCircles: google.maps.Circle[] = [];
   private infoWindow!: google.maps.InfoWindow;
-  private selectedPolygon!: google.maps.Polygon | null;
-  private selectedCircle!: google.maps.Circle | null;
-  private circleListener: google.maps.MapsEventListener | null = null;
+  // private selectedPolygon!: google.maps.Polygon | null;
+  // private selectedCircle!: google.maps.Circle | null;
+  // private circleListener: google.maps.MapsEventListener | null = null;
 
   onPolygonCreated = new EventEmitter<google.maps.Polygon>();
+  onPolygonChanged = new EventEmitter<google.maps.Polygon>();
   onPolygonDeleted = new EventEmitter<google.maps.Polygon>();
   onCircleCreated = new EventEmitter<google.maps.Circle>();
+  onCircleChanged = new EventEmitter<google.maps.Circle>();
   onCircleDeleted = new EventEmitter<google.maps.Circle>();
 
   constructor() {}
@@ -37,7 +41,7 @@ export class MapDrawingService {
     const map = new google.maps.Map(gmapContainer.nativeElement, mapOptions);
 
     // listen to map clicks to remove any selection or popups
-    this.addMapListner(map);
+    this.addMapListener(map);
 
     // initialize popup window
     this.initializeInfoWindow();
@@ -84,10 +88,7 @@ export class MapDrawingService {
     this.drawingManager.setMap(map);
 
     // listen for polygons drawing completions to push it into drwan list
-    this.addPolygonCompletionListner(map);
-
-    // listen for drawing mode changes (stop drawing, polygon, circle)
-    this.addDrawingChangeListner(map);
+    this.addShapeCompletionListener(map);
   }
 
   private initializeInfoWindow() {
@@ -95,16 +96,16 @@ export class MapDrawingService {
     this.infoWindow = new google.maps.InfoWindow();
   }
 
-  private drawNewCircle(map: any): void {
-    // remove listner if exists
-    if (this.circleListener) {
-      google.maps.event.removeListener(this.circleListener);
-      this.circleListener = null;
-    }
+  // private drawNewCircle(map: any): void {
+  //   // remove listener if exists
+  //   if (this.circleListener) {
+  //     google.maps.event.removeListener(this.circleListener);
+  //     this.circleListener = null;
+  //   }
 
-    // add listner for new circle creation
-    this.addCircleCreationListner(map);
-  }
+  //   // add listener for new circle creation
+  //   this.addCircleCreationListener(map);
+  // }
 
   private getPolygonCenter(polygon: google.maps.Polygon): google.maps.LatLng {
     // get polygon as lat and lng points
@@ -141,55 +142,49 @@ export class MapDrawingService {
 
   private hidePopupContent() {
     this.infoWindow.close();
-    this.selectedPolygon = null;
-    this.selectedCircle = null;
   }
 
   // listeners
 
-  private addMapListner(map: any): void {
+  private addMapListener(map: any): void {
     map.addListener('click', () => {
       // close any popup is shown
       if (this.infoWindow) {
-        this.infoWindow.close();
+        this.hidePopupContent();
       }
-
-      // remove any selected polygons or circles
-      this.selectedPolygon = null;
-      this.selectedCircle = null;
     });
   }
 
-  private addDrawingChangeListner(map: any): void {
-    google.maps.event.addListener(
-      this.drawingManager,
-      'drawingmode_changed',
-      () => {
-        // close any popup if exists
-        if (this.infoWindow) {
-          this.infoWindow.close();
-        }
+  // private addDrawingChangeListener(map: any): void {
+  //   google.maps.event.addListener(
+  //     this.drawingManager,
+  //     'drawingmode_changed',
+  //     () => {
+  //       // close any popup if exists
+  //       if (this.infoWindow) {
+  //         this.infoWindow.close();
+  //       }
 
-        // get current drawing mode
-        const mode = this.drawingManager.getDrawingMode();
-        // check if the current mode is circle mode
-        if (mode === google.maps.drawing.OverlayType.CIRCLE) {
-          // stop original functionality
-          this.drawingManager.setDrawingMode(null);
-          // replace the original functionality with custom circle creation
-          this.drawNewCircle(map);
-        } else {
-          // remove circle listner if any drawing mode else
-          if (this.circleListener) {
-            google.maps.event.removeListener(this.circleListener);
-            this.circleListener = null;
-          }
-        }
-      }
-    );
-  }
+  //       // get current drawing mode
+  //       const mode = this.drawingManager.getDrawingMode();
+  //       // check if the current mode is circle mode
+  //       if (mode === google.maps.drawing.OverlayType.CIRCLE) {
+  //         // stop original functionality
+  //         this.drawingManager.setDrawingMode(null);
+  //         // replace the original functionality with custom circle creation
+  //         this.drawNewCircle(map);
+  //       } else {
+  //         // remove circle listener if any drawing mode else
+  //         if (this.circleListener) {
+  //           google.maps.event.removeListener(this.circleListener);
+  //           this.circleListener = null;
+  //         }
+  //       }
+  //     }
+  //   );
+  // }
 
-  private addPolygonCompletionListner(map: any): void {
+  private addShapeCompletionListener(map: any): void {
     google.maps.event.addListener(
       this.drawingManager,
       'overlaycomplete',
@@ -202,126 +197,150 @@ export class MapDrawingService {
           this.drawnPolygons.push(newPolygon);
           // emit created polygon to the component for any operation
           this.onPolygonCreated.emit(newPolygon);
-          // handle event of the polygon
+          // handle click event of the polygon
           this.addPolygonClickListener(map, newPolygon);
+          // handle change event of the polygon
+          this.addPolygonChangeListener(map, newPolygon);
+        }
+        if (event.type === google.maps.drawing.OverlayType.CIRCLE) {
+          // create new circle
+          const newCircle = event.overlay as google.maps.Circle;
+          // push the circle into drawn list
+          this.drawnCircles.push(newCircle);
+          // emit created circle to the component for any operation
+          this.onCircleCreated.emit(newCircle);
+          // handle click event of the circle
+          this.addCircleClickListener(map, newCircle);
+          // handle change event of the circle
+          this.addCircleChangeListener(map, newCircle);
         }
       }
     );
   }
 
-  private addCircleClickListner(map: any, circle: google.maps.Circle): void {
+  private addCircleClickListener(map: any, circle: google.maps.Circle): void {
     circle.addListener('click', (event: google.maps.MapMouseEvent) => {
       // stop map event click
       event.stop();
 
-      // set selected circle for the clicked circle
-      this.selectedCircle = circle;
       // display popup with selected circle options
       this.showCircleOptions(map, circle);
     });
   }
 
-  private addCircleSizeChangeListner(
-    map: any,
-    circle: google.maps.Circle
-  ): void {
+  private addCircleChangeListener(map: any, circle: google.maps.Circle): void {
     let resizeTimeout: any;
+    // listen for radius changes
     circle.addListener('radius_changed', () => {
-      // detect that the resized circle is the selected circle
-      if (this.selectedCircle === circle) {
-        // close options popup
-        this.infoWindow.close();
+      // close options popup
+      this.hidePopupContent();
 
-        // reset the timeout if has value
-        if (resizeTimeout) {
-          clearTimeout(resizeTimeout);
-        }
+      // emti circle change to component for any operations
+      this.onCircleChanged.emit(circle);
 
-        // display options again after resizeing
-        resizeTimeout = setTimeout(() => {
-          this.showCircleOptions(map, circle);
-        }, 300);
+      // reset the timeout if has value
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
       }
+
+      // display options again after resizeing
+      resizeTimeout = setTimeout(() => {
+        this.showCircleOptions(map, circle);
+      }, 300);
+    });
+
+    // listen for circle draging
+    circle.addListener('dragend', () => {
+      this.onCircleChanged.emit(circle);
     });
   }
 
-  private addCreateCircleButtonListner(
-    map: any,
-    createButton: any,
-    e: google.maps.MapMouseEvent
-  ): void {
-    createButton.addEventListener('click', () => {
-      // get radius input
-      const radiusInput = document.getElementById(
-        'circleRadiusInput'
-      ) as HTMLInputElement;
-      // set input value as a radius of the circle
-      const radius = Number(radiusInput.value);
-      // check for radius value
-      if (!isNaN(radius) && radius > 0) {
-        // create new circle
-        const circle = new google.maps.Circle({
-          map: map,
-          center: e.latLng,
-          radius: radius,
-          fillColor: '#FF0000',
-          fillOpacity: 0.3,
-          strokeWeight: 2,
-          strokeColor: '#FF0000',
-          editable: true,
-          draggable: true,
-        });
+  // private addCircleDragedListener(circle: google.maps.Circle): void {
+  //   circle.addListener('dragend', () => {
+  //     this.onCircleChanged.emit(circle);
+  //   });
+  // }
 
-        // add new circle inside drawn circles list
-        this.drawnCircles.push(circle);
-        // emit new circle to the component for any operations
-        this.onCircleCreated.emit(circle);
+  // private addCreateCircleButtonListener(
+  //   map: any,
+  //   createButton: any,
+  //   e: google.maps.MapMouseEvent
+  // ): void {
+  //   createButton.addEventListener('click', () => {
+  //     // get radius input
+  //     const radiusInput = document.getElementById(
+  //       'circleRadiusInput'
+  //     ) as HTMLInputElement;
+  //     // set input value as a radius of the circle
+  //     const radius = Number(radiusInput.value);
+  //     // check for radius value
+  //     if (!isNaN(radius) && radius > 0) {
+  //       // create new circle
+  //       const circle = new google.maps.Circle({
+  //         map: map,
+  //         center: e.latLng,
+  //         radius: radius,
+  //         fillColor: '#FF0000',
+  //         fillOpacity: 0.3,
+  //         strokeWeight: 2,
+  //         strokeColor: '#FF0000',
+  //         editable: true,
+  //         draggable: true,
+  //       });
 
-        // add listner for new circle clicks
-        this.addCircleClickListner(map, circle);
+  //       // add new circle inside drawn circles list
+  //       this.drawnCircles.push(circle);
+  //       // emit new circle to the component for any operations
+  //       this.onCircleCreated.emit(circle);
 
-        // create listner for circle resizeing to hide circle options
-        // and display it again with updated radius
-        this.addCircleSizeChangeListner(map, circle);
+  //       // add listener for new circle clicks
+  //       this.addCircleClickListener(map, circle);
 
-        // remove creation listner after create the circle
-        google.maps.event.removeListener(this.circleListener);
-        this.circleListener = null;
+  //       // create listener for circle resizeing to hide circle options
+  //       // and display it again with updated radius
+  //       this.addCircleSizeChangeListener(map, circle);
 
-        // close the popup if not selected
-        this.infoWindow.close();
-      } else {
-        alert('Please enter a valid radius.');
-      }
-    });
-  }
+  //       // create listener for circle draging
+  //       this.addCircleDragedListener(circle);
 
-  private addCircleCreationListner(map: any): void {
-    this.circleListener = map.addListener(
-      'click',
-      (e: google.maps.MapMouseEvent) => {
-        // create circle creation popup
-        const circleCreationPopup = this.getCircleCreationPopup();
-        this.infoWindow.setContent(circleCreationPopup);
-        this.infoWindow.setPosition(e.latLng);
-        this.infoWindow.open(map);
+  //       // remove creation listener after create the circle
+  //       google.maps.event.removeListener(this.circleListener);
+  //       this.circleListener = null;
 
-        const creationButtonInterval = setInterval(() => {
-          // get circle creation button after rendering
-          const createButton = document.getElementById('createCircleBtn');
-          if (createButton) {
-            // stop the interval when button created
-            clearInterval(creationButtonInterval);
+  //       // close the popup if not selected
+  //       this.infoWindow.close();
+  //     } else {
+  //       alert('Please enter a valid radius.');
+  //     }
+  //   });
+  // }
 
-            // create listner for creation button click
-            this.addCreateCircleButtonListner(map, createButton, e);
-          }
-        }, 100);
-      }
-    );
-  }
+  // private addCircleCreationListener(map: any): void {
+  //   this.circleListener = map.addListener(
+  //     'click',
+  //     (e: google.maps.MapMouseEvent) => {
+  //       // create circle creation popup
+  //       const circleCreationPopup = this.getCircleCreationPopup();
+  //       this.infoWindow.setContent(circleCreationPopup);
+  //       this.infoWindow.setPosition(e.latLng);
+  //       this.infoWindow.open(map);
 
-  private addCircleDeleteButtonListner(
+  //       const creationButtonInterval = setInterval(() => {
+  //         // get circle creation button after rendering
+  //         const createButton = document.getElementById('createCircleBtn');
+  //         if (createButton) {
+  //           // stop the interval when button created
+  //           clearInterval(creationButtonInterval);
+
+  //           // create listener for creation button click
+  //           this.addCreateCircleButtonListener(map, createButton, e);
+  //         }
+  //       }, 100);
+  //     }
+  //   );
+  // }
+
+  private addCircleDeleteButtonListener(
     circle: google.maps.Circle,
     deleteButton: any
   ): void {
@@ -333,46 +352,87 @@ export class MapDrawingService {
       // emit deleted circle to component for any operation
       this.onCircleDeleted.emit(circle);
       // close the popup
-      this.infoWindow.close();
+      this.hidePopupContent();
     });
   }
 
-  private addCircleUpdateButtonListner(
-    circle: google.maps.Circle,
-    confirmUpdateButton: any
+  // private addCircleUpdateButtonListener(
+  //   circle: google.maps.Circle,
+  //   confirmUpdateButton: any
+  // ): void {
+  //   confirmUpdateButton.addEventListener('click', () => {
+  //     // get radius input
+  //     const radiusInput = document.getElementById(
+  //       'circleRadiusInput'
+  //     ) as HTMLInputElement;
+  //     // extract radius value
+  //     const newRadius = Number(radiusInput.value);
+  //     // check for radius value
+  //     if (!isNaN(newRadius) && newRadius > 0) {
+  //       // update circle radius
+  //       circle.setRadius(newRadius);
+  //       // close the popup
+  //       this.infoWindow.close();
+  //     } else {
+  //       alert('Please enter a valid radius.');
+  //     }
+  //   });
+  // }
+
+  private addPolygonClickListener(
+    map: any,
+    polygon: google.maps.Polygon
   ): void {
-    confirmUpdateButton.addEventListener('click', () => {
-      // get radius input
-      const radiusInput = document.getElementById(
-        'circleRadiusInput'
-      ) as HTMLInputElement;
-      // extract radius value
-      const newRadius = Number(radiusInput.value);
-      // check for radius value
-      if (!isNaN(newRadius) && newRadius > 0) {
-        // update circle radius
-        circle.setRadius(newRadius);
-        // close the popup
-        this.infoWindow.close();
-      } else {
-        alert('Please enter a valid radius.');
-      }
-    });
-  }
-
-  private addPolygonClickListener(map: any, polygon: google.maps.Polygon) {
     polygon.addListener('click', (event: google.maps.MapMouseEvent) => {
       // stop map click event
       event.stop();
-      // set selected polygon to clicked polygon
-      this.selectedPolygon = polygon;
 
       // display polygon options popup
       this.showPolygonsOptions(map, polygon, this.getPolygonCenter(polygon));
     });
   }
 
-  private addPolygonDeleteButtonListner(
+  private addPolygonChangeListener(
+    map: any,
+    polygon: google.maps.Polygon
+  ): void {
+    let resizeTimeout: any;
+    const path = polygon.getPath();
+
+    // listen for changes in the polygon path (dragging vertices)
+    path.addListener('set_at', () => {
+      // close options popup
+      this.hidePopupContent();
+
+      this.onPolygonChanged.emit(polygon);
+
+      // reset the timeout if has value
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+
+      // display options again after change
+      resizeTimeout = setTimeout(() => {
+        this.showPolygonsOptions(map, polygon, this.getPolygonCenter(polygon));
+      }, 300);
+    });
+
+    // listen for insertions of new vertices
+    path.addListener('insert_at', () => {
+      // close options popup
+      this.hidePopupContent();
+      this.onPolygonChanged.emit(polygon);
+    });
+
+    // listen for removals of vertices
+    path.addListener('remove_at', () => {
+      // close options popup
+      this.hidePopupContent();
+      this.onPolygonChanged.emit(polygon);
+    });
+  }
+
+  private addPolygonDeleteButtonListener(
     deleteButton: any,
     polygon: google.maps.Polygon
   ): void {
@@ -390,8 +450,16 @@ export class MapDrawingService {
 
     // get current circle radius
     const currentRadius = circle.getRadius();
+    // convert radius into miles
+    const currentRadiusMiles = currentRadius * 0.000621371;
+    // calculate circle area
+    const circleAreaMiles = Math.PI * Math.pow(currentRadiusMiles, 2);
+
     // get circle options popup
-    const optionsContent = this.getSelectedCircleOptionsPopup(currentRadius);
+    const optionsContent = this.getCircleOptionsPopup(
+      currentRadiusMiles,
+      circleAreaMiles
+    );
     this.infoWindow.setContent(optionsContent);
     this.infoWindow.setPosition(center);
     this.infoWindow.open(map);
@@ -401,31 +469,7 @@ export class MapDrawingService {
       const deleteButton = document.getElementById('deleteCircleBtn');
       if (deleteButton) {
         // listen for delete button click
-        this.addCircleDeleteButtonListner(circle, deleteButton);
-      }
-      // get update button
-      const updateButton = document.getElementById('updateCircleBtn');
-      if (updateButton) {
-        // listen for update button click
-        updateButton.addEventListener('click', () => {
-          // get circle update popup
-          const updateContent = this.getCircleUpdateButtonPopup();
-          this.infoWindow.setContent(updateContent);
-
-          const updateButtonInterval = setInterval(() => {
-            // get update button in update popup
-            const confirmUpdateButton = document.getElementById(
-              'confirmUpdateCircleBtn'
-            );
-            if (confirmUpdateButton) {
-              // remove the interval when button found
-              clearInterval(updateButtonInterval);
-
-              // listen for update button clicked
-              this.addCircleUpdateButtonListner(circle, confirmUpdateButton);
-            }
-          }, 100);
-        });
+        this.addCircleDeleteButtonListener(circle, deleteButton);
       }
     }, 100);
   }
@@ -434,7 +478,7 @@ export class MapDrawingService {
     map: any,
     polygon: google.maps.Polygon,
     position: google.maps.LatLng | null
-  ) {
+  ): void {
     if (!position) return;
 
     const polygonSizeInMiles = this.getPolygonAreaInMiles(polygon);
@@ -451,118 +495,67 @@ export class MapDrawingService {
       if (deleteButton) {
         // remove the interval when button found
         clearInterval(deleteButtonInterval);
-        // add listner on delete button click
-        this.addPolygonDeleteButtonListner(deleteButton, polygon);
+        // add listener on delete button click
+        this.addPolygonDeleteButtonListener(deleteButton, polygon);
       }
     }, 100);
   }
 
   // popups
 
-  private getCircleCreationPopup(): string {
-    return `
-        <div
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem;
-          "
-        >
-          <input
-            id="circleRadiusInput"
-            type="number"
-            placeholder="Enter radius in meters"
-            class="form-control"
-          />
+  // private getCircleCreationPopup(): string {
+  //   return `
+  //       <div
+  //         style="
+  //           display: flex;
+  //           flex-direction: column;
+  //           align-items: center;
+  //           gap: 0.75rem;
+  //           padding: 1rem;
+  //         "
+  //       >
+  //         <input
+  //           id="circleRadiusInput"
+  //           type="number"
+  //           placeholder="Enter radius in meters"
+  //           class="form-control"
+  //         />
 
-          <button
-            id="createCircleBtn"
-            style="
-              background-color: black;
-              color: white;
-              border: none;
-              padding: 5px 10px;
-              cursor: pointer;
-              border-radius: 5px;
-              font-size: 14px;
-            "
-          >
-            Create
-          </button>
-        </div>
-      `;
-  }
+  //         <button
+  //           id="createCircleBtn"
+  //           style="
+  //             background-color: black;
+  //             color: white;
+  //             border: none;
+  //             padding: 5px 10px;
+  //             cursor: pointer;
+  //             border-radius: 5px;
+  //             font-size: 14px;
+  //           "
+  //         >
+  //           Create
+  //         </button>
+  //       </div>
+  //     `;
+  // }
 
-  private getSelectedCircleOptionsPopup(currentRadius: number): string {
+  private getCircleOptionsPopup(currentRadius: number, size: number): string {
     return `<div
               style="
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                gap: 0.75rem;
-                padding: 1rem;
-              "
-            >
-              <div style="font-weight: 500">Radius : ${currentRadius.toFixed(
-                2
-              )} m</div>
-              <div style="display: flex; align-items: center; gap: 0.5rem">
-                <button
-                  id="deleteCircleBtn"
-                  style="
-                    background-color: rgb(224, 0, 0);
-                    color: white;
-                    border: none;
-                    padding: 5px 10px;
-                    cursor: pointer;
-                    border-radius: 5px;
-                    font-size: 14px;
-                  "
-                >
-                  Delete
-                </button>
-                <button
-                  id="updateCircleBtn"
-                  style="
-                    background-color: black;
-                    color: white;
-                    border: none;
-                    padding: 5px 10px;
-                    cursor: pointer;
-                    border-radius: 5px;
-                    font-size: 14px;
-                  "
-                >
-                  Update
-                </button>
-              </div>
-            </div>
-          `;
-  }
-
-  private getCircleUpdateButtonPopup(): string {
-    return `<div
-              style="
-                display: flex;
-                flex-direction: column;
                 align-items: center;
                 gap: 0.75rem;
                 padding: 1rem;
               "
             >
-              <input
-                id="circleRadiusInput"
-                type="number"
-                placeholder="Enter new radius in meters"
-                class="form-control"
-              />
-
+              <div style="font-weight: 500">Radius : ${currentRadius} m</div>
+              <div style="font-weight: 500">Size : ${size} m</div>
               <button
-                id="confirmUpdateCircleBtn"
+                id="deleteCircleBtn"
                 style="
-                  background-color: black;
+                  background-color: rgb(224, 0, 0);
                   color: white;
                   border: none;
                   padding: 5px 10px;
@@ -571,11 +564,46 @@ export class MapDrawingService {
                   font-size: 14px;
                 "
               >
-                Update
+                Delete
               </button>
             </div>
           `;
   }
+
+  // private getCircleUpdateButtonPopup(): string {
+  //   return `<div
+  //             style="
+  //               display: flex;
+  //               flex-direction: column;
+  //               align-items: center;
+  //               gap: 0.75rem;
+  //               padding: 1rem;
+  //             "
+  //           >
+  //             <input
+  //               id="circleRadiusInput"
+  //               type="number"
+  //               placeholder="Enter new radius in meters"
+  //               class="form-control"
+  //             />
+
+  //             <button
+  //               id="confirmUpdateCircleBtn"
+  //               style="
+  //                 background-color: black;
+  //                 color: white;
+  //                 border: none;
+  //                 padding: 5px 10px;
+  //                 cursor: pointer;
+  //                 border-radius: 5px;
+  //                 font-size: 14px;
+  //               "
+  //             >
+  //               Update
+  //             </button>
+  //           </div>
+  //         `;
+  // }
 
   private getPolygonOptionsPopup(sizeInMiles: number): string {
     return `<div

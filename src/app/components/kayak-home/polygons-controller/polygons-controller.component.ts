@@ -1,4 +1,3 @@
-/// <reference types="google.maps" />
 import {
   AfterViewInit,
   Component,
@@ -7,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MapDrawingService } from 'src/app/services/map-drawing.service';
-declare const google: any;
 
 @Component({
   selector: 'app-polygons-controller',
@@ -29,11 +27,17 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
     this.mapDrawingService.onPolygonCreated.subscribe((polygon) => {
       console.log('New polygon created:', polygon);
     });
+    this.mapDrawingService.onPolygonChanged.subscribe((polygon) => {
+      console.log('Polygon changed:', polygon);
+    });
     this.mapDrawingService.onPolygonDeleted.subscribe((polygon) => {
       console.log('Polygon deleted:', polygon);
     });
     this.mapDrawingService.onCircleCreated.subscribe((circle) => {
       console.log('New circle created:', circle);
+    });
+    this.mapDrawingService.onCircleChanged.subscribe((circle) => {
+      console.log('Circle changed:', circle);
     });
     this.mapDrawingService.onCircleDeleted.subscribe((circle) => {
       console.log('Circle deleted:', circle);
