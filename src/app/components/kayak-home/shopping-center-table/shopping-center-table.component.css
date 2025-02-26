@@ -687,7 +687,7 @@ img[alt="logo"] {
 
 @media (max-width: 480px) {
   .center-name {
-    color:#fff;
+    color: #fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -773,7 +773,7 @@ img[alt="logo"] {
   }
 
   .header-info .center-name {
-    color:  #fff;
+    color: #fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -948,7 +948,7 @@ img[alt="logo"] {
   }
 
   .center-name {
-    color:  #fff;
+    color: #fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -1093,7 +1093,7 @@ img[alt="logo"] {
   }
 
   .header-info .center-name {
-    color:  #fff;
+    color: #fff;
 
     /* Body/16/30/SemiBold */
     font-family: Montserrat;
@@ -1258,13 +1258,13 @@ img[alt="logo"] {
 
 .share {
   display: flex;
-  padding:  4px;
+  padding: 4px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border-radius:  12px;
+  border-radius: 12px;
   background: #fff;
-  color:  #001f3f;
+  color: #001f3f;
   text-align: center;
 
   /* Body/12/20/Regular */
@@ -1405,7 +1405,7 @@ scroll-container {
   display: flex;
   flex-direction: column;
   height: 60.2vh;
-    justify-content: center;
+  justify-content: center;
 }
 
 .ellipsis_icont {
@@ -1421,6 +1421,7 @@ scroll-container {
 :host ::ng-deep .carousel-control-prev {
   left: 0;
 }
+
 .getNeareastCategoryName {
   color: black;
   font-weight: bold;
@@ -1476,7 +1477,7 @@ scroll-container {
 }
 
 .center-name {
-  color:  #fff;
+  color: #fff;
 
   /* Body/16/30/SemiBold */
   font-family: Montserrat;
@@ -1549,11 +1550,11 @@ scroll-container {
 .location-image {
   width: 80px;
   height: 80px;
-  border-radius:  12px;
+  border-radius: 12px;
 }
 
 .location-address {
-  color:  #7a8591;
+  color: #7a8591;
 
   /* Body/16/30/Regular */
   font-family: Montserrat;
@@ -1563,7 +1564,7 @@ scroll-container {
   line-height: 30px; /* 187.5% */
 }
 .modal-title {
-  color:  #0c0d0e;
+  color: #0c0d0e;
 
   /* Body/16/30/SemiBold */
   font-family: Montserrat;
@@ -1614,13 +1615,13 @@ textarea.form-control {
   align-content: center;
   align-self: stretch;
   flex-wrap: wrap;
-  border-radius:  16px;
+  border-radius: 16px;
   background: #fff;
   display: flex;
-  padding:  12px  16px;
+  padding: 12px 16px;
   flex-direction: column;
   align-items: center;
-  gap:  8px;
+  gap: 8px;
   margin-bottom: 20px;
 }
 
@@ -1652,8 +1653,8 @@ textarea.form-control {
   align-items: center;
   gap: 10px;
   align-self: stretch;
-  border-radius:  12px;
-  border: 1px solid  #caced3;
+  border-radius: 12px;
+  border: 1px solid #caced3;
   background: #fff;
 }
 
@@ -1662,7 +1663,7 @@ textarea.form-control {
 }
 
 .location-card h4 {
-  color:  #0c0d0e;
+  color: #0c0d0e;
   text-align: center;
 
   /* Body/16/30/SemiBold */
@@ -1809,12 +1810,12 @@ textarea.form-control {
   box-shadow: none !important;
 }
 .tiktok-header {
-  border-radius:  16px;
+  border-radius: 16px;
   background: #fff;
   display: flex;
-  padding: 12px  16px;
+  padding: 12px 16px;
   align-items: center;
-  gap:  12px;
+  gap: 12px;
   align-self: stretch;
 }
 
@@ -1827,9 +1828,9 @@ textarea.form-control {
   border-radius: 16px;
   background: #fff;
   display: flex;
-  padding:  16px;
+  padding: 16px;
   flex-direction: column;
-  gap:  20px;
+  gap: 20px;
   align-self: stretch;
 }
 .or-divider {
@@ -1857,11 +1858,76 @@ textarea.form-control {
 }
 
 .location-card.selected {
-  border: 4px solid  #001f3f;
-  background:#e6e9ec;
+  border: 4px solid #001f3f;
+  background: #e6e9ec;
 }
 
 .reply-content {
   display: flex;
   justify-content: space-between;
+}
+
+::ng-deep .shortcuts-modal .modal-dialog {
+  margin: 0 !important;
+}
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.styled-btn {
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  max-width: 250px;
+}
+
+.styled-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.styled-btn:active {
+  background-color: #004494;
+  transform: scale(0.98);
+}
+
+.styled-btn .big-text {
+  margin-right: 8px;
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+}
+
+.styled-btn a {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.styled-btn.total {
+  background-color: #28a745;
+}
+
+.styled-btn.total:hover {
+  background-color: #218838;
+}
+
+.styled-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }

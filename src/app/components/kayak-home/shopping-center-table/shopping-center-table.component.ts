@@ -30,6 +30,7 @@ import {
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
 import { LandingPlace } from 'src/models/landingPlace';
+import { NearByType } from 'src/models/nearBy';
 
 
 @Component({
@@ -127,6 +128,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   showDetails: boolean[] = [];
   selectedCenterId: number | null = null;
   currentIndex = -1;
+  NearByType: NearByType[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -1306,4 +1308,20 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.General.nextModalObject = this.shoppingCenters[nextIndex];
       }
     }
+
+    openshortcuts(content: any, modalObject?: any) {
+      this.General.modalObject = modalObject
+      this.selectedIdCard = modalObject.Id
+      this.ShoppingCenter=modalObject
+      this.modalService.open(content, {
+        windowClass: 'shortcuts-modal',
+        ariaLabelledBy: 'modal-basic-title',
+        fullscreen: true,
+        scrollable: true,
+        animation: false,
+      });
+  
+
+    }
+    
 }
