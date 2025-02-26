@@ -244,11 +244,11 @@
                 color: var(--Colors-Primary-500, #001f3f);
               "
               class="ellipsis_icont"
-              (click)="openshortcuts(Shortcuts, shopping)"
+              (click)="toggleShortcutsCard(shopping.Id)"
             >
               <i class="fa-solid fa-ellipsis"></i>
             </button>
-            <!-- <div
+            <div
               class="shortcuts_iconCard iconic-card"
               *ngIf="selectedIdCard === shopping.Id"
             >
@@ -379,7 +379,7 @@
                 </li>
               </ul>
               <i class="fa-solid fa-caret-right caret"></i>
-            </div> -->
+            </div>
           </div>
         </div>
         <div
@@ -2032,9 +2032,9 @@
   </div>
 </ng-template>
 
+<!-- 
 <ng-template #Shortcuts let-modal>
   <div class="modal-main">
-    <!-- Header Section -->
     <div class="modal-header justify-content-between" >
       <div class="d-flex align-items-center head">
         <img
@@ -2072,7 +2072,7 @@
         <a class="target" (click)="openGallery(ShoppingCenter.Id)">
           <i class="fa-solid fa-images big-text"></i> View Gallery
         </a>
-      </button>
+      </button> -->
 
       <!-- <button
         class="styled-btn"
@@ -2123,7 +2123,7 @@
         </a>
       </button> -->
 
-      <button
+      <!-- <button
         class="styled-btn"
         (click)="toggleShortcuts(ShoppingCenter.Id, 'close')"
       >
@@ -2149,4 +2149,4 @@
       </button>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
