@@ -469,7 +469,7 @@
                       </button>
                       <button
                         class="Emily__contant__button Emily__body__button"
-                        (click)="logoutMicrosoft()"
+                        (click)="logoutMicrosoft()" *ngIf="user"
                       >
                         Unlink Microsoft
                       </button>
