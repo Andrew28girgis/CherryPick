@@ -78,14 +78,18 @@ const msalConfig = {
     cacheLocation: 'localStorage', // or 'sessionStorage'
     storeAuthStateInCookie: false,
   },
+  
 };
+
 
 export function initializeMsal(msalService: MsalService) {
   return () => msalService.instance.initialize();
 }
 
 const loginRequest = {
-  scopes: ['User.Read', 'Mail.Send', 'offline_access'],
+  scopes: ['User.Read', 'offline_access',
+    'https://graph.microsoft.com/Mail.Send',  'https://graph.microsoft.com/Mail.Read'
+  ],
 };
 
 @NgModule({

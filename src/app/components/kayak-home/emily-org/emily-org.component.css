@@ -32,6 +32,11 @@
     line-height: 20px;
     text-align: center;
   }
+
+  .card-date-body{
+    flex-wrap: wrap;
+  }
+
   .card-date{
     color: #797979;
     font-family: Montserrat;
@@ -40,4 +45,11 @@
     font-weight: 500;
     line-height: 16px;
     text-align: center;
+    width: calc(100% / 3 - 6px);
   }
+
+@media (max-width: 768px) {
+  .card-date{
+    width: calc(100% / 2 - 0px);
+  }
+}
