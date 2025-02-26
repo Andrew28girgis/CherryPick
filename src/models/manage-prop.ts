@@ -7,3 +7,9 @@ export interface Properties {
     zipCode: string
     mainImage: string
   }
+  export interface IFile {
+    name: string;
+    type: string;
+    content: string; // Base64-encoded image content
+    selected?: boolean; // Add a selected property
+  }
