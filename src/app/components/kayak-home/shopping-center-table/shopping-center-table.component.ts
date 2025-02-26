@@ -18,7 +18,7 @@ import {
 } from './../../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place, Reaction } from 'src/models/shoppingCenters';
@@ -223,11 +223,12 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   toggleShortcutsCard(id: number | null, close?: string): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-    } else {
-      this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    }
+    // if (close === 'close') {
+    //   this.selectedIdCard = null;
+    // } else {
+    //   this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    // }
+    this.selectedIdCard=id;
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
@@ -1329,4 +1330,40 @@ console.log("adding like ");
 
     }
     
+
+
+
+    @ViewChild("carousel") carousel!: NgbCarousel
+    @ViewChild("carousel", { read: ElementRef }) carouselElement!: ElementRef
+  
+  
+    private touchStartX = 0
+    private touchEndX = 0
+    private readonly SWIPE_THRESHOLD = 50
+
+    
+    onTouchStart(event: TouchEvent) {
+      this.touchStartX = event.touches[0].clientX
+    }
+  
+    onTouchMove(event: TouchEvent) {
+      this.touchEndX = event.touches[0].clientX
+    }
+  
+    onTouchEnd() {
+      if (!this.carousel) return
+  
+      const swipeDistance = this.touchEndX - this.touchStartX
+      if (Math.abs(swipeDistance) > this.SWIPE_THRESHOLD) {
+        if (swipeDistance > 0) {
+          this.carousel.prev()
+        } else {
+          this.carousel.next()
+        }
+      }
+  
+      // Reset values
+      this.touchStartX = 0
+      this.touchEndX = 0
+    }
 }

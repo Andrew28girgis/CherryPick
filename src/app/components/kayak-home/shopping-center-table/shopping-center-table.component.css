@@ -1088,7 +1088,7 @@ img[alt="logo"] {
     bottom: 27%;
     left: 16px;
     right: 16px;
-    z-index: 5;
+    z-index: 0;
     width: fit-content;
   }
 
@@ -1442,8 +1442,10 @@ scroll-container {
   color: #001f3f;
 }
 .iconic-card {
-  bottom: 0% !important ;
+  bottom: -42px;
+  position: absolute;
   top: auto !important;
+  right: 5.2vw;
 }
 .total {
   cursor: pointer;
@@ -1931,3 +1933,55 @@ textarea.form-control {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
+
+::ng-deep  .popover-body{
+  padding: 0 !important;
+}
+
+::ng-deep .popover-arrow::after{
+  border-top: none !important;
+  border-top-color: transparent !important;
+}
+
+
+
+.carousel-wrapper {
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.custom-carousel .carousel-inner {
+  overflow: hidden;
+}
+
+.custom-carousel .carousel-item {
+  transition: transform 0.6s ease-in-out;
+}
+
+.p-img {
+  max-height: 80vh;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .custom-carousel .carousel-control-prev,
+  .custom-carousel .carousel-control-next {
+    display: none;
+  }
+}
+
+
+@media (max-width: 768px) {
+  ::ng-deep.carousel-control-prev {
+      left: -50px !important;
+      background-color: #d3d3d3;
+  }
+  @media (max-width: 768px) {
+    ::ng-deep .carousel-control-next {
+        right: -50px !important;
+        background-color: #d3d3d3;
+    }
+}
+}
+
