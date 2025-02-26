@@ -62,6 +62,10 @@ export class ManagePropertiesComponent implements OnInit {
   }
   closeModal(modal: any) {
     modal.dismiss();
+    this.fileName = '';
+    this.uploadProgress = 0; 
+    this.isUploading = false; 
+    this.isConverting = false; 
   }
   // Method to UploadPDF file
   public uploadFile(files: NgxFileDropEntry[]) {
