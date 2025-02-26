@@ -1179,24 +1179,29 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
-    const contactIdStr = localStorage.getItem('contactId');
+    const contactIdStr = localStorage.getItem('ContactId');
     if (!contactIdStr) {
-      return;
+      console.log("no contact id");
+      // return;
     }
-    const contactId = parseInt(contactIdStr, 10);
+    const contactId = parseInt(contactIdStr? contactIdStr: "0", 10);
 
     if (
+      
       shopping.ShoppingCenter.Reactions &&
       shopping.ShoppingCenter.Reactions.some(
         (reaction: Reaction) => reaction.ContactId === contactId
       )
     ) {
+      console.log("liked before");
+
       return;
     }
 
     if (this.isLikeInProgress) {
       return;
     }
+console.log("adding like ");
 
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
