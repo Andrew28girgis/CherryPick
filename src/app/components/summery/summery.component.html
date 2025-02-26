@@ -33,7 +33,8 @@
               >
                 Market Survey
               </button>
-              <button
+              <button 
+                *ngIf="organizationId != type.organizationId"
                 class="Kayack__button"
                 [routerLink]="['/dashboard', type.id , type.organizationId,  type.name]"
               >

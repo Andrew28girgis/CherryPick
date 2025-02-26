@@ -28,6 +28,7 @@ export class SummeryComponent  {
   standAlone: Place[] = [];
   buyboxPlaces: BbPlace[] = []; 
   isCollapsed = true;
+  organizationId!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -45,15 +46,13 @@ export class SummeryComponent  {
   }
 
   ngOnInit(): void {
-    this.stateService.clearAll();
-    this.General = new General();
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.orgId = +params.orgId;
-    });
 
+    this.stateService.clearAll();
+    this.General = new General(); 
     this.route.queryParams.subscribe((params) => {
       this.Token = params['Token'];
       this.getUserBuyBoxes();
+      this.organizationId =  localStorage.getItem('orgId')  ;
     });
 
     //this.GetUserBuyBoxes();
