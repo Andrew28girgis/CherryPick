@@ -1369,12 +1369,11 @@ export class EmilyComponent implements OnInit {
   // login
   user: any = null;
 
-async waitForMsalInitialization() {
-    if (!this.msalService.instance) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+  async waitForMsalInitialization() {
+      if (!this.msalService.instance) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
     }
-  }
-
 
   async loginMicrosoft(): Promise<void> {
     const msalInstance = this.msalService.instance;
