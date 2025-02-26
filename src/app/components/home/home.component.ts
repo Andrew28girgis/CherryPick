@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
       status: 1,
     }, 
     {
-      text: 'Side List',
+      text: 'Side',
       icon: '../../../assets/Images/Icons/element-3.png',
       status: 2,
     },
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
       status: 4,
     },
     {
-      text: 'Social View',
+      text: 'Social',
       icon: '../../../assets/Images/Icons/globe-solid.svg',
       status: 5,
     },
@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
-    this.currentView = localStorage.getItem('currentView') || '3';
+    this.currentView = localStorage.getItem('currentView') || '5';
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
     );

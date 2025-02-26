@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
   templateUrl: './kayak-home.component.html',
   styleUrls: ['./kayak-home.component.css'],
 })
+
 export class KayakHomeComponent implements OnInit {
   tabs = [
     { id: 'Properties', label: 'Properties' },
@@ -25,9 +26,7 @@ export class KayakHomeComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       this.BuyboxName = params.get('buyboxName');
       this.Buyboxid = params.get('buyboxid');
-
     });
-
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
   } 
@@ -40,4 +39,5 @@ export class KayakHomeComponent implements OnInit {
   BackTo() {
     this._location.back();
   }
+
 }
