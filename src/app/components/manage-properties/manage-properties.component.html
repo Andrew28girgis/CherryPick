@@ -31,6 +31,42 @@
             </tr>
           </tbody>
         </table>
+        <!-- Display Images Section -->
+        <div *ngIf="images.length > 0" class="mt-4">
+          <h4>Extracted Images</h4>
+          <div class="row">
+            <div *ngFor="let image of images" class="col-md-3 mb-3">
+              <div class="card">
+                <div class="form-check m-2 mb-0">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [(ngModel)]="image.selected"
+                    id="checkbox-{{ image.name }}"
+                  />
+                  <label class="form-check-label" for="checkbox-{{ image.name }}">
+                    Select
+                  </label>
+                </div>
+                <img
+                  [src]="displayCustomImage(image)"
+                  [alt]="image.name"
+                  class="img-fluid gpt-image"
+                />
+                <div class="card-body">
+                  <p class="text-center mt-2">{{ image.name }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Send Selected Images Button -->
+          <div class="text-center mt-3">
+            <button class="upload mb-2" (click)="sendImages()">
+              Send Selected Images
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -51,7 +87,7 @@
           *ngIf="fileName"
           style="justify-content: start"
         >
-          {{ fileName }} Uploaded!
+          {{ fileName }}
         </h1>
       </div>
       <div class="col-md-12 p-0">
@@ -77,6 +113,32 @@
           </ng-template>
         </ngx-file-drop>
       </div>
+       <!-- Progress Bar -->
+       <div *ngIf="isUploading" class="mt-3">
+        <div class="progress">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [style.width]="uploadProgress + '%'"
+            [attr.aria-valuenow]="uploadProgress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            {{ uploadProgress }}%
+          </div>
+        </div>
+        <p class="text-center mt-2">Uploading...</p>
+      </div>
+      <!-- Conversion Status -->
+      <div *ngIf="isConverting" class="mt-3">
+        <div class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <p class="mt-2">Converting PDF to images...</p>
+        </div>
+      </div>
+
     </div>
   </div>
   <div class="modal-footer">
@@ -85,3 +147,10 @@
     </button>
   </div>
 </ng-template>
+
+<!-- toast -->
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
