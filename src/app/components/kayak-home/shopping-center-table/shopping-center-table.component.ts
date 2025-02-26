@@ -143,7 +143,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef
   ) {
-    this.currentView = localStorage.getItem('currentViewDashBord') || '4';
+    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
 
