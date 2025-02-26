@@ -52,20 +52,21 @@ export class ManagePropertiesComponent implements OnInit {
         this.spinner.hide();
       },
       error: (err) => {
-        console.error('Error fetching buybox info:', err);
+        console.error('Error fetching Shopping center Data:', err);
+        this.showToast('Error fetching Shopping center Data!');
         this.spinner.hide();
       },
     });
   }
   openUploadModal() {
-    this.modalService.open(this.uploadPDF, { size: 'lg', centered: true });
+    this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
   closeModal(modal: any) {
     modal.dismiss();
     this.fileName = '';
-    this.uploadProgress = 0; 
-    this.isUploading = false; 
-    this.isConverting = false; 
+    this.uploadProgress = 0;
+    this.isUploading = false;
+    this.isConverting = false;
   }
   // Method to UploadPDF file
   public uploadFile(files: NgxFileDropEntry[]) {
@@ -108,7 +109,8 @@ export class ManagePropertiesComponent implements OnInit {
                 this.isConverting = false; // Conversion complete
                 this.spinner.hide();
                 this.showToast('PDF File uploaded and converted successfully!');
-                this.modalService.dismissAll();
+                // this.modalService.dismissAll();
+                // this.fileName = '';
               }
             },
             (error) => {
@@ -133,14 +135,14 @@ export class ManagePropertiesComponent implements OnInit {
   }
   sendImages() {
     this.spinner.show();
-    const selectedImages = this.images.filter(image => image.selected); // Get only selected images
-  
+    const selectedImages = this.images.filter((image) => image.selected); // Get only selected images
+
     if (selectedImages.length === 0) {
       this.showToast('No images selected!');
       this.spinner.hide();
       return;
     }
-  
+
     const body: any = {
       Name: 'SendImagesShoppingCenters',
       MainEntity: null,
@@ -150,7 +152,7 @@ export class ManagePropertiesComponent implements OnInit {
       },
       Json: null,
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.spinner.hide();
