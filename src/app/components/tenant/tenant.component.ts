@@ -30,7 +30,7 @@ export class TenantComponent implements OnInit  {
   buyboxDescription!:string;
   brokerlinkedin!:string;
   brokerphoto!:string;
-  brokersignature!:string;
+  brokersignature!:any;
   MinBuildingSize!:number;
   MaxBuildingSize!:number;
   ManagementOrganizationDesc!:string;
