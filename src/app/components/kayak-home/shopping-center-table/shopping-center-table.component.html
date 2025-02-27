@@ -244,10 +244,13 @@
                 color: var(--Colors-Primary-500, #001f3f);
               "
               class="ellipsis_icont"
+              [ngbPopover]="shortcutspopover"
+
               (click)="toggleShortcutsCard(shopping.Id)"
             >
               <i class="fa-solid fa-ellipsis"></i>
             </button>
+            <ng-template #shortcutspopover>
             <div
               class="shortcuts_iconCard iconic-card"
               *ngIf="selectedIdCard === shopping.Id"
@@ -380,6 +383,7 @@
               </ul>
               <i class="fa-solid fa-caret-right caret"></i>
             </div>
+          </ng-template>
           </div>
         </div>
         <div
@@ -1865,15 +1869,21 @@
 
 <ng-template #galleryModal let-modal>
   <div class="modal-body p-0">
-    <div class="carousel-wrapper position-relative">
-      <ngb-carousel
+    <div class="carousel-wrapper position-relative"
+         (touchstart)="onTouchStart($event)"
+         (touchmove)="onTouchMove($event)"
+         (touchend)="onTouchEnd()">
+      <ngb-carousel #carousel
         class="custom-carousel"
         [showNavigationIndicators]="true"
         [showNavigationArrows]="true"
+        [interval]="0"
+        [pauseOnHover]="false"
+        [pauseOnFocus]="false"
       >
         <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
           <div class="text-center">
-            <img [src]="img" class="img-fluid p-img" alt="image" />
+            <img [src]="img" class="img-fluid p-img" alt="image" [attr.draggable]="false" />
           </div>
         </ng-template>
       </ngb-carousel>
@@ -1881,10 +1891,12 @@
   </div>
 </ng-template>
 
+
+
 <ng-template #Like let-modal>
   <div class="modal-main like-modal">
     <!-- Header Section -->
-    <div class="modal-header tiktok-header">
+    <div class="modal-header tiktok-header justify-content-between">
       <div class="d-flex align-items-center head">
         <img
           [src]="
@@ -1908,7 +1920,7 @@
         </div>
       </div>
       <button
-        type="button  btn-danger"
+        type="button  btn-danger br-50"
         class="close btn btn-danger"
         aria-label="Close"
         (click)="modal.close()"
@@ -2150,3 +2162,32 @@
     </div>
   </div>
 </ng-template> -->
+
+
+
+<ng-template #shortcutspopover>
+  <!-- Dynamic Content from ManagerOrganization -->
+  <div
+    *ngFor="
+      let org of shoppingCenter.ShoppingCenter
+        .ManagerOrganization
+    "
+    class="contact-container table-texttt"
+  >
+    <p class="text-bold m-0">
+      {{ org.Firstname | titlecase }}
+      {{ org.LastName | titlecase }}
+    </p>
+    <p class="m-0">{{ org.CellPhone }}</p>
+    <p class="m-0">{{ org.Email }}</p>
+    <hr
+      *ngIf="
+        !isLast(
+          org,
+          shoppingCenter.ShoppingCenter
+            .ManagerOrganization
+        )
+      "
+    />
+  </div>
+</ng-template>
