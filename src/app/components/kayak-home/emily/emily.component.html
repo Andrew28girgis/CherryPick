@@ -259,12 +259,14 @@
                         <i class="fa-regular fa-eye px-1"></i>
                       </button>
 
-                      <button class="Emily__contant__button Emily__body__button" *ngIf="!user"
+                      <button class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" *ngIf="!user"
                         (click)="loginMicrosoft()">
+                        <object type="image/svg+xml" data="https://s3-eu-west-1.amazonaws.com/cdn-testing.web.bas.ac.uk/scratch/bas-style-kit/ms-pictogram/ms-pictogram.svg" class="x-icon"></object> 
                         Link Microsoft
                       </button>
-                      <button class="Emily__contant__button Emily__body__button" (click)="logoutMicrosoft()"
+                      <button class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" (click)="logoutMicrosoft()"
                         *ngIf="user">
+                        <object type="image/svg+xml" data="https://s3-eu-west-1.amazonaws.com/cdn-testing.web.bas.ac.uk/scratch/bas-style-kit/ms-pictogram/ms-pictogram.svg" class="x-icon"></object> 
                         Unlink Microsoft
                       </button>
                       <button *ngIf="user" class="Emily__contant__button Emily__body__button"
