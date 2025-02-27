@@ -140,7 +140,7 @@ select option:checked {
 
 .Button_all {
   display: flex !important;
-  justify-content: end !important;
+  justify-content: flex-end !important;
   flex-wrap: wrap;
   align-items: normal !important;
   gap: 6px;
