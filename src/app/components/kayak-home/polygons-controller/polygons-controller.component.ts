@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { take } from 'rxjs';
 import { MapDrawingService } from 'src/app/services/map-drawing.service';
 import { PolygonsControllerService } from 'src/app/services/polygons-controller.service';
 import { StateService } from 'src/app/services/state.service';
@@ -268,22 +267,24 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
       .getAllPolygons(this.contactId, this.buyBoxId)
       .subscribe(observer);
   }
-  isRequestInProgress:any;
-  
-  insertNewPolygon(name: string, geoJson: IGeoJson, center: string, radius: string): void {
-    if (this.isRequestInProgress) return;  // Prevent multiple simultaneous calls
-    this.isRequestInProgress = true;
+
+  insertNewPolygon(
+    name: string,
+    geoJson: IGeoJson,
+    center: string,
+    radius: string
+  ): void {
     this.spinner.show();
-  
     const observer = {
       next: (response: any) => {
         if (response) {
-          this.isRequestInProgress = false; // Reset flag
           this.spinner.hide();
           this.polygons.push(response);
           setTimeout(() => {
             const lastIndex = this.polygons.length - 1;
-            const lastCheckbox = document.getElementById('checkBox' + lastIndex) as HTMLInputElement;
+            const lastCheckbox = document.getElementById(
+              'checkBox' + lastIndex
+            ) as HTMLInputElement;
             if (lastCheckbox) {
               lastCheckbox.checked = true;
               if (center && radius) {
@@ -296,24 +297,23 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
         }
       },
       error: (error: any) => {
-        this.isRequestInProgress = false; // Reset flag
         this.spinner.hide();
         console.error(error);
       },
     };
-  
-    this.polygonsControllerService.insertNewPolygons({
-      buyBoxId: this.buyBoxId,
-      contactId: this.contactId,
-      name: name,
-      city: geoJson.properties.city,
-      state: geoJson.properties.state,
-      geoJson: JSON.stringify(geoJson),
-      center: center,
-      radius: radius,
-    })
-    .pipe(take(1)) // Ensure only one subscription
-    .subscribe(observer);
+
+    this.polygonsControllerService
+      .insertNewPolygons({
+        buyBoxId: this.buyBoxId,
+        contactId: this.contactId,
+        name: name,
+        city: geoJson.properties.city,
+        state: geoJson.properties.state,
+        geoJson: JSON.stringify(geoJson),
+        center: center,
+        radius: radius,
+      })
+      .subscribe(observer);
   }
 
   updatePolygon(
