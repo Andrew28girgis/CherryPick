@@ -1405,7 +1405,6 @@ export class EmilyComponent implements OnInit {
     }
 
     try {
-      // Initiate login popup with the required scope.
       const response = await msalInstance.loginPopup({
         scopes: [
           'User.Read',
