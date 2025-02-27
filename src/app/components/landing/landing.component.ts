@@ -904,7 +904,7 @@ export class LandingComponent {
     let lat = this.getStreetLat();
     let lng = this.getStreetLong();
     let heading = this.getStreetHeading() || 165; // Default heading value
-    let pitch = this.getStreetPitch() || 0; // Default pitch value
+    let pitch = this.getStreetPitch() || 0; 
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
