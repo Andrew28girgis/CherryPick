@@ -360,6 +360,7 @@ export class MapDrawingService {
           this.addPolygonClickListener(map, newPolygon);
           // handle change event of the polygon
           this.addPolygonChangeListener(map, newPolygon);
+          this.drawingManager.setDrawingMode(null);
         }
         if (event.type === google.maps.drawing.OverlayType.CIRCLE) {
           // create new circle
@@ -372,6 +373,7 @@ export class MapDrawingService {
           this.addCircleClickListener(map, newCircle);
           // handle change event of the circle
           this.addCircleChangeListener(map, newCircle);
+          this.drawingManager.setDrawingMode(null);
         }
       }
     );
@@ -667,10 +669,8 @@ export class MapDrawingService {
                 padding: 1rem;
               "
             >
-              <div style="font-weight: 500">Radius : ${currentRadius.toFixed(
-                2
-              )} mi</div>
-              <div style="font-weight: 500">Size : ${size.toFixed(2)} mi</div>
+              <div style="font-weight: 500">Radius : ${currentRadius.toFixed()} MI</div>
+              <div style="font-weight: 500">Size : ${size.toFixed()} MI</div>
               <button
                 id="deleteCircleBtn"
                 style="
@@ -700,9 +700,7 @@ export class MapDrawingService {
                 padding: 1rem;
               "
             >
-              <div style="font-weight: 500">Size : ${sizeInMiles.toFixed(
-                2
-              )} mi</div>
+              <div style="font-weight: 500">Size : ${sizeInMiles.toFixed()} MI</div>
               <button
                 id="deletePolygonBtn"
                 style="
