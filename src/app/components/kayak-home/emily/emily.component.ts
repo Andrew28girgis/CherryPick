@@ -1487,7 +1487,6 @@ export class EmilyComponent implements OnInit {
     const account = this.msalService.instance.getActiveAccount();
     if (account) {
       this.user = account;
-      // console.log(`user: ${this.user.name}`);
     }
   }
 
