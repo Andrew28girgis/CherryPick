@@ -903,7 +903,7 @@ export class LandingComponent {
   viewOnStreet() {
     let lat = this.getStreetLat();
     let lng = this.getStreetLong();
-    let heading = this.getStreetHeading() || 165; // Default heading value
+    let heading = this.getStreetHeading() || 165; 
     let pitch = this.getStreetPitch() || 0; 
 
     setTimeout(() => {
@@ -915,7 +915,7 @@ export class LandingComponent {
       }
     });
   }
-  
+
   getStreetLat(): any {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLatitude
