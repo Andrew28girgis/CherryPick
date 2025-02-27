@@ -3,15 +3,13 @@
     <div class="border-section w-100">
       <div class="row m-0 p-0">
         <div class="col-3 p-0 head">From :</div>
-        <div class="col-3 p-0 head">Subject :</div>
-        <div class="col-4 p-0 head">Body :</div>
+        <div class="col-3 p-0 head">Subject :</div> 
         <div class="col-2 p-0 head">Date :</div>
       </div>
       <div *ngFor="let item of Inboxs" class="box-section row m-0 p-0"
         (click)="GetMailInfo(item.mailId,ViewContactFolders)">
         <div class="col-3 p-0 m-0 from-name pe-2">{{ item.from }}</div>
-        <div class="col-3 p-0 m-0 from-subject pe-2">{{ item.subject }}</div>
-        <div class="col-4 p-0 m-0 from-body pe-2" [innerHTML]="getFirstRow(item.body)"></div>
+        <div class="col-3 p-0 m-0 from-subject pe-2">{{ item.subject }}</div> 
         <div class="col-2 p-0 m-0 from-date ">{{ item.date }}</div>
       </div>
     </div>
