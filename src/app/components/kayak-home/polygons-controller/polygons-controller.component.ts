@@ -7,6 +7,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MapDrawingService } from 'src/app/services/map-drawing.service';
 import { PolygonsControllerService } from 'src/app/services/polygons-controller.service';
 import { StateService } from 'src/app/services/state.service';
@@ -30,7 +31,8 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
     private mapDrawingService: MapDrawingService,
     private polygonsControllerService: PolygonsControllerService,
     private stateService: StateService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -265,9 +267,11 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
     center: string,
     radius: string
   ): void {
+    this.spinner.show();
     const observer = {
       next: (response: any) => {
         if (response) {
+          this.spinner.hide();
           this.polygons.push(response);
           setTimeout(() => {
             const lastIndex = this.polygons.length - 1;
@@ -286,6 +290,7 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
         }
       },
       error: (error: any) => {
+        this.spinner.hide();
         console.error(error);
       },
     };
@@ -311,8 +316,10 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
     radius: string,
     name: string
   ): void {
+    this.spinner.show();
     const observer = {
       next: (response: any) => {
+        this.spinner.hide();
         if (response) {
           let polygon = this.polygons.find((p) => p.id == id);
           if (polygon) {
@@ -321,6 +328,7 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
         }
       },
       error: (error: any) => {
+        this.spinner.hide();
         console.error(error);
       },
     };

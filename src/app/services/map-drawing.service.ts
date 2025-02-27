@@ -178,7 +178,7 @@ export class MapDrawingService {
     const radius = circle.getRadius();
 
     // Desired length of each segment in meters
-    const segmentLength = 10;
+    const segmentLength = 20;
     // Dynamically calculate the number of segments
     const numSegments = Math.max(
       12,
