@@ -39,7 +39,7 @@ export class TenantComponent implements OnInit  {
   firstnamemanagerorganization!:string;
   lastnamemanagerorganization!:string;
   managementorganizationname!:string;
-  ManagerOrganizationDescription!:string;
+  ManagerOrganizationDescription!:any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
