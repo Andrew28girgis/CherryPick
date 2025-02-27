@@ -95,7 +95,7 @@ export class EmilyComponent implements OnInit {
   selectedContact: number[] = [];
   RepresentativeOrganizationContactsThatWillReceiveThisEmail: string =
     'Representative Organization Contacts that will receive this email:';
-
+  contactId:any ;
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
@@ -114,6 +114,7 @@ export class EmilyComponent implements OnInit {
 
   async ngOnInit() {
     this.spinner.show();
+    this.contactId = localStorage.getItem('contactId');
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetPrompts();
@@ -1498,7 +1499,7 @@ export class EmilyComponent implements OnInit {
         Params: {
           AccessToken: AccessToken,
           RefreshToken: RefreshToken,
-          ContactId: 38362,
+          ContactId: this.contactId,
         },
       };
 
@@ -1518,7 +1519,7 @@ export class EmilyComponent implements OnInit {
   }
 
   GetContactFolders() {
-    this.microsoftMailsService.GetContactFolders(38362).subscribe({
+    this.microsoftMailsService.GetContactFolders(this.contactId).subscribe({
       next: (data: any) => {
         this.ContactFolders = data;
         this.mergeContactFoldersWithInfos();
@@ -1527,7 +1528,7 @@ export class EmilyComponent implements OnInit {
   }
 
   GetContactInfos() {
-    this.microsoftMailsService.GetContactInfos(38362).subscribe({
+    this.microsoftMailsService.GetContactInfos(this.contactId).subscribe({
       next: (data: any) => {
         this.ContactInfos = data;
         this.mergeContactFoldersWithInfos();
@@ -1553,7 +1554,7 @@ export class EmilyComponent implements OnInit {
 
   AddFolderToBeRead(id: any, displayName: any, IsAdded: any) {
     const payload = {
-      ContactId: 38362,
+      ContactId: this.contactId,
       FolderId: id,
       FolderName: displayName,
       IsAdded: IsAdded.target.checked,
@@ -1567,7 +1568,7 @@ export class EmilyComponent implements OnInit {
 
     if (this.validateEmail(email)) {
       const payload = {
-        ContactId: 38362,
+        ContactId: this.contactId,
         Email: email,
         IsAdded: true,
       };
@@ -1583,7 +1584,7 @@ export class EmilyComponent implements OnInit {
 
   deleteEmailsToBeRead(email: string) {
     const payload = {
-      ContactId: 38362,
+      ContactId: this.contactId,
       Email: email,
       IsAdded: false,
     };
@@ -1597,7 +1598,7 @@ export class EmilyComponent implements OnInit {
     const domain = domainInput.value.trim();
 
     const payload = {
-      ContactId: 38362,
+      ContactId: this.contactId,
       Domain: domain,
       IsAdded: true,
     };
@@ -1610,7 +1611,7 @@ export class EmilyComponent implements OnInit {
 
   deleteDomainToBeRead(domain: string) {
     const payload = {
-      ContactId: 38362,
+      ContactId: this.contactId,
       Domain: domain,
       IsAdded: false,
     };
