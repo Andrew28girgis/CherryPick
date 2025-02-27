@@ -281,6 +281,33 @@
     width: 150px;
     height: 150px;
 }
+.imagecard {
+  position: relative;
+  border-top-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+.imagecard::before,
+.imagecard::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: black; /* Change the color of the border here */
+}
+
+.imagecard::before {
+  top: 0;
+  left: 0;
+  border-top-left-radius: 15px; /* Top-left border effect */
+}
+
+.imagecard::after {
+  bottom: 0;
+  right: 0;
+  border-bottom-right-radius: 15px; /* Bottom-right border effect */
+}
+
 
 @media (max-width: 576px) { 
     .proposal-button {
