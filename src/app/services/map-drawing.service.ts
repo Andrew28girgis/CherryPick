@@ -235,11 +235,12 @@ export class MapDrawingService {
 
           // extract city and state from geocoding results
           results[0].address_components.forEach((component: any) => {
+            
             if (component.types.includes('locality')) {
               city = component.long_name;
             }
             if (component.types.includes('administrative_area_level_1')) {
-              state = component.long_name;
+              state = component.short_name;
             }
           });
 
@@ -268,12 +269,10 @@ export class MapDrawingService {
   }
 
   displayShapeOnMap(id: number, map: any): void {
-    // get shape from the drawn list
     const shape =
       this.drawnPolygons.find((p) => p.id == id) ||
       this.drawnCircles.find((c) => c.id == id);
     if (shape) {
-      // display the shape on the map view
       shape.shape.setMap(map);
     }
   }
