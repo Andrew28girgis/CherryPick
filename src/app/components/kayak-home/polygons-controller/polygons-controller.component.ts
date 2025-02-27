@@ -153,7 +153,7 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
       }
     } else {
       // get center lat and lng if no polygons
-      if (this.stateService.getShoppingCenters().length > 0) {
+      if (this.stateService.getShoppingCenters()?.length > 0) {
         const lat = this.stateService.getShoppingCenters()[0].Latitude;
         const lng = this.stateService.getShoppingCenters()[0].Longitude;
         this.map = this.mapDrawingService.initializeMap(
