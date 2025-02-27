@@ -34,6 +34,19 @@
     border: 1px solid gray;
   }
 }
+.section-Text{
+  display: flex;
+  gap: 10px;
+}
+
+.section-Text>label {
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+}
 
 .checkbox-section>label {
   color: #707791;
@@ -127,7 +140,7 @@ select option:checked {
 
 .Button_all {
   display: flex !important;
-  justify-content: center !important;
+  justify-content: end !important;
   flex-wrap: wrap;
   align-items: normal !important;
   gap: 6px;
@@ -142,7 +155,7 @@ select option:checked {
   text-align: center;
   height: max-content;
   padding: 9px;
-  width: calc(100% / 3 - 6px);
+  width: calc(100% / 6 - 6px);
 }
 
 .textarea>textarea {
@@ -268,6 +281,36 @@ textarea {
   text-align: center;
   height: max-content;
   padding: 9px;
+}
+
+.Button_add{
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 5px 10px;
+  width: 50px;
+}
+
+.delete_button {
+  background: red;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 5px 10px;
+  width: 50px;
+}
+
+.folder_p{
+  font-size: 16px;
+  font-weight: 500;
+}
+.section-Text-email{
+  display: flex;
 }
 
 .Button_Update_S {
