@@ -915,7 +915,6 @@ export class LandingComponent {
       }
     });
   }
-
   getStreetLat(): any {
     return this.ShoppingCenter
       ? +this.ShoppingCenter.StreetLatitude
