@@ -667,8 +667,10 @@ export class MapDrawingService {
                 padding: 1rem;
               "
             >
-              <div style="font-weight: 500">Radius : ${currentRadius} m</div>
-              <div style="font-weight: 500">Size : ${size} m</div>
+              <div style="font-weight: 500">Radius : ${currentRadius.toFixed(
+                2
+              )} mi</div>
+              <div style="font-weight: 500">Size : ${size.toFixed(2)} mi</div>
               <button
                 id="deleteCircleBtn"
                 style="
@@ -698,7 +700,9 @@ export class MapDrawingService {
                 padding: 1rem;
               "
             >
-              <div style="font-weight: 500">Size : ${sizeInMiles} m</div>
+              <div style="font-weight: 500">Size : ${sizeInMiles.toFixed(
+                2
+              )} mi</div>
               <button
                 id="deletePolygonBtn"
                 style="
