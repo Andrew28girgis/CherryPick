@@ -19,6 +19,7 @@ import { CommunicationComponent } from './components/kanban/communication/commun
 import { KayakHomeComponent } from './components/kayak-home/kayak-home.component';
 import { TermsComponent } from './components/terms/terms.component';
 import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
+import { TenantComponent } from './components/tenant/tenant.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -35,6 +36,11 @@ const routes: Routes = [
   {
     path: 'home/:contactId/:buyboxid/:city/:State/:MatchStatus',
     component: HomeComponent,
+    // canActivate: [AuthGuardService],
+  },
+  {
+    path: 'tenant/:buyboxid',
+    component: TenantComponent,
     // canActivate: [AuthGuardService],
   },
   {
