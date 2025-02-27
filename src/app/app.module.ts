@@ -75,12 +75,11 @@ const msalConfig = {
     redirectUri: 'http://localhost:4200/summary', // Must match your Azure AD redirect URI
   },
   cache: {
-    cacheLocation: 'localStorage', // or 'sessionStorage'
+    cacheLocation: 'sessionStorage', // or 'sessionStorage'
     storeAuthStateInCookie: false,
   },
   
 };
-
 
 export function initializeMsal(msalService: MsalService) {
   return () => msalService.instance.initialize();
