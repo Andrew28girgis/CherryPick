@@ -24,6 +24,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class TenantComponent implements OnInit  {
   TenantResult: any = [];  
+  organizationBranches: any = []; 
   selectedbuyBox!: string;
   buyboxid!:number;
   managementorganizationId!:number;
@@ -51,6 +52,7 @@ export class TenantComponent implements OnInit  {
       this.selectedbuyBox = params['buyboxid'];
       console.log(this.selectedbuyBox);
       this.GetBuyBoxInfo();
+      this.GetOrganizationBranches();
     });
   }
   GetBuyBoxInfo(): void {
@@ -67,7 +69,7 @@ export class TenantComponent implements OnInit  {
       next: (res: any) => {
         this.TenantResult = res.json[0];  
         console.log('API Response:', this.TenantResult);
-        this.buyboxid=this.TenantResult.Buybox[0].BuyBoxOrganization[0].BuyBoxOrganizationId;
+        this.buyboxid=this.TenantResult.Buybox[0].BuyBoxOrganization[0].BuyBoxOrganizationId;;
         this.buyboxDescription = this.TenantResult.Buybox[0].BuyBoxOrganization[0].BuyBoxOrganizationDescription;
         this.buyboxname = this.TenantResult.Buybox[0].BuyBoxOrganization[0].Name;
         this.firstnamemanagerorganization=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].Firstname;
@@ -80,7 +82,7 @@ export class TenantComponent implements OnInit  {
         this.MaxBuildingSize=this.TenantResult.Buybox[0].MaxBuildingSize
         this.ManagementOrganizationDesc=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationDescription;
         this.brokerphoto=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].Photo;
-        this.brokersignature=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].Profile
+        this.brokersignature=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].Profile;
 
         if (Array.isArray(this.TenantResult.Buybox[0].Description)) {
           this.smalldescription = this.TenantResult.Buybox[0].Description; // Assuming Description is an array
@@ -96,4 +98,37 @@ export class TenantComponent implements OnInit  {
       },
     });
   }
+  GetOrganizationBranches(): void {
+    // Log the organizationid to the console
+    console.log('Organization ID:', this.buyboxid); // This logs the value of organizationid
+  
+    this.spinner.show(); // Show the spinner before the API request
+  
+    const body: any = {
+      Name: 'GetOrganizationBranches',
+      Params: {
+        organizationid: this.buyboxid, // Pass the OrganizationId parameter
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        console.log('GetOrganizationBranches API Response:', res);
+        
+        // Handle the response here, e.g., store it in a variable
+        this.organizationBranches = res.json; // You can process it as needed
+  
+        // Hide the spinner once the data is fetched
+        this.spinner.hide();
+      },
+      error: (err: any) => {
+        console.error('API Error:', err);
+        
+        // Hide the spinner in case of an error
+        this.spinner.hide();
+      },
+    });
+  }
+  
+  
 }
