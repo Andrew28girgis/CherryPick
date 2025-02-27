@@ -54,6 +54,9 @@ export class LoginComponent {
     this.PlacesService.loginUser(this.adminLogin).subscribe(
       (data: any) => {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('contactId', data.contactId);
+        localStorage.setItem('orgId', data.orgId);
+
         if(data.token){
           this.navigateToHome(); 
         }

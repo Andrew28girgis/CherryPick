@@ -52,6 +52,7 @@ export interface Center {
     MarketSurveyId?: number
     Comment?: string
     CommentDate?: string
+    ParentCommentId?: number
   }
   
   export interface ManagerOrganization{
@@ -61,6 +62,7 @@ export interface Center {
     LastName :string
     CellPhone : number
     Email: string
+    ContactId: number
   }
   
   export interface Place {

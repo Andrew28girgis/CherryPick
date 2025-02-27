@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
-import {
-  GoogleMap,
-  GoogleMapsOptions,
-  GoogleMapsLatLng,
-  GoogleMapsMarker,
-} from '../../models/google-maps.types';
 declare const google: any;
 import { Router } from '@angular/router';
 import { permission } from 'src/models/permission';
@@ -125,9 +119,7 @@ export class MapsService {
     markerId: any,
     shoppingCenterId?: number,
     placeType?: string
-  ): void {
-    console.log(`markerID ${markerId}`);
-    console.log(`ShoppingCenterID ${shoppingCenterId}`);
+  ): void { 
 
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedOrgId = localStorage.getItem('OrgId');
@@ -735,8 +727,6 @@ export class MapsService {
       console.error('Error drawing polygon:', error);
     }
   }
-
-
 
   
 

@@ -4,6 +4,7 @@ export class General {
   Buildings: building[] = [];
   fbo!: Fbo;
   modalObject: any = {};
+  nextModalObject: any;
   activities: Activity[] = [];
   workSpace: WorkSpace[] = [];
   nearsetPlaces!: nearsetPlaces;

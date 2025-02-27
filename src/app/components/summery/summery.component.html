@@ -5,7 +5,9 @@
   </div>
   <div class="col-11 p-0">
     <div class="row container m-0 mtop42">
- 
+ <!-- <div class="d-flex justify-content-end">
+  <button class="CherryPick__button" [routerLink]="['/manage-properties']">Manage My Properties</button>
+ </div> -->
       
       <ng-container *ngFor="let type of buyboxTypes">
         <div
@@ -31,7 +33,8 @@
               >
                 Market Survey
               </button>
-              <button
+              <button 
+                *ngIf="organizationId != type.organizationId"
                 class="Kayack__button"
                 [routerLink]="['/dashboard', type.id , type.organizationId,  type.name]"
               >

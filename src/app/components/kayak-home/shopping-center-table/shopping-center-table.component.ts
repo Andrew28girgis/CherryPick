@@ -7,7 +7,6 @@ import {
   TemplateRef,
   Output,
   EventEmitter,
-  HostListener,
   Renderer2,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -15,38 +14,24 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from './../../../../../src/app/services/places.service';
 import {
-  AllPlaces,
-  type AnotherPlaces,
-  General,
-  type Property,
+  General
 } from './../../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center, Place } from 'src/models/shoppingCenters';
+import { Center, Place, Reaction } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Polygons } from 'src/models/polygons';
 import { ShareOrg } from 'src/models/shareOrg';
 import { StateService } from 'src/app/services/state.service';
-import { permission } from 'src/models/permission';
 import {
-  BuyBoxCityState,
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
 import { LandingPlace } from 'src/models/landingPlace';
-import { Carousel } from 'primeng/carousel';
+import { NearByType } from 'src/models/nearBy';
 
-interface Comment {
-  id: number;
-  text: string;
-  user: string;
-  parentId: number | null;
-  replies: Comment[];
-  MarketSurveyId: number;
-}
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -58,15 +43,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   globalClickListener!: (() => void)[];
   shoppingCenter: any;
-  selectedView = 'shoppingCenters';
   General!: General;
-  pageTitle!: string;
   BuyBoxId!: any;
   OrgId!: any;
-  page = 1;
-  pageSize = 25;
-  paginatedProperties: Property[] = [];
-  filteredProperties: Property[] = [];
   dropdowmOptions: any = [
     {
       text: 'Map View',
@@ -96,28 +75,17 @@ export class ShoppingCenterTableComponent implements OnInit {
     },
   ];
   isOpen = false;
-  allPlaces!: AllPlaces;
-  anotherPlaces!: AnotherPlaces;
   currentView: any;
-  centerPoints: any[] = [];
   map: any;
-  isCompetitorChecked = false;
-  isCoTenantChecked = false;
   cardsSideList: any[] = [];
   selectedOption!: number;
-  selectedSS!: any;
   savedMapView: any;
   mapViewOnePlacex = false;
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
-  MarketSurveyId: Center[] = [];
-  BuyBoxCitiesStates!: BuyBoxCityState[];
-  StateCodes: string[] = [];
-  filteredCities: string[] = [];
   selectedState = '0';
   selectedCity = '';
-  filteredBuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
   BuyBoxPlacesAndShoppingCenter: ShoppingCenter[] = [];
   @ViewChild('deleteShoppingCenterModal')
   deleteShoppingCenterModal!: TemplateRef<any>;
@@ -125,18 +93,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('cardContainer') cardContainer!: ElementRef;
   @ViewChild('shortcutsContainer') shortcutsContainer!: ElementRef;
 
-  lastTap = 0;
-  showToast = false;
-  toastMessage = '';
-  reactions: { [key: number]: string } = {};
-  showReactions: { [key: number]: boolean } = {};
   replyingTo: { [key: number]: number | null } = {};
-  reactionTimers: { [key: number]: any } = {};
   newComments: { [key: number]: string } = {};
   newReplies: { [key: number]: string } = {};
-  Comments: { [key: number]: string } = {};
-  comments: { [key: number]: Comment[] } = {};
-  likes: { [key: string]: number } = {};
   showComments: { [key: number]: boolean } = {};
   OrganizationContacts: any[] = [];
   newContact: any = {
@@ -148,31 +107,28 @@ export class ShoppingCenterTableComponent implements OnInit {
   showbackIds: number[] = [];
   showbackIdsJoin: any;
   buyboxPlaces: BbPlace[] = [];
-  Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
   shareLink: any;
   BuyBoxName = '';
-  Permission: permission[] = [];
   placesRepresentative: boolean | undefined;
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   showStandalone = true;
   standAlone: Place[] = [];
   sanitizedUrl!: any;
-  responsiveOptions: any[];
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
-  ShoppingCenterId!: number;
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  likedShoppings: { [key: number]: boolean } = {}; // Track liked state by MarketSurveyId
+  likedShoppings: { [key: number]: boolean } = {};
   isLikeInProgress = false;
-  showMore: boolean[] = []; // Track the expanded state for each card
   selectedRating: string | null = null;
   clickTimeout: any;
   showDetails: boolean[] = [];
   selectedCenterId: number | null = null;
+  currentIndex = -1;
+  NearByType: NearByType[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -187,29 +143,10 @@ export class ShoppingCenterTableComponent implements OnInit {
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef
   ) {
-    this.currentView = localStorage.getItem('currentViewDashBord') || '4';
+    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
-    this.responsiveOptions = [
-      // {
-      //   breakpoint: '1024px',
-      //   numVisible: 1,
-      //   numScroll: 1,
-      //   effect: 'fade',
-      // },
-      // {
-      //   breakpoint: '768px',
-      //   numVisible: 1,
-      //   numScroll: 1,
-      //   effect: 'fade',
-      // },
-      // {
-      //   breakpoint: '560px',
-      //   numVisible: 1,
-      //   numScroll: 1,
-      //   effect: 'fade',
-      // },
-    ];
+
   }
   tabs = [
     { id: 'Properties', label: 'Properties' },
@@ -286,11 +223,12 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   toggleShortcutsCard(id: number | null, close?: string): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-    } else {
-      this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    }
+    // if (close === 'close') {
+    //   this.selectedIdCard = null;
+    // } else {
+    //   this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    // }
+    this.selectedIdCard=id;
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
@@ -982,48 +920,16 @@ export class ShoppingCenterTableComponent implements OnInit {
     return categories[0]?.name;
   }
 
-  formatNumberWithCommas(value: number | null): string {
-    if (value !== null) {
-      return value?.toLocaleString();
-    } else {
-      return '';
-    }
-  }
-
-  setDefaultView(viewValue: number) {
-    this.selectedSS = viewValue;
-    this.stateService.setSelectedSS(viewValue);
-  }
-
-  react(shopping: any, reactionType: string): void {
-    this.reactions[shopping.Id] = reactionType;
-    this.showReactions[shopping.Id] = false;
-  }
-
-  getReaction(shopping: any): string {
-    return this.reactions[shopping.Id] || '';
-  }
-
-  getTotalReactions(shopping: any): number {
-    return this.reactions[shopping.Id] ? 1 : 0;
-  }
-
-  getPrimaryReaction(shopping: any): string {
-    return this.reactions[shopping.Id] || 'Like';
-  }
-
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
 
   addComment(shopping: Center, marketSurveyId: number): void {
-    // Early return if comment is empty
     if (!this.newComments[marketSurveyId]?.trim()) {
       return;
     }
 
-    // Store comment text and clear input immediately to prevent double submission
     const commentText = this.newComments[marketSurveyId];
     this.newComments[marketSurveyId] = '';
 
@@ -1052,44 +958,54 @@ export class ShoppingCenterTableComponent implements OnInit {
         );
       },
       error: (error) => {
-        // Restore the comment text if API call fails
         this.newComments[marketSurveyId] = commentText;
         console.error('Error adding comment:', error);
       },
     });
   }
 
-  addReply(marketSurveyId: number, parentCommentId: number): void {
-    if (this.newReplies[parentCommentId]) {
-      const body = {
-        Name: 'CreateComment',
-        Params: {
-          MarketSurveyId: marketSurveyId,
-          Comment: this.newReplies[parentCommentId],
-          ParentCommentId: parentCommentId,
-        },
-      };
-      console.log(body),
-        this.PlacesService.GenericAPI(body).subscribe({
-          next: (response: any) => {
-            const newReply: Comment = {
-              id: response.id,
-              text: this.newReplies[parentCommentId],
-              user: 'Current User',
-              parentId: parentCommentId,
-              replies: [],
-              MarketSurveyId: marketSurveyId,
-            };
-            this.newReplies[parentCommentId] = '';
-            this.replyingTo[marketSurveyId] = null;
-
-            this.getMarketSurveyShoppingCenter();
-          },
-          error: (error: any) => {
-            console.error('Error adding reply:', error);
-          },
-        });
+  addReply(marketSurveyId: number, commentId: number): void {
+    if (!this.newReplies[commentId]?.trim()) {
+      console.error('Reply text is empty');
+      return;
     }
+
+    const replyText = this.newReplies[commentId];
+    this.newReplies[commentId] = '';
+
+    const body = {
+      Name: 'CreateComment',
+      Params: {
+        MarketSurveyId: marketSurveyId,
+        Comment: replyText,
+        ParentCommentId: commentId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        this.replyingTo[marketSurveyId] = null;
+
+        const shoppingCenter = this.shoppingCenters.find(
+          (sc) => sc.MarketSurveyId === marketSurveyId
+        );
+        if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
+          shoppingCenter.ShoppingCenter.Comments.push({
+            Comment: replyText,
+            CommentDate: new Date().toISOString(),
+            ParentCommentId: commentId,
+          });
+
+          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(
+            shoppingCenter.ShoppingCenter.Comments
+          );
+        }
+      },
+      error: (error: any) => {
+        console.error('Error adding reply:', error);
+        this.newReplies[commentId] = replyText;
+      },
+    });
   }
 
   openAddContactModal(content: any): void {
@@ -1171,25 +1087,19 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   toggleReply(shopping: any, commentId: number): void {
-    this.replyingTo[shopping.Id] =
-      this.replyingTo[shopping.Id] === commentId ? null : commentId;
-
+    if (!this.replyingTo[shopping.MarketSurveyId]) {
+      this.replyingTo[shopping.MarketSurveyId] = null;
     }
-  closeComments(shopping: any): void {
-    this.showComments[shopping.Id] = false;
+
+    this.replyingTo[shopping.MarketSurveyId] =
+      this.replyingTo[shopping.MarketSurveyId] === commentId ? null : commentId;
   }
+
   sortCommentsByDate(comments: any[]): any[] {
     return comments?.sort(
       (a, b) =>
         new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
     );
-  }
-  selectTab(tabId: string): void {
-    this.selectedTab = tabId;
-    this.activeComponent = tabId;
-  }
-  toggleMenu() {
-    this.isOpen = !this.isOpen;
   }
 
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
@@ -1198,15 +1108,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
 
-  fetchImages(shoppingCenter: any) {
-    if (shoppingCenter && shoppingCenter.Images) {
-      this.placeImage = shoppingCenter.Images.split(',').map((link: string) =>
-        link.trim()
-      );
-    } else {
-      this.placeImage = [];
-    }
-  }
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     const body: any = {
       Name: 'GetShoppingCenterDetails',
@@ -1252,7 +1153,6 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   ngAfterViewInit(): void {
     const events = ['click', 'wheel', 'touchstart'];
-    // Listen for clicks anywhere in the document
     this.globalClickListener = events.map((eventType) =>
       this.renderer.listen('document', eventType, (event: Event) => {
         const target = event.target as HTMLElement;
@@ -1264,7 +1164,7 @@ export class ShoppingCenterTableComponent implements OnInit {
           target.classList.contains('like-button') ||
           target.classList.contains('photo');
         if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
-          return; // Do NOT close if clicking inside the comment box, input field, or like/photo
+          return;
         }
         this.hideAllComments();
       })
@@ -1273,7 +1173,6 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   trimComment(value: string, marketSurveyId: number): void {
     if (value) {
-      // Only update if the trimmed value is different from empty string
       this.newComments[marketSurveyId] = value.trimLeft();
     } else {
       this.newComments[marketSurveyId] = '';
@@ -1281,13 +1180,47 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
-    // Prevent multiple rapid clicks
-    if (this.isLikeInProgress) {
+    const contactIdStr = localStorage.getItem('ContactId');
+    if (!contactIdStr) {
+      console.log("no contact id");
+      // return;
+    }
+    const contactId = parseInt(contactIdStr? contactIdStr: "0", 10);
+
+    if (
+      
+      shopping.ShoppingCenter.Reactions &&
+      shopping.ShoppingCenter.Reactions.some(
+        (reaction: Reaction) => reaction.ContactId === contactId
+      )
+    ) {
+      console.log("liked before");
+
       return;
     }
 
+    if (this.isLikeInProgress) {
+      return;
+    }
+console.log("adding like ");
+
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+
+    if (!shopping.ShoppingCenter.Reactions) {
+      shopping.ShoppingCenter.Reactions = [];
+    }
+
+    if (!isLiked) {
+      shopping.ShoppingCenter.Reactions.length++;
+      this.likedShoppings[shopping.MarketSurveyId] = true;
+    }
+    // else {
+    //   shopping.ShoppingCenter.Reactions.length--;
+    //   delete this.likedShoppings[shopping.MarketSurveyId];
+    // }
+
+    this.cdr.detectChanges();
 
     const body = {
       Name: 'CreatePropertyReaction',
@@ -1298,30 +1231,20 @@ export class ShoppingCenterTableComponent implements OnInit {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-        // Ensure the Reactions array exists
-        if (!shopping.ShoppingCenter.Reactions) {
-          shopping.ShoppingCenter.Reactions = [];
-        }
-
-        if (isLiked) {
-          // If already liked, decrease the count
+      next: (response: any) => {},
+      error: (error) => {
+        if (!isLiked) {
           // shopping.ShoppingCenter.Reactions.length--;
           // delete this.likedShoppings[shopping.MarketSurveyId];
         } else {
-          // If not liked, increase the count
           shopping.ShoppingCenter.Reactions.length++;
           this.likedShoppings[shopping.MarketSurveyId] = true;
         }
-      },
-      error: (error) => {
-        console.error('Error processing like:', error);
+        this.cdr.detectChanges();
       },
       complete: () => {
-        // Reset the flag after a short delay
-        setTimeout(() => {
-          this.isLikeInProgress = false;
-        }, 50); // 500ms debounce
+        this.isLikeInProgress = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -1330,11 +1253,12 @@ export class ShoppingCenterTableComponent implements OnInit {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  open(content: any, modalObject?: any) {
-    this.modalService.open(content,{
-      windowClass: 'custom-modal'
+  open(content: any, currentShopping: any, nextShopping: any) {
+    this.modalService.open(content, {
+      windowClass: 'custom-modal',
     });
-    this.General.modalObject = modalObject;
+    this.General.modalObject = currentShopping;
+    this.General.nextModalObject = nextShopping;
   }
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
@@ -1342,28 +1266,104 @@ export class ShoppingCenterTableComponent implements OnInit {
     console.log(`User rated: ${rating}`);
   }
 
-  handleClick(shopping: any, likeTpl: TemplateRef<any>): void {
+  handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
     if (this.clickTimeout) {
-      // Second click detected: cancel single-click action and execute double-click action.
       clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
       this.addLike(shopping, 1);
     } else {
-      // First click: set a timer. If no second click occurs within 250ms, execute single-click action.
       this.clickTimeout = setTimeout(() => {
-        this.open(likeTpl, shopping);
+        const nextShopping = this.getNextShopping(index);
+        this.open(likeTpl, shopping, nextShopping);
         this.clickTimeout = null;
       }, 250);
     }
   }
+  getNextShopping(currentIndex: number): any {
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
+      return this.shoppingCenters[nextIndex];
+    }
+    return null;
+  }
 
-  toggleDetails(index: number,shopping:any): void {
-    if(shopping.ShoppingCenter?.BuyBoxPlaces){
-    this.showDetails[index] = !this.showDetails[index];
-  }
+  toggleDetails(index: number, shopping: any): void {
+    if (shopping.ShoppingCenter?.BuyBoxPlaces) {
+      this.showDetails[index] = !this.showDetails[index];
+    }
   }
 
-  selectCenter(centerId: number): void {
-    this.selectedCenterId = centerId;
-  }
+    selectCenter(centerId: number): void {
+      console.log(centerId);
+
+      this.selectedCenterId = centerId;
+
+      const selectedIndex = this.shoppingCenters.findIndex(
+        (center) => center.Id === centerId
+      );
+
+      if (selectedIndex !== -1) {
+        this.General.modalObject = this.shoppingCenters[selectedIndex];
+
+        this.currentIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+
+        let nextIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+        while (nextIndex === selectedIndex) {
+          nextIndex = (nextIndex + 1) % this.shoppingCenters.length;
+        }
+        this.General.nextModalObject = this.shoppingCenters[nextIndex];
+      }
+    }
+
+    openshortcuts(content: any, modalObject?: any) {
+      this.General.modalObject = modalObject
+      this.selectedIdCard = modalObject.Id
+      this.ShoppingCenter=modalObject
+      this.modalService.open(content, {
+        windowClass: 'shortcuts-modal',
+        ariaLabelledBy: 'modal-basic-title',
+        fullscreen: true,
+        scrollable: true,
+        animation: false,
+      });
+  
+
+    }
+    
+
+
+
+    @ViewChild("carousel") carousel!: NgbCarousel
+    @ViewChild("carousel", { read: ElementRef }) carouselElement!: ElementRef
+  
+  
+    private touchStartX = 0
+    private touchEndX = 0
+    private readonly SWIPE_THRESHOLD = 50
+
+    
+    onTouchStart(event: TouchEvent) {
+      this.touchStartX = event.touches[0].clientX
+    }
+  
+    onTouchMove(event: TouchEvent) {
+      this.touchEndX = event.touches[0].clientX
+    }
+  
+    onTouchEnd() {
+      if (!this.carousel) return
+  
+      const swipeDistance = this.touchEndX - this.touchStartX
+      if (Math.abs(swipeDistance) > this.SWIPE_THRESHOLD) {
+        if (swipeDistance > 0) {
+          this.carousel.prev()
+        } else {
+          this.carousel.next()
+        }
+      }
+  
+      // Reset values
+      this.touchStartX = 0
+      this.touchEndX = 0
+    }
 }

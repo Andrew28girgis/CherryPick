@@ -125,6 +125,15 @@ select option:checked {
   display: flex;
 }
 
+.Button_all {
+  display: flex !important;
+  justify-content: center !important;
+  flex-wrap: wrap;
+  align-items: normal !important;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
 .Emily__contant__button {
   background: #4d65b4;
   color: white;
@@ -133,6 +142,7 @@ select option:checked {
   text-align: center;
   height: max-content;
   padding: 9px;
+  width: calc(100% / 3 - 6px);
 }
 
 .textarea>textarea {
@@ -323,20 +333,14 @@ input {
   display: block;
 }
 @media (max-width: 768px) {
-  .mobileResponsive {
-    margin-left: 11px;
-  }
-  
   .Button_all {
-    justify-content: center !important;
-    display: flex !important;
     flex-direction: column;
-    align-items: normal !important;
-    gap: 6px;
   }
 
   .Emily__contant__button {
     margin: 0 !important;
+    width: calc(100% / 1 - 0px);
+    margin-bottom: 0px;
   }
 
   .Emily__body__button {

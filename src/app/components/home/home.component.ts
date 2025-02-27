@@ -5,20 +5,19 @@ import {
   ViewChild,
   ElementRef,
   Renderer2,
-  TemplateRef, 
+  TemplateRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from './../../../../src/app/services/places.service';
-import {
-  General,
-} from './../../../../src/models/domain';
+import { General } from './../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from '../../../../src/app/services/maps.service';
 import { BuyboxCategory } from '../../../../src/models/buyboxCategory';
-import { Center } from '../../../../src/models/shoppingCenters';
+import { Center, Reaction } from '../../../../src/models/shoppingCenters';
 import { BbPlace } from '../../../../src/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Polygons } from '../../../../src/models/polygons';
@@ -27,33 +26,25 @@ import { StateService } from '../../../../src/app/services/state.service';
 import { permission } from '../../../../src/models/permission';
 import { LandingPlace } from 'src/models/landingPlace';
 
-interface Comment {
-  id: number;
-  text: string;
-  user: string;
-  parentId: number | null;
-  replies: Comment[];
-  MarketSurveyId: number;
-}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-
-export class HomeComponent implements OnInit { 
+export class HomeComponent implements OnInit {
   shoppingCenter: any;
   General!: General;
   BuyBoxId!: any;
-  OrgId!: any;  
+  OrgId!: any;
   dropdowmOptions: any = [
     {
       text: 'Map',
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
-    }, // Add your SVG paths here
+    }, 
     {
-      text: 'Side List',
+      text: 'Side',
       icon: '../../../assets/Images/Icons/element-3.png',
       status: 2,
     },
@@ -68,28 +59,27 @@ export class HomeComponent implements OnInit {
       status: 4,
     },
     {
-      text: 'Social View',
+      text: 'Social',
       icon: '../../../assets/Images/Icons/globe-solid.svg',
       status: 5,
     },
   ];
   currentView: any;
-  map: any; 
+  map: any;
   cardsSideList: any[] = [];
-  selectedOption!: number; 
+  selectedOption!: number;
   savedMapView: any;
   mapViewOnePlacex: boolean = false;
-  buyboxCategories: BuyboxCategory[] = []; 
+  buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
-  navbarOpen: any; 
+  navbarOpen: any;
   OrganizationContacts: any[] = [];
-  contactModal: any;
   newContact: any = {
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-  }; 
+  };
   buyboxPlaces: BbPlace[] = [];
   Polygons: Polygons[] = [];
   ShareOrg: ShareOrg[] = [];
@@ -99,34 +89,26 @@ export class HomeComponent implements OnInit {
   placesRepresentative: boolean | undefined;
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   StreetViewOnePlace!: boolean;
-  sanitizedUrl!: any; 
-  activeComponent: string = 'Properties';
-  selectedTab: string = 'Properties';
-  ShoppingCenterId!: number;
+  sanitizedUrl!: any;
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  likedShoppings: { [key: number]: boolean } = {}; // Track liked state by MarketSurveyId
+  likedShoppings: { [key: number]: boolean } = {}; 
   isLikeInProgress = false;
-  showMore: boolean[] = []; // Track the expanded state for each card
   selectedRating: string | null = null;
   clickTimeout: any;
   showDetails: boolean[] = [];
   selectedCenterId: number | null = null;
-  reactions: { [key: number]: string } = {};
-  showReactions: { [key: number]: boolean } = {};
   replyingTo: { [key: number]: number | null } = {};
-  reactionTimers: { [key: number]: any } = {};
   newComments: { [key: number]: string } = {};
   newReplies: { [key: number]: string } = {};
-  Comments: { [key: number]: string } = {};
-  comments: { [key: number]: Comment[] } = {};
-  likes: { [key: string]: number } = {};
   showComments: { [key: number]: boolean } = {};
   globalClickListener!: (() => void)[];
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
+  currentIndex = -1;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -136,9 +118,9 @@ export class HomeComponent implements OnInit {
     private markerService: MapsService,
     private ngZone: NgZone,
     private sanitizer: DomSanitizer,
-    private stateService: StateService ,
+    private stateService: StateService,
     private renderer: Renderer2,
-    
+    private cdr: ChangeDetectorRef
   ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
@@ -156,13 +138,13 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
-    this.currentView = localStorage.getItem('currentView') || '3';
+    this.currentView = localStorage.getItem('currentView') || '5';
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
     );
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
-    } 
+    }
   }
 
   toggleNavbar() {
@@ -197,7 +179,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
- 
   addContact(form: NgForm): void {
     this.spinner.show();
     const body: any = {
@@ -744,7 +725,7 @@ export class HomeComponent implements OnInit {
   getShoppingCenterUnitSize(shoppingCenter: any): any {
     const formatNumberWithCommas = (number: number) => {
       return number.toLocaleString(); // Format the number with commas
-    }; 
+    };
     const formatLeasePrice = (price: any) => {
       if (price === 0 || price === 'On Request') return 'On Request';
       const priceNumber = parseFloat(price);
@@ -851,342 +832,353 @@ export class HomeComponent implements OnInit {
     return categories[0]?.name;
   }
 
-  formatNumberWithCommas(value: number | null): string {
-    if (value !== null) {
-      return value?.toLocaleString();
-    } else {
-      return '';
-    }
-  } 
+  toggleComments(shopping: any, event: MouseEvent): void {
+    event.stopPropagation();
+    this.showComments[shopping.Id] = !this.showComments[shopping.Id];
+  }
 
-  
-    react(shopping: any, reactionType: string): void {
-      this.reactions[shopping.Id] = reactionType;
-      this.showReactions[shopping.Id] = false;
+  addComment(shopping: Center, marketSurveyId: number): void {
+    if (!this.newComments[marketSurveyId]?.trim()) {
+      return;
     }
-  
-    getReaction(shopping: any): string {
-      return this.reactions[shopping.Id] || '';
-    }
-  
-    getTotalReactions(shopping: any): number {
-      return this.reactions[shopping.Id] ? 1 : 0;
-    }
-  
-    getPrimaryReaction(shopping: any): string {
-      return this.reactions[shopping.Id] || 'Like';
-    }
-  
-    toggleComments(shopping: any, event: MouseEvent): void {
-      event.stopPropagation();
-      this.showComments[shopping.Id] = !this.showComments[shopping.Id];
-    }
-  
-    addComment(shopping: Center, marketSurveyId: number): void {
-      // Early return if comment is empty
-      if (!this.newComments[marketSurveyId]?.trim()) {
-        return;
-      }
-  
-      // Store comment text and clear input immediately to prevent double submission
-      const commentText = this.newComments[marketSurveyId];
-      this.newComments[marketSurveyId] = '';
-  
-      const body = {
-        Name: 'CreateComment',
-        Params: {
-          MarketSurveyId: shopping.MarketSurveyId,
+
+    const commentText = this.newComments[marketSurveyId];
+    this.newComments[marketSurveyId] = '';
+
+    const body = {
+      Name: 'CreateComment',
+      Params: {
+        MarketSurveyId: shopping.MarketSurveyId,
+        Comment: commentText,
+        ParentCommentId: 0,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        if (!shopping.ShoppingCenter.Comments) {
+          shopping.ShoppingCenter.Comments = [];
+        }
+
+        shopping.ShoppingCenter.Comments.push({
           Comment: commentText,
-          ParentCommentId: 0,
-        },
-      };
-  
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (response: any) => {
-          if (!shopping.ShoppingCenter.Comments) {
-            shopping.ShoppingCenter.Comments = [];
-          }
-  
-          shopping.ShoppingCenter.Comments.push({
-            Comment: commentText,
-            CommentDate: new Date().toISOString(),
-          });
-  
-          shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
-            shopping.ShoppingCenter.Comments
-          );
-        },
-        error: (error) => {
-          // Restore the comment text if API call fails
-          this.newComments[marketSurveyId] = commentText;
-          console.error('Error adding comment:', error);
-        },
-      });
-    }
-  
-    addReply(marketSurveyId: number, parentCommentId: number): void {
-      if (this.newReplies[parentCommentId]) {
-        const body = {
-          Name: 'CreateComment',
-          Params: {
-            MarketSurveyId: marketSurveyId,
-            Comment: this.newReplies[parentCommentId],
-            ParentCommentId: parentCommentId,
-          },
-        };
-        console.log(body),
-          this.PlacesService.GenericAPI(body).subscribe({
-            next: (response: any) => {
-              const newReply: Comment = {
-                id: response.id,
-                text: this.newReplies[parentCommentId],
-                user: 'Current User',
-                parentId: parentCommentId,
-                replies: [],
-                MarketSurveyId: marketSurveyId,
-              };
-              this.newReplies[parentCommentId] = '';
-              this.replyingTo[marketSurveyId] = null;
-  
-              this.getShoppingCenters(this.BuyBoxId);
-            },
-            error: (error: any) => {
-              console.error('Error adding reply:', error);
-            },
-          });
-      }
-    }
-  
-    openAddContactModal(content: any): void {
-      this.newContact = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-      };
-      this.modalService.open(content, {
-        ariaLabelledBy: 'modal-add-contact',
-        size: 'lg',
-        centered: true,
-        scrollable: true,
-      });
-    }
-   
-    toggleReply(shopping: any, commentId: number): void {
-      this.replyingTo[shopping.Id] =
-        this.replyingTo[shopping.Id] === commentId ? null : commentId;
-    }
-    closeComments(shopping: any): void {
-      this.showComments[shopping.Id] = false;
-    }
-    sortCommentsByDate(comments: any[]): any[] {
-      return comments?.sort(
-        (a, b) =>
-          new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
-      );
-    }
-    selectTab(tabId: string): void {
-      this.selectedTab = tabId;
-      this.activeComponent = tabId;
-    } 
-    
-    @ViewChild('galleryModal', { static: true }) galleryModal: any;
-    openGallery(shpping: number) {
-      this.GetPlaceDetails(0, shpping);
-      this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
-    }
-  
-    fetchImages(shoppingCenter: any) {
-      if (shoppingCenter && shoppingCenter.Images) {
-        this.placeImage = shoppingCenter.Images.split(',').map((link: string) =>
-          link.trim()
+          CommentDate: new Date().toISOString(),
+        });
+
+        shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
+          shopping.ShoppingCenter.Comments
         );
-      } else {
-        this.placeImage = [];
-      }
+      },
+      error: (error) => {
+        this.newComments[marketSurveyId] = commentText;
+        console.error('Error adding comment:', error);
+      },
+    });
+  }
+
+  addReply(marketSurveyId: number, commentId: number): void {
+    if (!this.newReplies[commentId]?.trim()) {
+      console.error('Reply text is empty');
+      return;
     }
-    GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
-      const body: any = {
-        Name: 'GetShoppingCenterDetails',
-        Params: {
-          PlaceID: placeId,
-          shoppingcenterId: ShoppingcenterId,
-          buyboxid: this.BuyBoxId,
-        },
-      };
-  
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          this.CustomPlace = data.json?.[0] || null;
-          this.ShoppingCenter = this.CustomPlace;
-  
-          if (this.ShoppingCenter && this.ShoppingCenter.Images) {
-            this.placeImage = this.ShoppingCenter.Images?.split(',').map(
-              (link: any) => link.trim()
-            );
-          }
-        },
-      });
+
+    const replyText = this.newReplies[commentId];
+    this.newReplies[commentId] = '';
+
+    const body = {
+      Name: 'CreateComment',
+      Params: {
+        MarketSurveyId: marketSurveyId,
+        Comment: replyText,
+        ParentCommentId: commentId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        this.replyingTo[marketSurveyId] = null;
+
+        const shoppingCenter = this.shoppingCenters.find(
+          (sc) => sc.MarketSurveyId === marketSurveyId
+        );
+        if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
+          shoppingCenter.ShoppingCenter.Comments.push({
+            Comment: replyText,
+            CommentDate: new Date().toISOString(),
+            ParentCommentId: commentId,
+          });
+
+          shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(
+            shoppingCenter.ShoppingCenter.Comments
+          );
+        }
+      },
+      error: (error: any) => {
+        console.error('Error adding reply:', error);
+        this.newReplies[commentId] = replyText;
+      },
+    });
+  }
+
+  openAddContactModal(content: any): void {
+    this.newContact = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-add-contact',
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+    });
+  }
+
+  toggleReply(shopping: any, commentId: number): void {
+    if (!this.replyingTo[shopping.MarketSurveyId]) {
+      this.replyingTo[shopping.MarketSurveyId] = null;
     }
-  
-    @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-    scrollUp() {
-      const container = this.scrollContainer.nativeElement;
-      const cardHeight = container.querySelector('.card')?.clientHeight || 0;
-      container.scrollBy({
-        top: -cardHeight,
-        behavior: 'smooth',
-      });
+
+    this.replyingTo[shopping.MarketSurveyId] =
+      this.replyingTo[shopping.MarketSurveyId] === commentId ? null : commentId;
+  }
+
+  sortCommentsByDate(comments: any[]): any[] {
+    return comments?.sort(
+      (a, b) =>
+        new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
+    );
+  }
+
+  @ViewChild('galleryModal', { static: true }) galleryModal: any;
+  openGallery(shpping: number) {
+    this.GetPlaceDetails(0, shpping);
+    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
+  }
+
+  GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
+    const body: any = {
+      Name: 'GetShoppingCenterDetails',
+      Params: {
+        PlaceID: placeId,
+        shoppingcenterId: ShoppingcenterId,
+        buyboxid: this.BuyBoxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.CustomPlace = data.json?.[0] || null;
+        this.ShoppingCenter = this.CustomPlace;
+
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) {
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
+            (link: any) => link.trim()
+          );
+        }
+      },
+    });
+  }
+
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  scrollUp() {
+    const container = this.scrollContainer.nativeElement;
+    const cardHeight = container.querySelector('.card')?.clientHeight || 0;
+    container.scrollBy({
+      top: -cardHeight,
+      behavior: 'smooth',
+    });
+  }
+
+  scrollDown() {
+    const container = this.scrollContainer.nativeElement;
+    const cardHeight = container.querySelector('.card')?.clientHeight || 0;
+    container.scrollBy({
+      top: cardHeight,
+      behavior: 'smooth',
+    });
+  }
+
+  ngAfterViewInit(): void {
+    const events = ['click', 'wheel', 'touchstart'];
+    this.globalClickListener = events.map((eventType) =>
+      this.renderer.listen('document', eventType, (event: Event) => {
+        const target = event.target as HTMLElement;
+        const commentsContainer = this.commentsContainer?.nativeElement;
+        const isInsideComments = commentsContainer?.contains(target);
+        const isInputFocused =
+          target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+        const isClickOnLikeOrPhoto =
+          target.classList.contains('like-button') ||
+          target.classList.contains('photo');
+        if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
+          return; 
+        }
+        this.hideAllComments();
+      })
+    );
+  }
+
+  trimComment(value: string, marketSurveyId: number): void {
+    if (value) {
+      this.newComments[marketSurveyId] = value.trimLeft();
+    } else {
+      this.newComments[marketSurveyId] = '';
     }
-  
-    scrollDown() {
-      const container = this.scrollContainer.nativeElement;
-      const cardHeight = container.querySelector('.card')?.clientHeight || 0;
-      container.scrollBy({
-        top: cardHeight,
-        behavior: 'smooth',
-      });
-    }
-  
-    ngAfterViewInit(): void {
-      const events = ['click', 'wheel', 'touchstart'];
-      // Listen for clicks anywhere in the document
-      this.globalClickListener = events.map((eventType) =>
-        this.renderer.listen('document', eventType, (event: Event) => {
-          const target = event.target as HTMLElement;
-          const commentsContainer = this.commentsContainer?.nativeElement;
-          const isInsideComments = commentsContainer?.contains(target);
-          const isInputFocused =
-            target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
-          const isClickOnLikeOrPhoto =
-            target.classList.contains('like-button') ||
-            target.classList.contains('photo');
-          if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
-            return; // Do NOT close if clicking inside the comment box, input field, or like/photo
-          }
-          this.hideAllComments();
-        })
-      );
-    }
-  
-    trimComment(value: string, marketSurveyId: number): void {
-      if (value) {
-        // Only update if the trimmed value is different from empty string
-        this.newComments[marketSurveyId] = value.trimLeft();
-      } else {
-        this.newComments[marketSurveyId] = '';
-      }
-    }
-  
-    addLike(shopping: Center, reactionId: number): void {
-      // Prevent multiple rapid clicks
-      if (this.isLikeInProgress) {
-        return;
-      }
-  
-      this.isLikeInProgress = true;
-      const isLiked = this.likedShoppings[shopping.MarketSurveyId];
-  
-      const body = {
-        Name: 'CreatePropertyReaction',
-        Params: {
-          MarketSurveyId: shopping.MarketSurveyId,
-          ReactionId: reactionId,
-        },
-      };
-  
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (response: any) => {
-          // Ensure the Reactions array exists
-          if (!shopping.ShoppingCenter.Reactions) {
-            shopping.ShoppingCenter.Reactions = [];
-          }
-  
-          if (isLiked) {
-            // If already liked, decrease the count
-            // shopping.ShoppingCenter.Reactions.length--;
-            // delete this.likedShoppings[shopping.MarketSurveyId];
-          } else {
-            // If not liked, increase the count
-            shopping.ShoppingCenter.Reactions.length++;
-            this.likedShoppings[shopping.MarketSurveyId] = true;
-          }
-        },
-        error: (error) => {
-          console.error('Error processing like:', error);
-        },
-        complete: () => {
-          // Reset the flag after a short delay
-          setTimeout(() => {
-            this.isLikeInProgress = false;
-          }, 50); // 500ms debounce
-        },
-      });
-    }
-  
-    isLiked(shopping: any): boolean {
-      return shopping?.ShoppingCenter?.Reactions?.length >= 1;
-    }
-  
-    open(content: any, modalObject?: any) {
-      this.modalService.open(content,{
-        windowClass: 'custom-modal'
-      });
-      this.General.modalObject = modalObject;
-    }
-  
-    rate(rating: 'dislike' | 'neutral' | 'like') {
-      this.selectedRating = rating;
-      console.log(`User rated: ${rating}`);
-    }
-  
-    handleClick(shopping: any, likeTpl: TemplateRef<any>): void {
-      if (this.clickTimeout) {
-        // Second click detected: cancel single-click action and execute double-click action.
-        clearTimeout(this.clickTimeout);
+  }
+
+   addLike(shopping: Center, reactionId: number): void {
+     
+     const contactIdStr = localStorage.getItem('contactId');
+     if (!contactIdStr) {
+       return;
+     }
+     const contactId = parseInt(contactIdStr, 10);
+     
+     if (shopping.ShoppingCenter.Reactions && shopping.ShoppingCenter.Reactions.some(
+           (reaction: Reaction) => reaction.ContactId === contactId)) {
+       return;
+     }
+     
+     if (this.isLikeInProgress) {
+       return;
+     }
+ 
+     this.isLikeInProgress = true;
+     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+ 
+     if (!shopping.ShoppingCenter.Reactions) {
+       shopping.ShoppingCenter.Reactions = [];
+     }
+     
+     if (!isLiked) {
+       shopping.ShoppingCenter.Reactions.length++;
+       this.likedShoppings[shopping.MarketSurveyId] = true;
+     } 
+     // else {
+     //   shopping.ShoppingCenter.Reactions.length--;
+     //   delete this.likedShoppings[shopping.MarketSurveyId];
+     // }
+ 
+     this.cdr.detectChanges();
+ 
+     const body = {
+       Name: 'CreatePropertyReaction',
+       Params: {
+         MarketSurveyId: shopping.MarketSurveyId,
+         ReactionId: reactionId,
+       },
+     };
+ 
+     this.PlacesService.GenericAPI(body).subscribe({
+       next: (response: any) => {
+       },
+       error: (error) => {
+         if (!isLiked) {
+           // shopping.ShoppingCenter.Reactions.length--;
+           // delete this.likedShoppings[shopping.MarketSurveyId];
+         } else {
+           shopping.ShoppingCenter.Reactions.length++;
+           this.likedShoppings[shopping.MarketSurveyId] = true;
+         }
+         this.cdr.detectChanges();
+       },
+       complete: () => {
+         this.isLikeInProgress = false;
+         this.cdr.detectChanges();
+       },
+     });
+   }
+ 
+
+  isLiked(shopping: any): boolean {
+    return shopping?.ShoppingCenter?.Reactions?.length >= 1;
+  }
+
+  open(content: any, currentShopping: any, nextShopping: any) {
+    this.modalService.open(content, {
+      windowClass: 'custom-modal',
+    });
+    this.General.modalObject = currentShopping;
+    this.General.nextModalObject = nextShopping;    
+  }
+
+  rate(rating: 'dislike' | 'neutral' | 'like') {
+    this.selectedRating = rating;
+    console.log(`User rated: ${rating}`);
+  }
+
+  handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
+    if (this.clickTimeout) {
+      clearTimeout(this.clickTimeout);
+      this.clickTimeout = null;
+      this.addLike(shopping, 1);
+    } else {
+      this.clickTimeout = setTimeout(() => {
+        const nextShopping = this.getNextShopping(index);
+        this.open(likeTpl, shopping, nextShopping);
         this.clickTimeout = null;
-        this.addLike(shopping, 1);
-      } else {
-        // First click: set a timer. If no second click occurs within 250ms, execute single-click action.
-        this.clickTimeout = setTimeout(() => {
-          this.open(likeTpl, shopping);
-          this.clickTimeout = null;
-        }, 250);
-      }
+      }, 250);
     }
-  
-    toggleDetails(index: number,shopping:any): void {
-      if(shopping.ShoppingCenter?.BuyBoxPlaces){
+  }
+  getNextShopping(currentIndex: number): any {
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
+      return this.shoppingCenters[nextIndex];
+    }
+    return null;
+  }
+
+
+  toggleDetails(index: number, shopping: any): void {
+    if (shopping.ShoppingCenter?.BuyBoxPlaces) {
       this.showDetails[index] = !this.showDetails[index];
     }
-    }
-  
-    selectCenter(centerId: number): void {
-      this.selectedCenterId = centerId;
-    }
-  
-    hideAllComments(): void {
-      for (const key in this.showComments) {
-        this.showComments[key] = false;
-      }
-    }
+  }
 
-    toggleShortcutsCard(id: number | null, close?: string): void {
-      if (close === 'close') {
-        this.selectedIdCard = null;
-      } else {
-        this.selectedIdCard = this.selectedIdCard === id ? null : id;
-      }
-    }
-  
-    toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-      if (close === 'close') {
-        this.selectedId = null;
-        this.selectedIdCard = null;
-        return;
-      }
-  
+  selectCenter(centerId: number): void {
+    console.log(centerId);
 
+    this.selectedCenterId = centerId;
+
+    const selectedIndex = this.shoppingCenters.findIndex(
+      (center) => center.Id === centerId
+    );
+
+    if (selectedIndex !== -1) {
+      this.General.modalObject = this.shoppingCenters[selectedIndex];
+
+      this.currentIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+
+      let nextIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
+      while (nextIndex === selectedIndex) {
+        nextIndex = (nextIndex + 1) % this.shoppingCenters.length;
+      }
+      this.General.nextModalObject = this.shoppingCenters[nextIndex];
     }
+  }
+
+  hideAllComments(): void {
+    for (const key in this.showComments) {
+      this.showComments[key] = false;
+    }
+  }
+
+  toggleShortcutsCard(id: number | null, close?: string): void {
+    if (close === 'close') {
+      this.selectedIdCard = null;
+    } else {
+      this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    }
+  }
+
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    if (close === 'close') {
+      this.selectedId = null;
+      this.selectedIdCard = null;
+      return;
+    }
+  }
   
 }
