@@ -67,6 +67,7 @@ export class LandingComponent {
   Permission: permission[] = [];
   windowHistrony:any;
   enriche!:Enriche;
+
    constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -312,7 +313,6 @@ export class LandingComponent {
   getMinMaxUnitSize() {
     if (this.CustomPlace.OtherPlaces) {
       const places = this.CustomPlace.OtherPlaces;
-
       if (places.length > 0) {
         const buildingSizes = places
           .map((place: any) => place.BuildingSizeSf)
