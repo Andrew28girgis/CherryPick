@@ -2,12 +2,14 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subject, takeUntil } from 'rxjs';
 import { MapDrawingService } from 'src/app/services/map-drawing.service';
 import { PolygonsControllerService } from 'src/app/services/polygons-controller.service';
 import { StateService } from 'src/app/services/state.service';
@@ -19,7 +21,11 @@ import { IPolygon } from 'src/models/ipolygons-controller';
   templateUrl: './polygons-controller.component.html',
   styleUrl: './polygons-controller.component.css',
 })
-export class PolygonsControllerComponent implements OnInit, AfterViewInit {
+export class PolygonsControllerComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  private destroy$ = new Subject<void>();
+  // create observable to destroy all subscribtions when component destroyed
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
   map!: google.maps.Map;
   buyBoxId!: number;
@@ -62,88 +68,107 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
     this.getAllPolygons();
   }
 
+  // use take until method to keep listening till the destroy observable completed
   polygonsListeners(): void {
-    this.mapDrawingService.onPolygonCreated.subscribe(async (polygon) => {
-      const geo = await this.mapDrawingService.convertPolygonToGeoJson(
-        polygon.shape as google.maps.Polygon
-      );
-      this.insertNewPolygon(polygon.shape.get('label'), geo, '', '');
-    });
+    this.mapDrawingService.onPolygonCreated
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (polygon) => {
+        const geo = await this.mapDrawingService.convertPolygonToGeoJson(
+          polygon.shape as google.maps.Polygon
+        );
+        this.insertNewPolygon(polygon.shape.get('label'), geo, '', '');
+      });
 
-    this.mapDrawingService.onPolygonChanged.subscribe(async (polygon) => {
-      const geo = await this.mapDrawingService.convertPolygonToGeoJson(
-        polygon.shape as google.maps.Polygon
-      );
-      const element = this.polygons.find((p) => p.id == polygon.id);
-      this.updatePolygon(polygon.id!, geo, '', '', element!.name);
-    });
+    this.mapDrawingService.onPolygonChanged
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (polygon) => {
+        const geo = await this.mapDrawingService.convertPolygonToGeoJson(
+          polygon.shape as google.maps.Polygon
+        );
+        const element = this.polygons.find((p) => p.id == polygon.id);
+        this.updatePolygon(polygon.id!, geo, '', '', element!.name);
+      });
 
-    this.mapDrawingService.onPolygonDeleted.subscribe((polygon) => {
-      if (polygon.id) {
-        this.polygons = this.polygons.filter((p) => p.id != polygon.id);
-        this.deletePolygon(polygon.id);
-      }
-    });
+    this.mapDrawingService.onPolygonDeleted
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((polygon) => {
+        if (polygon.id) {
+          this.polygons = this.polygons.filter((p) => p.id != polygon.id);
+          this.deletePolygon(polygon.id);
+        }
+      });
   }
 
+  // use take until method to keep listening till the destroy observable completed
+
   circlesListeners(): void {
-    this.mapDrawingService.onCircleCreated.subscribe(async (circle) => {
-      const c = circle.shape as google.maps.Circle;
-      const center = c.getCenter();
-      const radius = c.getRadius();
+    this.mapDrawingService.onCircleCreated
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (circle) => {
+        const c = circle.shape as google.maps.Circle;
+        const center = c.getCenter();
+        const radius = c.getRadius();
 
-      const polygon = this.mapDrawingService.convertCircleToPolygon(
-        this.map,
-        c
-      );
+        const polygon = this.mapDrawingService.convertCircleToPolygon(
+          this.map,
+          c
+        );
 
-      const geo = await this.mapDrawingService.convertPolygonToGeoJson(polygon);
-      this.insertNewPolygon(
-        circle.shape.get('label'),
-        geo,
-        JSON.stringify(center),
-        JSON.stringify(radius)
-      );
-    });
+        const geo = await this.mapDrawingService.convertPolygonToGeoJson(
+          polygon
+        );
+        this.insertNewPolygon(
+          circle.shape.get('label'),
+          geo,
+          JSON.stringify(center),
+          JSON.stringify(radius)
+        );
+      });
 
-    this.mapDrawingService.onCircleChanged.subscribe(async (circle) => {
-      const c = circle.shape as google.maps.Circle;
-      const center = c.getCenter();
-      const radius = c.getRadius();
+    this.mapDrawingService.onCircleChanged
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (circle) => {
+        const c = circle.shape as google.maps.Circle;
+        const center = c.getCenter();
+        const radius = c.getRadius();
 
-      const polygon = this.mapDrawingService.convertCircleToPolygon(
-        this.map,
-        c
-      );
+        const polygon = this.mapDrawingService.convertCircleToPolygon(
+          this.map,
+          c
+        );
 
-      const geo = await this.mapDrawingService.convertPolygonToGeoJson(polygon);
-      const element = this.polygons.find((p) => p.id == circle.id);
-      this.updatePolygon(
-        circle.id!,
-        geo,
-        JSON.stringify(center),
-        JSON.stringify(radius),
-        element!.name
-      );
-    });
+        const geo = await this.mapDrawingService.convertPolygonToGeoJson(
+          polygon
+        );
+        const element = this.polygons.find((p) => p.id == circle.id);
+        this.updatePolygon(
+          circle.id!,
+          geo,
+          JSON.stringify(center),
+          JSON.stringify(radius),
+          element!.name
+        );
+      });
 
-    this.mapDrawingService.onCircleDeleted.subscribe((circle) => {
-      if (circle.id) {
-        this.polygons = this.polygons.filter((p) => p.id != circle.id);
-        this.deletePolygon(circle.id);
-      }
-    });
+    this.mapDrawingService.onCircleDeleted
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((circle) => {
+        if (circle.id) {
+          this.polygons = this.polygons.filter((p) => p.id != circle.id);
+          this.deletePolygon(circle.id);
+        }
+      });
   }
 
   initializeMap(): void {
     console.log(`ee`);
-    
+
     console.log(this.polygons);
-    
+
     // check for polygons exist
     if (this.polygons.length > 0) {
       console.log(`hello`);
-      
+
       const point = this.getMapCenter();
       if (point) {
         this.map = this.mapDrawingService.initializeMap(
@@ -405,5 +430,11 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
   openUpdatePolygonNameModal(content: TemplateRef<any>, polygon: IPolygon) {
     this.selectedPolygon = polygon;
     this.modalService.open(content);
+  }
+
+  ngOnDestroy(): void {
+    // emit next and complete states to end all subscribtions for all subscribers
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
