@@ -31,7 +31,7 @@ export class TenantComponent implements OnInit  {
   buyboxDescription!:string;
   brokerlinkedin!:string;
   brokerphoto!:string;
-  brokersignature!:string;
+  brokersignature!:any;
   MinBuildingSize!:number;
   MaxBuildingSize!:number;
   ManagementOrganizationDesc!:string;
@@ -40,7 +40,7 @@ export class TenantComponent implements OnInit  {
   firstnamemanagerorganization!:string;
   lastnamemanagerorganization!:string;
   managementorganizationname!:string;
-  ManagerOrganizationDescription!:string;
+  ManagerOrganizationDescription!:any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,

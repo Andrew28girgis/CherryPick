@@ -1400,8 +1400,7 @@ export class EmilyComponent implements OnInit {
     const msalInstance = this.msalService.instance;
 
     // If an active account already exists, no need to log in again.
-    if (msalInstance.getActiveAccount()) {
-      console.log('User already logged in.');
+    if (msalInstance.getActiveAccount()) { 
       return;
     }
 
@@ -1487,7 +1486,6 @@ export class EmilyComponent implements OnInit {
     const account = this.msalService.instance.getActiveAccount();
     if (account) {
       this.user = account;
-      // console.log(`user: ${this.user.name}`);
     }
   }
 
