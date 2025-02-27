@@ -15,15 +15,16 @@ export class MyInboxEmailListComponent implements OnInit {
   Inboxs: any;
   mailInfo: any;
   mailIdnum!: number;
-
+  contactId!: any;
   constructor(private modalService: NgbModal, private microsoftMailsService: MicrosoftMailsService) { }
 
   ngOnInit(): void {
+    this.contactId =  localStorage.getItem('contactId')  ;
     this.MyInbox();
   }
   
   MyInbox() {
-    this.microsoftMailsService.MyInbox(38362).subscribe({
+    this.microsoftMailsService.MyInbox(this.contactId).subscribe({
       next: (data: any) => {
         this.Inboxs = data;
       },
