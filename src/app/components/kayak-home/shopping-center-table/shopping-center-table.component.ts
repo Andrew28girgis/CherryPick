@@ -18,7 +18,7 @@ import {
 } from './../../../../../src/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Place, Reaction } from 'src/models/shoppingCenters';
@@ -30,6 +30,7 @@ import {
   ShoppingCenter,
 } from 'src/models/buyboxShoppingCenter';
 import { LandingPlace } from 'src/models/landingPlace';
+import { NearByType } from 'src/models/nearBy';
 
 
 @Component({
@@ -47,28 +48,28 @@ export class ShoppingCenterTableComponent implements OnInit {
   OrgId!: any;
   dropdowmOptions: any = [
     {
-      text: 'Map View',
+      text: 'Map',
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
     },
     {
-      text: 'Side List View',
+      text: 'Side',
       icon: '../../../assets/Images/Icons/element-3.png',
       status: 2,
     },
     {
-      text: 'Cards View',
+      text: 'Cards',
       icon: '../../../assets/Images/Icons/grid-1.png',
       status: 3,
     },
     {
-      text: 'Table View',
+      text: 'Table',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
 
     {
-      text: 'Social View',
+      text: 'Social',
       icon: '../../../assets/Images/Icons/globe-solid.svg',
       status: 5,
     },
@@ -127,6 +128,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   showDetails: boolean[] = [];
   selectedCenterId: number | null = null;
   currentIndex = -1;
+  NearByType: NearByType[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -141,7 +143,7 @@ export class ShoppingCenterTableComponent implements OnInit {
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef
   ) {
-    this.currentView = localStorage.getItem('currentViewDashBord') || '4';
+    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
     this.savedMapView = localStorage.getItem('mapView');
     this.markerService.clearMarkers();
 
@@ -221,11 +223,12 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   toggleShortcutsCard(id: number | null, close?: string): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-    } else {
-      this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    }
+    // if (close === 'close') {
+    //   this.selectedIdCard = null;
+    // } else {
+    //   this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    // }
+    this.selectedIdCard=id;
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
@@ -1177,24 +1180,29 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
-    const contactIdStr = localStorage.getItem('contactId');
+    const contactIdStr = localStorage.getItem('ContactId');
     if (!contactIdStr) {
-      return;
+      console.log("no contact id");
+      // return;
     }
-    const contactId = parseInt(contactIdStr, 10);
+    const contactId = parseInt(contactIdStr? contactIdStr: "0", 10);
 
     if (
+      
       shopping.ShoppingCenter.Reactions &&
       shopping.ShoppingCenter.Reactions.some(
         (reaction: Reaction) => reaction.ContactId === contactId
       )
     ) {
+      console.log("liked before");
+
       return;
     }
 
     if (this.isLikeInProgress) {
       return;
     }
+console.log("adding like ");
 
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
@@ -1305,5 +1313,57 @@ export class ShoppingCenterTableComponent implements OnInit {
         }
         this.General.nextModalObject = this.shoppingCenters[nextIndex];
       }
+    }
+
+    openshortcuts(content: any, modalObject?: any) {
+      this.General.modalObject = modalObject
+      this.selectedIdCard = modalObject.Id
+      this.ShoppingCenter=modalObject
+      this.modalService.open(content, {
+        windowClass: 'shortcuts-modal',
+        ariaLabelledBy: 'modal-basic-title',
+        fullscreen: true,
+        scrollable: true,
+        animation: false,
+      });
+  
+
+    }
+    
+
+
+
+    @ViewChild("carousel") carousel!: NgbCarousel
+    @ViewChild("carousel", { read: ElementRef }) carouselElement!: ElementRef
+  
+  
+    private touchStartX = 0
+    private touchEndX = 0
+    private readonly SWIPE_THRESHOLD = 50
+
+    
+    onTouchStart(event: TouchEvent) {
+      this.touchStartX = event.touches[0].clientX
+    }
+  
+    onTouchMove(event: TouchEvent) {
+      this.touchEndX = event.touches[0].clientX
+    }
+  
+    onTouchEnd() {
+      if (!this.carousel) return
+  
+      const swipeDistance = this.touchEndX - this.touchStartX
+      if (Math.abs(swipeDistance) > this.SWIPE_THRESHOLD) {
+        if (swipeDistance > 0) {
+          this.carousel.prev()
+        } else {
+          this.carousel.next()
+        }
+      }
+  
+      // Reset values
+      this.touchStartX = 0
+      this.touchEndX = 0
     }
 }

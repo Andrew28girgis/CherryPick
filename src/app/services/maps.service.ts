@@ -728,8 +728,6 @@ export class MapsService {
     }
   }
 
-
-
   
 
   // drawPolygons(map: any, response: any): void {
