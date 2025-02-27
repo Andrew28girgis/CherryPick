@@ -88,6 +88,13 @@ export class MapDrawingService {
     this.addShapeCompletionListener(map);
   }
 
+  updateMapCenter(map: any, center: any): void {
+    if (map) {
+      const newCenter = center ? center : { lat: 37.7749, lng: -122.4194 };
+      map.setCenter(newCenter);
+    }
+  }
+
   clearDrawnLists(): void {
     this.drawnPolygons = [];
     this.drawnCircles = [];
@@ -235,7 +242,6 @@ export class MapDrawingService {
 
           // extract city and state from geocoding results
           results[0].address_components.forEach((component: any) => {
-            
             if (component.types.includes('locality')) {
               city = component.long_name;
             }

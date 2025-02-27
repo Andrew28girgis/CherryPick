@@ -169,7 +169,7 @@ export class PolygonsControllerComponent
     if (this.polygons.length > 0) {
       console.log(`hello`);
 
-      const point = this.getMapCenter();
+      const point = this.getMapCenter(this.polygons[0].json);
       if (point) {
         this.map = this.mapDrawingService.initializeMap(
           this.gmapContainer,
@@ -195,11 +195,11 @@ export class PolygonsControllerComponent
     }
   }
 
-  getMapCenter(): {
+  getMapCenter(polygon: string): {
     lat: number;
     lng: number;
   } | null {
-    const geoJson: IGeoJson = JSON.parse(this.polygons[0].json);
+    const geoJson: IGeoJson = JSON.parse(polygon);
 
     const points = geoJson.geometry.coordinates[0]?.map((coord: number[]) => {
       return { lat: coord[1], lng: coord[0] };
@@ -410,6 +410,15 @@ export class PolygonsControllerComponent
   }
 
   displayShapeOnMap(id: number): void {
+    const polygon = this.polygons.find((p) => p.id == id);
+    if (polygon) {
+      const point = this.getMapCenter(polygon.json);
+      if (point) {
+        this.mapDrawingService.updateMapCenter(this.map, point);
+      } else {
+        this.mapDrawingService.updateMapCenter(this.map, null);
+      }
+    }
     this.mapDrawingService.displayShapeOnMap(id, this.map);
   }
 
