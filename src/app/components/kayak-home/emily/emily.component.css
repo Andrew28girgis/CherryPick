@@ -183,6 +183,12 @@ select option:checked {
   width: max-content;
 }
 
+.Emily__body__button_Microsoft {
+  background: #eeeeee;
+  width: max-content;
+  color: #4e4e4e;
+}
+
 .backgroundcolor {
   background: #f2f3f4;
 }
@@ -201,6 +207,13 @@ select option:checked {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.x-icon {
+  height: 1em;
+  width: 1em;
+  top: .125em;
+  position: relative;
 }
 
 .Oganirzations__img {
