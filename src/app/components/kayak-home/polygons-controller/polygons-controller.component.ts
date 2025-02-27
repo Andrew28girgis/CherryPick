@@ -36,13 +36,11 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    // get contact id from local storage
     const contact = localStorage.getItem('contactId');
     if (contact) {
       this.contactId = +contact;
     }
 
-    // get buybox id from local storage
     const id = localStorage.getItem('BuyBoxId');
     if (id) {
       this.buyBoxId = +id;
@@ -138,9 +136,14 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
   }
 
   initializeMap(): void {
+    console.log(`ee`);
+    
+    console.log(this.polygons);
+    
     // check for polygons exist
     if (this.polygons.length > 0) {
-      // get first polygon center
+      console.log(`hello`);
+      
       const point = this.getMapCenter();
       if (point) {
         this.map = this.mapDrawingService.initializeMap(
@@ -248,6 +251,10 @@ export class PolygonsControllerComponent implements OnInit, AfterViewInit {
           // clear all lists to fill the data from database
           this.mapDrawingService.clearDrawnLists();
           this.polygons = response.json;
+          this.initializeMap();
+
+          // initialize drawing manager
+          this.mapDrawingService.initializeDrawingManager(this.map);
           this.addPolygonsToMap();
         }
       },

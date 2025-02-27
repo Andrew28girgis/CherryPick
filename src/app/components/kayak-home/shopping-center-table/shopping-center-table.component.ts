@@ -311,7 +311,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   }
 
   getShoppingCenters(buyboxId: number): void {
-    if (this.stateService.getShoppingCenters().length > 0) {
+    if (this.stateService.getShoppingCenters()?.length > 0) {
       this.shoppingCenters = this.stateService.getShoppingCenters();
       return;
     }
