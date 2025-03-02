@@ -15,6 +15,7 @@ import { KayakComponent } from './kayak/kayak.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
 import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
+import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.component";
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PolygonsControllerComponent } from './polygons-controller/polygons-cont
     NgxSpinnerModule,
     ToastrModule.forRoot(),
     SharedModule,
-  ],
+    LinkMicrosoftComponent
+],
   exports: [
     KayakHomeComponent,
     EmilyComponent,
