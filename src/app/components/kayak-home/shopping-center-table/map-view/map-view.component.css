@@ -1,0 +1,331 @@
+.shortcuts_icon,
+.shortcuts_iconCard {
+  position: absolute;
+  background: white;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+  padding: 16px;
+  border-radius: 10px;
+  text-align: start;
+  margin: 0;
+  z-index: 100;
+  right: 135%;
+  width: max-content;
+  top: -135%;
+}
+
+.shortcuts_iconCard {
+  top: -22%;
+}
+
+.mtopp {
+  overflow-y: scroll;
+}
+
+.shortcuts_icon > ul,
+.shortcuts_iconCard > ul {
+  text-decoration: none;
+  list-style: none;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  gap: 8px;
+  display: grid;
+}
+
+.shortcuts_icon > li,
+.shortcuts_iconCard > li {
+  display: flex;
+  gap: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  cursor: pointer;
+}
+
+.shortcuts_icon .target,
+.shortcuts_iconCard .target {
+  display: flex;
+  gap: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.shortcuts_icon > i,
+.shortcuts_iconCard > i {
+  position: absolute;
+  right: -8px;
+  top: 25%;
+  font-size: 25px;
+  color: white;
+}
+
+.shortcuts_iconCard > i {
+  top: 5%;
+}
+
+.card-window {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.card-window-back {
+  position: relative;
+  z-index: 10;
+  border-radius: 20px;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+}
+
+.card-window-back2 {
+  position: absolute;
+  width: 94%;
+  height: 100%;
+  border-radius: 16px;
+  background: #0000006e;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: red;
+  z-index: 100;
+  display: none;
+}
+
+.card-window-back2.show {
+  display: flex;
+}
+
+.Button_delete {
+  background: rgb(180, 0, 0);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 20px;
+  padding-inline: 26px;
+  padding-block: 10px;
+}
+
+.Button_cancel {
+  background: rgb(134, 134, 134);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 20px;
+  padding-inline: 26px;
+  padding-block: 10px;
+}
+
+.procpect-table-body td {
+  padding-block: 5px;
+  padding-inline: 10px;
+  font-size: 14px;
+}
+
+.ellipsis_icon,
+.ellipsis_icont {
+  border: 1.5px solid #7077915b;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border-radius: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.cards {
+  height: 100vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background-color: #f0f0f0;
+  /* Highlight on hover */
+}
+
+.option-icon img {
+  margin-right: 10px;
+  /* Space between icon and text */
+}
+
+.custom-map {
+  height: 100vh;
+}
+
+img[alt="logo"] {
+  margin-right: 20px;
+}
+
+.custom-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+}
+
+.icon-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.icon-option:hover {
+  background-color: #eaeaea;
+  transform: scale(1.1);
+}
+
+.icon-option.selected {
+  background-color: #001f3f;
+  color: #fff;
+}
+
+.icon-option.selected .icon-image {
+  filter: brightness(0) invert(1);
+}
+
+.icon-option.selected .icon-text {
+  color: #fff;
+}
+
+.icon-image {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-text {
+  font-size: 0.7rem;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.custom-icon-container {
+  display: flex;
+  gap: 15px;
+  /* Add spacing between the icons */
+}
+
+.icon-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid rgb(190, 190, 190);
+}
+
+.icon-option:hover {
+  transform: scale(1.1);
+}
+
+.icon-option.selected {
+  color: blue;
+  /* Highlight the selected option */
+}
+
+.svg-container {
+  display: flex;
+  align-items: center;
+}
+
+.table-text {
+  color: #7a8591;
+  font-family: Montserrat;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
+
+.table-texttt {
+  color: #7a8591;
+  font-family: Montserrat;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
+
+.card-content {
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  height: max-content;
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: space-between;
+  /* height: 340px; */
+  min-height: 280px;
+  max-height: 350px;
+}
+
+.card-sideview {
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  /* height: 300px; */
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 280px;
+  max-height: 350px;
+}
+
+.card-content2 {
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  height: 250px;
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-address {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 30px;
+  letter-spacing: -0.005em;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #7a8591;
+}
+
+.managed-by {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  color: #7a8591;
+}
+
+.nearset-category {
+  font-size: 14px;
+  margin-top: 10px;
+}
