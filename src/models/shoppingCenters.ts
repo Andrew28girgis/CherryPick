@@ -34,13 +34,14 @@ export interface Center {
     ManagerOrganization: ManagerOrganization[]
   }
   export interface Reaction {
-    Id: number
-    ContactId: number
-    MarketSurveyId: number
-    ReactionId: number
-    ReactionDate: string
-    Firstname: string
-    Lastname: string
+    Id?: number
+    ContactId?: number
+    MarketSurveyId?: number
+    ReactionId?: number
+    ReactionDate?: string
+    Firstname?: string
+    Lastname?: string
+    
   }
   
 

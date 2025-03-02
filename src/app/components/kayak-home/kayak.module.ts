@@ -14,6 +14,11 @@ import { FormsModule } from '@angular/forms';
 import { KayakComponent } from './kayak/kayak.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
+import { SocialViewComponent } from './shopping-center-table/social-view/social-view.component';
+import { TableViewComponent } from './shopping-center-table/table-view/table-view.component';
+import { CardViewComponent } from './shopping-center-table/card-view/card-view.component';
+import { SideListViewComponent } from './shopping-center-table/side-list-view/side-list-view.component';
+import { MapViewComponent } from './shopping-center-table/map-view/map-view.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +30,11 @@ import { EmilyOrgComponent } from './emily-org/emily-org.component';
     BuyboxRelatiosComponent,
     KayakComponent,
     EmilyOrgComponent,
+    SocialViewComponent,
+    TableViewComponent,
+    CardViewComponent,
+    SideListViewComponent,
+    MapViewComponent,
   ],
   imports: [
     CommonModule,
@@ -44,6 +54,12 @@ import { EmilyOrgComponent } from './emily-org/emily-org.component';
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     EmilyOrgComponent,
+    SocialViewComponent,
+    TableViewComponent,
+    CardViewComponent,
+    SideListViewComponent,
+    MapViewComponent,
+
   ],
 })
 export class KayakModule {}
