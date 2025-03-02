@@ -28,19 +28,22 @@
 .upload {
   width: auto;
   min-width: 110px;
-  border-radius: 10px;
+  border-radius: 7px;
   background: #001f3f;
   color: #fff;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 500;
   border: 0;
-  padding: 4px 16px;
+  padding: 7px 10px;
   white-space: nowrap;
 }
+.upload:hover{
+  background-color: #043566;
+}
 .view-act {
-  padding-top: 20px;
+  padding-top: 10px;
   padding-left: 10px;
   padding-right: 20px;
 }
