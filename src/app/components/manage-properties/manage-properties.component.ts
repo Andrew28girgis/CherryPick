@@ -211,8 +211,8 @@ export class ManagePropertiesComponent implements OnInit {
         console.log('Data:', data);
         this.showToast('shopping center updated successfully!');
         this.spinner.hide();
+        this.modalService.dismissAll();
         this.closeModal(this.modalService);
-        // this.modalService.dismissAll();
       },
       error: (error) => {
         console.error('Error:', error);

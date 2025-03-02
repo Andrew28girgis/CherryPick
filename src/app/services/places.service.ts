@@ -28,6 +28,10 @@ export class PlacesService {
   public GenericAPI(body: any) {
     return this.http.post<any>(`${environment.api}/GenericAPI/Execute`, body);
   }
+  // for testing local generic api
+  public GenericAPILocal(body: any) {
+    return this.http.post<any>(`http://10.0.0.15:8082/api/GenericAPI/Execute`, body);
+  }
 
   public loginUser(message: any) {
     return this.http.post<any[]>(`${environment.api}/BuyBox/Login`, message);
@@ -71,7 +75,6 @@ export class PlacesService {
       // shoppingcenterid: id,
     };
 
-    // Send the request with the combined payload
     return this.http.post<any>(`http://10.0.0.15:8082/api/BrokerWithChatGPT/UpdateAvailability/${id}`,requestPayload);
   }
 }
