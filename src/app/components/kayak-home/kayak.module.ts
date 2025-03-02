@@ -14,6 +14,11 @@ import { FormsModule } from '@angular/forms';
 import { KayakComponent } from './kayak/kayak.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { EmilyOrgComponent } from './emily-org/emily-org.component';
+import { SocialViewComponent } from './shopping-center-table/social-view/social-view.component';
+import { TableViewComponent } from './shopping-center-table/table-view/table-view.component';
+import { CardViewComponent } from './shopping-center-table/card-view/card-view.component';
+import { SideListViewComponent } from './shopping-center-table/side-list-view/side-list-view.component';
+import { MapViewComponent } from './shopping-center-table/map-view/map-view.component';
 import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
 import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.component";
 
@@ -27,7 +32,11 @@ import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.componen
     BuyboxRelatiosComponent,
     KayakComponent,
     EmilyOrgComponent,
-    PolygonsControllerComponent,
+    SocialViewComponent,
+    TableViewComponent,
+    CardViewComponent,
+    SideListViewComponent,
+    MapViewComponent,
   ],
   imports: [
     CommonModule,
@@ -48,6 +57,12 @@ import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.componen
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     EmilyOrgComponent,
+    SocialViewComponent,
+    TableViewComponent,
+    CardViewComponent,
+    SideListViewComponent,
+    MapViewComponent,
+
   ],
 })
 export class KayakModule {}
