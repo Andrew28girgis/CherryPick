@@ -210,9 +210,9 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data) => {
         console.log('Data:', data);
         this.showToast('shopping center updated successfully!');
-        this.spinner.hide();
+        this.clearModalData();
         this.modalService.dismissAll();
-        this.closeModal(this.modalService);
+        this.spinner.hide();
       },
       error: (error) => {
         console.error('Error:', error);
@@ -220,6 +220,17 @@ export class ManagePropertiesComponent implements OnInit {
         this.spinner.hide();
       },
     });
+  }
+    // Method to clear all modal data
+  clearModalData() {
+    this.images = []; // Clear images array
+    this.JsonPDF = null!; // Clear PDF data
+    this.AvailabilityAndTenants = {}; // Clear "Our Data"
+    this.fileName = ''; // Clear file name
+    this.uploadProgress = 0; // Reset upload progress
+    this.isUploading = false; // Reset upload state
+    this.isConverting = false; // Reset conversion state
+    this.files = []; // Clear dropped files
   }
   showToast(message: string) {
     const toast = document.getElementById('customToast');
