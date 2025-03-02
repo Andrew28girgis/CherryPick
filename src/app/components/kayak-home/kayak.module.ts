@@ -37,6 +37,7 @@ import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.componen
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
+    PolygonsControllerComponent
   ],
   imports: [
     CommonModule,
