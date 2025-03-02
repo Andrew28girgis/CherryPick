@@ -4,13 +4,15 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlacesService {
   constructor(private http: HttpClient) {}
 
   public GetBuyBoxPlaces(buyBoxId: any) {
-    return this.http.get<any>(`${environment.api}/BuyBox/GetBuyBoxPlaces?buyboxid=${buyBoxId}`);
+    return this.http.get<any>(
+      `${environment.api}/BuyBox/GetBuyBoxPlaces?buyboxid=${buyBoxId}`
+    );
   }
 
   public GetBrokerCategories() {
@@ -18,11 +20,17 @@ export class PlacesService {
   }
 
   public GetAllBuyBoxComparables(buyBoxId: number) {
-    return this.http.get<any>(`${environment.api}/BuyBox/GetAllBuyBoxComparables?buyBoxId=${buyBoxId}`);
+    return this.http.get<any>(
+      `${environment.api}/BuyBox/GetAllBuyBoxComparables?buyBoxId=${buyBoxId}`
+    );
   }
 
   public GenericAPI(body: any) {
     return this.http.post<any>(`${environment.api}/GenericAPI/Execute`, body);
+  }
+  // for testing local generic api
+  public GenericAPILocal(body: any) {
+    return this.http.post<any>(`http://10.0.0.15:8082/api/GenericAPI/Execute`, body);
   }
 
   public loginUser(message: any) {
@@ -30,7 +38,10 @@ export class PlacesService {
   }
 
   public UpdateBuyBoxWorkSpacePlace(message: any) {
-    return this.http.post<any>(`${environment.api}/BuyBox/UpdatePlaceNote`, message);
+    return this.http.post<any>(
+      `${environment.api}/BuyBox/UpdatePlaceNote`,
+      message
+    );
   }
 
   GetUserBuyBoxes(): Observable<any> {
@@ -46,8 +57,24 @@ export class PlacesService {
     return this.http.post<any>(apiUrl, body);
   }
 
+  public UploadFile(formData: FormData, id: number) {
+    return this.http.post<any>(
+      `${environment.api}/HelperUpload/UploadFile//Enrich/${id}`,
+      formData
+    );
+  }
+  public SendImagesArray(images: any) {
+    return this.http.post<any>(
+      `http://10.0.0.15:8082/api/BrokerWithChatGPT/ProcessImagesWithGPT`,
+      images
+    );
+  }
+  public SendJsonData(data: any, id: any) {
+    const requestPayload = {
+      ...data, // Spread the existing data
+      // shoppingcenterid: id,
+    };
 
-  public UploadFile(formData: FormData ,id: number) {
-    return this.http.post<any>(`${environment.api}/HelperUpload/UploadFile//Enrich/${id}`, formData);
-  } 
+    return this.http.post<any>(`http://10.0.0.15:8082/api/BrokerWithChatGPT/UpdateAvailability/${id}`,requestPayload);
+  }
 }
