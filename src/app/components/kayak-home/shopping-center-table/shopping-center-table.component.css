@@ -1024,6 +1024,7 @@ img[alt="logo"] {
     align-items: center;
     justify-content: center;
     margin-bottom: 23%;
+    width: inherit;
   }
 
   .card-image img {
@@ -1523,10 +1524,6 @@ scroll-container {
 .expanded-info p {
   font-size: 1rem;
   color: #333;
-}
-
-.row {
-  margin-top: 10px;
 }
 
 .logo {
