@@ -307,7 +307,10 @@
   right: 0;
   border-bottom-right-radius: 15px; /* Bottom-right border effect */
 }
-
+.cherry-logo {
+  width: 184px;
+  cursor: pointer;
+}
 
 @media (max-width: 576px) { 
     .proposal-button {

@@ -17,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-tenant',
   standalone: true,
-  imports: [CommonModule, NgxSpinnerModule],  // Add CommonModule and NgxSpinnerModule to the imports array
+  imports: [CommonModule, NgxSpinnerModule, RouterModule],  // Add CommonModule and NgxSpinnerModule to the imports array
   providers:[],
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
