@@ -658,17 +658,7 @@
 .comment-btn:active i {
   animation: likeAnimation 0.3s ease;
 }
-
-/* .action-btn:hover svg path {
-  fill: #2980b9;
-  /* Orange color for active state */
-/* } */
-
-/* .like-btn:hover svg path { */
-/* fill: #2980b9; */
-/* Red color for active like button */
-/* } */
-*/ .comment-btn:hover svg path {
+ .comment-btn:hover svg path {
   fill: #2980b9;
   /* Green color for active comment button */
 }

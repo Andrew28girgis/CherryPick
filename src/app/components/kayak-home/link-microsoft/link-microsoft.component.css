@@ -1,0 +1,116 @@
+.Button_all {
+  display: flex !important;
+  justify-content: flex-end !important;
+  flex-wrap: wrap;
+  align-items: normal !important;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.Emily__contant__button {
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+  width: calc(100% / 6 - 6px);
+}
+
+.Emily__body__button {
+  background: #001f3f;
+  width: max-content;
+}
+
+.Emily__body__button_Microsoft {
+  background: #eeeeee;
+  width: max-content;
+  color: #4e4e4e;
+  align-items: center;
+  display: flex;
+  gap: 4px;
+}
+
+.checkbox-section {
+  display: flex;
+  gap: 5px;
+}
+
+.form-check-input[type="checkbox"] {
+  box-shadow: none;
+  outline: none;
+
+  &:checked {
+    border: 1px solid #001f3f;
+    background-color: #001f3f;
+  }
+
+  &:not(checked) {
+    border: 1px solid gray;
+  }
+}
+
+.modal-title {
+  font-size: 16px;
+  color: #747474 !important;
+  margin: 0;
+  padding: 0;
+}
+
+.Button_add {
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 5px 10px;
+  width: 50px;
+}
+
+.delete_button {
+  background: red;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 5px 10px;
+  width: 50px;
+}
+
+.folder_p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.section-Text-email {
+  display: flex;
+}
+
+.Button_Update_S {
+  background: green;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+
+@media (max-width: 768px) {
+  .Button_all {
+    flex-direction: column;
+  }
+
+  .Emily__contant__button {
+    margin: 0 !important;
+    width: calc(100% / 1 - 0px);
+    margin-bottom: 0px;
+  }
+
+  .Emily__body__button {
+    width: 100% !important;
+  }
+}

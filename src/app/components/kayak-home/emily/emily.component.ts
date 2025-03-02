@@ -14,6 +14,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
 import { MsalService } from '@azure/msal-angular';
 import { AuthenticationResult, BrowserAuthError } from '@azure/msal-browser';
+import { MicrosoftMailsService } from 'src/app/services/microsoft-mails.service';
 
 @Component({
   selector: 'app-emily',
@@ -94,13 +95,14 @@ export class EmilyComponent implements OnInit {
   selectedContact: number[] = [];
   RepresentativeOrganizationContactsThatWillReceiveThisEmail: string =
     'Representative Organization Contacts that will receive this email:';
-
+  contactId:any ;
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
-    private msalService: MsalService
+    private msalService: MsalService,
+    private microsoftMailsService: MicrosoftMailsService
   ) {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = params.get('buyboxId');
@@ -112,18 +114,12 @@ export class EmilyComponent implements OnInit {
 
   async ngOnInit() {
     this.spinner.show();
+    this.contactId = localStorage.getItem('contactId');
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetPrompts();
     this.GetBuyBoxInfoDetails();
     this.GetBuyBoxOrganizationsForEmail();
-
-    this.msalService.instance.handleRedirectPromise().then((response) => {
-      if (response) {
-        this.msalService.instance.setActiveAccount(response.account);
-      }
-      this.getUser();
-    });
     this.spinner.hide();
   }
 
@@ -1372,129 +1368,4 @@ export class EmilyComponent implements OnInit {
     toast!.classList.remove('show');
   }
 
-  // login
-  user: any = null;
-
-  async waitForMsalInitialization() {
-    if (!this.msalService.instance) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-  }
-
-  async loginMicrosoft(): Promise<void> {
-    const msalInstance = this.msalService.instance;
-  
-    // If an active account already exists, no need to log in again.
-    if (msalInstance.getActiveAccount()) {
-      console.log('User already logged in.');
-      return;
-    }
-  
-    try {
-      // Initiate login popup with the required scope.
-      const response = await msalInstance.loginPopup({
-        scopes: [
-          'User.Read',
-          'offline_access',
-          'https://graph.microsoft.com/Mail.Send',
-          'https://graph.microsoft.com/Mail.Read',
-        ],
-      });
-  
-      console.log('Login successful.');
-  
-      console.log(response);
-  
-      const account = response?.account;
-  
-      // Ensure that account information is present.
-      if (!account) {
-        throw new Error(
-          'Login succeeded, but no account information was returned.'
-        );
-      }
-  
-      // Set the active account and fetch user details.
-      msalInstance.setActiveAccount(account);
-  
-      // Save access_token and refresh_token to localStorage
-      localStorage.setItem('access_token', response.accessToken);
-      // localStorage.setItem('refresh_token', response.refreshToken);  // Storing refresh token
-  
-      // Call other methods you need.
-      this.UpdateContactToReadEmails();
-      this.getUser();
-    } catch (error) {
-      // Check for specific MSAL error when an interaction is already in progress.
-      if (
-        error instanceof BrowserAuthError &&
-        error.errorCode === 'interaction_in_progress'
-      ) {
-        console.warn('Authentication interaction already in progress.');
-      } else {
-        console.error('Login error:', error);
-      }
-    }
-  }
-  
-
-  logoutMicrosoft() {
-    this.msalService.logoutPopup().subscribe({
-      next: () => {
-        this.showToast('User logged out successfully.');
-        this.user = null;
-        window.close();
-      },
-      error: (error) => {
-        console.error('Error during logout:', error);
-        window.close();
-      },
-    });
-  }
-
-  getUser() {
-    const account = this.msalService.instance.getActiveAccount();
-    if (account) {
-      this.user = account;
-      // console.log(`user: ${this.user.name}`);
-    }
-  }
-
-  UpdateContactToReadEmails(): void {
-    const objectTokeMsal = localStorage.getItem(
-      'msal.token.keys.0405c49c-ebe8-4fef-9ae7-87305ad01f8e'
-    );
-
-    if (objectTokeMsal) {
-      try {
-        const parsedObject = JSON.parse(objectTokeMsal);
-        const accessToken = Array.isArray(parsedObject.accessToken)
-          ? parsedObject.accessToken[0]
-          : parsedObject.accessToken;
-        const refreshToken = Array.isArray(parsedObject.refreshToken)
-          ? parsedObject.refreshToken[0]
-          : parsedObject.refreshToken;
-
-        this.spinner.show();
-        const body: any = {
-          Name: 'UpdateContactToReadEmails',
-          Params: {
-            AccessToken: accessToken,
-            RefreshToken: refreshToken,
-            ContactId: 38362,
-          },
-        };
-
-        this.PlacesService.GenericAPI(body).subscribe({
-          next: (data: any) => {
-            this.spinner.hide();
-          },
-        });
-      } catch (error) {
-        console.error('Error parsing objectTokeMsal:', error);
-      }
-    } else {
-      console.error('objectTokeMsal is null');
-    }
-  }
 }

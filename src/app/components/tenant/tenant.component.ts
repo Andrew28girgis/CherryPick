@@ -1,12 +1,127 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ChangeDetectorRef,
+  ViewChild,
+  HostListener,
+} from '@angular/core';import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
+import { PlacesService } from '../../../app/services/places.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';  // Import RouterModule
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-tenant',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, NgxSpinnerModule, RouterModule],  // Add CommonModule and NgxSpinnerModule to the imports array
+  providers:[],
   templateUrl: './tenant.component.html',
-  styleUrl: './tenant.component.css'
+  styleUrl: './tenant.component.css',
 })
-export class TenantComponent {
+export class TenantComponent implements OnInit  {
+  TenantResult: any = [];  
+  organizationBranches: any = []; 
+  selectedbuyBox!: string;
+  buyboxid!:number;
+  managementorganizationId!:number;
+  buyboxDescription!:string;
+  brokerlinkedin!:string;
+  brokerphoto!:string;
+  brokersignature!:any;
+  MinBuildingSize!:number;
+  MaxBuildingSize!:number;
+  ManagementOrganizationDesc!:string;
+  buyboxname!:string;
+  smalldescription: string[] = []; 
+  firstnamemanagerorganization!:string;
+  lastnamemanagerorganization!:string;
+  managementorganizationname!:string;
+  ManagerOrganizationDescription!:any;
+  constructor(
+    public activatedRoute: ActivatedRoute,
+    public router: Router,
+    private spinner: NgxSpinnerService,
+    private PlacesService: PlacesService
+  ) {}
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe((params) => {
+      this.selectedbuyBox = params['buyboxid'];
+      this.GetBuyBoxInfo();
+    });
+  }
+  GetBuyBoxInfo(): void {
+    this.spinner.show(); // Show the spinner before the API request
 
+    const body: any = {
+      Name: 'GetBuyBoxInfo',
+      Params: {
+        buyboxid: this.selectedbuyBox,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.TenantResult = res.json[0];  
+        console.log('API Response:', this.TenantResult);
+        this.buyboxid=this.TenantResult.Buybox[0].BuyBoxOrganization[0].BuyBoxOrganizationId;;
+        this.buyboxDescription = this.TenantResult.Buybox[0].BuyBoxOrganization[0].BuyBoxOrganizationDescription;
+        this.buyboxname = this.TenantResult.Buybox[0].BuyBoxOrganization[0].Name;
+        this.firstnamemanagerorganization=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].Firstname;
+        this.lastnamemanagerorganization=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].LastName;
+        this.managementorganizationname=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationName
+        this.ManagerOrganizationDescription=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationDescription
+        this.managementorganizationId=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationId;
+        this.brokerlinkedin=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].LinkedIn;
+        this.MinBuildingSize=this.TenantResult.Buybox[0].MinBuildingSize;
+        this.MaxBuildingSize=this.TenantResult.Buybox[0].MaxBuildingSize
+        this.ManagementOrganizationDesc=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationDescription;
+        this.brokerphoto=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].Photo;
+        this.brokersignature=this.TenantResult.Buybox[0].BuyBoxOrganization[0].ManagerOrganization[0].ManagerOrganizationContacts[0].Profile;
+
+        if (Array.isArray(this.TenantResult.Buybox[0].Description)) {
+          this.smalldescription = this.TenantResult.Buybox[0].Description; // Assuming Description is an array
+        } else {
+          this.smalldescription = [this.TenantResult.Buybox[0].Description];
+        }
+
+        this.spinner.hide();
+        console.log('Extracted BuyBoxOrganizationId:', this.buyboxid);
+
+        this.GetOrganizationBranches();
+
+      },
+      error: (err: any) => {
+        console.error('API Error:', err);
+        this.spinner.hide();
+      },
+    });
+  }
+  GetOrganizationBranches(): void {
+    this.spinner.show();
+    
+    const body: any = {
+      Name: 'GetOrganizationBranches',
+      Params: {
+        organizationid: this.buyboxid,  // Use the variable holding BuyBoxOrganizationId
+      },
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        console.log('GetOrganizationBranches API Response:', res);
+        this.organizationBranches = res.json;
+        this.spinner.hide();
+      },
+      error: (err: any) => {
+        console.error('API Error:', err);
+        this.spinner.hide();
+      },
+    });
+  }
+  
+  
 }

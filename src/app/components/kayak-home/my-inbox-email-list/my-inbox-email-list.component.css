@@ -1,0 +1,105 @@
+.section {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+
+.box-section {
+  display: flex;
+  border-bottom: 1px solid rgb(214, 214, 214);
+  cursor: pointer;
+  margin-block: 10px !important;
+  border-radius: 6px;
+}
+
+.box-section:hover {
+  background: rgba(0, 128, 0, 0.226);
+  border-radius: 6px;
+}
+
+.border-section {
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 16px;
+  padding: 16px;
+}
+.head{
+  font-size: 16px;
+  font-weight: 600;
+  color: #001f3f;
+}
+
+.from-name {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.from-subject {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.from-body {
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.from-date {
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 30px;
+  letter-spacing: 0%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.GeneratedEmail {
+  background-color: #141e2a;
+}
+
+.SavedTemplate {
+  align-items: center;
+  display: block
+}
+
+.firstemail {
+    font-size: 16px;
+    align-items: center;
+    display: block;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+.firstlast {
+  font-size: 13px;
+  align-items: center;
+  display: block;
+  margin-top: 4px;
+}
+
+.creationdate {
+  font-size: 13px;
+  align-items: center;
+  display: block;
+}

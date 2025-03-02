@@ -1,0 +1,46 @@
+<div class="row m-0 p-0 d-flex justify-content-center">
+  <div class="col-8 p-0 mt-3">
+    <div class="col-12 p-0">
+      <div class="mt-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-header text-white GeneratedEmail">
+            <h5 class="mb-0 d-flex justify-content-between">
+              <p>
+                <span class="firstemail">
+                  {{ mailDetails.from }}
+                </span>
+                <span class="firstlast" > To Emails :
+                    <span class="firstlast" *ngFor="let item of mailDetails.toEmails">
+                      {{ item }}
+                      </span>
+                </span>
+              </p>
+              <p>
+                <span class="creationdate">Creation Date :
+                  {{ mailDetails.date | date : "medium" }}</span>
+              </p>
+            </h5>
+          </div>
+          <div class="card-body bg-light">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="fw-bold text-secondary">Email Subject:</label>
+              </div>
+              <div class="p-3 border rounded bg-white text-dark">
+                <div class="col-5 p-0 m-0">{{ mailDetails.subject }}</div>
+              </div>
+            </div>
+            <div>
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="fw-bold text-secondary">Email Body:</label>
+              </div>
+              <div class="p-3 border rounded bg-white text-dark">
+                <div class="col-5 p-0 m-0" [innerHTML]="mailDetails.body"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

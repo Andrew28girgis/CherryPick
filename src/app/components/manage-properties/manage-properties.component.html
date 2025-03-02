@@ -11,7 +11,7 @@
       <div class="container-fluid">
         <div class="pt-3 d-flex justify-content-between">
           <h3 class="my-prop">Manage My Properties</h3>
-          <button class="upload" (click)="openUploadModal()">Upload PDF</button>
+          <button class="upload" (click)="openUploadModal(test)">Upload PDF</button>
         </div>
         <table class="procpect-table">
           <thead class="t-head">
@@ -19,6 +19,7 @@
               <th>Name</th>
               <th>Address</th>
               <th>ZipCode</th>
+              <th>PDF</th>
             </tr>
           </thead>
           <tbody class="procpect-table-body">
@@ -29,6 +30,13 @@
                 {{ property.centerState }}
               </td>
               <td>{{ property.zipCode }}</td>
+              <td>
+                <div style="cursor: pointer; font-weight: 600;" (click)="openUploadModal(property.id)">
+               Upload <i class="fa-solid fa-file-pdf mx-1" style="font-size: 20px; color:#001f3f; "
+                 
+                 ></i>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -38,12 +46,12 @@
 </section>
 
 <ng-template #uploadPDF let-modal>
-  <!-- <div class="d-flex justify-content-between align-items-center view-act">
-    <h4 class="mb-0">Upload PDF file</h4>
-    <button type="button" class="close" (click)="modal.dismiss()">
+  <div class="d-flex justify-content-center align-items-center view-act">
+    <h4 class="mb-0">Convert PDF to Images</h4>
+    <!-- <button type="button" class="close" (click)="modal.dismiss()">
       <span aria-hidden="true">&times;</span>
-    </button>
-  </div> -->
+    </button> -->
+  </div>
   <div class="modal-body" style="overflow: auto; max-height: 80vh">
     <div class="col-12 mr-1">
       <div style="width: 100%">
@@ -66,7 +74,7 @@
             </b>
             <button
               type="button"
-              class="btn btn-success ml-2 secondary-color"
+              class="btn btn-success ml-2 secondary-color upload"
               (click)="openFileSelector()"
             >
               Browse Files
@@ -110,11 +118,12 @@
                 <input
                   type="checkbox"
                   class="form-check-input"
+                  style="border: 2px solid #cbcbcb"
                   [(ngModel)]="image.selected"
                   id="checkbox-{{ image.name }}"
                 />
                 <label class="form-check-label" for="checkbox-{{ image.name }}">
-                  Select
+                  
                 </label>
               </div>
               <img
@@ -129,18 +138,87 @@
           </div>
         </div>
       </div>
+      <!-- Display JsonPDF Data Section -->
+      <div *ngIf="JsonPDF" class="mt-4">
+
+        <div class="row">
+          <div class="col-md-6">
+            <h5>PDF Data</h5>
+            <!-- <h4 class="my-prop">Shopping Center Information</h4> -->
+            <p><strong>Center Name:</strong> {{ JsonPDF.CenterName }}</p>
+            <p><strong>Center Type:</strong> {{ JsonPDF.CenterType }}</p>
+            <p><strong>Center Address:</strong> {{ JsonPDF.CenterAddress }}</p>
+            <p><strong>Center City:</strong> {{ JsonPDF.CenterCity }}</p>
+            <p><strong>Center State:</strong> {{ JsonPDF.CenterState }}</p>
+            <p><strong>Available Space (SF):</strong> {{ JsonPDF.TotalAvailableSpace_SF }}</p>
+
+            <div *ngIf="JsonPDF.Availability.length > 0" class="mt-4">
+              <h5>Availability</h5>
+              <ul>
+                    <li *ngFor="let avail of JsonPDF.Availability">
+                      <strong>Building Size (SF):</strong> {{ avail.BuildingSizeSf }}<br />
+                      <strong>Lease Price (per SF):</strong> ${{ avail.ForLeasePrice }}<br />
+                      <strong>Lease Type:</strong> {{ avail.LeaseType || 'N/A' }}<br />
+                      <strong>Suite:</strong> {{ avail.Suite || 'N/A' }}<br />
+                      <strong>Is Second Generation:</strong> {{ avail.IsSecondGeneration ? 'Yes' : 'No' }}<br />
+                      <strong>Secondary Type:</strong> {{ avail.SecondaryType }}
+                    </li>
+                  </ul>
+                
+            </div>
+            <!-- <p><strong>Number of Tenants:</strong> {{ JsonPDF.Tenants.length }}</p> -->
+            <h5 class="mt-4">Tenants</h5>
+            <ul>
+              <li *ngFor="let tenant of JsonPDF.Tenants">
+                {{ tenant.Name }} - {{ tenant.SecondaryType }}
+              </li>
+            </ul>
+            
+          </div>
+          <div class="col-md-6">
+            <h5>Our Data</h5>
+            <h5>Availability</h5>
+            <ul>
+              <li *ngFor="let availabilityItem of AvailabilityAndTenants.availability">
+                <div>Suite: {{ availabilityItem.Suite }}</div>
+                <div>Type: {{ availabilityItem.SecondaryType }}</div>
+                <div>Size: {{ availabilityItem.BuildingSizeSf }} SF</div>
+                <div>Lease Type: {{ availabilityItem.LeaseType }}</div>
+                <div>For Lease Price: {{ availabilityItem.ForLeasePrice | currency }}</div>
+                <div>Second Generation: {{ availabilityItem.IsSecondGeneration ? 'Yes' : 'No' }}</div>
+              </li>
+            </ul>
+          
+            <h5>Tenants</h5>
+            <ul>
+              <li *ngFor="let tenant of AvailabilityAndTenants.tenants">
+                Name: {{ tenant.Name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+      
     </div>
   </div>
   <div class="modal-footer">
     <!-- Send Selected Images Button -->
-    <div class="text-center" *ngIf="images.length > 0">
-      <button class="btn btn-success" (click)="sendImages()">
-        Send Images
+    <div class="text-center col-12" >
+      <div class="d-flex justify-content-end">
+      <button class="upload mx-1" (click)="sendImagesArray()" *ngIf="images.length > 0">
+        Convert Images
       </button>
+        <div class="right">
+        <button class="btn btn-success" *ngIf="JsonPDF" (click)="sendJson()">
+          Submit PDF Data
+        </button>
+        <button class="btn btn-secondary mx-1" (click)="closeModal(modal)">
+          Cancel
+        </button>
+      </div>
     </div>
-    <button class="btn btn-secondary" (click)="closeModal(modal)">
-      Cancel
-    </button>
+  </div>
   </div>
 </ng-template>
 

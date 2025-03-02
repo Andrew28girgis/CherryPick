@@ -70,17 +70,16 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 
 const msalConfig = {
   auth: {
-    clientId: '0405c49c-ebe8-4fef-9ae7-87305ad01f8e', // Replace with your Azure AD Client ID
+    clientId: '32cd04af-9526-4567-8c83-23b3deb6a209', // Replace with your Azure AD Client ID
     authority: 'https://login.microsoftonline.com/common', // Replace with your Tenant ID if needed
-    redirectUri: 'http://localhost:4200/summary', // Must match your Azure AD redirect URI
+    redirectUri: 'https://cp.cherrypick.com/summary', // Must match your Azure AD redirect URI
   },
   cache: {
-    cacheLocation: 'localStorage', // or 'sessionStorage'
+    cacheLocation: 'sessionStorage', // or 'sessionStorage'
     storeAuthStateInCookie: false,
   },
   
 };
-
 
 export function initializeMsal(msalService: MsalService) {
   return () => msalService.instance.initialize();
