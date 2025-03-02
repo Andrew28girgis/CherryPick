@@ -17,18 +17,18 @@ export class LoginComponent {
   logoUrl: string = '';
   t: any;
   r: any; 
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private configService: ConfigService,
-  ) {
+  ){
     localStorage.removeItem('mapView');
   }
 
-  async  ngOnInit() {
-
+  async ngOnInit() { 
     this.General = new General();
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
@@ -38,12 +38,9 @@ export class LoginComponent {
         localStorage.clear(); 
         this.onSubmit();
       }else{
-        // localStorage.getItem('token') && this.navigateToHome();
         localStorage.clear();
       }
-    });
-
-
+    }); 
   }
 
   onSubmit() {
@@ -56,13 +53,9 @@ export class LoginComponent {
         localStorage.setItem('token', data.token);
         localStorage.setItem('contactId', data.contactId);
         localStorage.setItem('orgId', data.orgId);
-
         if(data.token){
           this.navigateToHome(); 
         }
-        this.spinner.hide();
-      },
-      (error) => { 
         this.spinner.hide();
       }
     );
@@ -70,7 +63,6 @@ export class LoginComponent {
 
   private navigateToHome() {
     this.router.navigate(['/summary']);
-  } 
-
-  
+  }
+   
 }
