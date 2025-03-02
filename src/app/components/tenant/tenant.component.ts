@@ -51,7 +51,6 @@ export class TenantComponent implements OnInit  {
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
       this.GetBuyBoxInfo();
-      this.GetOrganizationBranches();
     });
   }
   GetBuyBoxInfo(): void {
