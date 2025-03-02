@@ -1,7 +1,8 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="row pt-4">
-  <div class="p-3" *ngIf="!BuyBoxOrganizationsForEmail || BuyBoxOrganizationsForEmail.length === 0">
+<div class="row p-0">
+  <app-link-microsoft></app-link-microsoft>
+  <div class="p-5" *ngIf="!BuyBoxOrganizationsForEmail || BuyBoxOrganizationsForEmail.length === 0">
     No Organization Found.
   </div>
   <div *ngFor="let organization of BuyBoxOrganizationsForEmail; let i = index" class="col-sm-4 mb-4">
