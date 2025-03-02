@@ -50,9 +50,7 @@ export class TenantComponent implements OnInit  {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log(this.selectedbuyBox);
       this.GetBuyBoxInfo();
-      this.GetOrganizationBranches();
     });
   }
   GetBuyBoxInfo(): void {
@@ -91,6 +89,10 @@ export class TenantComponent implements OnInit  {
         }
 
         this.spinner.hide();
+        console.log('Extracted BuyBoxOrganizationId:', this.buyboxid);
+
+        this.GetOrganizationBranches();
+
       },
       error: (err: any) => {
         console.error('API Error:', err);
@@ -99,32 +101,23 @@ export class TenantComponent implements OnInit  {
     });
   }
   GetOrganizationBranches(): void {
-    // Log the organizationid to the console
-    console.log('Organization ID:', this.buyboxid); // This logs the value of organizationid
-  
-    this.spinner.show(); // Show the spinner before the API request
-  
+    this.spinner.show();
+    
     const body: any = {
       Name: 'GetOrganizationBranches',
       Params: {
-        organizationid: this.buyboxid, // Pass the OrganizationId parameter
+        organizationid: this.buyboxid,  // Use the variable holding BuyBoxOrganizationId
       },
     };
   
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         console.log('GetOrganizationBranches API Response:', res);
-        
-        // Handle the response here, e.g., store it in a variable
-        this.organizationBranches = res.json; // You can process it as needed
-  
-        // Hide the spinner once the data is fetched
+        this.organizationBranches = res.json;
         this.spinner.hide();
       },
       error: (err: any) => {
         console.error('API Error:', err);
-        
-        // Hide the spinner in case of an error
         this.spinner.hide();
       },
     });
