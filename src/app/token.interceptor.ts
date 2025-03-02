@@ -37,6 +37,8 @@ export class TokenInterceptor implements HttpInterceptor {
       'https://api.cherrypick.com/api/BuyBox/Login', // Login API
       'https://10.0.0.15:8082/api/BuyBox/GetSharedPlace',
       'https://api.capsnap.ai/api/BuyBox/GetSharedPlace',
+      'http://10.0.0.15:8082/api/BrokerWithChatGPT/ConvertPdfToImages',
+      'https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages',
     ];
     return excludedUrls.some((excludedUrl) => url.startsWith(excludedUrl));
   }
