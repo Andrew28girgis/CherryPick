@@ -1024,6 +1024,7 @@ img[alt="logo"] {
     align-items: center;
     justify-content: center;
     margin-bottom: 23%;
+    width: inherit;
   }
 
   .card-image img {
