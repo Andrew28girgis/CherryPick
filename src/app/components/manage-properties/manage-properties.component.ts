@@ -129,7 +129,7 @@ export class ManagePropertiesComponent implements OnInit {
           this.isUploading = true;
           this.uploadProgress = 0;
 
-          const SERVER_URL = `https://api.capsnap.ai/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
+          const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
           // const SERVER_URL = `http://10.0.0.15:8082/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
 
           // Create a request with progress reporting enabled
