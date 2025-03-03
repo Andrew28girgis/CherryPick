@@ -42,7 +42,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild("carousel", { read: ElementRef }) carouselElement!: ElementRef
   @ViewChild("galleryModal", { static: true }) galleryModal: any
   @ViewChild("contactsModal", { static: true }) contactsModalTemplate: any
-
+  @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
+  @ViewChild('StreetViewPlace', { static: true }) StreetViewPlace!: TemplateRef<any>;
+  
   General: General = new General()
   BuyBoxId!: any
   OrgId!: any
@@ -92,6 +94,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteShoppingCenterModal!: TemplateRef<any>
   buyboxPlaces: BbPlace[] = []
   showbackIds: number[] = []
+  private globalClickListenerr!: () => void
+  private isOptionSelected = false
+  currentShopping: any = null
 
   // Flag to control when to load maps
   mapsLoaded = false
@@ -118,6 +123,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    
     this.General = new General()
     this.selectedState = ""
     this.selectedCity = ""
@@ -198,6 +204,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     // Use NgZone.runOutsideAngular for event listeners to avoid change detection cycles
+    this.setupGlobalClickListener()
+
     this.ngZone.runOutsideAngular(() => {
       const events = ["click", "wheel", "touchstart"]
       this.globalClickListener = events.map((eventType) =>
@@ -222,6 +230,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.globalClickListener) {
+      this.globalClickListenerr()
+    }
     if (this.globalClickListener) {
       this.globalClickListener.forEach((listener) => listener())
     }
@@ -837,49 +848,56 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  
+
+
+
+
+  private setupGlobalClickListener(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.globalClickListenerr = this.renderer.listen("document", "click", (event: Event) => {
+        if (this.isOptionSelected) {
+          this.isOptionSelected = false
+          return
+        }
+
+        const target = event.target as HTMLElement
+        const expandedDetails = document.querySelector(".shopping-center-details.expanded")
+        const seeMoreBtn = document.querySelector(".see-more-btn")
+
+        if (expandedDetails && !expandedDetails.contains(target) && seeMoreBtn && !seeMoreBtn.contains(target)) {
+          this.ngZone.run(() => {
+            this.hideAllDetails()
+            this.cdr.markForCheck()
+          })
+        }
+      })
+    })
+
+    this.setupScrollListener()
+  }
+
+  private setupScrollListener(): void {
+    this.ngZone.runOutsideAngular(() => {
+      const scrollHandler = () => {
+        if (!this.isOptionSelected) {
+          this.ngZone.run(() => {
+            this.hideAllDetails()
+            this.cdr.markForCheck()
+          })
+        }
+      }
+
+      this.scrollContainer.nativeElement.addEventListener("scroll", scrollHandler, { passive: true })
+    })
+  }
+
+  hideAllDetails(): void {
+    this.showDetails.fill(false)
+  }
+
   toggleDetailsMobile(index: number, shopping: any): void {
     if (shopping.ShoppingCenter?.BuyBoxPlaces) {
       this.showDetails[index] = !this.showDetails[index]
-
-      if (this.showDetails[index] && window.innerWidth <= 768) {
-        setTimeout(() => {
-          this.ngZone.runOutsideAngular(() => {
-            const closeHandler = (event: Event) => {
-              const target = event.target as HTMLElement
-              const expandedContent = document.querySelector(".shopping-center-details.expanded")
-              const seeMoreBtn = document.querySelector(".see-more-btn")
-
-              if (expandedContent && !expandedContent.contains(target) && seeMoreBtn && !seeMoreBtn.contains(target)) {
-                this.ngZone.run(() => {
-                  this.showDetails[index] = false
-                  this.cdr.markForCheck()
-                })
-
-                document.removeEventListener("click", closeHandler)
-                document.removeEventListener("scroll", scrollHandler)
-                document.removeEventListener("touchmove", scrollHandler)
-              }
-            }
-
-            const scrollHandler = () => {
-              this.ngZone.run(() => {
-                this.showDetails[index] = false
-                this.cdr.markForCheck()
-              })
-
-              document.removeEventListener("click", closeHandler)
-              document.removeEventListener("scroll", scrollHandler)
-              document.removeEventListener("touchmove", scrollHandler)
-            }
-
-            document.addEventListener("click", closeHandler)
-            document.addEventListener("scroll", scrollHandler, { passive: true })
-            document.addEventListener("touchmove", scrollHandler, { passive: true })
-          })
-        }, 0)
-      }
-
       this.cdr.markForCheck()
     }
   }
@@ -890,6 +908,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         label: "Emily",
         icon: "fa-regular fa-envelope big-text",
         action: (item: any) => {
+          this.isOptionSelected = true
           window.open(`/emily/${this.BuyBoxId}/${item.ShoppingCenter.ManagerOrganization[0].ID}/${item.Id}`, "_blank")
         },
       },
@@ -897,6 +916,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         label: "View Gallery",
         icon: "fa-solid fa-images big-text",
         action: (item: any) => {
+          this.isOptionSelected = true
           this.openGallery(item.Id)
         },
       },
@@ -904,6 +924,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         label: "View Details",
         icon: "fa-solid fa-file-lines big-text",
         action: (item: any) => {
+          this.isOptionSelected = true
           this.router.navigate([
             "/landing",
             item.ShoppingCenter.Places ? item.ShoppingCenter.Places[0].Id : 0,
@@ -916,6 +937,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         label: "View Location",
         icon: "fa-solid fa-map-location-dot big-text",
         action: (item: any) => {
+          this.isOptionSelected = true
           this.openMapViewPlace(this.MapViewPlace, item)
         },
       },
@@ -923,13 +945,43 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         label: "Street View",
         icon: "fa-solid fa-street-view big-text",
         action: (item: any) => {
+          this.isOptionSelected = true
           this.openStreetViewPlace(this.StreetViewPlace, item)
         },
       },
     ]
   }
-// Add these ViewChild references to your component
-@ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
-@ViewChild('StreetViewPlace', { static: true }) StreetViewPlace!: TemplateRef<any>;
+
+
+
+
+// Method to open the shopping details modal\
+openShoppingDetailsModal(modal: any, shopping: any)
+{
+  this.currentShopping = shopping
+
+  // Open the modal with medium size
+  this.modalService
+    .open(modal, {
+      windowClass: "tiktok-modal",
+      size: "xl",
+      animation:true,
+      centered: true,
+      scrollable: true,
+      backdrop: true,
+      keyboard: true,
+      backdropClass:"tiktok-backdrop",
+    })
+    .result.then(
+      (result) => {
+        // Handle modal close (if needed)
+        this.currentShopping = null
+      },
+      (reason) => {
+        // Handle modal dismiss (if needed)
+        this.currentShopping = null
+      },
+    )
+}
 }
 
