@@ -20,9 +20,10 @@ export class KayakHomeComponent implements OnInit {
   selectedTab: string = 'Properties';  
   BuyboxName: string | null = '';
   Buyboxid: any | null = '';
+
   constructor(public router: Router, private _location: Location,private route: ActivatedRoute) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.BuyboxName = params.get('buyboxName');
       this.Buyboxid = params.get('buyboxid');
@@ -39,5 +40,4 @@ export class KayakHomeComponent implements OnInit {
   BackTo() {
     this._location.back();
   }
-
 }

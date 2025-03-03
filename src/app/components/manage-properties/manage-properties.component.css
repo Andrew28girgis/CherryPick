@@ -28,19 +28,22 @@
 .upload {
   width: auto;
   min-width: 110px;
-  border-radius: 10px;
+  border-radius: 7px;
   background: #001f3f;
   color: #fff;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 500;
   border: 0;
-  padding: 4px 16px;
+  padding: 7px 10px;
   white-space: nowrap;
 }
+.upload:hover{
+  background-color: #043566;
+}
 .view-act {
-  padding-top: 20px;
+  padding-top: 10px;
   padding-left: 10px;
   padding-right: 20px;
 }
@@ -66,3 +69,49 @@
   font-weight: 500;
   line-height: 20px;
 } */
+ /* shopping-center.component.css */
+.shopping-center-container {
+  padding: 20px;
+}
+
+.card {
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+/* .card:hover {
+  transform: translateY(-5px);
+} */
+
+.card-header {
+  border-radius: 10px 10px 0 0;
+  padding: 15px;
+}
+
+dl dt {
+  font-weight: 600;
+  color: #444;
+}
+
+dl dd {
+  margin-bottom: 10px;
+}
+
+.list-group-item {
+  padding: 10px 0;
+}
+
+.form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.tenant-link {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.tenant-link:hover {
+  text-decoration: underline;
+}

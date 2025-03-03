@@ -1,0 +1,120 @@
+::ng-deep .p-accordion-header a {
+  color: #001f3f !important;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: Montserrat;
+}
+
+::ng-deep .p-accordion .p-accordion-content .p-accordion .p-accordion-header a {
+    padding-block: 8px !important;
+    color: #001f3f !important;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Montserrat;
+}
+
+::ng-deep .p-accordion-header .p-accordion-toggle-icon {
+  color: #001f3f !important;
+}
+
+::ng-deep .p-accordion-tab .p-accordion-content {
+  padding: 10px !important;
+}
+
+::ng-deep .p-card .p-card-body{
+  padding: 0 10px !important;
+}
+
+.contact-ul {
+  margin: 0;
+}
+
+.contact-ul>li {
+  color: #001f3f !important;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: Montserrat;
+  cursor: pointer;
+}
+
+.contact-ul>li:hover {
+ color: #001f3f !important;
+ font-weight: 700;
+}
+
+.no-data{
+  color: #001f3f;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: Montserrat;
+}
+
+.no-contact-msg {
+  color: gray;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  border-bottom: 2px solid #ddd;
+}
+
+.Direction-class {
+  color: #001f3f; 
+}
+
+.date-text {
+  color: #6c757d; 
+  font-size: 14px;
+}
+
+.selectedContact{
+  color: #001f3f;
+  font-weight: bold;
+  font-weight: 600;
+  font-family: Montserrat;
+}
+
+.card-pTemplate{
+  cursor: pointer;
+}
+
+
+
+
+.GeneratedEmail {
+  background-color: #001f3f;
+}
+
+.SavedTemplate {
+  align-items: center;
+  display: block
+}
+
+.firstemail {
+    font-size: 16px;
+    align-items: center;
+    display: block; 
+    font-weight: 600;
+  }
+
+.firstlast {
+  font-size: 13px;
+  align-items: center;
+  display: block;
+  margin-top: 4px;
+}
+
+.creationdate {
+  font-size: 13px;
+  align-items: center;
+  display: block;
+}

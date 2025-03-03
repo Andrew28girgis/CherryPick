@@ -2,31 +2,27 @@
   <div class=" p-0 d-none d-sm-flex widthh">
     <app-sidbar></app-sidbar>
   </div>
-  
-  <div class="col-11 Responsive " >
+
+  <div class="col-11 Responsive ">
     <div>
-      <h3 class="bb-name d-none d-sm-flex">{{BuyboxName}}</h3>
+      <h3 class="bb-name d-none d-sm-flex">{{ BuyboxName }}</h3>
     </div>
     <div class="Nav__section d-flex justify-content-between">
       <ul class="p-0 m-0 d-sm-flex">
-        <li
-          *ngFor="let tab of tabs"
-          [ngClass]="{ active: selectedTab === tab.id }"
-          (click)="selectTab(tab.id)"
-        >
+        <li *ngFor="let tab of tabs" [ngClass]="{ active: selectedTab === tab.id }" (click)="selectTab(tab.id)">
           {{ tab.label }}
         </li>
       </ul>
-     
+
     </div>
     <div class="backgroundd">
-      
+
       <ng-container [ngSwitch]="activeComponent">
         <app-shopping-center-table *ngSwitchCase="'Properties'"></app-shopping-center-table>
         <app-buybox-details *ngSwitchCase="'Details'"></app-buybox-details>
-        <app-kayak *ngSwitchCase="'Manage'"></app-kayak>     
-        <app-emily-org *ngSwitchCase="'Emily'"></app-emily-org>  
-         <!-- <app-kayak *ngSwitchCase="'search'"></app-kayak> -->
+        <app-kayak *ngSwitchCase="'Manage'"></app-kayak>
+        <app-emily-org *ngSwitchCase="'Emily'"></app-emily-org>
+        <!-- <app-kayak *ngSwitchCase="'search'"></app-kayak> -->
         <!-- <app-kayak *ngSwitchCase="'search'"></app-kayak>
             <app-wizard *ngSwitchCase="'wizard'"></app-wizard>
             <app-shopping-centers *ngSwitchCase="'centers'"></app-shopping-centers>
@@ -34,6 +30,7 @@
             <app-sharing *ngSwitchCase="'sharing'"></app-sharing> -->
       </ng-container>
     </div>
-
   </div>
 </div>
+
+
