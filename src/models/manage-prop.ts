@@ -29,13 +29,17 @@ export interface Properties {
     NumberOfStores: any
     Availability: Availability[]
     Tenants: Tenant[]
+    CenterNameIsAdded?: boolean; // Optional property for CenterName checkbox
+    CenterTypeIsAdded?: boolean; // Optional property for CenterType checkbox
   }
   
   export interface Tenant {
-    Id: number
+    id: number
     Name: string
     BuildingSizeSf: any
     SecondaryType: string
+    OrgUrl: string
+    isAdded: boolean
   }
   
   export interface AvailabilityTenant {
@@ -44,11 +48,12 @@ export interface Properties {
   }
   
   export interface Availability {
-    Id: number
+    id: number
     BuildingSizeSf: number
     ForLeasePrice: number
     LeaseType: string
     Suite: string
     IsSecondGeneration: boolean
     SecondaryType: string
+    isAdded: boolean
   }

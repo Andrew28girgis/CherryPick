@@ -69,3 +69,49 @@
   font-weight: 500;
   line-height: 20px;
 } */
+ /* shopping-center.component.css */
+.shopping-center-container {
+  padding: 20px;
+}
+
+.card {
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+/* .card:hover {
+  transform: translateY(-5px);
+} */
+
+.card-header {
+  border-radius: 10px 10px 0 0;
+  padding: 15px;
+}
+
+dl dt {
+  font-weight: 600;
+  color: #444;
+}
+
+dl dd {
+  margin-bottom: 10px;
+}
+
+.list-group-item {
+  padding: 10px 0;
+}
+
+.form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.tenant-link {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.tenant-link:hover {
+  text-decoration: underline;
+}
