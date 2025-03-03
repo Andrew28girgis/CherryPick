@@ -66,7 +66,6 @@
                     }}"
                     [title]="item.RelationOrganizationName"
                     alt=""
-                    loading="lazy"
                   />
 
                   <span> {{ item.RelationOrganizationName }}</span>
@@ -78,7 +77,7 @@
             *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
             class="see-more-btn"
             (click)="toggleDetails(i, shopping); $event.stopPropagation()"
-          >
+          > 
             {{ showDetails[i] ? "See less" : "See more" }}
           </p>
         </div>
@@ -96,7 +95,6 @@
                 : 'assets/Images/skeltonImage.png'
             "
             [alt]="shopping.CenterName"
-            loading="lazy"
           />
         </div>
       </div>

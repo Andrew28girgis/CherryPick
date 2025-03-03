@@ -159,8 +159,8 @@
   transition: color 0.3s, text-decoration 0.3s;
 }
 .linkedin:hover {
-  color: #7A8591;       
-  text-decoration: underline; 
+  color: #7a8591;
+  text-decoration: underline;
 }
 
 .line-container {
@@ -253,15 +253,15 @@
 }
 
 .image-container {
-    position: absolute;
-    top: 35px;
-    left: -18px;
-    transform: translate(0, -50%);
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border-radius: 40px 4px;
-    border: 8px solid var(--Body-Page-BG, #f2f3f4);
+  position: absolute;
+  top: 30px;
+  left: -40px;
+  transform: translate(0, -50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border-radius: 40px 4px;
+  border: 8px solid var(--Body-Page-BG, #f2f3f4);
 }
 
 .card-bodyy img {
@@ -291,14 +291,14 @@
   font-weight: 400;
   line-height: 30px;
 }
-.brokerandmangeorgimage{
-    width: 150px;
-    height: 150px;
+.brokerandmangeorgimage {
+  width: 100px;
+  height: 100px;
 }
 .imagecard {
   position: relative;
-  border-top-left-radius: 40px;
-  border-bottom-right-radius: 40px;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
 }
 
 .imagecard::before,
@@ -326,74 +326,75 @@
   cursor: pointer;
 }
 
-@media (max-width: 576px) { 
-    .proposal-button {
-        padding: var(--Button-Padding-top-bottom, 8px) var(--Button-Padding-left-right, 3px);
-        gap: var(--Button-Gap, 8px);
-        font-size: 10px;
-    }
-    .tenant-logo {
-        width: 25px;
-        height: 25px;
-    }
-    .boldtext {
-        font-size: 15px;
-    }
-    .frame {
-        padding: var(--Space-Space-4, 0px) var(--Space-Space-12, 3px);
-    }
-    .dot {
-        font-weight: bold;
-        margin-right: 0px;
-        font-size: 17px;
-    }
-    .text{
-        font-size: 10px;
-    }
-    .Osmowstext{
-        font-size: 13px;
-    }
+@media (max-width: 576px) {
+  .proposal-button {
+    padding: var(--Button-Padding-top-bottom, 8px)
+      var(--Button-Padding-left-right, 3px);
+    gap: var(--Button-Gap, 8px);
+    font-size: 10px;
+  }
+  .tenant-logo {
+    width: 25px;
+    height: 25px;
+  }
+  .boldtext {
+    font-size: 15px;
+  }
+  .frame {
+    padding: var(--Space-Space-4, 0px) var(--Space-Space-12, 3px);
+  }
+  .dot {
+    font-weight: bold;
+    margin-right: 0px;
+    font-size: 17px;
+  }
+  .text {
+    font-size: 10px;
+  }
+  .Osmowstext {
+    font-size: 13px;
+  }
 }
-@media (min-width: 576px) { 
-    .proposal-button {
-        padding: var(--Button-Padding-top-bottom, 9px) var(--Button-Padding-left-right, 15px);
-        font-size: 13px;
-    }
-    .tenant-logo{
-        width: 35px;
-        height: 35px;
-    }
-    .boldtext {
-        font-size: 15px;
-    }
-    .frame {
-        display: flex ;
-        padding: var(--Space-Space-4, 1px) var(--Space-Space-12, 7px);
-        justify-content: center;
-        align-items: center;
-        gap: var(--Space-Space-4, 4px);
-        border-radius: var(--Radius-Radius-16, 16px);
-        background: var(--Status-Info-BG, #ccd2d9);
-    }
-    .dot {
-        font-weight: bold;
-        margin-right: 4px;
-        font-size: 20px;
-    }
- }
+@media (min-width: 576px) {
+  .proposal-button {
+    padding: var(--Button-Padding-top-bottom, 9px)
+      var(--Button-Padding-left-right, 15px);
+    font-size: 13px;
+  }
+  .tenant-logo {
+    width: 35px;
+    height: 35px;
+  }
+  .boldtext {
+    font-size: 15px;
+  }
+  .frame {
+    display: flex;
+    padding: var(--Space-Space-4, 1px) var(--Space-Space-12, 7px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--Space-Space-4, 4px);
+    border-radius: var(--Radius-Radius-16, 16px);
+    background: var(--Status-Info-BG, #ccd2d9);
+  }
+  .dot {
+    font-weight: bold;
+    margin-right: 4px;
+    font-size: 20px;
+  }
+}
 
-@media (min-width: 768px) { 
+@media (min-width: 768px) {
+  .linkedin[_ngcontent-ng-c760362494] {
+    font-size: 14px;
+  }
+}
 
- }
+@media (min-width: 992px) {
+}
 
-@media (min-width: 992px) { 
+@media (min-width: 1200px) {
+}
 
- }
-
-@media (min-width: 1200px) { 
-
- }
-
-@media (min-width: 1400px) { 
-
- }
+@media (min-width: 1400px) {
+}

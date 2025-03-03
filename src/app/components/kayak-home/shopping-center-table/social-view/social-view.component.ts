@@ -836,5 +836,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.markForCheck()
     }
   }
+
+  
 }
 
