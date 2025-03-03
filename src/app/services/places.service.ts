@@ -63,9 +63,9 @@ export class PlacesService {
       formData
     );
   }
-  public SendImagesArray(images: any) {
+  public SendImagesArray(images: any,shoppingID: any) {
     return this.http.post<any>(
-      `http://10.0.0.15:8082/api/BrokerWithChatGPT/ProcessImagesWithGPT`,
+      `http://10.0.0.15:8082/api/BrokerWithChatGPT/ProcessImagesWithGPT/${shoppingID}`,
       images
     );
   }
