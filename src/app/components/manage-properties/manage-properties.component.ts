@@ -27,6 +27,9 @@ export class ManagePropertiesComponent implements OnInit {
   test!:number;
   JsonPDF!: jsonGPT;
   AvailabilityAndTenants: AvailabilityTenant = {};
+
+  showInputField: string | null = null; // Track which input field is visible
+
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   constructor(
     private route: ActivatedRoute,
@@ -73,38 +76,38 @@ export class ManagePropertiesComponent implements OnInit {
         this.selectedShoppingID = id.toString();
     }
     console.log('Selected Shopping ID:', this.selectedShoppingID);
-    this.getAvailabilityTenants();
+    // this.getAvailabilityTenants();
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
-  getAvailabilityTenants() {
-    this.spinner.show();
-    const body: any = {
-      Name: 'GetShoppingCenterAvailabilityAndTenants',
-      MainEntity: null,
-      Params: {
-        // ContactId: this.contactID,
-        shoppingcenterId: this.selectedShoppingID,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        if (data.json) {
-          this.AvailabilityAndTenants = {
-            availability: data.json.Availability || [],
-            tenants: data.json.Tenants || [],
-          };
-        } else {
-          this.AvailabilityAndTenants = { availability: [], tenants: [] };
-        }
-        this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching Availability Tenants:', err);
-        this.spinner.hide();
-      },
-    });
-  }
+  // getAvailabilityTenants() {
+  //   this.spinner.show();
+  //   const body: any = {
+  //     Name: 'GetShoppingCenterAvailabilityAndTenants',
+  //     MainEntity: null,
+  //     Params: {
+  //       // ContactId: this.contactID,
+  //       shoppingcenterId: this.selectedShoppingID,
+  //     },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPILocal(body).subscribe({
+  //     next: (data: any) => {
+  //       if (data.json) {
+  //         this.AvailabilityAndTenants = {
+  //           availability: data.json.Availability || [],
+  //           tenants: data.json.Tenants || [],
+  //         };
+  //       } else {
+  //         this.AvailabilityAndTenants = { availability: [], tenants: [] };
+  //       }
+  //       this.spinner.hide();
+  //     },
+  //     error: (err) => {
+  //       console.error('Error fetching Availability Tenants:', err);
+  //       this.spinner.hide();
+  //     },
+  //   });
+  // }
   closeModal(modal: any) {
     modal.dismiss();
     this.fileName = '';
@@ -126,8 +129,8 @@ export class ManagePropertiesComponent implements OnInit {
           this.isUploading = true;
           this.uploadProgress = 0;
 
-          // const SERVER_URL = `https://api.capsnap.ai/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
-          const SERVER_URL = `http://10.0.0.15:8082/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
+          const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
+          // const SERVER_URL = `http://10.0.0.15:8082/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
 
           // Create a request with progress reporting enabled
           const req = new HttpRequest('POST', SERVER_URL, formData, {
@@ -191,7 +194,8 @@ export class ManagePropertiesComponent implements OnInit {
     const selectedImages = this.images.filter(image => image.selected);
     // Extract the content of the selected images
     const array = selectedImages.map(image => image.content);
-    this.PlacesService.SendImagesArray(array).subscribe({
+    const shopID = this.selectedShoppingID;
+    this.PlacesService.SendImagesArray(array,shopID).subscribe({
       next: (data) => {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
@@ -206,7 +210,29 @@ export class ManagePropertiesComponent implements OnInit {
   sendJson() {
     this.spinner.show();
     const shopID = this.selectedShoppingID;
-    this.PlacesService.SendJsonData(this.JsonPDF, shopID).subscribe({
+  
+    // Add dynamic properties for CenterName and CenterType
+    this.JsonPDF = {
+      ...this.JsonPDF,
+      CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
+      CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
+    };
+  
+    // Do not filter Availability and Tenants; send all items with their updated isAdded states
+    const updatedJsonPDF = {
+      ...this.JsonPDF,
+      Availability: this.JsonPDF.Availability.map((avail) => ({
+        ...avail,
+        isAdded: avail.isAdded || false, // Ensure isAdded is always defined
+      })),
+      Tenants: this.JsonPDF.Tenants.map((tenant) => ({
+        ...tenant,
+        isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
+      })),
+    };
+  
+    // Send the updated JsonPDF data
+    this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
         console.log('Data:', data);
         this.showToast('shopping center updated successfully!');
@@ -244,5 +270,8 @@ export class ManagePropertiesComponent implements OnInit {
   closeToast() {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
+  }
+  addField(fieldName: string) {
+    this.showInputField = fieldName;
   }
 }

@@ -46,7 +46,7 @@
             ></p>
           </div>
 
-          <div *ngIf="showDetails[i]" class="shopping-center-details">
+          <div *ngIf="showDetails[i]" class="shopping-center-details d-none d-sm-flex">
             <div class="row">
               <ng-container
                 *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces; trackBy: trackByShoppingId"
@@ -66,7 +66,6 @@
                     }}"
                     [title]="item.RelationOrganizationName"
                     alt=""
-                    loading="lazy"
                   />
 
                   <span> {{ item.RelationOrganizationName }}</span>
@@ -74,11 +73,49 @@
               </ng-container>
             </div>
           </div>
+<!-- Replace your existing shopping-center-details div with this -->
+<div *ngIf="showDetails[i]" class="shopping-center-details d-sm-none d-flex" [class.expanded]="showDetails[i]">
+  <div class="mobile-expanded-content">
+    <div class="row">
+      <ng-container *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces; trackBy: trackByShoppingId">
+        <div class="mobile-expanded-item">
+          <span>{{ getNeareastCategoryName(item.CategoryId) }}:</span>
+          <img
+            class="logo"
+            [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + item.RelationOrganizationId"
+            [title]="item.RelationOrganizationName"
+            alt=""
+            loading="lazy"
+          />
+          <span>{{ item.RelationOrganizationName }}</span>
+        </div>
+      </ng-container>
+      
+      <!-- Add shortcuts options for mobile -->
+      <div class="mobile-expanded-shortcuts">
+        <div class="mobile-expanded-item" *ngFor="let option of getMobileShortcutOptions(shopping)">
+          <i [class]="option.icon"></i>
+          <span (click)="option.action(shopping)">{{ option.label }}</span>
+        </div>
+      </div>
+    </div>
+    <button class="show-less-btn" (click)="toggleDetailsMobile(i, shopping)">Show Less</button>
+  </div>
+</div>
+
+<!-- Update the see more/less button -->
+<p
+  *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
+  class="see-more-btn d-none d-sm-flex"
+  (click)="toggleDetailsMobile(i, shopping); $event.stopPropagation()"
+>
+  {{ showDetails[i] ? "See less" : "See more" }}
+</p>
           <p
             *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
-            class="see-more-btn"
+            class="see-more-btn d-flex d-sm-none"  
             (click)="toggleDetails(i, shopping); $event.stopPropagation()"
-          >
+          > 
             {{ showDetails[i] ? "See less" : "See more" }}
           </p>
         </div>
@@ -96,7 +133,6 @@
                 : 'assets/Images/skeltonImage.png'
             "
             [alt]="shopping.CenterName"
-            loading="lazy"
           />
         </div>
       </div>
