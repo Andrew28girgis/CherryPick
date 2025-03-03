@@ -277,6 +277,12 @@ export class PolygonsControllerComponent
 
           // initialize drawing manager
           this.mapDrawingService.initializeDrawingManager(this.map);
+          const centers = this.stateService.getShoppingCenters();
+          for (let center of centers) {
+            console.log(center);
+            
+            this.mapDrawingService.createTempMarker(this.map, center);
+          }
           this.addPolygonsToMap();
         }
       },

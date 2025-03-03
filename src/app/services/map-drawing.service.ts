@@ -14,6 +14,7 @@ export class MapDrawingService {
   private drawnPolygons: IMapShape[] = [];
   private drawnCircles: IMapShape[] = [];
   private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
+  tempMarkers: google.maps.Marker[]=[]
   private infoWindow!: google.maps.InfoWindow;
 
   onPolygonCreated = new EventEmitter<IMapShape>();
@@ -295,6 +296,31 @@ export class MapDrawingService {
       // remove the shape from the map view
       shape.shape.setMap(null);
     }
+  }
+
+  createTempMarker(map: any,  propertyData: any): void {
+    const icon = this.getLocationIconSvg();
+    let marker = new google.maps.Marker({
+      map,
+      position: {
+        lat: Number(propertyData.Latitude),
+        lng: Number(propertyData.Longitude),
+      },
+      icon: icon,
+      // Use a higher zIndex to bring the marker “on top” of others
+      zIndex: 999999,
+    });
+
+    marker.propertyData = propertyData;
+    this.tempMarkers.push(marker);
+    const gmapPosition = new google.maps.LatLng(
+      Number(propertyData.latitude),
+      Number(propertyData.longitude)
+    );
+
+    marker.addListener('click', () => {
+      this.showPropertyOptions(map, propertyData, gmapPosition);
+    });
   }
 
   createMarker(map: any, polygonId: number, propertyData: IProperty): void {
