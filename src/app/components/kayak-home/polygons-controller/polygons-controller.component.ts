@@ -9,12 +9,13 @@ import {
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject, takeUntil } from 'rxjs';
+import { lastValueFrom, Subject, takeUntil } from 'rxjs';
 import { MapDrawingService } from 'src/app/services/map-drawing.service';
 import { PolygonsControllerService } from 'src/app/services/polygons-controller.service';
 import { StateService } from 'src/app/services/state.service';
 import { IGeoJson } from 'src/models/igeo-json';
 import { IPolygon } from 'src/models/ipolygons-controller';
+import { IProperty } from 'src/models/iproperty';
 
 @Component({
   selector: 'app-polygons-controller',
@@ -31,7 +32,9 @@ export class PolygonsControllerComponent
   buyBoxId!: number;
   contactId!: number;
   polygons: IPolygon[] = [];
+  selectedPolygonsIds: Set<number> = new Set<number>();
   selectedPolygon: IPolygon | null = null;
+  properties: { polygonId: number; properties: IProperty[] }[] = [];
 
   constructor(
     private mapDrawingService: MapDrawingService,
@@ -161,14 +164,8 @@ export class PolygonsControllerComponent
   }
 
   initializeMap(): void {
-    console.log(`ee`);
-
-    console.log(this.polygons);
-
     // check for polygons exist
     if (this.polygons.length > 0) {
-      console.log(`hello`);
-
       const point = this.getMapCenter(this.polygons[0].json);
       if (point) {
         this.map = this.mapDrawingService.initializeMap(
@@ -312,6 +309,9 @@ export class PolygonsControllerComponent
             ) as HTMLInputElement;
             if (lastCheckbox) {
               lastCheckbox.checked = true;
+
+              this.selectedPolygonsIds.add(response.id);
+              this.createPropertiesMarkers(response.id, false);
               if (center && radius) {
                 this.mapDrawingService.updatePolygonId(response.id, true);
               } else {
@@ -356,6 +356,7 @@ export class PolygonsControllerComponent
           let polygon = this.polygons.find((p) => p.id == id);
           if (polygon) {
             Object.assign(polygon, response);
+            this.createPropertiesMarkers(id, true);
           }
         }
       },
@@ -394,6 +395,8 @@ export class PolygonsControllerComponent
     const observer = {
       next: (response: any) => {
         if (response) {
+          this.mapDrawingService.completelyRemoveMarkers(id);
+          this.properties = this.properties.filter((p) => p.polygonId != id);
         }
       },
       error: (error: any) => {
@@ -404,12 +407,71 @@ export class PolygonsControllerComponent
     this.polygonsControllerService.deletePolygon(id).subscribe(observer);
   }
 
+  async createPropertiesMarkers(
+    polygonId: number,
+    updating: boolean
+  ): Promise<void> {
+    this.spinner.show();
+
+    const property = this.properties.find((p) => p.polygonId == polygonId);
+    if (property) {
+      if (updating) {
+        this.mapDrawingService.completelyRemoveMarkers(polygonId);
+        this.properties = this.properties.filter(
+          (p) => p.polygonId != polygonId
+        );
+        const properties = await this.getPolygonProperties(polygonId);
+        if (properties && properties.length > 0) {
+          this.properties.push({
+            polygonId: polygonId,
+            properties: properties,
+          });
+          for (let property of properties) {
+            this.mapDrawingService.createMarker(this.map, polygonId, property);
+          }
+        }
+        //update
+      } else {
+        this.mapDrawingService.displayMarker(polygonId, this.map);
+      }
+    } else {
+      const properties = await this.getPolygonProperties(polygonId);
+      if (properties && properties.length > 0) {
+        this.properties.push({
+          polygonId: polygonId,
+          properties: properties,
+        });
+        for (let property of properties) {
+          this.mapDrawingService.createMarker(this.map, polygonId, property);
+        }
+      }
+    }
+    this.spinner.hide();
+  }
+
+  async getPolygonProperties(polygonId: number): Promise<any> {
+    try {
+      const response = await lastValueFrom(
+        this.polygonsControllerService.getPolygonProperties(polygonId)
+      );
+      if (response.json) {
+        return response.json;
+      }
+      return null;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   onCheckBoxChange(event: any, id: number): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     isChecked ? this.displayShapeOnMap(id) : this.hideShapeFromMap(id);
   }
 
   displayShapeOnMap(id: number): void {
+    this.selectedPolygonsIds.add(id);
+    this.createPropertiesMarkers(id, false);
+
     const polygon = this.polygons.find((p) => p.id == id);
     if (polygon) {
       const point = this.getMapCenter(polygon.json);
@@ -423,6 +485,9 @@ export class PolygonsControllerComponent
   }
 
   hideShapeFromMap(id: number): void {
+    this.selectedPolygonsIds.delete(id);
+    this.mapDrawingService.removeMarkers(id);
+
     this.mapDrawingService.hideShapeFromMap(id);
   }
 
