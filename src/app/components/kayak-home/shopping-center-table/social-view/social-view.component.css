@@ -1737,3 +1737,100 @@ textarea.form-control {
 
 
 
+/* Add this to your social-view.component.css file */
+
+@media (max-width: 768px) {
+  .shopping-center-details {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-out;
+    opacity: 0;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+
+  .shopping-center-details.expanded {
+    max-height: calc(100vh - 32px);
+    opacity: 1;
+    transition: all 0.3s ease-in;
+  }
+
+  .mobile-expanded-content {
+    padding: 16px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+  }
+
+  .mobile-expanded-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: #333;
+  }
+
+  .mobile-expanded-item:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-expanded-item i {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    color: #707791;
+  }
+
+  .mobile-expanded-item img.logo {
+    width: 24px;
+    height: 24px;
+    margin: 0 12px;
+    border-radius: 4px;
+  }
+
+  .mobile-expanded-item span {
+    font-size: 14px;
+    color: #707791;
+  }
+
+  .mobile-expanded-shortcuts {
+    margin-top: 8px;
+  }
+
+  .see-more-btn {
+    color: white;
+    font-size: 14px;
+    margin-top: 8px;
+    opacity: 0.9;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .see-more-btn:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+
+  .show-less-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: none;
+    border: none;
+    color: #707791;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+
+  .show-less-btn:hover {
+    text-decoration: underline;
+  }
+}
+

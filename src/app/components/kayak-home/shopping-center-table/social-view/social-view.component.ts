@@ -838,5 +838,98 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   
+  toggleDetailsMobile(index: number, shopping: any): void {
+    if (shopping.ShoppingCenter?.BuyBoxPlaces) {
+      this.showDetails[index] = !this.showDetails[index]
+
+      if (this.showDetails[index] && window.innerWidth <= 768) {
+        setTimeout(() => {
+          this.ngZone.runOutsideAngular(() => {
+            const closeHandler = (event: Event) => {
+              const target = event.target as HTMLElement
+              const expandedContent = document.querySelector(".shopping-center-details.expanded")
+              const seeMoreBtn = document.querySelector(".see-more-btn")
+
+              if (expandedContent && !expandedContent.contains(target) && seeMoreBtn && !seeMoreBtn.contains(target)) {
+                this.ngZone.run(() => {
+                  this.showDetails[index] = false
+                  this.cdr.markForCheck()
+                })
+
+                document.removeEventListener("click", closeHandler)
+                document.removeEventListener("scroll", scrollHandler)
+                document.removeEventListener("touchmove", scrollHandler)
+              }
+            }
+
+            const scrollHandler = () => {
+              this.ngZone.run(() => {
+                this.showDetails[index] = false
+                this.cdr.markForCheck()
+              })
+
+              document.removeEventListener("click", closeHandler)
+              document.removeEventListener("scroll", scrollHandler)
+              document.removeEventListener("touchmove", scrollHandler)
+            }
+
+            document.addEventListener("click", closeHandler)
+            document.addEventListener("scroll", scrollHandler, { passive: true })
+            document.addEventListener("touchmove", scrollHandler, { passive: true })
+          })
+        }, 0)
+      }
+
+      this.cdr.markForCheck()
+    }
+  }
+
+  getMobileShortcutOptions(shopping: any): any[] {
+    return [
+      {
+        label: "Emily",
+        icon: "fa-regular fa-envelope big-text",
+        action: (item: any) => {
+          window.open(`/emily/${this.BuyBoxId}/${item.ShoppingCenter.ManagerOrganization[0].ID}/${item.Id}`, "_blank")
+        },
+      },
+      {
+        label: "View Gallery",
+        icon: "fa-solid fa-images big-text",
+        action: (item: any) => {
+          this.openGallery(item.Id)
+        },
+      },
+      {
+        label: "View Details",
+        icon: "fa-solid fa-file-lines big-text",
+        action: (item: any) => {
+          this.router.navigate([
+            "/landing",
+            item.ShoppingCenter.Places ? item.ShoppingCenter.Places[0].Id : 0,
+            item.Id,
+            this.BuyBoxId,
+          ])
+        },
+      },
+      {
+        label: "View Location",
+        icon: "fa-solid fa-map-location-dot big-text",
+        action: (item: any) => {
+          this.openMapViewPlace(this.MapViewPlace, item)
+        },
+      },
+      {
+        label: "Street View",
+        icon: "fa-solid fa-street-view big-text",
+        action: (item: any) => {
+          this.openStreetViewPlace(this.StreetViewPlace, item)
+        },
+      },
+    ]
+  }
+// Add these ViewChild references to your component
+@ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
+@ViewChild('StreetViewPlace', { static: true }) StreetViewPlace!: TemplateRef<any>;
 }
 
