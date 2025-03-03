@@ -14,7 +14,7 @@ export class MapDrawingService {
   private drawnPolygons: IMapShape[] = [];
   private drawnCircles: IMapShape[] = [];
   private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
-  tempMarkers: google.maps.Marker[]=[]
+  tempMarkers: google.maps.Marker[] = [];
   private infoWindow!: google.maps.InfoWindow;
 
   onPolygonCreated = new EventEmitter<IMapShape>();
@@ -298,7 +298,7 @@ export class MapDrawingService {
     }
   }
 
-  createTempMarker(map: any,  propertyData: any): void {
+  createTempMarker(map: any, propertyData: any): void {
     const icon = this.getLocationIconSvg();
     let marker = new google.maps.Marker({
       map,
@@ -314,12 +314,12 @@ export class MapDrawingService {
     marker.propertyData = propertyData;
     this.tempMarkers.push(marker);
     const gmapPosition = new google.maps.LatLng(
-      Number(propertyData.latitude),
-      Number(propertyData.longitude)
+      Number(propertyData.Latitude),
+      Number(propertyData.Longitude)
     );
 
     marker.addListener('click', () => {
-      this.showPropertyOptions(map, propertyData, gmapPosition);
+      this.showTempPropertyOptions(map, propertyData, gmapPosition);
     });
   }
 
@@ -701,6 +701,43 @@ export class MapDrawingService {
     }, 100);
   }
 
+  private showTempPropertyOptions(
+    map: any,
+    property: any,
+    position: google.maps.LatLng | null
+  ): void {
+    if (!position) return;
+
+    // get polygon options popup
+    const options = this.getTempPropertyOptionsPopup(property);
+
+    this.infoWindow.setContent(options);
+    this.infoWindow.setPosition(position);
+    this.infoWindow.open(map);
+
+    const deleteButtonInterval = setInterval(() => {
+      // this.addCloseButtonListener(infoWindow);
+
+      // get delete button
+      const detailsButton = document.getElementById(
+        `view-details-${property.Id}`
+      );
+      if (detailsButton) {
+        detailsButton.addEventListener('click', () => {
+          const storedBuyBoxId = localStorage.getItem('BuyBoxId');
+          this.router.navigate(['/landing', 0, property.Id, storedBuyBoxId]);
+        });
+      }
+
+      const closeButton = document.querySelector('.close-btn');
+      if (closeButton) {
+        closeButton.addEventListener('click', () => {
+          this.hidePopupContent();
+        });
+      }
+    }, 100);
+  }
+
   private showPropertyOptions(
     map: any,
     property: IProperty,
@@ -862,6 +899,40 @@ export class MapDrawingService {
                 <div class="buttons-wrap">
                   <button style="margin-top: 0.5rem;" id="view-details-${
                     property.id
+                  }" 
+                  class="view-details-card"> View Details </button>
+                </div>
+              </div>
+            </div>
+    `;
+  }
+
+  private getTempPropertyOptionsPopup(property: any): string {
+    return `
+            <div class="info-window">
+              <div class="main-img">
+                <img src="${property.MainImage}" alt="Main Image">
+                <span class="close-btn">&times;</span>
+              </div>
+              <div class="content-wrap">
+                ${
+                  property.CenterName
+                    ? `<p class="content-title">${property.CenterName.toUpperCase()}</p>`
+                    : ''
+                }
+              <p class="address-content"> 
+                ${property.CenterAddress}, ${property.CenterCity}, ${
+      property.CenterState
+    }
+              </p>
+              ${
+                property.LandArea_SF
+                  ? `<p class="address-content">Unit Size: ${property.LandArea_SF}</p>`
+                  : ''
+              }
+                <div class="buttons-wrap">
+                  <button style="margin-top: 0.5rem;" id="view-details-${
+                    property.Id
                   }" 
                   class="view-details-card"> View Details </button>
                 </div>
