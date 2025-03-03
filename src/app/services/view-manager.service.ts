@@ -11,7 +11,7 @@ import { ShareOrg } from 'src/models/shareOrg';
 declare const google: any;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ViewManagerService {
   dropdowmOptions: any = [
@@ -94,7 +94,7 @@ export class ViewManagerService {
           BuyBoxId: buyboxId,
         },
       };
-      
+
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const places = data.json;
@@ -122,7 +122,7 @@ export class ViewManagerService {
           BuyBoxId: buyboxId,
         },
       };
-      
+
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const categories = data.json;
@@ -152,7 +152,7 @@ export class ViewManagerService {
           organizationid: orgId,
         },
       };
-      
+
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const org = data.json;
@@ -167,7 +167,10 @@ export class ViewManagerService {
     });
   }
 
-  deleteShoppingCenter(buyboxId: number, shoppingCenterId: number | string): Promise<any> {
+  deleteShoppingCenter(
+    buyboxId: number,
+    shoppingCenterId: number | string
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       this.spinner.show();
       const body: any = {
@@ -188,18 +191,23 @@ export class ViewManagerService {
         },
         complete: () => {
           this.spinner.hide();
-        }
+        },
       });
     });
   }
 
   // Map and Street View methods
-  async initializeMap(elementId: string, lat: number, lng: number, zoom: number = 14): Promise<any> {
+  async initializeMap(
+    elementId: string,
+    lat: number,
+    lng: number,
+    zoom: number = 14
+  ): Promise<any> {
     if (!lat || !lng) {
       console.error('Latitude and longitude are required to display the map.');
       return null;
     }
-    
+
     try {
       const { Map } = (await google.maps.importLibrary('maps')) as any;
       const mapDiv = document.getElementById(elementId) as HTMLElement;
@@ -228,7 +236,13 @@ export class ViewManagerService {
     }
   }
 
-  initializeStreetView(elementId: string, lat: number, lng: number, heading: number = 165, pitch: number = 0): any {
+  initializeStreetView(
+    elementId: string,
+    lat: number,
+    lng: number,
+    heading: number = 165,
+    pitch: number = 0
+  ): any {
     const streetViewElement = document.getElementById(elementId);
     if (!streetViewElement) {
       console.error(`Element with id '${elementId}' not found.`);
@@ -271,7 +285,10 @@ export class ViewManagerService {
   }
 
   // Utility methods
-  getNearestCategoryName(categoryId: number, categories: BuyboxCategory[]): string {
+  getNearestCategoryName(
+    categoryId: number,
+    categories: BuyboxCategory[]
+  ): string {
     const matchedCategories = categories.filter((x) => x.id == categoryId);
     return matchedCategories[0]?.name || '';
   }
@@ -389,6 +406,4 @@ export class ViewManagerService {
   isLast(currentItem: any, array: any[]): boolean {
     return array.indexOf(currentItem) === array.length - 1;
   }
-
-  
 }

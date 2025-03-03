@@ -1,8 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { StateService } from 'src/app/services/state.service';
 import { MapViewComponent } from './map-view/map-view.component';
 
 @Component({
@@ -12,12 +9,11 @@ import { MapViewComponent } from './map-view/map-view.component';
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
-  
-  currentView: number = 5; // Default view is Social View
+  currentView: number = 5;
   BuyBoxId!: any;
   OrgId!: any;
   selectedOption: number = 5;
-  
+ 
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -48,9 +44,6 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private placesService: PlacesService,
-    private spinner: NgxSpinnerService,
-    private stateService: StateService
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +53,6 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
-
     this.currentView = Number(localStorage.getItem('currentViewDashBord') || '5');
     this.selectedOption = this.currentView;
   }
@@ -82,4 +74,5 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.mapView.unhighlightMarker(place);
     }
   }
+
 }
