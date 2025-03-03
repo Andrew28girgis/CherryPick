@@ -21,6 +21,7 @@ import { SideListViewComponent } from './shopping-center-table/side-list-view/si
 import { MapViewComponent } from './shopping-center-table/map-view/map-view.component';
 import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
 import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.component";
+import { StageEmailComponent } from "./stage-email/stage-email.component";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.componen
     NgxSpinnerModule,
     ToastrModule.forRoot(),
     SharedModule,
-    LinkMicrosoftComponent
+    LinkMicrosoftComponent,
+    StageEmailComponent
 ],
   exports: [
     KayakHomeComponent,
