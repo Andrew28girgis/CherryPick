@@ -169,7 +169,7 @@
 }
 
 .custom-map {
-  height: 100vh;
+  height: calc(96vh - 58px);
 }
 
 img[alt="logo"] {

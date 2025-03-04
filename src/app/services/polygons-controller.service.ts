@@ -96,4 +96,15 @@ export class PolygonsControllerService {
 
     return this.placesService.GenericAPI(body);
   }
+
+  getPolygonProperties(polygonId: number): Observable<any> {
+    const body: any = {
+      Name: 'GetPolygonsShoppingCenters',
+      Params: {
+        PolygonId: polygonId,
+      },
+    };
+
+    return this.placesService.GenericAPI(body);
+  }
 }

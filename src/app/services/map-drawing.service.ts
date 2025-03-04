@@ -1,7 +1,9 @@
 /// <reference types="google.maps" />
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { IGeoJson } from 'src/models/igeo-json';
 import { IMapShape } from 'src/models/imap-shape';
+import { IProperty } from 'src/models/iproperty';
 declare const google: any;
 
 @Injectable({
@@ -11,6 +13,8 @@ export class MapDrawingService {
   private drawingManager!: google.maps.drawing.DrawingManager;
   private drawnPolygons: IMapShape[] = [];
   private drawnCircles: IMapShape[] = [];
+  private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
+  tempMarkers: google.maps.Marker[] = [];
   private infoWindow!: google.maps.InfoWindow;
 
   onPolygonCreated = new EventEmitter<IMapShape>();
@@ -20,7 +24,7 @@ export class MapDrawingService {
   onCircleChanged = new EventEmitter<IMapShape>();
   onCircleDeleted = new EventEmitter<IMapShape>();
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   initializeMap(
     gmapContainer: ElementRef,
@@ -68,7 +72,7 @@ export class MapDrawingService {
         fillColor: '#0000FF',
         fillOpacity: 0.35,
         editable: true,
-        draggable: true,
+        draggable: false,
       },
       // setup circles styles
       circleOptions: {
@@ -77,7 +81,7 @@ export class MapDrawingService {
         strokeWeight: 2,
         clickable: true,
         editable: true,
-        draggable: true,
+        draggable: false,
       },
     });
 
@@ -115,7 +119,7 @@ export class MapDrawingService {
       fillColor: '#0000FF',
       fillOpacity: 0.35,
       editable: true,
-      draggable: true,
+      draggable: false,
     });
 
     polygon.set('label', name);
@@ -130,6 +134,7 @@ export class MapDrawingService {
     this.addPolygonClickListener(map, polygon);
     // handle change event of the polygon
     this.addPolygonChangeListener(map, polygon);
+    this.addPolygonDoubleClickListener(polygon);
   }
 
   insertExternalCircle(
@@ -149,7 +154,7 @@ export class MapDrawingService {
       strokeWeight: 2,
       strokeColor: '#FF0000',
       editable: true,
-      draggable: true,
+      draggable: false,
     });
 
     circle.set('label', name);
@@ -164,6 +169,7 @@ export class MapDrawingService {
     this.addCircleClickListener(map, circle);
     // handle change event of the circle
     this.addCircleChangeListener(map, circle);
+    this.addCircleDoubleClickListener(circle);
   }
 
   updatePolygonId(id: number, circle: boolean): void {
@@ -294,6 +300,73 @@ export class MapDrawingService {
     }
   }
 
+  createTempMarker(map: any, propertyData: any): void {
+    const icon = this.getLocationIconSvg();
+    let marker = new google.maps.Marker({
+      map,
+      position: {
+        lat: Number(propertyData.Latitude),
+        lng: Number(propertyData.Longitude),
+      },
+      icon: icon,
+      // Use a higher zIndex to bring the marker “on top” of others
+      zIndex: 999999,
+    });
+
+    marker.propertyData = propertyData;
+    this.tempMarkers.push(marker);
+    const gmapPosition = new google.maps.LatLng(
+      Number(propertyData.Latitude),
+      Number(propertyData.Longitude)
+    );
+
+    marker.addListener('click', () => {
+      this.showTempPropertyOptions(map, propertyData, gmapPosition);
+    });
+  }
+
+  createMarker(map: any, polygonId: number, propertyData: IProperty): void {
+    const icon = this.getLocationIconSvg();
+    let marker = new google.maps.Marker({
+      map,
+      position: {
+        lat: Number(propertyData.latitude),
+        lng: Number(propertyData.longitude),
+      },
+      icon: icon,
+      // Use a higher zIndex to bring the marker “on top” of others
+      zIndex: 999999,
+    });
+
+    marker.propertyData = propertyData;
+    this.markers.push({ polygonId: polygonId, marker: marker });
+    const gmapPosition = new google.maps.LatLng(
+      Number(propertyData.latitude),
+      Number(propertyData.longitude)
+    );
+
+    marker.addListener('click', () => {
+      this.showPropertyOptions(map, propertyData, gmapPosition);
+    });
+  }
+
+  displayMarker(polygonId: number, map: any): void {
+    const markers = this.markers.filter((m) => m.polygonId == polygonId);
+    if (markers && markers.length > 0) {
+      markers.forEach((m) => m.marker.setMap(map));
+    }
+  }
+
+  removeMarkers(polygonId: number): void {
+    const markers = this.markers.filter((m) => m.polygonId == polygonId);
+    markers.forEach((m) => m.marker.setMap(null));
+  }
+
+  completelyRemoveMarkers(polygonId: number): void {
+    this.removeMarkers(polygonId);
+    this.markers = this.markers.filter((m) => m.polygonId != polygonId);
+  }
+
   private initializeInfoWindow() {
     // iniialize the popup
     this.infoWindow = new google.maps.InfoWindow();
@@ -345,6 +418,22 @@ export class MapDrawingService {
       if (this.infoWindow) {
         this.hidePopupContent();
       }
+
+      // Disable dragging for all drawn polygons if they are currently draggable.
+      this.drawnPolygons.forEach((entry) => {
+        const polygon = entry.shape as google.maps.Polygon;
+        if (polygon.getDraggable()) {
+          polygon.setDraggable(false);
+        }
+      });
+      
+      // Disable dragging for all drawn circles if they are currently draggable.
+      this.drawnCircles.forEach((entry) => {
+        const circle = entry.shape as google.maps.Circle;
+        if (circle.getDraggable()) {
+          circle.setDraggable(false);
+        }
+      });
     });
   }
 
@@ -365,6 +454,7 @@ export class MapDrawingService {
           this.addPolygonClickListener(map, newPolygon);
           // handle change event of the polygon
           this.addPolygonChangeListener(map, newPolygon);
+          this.addPolygonDoubleClickListener(newPolygon);
           this.drawingManager.setDrawingMode(null);
         }
         if (event.type === google.maps.drawing.OverlayType.CIRCLE) {
@@ -378,6 +468,7 @@ export class MapDrawingService {
           this.addCircleClickListener(map, newCircle);
           // handle change event of the circle
           this.addCircleChangeListener(map, newCircle);
+          this.addCircleDoubleClickListener(newCircle);
           this.drawingManager.setDrawingMode(null);
         }
       }
@@ -424,8 +515,16 @@ export class MapDrawingService {
       const updatedCircle = this.drawnCircles.find((p) => p.shape == oldCircle);
       if (updatedCircle) {
         updatedCircle.shape = circle;
+        circle.setDraggable(false);
         this.onCircleChanged.emit(updatedCircle);
       }
+    });
+  }
+
+  private addCircleDoubleClickListener(circle: google.maps.Circle): void {
+    circle.addListener('dblclick', (event: google.maps.MapMouseEvent) => {
+      event.stop(); // prevent propagation of the event
+      circle.setDraggable(true);
     });
   }
 
@@ -466,50 +565,66 @@ export class MapDrawingService {
   ): void {
     const oldPolygon = polygon;
     let resizeTimeout: any;
+    let isDragging = false;
+
+    const emitChange = () => {
+      const updatedPolygon = this.drawnPolygons.find(
+        (p) => p.shape === oldPolygon
+      );
+      if (updatedPolygon) {
+        this.onPolygonChanged.emit(updatedPolygon);
+      }
+    };
+
     const path = polygon.getPath();
 
-    // listen for changes in the polygon path (dragging vertices)
     path.addListener('set_at', () => {
-      // close options popup
+      if (isDragging) return;
       this.hidePopupContent();
-
-      const updatedPolygon = this.drawnPolygons.find(
-        (p) => p.shape == oldPolygon
-      );
-
-      this.onPolygonChanged.emit(updatedPolygon);
-
-      // reset the timeout if has value
-      if (resizeTimeout) {
-        clearTimeout(resizeTimeout);
-      }
-
-      // display options again after change
+      if (resizeTimeout) clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         this.showPolygonsOptions(map, polygon, this.getPolygonCenter(polygon));
+        emitChange();
       }, 300);
     });
 
-    // listen for insertions of new vertices
     path.addListener('insert_at', () => {
-      // close options popup
+      if (isDragging) return;
       this.hidePopupContent();
-      const updatedPolygon = this.drawnPolygons.find(
-        (p) => p.shape == oldPolygon
-      );
-
-      this.onPolygonChanged.emit(updatedPolygon);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        emitChange();
+      }, 300);
     });
 
-    // listen for removals of vertices
     path.addListener('remove_at', () => {
-      // close options popup
+      if (isDragging) return;
       this.hidePopupContent();
-      const updatedPolygon = this.drawnPolygons.find(
-        (p) => p.shape == oldPolygon
-      );
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        emitChange();
+      }, 300);
+    });
 
-      this.onPolygonChanged.emit(updatedPolygon);
+    polygon.addListener('dragstart', () => {
+      isDragging = true;
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = null;
+      }
+    });
+
+    polygon.addListener('dragend', () => {
+      isDragging = false;
+      emitChange();
+      polygon.setDraggable(false);
+    });
+  }
+
+  private addPolygonDoubleClickListener(polygon: google.maps.Polygon): void {
+    polygon.addListener('dblclick', (event: google.maps.MapMouseEvent) => {
+      event.stop(); // prevent propagation of the event
+      polygon.setDraggable(true);
     });
   }
 
@@ -626,6 +741,80 @@ export class MapDrawingService {
     }, 100);
   }
 
+  private showTempPropertyOptions(
+    map: any,
+    property: any,
+    position: google.maps.LatLng | null
+  ): void {
+    if (!position) return;
+
+    // get polygon options popup
+    const options = this.getTempPropertyOptionsPopup(property);
+
+    this.infoWindow.setContent(options);
+    this.infoWindow.setPosition(position);
+    this.infoWindow.open(map);
+
+    const deleteButtonInterval = setInterval(() => {
+      // this.addCloseButtonListener(infoWindow);
+
+      // get delete button
+      const detailsButton = document.getElementById(
+        `view-details-${property.Id}`
+      );
+      if (detailsButton) {
+        detailsButton.addEventListener('click', () => {
+          const storedBuyBoxId = localStorage.getItem('BuyBoxId');
+          this.router.navigate(['/landing', 0, property.Id, storedBuyBoxId]);
+        });
+      }
+
+      const closeButton = document.querySelector('.close-btn');
+      if (closeButton) {
+        closeButton.addEventListener('click', () => {
+          this.hidePopupContent();
+        });
+      }
+    }, 100);
+  }
+
+  private showPropertyOptions(
+    map: any,
+    property: IProperty,
+    position: google.maps.LatLng | null
+  ): void {
+    if (!position) return;
+
+    // get polygon options popup
+    const options = this.getPropertyOptionsPopup(property);
+
+    this.infoWindow.setContent(options);
+    this.infoWindow.setPosition(position);
+    this.infoWindow.open(map);
+
+    const deleteButtonInterval = setInterval(() => {
+      // this.addCloseButtonListener(infoWindow);
+
+      // get delete button
+      const detailsButton = document.getElementById(
+        `view-details-${property.id}`
+      );
+      if (detailsButton) {
+        detailsButton.addEventListener('click', () => {
+          const storedBuyBoxId = localStorage.getItem('BuyBoxId');
+          this.router.navigate(['/landing', 0, property.id, storedBuyBoxId]);
+        });
+      }
+
+      const closeButton = document.querySelector('.close-btn');
+      if (closeButton) {
+        closeButton.addEventListener('click', () => {
+          this.hidePopupContent();
+        });
+      }
+    }, 100);
+  }
+
   // popups
 
   private getShapeNameOptionsPopup(): string {
@@ -722,6 +911,86 @@ export class MapDrawingService {
               </button>
             </div>
           `;
+  }
+
+  private getPropertyOptionsPopup(property: IProperty): string {
+    return `
+            <div class="info-window">
+              <div class="main-img">
+                <img src="${property.mainImage}" alt="Main Image">
+                <span class="close-btn">&times;</span>
+              </div>
+              <div class="content-wrap">
+                ${
+                  property.centerName
+                    ? `<p class="content-title">${property.centerName.toUpperCase()}</p>`
+                    : ''
+                }
+              <p class="address-content"> 
+                ${property.centerAddress}, ${property.centerCity}, ${
+      property.centerState
+    }
+              </p>
+              ${
+                property.landArea_SF
+                  ? `<p class="address-content">Unit Size: ${property.landArea_SF}</p>`
+                  : ''
+              }
+                <div class="buttons-wrap">
+                  <button style="margin-top: 0.5rem;" id="view-details-${
+                    property.id
+                  }" 
+                  class="view-details-card"> View Details </button>
+                </div>
+              </div>
+            </div>
+    `;
+  }
+
+  private getTempPropertyOptionsPopup(property: any): string {
+    return `
+            <div class="info-window">
+              <div class="main-img">
+                <img src="${property.MainImage}" alt="Main Image">
+                <span class="close-btn">&times;</span>
+              </div>
+              <div class="content-wrap">
+                ${
+                  property.CenterName
+                    ? `<p class="content-title">${property.CenterName.toUpperCase()}</p>`
+                    : ''
+                }
+              <p class="address-content"> 
+                ${property.CenterAddress}, ${property.CenterCity}, ${
+      property.CenterState
+    }
+              </p>
+              ${
+                property.LandArea_SF
+                  ? `<p class="address-content">Unit Size: ${property.LandArea_SF}</p>`
+                  : ''
+              }
+                <div class="buttons-wrap">
+                  <button style="margin-top: 0.5rem;" id="view-details-${
+                    property.Id
+                  }" 
+                  class="view-details-card"> View Details </button>
+                </div>
+              </div>
+            </div>
+    `;
+  }
+
+  // others
+
+  private getLocationIconSvg(): string {
+    return (
+      'data:image/svg+xml;charset=UTF-8,' +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
+      </svg>
+    `)
+    );
   }
 
   // private selectedPolygon!: google.maps.Polygon | null;

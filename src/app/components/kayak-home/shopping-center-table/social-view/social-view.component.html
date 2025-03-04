@@ -18,24 +18,28 @@
 </div>
 
 <div class="scroll-container" #scrollContainer>
-  <div class="card" *ngFor="let shopping of shoppingCenters; let i = index; trackBy: trackByShoppingId">
+  <div
+    class="card"
+    *ngFor="
+      let shopping of shoppingCenters;
+      let i = index;
+      trackBy: trackByShoppingId
+    "
+  >
     <div
       class="social-card mb-0 mb-sm-5 Res"
       [style.backgroundImage]="
-        'url(' +
-        (shopping.MainImage || 'assets/Images/skeltonImage.png') +
-        ')'
+        'url(' + (shopping.MainImage || 'assets/Images/skeltonImage.png') + ')'
       "
     >
-      <div class="card-header" (click)="toggleDetails(i, shopping)">
+      <div class="card-header" (click)="isMobileView? openShoppingDetailsModal(shoppingDetailsModal, shopping):toggleDetails(i, shopping)">
         <div class="header-info Res">
           <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
           <p
             class="center-address shoppingcenterdata total"
             style="color: #fff"
           >
-            {{ shopping.CenterAddress }},
-            {{ shopping.CenterCity | titlecase }},
+            {{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }},
             {{ shopping.CenterState }}
           </p>
           <div>
@@ -46,18 +50,22 @@
             ></p>
           </div>
 
-          <div *ngIf="showDetails[i]" class="shopping-center-details d-none d-sm-flex">
+          <div
+            *ngIf="showDetails[i]"
+            class="shopping-center-details d-none d-sm-flex"
+          >
             <div class="row">
               <ng-container
-                *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces; trackBy: trackByShoppingId"
+                *ngFor="
+                  let item of shopping.ShoppingCenter?.BuyBoxPlaces;
+                  trackBy: trackByShoppingId
+                "
               >
                 <div
                   class="nearestt"
                   style="color: #fff; padding: 0 !important; max-width: 60%"
                 >
-                  <span>
-                    {{ getNeareastCategoryName(item.CategoryId) }}:
-                  </span>
+                  <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
 
                   <img
                     class="logo"
@@ -73,58 +81,28 @@
               </ng-container>
             </div>
           </div>
-<!-- Replace your existing shopping-center-details div with this -->
-<div *ngIf="showDetails[i]" class="shopping-center-details d-sm-none d-flex" [class.expanded]="showDetails[i]">
-  <div class="mobile-expanded-content">
-    <div class="row">
-      <ng-container *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces; trackBy: trackByShoppingId">
-        <div class="mobile-expanded-item">
-          <span>{{ getNeareastCategoryName(item.CategoryId) }}:</span>
-          <img
-            class="logo"
-            [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + item.RelationOrganizationId"
-            [title]="item.RelationOrganizationName"
-            alt=""
-            loading="lazy"
-          />
-          <span>{{ item.RelationOrganizationName }}</span>
-        </div>
-      </ng-container>
-      
-      <!-- Add shortcuts options for mobile -->
-      <div class="mobile-expanded-shortcuts">
-        <div class="mobile-expanded-item" *ngFor="let option of getMobileShortcutOptions(shopping)">
-          <i [class]="option.icon"></i>
-          <span (click)="option.action(shopping)">{{ option.label }}</span>
-        </div>
-      </div>
-    </div>
-    <button class="show-less-btn" (click)="toggleDetailsMobile(i, shopping)">Show Less</button>
-  </div>
-</div>
-
-<!-- Update the see more/less button -->
-<p
-  *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
-  class="see-more-btn d-none d-sm-flex"
-  (click)="toggleDetailsMobile(i, shopping); $event.stopPropagation()"
->
-  {{ showDetails[i] ? "See less" : "See more" }}
-</p>
+          <!-- Replace the expandable content with a button to open modal -->
+          <p
+            *ngIf="isMobileView?1 :shopping.ShoppingCenter?.BuyBoxPlaces?.length"
+            class="see-more-btn d-sm-none d-flex"
+            (click)="
+              openShoppingDetailsModal(shoppingDetailsModal, shopping);
+              $event.stopPropagation()
+            "
+          >
+            See More
+          </p>
           <p
             *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
-            class="see-more-btn d-flex d-sm-none"  
+            class="see-more-btn d-none d-sm-flex"
             (click)="toggleDetails(i, shopping); $event.stopPropagation()"
-          > 
+          >
             {{ showDetails[i] ? "See less" : "See more" }}
           </p>
         </div>
       </div>
       <div class="card-image Res tiktok-imgg">
-        <div
-          [ngClass]="{ 'image-shadow': showDetails[i] }"
-          style="width: 100%"
-        >
+        <div [ngClass]="{ 'image-shadow': showDetails[i] }" style="width: 100%">
           <img
             class="Res"
             [src]="
@@ -205,7 +183,7 @@
         <button
           class="action-btn share-btn"
           (click)="openContactsModal(contactsModal)"
-          >
+        >
           <svg
             width="33"
             height="32"
@@ -221,14 +199,14 @@
 
           <span class="share"> Share </span>
         </button>
-        <div style="position: relative">
+        <div style="position: relative "class="d-none d-sm-flex">
           <button
             style="
               background: #fff;
               border-radius: 20px;
               color: var(--Colors-Primary-500, #001f3f);
             "
-            class="ellipsis_icont"
+            class="ellipsis_icont d-none d-sm-flex"
             [ngbPopover]="shortcutspopover"
             (click)="toggleShortcutsCard(shopping.Id)"
           >
@@ -236,7 +214,7 @@
           </button>
           <ng-template #shortcutspopover>
             <div
-              class="shortcuts_iconCard iconic-card"
+              class="shortcuts_iconCard iconic-card d-none d-sm-flex"
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul>
@@ -354,11 +332,12 @@
                   <a
                     class="target"
                     (click)="
-                    openDeleteShoppingCenterModal(
-                      deleteSingleShoppingCenterModal,
-                      shopping.Id
-                    )
-                  "                  >
+                      openDeleteShoppingCenterModal(
+                        deleteSingleShoppingCenterModal,
+                        shopping.Id
+                      )
+                    "
+                  >
                     <i class="fa-regular fa-trash-can big-text"></i>
                     Remove Shopping
                   </a>
@@ -395,7 +374,8 @@
             *ngFor="
               let comment of sortCommentsByDate(
                 shopping.ShoppingCenter.Comments
-              ); trackBy: trackByCommentId
+              );
+              trackBy: trackByCommentId
             "
           >
             <li *ngIf="!comment.ParentCommentId">
@@ -421,9 +401,7 @@
                   type="text"
                   placeholder="Write a reply..."
                   [(ngModel)]="newReplies[comment.Id]"
-                  (keyup.enter)="
-                    addReply(shopping.MarketSurveyId, comment.Id)
-                  "
+                  (keyup.enter)="addReply(shopping.MarketSurveyId, comment.Id)"
                 />
                 <button
                   class="post-reply-btn"
@@ -438,7 +416,8 @@
                   *ngFor="
                     let reply of sortCommentsByDate(
                       shopping.ShoppingCenter.Comments
-                    ); trackBy: trackByCommentId
+                    );
+                    trackBy: trackByCommentId
                   "
                 >
                   <li *ngIf="reply.ParentCommentId === comment.Id">
@@ -468,14 +447,32 @@
   </div>
 </div>
 
+<div class="row mb-0 d-sm-none d-flex" style="justify-content: center; margin-top:0 !important;padding-bottom: 5px;">
+  <div class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center" style="width: auto;">
+    <div class="custom-icon-container">
+      <div
+        class="icon-option"
+        *ngFor="let option of dropdowmOptions"
+        (click)="selectOption(option)"
+        [class.selected]="selectedOption === option.status || selectedOption === option"
+        [ngClass]="{'hide-on-mobile': option.text === 'Side List View'}"
+      >
+        <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+      </div>
+    </div>
+  </div>
+</div>
 
 <ng-template #galleryModal let-modal>
   <div class="modal-body p-0">
-    <div class="carousel-wrapper position-relative"
-         (touchstart)="onTouchStart($event)"
-         (touchmove)="onTouchMove($event)"
-         (touchend)="onTouchEnd()">
-      <ngb-carousel #carousel
+    <div
+      class="carousel-wrapper position-relative"
+      (touchstart)="onTouchStart($event)"
+      (touchmove)="onTouchMove($event)"
+      (touchend)="onTouchEnd()"
+    >
+      <ngb-carousel
+        #carousel
         class="custom-carousel"
         [showNavigationIndicators]="true"
         [showNavigationArrows]="true"
@@ -485,15 +482,18 @@
       >
         <ng-template ngbSlide *ngFor="let img of placeImage; let i = index">
           <div class="text-center">
-            <img [src]="img" class="img-fluid p-img" alt="image" [attr.draggable]="false" />
+            <img
+              [src]="img"
+              class="img-fluid p-img"
+              alt="image"
+              [attr.draggable]="false"
+            />
           </div>
         </ng-template>
       </ngb-carousel>
     </div>
   </div>
 </ng-template>
-
-
 
 <ng-template #Like let-modal>
   <div class="modal-main like-modal">
@@ -610,7 +610,6 @@
       </div>
 
       <!-- Location Preference Section -->
-      <!-- Location Preference Section -->
       <div class="preference-options mb-4">
         <div
           class="location-card"
@@ -646,7 +645,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #contactsModal let-modal>
   <div class="modal-header d-flex justify-content-between align-items-center">
     <span class="modal-title" id="modal-basic-title">Contacts</span>
@@ -666,7 +664,6 @@
       ></button>
     </div>
   </div>
-  <!-- Added inline styles for vertical scrolling -->
   <div class="modal-body modalbodyy">
     <div
       *ngFor="let contact of OrganizationContacts"
@@ -684,7 +681,6 @@
           </span>
         </div>
       </div>
-      <!-- Pass the contact to openLink -->
       <i
         class="fa-solid fa-share ms-2 sharee-link"
         (click)="openLink(ShareLink, contact)"
@@ -701,8 +697,8 @@
       Close
     </button>
   </div>
+  
 </ng-template>
-
 
 <ng-template #ShareLink let-modal>
   <div class="d-flex p-3 m-3 align-items-center shareelink">
@@ -710,7 +706,6 @@
     <i class="fa-solid fa-copy ms-3 cursor" (click)="copyLink(shareLink)"></i>
   </div>
 </ng-template>
-
 
 <ng-template #addContactModal let-modal>
   <form (ngSubmit)="addContact(addContactForm)" #addContactForm="ngForm">
@@ -790,8 +785,6 @@
   </form>
 </ng-template>
 
-
-
 <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
     <iframe
@@ -807,13 +800,11 @@
     class="h700"
     *ngIf="!General.modalObject.StreetViewURL"
   ></div>
-</ng-template> 
+</ng-template>
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
 </ng-template>
-
-
 
 <ng-template #deleteSingleShoppingCenterModal let-modal>
   <div class="modal-body-general p-4 rounded deleteShopping">
@@ -841,3 +832,102 @@
   </div>
 </ng-template>
 
+<ng-template #shoppingDetailsModal let-modal>
+  <div class="modal-header">
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="mobile-expanded-content">
+      <div class="row">
+        <ng-container
+          *ngFor="
+            let item of currentShopping?.ShoppingCenter?.BuyBoxPlaces;
+            trackBy: trackByShoppingId
+          "
+        >
+          <div class="mobile-expanded-item">
+            <h4 class="modal-title">
+              {{ currentShopping?.CenterName | titlecase }}
+            </h4>
+          </div>
+          <p
+            class="center-address shoppingcenterdata total"
+            style="color: #7a8591"
+          >
+            {{ currentShopping.CenterAddress }},
+            {{ currentShopping.CenterCity | titlecase }},
+            {{ currentShopping.CenterState }}
+          </p>
+          <div>
+            <p
+              style="color: #7a8591"
+              class="getShoppingCenterr"
+              [innerHTML]="getShoppingCenterUnitSize(currentShopping)"
+            ></p>
+            <div
+              class=""
+              style="color: #7a8591; padding: 0 !important;"
+            >
+              <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
+
+              <img
+                class="logo"
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  item.RelationOrganizationId
+                }}"
+                [title]="item.RelationOrganizationName"
+                alt=""
+              />
+
+              <span> {{ item.RelationOrganizationName }}</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Add shortcuts options for mobile -->
+        <div class="mobile-expanded-shortcuts" *ngIf="currentShopping">
+          <div
+            class="mobile-expanded-item"
+            *ngFor="let option of getMobileShortcutOptions(currentShopping)"
+          >
+            <i [class]="option.icon"></i>
+            <div
+              class="arrow justify-content-between"
+              style="display: flex; width: 100%"
+            >
+              <span (click)="option.action(currentShopping)">{{
+                option.label
+              }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+              >
+                <path
+                  d="M5.94 13.78C5.81333 13.78 5.68667 13.7333 5.58667 13.6333C5.39333 13.44 5.39333 13.12 5.58667 12.9267L9.93333 8.58001C10.2533 8.26001 10.2533 7.74001 9.93333 7.42001L5.58667 3.07335C5.39333 2.88001 5.39333 2.56001 5.58667 2.36668C5.78 2.17335 6.1 2.17335 6.29333 2.36668L10.64 6.71335C10.98 7.05335 11.1733 7.51335 11.1733 8.00001C11.1733 8.48668 10.9867 8.94668 10.64 9.28668L6.29333 13.6333C6.19333 13.7267 6.06667 13.78 5.94 13.78Z"
+                  fill="#7A8591"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <p
+      type="button"
+      class="btn btn-secondary show-less-btn"
+      (click)="modal.close('Close click')"
+    >
+      Show Less
+    </p>
+  </div>
+</ng-template>

@@ -35,6 +35,8 @@ export class TenantComponent implements OnInit {
   brokersignature!: any;
   MinBuildingSize!: number;
   MaxBuildingSize!: number;
+  address!:string;
+  states!:string;
   ManagementOrganizationDesc!: string;
   buyboxname!: string;
   smalldescription: string[] = [];
@@ -125,7 +127,9 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         console.log('GetOrganizationBranches API Response:', res);
-        this.organizationBranches = res.json;
+        this.organizationBranches = res.json[0];
+        this.address=this.organizationBranches.Address;
+        this.states=this.organizationBranches.States;
         this.spinner.hide();
       },
       error: (err: any) => {

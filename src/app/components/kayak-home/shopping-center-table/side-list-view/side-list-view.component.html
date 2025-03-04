@@ -330,7 +330,24 @@
     </ng-container>
   </div>
 </div>
-    
+
+
+<div class="row mb-0 d-sm-none d-flex" style="justify-content: center; margin-top:0 !important;padding-bottom: 5px;">
+  <div class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center" style="width: auto;">
+    <div class="custom-icon-container">
+      <div
+        class="icon-option"
+        *ngFor="let option of dropdowmOptions"
+        (click)="selectOption(option)"
+        [class.selected]="selectedOption === option.status || selectedOption === option"
+        [ngClass]="{'hide-on-mobile': option.text === 'Side List View'}"
+      >
+        <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+      </div>
+    </div>
+  </div>
+</div>
+
 <ng-template #deleteShoppingCenterModal let-modal>
   <div class="modal-body-general p-4 rounded deleteShopping">
     <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
