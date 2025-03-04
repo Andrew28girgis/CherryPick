@@ -9,7 +9,7 @@
   color: #3c4b64;
   cursor: pointer;
 }
-.sidebar-header {
+.sidebar-header{
   padding: 0 !important;
 }
 .sidebar-header .nav-link.cherry-icon:hover {
@@ -24,31 +24,39 @@
   transform: none;
 }
 
-.cherry-logo {
+.cherry-logo{
   flex: none !important;
 }
-.border-end {
+.border-end{
   height: 100vh;
   z-index: 11;
 }
 
+
 .cherry-collabse {
+
   width: fit-content;
   height: fit-content;
-  background: transparent;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+background: transparent;
+  border: none;  
+  padding: 10px;  
+  cursor: pointer;  
+  transition: all 0.3s ease;  
   padding-left: 16px;
 }
 
 .cherry-collabse:hover {
-  transform: scale(1.1);
+  transform: scale(1.1);  
 }
 
 .cherry-collabse i {
-  font-size: 1.5rem;
-  color: #333;
-  transition: color 0.3s ease;
+  font-size: 1.5rem;  
+  color: #333;  
+  transition: color 0.3s ease;  
+}
+
+
+.fa-right-from-bracket{
+  transform: scaleX(-1); 
+
 }
