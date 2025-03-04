@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -15,11 +15,17 @@ import {
 import { CardModule } from 'primeng/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmailDashboardComponent } from "../email-dashboard/email-dashboard.component";
+import { TableModule } from 'primeng/table';
+
+interface Column {
+  field: string;
+  header: string;
+}
 
 @Component({
   selector: 'app-stage-email',
   standalone: true,
-  imports: [CommonModule, NgxSpinnerModule, AccordionModule, CardModule, EmailDashboardComponent],
+  imports: [CommonModule, NgxSpinnerModule, AccordionModule, CardModule, TableModule],
   providers: [NgxSpinnerService, PlacesService],
   templateUrl: './stage-email.component.html',
   styleUrl: './stage-email.component.css',
@@ -36,7 +42,14 @@ export class StageEmailComponent implements OnInit {
   loginContact: any;
   emptyMessage: string = 'Select Contact in organization';
   selectedFilter: string = 'all';
-  ShowSection:boolean = false;
+  ShowSection: boolean = false;
+  EmailDashboard: any[] = [];
+  cols!: Column[];
+  activeStageId!: number;
+  activeOrgId!: number;
+  openedStageId: number | null = null;
+  openedOrgId: number | null = null;
+
 
   constructor(
     public spinner: NgxSpinnerService,
@@ -48,10 +61,44 @@ export class StageEmailComponent implements OnInit {
     this.buyBoxId = localStorage.getItem('BuyBoxId');
     this.loginContact = localStorage.getItem('contactId');
 
+    this.cols = [
+      { field: 'Organizations', header: 'Organizations' },
+      { field: 'Last Activity Date', header: 'Last Activity Date' },
+    ];
 
+    this.GetEmailDashboard();
     this.GetBuyBoxMicroDeals();
     this.GetBuyBoxEmails();
     this.GetStages();
+  }
+
+
+  Openaccordion(stageId: number, orgId: number) {
+    if (this.openedStageId === stageId && this.openedOrgId === orgId) {
+      this.openedStageId = null;
+      this.openedOrgId = null;
+    } else {
+      this.openedStageId = stageId;
+      this.openedOrgId = orgId;
+    }
+  }
+
+  getActiveIndex(stageId: number): number {
+    if (this.openedStageId === stageId) {
+      return 0;
+    }
+    return -1;
+  }
+
+  getActiveIndex2(orgId: number): number {
+    if (this.openedOrgId === orgId) {
+      return 0;
+    }
+    return -1;
+  }
+
+  onButtonClicked() {
+    this.ShowSection = false;
   }
 
   getDirection(direction: number): string {
@@ -182,7 +229,7 @@ export class StageEmailComponent implements OnInit {
 
     const matchingEmails = this.BuyBoxEmails.flatMap(
       (buyBoxEmail) => buyBoxEmail.mail
-    );    
+    );
 
     // new line
     // this.emailsSentContact = [...this.emailsSentContact];
@@ -233,7 +280,7 @@ export class StageEmailComponent implements OnInit {
   }
 
   checkAndFilterEmails(type: string): void {
-    this.selectedFilter = type; 
+    this.selectedFilter = type;
     let count = 0;
     this.emptyMessage = '';
 
@@ -258,5 +305,29 @@ export class StageEmailComponent implements OnInit {
     return (contact.EmailStats[0].Sent || 0) +
       (contact.EmailStats[0].Inbox || 0) +
       (contact.EmailStats[0].Outbox || 0);
+  }
+
+  GetEmailDashboard(): void {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'EmailDashboard',
+      MainEntity: null,
+      Params: {
+        buyboxid: this.buyBoxId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data.json && Array.isArray(data.json)) {
+          this.EmailDashboard = data.json;
+        } else {
+          this.EmailDashboard = [];
+        }
+        this.spinner.hide();
+      },
+    });
   }
 }

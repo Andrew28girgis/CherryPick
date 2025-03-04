@@ -17,7 +17,7 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData>
-      <tr>
+      <tr (click)="openOrg(rowData.ID,items.Id)">
         <td class="col-body">{{ rowData.Name }}</td>
         <td class="col-body">{{ (rowData.LastActivityDate | date : "medium") || '--' }}</td>
       </tr>
