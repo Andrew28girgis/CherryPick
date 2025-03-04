@@ -104,29 +104,37 @@
   <table *ngIf="externalPolygons.length > 0; else emptyPolygons" class="table">
     <thead class="thead-light">
       <tr>
-        <th></th>
         <th>Name</th>
-        <th>City</th>
-        <th>State</th>
-        <th>Action</th>
+        <th class="text-center">Actions</th>
       </tr>
     </thead>
     <tbody *ngIf="externalPolygons.length > 0">
       <tr *ngFor="let polygon of externalPolygons; let index = index">
-        <td class="text-center">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            [id]="'checkBox' + index"
-            (change)="onExploreCheckBoxChange($event, polygon)"
-          />
-        </td>
         <td>
           {{ polygon.name }}
         </td>
-        <td>{{ polygon.city }}</td>
-        <td>{{ polygon.state }}</td>
-        <td>
+        <td class="text-center">
+          <ng-container
+            *ngIf="
+              displayedExternalPolygons.includes(polygon.id);
+              else displayExternal
+            "
+          >
+            <button
+              class="btn btn-secondary me-3"
+              (click)="toggleDisplayedExternalPolygon(polygon)"
+            >
+              Hide
+            </button>
+          </ng-container>
+          <ng-template #displayExternal>
+            <button
+              class="btn btn-primary me-3"
+              (click)="toggleDisplayedExternalPolygon(polygon)"
+            >
+              View
+            </button>
+          </ng-template>
           <button class="btn btn-dark">Add</button>
         </td>
       </tr>
