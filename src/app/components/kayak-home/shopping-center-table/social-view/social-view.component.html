@@ -32,7 +32,7 @@
         'url(' + (shopping.MainImage || 'assets/Images/skeltonImage.png') + ')'
       "
     >
-      <div class="card-header" (click)="toggleDetails(i, shopping)">
+      <div class="card-header" (click)="isMobileView? openShoppingDetailsModal(shoppingDetailsModal, shopping):toggleDetails(i, shopping)">
         <div class="header-info Res">
           <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
           <p
@@ -83,7 +83,7 @@
           </div>
           <!-- Replace the expandable content with a button to open modal -->
           <p
-            *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
+            *ngIf="isMobileView?1 :shopping.ShoppingCenter?.BuyBoxPlaces?.length"
             class="see-more-btn d-sm-none d-flex"
             (click)="
               openShoppingDetailsModal(shoppingDetailsModal, shopping);
@@ -199,14 +199,14 @@
 
           <span class="share"> Share </span>
         </button>
-        <div style="position: relative">
+        <div style="position: relative "class="d-none d-sm-flex">
           <button
             style="
               background: #fff;
               border-radius: 20px;
               color: var(--Colors-Primary-500, #001f3f);
             "
-            class="ellipsis_icont"
+            class="ellipsis_icont d-none d-sm-flex"
             [ngbPopover]="shortcutspopover"
             (click)="toggleShortcutsCard(shopping.Id)"
           >
@@ -214,7 +214,7 @@
           </button>
           <ng-template #shortcutspopover>
             <div
-              class="shortcuts_iconCard iconic-card"
+              class="shortcuts_iconCard iconic-card d-none d-sm-flex"
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul>
@@ -447,6 +447,21 @@
   </div>
 </div>
 
+<div class="row mb-0 d-sm-none d-flex" style="justify-content: center; margin-top:0 !important;padding-bottom: 5px;">
+  <div class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center" style="width: auto;">
+    <div class="custom-icon-container">
+      <div
+        class="icon-option"
+        *ngFor="let option of dropdowmOptions"
+        (click)="selectOption(option)"
+        [class.selected]="selectedOption === option.status || selectedOption === option"
+        [ngClass]="{'hide-on-mobile': option.text === 'Side List View'}"
+      >
+        <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+      </div>
+    </div>
+  </div>
+</div>
 
 <ng-template #galleryModal let-modal>
   <div class="modal-body p-0">
@@ -682,6 +697,7 @@
       Close
     </button>
   </div>
+  
 </ng-template>
 
 <ng-template #ShareLink let-modal>

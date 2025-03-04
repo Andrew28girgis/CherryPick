@@ -13,7 +13,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   BuyBoxId!: any;
   OrgId!: any;
   selectedOption: number = 5;
- 
+
+
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -48,19 +49,19 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
-      this.OrgId = params.orgId;
-      localStorage.setItem('BuyBoxId', this.BuyBoxId);
-      localStorage.setItem('OrgId', this.OrgId);
-    });
-    this.currentView = Number(localStorage.getItem('currentViewDashBord') || '5');
-    this.selectedOption = this.currentView;
+      this.BuyBoxId = params.buyboxid
+      this.OrgId = params.orgId
+      localStorage.setItem("BuyBoxId", this.BuyBoxId)
+      localStorage.setItem("OrgId", this.OrgId)
+    })
+    this.currentView = Number(localStorage.getItem("currentViewDashBord") || "5")
+    this.selectedOption = this.currentView
   }
 
   selectOption(option: any): void {
-    this.selectedOption = option.status;
-    this.currentView = option.status;
-    localStorage.setItem('currentViewDashBord', this.currentView.toString());
+    this.selectedOption = option.status
+    this.currentView = option.status
+    localStorage.setItem("currentViewDashBord", this.currentView.toString())
   }
   
   onHighlightMarker(place: any): void {
@@ -74,5 +75,9 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.mapView.unhighlightMarker(place);
     }
   }
-
+  onViewChange(viewStatus: number) {
+    this.currentView = viewStatus
+    this.selectedOption = viewStatus
+    localStorage.setItem("currentViewDashBord", this.currentView.toString())
+  }
 }
