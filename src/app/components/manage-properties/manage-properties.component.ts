@@ -113,26 +113,6 @@ export class ManagePropertiesComponent implements OnInit {
     if (!this.CustomPlace?.Images) return [];
     return this.CustomPlace.Images.split(',').map(url => url.trim());
   }
-  // addTenant()
-  // {
-  //   this.spinner.show();
-  //   let body: any = {
-  //     Name: 'addTenant',
-  //     Params: {
-  //       ShoppingCenterId : this.selectedShoppingID,
-  //       // tenantNew:this.newTenant,
-  //     },
-  //   };
-  //   this.PlacesService.GenericAPI(body).subscribe({
-  //     next: (data: any) => {
-  //       this.spinner.hide();
-  //     },
-  //     error: (err) => {
-  //       console.error('Error Adding Tenant', err);
-  //       this.spinner.hide();
-  //     },
-  //   });
-  // }
   // Toggle the visibility of the input field for adding a new tenant
   toggleAddTenantInput() {
     // Initialize CustomPlace.Tenants if it’s null or undefined
@@ -388,35 +368,6 @@ export class ManagePropertiesComponent implements OnInit {
     // this.getAvailabilityTenants();
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
-  // getAvailabilityTenants() {
-  //   this.spinner.show();
-  //   const body: any = {
-  //     Name: 'GetShoppingCenterAvailabilityAndTenants',
-  //     MainEntity: null,
-  //     Params: {
-  //       // ContactId: this.contactID,
-  //       shoppingcenterId: this.selectedShoppingID,
-  //     },
-  //     Json: null,
-  //   };
-  //   this.PlacesService.GenericAPILocal(body).subscribe({
-  //     next: (data: any) => {
-  //       if (data.json) {
-  //         this.AvailabilityAndTenants = {
-  //           availability: data.json.Availability || [],
-  //           tenants: data.json.Tenants || [],
-  //         };
-  //       } else {
-  //         this.AvailabilityAndTenants = { availability: [], tenants: [] };
-  //       }
-  //       this.spinner.hide();
-  //     },
-  //     error: (err) => {
-  //       console.error('Error fetching Availability Tenants:', err);
-  //       this.spinner.hide();
-  //     },
-  //   });
-  // }
   closeModal(modal: any) {
     modal.dismiss();
     this.fileName = '';
@@ -579,8 +530,5 @@ export class ManagePropertiesComponent implements OnInit {
   closeToast() {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
-  }
-  addField(fieldName: string) {
-    this.showInputField = fieldName;
   }
 }
