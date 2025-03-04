@@ -55,6 +55,7 @@
                         <span (click)="checkAndFilterEmails('sent')" [ngClass]="{'active': selectedFilter === 'sent'}">{{selectedContact.EmailStats[0].Sent}} Sent</span>
                         <span (click)="checkAndFilterEmails('inbox')" [ngClass]="{'active': selectedFilter === 'inbox'}">{{selectedContact.EmailStats[0].Inbox}} Inbox</span>
                         <span (click)="checkAndFilterEmails('outbox')" [ngClass]="{'active': selectedFilter === 'outbox'}">{{selectedContact.EmailStats[0].Outbox}} Outbox</span>
+                        <span (click)="ShowSection = false">Over View</span>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 p-2 card-pTemplate" *ngFor="let email of emailsSentContact"

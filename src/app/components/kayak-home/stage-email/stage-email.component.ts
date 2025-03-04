@@ -195,9 +195,6 @@ export class StageEmailComponent implements OnInit {
   }
 
   getSentEmails(matchingEmails: any, contactId: number): void {
-    console.log(matchingEmails);
-    console.log(contactId);
-  
     let mails = matchingEmails.filter((mail: Mail) => {
       if (mail.ContactId != this.loginContact) {
         return false;
