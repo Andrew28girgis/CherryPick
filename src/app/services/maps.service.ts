@@ -690,7 +690,6 @@ export class MapsService {
         lng: coord[0],
       }));
   
-      // Create and add the polygon to the map
       const polygon = new google.maps.Polygon({
         paths: polygonCoords,
         strokeColor: '#3498db',
