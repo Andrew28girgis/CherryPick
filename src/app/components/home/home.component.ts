@@ -20,7 +20,7 @@ import { BuyboxCategory } from '../../../../src/models/buyboxCategory';
 import { Center, Reaction } from '../../../../src/models/shoppingCenters';
 import { BbPlace } from '../../../../src/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Polygons } from '../../../../src/models/polygons';
+import { Polygon } from '../../../../src/models/polygons';
 import { ShareOrg } from '../../../../src/models/shareOrg';
 import { StateService } from '../../../../src/app/services/state.service';
 import { permission } from '../../../../src/models/permission';
@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit {
     password: '',
   };
   buyboxPlaces: BbPlace[] = [];
-  Polygons: Polygons[] = [];
+  Polygons: Polygon[] = [];
   ShareOrg: ShareOrg[] = [];
   shareLink: any;
   BuyBoxName: string = '';
@@ -283,16 +283,17 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  GetPolygons(buyboxId: number): void {
+  GetPolygons(): void {
     const body: any = {
-      Name: 'GetPolygons',
+      Name: 'PolygonStats',
       Params: {
-        buyboxid: buyboxId,
+        buyboxid: this.BuyBoxId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.Polygons = data.json;
+        this.Polygons = data.json; 
+          this.markerService.drawMultiplePolygons(this.map, this.Polygons);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -420,7 +421,7 @@ export class HomeComponent implements OnInit {
         this.createMarkers(this.shoppingCenters, 'Shopping Center');
       }
 
-      //this.getPolygons();
+      this.GetPolygons();
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
       this.spinner.hide();
