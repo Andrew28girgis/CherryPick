@@ -1,21 +1,57 @@
+<div class="sidebar sidebar-narrow-unfoldable border-end">
+  <!-- CoreUI built-in sidebar toggler -->
 
-    <div class="m-0 p-0" [style.width]="isCollapsed ? '5% !important' : '20% !important'" id="primaryColumn">
-      <div class="inherit">
-        <div class="d-flex">
-          <!-- Sidebar Primary -->
-          <div class="Sidbar-Primary" [ngStyle]="{ width: isCollapsed ? '200%' : '25%' }">
-            <ul class="p-0 m-0 Sidbar-Primary-ul">
-              <li (click)="BackTo()">
-                <i class="fa-solid fa-house" ></i>
-              </li>
-              <li (click)="logout()">
-                <i class="fa-solid fa-arrow-left"  title="Logout"></i>       
-                     </li>
-            </ul>
-          </div>
-          <div class="Sidbar-Secondary" id="secondarySidebar" [style.display]="isCollapsed ? 'none' : 'block'">
-            <p class="name-summary">Summary</p>
-          </div>
-        </div>
+  <!-- <button
+    class="cherry-collabse"
+    type="button"
+    data-coreui-toggle="unfoldable"
+    data-coreui-target=".sidebar"
+  >
+    <i
+      class="fa-solid fa-bars nav-icon"
+      data-coreui-toggle="unfoldable"
+      data-coreui-target=".sidebar"
+    ></i>
+  </button> -->
+  <div class="sidebar-header border-bottom">
+    <ul class="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link cherry-icon" href="summary" style="padding-left: 15px;">
+          <img
+            src="assets/Images/Icons/favicon-1.jpg"
+            alt="CherryPick Logo"
+            class="header-logo-active nav-icon cherry-logo"
+          />
+          <p class="nav-link cherry-icon">CherryPick</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <ul class="sidebar-nav">
+    <li (click)="BackTo()" class="nav-item">
+      <div class="nav-link">
+        <i class="fa-solid fa-house nav-icon"></i>
+        <p class="nav-link">Tenants</p>
       </div>
-    </div>
+    </li>
+    <li class="nav-item">
+      <a [routerLink]="['/manage-properties']" class="nav-link">
+        <i class="fa-solid fa-building nav-icon"></i>
+        <p class="nav-link">My Properties</p>
+      </a>
+    </li>
+    <li class="nav-item">
+      <div class="nav-link">
+        <i class="fa-solid fa-envelope nav-icon"></i>
+        <p class="nav-link">Email</p>
+      </div>
+    </li>
+    <li (click)="logout()" class="nav-item">
+      <div class="nav-link">
+        <i class="fa-solid fa-right-from-bracket nav-icon"></i>
+        <p class="nav-link">Logout</p>
+      </div>
+    </li>
+  </ul>
+</div>

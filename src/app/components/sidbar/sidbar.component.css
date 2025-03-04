@@ -1,132 +1,62 @@
-.Sidbar-Primary {
-    background-color: #001f3f;
-    color: #fff;
-    height: 100vh;
-    padding: 30px 0; 
-    font-family: Montserrat;
-    display: flex;
-    padding: 12px;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-    align-self: stretch;
-    transition: width 0.5s ease, opacity 0.5s ease;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  
-  .Sidbar-Secondary {
-    background-color: white;
-    height: 100vh;
-    padding: 30px 16px;
-    width: 75%;
-    font-family: Montserrat;
-    box-shadow: 1px 0px 3px 0px rgba(0, 0, 0, 0.31);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-      -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  
-  #primaryColumn {
-    transition: width 0.5s ease;
-  }
-  
-  #contentColumn {
-    transition: width 0.5s ease;
-  }
-  
-  .Sidbar-Primary-ul{ 
-    height: 100%;
-  }
+.sidebar-toggler {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1030;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #3c4b64;
+  cursor: pointer;
+}
+.sidebar-header{
+  padding: 0 !important;
+}
+.sidebar-header .nav-link.cherry-icon:hover {
+  background-color: transparent !important;
+}
 
-  .Sidbar-Primary-ul>li {
-    height: 60px;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    cursor: pointer;
-  }
-  
-  .Sidbar-Primary>ul>li>i {
-    display: flex;
-    font-size: 22px;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s ease;
-  }
-  
-  .Sidbar-Primary>ul>li>i:hover {
-    transform: scale(1.1);
-    color: rgb(135, 176, 252);
-  }
-  
-  .name-summary {
-    color: #16181D;
-    color: var(--Body-Heading-Color, #16181D);
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 30px;
-  }
-  
-  .ul-summery {
-    height: auto !important;
-    align-items: center;
-    display: grid;
-    gap: 5px;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    list-style: none;
-  }
-  
-  .ul-summery>li {
-    color: #707791b6;
-    font-size: 13px;
-    font-weight: 600 !important;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 30px;
-    cursor: pointer;
-    padding-inline: 5px;
-  }
-  
-  .activeIcon{
-    color: rgb(135, 176, 252);
-  }
-  
-  .activeTab{
-    color: #001f3f !important;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    padding-inline: 5px;
-    font-weight: bold;
-  }
+.sidebar-header .nav-link.cherry-icon img {
+  transition: none;
+}
+
+.sidebar-header .nav-link.cherry-icon:hover img {
+  transform: none;
+}
+
+.cherry-logo{
+  flex: none !important;
+}
+.border-end{
+  height: 100vh;
+  z-index: 11;
+}
 
 
-  .logout p{
-    /* background-color: #001f3f; */
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  
-  .logout i{
-    color: white;
-    font-size: 20px;
-    transform: rotate(180deg); 
-  }
-  .inherit{
-    width: inherit; 
-    position: fixed
-  }
+.cherry-collabse {
+
+  width: fit-content;
+  height: fit-content;
+background: transparent;
+  border: none;  
+  padding: 10px;  
+  cursor: pointer;  
+  transition: all 0.3s ease;  
+  padding-left: 16px;
+}
+
+.cherry-collabse:hover {
+  transform: scale(1.1);  
+}
+
+.cherry-collabse i {
+  font-size: 1.5rem;  
+  color: #333;  
+  transition: color 0.3s ease;  
+}
+
+
+.fa-right-from-bracket{
+  transform: scaleX(-1); 
+
+}

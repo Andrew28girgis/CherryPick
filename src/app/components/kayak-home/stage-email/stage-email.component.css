@@ -6,11 +6,11 @@
 }
 
 ::ng-deep .p-accordion .p-accordion-content .p-accordion .p-accordion-header a {
-    padding-block: 8px !important;
-    color: #001f3f !important;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: Montserrat;
+  padding-block: 8px !important;
+  color: #001f3f !important;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: Montserrat;
 }
 
 ::ng-deep .p-accordion-header .p-accordion-toggle-icon {
@@ -21,7 +21,7 @@
   padding: 10px !important;
 }
 
-::ng-deep .p-card .p-card-body{
+::ng-deep .p-card .p-card-body {
   padding: 0 10px !important;
 }
 
@@ -37,16 +37,19 @@
   cursor: pointer;
 }
 
-.contact-ul>li:hover {
- color: #001f3f !important;
- font-weight: 700;
+.contact-ul>li>.namecontact:hover {
+  color: #001f3f !important;
+  font-weight: 700;
 }
 
-.no-data{
+.Empty-data {
   color: #001f3f;
   font-size: 16px;
   font-weight: 600;
   font-family: Montserrat;
+  height: 10vh;
+  align-items: center;
+  padding-inline: 10px;
 }
 
 .no-contact-msg {
@@ -68,26 +71,47 @@
 }
 
 .Direction-class {
-  color: #001f3f; 
+  color: #001f3f;
 }
 
 .date-text {
-  color: #6c757d; 
+  color: #6c757d;
   font-size: 14px;
 }
 
-.selectedContact{
+.selectedContact {
   color: #001f3f;
   font-weight: bold;
   font-weight: 600;
   font-family: Montserrat;
 }
 
-.card-pTemplate{
+.card-pTemplate {
   cursor: pointer;
 }
 
+.filterEmails {
+  display: flex;
+  gap: 5px;
+}
 
+.filterEmails>span {
+  padding: 5px 10px;
+  background: #ddd;
+  border: 1px solid #ddd;
+  color: #001f3f;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.filterEmails span.active {
+  color: white;
+  background: #001f3f;
+  padding: 5px 10px;
+  border: 1px solid #001f3f;
+  cursor: pointer;
+  border-radius: 6px;
+}
 
 
 .GeneratedEmail {
@@ -100,11 +124,11 @@
 }
 
 .firstemail {
-    font-size: 16px;
-    align-items: center;
-    display: block; 
-    font-weight: 600;
-  }
+  font-size: 16px;
+  align-items: center;
+  display: block;
+  font-weight: 600;
+}
 
 .firstlast {
   font-size: 13px;
@@ -117,4 +141,72 @@
   font-size: 13px;
   align-items: center;
   display: block;
+}
+
+
+.Outbox {
+  color: red;
+}
+
+.Sent {
+  color: green;
+
+}
+
+.Inbox {
+  color: #001f3f;
+}
+
+
+@media (max-width: 768px) {
+  .selectedContactdiv {
+    display: block !important;
+  }
+
+  .selectedContact {
+    width: 100%;
+    margin-top: 16px;
+    /* order: 2; */
+  }
+
+  .filterEmails {
+    width: 100%;
+    justify-content: end;
+    margin-top: 6px;
+    /* order: 1; */
+  }
+}
+.card-pTemplate {
+  cursor: pointer;
+}
+
+.col-header {
+  width: 50% !important;
+  padding-block: 5px;
+  border-bottom: 1px solid rgb(211, 211, 211);
+  color: gray;
+}
+
+.col-header:nth-child(1) {
+  border-right: 1px solid rgb(211, 211, 211);
+}
+
+.col-body {
+  padding-block: 5px;
+  border-bottom: 1px solid rgb(211, 211, 211);
+}
+
+.col-body:nth-child(1) {
+  border-right: 1px solid rgb(211, 211, 211);
+  cursor: pointer;
+}
+
+.col-body:nth-child(1):hover {
+  color: #001f3f;
+  font-weight: 600;
+}
+
+::ng-deep .p-datatable .p-datatable-header {
+  background: #001f3f17;
+  padding-block: 8px;
 }

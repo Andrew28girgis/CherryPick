@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
 import { MsalService } from '@azure/msal-angular';
@@ -16,12 +16,13 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     MicrosoftMailsService,
     NgxSpinnerService,
     MsalService,
-    PlacesService,
+    PlacesService
   ],
   templateUrl: './link-microsoft.component.html',
   styleUrl: './link-microsoft.component.css',
 })
 export class LinkMicrosoftComponent implements OnInit {
+  @Output() buttonClicked: EventEmitter<void> = new EventEmitter();
   user: any = null;
   public ContactFolders: any;
   public ContactInfos: any;
@@ -35,7 +36,7 @@ export class LinkMicrosoftComponent implements OnInit {
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private msalService: MsalService,
-    private microsoftMailsService: MicrosoftMailsService
+    private microsoftMailsService: MicrosoftMailsService,
   ) {}
 
   async ngOnInit() {
@@ -55,6 +56,11 @@ export class LinkMicrosoftComponent implements OnInit {
       }
     });
   }
+
+  onClick() {
+    this.buttonClicked.emit();
+  }
+
 
   RemoveLinkedAccount() {
     this.spinner.show();
@@ -194,6 +200,26 @@ export class LinkMicrosoftComponent implements OnInit {
       });
     } catch (error) {
       console.error('Error parsing objectTokeMsal:', error);
+    }
+  }
+
+  AcceptToReadReplyEmails(canRead: any): void {
+    try {
+      this.spinner.show();
+      const body: any = {
+        Name: 'AcceptToReadReplyEmails',
+        Params: {
+          ContactId: this.contactId,
+          CanRead: canRead.target.checked,
+        },
+      };
+
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (data: any) => {
+          this.spinner.hide();
+        },
+      });
+    } catch (error) {
     }
   }
 
