@@ -4,8 +4,7 @@ import {
   APP_INITIALIZER,
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
-import { RouterModule } from '@angular/router';
+import { AppRoutingModule } from './app-routing.module'; 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -122,8 +121,7 @@ const loginRequest = {
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    RouterModule,
+    AppRoutingModule, 
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,

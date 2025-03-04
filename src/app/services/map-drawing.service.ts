@@ -72,7 +72,7 @@ export class MapDrawingService {
         fillColor: '#0000FF',
         fillOpacity: 0.35,
         editable: true,
-        draggable: true,
+        draggable: false,
       },
       // setup circles styles
       circleOptions: {
@@ -81,7 +81,7 @@ export class MapDrawingService {
         strokeWeight: 2,
         clickable: true,
         editable: true,
-        draggable: true,
+        draggable: false,
       },
     });
 
@@ -119,7 +119,7 @@ export class MapDrawingService {
       fillColor: '#0000FF',
       fillOpacity: 0.35,
       editable: true,
-      draggable: true,
+      draggable: false,
     });
 
     polygon.set('label', name);
@@ -134,6 +134,7 @@ export class MapDrawingService {
     this.addPolygonClickListener(map, polygon);
     // handle change event of the polygon
     this.addPolygonChangeListener(map, polygon);
+    this.addPolygonDoubleClickListener(polygon);
   }
 
   insertExternalCircle(
@@ -153,7 +154,7 @@ export class MapDrawingService {
       strokeWeight: 2,
       strokeColor: '#FF0000',
       editable: true,
-      draggable: true,
+      draggable: false,
     });
 
     circle.set('label', name);
@@ -168,6 +169,7 @@ export class MapDrawingService {
     this.addCircleClickListener(map, circle);
     // handle change event of the circle
     this.addCircleChangeListener(map, circle);
+    this.addCircleDoubleClickListener(circle);
   }
 
   updatePolygonId(id: number, circle: boolean): void {
@@ -416,6 +418,22 @@ export class MapDrawingService {
       if (this.infoWindow) {
         this.hidePopupContent();
       }
+
+      // Disable dragging for all drawn polygons if they are currently draggable.
+      this.drawnPolygons.forEach((entry) => {
+        const polygon = entry.shape as google.maps.Polygon;
+        if (polygon.getDraggable()) {
+          polygon.setDraggable(false);
+        }
+      });
+      
+      // Disable dragging for all drawn circles if they are currently draggable.
+      this.drawnCircles.forEach((entry) => {
+        const circle = entry.shape as google.maps.Circle;
+        if (circle.getDraggable()) {
+          circle.setDraggable(false);
+        }
+      });
     });
   }
 
@@ -436,6 +454,7 @@ export class MapDrawingService {
           this.addPolygonClickListener(map, newPolygon);
           // handle change event of the polygon
           this.addPolygonChangeListener(map, newPolygon);
+          this.addPolygonDoubleClickListener(newPolygon);
           this.drawingManager.setDrawingMode(null);
         }
         if (event.type === google.maps.drawing.OverlayType.CIRCLE) {
@@ -449,6 +468,7 @@ export class MapDrawingService {
           this.addCircleClickListener(map, newCircle);
           // handle change event of the circle
           this.addCircleChangeListener(map, newCircle);
+          this.addCircleDoubleClickListener(newCircle);
           this.drawingManager.setDrawingMode(null);
         }
       }
@@ -495,8 +515,16 @@ export class MapDrawingService {
       const updatedCircle = this.drawnCircles.find((p) => p.shape == oldCircle);
       if (updatedCircle) {
         updatedCircle.shape = circle;
+        circle.setDraggable(false);
         this.onCircleChanged.emit(updatedCircle);
       }
+    });
+  }
+
+  private addCircleDoubleClickListener(circle: google.maps.Circle): void {
+    circle.addListener('dblclick', (event: google.maps.MapMouseEvent) => {
+      event.stop(); // prevent propagation of the event
+      circle.setDraggable(true);
     });
   }
 
@@ -537,54 +565,66 @@ export class MapDrawingService {
   ): void {
     const oldPolygon = polygon;
     let resizeTimeout: any;
-    let changePending = false; // flag to indicate a change occurred
-    let updatedPolygon: any = null; // store the updated polygon
+    let isDragging = false;
+
+    const emitChange = () => {
+      const updatedPolygon = this.drawnPolygons.find(
+        (p) => p.shape === oldPolygon
+      );
+      if (updatedPolygon) {
+        this.onPolygonChanged.emit(updatedPolygon);
+      }
+    };
 
     const path = polygon.getPath();
 
-    // Listen for changes in the polygon path (dragging vertices)
     path.addListener('set_at', () => {
-      // Close options popup immediately
+      if (isDragging) return;
       this.hidePopupContent();
-
-      // Update the polygon reference and mark change as pending
-      updatedPolygon = this.drawnPolygons.find((p) => p.shape === oldPolygon);
-      changePending = true;
-
-      // Reset the timeout if already set
-      if (resizeTimeout) {
-        clearTimeout(resizeTimeout);
-      }
-
-      // Optionally show polygon options after a delay (this runs regardless of mouseup)
+      if (resizeTimeout) clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         this.showPolygonsOptions(map, polygon, this.getPolygonCenter(polygon));
+        emitChange();
       }, 300);
     });
 
-    // Listen for insertions of new vertices
     path.addListener('insert_at', () => {
+      if (isDragging) return;
       this.hidePopupContent();
-      updatedPolygon = this.drawnPolygons.find((p) => p.shape === oldPolygon);
-      changePending = true;
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        emitChange();
+      }, 300);
     });
 
-    // Listen for removals of vertices
     path.addListener('remove_at', () => {
+      if (isDragging) return;
       this.hidePopupContent();
-      updatedPolygon = this.drawnPolygons.find((p) => p.shape === oldPolygon);
-      changePending = true;
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        emitChange();
+      }, 300);
     });
 
-    // Listen for mouseup events on the polygon (when the mouse button is released)
-    polygon.addListener('mouseup', () => {
-      // Only emit if a change occurred
-      if (changePending && updatedPolygon) {
-        this.onPolygonChanged.emit(updatedPolygon);
-        // Clear the flag and updated polygon after emitting
-        changePending = false;
-        updatedPolygon = null;
+    polygon.addListener('dragstart', () => {
+      isDragging = true;
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = null;
       }
+    });
+
+    polygon.addListener('dragend', () => {
+      isDragging = false;
+      emitChange();
+      polygon.setDraggable(false);
+    });
+  }
+
+  private addPolygonDoubleClickListener(polygon: google.maps.Polygon): void {
+    polygon.addListener('dblclick', (event: google.maps.MapMouseEvent) => {
+      event.stop(); // prevent propagation of the event
+      polygon.setDraggable(true);
     });
   }
 

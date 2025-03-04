@@ -146,12 +146,17 @@
 
             <div class="d-flex flex-column text-center">
               <span class="boldtext">Size needed</span>
-              <div class="d-flex justify-content-center">
-                <span class="graytext">{{ MinBuildingSize }} SF</span>
-                <span class="graytext mx-2"> - </span>
-                <span class="graytext">{{ MaxBuildingSize }} SF</span>
+              <div class="d-flex justify-content-start">
+                <span class="graytext">
+                  {{ MinBuildingSize ? (MinBuildingSize + ' SF') : '' }}
+                </span>
+                <span class="graytext mx-2" *ngIf="MinBuildingSize && MaxBuildingSize"> - </span>
+                <span class="graytext">
+                  {{ MaxBuildingSize ? (MaxBuildingSize + ' SF') : '' }}
+                </span>
               </div>
             </div>
+            
           </div>
         </div>
         <div class="col-4 flex align-items-center justify-content-center">
@@ -166,8 +171,8 @@
 
             <div class="d-flex flex-column text-center">
               <span class="boldtext">States</span>
-              <div class="d-flex justify-content-center">
-                <!-- <span class="graytext"> Alabama - California - Colorado </span> -->
+              <div class="d-flex justify-content-start">
+                <span class="graytext"> {{states}} </span>
               </div>
             </div>
           </div>
@@ -184,8 +189,8 @@
 
             <div class="d-flex flex-column text-center">
               <span class="boldtext">Cities</span>
-              <div class="d-flex justify-content-center">
-                <!-- <span class="graytext"> Alabama - California - Colorado </span> -->
+              <div class="d-flex justify-content-start">
+                <span class="graytext"> {{address}} </span>
               </div>
             </div>
           </div>
