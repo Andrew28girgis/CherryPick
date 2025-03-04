@@ -176,3 +176,37 @@
     /* order: 1; */
   }
 }
+.card-pTemplate {
+  cursor: pointer;
+}
+
+.col-header {
+  width: 50% !important;
+  padding-block: 5px;
+  border-bottom: 1px solid rgb(211, 211, 211);
+  color: gray;
+}
+
+.col-header:nth-child(1) {
+  border-right: 1px solid rgb(211, 211, 211);
+}
+
+.col-body {
+  padding-block: 5px;
+  border-bottom: 1px solid rgb(211, 211, 211);
+}
+
+.col-body:nth-child(1) {
+  border-right: 1px solid rgb(211, 211, 211);
+  cursor: pointer;
+}
+
+.col-body:nth-child(1):hover {
+  color: #001f3f;
+  font-weight: 600;
+}
+
+::ng-deep .p-datatable .p-datatable-header {
+  background: #001f3f17;
+  padding-block: 8px;
+}

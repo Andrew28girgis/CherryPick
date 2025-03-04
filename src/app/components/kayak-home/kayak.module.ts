@@ -23,6 +23,7 @@ import { PolygonsControllerComponent } from './polygons-controller/polygons-cont
 import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.component";
 import { StageEmailComponent } from "./stage-email/stage-email.component";
 import { EditorEmailComponent } from "./editor-email/editor-email.component";
+import { EmailDashboardComponent } from './email-dashboard/email-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import { EditorEmailComponent } from "./editor-email/editor-email.component";
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
-    PolygonsControllerComponent
+    PolygonsControllerComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +53,7 @@ import { EditorEmailComponent } from "./editor-email/editor-email.component";
     SharedModule,
     LinkMicrosoftComponent,
     StageEmailComponent,
+    EmailDashboardComponent,
     EditorEmailComponent
 ],
   exports: [
@@ -67,7 +69,8 @@ import { EditorEmailComponent } from "./editor-email/editor-email.component";
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
-
+    StageEmailComponent,
+    EmailDashboardComponent
   ],
 })
 export class KayakModule {}
