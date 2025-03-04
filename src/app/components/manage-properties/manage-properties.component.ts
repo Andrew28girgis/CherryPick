@@ -135,6 +135,13 @@ export class ManagePropertiesComponent implements OnInit {
   // }
   // Toggle the visibility of the input field for adding a new tenant
   toggleAddTenantInput() {
+    // Initialize CustomPlace.Tenants if it’s null or undefined
+    if (!this.CustomPlace?.Tenants) {
+      this.CustomPlace = {
+        ...this.CustomPlace,
+        Tenants: [], // Initialize an empty array for tenants
+      } as PropertiesDetails;
+    }
     this.showAddTenantInput = !this.showAddTenantInput;
     if (this.showAddTenantInput) {
       this.newTenantName = '';
@@ -196,9 +203,15 @@ export class ManagePropertiesComponent implements OnInit {
     });
   }
   toggleAddPlaceInput() {
+    if (!this.CustomPlace?.Availability) {
+      this.CustomPlace = {
+        ...this.CustomPlace,
+        Availability: [], // Initialize Availability if null
+      } as PropertiesDetails;
+    }
     this.showAddPlaceInput = !this.showAddPlaceInput;
     if (this.showAddPlaceInput) {
-      this.newPlaceSqFT = 0;
+      this.newPlaceSqFT = 0; // Reset the input value
     }
   }
   cancelAddPlace() {
