@@ -1,49 +1,51 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="row mb-0 d-sm-flex d-none">
-  <div
-    class="col-6 col-md-6 pt-2 d-flex justify-content-strat align-items-cente"
-  >
-    <div class="custom-icon-container">
-      <div
-        class="icon-option"
-        *ngFor="let option of dropdowmOptions"
-        (click)="selectOption(option)"
-        [class.selected]="
-          selectedOption === option.status || selectedOption === option
-        "
-        [ngClass]="{
-          'hide-on-mobile': option.text === 'Side List View'
-        }"
-      >
-        <img [src]="option.icon" [alt]="option.text" class="icon-image" />
-        <span class="icon-text hide-on-mobile">{{ option.text }}</span>
+<div class="tab-view-container">
+  <div class="row mb-0 d-sm-flex d-none">
+    <div
+      class="col-6 col-md-6 pt-2 d-flex justify-content-strat align-items-cente"
+    >
+      <div class="custom-icon-container">
+        <div
+          class="icon-option"
+          *ngFor="let option of dropdowmOptions"
+          (click)="selectOption(option)"
+          [class.selected]="
+            selectedOption === option.status || selectedOption === option
+          "
+          [ngClass]="{
+            'hide-on-mobile': option.text === 'Side List View'
+          }"
+        >
+          <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+          <span class="icon-text hide-on-mobile">{{ option.text }}</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<!-- Map View (View 1) -->
-<app-map-view *ngIf="currentView == 1"></app-map-view>
-
-<!-- Side List View (View 2) -->
-<div class="row" *ngIf="currentView == 2">
-  <div class="col-12 col-sm-8 cards">
-    <app-side-list-view 
-      (highlightMarker)="onHighlightMarker($event)"
-      (unhighlightMarker)="onUnhighlightMarker($event)"
-    ></app-side-list-view>
+  <!-- Map View (View 1) -->
+  <app-map-view *ngIf="currentView == 1"></app-map-view>
+  
+  <!-- Side List View (View 2) -->
+  <div class="row" *ngIf="currentView == 2">
+    <div class="col-12 col-sm-8 cards">
+      <app-side-list-view 
+        (highlightMarker)="onHighlightMarker($event)"
+        (unhighlightMarker)="onUnhighlightMarker($event)"
+      ></app-side-list-view>
+    </div>
+    <div class="col-12 col-sm-4">
+      <app-map-view #mapView></app-map-view>
+    </div>
   </div>
-  <div class="col-12 col-sm-4">
-    <app-map-view #mapView></app-map-view>
-  </div>
+  
+  <!-- Card View (View 3) -->
+  <app-card-view *ngIf="currentView == 3"></app-card-view>
+  
+  <!-- Table View (View 4) -->
+  <app-table-view *ngIf="currentView == 4"></app-table-view>
+  
+  <!-- Social View (View 5) -->
+  <app-social-view *ngIf="currentView == 5"></app-social-view>
 </div>
-
-<!-- Card View (View 3) -->
-<app-card-view *ngIf="currentView == 3"></app-card-view>
-
-<!-- Table View (View 4) -->
-<app-table-view *ngIf="currentView == 4"></app-table-view>
-
-<!-- Social View (View 5) -->
-<app-social-view *ngIf="currentView == 5"></app-social-view>
 
