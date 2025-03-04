@@ -402,6 +402,14 @@ border: 8px solid #accbed;
   left: 10px;
   transform: translateY(-50%);
 }
+.buyboxpos {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  top: 30%;
+  left: -14px;
+  transform: translateY(-50%);
+}
 
 /* Position the buttons at the bottom-right within .logo-container */
 .content-right {
@@ -559,6 +567,14 @@ border: 8px solid #accbed;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.buyboxname {
+  color: #FFF;
+  font-family: Montserrat;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
 }
 
 
