@@ -87,7 +87,7 @@
                     <span (click)="checkAndFilterEmails('outbox')"
                         [ngClass]="{'active': selectedFilter === 'outbox'}">{{selectedContact.EmailStats[0].Outbox}}
                         Outbox</span>
-                    <span (click)="ShowSection = false">Over View</span>
+                    <span (click)="ShowSection = false">Home</span>
                 </div>
             </div>
             <div class="col-12 col-sm-12 p-2 card-pTemplate" *ngFor="let email of emailsSentContact"
