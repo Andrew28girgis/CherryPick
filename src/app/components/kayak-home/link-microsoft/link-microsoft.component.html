@@ -33,6 +33,16 @@
       </div>
       <div class="modal-body">
         <div class="row m-0 mb-3">
+          <div class="col-12 p-0 row m-0">
+              <div class="checkbox-section">
+                <input type="checkbox" name="ReadReply" id="ReadReply" class="form-check-input"
+                  (change)="AcceptToReadReplyEmails($event)" />
+                <label for="ReadReply">Accept To Read Reply Emails</label>
+              </div>
+          </div>
+        </div>
+
+        <div class="row m-0 mb-3">
           <div class="col-2 p-0">
             <p class="folder_p">Folders :</p>
           </div>

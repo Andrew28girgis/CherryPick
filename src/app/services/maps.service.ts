@@ -683,13 +683,13 @@ export class MapsService {
 
   drawSinglePolygon(map: any, feature: any): void {
     try {
-      const geoJson = JSON.parse(feature.json);
+      const geoJson = JSON.parse(feature.PolygonJson[0].json);
       const coordinates = geoJson.geometry.coordinates[0];
       const polygonCoords = coordinates.map((coord: number[]) => ({
         lat: coord[1],
         lng: coord[0],
       }));
-
+  
       // Create and add the polygon to the map
       const polygon = new google.maps.Polygon({
         paths: polygonCoords,
@@ -700,36 +700,115 @@ export class MapsService {
         fillOpacity: 0.35,
         map: map,
       });
-
+  
       // Calculate polygon center
       const bounds = new google.maps.LatLngBounds();
       polygonCoords.forEach((coord: any) => {
         bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
       });
       const center = bounds.getCenter();
-
-      // Add label at polygon center
-      new google.maps.Marker({
-        position: center,
+  
+      // Create info window for detailed information
+      const infoWindow = new google.maps.InfoWindow({
+        content: this.createInfoWindowContent(feature),
+        disableAutoPan: true,
+      });
+  
+      // Track the currently open info window
+      let openInfoWindow: google.maps.InfoWindow | null = null;
+  
+      // Close any existing info windows before opening a new one
+      const closeAllInfoWindows = () => {
+        if (openInfoWindow) {
+          openInfoWindow.close();
+          openInfoWindow = null;
+        }
+      };
+  
+      // Add hover events to the polygon
+      polygon.addListener('mouseover', () => {
+        // Close any existing info windows
+        closeAllInfoWindows();
+  
+        // Open info window at polygon's center
+        infoWindow.setPosition(center);
+        infoWindow.open(map);
+        openInfoWindow = infoWindow;
+  
+        // Optional: Change polygon style on hover
+        polygon.setOptions({
+          fillOpacity: 0.5,
+          strokeWeight: 3
+        });
+      });
+  
+      polygon.addListener('mouseout', () => {
+        // Close the info window
+        closeAllInfoWindows();
+  
+        // Revert polygon style
+        polygon.setOptions({
+          fillOpacity: 0.35,
+          strokeWeight: 2
+        });
+      }); 
+  
+      // Close info window when clicking outside
+      map.addListener('click', () => {
+        closeAllInfoWindows();
+      });
+  
+      // Display the polygon's name on the polygon with margin
+      const polygonLabel = new google.maps.Marker({
+        position: { lat: center.lat(), lng: center.lng() },
         map: map,
         label: {
-          text: feature.name,
-          color: '#00426e',
+          text: feature.Name,
+          color: '#001f3f',
           fontSize: '11px',
-          fontWeight: '600',
+          fontWeight: 'bold',
         },
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
-          scale: 0,
+          scale: 0, // Hide the default circle icon
         },
+        title: feature.Name,
       });
+  
     } catch (error) {
       console.error('Error drawing polygon:', error);
     }
   }
-
   
-
+  // Helper method to create detailed info window content
+  private createInfoWindowContent(feature: any): string {
+    // Helper function to format number as currency
+    const formatCurrency = (value: number) => {
+      return value !== null && value !== undefined && value !== 0
+        ? `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+        : '';
+    };
+  
+    return `
+      <div style="padding:10px; max-width:250px; color:#000">
+        <h3 style="font-size:14px ; margin:0">${feature.Name || 'Unnamed Location'}</h3>
+        <hr style="margin:10px 0">
+        <p class="py-1"><strong>Shopping centers:</strong> ${feature.shoppingcenters !== null && feature.shoppingcenters !== undefined ? feature.shoppingcenters : 'N/A'}</p>
+        ${(feature.minForlease !== 0 || feature.maxforlease !== 0)
+          ? `<p class="py-1"><strong>Lease price:</strong> 
+             ${formatCurrency(feature.minForlease)} ${feature.minForlease !== 0 && feature.maxforlease !== 0 ? '- ' : ''}${formatCurrency(feature.maxforlease)}
+             </p>`
+          : ''}
+        <p class="py-1"> <strong>Spaces:</strong> 
+          ${(feature.minspace !== null && feature.minspace !== undefined && 
+             feature.maxspace !== null && feature.maxspace !== undefined) 
+             ? `${feature.minspace} sq ft - ${feature.maxspace} sq ft` 
+             : 'No space information available'}
+        </p>
+      </div>
+    `;
+  }
+  
   // drawPolygons(map: any, response: any): void {
   //   if (!map || !response || !Array.isArray(response)) {
   //     console.error('Invalid parameters provided to drawPolygons');
@@ -951,3 +1030,8 @@ export class MapsService {
   //   }
   // }
 }
+
+
+
+
+ 

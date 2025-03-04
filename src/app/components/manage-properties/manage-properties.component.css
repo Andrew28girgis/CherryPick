@@ -115,3 +115,62 @@ dl dd {
 .tenant-link:hover {
   text-decoration: underline;
 }
+.modal-header {
+  padding: 1.5rem;
+}
+
+.image-container {
+  padding: 10px;
+}
+
+.carousel-container {
+  max-width: 100%;
+}
+
+.carousel-item img {
+  object-fit: cover;
+  height: 300px; /* Adjust as needed */
+}
+
+.details-container {
+  padding: 10px;
+}
+
+/* .tenants-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+} */
+
+.list-group-item {
+  border: none;
+  padding: 8px 0;
+}
+
+.badge {
+  font-size: 0.9em;
+  padding: 0.5em 1em;
+}
+.carousel-control-next {
+  right: -20px !important;
+}
+.carousel-control-prev {
+  left: -20px !important;
+}
+.carousel-control-prev-icon::before,
+.carousel-control-next-icon::before {
+  content: '';
+  /* background-color: #747373;  */
+  display: block;
+  /* Additional styling if needed */
+}
+.center-name{
+  font-weight: 600;
+  font-size: 16PX;
+  cursor: pointer;
+  color: #081c3e;
+}
+.center-name:hover{
+  text-decoration: underline;
+  color: #043566;
+}

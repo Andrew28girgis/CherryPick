@@ -197,6 +197,26 @@ export class LinkMicrosoftComponent implements OnInit {
     }
   }
 
+  AcceptToReadReplyEmails(canRead: any): void {
+    try {
+      this.spinner.show();
+      const body: any = {
+        Name: 'AcceptToReadReplyEmails',
+        Params: {
+          ContactId: this.contactId,
+          CanRead: canRead.target.checked,
+        },
+      };
+
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (data: any) => {
+          this.spinner.hide();
+        },
+      });
+    } catch (error) {
+    }
+  }
+
   openBodyModalContactFolders(modal: any) {
     this.modalService.open(modal, { size: 'lg', backdrop: true });
   }
