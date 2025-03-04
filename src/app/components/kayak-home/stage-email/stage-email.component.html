@@ -93,7 +93,7 @@
             <div class="col-12 col-sm-12 p-2 card-pTemplate" *ngFor="let email of emailsSentContact"
                 (click)="GetMail(email.id,Viewemail)">
                 <p-card>
-                    <ng-template pTemplate="header">
+                   <ng-template pTemplate="header">
                         <div class="custom-header">
                             <span class="Direction-class">
                                 {{ getDirection(email.Direction) }}
@@ -101,7 +101,6 @@
                             <span class="date-text">{{ email.Date | date: 'yyyy-MM-dd HH:mm' }}</span>
                         </div>
                     </ng-template>
-
                     <p class="m-0">
                         <strong>Subject:</strong> {{ email.Subject }}
                     </p>
