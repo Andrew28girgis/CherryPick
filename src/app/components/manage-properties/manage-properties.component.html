@@ -33,8 +33,7 @@
               <td>{{ property.zipCode }}</td>
               <td>
                 <div style="cursor: pointer; font-weight: 600;" (click)="openUploadModal(property.id)">
-               Upload <i class="fa-solid fa-file-pdf mx-1" style="font-size: 20px; color:#001f3f; "
-                 
+               Upload <i class="fa-solid fa-file-pdf mx-1" style="font-size: 20px; color:#001f3f;"
                  ></i>
                 </div>
               </td>
@@ -49,9 +48,6 @@
 <ng-template #uploadPDF let-modal>
   <div class="d-flex justify-content-center align-items-center view-act">
     <h4 class="mb-0">Convert PDF to Images</h4>
-    <!-- <button type="button" class="close" (click)="modal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button> -->
   </div>
   <div class="modal-body" style="overflow: auto; max-height: 80vh">
     <div class="col-12 mr-1">
@@ -447,7 +443,6 @@
   </div>
 </ng-template>
 
-<!-- toast -->
 <div id="customToast" class="custom-toast">
   <div class="toast-content">
     <p id="toastMessage"></p>

@@ -65,7 +65,7 @@ export class PlacesService {
   }
   public SendImagesArray(images: any,shoppingID: any) {
     return this.http.post<any>(
-      `http://10.0.0.15:8082/api/BrokerWithChatGPT/ProcessImagesWithGPT/${shoppingID}`,
+      `${environment.api}/BrokerWithChatGPT/ProcessImagesWithGPT/${shoppingID}`,
       images
     );
   }

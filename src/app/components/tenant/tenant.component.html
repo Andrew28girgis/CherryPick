@@ -26,11 +26,16 @@
 <section class="container red-background position-relative mt-4">
   <div class="row">
     <div class="col-12">
+ 
       <!-- Logo Container (positioned relatively so the logo and content can be absolutely placed inside) -->
       <div class="logo-container position-relative">
         <!-- Absolutely positioned logo -->
+        <span class="buyboxname buyboxpos position-absolute mt-5">
+          {{buyboxname}}
+         </span>
         <img
           class="tenant-logo position-absolute"
+          
           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
             buyboxid
           }}"

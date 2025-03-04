@@ -63,90 +63,59 @@
   justify-content: center;
   background: #e4e7e9;
 }
-/* .procpect-table-body td {
-  padding: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-} */
- /* shopping-center.component.css */
 .shopping-center-container {
   padding: 20px;
 }
-
 .card {
   border-radius: 10px;
   transition: transform 0.2s;
 }
-
-/* .card:hover {
-  transform: translateY(-5px);
-} */
-
 .card-header {
   border-radius: 10px 10px 0 0;
   padding: 15px;
 }
-
 dl dt {
   font-weight: 600;
   color: #444;
 }
-
 dl dd {
   margin-bottom: 10px;
 }
-
 .list-group-item {
   padding: 10px 0;
 }
-
 .form-check-input:checked {
   background-color: #007bff;
   border-color: #007bff;
 }
-
 .tenant-link {
   color: #007bff;
   text-decoration: none;
   margin-left: 5px;
 }
-
 .tenant-link:hover {
   text-decoration: underline;
 }
 .modal-header {
   padding: 1.5rem;
 }
-
 .image-container {
   padding: 10px;
 }
-
 .carousel-container {
   max-width: 100%;
 }
-
 .carousel-item img {
   object-fit: cover;
   height: 300px; /* Adjust as needed */
 }
-
 .details-container {
   padding: 10px;
 }
-
-/* .tenants-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-} */
-
 .list-group-item {
   border: none;
   padding: 8px 0;
 }
-
 .badge {
   font-size: 0.9em;
   padding: 0.5em 1em;
