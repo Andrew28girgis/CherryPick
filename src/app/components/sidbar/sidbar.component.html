@@ -1,19 +1,18 @@
 <div class="sidebar sidebar-narrow-unfoldable border-end">
   <!-- CoreUI built-in sidebar toggler -->
 
-  <button
+  <!-- <button
     class="cherry-collabse"
     type="button"
     data-coreui-toggle="unfoldable"
     data-coreui-target=".sidebar"
   >
-    <!-- Toggle collapse icon updated to bars icon -->
     <i
       class="fa-solid fa-bars nav-icon"
       data-coreui-toggle="unfoldable"
       data-coreui-target=".sidebar"
     ></i>
-  </button>
+  </button> -->
   <div class="sidebar-header border-bottom">
     <ul class="sidebar-nav">
       <li class="nav-item">
@@ -38,19 +37,19 @@
     </li>
     <li class="nav-item">
       <a [routerLink]="['/manage-properties']" class="nav-link">
-        <i class="fa-solid fa-house nav-icon"></i>
+        <i class="fa-solid fa-building nav-icon"></i>
         <p class="nav-link">My Properties</p>
       </a>
     </li>
     <li class="nav-item">
       <div class="nav-link">
-        <i class="fa-solid fa-house nav-icon"></i>
+        <i class="fa-solid fa-envelope nav-icon"></i>
         <p class="nav-link">Email</p>
       </div>
     </li>
     <li (click)="logout()" class="nav-item">
       <div class="nav-link">
-        <i class="fa-solid fa-arrow-left nav-icon" title="Logout"></i>
+        <i class="fa-solid fa-right-from-bracket nav-icon"></i>
         <p class="nav-link">Logout</p>
       </div>
     </li>
