@@ -54,6 +54,7 @@ export class PolygonsControllerComponent
         '../../../../assets/icons/svgs/explore-polygons-selected.svg',
     },
   ];
+  displayedExternalPolygons: number[] = [];
   selectedPolygonOption: number = 1;
   polygonSearch: string = '';
   polygons: IPolygon[] = [];
@@ -644,10 +645,16 @@ export class PolygonsControllerComponent
     this.getAllPolygons();
   }
 
-  onExploreCheckBoxChange(event: any, polygon: IPolygon): void {
-    const isChecked = (event.target as HTMLInputElement).checked;
-    const coordinates = this.getPolygonCoordinates(polygon);
-    if (isChecked) {
+  toggleDisplayedExternalPolygon(polygon: IPolygon): void {
+    const check = this.displayedExternalPolygons.includes(polygon.id);
+    if (check) {
+      this.mapDrawingService.hideShapeFromMap(polygon.id);
+      this.displayedExternalPolygons = this.displayedExternalPolygons.filter(
+        (id) => id != polygon.id
+      );
+    } else {
+      this.displayedExternalPolygons.push(polygon.id);
+      const coordinates = this.getPolygonCoordinates(polygon);
       const point = this.getMapCenter(polygon.json);
 
       if (coordinates) {
@@ -661,10 +668,16 @@ export class PolygonsControllerComponent
       }
 
       this.mapDrawingService.displayShapeOnMap(polygon.id, this.map);
-    } else {
-      this.mapDrawingService.hideShapeFromMap(polygon.id);
     }
   }
+
+  // onExploreCheckBoxChange(event: any, polygon: IPolygon): void {
+  //   const isChecked = (event.target as HTMLInputElement).checked;
+  //   const coordinates = this.getPolygonCoordinates(polygon);
+  //   if (isChecked) {
+  //   } else {
+  //   }
+  // }
 
   ngOnDestroy(): void {
     // emit next and complete states to end all subscribtions for all subscribers
