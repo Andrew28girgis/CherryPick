@@ -31,6 +31,29 @@ export class PolygonsControllerComponent
   map!: google.maps.Map;
   buyBoxId!: number;
   contactId!: number;
+  polygonsOptions: {
+    id: number;
+    title: string;
+    icon: string;
+    selectedIcon: string;
+  }[] = [
+    {
+      id: 1,
+      title: 'My Polygons',
+      icon: '../../../../assets/icons/svgs/buyBox-polygons.svg',
+      selectedIcon:
+        '../../../../assets/icons/svgs/buyBox-polygons-selected.svg',
+    },
+    {
+      id: 2,
+      title: 'Explore Polygons',
+      icon: '../../../../assets/icons/svgs/explore-polygons.svg',
+      selectedIcon:
+        '../../../../assets/icons/svgs/explore-polygons-selected.svg',
+    },
+  ];
+  selectedPolygonOption: number = 1;
+  polygonSearch: string = '';
   polygons: IPolygon[] = [];
   selectedPolygonsIds: Set<number> = new Set<number>();
   selectedPolygon: IPolygon | null = null;
@@ -280,7 +303,7 @@ export class PolygonsControllerComponent
           const centers = this.stateService.getShoppingCenters();
           for (let center of centers) {
             console.log(center);
-            
+
             this.mapDrawingService.createTempMarker(this.map, center);
           }
           this.addPolygonsToMap();
@@ -510,6 +533,19 @@ export class PolygonsControllerComponent
   openUpdatePolygonNameModal(content: TemplateRef<any>, polygon: IPolygon) {
     this.selectedPolygon = polygon;
     this.modalService.open(content);
+  }
+
+  onPolygonOptionChange(optionId: number): void {
+    this.selectedPolygonOption = optionId;
+    if (optionId == 1) {
+      this.navigateToMyPolygons();
+    }
+  }
+
+  navigateToExplorePolygons(): void {}
+
+  navigateToMyPolygons(): void {
+    this.polygonSearch = '';
   }
 
   ngOnDestroy(): void {

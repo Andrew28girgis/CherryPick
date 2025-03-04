@@ -1,7 +1,36 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-
+<div class="polygons-options">
+  <ul class="d-flex align-items-center justify-content-center">
+    <li
+      *ngFor="let option of polygonsOptions"
+      class="nav-item"
+      [ngClass]="{ 'active-nav-item': selectedPolygonOption === option.id }"
+      (click)="onPolygonOptionChange(option.id)"
+    >
+      <div class="tab-icon">
+        <img
+          [src]="
+            selectedPolygonOption === option.id
+              ? option.selectedIcon
+              : option.icon
+          "
+          alt="tab-icon"
+        />
+      </div>
+      <span>{{ option.title }}</span>
+    </li>
+  </ul>
+</div>
 <div class="row">
-  <div class="col-md-6 col-sm-12 mb-3">
+  <div class="col-md-6 col-sm-12 ps-0 buybox-polygons-container">
+    <input
+      *ngIf="selectedPolygonOption == 2"
+      type="text"
+      class="form-control mb-3 search-polygons"
+      name="search-polygons"
+      placeholder="Search with name"
+      [(ngModel)]="polygonSearch"
+    />
     <div class="table-container">
       <table *ngIf="polygons.length > 0; else emptyPolygons" class="table">
         <thead class="thead-light">
@@ -73,7 +102,7 @@
       </ng-template>
     </div>
   </div>
-  <div class="col-md-6 col-sm-12 mb-3">
+  <div class="col-md-6 col-sm-12 pe-0 buybox-map-container">
     <div
       #mapContainer
       class="map-container"

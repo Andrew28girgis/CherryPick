@@ -1,11 +1,10 @@
-
 .table-container {
   padding: 0.5rem;
   border: 1px solid #dee2e6;
   border-radius: 1rem;
   overflow: scroll;
   scrollbar-width: none;
-  max-height: 500px;
+  height: auto;
 }
 
 .table {
@@ -32,6 +31,51 @@
 .map-container {
   border-radius: 1rem;
 }
+
+.buybox-polygons-container {
+  max-height: 500px;
+}
+
+.search-polygons {
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.polygons-options ul {
+  display: flex;
+  list-style: none;
+  gap: 0.25rem;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.nav-item {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: #707791;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.active-nav-item {
+  background-color: #b8c1e1;
+  border: 1px solid #2e3d6c;
+  color: #4d65b4;
+  font-weight: 500;
+}
+
+@media (max-width: 767px) {
+  .buybox-polygons-container {
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  .buybox-map-container {
+    padding: 0;
+  }
+}
+
 /* 
 .table thead th:first-child {
   border-top-left-radius: 1rem;
