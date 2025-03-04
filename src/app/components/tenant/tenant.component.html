@@ -5,7 +5,12 @@
     <div class="col-12">
       <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center justify-content-start">
-          <img class="cherry-logo" [routerLink]="['/summary']" src="../../../assets/Images/logo.png" alt="">
+          <img
+            class="cherry-logo"
+            [routerLink]="['/summary']"
+            src="../../../assets/Images/logo.png"
+            alt=""
+          />
         </div>
         <div class="d-flex align-items-center justify-content-end">
           <!-- <img
@@ -18,55 +23,44 @@
     </div>
   </div>
 </nav>
+<section class="container red-background position-relative mt-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Logo Container (positioned relatively so the logo and content can be absolutely placed inside) -->
+      <div class="logo-container position-relative">
+        <!-- Absolutely positioned logo -->
+        <img
+          class="tenant-logo position-absolute"
+          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+            buyboxid
+          }}"
+          alt="Tenant Logo"
+        />
+
+        <!-- Absolutely positioned content in the bottom-right -->
+        <div class="content-right position-absolute d-flex gap-2">
+          <button class="btn-share">
+            <div>
+              <img src="../../../assets/icons/export.png" alt="">
+            </div>
+            <span>Share</span>
+          </button>
+          <button class="btn-submit">
+            <span>Submit a proposal</span>
+          </button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
 
 <div class="container background mt-5">
   <div class="row">
     <div class="col-lg-8 col-md-7">
-      <div class="card bigcard">
-        <div class="card-body">
-          <div class="d-flex align-items-center justify-content-center">
-            <div
-              class="col-md-9 col-6 d-flex align-items-center justify-content-start"
-            >
-              <div class="d-flex align-items-center justify-content-center">
-                <img
-                  class="tenant-logo me-3"
-                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                    buyboxid
-                  }}"
-                  alt=""
-                />
-                <!-- <img
-                  class="tenant-logo me-3"
-                  src="../../../assets/Images/Tenant Logo.png"
-                  alt="Tenant Logo"
-                /> -->
-                <div class="d-flex flex-column text-center">
-                  <span class="boldtext">{{ buyboxname }}</span>
-                  <div class="d-flex justify-content-center">
-                    <span
-                      class="me-2"
-                      *ngFor="let description of smalldescription"
-                    >
-                      <!-- <div class="frame mt-2">
-                        <span class="dot">•</span>
-                        <span class="text">{{ description }} </span>
-                      </div> -->
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 d-flex align-items-center justify-content-end">
-              <button class="proposal-button">Submit a proposal</button>
-            </div>
-          </div>
-          <hr class="custom-hr" />
-          <span class="Osmowstext">
-            {{ buyboxDescription }}
-          </span>
-        </div>
-      </div>
+      <span class="Osmowstext">
+        {{ buyboxDescription }}
+      </span>
     </div>
     <div class="col-lg-4 col-md-5">
       <div class="card cardbackground">
@@ -130,145 +124,153 @@
       </div>
     </div>
   </div>
+</div>
+<div class="row row-background d-flex justify-content-center align-items-center mt-4">
+  <div class="d-flex align-items-center justify-content-center mt-4">
+    <span class="specifications">Specifications</span>
 
-  <div class="row">
-    <div class="card mt-4 bigcard">
-      <div class="card-body d-flex align-items-center justify-content-between">
-        <div class="col-4 d-flex align-items-center justify-content-start">
-          <div class="d-flex align-items-center justify-content-center">
-            <div class="smalllframe">
-              <img
-                src="../../../assets/Images/size.png"
-                alt="Small Image"
-                class="small-image"
-              />
-            </div>
+  </div>
+  <div class="col-4 d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center">
+      <div class="smalllframe">
+        <img
+          src="../../../assets/Images/size.png"
+          alt="Small Image"
+          class="small-image"
+        />
+      </div>
 
-            <div class="d-flex flex-column text-center">
-              <span class="boldtext">Size needed</span>
-              <div class="d-flex justify-content-start">
-                <span class="graytext">
-                  {{ MinBuildingSize ? (MinBuildingSize + ' SF') : '' }}
-                </span>
-                <span class="graytext mx-2" *ngIf="MinBuildingSize && MaxBuildingSize"> - </span>
-                <span class="graytext">
-                  {{ MaxBuildingSize ? (MaxBuildingSize + ' SF') : '' }}
-                </span>
-              </div>
-            </div>
-            
-          </div>
-        </div>
-        <div class="col-4 flex align-items-center justify-content-center">
-          <div class="d-flex align-items-center justify-content-center">
-            <div class="smalllframe">
-              <img
-                src="../../../assets/Images/bank.png"
-                alt="Small Image"
-                class="small-image"
-              />
-            </div>
-
-            <div class="d-flex flex-column text-center">
-              <span class="boldtext">States</span>
-              <div class="d-flex justify-content-start">
-                <span class="graytext"> {{states}} </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4 flex align-items-center justify-content-end">
-          <div class="d-flex align-items-center justify-content-center">
-            <div class="smalllframe">
-              <img
-                src="../../../assets/Images/buildings.png"
-                alt="Small Image"
-                class="small-image"
-              />
-            </div>
-
-            <div class="d-flex flex-column text-center">
-              <span class="boldtext">Cities</span>
-              <div class="d-flex justify-content-start">
-                <span class="graytext"> {{address}} </span>
-              </div>
-            </div>
-          </div>
+      <div class="d-flex flex-column text-center">
+        <span class="boldtext">Size needed</span>
+        <div class="d-flex justify-content-start">
+          <span class="lowwhite">
+            {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
+          </span>
+          <span
+            class="lowwhite mx-2"
+            *ngIf="MinBuildingSize && MaxBuildingSize"
+          >
+            -
+          </span>
+          <span class="lowwhite">
+            {{ MaxBuildingSize ? MaxBuildingSize + " SF" : "" }}
+          </span>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="card bigcard mt-4">
-      <div
-        class="card-body card-bodyy d-flex align-items-center justify-content-center"
-      >
-        <div class="col-1">
-          <div class="image-container">
-            <img class="imagecard" [src]="brokerphoto" alt="Broker Photo" />
-          </div>
-        </div>
+  <!-- Center-aligned column (States) -->
+  <div class="col-4 d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center">
+      <div class="smalllframe">
+        <img
+          src="../../../assets/Images/bank.png"
+          alt="Small Image"
+          class="small-image"
+        />
+      </div>
 
-        <!-- Content of the Card -->
-        <div class="col-11">
-          <div class="d-flex flex-column text-start">
-            <div class="d-flex align-items-center justify-content-start">
-              <span class="nameincard me-2"
-                >{{ firstnamemanagerorganization }}
-              </span>
-              <span class="nameincard">{{ lastnamemanagerorganization }} </span>
-            </div>
-            <div class="brokerframeee">
-              <span class="broker">Broker</span>
-            </div>
-            <!-- <span class="emailincard">aponcher&#64;renaudconsulting.net</span> -->
-
-            <hr class="customm-hr" />
-            <span class="overviewtext">Overiew</span>
-            <span class="grayspan" [innerHTML]="brokersignature"></span>  
-          </div>
+      <div class="d-flex flex-column text-center">
+        <span class="boldtext">States</span>
+        <div class="d-flex justify-content-start">
+          <span class="lowwhite"> {{ states }} </span>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="card bigcard mt-4">
-      <div
-        class="card-body card-bodyy d-flex align-items-center justify-content-center"
-      >
-        <div class="col-1">
-          <div class="image-container">
-            <img class="imagecard"
-              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                managementorganizationId
-              }}"
-              alt="Organization Image"
-            />
-          </div>
-        </div>
+  <!-- Right-aligned column (Cities) -->
+  <div class="col-4 d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center">
+      <div class="smalllframe">
+        <img
+          src="../../../assets/Images/buildings.png"
+          alt="Small Image"
+          class="small-image"
+        />
+      </div>
 
-        <!-- Content of the Card -->
-        <div class="col-11">
-          <div class="d-flex flex-column text-start">
-            <span class="nameincard">{{ managementorganizationname }}</span>
-            <div class="brokerframeee">
-              <span class="broker">Commercial Real Estate</span>
-            </div>
-            <!-- <span class="emailincard">aponcher&#64;renaudconsulting.net</span> -->
-
-            <hr class="customm-hr" />
-            <span class="overviewtext">Overiew</span>
-            <span class="grayspan" [innerHTML]="ManagerOrganizationDescription">
-            </span>
-          </div>
+      <div class="d-flex flex-column text-center">
+        <span class="boldtext">Cities</span>
+        <div class="d-flex justify-content-start">
+          <span class="lowwhite"> {{ address }} </span>
         </div>
       </div>
     </div>
   </div>
+  <div class="d-flex align-items-center justify-content-center gap-2 mt-3">
+  
+    <button class="btn-submit-proposel">
+      <span>Submit a proposal</span>
+    </button>
+    <button class="btn-share">
+      <div>
+        <img src="../../../assets/icons/export.png" alt="">
+      </div>
+      <span>Share</span>
+    </button>
+  </div>
+</div>
+
+
+
+<div class="d-flex align-items-center justify-content-center toppp">
+  <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
+  <span class="nameincard">{{ lastnamemanagerorganization }}</span>
+</div>
+<div class="row reddd mt-4">
+  <!-- Image column (col-4) -->
+  <div class="col-4 position-relative">
+    <div class="broker-container broker-containerrrr">
+      <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
+      <div class="frameeeeeee">
+        <span class="brokerrrr">Broker</span>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Content of the Card (col-8) -->
+  <div class="col-8">
+    <div class="d-flex flex-column text-start">
+      <!-- <div class="d-flex align-items-center justify-content-start">
+        <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
+        <span class="nameincard">{{ lastnamemanagerorganization }}</span>
+      </div> -->
+      <span class="brokertext" [innerHTML]="brokersignature"></span>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="container mt-4">
+  <div class="d-flex align-items-center"> <!-- Flex container for image and text content -->
+    <!-- Image -->
+    <img
+      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ managementorganizationId }}"
+      alt="Organization Image"
+      class="organization-image"
+    />
+    
+    <!-- Content of the Card -->
+    <div class="ml-3"> <!-- Optional margin for spacing -->
+      <span class="nameincard">{{ managementorganizationname }}</span>
+      <div class="brokerframeee">
+        <span class="broker">Commercial Real Estate</span>
+      </div>
+    </div>
+  </div>
+  
+  <hr class="customm-hr" />
+  <span class="grayspan" [innerHTML]="ManagerOrganizationDescription"></span>
+  
+  
+</div>
 
   <div class="row">
     <div class="col-12"></div>
   </div>
-</div>
