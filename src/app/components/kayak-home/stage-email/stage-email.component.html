@@ -19,8 +19,15 @@
                         </ng-template>
                         <ul class="contact-ul" *ngIf="org.Contact && org.Contact.length > 0">
                             @for(contact of org.Contact; track contact){
-                            <li (click)="getEmailsForContact(contact,email.id)">{{ contact.Firstname }} {{
-                                contact.Lastname }}</li>
+                            <li (click)="getEmailsForContact(contact)" class="d-flex justify-content-between">
+                                <span class="namecontact">{{ contact.Firstname }} {{contact.Lastname }} </span>
+                                <div>
+                                    <!-- <span title="Sent" class="Sent me-2">{{contact.EmailStats[0].Sent}}</span>
+                                    <span title="Inbox" class="Inbox me-2">{{contact.EmailStats[0].Inbox}}</span>
+                                    <span title="Outbox" class="Outbox">{{contact.EmailStats[0].Outbox}}</span> -->
+                                    <span class="Inbox" *ngIf="getTotalEmails(contact) > 0">{{ getTotalEmails(contact) }}</span>
+                                </div>
+                            </li>
                             }
                         </ul>
                         <p *ngIf="!org.Contact || org.Contact.length === 0" class="no-contact-msg">
@@ -35,82 +42,91 @@
         </p-accordion>
     </div>
     <div class="col-12 col-sm-9">
-        <div *ngIf="emailsForContact.length > 0">
+        @if(!ShowSection){
+                <app-email-dashboard></app-email-dashboard>
+        }@else {
             <div class="row m-0 p-0">
-                <p *ngIf="selectedContact" class="selectedContact">
-                    {{ selectedContact.Firstname }} {{ selectedContact.Lastname }}
-                </p>
-                <div class="col-12 col-sm-12 p-2 card-pTemplate" *ngFor="let email of emailsForContact" (click)="GetMail(email.id,Viewemail)">
+                <div class="d-flex justify-content-between align-items-center selectedContactdiv col-12">
+                    <p *ngIf="selectedContact" class="selectedContact">
+                        {{ selectedContact.Firstname }} {{ selectedContact.Lastname }}
+                    </p>
+                    <div *ngIf="selectedContact" class="filterEmails">
+                        <span (click)="checkAndFilterEmails('all')" [ngClass]="{'active': selectedFilter === 'all'}">All</span>
+                        <span (click)="checkAndFilterEmails('sent')" [ngClass]="{'active': selectedFilter === 'sent'}">{{selectedContact.EmailStats[0].Sent}} Sent</span>
+                        <span (click)="checkAndFilterEmails('inbox')" [ngClass]="{'active': selectedFilter === 'inbox'}">{{selectedContact.EmailStats[0].Inbox}} Inbox</span>
+                        <span (click)="checkAndFilterEmails('outbox')" [ngClass]="{'active': selectedFilter === 'outbox'}">{{selectedContact.EmailStats[0].Outbox}} Outbox</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 p-2 card-pTemplate" *ngFor="let email of emailsSentContact"
+                    (click)="GetMail(email.id,Viewemail)">
                     <p-card>
                         <ng-template pTemplate="header">
                             <div class="custom-header">
-                                <!-- [ngClass]="email.Direction === 1 ? 'sent' : 'received'" -->
                                 <span class="Direction-class">
-                                    {{ email.Direction === 1 ? 'Sent' : 'Received' }}
+                                    {{ getDirection(email.Direction) }}
                                 </span>
                                 <span class="date-text">{{ email.Date | date: 'yyyy-MM-dd HH:mm' }}</span>
                             </div>
                         </ng-template>
-
+    
                         <p class="m-0">
                             <strong>Subject:</strong> {{ email.Subject }}
                         </p>
                     </p-card>
                 </div>
             </div>
-        </div>
-        <div *ngIf="emailsForContact.length === 0" class="d-flex justify-content-center no-data">
-            No emails in organization
-        </div>
+            <div *ngIf="emailsSentContact.length === 0" class="d-flex justify-content-start Empty-data">
+                {{ emptyMessage }}
+            </div>
+        }
     </div>
 </div>
 
 <ng-template #Viewemail let-modal>
     <div class="modal-content">
-      <div class="modal-body p-0">
-        <div class="row m-0 p-0 d-flex justify-content-center">
-          <div class="col-12 p-0">
-            <div class="card shadow-sm border-0">
-              <div class="card-header text-white GeneratedEmail">
-                <h5 class="mb-0 d-flex justify-content-between">
-                    <p>
-                        <span class="firstemail">
-                            {{ Emails[0].Direction === 1 ? 'Sent' : 'Received' }}
-                        </span>
-                      </p>
-                  <p>
-                    <span class="creationdate">
-                      {{ Emails[0].Date | date: 'yyyy-MM-dd HH:mm' }}</span>
-                  </p>
-                </h5>
-              </div>
-              <div class="card-body bg-light">
-                <div class="mb-3">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <label class="fw-bold text-secondary">Subject</label>
-                  </div>
-                  <div class="p-3 border rounded bg-white text-dark">
-                    <div class="col-5 p-0 m-0">{{ Emails[0].Subject }}</div>
-                  </div>
+        <div class="modal-body p-0">
+            <div class="row m-0 p-0 d-flex justify-content-center">
+                <div class="col-12 p-0">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header text-white GeneratedEmail">
+                            <h5 class="mb-0 d-flex justify-content-between">
+                                <p>
+                                    <span class="firstemail">
+                                        {{ getDirection(Emails[0].Direction) }}
+                                    </span>
+                                </p>
+                                <p>
+                                    <span class="creationdate">
+                                        {{ Emails[0].Date | date: 'yyyy-MM-dd HH:mm' }}</span>
+                                </p>
+                            </h5>
+                        </div>
+                        <div class="card-body bg-light">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="fw-bold text-secondary">Subject</label>
+                                </div>
+                                <div class="p-3 border rounded bg-white text-dark">
+                                    <div class="col-5 p-0 m-0">{{ Emails[0].Subject }}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="fw-bold text-secondary">Body</label>
+                                </div>
+                                <div class="p-3 border rounded bg-white text-dark">
+                                    <div class="col-5 p-0 m-0" [innerHTML]="Emails[0].Body"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <label class="fw-bold text-secondary">Body</label>
-                  </div>
-                  <div class="p-3 border rounded bg-white text-dark">
-                    <div class="col-5 p-0 m-0" [innerHTML]="Emails[0].Body"></div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">
-         Close
-        </button>
-      </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">
+                Close
+            </button>
+        </div>
     </div>
-  </ng-template>
-  
+</ng-template>

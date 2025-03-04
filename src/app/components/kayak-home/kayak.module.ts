@@ -22,6 +22,7 @@ import { MapViewComponent } from './shopping-center-table/map-view/map-view.comp
 import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
 import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.component";
 import { StageEmailComponent } from "./stage-email/stage-email.component";
+import { EditorEmailComponent } from "./editor-email/editor-email.component";
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { StageEmailComponent } from "./stage-email/stage-email.component";
     ToastrModule.forRoot(),
     SharedModule,
     LinkMicrosoftComponent,
-    StageEmailComponent
+    StageEmailComponent,
+    EditorEmailComponent
 ],
   exports: [
     KayakHomeComponent,
