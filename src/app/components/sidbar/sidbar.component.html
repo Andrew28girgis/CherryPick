@@ -6,11 +6,21 @@
           <div class="Sidbar-Primary" [ngStyle]="{ width: isCollapsed ? '200%' : '25%' }">
             <ul class="p-0 m-0 Sidbar-Primary-ul">
               <li (click)="BackTo()">
-                <i class="fa-solid fa-house" ></i>
-              </li>
+                <i class="fa-solid fa-house" ></i> Tenants  
+              </li> 
+
+              <li>
+                <a [routerLink]="['/manage-properties']">
+                  <i class="fa-solid fa-house" ></i> My Properties  
+                </a>
+              </li> 
+         
+              <li >
+                <i class="fa-solid fa-house" ></i> Email  
+              </li> 
               <li (click)="logout()">
-                <i class="fa-solid fa-arrow-left"  title="Logout"></i>       
-                     </li>
+                <i class="fa-solid fa-arrow-left"  title="Logout"></i> Logout
+               </li>
             </ul>
           </div>
           <div class="Sidbar-Secondary" id="secondarySidebar" [style.display]="isCollapsed ? 'none' : 'block'">
