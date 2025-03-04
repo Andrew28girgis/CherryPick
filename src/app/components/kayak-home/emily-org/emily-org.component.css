@@ -1,55 +1,60 @@
 .card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    border-radius: 20px;
-    border: none;
-    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
-  }
-  
-  .img_div{
-    height: 150px;
-  }
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+}
+.tab-view-container {
+  background-color: #fff;
+  padding: 0.5rem;
+  min-height: 85vh;
+  border-radius: 1rem;
+}
+.img_div {
+  height: 150px;
+}
 
-  .card-img-top {
-    width: 130px;
-    /* object-fit: cover; */
-    height: auto;
-    margin: auto;
-    border-radius: 5px;
-  }
-  
-  .card-body {
-    flex: 1;
-  }
-  .card-title{
-    color: #16181d;
-    font-family: Montserrat;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 20px;
-    text-align: center;
-  }
+.card-img-top {
+  width: 130px;
+  /* object-fit: cover; */
+  height: auto;
+  margin: auto;
+  border-radius: 5px;
+}
 
-  .card-date-body{
-    flex-wrap: wrap;
-  }
+.card-body {
+  flex: 1;
+}
+.card-title {
+  color: #16181d;
+  font-family: Montserrat;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+}
 
-  .card-date{
-    color: #797979;
-    font-family: Montserrat;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 16px;
-    text-align: center;
-    width: calc(100% / 3 - 6px);
-  }
+.card-date-body {
+  flex-wrap: wrap;
+}
+
+.card-date {
+  color: #797979;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: center;
+  width: calc(100% / 3 - 6px);
+}
 
 @media (max-width: 768px) {
-  .card-date{
+  .card-date {
     width: calc(100% / 2 - 0px);
   }
 }
