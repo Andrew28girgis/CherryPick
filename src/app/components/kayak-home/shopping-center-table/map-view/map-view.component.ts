@@ -5,7 +5,9 @@ import {
   ElementRef,
   AfterViewInit,
   OnDestroy,
-  NgZone
+  NgZone,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
@@ -27,7 +29,8 @@ declare const google: any;
 })
 export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('map') mapElement!: ElementRef;
-  
+  @Output() viewChange = new EventEmitter<number>();
+
   map: any;
   markers: any[] = [];
   infoWindows: any[] = [];
@@ -35,6 +38,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
+
   dropdowmOptions: any = [
     {
       text: 'Map View',
@@ -78,6 +82,8 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   ShareOrg: ShareOrg[] = [];
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
+
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -406,10 +412,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectOption(option: any): void {
-    this.selectedOption = option.status;
-    this.currentView = option.status;
-    this.isOpen = false;
-    localStorage.setItem('currentViewDashBord', this.currentView);
+    this.viewChange.emit(option.status)
   }
 
   // Method to highlight a marker when hovering over a list item

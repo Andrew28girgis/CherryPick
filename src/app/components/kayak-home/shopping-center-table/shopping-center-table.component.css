@@ -1712,5 +1712,12 @@ textarea.form-control {
         background-color: #d3d3d3;
     }
 }
+.bottom-navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Adjust the value as needed */
+}
 }
 
