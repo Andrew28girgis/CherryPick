@@ -27,10 +27,6 @@
   font-weight: 500;
   line-height: 30px;
 }
-.tenant-logo {
-  width: 45px;
-  height: 45px;
-}
 .frame {
   display: flex;
   padding: var(--Space-Space-4, 4px) var(--Space-Space-12, 12px);
@@ -59,7 +55,7 @@
   white-space: wrap;
 }
 .boldtext {
-  color: #000;
+  color: #fff;
   font-family: Montserrat;
   font-size: 18px;
   font-style: normal;
@@ -67,6 +63,14 @@
   line-height: 24px;
   align-self: flex-start;
   text-align: left;
+}
+.brokertext {
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 40px;
 }
 .proposal-button {
   display: flex;
@@ -102,10 +106,10 @@
 }
 .cardbackground {
   border-radius: var(--Radius-Radius-12, 12px);
-  background: var(
-    --Email-Template-2,
-    linear-gradient(108deg, #007bff 27.97%, #003e80 86%)
-  );
+  background: linear-gradient(108deg, #d7141b 27.97%, #d92128 86%);
+
+  /* Highlight Shadow */
+  box-shadow: -1px 3px 17px 0px rgba(0, 0, 0, 0.1);
 }
 .namee {
   color: #fff;
@@ -133,10 +137,7 @@
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.07px;
-  background: var(
-    --Email-Template-2,
-    linear-gradient(108deg, #007bff 27.97%, #003e80 86%)
-  );
+  background: linear-gradient(108deg, #d7141b 27.97%, #d92128 86%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -205,8 +206,8 @@
   align-items: center;
   flex-shrink: 0;
 }
-.graytext {
-  color: var(--Body-Body-Color-Text-Icons, #7a8591);
+.lowwhite {
+  color: #afa8a8;
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
@@ -233,12 +234,12 @@
   width: fit-content;
 }
 .nameincard {
-  color: var(--Body-Heading-Color, #0c0d0e);
+  color: #000;
   font-family: Montserrat;
-  font-size: 16px;
+  font-size: 32px;
   font-style: normal;
   font-weight: 600;
-  line-height: 30px;
+  line-height: 40px;
 }
 .emailincard {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
@@ -262,6 +263,25 @@
   border-radius: 50%;
   border-radius: 40px 4px;
   border: 8px solid var(--Body-Page-BG, #f2f3f4);
+}
+
+.broker-container {
+  border-radius: 40px 4px;
+  position: absolute;
+  top: -80px;
+  left: 40px;
+  width: 100%;
+  height: auto;
+}
+
+/* Style for the image to take up full width */
+.imagebroker {
+  width: 100%; /* Image will take full width of the container */
+  height: auto; /* Keeps the aspect ratio intact */
+  border-top-left-radius: 30px; /* Adjust border radius for rounded corners */
+  border-bottom-right-radius: 30px; /* Adjust border radius for rounded corners */
+  border-radius: 40px 4px;
+border: 8px solid #accbed;
 }
 
 .card-bodyy img {
@@ -292,10 +312,13 @@
   line-height: 30px;
 }
 .brokerandmangeorgimage {
-  width: 100px;
-  height: 100px;
+  border-radius: 40px 4px;
+  width: 120px;
+  height: 120px;
 }
 .imagecard {
+  width: 200px;
+  height: 200px;
   position: relative;
   border-top-left-radius: 30px;
   border-bottom-right-radius: 30px;
@@ -325,9 +348,219 @@
   width: 184px;
   cursor: pointer;
 }
-.col-1{
+.col-1 {
   width: 20px;
 }
+.imagebroker {
+  width: 350px;
+  height: 350px;
+  position: relative;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.imagebroker::before,
+.imagebroker::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: black; /* Change the color of the border here */
+}
+
+.imagebroker::before {
+  top: 0;
+  left: 0;
+  border-top-left-radius: 15px; /* Top-left border effect */
+}
+
+.imagebroker::after {
+  bottom: 0;
+  right: 0;
+  border-bottom-right-radius: 15px; /* Bottom-right border effect */
+}
+.red-background {
+  background-image: url("../../../assets/Images/RedImage.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  min-height: 150px; /* Ensure enough height for your design */
+  border-radius: 20px; /* Matches the rounded edges in your screenshot */
+  position: relative; /* So we can absolutely position elements inside */
+}
+/* Container for the logo and text, also position: relative */
+.logo-container {
+  min-height: 150px; /* Adjust to fit your design */
+  position: relative;
+}
+
+.tenant-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  top: 91%;
+  left: 10px;
+  transform: translateY(-50%);
+}
+
+/* Position the buttons at the bottom-right within .logo-container */
+.content-right {
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px; /* Adjust the gap as needed */
+}
+
+/* Optional styling for buttons */
+.share-btn,
+.proposal-btn {
+  background-color: #fff;
+  color: #c00;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  border-radius: 8px;
+}
+
+.banner-text {
+  /* Example text styling inside the banner */
+  color: #fff;
+  padding: 50px 0; /* Just to add some spacing if needed */
+  text-align: center;
+  font-size: 1.2rem;
+}
+.btn-share {
+  display: flex;
+  height: 40px;
+  padding: var(--Button-Padding-top-bottom, 20px)
+    var(--Button-Padding-left-right, 21px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Button-Gap, 8px);
+  border-radius: var(--Button-Radius, 16px);
+  border: 1px solid #d92128;
+  background: var(--Button-Secondary-BG, #fff);
+}
+
+/* Style for the "Share" text */
+.btn-share span {
+  color: #d92128;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.btn-submit-proposel {
+  display: flex;
+  height: 48px;
+  padding: var(--Button-Padding-top-bottom, 12px)
+    var(--Button-Padding-left-right, 24px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Button-Gap, 8px);
+  border-radius: var(--Button-Radius, 16px);
+  background: #d92128;
+}
+.btn-submit-proposel span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.btn-submit {
+  display: flex;
+  height: 40px;
+  padding: var(--Button-Padding-top-bottom, 20px)
+    var(--Button-Padding-left-right, 21px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Button-Gap, 8px);
+  border-radius: var(--Button-Radius, 16px);
+  background: var(--Colors-Primary-900, #00060d);
+}
+
+.btn-submit span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.row-background {
+  height: 45vh;
+  background-image: url("../../../assets/Images/GreyImage.png"); /* Replace with your image path */
+  background-repeat: no-repeat;
+  background-size: cover; /* Ensures the image covers the entire row */
+  background-position: center center; /* Centers the image */
+}
+.reddd {
+  background-image: url("../../../assets/Images/BGPattern.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  min-height: 150px; /* Ensure enough height for your design */
+  border-radius: 20px; /* Matches the rounded edges in your screenshot */
+  position: relative; /* So we can absolutely position elements inside */
+}
+
+.specifications {
+  color: #fff;
+  font-family: Montserrat;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 40px;
+}
+.organization-image {
+  width: 80px; /* Set the width of the image */
+  height: 80px; /* Set the height of the image */
+  border-radius: 50%;
+}
+
+
+.ml-3 {
+  margin-left: 10px; /* Adds space between the image and the text content */
+}
+.toppp{
+  margin-top: 90px;
+}
+.broker-containerrrr {
+  position: relative;
+}
+
+.frameeeeeee {
+  position: absolute;
+  top: 15px; /* Adjust the top distance from the top of the image */
+  right: 120px; /* Adjust the right distance from the right side of the image */
+  display: flex;
+  padding: 4px 10px;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Card-Section-BG, #fff);
+  width: fit-content;
+}
+
+.brokerrrr {
+  font-family: Montserrat, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
+  background: linear-gradient(108deg, #d7141b 27.97%, #d92128 86%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 
 @media (max-width: 576px) {
   .proposal-button {
@@ -335,10 +568,6 @@
       var(--Button-Padding-left-right, 3px);
     gap: var(--Button-Gap, 8px);
     font-size: 10px;
-  }
-  .tenant-logo {
-    width: 25px;
-    height: 25px;
   }
   .boldtext {
     font-size: 15px;
@@ -363,10 +592,6 @@
     padding: var(--Button-Padding-top-bottom, 9px)
       var(--Button-Padding-left-right, 15px);
     font-size: 13px;
-  }
-  .tenant-logo {
-    width: 35px;
-    height: 35px;
   }
   .boldtext {
     font-size: 15px;
