@@ -4,7 +4,7 @@
   border-radius: 1rem;
   overflow: scroll;
   scrollbar-width: none;
-  height: auto;
+  flex: 1;
 }
 
 .table {
@@ -34,6 +34,8 @@
 
 .buybox-polygons-container {
   max-height: 500px;
+  display: flex;
+  flex-direction: column;
 }
 
 .search-polygons {

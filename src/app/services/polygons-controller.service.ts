@@ -107,4 +107,15 @@ export class PolygonsControllerService {
 
     return this.placesService.GenericAPI(body);
   }
+
+  getPolygonsByName(name: string): Observable<any> {
+    const body: any = {
+      Name: 'GetPolygonsByName',
+      Params: {
+        Name: name,
+      },
+    };
+
+    return this.placesService.GenericAPI(body);
+  }
 }
