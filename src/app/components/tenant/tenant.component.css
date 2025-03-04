@@ -325,6 +325,9 @@
   width: 184px;
   cursor: pointer;
 }
+.col-1{
+  width: 20px;
+}
 
 @media (max-width: 576px) {
   .proposal-button {

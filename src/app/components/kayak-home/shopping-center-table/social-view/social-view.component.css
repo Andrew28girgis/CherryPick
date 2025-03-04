@@ -1,4 +1,3 @@
-
 .cardResponsive {
   background: white;
   min-height: 100%;
@@ -141,7 +140,7 @@
 .comment-btn:active i {
   animation: likeAnimation 0.3s ease;
 }
- .comment-btn:hover svg path {
+.comment-btn:hover svg path {
   fill: #2980b9;
 }
 
@@ -694,7 +693,7 @@
   }
 
   .card-image img {
-    width: 100%;
+    width: 100vw;
     height: 100%;
     object-fit: cover;
     object-position: center;
@@ -775,7 +774,7 @@
   .card-footer {
     position: absolute;
     right: 16px;
-    bottom: 8%;
+    bottom: 13%;
     transform: translateY(-50%);
     flex-direction: column;
     align-items: center;
@@ -988,7 +987,7 @@
   height: 73vh;
   /* Full height for the scroll container */
   overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -1021,7 +1020,7 @@ scroll-container {
   position: relative;
   height: 100vh;
   overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .scroll-indicator {
@@ -1131,7 +1130,7 @@ scroll-container {
     height: 100vh;
   }
   .scroll-container {
-    height: 100vh;
+    height: 89vh;
   }
 }
 .spec-head {
@@ -1602,19 +1601,18 @@ textarea.form-control {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
-::ng-deep  .popover-body{
+::ng-deep .popover-body {
   padding: 0 !important;
 }
 
-::ng-deep .popover-arrow::after{
+::ng-deep .popover-arrow::after {
   border-top: none !important;
   border-top-color: transparent !important;
 }
-::ng-deep .popover-arrow::before{
+::ng-deep .popover-arrow::before {
   /* border-top-color: white !important; */
   border-top: none !important;
 }
-
 
 .carousel-wrapper {
   touch-action: pan-y;
@@ -1642,18 +1640,17 @@ textarea.form-control {
   }
 }
 
-
 @media (max-width: 768px) {
   ::ng-deep.carousel-control-prev {
-      left: -50px !important;
-      background-color: #d3d3d3;
+    left: -50px !important;
+    background-color: #d3d3d3;
   }
   @media (max-width: 768px) {
     ::ng-deep .carousel-control-next {
-        right: -50px !important;
-        background-color: #d3d3d3;
+      right: -50px !important;
+      background-color: #d3d3d3;
     }
-}
+  }
 }
 
 .shortcuts_icon,
@@ -1735,24 +1732,19 @@ textarea.form-control {
   width: 24px;
 }
 
-
-
-/* Add this to your social-view.component.css file */
-
 @media (max-width: 768px) {
   .shopping-center-details {
     position: fixed;
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     max-height: 0;
     overflow: hidden;
     transition: all 0.3s ease-out;
     opacity: 0;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
     background: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+    z-index: 1001; /* Increased z-index to be above other elements */
   }
 
   .shopping-center-details.expanded {
@@ -1771,13 +1763,12 @@ textarea.form-control {
     display: flex;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     color: #333;
+    padding-left: 12px;
+    padding-bottom: 0;
   }
 
-  .mobile-expanded-item:last-child {
-    border-bottom: none;
-  }
+
 
   .mobile-expanded-item i {
     width: 24px;
@@ -1800,6 +1791,10 @@ textarea.form-control {
 
   .mobile-expanded-shortcuts {
     margin-top: 8px;
+    border-radius: var(--Card-Section-Lg-Radius, 20px);
+    border: 1px solid var(--Body-General-Body-Border, #caced3);
+    padding: var(--Space-Space-24, 24px) var(--Space-Space-16, 16px);
+    gap: var(--Space-Space-20, 20px);
   }
 
   .see-more-btn {
@@ -1817,12 +1812,13 @@ textarea.form-control {
   }
 
   .show-less-btn {
-    display: block;
+    display: flex;
+    justify-content: center;
     width: 100%;
     padding: 12px;
     background: none;
     border: none;
-    color: #707791;
+    color: #001f3f;
     font-size: 14px;
     text-align: center;
     cursor: pointer;
@@ -1832,5 +1828,26 @@ textarea.form-control {
   .show-less-btn:hover {
     text-decoration: underline;
   }
+}
+::ng-deep .tiktok-modal .modal-content {
+  bottom: -1px;
+  position: fixed;
+  border-radius: 12px 12px 0 0;
+  left: -1px;
+  width: 101vw;
+  box-shadow: none;
+}
+
+::ng-deep .tiktok-modal .modal-dialog {
+  margin: 0 !important;
+}
+
+::ng-deep .tiktok-backdrop.show {
+  opacity: 0;
+}
+
+::ng-deep .tiktok-modal .modal-dialog {
+  transform: translateY(97%) !important;
+  transition: transform 0.3s ease-out !important;
 }
 

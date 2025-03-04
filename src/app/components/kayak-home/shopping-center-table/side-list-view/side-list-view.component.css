@@ -145,7 +145,7 @@
 }
 
 .cards {
-  height: 100vh;
+  height: 88vh;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 transparent;

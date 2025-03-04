@@ -4,6 +4,8 @@ import {
   Renderer2,
   ChangeDetectorRef,
   TemplateRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
@@ -52,6 +54,7 @@ export class TableViewComponent implements OnInit {
   showbackIds: number[] = [];
   buyboxPlaces: BbPlace[] = [];
   selectedIdCard: number | null = null;
+  @Output() viewChange = new EventEmitter<number>();
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -160,11 +163,7 @@ export class TableViewComponent implements OnInit {
     return index;
   }
 
-  selectOption(option: any): void {
-    this.selectedOption = option.status;
-    localStorage.setItem('currentViewDashBord', option.status);
-    // Emit event to parent component to change view
-  }
+
 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
@@ -268,5 +267,9 @@ export class TableViewComponent implements OnInit {
 
   toggleShortcutsCard(id: number | null): void {
     this.selectedIdCard = id;
+  }
+
+  selectOption(option: any): void {
+    this.viewChange.emit(option.status)
   }
 }
