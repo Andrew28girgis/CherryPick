@@ -11,49 +11,7 @@
 .background {
   background: var(--Body-Page-BG, #f2f3f4);
 }
-.homee {
-  color: var(--Crumb-Last-Page, #7a8591);
-  font-family: Montserrat;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-}
-.osmowss {
-  color: var(--Crumb-Current-Page, #0c0d0e);
-  font-family: Montserrat;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px;
-}
-.frame {
-  display: flex;
-  padding: var(--Space-Space-4, 4px) var(--Space-Space-12, 12px);
-  justify-content: center;
-  align-items: center;
-  gap: var(--Space-Space-4, 4px);
-  border-radius: var(--Radius-Radius-16, 16px);
-  background: var(--Status-Info-BG, #ccd2d9);
-}
 
-.dot {
-  font-weight: bold;
-  margin-right: 5px;
-  font-size: 24px;
-}
-
-.text {
-  color: var(--Status-Info-Text-Color, #001f3f);
-  text-align: center;
-  font-family: Montserrat;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px; /* 171.429% */
-  letter-spacing: -0.07px;
-  white-space: wrap;
-}
 .boldtext {
   color: #fff;
   font-family: Montserrat;
@@ -281,7 +239,7 @@
   border-top-left-radius: 30px; /* Adjust border radius for rounded corners */
   border-bottom-right-radius: 30px; /* Adjust border radius for rounded corners */
   border-radius: 40px 4px;
-border: 8px solid #accbed;
+  border: 8px solid #accbed;
 }
 
 .card-bodyy img {
@@ -315,34 +273,6 @@ border: 8px solid #accbed;
   border-radius: 40px 4px;
   width: 120px;
   height: 120px;
-}
-.imagecard {
-  width: 200px;
-  height: 200px;
-  position: relative;
-  border-top-left-radius: 30px;
-  border-bottom-right-radius: 30px;
-}
-
-.imagecard::before,
-.imagecard::after {
-  content: "";
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  background-color: black; /* Change the color of the border here */
-}
-
-.imagecard::before {
-  top: 0;
-  left: 0;
-  border-top-left-radius: 15px; /* Top-left border effect */
-}
-
-.imagecard::after {
-  bottom: 0;
-  right: 0;
-  border-bottom-right-radius: 15px; /* Bottom-right border effect */
 }
 .cherry-logo {
   width: 184px;
@@ -431,9 +361,8 @@ border: 8px solid #accbed;
 }
 
 .banner-text {
-  /* Example text styling inside the banner */
   color: #fff;
-  padding: 50px 0; /* Just to add some spacing if needed */
+  padding: 50px 0; 
   text-align: center;
   font-size: 1.2rem;
 }
@@ -450,7 +379,6 @@ border: 8px solid #accbed;
   background: var(--Button-Secondary-BG, #fff);
 }
 
-/* Style for the "Share" text */
 .btn-share span {
   color: #d92128;
   text-align: center;
@@ -503,19 +431,19 @@ border: 8px solid #accbed;
 }
 .row-background {
   height: 45vh;
-  background-image: url("../../../assets/Images/GreyImage.png"); /* Replace with your image path */
+  background-image: url("../../../assets/Images/GreyImage.png"); 
   background-repeat: no-repeat;
-  background-size: cover; /* Ensures the image covers the entire row */
-  background-position: center center; /* Centers the image */
+  background-size: cover; 
+  background-position: center center;
 }
 .reddd {
   background-image: url("../../../assets/Images/BGPattern.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  min-height: 150px; /* Ensure enough height for your design */
-  border-radius: 20px; /* Matches the rounded edges in your screenshot */
-  position: relative; /* So we can absolutely position elements inside */
+  min-height: 150px; 
+  border-radius: 20px;
+  position: relative;
 }
 
 .specifications {
@@ -527,16 +455,15 @@ border: 8px solid #accbed;
   line-height: 40px;
 }
 .organization-image {
-  width: 80px; /* Set the width of the image */
-  height: 80px; /* Set the height of the image */
+  width: 80px;
+  height: 80px; 
   border-radius: 50%;
 }
 
-
 .ml-3 {
-  margin-left: 10px; /* Adds space between the image and the text content */
+  margin-left: 10px; 
 }
-.toppp{
+.toppp {
   margin-top: 90px;
 }
 .broker-containerrrr {
@@ -545,8 +472,8 @@ border: 8px solid #accbed;
 
 .frameeeeeee {
   position: absolute;
-  top: 15px; /* Adjust the top distance from the top of the image */
-  right: 120px; /* Adjust the right distance from the right side of the image */
+  top: 15px; 
+  right: 120px; 
   display: flex;
   padding: 4px 10px;
   justify-content: flex-start;
@@ -569,7 +496,7 @@ border: 8px solid #accbed;
   -webkit-text-fill-color: transparent;
 }
 .buyboxname {
-  color: #FFF;
+  color: #fff;
   font-family: Montserrat;
   font-size: 30px;
   font-style: normal;
@@ -578,7 +505,6 @@ border: 8px solid #accbed;
   margin: 15px;
 
 }
-
 
 @media (max-width: 576px) {
   .proposal-button {
