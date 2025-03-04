@@ -714,6 +714,50 @@ export class MapsService {
         disableAutoPan: true,
       });
   
+      // Track the currently open info window
+      let openInfoWindow: google.maps.InfoWindow | null = null;
+  
+      // Close any existing info windows before opening a new one
+      const closeAllInfoWindows = () => {
+        if (openInfoWindow) {
+          openInfoWindow.close();
+          openInfoWindow = null;
+        }
+      };
+  
+      // Add hover events to the polygon
+      polygon.addListener('mouseover', () => {
+        // Close any existing info windows
+        closeAllInfoWindows();
+  
+        // Open info window at polygon's center
+        infoWindow.setPosition(center);
+        infoWindow.open(map);
+        openInfoWindow = infoWindow;
+  
+        // Optional: Change polygon style on hover
+        polygon.setOptions({
+          fillOpacity: 0.5,
+          strokeWeight: 3
+        });
+      });
+  
+      polygon.addListener('mouseout', () => {
+        // Close the info window
+        closeAllInfoWindows();
+  
+        // Revert polygon style
+        polygon.setOptions({
+          fillOpacity: 0.35,
+          strokeWeight: 2
+        });
+      }); 
+  
+      // Close info window when clicking outside
+      map.addListener('click', () => {
+        closeAllInfoWindows();
+      });
+  
       // Display the polygon's name on the polygon with margin
       const polygonLabel = new google.maps.Marker({
         position: { lat: center.lat(), lng: center.lng() },
@@ -721,7 +765,7 @@ export class MapsService {
         label: {
           text: feature.Name,
           color: '#001f3f',
-          fontSize: '14px',
+          fontSize: '11px',
           fontWeight: 'bold',
         },
         icon: {
@@ -729,18 +773,6 @@ export class MapsService {
           scale: 0, // Hide the default circle icon
         },
         title: feature.Name,
-      });
-  
-      // Add click event to polygonLabel to show info window
-      polygonLabel.addListener('click', () => {
-        // Open info window directly at the polygon label's position
-        infoWindow.setPosition({ lat: center.lat(), lng: center.lng() });
-        infoWindow.open(map);
-      });
-  
-      // Close info window when clicking outside
-      map.addListener('click', () => {
-        infoWindow.close();
       });
   
     } catch (error) {
@@ -998,3 +1030,8 @@ export class MapsService {
   //   }
   // }
 }
+
+
+
+
+ 
