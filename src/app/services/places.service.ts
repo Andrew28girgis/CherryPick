@@ -75,6 +75,6 @@ export class PlacesService {
       // shoppingcenterid: id,
     };
 
-    return this.http.post<any>(`http://10.0.0.15:8082/api/BrokerWithChatGPT/UpdateAvailability/${id}`,requestPayload);
+    return this.http.post<any>(`${environment.api}/BrokerWithChatGPT/UpdateAvailability/${id}`,requestPayload);
   }
 }
