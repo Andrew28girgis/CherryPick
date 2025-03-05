@@ -88,7 +88,7 @@ export class PolygonsControllerComponent
 
     this.getPolygonsByNameListener();
   }
-
+  
   ngAfterViewInit() { 
     this.initializeMap();
 
