@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -68,7 +69,8 @@ export class PolygonsControllerComponent
     private polygonsControllerService: PolygonsControllerService,
     private stateService: StateService,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -125,6 +127,13 @@ export class PolygonsControllerComponent
       .subscribe((polygon) => {
         if (polygon.id) {
           this.polygons = this.polygons.filter((p) => p.id != polygon.id);
+          this.mapDrawingService.completelyRemoveMarkers(polygon.id);
+          this.properties = this.properties.filter(
+            (p) => p.polygonId != polygon.id
+          );
+          this.selectedPolygon = null;
+          this.selectedPolygonsIds.delete(polygon.id);
+          this.cdr.detectChanges();
           this.deletePolygon(polygon.id);
         }
       });
@@ -186,6 +195,13 @@ export class PolygonsControllerComponent
       .subscribe((circle) => {
         if (circle.id) {
           this.polygons = this.polygons.filter((p) => p.id != circle.id);
+          this.mapDrawingService.completelyRemoveMarkers(circle.id);
+          this.properties = this.properties.filter(
+            (p) => p.polygonId != circle.id
+          );
+          this.selectedPolygon = null;
+          this.selectedPolygonsIds.delete(circle.id);
+          this.cdr.detectChanges();
           this.deletePolygon(circle.id);
         }
       });
@@ -475,8 +491,6 @@ export class PolygonsControllerComponent
     const observer = {
       next: (response: any) => {
         if (response) {
-          this.mapDrawingService.completelyRemoveMarkers(id);
-          this.properties = this.properties.filter((p) => p.polygonId != id);
         }
       },
       error: (error: any) => {
