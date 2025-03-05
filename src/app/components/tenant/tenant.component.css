@@ -650,6 +650,10 @@
   .grayspan {
     font-size: 15px;
   }
+  .brokertext[_ngcontent-ng-c2705470804] {
+    font-size: 15px;
+    line-height: 30px;
+}
   .nameincard {
     font-size: 20px;
   }
@@ -745,6 +749,9 @@
 }
 
 @media (min-width: 768px) {
+  .boldtext {
+    font-size: 16px;
+}
   .broker-container {
     top: -75px;
     left: -9px;
@@ -822,7 +829,7 @@
     font-size: 14px;
   }
   .lowwhite {
-    font-size: 16px;
+    font-size: 15px;
   }
   .specifications {
     font-size: 32px;
@@ -837,6 +844,9 @@
 }
 
 @media (min-width: 992px) {
+  .boldtext {
+    font-size: 16px;
+}
   .brokerandmangeorgimage{
     width: 100px;
     height: 110px;
@@ -851,6 +861,9 @@
   .broker-container {
     top: -75px;
     left: 5px;
+  }
+  .lowwhite {
+    font-size: 16px;
   }
 }
 

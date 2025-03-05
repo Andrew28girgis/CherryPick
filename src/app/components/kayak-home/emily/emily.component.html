@@ -397,7 +397,7 @@
                   <p-editor [(ngModel)]="emailBodyResponse" formControlName="body"  [style]="{ height: '250px' }"></p-editor>
                   <div class="d-flex justify-content-end">
                     <button type="button" class="m-2 buttonSave" (click)="AddEmail()">Send</button>
-                    <button class="btn btn-secondary m-2">
+                    <button class="btn btn-secondary m-2" (click)="closeModal()">
                       Close
                     </button>
                   </div>
