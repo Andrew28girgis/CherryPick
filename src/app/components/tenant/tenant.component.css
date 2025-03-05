@@ -65,8 +65,6 @@
 .cardbackground {
   border-radius: var(--Radius-Radius-12, 12px);
   background: linear-gradient(108deg, #d7141b 27.97%, #d92128 86%);
-
-  /* Highlight Shadow */
   box-shadow: -1px 3px 17px 0px rgba(0, 0, 0, 0.1);
 }
 .namee {
@@ -231,13 +229,11 @@
   width: 100%;
   height: auto;
 }
-
-/* Style for the image to take up full width */
 .imagebroker {
-  width: 100%; /* Image will take full width of the container */
-  height: auto; /* Keeps the aspect ratio intact */
-  border-top-left-radius: 30px; /* Adjust border radius for rounded corners */
-  border-bottom-right-radius: 30px; /* Adjust border radius for rounded corners */
+  width: 100%; 
+  height: auto; 
+  border-top-left-radius: 30px; 
+  border-bottom-right-radius: 30px; 
   border-radius: 40px 4px;
   border: 8px solid #accbed;
 }
@@ -251,7 +247,7 @@
   height: 1px;
   background: var(--Body-General-Body-Border, #caced3);
   margin: 10px 0;
-  width: 100%; /* Makes the <hr> take the full width of its container */
+  width: 100%; 
 }
 .overviewtext {
   color: var(--Body-Heading-Color, #0c0d0e);
@@ -295,32 +291,31 @@
   position: absolute;
   width: 15px;
   height: 15px;
-  background-color: black; /* Change the color of the border here */
+  background-color: black; 
 }
 
 .imagebroker::before {
   top: 0;
   left: 0;
-  border-top-left-radius: 15px; /* Top-left border effect */
+  border-top-left-radius: 15px; 
 }
 
 .imagebroker::after {
   bottom: 0;
   right: 0;
-  border-bottom-right-radius: 15px; /* Bottom-right border effect */
+  border-bottom-right-radius: 15px; 
 }
 .red-background {
   background-image: url("../../../assets/Images/RedImage.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  min-height: 150px; /* Ensure enough height for your design */
-  border-radius: 20px; /* Matches the rounded edges in your screenshot */
-  position: relative; /* So we can absolutely position elements inside */
+  min-height: 150px; 
+  border-radius: 20px; 
+  position: relative; 
 }
-/* Container for the logo and text, also position: relative */
 .logo-container {
-  min-height: 150px; /* Adjust to fit your design */
+  min-height: 150px;
   position: relative;
 }
 
@@ -341,15 +336,13 @@
   transform: translateY(-50%);
 }
 
-/* Position the buttons at the bottom-right within .logo-container */
 .content-right {
   bottom: 20px;
   right: 20px;
   display: flex;
-  gap: 8px; /* Adjust the gap as needed */
+  gap: 8px;
 }
 
-/* Optional styling for buttons */
 .share-btn,
 .proposal-btn {
   background-color: #fff;
@@ -510,6 +503,9 @@
 }
 
 @media (max-width: 576px) {
+  .row-background[_ngcontent-ng-c2705470804] {
+    height: 35vh;
+}
   .grayspan {
     font-size: 14px;
   }
@@ -634,6 +630,9 @@
   }
 }
 @media (min-width: 576px) {
+  .row-background {
+    height: 40vh;
+}
   .organization-image {
     width: 60px;
     height: 60px;
@@ -641,7 +640,7 @@
   }
   .imagebroker {
     width: 180px;
-    height: 200px;
+    height: 180px;
 }
   .broker-container {
     top: -75px;
@@ -650,6 +649,10 @@
   .grayspan {
     font-size: 15px;
   }
+  .brokertext[_ngcontent-ng-c2705470804] {
+    font-size: 15px;
+    line-height: 30px;
+}
   .nameincard {
     font-size: 20px;
   }
@@ -745,6 +748,12 @@
 }
 
 @media (min-width: 768px) {
+  .row-background {
+    height: 45vh;
+}
+  .boldtext {
+    font-size: 16px;
+}
   .broker-container {
     top: -75px;
     left: -9px;
@@ -822,7 +831,7 @@
     font-size: 14px;
   }
   .lowwhite {
-    font-size: 16px;
+    font-size: 15px;
   }
   .specifications {
     font-size: 32px;
@@ -837,6 +846,9 @@
 }
 
 @media (min-width: 992px) {
+  .boldtext {
+    font-size: 16px;
+}
   .brokerandmangeorgimage{
     width: 100px;
     height: 110px;
@@ -851,6 +863,9 @@
   .broker-container {
     top: -75px;
     left: 5px;
+  }
+  .lowwhite {
+    font-size: 16px;
   }
 }
 

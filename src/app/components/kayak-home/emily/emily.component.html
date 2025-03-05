@@ -1,5 +1,8 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
+<div class="d-flex justify-content-start p-3">
+  <button class="active" (click)="back()"><i class="fa-solid fa-arrow-left"></i></button>
+</div>
 <section class="container-fluid pt-2 pb-2 mobileResponsive">
   <div class="main-section-emily">
     <section>
@@ -380,7 +383,7 @@
                   </div>
                 </div>
               </ng-container>
-              <ng-container *ngIf="emailBodyResponse">
+              <ng-container *ngIf="emailBodyReply">
                 <div  [formGroup]="formGroup">
                   <div class="p-3">
                     <div class="d-flex pb-3 align-items-center">
@@ -397,7 +400,7 @@
                   <p-editor [(ngModel)]="emailBodyResponse" formControlName="body"  [style]="{ height: '250px' }"></p-editor>
                   <div class="d-flex justify-content-end">
                     <button type="button" class="m-2 buttonSave" (click)="AddEmail()">Send</button>
-                    <button class="btn btn-secondary m-2">
+                    <button class="btn btn-secondary m-2" (click)="closeModal()">
                       Close
                     </button>
                   </div>
