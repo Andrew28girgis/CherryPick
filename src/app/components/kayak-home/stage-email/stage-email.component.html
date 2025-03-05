@@ -11,9 +11,18 @@
                 <p-accordionTab [id]="org.OrganizationId">
                   <ng-template pTemplate="header">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                      <span>{{ org.OrganizationName }}</span>
-                      <img src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ org.OrganizationId }}"
-                        width="30" height="30" style="border-radius: 50%;">
+                        <div style="width: 30px; height: 30px; margin-inline: 5px;">
+                          <img src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ org.OrganizationId }}"
+                          width="30" height="30" style="border-radius: 50%;">
+                        </div>
+                        <div>
+                          {{ org.OrganizationName }} 
+                        </div>
+                      <div>
+                        <span class="mx-2 "
+                          [routerLink]="['/emily', buyBoxId, org.OrganizationId]"><i style="font-size: 16px;color:#001f3f"
+                            class="fa-solid fa-pen-to-square"></i></span>
+                      </div>
                     </div>
                   </ng-template>
                   <ul class="contact-ul" *ngIf="org.Contact && org.Contact.length > 0">
@@ -60,8 +69,10 @@
           </ng-template>
 
           <ng-template pTemplate="body" let-rowData>
-            <tr (click)="Openaccordion(items.Id,rowData.ID)">
-              <td class="col-body">{{ rowData.Name }}</td>
+            <tr>
+              <td class="col-body d-flex justify-content-between"><span
+                  (click)="Openaccordion(items.Id,rowData.ID)">{{ rowData.Name }}</span> <span class="buttonSave"
+                  [routerLink]="['/emily', buyBoxId,rowData.ID]">Compose</span></td>
               <td class="col-body">
                 {{ (rowData.LastActivityDate | date : "medium") || '--' }}
               </td>
@@ -128,7 +139,9 @@
             </div>
           </div>
           <div class="modal-footer mt-2">
-            <button class="btn buttonSave me-2" (click)="openmodel(openreply,selectedEmail.Body,selectedContact?.ContactId)" *ngIf="selectedEmail.Direction === 1">
+            <button class="btn buttonSave me-2"
+              (click)="openmodel(openreply,selectedEmail.Body,selectedContact?.ContactId)"
+              *ngIf="selectedEmail.Direction === 1">
               Reply
             </button>
             <button class="btn btn-secondary" (click)="close()">
@@ -194,14 +207,15 @@
 </ng-template>
 
 <ng-template #openreply let-modal>
-    <div class="modal-content">
-      <div class="modal-body p-0">
-        <div class="row m-0 p-2 d-flex justify-content-center">
-          <div class="d-flex gap-3 selectedOptionDiv"> 
-              <app-emily [buyBoxIdReply]="buyBoxId" [orgIdReply]="openedOrgId" [emailBodyReply]="bodyemail" [selectedContactContactId]="contactIdemail"  [modal]="modal"> </app-emily>
-          </div>
-          <div class="col-12 p-0"  > 
-            <!-- <form [formGroup]="formGroup">
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="row m-0 p-2 d-flex justify-content-center">
+        <div class="d-flex gap-3 selectedOptionDiv">
+          <app-emily [buyBoxIdReply]="buyBoxId" [orgIdReply]="openedOrgId" [emailBodyReply]="bodyemail"
+            [selectedContactContactId]="contactIdemail" [modal]="modal"> </app-emily>
+        </div>
+        <div class="col-12 p-0">
+          <!-- <form [formGroup]="formGroup">
               <div class="p-3">
                 <div class="d-flex pb-3 align-items-center">
                   <label for="subject"class="IsCC_checkbox me-2">Subject: </label>
@@ -212,7 +226,7 @@
                   <label for="IsCC" class="ms-2 IsCC_checkbox" >IsCC</label>
                 </div>
               </div>
-              {{email}}
+              {{ email }}
               <p-editor [(ngModel)]="email" [style]="{ height: '250px' }"></p-editor>
               <div class="d-flex justify-content-end">
                 <button type="button" (click)="Send()" class="mt-2 mb-4 me-2 buttonSave">Send</button>
@@ -222,8 +236,8 @@
               </div>
             </form> -->
 
-          </div>
         </div>
       </div>
     </div>
+  </div>
 </ng-template>
