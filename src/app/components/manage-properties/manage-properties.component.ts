@@ -113,7 +113,6 @@ export class ManagePropertiesComponent implements OnInit {
     if (!this.CustomPlace?.Images) return [];
     return this.CustomPlace.Images.split(',').map(url => url.trim());
   }
-  // Toggle the visibility of the input field for adding a new tenant
   toggleAddTenantInput() {
     // Initialize CustomPlace.Tenants if it’s null or undefined
     if (!this.CustomPlace?.Tenants) {
