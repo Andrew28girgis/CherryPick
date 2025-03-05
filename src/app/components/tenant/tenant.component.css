@@ -463,9 +463,6 @@
 .ml-3 {
   margin-left: 10px;
 }
-.toppp {
-  margin-top: 90px;
-}
 .broker-containerrrr {
   position: relative;
 }
@@ -523,9 +520,6 @@
   .broker-container {
     top: -50px;
     left: -13px;
-  }
-  .toppp {
-    margin: 27px -96px 0px 0px;
   }
   .frameeeeeee {
     top: 12px;
@@ -646,18 +640,15 @@
     border-radius: 50%;
   }
   .imagebroker {
-    width: 200px;
-    height: 210px;
-  }
+    width: 180px;
+    height: 200px;
+}
   .broker-container {
     top: -75px;
-    left: -16px;
+    left: 0px;
   }
   .grayspan {
     font-size: 15px;
-  }
-  .toppp {
-    margin: 40px -64px 30px 0px;
   }
   .nameincard {
     font-size: 20px;
@@ -762,9 +753,6 @@
     width: 190px;
     height: 200px;
   }
-  .toppp {
-    margin: 34px 170px 35px 0px;
-  }
   .brokertext {
     color: #fff;
     font-family: Montserrat;
@@ -849,10 +837,6 @@
 }
 
 @media (min-width: 992px) {
-  .toppp {
-    margin: 34px 125px 35px 0px;
-}
-
   .brokerandmangeorgimage{
     width: 100px;
     height: 110px;
@@ -881,9 +865,6 @@
     letter-spacing: -0.07px;
 
   }
-  .toppp{
-    margin: 34px 510px 35px 0px;
-}
   .brokerandmangeorgimage {
     width: 120px;
     height: 120px;
