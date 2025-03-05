@@ -14,11 +14,10 @@ import {
 } from 'src/models/buy-box-emails';
 import { CardModule } from 'primeng/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EmailDashboardComponent } from "../email-dashboard/email-dashboard.component";
+import { EmailDashboardComponent } from '../email-dashboard/email-dashboard.component';
 import { TableModule } from 'primeng/table';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
-
 
 interface Column {
   field: string;
@@ -28,7 +27,15 @@ interface Column {
 @Component({
   selector: 'app-stage-email',
   standalone: true,
-  imports: [CommonModule, NgxSpinnerModule, AccordionModule, CardModule, TableModule,ReactiveFormsModule, EditorModule],
+  imports: [
+    CommonModule,
+    NgxSpinnerModule,
+    AccordionModule,
+    CardModule,
+    TableModule,
+    ReactiveFormsModule,
+    EditorModule,
+  ],
   providers: [NgxSpinnerService, PlacesService],
   templateUrl: './stage-email.component.html',
   styleUrl: './stage-email.component.css',
@@ -55,14 +62,14 @@ export class StageEmailComponent implements OnInit {
   openedOrgId: number | null = null;
   selectedEmail: EmailInfo | null = null;
   formGroup!: FormGroup;
-  bodyemail:any;
-  contactIdemail:any;
+  bodyemail: any;
+  contactIdemail: any;
 
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.buyBoxId = localStorage.getItem('BuyBoxId');
@@ -84,7 +91,6 @@ export class StageEmailComponent implements OnInit {
     this.GetBuyBoxEmails();
     this.GetStages();
   }
-
 
   Openaccordion(stageId: number, orgId: number) {
     if (this.openedStageId === stageId && this.openedOrgId === orgId) {
@@ -118,10 +124,10 @@ export class StageEmailComponent implements OnInit {
     return direction === 2
       ? 'Send'
       : direction === -1
-        ? 'Outbox'
-        : direction === 1
-          ? 'Received'
-          : '';
+      ? 'Outbox'
+      : direction === 1
+      ? 'Received'
+      : '';
   }
 
   GetBuyBoxEmails(): void {
@@ -175,7 +181,6 @@ export class StageEmailComponent implements OnInit {
 
   GetStages(): void {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetStages',
       MainEntity: null,
@@ -213,10 +218,10 @@ export class StageEmailComponent implements OnInit {
         if (data.json && Array.isArray(data.json)) {
           // this.Emails = data.json;
           // this.modalService.open(modal, { size: 'xl', backdrop: true });
-          this.selectedEmail = data.json[0]; 
+          this.selectedEmail = data.json[0];
         } else {
           // this.Emails = [];
-          this.selectedEmail = null; 
+          this.selectedEmail = null;
         }
         this.mergeStagesWithGetBuyBoxMicroDeals();
         this.spinner.hide();
@@ -224,7 +229,7 @@ export class StageEmailComponent implements OnInit {
     });
   }
 
-  close(){
+  close() {
     // this.Emails = [];
     this.selectedEmail = null;
   }
@@ -266,8 +271,8 @@ export class StageEmailComponent implements OnInit {
       if (mail.ContactId != this.loginContact) {
         return false;
       }
-      return mail.MailsContacts.some((element: any) =>
-        element.MailContactId === contactId
+      return mail.MailsContacts.some(
+        (element: any) => element.MailContactId === contactId
       );
     });
     this.emailsSentContact = [...mails];
@@ -278,12 +283,12 @@ export class StageEmailComponent implements OnInit {
       if (mail.ContactId != contactId) {
         return false;
       }
-      return mail.MailsContacts.some((element: any) =>
-        element.MailContactId == this.loginContact
+      return mail.MailsContacts.some(
+        (element: any) => element.MailContactId == this.loginContact
       );
     });
     mails.forEach((mail: Mail) => {
-      this.emailsSentContact.push(mail)
+      this.emailsSentContact.push(mail);
     });
   }
 
@@ -291,11 +296,17 @@ export class StageEmailComponent implements OnInit {
     if (type === 'all') {
       this.emailsSentContact = [...this.emailsSentContact];
     } else if (type === 'sent') {
-      this.emailsSentContact = this.emailsSentContact.filter(email => email.Direction === 2);
+      this.emailsSentContact = this.emailsSentContact.filter(
+        (email) => email.Direction === 2
+      );
     } else if (type === 'inbox') {
-      this.emailsSentContact = this.emailsSentContact.filter(email => email.Direction === 1);
+      this.emailsSentContact = this.emailsSentContact.filter(
+        (email) => email.Direction === 1
+      );
     } else if (type === 'outbox') {
-      this.emailsSentContact = this.emailsSentContact.filter(email => email.Direction === -1);
+      this.emailsSentContact = this.emailsSentContact.filter(
+        (email) => email.Direction === -1
+      );
     }
   }
 
@@ -317,14 +328,18 @@ export class StageEmailComponent implements OnInit {
     if (type === 'all' && this.emailsSentContact.length === 0) {
       this.emptyMessage = 'empty emails';
     } else if (type !== 'all' && count === 0) {
-      this.emptyMessage = `empty ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+      this.emptyMessage = `empty ${
+        type.charAt(0).toUpperCase() + type.slice(1)
+      }`;
     }
   }
 
   getTotalEmails(contact: Contact): number {
-    return (contact.EmailStats[0].Sent || 0) +
+    return (
+      (contact.EmailStats[0].Sent || 0) +
       (contact.EmailStats[0].Inbox || 0) +
-      (contact.EmailStats[0].Outbox || 0);
+      (contact.EmailStats[0].Outbox || 0)
+    );
   }
 
   GetEmailDashboard(): void {
@@ -350,15 +365,15 @@ export class StageEmailComponent implements OnInit {
       },
     });
   }
- 
-  AddEmail(){
+
+  AddEmail() {
     this.spinner.show();
 
     const body: any = {
       Name: 'AddEmail',
       MainEntity: null,
       Params: {
-        Body:  this.formGroup.get('body')?.value  + this.bodyemail ,
+        Body: this.formGroup.get('body')?.value + this.bodyemail,
         Date: new Date().toISOString(),
         Subject: this.formGroup.get('subject')?.value,
         Direction: -1,
@@ -366,7 +381,7 @@ export class StageEmailComponent implements OnInit {
         BuyBoxId: +this.buyBoxId,
         IsCC: this.formGroup.get('IsCC')?.value,
         FromContactId: +this.loginContact,
-        ContactIds: String(this.contactIdemail)
+        ContactIds: String(this.contactIdemail),
       },
       Json: null,
     };
@@ -378,14 +393,12 @@ export class StageEmailComponent implements OnInit {
     });
   }
 
-
-
   Send() {
-    console.log("Editor Content:", this.formGroup.get('text')?.value);
+    console.log('Editor Content:', this.formGroup.get('text')?.value);
     this.AddEmail();
   }
 
-  openmodel(modal: any,body:any,contactId:any){
+  openmodel(modal: any, body: any, contactId: any) {
     this.bodyemail = body;
     this.contactIdemail = contactId;
     this.modalService.open(modal, { size: 'xl', backdrop: true });
