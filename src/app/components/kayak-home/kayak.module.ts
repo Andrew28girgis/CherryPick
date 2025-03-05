@@ -20,15 +20,14 @@ import { CardViewComponent } from './shopping-center-table/card-view/card-view.c
 import { SideListViewComponent } from './shopping-center-table/side-list-view/side-list-view.component';
 import { MapViewComponent } from './shopping-center-table/map-view/map-view.component';
 import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
-import { LinkMicrosoftComponent } from "./link-microsoft/link-microsoft.component";
-import { StageEmailComponent } from "./stage-email/stage-email.component";
-import { EditorEmailComponent } from "./editor-email/editor-email.component";
+import { LinkMicrosoftComponent } from './link-microsoft/link-microsoft.component';
+import { StageEmailComponent } from './stage-email/stage-email.component';
+import { EditorEmailComponent } from './editor-email/editor-email.component';
 import { EmailDashboardComponent } from './email-dashboard/email-dashboard.component';
 
 @NgModule({
   declarations: [
     KayakHomeComponent,
-    EmilyComponent,
     BuyboxDetailsComponent,
     WorkSpacesComponent,
     ShoppingCenterTableComponent,
@@ -54,11 +53,12 @@ import { EmailDashboardComponent } from './email-dashboard/email-dashboard.compo
     LinkMicrosoftComponent,
     StageEmailComponent,
     EmailDashboardComponent,
-    EditorEmailComponent
-],
+    EditorEmailComponent,
+
+    EmilyComponent,
+  ],
   exports: [
     KayakHomeComponent,
-    EmilyComponent,
     BuyboxDetailsComponent,
     WorkSpacesComponent,
     ShoppingCenterTableComponent,
@@ -70,7 +70,7 @@ import { EmailDashboardComponent } from './email-dashboard/email-dashboard.compo
     SideListViewComponent,
     MapViewComponent,
     StageEmailComponent,
-    EmailDashboardComponent
+    EmailDashboardComponent,
   ],
 })
 export class KayakModule {}
