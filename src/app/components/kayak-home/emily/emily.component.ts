@@ -24,6 +24,7 @@ import { EditorModule } from 'primeng/editor';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EmailService } from 'src/app/services/email-body.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-emily',
@@ -122,10 +123,10 @@ export class EmilyComponent implements OnInit {
   @Input() selectedContactContactId!: any  ;
   loginContact: any;
   @Output() emailBodyResponseSend : EventEmitter<any> = new EventEmitter<any>();
-  @Input() modal: any;  // تم تمرير modal هنا
-
+  @Input() modal: any; 
+  microDealId:any ;
   closeModal() {
-    this.modal.dismiss('Close click');  // إغلاق الـ modal
+    this.modal.dismiss('Close click'); 
   }
   
     formGroup!: FormGroup;
@@ -137,12 +138,15 @@ export class EmilyComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService, 
-    private emailService: EmailService
+    private emailService: EmailService,
+    private _location: Location,
   ) {
     if (!this.buyBoxIdReply) {
       this.route.paramMap.subscribe((params) => {
         this.buyBoxId = params.get('buyboxId');
         this.orgId = params.get('orgId');
+        this.microDealId = params.get('microDealId');
+
         this.CenterId = params.get('CenterId');
         this.shoppingCenterOrganization = this.orgId;
       });
@@ -446,6 +450,7 @@ export class EmilyComponent implements OnInit {
           this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
 
           this.showToast('Email Save and Send successfully!');
+          this.MoveStage();
         },
         error: (err) => {
           console.error('Error updating prompt:', err);
@@ -453,6 +458,20 @@ export class EmilyComponent implements OnInit {
         },
       });
     }, 2000);
+  }
+
+  MoveStage() {
+    const body = {
+      name: 'ChangeDealStage',
+      params: {
+        stageid: 8,
+        microdealid : this.microDealId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+      },
+    });
   }
 
   SendEmailTemplate(email: any) {
@@ -1452,5 +1471,10 @@ export class EmilyComponent implements OnInit {
         this.closeModal();
       },
     });
+  }
+
+
+  back(){
+      this._location.back();
   }
 }

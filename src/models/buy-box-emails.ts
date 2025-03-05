@@ -72,5 +72,6 @@ export interface EmailDashboard {
 export interface OrganizationDashboard {
   ID: number
   Name: string
+  MicroDealId:any
   LastActivityDate?: string
 }
