@@ -46,7 +46,7 @@
         <div class="content-right position-absolute d-flex gap-2">
           <button class="btn-share">
             <div>
-              <img src="../../../assets/icons/export.png" alt="">
+              <img class="imgshare" src="../../../assets/icons/export.png" alt="">
             </div>
             <span>Share</span>
           </button>
@@ -62,16 +62,16 @@
 
 <div class="container background mt-5">
   <div class="row">
-    <div class="col-lg-8 col-md-7">
+    <div class="col-lg-8 col-md-7 order-2 order-md-0 mt-3 mt-md-0">
       <span class="Osmowstext">
         {{ buyboxDescription }}
       </span>
     </div>
-    <div class="col-lg-4 col-md-5">
+    <div class="col-lg-4 col-md-5 order-1 order-md-0">
       <div class="card cardbackground">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-center">
-            <div class="col-lg-4 col-md-3">
+            <div class="col-4">
               <!-- Bind the src attribute to the brokerphoto variable -->
               <img
                 class="brokerandmangeorgimage"
@@ -80,7 +80,7 @@
               />
             </div>
 
-            <div class="col-lg-7 col-md-6 offset-md-3 offset-lg-1">
+            <div class="col-7 offset-1">
               <div class="d-flex flex-column text-start">
                 <div class="d-flex align-items-center justify-content-start">
                   <span class="namee me-2">
@@ -148,7 +148,7 @@
       <div class="d-flex flex-column text-center">
         <span class="boldtext">Size needed</span>
         <div class="d-flex justify-content-start">
-          <span class="lowwhite">
+          <span class="lowwhite" style="white-space: nowrap;">
             {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
           </span>
           <span
@@ -204,14 +204,14 @@
       </div>
     </div>
   </div>
-  <div class="d-flex align-items-center justify-content-center gap-2 mt-3">
+  <div class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0">
   
     <button class="btn-submit-proposel">
       <span>Submit a proposal</span>
     </button>
     <button class="btn-share">
       <div>
-        <img src="../../../assets/icons/export.png" alt="">
+        <img class="imgshare" src="../../../assets/icons/export.png" alt="">
       </div>
       <span>Share</span>
     </button>
@@ -226,18 +226,18 @@
 </div>
 <div class="row reddd mt-4">
   <!-- Image column (col-4) -->
-  <div class="col-4 position-relative">
+  <div class="col-4 col-md-3 col-lg-4 col-xl-3 position-relative">
     <div class="broker-container broker-containerrrr">
       <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
-      <div class="frameeeeeee">
+      <!-- <div class="frameeeeeee">
         <span class="brokerrrr">Broker</span>
-      </div>
+      </div> -->
     </div>
   </div>
   
 
   <!-- Content of the Card (col-8) -->
-  <div class="col-8">
+  <div class="col-8 col-md-9 col-lg-8 col-xl-9">
     <div class="d-flex flex-column text-start">
       <!-- <div class="d-flex align-items-center justify-content-start">
         <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
