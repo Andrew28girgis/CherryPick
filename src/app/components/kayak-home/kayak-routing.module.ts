@@ -13,7 +13,7 @@ import { EmailReadComponent } from './email-read/email-read.component';
 const routes: Routes = [
   { path: '', component: KayakHomeComponent },
   { path: 'details', component: BuyboxDetailsComponent },
-  { path: 'emily/:buyboxId/:orgId/:CenterId', component: EmilyComponent },
+  { path: 'emily/:buyboxId/:orgId/:CenterId/:microDealId', component: EmilyComponent },
   { path: 'emily/:buyboxId/:orgId/:microDealId', component: EmilyComponent },
   { path: 'work-spaces', component: WorkSpacesComponent },
   { path: 'shopping-table', component: ShoppingCenterTableComponent },
