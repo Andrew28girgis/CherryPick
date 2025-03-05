@@ -16,6 +16,9 @@ import { CardModule } from 'primeng/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmailDashboardComponent } from "../email-dashboard/email-dashboard.component";
 import { TableModule } from 'primeng/table';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { EditorModule } from 'primeng/editor';
+
 
 interface Column {
   field: string;
@@ -25,7 +28,7 @@ interface Column {
 @Component({
   selector: 'app-stage-email',
   standalone: true,
-  imports: [CommonModule, NgxSpinnerModule, AccordionModule, CardModule, TableModule],
+  imports: [CommonModule, NgxSpinnerModule, AccordionModule, CardModule, TableModule,ReactiveFormsModule, EditorModule],
   providers: [NgxSpinnerService, PlacesService],
   templateUrl: './stage-email.component.html',
   styleUrl: './stage-email.component.css',
@@ -43,13 +46,17 @@ export class StageEmailComponent implements OnInit {
   emptyMessage: string = 'Select Contact in organization';
   selectedFilter: string = 'all';
   ShowSection: boolean = false;
+  ShowResaved: boolean = false;
   EmailDashboard: any[] = [];
   cols!: Column[];
   activeStageId!: number;
   activeOrgId!: number;
   openedStageId: number | null = null;
   openedOrgId: number | null = null;
-
+  selectedEmail: EmailInfo | null = null;
+  formGroup!: FormGroup;
+  bodyemail:any;
+  contactIdemail:any;
 
   constructor(
     public spinner: NgxSpinnerService,
@@ -65,6 +72,12 @@ export class StageEmailComponent implements OnInit {
       { field: 'Organizations', header: 'Organizations' },
       { field: 'Last Activity Date', header: 'Last Activity Date' },
     ];
+
+    this.formGroup = new FormGroup({
+      body: new FormControl(''),
+      subject: new FormControl(''),
+      IsCC: new FormControl(false),
+    });
 
     this.GetEmailDashboard();
     this.GetBuyBoxMicroDeals();
@@ -183,7 +196,7 @@ export class StageEmailComponent implements OnInit {
     });
   }
 
-  GetMail(mailId: number, modal: any): void {
+  GetMail(mailId: number): void {
     this.spinner.show();
 
     const body: any = {
@@ -198,15 +211,22 @@ export class StageEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
-          this.Emails = data.json;
-          this.modalService.open(modal, { size: 'xl', backdrop: true });
+          // this.Emails = data.json;
+          // this.modalService.open(modal, { size: 'xl', backdrop: true });
+          this.selectedEmail = data.json[0]; 
         } else {
-          this.Emails = [];
+          // this.Emails = [];
+          this.selectedEmail = null; 
         }
         this.mergeStagesWithGetBuyBoxMicroDeals();
         this.spinner.hide();
       },
     });
+  }
+
+  close(){
+    // this.Emails = [];
+    this.selectedEmail = null;
   }
 
   mergeStagesWithGetBuyBoxMicroDeals(): void {
@@ -329,5 +349,45 @@ export class StageEmailComponent implements OnInit {
         this.spinner.hide();
       },
     });
+  }
+ 
+  AddEmail(){
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'AddEmail',
+      MainEntity: null,
+      Params: {
+        Body:  this.formGroup.get('body')?.value  + this.bodyemail ,
+        Date: new Date().toISOString(),
+        Subject: this.formGroup.get('subject')?.value,
+        Direction: -1,
+        outbox: null,
+        BuyBoxId: +this.buyBoxId,
+        IsCC: this.formGroup.get('IsCC')?.value,
+        FromContactId: +this.loginContact,
+        ContactIds: String(this.contactIdemail)
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.spinner.hide();
+      },
+    });
+  }
+
+
+
+  Send() {
+    console.log("Editor Content:", this.formGroup.get('text')?.value);
+    this.AddEmail();
+  }
+
+  openmodel(modal: any,body:any,contactId:any){
+    this.bodyemail = body;
+    this.contactIdemail = contactId;
+    this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 }
