@@ -286,6 +286,10 @@ export class StageEmailComponent implements OnInit {
 
         this.stageEmailsMap[stage.id] = matchingEmails;
       });
+
+      if (this.Stages.length > 0) {
+        this.openedStageId = this.Stages[0].id; // Open the first stage by default
+      }
     }
   }
 
