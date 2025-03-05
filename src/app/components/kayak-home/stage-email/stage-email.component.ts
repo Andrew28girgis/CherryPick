@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -14,10 +22,17 @@ import {
 } from 'src/models/buy-box-emails';
 import { CardModule } from 'primeng/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EmailDashboardComponent } from '../email-dashboard/email-dashboard.component';
 import { TableModule } from 'primeng/table';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
+import { EmilyComponent } from '../emily/emily.component';
+import { EmailService } from 'src/app/services/email-body.service';
+import { Subscription } from 'rxjs';
 
 interface Column {
   field: string;
@@ -35,8 +50,10 @@ interface Column {
     TableModule,
     ReactiveFormsModule,
     EditorModule,
+    EmilyComponent,
+    FormsModule,
   ],
-  providers: [NgxSpinnerService, PlacesService],
+  providers: [NgxSpinnerService, PlacesService, EmailService],
   templateUrl: './stage-email.component.html',
   styleUrl: './stage-email.component.css',
 })
@@ -59,21 +76,27 @@ export class StageEmailComponent implements OnInit {
   activeStageId!: number;
   activeOrgId!: number;
   openedStageId: number | null = null;
-  openedOrgId: number | null = null;
+  openedOrgId: any;
   selectedEmail: EmailInfo | null = null;
   formGroup!: FormGroup;
   bodyemail: any;
   contactIdemail: any;
+  @Input() emailBodyResponseSend!: any;
+
+  private subscription: Subscription | null = null;
+  currentValue: any;
 
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private emailService: EmailService
   ) {}
 
   ngOnInit(): void {
     this.buyBoxId = localStorage.getItem('BuyBoxId');
     this.loginContact = localStorage.getItem('contactId');
+    console.log(this.emailBodyResponseSend);
 
     this.cols = [
       { field: 'Organizations', header: 'Organizations' },
@@ -90,8 +113,25 @@ export class StageEmailComponent implements OnInit {
     this.GetBuyBoxMicroDeals();
     this.GetBuyBoxEmails();
     this.GetStages();
+ 
+    this.subscription = this.emailService.myVariable$.subscribe((newValue) => {
+      this.currentValue = newValue;  // Update the component's currentValue
+      console.log('Component: Received updated value:', newValue);  // Log the new value
+    });
+
+    // Optional: Log current value when component loads (initial value)
+    console.log('Component: Initial value:', this.emailService.getCurrentValue());
   }
 
+  ngOnDestroy(): void {
+    // Clean up the subscription when the component is destroyed to prevent memory leaks
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+ 
+  
   Openaccordion(stageId: number, orgId: number) {
     if (this.openedStageId === stageId && this.openedOrgId === orgId) {
       this.openedStageId = null;
@@ -377,9 +417,9 @@ export class StageEmailComponent implements OnInit {
         Date: new Date().toISOString(),
         Subject: this.formGroup.get('subject')?.value,
         Direction: -1,
-        outbox: null,
+        outbox: '',
         BuyBoxId: +this.buyBoxId,
-        IsCC: this.formGroup.get('IsCC')?.value,
+        IsCC: this.formGroup.get('IsCC')?.value ? 1 : 0,
         FromContactId: +this.loginContact,
         ContactIds: String(this.contactIdemail),
       },
