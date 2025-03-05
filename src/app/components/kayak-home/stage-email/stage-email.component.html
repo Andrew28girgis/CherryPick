@@ -78,7 +78,7 @@
                     </div>
                     <span  (click)="Openaccordion(items.Id,rowData.ID)">{{ rowData.Name }}</span>
     
-                      <span class="buttonSave" [routerLink]="['/emily', buyBoxId,rowData.ID , rowData.MicroDealId]">Compose</span>
+                      <span class="buttonSave2" [routerLink]="['/emily', buyBoxId,rowData.ID , rowData.MicroDealId]"><i class="fa-solid fa-pen-to-square"></i></span>
                     </td>
                   <td class="col-body">
                     {{ (rowData.LastActivityDate | date : "medium") || '--' }}

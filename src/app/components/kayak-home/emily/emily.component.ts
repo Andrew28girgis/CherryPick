@@ -145,10 +145,7 @@ export class EmilyComponent implements OnInit {
       this.route.paramMap.subscribe((params) => {
         this.buyBoxId = params.get('buyboxId');
         this.orgId = params.get('orgId');
-        this.microDealId = params.get('microDealId');
-        console.log(this.microDealId);
-        
-
+        this.microDealId = params.get('microDealId');        
         this.CenterId = params.get('CenterId');
         this.shoppingCenterOrganization = this.orgId;
       });
