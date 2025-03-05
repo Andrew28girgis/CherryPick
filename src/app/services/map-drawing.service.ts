@@ -137,7 +137,8 @@ export class MapDrawingService {
     polygonId: number,
     map: any,
     coordinates: any,
-    name: string
+    name: string,
+    editable: boolean
   ): void {
     // create new polygon
     const polygon: google.maps.Polygon = new google.maps.Polygon({
@@ -147,7 +148,7 @@ export class MapDrawingService {
       strokeWeight: 2,
       fillColor: '#0000FF',
       fillOpacity: 0.35,
-      editable: true,
+      editable: editable,
       draggable: false,
     });
 
@@ -163,7 +164,9 @@ export class MapDrawingService {
     this.addPolygonClickListener(map, polygon);
     // handle change event of the polygon
     this.addPolygonChangeListener(map, polygon);
-    this.addPolygonDoubleClickListener(polygon);
+    if (editable) {
+      this.addPolygonDoubleClickListener(polygon);
+    }
   }
 
   insertExplorePolygon(polygonId: number, coordinates: any): void {
@@ -196,7 +199,8 @@ export class MapDrawingService {
     map: any,
     center: any,
     radius: any,
-    name: string
+    name: string,
+    editable: boolean
   ): void {
     // create new circle
     const circle = new google.maps.Circle({
@@ -207,7 +211,7 @@ export class MapDrawingService {
       fillOpacity: 0.3,
       strokeWeight: 2,
       strokeColor: '#FF0000',
-      editable: true,
+      editable: editable,
       draggable: false,
     });
 
@@ -223,7 +227,9 @@ export class MapDrawingService {
     this.addCircleClickListener(map, circle);
     // handle change event of the circle
     this.addCircleChangeListener(map, circle);
-    this.addCircleDoubleClickListener(circle);
+    if (editable) {
+      this.addCircleDoubleClickListener(circle);
+    }
   }
 
   updatePolygonId(id: number, circle: boolean): void {

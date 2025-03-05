@@ -265,7 +265,8 @@ export class PolygonsControllerComponent
             this.map,
             JSON.parse(polygon.center),
             JSON.parse(polygon.radius),
-            polygon.name
+            polygon.name,
+            polygon.polygonSourceId ? false : true
           );
         }
         // polygon shape
@@ -286,7 +287,8 @@ export class PolygonsControllerComponent
             polygon.id,
             this.map,
             coordinates,
-            polygon.name
+            polygon.name,
+            polygon.polygonSourceId ? false : true
           );
         }
       } catch (error) {
@@ -365,7 +367,7 @@ export class PolygonsControllerComponent
     };
 
     this.polygonsControllerService
-      .getAllPolygons(this.contactId, this.buyBoxId)
+      .getAllPolygons(this.buyBoxId)
       .subscribe(observer);
   }
 
@@ -673,6 +675,34 @@ export class PolygonsControllerComponent
 
       this.mapDrawingService.displayShapeOnMap(polygon.id, this.map);
     }
+  }
+
+  attachPolygonToBuyBox(polygonId: number): void {
+    this.spinner.show();
+    const observer = {
+      next: (response: any) => {
+        this.spinner.hide();
+        this.mapDrawingService.hideShapeFromMap(polygonId);
+        this.externalPolygons = this.externalPolygons.filter(
+          (p) => p.id != polygonId
+        );
+        // if (response) {
+        //   let polygon = this.polygons.find((p) => p.id == id);
+        //   if (polygon) {
+        //     Object.assign(polygon, response);
+        //     this.createPropertiesMarkers(id, true);
+        //   }
+        // }
+      },
+      error: (error: any) => {
+        this.spinner.hide();
+        console.error(error);
+      },
+    };
+
+    this.polygonsControllerService
+      .attachPolygonToBuyBox(this.buyBoxId, polygonId)
+      .subscribe(observer);
   }
 
   ngOnDestroy(): void {
