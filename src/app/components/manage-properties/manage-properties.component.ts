@@ -493,7 +493,6 @@ export class ManagePropertiesComponent implements OnInit {
     // Send the updated JsonPDF data
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        console.log('Data:', data);
         this.showToast('shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
