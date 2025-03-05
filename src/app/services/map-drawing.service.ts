@@ -1132,7 +1132,7 @@ export class MapDrawingService {
                 padding: 1rem;
               "
             >
-              <div style="font-weight: 500">Shape size must be less than 1 mile.</div>
+              <div style="font-weight: 500">Shape size must be less than 100 miles.</div>
               <div >Your shape size : <strong>${sizeInMiles.toFixed()} MI</strong></div>
               <button
                 id="cancelLargeSizeAlert"
