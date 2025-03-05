@@ -362,7 +362,7 @@
 
 .banner-text {
   color: #fff;
-  padding: 50px 0; 
+  padding: 50px 0;
   text-align: center;
   font-size: 1.2rem;
 }
@@ -431,9 +431,9 @@
 }
 .row-background {
   height: 45vh;
-  background-image: url("../../../assets/Images/GreyImage.png"); 
+  background-image: url("../../../assets/Images/GreyImage.png");
   background-repeat: no-repeat;
-  background-size: cover; 
+  background-size: cover;
   background-position: center center;
 }
 .reddd {
@@ -441,7 +441,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  min-height: 150px; 
+  min-height: 150px;
   border-radius: 20px;
   position: relative;
 }
@@ -456,15 +456,12 @@
 }
 .organization-image {
   width: 80px;
-  height: 80px; 
+  height: 80px;
   border-radius: 50%;
 }
 
 .ml-3 {
-  margin-left: 10px; 
-}
-.toppp {
-  margin-top: 90px;
+  margin-left: 10px;
 }
 .broker-containerrrr {
   position: relative;
@@ -472,8 +469,8 @@
 
 .frameeeeeee {
   position: absolute;
-  top: 15px; 
-  right: 120px; 
+  top: 15px;
+  right: 120px;
   display: flex;
   padding: 4px 10px;
   justify-content: flex-start;
@@ -502,17 +499,124 @@
   font-style: normal;
   font-weight: 600;
   line-height: 30px;
+  white-space: nowrap;
+}
+.imgshare {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 576px) {
+  .grayspan {
+    font-size: 14px;
+  }
+  .organization-image {
+    width: 60px;
+    height: 60px;
+  }
+  .broker-container {
+    top: -50px;
+    left: -13px;
+  }
+  .frameeeeeee {
+    top: 12px;
+    right: -19px;
+    padding: 0px 2px;
+  }
+  .brokerrrr {
+    font-size: 9px;
+  }
+  .imagebroker {
+    width: 130px;
+    height: 140px;
+  }
+  .brokertext {
+    font-size: 14px;
+    line-height: 25px;
+  }
+  .nameincard {
+    font-size: 18px;
+  }
+  .btn-submit-proposel span {
+    font-size: 11px;
+  }
+  .smalllframe {
+    width: 30px;
+    height: 30px;
+    padding: 12px;
+    margin-right: 8px;
+  }
+  .lowwhite {
+    font-size: 12px;
+  }
+  .small-image {
+    width: 15px;
+    height: 15px;
+  }
+  .boldtext {
+    font-size: 13px;
+  }
+  .specifications {
+    font-size: 20px;
+  }
+  .container {
+    max-width: 97% !important;
+  }
+  .tenant-logo {
+    width: 60px;
+    height: 60px;
+  }
+  .buyboxname {
+    font-size: 20px;
+  }
+  .buyboxpos {
+    height: 58px;
+    top: 30%;
+    left: 0px;
+  }
+  .imgshare {
+    width: 15px;
+    height: 15px;
+  }
+  .btn-share {
+    padding: var(--Button-Padding-top-bottom, 20px)
+      var(--Button-Padding-left-right, 12px);
+  }
+  .btn-submit {
+    padding: var(--Button-Padding-top-bottom, 20px)
+      var(--Button-Padding-left-right, 11px);
+  }
+  .btn-submit span {
+    font-size: 11px;
+  }
+  .btn-share span {
+    font-size: 11px;
+  }
+  .content-right {
+    bottom: 20px;
+    right: -20px;
+  }
+  .brokerandmangeorgimage {
+    width: 110px;
+    height: 110px;
+  }
+  .namee {
+    font-size: 14px;
+  }
+  .broker {
+    font-size: 12px;
+  }
+  .linkedin {
+    font-size: 14px;
+  }
   .proposal-button {
     padding: var(--Button-Padding-top-bottom, 8px)
       var(--Button-Padding-left-right, 3px);
     gap: var(--Button-Gap, 8px);
     font-size: 10px;
-  }
-  .boldtext {
-    font-size: 15px;
   }
   .frame {
     padding: var(--Space-Space-4, 0px) var(--Space-Space-12, 3px);
@@ -530,6 +634,92 @@
   }
 }
 @media (min-width: 576px) {
+  .organization-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+  .imagebroker {
+    width: 180px;
+    height: 200px;
+}
+  .broker-container {
+    top: -75px;
+    left: 0px;
+  }
+  .grayspan {
+    font-size: 15px;
+  }
+  .nameincard {
+    font-size: 20px;
+  }
+  .lowwhite {
+    font-size: 12px;
+  }
+  .specifications {
+    font-size: 25px;
+  }
+  .btn-submit-proposel span {
+    font-size: 13px;
+  }
+  .btn-submit-proposel {
+    padding: var(--Button-Padding-top-bottom, 12px)
+      var(--Button-Padding-left-right, 15px);
+  }
+  .brokerandmangeorgimage {
+    width: 140px;
+    height: 140px;
+  }
+  .namee {
+    font-size: 17px;
+  }
+  .broker {
+    font-size: 14px;
+  }
+  .linkedin {
+    font-size: 16px;
+  }
+  .brokerandmangeorgimage {
+    width: 160px;
+    height: 150px;
+  }
+  .container {
+    max-width: 97% !important;
+  }
+  .tenant-logo {
+    width: 75px;
+    height: 75px;
+  }
+  .buyboxname {
+    font-size: 30px;
+  }
+  .buyboxpos {
+    height: 60px;
+    top: 34%;
+    left: -16px;
+  }
+  .imgshare {
+    width: 15px;
+    height: 15px;
+  }
+  .btn-share {
+    padding: var(--Button-Padding-top-bottom, 20px)
+      var(--Button-Padding-left-right, 17px);
+  }
+  .btn-submit {
+    padding: var(--Button-Padding-top-bottom, 20px)
+      var(--Button-Padding-left-right, 17px);
+  }
+  .btn-submit span {
+    font-size: 13px;
+  }
+  .btn-share span {
+    font-size: 13px;
+  }
+  .content-right {
+    bottom: 20px;
+    right: -20px;
+  }
   .proposal-button {
     padding: var(--Button-Padding-top-bottom, 9px)
       var(--Button-Padding-left-right, 15px);
@@ -555,16 +745,132 @@
 }
 
 @media (min-width: 768px) {
-  .linkedin[_ngcontent-ng-c760362494] {
+  .broker-container {
+    top: -75px;
+    left: -9px;
+  }
+  .imagebroker {
+    width: 190px;
+    height: 200px;
+  }
+  .brokertext {
+    color: #fff;
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px;
+  }
+
+  .brokerandmangeorgimage {
+    width: 90px;
+    height: 90px;
+  }
+  .Osmowstext {
+    font-size: 15px;
+  }
+  .namee {
+    font-size: 15px;
+  }
+  .frameee {
+    padding: 4px 7px;
+  }
+  .broker {
+    font-size: 10px;
+  }
+  .linkedin {
+    font-size: 13px;
+  }
+  .container {
+    max-width: 97% !important;
+  }
+  .tenant-logo {
+    width: 85px;
+    height: 85px;
+  }
+  .buyboxname {
+    font-size: 30px;
+  }
+  .buyboxpos {
+    height: 60px;
+    top: 28%;
+    left: -10px;
+  }
+  .imgshare {
+    width: 17px;
+    height: 17px;
+  }
+  .btn-share {
+    padding: var(--Button-Padding-top-bottom, 20px)
+      var(--Button-Padding-left-right, 19px);
+  }
+  .btn-submit {
+    padding: var(--Button-Padding-top-bottom, 20px)
+      var(--Button-Padding-left-right, 19px);
+  }
+  .btn-submit span {
+    font-size: 15px;
+  }
+  .btn-share span {
+    font-size: 15px;
+  }
+  .content-right {
+    bottom: 20px;
+    right: -20px;
+  }
+  .linkedin {
     font-size: 14px;
+  }
+  .lowwhite {
+    font-size: 16px;
+  }
+  .specifications {
+    font-size: 32px;
+  }
+  .btn-submit-proposel span {
+    font-size: 16px;
+  }
+  .btn-submit-proposel {
+    padding: var(--Button-Padding-top-bottom, 12px)
+      var(--Button-Padding-left-right, 24px);
   }
 }
 
 @media (min-width: 992px) {
+  .brokerandmangeorgimage{
+    width: 100px;
+    height: 110px;
+}
+  .imagebroker {
+    width: 301px;
+    height: 310px;
+  }
+  .container {
+    max-width: 97% !important;
+  }
+  .broker-container {
+    top: -75px;
+    left: 5px;
+  }
 }
 
 @media (min-width: 1200px) {
+  .broker-container {
+    top: -80px;
+    left: 15px;
 }
+  .broker {
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: -0.07px;
 
-@media (min-width: 1400px) {
+  }
+  .brokerandmangeorgimage {
+    width: 120px;
+    height: 120px;
+}
+.imagebroker{
+  width: 300px;
+  height: 300px;
+}
 }

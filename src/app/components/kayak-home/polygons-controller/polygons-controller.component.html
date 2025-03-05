@@ -135,7 +135,12 @@
               View
             </button>
           </ng-template>
-          <button class="btn btn-dark">Add</button>
+          <button
+            class="btn btn-dark"
+            (click)="attachPolygonToBuyBox(polygon.id)"
+          >
+            Add to buybox
+          </button>
         </td>
       </tr>
     </tbody>

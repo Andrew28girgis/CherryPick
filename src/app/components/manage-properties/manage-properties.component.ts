@@ -55,7 +55,7 @@ export class ManagePropertiesComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.contactID =  localStorage.getItem('contactId')  ;
-    console.log('Contact ID:', this.contactID);
+    // console.log('Contact ID:', this.contactID);
     this.GetContactShoppingCenters();
   }
 
@@ -113,7 +113,6 @@ export class ManagePropertiesComponent implements OnInit {
     if (!this.CustomPlace?.Images) return [];
     return this.CustomPlace.Images.split(',').map(url => url.trim());
   }
-  // Toggle the visibility of the input field for adding a new tenant
   toggleAddTenantInput() {
     // Initialize CustomPlace.Tenants if it’s null or undefined
     if (!this.CustomPlace?.Tenants) {
@@ -364,8 +363,7 @@ export class ManagePropertiesComponent implements OnInit {
     } else {
         this.selectedShoppingID = id.toString();
     }
-    console.log('Selected Shopping ID:', this.selectedShoppingID);
-    // this.getAvailabilityTenants();
+    // console.log('Selected Shopping ID:', this.selectedShoppingID);
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
   closeModal(modal: any) {
@@ -412,7 +410,7 @@ export class ManagePropertiesComponent implements OnInit {
                 }
               } else if (event instanceof HttpResponse) {
                 // Conversion complete; extract images from the new API response structure
-                console.log('API Response:', event.body);
+                // console.log('API Response:', event.body);
                 const response = event.body;
                 if (response && response.images) {
                   this.images = response.images.map((img: string, index: number) => ({
@@ -422,7 +420,7 @@ export class ManagePropertiesComponent implements OnInit {
                     selected: false,
                   }));
                   this.pdfFileName=response.pdfFileName;
-                  console.log('pdfFileName:', this.pdfFileName);
+                  // console.log('pdfFileName:', this.pdfFileName);
                 }
                 this.isConverting = false;
                 this.spinner.hide();
@@ -494,7 +492,6 @@ export class ManagePropertiesComponent implements OnInit {
     // Send the updated JsonPDF data
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        console.log('Data:', data);
         this.showToast('shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
