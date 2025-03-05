@@ -1440,6 +1440,8 @@ export class EmilyComponent implements OnInit {
       Json: null,
     };
 
+    
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.spinner.hide();
