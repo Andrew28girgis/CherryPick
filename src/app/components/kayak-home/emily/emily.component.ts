@@ -122,7 +122,12 @@ export class EmilyComponent implements OnInit {
   @Input() selectedContactContactId!: any  ;
   loginContact: any;
   @Output() emailBodyResponseSend : EventEmitter<any> = new EventEmitter<any>();
+  @Input() modal: any;  // تم تمرير modal هنا
 
+  closeModal() {
+    this.modal.dismiss('Close click');  // إغلاق الـ modal
+  }
+  
     formGroup!: FormGroup;
     bodyemail: any;
     contactIdemail: any;
@@ -1440,11 +1445,11 @@ export class EmilyComponent implements OnInit {
       Json: null,
     };
 
-    
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.spinner.hide();
+        this.closeModal();
       },
     });
   }

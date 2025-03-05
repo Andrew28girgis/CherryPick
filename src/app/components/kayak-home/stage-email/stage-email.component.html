@@ -128,7 +128,7 @@
             </div>
           </div>
           <div class="modal-footer mt-2">
-            <button class="btn btn-secondary me-2" (click)="openmodel(openreply,selectedEmail.Body,selectedContact?.ContactId)" *ngIf="selectedEmail.Direction === 1">
+            <button class="btn buttonSave me-2" (click)="openmodel(openreply,selectedEmail.Body,selectedContact?.ContactId)" *ngIf="selectedEmail.Direction === 1">
               Reply
             </button>
             <button class="btn btn-secondary" (click)="close()">
@@ -198,7 +198,7 @@
       <div class="modal-body p-0">
         <div class="row m-0 p-2 d-flex justify-content-center">
           <div class="d-flex gap-3 selectedOptionDiv"> 
-            <app-emily [buyBoxIdReply]="buyBoxId" [orgIdReply]="openedOrgId" [emailBodyReply]="bodyemail" [selectedContactContactId]="contactIdemail"> </app-emily>
+              <app-emily [buyBoxIdReply]="buyBoxId" [orgIdReply]="openedOrgId" [emailBodyReply]="bodyemail" [selectedContactContactId]="contactIdemail"  [modal]="modal"> </app-emily>
           </div>
           <div class="col-12 p-0"  > 
             <!-- <form [formGroup]="formGroup">
@@ -221,9 +221,8 @@
                 </button>
               </div>
             </form> -->
+
           </div>
-          
-       
         </div>
       </div>
     </div>
