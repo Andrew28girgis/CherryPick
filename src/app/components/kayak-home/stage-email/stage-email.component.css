@@ -6,8 +6,7 @@
 }
 
 ::ng-deep .p-accordion .p-accordion-content .p-accordion .p-accordion-header a {
-  padding-block: 8px !important;
-  color: #001f3f !important;
+   color: #001f3f !important;
   font-size: 14px;
   font-weight: 500;
   font-family: Montserrat;
