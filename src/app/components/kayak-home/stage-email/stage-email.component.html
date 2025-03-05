@@ -108,7 +108,7 @@
           </p-card>
         </div>
         <div class="modal-content" *ngIf="selectedEmail">
-          <div class="modal-body p-0">
+          <div class="modal-body p-0 openreply">
             <div class="row m-0 p-0 d-flex justify-content-center">
               <div class="col-12 p-0">
                 <div class="card shadow-sm border-0">
@@ -194,28 +194,36 @@
 </ng-template>
 
 <ng-template #openreply let-modal>
-    <div class="modal-content openreply">
+    <div class="modal-content">
       <div class="modal-body p-0">
-        <div class="row m-0 p-0 d-flex justify-content-center">
-          <div class="col-12 p-0">
-            <form [formGroup]="formGroup">
-              <div class="d-flex pt-2 pb-2 align-items-center ps-3">
-                  <label for="subject"class="inputText" class="">Subject :</label>
-                  <input type="text"  formControlName="subject" name="subject" id="subject" placeholder="Enter your subject email">
+        <div class="row m-0 p-2 d-flex justify-content-center">
+          <div class="d-flex gap-3 selectedOptionDiv"> 
+            <app-emily [buyBoxIdReply]="buyBoxId" [orgIdReply]="openedOrgId" [emailBodyReply]="bodyemail" [selectedContactContactId]="contactIdemail"> </app-emily>
+          </div>
+          <div class="col-12 p-0"  > 
+            <!-- <form [formGroup]="formGroup">
+              <div class="p-3">
+                <div class="d-flex pb-3 align-items-center">
+                  <label for="subject"class="IsCC_checkbox me-2">Subject: </label>
+                  <input type="text" class="input_checkbox form-control w-25" formControlName="subject" name="subject" id="subject" placeholder="Enter your subject email">
+                </div>
+                <div class="checkbox-section">
+                  <input type="checkbox"  formControlName="IsCC" name="IsCC" id="IsCC" class="form-check-input m-0"/>
+                  <label for="IsCC" class="ms-2 IsCC_checkbox" >IsCC</label>
+                </div>
               </div>
-              <div class="d-flex pt-2 pb-2 align-items-center ps-3">
-                  <input type="checkbox"  formControlName="IsCC" name="IsCC" id="IsCC">
-                  <label for="IsCC"class="inputText" class="ms-2">IsCC </label>
-              </div>
-              <p-editor formControlName="body" [style]="{ height: '320px' }"></p-editor>
+              {{email}}
+              <p-editor [(ngModel)]="email" [style]="{ height: '250px' }"></p-editor>
               <div class="d-flex justify-content-end">
                 <button type="button" (click)="Send()" class="mt-2 mb-4 me-2 buttonSave">Send</button>
                 <button class="btn btn-secondary mt-2 mb-4 me-2" (click)="modal.dismiss('Close click')">
                   Close
                 </button>
               </div>
-            </form>
+            </form> -->
           </div>
+          
+       
         </div>
       </div>
     </div>
