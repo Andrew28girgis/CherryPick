@@ -6,6 +6,7 @@ export interface IPolygon {
   state: string;
   json: string;
   creationDate: Date;
+  polygonSourceId: any;
   center: string | null;
   radius: string | null;
 }
