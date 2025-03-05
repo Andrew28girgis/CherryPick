@@ -4,11 +4,13 @@
   <div class="col-12 col-sm-3">
     @for(stage of Stages; track stage){
       <p-accordion [activeIndex]="getActiveIndex(stage.id)">
+        <!-- (click)="Openaccordion(stage.id)" -->
         <p-accordionTab [header]="stage.title" [id]="stage.id">
           @for(email of stageEmailsMap[stage.id]; track email){
             @for(org of email.Organization; track org){
               <p-accordion [activeIndex]="getActiveIndex2(org.OrganizationId)">
-                <p-accordionTab [id]="org.OrganizationId">
+                <!-- (click)="Openaccordion(stage.id, org.OrganizationId)" -->
+                <p-accordionTab [id]="org.OrganizationId"  >
                   <ng-template pTemplate="header">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <div style="width: 30px; height: 30px; margin-inline: 5px;">
@@ -52,8 +54,9 @@
   </div>
   <div class="col-12 col-sm-9">
     @if(!ShowSection){
-    <div class="card p-0" *ngFor="let items of EmailDashboard; let i = index"  >
-          <div *ngIf="items.Organizations.length > 0" [ngClass]="{'pt-3': i !== 0}">
+     
+      <div *ngFor="let items of EmailDashboard; let i = index"   [ngClass]="{'mt-3': i !== 0}">
+    <div class="card p-0" *ngIf="items.Organizations"   >
             <p-table [columns]="cols" [value]="items.Organizations">
               <ng-template pTemplate="caption">
                 <div class="flex items-center justify-between">
@@ -81,7 +84,7 @@
                       <span class="buttonSave2" [routerLink]="['/emily', buyBoxId,rowData.ID , rowData.MicroDealId]"><i class="fa-solid fa-pen-to-square"></i></span>
                     </td>
                   <td class="col-body">
-                    {{ (rowData.LastActivityDate | date : "medium") || '--' }}
+                    {{ (rowData.LastActivityDate | date : "medium")}}
                   </td>
                 </tr>
               </ng-template>
