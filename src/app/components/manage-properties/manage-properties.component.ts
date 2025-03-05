@@ -113,7 +113,6 @@ export class ManagePropertiesComponent implements OnInit {
     if (!this.CustomPlace?.Images) return [];
     return this.CustomPlace.Images.split(',').map(url => url.trim());
   }
-  // Toggle the visibility of the input field for adding a new tenant
   toggleAddTenantInput() {
     // Initialize CustomPlace.Tenants if it’s null or undefined
     if (!this.CustomPlace?.Tenants) {
@@ -493,7 +492,6 @@ export class ManagePropertiesComponent implements OnInit {
     // Send the updated JsonPDF data
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        console.log('Data:', data);
         this.showToast('shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
