@@ -93,6 +93,18 @@ export class MapDrawingService {
     this.addShapeCompletionListener(map);
   }
 
+  displayDrawingManager(map: any): void {
+    if (this.drawingManager) {
+      this.drawingManager.setMap(map);
+    }
+  }
+
+  hideDrawingManager(): void {
+    if (this.drawingManager) {
+      this.drawingManager.setMap(null);
+    }
+  }
+
   updateMapCenter(map: any, center: any): void {
     if (map) {
       const newCenter = center ? center : { lat: 37.7749, lng: -122.4194 };
@@ -914,6 +926,18 @@ export class MapDrawingService {
     this.infoWindow.setPosition(position);
     this.infoWindow.open(map);
 
+    // Add a one-time click listener on the map to hide the shape and remove its listeners.
+    const mapClickListener = map.addListener('click', () => {
+      // Hide the shape from the map.
+      shape.setMap(null);
+      // Remove all event listeners for this shape.
+      google.maps.event.clearInstanceListeners(shape);
+      // Close the infoWindow.
+      this.infoWindow.close();
+      // Remove this listener.
+      google.maps.event.removeListener(mapClickListener);
+    });
+
     const cancelButtonInterval = setInterval(() => {
       // get cancel button
       const cancelButton = document.getElementById('cancelLargeSizeAlert');
@@ -924,6 +948,8 @@ export class MapDrawingService {
         cancelButton.addEventListener('click', () => {
           shape.setMap(null);
           this.hidePopupContent();
+          // Remove this listener.
+          google.maps.event.removeListener(mapClickListener);
         });
       }
     }, 100);

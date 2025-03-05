@@ -633,6 +633,9 @@ export class PolygonsControllerComponent
     this.selectedPolygon = null;
     this.properties = [];
     this.mapDrawingService.clearDrawnLists();
+    if (this.map) {
+      this.mapDrawingService.hideDrawingManager();
+    }
   }
 
   navigateToMyPolygons(): void {
@@ -640,6 +643,9 @@ export class PolygonsControllerComponent
     this.externalPolygons = [];
     this.displayedExternalPolygons = [];
     this.mapDrawingService.completelyRemoveExplorePolygon();
+    if (this.map) {
+      this.mapDrawingService.displayDrawingManager(this.map);
+    }
     this.getAllPolygons();
   }
 
