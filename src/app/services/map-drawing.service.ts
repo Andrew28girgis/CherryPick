@@ -162,9 +162,9 @@ export class MapDrawingService {
 
     // handle click event of the polygon
     this.addPolygonClickListener(map, polygon);
-    // handle change event of the polygon
-    this.addPolygonChangeListener(map, polygon);
     if (editable) {
+      // handle change event of the polygon
+      this.addPolygonChangeListener(map, polygon);
       this.addPolygonDoubleClickListener(polygon);
     }
   }
@@ -225,9 +225,9 @@ export class MapDrawingService {
 
     // handle click event of the circle
     this.addCircleClickListener(map, circle);
-    // handle change event of the circle
-    this.addCircleChangeListener(map, circle);
     if (editable) {
+      // handle change event of the circle
+      this.addCircleChangeListener(map, circle);
       this.addCircleDoubleClickListener(circle);
     }
   }
