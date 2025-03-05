@@ -503,6 +503,9 @@
 }
 
 @media (max-width: 576px) {
+  .row-background[_ngcontent-ng-c2705470804] {
+    height: 35vh;
+}
   .grayspan {
     font-size: 14px;
   }
@@ -627,6 +630,9 @@
   }
 }
 @media (min-width: 576px) {
+  .row-background {
+    height: 40vh;
+}
   .organization-image {
     width: 60px;
     height: 60px;
@@ -634,7 +640,7 @@
   }
   .imagebroker {
     width: 180px;
-    height: 200px;
+    height: 180px;
 }
   .broker-container {
     top: -75px;
@@ -742,6 +748,9 @@
 }
 
 @media (min-width: 768px) {
+  .row-background {
+    height: 45vh;
+}
   .boldtext {
     font-size: 16px;
 }

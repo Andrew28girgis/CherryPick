@@ -27,9 +27,7 @@
   <div class="row">
     <div class="col-12">
  
-      <!-- Logo Container (positioned relatively so the logo and content can be absolutely placed inside) -->
       <div class="logo-container position-relative">
-        <!-- Absolutely positioned logo -->
         <span class="buyboxname buyboxpos position-absolute mt-5">
           {{buyboxname}}
          </span>
@@ -72,7 +70,6 @@
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-center">
             <div class="col-4">
-              <!-- Bind the src attribute to the brokerphoto variable -->
               <img
                 class="brokerandmangeorgimage"
                 [src]="brokerphoto"
@@ -121,7 +118,6 @@
                   <span class="broker">Commercial Real Estate</span>
                 </div>
 
-                <!-- <span class="email"> example&#64;gmail.com </span> -->
               </div>
             </div>
           </div>
@@ -165,7 +161,6 @@
     </div>
   </div>
 
-  <!-- Center-aligned column (States) -->
   <div class="col-4 d-flex align-items-center justify-content-center">
     <div class="d-flex align-items-center justify-content-center">
       <div class="smalllframe">
@@ -185,7 +180,6 @@
     </div>
   </div>
 
-  <!-- Right-aligned column (Cities) -->
   <div class="col-4 d-flex align-items-center justify-content-center">
     <div class="d-flex align-items-center justify-content-center">
       <div class="smalllframe">
@@ -229,7 +223,6 @@
 </div>
 </div>
 <div class="row reddd mt-4">
-  <!-- Image column (col-4) -->
   <div class="col-4 col-md-3 col-lg-4 col-xl-3 position-relative">
     <div class="broker-container broker-containerrrr">
       <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
@@ -240,7 +233,6 @@
   </div>
   
 
-  <!-- Content of the Card (col-8) -->
   <div class="col-8 col-md-9 col-lg-8 col-xl-9">
     <div class="d-flex flex-column text-start">
       <!-- <div class="d-flex align-items-center justify-content-start">
@@ -257,16 +249,14 @@
 
 
 <div class="container mt-4">
-  <div class="d-flex align-items-center"> <!-- Flex container for image and text content -->
-    <!-- Image -->
+  <div class="d-flex align-items-center">
     <img
       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ managementorganizationId }}"
       alt="Organization Image"
       class="organization-image"
     />
     
-    <!-- Content of the Card -->
-    <div class="ml-3"> <!-- Optional margin for spacing -->
+    <div class="ml-3"> 
       <span class="nameincard">{{ managementorganizationname }}</span>
       <div class="brokerframeee">
         <span class="broker">Commercial Real Estate</span>
