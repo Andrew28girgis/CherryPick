@@ -490,29 +490,58 @@ export class MapDrawingService {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           // create new polygon
           const newPolygon = event.overlay as google.maps.Polygon;
-          // push the polygon into drawn list
-          this.drawnPolygons.push({ shape: newPolygon });
-          // take shape name
-          this.showShapeNameOptions(map, newPolygon, false);
-          // handle click event of the polygon
-          this.addPolygonClickListener(map, newPolygon);
-          // handle change event of the polygon
-          this.addPolygonChangeListener(map, newPolygon);
-          this.addPolygonDoubleClickListener(newPolygon);
+
+          const polygonArea = this.getPolygonAreaInMiles(newPolygon);
+          if (polygonArea > 100) {
+            this.showLargeSizeAlert(
+              map,
+              newPolygon,
+              this.getPolygonCenter(newPolygon),
+              polygonArea
+            );
+          } else {
+            // push the polygon into drawn list
+            this.drawnPolygons.push({ shape: newPolygon });
+            // take shape name
+            this.showShapeNameOptions(map, newPolygon, false);
+            // handle click event of the polygon
+            this.addPolygonClickListener(map, newPolygon);
+            // handle change event of the polygon
+            this.addPolygonChangeListener(map, newPolygon);
+            this.addPolygonDoubleClickListener(newPolygon);
+          }
           this.drawingManager.setDrawingMode(null);
         }
         if (event.type === google.maps.drawing.OverlayType.CIRCLE) {
           // create new circle
           const newCircle = event.overlay as google.maps.Circle;
-          // push the circle into drawn list
-          this.drawnCircles.push({ shape: newCircle });
-          // take shape name
-          this.showShapeNameOptions(map, newCircle, true);
-          // handle click event of the circle
-          this.addCircleClickListener(map, newCircle);
-          // handle change event of the circle
-          this.addCircleChangeListener(map, newCircle);
-          this.addCircleDoubleClickListener(newCircle);
+
+          // get current circle radius
+          const currentRadius = newCircle.getRadius();
+          // convert radius into miles
+          const currentRadiusMiles = currentRadius * 0.000621371;
+          // calculate circle area
+          const circleAreaMiles = Math.PI * Math.pow(currentRadiusMiles, 2);
+
+          if (circleAreaMiles > 100) {
+            this.showLargeSizeAlert(
+              map,
+              newCircle,
+              newCircle.getCenter(),
+              circleAreaMiles
+            );
+          } else {
+            // push the circle into drawn list
+            this.drawnCircles.push({ shape: newCircle });
+            // take shape name
+            this.showShapeNameOptions(map, newCircle, true);
+            // handle click event of the circle
+            this.addCircleClickListener(map, newCircle);
+            // handle change event of the circle
+            this.addCircleChangeListener(map, newCircle);
+            this.addCircleDoubleClickListener(newCircle);
+          }
+
           this.drawingManager.setDrawingMode(null);
         }
       }
@@ -698,6 +727,18 @@ export class MapDrawingService {
     this.infoWindow.setPosition(position);
     this.infoWindow.open(map);
 
+    // Add a one-time click listener on the map to hide the shape and remove its listeners.
+    const mapClickListener = map.addListener('click', () => {
+      // Hide the shape from the map.
+      shape.setMap(null);
+      // Remove all event listeners for this shape.
+      google.maps.event.clearInstanceListeners(shape);
+      // Close the infoWindow.
+      this.infoWindow.close();
+      // Remove this listener.
+      google.maps.event.removeListener(mapClickListener);
+    });
+
     setTimeout(() => {
       const saveButton = document.getElementById('saveShapeNameBtn');
       const input = document.getElementById(
@@ -710,12 +751,11 @@ export class MapDrawingService {
         const name = input.value.trim();
 
         if (shapeEntry) {
-          if (name) {
-            shapeEntry.shape.set('label', name);
-          } else {
-            shapeEntry.shape.set('label', 'Shape');
-          }
+          shapeEntry.shape.set('label', name ? name : 'Shape');
         }
+        // Remove the one-time map click listener since the shape is saved.
+        google.maps.event.removeListener(mapClickListener);
+
         this.infoWindow.close();
 
         // emit created shape to the component for any operation
@@ -853,6 +893,36 @@ export class MapDrawingService {
       const closeButton = document.querySelector('.close-btn');
       if (closeButton) {
         closeButton.addEventListener('click', () => {
+          this.hidePopupContent();
+        });
+      }
+    }, 100);
+  }
+
+  private showLargeSizeAlert(
+    map: any,
+    shape: google.maps.Polygon | google.maps.Circle,
+    position: google.maps.LatLng | null,
+    size: number
+  ): void {
+    if (!position) return;
+
+    // get options popup
+    const options = this.getLargeSizeAlertPopup(size);
+
+    this.infoWindow.setContent(options);
+    this.infoWindow.setPosition(position);
+    this.infoWindow.open(map);
+
+    const cancelButtonInterval = setInterval(() => {
+      // get cancel button
+      const cancelButton = document.getElementById('cancelLargeSizeAlert');
+      if (cancelButton) {
+        // remove the interval when button found
+        clearInterval(cancelButtonInterval);
+        // add listener on delete button click
+        cancelButton.addEventListener('click', () => {
+          shape.setMap(null);
           this.hidePopupContent();
         });
       }
@@ -1023,6 +1093,37 @@ export class MapDrawingService {
               </div>
             </div>
     `;
+  }
+
+  private getLargeSizeAlertPopup(sizeInMiles: number): string {
+    return `<div
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 1rem;
+              "
+            >
+              <div style="font-weight: 500">Shape size must be less than 1 mile.</div>
+              <div >Your shape size : <strong>${sizeInMiles.toFixed()} MI</strong></div>
+              <button
+                id="cancelLargeSizeAlert"
+                style="
+                  background-color: black;
+                  color: white;
+                  border: none;
+                  padding: 5px 10px;
+                  cursor: pointer;
+                  border-radius: 5px;
+                  font-size: 14px;
+                "
+              >
+                Cancel
+              </button>
+            </div>
+          `;
   }
 
   // others

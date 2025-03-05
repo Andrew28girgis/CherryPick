@@ -583,12 +583,9 @@ export class PolygonsControllerComponent
   getPolygonsByNameListener(): void {
     const observer = {
       next: (response: any) => {
-        console.log('ffff');
-
         if (response.json && response.json.length > 0) {
           this.mapDrawingService.completelyRemoveExplorePolygon();
           this.externalPolygons = response.json;
-          console.log(this.externalPolygons.length);
           this.addExplorePolygonsToMap();
         }
       },
@@ -609,10 +606,12 @@ export class PolygonsControllerComponent
   }
 
   onSearchChange(value: string): void {
+    this.externalPolygons = [];
+    this.displayedExternalPolygons = [];
     if (value.trim().length > 0) {
       this.searchSubject.next(value);
     } else {
-      this.externalPolygons = [];
+      this.mapDrawingService.completelyRemoveExplorePolygon();
     }
   }
 
@@ -626,7 +625,6 @@ export class PolygonsControllerComponent
   }
 
   navigateToExplorePolygons(): void {
-    console.log('drawn cleared');
     this.polygons.forEach((p) =>
       this.mapDrawingService.completelyRemoveMarkers(p.id)
     );
@@ -640,7 +638,7 @@ export class PolygonsControllerComponent
   navigateToMyPolygons(): void {
     this.polygonSearch = '';
     this.externalPolygons = [];
-    console.log('explore cleared');
+    this.displayedExternalPolygons = [];
     this.mapDrawingService.completelyRemoveExplorePolygon();
     this.getAllPolygons();
   }
@@ -670,14 +668,6 @@ export class PolygonsControllerComponent
       this.mapDrawingService.displayShapeOnMap(polygon.id, this.map);
     }
   }
-
-  // onExploreCheckBoxChange(event: any, polygon: IPolygon): void {
-  //   const isChecked = (event.target as HTMLInputElement).checked;
-  //   const coordinates = this.getPolygonCoordinates(polygon);
-  //   if (isChecked) {
-  //   } else {
-  //   }
-  // }
 
   ngOnDestroy(): void {
     // emit next and complete states to end all subscribtions for all subscribers
