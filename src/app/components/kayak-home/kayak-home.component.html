@@ -3,22 +3,33 @@
     <app-sidbar></app-sidbar>
   </div>
 
-  <div class="col-11 Responsive ">
+  <div class="col-11 Responsive">
     <div>
       <h3 class="bb-name d-none d-sm-flex">{{ BuyboxName }}</h3>
     </div>
     <div class="Nav__section d-flex justify-content-between">
-      <ul class="p-0 m-0 d-sm-flex">
-        <li *ngFor="let tab of tabs" [ngClass]="{ active: selectedTab === tab.id }" (click)="selectTab(tab.id)">
-          {{ tab.label }}
+      <ul class="d-sm-flex">
+        <li
+          *ngFor="let tab of tabs"
+          class="nav-item"
+          [ngClass]="{ active: selectedTab === tab.id }"
+          (click)="selectTab(tab.id)"
+        >
+          <div class="tab-icon">
+            <img
+              [src]="selectedTab === tab.id ? tab.selectedIcon : tab.icon"
+              alt="tab-icon"
+            />
+          </div>
+          <span>{{ tab.label }}</span>
         </li>
       </ul>
-
     </div>
-    <div class="backgroundd">
-
+    <div>
       <ng-container [ngSwitch]="activeComponent">
-        <app-shopping-center-table *ngSwitchCase="'Properties'"></app-shopping-center-table>
+        <app-shopping-center-table
+          *ngSwitchCase="'Properties'"
+        ></app-shopping-center-table>
         <app-buybox-details *ngSwitchCase="'Details'"></app-buybox-details>
         <app-kayak *ngSwitchCase="'Manage'"></app-kayak>
         <app-emily-org *ngSwitchCase="'Emily'"></app-emily-org>
@@ -32,5 +43,3 @@
     </div>
   </div>
 </div>
-
-

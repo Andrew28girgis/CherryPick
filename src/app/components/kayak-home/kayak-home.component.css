@@ -1,8 +1,12 @@
-.Nav__section>ul {
+.Nav__section ul {
   display: flex;
   list-style-type: none;
+  gap: 0.25rem;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1rem;
 }
-
+/*
 .Nav__section>ul>li {
   padding: 6px 12px;
   border-radius: 12px 12px 0 0;
@@ -10,11 +14,20 @@
   font-size: 16px;
   line-height: 25px;
   cursor: pointer;
+} */
+.nav-item {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  color: #707791;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-
 .active {
-  color: #16181d;
-  background-color: white;
+  background-color: #b8c1e1;
+  border: 1px solid #2e3d6c;
+  color: #4d65b4;
   font-weight: 500;
 }
 
@@ -26,7 +39,7 @@
   transition: width 0.5s ease;
 }
 
-.Sidbar-Primary-ul>li {
+.Sidbar-Primary-ul > li {
   height: 60px;
   align-items: center;
   display: flex;
@@ -36,7 +49,7 @@
   cursor: pointer;
 }
 
-.Sidbar-Primary>ul>li>i {
+.Sidbar-Primary > ul > li > i {
   display: flex;
   font-size: 22px;
   justify-content: center;
@@ -44,14 +57,14 @@
   transition: transform 0.3s ease;
 }
 
-.Sidbar-Primary>ul>li>i:hover {
+.Sidbar-Primary > ul > li > i:hover {
   transform: scale(1.1);
   color: rgb(135, 176, 252);
 }
 
 .name-summary {
-  color: #16181D;
-  color: var(--Body-Heading-Color, #16181D);
+  color: #16181d;
+  color: var(--Body-Heading-Color, #16181d);
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -67,7 +80,7 @@
   list-style: none;
 }
 
-.ul-summery>li {
+.ul-summery > li {
   color: #707791b6;
   font-size: 13px;
   font-weight: 600 !important;
@@ -78,11 +91,11 @@
   padding-inline: 5px;
 }
 
-.activeIcon{
+.activeIcon {
   color: rgb(135, 176, 252);
 }
 
-.activeTab{
+.activeTab {
   color: #001f3f !important;
   background-color: #f0f0f0;
   border-radius: 10px;
@@ -95,34 +108,33 @@
   transition: flex-basis 0.5s ease, width 0.5s ease;
 }
 
-.container-fluid{
+.container-fluid {
   margin-left: 11px;
-
 }
 
-.widthh{
+.widthh {
   width: 6.7%;
 }
 
-.backgroundd{
-  background-color: #fff; 
+/* .backgroundd {
+  background-color: #fff;
   padding: 0px;
   min-height: 85vh;
   border-radius: 2px;
+} */
+
+.bb-name {
+  padding: 10px 0;
+  font-weight: 600;
 }
 
-.bb-name{
-  padding: 10px 0; 
-  font-weight: 600  ;
-}
-
-.Home-icon{
+.Home-icon {
   padding: 0px 6px;
   line-height: 25px;
   align-items: center;
 }
 
-.Home-icon>i{
+.Home-icon > i {
   padding: 6px 6px;
   background-color: #001f3f;
   color: #fff;
@@ -294,11 +306,10 @@
     border-bottom: none;
   }
 
-  .Responsive{
+  .Responsive {
     padding-right: 0px;
     padding-left: 0px;
     flex: 0 0 100% !important;
     max-width: 100% !important;
-
   }
-} 
+}

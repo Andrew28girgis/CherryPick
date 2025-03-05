@@ -13,6 +13,7 @@ export class MapDrawingService {
   private drawingManager!: google.maps.drawing.DrawingManager;
   private drawnPolygons: IMapShape[] = [];
   private drawnCircles: IMapShape[] = [];
+  private explorePolygons: IMapShape[] = [];
   private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
   tempMarkers: google.maps.Marker[] = [];
   private infoWindow!: google.maps.InfoWindow;
@@ -99,7 +100,23 @@ export class MapDrawingService {
     }
   }
 
+  updateMapZoom(map: any, coordinates: any[]): void {
+    if (map) {
+      const bounds = new google.maps.LatLngBounds();
+
+      // Extend the bounds to include each coordinate
+      coordinates.forEach((point) => {
+        bounds.extend(point);
+      });
+
+      // Adjust the map to fit the bounds with optional padding
+      map.fitBounds(bounds, { padding: 20 });
+    }
+  }
+
   clearDrawnLists(): void {
+    this.drawnPolygons.forEach((p) => p.shape.setMap(null));
+    this.drawnCircles.forEach((c) => c.shape.setMap(null));
     this.drawnPolygons = [];
     this.drawnCircles = [];
   }
@@ -135,6 +152,31 @@ export class MapDrawingService {
     // handle change event of the polygon
     this.addPolygonChangeListener(map, polygon);
     this.addPolygonDoubleClickListener(polygon);
+  }
+
+  insertExplorePolygon(polygonId: number, coordinates: any): void {
+    // create new polygon
+    const polygon: google.maps.Polygon = new google.maps.Polygon({
+      paths: coordinates,
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+      editable: false,
+      draggable: false,
+    });
+
+    // Set the polygon on the map
+    polygon.setMap(null);
+
+    // push the polygon into drawn list
+    this.explorePolygons.push({ id: polygonId, shape: polygon });
+  }
+
+  completelyRemoveExplorePolygon(): void {
+    this.explorePolygons.forEach((p) => p.shape.setMap(null));
+    this.explorePolygons = [];
   }
 
   insertExternalCircle(
@@ -283,7 +325,8 @@ export class MapDrawingService {
   displayShapeOnMap(id: number, map: any): void {
     const shape =
       this.drawnPolygons.find((p) => p.id == id) ||
-      this.drawnCircles.find((c) => c.id == id);
+      this.drawnCircles.find((c) => c.id == id) ||
+      this.explorePolygons.find((p) => p.id == id);
     if (shape) {
       shape.shape.setMap(map);
     }
@@ -293,7 +336,8 @@ export class MapDrawingService {
     // get shape from the drawn list
     const shape =
       this.drawnPolygons.find((p) => p.id == id) ||
-      this.drawnCircles.find((c) => c.id == id);
+      this.drawnCircles.find((c) => c.id == id) ||
+      this.explorePolygons.find((p) => p.id == id);
     if (shape) {
       // remove the shape from the map view
       shape.shape.setMap(null);
@@ -426,7 +470,7 @@ export class MapDrawingService {
           polygon.setDraggable(false);
         }
       });
-      
+
       // Disable dragging for all drawn circles if they are currently draggable.
       this.drawnCircles.forEach((entry) => {
         const circle = entry.shape as google.maps.Circle;

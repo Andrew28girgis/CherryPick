@@ -2,7 +2,12 @@
   border: 1px solid #001f3f2b;
   border-radius: 10px;
 }
-
+.tab-view-container {
+  background-color: #fff;
+  padding: 1rem;
+  /* min-height: 85vh; */
+  border-radius: 1rem;
+}
 .bold-word {
   color: var(--Body-Heading-Color, #16181d);
   font-family: Montserrat;
@@ -91,7 +96,7 @@
   font-weight: 500;
   line-height: 30px;
 }
-.whitee-space{
+.whitee-space {
   white-space: pre-line;
 }
 
