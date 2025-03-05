@@ -33,6 +33,7 @@ import { EditorModule } from 'primeng/editor';
 import { EmilyComponent } from '../emily/emily.component';
 import { EmailService } from 'src/app/services/email-body.service';
 import { Subscription } from 'rxjs';
+import { RouterModule } from '@angular/router';
 
 interface Column {
   field: string;
@@ -52,6 +53,7 @@ interface Column {
     EditorModule,
     EmilyComponent,
     FormsModule,
+    RouterModule
   ],
   providers: [NgxSpinnerService, PlacesService, EmailService],
   templateUrl: './stage-email.component.html',
