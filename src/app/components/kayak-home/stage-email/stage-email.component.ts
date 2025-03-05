@@ -132,7 +132,34 @@ export class StageEmailComponent implements OnInit {
     }
   }
 
- 
+  // Openaccordion(stageId: number, orgId?: number) {
+  //   // Organization accordion logic
+  //   if (orgId !== undefined) {
+  //     // If the clicked organization is in a different stage, reset the stage
+  //     if (this.openedStageId !== stageId) {
+  //       this.openedStageId = stageId;
+  //     }
+      
+  //     // Toggle organization
+  //     if (this.openedOrgId === orgId) {
+  //       this.openedOrgId = null;
+  //     } else {
+  //       this.openedOrgId = orgId;
+  //     }
+  //   } 
+  //   // Stage accordion logic
+  //   else {
+  //     // If clicking the same stage, close it completely
+  //     if (this.openedStageId === stageId) {
+  //       this.openedStageId = null;
+  //       this.openedOrgId = null;
+  //     } else {
+  //       // Open the new stage and reset organizations
+  //       this.openedStageId = stageId;
+  //       this.openedOrgId = null;
+  //     }
+  //   }
+  // }
   
   Openaccordion(stageId: number, orgId: number) {
     if (this.openedStageId === stageId && this.openedOrgId === orgId) {
