@@ -23,17 +23,18 @@
     </div>
   </div>
 </nav>
-<section class="container red-background position-relative mt-4">
+<section
+  class="container red-background position-relative mt-4"
+  [ngStyle]="{ background: buyboxcolor }"
+>
   <div class="row">
     <div class="col-12">
- 
       <div class="logo-container position-relative">
         <span class="buyboxname buyboxpos position-absolute mt-5">
-          {{buyboxname}}
-         </span>
+          {{ buyboxname }}
+        </span>
         <img
           class="tenant-logo position-absolute"
-          
           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
             buyboxid
           }}"
@@ -44,15 +45,14 @@
         <div class="content-right position-absolute d-flex gap-2">
           <button class="btn-share">
             <div>
-              <img class="imgshare" src="../../../assets/icons/export.png" alt="">
+              <i class="fa-solid fa-arrow-up-right-from-square imgshare" [ngStyle]="{ color: buyboxcolor }"></i>
             </div>
-            <span>Share</span>
+            <span [ngStyle]="{ color: buyboxcolor }">Share</span>
           </button>
           <button class="btn-submit">
             <span>Submit a proposal</span>
           </button>
         </div>
-        
       </div>
     </div>
   </div>
@@ -66,7 +66,7 @@
       </span>
     </div>
     <div class="col-lg-4 col-md-5 order-1 order-md-0">
-      <div class="card cardbackground">
+      <div class="card cardbackground" [ngStyle]="{ background: buyboxcolor }">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-center">
             <div class="col-4">
@@ -87,7 +87,14 @@
                 </div>
 
                 <div class="frameee">
-                  <span class="broker">broker</span>
+                  <span
+                    class="broker"
+                    [ngStyle]="{
+                      color: buyboxcolor,
+                      '-webkit-text-fill-color': buyboxcolor
+                    }"
+                    >broker</span
+                  >
                 </div>
 
                 <a [href]="brokerlinkedin" target="_blank">
@@ -115,9 +122,15 @@
               <div class="d-flex flex-column text-start">
                 <span class="namee"> {{ managementorganizationname }} </span>
                 <div class="frameee">
-                  <span class="broker">Commercial Real Estate</span>
+                  <span
+                    class="broker"
+                    [ngStyle]="{
+                      color: buyboxcolor,
+                      '-webkit-text-fill-color': buyboxcolor
+                    }"
+                    >Commercial Real Estate</span
+                  >
                 </div>
-
               </div>
             </div>
           </div>
@@ -126,10 +139,11 @@
     </div>
   </div>
 </div>
-<div class="row row-background d-flex justify-content-center align-items-center mt-4">
+<div
+  class="row row-background d-flex justify-content-center align-items-center mt-4"
+>
   <div class="d-flex align-items-center justify-content-center mt-4">
     <span class="specifications">Specifications</span>
-
   </div>
   <div class="col-4 d-flex align-items-center justify-content-center">
     <div class="d-flex align-items-center justify-content-center">
@@ -144,7 +158,7 @@
       <div class="d-flex flex-column text-center">
         <span class="boldtext">Size needed</span>
         <div class="d-flex justify-content-start">
-          <span class="lowwhite" style="white-space: nowrap;">
+          <span class="lowwhite" style="white-space: nowrap">
             {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
           </span>
           <span
@@ -198,31 +212,32 @@
       </div>
     </div>
   </div>
-  <div class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0">
-  
-    <button class="btn-submit-proposel">
+  <div
+    class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0"
+  >
+    <button class="btn-submit-proposel" [ngStyle]="{ background: buyboxcolor }">
       <span>Submit a proposal</span>
     </button>
     <button class="btn-share">
       <div>
-        <img class="imgshare" src="../../../assets/icons/export.png" alt="">
+        <i class="fa-solid fa-arrow-up-right-from-square imgshare" [ngStyle]="{ color: buyboxcolor }"></i>
       </div>
-      <span>Share</span>
+      <span [ngStyle]="{ color: buyboxcolor }">Share</span>
     </button>
   </div>
 </div>
 
-
-
 <div class="row mt-4">
-<div class="col-8 offset-4 offset-md-3 offset-lg-4 offset-xl-3 col-md-9 col-lg-8 col-xl-9">
-  <div class="d-flex align-items-center justify-content-start">
-    <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
-    <span class="nameincard">{{ lastnamemanagerorganization }}</span>
+  <div
+    class="col-8 offset-4 offset-md-3 offset-lg-4 offset-xl-3 col-md-9 col-lg-8 col-xl-9"
+  >
+    <div class="d-flex align-items-center justify-content-start">
+      <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
+      <span class="nameincard">{{ lastnamemanagerorganization }}</span>
+    </div>
   </div>
 </div>
-</div>
-<div class="row reddd mt-4">
+<div class="row colorr mt-4" [ngStyle]="{ background: buyboxcolor }">
   <div class="col-4 col-md-3 col-lg-4 col-xl-3 position-relative">
     <div class="broker-container broker-containerrrr">
       <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
@@ -231,7 +246,6 @@
       </div> -->
     </div>
   </div>
-  
 
   <div class="col-8 col-md-9 col-lg-8 col-xl-9">
     <div class="d-flex flex-column text-start">
@@ -244,32 +258,36 @@
   </div>
 </div>
 
-
-
-
-
 <div class="container mt-4">
   <div class="d-flex align-items-center">
     <img
-      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ managementorganizationId }}"
+      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+        managementorganizationId
+      }}"
       alt="Organization Image"
       class="organization-image"
     />
-    
-    <div class="ml-3"> 
+
+    <div class="ml-3">
       <span class="nameincard">{{ managementorganizationname }}</span>
       <div class="brokerframeee">
-        <span class="broker">Commercial Real Estate</span>
+        <span
+          class="broker"
+          [ngStyle]="{
+            color: buyboxcolor,
+            '-webkit-text-fill-color': buyboxcolor
+          }"
+        >
+          Commercial Real Estate
+        </span>
       </div>
     </div>
   </div>
-  
+
   <hr class="customm-hr" />
   <span class="grayspan" [innerHTML]="ManagerOrganizationDescription"></span>
-  
-  
 </div>
 
-  <div class="row">
-    <div class="col-12"></div>
-  </div>
+<div class="row">
+  <div class="col-12"></div>
+</div>

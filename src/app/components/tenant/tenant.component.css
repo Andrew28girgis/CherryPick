@@ -64,7 +64,6 @@
 }
 .cardbackground {
   border-radius: var(--Radius-Radius-12, 12px);
-  background: linear-gradient(108deg, #d7141b 27.97%, #d92128 86%);
   box-shadow: -1px 3px 17px 0px rgba(0, 0, 0, 0.1);
 }
 .namee {
@@ -93,7 +92,6 @@
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.07px;
-  background: linear-gradient(108deg, #d7141b 27.97%, #d92128 86%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -230,10 +228,10 @@
   height: auto;
 }
 .imagebroker {
-  width: 100%; 
-  height: auto; 
-  border-top-left-radius: 30px; 
-  border-bottom-right-radius: 30px; 
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
   border-radius: 40px 4px;
   border: 8px solid #accbed;
 }
@@ -247,7 +245,7 @@
   height: 1px;
   background: var(--Body-General-Body-Border, #caced3);
   margin: 10px 0;
-  width: 100%; 
+  width: 100%;
 }
 .overviewtext {
   color: var(--Body-Heading-Color, #0c0d0e);
@@ -291,28 +289,23 @@
   position: absolute;
   width: 15px;
   height: 15px;
-  background-color: black; 
+  background-color: black;
 }
 
 .imagebroker::before {
   top: 0;
   left: 0;
-  border-top-left-radius: 15px; 
+  border-top-left-radius: 15px;
 }
 
 .imagebroker::after {
   bottom: 0;
   right: 0;
-  border-bottom-right-radius: 15px; 
+  border-bottom-right-radius: 15px;
 }
 .red-background {
-  background-image: url("../../../assets/Images/RedImage.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  min-height: 150px; 
-  border-radius: 20px; 
-  position: relative; 
+  min-height: 150px;
+  border-radius: 20px;
 }
 .logo-container {
   min-height: 150px;
@@ -346,7 +339,6 @@
 .share-btn,
 .proposal-btn {
   background-color: #fff;
-  color: #c00;
   border: none;
   padding: 0.5rem 1rem;
   margin-left: 0.5rem;
@@ -368,12 +360,11 @@
   align-items: center;
   gap: var(--Button-Gap, 8px);
   border-radius: var(--Button-Radius, 16px);
-  border: 1px solid #d92128;
+  border: 1px solid transparent;
   background: var(--Button-Secondary-BG, #fff);
 }
 
 .btn-share span {
-  color: #d92128;
   text-align: center;
   font-family: Montserrat, sans-serif;
   font-size: 14px;
@@ -390,7 +381,7 @@
   align-items: center;
   gap: var(--Button-Gap, 8px);
   border-radius: var(--Button-Radius, 16px);
-  background: #d92128;
+  border: 1px solid transparent;
 }
 .btn-submit-proposel span {
   color: var(--Button-Primary-Label, #fff);
@@ -429,11 +420,7 @@
   background-size: cover;
   background-position: center center;
 }
-.reddd {
-  background-image: url("../../../assets/Images/BGPattern.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
+.colorr {
   min-height: 150px;
   border-radius: 20px;
   position: relative;
@@ -496,8 +483,7 @@
 }
 .imgshare {
   display: flex;
-  width: 20px;
-  height: 20px;
+  font-size: 16px;
   justify-content: center;
   align-items: center;
 }
@@ -505,7 +491,7 @@
 @media (max-width: 576px) {
   .row-background[_ngcontent-ng-c2705470804] {
     height: 35vh;
-}
+  }
   .grayspan {
     font-size: 14px;
   }
@@ -574,8 +560,7 @@
     left: 0px;
   }
   .imgshare {
-    width: 15px;
-    height: 15px;
+    font-size: 12px;
   }
   .btn-share {
     padding: var(--Button-Padding-top-bottom, 20px)
@@ -632,7 +617,7 @@
 @media (min-width: 576px) {
   .row-background {
     height: 40vh;
-}
+  }
   .organization-image {
     width: 60px;
     height: 60px;
@@ -641,7 +626,7 @@
   .imagebroker {
     width: 180px;
     height: 180px;
-}
+  }
   .broker-container {
     top: -75px;
     left: 0px;
@@ -652,7 +637,7 @@
   .brokertext[_ngcontent-ng-c2705470804] {
     font-size: 15px;
     line-height: 30px;
-}
+  }
   .nameincard {
     font-size: 20px;
   }
@@ -702,8 +687,7 @@
     left: -16px;
   }
   .imgshare {
-    width: 15px;
-    height: 15px;
+    font-size: 14px;
   }
   .btn-share {
     padding: var(--Button-Padding-top-bottom, 20px)
@@ -750,10 +734,10 @@
 @media (min-width: 768px) {
   .row-background {
     height: 45vh;
-}
+  }
   .boldtext {
     font-size: 16px;
-}
+  }
   .broker-container {
     top: -75px;
     left: -9px;
@@ -806,8 +790,7 @@
     left: -10px;
   }
   .imgshare {
-    width: 17px;
-    height: 17px;
+    font-size: 15px;
   }
   .btn-share {
     padding: var(--Button-Padding-top-bottom, 20px)
@@ -848,11 +831,11 @@
 @media (min-width: 992px) {
   .boldtext {
     font-size: 16px;
-}
-  .brokerandmangeorgimage{
+  }
+  .brokerandmangeorgimage {
     width: 100px;
     height: 110px;
-}
+  }
   .imagebroker {
     width: 301px;
     height: 310px;
@@ -873,19 +856,18 @@
   .broker-container {
     top: -80px;
     left: 15px;
-}
+  }
   .broker {
     font-size: 14px;
     line-height: 24px;
     letter-spacing: -0.07px;
-
   }
   .brokerandmangeorgimage {
     width: 120px;
     height: 120px;
-}
-.imagebroker{
-  width: 300px;
-  height: 300px;
-}
+  }
+  .imagebroker {
+    width: 300px;
+    height: 300px;
+  }
 }
