@@ -179,7 +179,11 @@
                           >
                             <a
                               class="target"
-                              (click)="deleteShopping(place.Id)"
+                              (click)="   openDeleteShoppingCenterModal(
+                                deleteSingleShoppingCenterModal,
+                                place.Id
+                              )
+                            "   
                             >
                               <i class="fa-regular fa-trash-can emily"></i>
                               Remove Shopping
@@ -373,6 +377,33 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #deleteSingleShoppingCenterModal let-modal>
+  <div class="modal-body-general p-4 rounded deleteShopping">
+    <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
+    <p class="text-center Areyou">
+      Are you sure you want to remove this Shopping Center?
+    </p>
+
+    <div class="d-flex justify-content-end mt-4">
+      <button
+        type="button"
+        class="btn btn-secondary me-2 px-4 py-2 btnborder"
+        (click)="modal.dismiss('Cancel click')"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger px-4 py-2 btnborder"
+        (click)="deleteShCenter()"
+      >
+        Remove
+      </button>
+    </div>
+  </div>
+</ng-template>
+
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>

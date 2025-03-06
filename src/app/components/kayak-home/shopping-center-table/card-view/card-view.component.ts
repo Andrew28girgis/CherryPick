@@ -2,10 +2,9 @@
 import {
   Component,
   OnInit,
-  ViewChild,
-  ElementRef,
   Renderer2,
   ChangeDetectorRef,
+  TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +13,8 @@ import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center } from 'src/models/shoppingCenters';
 import { ShareOrg } from 'src/models/shareOrg';
 import { ViewManagerService } from 'src/app/services/view-manager.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { BbPlace } from 'src/models/buyboxPlaces';
 
 @Component({
   selector: 'app-card-view',
@@ -47,6 +48,10 @@ export class CardViewComponent implements OnInit {
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
   shareLink: any;
+  
+  shoppingCenterIdToDelete: number | null = null;
+  showbackIds: number[] = [];
+  buyboxPlaces: BbPlace[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -54,7 +59,9 @@ export class CardViewComponent implements OnInit {
     private modalService: NgbModal,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
-    private viewManager: ViewManagerService // Inject the ViewManagerService
+    private viewManager: ViewManagerService, // Inject the ViewManagerService,
+        private spinner: NgxSpinnerService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -182,9 +189,15 @@ export class CardViewComponent implements OnInit {
     this.sanitizedUrl = this.viewManager.sanitizeUrl(url);
   }
 
-  openDeleteShoppingCenterModal(shoppingId: number): void {
-    // Implementation for opening delete modal
-  }
+    openDeleteShoppingCenterModal(
+      modalTemplate: TemplateRef<any>,
+      shoppingCenterId: any
+    ) {
+      this.shoppingCenterIdToDelete = shoppingCenterId;
+      this.modalService.open(modalTemplate, {
+        ariaLabelledBy: 'modal-basic-title',
+      });
+    }
 
   copyLink(link: string) {
     navigator.clipboard
@@ -195,5 +208,33 @@ export class CardViewComponent implements OnInit {
       .catch((err) => {
         console.error('Could not copy text: ', err);
       });
+  }
+  async deleteShCenter() {
+    console.log('fffffffffff',this.BuyBoxId, this.shoppingCenterIdToDelete);
+    
+    if (this.shoppingCenterIdToDelete !== null) {
+      try {
+        this.spinner.show();
+        await this.viewManager.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
+        this.modalService.dismissAll();
+        await this.refreshShoppingCenters();
+      } catch (error) {
+        console.error('Error deleting shopping center:', error);
+      } finally {
+        this.spinner.hide();
+      }
+    }
+  }
+  async refreshShoppingCenters() {
+    try {
+      this.spinner.show();
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
+      this.buyboxPlaces = await this.viewManager.getBuyBoxPlaces(this.BuyBoxId);
+      this.showbackIds = [];
+    } catch (error) {
+      console.error('Error refreshing shopping centers:', error);
+    } finally {
+      this.spinner.hide();
+    }
   }
 } 
