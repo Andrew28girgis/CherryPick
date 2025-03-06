@@ -105,7 +105,7 @@
               *ngFor="let org of organizations; let i = index"
               class="list-group-item list-group-item-action"
               [class.active]="highlightedOrganizationIndex === i"
-              (click)="selectOrganizationFromList(org)"
+              (click)="selectOrganization(org)"
               id="organization-suggestion-{{ i }}"
               role="option"
               [attr.aria-selected]="highlightedOrganizationIndex === i"
@@ -118,17 +118,14 @@
         
         <div class="col-sm-12">
           <div class="form-group form-group-default">
-            <label for="managerOrgSearch" class="form-label">Manager Organization</label>
-            <input
+            <!-- <label for="managerOrgSearch" class="form-label">Manager Organization</label> -->
+            <!-- <input
               type="text"
               id="managerOrgSearch"
               name="managerOrgSearch"
               class="form-control"
               placeholder="Search Manager Organization"
               [(ngModel)]="searchManagerOrganizationTerm"
-              (input)="onManagerOrganizationInput($event)"
-              (keydown)="handleManagerOrganizationKeydown($event)"
-              (blur)="handleManagerOrganizationBlur()"
               autocomplete="off"
               required
               aria-autocomplete="list"
@@ -143,14 +140,13 @@
                 *ngFor="let managerOrg of managerOrganizations; let i = index"
                 class="list-group-item list-group-item-action"
                 [class.active]="highlightedManagerOrganizationIndex === i"
-                (click)="selectManagerOrganizationFromList(managerOrg)"
                 id="manager-organization-suggestion-{{ i }}"
                 role="option"
                 [attr.aria-selected]="highlightedManagerOrganizationIndex === i"
               >
                 {{ managerOrg.name }}
               </li>
-            </ul>
+            </ul> -->
           </div>
         </div>
 
