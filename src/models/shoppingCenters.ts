@@ -8,6 +8,7 @@ export interface Center {
     Neighbourhood: string
     Latitude: number
     Longitude: number
+    Deleted: boolean
     MainImage: string
     Heading: number 
     DocsLink: string

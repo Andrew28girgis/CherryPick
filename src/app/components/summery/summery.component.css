@@ -90,11 +90,9 @@ button:active {
   font-size: 15px;
   padding: 16px 20px;
   width: 90%;
-  font-family: Montserrat;
 }
 
-.card__Kayak {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
+.card__Kayak { 
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -123,7 +121,7 @@ button:active {
 .card__Kayak_title {
   color: #16181d;
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -148,7 +146,7 @@ button:active {
   gap: 4px;
   color: #001f3f;
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -169,7 +167,7 @@ button:active {
   background: #001f3fc2;
   color: #fff;
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -186,7 +184,7 @@ button:active {
   background: #001f3f;
   color: #fff;
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -232,7 +230,7 @@ button:active {
   background: #001f3f;
   color: #fff;
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -355,16 +353,14 @@ button:active {
 }
 
 .x-btn {
-  display: inline-flex;
-  height: 48px;
-  padding: 14px 24px;
+  display: inline-flex; 
+  padding: 8px 24px;
   justify-content: center;
   align-items: center;
   gap: 8px;
   border-radius: 16px;
   background: #4D65B4;
-  color: #FFFFFF;
-  font-family: 'Montserrat', sans-serif;
+  color: #FFFFFF; 
   font-size: 14px;
   font-weight: 600;
   border: none;

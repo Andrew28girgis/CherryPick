@@ -22,7 +22,7 @@
 }
 .my-prop {
   color: #16181d;
-  font-family: Montserrat;
+  
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -153,7 +153,7 @@ dl dd {
 }
 .table-text{
   color: #7a8591;
-    font-family: Montserrat;
+    
     font-size: 1rem;
     font-style: normal;
     font-weight: 400;

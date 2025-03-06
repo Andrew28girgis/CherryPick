@@ -35,6 +35,8 @@
       <div class="card-header" (click)="isMobileView? openShoppingDetailsModal(shoppingDetailsModal, shopping):toggleDetails(i, shopping)">
         <div class="header-info Res">
           <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
+          <span class="badge badge-danger mx-2" *ngIf="shopping.Deleted == true">Deleted</span>
+
           <p
             class="center-address shoppingcenterdata total"
             style="color: #fff"

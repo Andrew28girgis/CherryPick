@@ -1,63 +1,50 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<section class="row m-0 p-0">
-  <div class="col-1 p-0" style="width: 4.4% !important;">
-    <div class="sidebar-container" [ngClass]="{'expanded': !isCollapsed }">
-      <app-sidbar></app-sidbar>
-    </div>
-    
-    <div class="content-wrapper" [ngClass]="{'sidebar-expanded': !isCollapsed }">
-      <app-header></app-header>
-  </div>
-  </div>
-    <div class=" p-0" [ngClass]="{'sidebar-expanded col-10': !isCollapsed ,'col-11': isCollapsed}"  style="margin-top:17px">
-    <button class="x-btn add-buy" (click)="open(BuyBoxProperty)">
+<app-header></app-header>
+<div class="row mt-3">
+  <div class="d-flex justify-content-end">
+    <button class="CherryPick__button" (click)="open(BuyBoxProperty)">
       Add Tenant
     </button>
-    <div class="row container m-0 mtop42">
- <!-- <div class="d-flex justify-content-end">
-  <button class="CherryPick__button" [routerLink]="['/manage-properties']">Manage My Properties</button>
- </div> -->
-      
-      <ng-container *ngFor="let type of buyboxTypes">
-        <div
-          class="col-12 col-sm-6 col-md-4 col-lg-3 p-3 ResContainer">
-
-          <section class="card__Kayak">
-            <div class="card__Kayak__img mt-3 mb-3">
-              <img
-                class="Kayak__img ms-2"
-                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                  type.organizationId
-                }}"
-                alt=""
-              />
-            </div>
-            <div class="card__Kayak_title">
-              {{ type.name }}
-            </div> 
-            <div
-              class="card__Kayak_buttons mt-2 pb-3">
-              <button
-                class="CherryPick__button"
-                (click)="chooseType(type.id, type.organizationId, type.name)"
-              >
-                Market Survey
-              </button>
-              <button 
-                *ngIf="organizationId != type.organizationId"
-                class="Kayack__button"
-                [routerLink]="['/dashboard', type.id , type.organizationId,  type.name]"
-              >
-                Dashboard
-              </button>
-            </div>
-          </section>
-        </div>
-      </ng-container>
-    </div>
   </div>
-</section>
-
+  <ng-container *ngFor="let type of buyboxTypes">
+    <div class="col-12 col-sm-6 col-md-3 p-3 ResContainer">
+      <section class="card__Kayak">
+        <div class="card__Kayak__img mt-3 mb-3">
+          <img
+            class="Kayak__img ms-2"
+            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+              type.organizationId
+            }}"
+            alt=""
+          />
+        </div>
+        <div class="card__Kayak_title">
+          {{ type.name }}
+        </div>
+        <div class="card__Kayak_buttons mt-2 pb-3">
+          <button
+            class="CherryPick__button"
+            (click)="chooseType(type.id, type.organizationId, type.name)"
+          >
+            Market Survey
+          </button>
+          <button
+            *ngIf="organizationId != type.organizationId"
+            class="Kayack__button"
+            [routerLink]="[
+              '/dashboard',
+              type.id,
+              type.organizationId,
+              type.name
+            ]"
+          >
+            Dashboard
+          </button>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</div>
 
 <ng-template #BuyBoxProperty let-modal>
   <div class="modal-body">
@@ -80,7 +67,9 @@
         </div>
         <div class="col-sm-12">
           <div class="form-group form-group-default">
-            <label for="organizationSearch" class="form-label">Organization</label>
+            <label for="organizationSearch" class="form-label"
+              >Organization</label
+            >
             <input
               type="text"
               id="organizationSearch"
@@ -101,21 +90,21 @@
               class="list-group position-absolute w-100"
               id="organization-suggestions"
             >
-            <li
-              *ngFor="let org of organizations; let i = index"
-              class="list-group-item list-group-item-action"
-              [class.active]="highlightedOrganizationIndex === i"
-              (click)="selectOrganization(org)"
-              id="organization-suggestion-{{ i }}"
-              role="option"
-              [attr.aria-selected]="highlightedOrganizationIndex === i"
-            >
-              {{ org.name }}
-            </li>
+              <li
+                *ngFor="let org of organizations; let i = index"
+                class="list-group-item list-group-item-action"
+                [class.active]="highlightedOrganizationIndex === i"
+                (click)="selectOrganization(org)"
+                id="organization-suggestion-{{ i }}"
+                role="option"
+                [attr.aria-selected]="highlightedOrganizationIndex === i"
+              >
+                {{ org.name }}
+              </li>
             </ul>
           </div>
         </div>
-        
+
         <div class="col-sm-12">
           <div class="form-group form-group-default">
             <!-- <label for="managerOrgSearch" class="form-label">Manager Organization</label> -->
@@ -150,46 +139,50 @@
           </div>
         </div>
 
-      <div class="col-sm-12">
-        <div class="form-group form-group-default">
-          <label>Min BuildingSize</label>
-          <input
-            type="number"
-            class="form-control"
-            name="minBuildingSize"
-            [(ngModel)]="Obj.MinBuildingSize"
-            #minBuildingSize="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && minBuildingSize.invalid }"
-          />
+        <div class="col-sm-12">
+          <div class="form-group form-group-default">
+            <label>Min BuildingSize</label>
+            <input
+              type="number"
+              class="form-control"
+              name="minBuildingSize"
+              [(ngModel)]="Obj.MinBuildingSize"
+              #minBuildingSize="ngModel"
+              [ngClass]="{
+                'is-invalid': f.submitted && minBuildingSize.invalid
+              }"
+            />
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="form-group form-group-default">
+            <label>Max BuildingSize</label>
+            <input
+              type="number"
+              class="form-control"
+              name="maxBuildingSize"
+              [(ngModel)]="Obj.MaxBuildingSize"
+              #maxBuildingSize="ngModel"
+              [ngClass]="{
+                'is-invalid': f.submitted && maxBuildingSize.invalid
+              }"
+            />
+          </div>
         </div>
       </div>
-    <div class="col-sm-12">
-      <div class="form-group form-group-default">
-        <label>Max BuildingSize</label>
-        <input
-          type="number"
-          class="form-control"
-          name="maxBuildingSize"
-          [(ngModel)]="Obj.MaxBuildingSize"
-          #maxBuildingSize="ngModel"
-          [ngClass]="{ 'is-invalid': f.submitted && maxBuildingSize.invalid }"
-        />
+      <div class="modal-footer no-bd p-0">
+        <button type="submit" id="addRowButton" class="CherryPick__button">
+          {{ editing ? "Edit" : "Add" }}
+        </button>
+        <button
+          type="button"
+          class="Kayack__button"
+          data-dismiss="modal"
+          (click)="closeModal()"
+        >
+          Close
+        </button>
       </div>
-    </div>
+    </form>
   </div>
-    <div class="modal-footer no-bd p-0">
-      <button type="submit" id="addRowButton" class="btn btn-primary">
-        {{ editing ? "Edit" : "Add" }}
-      </button>
-      <button
-        type="button"
-        class="x-btn-close"
-        data-dismiss="modal"
-        (click)="closeModal()"
-      >
-        Close
-      </button>
-    </div>
-  </form>
-</div>
 </ng-template>

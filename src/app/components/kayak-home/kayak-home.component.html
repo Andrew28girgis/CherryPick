@@ -1,30 +1,29 @@
 <div class="row m-0 p-0">
-  <div class="p-0 d-none d-sm-flex widthh">
-    <app-sidbar></app-sidbar>
-  </div>
+  <app-header class="p-0"></app-header>
 
-  <div class="col-11 Responsive">
-    <div>
-      <h3 class="bb-name d-none d-sm-flex">{{ BuyboxName }}</h3>
+  <div class="col-12 Responsive">
+    <div class="d-flex py-3">
+      <h3 class="bb-name d-none d-sm-flex m-0">{{ BuyboxName }}</h3>
+      <div class="Nav__section d-flex justify-content-between ms-3">
+        <ul class="d-sm-flex m-0">
+          <li
+            *ngFor="let tab of tabs"
+            class="nav-item"
+            [ngClass]="{ active: selectedTab === tab.id }"
+            (click)="selectTab(tab.id)"
+          >
+            <div class="tab-icon">
+              <img
+                [src]="selectedTab === tab.id ? tab.selectedIcon : tab.icon"
+                alt="tab-icon"
+              />
+            </div>
+            <span>{{ tab.label }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="Nav__section d-flex justify-content-between">
-      <ul class="d-sm-flex">
-        <li
-          *ngFor="let tab of tabs"
-          class="nav-item"
-          [ngClass]="{ active: selectedTab === tab.id }"
-          (click)="selectTab(tab.id)"
-        >
-          <div class="tab-icon">
-            <img
-              [src]="selectedTab === tab.id ? tab.selectedIcon : tab.icon"
-              alt="tab-icon"
-            />
-          </div>
-          <span>{{ tab.label }}</span>
-        </li>
-      </ul>
-    </div>
+
     <div>
       <ng-container [ngSwitch]="activeComponent">
         <app-shopping-center-table

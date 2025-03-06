@@ -64,7 +64,7 @@
 }
 
 .stage-name {
-  font-family: "Montserrat", sans-serif;
+  
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -118,13 +118,13 @@
 
 .broker-name {
   cursor: pointer;
-  font-family: "Montserrat", sans-serif;
+  
   font-weight: bold;
   white-space: nowrap;
 }
 
 .brokerrr {
-  font-family: "Montserrat", sans-serif;
+  
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
   /* Body/14/24/Regular */
@@ -182,7 +182,7 @@
   text-align: center;
 
   /* Body/16/30/Medium */
-  font-family: "Montserrat", sans-serif;
+  
 
   font-size: 16px;
   font-style: normal;
@@ -248,7 +248,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 30px; /* 187.5% */
-  font-family: "Montserrat", sans-serif;
+  
 }
 
 .filter-tab.active {

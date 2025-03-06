@@ -122,7 +122,6 @@ const loginRequest = {
     NumberFormatDirective,
     NumberWithCommasPipe,
     ManagePropertiesComponent,
-    HeaderComponent,
     DashboardComponent,
   ],
   imports: [

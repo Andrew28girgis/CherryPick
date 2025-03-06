@@ -676,7 +676,7 @@ export class MapsService {
   } 
 
   drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
-    polygonFeatures.forEach((feature) => {
+    polygonFeatures?.forEach((feature) => {
       this.drawSinglePolygon(map, feature);
     });
   }

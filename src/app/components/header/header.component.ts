@@ -1,4 +1,5 @@
 import { Component, ViewChild, type TemplateRef } from "@angular/core"
+import { Router } from "@angular/router"
 import  { SidbarService } from "src/app/services/sidbar.service"
 
 @Component({
@@ -22,7 +23,7 @@ export class HeaderComponent {
   @ViewChild("emailContent") emailContent!: TemplateRef<any>
   @ViewChild("notificationContent") notificationContent!: TemplateRef<any>
 
-  constructor(private sidbarService: SidbarService) {
+  constructor(private sidbarService: SidbarService ,   public router: Router) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state
     })
@@ -30,6 +31,16 @@ export class HeaderComponent {
 
   toggleSidebar() {
     this.sidbarService.toggleSidebar()
+  }
+
+  
+  logout(): void {
+    localStorage.removeItem("token")
+    this.router.navigate(["/login"])
+  }
+  
+  BackTo() {
+    this.router.navigate(["/summary"])
   }
 }
 
