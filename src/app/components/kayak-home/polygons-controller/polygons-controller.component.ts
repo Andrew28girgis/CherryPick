@@ -587,7 +587,6 @@ export class PolygonsControllerComponent
   hideShapeFromMap(id: number): void {
     this.selectedPolygonsIds.delete(id);
     this.mapDrawingService.removeMarkers(id);
-
     this.mapDrawingService.hideShapeFromMap(id);
   }
 
@@ -668,11 +667,13 @@ export class PolygonsControllerComponent
   toggleDisplayedExternalPolygon(polygon: IPolygon): void {
     const check = this.displayedExternalPolygons.includes(polygon.id);
     if (check) {
+      this.mapDrawingService.removeMarkers(polygon.id);
       this.mapDrawingService.hideShapeFromMap(polygon.id);
       this.displayedExternalPolygons = this.displayedExternalPolygons.filter(
         (id) => id != polygon.id
       );
     } else {
+      this.createPropertiesMarkers(polygon.id, false);
       this.displayedExternalPolygons.push(polygon.id);
       const coordinates = this.getPolygonCoordinates(polygon);
       const point = this.getMapCenter(polygon.json);
