@@ -9,8 +9,7 @@
       <app-header></app-header>
   </div>
   </div>
-    <div class="col-11 p-0"   style="margin-top:17px">
-      <!-- [ngClass]="{'sidebar-expanded': !isCollapsed }" -->
+    <div class=" p-0" [ngClass]="{'sidebar-expanded col-10': !isCollapsed ,'col-11': isCollapsed}"  style="margin-top:17px">
     <button class="x-btn add-buy" (click)="open(BuyBoxProperty)">
       Add Tenant
     </button>
