@@ -4,8 +4,59 @@
     <button class="cherry-collapse" type="button" (click)="toggleSidebar()">
       <i class="fa-solid fa-bars nav-icon"></i>
     </button>
+    
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+        <!-- Your navbar items can go here if needed -->
+      </ul>
+    </div>
+
+    <!-- Action icons -->
+    <div class="actions">
+      <i class="fa-regular fa-envelope action-icon"
+         [ngbPopover]="emailContent"
+         [autoClose]="'outside'"
+         [popoverClass]="'custom-popover'"
+         placement="bottom-end"
+         container="body">
+        <span class="badge">{{ emails.length }}</span>
+      </i>
+      
+      <i class="fa-regular fa-bell action-icon"
+         [ngbPopover]="notificationContent"
+         [autoClose]="'outside'"
+         [popoverClass]="'custom-popover'"
+         placement="bottom-end"
+         container="body">
+        <span class="badge">{{ notifications.length }}</span>
+      </i>
     </div>
   </div>
 </nav>
+
+<!-- Custom email popover content -->
+<ng-template #emailContent>
+  <div class="custom-popover-content">
+    <div class="popover-item" *ngFor="let email of emails">
+      <div class="item-header">
+        <strong>{{ email.subject }}</strong>
+        <span class="time">{{ email.time }}</span>
+      </div>
+      <div class="item-body">
+        From: {{ email.from }}
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Custom notification popover content -->
+<ng-template #notificationContent>
+  <div class="custom-popover-content">
+    <div class="popover-item" *ngFor="let notification of notifications">
+      <div class="item-header">
+        <strong>{{ notification.message }}</strong>
+        <span class="time">{{ notification.time }}</span>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -9,10 +9,10 @@
       <app-header></app-header>
   </div>
   </div>
-    <div class="col-11 p-0" style="margin-top:17px">
-    <!-- <button class="x-btn add-buy" (click)="open(BuyBoxProperty)">
-      Add new BuyBoxWithDeal
-    </button> -->
+    <div class="col-11 p-0" [ngClass]="{'sidebar-expanded': !isCollapsed }"  style="margin-top:17px">
+    <button class="x-btn add-buy" (click)="open(BuyBoxProperty)">
+      Add Tenant
+    </button>
     <div class="row container m-0 mtop42">
  <!-- <div class="d-flex justify-content-end">
   <button class="CherryPick__button" [routerLink]="['/manage-properties']">Manage My Properties</button>
@@ -105,7 +105,7 @@
               *ngFor="let org of organizations; let i = index"
               class="list-group-item list-group-item-action"
               [class.active]="highlightedOrganizationIndex === i"
-              (click)="selectOrganizationFromList(org)"
+              (click)="selectOrganization(org)"
               id="organization-suggestion-{{ i }}"
               role="option"
               [attr.aria-selected]="highlightedOrganizationIndex === i"
@@ -118,17 +118,14 @@
         
         <div class="col-sm-12">
           <div class="form-group form-group-default">
-            <label for="managerOrgSearch" class="form-label">Manager Organization</label>
-            <input
+            <!-- <label for="managerOrgSearch" class="form-label">Manager Organization</label> -->
+            <!-- <input
               type="text"
               id="managerOrgSearch"
               name="managerOrgSearch"
               class="form-control"
               placeholder="Search Manager Organization"
               [(ngModel)]="searchManagerOrganizationTerm"
-              (input)="onManagerOrganizationInput($event)"
-              (keydown)="handleManagerOrganizationKeydown($event)"
-              (blur)="handleManagerOrganizationBlur()"
               autocomplete="off"
               required
               aria-autocomplete="list"
@@ -143,14 +140,13 @@
                 *ngFor="let managerOrg of managerOrganizations; let i = index"
                 class="list-group-item list-group-item-action"
                 [class.active]="highlightedManagerOrganizationIndex === i"
-                (click)="selectManagerOrganizationFromList(managerOrg)"
                 id="manager-organization-suggestion-{{ i }}"
                 role="option"
                 [attr.aria-selected]="highlightedManagerOrganizationIndex === i"
               >
                 {{ managerOrg.name }}
               </li>
-            </ul>
+            </ul> -->
           </div>
         </div>
 
