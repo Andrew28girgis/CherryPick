@@ -75,3 +75,7 @@
 .sidebar-narrow-unfoldable {
   width: 70px;
 }
+
+.sidebar-nav{
+  overflow: hidden;
+}
