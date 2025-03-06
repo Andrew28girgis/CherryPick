@@ -273,7 +273,7 @@ export class StageEmailComponent implements OnInit {
     this.ShowSection = false;
     this.accordionClicked = false;
     this.accordionSecondClicked = false;
-
+    this.openedOrgId = null;
     if (this.Stages.length > 0) {
       this.openedStageId = this.Stages[0].id;
     }
