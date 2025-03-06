@@ -1063,7 +1063,12 @@ export class MapDrawingService {
     return `
             <div class="info-window">
               <div class="main-img">
-                <img src="${property.mainImage}" alt="Main Image">
+              ${
+                property.mainImage
+                  ? `<img src="${property.mainImage}" alt="Main Image">`
+                  : ''
+              }
+                
                 <span class="close-btn">&times;</span>
               </div>
               <div class="content-wrap">
@@ -1097,7 +1102,12 @@ export class MapDrawingService {
     return `
             <div class="info-window">
               <div class="main-img">
-                <img src="${property.MainImage}" alt="Main Image">
+              ${
+                property.MainImage
+                  ? `<img src="${property.MainImage}" alt="Main Image">`
+                  : ''
+              }
+                
                 <span class="close-btn">&times;</span>
               </div>
               <div class="content-wrap">
