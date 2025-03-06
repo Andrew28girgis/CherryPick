@@ -1,4 +1,13 @@
-import { Component, ViewChildren, QueryList, AfterViewInit, ElementRef, HostListener, ViewChild, Renderer2 } from '@angular/core';
+import {
+  Component,
+  ViewChildren,
+  QueryList,
+  AfterViewInit,
+  ElementRef,
+  HostListener,
+  ViewChild,
+  Renderer2,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { General, GroupedProperties, Property } from 'src/models/domain';
@@ -20,20 +29,20 @@ import { Organization } from 'src/models/buyboxShoppingCenter';
   templateUrl: './summery.component.html',
   styleUrls: ['./summery.component.css'],
 })
-export class SummeryComponent  {
+export class SummeryComponent {
   General!: General;
   buyboxTypes: any[] = [];
   showSummery: boolean = false;
   Token: any;
-  orgId!: number; 
+  orgId!: number;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
   standAlone: Place[] = [];
-  buyboxPlaces: BbPlace[] = []; 
+  buyboxPlaces: BbPlace[] = [];
   isCollapsed = true;
   organizationId!: any;
-  editing!:boolean;
-  Obj!:BuyBoxModel;
+  editing!: boolean;
+  Obj!: BuyBoxModel;
   searchManagerOrganizationTerm: string = '';
   highlightedOrganizationIndex: number = -1;
   highlightedManagerOrganizationIndex: number = -1;
@@ -43,7 +52,7 @@ export class SummeryComponent  {
   isSearchingManagerOrganization: boolean = false;
   managerOrganizations: { id: number; name: string }[] = [];
   selectedManagerOrganizationId!: number; // Bound to the manager dropdown
-  buyBoxes:any[]=[];
+  buyBoxes: any[] = [];
   organizations: Organization[] = [];
   selectedOrganizationId!: number; // To bind the selected organization
   searchOrganizationTerm: string = '';
@@ -59,50 +68,48 @@ export class SummeryComponent  {
     private stateService: StateService,
     private sidbarService: SidbarService,
     private modalService: NgbModal,
-    private ApiService: ApiServiceService,
+    private ApiService: ApiServiceService
   ) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)
-    );    
+    );
   }
 
   ngOnInit(): void {
-
     this.stateService.clearAll();
-    this.General = new General(); 
+    this.General = new General();
     this.route.queryParams.subscribe((params) => {
       this.Token = params['Token'];
       this.getUserBuyBoxes();
-      this.organizationId =  localStorage.getItem('orgId')  ;
+      this.organizationId = localStorage.getItem('orgId');
     });
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
-      this.isCollapsed = state
-    })
-    
-
-    //this.GetUserBuyBoxes();
+      this.isCollapsed = state;
+    });
   }
-
 
   getUserBuyBoxes(): void {
     const body: any = {
       Name: 'GetUserBuyBoxes',
-      Params: {
-      }, 
+      Params: {},
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if(data.json!=null){
-          this.buyboxTypes =  data.json ;
+        if (data.json != null) {
+          this.buyboxTypes = data.json;
           if (this.buyboxTypes?.length == 1) {
-            this.chooseType(this.buyboxTypes[0].id ,this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
+            this.chooseType(
+              this.buyboxTypes[0].id,
+              this.buyboxTypes[0].organizationId,
+              this.buyboxTypes[0].name
+            );
           }
           this.spinner.hide();
-        } else{
+        } else {
           this.router.navigate(['/login']);
-        } 
-      } 
+        }
+      },
     });
   }
 
@@ -110,123 +117,39 @@ export class SummeryComponent  {
     this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {
       this.buyboxTypes = res;
       if (this.buyboxTypes.length == 1) {
-        this.chooseType(this.buyboxTypes[0].id ,  this.buyboxTypes[0].organizationId , this.buyboxTypes[0].name);
+        this.chooseType(
+          this.buyboxTypes[0].id,
+          this.buyboxTypes[0].organizationId,
+          this.buyboxTypes[0].name
+        );
       }
     });
   }
 
-  chooseType(buyboxId: number , orgId:number , name:string) {
+  chooseType(buyboxId: number, orgId: number, name: string) {
     this.showSummery = true;
     this.showSummery = true;
-    this.goToAllPlaces(buyboxId , orgId , name);
+    this.goToAllPlaces(buyboxId, orgId, name);
     this.propertiesService.setbuyboxId(buyboxId);
   }
 
-  goToAllPlaces(buyboxId: number , orgId:number , name:string) {
-    this.router.navigate(['/home', buyboxId , orgId , name]);
+  goToAllPlaces(buyboxId: number, orgId: number, name: string) {
+    this.router.navigate(['/home', buyboxId, orgId, name]);
   }
-  open(content:any)
-  {
-    this.editing = false; 
+  open(content: any) {
+    this.editing = false;
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       scrollable: true,
     });
-    this.Obj = new BuyBoxModel(); 
+    this.Obj = new BuyBoxModel();
   }
-  closeModal()
-  {
+  closeModal() {
     this.editing = false;
     this.modalService.dismissAll();
-    this.Obj = new BuyBoxModel();  // Reset the 'Obj' to its default state
-  }
-  selectManagerOrganization(managerOrganization: { id: number; name: string }) {
-    this.selectedManagerOrganizationId = managerOrganization.id;
-    this.searchManagerOrganizationTerm = managerOrganization.name;
-    this.managerOrganizations = [];
-    this.showManagerOrganizationSuggestions = false;
-    this.highlightedManagerOrganizationIndex = -1;
-  }
-  selectManagerOrganizationFromList(
-    managerOrganization: { id: number; name: string }
-  ) {
-    this.selectManagerOrganization(managerOrganization);
-  }
-  handleManagerOrganizationBlur() {
-    setTimeout(() => {
-      this.showManagerOrganizationSuggestions = false;
-      this.highlightedManagerOrganizationIndex = -1;
-    }, 100);
+    this.Obj = new BuyBoxModel(); // Reset the 'Obj' to its default state
   }
 
-  onManagerOrganizationInput(event: any) {
-    const val: string = event.target.value;
-    this.searchManagerOrganizationTerm = val;
-  
-    if (val.length > 2) {
-      this.searchManagerOrganization(val);
-    } else {
-      this.managerOrganizations = [];
-      this.showManagerOrganizationSuggestions = false;
-      this.highlightedManagerOrganizationIndex = -1;
-    }
-  }
-  searchManagerOrganization(term: string) {
-    this.isSearchingManagerOrganization = true;
-    let body: any = {
-      Name: 'SearchOrganizationByName', // Update API if required
-      Params: {
-        Name: term,
-      },
-    };
-    this.ApiService.GenericAPI(body).subscribe(
-      (res: any) => {
-        this.managerOrganizations = res.json as { id: number; name: string }[];
-        this.showManagerOrganizationSuggestions = true;
-        this.highlightedManagerOrganizationIndex = -1;
-        this.isSearchingManagerOrganization = false;
-      },
-      (error: any) => {
-        console.error('Error searching manager organizations:', error);
-        this.managerOrganizations = [];
-        this.showManagerOrganizationSuggestions = false;
-        this.isSearchingManagerOrganization = false;
-      }
-    );
-  }
-  handleManagerOrganizationKeydown(event: KeyboardEvent) {
-    if (
-      this.showManagerOrganizationSuggestions &&
-      this.managerOrganizations.length > 0
-    ) {
-      if (event.key === 'ArrowDown') {
-        this.highlightedManagerOrganizationIndex =
-          (this.highlightedManagerOrganizationIndex + 1) %
-          this.managerOrganizations.length;
-        event.preventDefault();
-      } else if (event.key === 'ArrowUp') {
-        this.highlightedManagerOrganizationIndex =
-          (this.highlightedManagerOrganizationIndex - 1 +
-            this.managerOrganizations.length) %
-          this.managerOrganizations.length;
-        event.preventDefault();
-      } else if (event.key === 'Enter') {
-        if (
-          this.highlightedManagerOrganizationIndex >= 0 &&
-          this.highlightedManagerOrganizationIndex <
-            this.managerOrganizations.length
-        ) {
-          this.selectManagerOrganization(
-            this.managerOrganizations[this.highlightedManagerOrganizationIndex]
-          );
-          event.preventDefault();
-        }
-      }
-    }
-  }
-  selectOrganizationFromList(organization: Organization) {
-    this.selectOrganization(organization);
-  }
   selectOrganization(organization: Organization) {
     this.selectedOrganizationId = organization.id; // Store the selected organization ID
     this.selectedOrganizationName = organization.name; // Store the selected organization's name
@@ -234,9 +157,6 @@ export class SummeryComponent  {
     this.organizations = []; // Clear suggestions
     this.showOrganizationSuggestions = false;
     this.highlightedOrganizationIndex = -1;
-  
-    // Fetch managers for the selected organization
-    this.fetchOrganizationManagers();
   }
   handleOrganizationBlur() {
     setTimeout(() => {
@@ -247,7 +167,7 @@ export class SummeryComponent  {
   onOrganizationInput(event: any) {
     const val: string = event.target.value;
     this.searchOrganizationTerm = val;
-  
+
     if (val.length > 2) {
       this.searchOrganization(val);
     } else {
@@ -259,109 +179,51 @@ export class SummeryComponent  {
   handleOrganizationKeydown(event: KeyboardEvent) {
     if (this.showOrganizationSuggestions && this.organizations.length > 0) {
       if (event.key === 'ArrowDown') {
-        this.highlightedOrganizationIndex = (this.highlightedOrganizationIndex + 1) % this.organizations.length;
+        this.highlightedOrganizationIndex =
+          (this.highlightedOrganizationIndex + 1) % this.organizations.length;
         event.preventDefault();
       } else if (event.key === 'ArrowUp') {
-        this.highlightedOrganizationIndex = (this.highlightedOrganizationIndex - 1 + this.organizations.length) % this.organizations.length;
+        this.highlightedOrganizationIndex =
+          (this.highlightedOrganizationIndex - 1 + this.organizations.length) %
+          this.organizations.length;
         event.preventDefault();
       } else if (event.key === 'Enter') {
-        if (this.highlightedOrganizationIndex >= 0 && this.highlightedOrganizationIndex < this.organizations.length) {
-          this.selectOrganization(this.organizations[this.highlightedOrganizationIndex]);
+        if (
+          this.highlightedOrganizationIndex >= 0 &&
+          this.highlightedOrganizationIndex < this.organizations.length
+        ) {
+          this.selectOrganization(
+            this.organizations[this.highlightedOrganizationIndex]
+          );
           event.preventDefault();
         }
       }
     }
   }
-  onSubmit()
-  {
+  onSubmit() {
     this.spinner.show();
-    if (
-      this.editing == false ||
-      this.editing == null ||
-      this.editing == undefined
-    ) {
 
-      this.Obj.OrganizationId = this.selectedOrganizationId; // Set the selected organization ID
-      this.Obj.ManagerOrganizationId = this.selectedManagerOrganizationId; // Set the selected manager organization ID
+    this.Obj.OrganizationId = this.selectedOrganizationId; // Set the selected organization ID
+    this.Obj.ManagerOrganizationId = this.selectedManagerOrganizationId; // Set the selected manager organization ID
 
-      this.spinner.show();
-      let body: any = {
-        Name: 'createbuybox',
-        Params: { 
-          Name : this.Obj.Name ,
-          OrganizationId:this.Obj.OrganizationId,
-          ManagerOrganizationId :this.Obj.ManagerOrganizationId,
-          MinBuildingSize:this.Obj.MinBuildingSize,
-          MaxBuildingSize:this.Obj.MaxBuildingSize
-        },
-      };
-      this.ApiService.GenericAPI(body).subscribe({
-        next: (data) => {
-          if (data.error != null && data.error != undefined) 
-          {
-            alert('Failed To Insert Data');
-          } 
-          else 
-          {
-           // this.Get_BuyBoxes();
-            this.buyBoxes.push(data.json[0]);
-            this.closeModal();    
-          }
-        },
-        error: (error) => {
-          alert('Server Error');
-          console.error('Error fetching APIs:', error);
-          this.spinner.hide();
-        },
-        complete: () => {
-          console.log('API fetch completed.');
-        },
-      });
-      this.spinner.hide();
-    }
-    else 
-    {
-      this.spinner.show();
-      let body: any = {
-        Name: 'UpdateBuyBox',
-        Params: { 
-          Name : this.Obj.Name ,
-          OrganizationId:this.Obj.OrganizationId,
-          ManagerOrganizationId :this.Obj.ManagerOrganizationId,
-          MinBuildingSize:this.Obj.MinBuildingSize,
-          MaxBuildingSize:this.Obj.MaxBuildingSize,
-          buyboxid : this.Obj.Id  
-        },
-      };
-      this.ApiService.GenericAPI(body).subscribe({
-        next: (data) => {
-          if (data.error != null && data.error != undefined) 
-          {
-            alert('Failed To Update Data');
-          } 
-          else 
-          {
-            const Index = this.buyBoxes.findIndex(
-              (item) => item.Id == this.Obj.Id
-            );
-            this.buyBoxes[Index] = Object.assign({}, this.Obj);
-            this.closeModal();
-          }
-        },
-        error: (error) => {
-          alert('Server Error');
-          console.error('Error fetching APIs:', error);
-          this.spinner.hide();
-        },
-        complete: () => {
-          console.log('API fetch completed.');
-        },
-      });
-      this.spinner.hide();
-
-
-    }
-    
+    this.spinner.show();
+    let body: any = {
+      Name: 'CreateBuyBox',
+      Params: {
+        Name: this.Obj.Name,
+        OrganizationId: this.Obj.OrganizationId,
+        ManagerOrganizationId: this.Obj.ManagerOrganizationId,
+        MinBuildingSize: this.Obj.MinBuildingSize,
+        MaxBuildingSize: this.Obj.MaxBuildingSize,
+      },
+    };
+    this.ApiService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.getUserBuyBoxes();
+        this.closeModal();
+        this.spinner.hide();
+      },
+    });
   }
   searchOrganization(term: string) {
     this.isSearchingOrganization = true;
@@ -383,24 +245,6 @@ export class SummeryComponent  {
         this.organizations = [];
         this.showOrganizationSuggestions = false;
         this.isSearchingOrganization = false;
-      }
-    );
-  }
-  fetchOrganizationManagers() {
-    const body: any = {
-      Name: 'GetOrganizationById',
-      Params: { organizationId: this.selectedOrganizationId  }, // Send the selected organization name
-    };
-
-    this.ApiService.GenericAPI(body).subscribe(
-      (res: any) => {
-        this.managerOrganizations = res.json as { id: number; name: string }[]; // Assuming the API response contains the managers
-        console.log('MO',this.managerOrganizations);
-        
-      },
-      (error: any) => {
-        console.error('Error fetching organization managers:', error);
-        this.managerOrganizations = [];
       }
     );
   }

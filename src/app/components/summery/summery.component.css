@@ -394,9 +394,9 @@ button:active {
 
 .add-buy{
   position: relative;
-  left: 79%;
+  left: 88%;
   margin-bottom: 27px;
-  top: 4%;
+  top: 7%;
 }
 .layout-container {
   display: flex;
@@ -456,4 +456,15 @@ button:active {
     z-index: 1040;
   }
 }
+
+/* CSS for expanding sidebar and shifting content */
+.sidebar-container {
+  transition: all 0.3s ease; /* Smooth transition for sidebar expansion */
+}
+
+
+.sidebar-expanded {
+  margin-left: 240px; /* Adjust this to the width of your sidebar */
+}
+
 
