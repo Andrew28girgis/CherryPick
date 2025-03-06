@@ -243,10 +243,30 @@ export class StageEmailComponent implements OnInit {
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
           this.selectedEmail = data.json[0];
+          this.SetAsOpen(mailId);
         } else {
           this.selectedEmail = null;
         }
         this.mergeStagesWithGetBuyBoxMicroDeals();
+        this.spinner.hide();
+      },
+    });
+  }
+
+  SetAsOpen(mailId: number): void {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'SetAsOpen',
+      MainEntity: null,
+      Params: {
+        mailid: mailId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
         this.spinner.hide();
       },
     });
