@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -31,8 +23,6 @@ import {
 } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
 import { EmilyComponent } from '../emily/emily.component';
-import { EmailService } from 'src/app/services/email-body.service';
-import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 interface Column {
@@ -55,7 +45,7 @@ interface Column {
     FormsModule,
     RouterModule
   ],
-  providers: [NgxSpinnerService, PlacesService, EmailService],
+  providers: [NgxSpinnerService, PlacesService],
   templateUrl: './stage-email.component.html',
   styleUrl: './stage-email.component.css',
 })
@@ -83,22 +73,18 @@ export class StageEmailComponent implements OnInit {
   formGroup!: FormGroup;
   bodyemail: any;
   contactIdemail: any;
-  @Input() emailBodyResponseSend!: any;
-
-  private subscription: Subscription | null = null;
-  currentValue: any;
+  accordionClicked: boolean = false;
+  accordionSecondClicked: boolean = false;
 
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
-    private modalService: NgbModal,
-    private emailService: EmailService
-  ) {}
+    private modalService: NgbModal
+  ) { }
 
   ngOnInit(): void {
     this.buyBoxId = localStorage.getItem('BuyBoxId');
     this.loginContact = localStorage.getItem('contactId');
-    console.log(this.emailBodyResponseSend);
 
     this.cols = [
       { field: 'Organizations', header: 'Organizations' },
@@ -115,59 +101,29 @@ export class StageEmailComponent implements OnInit {
     this.GetBuyBoxMicroDeals();
     this.GetBuyBoxEmails();
     this.GetStages();
- 
-    this.subscription = this.emailService.myVariable$.subscribe((newValue) => {
-      this.currentValue = newValue;  // Update the component's currentValue
-      console.log('Component: Received updated value:', newValue);  // Log the new value
-    });
-
-    // Optional: Log current value when component loads (initial value)
-    console.log('Component: Initial value:', this.emailService.getCurrentValue());
   }
 
-  ngOnDestroy(): void {
-    // Clean up the subscription when the component is destroyed to prevent memory leaks
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  // Openaccordion(stageId: number, orgId?: number) {
-  //   // Organization accordion logic
-  //   if (orgId !== undefined) {
-  //     // If the clicked organization is in a different stage, reset the stage
-  //     if (this.openedStageId !== stageId) {
-  //       this.openedStageId = stageId;
-  //     }
-      
-  //     // Toggle organization
-  //     if (this.openedOrgId === orgId) {
-  //       this.openedOrgId = null;
-  //     } else {
-  //       this.openedOrgId = orgId;
-  //     }
-  //   } 
-  //   // Stage accordion logic
-  //   else {
-  //     // If clicking the same stage, close it completely
-  //     if (this.openedStageId === stageId) {
-  //       this.openedStageId = null;
-  //       this.openedOrgId = null;
-  //     } else {
-  //       // Open the new stage and reset organizations
-  //       this.openedStageId = stageId;
-  //       this.openedOrgId = null;
-  //     }
-  //   }
-  // }
-  
   Openaccordion(stageId: number, orgId: number) {
-    if (this.openedStageId === stageId && this.openedOrgId === orgId) {
-      this.openedStageId = null;
-      this.openedOrgId = null;
-    } else {
-      this.openedStageId = stageId;
-      this.openedOrgId = orgId;
+    this.accordionClicked = true;
+    this.accordionSecondClicked = true;
+    this.openedStageId = stageId;
+    this.openedOrgId = orgId;
+
+
+    const stageEmails = this.stageEmailsMap[stageId];
+    if (stageEmails) {
+      for (let email of stageEmails) {
+        if (email.Organization) {
+          for (let org of email.Organization) {
+            if (org.OrganizationId === orgId) {
+              if (org.Contact && org.Contact.length > 0) {
+                this.getEmailsForContact(org.Contact[0]);
+                return;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -193,10 +149,10 @@ export class StageEmailComponent implements OnInit {
     return direction === 2
       ? 'Send'
       : direction === -1
-      ? 'Outbox'
-      : direction === 1
-      ? 'Received'
-      : '';
+        ? 'Outbox'
+        : direction === 1
+          ? 'Received'
+          : '';
   }
 
   GetBuyBoxEmails(): void {
@@ -286,11 +242,8 @@ export class StageEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
-          // this.Emails = data.json;
-          // this.modalService.open(modal, { size: 'xl', backdrop: true });
           this.selectedEmail = data.json[0];
         } else {
-          // this.Emails = [];
           this.selectedEmail = null;
         }
         this.mergeStagesWithGetBuyBoxMicroDeals();
@@ -300,7 +253,6 @@ export class StageEmailComponent implements OnInit {
   }
 
   close() {
-    // this.Emails = [];
     this.selectedEmail = null;
   }
 
@@ -310,13 +262,21 @@ export class StageEmailComponent implements OnInit {
         const matchingEmails = this.BuyBoxMicroDeals.filter(
           (buyBoxEmail: BuyBoxMicroDeals) => buyBoxEmail.StageId === stage.id
         );
-
         this.stageEmailsMap[stage.id] = matchingEmails;
       });
-
-      if (this.Stages.length > 0) {
-        this.openedStageId = this.Stages[0].id; // Open the first stage by default
+      if (!this.openedStageId && this.Stages.length > 0) {
+        this.openedStageId = this.Stages[0].id;
       }
+    }
+  }
+
+  OverView() {
+    this.ShowSection = false;
+    this.accordionClicked = false;
+    this.accordionSecondClicked = false;
+
+    if (this.Stages.length > 0) {
+      this.openedStageId = this.Stages[0].id;
     }
   }
 
@@ -402,9 +362,8 @@ export class StageEmailComponent implements OnInit {
     if (type === 'all' && this.emailsSentContact.length === 0) {
       this.emptyMessage = 'empty emails';
     } else if (type !== 'all' && count === 0) {
-      this.emptyMessage = `empty ${
-        type.charAt(0).toUpperCase() + type.slice(1)
-      }`;
+      this.emptyMessage = `empty ${type.charAt(0).toUpperCase() + type.slice(1)
+        }`;
     }
   }
 

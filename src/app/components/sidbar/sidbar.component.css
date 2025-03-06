@@ -60,3 +60,7 @@ background: transparent;
   transform: scaleX(-1); 
 
 }
+
+.sidebar-nav{
+  overflow: hidden;
+}

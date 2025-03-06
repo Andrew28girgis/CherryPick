@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  input,
   OnInit,
   Output,
 } from '@angular/core';
@@ -23,7 +22,6 @@ import { EditorModule } from 'primeng/editor';
 
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EmailService } from 'src/app/services/email-body.service';
 import { Location } from '@angular/common';
 
 @Component({
@@ -36,11 +34,10 @@ import { Location } from '@angular/common';
     NgxSpinnerModule,
     ReactiveFormsModule,
     EditorModule,
-
     FormsModule,
     RouterModule,
   ],
-  providers: [NgxSpinnerService, PlacesService ,EmailService],
+  providers: [NgxSpinnerService, PlacesService],
 })
 export class EmilyComponent implements OnInit {
   @Output() contentChange = new EventEmitter<string>();
@@ -119,33 +116,32 @@ export class EmilyComponent implements OnInit {
   contactId: any;
   @Input() buyBoxIdReply!: number;
   @Input() orgIdReply!: number;
-  @Input() emailBodyReply!: any  ;
-  @Input() selectedContactContactId!: any  ;
+  @Input() emailBodyReply!: any;
+  @Input() selectedContactContactId!: any;
   loginContact: any;
-  @Output() emailBodyResponseSend : EventEmitter<any> = new EventEmitter<any>();
-  @Input() modal: any; 
-  microDealId:any ;
+  @Output() emailBodyResponseSend: EventEmitter<any> = new EventEmitter<any>();
+  @Input() modal: any;
+  microDealId: any;
   closeModal() {
-    this.modal.dismiss('Close click'); 
+    this.modal.dismiss('Close click');
   }
-  
-    formGroup!: FormGroup;
-    bodyemail: any;
-    contactIdemail: any;
+
+  formGroup!: FormGroup;
+  bodyemail: any;
+  contactIdemail: any;
 
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private PlacesService: PlacesService, 
-    private emailService: EmailService,
+    private PlacesService: PlacesService,
     private _location: Location,
   ) {
     if (!this.buyBoxIdReply) {
       this.route.paramMap.subscribe((params) => {
         this.buyBoxId = params.get('buyboxId');
         this.orgId = params.get('orgId');
-        this.microDealId = params.get('microDealId');        
+        this.microDealId = params.get('microDealId');
         this.CenterId = params.get('CenterId');
         this.shoppingCenterOrganization = this.orgId;
       });
@@ -153,7 +149,9 @@ export class EmilyComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.spinner.show();
     this.loginContact = localStorage.getItem('contactId');
+    this.contactId = localStorage.getItem('contactId');
 
     if (this.buyBoxIdReply && this.orgIdReply) {
       this.buyBoxId = this.buyBoxIdReply;
@@ -161,15 +159,12 @@ export class EmilyComponent implements OnInit {
       this.shoppingCenterOrganization = this.orgId;
     }
 
+    this.formGroup = new FormGroup({
+      body: new FormControl(''),
+      subject: new FormControl(''),
+      IsCC: new FormControl(false),
+    });
 
-        this.formGroup = new FormGroup({
-          body: new FormControl(''),
-          subject: new FormControl(''),
-          IsCC: new FormControl(false),
-        });
-        
-    this.spinner.show();
-    this.contactId = localStorage.getItem('contactId');
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetPrompts();
@@ -460,13 +455,11 @@ export class EmilyComponent implements OnInit {
   }
 
   MoveStage() {
-    console.log(this.microDealId);
-    
     const body = {
       name: 'ChangeDealStage',
       params: {
         stageid: 8,
-        microdealid : this.microDealId,
+        microdealid: this.microDealId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -1173,8 +1166,8 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.generateEmail(promptId, context).subscribe({
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
-        this.emailBodyResponse = data?.emailBody ;
-         
+        this.emailBodyResponse = data?.emailBody;
+
         this.emailId = data?.id || 'No body received';
         this.spinner.hide();
       },
@@ -1459,7 +1452,7 @@ export class EmilyComponent implements OnInit {
         outbox: '',
         BuyBoxId: +this.buyBoxId,
         IsCC: this.formGroup.get('IsCC')?.value ? 1 : 0,
-        FromContactId:  Number(this.loginContact),
+        FromContactId: Number(this.loginContact),
         ContactIds: this.selectedContactContactId,
       },
       Json: null,
@@ -1474,8 +1467,7 @@ export class EmilyComponent implements OnInit {
     });
   }
 
-
-  back(){
-      this._location.back();
+  back() {
+    this._location.back();
   }
 }

@@ -1,15 +1,19 @@
 ::ng-deep .p-accordion-header a {
   color: #001f3f !important;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   font-family: Montserrat;
+  background: #b8c1e1;
 }
 
 ::ng-deep .p-accordion .p-accordion-content .p-accordion .p-accordion-header a {
-   color: #001f3f !important;
+  padding-block: 12px;
+  padding-inline: 10px;
+  color: #001f3f !important;
   font-size: 14px;
   font-weight: 500;
   font-family: Montserrat;
+  background: #e8ebee;
 }
 
 ::ng-deep .p-accordion-header .p-accordion-toggle-icon {
@@ -175,6 +179,7 @@
     /* order: 1; */
   }
 }
+
 .card-pTemplate {
   cursor: pointer;
 }
@@ -210,13 +215,13 @@
   padding-block: 8px;
 }
 
-.buttonSave{
+.buttonSave {
   color: white;
   background: #001f3f;
   padding: 5px 10px;
   border: 1px solid #001f3f;
   cursor: pointer;
-  border-radius: 6px;  
+  border-radius: 6px;
 }
 
 .checkbox-section {
@@ -240,51 +245,55 @@
   }
 }
 
-.openreply{
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+.openreply {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-.selectedOptionDiv{
+.selectedOptionDiv {
   padding-inline: 10px;
 }
 
-.selectedOption{
+.selectedOption {
   color: #001f3f;
   background: #001f3f52;
   padding: 5px 10px;
   border: 1px solid white;
   cursor: pointer;
-  border-radius: 6px;  
+  border-radius: 6px;
   width: max-content;
   margin: 0;
 }
 
-.active{
+.active {
   color: white;
   background: #001f3f;
   padding: 5px 10px;
   border: 1px solid #001f3f;
   cursor: pointer;
-  border-radius: 6px; 
-  width: max-content; 
+  border-radius: 6px;
+  width: max-content;
   margin: 0;
 }
 
-.IsCC_checkbox{
+.IsCC_checkbox {
   font-size: 14px;
   font-weight: 700;
   color: gray;
 }
 
-.input_checkbox{
+.input_checkbox {
   box-shadow: none;
   outline: none;
 }
 
-.buttonSave2{
+.buttonSave2 {
   color: #001f3f;
   background: transparent;
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 6px;
+}
+
+.hide-accordion {
+  display: none;
 }
