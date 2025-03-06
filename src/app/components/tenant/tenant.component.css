@@ -402,6 +402,8 @@
   gap: var(--Button-Gap, 8px);
   border-radius: var(--Button-Radius, 16px);
   background: var(--Colors-Primary-900, #00060d);
+  border: 1px solid transparent;
+
 }
 
 .btn-submit span {
