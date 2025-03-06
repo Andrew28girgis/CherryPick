@@ -2,7 +2,7 @@
   color: #001f3f !important;
   font-size: 16px;
   font-weight: 600;
-  font-family: Montserrat;
+  
   background: #b8c1e1;
 }
 
@@ -12,7 +12,7 @@
   color: #001f3f !important;
   font-size: 14px;
   font-weight: 500;
-  font-family: Montserrat;
+  
   background: #e8ebee;
 }
 
@@ -36,7 +36,7 @@
   color: #001f3f !important;
   font-size: 14px;
   font-weight: 500;
-  font-family: Montserrat;
+  
   cursor: pointer;
 }
 
@@ -49,7 +49,7 @@
   color: #001f3f;
   font-size: 16px;
   font-weight: 600;
-  font-family: Montserrat;
+  
   height: 10vh;
   align-items: center;
   padding-inline: 10px;
@@ -86,7 +86,7 @@
   color: #001f3f;
   font-weight: bold;
   font-weight: 600;
-  font-family: Montserrat;
+  
 }
 
 .card-pTemplate {

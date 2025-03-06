@@ -16,13 +16,13 @@
   line-height: 24px;
   display: flex;
   align-items: center;
-  font-family: Montserrat;
+  
 }
 
 label,
 h5 {
   margin: 0;
-  font-family: Montserrat;
+  
 }
 
 label {
@@ -53,7 +53,7 @@ thead > tr > th:nth-child(4) {
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  font-family: Montserrat;
+  
 }
 
 tbody > tr > td:nth-child(2),
@@ -65,7 +65,7 @@ tbody > tr > td:nth-child(4) {
   font-style: normal;
   font-weight: 500;
   line-height: 24px;
-  font-family: Montserrat;
+  
 }
 
 thead > tr > th:nth-child(1) {
@@ -75,7 +75,7 @@ thead > tr > th:nth-child(1) {
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  font-family: Montserrat;
+  
 }
 
 tbody > tr > td:nth-child(1) {
@@ -85,7 +85,7 @@ tbody > tr > td:nth-child(1) {
   font-style: normal;
   font-weight: 500;
   line-height: 24px;
-  font-family: Montserrat;
+  
 }
 
 .btn {

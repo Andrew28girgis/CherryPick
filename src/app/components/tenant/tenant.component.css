@@ -14,7 +14,7 @@
 
 .boldtext {
   color: #fff;
-  font-family: Montserrat;
+  
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -24,7 +24,7 @@
 }
 .brokertext {
   color: #fff;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -41,7 +41,7 @@
   background: var(--Button-Primary-BG, #001f3f);
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  font-family: Montserrat, sans-serif;
+  
   font-size: 13px;
   font-weight: 500;
   border: none;
@@ -56,7 +56,7 @@
 }
 .Osmowstext {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -68,7 +68,7 @@
 }
 .namee {
   color: #fff;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -86,7 +86,7 @@
 }
 
 .broker {
-  font-family: Montserrat, sans-serif;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -98,7 +98,7 @@
 }
 .email {
   color: #fff;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -106,7 +106,7 @@
 }
 .linkedin {
   color: #fff;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -134,7 +134,7 @@
 .assistant {
   color: #fff;
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -162,7 +162,7 @@
 }
 .lowwhite {
   color: #afa8a8;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -189,7 +189,7 @@
 }
 .nameincard {
   color: #000;
-  font-family: Montserrat;
+  
   font-size: 32px;
   font-style: normal;
   font-weight: 600;
@@ -197,7 +197,7 @@
 }
 .emailincard {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -249,7 +249,7 @@
 }
 .overviewtext {
   color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -257,7 +257,7 @@
 }
 .grayspan {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -366,7 +366,7 @@
 
 .btn-share span {
   text-align: center;
-  font-family: Montserrat, sans-serif;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -386,7 +386,7 @@
 .btn-submit-proposel span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -407,7 +407,7 @@
 .btn-submit span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  font-family: Montserrat, sans-serif;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -428,7 +428,7 @@
 
 .specifications {
   color: #fff;
-  font-family: Montserrat;
+  
   font-size: 32px;
   font-style: normal;
   font-weight: 600;
@@ -461,7 +461,7 @@
 }
 
 .brokerrrr {
-  font-family: Montserrat, sans-serif;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -474,7 +474,7 @@
 }
 .buyboxname {
   color: #fff;
-  font-family: Montserrat;
+  
   font-size: 30px;
   font-style: normal;
   font-weight: 600;
@@ -748,7 +748,7 @@
   }
   .brokertext {
     color: #fff;
-    font-family: Montserrat;
+    
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

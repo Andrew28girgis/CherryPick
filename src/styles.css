@@ -17,7 +17,9 @@ a {
   border-radius: 8px!important ;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)!important ;
 }
-
+.cherry-logo {
+  width: 160px;
+}
 .response-content .message-text {
   color: #1f2937 !important ;
   font-size: 15px!important ;

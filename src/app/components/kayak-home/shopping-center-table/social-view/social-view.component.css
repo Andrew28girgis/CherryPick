@@ -38,7 +38,7 @@
   color: #fff;
 
   /* Body/16/30/SemiBold */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -347,7 +347,7 @@
     color: #fff;
 
     /* Body/16/30/SemiBold */
-    font-family: Montserrat;
+    
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -433,7 +433,7 @@
     color: #fff;
 
     /* Body/16/30/SemiBold */
-    font-family: Montserrat;
+    
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -608,7 +608,7 @@
     color: #fff;
 
     /* Body/16/30/SemiBold */
-    font-family: Montserrat;
+    
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -753,7 +753,7 @@
     color: #fff;
 
     /* Body/16/30/SemiBold */
-    font-family: Montserrat;
+    
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
@@ -925,7 +925,7 @@
   text-align: center;
 
   /* Body/12/20/Regular */
-  font-family: Montserrat;
+  
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -1149,7 +1149,7 @@ scroll-container {
   color: #fff;
 
   /* Body/16/30/SemiBold */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -1226,7 +1226,7 @@ scroll-container {
   color: #7a8591;
 
   /* Body/16/30/Regular */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -1236,7 +1236,7 @@ scroll-container {
   color: #0c0d0e;
 
   /* Body/16/30/SemiBold */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -1250,7 +1250,7 @@ scroll-container {
   text-align: center;
 
   /* Body/16/30/SemiBold */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -1301,7 +1301,7 @@ textarea.form-control {
   display: flex;
   align-items: center;
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -1336,7 +1336,7 @@ textarea.form-control {
   text-align: center;
 
   /* Body/16/30/SemiBold */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -1349,7 +1349,7 @@ textarea.form-control {
   text-align: center;
 
   /* Body/16/30/Regular */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

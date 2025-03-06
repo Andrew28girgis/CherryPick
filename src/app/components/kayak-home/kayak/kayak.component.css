@@ -1,6 +1,4 @@
-
-.slider {
-  -webkit-appearance: none;
+.slider { 
   width: 100%;
   height: 10px;
   background: #ddd;
@@ -67,7 +65,7 @@
 }
 .search-bar input[type="text"] {
   color: var(#707791);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -112,7 +110,7 @@
 }
 .search-textt {
   color: var(--Inputs-Color-Hierarchy-1, #707791);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -120,7 +118,7 @@
 }
 .table-headd {
   color: var(--Table-Title-Cell-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -128,7 +126,7 @@
 }
 .table-text1 {
   color: var(--Table-Info-Cell-Color, #707791);
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -138,7 +136,7 @@
 .showfilters {
   color: var(--Colors-Primary-500, #4d65b4);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -264,7 +262,7 @@
 .eye-text {
   color: var(--Button-Link-Label, #4d65b4);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -285,7 +283,7 @@
 }
 .company-name {
   color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -301,7 +299,7 @@
 }
 .form-check-label {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -309,7 +307,7 @@
 }
 .small-titlefilter {
   color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -337,7 +335,7 @@
 }
 .card-texts {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -349,7 +347,7 @@
 }
 .sqft {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  font-family: Montserrat;
+  
   font-size: 0.9rem;
   font-style: normal;
   font-weight: 400;
@@ -361,7 +359,7 @@
 }
 .shoppingcentername {
   color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

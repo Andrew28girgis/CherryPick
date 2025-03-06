@@ -256,7 +256,7 @@ img[alt="logo"] {
 
 .table-text {
   color: #7a8591;
-  font-family: Montserrat;
+  
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -265,7 +265,7 @@ img[alt="logo"] {
 
 .table-texttt {
   color: #7a8591;
-  font-family: Montserrat;
+  
   font-size: 0.8rem;
   font-style: normal;
   font-weight: 400;
@@ -307,7 +307,7 @@ img[alt="logo"] {
 }
 
 .card-address {
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-weight: 400;
   line-height: 30px;
@@ -319,7 +319,7 @@ img[alt="logo"] {
 }
 
 .managed-by {
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;

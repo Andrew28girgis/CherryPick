@@ -1,22 +1,11 @@
-:host {
-  display: block;
-  width: 100%;
-}
+
 
 .navbar {
-  width: 100%;
-  position: fixed;
-  z-index: 1020;
-  background-color: #fff !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem 1rem;
-}
-
-.container-fluid {
-  width: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between  ;
+  background-color: #fff !important; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
 }
 
 .cherry-collapse {
@@ -26,6 +15,11 @@
   color: #333;
   transition: all 0.3s ease;
   cursor: pointer;
+}
+.nav-link{
+  color: #707791;
+  font-size: 16px;
+  text-transform:none;
 }
 
 .cherry-collapse:hover {

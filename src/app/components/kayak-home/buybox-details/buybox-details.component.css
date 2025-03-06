@@ -10,7 +10,7 @@
 }
 .bold-word {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -28,7 +28,7 @@
 
 .card-title {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -38,7 +38,7 @@
 
 .card-text {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
@@ -52,7 +52,7 @@
 .edit-buyoxtext {
   color: var(--Button-Secondary-Label-Default, #4d65b4);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -61,7 +61,7 @@
 .editbtn-modal {
   color: var(--Button-Close-Label-Default, #4d65b4); /* Soft red tone */
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -76,7 +76,7 @@
 .closebtn-modal {
   color: var(--Button-Close-Label-Default, #dc3545);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -90,7 +90,7 @@
 
 .input-text {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
