@@ -19,18 +19,18 @@ import { BbPlace } from 'src/models/buyboxPlaces';
 @Component({
   selector: 'app-card-view',
   templateUrl: './card-view.component.html',
-  styleUrls: ['./card-view.component.css']
+  styleUrls: ['./card-view.component.css'],
 })
 export class CardViewComponent implements OnInit {
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
-  
+
   // Use the dropdown options from the service
   get dropdowmOptions() {
     return this.viewManager.dropdowmOptions;
   }
-  
+
   selectedOption: number = 3;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
@@ -48,20 +48,16 @@ export class CardViewComponent implements OnInit {
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
   shareLink: any;
-  
+
   shoppingCenterIdToDelete: number | null = null;
   showbackIds: number[] = [];
   buyboxPlaces: BbPlace[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private modalService: NgbModal,
-    private renderer: Renderer2,
-    private cdr: ChangeDetectorRef,
     private viewManager: ViewManagerService, // Inject the ViewManagerService,
-        private spinner: NgxSpinnerService,
-    
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -93,21 +89,27 @@ export class CardViewComponent implements OnInit {
   async loadData() {
     try {
       // Load categories first
-      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(this.BuyBoxId);
-      
+      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(
+        this.BuyBoxId
+      );
+
       // Then load shopping centers
-      this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
-      
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(
+        this.BuyBoxId
+      );
+
       // Load organization data
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
-      
     } catch (error) {
       console.error('Error loading data:', error);
     }
   }
 
   getNeareastCategoryName(categoryId: number): string {
-    return this.viewManager.getNearestCategoryName(categoryId, this.buyboxCategories);
+    return this.viewManager.getNearestCategoryName(
+      categoryId,
+      this.buyboxCategories
+    );
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): string {
@@ -134,18 +136,18 @@ export class CardViewComponent implements OnInit {
     this.isOpen = false;
     localStorage.setItem('currentViewDashBord', this.currentView);
   }
-  
+
   async openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-    
+
     this.mapViewOnePlacex = true;
     await this.viewManager.initializeMap(
-      'mappopup', 
-      modalObject.Latitude, 
+      'mappopup',
+      modalObject.Latitude,
       modalObject.Longitude
     );
   }
@@ -156,7 +158,7 @@ export class CardViewComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-    
+
     this.General.modalObject = modalObject;
 
     if (this.General.modalObject.StreetViewURL) {
@@ -167,7 +169,7 @@ export class CardViewComponent implements OnInit {
       }, 100);
     }
   }
-  
+
   viewOnStreet() {
     this.StreetViewOnePlace = true;
     const lat = +this.General.modalObject.StreetLatitude;
@@ -178,7 +180,13 @@ export class CardViewComponent implements OnInit {
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
-        this.viewManager.initializeStreetView('street-view', lat, lng, heading, pitch);
+        this.viewManager.initializeStreetView(
+          'street-view',
+          lat,
+          lng,
+          heading,
+          pitch
+        );
       } else {
         console.error("Element with id 'street-view' not found.");
       }
@@ -189,15 +197,15 @@ export class CardViewComponent implements OnInit {
     this.sanitizedUrl = this.viewManager.sanitizeUrl(url);
   }
 
-    openDeleteShoppingCenterModal(
-      modalTemplate: TemplateRef<any>,
-      shoppingCenterId: any
-    ) {
-      this.shoppingCenterIdToDelete = shoppingCenterId;
-      this.modalService.open(modalTemplate, {
-        ariaLabelledBy: 'modal-basic-title',
-      });
-    }
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenterId: any
+  ) {
+    this.shoppingCenterIdToDelete = shoppingCenterId;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
 
   copyLink(link: string) {
     navigator.clipboard
@@ -210,12 +218,15 @@ export class CardViewComponent implements OnInit {
       });
   }
   async deleteShCenter() {
-    console.log('fffffffffff',this.BuyBoxId, this.shoppingCenterIdToDelete);
-    
+    console.log('fffffffffff', this.BuyBoxId, this.shoppingCenterIdToDelete);
+
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.spinner.show();
-        await this.viewManager.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
+        await this.viewManager.deleteShoppingCenter(
+          this.BuyBoxId,
+          this.shoppingCenterIdToDelete
+        );
         this.modalService.dismissAll();
         await this.refreshShoppingCenters();
       } catch (error) {
@@ -228,7 +239,9 @@ export class CardViewComponent implements OnInit {
   async refreshShoppingCenters() {
     try {
       this.spinner.show();
-      this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(
+        this.BuyBoxId
+      );
       this.buyboxPlaces = await this.viewManager.getBuyBoxPlaces(this.BuyBoxId);
       this.showbackIds = [];
     } catch (error) {
@@ -237,4 +250,4 @@ export class CardViewComponent implements OnInit {
       this.spinner.hide();
     }
   }
-} 
+}
