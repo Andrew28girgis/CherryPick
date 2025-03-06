@@ -87,13 +87,11 @@ export class PolygonsControllerComponent
     // listen for polygons and circles changes
     this.polygonsListeners();
     this.circlesListeners();
-
     this.getPolygonsByNameListener();
   }
   
   ngAfterViewInit() { 
     this.initializeMap();
-
     // initialize drawing manager
     this.mapDrawingService.initializeDrawingManager(this.map);
 
