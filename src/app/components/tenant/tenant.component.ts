@@ -96,7 +96,7 @@ export class TenantComponent implements OnInit {
           buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
         this.brokerphoto = managerOrganizationData.Photo;
         this.brokersignature = managerOrganizationData.Profile;
-        this.buyboxcolor = 'red';
+        this.buyboxcolor = '#bd3e3e';
 
         this.smalldescription = Array.isArray(
           this.TenantResult.Buybox[0].Description
