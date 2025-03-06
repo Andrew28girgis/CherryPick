@@ -119,8 +119,7 @@ const loginRequest = {
     NumberFormatDirective,
     NumberWithCommasPipe,
     ManagePropertiesComponent,
-    HeaderComponent,
-  ],
+   ],
   imports: [
     BrowserModule,
     AppRoutingModule, 
