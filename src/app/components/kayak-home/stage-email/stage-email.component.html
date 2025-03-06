@@ -118,18 +118,21 @@
         </div>
         <div class="col-12 col-sm-12 p-2 card-pTemplate" *ngFor="let email of filteredEmails">
           <p-card (click)="GetMail(email.id)">
-            <ng-template pTemplate="header">
+            <!-- <ng-template pTemplate="header">
               <div class="custom-header">
                 <span class="Direction-class">
-                  {{ getDirection(email.Direction) }}
+                  <i  [ngClass]="'fa-solid '+getDirection(email.Direction)"></i>
                 </span>
-                <span
-                  class="date-text">{{ email.Date | date: 'yyyy-MM-dd HH:mm' }}</span>
-              </div>
-            </ng-template>
 
-            <p class="m-0">
-              <strong>Subject:</strong> {{ email.Subject }}
+              </div>
+            </ng-template> -->
+
+            <p class="m-0 d-flex justify-content-between">
+              <strong><i  [ngClass]="'fa-solid '+getDirection(email.Direction)" class="me-2"></i> {{ email.Subject }}</strong> 
+
+              <span
+              class="date-text">{{ email.Date | date: 'EEE' }} - {{ email.Date | date: 'yyyy-MM-dd HH:mm' }}
+            </span>
             </p>
           </p-card>
           <div class="mail_show mt-2" *ngIf="selectedEmail && selectedEmail.ID === email.id">

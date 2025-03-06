@@ -148,11 +148,11 @@ export class StageEmailComponent implements OnInit {
 
   getDirection(direction: number): string {
     return direction === 2
-      ? 'Send'
+      ? 'fa-envelope-circle-check send'
       : direction === -1
-        ? 'Outbox'
+        ? 'fa-share outbox'
         : direction === 1
-          ? 'Received'
+          ? 'fa-reply outbox'
           : '';
   }
 

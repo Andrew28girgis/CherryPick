@@ -294,7 +294,8 @@
   border-radius: 6px;
   font-size: 14px;
 }
-.buttonSave2>i{
+
+.buttonSave2>i {
   font-size: 16px;
 }
 
@@ -303,6 +304,22 @@
 }
 
 
-.image_style{
-  width: 30px; height: 30px;
+.image_style {
+  width: 30px;
+  height: 30px;
+}
+
+.send {
+  color: #28a745;
+  font-size: 18px;
+}
+
+.inbox {
+  color: #007bff;
+  font-size: 18px;
+}
+
+.outbox {
+  color: #fd7e14;
+  font-size: 18px;
 }
