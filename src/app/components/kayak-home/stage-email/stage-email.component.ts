@@ -56,11 +56,12 @@ export class StageEmailComponent implements OnInit {
   Stages: Stages[] = [];
   stageEmailsMap: { [key: number]: BuyBoxMicroDeals[] } = {};
   emailsSentContact: Mail[] = [];
+  filteredEmails: Mail[] = [];
   selectedContact: Contact | null = null;
   Emails: EmailInfo[] = [];
   loginContact: any;
   emptyMessage: string = 'Select Contact in organization';
-  selectedFilter: string = 'all';
+  selectedFilter: string = 'sent';
   ShowSection: boolean = false;
   ShowResaved: boolean = false;
   EmailDashboard: any[] = [];
@@ -309,6 +310,8 @@ export class StageEmailComponent implements OnInit {
       );
     });
     this.emailsSentContact = [...mails];
+    this.selectedFilter = 'sent';
+    this.checkAndFilterEmails('sent');  
   }
 
   getReceivedEmails(matchingEmails: any, contactId: number): void {
@@ -327,27 +330,27 @@ export class StageEmailComponent implements OnInit {
 
   filterEmails(type: string): void {
     if (type === 'all') {
-      this.emailsSentContact = [...this.emailsSentContact];
+      this.filteredEmails = [...this.emailsSentContact];
     } else if (type === 'sent') {
-      this.emailsSentContact = this.emailsSentContact.filter(
+      this.filteredEmails = this.emailsSentContact.filter(
         (email) => email.Direction === 2
       );
     } else if (type === 'inbox') {
-      this.emailsSentContact = this.emailsSentContact.filter(
+      this.filteredEmails = this.emailsSentContact.filter(
         (email) => email.Direction === 1
       );
     } else if (type === 'outbox') {
-      this.emailsSentContact = this.emailsSentContact.filter(
+      this.filteredEmails = this.emailsSentContact.filter(
         (email) => email.Direction === -1
       );
     }
   }
-
+  
   checkAndFilterEmails(type: string): void {
     this.selectedFilter = type;
     let count = 0;
     this.emptyMessage = '';
-
+  
     if (type === 'sent') {
       count = this.selectedContact?.EmailStats[0].Sent || 0;
     } else if (type === 'inbox') {
@@ -355,14 +358,13 @@ export class StageEmailComponent implements OnInit {
     } else if (type === 'outbox') {
       count = this.selectedContact?.EmailStats[0].Outbox || 0;
     }
-
+  
     this.filterEmails(type);
-
-    if (type === 'all' && this.emailsSentContact.length === 0) {
+  
+    if (type === 'all' && this.filteredEmails.length === 0) {
       this.emptyMessage = 'empty emails';
     } else if (type !== 'all' && count === 0) {
-      this.emptyMessage = `empty ${type.charAt(0).toUpperCase() + type.slice(1)
-        }`;
+      this.emptyMessage = `empty ${type.charAt(0).toUpperCase() + type.slice(1)}`;
     }
   }
 
