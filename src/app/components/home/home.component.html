@@ -17,7 +17,6 @@
         <p class="titleResponsive ms-2 d-none d-sm-flex">
           {{ BuyBoxName }}
         </p>
-
       </div>
 
       <div
@@ -88,11 +87,11 @@
             <span class="icon-text">{{ option.text }}</span>
           </div>
           <button
-          class="btn custom-share-btn ms-3 d-none d-sm-flex"
-          (click)="openContactsModal(contactsModal)"
-        >
-          Share
-        </button>
+            class="btn custom-share-btn ms-3 d-none d-sm-flex"
+            (click)="openContactsModal(contactsModal)"
+          >
+            Share
+          </button>
 
           <app-logout></app-logout>
         </div>
@@ -135,6 +134,7 @@
   }
   <div class="scroll-container" #scrollContainer>
     <div class="card" *ngFor="let shopping of shoppingCenters; let i = index">
+      <ng-container *ngIf="shoppingCenter.Deleted == false">
       <div
         class="social-card mb-0 mb-sm-5 Res"
         [style.backgroundImage]="
@@ -170,8 +170,7 @@
                 >
                   <div
                     class="nearestt"
-                    style="color: #fff; padding: 0 !important;    max-width: 60%;
-"
+                    style="color: #fff; padding: 0 !important; max-width: 60%"
                   >
                     <span>
                       {{ getNeareastCategoryName(item.CategoryId) }}:
@@ -542,6 +541,7 @@
           </ul>
         </div>
       </div>
+    </ng-container>
     </div>
   </div>
   <div class="row d-sm-none fixed-bottom-mobile">
@@ -585,8 +585,7 @@
 </ng-container>
 
 <div class="row backgroundd">
- 
- <ng-container *ngIf="currentView == 4">
+  <ng-container *ngIf="currentView == 4">
     <table
       class="procpect-table"
       *ngIf="shoppingCenters && shoppingCenters.length > 0"
@@ -614,190 +613,230 @@
       </thead>
       <tbody class="procpect-table-body">
         <ng-container *ngFor="let shoppingCenter of shoppingCenters">
-          <tr>
-            <td>
-              <span
-                class="table-text"
-                [innerHTML]="shoppingCenter.CenterName | titlecase"
-              ></span>
-            </td>
-            <td>
-              <div
-                class="table-text"
-                (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
-              >
-                {{ shoppingCenter.CenterAddress }}
-              </div>
-            </td>
-            <td>
-              <div class="table-text">
-                <span class="table-text">
-                  {{ shoppingCenter.CenterCity | titlecase }}
-                </span>
-              </div>
-            </td>
-            <td>
-              <div class="table-text">
-                <span class="table-text">
-                  {{ shoppingCenter.CenterState }}
-                </span>
-              </div>
-            </td>
-            <td *ngIf="placesRepresentative != false">
-              <ng-container
-                *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization"
-              >
-                <div>
-                  <div
-                    class="d-flex align-items-center justify-content-between"
-                  >
-                    <img
-                      class="logo"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID
-                      }}"
-                      [title]="
-                        shoppingCenter.ShoppingCenter.ManagerOrganization[0]
-                          .Name
-                      "
-                      alt=""
-                    />
-
-                    <div class="table-text">
-                      {{
-                        shoppingCenter.ShoppingCenter.ManagerOrganization[0]
-                          .Name
-                      }}
-                    </div>
-
-                    <div>
-                      <img
-                        class="total"
-                        class="ms-2"
-                        src="../../../assets/Images/Icons/eye.png"
-                        alt="View Manager Details"
-                        [ngbPopover]="popoverContent"
-                        popoverTitle="Organization Contact Info"
-                        triggers="click:outside"
-                        [placement]="'right'"
-                      />
-                    </div>
-                  </div>
-                  <ng-template #popoverContent>
-                    <div
-                      *ngFor="
-                        let org of shoppingCenter.ShoppingCenter
-                          .ManagerOrganization
-                      "
-                      class="contact-container table-texttt"
-                    >
-                      <p class="text-bold m-0">
-                        {{ org.Firstname | titlecase }}
-                        {{ org.LastName | titlecase }}
-                      </p>
-                      <p class="m-0">{{ org.CellPhone }}</p>
-                      <p class="m-0">{{ org.Email }}</p>
-                      <hr
-                        *ngIf="
-                          !isLast(
-                            org,
-                            shoppingCenter.ShoppingCenter.ManagerOrganization
-                          )
-                        "
-                      />
-                    </div>
-                  </ng-template>
+          <ng-container *ngIf="shoppingCenter.Deleted == false">
+            <tr>
+              <td>
+                <span
+                  class="table-text"
+                  [innerHTML]="shoppingCenter.CenterName | titlecase"
+                ></span>
+              </td>
+              <td>
+                <div
+                  class="table-text"
+                  (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
+                >
+                  {{ shoppingCenter.CenterAddress }}
                 </div>
-              </ng-container>
-            </td>
-            <td class="table-text">
-              <span
-                [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
-              ></span>
-              <div>
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
-                    fill="black"
-                  />
-                  <path
-                    d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
-                    fill="black"
-                  />
-                </svg>
-
-                <a
-                  class="info-value text-dark px-1"
-                  href="{{ shoppingCenter.DocsLink }}"
-                  target="_blank"
-                  >Property Docs</a
-                >
-              </div>
-            </td>
-            <td>
-              <ng-container
-                *ngIf="
-                  shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
-                  else emptyTd
-                "
-              >
+              </td>
+              <td>
+                <div class="table-text">
+                  <span class="table-text">
+                    {{ shoppingCenter.CenterCity | titlecase }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="table-text">
+                  <span class="table-text">
+                    {{ shoppingCenter.CenterState }}
+                  </span>
+                </div>
+              </td>
+              <td *ngIf="placesRepresentative != false">
                 <ng-container
-                  *ngFor="
-                    let item of shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
-                    let i = index;
-                    trackBy: trackByIndex
+                  *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization"
+                >
+                  <div>
+                    <div
+                      class="d-flex align-items-center justify-content-between"
+                    >
+                      <img
+                        class="logo"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          shoppingCenter.ShoppingCenter.ManagerOrganization[0]
+                            .ID
+                        }}"
+                        [title]="
+                          shoppingCenter.ShoppingCenter.ManagerOrganization[0]
+                            .Name
+                        "
+                        alt=""
+                      />
+
+                      <div class="table-text">
+                        {{
+                          shoppingCenter.ShoppingCenter.ManagerOrganization[0]
+                            .Name
+                        }}
+                      </div>
+
+                      <div>
+                        <img
+                          class="total"
+                          class="ms-2"
+                          src="../../../assets/Images/Icons/eye.png"
+                          alt="View Manager Details"
+                          [ngbPopover]="popoverContent"
+                          popoverTitle="Organization Contact Info"
+                          triggers="click:outside"
+                          [placement]="'right'"
+                        />
+                      </div>
+                    </div>
+                    <ng-template #popoverContent>
+                      <div
+                        *ngFor="
+                          let org of shoppingCenter.ShoppingCenter
+                            .ManagerOrganization
+                        "
+                        class="contact-container table-texttt"
+                      >
+                        <p class="text-bold m-0">
+                          {{ org.Firstname | titlecase }}
+                          {{ org.LastName | titlecase }}
+                        </p>
+                        <p class="m-0">{{ org.CellPhone }}</p>
+                        <p class="m-0">{{ org.Email }}</p>
+                        <hr
+                          *ngIf="
+                            !isLast(
+                              org,
+                              shoppingCenter.ShoppingCenter.ManagerOrganization
+                            )
+                          "
+                        />
+                      </div>
+                    </ng-template>
+                  </div>
+                </ng-container>
+              </td>
+              <td class="table-text">
+                <span
+                  [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
+                ></span>
+                <div>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H14C14.41 1.25 14.75 1.59 14.75 2C14.75 2.41 14.41 2.75 14 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V10C21.25 9.59 21.59 9.25 22 9.25C22.41 9.25 22.75 9.59 22.75 10V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M22 10.75H18C14.58 10.75 13.25 9.42 13.25 6V2C13.25 1.7 13.43 1.42 13.71 1.31C13.99 1.19 14.31 1.26 14.53 1.47L22.53 9.47C22.74 9.68 22.81 10.01 22.69 10.29C22.57 10.57 22.3 10.75 22 10.75ZM14.75 3.81V6C14.75 8.58 15.42 9.25 18 9.25H20.19L14.75 3.81Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M13 13.75H7C6.59 13.75 6.25 13.41 6.25 13C6.25 12.59 6.59 12.25 7 12.25H13C13.41 12.25 13.75 12.59 13.75 13C13.75 13.41 13.41 13.75 13 13.75Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M11 17.75H7C6.59 17.75 6.25 17.41 6.25 17C6.25 16.59 6.59 16.25 7 16.25H11C11.41 16.25 11.75 16.59 11.75 17C11.75 17.41 11.41 17.75 11 17.75Z"
+                      fill="black"
+                    />
+                  </svg>
+
+                  <a
+                    class="info-value text-dark px-1"
+                    href="{{ shoppingCenter.DocsLink }}"
+                    target="_blank"
+                    >Property Docs</a
+                  >
+                </div>
+              </td>
+              <td>
+                <ng-container
+                  *ngIf="
+                    shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
+                    else emptyTd
                   "
                 >
-                  <div class="d-flex align-items-center justify-content-center">
-                    <img
-                      class="logo"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        item.RelationOrganizationId
-                      }}"
-                      [title]="item.RelationOrganizationName"
-                      alt=""
-                    />
-                    <span>{{ item.RelationOrganizationName }}</span>
+                  <ng-container
+                    *ngFor="
+                      let item of shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
+                      let i = index;
+                      trackBy: trackByIndex
+                    "
+                  >
                     <div
                       class="d-flex align-items-center justify-content-center"
                     >
-                      <span class="ms-2 table-text"> </span>
+                      <img
+                        class="logo"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          item.RelationOrganizationId
+                        }}"
+                        [title]="item.RelationOrganizationName"
+                        alt=""
+                      />
+                      <span>{{ item.RelationOrganizationName }}</span>
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                      >
+                        <span class="ms-2 table-text"> </span>
+                      </div>
                     </div>
-                  </div>
+                  </ng-container>
                 </ng-container>
-              </ng-container>
-            </td>
-            <ng-template #emptyTd> </ng-template>
+              </td>
+              <ng-template #emptyTd> </ng-template>
 
-            <td>
-              <div
-                class="d-flex justify-content-center align-items-center total"
-              >
-                <div class="d-flex gap16">
-                  <div class="framee">
-                    <a
-                      [routerLink]="[
-                        '/landing',
-                        shoppingCenter?.ShoppingCenter?.Places
-                          ? shoppingCenter.ShoppingCenter.Places[0].Id
-                          : 0,
-                        shoppingCenter.Id,
-                        BuyBoxId
-                      ]"
+              <td>
+                <div
+                  class="d-flex justify-content-center align-items-center total"
+                >
+                  <div class="d-flex gap16">
+                    <div class="framee">
+                      <a
+                        [routerLink]="[
+                          '/landing',
+                          shoppingCenter?.ShoppingCenter?.Places
+                            ? shoppingCenter.ShoppingCenter.Places[0].Id
+                            : 0,
+                          shoppingCenter.Id,
+                          BuyBoxId
+                        ]"
+                      >
+                        <svg
+                          class="svg-icon"
+                          width="21"
+                          height="20"
+                          viewBox="0 0 21 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M11.1667 9.16683L18.0001 2.3335"
+                            stroke="#817A79"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M18.6667 5.6665V1.6665H14.6667"
+                            stroke="#817A79"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M9.50024 1.6665H7.83358C3.66691 1.6665 2.00024 3.33317 2.00024 7.49984V12.4998C2.00024 16.6665 3.66691 18.3332 7.83358 18.3332H12.8336C17.0002 18.3332 18.6669 16.6665 18.6669 12.4998V10.8332"
+                            stroke="#817A79"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </a>
+                    </div>
+                    <div
+                      class="framee"
+                      (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
                     >
                       <svg
                         class="svg-icon"
@@ -807,82 +846,47 @@
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                       >
+                        <g id="vuesax/outline/location">
+                          <g id="location">
+                            <path
+                              id="Vector"
+                              d="M11.9999 14.1699C9.86988 14.1699 8.12988 12.4399 8.12988 10.2999C8.12988 8.15994 9.86988 6.43994 11.9999 6.43994C14.1299 6.43994 15.8699 8.16994 15.8699 10.3099C15.8699 12.4499 14.1299 14.1699 11.9999 14.1699ZM11.9999 7.93994C10.6999 7.93994 9.62988 8.99994 9.62988 10.3099C9.62988 11.6199 10.6899 12.6799 11.9999 12.6799C13.3099 12.6799 14.3699 11.6199 14.3699 10.3099C14.3699 8.99994 13.2999 7.93994 11.9999 7.93994Z"
+                              fill="#7A8591"
+                            />
+                            <path
+                              id="Vector_2"
+                              d="M12.0002 22.76C10.5202 22.76 9.03018 22.2 7.87018 21.09C4.92018 18.25 1.66018 13.72 2.89018 8.33C4.00018 3.44 8.27018 1.25 12.0002 1.25C12.0002 1.25 12.0002 1.25 12.0102 1.25C15.7402 1.25 20.0102 3.44 21.1202 8.34C22.3402 13.73 19.0802 18.25 16.1302 21.09C14.9702 22.2 13.4802 22.76 12.0002 22.76ZM12.0002 2.75C9.09018 2.75 5.35018 4.3 4.36018 8.66C3.28018 13.37 6.24018 17.43 8.92018 20C10.6502 21.67 13.3602 21.67 15.0902 20C17.7602 17.43 20.7202 13.37 19.6602 8.66C18.6602 4.3 14.9102 2.75 12.0002 2.75Z"
+                              fill="#7A8591"
+                            />
+                          </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <div
+                      class="framee"
+                      (click)="
+                        openStreetViewPlace(StreetViewPlace, shoppingCenter)
+                      "
+                    >
+                      <svg
+                        class="svg-icon"
+                        width="35"
+                        height="35"
+                        viewBox="0 0 56 48"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
                         <path
-                          d="M11.1667 9.16683L18.0001 2.3335"
-                          stroke="#817A79"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M18.6667 5.6665V1.6665H14.6667"
-                          stroke="#817A79"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M9.50024 1.6665H7.83358C3.66691 1.6665 2.00024 3.33317 2.00024 7.49984V12.4998C2.00024 16.6665 3.66691 18.3332 7.83358 18.3332H12.8336C17.0002 18.3332 18.6669 16.6665 18.6669 12.4998V10.8332"
-                          stroke="#817A79"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
+                          fill="#0D0C0C"
                         />
                       </svg>
-                    </a>
-                  </div>
-                  <div
-                    class="framee"
-                    (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
-                  >
-                    <svg
-                      class="svg-icon"
-                      width="21"
-                      height="20"
-                      viewBox="0 0 21 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <g id="vuesax/outline/location">
-                        <g id="location">
-                          <path
-                            id="Vector"
-                            d="M11.9999 14.1699C9.86988 14.1699 8.12988 12.4399 8.12988 10.2999C8.12988 8.15994 9.86988 6.43994 11.9999 6.43994C14.1299 6.43994 15.8699 8.16994 15.8699 10.3099C15.8699 12.4499 14.1299 14.1699 11.9999 14.1699ZM11.9999 7.93994C10.6999 7.93994 9.62988 8.99994 9.62988 10.3099C9.62988 11.6199 10.6899 12.6799 11.9999 12.6799C13.3099 12.6799 14.3699 11.6199 14.3699 10.3099C14.3699 8.99994 13.2999 7.93994 11.9999 7.93994Z"
-                            fill="#7A8591"
-                          />
-                          <path
-                            id="Vector_2"
-                            d="M12.0002 22.76C10.5202 22.76 9.03018 22.2 7.87018 21.09C4.92018 18.25 1.66018 13.72 2.89018 8.33C4.00018 3.44 8.27018 1.25 12.0002 1.25C12.0002 1.25 12.0002 1.25 12.0102 1.25C15.7402 1.25 20.0102 3.44 21.1202 8.34C22.3402 13.73 19.0802 18.25 16.1302 21.09C14.9702 22.2 13.4802 22.76 12.0002 22.76ZM12.0002 2.75C9.09018 2.75 5.35018 4.3 4.36018 8.66C3.28018 13.37 6.24018 17.43 8.92018 20C10.6502 21.67 13.3602 21.67 15.0902 20C17.7602 17.43 20.7202 13.37 19.6602 8.66C18.6602 4.3 14.9102 2.75 12.0002 2.75Z"
-                            fill="#7A8591"
-                          />
-                        </g>
-                      </g>
-                    </svg>
-                  </div>
-                  <div
-                    class="framee"
-                    (click)="
-                      openStreetViewPlace(StreetViewPlace, shoppingCenter)
-                    "
-                  >
-                    <svg
-                      class="svg-icon"
-                      width="35"
-                      height="35"
-                      viewBox="0 0 56 48"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M23.3281 43.8644C23.54 43.9408 23.7616 44 24 44H28H32C32.2384 44 32.4601 43.9408 32.672 43.8644C39.801 43.4626 48 42.1089 48 38C48 34.2515 41.1746 32.7958 34.5642 32.2639L37.4141 29.4141C37.7891 29.0391 38 28.5303 38 28V22C38 18.3336 35.5072 15.2683 32.1367 14.3265C33.2797 13.2334 34 11.7026 34 10C34 6.6914 31.3086 4 28 4C24.6914 4 22 6.6914 22 10C22 11.7026 22.7203 13.2334 23.8633 14.3265C20.4928 15.2683 18 18.3336 18 22V28C18 28.5303 18.2109 29.0391 18.5859 29.4141L21.4358 32.2639C14.8254 32.7958 8 34.2515 8 38C8 42.1089 16.1991 43.4626 23.3281 43.8644ZM34 39.7666V36.2334C38.7793 36.6182 41.7715 37.3975 43.209 38C41.7715 38.6025 38.7793 39.3818 34 39.7666ZM28 8C29.1035 8 30 8.89746 30 10C30 11.1025 29.1035 12 28 12C26.8965 12 26 11.1025 26 10C26 8.89746 26.8965 8 28 8ZM22 22C22 19.7939 23.7949 18 26 18H30C32.2051 18 34 19.7939 34 22V27.1719L30.5859 30.5859C30.2109 30.9609 30 31.4697 30 32V34.0996V39.9499C29.6979 39.958 29.4011 39.9679 29.0937 39.9726C28.364 39.983 27.6361 39.983 26.9062 39.9726C26.5989 39.9679 26.3021 39.958 26 39.95V34.0996V32C26 31.4697 25.7891 30.9609 25.4141 30.5859L22 27.1719V22ZM22 36.2334V39.7666C17.2207 39.3818 14.2285 38.6025 12.791 38C14.2285 37.3975 17.2207 36.6182 22 36.2334Z"
-                        fill="#0D0C0C"
-                      />
-                    </svg>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </td>
-          </tr>
+              </td>
+            </tr>
+          </ng-container>
         </ng-container>
       </tbody>
     </table>
@@ -924,7 +928,7 @@
         </div>
       </div>
     </div>
- </ng-container>
+  </ng-container>
 
   <div
     class="background2"
@@ -937,6 +941,7 @@
     <div class="row mt-2">
       <ng-container *ngIf="currentView != 2">
         <ng-container *ngFor="let shopping of shoppingCenters">
+          <ng-container *ngIf="shopping.Deleted == false"> 
           <div
             class="card-window total"
             [ngClass]="{
@@ -1190,6 +1195,8 @@
               </div>
             </div>
           </div>
+        </ng-container>
+
         </ng-container>
       </ng-container>
       <ng-container *ngIf="currentView == 2">
@@ -1774,8 +1781,7 @@
       <div class="preference-options mb-4">
         <div
           class="location-card"
-          style="cursor: pointer;"
-
+          style="cursor: pointer"
           [class.selected]="selectedCenterId === General.modalObject.Id"
           (click)="selectCenter(General.modalObject.Id)"
         >
@@ -1791,8 +1797,7 @@
 
         <div
           class="location-card next-center"
-          style="cursor: pointer;"
-
+          style="cursor: pointer"
           [class.selected]="selectedCenterId === General.nextModalObject.Id"
           (click)="selectCenter(General.nextModalObject.Id)"
         >

@@ -1,5 +1,5 @@
 
-<div class="container p-2">
+<div class="py-2">
     <div
       class="mtopp"
       *ngIf="
@@ -11,8 +11,6 @@
           <tr>
             <th>Name</th>
             <th>Address</th>
-            <th>City</th>
-            <th>State</th>
 
             <th *ngIf="placesRepresentative != false">Leased by</th>
             <th>Unit Size & Lease Price</th>
@@ -33,26 +31,26 @@
           <ng-container *ngFor="let shoppingCenter of shoppingCenters">
             <tr>
               <td>
+                
                 <span
                   class="table-text"
                   [innerHTML]="shoppingCenter.CenterName | titlecase"
                 ></span>
+
+                <span class="badge badge-danger mx-2" *ngIf="shoppingCenter.Deleted == true">Deleted</span>
+
               </td>
               <td>
                 <div
                   class="table-text cursor"
                   (click)="openMapViewPlace(MapViewPlace, shoppingCenter)"
                 >
+                
                   {{ shoppingCenter.CenterAddress }},
                   {{ shoppingCenter.CenterCity | titlecase }},
                   {{ shoppingCenter.CenterState }}
+
                 </div>
-              </td>
-              <td>
-                {{ shoppingCenter.CenterCity | titlecase }}
-              </td>
-              <td>
-                {{ shoppingCenter.CenterState }}
               </td>
               <td *ngIf="placesRepresentative != false">
                 <ng-container
