@@ -1,4 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   Cotenant,
   Generated,
@@ -6,20 +12,32 @@ import {
   ShoppingCenterManager,
 } from 'src/models/emailGenerate';
 import { RelationNames } from 'src/models/emailGenerate';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/services/places.service';
 import { Center } from 'src/models/shoppingCenters';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
-import { MsalService } from '@azure/msal-angular';
-import { AuthenticationResult, BrowserAuthError } from '@azure/msal-browser';
-import { MicrosoftMailsService } from 'src/app/services/microsoft-mails.service';
+import { EditorModule } from 'primeng/editor';
+
+import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-emily',
   templateUrl: './emily.component.html',
   styleUrls: ['./emily.component.css'],
+  standalone: true, // Add this line
+  imports: [
+    CommonModule,
+    NgxSpinnerModule,
+    ReactiveFormsModule,
+    EditorModule,
+    FormsModule,
+    RouterModule,
+  ],
+  providers: [NgxSpinnerService, PlacesService],
 })
 export class EmilyComponent implements OnInit {
   @Output() contentChange = new EventEmitter<string>();
@@ -62,7 +80,7 @@ export class EmilyComponent implements OnInit {
   selectedPromptName: string = '';
   prompts: any[] = [];
   emailSubject: string = '';
-  emailBodyResponse: string = '';
+  emailBodyResponse: any;
   emailId!: number;
   isEditing: boolean = false;
   isEditingBody: boolean = false;
@@ -95,26 +113,58 @@ export class EmilyComponent implements OnInit {
   selectedContact: number[] = [];
   RepresentativeOrganizationContactsThatWillReceiveThisEmail: string =
     'Representative Organization Contacts that will receive this email:';
-  contactId:any ;
+  contactId: any;
+  @Input() buyBoxIdReply!: number;
+  @Input() orgIdReply!: number;
+  @Input() emailBodyReply!: any;
+  @Input() selectedContactContactId!: any;
+  loginContact: any;
+  @Output() emailBodyResponseSend: EventEmitter<any> = new EventEmitter<any>();
+  @Input() modal: any;
+  microDealId: any;
+  closeModal() {
+    this.modal.dismiss('Close click');
+  }
+
+  formGroup!: FormGroup;
+  bodyemail: any;
+  contactIdemail: any;
+
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
-    private msalService: MsalService,
-    private microsoftMailsService: MicrosoftMailsService
+    private _location: Location,
   ) {
-    this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = params.get('buyboxId');
-      this.orgId = params.get('orgId');
-      this.CenterId = params.get('CenterId');
-      this.shoppingCenterOrganization = this.orgId;
-    });
+    if (!this.buyBoxIdReply) {
+      this.route.paramMap.subscribe((params) => {
+        this.buyBoxId = params.get('buyboxId');
+        this.orgId = params.get('orgId');
+        this.microDealId = params.get('microDealId');
+        this.CenterId = params.get('CenterId');
+        this.shoppingCenterOrganization = this.orgId;
+      });
+    }
   }
 
   async ngOnInit() {
     this.spinner.show();
+    this.loginContact = localStorage.getItem('contactId');
     this.contactId = localStorage.getItem('contactId');
+
+    if (this.buyBoxIdReply && this.orgIdReply) {
+      this.buyBoxId = this.buyBoxIdReply;
+      this.orgId = this.orgIdReply;
+      this.shoppingCenterOrganization = this.orgId;
+    }
+
+    this.formGroup = new FormGroup({
+      body: new FormControl(''),
+      subject: new FormControl(''),
+      IsCC: new FormControl(false),
+    });
+
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetPrompts();
@@ -394,6 +444,7 @@ export class EmilyComponent implements OnInit {
           this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
 
           this.showToast('Email Save and Send successfully!');
+          this.MoveStage();
         },
         error: (err) => {
           console.error('Error updating prompt:', err);
@@ -401,6 +452,20 @@ export class EmilyComponent implements OnInit {
         },
       });
     }, 2000);
+  }
+
+  MoveStage() {
+    const body = {
+      name: 'ChangeDealStage',
+      params: {
+        stageid: 8,
+        microdealid: this.microDealId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+      },
+    });
   }
 
   SendEmailTemplate(email: any) {
@@ -636,7 +701,7 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.relationCategoriesNames = data.json;
-        this.relationCategoriesNames.forEach((r) => (r.selected = true));
+        this.relationCategoriesNames?.forEach((r) => (r.selected = true));
         this.spinner.hide();
       },
     });
@@ -982,7 +1047,7 @@ export class EmilyComponent implements OnInit {
         'No Organization Name';
 
       const categoryMap: { [key: string]: string[] } = {};
-      this.relationCategoriesNames.forEach((selectedRelation) => {
+      this.relationCategoriesNames?.forEach((selectedRelation) => {
         if (selectedRelation.selected) {
           this.generated[0]?.Releations?.forEach((relation) => {
             if (
@@ -1080,6 +1145,10 @@ export class EmilyComponent implements OnInit {
       });
     }
 
+    if (this.emailBodyReply) {
+      emailContent += `Reply to this email`;
+      emailContent += this.emailBodyReply;
+    }
     this.emailBody = emailContent;
   }
 
@@ -1097,7 +1166,8 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.generateEmail(promptId, context).subscribe({
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
-        this.emailBodyResponse = data?.emailBody || 'No body received';
+        this.emailBodyResponse = data?.emailBody;
+
         this.emailId = data?.id || 'No body received';
         this.spinner.hide();
       },
@@ -1368,4 +1438,36 @@ export class EmilyComponent implements OnInit {
     toast!.classList.remove('show');
   }
 
+  AddEmail() {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'AddEmail',
+      MainEntity: null,
+      Params: {
+        Body: this.formGroup.get('body')?.value + this.bodyemail,
+        Date: new Date().toISOString(),
+        Subject: this.formGroup.get('subject')?.value,
+        Direction: Number(-1),
+        outbox: '',
+        BuyBoxId: +this.buyBoxId,
+        IsCC: this.formGroup.get('IsCC')?.value ? 1 : 0,
+        FromContactId: Number(this.loginContact),
+        ContactIds: this.selectedContactContactId,
+      },
+      Json: null,
+    };
+
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.spinner.hide();
+        this.closeModal();
+      },
+    });
+  }
+
+  back() {
+    this._location.back();
+  }
 }

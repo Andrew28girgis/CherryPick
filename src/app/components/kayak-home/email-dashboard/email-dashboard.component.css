@@ -20,6 +20,12 @@
 
 .col-body:nth-child(1) {
   border-right: 1px solid rgb(211, 211, 211);
+  cursor: pointer;
+}
+
+.col-body:nth-child(1):hover {
+  color: #001f3f;
+  font-weight: 600;
 }
 
 ::ng-deep .p-datatable .p-datatable-header {

@@ -19,14 +19,14 @@ interface Column {
   templateUrl: './email-dashboard.component.html',
   styleUrl: './email-dashboard.component.css'
 })
-export class EmailDashboardComponent {
+export class EmailDashboardComponent implements OnInit{
   buyBoxId!: any;
   EmailDashboard : any[] = [];
   cols!: Column[];
   
   constructor(
     public spinner: NgxSpinnerService,
-    private PlacesService: PlacesService
+    private PlacesService: PlacesService,
   ) { }
 
   ngOnInit(): void {
@@ -61,5 +61,8 @@ export class EmailDashboardComponent {
         this.spinner.hide();
       },
     });
+  }
+
+  openOrg(idOrg: number, IdStage: number): void {
   }
 }

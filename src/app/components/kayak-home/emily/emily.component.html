@@ -1,5 +1,8 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
+<div class="d-flex justify-content-start p-3">
+  <button class="active" (click)="back()"><i class="fa-solid fa-arrow-left"></i></button>
+</div>
 <section class="container-fluid pt-2 pb-2 mobileResponsive">
   <div class="main-section-emily">
     <section>
@@ -263,112 +266,115 @@
                 </ng-container>
               </div>
 
-              
-              <!-- API Response View  Generated Email-->
-              <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
-                <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
-                  <div class="card shadow-sm border-0">
-                    <div class="card-header text-white GeneratedEmail">
-                      <h5 class="mb-0">Generated Email</h5>
-                    </div>
-                    <div class="card-body bg-light">
-                      <div class="mb-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                          <label class="fw-bold text-secondary">Email Subject:</label>
-                          <span (click)="copyEmailSubject()" class="copy-icon-container">
-                            <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
-                            <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
-                          </span>
-                        </div>
-                        <div class="p-3 border rounded bg-white text-dark">
-                          <textarea [innerHTML]="emailSubject" rows="1" class="form-control"></textarea>
-                        </div>
+
+
+
+              <!-- API Response View Saved Template-->
+              <ng-container *ngIf="!emailBodyReply">
+                <!-- API Response View  Generated Email-->
+                <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
+                  <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
+                    <div class="card shadow-sm border-0">
+                      <div class="card-header text-white GeneratedEmail">
+                        <h5 class="mb-0">Generated Email</h5>
                       </div>
-                      <div>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <label class="fw-bold text-secondary">Email Body:</label>
-                          <span (click)="copyEmailBody()" class="copy-icon-container">
-                            <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
-                            <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
-                          </span>
+                      <div class="card-body bg-light">
+                        <div class="mb-3">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <label class="fw-bold text-secondary">Email Subject:</label>
+                            <span (click)="copyEmailSubject()" class="copy-icon-container">
+                              <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
+                              <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
+                            </span>
+                          </div>
+                          <div class="p-3 border rounded bg-white text-dark">
+                            <textarea [innerHTML]="emailSubject" rows="1" class="form-control"></textarea>
+                          </div>
                         </div>
-                        <div class="p-3 border rounded bg-white text-dark">
-                          <p [innerHTML]="emailBodyResponse" class="m-0"></p>
-                        </div>
-                        <div class="d-flex justify-content-end gap-2">
-                          <button class="btn btn-success mt-3" (click)="SaveTemplate()">
-                            Save
-                          </button>
-                          <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">
-                            Save and Send
-                          </button>
+                        <div>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <label class="fw-bold text-secondary">Email Body:</label>
+                            <span (click)="copyEmailBody()" class="copy-icon-container">
+                              <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
+                              <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
+                            </span>
+                          </div>
+                          <div class="p-3 border rounded bg-white text-dark">
+                            <p [innerHTML]="emailBodyResponse" class="m-0"></p>
+                          </div>
+                          <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-success mt-3" (click)="SaveTemplate()">
+                              Save
+                            </button>
+                            <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">
+                              Save and Send
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <!-- API Response View Saved Template-->
-              <div *ngIf="
+                <div *ngIf="
                   CheckGetSavedTemplates && CheckGetSavedTemplates.length > 0
                 " class="row m-0 p-0 d-flex justify-content-center">
-                <div class="col-12 p-0 mt-3" *ngFor="let item of CheckGetSavedTemplates">
-                  <div class="col-12 p-0">
-                    <div class="form-group mt-4">
-                      <div class="card shadow-sm border-0">
-                        <div class="card-header text-white GeneratedEmail">
-                          <h5 class="mb-0 d-flex justify-content-between">
-                            <p>
-                              <span class="SavedTemplate">Saved Template</span>
-                              <span class="firstlast" *ngFor="let contact of item.Contact">
-                                {{ contact.Firstname }} {{ contact.LastName }}
-                              </span>
-                            </p>
-                            <p>
-                              <span class="creationdate">Creation Date :
-                                {{ item.CreationDate | date : "medium" }}</span>
-                              <span *ngIf="item.SentDate !== '0001-01-01T00:00:00'" class="firstlast">Sent Date :
-                                {{ item.SentDate | date : "medium" }}</span>
-                            </p>
-                          </h5>
-                        </div>
-                        <div class="card-body bg-light">
-                          <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <label class="fw-bold text-secondary">Email Subject:</label>
-                            </div>
-                            <div class="p-3 border rounded bg-white text-dark">
-                              <textarea [(ngModel)]="item.Subject" rows="1" class="form-control"></textarea>
-                            </div>
+                  <div class="col-12 p-0 mt-3" *ngFor="let item of CheckGetSavedTemplates">
+                    <div class="col-12 p-0">
+                      <div class="form-group mt-4">
+                        <div class="card shadow-sm border-0">
+                          <div class="card-header text-white GeneratedEmail">
+                            <h5 class="mb-0 d-flex justify-content-between">
+                              <p>
+                                <span class="SavedTemplate">Saved Template</span>
+                                <span class="firstlast" *ngFor="let contact of item.Contact">
+                                  {{ contact.Firstname }} {{ contact.LastName }}
+                                </span>
+                              </p>
+                              <p>
+                                <span class="creationdate">Creation Date :
+                                  {{ item.CreationDate | date : "medium" }}</span>
+                                <span *ngIf="item.SentDate !== '0001-01-01T00:00:00'" class="firstlast">Sent Date :
+                                  {{ item.SentDate | date : "medium" }}</span>
+                              </p>
+                            </h5>
                           </div>
-                          <div>
-                            <div class="d-flex justify-content-between align-items-center">
-                              <label class="fw-bold text-secondary">Email Body:</label>
+                          <div class="card-body bg-light">
+                            <div class="mb-3">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <label class="fw-bold text-secondary">Email Subject:</label>
+                              </div>
+                              <div class="p-3 border rounded bg-white text-dark">
+                                <textarea [(ngModel)]="item.Subject" rows="1" class="form-control"></textarea>
+                              </div>
                             </div>
-                            <div class="p-3 border rounded bg-white text-dark">
-                              <p [innerHTML]="item.Template" class="m-0" *ngIf="!emailBodyResponsetogale"></p>
-                              <textarea [(ngModel)]="item.Template" [innerHTML]="item.Template" rows="15"
-                                class="form-control" *ngIf="emailBodyResponsetogale"></textarea>
-                            </div>
-                            <div class="d-flex justify-content-end mt-2 gap-2">
-                              <button class="Button_Update" *ngIf="emailBodyResponsetogale"
-                                (click)="emailBodyResponsetogale = false">
-                                Cancel
-                              </button>
-                              <button class="Button_Update" *ngIf="item.SentDate == '0001-01-01T00:00:00'" (click)="
+                            <div>
+                              <div class="d-flex justify-content-between align-items-center">
+                                <label class="fw-bold text-secondary">Email Body:</label>
+                              </div>
+                              <div class="p-3 border rounded bg-white text-dark">
+                                <p [innerHTML]="item.Template" class="m-0" *ngIf="!emailBodyResponsetogale"></p>
+                                <textarea [(ngModel)]="item.Template" [innerHTML]="item.Template" rows="15"
+                                  class="form-control" *ngIf="emailBodyResponsetogale"></textarea>
+                              </div>
+                              <div class="d-flex justify-content-end mt-2 gap-2">
+                                <button class="Button_Update" *ngIf="emailBodyResponsetogale"
+                                  (click)="emailBodyResponsetogale = false">
+                                  Cancel
+                                </button>
+                                <button class="Button_Update" *ngIf="item.SentDate == '0001-01-01T00:00:00'" (click)="
                                   !emailBodyResponsetogale
                                     ? toggleSwitch()
                                     : UpdateEmailTemplate(item)
                                 ">
-                                {{
+                                  {{
                                   !emailBodyResponsetogale ? "Edit" : "Update"
                                 }}
-                              </button>
-                              <button class="Button_Update_S" *ngIf="item.SentDate == '0001-01-01T00:00:00'"
-                                (click)="SendEmailTemplate(item)">
-                                Send
-                              </button>
+                                </button>
+                                <button class="Button_Update_S" *ngIf="item.SentDate == '0001-01-01T00:00:00'"
+                                  (click)="SendEmailTemplate(item)">
+                                  Send
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -376,7 +382,30 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </ng-container>
+              <ng-container *ngIf="emailBodyReply">
+                <div  [formGroup]="formGroup">
+                  <div class="p-3">
+                    <div class="d-flex pb-3 align-items-center">
+                      <label for="subject" class="IsCC_checkbox me-2">Subject: </label>
+                      <input type="text" formControlName="subject"  class="input_checkbox form-control w-25" name="subject" id="subject"
+                        placeholder="Enter your subject email">
+                    </div>
+                    <div class="checkbox-section">
+                      <input type="checkbox" formControlName="IsCC" name="IsCC" id="IsCC" class="form-check-input m-0" />
+                      <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label>
+                    </div>
+                  </div>
+  
+                  <p-editor [(ngModel)]="emailBodyResponse" formControlName="body"  [style]="{ height: '250px' }"></p-editor>
+                  <div class="d-flex justify-content-end">
+                    <button type="button" class="m-2 buttonSave" (click)="AddEmail()">Send</button>
+                    <button class="btn btn-secondary m-2" (click)="closeModal()">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </ng-container>
         </div>

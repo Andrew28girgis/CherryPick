@@ -1,27 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common'; 
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-kayak-home',
   templateUrl: './kayak-home.component.html',
   styleUrls: ['./kayak-home.component.css'],
 })
-
 export class KayakHomeComponent implements OnInit {
   tabs = [
-    { id: 'Properties', label: 'Properties' },
-    { id: 'Details', label: 'Details' },
+    {
+      id: 'Properties',
+      label: 'Properties',
+      icon: '../../../assets/icons/svgs/properties.svg',
+      selectedIcon: '../../../assets/icons/svgs/properties-selected.svg',
+    },
+    {
+      id: 'Details',
+      label: 'Details',
+      icon: '../../../assets/icons/svgs/details.svg',
+      selectedIcon: '../../../assets/icons/svgs/details-selected.svg',
+    },
     // { id: 'Manage', label: 'Manage' },
-    { id: 'Emily', label: 'Emily' },
+    {
+      id: 'Emily',
+      label: 'Emily',
+      icon: '../../../assets/icons/svgs/emily.svg',
+      selectedIcon: '../../../assets/icons/svgs/emily-selected.svg',
+    },
   ];
 
-  activeComponent: string = 'Properties';  
-  selectedTab: string = 'Properties';  
+  activeComponent: string = 'Properties';
+  selectedTab: string = 'Properties';
   BuyboxName: string | null = '';
   Buyboxid: any | null = '';
 
-  constructor(public router: Router, private _location: Location,private route: ActivatedRoute) {}
+  constructor(
+    public router: Router,
+    private _location: Location,
+    private route: ActivatedRoute
+  ) {}
 
   async ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -30,13 +48,13 @@ export class KayakHomeComponent implements OnInit {
     });
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
-  } 
-   
+  }
+
   selectTab(tabId: string): void {
-    this.selectedTab = tabId; 
-    this.activeComponent = tabId; 
-  } 
- 
+    this.selectedTab = tabId;
+    this.activeComponent = tabId;
+  }
+
   BackTo() {
     this._location.back();
   }

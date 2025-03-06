@@ -13,11 +13,10 @@ export class PolygonsControllerService {
     private placesService: PlacesService
   ) {}
 
-  getAllPolygons(contactId: number, buyBoxId: number): Observable<any> {
+  getAllPolygons(buyBoxId: number): Observable<any> {
     const body: any = {
       Name: 'RetrieveGeoJsons',
       Params: {
-        ContactId: contactId,
         BuyBoxId: buyBoxId,
       },
     };
@@ -101,6 +100,40 @@ export class PolygonsControllerService {
     const body: any = {
       Name: 'GetPolygonsShoppingCenters',
       Params: {
+        PolygonId: polygonId,
+      },
+    };
+
+    return this.placesService.GenericAPI(body);
+  }
+  
+  getExplorePolygonProperties(polygonId: number): Observable<any> {
+    const body: any = {
+      Name: 'GetShoppingcentersIntersectingPolygon',
+      Params: {
+        PolygonId: polygonId,
+      },
+    };
+
+    return this.placesService.GenericAPI(body);
+  }
+
+  getPolygonsByName(name: string): Observable<any> {
+    const body: any = {
+      Name: 'GetPolygonsByName',
+      Params: {
+        Name: name,
+      },
+    };
+
+    return this.placesService.GenericAPI(body);
+  }
+
+  attachPolygonToBuyBox(buyBoxId: number, polygonId: number): Observable<any> {
+    const body: any = {
+      Name: 'AttachPolygonToBuyBox',
+      Params: {
+        BuyBoxId: buyBoxId,
         PolygonId: polygonId,
       },
     };

@@ -5,7 +5,7 @@ export interface BuyBoxMicroDeals {
 }
 
 export interface Organization {
-  OrganizationId: number
+  OrganizationId: any
   OrganizationName: string
   Contact: Contact[]
 }
@@ -25,7 +25,7 @@ export interface EmailStat {
 
 
 export interface Stages {
-  id: number
+  id: any
   title: string
   dealTypeId: any
   displayName: any
@@ -72,5 +72,6 @@ export interface EmailDashboard {
 export interface OrganizationDashboard {
   ID: number
   Name: string
+  MicroDealId:any
   LastActivityDate?: string
 }

@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -9,7 +10,7 @@ import {
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { lastValueFrom, Subject, takeUntil } from 'rxjs';
+import { lastValueFrom, Subject, switchMap, takeUntil } from 'rxjs';
 import { MapDrawingService } from 'src/app/services/map-drawing.service';
 import { PolygonsControllerService } from 'src/app/services/polygons-controller.service';
 import { StateService } from 'src/app/services/state.service';
@@ -26,12 +27,39 @@ export class PolygonsControllerComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   private destroy$ = new Subject<void>();
+  private searchSubject: Subject<string> = new Subject<string>();
+
   // create observable to destroy all subscribtions when component destroyed
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
   map!: google.maps.Map;
   buyBoxId!: number;
   contactId!: number;
+  polygonsOptions: {
+    id: number;
+    title: string;
+    icon: string;
+    selectedIcon: string;
+  }[] = [
+    {
+      id: 1,
+      title: 'My Polygons',
+      icon: '../../../../assets/icons/svgs/buyBox-polygons.svg',
+      selectedIcon:
+        '../../../../assets/icons/svgs/buyBox-polygons-selected.svg',
+    },
+    {
+      id: 2,
+      title: 'Explore Polygons',
+      icon: '../../../../assets/icons/svgs/explore-polygons.svg',
+      selectedIcon:
+        '../../../../assets/icons/svgs/explore-polygons-selected.svg',
+    },
+  ];
+  displayedExternalPolygons: number[] = [];
+  selectedPolygonOption: number = 1;
+  polygonSearch: string = '';
   polygons: IPolygon[] = [];
+  externalPolygons: IPolygon[] = [];
   selectedPolygonsIds: Set<number> = new Set<number>();
   selectedPolygon: IPolygon | null = null;
   properties: { polygonId: number; properties: IProperty[] }[] = [];
@@ -41,7 +69,8 @@ export class PolygonsControllerComponent
     private polygonsControllerService: PolygonsControllerService,
     private stateService: StateService,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -58,12 +87,11 @@ export class PolygonsControllerComponent
     // listen for polygons and circles changes
     this.polygonsListeners();
     this.circlesListeners();
+    this.getPolygonsByNameListener();
   }
-
-  ngAfterViewInit() {
-    // initialize the map
+  
+  ngAfterViewInit() { 
     this.initializeMap();
-
     // initialize drawing manager
     this.mapDrawingService.initializeDrawingManager(this.map);
 
@@ -97,6 +125,13 @@ export class PolygonsControllerComponent
       .subscribe((polygon) => {
         if (polygon.id) {
           this.polygons = this.polygons.filter((p) => p.id != polygon.id);
+          this.mapDrawingService.completelyRemoveMarkers(polygon.id);
+          this.properties = this.properties.filter(
+            (p) => p.polygonId != polygon.id
+          );
+          this.selectedPolygon = null;
+          this.selectedPolygonsIds.delete(polygon.id);
+          this.cdr.detectChanges();
           this.deletePolygon(polygon.id);
         }
       });
@@ -158,6 +193,13 @@ export class PolygonsControllerComponent
       .subscribe((circle) => {
         if (circle.id) {
           this.polygons = this.polygons.filter((p) => p.id != circle.id);
+          this.mapDrawingService.completelyRemoveMarkers(circle.id);
+          this.properties = this.properties.filter(
+            (p) => p.polygonId != circle.id
+          );
+          this.selectedPolygon = null;
+          this.selectedPolygonsIds.delete(circle.id);
+          this.cdr.detectChanges();
           this.deletePolygon(circle.id);
         }
       });
@@ -236,7 +278,8 @@ export class PolygonsControllerComponent
             this.map,
             JSON.parse(polygon.center),
             JSON.parse(polygon.radius),
-            polygon.name
+            polygon.name,
+            polygon.polygonSourceId ? false : true
           );
         }
         // polygon shape
@@ -257,11 +300,53 @@ export class PolygonsControllerComponent
             polygon.id,
             this.map,
             coordinates,
-            polygon.name
+            polygon.name,
+            polygon.polygonSourceId ? false : true
           );
         }
       } catch (error) {
         console.error('Error parsing GeoJSON:', error, polygon.json);
+      }
+    }
+  }
+
+  getPolygonCoordinates(polygon: IPolygon):
+    | {
+        lat: number;
+        lng: number;
+      }[]
+    | null {
+    try {
+      const geoJson: IGeoJson = JSON.parse(polygon.json);
+
+      if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
+        console.error('Invalid GeoJSON:', polygon.json);
+        return null;
+      }
+
+      const coordinates = geoJson.geometry.coordinates[0]?.map(
+        (coord: number[]) => {
+          return { lat: coord[1], lng: coord[0] };
+        }
+      );
+
+      if (!coordinates) {
+        console.error('Invalid coordinates for polygon:', polygon.json);
+        return null;
+      }
+
+      return coordinates;
+    } catch (error) {
+      console.error('Error parsing GeoJSON:', error, polygon.json);
+    }
+    return null;
+  }
+
+  addExplorePolygonsToMap(): void {
+    for (let polygon of this.externalPolygons) {
+      const coordinates = this.getPolygonCoordinates(polygon);
+      if (coordinates) {
+        this.mapDrawingService.insertExplorePolygon(polygon.id, coordinates);
       }
     }
   }
@@ -273,15 +358,18 @@ export class PolygonsControllerComponent
           // clear all lists to fill the data from database
           this.mapDrawingService.clearDrawnLists();
           this.polygons = response.json;
-          this.initializeMap();
 
-          // initialize drawing manager
-          this.mapDrawingService.initializeDrawingManager(this.map);
+          if (!this.map) {
+            this.initializeMap();
+            // initialize drawing manager
+            this.mapDrawingService.initializeDrawingManager(this.map);
+          }
+
           const centers = this.stateService.getShoppingCenters();
-          for (let center of centers) {
-            console.log(center);
-            
-            this.mapDrawingService.createTempMarker(this.map, center);
+          if (centers && centers.length > 0) {
+            for (let center of centers) {
+              this.mapDrawingService.createTempMarker(this.map, center);
+            }
           }
           this.addPolygonsToMap();
         }
@@ -292,7 +380,7 @@ export class PolygonsControllerComponent
     };
 
     this.polygonsControllerService
-      .getAllPolygons(this.contactId, this.buyBoxId)
+      .getAllPolygons(this.buyBoxId)
       .subscribe(observer);
   }
 
@@ -401,8 +489,6 @@ export class PolygonsControllerComponent
     const observer = {
       next: (response: any) => {
         if (response) {
-          this.mapDrawingService.completelyRemoveMarkers(id);
-          this.properties = this.properties.filter((p) => p.polygonId != id);
         }
       },
       error: (error: any) => {
@@ -415,7 +501,8 @@ export class PolygonsControllerComponent
 
   async createPropertiesMarkers(
     polygonId: number,
-    updating: boolean
+    updating: boolean,
+    explore?: boolean
   ): Promise<void> {
     this.spinner.show();
 
@@ -426,7 +513,9 @@ export class PolygonsControllerComponent
         this.properties = this.properties.filter(
           (p) => p.polygonId != polygonId
         );
-        const properties = await this.getPolygonProperties(polygonId);
+        const properties = explore
+          ? await this.getExplorePolygonProperties(polygonId)
+          : await this.getPolygonProperties(polygonId);
         if (properties && properties.length > 0) {
           this.properties.push({
             polygonId: polygonId,
@@ -441,7 +530,9 @@ export class PolygonsControllerComponent
         this.mapDrawingService.displayMarker(polygonId, this.map);
       }
     } else {
-      const properties = await this.getPolygonProperties(polygonId);
+      const properties = explore
+        ? await this.getExplorePolygonProperties(polygonId)
+        : await this.getPolygonProperties(polygonId);
       if (properties && properties.length > 0) {
         this.properties.push({
           polygonId: polygonId,
@@ -469,6 +560,20 @@ export class PolygonsControllerComponent
     }
   }
 
+  async getExplorePolygonProperties(polygonId: number): Promise<any> {
+    try {
+      const response = await lastValueFrom(
+        this.polygonsControllerService.getExplorePolygonProperties(polygonId)
+      );
+      if (response.json) {
+        return response.json;
+      }
+      return null;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   onCheckBoxChange(event: any, id: number): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     isChecked ? this.displayShapeOnMap(id) : this.hideShapeFromMap(id);
@@ -481,10 +586,15 @@ export class PolygonsControllerComponent
     const polygon = this.polygons.find((p) => p.id == id);
     if (polygon) {
       const point = this.getMapCenter(polygon.json);
-      if (point) {
-        this.mapDrawingService.updateMapCenter(this.map, point);
+      const coordinates = this.getPolygonCoordinates(polygon);
+      if (coordinates) {
+        this.mapDrawingService.updateMapZoom(this.map, coordinates);
       } else {
-        this.mapDrawingService.updateMapCenter(this.map, null);
+        if (point) {
+          this.mapDrawingService.updateMapCenter(this.map, point);
+        } else {
+          this.mapDrawingService.updateMapCenter(this.map, null);
+        }
       }
     }
     this.mapDrawingService.displayShapeOnMap(id, this.map);
@@ -493,23 +603,141 @@ export class PolygonsControllerComponent
   hideShapeFromMap(id: number): void {
     this.selectedPolygonsIds.delete(id);
     this.mapDrawingService.removeMarkers(id);
-
     this.mapDrawingService.hideShapeFromMap(id);
-  }
-
-  getPolygonCity(json: any): string {
-    const geoJson: IGeoJson = JSON.parse(json);
-    return geoJson.properties.city;
-  }
-
-  getPolygonState(json: any): string {
-    const geoJson: IGeoJson = JSON.parse(json);
-    return geoJson.properties.state;
   }
 
   openUpdatePolygonNameModal(content: TemplateRef<any>, polygon: IPolygon) {
     this.selectedPolygon = polygon;
     this.modalService.open(content);
+  }
+
+  getPolygonsByNameListener(): void {
+    const observer = {
+      next: (response: any) => {
+        if (response.json && response.json.length > 0) {
+          this.mapDrawingService.completelyRemoveExplorePolygon();
+          this.externalPolygons = response.json;
+          this.addExplorePolygonsToMap();
+        }
+      },
+      error: (error: any) => {
+        console.error(error);
+      },
+    };
+
+    this.searchSubject
+      .pipe(
+        // switchMap cancels previous requests when a new value is emitted
+        switchMap((searchTerm: string) =>
+          this.polygonsControllerService.getPolygonsByName(searchTerm)
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(observer);
+  }
+
+  onSearchChange(value: string): void {
+    this.externalPolygons = [];
+    this.displayedExternalPolygons = [];
+    if (value.trim().length > 0) {
+      this.searchSubject.next(value);
+    } else {
+      this.mapDrawingService.completelyRemoveExplorePolygon();
+    }
+  }
+
+  onPolygonOptionChange(optionId: number): void {
+    this.selectedPolygonOption = optionId;
+    if (optionId == 1) {
+      this.navigateToMyPolygons();
+    } else {
+      this.navigateToExplorePolygons();
+    }
+  }
+
+  navigateToExplorePolygons(): void {
+    this.polygons.forEach((p) =>
+      this.mapDrawingService.completelyRemoveMarkers(p.id)
+    );
+    this.polygons = [];
+    this.selectedPolygonsIds.clear();
+    this.selectedPolygon = null;
+    this.properties = [];
+    this.mapDrawingService.clearDrawnLists();
+    if (this.map) {
+      this.mapDrawingService.hideDrawingManager();
+    }
+  }
+
+  navigateToMyPolygons(): void {
+    this.externalPolygons.forEach((p) =>
+      this.mapDrawingService.completelyRemoveMarkers(p.id)
+    );
+    this.polygonSearch = '';
+    this.externalPolygons = [];
+    this.displayedExternalPolygons = [];
+    this.mapDrawingService.completelyRemoveExplorePolygon();
+    if (this.map) {
+      this.mapDrawingService.displayDrawingManager(this.map);
+    }
+    this.getAllPolygons();
+  }
+
+  toggleDisplayedExternalPolygon(polygon: IPolygon): void {
+    const check = this.displayedExternalPolygons.includes(polygon.id);
+    if (check) {
+      this.mapDrawingService.removeMarkers(polygon.id);
+      this.mapDrawingService.hideShapeFromMap(polygon.id);
+      this.displayedExternalPolygons = this.displayedExternalPolygons.filter(
+        (id) => id != polygon.id
+      );
+    } else {
+      this.createPropertiesMarkers(polygon.id, false, true);
+      this.displayedExternalPolygons.push(polygon.id);
+      const coordinates = this.getPolygonCoordinates(polygon);
+      const point = this.getMapCenter(polygon.json);
+
+      if (coordinates) {
+        this.mapDrawingService.updateMapZoom(this.map, coordinates);
+      } else {
+        if (point) {
+          this.mapDrawingService.updateMapCenter(this.map, point);
+        } else {
+          this.mapDrawingService.updateMapCenter(this.map, null);
+        }
+      }
+
+      this.mapDrawingService.displayShapeOnMap(polygon.id, this.map);
+    }
+  }
+
+  attachPolygonToBuyBox(polygonId: number): void {
+    this.spinner.show();
+    const observer = {
+      next: (response: any) => {
+        this.spinner.hide();
+        this.mapDrawingService.removeMarkers(polygonId);
+        this.mapDrawingService.hideShapeFromMap(polygonId);
+        this.externalPolygons = this.externalPolygons.filter(
+          (p) => p.id != polygonId
+        );
+        // if (response) {
+        //   let polygon = this.polygons.find((p) => p.id == id);
+        //   if (polygon) {
+        //     Object.assign(polygon, response);
+        //     this.createPropertiesMarkers(id, true);
+        //   }
+        // }
+      },
+      error: (error: any) => {
+        this.spinner.hide();
+        console.error(error);
+      },
+    };
+
+    this.polygonsControllerService
+      .attachPolygonToBuyBox(this.buyBoxId, polygonId)
+      .subscribe(observer);
   }
 
   ngOnDestroy(): void {

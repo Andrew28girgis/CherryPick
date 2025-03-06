@@ -54,5 +54,6 @@ export class SidbarComponent implements OnInit {
     localStorage.removeItem("token")
     this.router.navigate(["/login"])
   }
+  
 }
 

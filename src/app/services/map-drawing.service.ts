@@ -13,6 +13,7 @@ export class MapDrawingService {
   private drawingManager!: google.maps.drawing.DrawingManager;
   private drawnPolygons: IMapShape[] = [];
   private drawnCircles: IMapShape[] = [];
+  private explorePolygons: IMapShape[] = [];
   private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
   tempMarkers: google.maps.Marker[] = [];
   private infoWindow!: google.maps.InfoWindow;
@@ -92,6 +93,18 @@ export class MapDrawingService {
     this.addShapeCompletionListener(map);
   }
 
+  displayDrawingManager(map: any): void {
+    if (this.drawingManager) {
+      this.drawingManager.setMap(map);
+    }
+  }
+
+  hideDrawingManager(): void {
+    if (this.drawingManager) {
+      this.drawingManager.setMap(null);
+    }
+  }
+
   updateMapCenter(map: any, center: any): void {
     if (map) {
       const newCenter = center ? center : { lat: 37.7749, lng: -122.4194 };
@@ -99,7 +112,23 @@ export class MapDrawingService {
     }
   }
 
+  updateMapZoom(map: any, coordinates: any[]): void {
+    if (map) {
+      const bounds = new google.maps.LatLngBounds();
+
+      // Extend the bounds to include each coordinate
+      coordinates.forEach((point) => {
+        bounds.extend(point);
+      });
+
+      // Adjust the map to fit the bounds with optional padding
+      map.fitBounds(bounds, { padding: 20 });
+    }
+  }
+
   clearDrawnLists(): void {
+    this.drawnPolygons.forEach((p) => p.shape.setMap(null));
+    this.drawnCircles.forEach((c) => c.shape.setMap(null));
     this.drawnPolygons = [];
     this.drawnCircles = [];
   }
@@ -108,7 +137,8 @@ export class MapDrawingService {
     polygonId: number,
     map: any,
     coordinates: any,
-    name: string
+    name: string,
+    editable: boolean
   ): void {
     // create new polygon
     const polygon: google.maps.Polygon = new google.maps.Polygon({
@@ -118,7 +148,7 @@ export class MapDrawingService {
       strokeWeight: 2,
       fillColor: '#0000FF',
       fillOpacity: 0.35,
-      editable: true,
+      editable: editable,
       draggable: false,
     });
 
@@ -132,9 +162,36 @@ export class MapDrawingService {
 
     // handle click event of the polygon
     this.addPolygonClickListener(map, polygon);
-    // handle change event of the polygon
-    this.addPolygonChangeListener(map, polygon);
-    this.addPolygonDoubleClickListener(polygon);
+    if (editable) {
+      // handle change event of the polygon
+      this.addPolygonChangeListener(map, polygon);
+      this.addPolygonDoubleClickListener(polygon);
+    }
+  }
+
+  insertExplorePolygon(polygonId: number, coordinates: any): void {
+    // create new polygon
+    const polygon: google.maps.Polygon = new google.maps.Polygon({
+      paths: coordinates,
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+      editable: false,
+      draggable: false,
+    });
+
+    // Set the polygon on the map
+    polygon.setMap(null);
+
+    // push the polygon into drawn list
+    this.explorePolygons.push({ id: polygonId, shape: polygon });
+  }
+
+  completelyRemoveExplorePolygon(): void {
+    this.explorePolygons.forEach((p) => p.shape.setMap(null));
+    this.explorePolygons = [];
   }
 
   insertExternalCircle(
@@ -142,7 +199,8 @@ export class MapDrawingService {
     map: any,
     center: any,
     radius: any,
-    name: string
+    name: string,
+    editable: boolean
   ): void {
     // create new circle
     const circle = new google.maps.Circle({
@@ -153,7 +211,7 @@ export class MapDrawingService {
       fillOpacity: 0.3,
       strokeWeight: 2,
       strokeColor: '#FF0000',
-      editable: true,
+      editable: editable,
       draggable: false,
     });
 
@@ -167,9 +225,11 @@ export class MapDrawingService {
 
     // handle click event of the circle
     this.addCircleClickListener(map, circle);
-    // handle change event of the circle
-    this.addCircleChangeListener(map, circle);
-    this.addCircleDoubleClickListener(circle);
+    if (editable) {
+      // handle change event of the circle
+      this.addCircleChangeListener(map, circle);
+      this.addCircleDoubleClickListener(circle);
+    }
   }
 
   updatePolygonId(id: number, circle: boolean): void {
@@ -283,7 +343,8 @@ export class MapDrawingService {
   displayShapeOnMap(id: number, map: any): void {
     const shape =
       this.drawnPolygons.find((p) => p.id == id) ||
-      this.drawnCircles.find((c) => c.id == id);
+      this.drawnCircles.find((c) => c.id == id) ||
+      this.explorePolygons.find((p) => p.id == id);
     if (shape) {
       shape.shape.setMap(map);
     }
@@ -293,7 +354,8 @@ export class MapDrawingService {
     // get shape from the drawn list
     const shape =
       this.drawnPolygons.find((p) => p.id == id) ||
-      this.drawnCircles.find((c) => c.id == id);
+      this.drawnCircles.find((c) => c.id == id) ||
+      this.explorePolygons.find((p) => p.id == id);
     if (shape) {
       // remove the shape from the map view
       shape.shape.setMap(null);
@@ -426,7 +488,7 @@ export class MapDrawingService {
           polygon.setDraggable(false);
         }
       });
-      
+
       // Disable dragging for all drawn circles if they are currently draggable.
       this.drawnCircles.forEach((entry) => {
         const circle = entry.shape as google.maps.Circle;
@@ -446,29 +508,58 @@ export class MapDrawingService {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           // create new polygon
           const newPolygon = event.overlay as google.maps.Polygon;
-          // push the polygon into drawn list
-          this.drawnPolygons.push({ shape: newPolygon });
-          // take shape name
-          this.showShapeNameOptions(map, newPolygon, false);
-          // handle click event of the polygon
-          this.addPolygonClickListener(map, newPolygon);
-          // handle change event of the polygon
-          this.addPolygonChangeListener(map, newPolygon);
-          this.addPolygonDoubleClickListener(newPolygon);
+
+          const polygonArea = this.getPolygonAreaInMiles(newPolygon);
+          if (polygonArea > 100) {
+            this.showLargeSizeAlert(
+              map,
+              newPolygon,
+              this.getPolygonCenter(newPolygon),
+              polygonArea
+            );
+          } else {
+            // push the polygon into drawn list
+            this.drawnPolygons.push({ shape: newPolygon });
+            // take shape name
+            this.showShapeNameOptions(map, newPolygon, false);
+            // handle click event of the polygon
+            this.addPolygonClickListener(map, newPolygon);
+            // handle change event of the polygon
+            this.addPolygonChangeListener(map, newPolygon);
+            this.addPolygonDoubleClickListener(newPolygon);
+          }
           this.drawingManager.setDrawingMode(null);
         }
         if (event.type === google.maps.drawing.OverlayType.CIRCLE) {
           // create new circle
           const newCircle = event.overlay as google.maps.Circle;
-          // push the circle into drawn list
-          this.drawnCircles.push({ shape: newCircle });
-          // take shape name
-          this.showShapeNameOptions(map, newCircle, true);
-          // handle click event of the circle
-          this.addCircleClickListener(map, newCircle);
-          // handle change event of the circle
-          this.addCircleChangeListener(map, newCircle);
-          this.addCircleDoubleClickListener(newCircle);
+
+          // get current circle radius
+          const currentRadius = newCircle.getRadius();
+          // convert radius into miles
+          const currentRadiusMiles = currentRadius * 0.000621371;
+          // calculate circle area
+          const circleAreaMiles = Math.PI * Math.pow(currentRadiusMiles, 2);
+
+          if (circleAreaMiles > 100) {
+            this.showLargeSizeAlert(
+              map,
+              newCircle,
+              newCircle.getCenter(),
+              circleAreaMiles
+            );
+          } else {
+            // push the circle into drawn list
+            this.drawnCircles.push({ shape: newCircle });
+            // take shape name
+            this.showShapeNameOptions(map, newCircle, true);
+            // handle click event of the circle
+            this.addCircleClickListener(map, newCircle);
+            // handle change event of the circle
+            this.addCircleChangeListener(map, newCircle);
+            this.addCircleDoubleClickListener(newCircle);
+          }
+
           this.drawingManager.setDrawingMode(null);
         }
       }
@@ -654,6 +745,18 @@ export class MapDrawingService {
     this.infoWindow.setPosition(position);
     this.infoWindow.open(map);
 
+    // Add a one-time click listener on the map to hide the shape and remove its listeners.
+    const mapClickListener = map.addListener('click', () => {
+      // Hide the shape from the map.
+      shape.setMap(null);
+      // Remove all event listeners for this shape.
+      google.maps.event.clearInstanceListeners(shape);
+      // Close the infoWindow.
+      this.infoWindow.close();
+      // Remove this listener.
+      google.maps.event.removeListener(mapClickListener);
+    });
+
     setTimeout(() => {
       const saveButton = document.getElementById('saveShapeNameBtn');
       const input = document.getElementById(
@@ -666,12 +769,11 @@ export class MapDrawingService {
         const name = input.value.trim();
 
         if (shapeEntry) {
-          if (name) {
-            shapeEntry.shape.set('label', name);
-          } else {
-            shapeEntry.shape.set('label', 'Shape');
-          }
+          shapeEntry.shape.set('label', name ? name : 'Shape');
         }
+        // Remove the one-time map click listener since the shape is saved.
+        google.maps.event.removeListener(mapClickListener);
+
         this.infoWindow.close();
 
         // emit created shape to the component for any operation
@@ -815,6 +917,50 @@ export class MapDrawingService {
     }, 100);
   }
 
+  private showLargeSizeAlert(
+    map: any,
+    shape: google.maps.Polygon | google.maps.Circle,
+    position: google.maps.LatLng | null,
+    size: number
+  ): void {
+    if (!position) return;
+
+    // get options popup
+    const options = this.getLargeSizeAlertPopup(size);
+
+    this.infoWindow.setContent(options);
+    this.infoWindow.setPosition(position);
+    this.infoWindow.open(map);
+
+    // Add a one-time click listener on the map to hide the shape and remove its listeners.
+    const mapClickListener = map.addListener('click', () => {
+      // Hide the shape from the map.
+      shape.setMap(null);
+      // Remove all event listeners for this shape.
+      google.maps.event.clearInstanceListeners(shape);
+      // Close the infoWindow.
+      this.infoWindow.close();
+      // Remove this listener.
+      google.maps.event.removeListener(mapClickListener);
+    });
+
+    const cancelButtonInterval = setInterval(() => {
+      // get cancel button
+      const cancelButton = document.getElementById('cancelLargeSizeAlert');
+      if (cancelButton) {
+        // remove the interval when button found
+        clearInterval(cancelButtonInterval);
+        // add listener on delete button click
+        cancelButton.addEventListener('click', () => {
+          shape.setMap(null);
+          this.hidePopupContent();
+          // Remove this listener.
+          google.maps.event.removeListener(mapClickListener);
+        });
+      }
+    }, 100);
+  }
+
   // popups
 
   private getShapeNameOptionsPopup(): string {
@@ -917,7 +1063,12 @@ export class MapDrawingService {
     return `
             <div class="info-window">
               <div class="main-img">
-                <img src="${property.mainImage}" alt="Main Image">
+              ${
+                property.mainImage
+                  ? `<img src="${property.mainImage}" alt="Main Image">`
+                  : ''
+              }
+                
                 <span class="close-btn">&times;</span>
               </div>
               <div class="content-wrap">
@@ -951,7 +1102,12 @@ export class MapDrawingService {
     return `
             <div class="info-window">
               <div class="main-img">
-                <img src="${property.MainImage}" alt="Main Image">
+              ${
+                property.MainImage
+                  ? `<img src="${property.MainImage}" alt="Main Image">`
+                  : ''
+              }
+                
                 <span class="close-btn">&times;</span>
               </div>
               <div class="content-wrap">
@@ -979,6 +1135,37 @@ export class MapDrawingService {
               </div>
             </div>
     `;
+  }
+
+  private getLargeSizeAlertPopup(sizeInMiles: number): string {
+    return `<div
+              style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 1rem;
+              "
+            >
+              <div style="font-weight: 500">Shape size must be less than 100 miles.</div>
+              <div >Your shape size : <strong>${sizeInMiles.toFixed()} MI</strong></div>
+              <button
+                id="cancelLargeSizeAlert"
+                style="
+                  background-color: black;
+                  color: white;
+                  border: none;
+                  padding: 5px 10px;
+                  cursor: pointer;
+                  border-radius: 5px;
+                  font-size: 14px;
+                "
+              >
+                Cancel
+              </button>
+            </div>
+          `;
   }
 
   // others
