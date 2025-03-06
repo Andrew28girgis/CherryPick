@@ -6,24 +6,56 @@ import {
   ViewChild,
   HostListener,
 } from '@angular/core';
+import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { AvailabilityTenant, IFile, jsonGPT, Properties } from 'src/models/manage-prop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
 import { PlacesService } from '../../../app/services/places.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'; 
-
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Availability, PropertiesDetails, Tenant } from 'src/models/manage-prop-shoppingCenter';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { NgxFileDropModule } from 'ngx-file-drop';
+
+
+
 
 @Component({
   selector: 'app-tenant',
   standalone: true,
-  imports: [CommonModule, NgxSpinnerModule, RouterModule], 
+  imports: [
+    CommonModule, 
+    NgxSpinnerModule, 
+    RouterModule, 
+    FormsModule,
+    NgxFileDropModule
+  ],
   providers: [],
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
 export class TenantComponent implements OnInit {
+  @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
+  newTenantName: string = '';
+  CustomPlace!: PropertiesDetails| undefined;
+  newTenantUrl: string = '';
+  public files: NgxFileDropEntry[] = [];
+  selectedShoppingID!:string | undefined;
+  showAddTenantInput: boolean = false;
+  JsonPDF!: jsonGPT;
+  AvailabilityAndTenants: AvailabilityTenant = {};
+
+  fileName!: string;
+  isUploading: boolean = false;
+  uploadProgress: number = 0;
+  isConverting: boolean = false;
+  images: IFile[] = [];
+  pdfFileName:string='';
+  contactID!: any;
+  test!:number;
   TenantResult: any = [];
   organizationBranches: any = [];
   selectedbuyBox!: string;
@@ -49,13 +81,24 @@ export class TenantComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private spinner: NgxSpinnerService,
-    private PlacesService: PlacesService
-  ) {}
+    private PlacesService: PlacesService,
+    private modalService: NgbModal,
+    private httpClient: HttpClient,
+    private sanitizer: DomSanitizer
+
+
+
+  ) {
+    
+  }
   ngOnInit(): void {
+    this.contactID =  localStorage.getItem('contactId')  ;
+    console.log('Contact ID:', this.contactID);
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
       this.GetBuyBoxInfo();
     });
+
   }
   GetBuyBoxInfo(): void {
     this.spinner.show(); // Show the spinner before the API request
@@ -140,4 +183,226 @@ export class TenantComponent implements OnInit {
       },
     });
   }
+  // manual display and edit shopping center
+  openUploadModal(id: number) {
+    if (id === undefined) {
+      const guid = crypto.randomUUID();
+        // console.log(guid);
+        this.selectedShoppingID = guid;
+    } else {
+        this.selectedShoppingID = id.toString();
+    }
+    // console.log('Selected Shopping ID:', this.selectedShoppingID);
+    this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
+  }
+  public uploadFile(files: NgxFileDropEntry[]) {
+    this.files = files;
+    for (const droppedFile of files) {
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          const formData = new FormData();
+          formData.append('file', file, file.name);
+          this.fileName = file.name;
+          this.isUploading = true;
+          this.uploadProgress = 0;
+
+          const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
+          // const SERVER_URL = `http://10.0.0.15:8082/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
+
+          // Create a request with progress reporting enabled
+          const req = new HttpRequest('POST', SERVER_URL, formData, {
+            reportProgress: true, // Enable progress tracking
+            responseType: 'json',
+          });
+
+          this.httpClient.request(req).subscribe(
+            (event: any) => {
+              if (event.type === HttpEventType.UploadProgress) {
+                // Calculate upload progress percentage
+                this.uploadProgress = Math.round(
+                  (100 * event.loaded) / event.total!
+                );
+                if (this.uploadProgress === 100) {
+                  // Upload complete, switch to converting state
+                  this.isUploading = false;
+                  this.isConverting = true;
+                }
+              } else if (event instanceof HttpResponse) {
+                // Conversion complete; extract images from the new API response structure
+                // console.log('API Response:', event.body);
+                const response = event.body;
+                if (response && response.images) {
+                  this.images = response.images.map((img: string, index: number) => ({
+                    name: `Image ${index + 1}`,
+                    type: 'image/png', // Adjust this if your images are of a different type
+                    content: img,
+                    selected: false,
+                  }));
+                  this.pdfFileName=response.pdfFileName;
+                  // console.log('pdfFileName:', this.pdfFileName);
+                }
+                this.isConverting = false;
+                this.spinner.hide();
+                this.showToast('PDF File uploaded and converted successfully!');
+              }
+            },
+            (error) => {
+              console.error('Error during upload/conversion:', error);
+              this.isUploading = false;
+              this.isConverting = false;
+              this.spinner.hide();
+              this.showToast('Failed to upload or convert PDF file!');
+            }
+          );
+        });
+      } else {
+        // Handle directory entry if needed
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+      }
+    }
+  }
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage!.innerText = message;
+    toast!.classList.add('show');
+    setTimeout(() => {
+      toast!.classList.remove('show');
+    }, 3000);
+  }
+  closeToast() {
+    const toast = document.getElementById('customToast');
+    toast!.classList.remove('show');
+  }
+    // Add a new tenant (send to API and update locally)
+    addNewTenant() {
+      if (!this.newTenantName || this.newTenantName.trim() === '' || !this.newTenantUrl || this.newTenantUrl.trim() === '') {      this.showToast('Please enter a valid tenant name.');
+        return;
+      }
+      // Basic validation for domain format (optional, since HTML pattern handles it)
+      const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+      if (!domainPattern.test(this.newTenantUrl.trim())) {
+        alert('Please enter a valid domain (e.g., example.com).');
+        return;
+      }
+      this.spinner.show();
+      const body: any = {
+        Name: 'ModifyTenantsWithBranch',
+        Params: {
+          ShoppingCenterId: this.selectedShoppingID,
+          Name: this.newTenantName,
+          Url: this.newTenantUrl,
+        },
+      };
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (data: any) => {
+          // Assuming the API returns the new tenant or an updated list
+          const newTenant: Tenant = {
+            Id: data.json?.Id || (this.CustomPlace?.Tenants.length! + 1), // Generate a temporary ID or use API response
+            Name: this.newTenantName,
+            URL:this.newTenantUrl,
+          };
+          // Add the new tenant to CustomPlace.Tenants
+          if (this.CustomPlace && this.CustomPlace.Tenants) {
+            this.CustomPlace.Tenants.push(newTenant);
+          } else {
+            // Initialize Tenants if it doesn't exist
+            this.CustomPlace = {
+              ...this.CustomPlace,
+              Tenants: [newTenant],
+            } as PropertiesDetails;
+          }
+          this.spinner.hide();
+          this.showToast('New tenant added successfully!');
+          this.showAddTenantInput = false;
+          this.newTenantName = '';
+        },
+        error: (err) => {
+          this.spinner.hide();
+          this.showToast('Failed to add new tenant. Please try again.');
+        },
+      });
+    }
+    sendImagesArray() {
+      this.spinner.show();
+      const selectedImages = this.images.filter(image => image.selected);
+      // Extract the content of the selected images
+      const array = selectedImages.map(image => image.content);
+      const shopID = this.selectedShoppingID;
+      this.PlacesService.SendImagesArray(array,shopID).subscribe({
+        next: (data) => {
+          this.JsonPDF = data;
+          this.showToast('Images Converted successfully!');
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error('Error fetching APIs:', error);
+          this.spinner.hide();
+        },
+      });
+    }
+    sendJson() {
+      this.spinner.show();
+      const shopID = this.selectedShoppingID;
+    
+      // Add dynamic properties for CenterName and CenterType
+      this.JsonPDF = {
+        ...this.JsonPDF,
+        CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
+        CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
+      };
+    
+      // Do not filter Availability and Tenants; send all items with their updated isAdded states
+      const updatedJsonPDF = {
+        ...this.JsonPDF,
+        Availability: this.JsonPDF.Availability.map((avail) => ({
+          ...avail,
+          isAdded: avail.isAdded || false, // Ensure isAdded is always defined
+        })),
+        Tenants: this.JsonPDF.Tenants.map((tenant) => ({
+          ...tenant,
+          isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
+        })),
+      };
+    
+      // Send the updated JsonPDF data
+      this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
+        next: (data) => {
+          this.showToast('shopping center updated successfully!');
+          this.clearModalData();
+          this.modalService.dismissAll();
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error('Error:', error);
+          this.showToast('Failed to update shopping center!');
+          this.spinner.hide();
+        },
+      });
+    }
+        // Method to clear all modal data
+  clearModalData() {
+    this.images = []; // Clear images array
+    this.JsonPDF = null!; // Clear PDF data
+    this.AvailabilityAndTenants = {}; // Clear "Our Data"
+    this.fileName = ''; // Clear file name
+    this.uploadProgress = 0; // Reset upload progress
+    this.isUploading = false; // Reset upload state
+    this.isConverting = false; // Reset conversion state
+    this.files = []; // Clear dropped files
+  }
+  closeModal(modal: any) {
+    modal.dismiss();
+    this.fileName = '';
+    this.uploadProgress = 0;
+    this.isUploading = false;
+    this.isConverting = false;
+    this.images=[];
+  }
+    // Method to convert base64 to a SafeUrl for image display
+    displayCustomImage(image: IFile): SafeUrl {
+      const dataUrl = `data:${image.type};base64,${image.content}`;
+      return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
+    }
 }
