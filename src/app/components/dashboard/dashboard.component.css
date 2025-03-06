@@ -1,0 +1,104 @@
+.container-divider {
+  width: 100%;
+  color: #e2e4e9;
+}
+
+.dashboard-container {
+  padding: 1rem;
+  height: 100vh;
+}
+
+.dashboard-sub-container {
+  height: 100%;
+  display: flex;
+  gap: 1.25%;
+}
+
+.dashboard-item-container {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: 1rem;
+  padding: 1rem;
+  height: 100%;
+  width: 32.5%;
+}
+
+.container-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #16181d;
+}
+.container-count {
+  background-color: #edf0f8;
+  color: #4d65b4;
+  border-radius: 2rem;
+  padding: 0.5rem 1rem;
+}
+
+.email-card {
+  width: 100%;
+  background-color: #edf0f8;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid #4d65b4;
+  border-radius: 0.75rem;
+}
+
+.email-calender-label {
+  color: #707791;
+}
+
+.title {
+  color: #16181d;
+  font-weight: 600;
+}
+.email-reply {
+  border: none;
+  background-color: #4d65b4;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+}
+.submissions-container {
+  gap: 0;
+}
+.submission-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+.submission-card-point {
+  background-color: #4d65b4;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+.comments-container {
+  gap: 0;
+}
+.comment-card {
+  width: 100%;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.comment-sub-card {
+  width: 100%;
+  background-color: #edf0f8;
+  padding: 0.5rem 0.75rem;
+
+  border-left: 3px solid #4d65b4;
+  border-right: 3px solid #4d65b4;
+  border-radius: 0.75rem;
+}
+
+.comment-content {
+  color: #707791;
+  text-align: justify;
+}
