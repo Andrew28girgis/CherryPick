@@ -504,7 +504,8 @@ export class PolygonsControllerComponent
 
   async createPropertiesMarkers(
     polygonId: number,
-    updating: boolean
+    updating: boolean,
+    explore?: boolean
   ): Promise<void> {
     this.spinner.show();
 
@@ -515,7 +516,9 @@ export class PolygonsControllerComponent
         this.properties = this.properties.filter(
           (p) => p.polygonId != polygonId
         );
-        const properties = await this.getPolygonProperties(polygonId);
+        const properties = explore
+          ? await this.getExplorePolygonProperties(polygonId)
+          : await this.getPolygonProperties(polygonId);
         if (properties && properties.length > 0) {
           this.properties.push({
             polygonId: polygonId,
@@ -530,7 +533,9 @@ export class PolygonsControllerComponent
         this.mapDrawingService.displayMarker(polygonId, this.map);
       }
     } else {
-      const properties = await this.getPolygonProperties(polygonId);
+      const properties = explore
+        ? await this.getExplorePolygonProperties(polygonId)
+        : await this.getPolygonProperties(polygonId);
       if (properties && properties.length > 0) {
         this.properties.push({
           polygonId: polygonId,
@@ -548,6 +553,20 @@ export class PolygonsControllerComponent
     try {
       const response = await lastValueFrom(
         this.polygonsControllerService.getPolygonProperties(polygonId)
+      );
+      if (response.json) {
+        return response.json;
+      }
+      return null;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getExplorePolygonProperties(polygonId: number): Promise<any> {
+    try {
+      const response = await lastValueFrom(
+        this.polygonsControllerService.getExplorePolygonProperties(polygonId)
       );
       if (response.json) {
         return response.json;
@@ -654,6 +673,9 @@ export class PolygonsControllerComponent
   }
 
   navigateToMyPolygons(): void {
+    this.externalPolygons.forEach((p) =>
+      this.mapDrawingService.completelyRemoveMarkers(p.id)
+    );
     this.polygonSearch = '';
     this.externalPolygons = [];
     this.displayedExternalPolygons = [];
@@ -673,7 +695,7 @@ export class PolygonsControllerComponent
         (id) => id != polygon.id
       );
     } else {
-      this.createPropertiesMarkers(polygon.id, false);
+      this.createPropertiesMarkers(polygon.id, false, true);
       this.displayedExternalPolygons.push(polygon.id);
       const coordinates = this.getPolygonCoordinates(polygon);
       const point = this.getMapCenter(polygon.json);
@@ -697,6 +719,7 @@ export class PolygonsControllerComponent
     const observer = {
       next: (response: any) => {
         this.spinner.hide();
+        this.mapDrawingService.removeMarkers(polygonId);
         this.mapDrawingService.hideShapeFromMap(polygonId);
         this.externalPolygons = this.externalPolygons.filter(
           (p) => p.id != polygonId
