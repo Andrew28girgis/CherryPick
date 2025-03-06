@@ -73,11 +73,11 @@
   width: 20px;
   height: 20px;
   position: absolute;
-  top: -8px;
+  top: -11px;
   right: -8px;
-  font-size: 0.75rem;
+  font-size: 10px;
   padding: 0.25em 0.4em;
-  background-color: #dc3545; /* Red badge color */
+  background-color: #ff3c7e;
 }
 
 ::ng-deep .custom-popover {

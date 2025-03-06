@@ -10,15 +10,12 @@
   </div>
   </div>
     <div class="col-11 p-0"   style="margin-top:17px">
-      <!-- [ngClass]="{'sidebar-expanded': !isCollapsed }" -->
-    <button class="x-btn add-buy" (click)="open(BuyBoxProperty)">
-      Add Tenant
-    </button>
-    <div class="row container m-0 mtop42">
- <!-- <div class="d-flex justify-content-end">
-  <button class="CherryPick__button" [routerLink]="['/manage-properties']">Manage My Properties</button>
- </div> -->
-      
+       <div class="d-flex justify-content-end " style="margin-top: 50px;">
+         <button class="x-btn " (click)="open(BuyBoxProperty)">
+           Add Tenant
+          </button>
+       </div>
+    <div class="row container m-0"> 
       <ng-container *ngFor="let type of buyboxTypes">
         <div
           class="col-12 col-sm-6 col-md-4 col-lg-3 p-3 ResContainer">
