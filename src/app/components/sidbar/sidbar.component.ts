@@ -30,5 +30,6 @@ export class SidbarComponent {
     localStorage.removeItem("token")
     this.router.navigate(["/login"])
   }
+  
 }
 

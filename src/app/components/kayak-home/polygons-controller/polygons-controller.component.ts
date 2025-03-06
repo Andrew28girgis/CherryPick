@@ -90,9 +90,8 @@ export class PolygonsControllerComponent
 
     this.getPolygonsByNameListener();
   }
-
-  ngAfterViewInit() {
-    // initialize the map
+  
+  ngAfterViewInit() { 
     this.initializeMap();
 
     // initialize drawing manager

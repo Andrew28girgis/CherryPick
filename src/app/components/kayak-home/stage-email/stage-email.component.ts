@@ -250,7 +250,6 @@ export class StageEmailComponent implements OnInit {
 
   GetStages(): void {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetStages',
       MainEntity: null,
