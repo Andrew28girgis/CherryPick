@@ -171,6 +171,8 @@ export class ViewManagerService {
     buyboxId: number,
     shoppingCenterId: number | string
   ): Promise<any> {
+    console.log('dddddddddddd',shoppingCenterId,buyboxId);
+    
     return new Promise((resolve, reject) => {
       this.spinner.show();
       const body: any = {

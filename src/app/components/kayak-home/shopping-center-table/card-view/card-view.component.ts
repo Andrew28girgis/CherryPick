@@ -2,8 +2,6 @@
 import {
   Component,
   OnInit,
-  ViewChild,
-  ElementRef,
   Renderer2,
   ChangeDetectorRef,
   TemplateRef,
@@ -50,7 +48,7 @@ export class CardViewComponent implements OnInit {
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
   shareLink: any;
-  private viewManagerService!: ViewManagerService
+  
   shoppingCenterIdToDelete: number | null = null;
   showbackIds: number[] = [];
   buyboxPlaces: BbPlace[] = [];
@@ -211,13 +209,13 @@ export class CardViewComponent implements OnInit {
         console.error('Could not copy text: ', err);
       });
   }
-  async deleteCenter() {
+  async deleteShCenter() {
     console.log('fffffffffff',this.BuyBoxId, this.shoppingCenterIdToDelete);
     
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.spinner.show();
-        await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
+        await this.viewManager.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
         this.modalService.dismissAll();
         await this.refreshShoppingCenters();
       } catch (error) {
@@ -230,8 +228,8 @@ export class CardViewComponent implements OnInit {
   async refreshShoppingCenters() {
     try {
       this.spinner.show();
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
+      this.buyboxPlaces = await this.viewManager.getBuyBoxPlaces(this.BuyBoxId);
       this.showbackIds = [];
     } catch (error) {
       console.error('Error refreshing shopping centers:', error);
