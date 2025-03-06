@@ -286,7 +286,7 @@ export class SummeryComponent  {
 
       this.spinner.show();
       let body: any = {
-        Name: 'createbuybox',
+        Name: 'CreateBuyBox',
         Params: { 
           Name : this.Obj.Name ,
           OrganizationId:this.Obj.OrganizationId,

@@ -9,10 +9,10 @@
       <app-header></app-header>
   </div>
   </div>
-    <div class="col-11 p-0" style="margin-top:17px">
-    <!-- <button class="x-btn add-buy" (click)="open(BuyBoxProperty)">
+    <div class="col-11 p-0" [ngClass]="{'sidebar-expanded': !isCollapsed }"  style="margin-top:17px">
+    <button class="x-btn add-buy" (click)="open(BuyBoxProperty)">
       Add new BuyBoxWithDeal
-    </button> -->
+    </button>
     <div class="row container m-0 mtop42">
  <!-- <div class="d-flex justify-content-end">
   <button class="CherryPick__button" [routerLink]="['/manage-properties']">Manage My Properties</button>

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, ViewChild, type TemplateRef } from "@angular/core"
 import  { SidbarService } from "src/app/services/sidbar.service"
 
 @Component({
@@ -8,15 +8,26 @@ import  { SidbarService } from "src/app/services/sidbar.service"
 })
 export class HeaderComponent {
   isCollapsed = true
+  notifications: any[] = [
+    { id: 1, message: "New notification 1", time: "5 min ago" },
+    { id: 2, message: "New notification 2", time: "1 hour ago" },
+    { id: 3, message: "New notification 3", time: "2 hours ago" },
+  ]
+  emails: any[] = [
+    { id: 1, subject: "Upcoming meeting", from: "john@example.com", time: "10:00 AM" },
+    { id: 2, subject: "Project update", from: "sarah@example.com", time: "11:30 AM" },
+    { id: 3, subject: "Weekly report", from: "mike@example.com", time: "2:00 PM" },
+  ]
+
+  @ViewChild("emailContent") emailContent!: TemplateRef<any>
+  @ViewChild("notificationContent") notificationContent!: TemplateRef<any>
 
   constructor(private sidbarService: SidbarService) {
-    // Subscribe to the collapsed state
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state
     })
   }
 
-  // Toggle the sidebar when the button is clicked
   toggleSidebar() {
     this.sidbarService.toggleSidebar()
   }
