@@ -795,8 +795,32 @@ export class SideListViewComponent implements OnInit, OnChanges {
   }
 
   private updateCards(): void {
-    // Update the cardsSideList with the loaded shopping centers
     this.cardsSideList = this.shoppingCenters;
-    // Additional logic for filtering based on map bounds can be added here if needed
+  }
+  async deleteShCenter() {
+    if (this.shoppingCenterIdToDelete !== null) {
+      try {
+        this.spinner.show();
+        await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
+        this.modalService.dismissAll();
+        await this.refreshShoppingCenters();
+      } catch (error) {
+        console.error('Error deleting shopping center:', error);
+      } finally {
+        this.spinner.hide();
+      }
+    }
+  }
+  async refreshShoppingCenters() {
+    try {
+      this.spinner.show();
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.showbackIds = [];
+    } catch (error) {
+      console.error('Error refreshing shopping centers:', error);
+    } finally {
+      this.spinner.hide();
+    }
   }
 }

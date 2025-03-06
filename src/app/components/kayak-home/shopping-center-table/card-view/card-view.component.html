@@ -144,7 +144,11 @@
                       >
                         <a
                           class="target"
-                          (click)="openDeleteShoppingCenterModal(shopping.Id)"
+                          (click)="openDeleteShoppingCenterModal(
+                            deleteSingleShoppingCenterModal,
+                            shopping.Id
+                          )
+                        "   
                         >
                           <i class="fa-regular fa-trash-can emily"></i>
                           Remove Shopping
@@ -293,3 +297,30 @@
     *ngIf="!General.modalObject.StreetViewURL"
   ></div>
 </ng-template>
+
+<ng-template #deleteSingleShoppingCenterModal let-modal>
+  <div class="modal-body-general p-4 rounded deleteShopping">
+    <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
+    <p class="text-center Areyou">
+      Are you sure you want to remove this Shopping Center?
+    </p>
+
+    <div class="d-flex justify-content-end mt-4">
+      <button
+        type="button"
+        class="btn btn-secondary me-2 px-4 py-2 btnborder"
+        (click)="modal.dismiss('Cancel click')"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger px-4 py-2 btnborder"
+        (click)="deleteCenter()"
+      >
+        Remove
+      </button>
+    </div>
+  </div>
+</ng-template>
+
