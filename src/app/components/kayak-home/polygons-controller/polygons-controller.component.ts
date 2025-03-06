@@ -91,11 +91,8 @@ export class PolygonsControllerComponent
   }
   
   ngAfterViewInit() { 
-    this.initializeMap();
-    // initialize drawing manager
-    this.mapDrawingService.initializeDrawingManager(this.map);
-
-    // get all polygons from database
+    this.initializeMap(); 
+    this.mapDrawingService.initializeDrawingManager(this.map); 
     this.getAllPolygons();
   }
 
