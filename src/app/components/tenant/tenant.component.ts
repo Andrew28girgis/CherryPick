@@ -37,6 +37,7 @@ export class TenantComponent implements OnInit {
   MaxBuildingSize!: number;
   address!:string;
   states!:string;
+  buyboxcolor!:string;
   ManagementOrganizationDesc!: string;
   buyboxname!: string;
   smalldescription: string[] = [];
@@ -95,6 +96,7 @@ export class TenantComponent implements OnInit {
           buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
         this.brokerphoto = managerOrganizationData.Photo;
         this.brokersignature = managerOrganizationData.Profile;
+        this.buyboxcolor = 'red';
 
         this.smalldescription = Array.isArray(
           this.TenantResult.Buybox[0].Description
