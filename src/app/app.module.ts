@@ -66,6 +66,7 @@ import {
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { HeaderComponent } from './components/header/header.component';
 
 const msalConfig = {
   auth: {
@@ -118,6 +119,7 @@ const loginRequest = {
     NumberFormatDirective,
     NumberWithCommasPipe,
     ManagePropertiesComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,

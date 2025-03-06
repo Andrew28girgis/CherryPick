@@ -1,18 +1,10 @@
-<div class="sidebar sidebar-narrow-unfoldable border-end">
-  <!-- CoreUI built-in sidebar toggler -->
+<div 
+  class="sidebar" 
+  [class.sidebar-narrow]="isCollapsed && !isHovering" 
+  [class.sidebar-narrow-unfoldable]="isCollapsed && !isHovering"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()">
 
-  <!-- <button
-    class="cherry-collabse"
-    type="button"
-    data-coreui-toggle="unfoldable"
-    data-coreui-target=".sidebar"
-  >
-    <i
-      class="fa-solid fa-bars nav-icon"
-      data-coreui-toggle="unfoldable"
-      data-coreui-target=".sidebar"
-    ></i>
-  </button> -->
   <div class="sidebar-header border-bottom">
     <ul class="sidebar-nav">
       <li class="nav-item">
@@ -55,3 +47,4 @@
     </li>
   </ul>
 </div>
+
