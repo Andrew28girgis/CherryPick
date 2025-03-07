@@ -9,6 +9,8 @@ import { KayakComponent } from './kayak/kayak.component';
 import { EmilyComponent } from './emily/emily.component';
 import { MyInboxEmailListComponent } from './my-inbox-email-list/my-inbox-email-list.component';
 import { EmailReadComponent } from './email-read/email-read.component';
+import { EmilyContactEmailComponent } from './emily-stages/emily-contact-email/emily-contact-email.component';
+import { EmilyOrgComponent } from './emily-org/emily-org.component';
 
 const routes: Routes = [
   { path: '', component: KayakHomeComponent },
@@ -21,6 +23,18 @@ const routes: Routes = [
   { path: 'kayak', component: KayakComponent },
   { path: 'MyInboxs', component: MyInboxEmailListComponent },
   { path: 'email-read/:MailId', component: EmailReadComponent },
+  { path: 'organization-mail/:orgId/:contactId', component: EmilyContactEmailComponent },
+  // {
+  //   path: 'emily/:buyBoxId',
+  //   component: EmilyOrgComponent, // Parent component
+  //   children: [
+  //     {
+  //       path: 'contact-email/:orgId/:emailId',
+  //       component: EmilyContactEmailComponent,
+  //       outlet: 'contactEmailOutlet' // Named router outlet
+  //     }
+  //   ]
+  // }
 ];
 
 @NgModule({

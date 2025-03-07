@@ -1,0 +1,109 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="row p-0">
+
+  <!-- Main Content -->
+  <div class="row m-0 p-0">
+    <!-- Column 1: Organization and Contacts -->
+    <div class="col-3 p-0 m-0">
+      <div class="buttonandname">
+        <button class="back" (click)="goBack()">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div class="org-data d-flex align-items-center ms-2">
+          <img
+            [src]="
+              'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+              orgId
+            "
+            width="30"
+            height="30"
+            style="border-radius: 50%"
+          />
+          <h5 class="org-name mb-0">{{ selectedOrganizationName }}</h5>
+        </div>
+      </div>
+      
+      <div class="card" style="border: none; border-radius: 0; min-height: 80vh;">
+        <div class="card-header" style="background-color: white; padding: 24px;">
+          <h5 class="contacts mb-0">Contacts</h5>
+        </div>
+        <div class="card-body" >
+          <ul class="contact-ul">
+            <li
+              class="contact-list"
+              *ngFor="let contact of contacts"
+              (click)="getEmailsForContact(contact)"
+              [ngClass]="{
+                'selected-contact':
+                  contact.ContactId === selectedContact?.ContactId
+              }"
+            >
+            <div class="d-flex justify-content-between w-100">
+              <span class="namecontact">
+                {{ contact.Firstname }} {{ contact.Lastname }}
+              </span>
+              
+                <span class="Inbox" *ngIf="getTotalEmails(contact) > 0">
+                  {{ getTotalEmails(contact) }}
+                </span>
+              </div>
+            </li>
+          </ul>
+          <p *ngIf="contacts.length === 0" class="no-contact-msg">
+            No contacts available in this organization.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email List Column -->
+    <div class="col-4 p-0 m-0">
+      <div class="card" style="border: none; min-height: 92vh; border-radius: 0;">
+        <div class="mailbox-header">
+          <h5 class="contacts">Mail box</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="selectedContact">
+            <div class="email-list">
+              <div
+                class="single-mail" style="cursor: pointer;"
+                *ngFor="let email of emailsSentContact"
+                (click)="openEmail(email)"
+                [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
+              >
+                <p class="subject"> {{ email.Subject }}</p>
+                <p class="date"> {{ email.Date | date : "medium" }}</p>
+              </div>
+
+              <p *ngIf="emailsSentContact.length === 0" class="no-email-msg">
+                {{ emptyMessage }}
+              </p>
+            </div>
+          </div>
+          <p *ngIf="!selectedContact" class="no-contact-selected">
+            Select a contact to view emails.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email body and subject -->
+    <div class="col-5 p-0 m-0">
+      <div class="email-details-body">
+        <div class="card-body" style="min-height: 81vh;">
+          <div *ngIf="selectedEmail">
+            <p class="subject-details"> {{ selectedEmail.Subject }}</p>
+            <!-- <p>
+              <strong>Date:</strong> {{ selectedEmail.Date | date : "medium" }}
+            </p> -->
+            <div class="body-details" [innerHTML]="selectedEmail.Body"></div>
+          </div>
+          <p *ngIf="!selectedEmail" class="no-email-selected">
+            Select an email to view details.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
