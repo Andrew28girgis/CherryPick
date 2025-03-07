@@ -46,9 +46,10 @@
 }
 
 .custom-icon-container {
-  display: flex;
   gap: 15px;
-  /* Add spacing between the icons */
+  justify-content: center;
+  display: flex;
+  background: #fff;
 }
 
 .icon-option {
