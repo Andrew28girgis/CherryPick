@@ -3,7 +3,7 @@
 
   <div class="col-12 Responsive">
     <div class="d-flex py-3">
-      <h3 class="bb-name d-none d-sm-flex m-0">{{ BuyboxName }}</h3>
+      <h3 class="bb-name m-0">{{ BuyboxName }}</h3>
       <div class="Nav__section d-flex justify-content-between ms-3">
         <ul class="d-sm-flex m-0">
           <li *ngFor="let tab of tabs" class="nav-item" [ngClass]="{ active: selectedTab === tab.id }"
