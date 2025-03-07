@@ -134,8 +134,7 @@
   }
   <div class="scroll-container" #scrollContainer>
     <div class="card" *ngFor="let shopping of shoppingCenters; let i = index">
-      <ng-container *ngIf="shoppingCenter.Deleted == false">
-      <div
+        <div
         class="social-card mb-0 mb-sm-5 Res"
         [style.backgroundImage]="
           'url(' +
@@ -541,7 +540,6 @@
           </ul>
         </div>
       </div>
-    </ng-container>
     </div>
   </div>
   <div class="row d-sm-none fixed-bottom-mobile">
@@ -613,8 +611,7 @@
       </thead>
       <tbody class="procpect-table-body">
         <ng-container *ngFor="let shoppingCenter of shoppingCenters">
-          <ng-container *ngIf="shoppingCenter.Deleted == false">
-            <tr>
+             <tr>
               <td>
                 <span
                   class="table-text"
@@ -886,7 +883,7 @@
                 </div>
               </td>
             </tr>
-          </ng-container>
+         
         </ng-container>
       </tbody>
     </table>
@@ -941,8 +938,7 @@
     <div class="row mt-2">
       <ng-container *ngIf="currentView != 2">
         <ng-container *ngFor="let shopping of shoppingCenters">
-          <ng-container *ngIf="shopping.Deleted == false"> 
-          <div
+           <div
             class="card-window total"
             [ngClass]="{
               'col-12 col-sm-4 ': currentView == 3
@@ -1195,7 +1191,7 @@
               </div>
             </div>
           </div>
-        </ng-container>
+       
 
         </ng-container>
       </ng-container>

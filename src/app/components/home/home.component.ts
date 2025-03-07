@@ -318,6 +318,14 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.sort((a, b) =>
           a.CenterCity.localeCompare(b.CenterCity)
         );
+        this.shoppingCenters = this.shoppingCenters?.filter((element: any) => 
+          element.Deleted == false
+      );
+      console.log(`shy`);
+      console.log(this.shoppingCenter);
+      
+      
+      
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);

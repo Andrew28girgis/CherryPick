@@ -663,12 +663,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.cdr.markForCheck();
   }
-
+  DeletedSC: any;
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
-    shoppingCenterId: any
+    shoppingCenter: any
   ) {
-    this.shoppingCenterIdToDelete = shoppingCenterId;
+    this.DeletedSC = shoppingCenter;
+    this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
       ariaLabelledBy: 'modal-basic-title',
     });
@@ -865,6 +866,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async deleteShCenter() {
+    this.shoppingCenters = this.shoppingCenters.map((x) => 
+      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
+  );
+  
     try {
       this.spinner.show();
       await this.viewManagerService.deleteShoppingCenter(
@@ -872,7 +877,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.shoppingCenterIdToDelete!
       );
       this.modalService.dismissAll();
-      await this.initializeData();
+      //await this.initializeData();
     } catch (error) {
       console.error('Error deleting shopping center:', error);
     } finally {

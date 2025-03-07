@@ -98,13 +98,13 @@ export class SummeryComponent {
       next: (data) => {
         if (data.json != null) {
           this.buyboxTypes = data.json;
-          if (this.buyboxTypes?.length == 1) {
-            this.chooseType(
-              this.buyboxTypes[0].id,
-              this.buyboxTypes[0].organizationId,
-              this.buyboxTypes[0].name
-            );
-          }
+          // if (this.buyboxTypes?.length == 1) {
+          //   this.chooseType(
+          //     this.buyboxTypes[0].id,
+          //     this.buyboxTypes[0].organizationId,
+          //     this.buyboxTypes[0].name
+          //   );
+          // }
           this.spinner.hide();
         } else {
           this.router.navigate(['/login']);

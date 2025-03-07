@@ -1,57 +1,38 @@
-<nav class="navbar navbar-expand-lg">
-  <!-- Sidebar toggle button -->
-  <!-- <button class="cherry-collapse" type="button" (click)="toggleSidebar()">
-      <i class="fa-solid fa-bars nav-icon"></i>
-    </button> -->
-  <div style="cursor: pointer;">
-    <img
-      alt="logo"
-      class="cherry-logo"
-      [routerLink]="['/summary']"
-      decoding="async"
-      data-nimg="1"
-      src="../../../assets/Images/logo.png"
-    />
+<nav class="navbar navbar-expand-lg d-flex align-items-center w-100">
+  <!-- Left Section (Logo) -->
+  <div class="d-flex align-items-center">
+    <img alt="logo" class="cherry-logo" [routerLink]="['/summary']" decoding="async"
+      src="../../../assets/Images/logo.png" />
   </div>
 
-  <div id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li (click)="BackTo()" class="nav-item">
-        <div class="nav-link">
-          <p class="nav-link">Tenants</p>
-        </div>
+  <!-- Right Section (Burger Button) -->
+  <button class="navbar-toggler ms-auto" type="button" (click)="toggleNavbar()">
+    <i class="fa-solid fa-bars nav-icon"></i>
+  </button>
+
+  <!-- Collapsible Navbar Content -->
+  <div class="collapse navbar-collapse text-center" [ngClass]="{ 'show': isNavbarOpen }" id="navbarNav">
+    <!-- Navigation Links -->
+    <ul class="navbar-nav mx-auto gap-3">
+      <li class="nav-item" (click)="BackTo()">
+        <div class="nav-link">Tenants</div>
       </li>
       <li class="nav-item">
-        <a [routerLink]="['/manage-properties']" class="nav-link">
-          <p class="nav-link">Properties</p>
-        </a>
+        <a [routerLink]="['/manage-properties']" class="nav-link">Properties</a>
       </li>
-      <!-- <li class="nav-item">
-        <div class="nav-link">
-          <i class="fa-solid fa-envelope nav-icon"></i>
-          <p class="nav-link">Email</p>
-        </div>
-      </li> -->
-
     </ul>
-  </div>
-  <div>
-    <i
-      class="fa-regular fa-envelope action-icon"
-     
-      placement="bottom-end"
-      container="body"
-    >
-      <span class="badge">{{ emails.length }}</span>
-    </i>
-    <i
-      class="fa-regular fa-bell action-icon me-4"
-   
-      placement="bottom-end"
-      container="body"
-    >
-      <span class="badge">{{ notifications.length }}</span>
-    </i>
-    <i class="fa-solid fa-right-from-bracket" style="cursor: pointer; font-size: 1.25rem;" (click)="logout()"></i>
+
+    <!-- Action Icons -->
+    <div class="d-flex align-items-center justify-content-center">
+      <i class="fa-regular fa-envelope action-icon position-relative mx-2">
+        <span class="badge">{{ emails.length }}</span>
+      </i>
+      <i class="fa-regular fa-bell action-icon position-relative mx-2">
+        <span class="badge">{{ notifications.length }}</span>
+      </i>
+
+      <button class="CherryPick__button ms-4" (click)="logout()" style="text-transform: uppercase;
+    letter-spacing: 1px;">Logout</button>
+    </div>
   </div>
 </nav>
