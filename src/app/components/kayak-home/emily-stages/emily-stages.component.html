@@ -9,7 +9,7 @@
   <div class="col-12 p-0 m-0">
     <div class="row" style="flex-wrap: nowrap; overflow-x: scroll; min-height: 70vh;">
       <div 
-        class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3" 
+        class="col-12 col-sm-6 col-md-4 col-lg-2 mb-3 custom-width" 
         style="float: none; display: inline-block;" 
         *ngFor="let stage of Stages;"
       >
@@ -46,7 +46,7 @@
                   (click)="toggleContacts(org)"
                   style="cursor: pointer; display: flex;"
                 >
-                <div class="left col-3">
+                <div class="left col-2">
                   <img 
                     [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + org.OrganizationId"
                     width="30" 
@@ -54,7 +54,7 @@
                     style="border-radius: 50%;"
                   >
                 </div>
-                  <div class="right col-9 ms-2">
+                  <div class="right col-10 ms-2">
                       <span class="org-name">{{ org.OrganizationName }}</span>
                       <!-- <span 
                         class="mx-2" 
@@ -76,7 +76,7 @@
                       (click)="onContactClick(contact.ContactId, org.OrganizationId)" 
                       class="d-flex justify-content-between"
                     >
-                    <div style="cursor: pointer;">
+                    <div style="cursor: pointer; display: flex ;justify-content: space-between; width: 100%;">
                       <span class="namecontact">
                         {{ contact.Firstname }} {{ contact.Lastname }}
                       </span>

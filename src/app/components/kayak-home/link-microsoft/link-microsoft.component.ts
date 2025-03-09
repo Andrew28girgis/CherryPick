@@ -45,7 +45,7 @@ export class LinkMicrosoftComponent implements OnInit {
       if (response) {
         this.msalService.instance.setActiveAccount(response.account);
       }
-      this.getUser();
+      this.getUser();      
 
       const refreshToken = localStorage.getItem('RefreshToken');
       const accessToken = localStorage.getItem('access_token');
@@ -174,9 +174,13 @@ export class LinkMicrosoftComponent implements OnInit {
   }
 
   getUser() {
+    console.log('go');
     const account = this.msalService.instance.getActiveAccount();
     if (account) {
-      this.user = account;
+      this.user = account;      
+    }
+    else if(localStorage.getItem('accountMicrosoftLinked')){
+      this.user = account;    
     }
   }
 

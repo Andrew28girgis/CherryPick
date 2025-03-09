@@ -43,7 +43,7 @@ interface Column {
     EditorModule,
     EmilyComponent,
     FormsModule,
-    RouterModule
+    RouterModule,
   ],
   providers: [NgxSpinnerService, PlacesService],
   templateUrl: './stage-email.component.html',
@@ -81,7 +81,7 @@ export class StageEmailComponent implements OnInit {
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private modalService: NgbModal
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.buyBoxId = localStorage.getItem('BuyBoxId');
@@ -109,7 +109,6 @@ export class StageEmailComponent implements OnInit {
     this.accordionSecondClicked = true;
     this.openedStageId = stageId;
     this.openedOrgId = orgId;
-
 
     const stageEmails = this.stageEmailsMap[stageId];
     if (stageEmails) {
@@ -150,10 +149,10 @@ export class StageEmailComponent implements OnInit {
     return direction === 2
       ? 'fa-envelope-circle-check send'
       : direction === -1
-        ? 'fa-share outbox'
-        : direction === 1
-          ? 'fa-reply outbox'
-          : '';
+      ? 'fa-share outbox'
+      : direction === 1
+      ? 'fa-reply outbox'
+      : '';
   }
 
   GetBuyBoxEmails(): void {
@@ -331,15 +330,13 @@ export class StageEmailComponent implements OnInit {
     });
     this.emailsSentContact = [...mails];
     this.selectedFilter = 'sent';
-    this.checkAndFilterEmails('sent');  
+    this.checkAndFilterEmails('sent');
   }
-
 
   getReceivedEmails(matchingEmails: any, contactId: number): void {
     console.log(`match emails`);
     console.log(matchingEmails);
-    
-    
+
     let mails = matchingEmails.filter((mail: Mail) => {
       if (mail.ContactId != contactId) {
         return false;
@@ -353,13 +350,11 @@ export class StageEmailComponent implements OnInit {
     });
   }
 
-
-  
   checkAndFilterEmails(type: string): void {
     this.selectedFilter = type;
     let count = 0;
     this.emptyMessage = '';
-  
+
     if (type === 'sent') {
       count = this.selectedContact?.EmailStats[0].Sent || 0;
     } else if (type === 'inbox') {
@@ -367,13 +362,15 @@ export class StageEmailComponent implements OnInit {
     } else if (type === 'outbox') {
       count = this.selectedContact?.EmailStats[0].Outbox || 0;
     }
-  
-    this.filterEmails(type); 
-  
+
+    this.filterEmails(type);
+
     if (type === 'all' && this.filteredEmails.length === 0) {
       this.emptyMessage = 'empty emails';
     } else if (type !== 'all' && count === 0) {
-      this.emptyMessage = `empty ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+      this.emptyMessage = `empty ${
+        type.charAt(0).toUpperCase() + type.slice(1)
+      }`;
     }
   }
 
