@@ -1130,7 +1130,7 @@ private updateCardsSideList(map: any, isInitialLoad = false): void {
   }
 
   
-  RestoreShoppingCenter(MarketSurveyId: any) {
+  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
     this.spinner.show();
 
     const body: any = {
@@ -1144,10 +1144,13 @@ private updateCardsSideList(map: any, isInitialLoad = false): void {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
+        this.shoppingCenters = this.shoppingCenters.map(center => {
+          if (center.MarketSurveyId === MarketSurveyId) {
+            return { ...center, Deleted: false };
+          }
+          return center;
+        });
         this.spinner.hide();
-        // this.refreshShoppingCenters();
-        // this.initializeData();
-        location.reload();
       },
     });
   }

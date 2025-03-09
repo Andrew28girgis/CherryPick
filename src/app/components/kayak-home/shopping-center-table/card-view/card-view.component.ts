@@ -230,7 +230,7 @@ export class CardViewComponent implements OnInit {
     }
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any) {
+  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
     this.spinner.show();
 
     const body: any = {
@@ -244,10 +244,13 @@ export class CardViewComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
+        this.shoppingCenters = this.shoppingCenters.map(center => {
+          if (center.MarketSurveyId === MarketSurveyId) {
+            return { ...center, Deleted: false };
+          }
+          return center;
+        });
         this.spinner.hide();
-        // this.refreshShoppingCenters();
-        // this.loadData();
-        location.reload();
       },
     });
   }
