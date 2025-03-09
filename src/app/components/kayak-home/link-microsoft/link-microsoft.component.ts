@@ -180,7 +180,7 @@ export class LinkMicrosoftComponent implements OnInit {
       this.user = account;      
     }
     else if(localStorage.getItem('accountMicrosoftLinked')){
-      this.user = account;    
+      this.user = true;    
     }
   }
 
