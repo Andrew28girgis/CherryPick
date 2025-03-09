@@ -3,7 +3,7 @@
   <!-- <button class="cherry-collapse" type="button" (click)="toggleSidebar()">
       <i class="fa-solid fa-bars nav-icon"></i>
     </button> -->
-  <div style="cursor: pointer;">
+  <div style="cursor: pointer">
     <img
       alt="logo"
       class="cherry-logo"
@@ -16,6 +16,11 @@
 
   <div id="navbarNavDropdown">
     <ul class="navbar-nav">
+      <li class="nav-item">
+        <a [routerLink]="['/dashboard']" class="nav-link">
+          <p class="nav-link">Dashboard</p>
+        </a>
+      </li>
       <li (click)="BackTo()" class="nav-item">
         <div class="nav-link">
           <p class="nav-link">Tenants</p>
@@ -32,13 +37,11 @@
           <p class="nav-link">Email</p>
         </div>
       </li> -->
-
     </ul>
   </div>
   <div>
     <i
       class="fa-regular fa-envelope action-icon"
-     
       placement="bottom-end"
       container="body"
     >
@@ -46,12 +49,15 @@
     </i>
     <i
       class="fa-regular fa-bell action-icon me-4"
-   
       placement="bottom-end"
       container="body"
     >
       <span class="badge">{{ notifications.length }}</span>
     </i>
-    <i class="fa-solid fa-right-from-bracket" style="cursor: pointer; font-size: 1.25rem;" (click)="logout()"></i>
+    <i
+      class="fa-solid fa-right-from-bracket"
+      style="cursor: pointer; font-size: 1.25rem"
+      (click)="logout()"
+    ></i>
   </div>
 </nav>
