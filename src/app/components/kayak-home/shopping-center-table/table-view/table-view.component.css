@@ -334,7 +334,7 @@ img[alt="logo"] {
   margin-top: 10px;
 }
 
-/* .shortcuts_icon,
+.shortcuts_icon,
 .shortcuts_iconCard {
   position: absolute;
   background: white;
@@ -347,8 +347,8 @@ img[alt="logo"] {
   right: 135%;
   width: max-content;
   top: -135%;
-} */
-/* 
+} 
+
 .shortcuts_iconCard {
   top: -22%;
 }
@@ -406,7 +406,7 @@ img[alt="logo"] {
 
 .shortcuts_iconCard > i {
   top: 5%;
-} */
+}
 
 
 
