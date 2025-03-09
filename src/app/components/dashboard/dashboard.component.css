@@ -1,3 +1,14 @@
+::ng-deep .my-container {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+::ng-deep .sub-container {
+  flex: 1;
+  overflow: hidden;
+}
+
 .container-divider {
   width: 100%;
   color: #e2e4e9;
@@ -12,7 +23,10 @@
 .dashboard-sub-container {
   height: 100%;
   display: flex;
-  gap: 1.25%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  /* gap: 1.25%; */
+  gap: 1.5%;
 }
 
 .dashboard-item-container {
@@ -25,7 +39,8 @@
   gap: 1rem;
   padding: 1rem;
   height: 100%;
-  width: 32.5%;
+  /* width: 32.5%; */
+  width: 49.25%;
 }
 
 .container-title {
@@ -40,7 +55,7 @@
   padding: 0.5rem 1rem;
 }
 
-.scrollable-container{
+.scrollable-container {
   overflow-y: scroll;
   scrollbar-width: none;
 }
@@ -52,6 +67,23 @@
   border-radius: 0.75rem;
 }
 
+.email-broker-image,
+.email-organization-image,
+.user-image,
+.organization-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.email-broker-image img,
+.email-organization-image img,
+.user-image img,
+.organization-image img {
+  width: 24px;
+  height: 24px;
+}
+
 .email-calender-label {
   color: #707791;
 }
@@ -59,6 +91,16 @@
 .title {
   color: #16181d;
   font-weight: 600;
+}
+.email-view {
+  border: 1px solid #4d65b4;
+  /* background-color: #4d65b4; */
+  color: #4d65b4;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .email-reply {
   border: none;
@@ -106,4 +148,13 @@
 .comment-content {
   color: #707791;
   text-align: justify;
+}
+
+@media only screen and (max-width: 768px) {
+  .dashboard-item-container {
+    width: 100%;
+  }
+  .dashboard-sub-container {
+    flex-direction: column;
+  }
 }

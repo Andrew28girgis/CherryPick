@@ -1,4 +1,3 @@
-.shortcuts_icon,
 .shortcuts_iconCard {
   position: absolute;
   background: white;
@@ -8,21 +7,12 @@
   text-align: start;
   margin: 0;
   z-index: 100;
-  right: 135%;
+  right: 2vw !important;
   width: max-content;
   top: -135%;
 }
 
-.shortcuts_iconCard {
-  top: -22%;
-}
-
-.mtopp {
-  overflow-y: scroll;
-}
-
-.shortcuts_icon > ul,
-.shortcuts_iconCard > ul {
+.shortcuts_iconCard>ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -32,8 +22,7 @@
   display: grid;
 }
 
-.shortcuts_icon > li,
-.shortcuts_iconCard > li {
+.shortcuts_iconCard>ul>li {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -47,8 +36,7 @@
   cursor: pointer;
 }
 
-.shortcuts_icon .target,
-.shortcuts_iconCard .target {
+.shortcuts_iconCard>ul>li>.target {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -61,19 +49,42 @@
   margin: 0;
   text-decoration: none;
   cursor: pointer;
+  align-items: center;
 }
 
-.shortcuts_icon > i,
-.shortcuts_iconCard > i {
+.shortcuts_iconCard>ul>li>.target i {
+  font-size: 16px;
+  cursor: w-resize;
+  width: 20px;
+  height: 20px;
+  color: #707791;
+}
+
+.shortcuts_iconCard>ul>li>.target svg {
+  width: 20px;
+  height: 20px;
+}
+
+.shortcuts_iconCard>ul>li>.target svg path {
+  fill: #707791;
+}
+
+.shortcuts_iconCard>i {
   position: absolute;
   right: -8px;
-  top: 25%;
+  top: 5%;
   font-size: 25px;
   color: white;
 }
 
-.shortcuts_iconCard > i {
-  top: 5%;
+@media (max-width: 768px) {
+  .shortcuts_iconCard {
+    right: 5vw !important;
+  }
+}
+
+.mtopp {
+  overflow-y: scroll;
 }
 
 .card-window {
@@ -252,7 +263,7 @@ img[alt="logo"] {
 
 .table-text {
   color: #7a8591;
-  
+
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -261,7 +272,7 @@ img[alt="logo"] {
 
 .table-texttt {
   color: #7a8591;
-  
+
   font-size: 0.8rem;
   font-style: normal;
   font-weight: 400;
@@ -303,7 +314,7 @@ img[alt="logo"] {
 }
 
 .card-address {
-  
+
   font-size: 14px;
   font-weight: 400;
   line-height: 30px;
@@ -315,7 +326,7 @@ img[alt="logo"] {
 }
 
 .managed-by {
-  
+
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -334,90 +345,18 @@ img[alt="logo"] {
   height: 700px;
 }
 
-.shortcuts_icon,
-.shortcuts_iconCard {
-  position: absolute;
-  background: white;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
-  padding: 16px;
-  border-radius: 10px;
-  text-align: start;
-  margin: 0;
-  z-index: 100;
-  width: max-content;
-  right: 16% !important;
-  top: 49% !important;
-}
-
-.shortcuts_iconCard {
-  top: -22%;
-}
-
-.shortcuts_icon > ul,
-.shortcuts_iconCard > ul {
-  text-decoration: none;
-  list-style: none;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  gap: 8px;
-  display: grid;
-}
-
-.shortcuts_icon > li,
-.shortcuts_iconCard > li {
-  display: flex;
-  gap: 6px;
-  color: #707791;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  cursor: pointer;
-}
-
-.shortcuts_icon .target,
-.shortcuts_iconCard .target {
-  display: flex;
-  gap: 6px;
-  color: #707791;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.shortcuts_icon > i,
-.shortcuts_iconCard > i {
-  position: absolute;
-  right: -8px;
-  top: 25%;
-  font-size: 25px;
-  color: white;
-}
-
-.shortcuts_iconCard > i {
-  top: 5%;
-}
 
 
-::ng-deep  .popover-body{
+::ng-deep .popover-body {
   padding: 0 !important;
 }
 
-::ng-deep .popover-arrow::after{
+::ng-deep .popover-arrow::after {
   border-top: none !important;
   border-top-color: transparent !important;
 }
-::ng-deep .popover-arrow::before{
+
+::ng-deep .popover-arrow::before {
   /* border-top-color: white !important; */
   border-top: none !important;
 }
@@ -440,6 +379,7 @@ img[alt="logo"] {
   font-size: 12px;
   text-align: center;
 }
+
 .emily {
   font-size: 18px;
   margin-top: 3px;

@@ -25,11 +25,12 @@
         <ng-container *ngFor="let shoppingCenter of shoppingCenters">
           <tr>
             <td>
-
-              <span class="table-text" [innerHTML]="shoppingCenter.CenterName | titlecase"></span>
-
-              <span class="badge badge-danger mx-2" *ngIf="shoppingCenter.Deleted == true">Deleted</span>
-
+              <div class="d-flex justify-content-between">
+                <span class="table-text" [innerHTML]="shoppingCenter.CenterName | titlecase"></span>
+                <div>
+                  <span class="badge badge-danger mx-2 h-auto" *ngIf="shoppingCenter.Deleted == true">Deleted</span>
+                </div>
+              </div>
             </td>
             <td>
               <div class="table-text cursor" (click)="openMapViewPlace(MapViewPlace, shoppingCenter)">
@@ -194,15 +195,22 @@
                               Street View
                             </a>
                           </li>
-                          <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
+                          <li *ngIf="shoppingCenter.Deleted != true">
                             <a class="target" (click)="
                               openDeleteShoppingCenterModal(
                                 deleteSingleShoppingCenterModal,
                                 shoppingCenter
-                              )
+                              );toggleShortcuts(shoppingCenter.Id, 'close')
                             ">
                               <i class="fa-regular fa-trash-can big-text"></i>
                               Remove Shopping
+                            </a>
+                          </li>
+                          <li (click)="toggleShortcuts(shoppingCenter.Id, 'close');RestoreShoppingCenter(shoppingCenter.MarketSurveyId)"
+                            *ngIf="shoppingCenter.Deleted == true">
+                            <a class="target">
+                              <i class="fa-regular fa-trash-can big-text"></i>
+                              Restore
                             </a>
                           </li>
                         </ul>

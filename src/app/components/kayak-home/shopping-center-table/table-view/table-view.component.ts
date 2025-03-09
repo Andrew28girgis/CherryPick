@@ -55,6 +55,7 @@ export class TableViewComponent implements OnInit {
   buyboxPlaces: BbPlace[] = [];
   selectedIdCard: number | null = null;
   @Output() viewChange = new EventEmitter<number>();
+  DeletedSC: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -102,16 +103,16 @@ export class TableViewComponent implements OnInit {
     try {
       // Load categories first
       this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
-      
+
       // Load shopping centers
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      
+
       // Load places
       this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
-      
+
       // Load organization data
       this.ShareOrg = await this.viewManagerService.getOrganizationById(this.OrgId);
-      
+
       // Process categories with places
       this.buyboxCategories.forEach((category) => {
         category.isChecked = false;
@@ -123,6 +124,29 @@ export class TableViewComponent implements OnInit {
       console.error('Error initializing data:', error);
     }
   }
+
+  RestoreShoppingCenter(MarketSurveyId: any) {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'RestoreShoppingCenter',
+      MainEntity: null,
+      Params: {
+        marketsurveyid: +MarketSurveyId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.spinner.hide();
+        // this.initializeData();
+        // this.refreshShoppingCenters();
+        location.reload();
+      },
+    });
+  }
+
 
   getNeareastCategoryName(categoryId: number): string {
     return this.viewManagerService.getNearestCategoryName(categoryId, this.buyboxCategories);
@@ -146,9 +170,8 @@ export class TableViewComponent implements OnInit {
     ) as HTMLElement;
 
     if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${
-        rect.top + window.scrollY + targetElement.offsetHeight
-      }px`;
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight
+        }px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
 
@@ -162,8 +185,6 @@ export class TableViewComponent implements OnInit {
   trackByIndex(index: number, item: any): number {
     return index;
   }
-
-
 
   openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
@@ -226,7 +247,7 @@ export class TableViewComponent implements OnInit {
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url);
   }
-  DeletedSC: any;
+
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
@@ -239,17 +260,17 @@ export class TableViewComponent implements OnInit {
   }
 
   async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) => 
+    this.shoppingCenters = this.shoppingCenters.map((x) =>
       x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-  );
-  
-   
+    );
+
+
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.spinner.show();
         await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
         this.modalService.dismissAll();
-       // await this.refreshShoppingCenters();
+        // await this.refreshShoppingCenters();
       } catch (error) {
         console.error('Error deleting shopping center:', error);
       } finally {

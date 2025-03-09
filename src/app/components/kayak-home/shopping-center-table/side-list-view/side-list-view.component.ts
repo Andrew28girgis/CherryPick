@@ -1129,6 +1129,29 @@ private updateCardsSideList(map: any, isInitialLoad = false): void {
     this.modalService.dismissAll()
   }
 
+  
+  RestoreShoppingCenter(MarketSurveyId: any) {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'RestoreShoppingCenter',
+      MainEntity: null,
+      Params: {
+        marketsurveyid: +MarketSurveyId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.spinner.hide();
+        // this.refreshShoppingCenters();
+        // this.initializeData();
+        location.reload();
+      },
+    });
+  }
+  
   private ensureCardsDisplayed(): void {
     // Always run inside NgZone
     this.ngZone.run(() => {
