@@ -68,6 +68,7 @@ import { ManagePropertiesComponent } from './components/manage-properties/manage
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { HeaderComponent } from './components/header/header.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 const msalConfig = {
   auth: {
@@ -144,6 +145,7 @@ const loginRequest = {
     SharedModule,
     ScrollingModule,
     NgxFileDropModule,
+    TooltipModule,
     MsalModule.forRoot(
       new PublicClientApplication(msalConfig),
       {

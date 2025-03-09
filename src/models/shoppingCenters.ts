@@ -73,8 +73,8 @@ export interface Center {
     City: string
     State: string
     Zip: string
-    Longitude: number
-    Latitude: number
+    Longitude: any
+    Latitude: any
     StreetViewURL: string
     Type: string
     Units: string
