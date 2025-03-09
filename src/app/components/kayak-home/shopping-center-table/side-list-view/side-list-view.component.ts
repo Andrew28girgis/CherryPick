@@ -140,7 +140,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log("SideListViewComponent initialized")
     this.General = new General()
     this.selectedState = ""
     this.selectedCity = ""
@@ -161,7 +160,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
     // Update the last visit timestamp
     localStorage.setItem("sideListViewLastVisit", currentTime.toString())
 
-    console.log(`Component load type: ${this.isFirstLoad ? "First Load" : "Navigation"}`)
 
     // Subscribe to route params only once
     this.activatedRoute.params.pipe(takeUntil(this.destroy$)).subscribe((params: any) => {
@@ -197,7 +195,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
 
   async initializeData() {
     try {
-      console.log("Initializing data...")
       this.spinner.show()
 
       // Use a single API call to get all data
@@ -209,7 +206,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
       })
         .pipe(
           tap((result) => {
-            console.log("Data loaded successfully")
             this.buyboxCategories = result.categories
             this.shoppingCenters = result.centers
             this.buyboxPlaces = result.places
@@ -232,7 +228,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
             // Initially show all properties
             const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
             this.cardsSideList = allProperties
-            console.log(`Initial cards list populated with ${this.cardsSideList.length} items`)
           }),
           catchError((error) => {
             console.error("Error initializing data:", error)
@@ -708,7 +703,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
   private onMapZoomChanged(): void {
     // Always run inside NgZone to ensure proper change detection
     this.ngZone.run(() => {
-      console.log("Map zoom changed, updating cards")
       this.saveMapView(this.map)
       this.updateCardsSideList(this.map)
       
@@ -724,7 +718,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
     updateTimes.forEach((time) => {
       const timeoutId = setTimeout(() => {
         if (!this.initialBoundsApplied) {
-          console.log(`Scheduled update at ${time}ms`)
           this.ngZone.run(() => {
             this.updateCardsSideList(this.map, true)
           })
@@ -737,7 +730,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
 
   // Start polling for bounds check
   private startBoundsCheckInterval() {
-    console.log("Starting bounds check interval")
 
     // Clear any existing interval
     if (this.boundsCheckInterval) {
@@ -752,11 +744,9 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
 
       // Use exponential backoff for logging to reduce console spam
       if (this.boundsCheckAttempts === 1 || this.boundsCheckAttempts % 2 === 0) {
-        console.log(`Bounds check attempt ${this.boundsCheckAttempts}`)
       }
 
       if (this.boundsCheckAttempts >= this.maxBoundsCheckAttempts) {
-        console.log("Max bounds check attempts reached, clearing interval")
         clearInterval(this.boundsCheckInterval)
         this.boundsCheckInterval = null
 
@@ -764,7 +754,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
         // force an update with all properties as a fallback
         if (!this.initialBoundsApplied) {
           this.ngZone.run(() => {
-            console.log("Forcing fallback to all properties after max attempts")
             const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
             this.cardsSideList = allProperties
             this.initialBoundsApplied = true
@@ -780,7 +769,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
         if (this.map && this.map.getBounds && this.markersCreated) {
           const bounds = this.map.getBounds()
           if (bounds) {
-            console.log("Map bounds available, updating cards")
 
             // Run the actual update inside NgZone
             this.ngZone.run(() => {
@@ -800,7 +788,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
     // Safety cleanup after 10 seconds
     setTimeout(() => {
       if (this.boundsCheckInterval) {
-        console.log("Safety cleanup of bounds check interval")
         clearInterval(this.boundsCheckInterval)
         this.boundsCheckInterval = null
       }
@@ -853,184 +840,173 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
 
 // Replace your current updateCardsSideList method with this improved version:
 
-// private updateCardsSideList(map: any, isInitialLoad = false): void {
-//   // Always run this method inside NgZone to ensure proper change detection
-//   this.ngZone.run(() => {
-//     try {
-//       console.log(`updateCardsSideList called, isInitialLoad: ${isInitialLoad}`)
+private updateCardsSideList(map: any, isInitialLoad = false): void {
+  // Always run this method inside NgZone to ensure proper change detection
+  this.ngZone.run(() => {
+    try {
 
-//       // CRITICAL FIX: Check if map is fully initialized
-//       const isMapInitialized = map && map.getBounds && typeof map.getBounds === "function"
+      // CRITICAL FIX: Check if map is fully initialized
+      const isMapInitialized = map && map.getBounds && typeof map.getBounds === "function"
 
-//       // If map isn't ready, show all cards instead of none
-//       if (!isMapInitialized) {
-//         console.log("Map or bounds not available")
-//         const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-//         this.cardsSideList = allProperties
-//         console.log("Cards displayed (no map):", this.cardsSideList.length)
-//         this.cdr.detectChanges()
-//         this.appRef.tick() // Force application update
-//         return
-//       }
+      // If map isn't ready, show all cards instead of none
+      if (!isMapInitialized) {
+        const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
+        this.cardsSideList = allProperties
+        this.cdr.detectChanges()
+        this.appRef.tick() // Force application update
+        return
+      }
 
-//       // Try to get bounds safely
-//       let bounds
-//       try {
-//         bounds = isMapInitialized ? map.getBounds() : null
-//       } catch (e) {
-//         console.error("Error getting map bounds:", e)
-//         bounds = null
-//       }
+      // Try to get bounds safely
+      let bounds
+      try {
+        bounds = isMapInitialized ? map.getBounds() : null
+      } catch (e) {
+        console.error("Error getting map bounds:", e)
+        bounds = null
+      }
 
-//       if (!bounds) {
-//         console.log("No bounds available")
-//         const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-//         this.cardsSideList = allProperties
-//         console.log("Cards displayed (no bounds):", this.cardsSideList.length)
-//         this.cdr.detectChanges()
-//         this.appRef.tick() // Force application update
-//         return
-//       }
+      if (!bounds) {
+        const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
+        this.cardsSideList = allProperties
+        this.cdr.detectChanges()
+        this.appRef.tick() // Force application update
+        return
+      }
 
-//       // Get properties in bounds
-//       const propertiesInBounds = this.getPropertiesInBounds(bounds)
-//       console.log(`Found ${propertiesInBounds.length} properties in bounds`)
+      // Get properties in bounds
+      const propertiesInBounds = this.getPropertiesInBounds(bounds)
 
-//       if (propertiesInBounds.length > 0) {
-//         // Update the cards list with properties in bounds
-//         this.cardsSideList = propertiesInBounds
-//         console.log(`Cards updated: ${this.cardsSideList.length} cards visible`)
+      if (propertiesInBounds.length > 0) {
+        // Update the cards list with properties in bounds
+        this.cardsSideList = propertiesInBounds
 
-//         // Mark that we've successfully applied bounds filtering
-//         if (isInitialLoad) {
-//           this.initialBoundsApplied = true
-//         }
-//       } else {
-//         // If no properties are in bounds, show all properties
-//         const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-//         this.cardsSideList = allProperties
-//         console.log(`No properties in bounds, showing all ${this.cardsSideList.length} cards`)
-//       }
+        // Mark that we've successfully applied bounds filtering
+        if (isInitialLoad) {
+          this.initialBoundsApplied = true
+        }
+      } else {
+        // If no properties are in bounds, show all properties
+        const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
+        this.cardsSideList = allProperties
+      }
 
-//       // Force change detection AND application update
-//       this.cdr.detectChanges()
-//       this.appRef.tick() // This is critical for ensuring the UI updates
-//     } catch (error) {
-//       console.error("Error updating cards list:", error)
-//       // On error, show all cards as fallback
-//       const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-//       this.cardsSideList = allProperties
-//       console.log("Cards displayed (error fallback):", this.cardsSideList.length)
-//       this.cdr.detectChanges()
-//       this.appRef.tick() // Force application update
-//     }
-//   })
-// }
+      // Force change detection AND application update
+      this.cdr.detectChanges()
+      this.appRef.tick() // This is critical for ensuring the UI updates
+    } catch (error) {
+      console.error("Error updating cards list:", error)
+      // On error, show all cards as fallback
+      const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
+      this.cardsSideList = allProperties
+      this.cdr.detectChanges()
+      this.appRef.tick() // Force application update
+    }
+  })
+}
 
   // Get properties that are within the current map bounds
-  // private getPropertiesInBounds(bounds: any): any[] {
-  //   if (!bounds) return []
+  private getPropertiesInBounds(bounds: any): any[] {
+    if (!bounds) return []
   
-  //   const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
+    const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
   
-  //   // CRITICAL FIX: Use a more efficient approach to check bounds
-  //   return allProperties.filter((property) => {
-  //     if (!property || !property.Latitude || !property.Longitude) {
-  //       return false
-  //     }
+    // CRITICAL FIX: Use a more efficient approach to check bounds
+    return allProperties.filter((property) => {
+      if (!property || !property.Latitude || !property.Longitude) {
+        return false
+      }
   
-  //     try {
-  //       const lat = Number.parseFloat(property.Latitude)
-  //       const lng = Number.parseFloat(property.Longitude)
+      try {
+        const lat = Number.parseFloat(property.Latitude)
+        const lng = Number.parseFloat(property.Longitude)
   
-  //       if (isNaN(lat) || isNaN(lng)) {
-  //         return false
-  //       }
+        if (isNaN(lat) || isNaN(lng)) {
+          return false
+        }
   
-  //       // Create a LatLng object for more accurate bounds checking
-  //       const position = new google.maps.LatLng(lat, lng)
-  //       return bounds.contains(position)
-  //     } catch (error) {
-  //       console.error("Error checking if property is in bounds:", error)
-  //       return false
-  //     }
-  //   })
-  // }
+        // Create a LatLng object for more accurate bounds checking
+        const position = new google.maps.LatLng(lat, lng)
+        return bounds.contains(position)
+      } catch (error) {
+        console.error("Error checking if property is in bounds:", error)
+        return false
+      }
+    })
+  }
 
   // New method to directly get visible markers from the map
-  // private getVisibleMarkersDirectly(map: any, bounds: any): any[] {
-  //   if (!map || !bounds) return []
+  private getVisibleMarkersDirectly(map: any, bounds: any): any[] {
+    if (!map || !bounds) return []
 
-  //   try {
-  //     // Get all markers from the map
-  //     const allMarkers: any[] = []
+    try {
+      // Get all markers from the map
+      const allMarkers: any[] = []
 
-  //     // Access the map's overlays (this is implementation-specific and may need adjustment)
-  //     if (map.overlays && map.overlays.length > 0) {
-  //       map.overlays.forEach((overlay: any) => {
-  //         if (overlay instanceof google.maps.Marker) {
-  //           const position = overlay.getPosition()
-  //           if (position && bounds.contains(position)) {
-  //             allMarkers.push({
-  //               lat: position.lat(),
-  //               lng: position.lng(),
-  //             })
-  //           }
-  //         }
-  //       })
-  //     }
+      // Access the map's overlays (this is implementation-specific and may need adjustment)
+      if (map.overlays && map.overlays.length > 0) {
+        map.overlays.forEach((overlay: any) => {
+          if (overlay instanceof google.maps.Marker) {
+            const position = overlay.getPosition()
+            if (position && bounds.contains(position)) {
+              allMarkers.push({
+                lat: position.lat(),
+                lng: position.lng(),
+              })
+            }
+          }
+        })
+      }
 
-  //     return allMarkers
-  //   } catch (error) {
-  //     console.error("Error getting visible markers directly:", error)
-  //     return []
-  //   }
-  // }
+      return allMarkers
+    } catch (error) {
+      console.error("Error getting visible markers directly:", error)
+      return []
+    }
+  }
 
   // Helper method to filter and update cards
-  // private filterAndUpdateCards(visibleCoords: Set<string>, bounds: any, isInitialLoad: boolean): void {
-  //   const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
+  private filterAndUpdateCards(visibleCoords: Set<string>, bounds: any, isInitialLoad: boolean): void {
+    const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
 
-  //   // Filter properties that are visible on the map
-  //   const visibleProperties = allProperties.filter(
-  //     (property) =>
-  //       property &&
-  //       property.Latitude &&
-  //       property.Longitude &&
-  //       (visibleCoords.has(`${property.Latitude},${property.Longitude}`) || this.isWithinBounds(property, bounds)),
-  //   )
+    // Filter properties that are visible on the map
+    const visibleProperties = allProperties.filter(
+      (property) =>
+        property &&
+        property.Latitude &&
+        property.Longitude &&
+        (visibleCoords.has(`${property.Latitude},${property.Longitude}`) || this.isWithinBounds(property, bounds)),
+    )
 
-  //   // Update the cards list
-  //   if (visibleProperties.length > 0) {
-  //     this.cardsSideList = visibleProperties
-  //     console.log(`Cards updated: ${this.cardsSideList.length} cards visible`)
-  //   } else {
-  //     // If no properties are visible, show all properties
-  //     this.cardsSideList = allProperties
-  //     console.log(`No visible properties, showing all ${this.cardsSideList.length} cards`)
-  //   }
+    // Update the cards list
+    if (visibleProperties.length > 0) {
+      this.cardsSideList = visibleProperties
+    } else {
+      // If no properties are visible, show all properties
+      this.cardsSideList = allProperties
+    }
 
-  //   // Force change detection
-  //   this.cdr.detectChanges()
+    // Force change detection
+    this.cdr.detectChanges()
 
-  //   // For initial load, we need to force the application to update
-  //   if (isInitialLoad) {
-  //     this.appRef.tick()
-  //   }
-  // }
+    // For initial load, we need to force the application to update
+    if (isInitialLoad) {
+      this.appRef.tick()
+    }
+  }
 
-  // private isWithinBounds(property: any, bounds: any): boolean {
-  //   if (!property || !bounds) return false
+  private isWithinBounds(property: any, bounds: any): boolean {
+    if (!property || !bounds) return false
 
-  //   const lat = Number.parseFloat(property.Latitude)
-  //   const lng = Number.parseFloat(property.Longitude)
+    const lat = Number.parseFloat(property.Latitude)
+    const lng = Number.parseFloat(property.Longitude)
 
-  //   if (isNaN(lat) || isNaN(lng)) {
-  //     return false
-  //   }
+    if (isNaN(lat) || isNaN(lng)) {
+      return false
+    }
 
-  //   return bounds.contains({ lat, lng })
-  // }
+    return bounds.contains({ lat, lng })
+  }
 
   private saveMapView(map: any): void {
     if (!map || !map.getCenter) return
@@ -1168,7 +1144,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
       ) {
         const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
         this.cardsSideList = allProperties
-        console.log("Cards forcibly displayed:", this.cardsSideList.length)
 
         // Force change detection
         this.cdr.detectChanges()
@@ -1189,266 +1164,6 @@ export class SideListViewComponent implements OnInit, OnChanges, OnDestroy {
 
 
 
-
-
-
-
-
-
-
-
-
-// Complete rewrite of the updateCardsSideList method
-private updateCardsSideList(map: any, isInitialLoad = false): void {
-  // Always run this method inside NgZone to ensure proper change detection
-  this.ngZone.run(() => {
-    try {
-      console.log(`updateCardsSideList called, isInitialLoad: ${isInitialLoad}`)
-
-      // CRITICAL FIX: Always show all cards initially, then filter if map is ready
-      const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-      
-      // If no properties exist, nothing to do
-      if (allProperties.length === 0) {
-        console.log("No properties available to display")
-        this.cardsSideList = []
-        this.cdr.detectChanges()
-        return
-      }
-
-      // CRITICAL FIX: Check if map is fully initialized
-      const isMapInitialized = map && map.getBounds && typeof map.getBounds === "function"
-
-      // If map isn't ready, show all cards instead of none
-      if (!isMapInitialized) {
-        console.log("Map not fully initialized, showing all properties")
-        this.cardsSideList = allProperties
-        console.log("Cards displayed (no map):", this.cardsSideList.length)
-        this.cdr.detectChanges()
-        this.appRef.tick() // Force application update
-        return
-      }
-
-      // Try to get bounds safely
-      let bounds
-      try {
-        bounds = map.getBounds()
-      } catch (e) {
-        console.error("Error getting map bounds:", e)
-        bounds = null
-      }
-
-      if (!bounds) {
-        console.log("No bounds available, showing all properties")
-        this.cardsSideList = allProperties
-        console.log("Cards displayed (no bounds):", this.cardsSideList.length)
-        this.cdr.detectChanges()
-        this.appRef.tick() // Force application update
-        return
-      }
-
-      // CRITICAL FIX: Try two different approaches to find properties in bounds
-      // 1. First try the direct bounds check
-      let propertiesInBounds = this.getPropertiesInBounds(bounds)
-      
-      // 2. If that fails, try the marker-based approach
-      if (propertiesInBounds.length === 0) {
-        console.log("No properties found with direct bounds check, trying marker-based approach")
-        const visibleMarkers = this.getVisibleMarkersDirectly(map, bounds)
-        const visibleCoords = new Set(visibleMarkers.map(m => `${m.lat},${m.lng}`))
-        
-        // Use the helper method to filter and update cards
-        this.filterAndUpdateCards(visibleCoords, bounds, isInitialLoad)
-        return
-      }
-
-      // If we have properties in bounds, update the cards list
-      if (propertiesInBounds.length > 0) {
-        console.log(`Found ${propertiesInBounds.length} properties in bounds`)
-        this.cardsSideList = propertiesInBounds
-        
-        // Mark that we've successfully applied bounds filtering
-        if (isInitialLoad) {
-          this.initialBoundsApplied = true
-        }
-      } else {
-        // CRITICAL FIX: If no properties are in bounds, show all properties
-        console.log("No properties in bounds, showing all properties")
-        this.cardsSideList = allProperties
-      }
-
-      console.log(`Cards list updated with ${this.cardsSideList.length} items`)
-      
-      // Force change detection AND application update
-      this.cdr.detectChanges()
-      this.appRef.tick() // This is critical for ensuring the UI updates
-    } catch (error) {
-      console.error("Error updating cards list:", error)
-      // On error, show all cards as fallback
-      const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-      this.cardsSideList = allProperties
-      console.log("Cards displayed (error fallback):", this.cardsSideList.length)
-      this.cdr.detectChanges()
-      this.appRef.tick() // Force application update
-    }
-  })
-}
-
-// Improved getPropertiesInBounds method
-private getPropertiesInBounds(bounds: any): any[] {
-  if (!bounds) return []
-
-  const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-  
-  // CRITICAL FIX: More robust bounds checking
-  return allProperties.filter((property) => {
-    if (!property) return false
-    
-    // Handle different property formats
-    const lat = property.Latitude !== undefined ? Number.parseFloat(property.Latitude) : 
-               (property.Latitude !== undefined ? Number.parseFloat(property.Latitude) : null)
-    
-    const lng = property.Longitude !== undefined ? Number.parseFloat(property.Longitude) : 
-               (property.Longitude !== undefined ? Number.parseFloat(property.Longitude) : null)
-    
-    if (lat === null || lng === null || isNaN(lat) || isNaN(lng)) {
-      return false
-    }
-    
-    try {
-      // Create a LatLng object for more accurate bounds checking
-      const position = new google.maps.LatLng(lat, lng)
-      return bounds.contains(position)
-    } catch (error) {
-      console.error("Error checking if property is in bounds:", error)
-      return false
-    }
-  })
-}
-
-// Improved filterAndUpdateCards method that's now actually used
-private filterAndUpdateCards(visibleCoords: Set<string>, bounds: any, isInitialLoad: boolean): void {
-  const allProperties = [...(this.shoppingCenters || []), ...(this.standAlone || [])]
-
-  // Filter properties that are visible on the map
-  const visibleProperties = allProperties.filter((property) => {
-    if (!property || (!property.Latitude && !property.Latitude) || (!property.Longitude && !property.Longitude)) {
-      return false
-    }
-    
-    // Handle different property formats
-    const lat = property.Latitude !== undefined ? property.Latitude : property.Latitude
-    const lng = property.Longitude !== undefined ? property.Longitude : property.Longitude
-    
-    return visibleCoords.has(`${lat},${lng}`) || this.isWithinBounds(property, bounds)
-  })
-
-  // Update the cards list
-  if (visibleProperties.length > 0) {
-    this.cardsSideList = visibleProperties
-    console.log(`Cards updated using marker approach: ${this.cardsSideList.length} cards visible`)
-    
-    // Mark that we've successfully applied bounds filtering
-    if (isInitialLoad) {
-      this.initialBoundsApplied = true
-    }
-  } else {
-    // If no properties are visible, show all properties
-    this.cardsSideList = allProperties
-    console.log(`No visible properties using marker approach, showing all ${this.cardsSideList.length} cards`)
-  }
-
-  // Force change detection
-  this.cdr.detectChanges()
-  this.appRef.tick()
-}
-
-// Improved isWithinBounds method
-private isWithinBounds(property: any, bounds: any): boolean {
-  if (!property || !bounds) return false
-
-  // Handle different property formats
-  const lat = property.Latitude !== undefined ? Number.parseFloat(property.Latitude) : 
-             (property.latitude !== undefined ? Number.parseFloat(property.latitude) : null)
-  
-  const lng = property.Longitude !== undefined ? Number.parseFloat(property.Longitude) : 
-             (property.longitude !== undefined ? Number.parseFloat(property.longitude) : null)
-
-  if (lat === null || lng === null || isNaN(lat) || isNaN(lng)) {
-    return false
-  }
-
-  try {
-    const position = new google.maps.LatLng(lat, lng)
-    return bounds.contains(position)
-  } catch (error) {
-    console.error("Error in isWithinBounds:", error)
-    return false
-  }
-}
-
-// Improved getVisibleMarkersDirectly method
-private getVisibleMarkersDirectly(map: any, bounds: any): any[] {
-  if (!map || !bounds) return []
-
-  try {
-    const allMarkers: any[] = []
-    
-    // Try to access markers from the map
-    // This is a more robust approach that tries multiple ways to access markers
-    
-    // Method 1: Try to access markers directly
-    if (map.markers && Array.isArray(map.markers)) {
-      map.markers.forEach((marker: any) => {
-        if (marker && marker.getPosition && typeof marker.getPosition === 'function') {
-          const position = marker.getPosition()
-          if (position && bounds.contains(position)) {
-            allMarkers.push({
-              lat: position.lat(),
-              lng: position.lng(),
-            })
-          }
-        }
-      })
-    }
-    
-    // Method 2: Try to access overlays
-    if (allMarkers.length === 0 && map.overlays && Array.isArray(map.overlays)) {
-      map.overlays.forEach((overlay: any) => {
-        if (overlay instanceof google.maps.Marker) {
-          const position = overlay.getPosition()
-          if (position && bounds.contains(position)) {
-            allMarkers.push({
-              lat: position.lat(),
-              lng: position.lng(),
-            })
-          }
-        }
-      })
-    }
-    
-    // Method 3: Try to access via data layer
-    if (allMarkers.length === 0 && map.data) {
-      map.data.forEach((feature: any) => {
-        const geometry = feature.getGeometry()
-        if (geometry && geometry.getType() === 'Point') {
-          const position = geometry.get()
-          if (position && bounds.contains(position)) {
-            allMarkers.push({
-              lat: position.lat(),
-              lng: position.lng(),
-            })
-          }
-        }
-      })
-    }
-
-    return allMarkers
-  } catch (error) {
-    console.error("Error getting visible markers directly:", error)
-    return []
-  }
-}
 
 // Add this method to ensure map is ready before updating cards
 private ensureMapReady(): Promise<boolean> {
@@ -1477,7 +1192,6 @@ private ensureMapReady(): Promise<boolean> {
 // Modify getAllMarker to use the ensureMapReady method
 async getAllMarker() {
   try {
-    console.log("getAllMarker called")
     this.spinner.show()
 
     // Create a promise that will resolve when the map is fully initialized
@@ -1557,7 +1271,7 @@ async getAllMarker() {
     // This ensures we catch the moment when the map is fully ready
     this.map.addListener("idle", () => {
       this.ngZone.run(() => {
-        console.log("Map idle event triggered")
+
         this.onMapDragEnd(this.map)
 
         // Resolve the map initialization promise
@@ -1572,7 +1286,6 @@ async getAllMarker() {
     
     this.map.addListener("tilesloaded", () => {
       this.ngZone.run(() => {
-        console.log("Map tiles loaded")
 
         // Also resolve the promise here as a backup
         if (this.mapInitResolver) {
@@ -1588,7 +1301,6 @@ async getAllMarker() {
 
     this.map.addListener("bounds_changed", () => {
       this.ngZone.run(() => {
-        console.log("Map bounds changed")
         if (this.isFirstLoad && !this.initialBoundsApplied) {
           this.updateCardsSideList(this.map, true)
         }
@@ -1614,14 +1326,12 @@ async getAllMarker() {
 
     // CRITICAL FIX: For first load, use a different strategy
     if (this.isFirstLoad) {
-      console.log("First load detected - using special initialization")
 
       // Ensure cards are displayed immediately
       this.ensureCardsDisplayed()
 
       // Wait for the map to be fully initialized before updating cards
       this.mapInitPromise.then(() => {
-        console.log("Map is fully initialized, updating cards")
         this.ngZone.run(() => {
           this.updateCardsSideList(this.map, true)
         })
