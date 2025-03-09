@@ -68,6 +68,7 @@ import { ManagePropertiesComponent } from './components/manage-properties/manage
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { HeaderComponent } from './components/header/header.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { MainComponent } from './components/main/main.component';
 
 const msalConfig = {
   auth: {
@@ -123,6 +124,7 @@ const loginRequest = {
     NumberWithCommasPipe,
     ManagePropertiesComponent,
     DashboardComponent,
+    MainComponent,
   ],
   imports: [
     BrowserModule,
