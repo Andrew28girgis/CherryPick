@@ -23,6 +23,8 @@
 .dashboard-sub-container {
   height: 100%;
   display: flex;
+  overflow-y: scroll;
+  scrollbar-width: none;
   /* gap: 1.25%; */
   gap: 1.5%;
 }
@@ -146,4 +148,13 @@
 .comment-content {
   color: #707791;
   text-align: justify;
+}
+
+@media only screen and (max-width: 768px) {
+  .dashboard-item-container {
+    width: 100%;
+  }
+  .dashboard-sub-container {
+    flex-direction: column;
+  }
 }
