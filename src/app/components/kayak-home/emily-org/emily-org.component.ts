@@ -10,9 +10,12 @@ import { OrganizationsForEmail } from 'src/models/emailyOrganization';
   styleUrls: ['./emily-org.component.css']
 })
 export class EmilyOrgComponent {
-  buyBoxId!: number | null;
+  buyBoxId!: number; // Change to number (remove | null)
   BuyBoxOrganizationsForEmail: OrganizationsForEmail[] = [];
   buyBoxMailActivity: any[] = [];
+  showContactEmail: boolean = false; // Controls which component is displayed
+  contactId!: number;
+  orgId!: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +31,19 @@ export class EmilyOrgComponent {
     this.GetBuyBoxOrganizationsForEmail();
     this.GetGetbuyBoxMailActivity();
   }
+// Method to toggle between components and store IDs
+toggleView(data: { contactId: number, orgId: number, buyBoxId: number } | boolean) {
+  if (typeof data === 'boolean') {
+    // Handle the goBackEvent case
+    this.showContactEmail = data;
+  } else {
+    // Handle the showContactEmail case
+    this.contactId = data.contactId;
+    this.orgId = data.orgId;
+    this.buyBoxId = data.buyBoxId;
+    this.showContactEmail = true; // Show the contact email component
+  }
+}
 
   GetBuyBoxOrganizationsForEmail() {
     this.spinner.show();

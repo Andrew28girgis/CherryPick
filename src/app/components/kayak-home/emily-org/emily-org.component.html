@@ -1,9 +1,21 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="tab-view-container">
+<div class="tab-view-container"  style="background-color: #F1F1F4;">
   <div class="row p-0">
     <app-link-microsoft></app-link-microsoft>
-    <app-stage-email></app-stage-email>
+    <!-- <app-stage-email></app-stage-email> -->
+    <app-emily-stages 
+    *ngIf="!showContactEmail" 
+    [buyBoxId]="buyBoxId" 
+    (showContactEmail)="toggleView($event)"
+  ></app-emily-stages>
+  <app-emily-contact-email 
+    *ngIf="showContactEmail" 
+    [contactId]="contactId" 
+    [orgId]="orgId" 
+    [buyBoxId]="buyBoxId"
+    (goBackEvent)="toggleView(false)"
+  ></app-emily-contact-email>
     <!-- <div
       class="p-5"
       *ngIf="

@@ -8,6 +8,7 @@ export interface Organization {
   OrganizationId: any
   OrganizationName: string
   Contact: Contact[]
+  showContacts:boolean
 }
 
 export interface Contact {
@@ -44,6 +45,10 @@ export interface Mail {
   Direction: number
   ContactId: number
   MailsContacts: MailsContact[]
+  ID?: number;
+  Body?: string;
+  MicroDealId?: number;
+  ResponseStatus?: string;
 }
 
 export interface MailsContact {
