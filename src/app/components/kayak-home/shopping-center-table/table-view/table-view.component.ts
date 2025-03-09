@@ -140,10 +140,13 @@ export class TableViewComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
         this.spinner.hide();
-        this.refreshShoppingCenters();
+        // this.initializeData();
+        // this.refreshShoppingCenters();
+        location.reload();
       },
     });
   }
+
 
   getNeareastCategoryName(categoryId: number): string {
     return this.viewManagerService.getNearestCategoryName(categoryId, this.buyboxCategories);

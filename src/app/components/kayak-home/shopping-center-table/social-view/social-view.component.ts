@@ -519,7 +519,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {},
+      next: (response: any) => { },
       error: (error) => {
         if (!isLiked) {
           // shopping.ShoppingCenter.Reactions.length--;
@@ -545,6 +545,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedOption = option.status
     this.viewChange.emit(option.status)
   }
+
   toggleShortcutsCard(id: number | null): void {
     this.selectedIdCard = id;
     this.cdr.markForCheck();
@@ -866,10 +867,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) => 
+    this.shoppingCenters = this.shoppingCenters.map((x) =>
       x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-  );
-  
+    );
+
     try {
       this.spinner.show();
       await this.viewManagerService.deleteShoppingCenter(
@@ -1039,5 +1040,25 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   checkMobileView() {
     this.isMobileView = window.innerWidth <= 768;
   }
-  
+
+  RestoreShoppingCenter(MarketSurveyId: any) {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'RestoreShoppingCenter',
+      MainEntity: null,
+      Params: {
+        marketsurveyid: +MarketSurveyId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.spinner.hide();
+        location.reload();
+      },
+    });
+  }
+
 }
