@@ -100,7 +100,8 @@ export class SideListViewComponent implements OnInit, OnChanges {
   selectedTab: string = 'Properties';
   shoppingCenter: any;
   @Input() isVisible = false;
-  dataLoaded: boolean =false;
+  dataLoaded: boolean = false;
+  DeletedSC: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -115,7 +116,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
     private viewManagerService: ViewManagerService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.General = new General();
@@ -199,7 +200,6 @@ export class SideListViewComponent implements OnInit, OnChanges {
     }
   }
 
-
   getNeareastCategoryName(categoryId: number): string {
     const categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name || '';
@@ -246,11 +246,11 @@ export class SideListViewComponent implements OnInit, OnChanges {
         const resultPrice =
           leasePrice && leasePrice !== 'On Request'
             ? appendInfoIcon(
-                `$${formatNumberWithCommas(
-                  Math.floor((Number.parseFloat(leasePrice) * singleSize) / 12)
-                )}/month`,
-                shoppingCenter.ForLeasePrice
-              )
+              `$${formatNumberWithCommas(
+                Math.floor((Number.parseFloat(leasePrice) * singleSize) / 12)
+              )}/month`,
+              shoppingCenter.ForLeasePrice
+            )
             : 'On Request';
         return `Unit Size: ${formatNumberWithCommas(
           singleSize
@@ -273,28 +273,28 @@ export class SideListViewComponent implements OnInit, OnChanges {
       minSize === maxSize
         ? `${formatNumberWithCommas(minSize)} sq ft.`
         : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
-            maxSize
-          )} sq ft.`;
+          maxSize
+        )} sq ft.`;
 
     const formattedMinPrice =
       minPrice === 'On Request'
         ? 'On Request'
         : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((Number.parseFloat(minPrice) * minSize) / 12)
-            )}/month`,
-            minPrice
-          );
+          `$${formatNumberWithCommas(
+            Math.floor((Number.parseFloat(minPrice) * minSize) / 12)
+          )}/month`,
+          minPrice
+        );
 
     const formattedMaxPrice =
       maxPrice === 'On Request'
         ? 'On Request'
         : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((Number.parseFloat(maxPrice) * maxSize) / 12)
-            )}/month`,
-            maxPrice
-          );
+          `$${formatNumberWithCommas(
+            Math.floor((Number.parseFloat(maxPrice) * maxSize) / 12)
+          )}/month`,
+          maxPrice
+        );
 
     let leasePriceRange;
     if (
@@ -314,6 +314,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
 
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
+
   toggleShortcutsCard(id: number | null): void {
     this.selectedIdCard = id;
   }
@@ -397,6 +398,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
       }, 100);
     }
   }
+
   viewOnStreet() {
     this.StreetViewOnePlace = true;
     const lat = +this.General.modalObject.StreetLatitude;
@@ -413,6 +415,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
       }
     });
   }
+
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
     const streetViewElement = document.getElementById('street-view');
     if (streetViewElement) {
@@ -447,9 +450,11 @@ export class SideListViewComponent implements OnInit, OnChanges {
       },
     });
   }
+
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
+
   deleteShopping(id: number): void {
     if (this.showbackIds.includes(id)) {
       this.CancelOneDelete(id);
@@ -470,7 +475,6 @@ export class SideListViewComponent implements OnInit, OnChanges {
     this.showbackIdsJoin = this.showbackIds.join(',');
     this.openDeleteShoppingCenterModal(modalTemplate, this.showbackIdsJoin);
   }
-  DeletedSC: any;
 
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
@@ -536,6 +540,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+
   async getAllMarker() {
     try {
       this.spinner.show();
@@ -601,6 +606,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
       this.markerService.createCustomMarker(this.map, categoryData);
     });
   }
+
   private onMapDragEnd(map: any) {
     this.saveMapView(map);
     this.updateShoppingCenterCoordinates();
@@ -652,6 +658,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
 
     return bounds?.contains({ lat, lng });
   }
+
   private saveMapView(map: any): void {
     const center = map.getCenter();
     const zoom = map.getZoom();
@@ -665,10 +672,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
     );
   }
 
- 
   confirmDeleteShoppingCenter(modal: NgbModalRef) {
-    console.log(this.shoppingCenterIdToDelete);
-
     if (this.shoppingCenterIdToDelete !== null) {
       this.DeleteShoppingCenter().subscribe((res) => {
         this.getMarketSurveyShoppingCenter();
@@ -682,6 +686,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
       });
     }
   }
+
   DeleteShoppingCenter() {
     const body: any = {
       Name: 'DeleteShoppingCenterFromBuyBox',
@@ -692,6 +697,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
     };
     return this.PlacesService.GenericAPI(body);
   }
+
   getMarketSurveyShoppingCenter() {
     this.spinner.show();
     const body: any = {
@@ -705,6 +711,7 @@ export class SideListViewComponent implements OnInit, OnChanges {
       next: (data) => this.handleSuccessResponse(data),
     });
   }
+
   private handleSuccessResponse(data: any) {
     this.shoppingCenters = data.json;
     this.stateService.setShoppingCenters(data.json);
@@ -800,11 +807,12 @@ export class SideListViewComponent implements OnInit, OnChanges {
   private updateCards(): void {
     this.cardsSideList = this.shoppingCenters;
   }
+
   async deleteShCenter() {
-    this.cardsSideList = this.cardsSideList.map((x) => 
+    this.cardsSideList = this.cardsSideList.map((x) =>
       x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-  );
-  
+    );
+
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.spinner.show();
@@ -818,6 +826,29 @@ export class SideListViewComponent implements OnInit, OnChanges {
       }
     }
   }
+
+  RestoreShoppingCenter(MarketSurveyId: any) {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'RestoreShoppingCenter',
+      MainEntity: null,
+      Params: {
+        marketsurveyid: +MarketSurveyId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.refreshShoppingCenters();
+        this.initializeData();
+
+      },
+    });
+  }
+
   async refreshShoppingCenters() {
     try {
       this.spinner.show();
