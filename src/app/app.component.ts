@@ -17,7 +17,6 @@ export class AppComponent {
 
   ngOnInit() {
     this.router.events.subscribe(() => {
-
       this.display = !(
         this.router.url === '/' ||
         this.router.url === '/login' ||
