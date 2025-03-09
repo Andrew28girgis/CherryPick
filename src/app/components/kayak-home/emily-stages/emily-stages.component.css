@@ -161,6 +161,16 @@
     font-size: 14px;
   }
 
+  .custom-width {
+    width: 20%; /* Ensure it's 20% of the container for large screens */
+  }
+  
+  @media (max-width: 768px) {
+    .custom-width {
+      width: 100%; /* Full width for smaller screens (col-12 equivalent) */
+    }
+  }
+
 /*  */
 
   /* ::ng-deep .p-accordion-header a {
