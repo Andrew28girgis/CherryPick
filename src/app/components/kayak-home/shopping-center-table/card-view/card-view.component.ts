@@ -245,8 +245,9 @@ export class CardViewComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
         this.spinner.hide();
-        this.refreshShoppingCenters();
-        this.loadData();
+        // this.refreshShoppingCenters();
+        // this.loadData();
+        location.reload();
       },
     });
   }

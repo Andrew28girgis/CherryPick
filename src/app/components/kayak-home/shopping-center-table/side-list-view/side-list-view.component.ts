@@ -842,9 +842,9 @@ export class SideListViewComponent implements OnInit, OnChanges {
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
         this.spinner.hide();
-        this.refreshShoppingCenters();
-        this.initializeData();
-
+        // this.refreshShoppingCenters();
+        // this.initializeData();
+        location.reload();
       },
     });
   }

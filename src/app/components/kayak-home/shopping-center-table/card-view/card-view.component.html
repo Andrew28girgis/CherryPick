@@ -93,18 +93,18 @@
                         Street View
                       </a>
                     </li>
-                    <li *ngIf="shopping.Deleted != true" class="cursor" (click)="toggleShortcuts(shopping.Id, 'close')">
+                    <li *ngIf="shopping.Deleted != true" class="cursor">
                       <a class="target" (click)="openDeleteShoppingCenterModal(
                             deleteSingleShoppingCenterModal,
                             shopping
-                          )
+                          );toggleShortcuts(shopping.Id, 'close')
                         ">
                         <i class="fa-regular fa-trash-can emily"></i>
                         Remove Shopping
                       </a>
                     </li>
-                    <li (click)="toggleShortcuts(shopping.Id, 'close')" *ngIf="shopping.Deleted == true">
-                      <a class="target" (click)="RestoreShoppingCenter(shopping.MarketSurveyId)">
+                    <li *ngIf="shopping.Deleted == true">
+                      <a class="target" (click)="RestoreShoppingCenter(shopping.MarketSurveyId);toggleShortcuts(shopping.Id, 'close')">
                         <i class="fa-regular fa-trash-can big-text emily"></i>
                         Restore
                       </a>
