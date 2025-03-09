@@ -51,6 +51,9 @@ export class EmilyContactEmailComponent implements OnInit {
   contacts: Contact[] = []; // your list of contacts
   emails: EmailInfo[] = []; // your list of emails
   private subscription: Subscription | null = null;
+  // scroll
+  isScrolling = false; // Boolean to track if scrolling is active
+  private scrollTimeout: any;
 
   @Input() contactId!: number;
   @Input() orgId!: number;
@@ -211,7 +214,7 @@ export class EmilyContactEmailComponent implements OnInit {
     setTimeout(() => {
       const emailDetailsSection = document.querySelector('.email-details-body') as HTMLElement;
       if (emailDetailsSection) {
-        this.smoothScrollTo(emailDetailsSection, 400); // 300ms (0.3s) duration
+        this.smoothScrollTo(emailDetailsSection, 300); // 300ms (0.3s) duration
       }
     }, 100);
   }
@@ -239,6 +242,20 @@ export class EmilyContactEmailComponent implements OnInit {
     requestAnimationFrame(animationStep);
   }
 
+  onScroll(): void {
+    // Set `isScrolling` to true when scrolling starts
+    if (!this.isScrolling) {
+      this.isScrolling = true;
+    }
+
+    // Clear any existing timeout and set a new one
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+    }
+    this.scrollTimeout = setTimeout(() => {
+      this.isScrolling = false; // Remove the `scrolling` class after scrolling stops
+    }, 500); // Adjust the delay as needed
+  }
   GetMail(mailId: number): void {
     // this.spinner.show(); // Show the spinner while fetching email details
 
