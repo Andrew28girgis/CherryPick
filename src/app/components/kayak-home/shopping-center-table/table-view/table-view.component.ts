@@ -140,13 +140,17 @@ export class TableViewComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
+        const marketSurveyIdNum = Number(MarketSurveyId);
+      
         this.shoppingCenters = this.shoppingCenters.map(center => {
-          if (center.MarketSurveyId === MarketSurveyId) {
+          if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
           return center;
         });
-
+        
+        this.cdr.markForCheck();
+        this.refreshShoppingCenters();
         this.spinner.hide();
       },
     });

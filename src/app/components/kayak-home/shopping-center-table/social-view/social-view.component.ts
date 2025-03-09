@@ -1055,15 +1055,35 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
+        const marketSurveyIdNum = Number(MarketSurveyId);
+      
         this.shoppingCenters = this.shoppingCenters.map(center => {
-          if (center.MarketSurveyId === MarketSurveyId) {
+          if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
           return center;
         });
+        
+        this.cdr.markForCheck();
+        this.refreshShoppingCenters();
         this.spinner.hide();
       },
     });
+  }
+
+  async refreshShoppingCenters() {
+    try {
+      this.spinner.show();
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      console.log('this.shoppingCenters',this.shoppingCenters);
+      
+      this.showbackIds = [];
+    } catch (error) {
+      console.error('Error refreshing shopping centers:', error);
+    } finally {
+      this.spinner.hide();
+    }
   }
 
 }
