@@ -6,6 +6,7 @@
     Home
   </button> -->
   <button class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" *ngIf="!user"
+    style="background-color: white;"
     (click)="loginMicrosoft()">
     <object type="image/svg+xml"
       data="https://s3-eu-west-1.amazonaws.com/cdn-testing.web.bas.ac.uk/scratch/bas-style-kit/ms-pictogram/ms-pictogram.svg"
@@ -13,7 +14,8 @@
     Link Microsoft
   </button>
   <button class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" (click)="logoutMicrosoft()"
-    *ngIf="user">
+  style="background-color: white;"
+  *ngIf="user">
     <object type="image/svg+xml"
       data="https://s3-eu-west-1.amazonaws.com/cdn-testing.web.bas.ac.uk/scratch/bas-style-kit/ms-pictogram/ms-pictogram.svg"
       class="x-icon"></object>

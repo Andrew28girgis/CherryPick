@@ -1,0 +1,463 @@
+.stages-container {
+    display: flex;              /* Make columns align horizontally */
+    flex-wrap: nowrap;          /* No wrapping, horizontal scroll if needed */
+    overflow-x: auto;           /* Horizontal scroll if columns exceed screen width */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .stage-column {
+    background-color: #f9f9f9;   /* Light background for each column */
+    border-radius: 8px;
+    margin: 0 10px;
+    padding: 10px;
+    min-width: 220px;           /* Ensures columns have a consistent width */
+  }
+  
+  .stage-header {
+    font-weight: 600;
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #555;
+  }
+  
+  .org-card {
+    margin-bottom: 10px;
+  }
+  
+  .org-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    padding: 8px;
+  }
+  
+  .org-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  
+  .org-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .org-name {
+    font-weight: 500;
+  }
+  
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .contact-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .contact-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .badge {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0 6px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+  }
+  
+  .no-contact-msg {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0;
+  }
+
+  /*  */
+  
+  .organization-card{
+    display: flex;
+    padding: 8px;
+    /* align-items: center; */
+    flex-direction: column;
+    gap:  8px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1px solid  #E2E4E9;
+    margin-bottom: 10px;
+  }
+  .contacts-list {
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .contact-ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .contact-ul li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .contact-ul li:last-child {
+    border-bottom: none;
+  }
+  
+  .no-contact-msg {
+    color: #999;
+    font-style: italic;
+    margin: 0;
+    padding: 10px;
+  }
+   .card-header{
+    display: flex;
+    height: 42px;
+    padding:  4px;
+    margin: 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius:  8px;
+    background:  #F1F1F4;
+    color: #707791;
+    font-family: Montserrat;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+  }
+  .card{
+    border-radius: 12px;
+    min-height: 100vh;
+  }
+  .org-name{
+    color: #707791;
+    font-family: Montserrat;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.07px;
+  }
+  .namecontact{
+    color: #606060;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .custom-width {
+    width: 20%; /* Ensure it's 20% of the container for large screens */
+  }
+  
+  @media (max-width: 768px) {
+    .custom-width {
+      width: 90%; /* Full width for smaller screens (col-12 equivalent) */
+    }
+  }
+
+/*  */
+
+  /* ::ng-deep .p-accordion-header a {
+    color: #001f3f !important;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: Montserrat;
+  }
+  
+  ::ng-deep .p-accordion .p-accordion-content .p-accordion .p-accordion-header a {
+     color: #001f3f !important;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Montserrat;
+  }
+  
+  ::ng-deep .p-accordion-header .p-accordion-toggle-icon {
+    color: #001f3f !important;
+  }
+  
+  ::ng-deep .p-accordion-tab .p-accordion-content {
+    padding: 10px !important;
+  }
+  
+  ::ng-deep .p-card .p-card-body {
+    padding: 0 10px !important;
+  }
+  
+  .contact-ul {
+    margin: 0;
+  }
+  
+  .contact-ul>li {
+    color: #001f3f !important;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Montserrat;
+    cursor: pointer;
+  }
+  
+  .contact-ul>li>.namecontact:hover {
+    color: #001f3f !important;
+    font-weight: 700;
+  }
+  
+  .Empty-data {
+    color: #001f3f;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: Montserrat;
+    height: 10vh;
+    align-items: center;
+    padding-inline: 10px;
+  }
+  
+  .no-contact-msg {
+    color: gray;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .custom-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .Direction-class {
+    color: #001f3f;
+  }
+  
+  .date-text {
+    color: #6c757d;
+    font-size: 14px;
+  }
+  
+  .selectedContact {
+    color: #001f3f;
+    font-weight: bold;
+    font-weight: 600;
+    font-family: Montserrat;
+  }
+  
+  .card-pTemplate {
+    cursor: pointer;
+  }
+  
+  .filterEmails {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .filterEmails>span {
+    padding: 5px 10px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    color: #001f3f;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  
+  .filterEmails span.active {
+    color: white;
+    background: #001f3f;
+    padding: 5px 10px;
+    border: 1px solid #001f3f;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  
+  
+  .GeneratedEmail {
+    background-color: #001f3f;
+  }
+  
+  .SavedTemplate {
+    align-items: center;
+    display: block
+  }
+  
+  .firstemail {
+    font-size: 16px;
+    align-items: center;
+    display: block;
+    font-weight: 600;
+  }
+  
+  .firstlast {
+    font-size: 13px;
+    align-items: center;
+    display: block;
+    margin-top: 4px;
+  }
+  
+  .creationdate {
+    font-size: 13px;
+    align-items: center;
+    display: block;
+  }
+  
+  
+  .Outbox {
+    color: red;
+  }
+  
+  .Sent {
+    color: green;
+  
+  }
+  
+  .Inbox {
+    color: #001f3f;
+  }
+  
+  
+  @media (max-width: 768px) {
+    .selectedContactdiv {
+      display: block !important;
+    }
+  
+    .selectedContact {
+      width: 100%;
+      margin-top: 16px;
+    }
+  
+    .filterEmails {
+      width: 100%;
+      justify-content: end;
+      margin-top: 6px;
+    }
+  }
+  .card-pTemplate {
+    cursor: pointer;
+  }
+  
+  .col-header {
+    width: 50% !important;
+    padding-block: 5px;
+    border-bottom: 1px solid rgb(211, 211, 211);
+    color: gray;
+  }
+  
+  .col-header:nth-child(1) {
+    border-right: 1px solid rgb(211, 211, 211);
+  }
+  
+  .col-body {
+    padding-block: 5px;
+    border-bottom: 1px solid rgb(211, 211, 211);
+  }
+  
+  .col-body:nth-child(1) {
+    border-right: 1px solid rgb(211, 211, 211);
+    cursor: pointer;
+  }
+  
+  .col-body:nth-child(1):hover {
+    color: #001f3f;
+    font-weight: 600;
+  }
+  
+  ::ng-deep .p-datatable .p-datatable-header {
+    background: #001f3f17;
+    padding-block: 8px;
+  }
+  
+  .buttonSave{
+    color: white;
+    background: #001f3f;
+    padding: 5px 10px;
+    border: 1px solid #001f3f;
+    cursor: pointer;
+    border-radius: 6px;  
+  }
+  
+  .checkbox-section {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .form-check-input[type="checkbox"] {
+    box-shadow: none;
+    outline: none;
+    border: #bfbfbf 1px solid;
+    border-radius: 6px;
+  
+    &:checked {
+      border: 1px solid #001f3f;
+      background-color: #001f3f;
+    }
+  
+    &:not(checked) {
+      border: 1px solid gray;
+    }
+  }
+  
+  .openreply{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  }
+  
+  .selectedOptionDiv{
+    padding-inline: 10px;
+  }
+  
+  .selectedOption{
+    color: #001f3f;
+    background: #001f3f52;
+    padding: 5px 10px;
+    border: 1px solid white;
+    cursor: pointer;
+    border-radius: 6px;  
+    width: max-content;
+    margin: 0;
+  }
+  
+  .active{
+    color: white;
+    background: #001f3f;
+    padding: 5px 10px;
+    border: 1px solid #001f3f;
+    cursor: pointer;
+    border-radius: 6px; 
+    width: max-content; 
+    margin: 0;
+  }
+  
+  .IsCC_checkbox{
+    font-size: 14px;
+    font-weight: 700;
+    color: gray;
+  }
+  
+  .input_checkbox{
+    box-shadow: none;
+    outline: none;
+  }
+  
+  .buttonSave2{
+    color: #001f3f;
+    background: transparent;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 6px;
+  } */
