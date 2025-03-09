@@ -3,6 +3,7 @@ export interface IUserInBox {
   Subject: string;
   FromAddress: any;
   Date: string;
+  Body: string;
   Contact: Contact[];
 }
 
