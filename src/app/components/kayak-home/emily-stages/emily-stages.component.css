@@ -167,7 +167,7 @@
   
   @media (max-width: 768px) {
     .custom-width {
-      width: 100%; /* Full width for smaller screens (col-12 equivalent) */
+      width: 90%; /* Full width for smaller screens (col-12 equivalent) */
     }
   }
 
