@@ -14,6 +14,7 @@ import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EmailService } from 'src/app/services/email-body.service';
 import { Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-emily-contact-email',
@@ -64,7 +65,8 @@ export class EmilyContactEmailComponent implements OnInit {
     private route: ActivatedRoute,
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
-    private emailService: EmailService
+    private emailService: EmailService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -298,5 +300,10 @@ export class EmilyContactEmailComponent implements OnInit {
       (contact.EmailStats[0].Inbox || 0) +
       (contact.EmailStats[0].Outbox || 0)
     );
+  }
+  openmodel(modal: any, body: any, contactId: any) {
+    this.bodyemail = body;
+    this.contactIdemail = contactId;
+    this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 }
