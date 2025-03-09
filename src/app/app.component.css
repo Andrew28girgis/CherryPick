@@ -1,11 +1,11 @@
 .my-container {
-  height: 100vh;
-  overflow: hidden;
+  /* height: 100vh;
+  overflow: hidden; */
   display: flex;
   flex-direction: column;
 }
 
 .sub-container {
   flex: 1;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
