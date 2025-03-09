@@ -332,14 +332,43 @@
                 <div class="title mb-2">
                   {{ center.CenterAddress }}
                 </div>
-                <ng-container
-                  *ngFor="let propertyComment of center.PropertiesComments"
+                <div
+                  class="w-100 d-flex flex-column align-items-center justify-content-start gap-2"
                 >
-                  <div class="comment-content">
-                    <span class="me-2">&bull;</span>
-                    {{ propertyComment.Comment }}
-                  </div>
-                </ng-container>
+                  <ng-container
+                    *ngFor="let propertyComment of center.PropertiesComments"
+                  >
+                    <div
+                      class="w-100 d-flex align-items-center justify-content-between"
+                    >
+                      <div class="comment-content">
+                        <span class="me-2">&bull;</span>
+                        {{ propertyComment.Comment }}
+                      </div>
+                      <div
+                        *ngIf="
+                          propertyComment.buyBoxes[0].Organization[0].LogoURL;
+                          else noBuyboxImage
+                        "
+                        class="user-image"
+                        [pTooltip]="propertyComment.buyBoxes[0].Name"
+                        tooltipPosition="left"
+                      >
+                        <img
+                          [src]="
+                            propertyComment.buyBoxes[0].Organization[0].LogoURL
+                          "
+                          alt="buybox-image"
+                        />
+                      </div>
+                      <ng-template #noBuyboxImage>
+                        <div class="comment-content">
+                          {{ propertyComment.buyBoxes[0].Name }}
+                        </div>
+                      </ng-template>
+                    </div>
+                  </ng-container>
+                </div>
               </div>
             </ng-container>
           </div>

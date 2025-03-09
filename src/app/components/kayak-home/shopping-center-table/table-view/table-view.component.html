@@ -206,7 +206,7 @@
                               Remove Shopping
                             </a>
                           </li>
-                          <li (click)="toggleShortcuts(shoppingCenter.Id, 'close');RestoreShoppingCenter(shoppingCenter.MarketSurveyId)"
+                          <li (click)="toggleShortcuts(shoppingCenter.Id, 'close');RestoreShoppingCenter(shoppingCenter.MarketSurveyId,shoppingCenter.Deleted)"
                             *ngIf="shoppingCenter.Deleted == true">
                             <a class="target">
                               <i class="fa-regular fa-trash-can big-text"></i>

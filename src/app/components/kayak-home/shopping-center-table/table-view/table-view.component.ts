@@ -125,8 +125,9 @@ export class TableViewComponent implements OnInit {
     }
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any) {
+  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
     this.spinner.show();
+    Deleted = false;
 
     const body: any = {
       Name: 'RestoreShoppingCenter',
@@ -139,10 +140,14 @@ export class TableViewComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
+        this.shoppingCenters = this.shoppingCenters.map(center => {
+          if (center.MarketSurveyId === MarketSurveyId) {
+            return { ...center, Deleted: false };
+          }
+          return center;
+        });
+
         this.spinner.hide();
-        // this.initializeData();
-        // this.refreshShoppingCenters();
-        location.reload();
       },
     });
   }
@@ -284,6 +289,8 @@ export class TableViewComponent implements OnInit {
       this.spinner.show();
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
       this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      console.log('this.shoppingCenters',this.shoppingCenters);
+      
       this.showbackIds = [];
     } catch (error) {
       console.error('Error refreshing shopping centers:', error);
