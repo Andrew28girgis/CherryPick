@@ -206,11 +206,41 @@ export class EmilyContactEmailComponent implements OnInit {
   }
   openEmail(email: Mail): void {
     // Call GetMail() with the selected email's ID (mailId)
-    this.GetMail(email.id); // Pass the email ID to fetch its full details
+    this.GetMail(email.id);
+    // smoth scroll to the email details
+    setTimeout(() => {
+      const emailDetailsSection = document.querySelector('.email-details-body') as HTMLElement;
+      if (emailDetailsSection) {
+        this.smoothScrollTo(emailDetailsSection, 400); // 300ms (0.3s) duration
+      }
+    }, 100);
+  }
+
+  smoothScrollTo(element: HTMLElement, duration: number) {
+    const targetPosition = element.getBoundingClientRect().top + window.scrollY;
+    const startPosition = window.scrollY;
+    const distance = targetPosition - startPosition;
+    const startTime = performance.now();
+  
+    function animationStep(currentTime: number) {
+      const elapsedTime = currentTime - startTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      const ease = progress < 0.5 
+        ? 2 * progress * progress 
+        : -1 + (4 - 2 * progress) * progress; // Smooth easing function
+  
+      window.scrollTo(0, startPosition + distance * ease);
+  
+      if (elapsedTime < duration) {
+        requestAnimationFrame(animationStep);
+      }
+    }
+  
+    requestAnimationFrame(animationStep);
   }
 
   GetMail(mailId: number): void {
-    this.spinner.show(); // Show the spinner while fetching email details
+    // this.spinner.show(); // Show the spinner while fetching email details
 
     const body: any = {
       Name: 'GetMail',
@@ -232,10 +262,10 @@ export class EmilyContactEmailComponent implements OnInit {
         } else {
           this.selectedEmail = null; // If no email is found, reset selectedEmail
         }
-        this.spinner.hide(); // Hide the spinner after fetching the data
+        // this.spinner.hide(); // Hide the spinner after fetching the data
       },
       error: (err) => {
-        this.spinner.hide(); // Hide the spinner on error
+        // this.spinner.hide(); // Hide the spinner on error
         console.error('Error fetching email details', err);
       },
     });
