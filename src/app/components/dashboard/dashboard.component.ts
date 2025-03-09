@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
 import { PlacesService } from 'src/app/services/places.service';
@@ -15,10 +16,12 @@ export class DashboardComponent implements OnInit {
   contactId!: number;
   userInBox: IUserInBox[] = [];
   userComments: IUserComment[] = [];
+  selectedEmailBody: string = '';
 
   constructor(
     private placesService: PlacesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +46,6 @@ export class DashboardComponent implements OnInit {
         if (response && response.json && response.json.length > 0) {
           this.userInBox = response.json;
         }
-        console.log(this.userInBox);
       },
       error: (error: any) => {
         this.spinner.hide();
@@ -70,7 +72,6 @@ export class DashboardComponent implements OnInit {
         if (response && response.json && response.json.length > 0) {
           this.userComments = response.json;
         }
-        console.log(this.userComments);
       },
       error: (error: any) => {
         this.spinner.hide();
@@ -82,5 +83,20 @@ export class DashboardComponent implements OnInit {
       .GenericAPI(body)
       .pipe(takeUntil(this.destroy$))
       .subscribe(observer);
+  }
+
+  getUserCommentsCount(): number {
+    let count = 0;
+    this.userComments.forEach((userComment) =>
+      userComment.ShoppingCenters.forEach(
+        (center) => (count += center.PropertiesComments.length)
+      )
+    );
+    return count;
+  }
+
+  openEmailBodyModal(content: TemplateRef<any>, body: string): void {
+    this.selectedEmailBody = body;
+    this.modalService.open(content, { centered: true, scrollable: true });
   }
 }

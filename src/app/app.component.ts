@@ -20,9 +20,11 @@ export class AppComponent {
       this.display = !(
         this.router.url === '/' ||
         this.router.url === '/login' ||
-        this.router.url.startsWith('/home')
+        this.router.url.startsWith('/home') ||
+        this.router.url.startsWith('/landing')
       );
     });
+
     const domain = window.location.href;
     const config = getDomainConfig(domain);
     this.logoUrl = config.logo;
