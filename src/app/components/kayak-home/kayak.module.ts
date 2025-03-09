@@ -24,7 +24,11 @@ import { LinkMicrosoftComponent } from './link-microsoft/link-microsoft.componen
 import { StageEmailComponent } from './stage-email/stage-email.component';
 import { EditorEmailComponent } from './editor-email/editor-email.component';
 import { EmailDashboardComponent } from './email-dashboard/email-dashboard.component';
-
+import { EmilyStagesComponent } from './emily-stages/emily-stages.component';
+import { AccordionModule } from 'primeng/accordion';
+import { TableModule } from 'primeng/table';
+import { CardModule } from 'primeng/card';
+import { EmilyContactEmailComponent } from './emily-stages/emily-contact-email/emily-contact-email.component';
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -40,6 +44,8 @@ import { EmailDashboardComponent } from './email-dashboard/email-dashboard.compo
     SideListViewComponent,
     MapViewComponent,
     PolygonsControllerComponent,
+    EmilyStagesComponent,
+    EmilyContactEmailComponent
   ],
   imports: [
     CommonModule,
@@ -54,6 +60,10 @@ import { EmailDashboardComponent } from './email-dashboard/email-dashboard.compo
     StageEmailComponent,
     EmailDashboardComponent,
     EditorEmailComponent,
+    AccordionModule,
+    TableModule,
+    CardModule,
+
 
     EmilyComponent,
   ],
@@ -71,6 +81,7 @@ import { EmailDashboardComponent } from './email-dashboard/email-dashboard.compo
     MapViewComponent,
     StageEmailComponent,
     EmailDashboardComponent,
+    EmilyStagesComponent,
   ],
 })
 export class KayakModule {}
