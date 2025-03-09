@@ -347,7 +347,8 @@
                       </div>
                       <div
                         *ngIf="
-                          propertyComment.buyBoxes[0].Organization[0].LogoURL
+                          propertyComment.buyBoxes[0].Organization[0].LogoURL;
+                          else noBuyboxImage
                         "
                         class="user-image"
                         [pTooltip]="propertyComment.buyBoxes[0].Name"
@@ -360,6 +361,11 @@
                           alt="buybox-image"
                         />
                       </div>
+                      <ng-template #noBuyboxImage>
+                        <div class="comment-content">
+                          {{ propertyComment.buyBoxes[0].Name }}
+                        </div>
+                      </ng-template>
                     </div>
                   </ng-container>
                 </div>
