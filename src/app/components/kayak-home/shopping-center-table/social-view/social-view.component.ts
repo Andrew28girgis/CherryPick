@@ -1041,7 +1041,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isMobileView = window.innerWidth <= 768;
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any) {
+  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
     this.spinner.show();
 
     const body: any = {
@@ -1055,8 +1055,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
+        this.shoppingCenters = this.shoppingCenters.map(center => {
+          if (center.MarketSurveyId === MarketSurveyId) {
+            return { ...center, Deleted: false };
+          }
+          return center;
+        });
         this.spinner.hide();
-        location.reload();
       },
     });
   }

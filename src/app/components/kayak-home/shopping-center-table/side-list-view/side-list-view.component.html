@@ -127,7 +127,7 @@
                             </a>
                           </li>
                           <li  *ngIf="place.Deleted == true">
-                            <a class="target" (click)="RestoreShoppingCenter(place.MarketSurveyId);toggleShortcuts(place.Id, 'close')">
+                            <a class="target" (click)="RestoreShoppingCenter(place.MarketSurveyId,place.Deleted);toggleShortcuts(place.Id, 'close')">
                               <i class="fa-regular fa-trash-can big-text"></i>
                               Restore
                             </a>
