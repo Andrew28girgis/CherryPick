@@ -3,12 +3,10 @@
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
     <div
-      class="row mb-0 d-flex justify-content-center"
-      style="background-color: #fff"
+      class="row mb-0  mobile-n"
     >
       <div
-        class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center"
-        style="width: fit-content; margin-bottom: 5px"
+        class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center mobile-nav"
       >
         <div class="custom-icon-container">
           <div
@@ -20,7 +18,7 @@
             "
           >
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
-            <!-- <span class="icon-text">{{ option.text }}</span> -->
+            <span class="icon-text d-none d-sm-flex">{{ option.text }}</span>
           </div>
         </div>
       </div>
