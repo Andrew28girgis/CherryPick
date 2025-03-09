@@ -661,6 +661,15 @@
 }
 
 @media (max-width: 768px) {
+  .mobile-nav{
+    width: fit-content;
+    margin-bottom: 5px;
+  }
+  .mobile-n{
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+  }
   .hide-on-mobile {
     display: none !important;
   }
