@@ -29,7 +29,10 @@
           <h5 class="contacts mb-0">Contacts</h5>
         </div>
         <div class="card-body" >
-          <ul class="contact-ul" style="padding: 5px;">
+          <ul class="card-body" style="padding: 5px; overflow-y: auto; max-height: 63vh;"
+         [class.scrolling]="isScrolling" 
+         (scroll)="onScroll()"
+          >
             <li
               class="contact-list"
               *ngFor="let contact of contacts"
@@ -58,8 +61,11 @@
     </div>
 
     <!-- Email List Column -->
-    <div class="col-lg-4 p-0 m-0">
-      <div class="card" style="border: none; min-height: 92vh; border-radius: 0;">
+    <div class="col-lg-4 p-0 mb-3">
+      <div class="card"
+      [class.scrolling]="isScrolling" 
+      (scroll)="onScroll()"
+       style="border: none; min-height: 92vh; border-radius: 0; overflow-y: auto;">
         <div class="mailbox-header">
           <div class="top-left">
           <h5 class="contacts">Mail box</h5>
@@ -80,7 +86,7 @@
             </div>
         </div>
         </div>
-        <div class="card-body">
+        <div class="card-bodyy" style="max-height: 80vh; overflow-y: auto;">
           <div *ngIf="selectedContact">
             <div class="email-list">
               <div
@@ -106,9 +112,16 @@
     </div>
 
     <!-- Email body and subject -->
-    <div class="col-lg-5 p-0 m-0">
-      <div class="email-details-body">
-        <div class="card-body" style="min-height: 81vh;">
+    <div class="col-lg-5 p-0 m-0" id="emailDetails">
+      <div class="email-details-body"
+      [class.scrolling]="isScrolling" 
+      (scroll)="onScroll()"
+      style=" overflow-y: auto;"
+      >
+        <div class="card-body"
+       
+        style="min-height: 87vh; max-height: 87vh;"
+        >
           <div *ngIf="selectedEmail">
             <p class="subject-details"> {{ selectedEmail.Subject }}</p>
             <!-- <p>
