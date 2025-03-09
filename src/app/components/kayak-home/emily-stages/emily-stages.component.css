@@ -89,7 +89,7 @@
   .organization-card{
     display: flex;
     padding: 8px;
-    align-items: center;
+    /* align-items: center; */
     flex-direction: column;
     gap:  8px;
     align-self: stretch;

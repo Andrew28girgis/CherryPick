@@ -10,7 +10,7 @@
         <button class="back" (click)="goBack()">
           <i class="fa-solid fa-arrow-left"></i>
         </button>
-        <div class="org-data d-flex align-items-center ms-2">
+        <div class="org-data ms-2">
           <img
             [src]="
               'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
@@ -29,7 +29,7 @@
           <h5 class="contacts mb-0">Contacts</h5>
         </div>
         <div class="card-body" >
-          <ul class="contact-ul">
+          <ul class="contact-ul" style="padding: 5px;">
             <li
               class="contact-list"
               *ngFor="let contact of contacts"
