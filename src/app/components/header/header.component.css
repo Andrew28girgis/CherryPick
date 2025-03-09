@@ -1,5 +1,3 @@
-
-
 .navbar {
   display: flex;
   justify-content: space-between  ;
@@ -17,7 +15,7 @@
   cursor: pointer;
 }
 .nav-link{
-  color: #707791;
+  color: #001f3f;
   font-size: 16px;
   text-transform:none;
 }
@@ -71,7 +69,7 @@
   right: -8px;
   font-size: 10px;
   padding: 0.25em 0.4em;
-  background-color: #ff3c7e;
+  background-color: #EA2027;
 }
 
 ::ng-deep .custom-popover {

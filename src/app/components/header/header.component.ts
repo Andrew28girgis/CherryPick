@@ -42,5 +42,11 @@ export class HeaderComponent {
   BackTo() {
     this.router.navigate(["/summary"])
   }
+  isNavbarOpen = false;
+
+toggleNavbar() {
+  this.isNavbarOpen = !this.isNavbarOpen;
+}
+
 }
 

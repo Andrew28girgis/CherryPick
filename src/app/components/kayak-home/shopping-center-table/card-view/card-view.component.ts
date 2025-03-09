@@ -197,11 +197,14 @@ export class CardViewComponent implements OnInit {
     this.sanitizedUrl = this.viewManager.sanitizeUrl(url);
   }
 
+  DeletedSC: any;
+
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
-    shoppingCenterId: any
+    shoppingCenter: any
   ) {
-    this.shoppingCenterIdToDelete = shoppingCenterId;
+    this.DeletedSC = shoppingCenter;
+    this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
       ariaLabelledBy: 'modal-basic-title',
     });
@@ -218,8 +221,10 @@ export class CardViewComponent implements OnInit {
       });
   }
   async deleteShCenter() {
-    console.log('fffffffffff', this.BuyBoxId, this.shoppingCenterIdToDelete);
-
+    this.shoppingCenters = this.shoppingCenters.map((x) => 
+      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
+  );
+  
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.spinner.show();
@@ -228,7 +233,7 @@ export class CardViewComponent implements OnInit {
           this.shoppingCenterIdToDelete
         );
         this.modalService.dismissAll();
-        await this.refreshShoppingCenters();
+       // await this.refreshShoppingCenters();
       } catch (error) {
         console.error('Error deleting shopping center:', error);
       } finally {

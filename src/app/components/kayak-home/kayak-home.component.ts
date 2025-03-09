@@ -21,7 +21,6 @@ export class KayakHomeComponent implements OnInit {
       icon: '../../../assets/icons/svgs/details.svg',
       selectedIcon: '../../../assets/icons/svgs/details-selected.svg',
     },
-    // { id: 'Manage', label: 'Manage' },
     {
       id: 'Emily',
       label: 'Emily',
