@@ -188,3 +188,24 @@ gap: 10px;
   .card-bodyy {
     scrollbar-width: thin; /* For Firefox */
   }
+  .replay{
+    border-radius: 16px;
+    background: #4D65B4;
+    display: inline-flex;
+    height: 48px;
+    padding: 14px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    color:  #FFF;
+    text-align: center;
+    font-family: Montserrat;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+    border: none;
+    max-height: 40px;
+    width: 110px;
+  }
