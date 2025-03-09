@@ -150,7 +150,7 @@ export class TableViewComponent implements OnInit {
         });
         
         this.cdr.markForCheck();
-        this.refreshShoppingCenters();
+        // this.refreshShoppingCenters();
         this.spinner.hide();
       },
     });

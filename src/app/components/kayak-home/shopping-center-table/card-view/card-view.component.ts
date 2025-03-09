@@ -255,7 +255,7 @@ export class CardViewComponent implements OnInit {
         });
         
         this.cdr.markForCheck();
-        this.refreshShoppingCenters();
+        // this.refreshShoppingCenters();
         this.spinner.hide();
       },
     });

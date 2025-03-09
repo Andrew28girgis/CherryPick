@@ -1065,7 +1065,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         
         this.cdr.markForCheck();
-        this.refreshShoppingCenters();
+        // this.refreshShoppingCenters();
         this.spinner.hide();
       },
     });
