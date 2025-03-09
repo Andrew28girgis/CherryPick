@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<nav class="navbar-background container-fluid">
+<!-- <nav class="navbar-background container-fluid">
   <div class="row">
     <div class="col-12">
       <div class="d-flex align-items-center justify-content-between">
@@ -13,16 +13,11 @@
           />
         </div>
         <div class="d-flex align-items-center justify-content-end">
-          <!-- <img
-            class="small-logo"
-            src="../../../assets/Images/Landlord profile pic.png"
-            alt=""
-          /> -->
         </div>
       </div>
     </div>
   </div>
-</nav>
+</nav> -->
 <section
   class="container red-background position-relative mt-4"
   [ngStyle]="{ background: buyboxcolor }"
@@ -215,7 +210,7 @@
   <div
     class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0"
   >
-    <button class="btn-submit-proposel" [ngStyle]="{ background: buyboxcolor }">
+    <button class="btn-submit-proposel" (click)="openUploadModal(test)" [ngStyle]="{ background: buyboxcolor }">
       <span>Submit a proposal</span>
     </button>
     <button class="btn-share">
