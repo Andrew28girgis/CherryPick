@@ -1,8 +1,13 @@
 <nav class="navbar navbar-expand-lg d-flex align-items-center w-100">
   <!-- Left Section (Logo) -->
   <div class="d-flex align-items-center">
-    <img alt="logo" class="cherry-logo" [routerLink]="['/summary']" decoding="async"
-      src="../../../assets/Images/logo.png" />
+    <img
+      alt="logo"
+      class="cherry-logo"
+      [routerLink]="['/summary']"
+      decoding="async"
+      src="../../../assets/Images/logo.png"
+    />
   </div>
 
   <!-- Right Section (Burger Button) -->
@@ -11,14 +16,39 @@
   </button>
 
   <!-- Collapsible Navbar Content -->
-  <div class="collapse navbar-collapse text-center" [ngClass]="{ 'show': isNavbarOpen }" id="navbarNav">
+  <div
+    class="collapse navbar-collapse text-center"
+    [ngClass]="{ show: isNavbarOpen }"
+    id="navbarNav"
+  >
     <!-- Navigation Links -->
     <ul class="navbar-nav mx-auto gap-3">
-      <li class="nav-item" (click)="BackTo()">
-        <div class="nav-link">Tenants</div>
+      <li class="nav-item">
+        <a
+          [routerLink]="['/dashboard']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Dashboard</a
+        >
       </li>
       <li class="nav-item">
-        <a [routerLink]="['/manage-properties']" class="nav-link">Properties</a>
+        <a
+          [routerLink]="['/summary']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Tenants</a
+        >
+      </li>
+      <!-- <li class="nav-item" (click)="BackTo()">
+        <div class="nav-link">Tenants</div>
+      </li> -->
+      <li class="nav-item">
+        <a
+          [routerLink]="['/manage-properties']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Properties</a
+        >
       </li>
     </ul>
 
@@ -31,8 +61,13 @@
         <span class="badge">{{ notifications.length }}</span>
       </i>
 
-      <button class="CherryPick__button ms-4" (click)="logout()" style="text-transform: uppercase; font-weight: 700;
-    letter-spacing: 1px;">Logout</button>
+      <button
+        class="CherryPick__button ms-4"
+        (click)="logout()"
+        style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px"
+      >
+        Logout
+      </button>
     </div>
   </div>
 </nav>
