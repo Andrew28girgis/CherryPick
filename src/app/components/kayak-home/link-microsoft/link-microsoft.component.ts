@@ -49,6 +49,8 @@ export class LinkMicrosoftComponent implements OnInit {
 
       const refreshToken = localStorage.getItem('RefreshToken');
       const accessToken = localStorage.getItem('access_token');
+      const accountMicrosoftLinked = localStorage.getItem('accountMicrosoftLinked');
+      
 
       if (refreshToken && accessToken) {
         this.GetContactFolders();
