@@ -61,13 +61,18 @@
         <span class="badge">{{ notifications.length }}</span>
       </i>
 
-      <button
+      <i
+        class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+        (click)="logout()"
+      ></i>
+
+      <!-- <button
         class="CherryPick__button ms-4"
         (click)="logout()"
         style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px"
       >
         Logout
-      </button>
+      </button> -->
     </div>
   </div>
 </nav>
