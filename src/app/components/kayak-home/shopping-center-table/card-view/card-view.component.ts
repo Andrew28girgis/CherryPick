@@ -5,6 +5,8 @@ import {
   Renderer2,
   ChangeDetectorRef,
   TemplateRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +17,7 @@ import { ShareOrg } from 'src/models/shareOrg';
 import { ViewManagerService } from 'src/app/services/view-manager.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BbPlace } from 'src/models/buyboxPlaces';
+import { PlacesService } from 'src/app/services/places.service';
 
 @Component({
   selector: 'app-card-view',
@@ -48,17 +51,20 @@ export class CardViewComponent implements OnInit {
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';
   shareLink: any;
-
+  selectedId: number | null = null;
+  @Output() viewChange = new EventEmitter<number>();
   shoppingCenterIdToDelete: number | null = null;
   showbackIds: number[] = [];
   buyboxPlaces: BbPlace[] = [];
+  DeletedSC: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
+    private PlacesService: PlacesService,
     private viewManager: ViewManagerService, // Inject the ViewManagerService,
     private spinner: NgxSpinnerService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.General = new General();
@@ -116,25 +122,8 @@ export class CardViewComponent implements OnInit {
     return this.viewManager.getShoppingCenterUnitSize(shoppingCenter);
   }
 
-  toggleShortcutsCard(id: number | null): void {
-    this.selectedIdCard = id;
-  }
-
-  toggleShortcuts(id: number, close?: string): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-    }
-  }
-
   isLast(currentItem: any, array: any[]): boolean {
     return this.viewManager.isLast(currentItem, array);
-  }
-
-  selectOption(option: any): void {
-    this.selectedOption = option.status;
-    this.currentView = option.status;
-    this.isOpen = false;
-    localStorage.setItem('currentViewDashBord', this.currentView);
   }
 
   async openMapViewPlace(content: any, modalObject?: any) {
@@ -197,8 +186,6 @@ export class CardViewComponent implements OnInit {
     this.sanitizedUrl = this.viewManager.sanitizeUrl(url);
   }
 
-  DeletedSC: any;
-
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
@@ -220,11 +207,12 @@ export class CardViewComponent implements OnInit {
         console.error('Could not copy text: ', err);
       });
   }
+
   async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) => 
+    this.shoppingCenters = this.shoppingCenters.map((x) =>
       x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-  );
-  
+    );
+
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.spinner.show();
@@ -233,7 +221,7 @@ export class CardViewComponent implements OnInit {
           this.shoppingCenterIdToDelete
         );
         this.modalService.dismissAll();
-       // await this.refreshShoppingCenters();
+        // await this.refreshShoppingCenters();
       } catch (error) {
         console.error('Error deleting shopping center:', error);
       } finally {
@@ -241,6 +229,28 @@ export class CardViewComponent implements OnInit {
       }
     }
   }
+
+  RestoreShoppingCenter(MarketSurveyId: any) {
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'RestoreShoppingCenter',
+      MainEntity: null,
+      Params: {
+        marketsurveyid: +MarketSurveyId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.refreshShoppingCenters();
+        this.loadData();
+      },
+    });
+  }
+
   async refreshShoppingCenters() {
     try {
       this.spinner.show();
@@ -254,5 +264,55 @@ export class CardViewComponent implements OnInit {
     } finally {
       this.spinner.hide();
     }
+  }
+
+  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
+    event?.stopPropagation();
+
+    if (this.selectedIdCard === id) {
+      this.selectedIdCard = null;
+      document.removeEventListener('click', this.outsideClickHandler);
+    } else {
+      this.selectedIdCard = id;
+      setTimeout(() => {
+        document.addEventListener('click', this.outsideClickHandler);
+      });
+    }
+  }
+
+  outsideClickHandler = (event: Event): void => {
+    const targetElement = event.target as HTMLElement;
+    const isInside = targetElement.closest('.shortcuts_iconCard, .ellipsis_icont');
+
+    if (!isInside) {
+      this.selectedIdCard = null;
+      document.removeEventListener('click', this.outsideClickHandler);
+    }
+  };
+
+  selectOption(option: any): void {
+    this.viewChange.emit(option.status)
+  }
+
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    if (close === 'close') {
+      this.selectedId = null;
+      return;
+    }
+
+    const targetElement = event?.target as HTMLElement;
+    const rect = targetElement?.getBoundingClientRect();
+
+    const shortcutsIcon = document.querySelector(
+      '.shortcuts_icon'
+    ) as HTMLElement;
+
+    if (shortcutsIcon && rect) {
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight
+        }px`;
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
+    }
+
+    this.selectedId = this.selectedId === id ? null : id;
   }
 }
