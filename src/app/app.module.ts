@@ -4,7 +4,7 @@ import {
   APP_INITIALIZER,
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module'; 
+import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -67,6 +67,7 @@ import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { HeaderComponent } from './components/header/header.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const msalConfig = {
   auth: {
@@ -78,7 +79,6 @@ const msalConfig = {
     cacheLocation: 'sessionStorage', // or 'sessionStorage'
     storeAuthStateInCookie: false,
   },
-  
 };
 
 export function initializeMsal(msalService: MsalService) {
@@ -86,8 +86,11 @@ export function initializeMsal(msalService: MsalService) {
 }
 
 const loginRequest = {
-  scopes: ['User.Read', 'offline_access',
-    'https://graph.microsoft.com/Mail.Send',  'https://graph.microsoft.com/Mail.Read'
+  scopes: [
+    'User.Read',
+    'offline_access',
+    'https://graph.microsoft.com/Mail.Send',
+    'https://graph.microsoft.com/Mail.Read',
   ],
 };
 
@@ -119,10 +122,11 @@ const loginRequest = {
     NumberFormatDirective,
     NumberWithCommasPipe,
     ManagePropertiesComponent,
-   ],
+    DashboardComponent,
+  ],
   imports: [
     BrowserModule,
-    AppRoutingModule, 
+    AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,

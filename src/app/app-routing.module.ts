@@ -20,6 +20,7 @@ import { KayakHomeComponent } from './components/kayak-home/kayak-home.component
 import { TermsComponent } from './components/terms/terms.component';
 import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
 import { TenantComponent } from './components/tenant/tenant.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -97,6 +98,10 @@ const routes: Routes = [
   {
     path: 'tos',
     component: TermsComponent,
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
   },
 
   {
