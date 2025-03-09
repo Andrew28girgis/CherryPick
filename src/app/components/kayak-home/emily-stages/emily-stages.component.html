@@ -16,10 +16,20 @@
         <div class="card">
           <div class="card-header"
           [ngStyle]="{
+            'color': stage.title === 'No Reply' ? '#FF4C4C' : 
+                     stage.title === 'Removed' ? '#FF4C4C' : 
+                     stage.title === 'New' ? '#707791' : 
+                     stage.title === 'Waiting For Reply' ? '#CC9A06' : 
+                     stage.title === 'Outbox' ? '#28A745' : 
+                     stage.title === 'No' ? '#007BFF' : 
+                     stage.title === 'yes' ? '#007BFF' : 
+                     stage.title === 'Replied' ? '#28A745' : '',
+
             'background-color': stage.title === 'No Reply' ? '#FFEDED' : 
+                                stage.title === 'Removed' ? '#FFEDED' : 
                                 stage.title === 'New' ? '#F1F1F4' : 
                                 stage.title === 'Waiting For Reply' ? '#FFF9E6' : 
-                                stage.title === 'Outbox' ? '#CCE5FF' : 
+                                stage.title === 'Outbox' ? '#EAF6EC' : 
                                 stage.title === 'No' ? '#CCE5FF' : 
                                 stage.title === 'yes' ? '#CCE5FF' : 
                                 stage.title === 'Replied' ? '#EAF6EC' : ''

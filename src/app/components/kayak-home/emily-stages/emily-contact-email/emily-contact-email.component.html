@@ -5,7 +5,7 @@
   <!-- Main Content -->
   <div class="row m-0 p-0">
     <!-- Column 1: Organization and Contacts -->
-    <div class="col-3 p-0 m-0">
+    <div class="col-lg-3 p-0 m-0">
       <div class="buttonandname">
         <button class="back" (click)="goBack()">
           <i class="fa-solid fa-arrow-left"></i>
@@ -44,7 +44,7 @@
                 {{ contact.Firstname }} {{ contact.Lastname }}
               </span>
               
-                <span class="Inbox" *ngIf="getTotalEmails(contact) > 0">
+                <span style="color: #ce0000;" *ngIf="getTotalEmails(contact) > 0">
                   {{ getTotalEmails(contact) }}
                 </span>
               </div>
@@ -58,10 +58,27 @@
     </div>
 
     <!-- Email List Column -->
-    <div class="col-4 p-0 m-0">
+    <div class="col-lg-4 p-0 m-0">
       <div class="card" style="border: none; min-height: 92vh; border-radius: 0;">
         <div class="mailbox-header">
+          <div class="top-left">
           <h5 class="contacts">Mail box</h5>
+        </div>
+        <div class="top-right d-flex">
+          <button class="new-btn"
+            [routerLink]="['/emily', buyBoxId, orgId , selectedMicroDealId ]"
+            >
+            New 
+            <img [src]="'../../../assets/Images/Icons/arrow-down.png'" 
+            />
+          </button>
+            <!-- <div class="out-icn">
+              <img [src]="'../../../assets/Images/Icons/search-normal.png'"/>
+            </div> -->
+            <div class="out-icn" (click)="loadInitialData()">
+              <img [src]="'../../../assets/Images/Icons/rotate-right.png'"/>
+            </div>
+        </div>
         </div>
         <div class="card-body">
           <div *ngIf="selectedContact">
@@ -89,7 +106,7 @@
     </div>
 
     <!-- Email body and subject -->
-    <div class="col-5 p-0 m-0">
+    <div class="col-lg-5 p-0 m-0">
       <div class="email-details-body">
         <div class="card-body" style="min-height: 81vh;">
           <div *ngIf="selectedEmail">

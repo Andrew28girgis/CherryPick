@@ -39,11 +39,13 @@ export class EmilyContactEmailComponent implements OnInit {
   openedStageId: number | null = null;
   openedOrgId: any;
   selectedEmail: EmailInfo | null = null;
+  selectedMicroDealId!: number;
   formGroup!: FormGroup;
   bodyemail: any;
   contactIdemail: any;
   currentValue: any;
   selectedOrganizationName!: string;
+  dataLoaded: boolean = false; // Flag to track if both APIs have loaded
 
   organization: any = {}; // or a more specific type if you have one
   contacts: Contact[] = []; // your list of contacts
@@ -66,26 +68,20 @@ export class EmilyContactEmailComponent implements OnInit {
     console.log('orgId', this.orgId);
     console.log('contactId', this.contactId);
     console.log('buyBoxId', this.buyBoxId);
-    this.GetBuyBoxMicroDeals();
-    this.GetBuyBoxEmails();
-
-    // Ensure emails are loaded for the selected contact on init
-    if (this.contacts.length > 0) {
-      // Find the contact by contactId or default to the first contact in the list
-      this.selectedContact =
-        this.contacts.find((contact) => contact.ContactId === this.contactId) ||
-        this.contacts[0];
-      console.log('Selected contact onInit:', this.selectedContact);
-
-      // Automatically load emails for the selected contact
-      if (this.selectedContact) {
-        this.getEmailsForContact(this.selectedContact);
-      }
-    }
+    // Load both APIs with Promise.all to ensure both are completed
+    this.loadInitialData();
   }
-  GetBuyBoxMicroDeals(): void {
-    this.spinner.show();
 
+  // New method to handle initial data loading
+  loadInitialData(): void {
+    this.spinner.show();
+    // Call the first API
+    this.GetBuyBoxMicroDeals();
+    // Call the second API
+    this.GetBuyBoxEmails();
+  }
+
+  GetBuyBoxMicroDeals(): void {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
       MainEntity: null,
@@ -113,8 +109,8 @@ export class EmilyContactEmailComponent implements OnInit {
             // Extract contacts from the selected organization
             this.contacts = selectedOrganization.Contact || [];
             console.log('Contacts for selected organization:', this.contacts);
-            this.selectedOrganizationName=selectedOrganization.OrganizationName;
-            console.log('selectedOrganizationName',this.selectedOrganizationName);
+            this.selectedOrganizationName = selectedOrganization.OrganizationName;
+            console.log('selectedOrganizationName', this.selectedOrganizationName);
             
             // Set the default selected contact if available
             if (this.contacts.length > 0) {
@@ -122,18 +118,20 @@ export class EmilyContactEmailComponent implements OnInit {
               this.selectedContact =
                 this.contacts.find(
                   (contact) => contact.ContactId === this.contactId
-                ) || null;
+                ) || this.contacts[0]; // Default to first contact if specific one not found
+              
               console.log('Selected contact:', this.selectedContact);
-
-              if (this.selectedContact) {
-                this.getEmailsForContact(this.selectedContact); // Automatically load emails for the selected contact
+              // If BuyBoxEmails are already loaded, get emails for the selected contact
+              if (this.BuyBoxEmails.length > 0 && this.selectedContact) {
+                this.getEmailsForContact(this.selectedContact);
+                this.spinner.hide();
               }
             }
           }
         } else {
           this.BuyBoxMicroDeals = [];
+          this.spinner.hide();
         }
-        this.spinner.hide();
       },
       error: (err) => {
         this.spinner.hide();
@@ -141,15 +139,18 @@ export class EmilyContactEmailComponent implements OnInit {
       },
     });
   }
+
   getEmailsForContact(contact: Contact): void {
-    // Skip if the contact is already selected and emails are already loaded
-    if (this.selectedContact?.ContactId === contact.ContactId) {
+    // Only clear and reset if selecting a different contact
+    if (this.selectedContact?.ContactId !== contact.ContactId) {
+      this.selectedContact = contact; // Set the selected contact
+      this.emailsSentContact = []; // Clear any previously loaded emails
+      this.emptyMessage = '';
+      this.selectedEmail = null; // Clear any selected email details
+    } else if (this.emailsSentContact.length > 0) {
+      // If same contact and emails already loaded, don't reload
       return;
     }
-
-    this.selectedContact = contact; // Set the selected contact
-    this.emailsSentContact = []; // Clear any previously loaded emails
-    this.emptyMessage = '';
 
     // Filter emails based on the contact's ContactId
     const matchingEmails = this.BuyBoxEmails.flatMap(
@@ -163,14 +164,16 @@ export class EmilyContactEmailComponent implements OnInit {
       );
     });
 
+    console.log('Loaded emails for contact:', contact.ContactId, this.emailsSentContact);
     // If no emails found, show a message
     if (this.emailsSentContact.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
+    } else if (this.emailsSentContact.length > 0) {
+      // Automatically open the first email if available
+      this.openEmail(this.emailsSentContact[0]);
     }
   }
   GetBuyBoxEmails(): void {
-    this.spinner.show();
-
     const body: any = {
       Name: 'GetBuyBoxEmails',
       MainEntity: null,
@@ -188,13 +191,17 @@ export class EmilyContactEmailComponent implements OnInit {
 
           // After emails are loaded, fetch the emails for the selected contact (if available)
           if (this.selectedContact) {
-            this.getEmailsForContact(this.selectedContact); // Ensure emails are filtered after BuyBoxEmails are available
+            this.getEmailsForContact(this.selectedContact);
           }
         } else {
           this.BuyBoxEmails = [];
         }
         this.spinner.hide();
       },
+      error: (err) => {
+        this.spinner.hide();
+        console.error('Error fetching BuyBoxEmails', err);
+      }
     });
   }
   openEmail(email: Mail): void {
@@ -210,7 +217,7 @@ export class EmilyContactEmailComponent implements OnInit {
       MainEntity: null,
       Params: {
         mailid: mailId, // Send the selected mail's ID to the API
-        identity: this.loginContact, // The user’s identity, which you might need to pass
+        identity: this.loginContact, // The user's identity, which you might need to pass
       },
       Json: null,
     };
@@ -219,6 +226,8 @@ export class EmilyContactEmailComponent implements OnInit {
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
           this.selectedEmail = data.json[0]; // Set the first email from response to selectedEmail
+          this.selectedMicroDealId=this.selectedEmail!.MicroDealId;
+          console.log('selectedMicroDealId', this.selectedMicroDealId);
           console.log('Fetched email details:', this.selectedEmail); // Debug log to check the response
         } else {
           this.selectedEmail = null; // If no email is found, reset selectedEmail
