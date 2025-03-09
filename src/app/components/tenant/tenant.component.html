@@ -215,7 +215,7 @@
   <div
     class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0"
   >
-    <button class="btn-submit-proposel" [ngStyle]="{ background: buyboxcolor }">
+    <button class="btn-submit-proposel" (click)="openUploadModal(test)" [ngStyle]="{ background: buyboxcolor }">
       <span>Submit a proposal</span>
     </button>
     <button class="btn-share">
