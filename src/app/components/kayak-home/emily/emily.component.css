@@ -1,5 +1,5 @@
 .container-fluid {
-  font-family: Montserrat;
+  
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -moz-user-select: none;
@@ -232,7 +232,7 @@ select option:checked {
 
 .OrganizationsForEmail__head>p {
   color: #747474;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -242,7 +242,7 @@ select option:checked {
 
 .Contact_head {
   color: #16181d;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -251,7 +251,7 @@ select option:checked {
 
 .Contact_head>label {
   color: black;
-  font-family: Montserrat;
+  
   font-size: 15px;
   font-style: normal;
   font-weight: 500;
@@ -260,7 +260,7 @@ select option:checked {
 
 .Contact_headD>label {
   color: gray;
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 500;

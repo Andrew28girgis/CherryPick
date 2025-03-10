@@ -116,7 +116,7 @@
   line-height: 30px;
   font-size: 16px;
   font-weight: 500;
-  font-family: "Montserrat", sans-serif;
+  
 }
 
 .filter-tab.active {
@@ -216,7 +216,7 @@
 
 .caller-name {
   color: #0c0d0e;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-weight: 500;
   line-height: 30px;
@@ -455,7 +455,7 @@ height: 216.267px;
 
 .empty-state h2 {
   color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
+  
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -478,7 +478,7 @@ height: 216.267px;
 .empty-state p {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -858,7 +858,7 @@ height: 216.267px;
 
 .caller-name {
   color: var(--Body-Heading-Color, #0c0d0e);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -1403,7 +1403,7 @@ height: 216.267px;
 .section-title {
   padding: 12px 16px;
   color: #000;
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -1521,7 +1521,7 @@ height: 216.267px;
   font-style: normal;
   font-weight: 500;
   line-height: 30px; /* 187.5% */  ;
-  font-family: "Montserrat", sans-serif;
+  
 
 }
 
