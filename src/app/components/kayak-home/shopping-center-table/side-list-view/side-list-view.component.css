@@ -1,21 +1,83 @@
+.ellipsis_icont {
+  border: 1.5px solid #7077915b;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border-radius: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.shortcuts_iconCard {
+  position: absolute;
+  background: white;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+  padding: 16px;
+  border-radius: 10px;
+  text-align: start;
+  margin: 0;
+  z-index: 100;
+  right: 14%;
+  width: max-content;
+  top: 2%;
+}
+
+.shortcuts_iconCard>ul {
+  text-decoration: none;
+  list-style: none;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  gap: 8px;
+  display: grid;
+}
+
+.shortcuts_iconCard>li {
+  display: flex;
+  gap: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  cursor: pointer;
+}
+
+.shortcuts_iconCard .target {
+  display: flex;
+  gap: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding: 0;
+  text-align: start;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.shortcuts_iconCard>i {
+  position: absolute;
+  right: -8px;
+  font-size: 25px;
+  color: white;
+  top: 5%;
+}
+
 .card-window_c {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 2px 14px rgba(0, 0, 0, 0.23);
   border-radius: 18px;
 }
+
 .total {
   cursor: pointer;
 }
-.main-img {
-  height: 250px;
-  background: white;
-  border-radius: 18px 18px 0 0;
-}
-.card-sideview {
-  height: max-content;
-  min-height: max-content;
-  max-height: max-content;
-  gap: 5px;
-}
+
 .card-address {
   font-size: 14px;
   font-weight: 400;
@@ -26,16 +88,19 @@
   text-decoration-skip-ink: none;
   color: #7a8591;
 }
+
 .ShoppingCenterUnit {
   font-size: 15px;
   font-weight: 500;
   color: #565656;
 }
+
 .nearset-category {
   color: #000;
   font-size: 14px;
   margin-top: 10px;
 }
+
 .contact-container {
   padding: 0 0.5rem;
 }
@@ -44,8 +109,8 @@
   width: 20px;
   height: 20px;
   margin: 0 !important;
-  /* margin-right: 10px; */
 }
+
 .managed-by {
   font-size: 14px;
   font-weight: 400;
@@ -55,6 +120,7 @@
   text-decoration-skip-ink: none;
   color: #7a8591;
 }
+
 .spec-head {
   width: 100%;
   color: #000;
@@ -62,17 +128,56 @@
   justify-content: space-between;
   align-items: center;
 }
-.table-texttt {
+
+.table-text {
   color: #7a8591;
   font-size: 0.8rem;
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
 }
+
 .cards-container {
   height: 100vh;
   overflow-y: scroll;
 }
+
 .custom-map {
   height: 100vh;
+}
+
+.h700 {
+  height: 700px;
+}
+
+.card-content {
+  background-color: #fff;
+  border-radius: 0 0 20px 20px;
+  height: max-content;
+  cursor: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: space-between;
+  min-height: 280px;
+  max-height: 350px;
+}
+
+.emily {
+  font-size: 18px;
+  margin-top: 3px;
+  width: 24px;
+}
+
+::ng-deep .popover-body {
+  padding: 0 !important;
+}
+
+::ng-deep .popover-arrow::after {
+  border-top: none !important;
+  border-top-color: transparent !important;
+}
+
+::ng-deep .popover-arrow::before {
+  border-top: none !important;
 }

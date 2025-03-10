@@ -156,23 +156,24 @@ export class TableViewComponent implements OnInit {
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
     if (close === 'close') {
+      this.selectedIdCard = null;
       this.selectedId = null;
       return;
     }
-
+  
     const targetElement = event?.target as HTMLElement;
     const rect = targetElement?.getBoundingClientRect();
-
+  
     const shortcutsIcon = document.querySelector(
       '.shortcuts_icon'
     ) as HTMLElement;
-
+  
     if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight
-        }px`;
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
-
+  
+    this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
   }
   
