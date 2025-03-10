@@ -329,7 +329,7 @@
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
   align-self: stretch;
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -494,7 +494,7 @@
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -506,7 +506,7 @@
   color: var(--Body-Heading-Color, #0c0d0e);
 
   /* Body/16/30/SemiBold */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;

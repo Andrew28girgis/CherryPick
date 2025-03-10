@@ -136,7 +136,7 @@
     border-radius:  8px;
     background:  #F1F1F4;
     color: #707791;
-    font-family: Montserrat;
+    
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -148,7 +148,7 @@
   }
   .org-name{
     color: #707791;
-    font-family: Montserrat;
+    
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -191,14 +191,14 @@
     color: #001f3f !important;
     font-size: 16px;
     font-weight: 500;
-    font-family: Montserrat;
+    
   }
   
   ::ng-deep .p-accordion .p-accordion-content .p-accordion .p-accordion-header a {
      color: #001f3f !important;
     font-size: 14px;
     font-weight: 500;
-    font-family: Montserrat;
+    
   }
   
   ::ng-deep .p-accordion-header .p-accordion-toggle-icon {
@@ -221,7 +221,7 @@
     color: #001f3f !important;
     font-size: 14px;
     font-weight: 500;
-    font-family: Montserrat;
+    
     cursor: pointer;
   }
   
@@ -234,7 +234,7 @@
     color: #001f3f;
     font-size: 16px;
     font-weight: 600;
-    font-family: Montserrat;
+    
     height: 10vh;
     align-items: center;
     padding-inline: 10px;
@@ -271,7 +271,7 @@
     color: #001f3f;
     font-weight: bold;
     font-weight: 600;
-    font-family: Montserrat;
+    
   }
   
   .card-pTemplate {

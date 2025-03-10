@@ -283,17 +283,6 @@
   </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
 <ng-template #modalTemplate let-modal>
   <div class="modal-content">
     <div class="custom-modal">
@@ -339,24 +328,6 @@
     </div>
   </div>
 </ng-template>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <ng-template #chooseStackHolder let-modal>
   <div class="p-2">
@@ -418,9 +389,7 @@
           </div>
 
           <!-- Display Filtered Results -->
-          <ul
-            *ngIf="filteredNames.length > 0"
-            class="list-group listtt">
+          <ul *ngIf="filteredNames.length > 0" class="list-group listtt">
             <li
               *ngFor="let name of filteredNames"
               class="list-group-item broker-name"
