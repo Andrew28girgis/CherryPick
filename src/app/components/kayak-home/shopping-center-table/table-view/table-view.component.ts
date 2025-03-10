@@ -133,14 +133,6 @@ export class TableViewComponent implements OnInit {
     });
   }
 
-  getNeareastCategoryName(categoryId: number): string {
-    return this.viewManagerService.getNearestCategoryName(categoryId, this.buyboxCategories);
-  }
-
-  getShoppingCenterUnitSize(shoppingCenter: any): string {
-    return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
-  }
-
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
@@ -157,13 +149,11 @@ export class TableViewComponent implements OnInit {
       x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
     );
 
-
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.spinner.show();
         await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
         this.modalService.dismissAll();
-        // await this.refreshShoppingCenters();
       } catch (error) {
         console.error('Error deleting shopping center:', error);
       } finally {
@@ -176,15 +166,21 @@ export class TableViewComponent implements OnInit {
     try {
       this.spinner.show();
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
-      console.log('this.shoppingCenters',this.shoppingCenters);
-      
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);      
       this.showbackIds = [];
     } catch (error) {
       console.error('Error refreshing shopping centers:', error);
     } finally {
       this.spinner.hide();
     }
+  }
+
+  getNeareastCategoryName(categoryId: number): string {
+    return this.viewManagerService.getNearestCategoryName(categoryId, this.buyboxCategories);
+  }
+
+  getShoppingCenterUnitSize(shoppingCenter: any): string {
+    return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
