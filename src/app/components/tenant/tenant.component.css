@@ -762,7 +762,7 @@
     height: 90px;
   }
   .Osmowstext {
-    font-size: 15px;
+    font-size: 16px;
   }
   .namee {
     font-size: 15px;
@@ -831,6 +831,15 @@
 }
 
 @media (min-width: 992px) {
+  .namee{
+    font-size: 16px;
+}
+  .broker {
+    font-size: 12px;
+  }
+  .Osmowstext {
+    font-size: 16px;
+  }
   .boldtext {
     font-size: 16px;
   }
@@ -855,12 +864,18 @@
 }
 
 @media (min-width: 1200px) {
+  .namee{
+    font-size: 17px;
+}
+  .Osmowstext {
+    font-size: 17px;
+  }
   .broker-container {
     top: -80px;
     left: 15px;
   }
   .broker {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 24px;
     letter-spacing: -0.07px;
   }
