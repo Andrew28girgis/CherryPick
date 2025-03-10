@@ -421,6 +421,16 @@ onContactClick(contactId: number, orgId: number) {
       (contact.EmailStats[0].Outbox || 0)
     );
   }
+   // Get the total number of emails for all contacts in an organization
+   getTotalOrganizationEmails(contacts: Contact[]): number {
+    if (!contacts || contacts.length === 0) {
+      return 0;
+    }
+    
+    return contacts.reduce((total, contact) => {
+      return total + this.getTotalEmails(contact);
+    }, 0);
+  }
 
   GetEmailDashboard(): void {
     this.spinner.show();
