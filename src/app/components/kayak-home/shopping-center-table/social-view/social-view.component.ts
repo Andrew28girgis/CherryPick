@@ -8,7 +8,6 @@ import {
   ChangeDetectorRef,
   AfterViewInit,
   OnDestroy,
-  ChangeDetectionStrategy,
   NgZone,
   HostListener,
   EventEmitter,
@@ -36,7 +35,6 @@ declare const google: any;
   selector: 'app-social-view',
   templateUrl: './social-view.component.html',
   styleUrls: ['./social-view.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush, // Use OnPush change detection for better performance
 })
 export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -93,24 +91,21 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     password: '',
   };
   OrganizationContacts: any[] = [];
-  private touchStartX = 0;
-  private touchEndX = 0;
-  private readonly SWIPE_THRESHOLD = 50;
   shoppingCenterIdToDelete: number | null = null;
   deleteShoppingCenterModal!: TemplateRef<any>;
   buyboxPlaces: BbPlace[] = [];
   showbackIds: number[] = [];
-  private globalClickListenerr!: () => void;
-  private isOptionSelected = false;
   currentShopping: any = null;
-
-  // Flag to control when to load maps
   mapsLoaded = false;
   isMobileView = false;
-  // Cache for expensive calculations
+  private touchStartX = 0;
+  private touchEndX = 0;
+  private readonly SWIPE_THRESHOLD = 50;
+  private globalClickListenerr!: () => void;
+  private isOptionSelected = false;
   private categoryNameCache = new Map<number, string>();
   private unitSizeCache = new Map<string, string>();
-
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -139,8 +134,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-
-      // Initialize data after getting params
       this.initializeData();
     });
 
@@ -156,7 +149,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.activecomponent = 'Properties';
     this.selectedTab = 'Properties';
 
-    // Defer loading of maps until needed
     setTimeout(() => {
       this.mapsLoaded = true;
       this.cdr.markForCheck();
@@ -166,8 +158,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   async initializeData() {
     try {
       this.spinner.show();
-
-      // Use forkJoin to fetch data in parallel
       forkJoin({
         categories: this.viewManagerService.getBuyBoxCategories(this.BuyBoxId),
         centers: this.viewManagerService.getShoppingCenters(this.BuyBoxId),
@@ -186,7 +176,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           }),
           finalize(() => {
             this.spinner.hide();
-            this.cdr.markForCheck(); // Trigger change detection after data is loaded
+            this.cdr.markForCheck(); 
           })
         )
         .subscribe((result) => {
@@ -209,7 +199,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    // Use NgZone.runOutsideAngular for event listeners to avoid change detection cycles
     this.setupGlobalClickListener();
 
     this.ngZone.runOutsideAngular(() => {
@@ -227,8 +216,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
             return;
           }
-
-          // Run inside Angular zone when we need to update the UI
           this.ngZone.run(() => {
             this.hideAllComments();
             this.cdr.markForCheck();
@@ -281,8 +268,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.markForCheck();
     }
   }
-
-  // Memoized version of getNeareastCategoryName
   getNeareastCategoryName(categoryId: number): string {
     if (this.categoryNameCache.has(categoryId)) {
       return this.categoryNameCache.get(categoryId)!;
@@ -295,8 +280,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.categoryNameCache.set(categoryId, result);
     return result;
   }
-
-  // Memoized version of getShoppingCenterUnitSize
   getShoppingCenterUnitSize(shoppingCenter: any): string {
     const key = `${shoppingCenter.Id}`;
     if (this.unitSizeCache.has(key)) {
@@ -403,8 +386,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
   }
-
-  // Memoize sortCommentsByDate with a WeakMap to avoid recalculating for the same array
   private commentSortCache = new WeakMap<any[], any[]>();
 
   sortCommentsByDate(comments: any[]): any[] {
@@ -476,7 +457,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const contactIdStr = localStorage.getItem('ContactId');
     if (!contactIdStr) {
       console.log('no contact id');
-      // return;
     }
     const contactId = Number.parseInt(contactIdStr ? contactIdStr : '0', 10);
 
@@ -522,8 +502,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (response: any) => { },
       error: (error) => {
         if (!isLiked) {
-          // shopping.ShoppingCenter.Reactions.length--;
-          // delete this.likedShoppings[shopping.MarketSurveyId];
         } else {
           shopping.ShoppingCenter.Reactions.length++;
           this.likedShoppings[shopping.MarketSurveyId] = true;
@@ -557,8 +535,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.markForCheck();
     }
   }
-
-  // TrackBy function for ngFor performance optimization
   trackByShoppingId(index: number, item: any): number {
     return item.Id;
   }
@@ -567,15 +543,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     return item.Id || index;
   }
 
-  // Lazy load maps only when needed
   async openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-
-    // Dynamically load Google Maps API if not already loaded
     if (!this.mapsLoaded) {
       this.mapsLoaded = true;
     }
@@ -590,7 +563,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       console.error('Latitude and longitude are required to display the map.');
       return;
     }
-    // Load Google Maps API libraries
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
@@ -603,8 +575,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       center: { lat, lng },
       zoom: 14,
     });
-
-    // Create a new marker
     const marker = new google.maps.Marker({
       position: { lat, lng },
       map: map,
@@ -779,8 +749,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.carousel.next();
       }
     }
-
-    // Reset values
     this.touchStartX = 0;
     this.touchEndX = 0;
   }
@@ -878,7 +846,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.shoppingCenterIdToDelete!
       );
       this.modalService.dismissAll();
-      //await this.initializeData();
     } catch (error) {
       console.error('Error deleting shopping center:', error);
     } finally {
@@ -1005,11 +972,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
   }
 
-  // Method to open the shopping details modal\
   openShoppingDetailsModal(modal: any, shopping: any) {
     this.currentShopping = shopping;
-
-    // Open the modal with medium size
     this.modalService
       .open(modal, {
         windowClass: 'tiktok-modal',
@@ -1023,11 +987,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .result.then(
         (result) => {
-          // Handle modal close (if needed)
           this.currentShopping = null;
         },
         (reason) => {
-          // Handle modal dismiss (if needed)
           this.currentShopping = null;
         }
       );
@@ -1065,7 +1027,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         
         this.cdr.markForCheck();
-        // this.refreshShoppingCenters();
         this.spinner.hide();
       },
     });
