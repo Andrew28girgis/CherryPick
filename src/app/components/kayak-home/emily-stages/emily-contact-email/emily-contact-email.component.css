@@ -209,3 +209,64 @@ gap: 10px;
     max-height: 40px;
     width: 110px;
   }
+  .send {
+    color: #28a745;
+    font-size: 18px;
+  }
+  .inbox {
+    color: #007bff;
+    font-size: 18px;
+  }
+  .outbox {
+    color: #fd7e14;
+    font-size: 18px;
+  }
+
+.filter-button {
+  padding: 0px 5px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #555;
+  transition: all 0.2s ease;
+}
+
+.filter-button:hover {
+  background-color: #eaeaea;
+}
+
+.filter-button.active {
+  background-color: #4D65B4;
+  color: white;
+}
+
+/* Make sure the filter icons are consistently styled */
+.fa-reply.inbox {
+  color: #007bff;
+}
+
+.fa-share.outbox {
+  color: #6c757d;
+}
+
+.fa-envelope-circle-check.send {
+  color: #28a745;
+}
+/* Make sure the filter buttons use your existing icon colors */
+.filter-button:not(.active) .fa-envelope-circle-check {
+  color: #28a745;
+}
+
+.filter-button:not(.active) .fa-reply {
+  color: #007bff;
+}
+
+.filter-button:not(.active) .fa-share {
+  color: #fd7e14;
+}
+
+/* When button is active, icons should be white */
+.filter-button.active i {
+  color: white;
+}

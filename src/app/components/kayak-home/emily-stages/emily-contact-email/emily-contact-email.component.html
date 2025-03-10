@@ -69,12 +69,28 @@
         <div class="mailbox-header">
           <div class="top-left">
           <h5 class="contacts">Mail box</h5>
+
+          <div class="email-filters d-flex justify-content-start align-items-center">
+            <div class="filter-button" [ngClass]="{'active': selectedFilter === 'all'}" (click)="filterEmails('all')">
+              <i class="fa-solid fa-envelope me-1"></i> All
+            </div>
+            <div class="filter-button" [ngClass]="{'active': selectedFilter === 'inbox'}" (click)="filterEmails('inbox')">
+              <i class="fa-solid fa-reply me-1"></i> Inbox
+            </div>
+            <div class="filter-button" [ngClass]="{'active': selectedFilter === 'outbox'}" (click)="filterEmails('outbox')">
+              <i class="fa-solid fa-share me-1"></i> Outbox
+            </div>
+            <div class="filter-button" [ngClass]="{'active': selectedFilter === 'sent'}" (click)="filterEmails('sent')">
+              <i class="fa-solid fa-envelope-circle-check me-1"></i> Sent
+            </div>
+          </div>
+
         </div>
-        <div class="top-right d-flex">
+        <div class="top-right d-flex" style="padding-top: 35px;">
           <button class="new-btn"
             [routerLink]="['/emily', buyBoxId, orgId , selectedMicroDealId ]"
             >
-            New 
+            Compose 
             <img [src]="'../../../assets/Images/Icons/arrow-down.png'" 
             />
           </button>
@@ -91,11 +107,15 @@
             <div class="email-list">
               <div
                 class="single-mail" style="cursor: pointer;"
-                *ngFor="let email of emailsSentContact"
+                *ngFor="let email of filteredEmails"
                 (click)="openEmail(email)"
                 [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
               >
-                <p class="subject"> {{ email.Subject }}</p>
+              <strong><i  [ngClass]="'fa-solid '+getDirection(email.Direction)" class="me-2"></i>
+               <span class="subject"> {{ email.Subject }}</span>
+              </strong> 
+               
+
                 <p class="date"> {{ email.Date | date : "medium" }}</p>
               </div>
 
@@ -116,7 +136,7 @@
       <div class="email-details-body"
       [class.scrolling]="isScrolling" 
       (scroll)="onScroll()"
-      style=" overflow-y: auto;"
+      style=" overflow-y: auto; min-height: 92vh;"
       >
         <div class="card-body"
        
@@ -135,7 +155,7 @@
         </div>
           <div class="d-flex justify-content-end w-100">
             <button class="replay"
-            *ngIf="selectedEmail?.Body"
+            *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 1"
             (click)="openmodel(openreply, selectedEmail?.Body, selectedContact?.ContactId)"
             >
             <img [src]="'../../../assets/Images/Icons/send.png'" />
