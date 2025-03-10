@@ -63,7 +63,7 @@ export class LoginComponent {
   }
 
   private navigateToHome() {
-    this.router.navigate(['/summary']);
+    this.router.navigate(['/dashboard']);
   }
    
 }
