@@ -425,6 +425,7 @@ export class ManagePropertiesComponent implements OnInit {
                 this.isConverting = false;
                 this.spinner.hide();
                 this.showToast('PDF File uploaded and converted successfully!');
+                this.saveFileInfoInDatabase();
               }
             },
             (error) => {
@@ -441,6 +442,27 @@ export class ManagePropertiesComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
       }
     }
+  }
+  saveFileInfoInDatabase() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'LogSubmission',
+      MainEntity: null,
+      Params: {
+        ContactId: this.contactID,
+        ShoppingCenterId: this.selectedShoppingID,
+        FileName:this.pdfFileName,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.spinner.hide();
+      },
+      error: (err) => {
+        this.spinner.hide();
+      },
+    });
   }
   // Method to convert base64 to a SafeUrl for image display
   displayCustomImage(image: IFile): SafeUrl {

@@ -13,7 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
@@ -68,6 +67,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { HeaderComponent } from './components/header/header.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { CommonModule } from '@angular/common';
 
 const msalConfig = {
   auth: {
@@ -99,7 +99,6 @@ const loginRequest = {
     AppComponent,
     LoginComponent,
     HomeComponent,
-    NavbarComponent,
     LandingComponent,
     SummeryComponent,
     KanbanComponent,

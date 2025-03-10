@@ -10,7 +10,7 @@ import { HeaderComponent } from '../components/header/header.component';
 
   imports: [
     CommonModule,
-    FormsModule,
+    FormsModule, 
     RouterModule,
     ReactiveFormsModule
   ],

@@ -2,36 +2,47 @@ import {
   Component,
   OnInit,
   TemplateRef,
-  ChangeDetectorRef,
   ViewChild,
-  HostListener,
 } from '@angular/core';
-import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
-import { AvailabilityTenant, IFile, jsonGPT, Properties } from 'src/models/manage-prop';
+import {
+  NgxFileDropEntry,
+  FileSystemFileEntry,
+  FileSystemDirectoryEntry,
+} from 'ngx-file-drop';
+import {
+  AvailabilityTenant,
+  IFile,
+  jsonGPT,
+} from 'src/models/manage-prop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
 import { PlacesService } from '../../../app/services/places.service';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; 
+import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
-import { Availability, PropertiesDetails, Tenant } from 'src/models/manage-prop-shoppingCenter';
+import {
+  HttpClient,
+  HttpEventType,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
+import {
+  Availability,
+  PropertiesDetails,
+  Tenant,
+} from 'src/models/manage-prop-shoppingCenter';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
-
-
-
-
 @Component({
   selector: 'app-tenant',
   standalone: true,
   imports: [
-    CommonModule, 
-    NgxSpinnerModule, 
-    RouterModule, 
+    CommonModule,
+    NgxSpinnerModule,
+    RouterModule,
     FormsModule,
-    NgxFileDropModule
+    NgxFileDropModule,
   ],
   providers: [],
   templateUrl: './tenant.component.html',
@@ -40,22 +51,21 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 export class TenantComponent implements OnInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   newTenantName: string = '';
-  CustomPlace!: PropertiesDetails| undefined;
+  CustomPlace!: PropertiesDetails | undefined;
   newTenantUrl: string = '';
   public files: NgxFileDropEntry[] = [];
-  selectedShoppingID!:string | undefined;
+  selectedShoppingID!: string | undefined;
   showAddTenantInput: boolean = false;
   JsonPDF!: jsonGPT;
   AvailabilityAndTenants: AvailabilityTenant = {};
-
   fileName!: string;
   isUploading: boolean = false;
   uploadProgress: number = 0;
   isConverting: boolean = false;
   images: IFile[] = [];
-  pdfFileName:string='';
+  pdfFileName: string = '';
   contactID!: any;
-  test!:number;
+  test!: number;
   TenantResult: any = [];
   organizationBranches: any = [];
   selectedbuyBox!: string;
@@ -67,9 +77,9 @@ export class TenantComponent implements OnInit {
   brokersignature!: any;
   MinBuildingSize!: number;
   MaxBuildingSize!: number;
-  address!:string;
-  states!:string;
-  buyboxcolor!:string;
+  address!: string;
+  states!: string;
+  buyboxcolor!: string;
   ManagementOrganizationDesc!: string;
   buyboxname!: string;
   smalldescription: string[] = [];
@@ -85,21 +95,17 @@ export class TenantComponent implements OnInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer
-
-
-
   ) {
     
   }
   ngOnInit(): void {
-    this.contactID =  localStorage.getItem('contactId')  ;
-    console.log('Contact ID:', this.contactID);
+    this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
       this.GetBuyBoxInfo();
     });
-
   }
+
   GetBuyBoxInfo(): void {
     this.spinner.show(); // Show the spinner before the API request
 
@@ -113,8 +119,7 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
-        console.log('API Response:', this.TenantResult);
-
+ 
         // Use destructuring to extract values from the API response
         const buyboxData = this.TenantResult.Buybox[0].BuyBoxOrganization[0];
         const managerOrganizationData =
@@ -148,13 +153,11 @@ export class TenantComponent implements OnInit {
           : [this.TenantResult.Buybox[0].Description];
 
         this.spinner.hide();
-        console.log('Extracted BuyBoxOrganizationId:', this.buyboxid);
-
+ 
         this.GetOrganizationBranches();
       },
       error: (err: any) => {
-        console.error('API Error:', err);
-        this.spinner.hide();
+         this.spinner.hide();
       },
     });
   }
@@ -165,21 +168,19 @@ export class TenantComponent implements OnInit {
     const body: any = {
       Name: 'GetOrganizationBranches',
       Params: {
-        organizationid: this.buyboxid, 
+        organizationid: this.buyboxid,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        console.log('GetOrganizationBranches API Response:', res);
-        this.organizationBranches = res.json[0];
-        this.address=this.organizationBranches.Address;
-        this.states=this.organizationBranches.States;
+         this.organizationBranches = res.json[0];
+        this.address = this.organizationBranches.Address;
+        this.states = this.organizationBranches.States;
         this.spinner.hide();
       },
       error: (err: any) => {
-        console.error('API Error:', err);
-        this.spinner.hide();
+         this.spinner.hide();
       },
     });
   }
@@ -187,12 +188,11 @@ export class TenantComponent implements OnInit {
   openUploadModal(id: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
-        // console.log(guid);
-        this.selectedShoppingID = guid;
+ 
+      this.selectedShoppingID = guid;
     } else {
-        this.selectedShoppingID = id.toString();
-    }
-    // console.log('Selected Shopping ID:', this.selectedShoppingID);
+      this.selectedShoppingID = id.toString();
+    } 
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
   public uploadFile(files: NgxFileDropEntry[]) {
@@ -230,26 +230,26 @@ export class TenantComponent implements OnInit {
                 }
               } else if (event instanceof HttpResponse) {
                 // Conversion complete; extract images from the new API response structure
-                // console.log('API Response:', event.body);
+          
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map((img: string, index: number) => ({
-                    name: `Image ${index + 1}`,
-                    type: 'image/png', // Adjust this if your images are of a different type
-                    content: img,
-                    selected: false,
-                  }));
-                  this.pdfFileName=response.pdfFileName;
-                  // console.log('pdfFileName:', this.pdfFileName);
-                }
+                  this.images = response.images.map(
+                    (img: string, index: number) => ({
+                      name: `Image ${index + 1}`,
+                      type: 'image/png', // Adjust this if your images are of a different type
+                      content: img,
+                      selected: false,
+                    })
+                  );
+                  this.pdfFileName = response.pdfFileName;
+                 }
                 this.isConverting = false;
                 this.spinner.hide();
                 this.showToast('PDF File uploaded and converted successfully!');
               }
             },
             (error) => {
-              console.error('Error during upload/conversion:', error);
-              this.isUploading = false;
+               this.isUploading = false;
               this.isConverting = false;
               this.spinner.hide();
               this.showToast('Failed to upload or convert PDF file!');
@@ -275,113 +275,118 @@ export class TenantComponent implements OnInit {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
-    // Add a new tenant (send to API and update locally)
-    addNewTenant() {
-      if (!this.newTenantName || this.newTenantName.trim() === '' || !this.newTenantUrl || this.newTenantUrl.trim() === '') {      this.showToast('Please enter a valid tenant name.');
-        return;
-      }
-      // Basic validation for domain format (optional, since HTML pattern handles it)
-      const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-      if (!domainPattern.test(this.newTenantUrl.trim())) {
-        alert('Please enter a valid domain (e.g., example.com).');
-        return;
-      }
-      this.spinner.show();
-      const body: any = {
-        Name: 'ModifyTenantsWithBranch',
-        Params: {
-          ShoppingCenterId: this.selectedShoppingID,
+  // Add a new tenant (send to API and update locally)
+  addNewTenant() {
+    if (
+      !this.newTenantName ||
+      this.newTenantName.trim() === '' ||
+      !this.newTenantUrl ||
+      this.newTenantUrl.trim() === ''
+    ) {
+      this.showToast('Please enter a valid tenant name.');
+      return;
+    }
+    // Basic validation for domain format (optional, since HTML pattern handles it)
+    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    if (!domainPattern.test(this.newTenantUrl.trim())) {
+      alert('Please enter a valid domain (e.g., example.com).');
+      return;
+    }
+    this.spinner.show();
+    const body: any = {
+      Name: 'ModifyTenantsWithBranch',
+      Params: {
+        ShoppingCenterId: this.selectedShoppingID,
+        Name: this.newTenantName,
+        Url: this.newTenantUrl,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        // Assuming the API returns the new tenant or an updated list
+        const newTenant: Tenant = {
+          Id: data.json?.Id || this.CustomPlace?.Tenants.length! + 1, // Generate a temporary ID or use API response
           Name: this.newTenantName,
-          Url: this.newTenantUrl,
-        },
-      };
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (data: any) => {
-          // Assuming the API returns the new tenant or an updated list
-          const newTenant: Tenant = {
-            Id: data.json?.Id || (this.CustomPlace?.Tenants.length! + 1), // Generate a temporary ID or use API response
-            Name: this.newTenantName,
-            URL:this.newTenantUrl,
-          };
-          // Add the new tenant to CustomPlace.Tenants
-          if (this.CustomPlace && this.CustomPlace.Tenants) {
-            this.CustomPlace.Tenants.push(newTenant);
-          } else {
-            // Initialize Tenants if it doesn't exist
-            this.CustomPlace = {
-              ...this.CustomPlace,
-              Tenants: [newTenant],
-            } as PropertiesDetails;
-          }
-          this.spinner.hide();
-          this.showToast('New tenant added successfully!');
-          this.showAddTenantInput = false;
-          this.newTenantName = '';
-        },
-        error: (err) => {
-          this.spinner.hide();
-          this.showToast('Failed to add new tenant. Please try again.');
-        },
-      });
-    }
-    sendImagesArray() {
-      this.spinner.show();
-      const selectedImages = this.images.filter(image => image.selected);
-      // Extract the content of the selected images
-      const array = selectedImages.map(image => image.content);
-      const shopID = this.selectedShoppingID;
-      this.PlacesService.SendImagesArray(array,shopID).subscribe({
-        next: (data) => {
-          this.JsonPDF = data;
-          this.showToast('Images Converted successfully!');
-          this.spinner.hide();
-        },
-        error: (error) => {
-          console.error('Error fetching APIs:', error);
-          this.spinner.hide();
-        },
-      });
-    }
-    sendJson() {
-      this.spinner.show();
-      const shopID = this.selectedShoppingID;
-    
-      // Add dynamic properties for CenterName and CenterType
-      this.JsonPDF = {
-        ...this.JsonPDF,
-        CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
-        CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
-      };
-    
-      // Do not filter Availability and Tenants; send all items with their updated isAdded states
-      const updatedJsonPDF = {
-        ...this.JsonPDF,
-        Availability: this.JsonPDF.Availability.map((avail) => ({
-          ...avail,
-          isAdded: avail.isAdded || false, // Ensure isAdded is always defined
-        })),
-        Tenants: this.JsonPDF.Tenants.map((tenant) => ({
-          ...tenant,
-          isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
-        })),
-      };
-    
-      // Send the updated JsonPDF data
-      this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
-        next: (data) => {
-          this.showToast('shopping center updated successfully!');
-          this.clearModalData();
-          this.modalService.dismissAll();
-          this.spinner.hide();
-        },
-        error: (error) => {
-          console.error('Error:', error);
-          this.showToast('Failed to update shopping center!');
-          this.spinner.hide();
-        },
-      });
-    }
-        // Method to clear all modal data
+          URL: this.newTenantUrl,
+        };
+        // Add the new tenant to CustomPlace.Tenants
+        if (this.CustomPlace && this.CustomPlace.Tenants) {
+          this.CustomPlace.Tenants.push(newTenant);
+        } else {
+          // Initialize Tenants if it doesn't exist
+          this.CustomPlace = {
+            ...this.CustomPlace,
+            Tenants: [newTenant],
+          } as PropertiesDetails;
+        }
+        this.spinner.hide();
+        this.showToast('New tenant added successfully!');
+        this.showAddTenantInput = false;
+        this.newTenantName = '';
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.showToast('Failed to add new tenant. Please try again.');
+      },
+    });
+  }
+  sendImagesArray() {
+    this.spinner.show();
+    const selectedImages = this.images.filter((image) => image.selected);
+    // Extract the content of the selected images
+    const array = selectedImages.map((image) => image.content);
+    const shopID = this.selectedShoppingID;
+    this.PlacesService.SendImagesArray(array, shopID).subscribe({
+      next: (data) => {
+        this.JsonPDF = data;
+        this.showToast('Images Converted successfully!');
+        this.spinner.hide();
+      },
+      error: (error) => {
+         this.spinner.hide();
+      },
+    });
+  }
+  sendJson() {
+    this.spinner.show();
+    const shopID = this.selectedShoppingID;
+
+    // Add dynamic properties for CenterName and CenterType
+    this.JsonPDF = {
+      ...this.JsonPDF,
+      CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
+      CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
+    };
+
+    // Do not filter Availability and Tenants; send all items with their updated isAdded states
+    const updatedJsonPDF = {
+      ...this.JsonPDF,
+      Availability: this.JsonPDF.Availability.map((avail) => ({
+        ...avail,
+        isAdded: avail.isAdded || false, // Ensure isAdded is always defined
+      })),
+      Tenants: this.JsonPDF.Tenants.map((tenant) => ({
+        ...tenant,
+        isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
+      })),
+    };
+
+    // Send the updated JsonPDF data
+    this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
+      next: (data) => {
+        this.showToast('shopping center updated successfully!');
+        this.clearModalData();
+        this.modalService.dismissAll();
+        this.spinner.hide();
+      },
+      error: (error) => {
+        console.error('Error:', error);
+        this.showToast('Failed to update shopping center!');
+        this.spinner.hide();
+      },
+    });
+  }
+  // Method to clear all modal data
   clearModalData() {
     this.images = []; // Clear images array
     this.JsonPDF = null!; // Clear PDF data
@@ -398,11 +403,11 @@ export class TenantComponent implements OnInit {
     this.uploadProgress = 0;
     this.isUploading = false;
     this.isConverting = false;
-    this.images=[];
+    this.images = [];
   }
-    // Method to convert base64 to a SafeUrl for image display
-    displayCustomImage(image: IFile): SafeUrl {
-      const dataUrl = `data:${image.type};base64,${image.content}`;
-      return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
-    }
+  // Method to convert base64 to a SafeUrl for image display
+  displayCustomImage(image: IFile): SafeUrl {
+    const dataUrl = `data:${image.type};base64,${image.content}`;
+    return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
+  }
 }
