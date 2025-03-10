@@ -1,7 +1,7 @@
 <div class="page-layout" [ngClass]="{ 'sidebar-collapsed': sidebarCollapsed }">
-  <div class="sidebar">
+  <!-- <div class="sidebar">
     <app-sidebar (collapseChange)="onSidebarCollapse($event)"></app-sidebar>
-  </div>
+  </div> -->
   <div class="main-content">
     <!-- <div class="dashboard-header">
       <h1 class="title">Dashboard</h1>
@@ -39,7 +39,7 @@
         </button>
       </div>
       <div class="search-bar position-relative">
-        <div class="input">
+        <!-- <div class="input">
           <input
             type="search"
             placeholder="Search..."
@@ -52,7 +52,7 @@
             alt="Search Icon"
             class="search-icon"
           />
-        </div>
+        </div> -->
         <!-- Filter Button -->
         <div class="filter-bar">
           <!-- ... other filter bar content ... -->
@@ -78,7 +78,7 @@
         <div class="kanban-header-section container-fluid">
           <div class="row">
             <div>
-              <div class="input">
+              <!-- <div class="input">
                 <input
                   type="search"
                   placeholder="Search..."
@@ -88,12 +88,8 @@
                   (input)="onSearchChange($event)"
                 />
 
-                <!-- <img
-                  src="assets/Images/Icons/search-normal.svg"
-                  alt="Search Icon"
-                  class="search-icon"
-                /> -->
-              </div>
+                
+              </div> -->
               <div
                 class="col-12 col-md-6 col-lg-4"
                 *ngFor="let kanban of userKanbans"
