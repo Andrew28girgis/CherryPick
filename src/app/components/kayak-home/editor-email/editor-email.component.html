@@ -1,0 +1,6 @@
+<form [formGroup]="formGroup">
+  <p-editor formControlName="text" [style]="{ height: '320px' }"></p-editor>
+  <div class="d-flex justify-content-end">
+      <button type="button" (click)="logEditorContent()" class="mt-2 mb-4 buttonSave">Save</button>
+  </div>
+</form>
