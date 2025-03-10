@@ -44,6 +44,18 @@ interface Column {
   styleUrls: ['./emily-stages.component.css']
 })
 export class EmilyStagesComponent implements OnInit {
+  visibleContacts: Contact[] = [];  // Initially only show two contacts
+  isViewMore = false; // State to toggle between View More and View Less
+
+  // Function to toggle between showing all contacts or just the first 2
+  toggleViewMore() {
+    this.isViewMore = !this.isViewMore;
+  }
+
+  // This function determines how many contacts to show based on the 'isViewMore' flag
+  getVisibleContacts(contacts: Contact[]): Contact[] {
+    return this.isViewMore ? contacts : contacts.slice(0, 2);
+  }
 
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];

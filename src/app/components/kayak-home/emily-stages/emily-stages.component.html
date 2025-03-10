@@ -76,35 +76,48 @@
                   </div>
                 </div>
   
-                <!-- Contacts List (Conditionally Rendered) -->
                 <div *ngIf="org.showContacts" class="contacts-list">
                   <ul class="contact-ul" style="padding: 5px;">
+                    <!-- Limit the number of contacts initially based on 'isViewMore' -->
                     <li 
-                      *ngFor="let contact of org.Contact;" 
+                      *ngFor="let contact of getVisibleContacts(org.Contact)" 
                       (click)="onContactClick(contact.ContactId, org.OrganizationId)" 
                       class="d-flex justify-content-between"
                     >
-                    <div style="cursor: pointer; display: flex ;justify-content: space-between; width: 100%;">
-                      <span class="namecontact">
-                        {{ contact.Firstname }} {{ contact.Lastname }}
-                      </span>
-                      
+                      <div style="cursor: pointer; display: flex; justify-content: space-between; width: 100%;">
+                        <span class="namecontact">
+                          {{ contact.Firstname }} {{ contact.Lastname }}
+                        </span>
                         <span 
-                          class="namecontact ms-2"  style="color: #4D65B4; "
+                          class="namecontact ms-2" 
+                          style="color: #4D65B4;" 
                           *ngIf="getTotalEmails(contact) > 0"
                         >
                           {{ getTotalEmails(contact) }}
                         </span>
                       </div>
                     </li>
+                
+                    <!-- View More / View Less Button -->
+                    <li *ngIf="org.Contact.length > 2">
+                      <div class="d-flex justify-content-center mt-2">
+                        <span 
+                          (click)="toggleViewMore()" 
+                          class="view-more-less-toggle" 
+                        >
+                        {{ isViewMore ? 'View Less' : 'View More' }}
+                          <i class="fa" [ngClass]="isViewMore ? 'fa-chevron-up' : 'fa-chevron-down'" style="font-size: 14px;"></i>
+                        </span>
+                      </div>
+                    </li>
+                    
                   </ul>
-                  <p 
-                    *ngIf="!org.Contact || org.Contact.length === 0" 
-                    class="no-contact-msg"
-                  >
+                
+                  <p *ngIf="!org.Contact || org.Contact.length === 0" class="no-contact-msg">
                     No contacts available in this organization.
                   </p>
                 </div>
+                
               </div>
             </div>
           </div>
