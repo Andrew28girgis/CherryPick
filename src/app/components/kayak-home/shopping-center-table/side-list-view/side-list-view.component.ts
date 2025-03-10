@@ -1,32 +1,13 @@
-import {
-  Component,
-  OnInit,
-  Renderer2,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-  NgZone,
-  TemplateRef,
-  OnChanges,
-  SimpleChanges,
-  Input,
-  OnDestroy,
-  ApplicationRef,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, NgZone } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
-import { General } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center, Place } from '../../../../../models/shoppingCenters';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Center } from '../../../../../models/shoppingCenters';
 import { StateService } from '../../../../services/state.service';
 import { BbPlace } from 'src/models/buyboxPlaces';
-import { ShoppingCenter } from 'src/models/buyboxShoppingCenter';
-import { ViewManagerService } from 'src/app/services/view-manager.service';
-import { forkJoin, tap, catchError, of, Subject, takeUntil } from 'rxjs';
 import { Polygon } from 'src/models/polygons';
 
 declare const google: any;
@@ -458,25 +439,6 @@ export class SideListViewComponent {
       this.markerService.createMarker(this.map, markerData, type);
       // this.markerService.fetchAndDrawPolygon(th)
     });
-
-    // let centerIds: any[] = [];
-    // this.shoppingCenters.forEach((center) => {
-    //   // centerIds.push(center.Id);
-    //   if (center.Latitude && center.Longitude) {
-    //     // this.markerService.fetchAndDrawPolygon(this.map, center.CenterCity, center.CenterState , center.Neighbourhood);
-    //     if (this.shoppingCenters.indexOf(center) < 1) {
-    //       this.markerService.fetchAndDrawPolygon(
-    //         this.map,
-    //         center.CenterCity,
-    //         center.CenterState,
-    //         center.Latitude,
-    //         center.Longitude
-    //       );
-    //     }
-    //   }
-    // });
-
-    // const centerIdsString = centerIds.join(',');
   }
 
   private updateCardsSideList(map: any): void {
