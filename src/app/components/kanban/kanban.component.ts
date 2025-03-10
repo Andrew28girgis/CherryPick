@@ -90,6 +90,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   @Output() kanbanCreated = new EventEmitter<any>();
   showFilter = false; // Add this property
   isUpdating = false; // Added property
+  activeKanbanId: number | null = null;
 
   private pollingSubscription?: Subscription;
   private isPollingActive = false;
@@ -124,6 +125,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       if (id) {
         const fetchingKanbanDetailsInterval = setInterval(() => {
           if (this.userKanbans && this.userKanbans.length > 0) {
+            this.activeKanbanId = +id;
             clearInterval(fetchingKanbanDetailsInterval);
             this.GetKanbanDetailsWithId(+id);
           }
@@ -206,6 +208,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   GetKanbanDetails(kanban: Kanban) {
+    this.activeKanbanId = kanban.Id;
+
     // Show loading indicator
     this.isLoading = true;
 
