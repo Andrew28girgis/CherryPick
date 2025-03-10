@@ -28,14 +28,21 @@
   >
     <div
       class="social-card mb-0 mb-sm-5 Res"
+      [ngClass]="{ 'panel-open': currentShopping === shopping && isPanelOpen }"
       [style.backgroundImage]="
         'url(' + (shopping.MainImage || 'assets/Images/skeltonImage.png') + ')'
       "
     >
-      <div class="card-header" (click)="isMobileView? openShoppingDetailsModal(shoppingDetailsModal, shopping):toggleDetails(i, shopping)">
+      <div
+        class="card-header"
+        (click)="
+          isMobileView ? openCustomPanel(shopping) : toggleDetails(i, shopping); $event.stopPropagation() "
+      >
         <div class="header-info Res">
           <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-          <span class="badge badge-danger mx-2" *ngIf="shopping.Deleted == true">Deleted</span>
+          <span class="badge badge-danger mx-2" *ngIf="shopping.Deleted == true"
+            >Deleted</span
+          >
 
           <p
             class="center-address shoppingcenterdata total"
@@ -83,14 +90,12 @@
               </ng-container>
             </div>
           </div>
-          <!-- Replace the expandable content with a button to open modal -->
+          <!-- Replace the expandable content with a button to open panel -->
           <p
-            *ngIf="isMobileView?1 :shopping.ShoppingCenter?.BuyBoxPlaces?.length"
-            class="see-more-btn d-sm-none d-flex"
-            (click)="
-              openShoppingDetailsModal(shoppingDetailsModal, shopping);
-              $event.stopPropagation()
+            *ngIf="
+              isMobileView ? 1 : shopping.ShoppingCenter?.BuyBoxPlaces?.length
             "
+            class="see-more-btn d-sm-none d-flex"
           >
             See More
           </p>
@@ -104,7 +109,11 @@
         </div>
       </div>
       <div class="card-image Res tiktok-imgg">
-        <div [ngClass]="{ 'image-shadow': showDetails[i] }" style="width: 100%">
+        <div
+          [ngClass]="{ 'image-shadow': showDetails[i],  }"
+          style="display: flex; justify-content: center"
+          [style.width]="isMobileView ? '100vw' : ''"
+        >
           <img
             class="Res"
             [src]="
@@ -201,7 +210,7 @@
 
           <span class="share"> Share </span>
         </button>
-        <div style="position: relative "class="d-none d-sm-flex">
+        <div style="position: relative" class="d-none d-sm-flex">
           <button
             style="
               background: #fff;
@@ -327,24 +336,32 @@
                     Street View
                   </a>
                 </li>
-                <li  *ngIf="shopping.Deleted != true"
-                  class="total"
-                >
+                <li *ngIf="shopping.Deleted != true" class="total">
                   <a
                     class="target"
                     (click)="
                       openDeleteShoppingCenterModal(
                         deleteSingleShoppingCenterModal,
                         shopping
-                      );toggleShortcuts(shopping.Id, 'close')
+                      );
+                      toggleShortcuts(shopping.Id, 'close')
                     "
                   >
                     <i class="fa-regular fa-trash-can big-text"></i>
                     Remove Shopping
                   </a>
                 </li>
-                <li  *ngIf="shopping.Deleted == true">
-                  <a class="target" (click)="RestoreShoppingCenter(shopping.MarketSurveyId,shopping.Deleted);toggleShortcuts(shopping.Id, 'close')">
+                <li *ngIf="shopping.Deleted == true">
+                  <a
+                    class="target"
+                    (click)="
+                      RestoreShoppingCenter(
+                        shopping.MarketSurveyId,
+                        shopping.Deleted
+                      );
+                      toggleShortcuts(shopping.Id, 'close')
+                    "
+                  >
                     <i class="fa-solid fa-trash-arrow-up big-text"></i>
                     Restore
                   </a>
@@ -454,15 +471,116 @@
   </div>
 </div>
 
-<div class="row mb-0 d-sm-none d-flex" style="justify-content: center; margin-top:0 !important;padding-bottom: 5px;">
-  <div class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center" style="width: auto;">
+<!-- Custom TikTok-style panel -->
+<div
+  class="tiktok-panel-overlay"
+  *ngIf="isPanelOpen"
+  (click)="closeCustomPanel()"
+></div>
+<div
+  class="tiktok-panel"
+  *ngIf="isPanelOpen"
+  (touchstart)="handlePanelTouchStart($event)"
+>
+  <div class="tiktok-panel-content" #panelContent>
+    <div class="tiktok-panel-handle"></div>
+
+    <div class="tiktok-panel-header">
+      <h4 class="modal-title">{{ currentShopping?.CenterName | titlecase }}</h4>
+    </div>
+
+    <div class="tiktok-panel-body">
+      <p class="center-address shoppingcenterdata total" style="color: #7a8591">
+        {{ currentShopping?.CenterAddress }},
+        {{ currentShopping?.CenterCity | titlecase }},
+        {{ currentShopping?.CenterState }}
+      </p>
+
+      <div>
+        <p
+          style="color: #7a8591"
+          class="getShoppingCenterr"
+          [innerHTML]="getShoppingCenterUnitSize(currentShopping)"
+        ></p>
+
+        <ng-container
+          *ngFor="
+            let item of currentShopping?.ShoppingCenter?.BuyBoxPlaces;
+            trackBy: trackByShoppingId
+          "
+        >
+          <div class="" style="color: #7a8591; padding: 0 !important">
+            <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
+            <img
+              class="logo"
+              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                item.RelationOrganizationId
+              }}"
+              [title]="item.RelationOrganizationName"
+              alt=""
+            />
+            <span> {{ item.RelationOrganizationName }}</span>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Shortcuts options for mobile -->
+      <div class="mobile-expanded-shortcuts" *ngIf="currentShopping">
+        <div
+          class="mobile-expanded-item"
+          *ngFor="let option of getMobileShortcutOptions(currentShopping)"
+        >
+          <i [class]="option.icon"></i>
+          <div
+            class="arrow justify-content-between"
+            style="display: flex; width: 100%"
+          >
+            <span (click)="option.action(currentShopping)">{{
+              option.label
+            }}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M5.94 13.78C5.81333 13.78 5.68667 13.7333 5.58667 13.6333C5.39333 13.44 5.39333 13.12 5.58667 12.9267L9.93333 8.58001C10.2533 8.26001 10.2533 7.74001 9.93333 7.42001L5.58667 3.07335C5.39333 2.88001 5.39333 2.56001 5.58667 2.36668C5.78 2.17335 6.1 2.17335 6.29333 2.36668L10.64 6.71335C10.98 7.05335 11.1733 7.51335 11.1733 8.00001C11.1733 8.48668 
+                10.9867 8.94668 10.64 9.28668L6.29333 13.6333C6.19333 13.7267 6.06667 13.78 5.94 13.78Z"
+                fill="#7A8591"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tiktok-panel-footer">
+      <button class="show-less-btn" (click)="closeCustomPanel()">
+        Show Less
+      </button>
+    </div>
+  </div>
+</div>
+
+<div
+  class="row mb-0 d-sm-none d-flex"
+  style="justify-content: center; margin-top: 0 !important; padding-bottom: 5px"
+>
+  <div
+    class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center"
+    style="width: auto"
+  >
     <div class="custom-icon-container">
       <div
         class="icon-option"
         *ngFor="let option of dropdowmOptions"
         (click)="selectOption(option)"
-        [class.selected]="selectedOption === option.status || selectedOption === option"
-        [ngClass]="{'hide-on-mobile': option.text === 'Side List View'}"
+        [class.selected]="
+          selectedOption === option.status || selectedOption === option
+        "
+        [ngClass]="{ 'hide-on-mobile': option.text === 'Side List View' }"
       >
         <img [src]="option.icon" [alt]="option.text" class="icon-image" />
       </div>
@@ -704,7 +822,6 @@
       Close
     </button>
   </div>
-  
 </ng-template>
 
 <ng-template #ShareLink let-modal>
@@ -876,10 +993,7 @@
               class="getShoppingCenterr"
               [innerHTML]="getShoppingCenterUnitSize(currentShopping)"
             ></p>
-            <div
-              class=""
-              style="color: #7a8591; padding: 0 !important;"
-            >
+            <div class="" style="color: #7a8591; padding: 0 !important">
               <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
 
               <img
@@ -907,9 +1021,10 @@
               class="arrow justify-content-between"
               style="display: flex; width: 100%"
             >
-              <span (click)="option.action(currentShopping)">{{
-                option.label
-              }}</span>
+              <span
+                (click)="handleOptionClick($event, option, currentShopping)"
+                >{{ option.label }}</span
+              >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
