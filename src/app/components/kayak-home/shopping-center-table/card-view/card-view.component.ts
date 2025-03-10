@@ -1,14 +1,5 @@
-// src/app/components/card-view/card-view.component.ts
-import {
-  Component,
-  OnInit,
-  Renderer2,
-  ChangeDetectorRef,
-  TemplateRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component,  OnInit, ChangeDetectorRef,  TemplateRef,  Output,  EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/models/domain';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
@@ -17,14 +8,13 @@ import { ShareOrg } from 'src/models/shareOrg';
 import { ViewManagerService } from 'src/app/services/view-manager.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BbPlace } from 'src/models/buyboxPlaces';
-import { PlacesService } from 'src/app/services/places.service';
 
 @Component({
   selector: 'app-card-view',
   templateUrl: './card-view.component.html',
   styleUrls: ['./card-view.component.css'],
 })
-export class CardViewComponent implements OnInit {
+export class CardViewComponent implements OnInit  {
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
@@ -68,21 +58,8 @@ export class CardViewComponent implements OnInit {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
-
-    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
+    
     this.loadData();
-
-    const selectedOption = this.dropdowmOptions.find(
-      (option: any) => option.status === Number.parseInt(this.currentView)
-    );
-
-    if (selectedOption) {
-      this.selectedOption = selectedOption.status;
-    }
-  }
-  
-  get dropdowmOptions() {
-    return this.viewManager.dropdowmOptions;
   }
 
   async loadData() {
@@ -101,21 +78,6 @@ export class CardViewComponent implements OnInit {
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
     } catch (error) {
       console.error('Error loading data:', error);
-    }
-  }
-
-  async refreshShoppingCenters() {
-    try {
-      this.spinner.show();
-      this.shoppingCenters = await this.viewManager.getShoppingCenters(
-        this.BuyBoxId
-      );
-      this.buyboxPlaces = await this.viewManager.getBuyBoxPlaces(this.BuyBoxId);
-      this.showbackIds = [];
-    } catch (error) {
-      console.error('Error refreshing shopping centers:', error);
-    } finally {
-      this.spinner.hide();
     }
   }
 
@@ -229,7 +191,6 @@ export class CardViewComponent implements OnInit {
           this.shoppingCenterIdToDelete
         );
         this.modalService.dismissAll();
-        // await this.refreshShoppingCenters();
       } catch (error) {
         console.error('Error deleting shopping center:', error);
       } finally {
@@ -261,7 +222,7 @@ export class CardViewComponent implements OnInit {
       this.selectedIdCard = null;
       document.removeEventListener('click', this.outsideClickHandler);
     }
-  };
+  }
 
   toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
     event?.stopPropagation();
@@ -277,29 +238,26 @@ export class CardViewComponent implements OnInit {
     }
   }
 
-  selectOption(option: any): void {
-    this.viewChange.emit(option.status)
-  }
-
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
     if (close === 'close') {
+      this.selectedIdCard = null;
       this.selectedId = null;
       return;
     }
-
+  
     const targetElement = event?.target as HTMLElement;
     const rect = targetElement?.getBoundingClientRect();
-
+  
     const shortcutsIcon = document.querySelector(
       '.shortcuts_icon'
     ) as HTMLElement;
-
+  
     if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight
-        }px`;
+      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
-
+  
+    this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
   }
 }
