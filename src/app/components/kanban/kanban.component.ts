@@ -148,20 +148,31 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   GetKanbanDetails(kanban: Kanban) {
-    this.selectedKanban = kanban
-    this.isPollingActive = true
-
-    // Initial load
-    this.fetchKanbanDetails()
-
+    // Show loading indicator
+    this.isLoading = true;
+    
+    // Clear previous data and subscription
+    this.kanbanList = [];
+    this.filteredKanbanList = [];
+    
+    // Unsubscribe from previous polling if active
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+    
+    this.selectedKanban = kanban;
+    this.isPollingActive = true;
+  
+    // Initial load with fresh state
+    this.fetchKanbanDetails();
+  
     // Set up polling for new stages and organizations
     this.pollingSubscription = interval(30000) // Poll every 30 seconds
       .pipe(takeWhile(() => this.isPollingActive))
       .subscribe(() => {
-        this.checkForNewStagesAndOrganizations()
-      })
+        this.checkForNewStagesAndOrganizations();
+      });
   }
-
   GetStageActions(stage: KanbanStage): any {
     const body: any = {
       Name: "GetStageActions",
