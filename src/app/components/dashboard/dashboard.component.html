@@ -28,7 +28,12 @@
               </td>
               <td>{{ tenant.stageName }}</td>
               <td>
-                <button class="kanban-button" [routerLink]="['/Kanban', tenant.kanbanid]">View Kanban</button>
+                <button
+                  class="kanban-button"
+                  [routerLink]="['/Kanban', tenant.kanbanid]"
+                >
+                  View Kanban
+                </button>
               </td>
             </tr>
           </tbody>
@@ -65,7 +70,12 @@
               </td>
               <td>{{ buyBox.stageName }}</td>
               <td>
-                <button class="kanban-button" [routerLink]="['/Kanban', buyBox.kanbanid]">View Kanban</button>
+                <button
+                  class="kanban-button"
+                  [routerLink]="['/Kanban', buyBox.kanbanid]"
+                >
+                  View Kanban
+                </button>
               </td>
             </tr>
           </tbody>
@@ -73,7 +83,7 @@
       </div>
     </div>
 
-    <div class="w-100 dashboard-sub-container">
+    <!-- <div class="w-100 dashboard-sub-container">
       <div class="dashboard-item-container emails-container">
         <div class="d-flex align-items-center justify-content-between w-100">
           <span class="container-title">Received Emails</span>
@@ -305,7 +315,7 @@
           </ng-container>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 
