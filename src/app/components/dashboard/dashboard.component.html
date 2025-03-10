@@ -45,7 +45,16 @@
       <div
         class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
       >
-        <table *ngIf="buyBoxes.length > 0" class="table">
+        <div class="d-flex justify-content-start w-100 p-2">
+          <input
+            type="text"
+            class="form-control w-100"
+            placeholder="Filter by name"
+            (input)="onBuyBoxSearchChange($event)"
+          />
+        </div>
+
+        <table *ngIf="filterBuyBoxes.length > 0" class="table">
           <thead class="thead-light">
             <tr>
               <th>Name</th>
@@ -54,8 +63,8 @@
               <th>Action</th>
             </tr>
           </thead>
-          <tbody *ngIf="buyBoxes.length > 0">
-            <tr *ngFor="let buyBox of buyBoxes; let index = index">
+          <tbody *ngIf="filterBuyBoxes.length > 0">
+            <tr *ngFor="let buyBox of filterBuyBoxes; let index = index">
               <td>{{ buyBox.buyBoxName }}</td>
               <td>
                 <div class="d-flex align-items-center gap-2">
