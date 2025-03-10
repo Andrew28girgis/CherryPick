@@ -847,6 +847,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
               }
             });
           });
+          
           this.lastKnownStageCount =
             this.kanbanList[0]?.kanbanStages?.length || 0;
         }
