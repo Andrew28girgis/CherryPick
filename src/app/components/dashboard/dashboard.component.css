@@ -17,7 +17,7 @@
 .dashboard-container {
   padding: 1rem;
   height: 100%;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .dashboard-sub-container {
@@ -43,6 +43,19 @@
   width: 49.25%;
 }
 
+.tenants-container,
+.buyBoxes-container {
+  max-height: 50vh;
+}
+
+.emails-container,
+.comments-container {
+  max-height: 75vh;
+}
+
+.emails-container {
+  height: 75vh;
+}
 .container-title {
   font-size: 1rem;
   font-weight: 500;
@@ -127,6 +140,7 @@
 }
 .comments-container {
   gap: 0;
+  height: 75vh;
 }
 .comment-card {
   width: 100%;
@@ -148,6 +162,21 @@
 .comment-content {
   color: #707791;
   text-align: justify;
+}
+
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+  margin: 0;
+}
+
+.table thead th {
+  border: 1px solid #dee2e6;
+}
+
+.table tbody td {
+  border: 1px solid #dee2e6;
 }
 
 @media only screen and (max-width: 768px) {

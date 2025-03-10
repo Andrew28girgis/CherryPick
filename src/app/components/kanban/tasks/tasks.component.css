@@ -102,10 +102,7 @@ border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #001F3F);
 background: var(--Button-Secondary-BG, #FFF);
 }
 
-.edit-btn:hover:not(:disabled) {
-  /* border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #000305); */
-}
-
+ 
 .delete-btn {
   display: flex;
   height: 48px;
@@ -370,7 +367,7 @@ th input[type="checkbox"]:checked::after {
   text-align: center;
   
   /* Body/16/30/Medium */
-  font-family: "Montserrat", sans-serif;
+  
   
   font-size: 16px;
   font-style: normal;

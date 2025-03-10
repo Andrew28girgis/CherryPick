@@ -282,7 +282,7 @@ th input[type="checkbox"]:checked {
   text-align: center;
 
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -301,7 +301,7 @@ th input[type="checkbox"]:checked {
   text-align: center;
 
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -320,7 +320,7 @@ th input[type="checkbox"]:checked {
   text-align: center;
 
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -401,7 +401,7 @@ th input[type="checkbox"]:checked {
   text-align: center;
 
   /* Body/16/30/Medium */
-  font-family: "Montserrat", sans-serif;
+  
 
   font-size: 16px;
   font-style: normal;
@@ -497,7 +497,7 @@ th input[type="checkbox"]:checked {
   color: var(--Table-Info-Cell-Color, #7A8591);
 
 /* Body/16/30/Regular */
-font-family: Montserrat;
+
 font-size: 16px;
 font-style: normal;
 font-weight: 400;
