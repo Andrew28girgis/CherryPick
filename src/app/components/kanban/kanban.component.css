@@ -47,7 +47,6 @@
   max-height: none;
   overflow: hidden;
   min-width: 250px;
-
 }
 
 .card::-webkit-scrollbar {
@@ -64,8 +63,7 @@
 }
 
 .stage-name {
-  
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 24px;
@@ -118,13 +116,12 @@
 
 .broker-name {
   cursor: pointer;
-  
+
   font-weight: bold;
   white-space: nowrap;
 }
 
 .brokerrr {
-  
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
   /* Body/14/24/Regular */
@@ -182,7 +179,6 @@
   text-align: center;
 
   /* Body/16/30/Medium */
-  
 
   font-size: 16px;
   font-style: normal;
@@ -248,7 +244,6 @@
   font-style: normal;
   font-weight: 500;
   line-height: 30px; /* 187.5% */
-  
 }
 
 .filter-tab.active {
@@ -334,7 +329,7 @@
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
   align-self: stretch;
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -376,13 +371,11 @@
 .kanban-card:hover::before {
   opacity: 1;
   /* cursor: grab; */
-
 }
 
 /* .kanban-card:hover {
   /* transform: translateY(-4px) scale(1.02); */
-  /* box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12); */
-  
+/* box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12); */
 
 .kanban-card:active {
   /* cursor: grabbing; */
@@ -501,7 +494,7 @@
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
   /* Body/14/24/Regular */
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -513,7 +506,7 @@
   color: var(--Body-Heading-Color, #0c0d0e);
 
   /* Body/16/30/SemiBold */
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -639,7 +632,7 @@
 } */
 
 .sidebar-collapsed .main-content {
-  margin-left: 4rem;
+  /* margin-left: 4rem; */
 }
 .sidebar {
   width: 2px;
@@ -651,7 +644,7 @@
 
 .main-content {
   flex: 1;
-  margin-left: 16.6667%;
+  /* margin-left: 16.6667%; */
   transition: margin-left 0.3s ease;
   overflow: hidden;
   /* height: 770px; */
@@ -774,7 +767,7 @@
 
   /* .main-content {
     /* margin-left: var(--sidebar-collapsed-width); */
-  /* } */ 
+  /* } */
 
   .kanban-wrap {
     padding: 16px;
@@ -865,7 +858,6 @@
   transform: scale(1.05);
   transition: all 0.2s var(--transition-bezier);
   /* cursor: grab; */
-
 }
 
 .cdk-drag-placeholder {
@@ -894,8 +886,7 @@
   /* overflow: hidden; */
   /* cursor: pointer; */
   margin-bottom: 1rem;
-  width:fit-content
-
+  width: fit-content;
 }
 
 /* .kanban-ca:hover {
@@ -928,7 +919,6 @@
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-
 }
 
 .stakeholder-name {
@@ -946,7 +936,7 @@
 
 .card-content {
   max-height: 0;
-  overflow: hidden; 
+  overflow: hidden;
   transition: max-height 0.3s ease;
 }
 
@@ -959,7 +949,6 @@
   flex-wrap: wrap;
   gap: 0.5rem;
   padding-top: 1rem;
-  
 }
 
 .org-item {
@@ -977,8 +966,6 @@
   transition: all 0.3s ease;
   cursor: pointer;
 }
-
-
 
 .connection-icon {
   color: #64748b;
@@ -1007,8 +994,6 @@
     margin-bottom: 1rem;
   }
 }
-
-
 
 /* Responsive adjustments */
 /* @media (max-width: 768px) {
@@ -1089,7 +1074,6 @@
   /* min-height: 100%; */
   height: calc(100vh - 2rem); /* Set a fixed height based on viewport */
   max-height: 650px;
-
 }
 
 table {
@@ -1098,7 +1082,6 @@ table {
   border-spacing: 0;
   background: white;
   height: auto;
-
 }
 
 th,
@@ -1144,11 +1127,11 @@ tr:last-child td {
 }
 
 .card {
-/* padding: 8px; */
+  /* padding: 8px; */
   /* height: fit-content;
    */
-   min-height:500px;
-   /* padding-bottom: 200px; */
+  min-height: 500px;
+  /* padding-bottom: 200px; */
   background: #fff;
   /* min-width: 250px; */
 
@@ -1185,20 +1168,13 @@ td {
   padding: 0;
 } */
 
-
-
-.input{
+.input {
   width: 350px;
 }
 
-.sk{
+.sk {
   justify-content: space-between;
 }
-
-
-
-
-
 
 .table-container::-webkit-scrollbar {
   width: 8px;
@@ -1245,7 +1221,8 @@ td {
   max-width: 900px;
   margin: 0 auto;
   animation: fadeIn 0.3s ease-in-out;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
 }
 
 .modal-header {
@@ -1404,8 +1381,6 @@ td {
   min-height: 100px;
 }
 
-
-
 .custom-tooltip {
   z-index: 50;
   pointer-events: none;
@@ -1418,41 +1393,58 @@ td {
 
 /* Optional: Add a subtle shadow */
 .custom-tooltip {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-  .card-move-right {
-    animation: moveRight 0.5s ease-out;
-  }
+.card-move-right {
+  animation: moveRight 0.5s ease-out;
+}
 
-  .card-move-left {
-    animation: moveLeft 0.5s ease-out;
-  }
+.card-move-left {
+  animation: moveLeft 0.5s ease-out;
+}
 
-  .card-appear {
-    animation: appear 0.5s ease-out;
-  }
-  .listtt{
-    max-height: 350px; 
-    overflow-y: auto
-  }
-  .total{
-    cursor: pointer;
-  }
+.card-appear {
+  animation: appear 0.5s ease-out;
+}
+.listtt {
+  max-height: 350px;
+  overflow-y: auto;
+}
+.total {
+  cursor: pointer;
+}
 
-  @keyframes moveRight {
-    from { transform: translateX(0); }
-    to { transform: translateX(100%); }
+@keyframes moveRight {
+  from {
+    transform: translateX(0);
   }
-
-  @keyframes moveLeft {
-    from { transform: translateX(0); }
-    to { transform: translateX(-100%); }
+  to {
+    transform: translateX(100%);
   }
+}
 
-  @keyframes appear {
-    from { opacity: 0; transform: translateX(-100%); }
-    to { opacity: 1; transform: translateX(0); }
+@keyframes moveLeft {
+  from {
+    transform: translateX(0);
   }
+  to {
+    transform: translateX(-100%);
+  }
+}
 
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
+.clients {
+  flex-direction: column;
+  display: flex;
+}

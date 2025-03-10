@@ -5,15 +5,9 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../components/header/header.component';
 
 @NgModule({
-  declarations: [    HeaderComponent,
-  ], 
+  declarations: [HeaderComponent],
 
-  imports: [
-    CommonModule,
-    FormsModule, 
-    RouterModule,
-    ReactiveFormsModule
-  ],
-  exports: [HeaderComponent]
+  imports: [CommonModule, FormsModule, RouterModule, ReactiveFormsModule],
+  exports: [HeaderComponent],
 })
 export class SharedModule {}

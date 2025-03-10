@@ -3,9 +3,7 @@ import  { ActivatedRoute, Router } from "@angular/router"
 import  { PlacesService } from "src/app/services/places.service"
 import  { NgxSpinnerService } from "ngx-spinner"
 import  { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap"
-import { SidebarComponent } from "./sidebar/sidebar.component"
 import { FilterPanelComponent } from "./filter-panel/filter-panel.component"
-import { Fbo } from "src/models/domain"
 import {  CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop"
 import  { Kanban } from "src/models/userKanban"
 import {
@@ -17,12 +15,11 @@ import {
   LeadBroker,
 } from "src/models/kanbans"
 import { General } from "src/models/domain"
-import { FormArray,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
+import {  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 import  { KanbanTemplate } from "src/models/kanbanTemplates"
 import  { KanbanAction } from "src/models/kanbanActions"
 import  { OrganizationContact } from "src/models/Organiztions"
 import  { ToastrService } from "ngx-toastr"
-import { retry, finalize } from "rxjs/operators"
 import { interval,  Subscription } from "rxjs"
 import { takeWhile } from "rxjs/operators"
 
@@ -151,20 +148,31 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   GetKanbanDetails(kanban: Kanban) {
-    this.selectedKanban = kanban
-    this.isPollingActive = true
-
-    // Initial load
-    this.fetchKanbanDetails()
-
+    // Show loading indicator
+    this.isLoading = true;
+    
+    // Clear previous data and subscription
+    this.kanbanList = [];
+    this.filteredKanbanList = [];
+    
+    // Unsubscribe from previous polling if active
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+    
+    this.selectedKanban = kanban;
+    this.isPollingActive = true;
+  
+    // Initial load with fresh state
+    this.fetchKanbanDetails();
+  
     // Set up polling for new stages and organizations
     this.pollingSubscription = interval(30000) // Poll every 30 seconds
       .pipe(takeWhile(() => this.isPollingActive))
       .subscribe(() => {
-        this.checkForNewStagesAndOrganizations()
-      })
+        this.checkForNewStagesAndOrganizations();
+      });
   }
-
   GetStageActions(stage: KanbanStage): any {
     const body: any = {
       Name: "GetStageActions",

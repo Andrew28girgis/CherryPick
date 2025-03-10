@@ -15,8 +15,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
-import { KanbanComponent } from './components/kanban/kanban.component';
-import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
+import { KanbanComponent } from './components/kanban/kanban.component'; 
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component';
 import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
 import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
@@ -96,8 +95,7 @@ const loginRequest = {
     HomeComponent,
     LandingComponent,
     SummeryComponent,
-    KanbanComponent,
-    KanbanHomeComponent,
+    KanbanComponent, 
     SidebarComponent,
     FilterPanelComponent,
     EditPopupComponent,

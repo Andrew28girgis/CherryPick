@@ -24,13 +24,5 @@ export class AppComponent {
         this.router.url.startsWith('/landing')
       );
     });
-
-    const domain = window.location.href;
-    const config = getDomainConfig(domain);
-    this.logoUrl = config.logo;
-    this.color = config.color;
-    document.documentElement.style.setProperty('--app-color', this.color);
-    this.fontFamily = config.fontFamily;
-    document.documentElement.style.setProperty('--app-font', this.fontFamily);
   }
 }
