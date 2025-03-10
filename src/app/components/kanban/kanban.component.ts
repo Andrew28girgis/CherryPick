@@ -835,11 +835,18 @@ export class KanbanComponent implements OnInit, OnDestroy {
           }));
           this.kanbanList = filteredData;
           this.filteredKanbanList = [...this.kanbanList];
-          console.log(`xx`);
-          
-          console.log(this.filteredKanbanList);
-          
-          
+
+          this.filteredKanbanList.forEach(kanban => {
+            kanban.kanbanStages.forEach(stage => {
+              if (stage.kanbanOrganizations && stage.kanbanOrganizations.length > 0) {
+                stage.kanbanOrganizations.sort((a:any, b:any) => {
+                  const nameA = a.Organization[0].Name.toLowerCase();
+                  const nameB = b.Organization[0].Name.toLowerCase();
+                  return nameA.localeCompare(nameB);
+                });
+              }
+            });
+          });
           this.lastKnownStageCount =
             this.kanbanList[0]?.kanbanStages?.length || 0;
         }
