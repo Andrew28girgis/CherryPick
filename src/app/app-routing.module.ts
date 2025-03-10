@@ -9,7 +9,7 @@ import { KanbanComponent } from './components/kanban/kanban.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
 import { TasksComponent } from './components/kanban/tasks/tasks.component';
- import { PropertiesComponent } from './components/kanban/properties/properties.component';
+import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
