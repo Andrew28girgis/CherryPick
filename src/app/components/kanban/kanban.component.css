@@ -1,3 +1,18 @@
+::ng-deep .my-container {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+::ng-deep .sub-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+.page-layout {
+  height: 100%;
+  overflow-y: hidden;
+}
 .kanban-wrap {
   /* padding-left: 32px; */
   /* overflow-x: auto; */
@@ -8,13 +23,33 @@
   margin-bottom: 30px;
 }
 
-.main-content {
-  padding: 0;
-  flex: 1;
-  /* padding: 24px; */
-  overflow: hidden;
-  background-color: #f8f9fa;
+.kanbans-container {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
 }
+
+.kanbans-container ul {
+  height: 100%;
+  list-style: none;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+.kanban-item {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  color: #707791;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kanban-active-item {
+  background-color: #b8c1e1;
+  /* border: 1px solid #2e3d6c; */
+  color: #4d65b4;
+  font-weight: 400;
+}
+
 .kanban-wrap .row {
   display: flex;
   flex-wrap: nowrap;
@@ -329,7 +364,7 @@
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
   align-self: stretch;
   /* Body/14/24/Regular */
-  
+
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -494,7 +529,7 @@
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
 
   /* Body/14/24/Regular */
-  
+
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -506,7 +541,7 @@
   color: var(--Body-Heading-Color, #0c0d0e);
 
   /* Body/16/30/SemiBold */
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -604,7 +639,6 @@
   white-space: pre-wrap;
 }
 
-
 .ccs.active {
   background-color: #d3d3d3;
 }
@@ -612,9 +646,6 @@
   colo
 } */
 
-.sidebar-collapsed .main-content {
-  /* margin-left: 4rem; */
-}
 .sidebar {
   width: 2px;
   max-width: 280px;
@@ -633,6 +664,13 @@
 
 /* Mobile styles (up to 768px) */
 @media (max-width: 768px) {
+  .page-layout {
+    overflow-y: auto;
+  }
+  .table-container {
+    margin-left: 0 !important;
+    margin-top: 0.5rem;
+  }
   .sidebar {
     width: 0;
     /* visibility: hidden; */
@@ -1041,7 +1079,8 @@
 .table-container {
   background: var(--glass-bg);
   border-radius: 12px;
-  margin: 1rem;
+  margin-left: 0.5rem;
+  /* margin: 1rem; */
   overflow: auto; /* Enable scrolling */
   background: #fff;
   box-shadow: var(--glass-shadow);
@@ -1429,6 +1468,6 @@ td {
   display: flex;
 }
 
-.kanban-wrap{
+.kanban-wrap {
   background-color: #fff;
 }

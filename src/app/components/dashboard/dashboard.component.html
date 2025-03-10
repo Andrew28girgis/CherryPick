@@ -28,7 +28,7 @@
               </td>
               <td>{{ tenant.stageName }}</td>
               <td>
-                <a [routerLink]="['/Kanban', tenant.kanbanid]">View Kanban</a>
+                <button class="kanban-button" [routerLink]="['/Kanban', tenant.kanbanid]">View Kanban</button>
               </td>
             </tr>
           </tbody>
@@ -65,7 +65,7 @@
               </td>
               <td>{{ buyBox.stageName }}</td>
               <td>
-                <a [routerLink]="['/Kanban', buyBox.kanbanid]">View Kanban</a>
+                <button class="kanban-button" [routerLink]="['/Kanban', buyBox.kanbanid]">View Kanban</button>
               </td>
             </tr>
           </tbody>
