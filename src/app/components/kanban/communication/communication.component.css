@@ -563,7 +563,6 @@ height: 216.267px;
   margin: 8px 0 0 0;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   max-width: 100%;
@@ -826,9 +825,7 @@ height: 216.267px;
   background-color: #f0f9ff;
   border-left: 3px solid #0ea5e9;
 }
-.call-item.missed {
-  /* background-color: #fef2f2; */
-}
+
 
 .avatar {
   position: relative;
@@ -1483,9 +1480,7 @@ height: 216.267px;
     flex-direction: column;
   }
 
-  .call-list {
-    /* max-height: 400px; */
-  }
+
 }
 
 @media (max-width: 768px) {
