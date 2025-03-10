@@ -28,7 +28,12 @@
               </td>
               <td>{{ tenant.stageName }}</td>
               <td>
-                <a [routerLink]="['/Kanban', tenant.kanbanid]">View Kanban</a>
+                <button
+                  class="kanban-button"
+                  [routerLink]="['/Kanban', tenant.kanbanid]"
+                >
+                  View Kanban
+                </button>
               </td>
             </tr>
           </tbody>
@@ -43,7 +48,16 @@
       <div
         class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
       >
-        <table *ngIf="buyBoxes.length > 0" class="table">
+        <div class="d-flex justify-content-start w-100 p-2">
+          <input
+            type="text"
+            class="form-control w-100"
+            placeholder="Filter by name"
+            (input)="onBuyBoxSearchChange($event)"
+          />
+        </div>
+
+        <table *ngIf="filterBuyBoxes.length > 0" class="table">
           <thead class="thead-light">
             <tr>
               <th>Name</th>
@@ -52,8 +66,8 @@
               <th>Action</th>
             </tr>
           </thead>
-          <tbody *ngIf="buyBoxes.length > 0">
-            <tr *ngFor="let buyBox of buyBoxes; let index = index">
+          <tbody *ngIf="filterBuyBoxes.length > 0">
+            <tr *ngFor="let buyBox of filterBuyBoxes; let index = index">
               <td>{{ buyBox.buyBoxName }}</td>
               <td>
                 <div class="d-flex align-items-center gap-2">
@@ -65,7 +79,12 @@
               </td>
               <td>{{ buyBox.stageName }}</td>
               <td>
-                <a [routerLink]="['/Kanban', buyBox.kanbanid]">View Kanban</a>
+                <button
+                  class="kanban-button"
+                  [routerLink]="['/Kanban', buyBox.kanbanid]"
+                >
+                  View Kanban
+                </button>
               </td>
             </tr>
           </tbody>
@@ -73,7 +92,7 @@
       </div>
     </div>
 
-    <div class="w-100 dashboard-sub-container">
+    <!-- <div class="w-100 dashboard-sub-container">
       <div class="dashboard-item-container emails-container">
         <div class="d-flex align-items-center justify-content-between w-100">
           <span class="container-title">Received Emails</span>
@@ -305,7 +324,7 @@
           </ng-container>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 

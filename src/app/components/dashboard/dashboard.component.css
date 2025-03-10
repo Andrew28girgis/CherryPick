@@ -43,9 +43,17 @@
   width: 49.25%;
 }
 
-.tenants-container,
+/* .tenants-container,
 .buyBoxes-container {
   max-height: 50vh;
+} */
+
+.kanban-button {
+  border: none;
+  background-color: #4d65b4;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
 }
 
 .emails-container,

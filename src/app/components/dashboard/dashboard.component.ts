@@ -20,6 +20,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   userComments: IUserComment[] = [];
   tenants: IDashboardTenant[] = [];
   buyBoxes: IDashboardBuyBox[] = [];
+  filterBuyBoxes: IDashboardBuyBox[] = [];
   selectedEmailBody: string = '';
 
   constructor(
@@ -103,6 +104,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.spinner.hide();
         if (response && response.json && response.json.length > 0) {
           this.buyBoxes = response.json;
+          this.filterBuyBoxes = response.json;
         }
       },
       error: (error: any) => {
@@ -156,6 +158,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   openEmailBodyModal(content: TemplateRef<any>, body: string): void {
     this.selectedEmailBody = body;
     this.modalService.open(content, { centered: true, scrollable: true });
+  }
+
+  onBuyBoxSearchChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    if (value.trim().length > 0) {
+      this.filterBuyBoxes = this.buyBoxes.filter((b) =>
+        b.buyBoxName.toLowerCase().includes(value.toLowerCase())
+      );
+    } else {
+      this.filterBuyBoxes = [...this.buyBoxes];
+    }
   }
 
   ngOnDestroy(): void {

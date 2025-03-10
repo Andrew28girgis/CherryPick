@@ -125,7 +125,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
       if (id) {
         const fetchingKanbanDetailsInterval = setInterval(() => {
           if (this.userKanbans && this.userKanbans.length > 0) {
-            this.activeKanbanId = +id;
             clearInterval(fetchingKanbanDetailsInterval);
             this.GetKanbanDetailsWithId(+id);
           }
@@ -137,7 +136,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.GetUserKanbans();
     this.GetAllStakeHolders();
     this.loadProperties();
-    this.userKanbans.forEach((kanban) => (kanban.isCollapsed = false));
 
     // Load saved sidebar state
     const savedState = localStorage.getItem('sidebarCollapsed');
@@ -155,6 +153,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.userKanbans = data.json;
+        this.userKanbans.forEach((kanban) => (kanban.isCollapsed = false));
       },
     });
   }
@@ -178,6 +177,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   GetKanbanDetailsWithId(id: number) {
     // Show loading indicator
+
     this.isLoading = true;
 
     // Clear previous data and subscription
@@ -188,10 +188,13 @@ export class KanbanComponent implements OnInit, OnDestroy {
     if (this.pollingSubscription) {
       this.pollingSubscription.unsubscribe();
     }
-    const kanban = this.userKanbans.find((k) => (k.Id = id));
+    const kanban = this.userKanbans.find((k) => k.Id == id);
     console.log(kanban);
 
     if (kanban) {
+      this.activeKanbanId = kanban.Id;
+      console.log(kanban.Id);
+
       this.selectedKanban = kanban;
       this.isPollingActive = true;
 
