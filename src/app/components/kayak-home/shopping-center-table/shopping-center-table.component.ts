@@ -40,6 +40,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       status: 5,
     },
   ];
+option: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,

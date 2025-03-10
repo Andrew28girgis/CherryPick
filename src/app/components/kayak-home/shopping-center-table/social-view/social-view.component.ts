@@ -45,10 +45,18 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
   @ViewChild('StreetViewPlace', { static: true })
-  @Output() viewChange = new EventEmitter<number>()
+  @Output()
+  viewChange = new EventEmitter<number>();
 
+  isPanelOpen = false;
+  currentShopping: any = null;
+  panelStartY = 0;
+  panelCurrentY = 0;
+  readonly PANEL_SWIPE_THRESHOLD = 100;
+  documentTouchMoveListener: Function | null = null;
+  documentTouchEndListener: Function | null = null;
+  isMobileView = false;
   StreetViewPlace!: TemplateRef<any>;
-
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
@@ -95,9 +103,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteShoppingCenterModal!: TemplateRef<any>;
   buyboxPlaces: BbPlace[] = [];
   showbackIds: number[] = [];
-  currentShopping: any = null;
   mapsLoaded = false;
-  isMobileView = false;
+
   private touchStartX = 0;
   private touchEndX = 0;
   private readonly SWIPE_THRESHOLD = 50;
@@ -105,7 +112,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private isOptionSelected = false;
   private categoryNameCache = new Map<number, string>();
   private unitSizeCache = new Map<string, string>();
-  
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -153,6 +159,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.mapsLoaded = true;
       this.cdr.markForCheck();
     }, 2000);
+
+    window.addEventListener('resize', this.checkMobileView.bind(this));
   }
 
   async initializeData() {
@@ -176,7 +184,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           }),
           finalize(() => {
             this.spinner.hide();
-            this.cdr.markForCheck(); 
+            this.cdr.markForCheck();
           })
         )
         .subscribe((result) => {
@@ -236,6 +244,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.clickTimeout) {
       clearTimeout(this.clickTimeout);
     }
+    window.removeEventListener('resize', this.checkMobileView.bind(this));
+
+    // Make sure to clean up any panel listeners
+    this.removeGlobalTouchListeners();
+
+    // Ensure body class is removed
+    document.body.classList.remove('panel-open');
   }
 
   hideAllComments(): void {
@@ -499,7 +514,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => { },
+      next: (response: any) => {},
       error: (error) => {
         if (!isLiked) {
         } else {
@@ -520,8 +535,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectOption(option: any): void {
-    this.selectedOption = option.status
-    this.viewChange.emit(option.status)
+    this.selectedOption = option.status;
+    this.viewChange.emit(option.status);
   }
 
   toggleShortcutsCard(id: number | null): void {
@@ -919,91 +934,16 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  getMobileShortcutOptions(shopping: any): any[] {
-    return [
-      {
-        label: 'Emily',
-        icon: 'fa-regular fa-envelope big-text',
-        action: (item: any) => {
-          this.isOptionSelected = true;
-          window.open(
-            `/emily/${this.BuyBoxId}/${item.ShoppingCenter.ManagerOrganization[0].ID}/${item.Id}`,
-            '_blank'
-          );
-        },
-      },
-      {
-        label: 'View Gallery',
-        icon: 'fa-solid fa-images big-text',
-        action: (item: any) => {
-          this.isOptionSelected = true;
-          this.openGallery(item.Id);
-        },
-      },
-      {
-        label: 'View Details',
-        icon: 'fa-solid fa-file-lines big-text',
-        action: (item: any) => {
-          this.isOptionSelected = true;
-          this.router.navigate([
-            '/landing',
-            item.ShoppingCenter.Places ? item.ShoppingCenter.Places[0].Id : 0,
-            item.Id,
-            this.BuyBoxId,
-          ]);
-        },
-      },
-      {
-        label: 'View Location',
-        icon: 'fa-solid fa-map-location-dot big-text',
-        action: (item: any) => {
-          this.isOptionSelected = true;
-          this.openMapViewPlace(this.MapViewPlace, item);
-        },
-      },
-      {
-        label: 'Street View',
-        icon: 'fa-solid fa-street-view big-text',
-        action: (item: any) => {
-          this.isOptionSelected = true;
-          this.openStreetViewPlace(this.StreetViewPlace, item);
-        },
-      },
-    ];
-  }
-
-  openShoppingDetailsModal(modal: any, shopping: any) {
-    this.currentShopping = shopping;
-    this.modalService
-      .open(modal, {
-        windowClass: 'tiktok-modal',
-        size: 'xl',
-        animation: true,
-        centered: true,
-        scrollable: true,
-        backdrop: true,
-        keyboard: true,
-        backdropClass: 'tiktok-backdrop',
-      })
-      .result.then(
-        (result) => {
-          this.currentShopping = null;
-        },
-        (reason) => {
-          this.currentShopping = null;
-        }
-      );
-  }
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkMobileView();
   }
 
-  checkMobileView() {
-    this.isMobileView = window.innerWidth <= 768;
-  }
+  // checkMobileView() {
+  //   this.isMobileView = window.innerWidth <= 768;
+  // }
 
-  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
+  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean) {
     this.spinner.show();
 
     const body: any = {
@@ -1018,14 +958,14 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
         const marketSurveyIdNum = Number(MarketSurveyId);
-      
-        this.shoppingCenters = this.shoppingCenters.map(center => {
+
+        this.shoppingCenters = this.shoppingCenters.map((center) => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
           return center;
         });
-        
+
         this.cdr.markForCheck();
         this.spinner.hide();
       },
@@ -1035,10 +975,14 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   async refreshShoppingCenters() {
     try {
       this.spinner.show();
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
-      console.log('this.shoppingCenters',this.shoppingCenters);
-      
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
+        this.BuyBoxId
+      );
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
+        this.BuyBoxId
+      );
+      console.log('this.shoppingCenters', this.shoppingCenters);
+
       this.showbackIds = [];
     } catch (error) {
       console.error('Error refreshing shopping centers:', error);
@@ -1047,4 +991,254 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  @ViewChild('panelContent') panelContent!: ElementRef;
+
+  // Check if we're on mobile
+  checkMobileView(): void {
+    this.isMobileView = window.innerWidth <= 768;
+    this.cdr.detectChanges();
+  }
+
+  // TikTok-style panel methods
+  openCustomPanel(shopping: any): void {
+    this.currentShopping = shopping;
+    this.isPanelOpen = true;
+    this.cdr.markForCheck();
+
+    document.body.classList.add('panel-open');
+
+      this.renderer.listen('document', 'click', (event: Event) => {
+        const panelElement = this.panelContent?.nativeElement;
+        if (
+          panelElement &&
+          !panelElement.contains(event.target) &&
+          this.isPanelOpen
+        ) {
+          this.closeCustomPanel();
+        }
+      });
+
+  }
+
+  closeCustomPanel(): void {
+    // Remove class from body
+    document.body.classList.remove('panel-open');
+
+    // Animate panel closing
+    if (this.panelContent) {
+      this.renderer.setStyle(
+        this.panelContent.nativeElement,
+        'transform',
+        'translateY(100%)'
+      );
+      this.renderer.setStyle(
+        this.panelContent.nativeElement,
+        'transition',
+        'transform 0.3s ease-out'
+      );
+
+        this.isPanelOpen = false;
+        this.currentShopping = null;
+        this.cdr.markForCheck();
+    } else {
+      this.isPanelOpen = false;
+      this.currentShopping = null;
+      this.cdr.markForCheck();
+    }
+
+    this.removeGlobalTouchListeners();
+  }
+
+  handlePanelTouchStart(event: TouchEvent): void {
+    this.panelStartY = event.touches[0].clientY;
+    this.panelCurrentY = this.panelStartY;
+
+    // Add global touch move and end listeners
+    this.documentTouchMoveListener = this.renderer.listen(
+      'document',
+      'touchmove',
+      (e: TouchEvent) => {
+        this.handlePanelTouchMove(e);
+      }
+    );
+
+    this.documentTouchEndListener = this.renderer.listen(
+      'document',
+      'touchend',
+      (e: TouchEvent) => {
+        this.handlePanelTouchEnd(e);
+      }
+    );
+  }
+
+  handlePanelTouchMove(event: TouchEvent): void {
+    this.panelCurrentY = event.touches[0].clientY;
+    const deltaY = this.panelCurrentY - this.panelStartY;
+
+    // Only allow dragging down, not up
+    if (deltaY > 0) {
+      event.preventDefault();
+      if (this.panelContent) {
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transform',
+          `translateY(${deltaY}px)`
+        );
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transition',
+          'none'
+        );
+      }
+    }
+  }
+
+  handlePanelTouchEnd(event: TouchEvent): void {
+    const deltaY = this.panelCurrentY - this.panelStartY;
+
+    if (this.panelContent) {
+      this.renderer.setStyle(
+        this.panelContent.nativeElement,
+        'transition',
+        'transform 0.3s ease-out'
+      );
+
+      if (deltaY > this.PANEL_SWIPE_THRESHOLD) {
+        // Swipe down - close the panel
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transform',
+          'translateY(100%)'
+        );
+          this.closeCustomPanel();
+
+      } else {
+        // Reset position
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transform',
+          'translateY(0)'
+        );
+      }
+    }
+
+    this.removeGlobalTouchListeners();
+  }
+
+  removeGlobalTouchListeners(): void {
+    if (this.documentTouchMoveListener) {
+      this.documentTouchMoveListener();
+      this.documentTouchMoveListener = null;
+    }
+
+    if (this.documentTouchEndListener) {
+      this.documentTouchEndListener();
+      this.documentTouchEndListener = null;
+    }
+  }
+
+  // Modified method to use custom panel on mobile
+  openShoppingDetailsModal(modal: any, shopping: any) {
+    if (this.isMobileView) {
+      this.openCustomPanel(shopping);
+    } else {
+      this.currentShopping = shopping;
+      this.modalService
+        .open(modal, {
+          windowClass: 'tiktok-modal',
+          size: 'xl',
+          animation: true,
+          centered: true,
+          scrollable: true,
+          backdrop: true,
+          keyboard: true,
+          backdropClass: 'tiktok-backdrop',
+        })
+        .result.then(
+          (result) => {
+            this.currentShopping = null;
+          },
+          (reason) => {
+            this.currentShopping = null;
+          }
+        );
+    }
+  }
+
+  handleOptionClick(event: Event, option: any, shopping: any): void {
+    // Stop event propagation to prevent panel from closing
+    event.stopPropagation();
+
+    // Execute the option's action
+    option.action(shopping);
+  }
+
+  getMobileShortcutOptions(shopping: any): any[] {
+    if (!shopping) return [];
+
+    return [
+      {
+        icon: 'fa-regular fa-envelope big-text',
+        label: 'Emily',
+        action: (s: any) => {
+          window.open(
+            `/emily/${this.BuyBoxId}/${s.ShoppingCenter.ManagerOrganization[0].ID}/${s.Id}`,
+            '_blank'
+          );
+        },
+      },
+      {
+        icon: 'fa-solid fa-images big-text',
+        label: 'View Gallery',
+        action: (s: any) => {
+          this.openGallery(s.Id);
+        },
+      },
+      {
+        icon: 'fa-solid fa-file-lines',
+        label: 'View Details',
+        action: (s: any) => {
+          this.router.navigate([
+            '/landing',
+            s.ShoppingCenter.Places ? s.ShoppingCenter.Places[0].Id : 0,
+            s.Id,
+            this.BuyBoxId,
+          ]);
+        },
+      },
+      {
+        icon: 'fa-solid fa-map-location-dot big-text',
+        label: 'View Location',
+        action: (s: any) => {
+          this.openMapViewPlace(this.MapViewPlace, s);
+        },
+      },
+      {
+        icon: 'fa-solid fa-street-view',
+        label: 'Street View',
+        action: (s: any) => {
+          this.openStreetViewPlace(this.StreetViewPlace, s);
+        },
+      },
+      {
+        icon: shopping.Deleted
+          ? 'fa-solid fa-trash-arrow-up big-text'
+          : 'fa-regular fa-trash-can big-text',
+        label: shopping.Deleted ? 'Restore' : 'Remove Shopping',
+        action: (shopping: any) => {
+          if (shopping.Deleted) {
+            this.RestoreShoppingCenter(
+              shopping.MarketSurveyId,
+              shopping.Deleted
+            );
+          } else {
+            this.openDeleteShoppingCenterModal(
+              this.deleteShoppingCenterModal,
+              shopping
+            );
+          }
+        },
+      },
+    ];
+  }
 }
