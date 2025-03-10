@@ -52,8 +52,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { KayakModule } from './components/kayak-home/kayak.module';
 import { SharedModule } from './shared/shared.module';
 import { TokenInterceptor } from './token.interceptor';
-import { GroqApiInterceptor } from './groq-api-interceptor.interceptor';
-
+ 
 // MSAL Imports
 import {
   MsalModule,
@@ -173,12 +172,7 @@ const loginRequest = {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: GroqApiInterceptor,
-      multi: true,
-    },
+    }
   ],
   bootstrap: [AppComponent],
 })
