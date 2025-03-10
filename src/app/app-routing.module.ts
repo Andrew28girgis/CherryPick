@@ -50,6 +50,11 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
+    path: 'Kanban/:id',
+    component: KanbanComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
     path: 'Done',
     component: DetailsComponent,
     canActivate: [AuthGuardService],
@@ -64,7 +69,7 @@ const routes: Routes = [
     path: 'tasks',
     component: TasksComponent,
     canActivate: [AuthGuardService],
-  }, 
+  },
   {
     path: 'Properties',
     component: PropertiesComponent,

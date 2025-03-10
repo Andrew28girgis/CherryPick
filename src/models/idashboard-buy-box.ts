@@ -3,4 +3,5 @@ export interface IDashboardBuyBox {
   organizationName: string;
   logoURL: string;
   stageName: string;
+  kanbanid: number;
 }

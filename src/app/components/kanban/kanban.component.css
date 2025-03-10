@@ -597,38 +597,19 @@
   font-size: 16px;
   font-weight: 500;
   color: #4a5568;
-  background-color: #f7fafc;
   padding: 6px 12px;
   border-radius: 6px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   cursor: pointer;
-  display: inline-block;
-  /* margin-top: 10px; */
-}
-.stakeholder-name:hover {
-  color: #2d3748;
-  background-color: #edf2f7;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
+  white-space: pre-wrap;
 }
 
-/* Responsive Styles */
-/* @media (max-width: 768px) {
-  .kanban-wrap {
-    padding: 10px;
-  }
 
-  .kanban-wrap .col {
-    width: 300px;
-  }
+.ccs.active {
+  background-color: #d3d3d3;
 }
-.page-layout {
-
-  min-height: 100vh;
-  background: #f8f9fa;
-  transition: margin-left 0.3s ease;
+/* .stakeholder-name.active{
+  colo
 } */
 
 .sidebar-collapsed .main-content {
@@ -1061,9 +1042,8 @@
   background: var(--glass-bg);
   border-radius: 12px;
   margin: 1rem;
-  /* overflow: hidden; */
   overflow: auto; /* Enable scrolling */
-
+  background: #fff;
   box-shadow: var(--glass-shadow);
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(8px);
@@ -1447,4 +1427,8 @@ td {
 .clients {
   flex-direction: column;
   display: flex;
+}
+
+.kanban-wrap{
+  background-color: #fff;
 }
