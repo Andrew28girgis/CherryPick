@@ -9,6 +9,8 @@ export interface Organization {
   OrganizationName: string
   Contact: Contact[]
   showContacts:boolean
+  showMoreContacts?: boolean;  // Add this line
+
 }
 
 export interface Contact {

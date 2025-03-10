@@ -46,41 +46,32 @@
                   (click)="toggleContacts(org)"
                   style="cursor: pointer; display: flex;"
                 >
-                <div class="left col-2">
-                  <img 
-                    [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + org.OrganizationId"
-                    width="30" 
-                    height="30" 
-                    style="border-radius: 50%;"
-                  >
-                </div>
-                  <div class="right col-10 ms-2 d-flex justify-content-between ">
-                      <span class="org-name">{{ org.OrganizationName }}</span>
-                      <!-- <span 
-                        class="mx-2" 
-                        [routerLink]="['/emily', buyBoxId, org.OrganizationId, email.id]"
-                      >
-                        <i 
-                          style="font-size: 16px; color: #001f3f" 
-                          class="fa-solid fa-pen-to-square"
-                        ></i>
-                      </span> -->
-                      <div class="d-flex align-items-center">
-                        <span 
+                  <div class="left col-2">
+                    <img 
+                      [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + org.OrganizationId"
+                      width="30" 
+                      height="30" 
+                      style="border-radius: 50%;"
+                    >
+                  </div>
+                  <div class="right col-10 ms-2 d-flex justify-content-between">
+                    <span class="org-name">{{ org.OrganizationName }}</span>
+                    <div class="d-flex align-items-center">
+                      <span 
                         class="total-emails"
                         *ngIf="getTotalOrganizationEmails(org.Contact) > 0"
-                        >
+                      >
                         {{ getTotalOrganizationEmails(org.Contact) }}
-                        </span>
-                      </div>
+                      </span>
+                    </div>
                   </div>
                 </div>
-  
+          
                 <div *ngIf="org.showContacts" class="contacts-list">
                   <ul class="contact-ul" style="padding: 5px;">
-                    <!-- Limit the number of contacts initially based on 'isViewMore' -->
+                    <!-- Limit the number of contacts initially based on 'showMoreContacts' -->
                     <li 
-                      *ngFor="let contact of getVisibleContacts(org.Contact)" 
+                      *ngFor="let contact of getVisibleContacts(org)" 
                       (click)="onContactClick(contact.ContactId, org.OrganizationId)" 
                       class="d-flex justify-content-between"
                     >
@@ -97,30 +88,29 @@
                         </span>
                       </div>
                     </li>
-                
+          
                     <!-- View More / View Less Button -->
                     <li *ngIf="org.Contact.length > 2">
                       <div class="d-flex justify-content-center mt-2">
                         <span 
-                          (click)="toggleViewMore()" 
+                          (click)="toggleViewMore(org)" 
                           class="view-more-less-toggle" 
                         >
-                        {{ isViewMore ? 'View Less' : 'View More' }}
-                          <i class="fa" [ngClass]="isViewMore ? 'fa-chevron-up' : 'fa-chevron-down'" style="font-size: 14px;"></i>
+                          {{ org.showMoreContacts ? 'View Less' : 'View More' }}
+                          <i class="fa" [ngClass]="org.showMoreContacts ? 'fa-chevron-up' : 'fa-chevron-down'" style="font-size: 14px;"></i>
                         </span>
                       </div>
                     </li>
-                    
                   </ul>
-                
+          
                   <p *ngIf="!org.Contact || org.Contact.length === 0" class="no-contact-msg">
                     No contacts available in this organization.
                   </p>
                 </div>
-                
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
