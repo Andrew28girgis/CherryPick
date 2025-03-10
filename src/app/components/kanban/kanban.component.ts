@@ -153,8 +153,15 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.userKanbans = data.json;
-        this.userKanbans.forEach((kanban) => (kanban.isCollapsed = false));
-      },
+        this.userKanbans.forEach((kanban) => (kanban.isCollapsed = false));  
+          
+          this.userKanbans.sort((a, b) => {
+            if (a.kanbanTemplateId === b.kanbanTemplateId) {
+              return a.kanbanName.localeCompare(b.kanbanName);
+            }
+            return a.kanbanTemplateId - b.kanbanTemplateId;
+          });
+        },
     });
   }
 
@@ -828,6 +835,11 @@ export class KanbanComponent implements OnInit, OnDestroy {
           }));
           this.kanbanList = filteredData;
           this.filteredKanbanList = [...this.kanbanList];
+          console.log(`xx`);
+          
+          console.log(this.filteredKanbanList);
+          
+          
           this.lastKnownStageCount =
             this.kanbanList[0]?.kanbanStages?.length || 0;
         }

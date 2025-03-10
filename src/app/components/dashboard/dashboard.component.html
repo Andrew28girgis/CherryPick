@@ -4,6 +4,12 @@
     <div class="w-100 dashboard-item-container tenants-container">
       <div class="d-flex align-items-center justify-content-between w-100">
         <span class="container-title">Tenants</span>
+        <button
+        class="kanban-button"
+        [routerLink]="['/Kanban', tenants[0].kanbanid]"
+      >
+        View Kanban
+      </button>
       </div>
       <div
         class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
@@ -13,7 +19,6 @@
             <tr>
               <th>Name</th>
               <th>Stage</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody *ngIf="tenants.length > 0">
@@ -26,15 +31,7 @@
                   <span>{{ tenant.name }}</span>
                 </div>
               </td>
-              <td>{{ tenant.stageName }}</td>
-              <td>
-                <button
-                  class="kanban-button"
-                  [routerLink]="['/Kanban', tenant.kanbanid]"
-                >
-                  View Kanban
-                </button>
-              </td>
+              <td>{{ tenant.stageName }}</td> 
             </tr>
           </tbody>
         </table>

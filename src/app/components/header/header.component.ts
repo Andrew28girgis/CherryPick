@@ -40,7 +40,7 @@ export class HeaderComponent {
   }
   
   BackTo() {
-    this.router.navigate(["/summary"])
+    this.router.navigate(["/dashboard"])
   }
   isNavbarOpen = false;
 
