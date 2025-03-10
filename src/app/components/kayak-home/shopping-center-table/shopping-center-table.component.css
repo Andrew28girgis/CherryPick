@@ -1192,6 +1192,9 @@ scroll-container {
   top: 86% !important;
 }
 @media (max-width: 768px) {
+  .tab-view-container{
+    padding: 0;
+  }
   .card {
     height: 100vh;
   }
