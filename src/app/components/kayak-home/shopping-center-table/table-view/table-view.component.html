@@ -70,7 +70,7 @@
                     <div *ngFor="
                           let org of shoppingCenter.ShoppingCenter
                             .ManagerOrganization
-                        " class="contact-container table-texttt">
+                        " class="contact-container table-text_second">
                       <p class="text-bold m-0">
                         {{ org.Firstname | titlecase }}
                         {{ org.LastName | titlecase }}
@@ -232,7 +232,7 @@
   <p class="fontweight">No data Shopping Center</p>
 </div>
 
-<div class="row mb-0 d-sm-none d-flex" style="justify-content: center;margin-top:0 !important;padding-bottom: 5px;">
+<!-- <div class="row mb-0 d-sm-none d-flex" style="justify-content: center;margin-top:0 !important;padding-bottom: 5px;">
   <div class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center" style="width: auto;">
     <div class="custom-icon-container">
       <div class="icon-option" *ngFor="let option of dropdowmOptions" (click)="selectOption(option)"
@@ -242,7 +242,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 
 <ng-template #StreetViewPlace let-modal>
@@ -252,7 +252,6 @@
   </div>
   <div id="street-view" class="h700" *ngIf="!General.modalObject.StreetViewURL"></div>
 </ng-template>
-
 
 <ng-template #deleteSingleShoppingCenterModal let-modal>
   <div class="modal-body-general p-4 rounded deleteShopping">
@@ -271,8 +270,6 @@
     </div>
   </div>
 </ng-template>
-
-
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
