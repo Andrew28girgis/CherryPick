@@ -19,10 +19,6 @@ import { Availability, PropertiesDetails, Tenant } from 'src/models/manage-prop-
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
-
-
-
-
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -47,7 +43,6 @@ export class TenantComponent implements OnInit {
   showAddTenantInput: boolean = false;
   JsonPDF!: jsonGPT;
   AvailabilityAndTenants: AvailabilityTenant = {};
-
   fileName!: string;
   isUploading: boolean = false;
   uploadProgress: number = 0;
@@ -85,9 +80,6 @@ export class TenantComponent implements OnInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer
-
-
-
   ) {
     
   }
