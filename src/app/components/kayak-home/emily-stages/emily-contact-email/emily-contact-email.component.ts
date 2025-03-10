@@ -31,7 +31,7 @@ export class EmilyContactEmailComponent implements OnInit {
   Emails: EmailInfo[] = [];
   loginContact: any;
   emptyMessage: string = 'Select Contact in organization';
-  selectedFilter: string = 'all';
+  // selectedFilter: string = 'all';
   ShowSection: boolean = false;
   ShowResaved: boolean = false;
   EmailDashboard: any[] = [];
@@ -55,6 +55,9 @@ export class EmilyContactEmailComponent implements OnInit {
   // scroll
   isScrolling = false; // Boolean to track if scrolling is active
   private scrollTimeout: any;
+
+  filteredEmails: Mail[] = []; // Array to hold filtered emails
+  selectedFilter: string = 'all'; // Default filter is 'all'  
 
   @Input() contactId!: number;
   @Input() orgId!: number;
@@ -80,6 +83,7 @@ export class EmilyContactEmailComponent implements OnInit {
   // New method to handle initial data loading
   loadInitialData(): void {
     this.spinner.show();
+    this.filteredEmails = []; // Reset filtered emails
     // Call the first API
     this.GetBuyBoxMicroDeals();
     // Call the second API
@@ -150,6 +154,7 @@ export class EmilyContactEmailComponent implements OnInit {
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact; // Set the selected contact
       this.emailsSentContact = []; // Clear any previously loaded emails
+      this.filteredEmails = []; // Clear filtered emails
       this.emptyMessage = '';
       this.selectedEmail = null; // Clear any selected email details
     } else if (this.emailsSentContact.length > 0) {
@@ -170,12 +175,12 @@ export class EmilyContactEmailComponent implements OnInit {
     });
 
     console.log('Loaded emails for contact:', contact.ContactId, this.emailsSentContact);
+    // Apply the current filter to the newly loaded emails
+    this.filterEmails(this.selectedFilter);
+    
     // If no emails found, show a message
     if (this.emailsSentContact.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
-    } else if (this.emailsSentContact.length > 0) {
-      // Automatically open the first email if available
-      this.openEmail(this.emailsSentContact[0]);
     }
   }
   GetBuyBoxEmails(): void {
@@ -305,5 +310,53 @@ export class EmilyContactEmailComponent implements OnInit {
     this.bodyemail = body;
     this.contactIdemail = contactId;
     this.modalService.open(modal, { size: 'xl', backdrop: true });
+  }
+  getDirection(direction: number): string {
+    return direction === 2
+      ? 'fa-envelope-circle-check send'
+      : direction === -1
+      ? 'fa-share outbox'
+      : direction === 1
+      ? 'fa-reply inbox'
+      : '';
+  }
+  filterEmails(filterType: string): void {
+    this.selectedFilter = filterType;
+    // If no emails or contact selected, don't try to filter
+    if (!this.selectedContact || this.emailsSentContact.length === 0) {
+      this.filteredEmails = [];
+      this.selectedEmail = null; // Clear selected email when no emails to filter
+      return;
+    }
+    // Apply the filter based on the selected type
+    switch (filterType) {
+      case 'inbox':
+        // Direction = 1 for inbox
+        this.filteredEmails = this.emailsSentContact.filter(email => email.Direction === 1);
+        break;
+      case 'outbox':
+        // Direction = -1 for outbox
+        this.filteredEmails = this.emailsSentContact.filter(email => email.Direction === -1);
+        break;
+      case 'sent':
+        // Direction = 2 for sent
+        this.filteredEmails = this.emailsSentContact.filter(email => email.Direction === 2);
+        break;
+      case 'all':
+      default:
+        // Show all emails
+        this.filteredEmails = [...this.emailsSentContact];
+        break;
+    }
+    // Update the empty message based on filter results
+    if (this.filteredEmails.length === 0) {
+      this.emptyMessage = `No ${filterType} emails available for this contact`;
+      this.selectedEmail = null; // Clear selected email when no filtered emails are found
+    }
+    // If there are filtered emails, select the first one by default
+    if (this.filteredEmails.length > 0 && (!this.selectedEmail || 
+        !this.filteredEmails.some(email => email.id === this.selectedEmail?.ID))) {
+      this.openEmail(this.filteredEmails[0]);
+    }
   }
 }
