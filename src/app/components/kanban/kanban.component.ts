@@ -76,6 +76,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   @Output() kanbanCreated = new EventEmitter<any>()
   showFilter = false // Add this property
   isUpdating = false // Added property
+  activeKanbanId: number | null = null
 
   private pollingSubscription?: Subscription
   private isPollingActive = false
@@ -148,7 +149,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   GetKanbanDetails(kanban: Kanban) {
-    // Show loading indicator
+    this.activeKanbanId = kanban.Id 
+
     this.isLoading = true;
     
     // Clear previous data and subscription
