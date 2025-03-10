@@ -13,6 +13,7 @@
             <tr>
               <th>Name</th>
               <th>Stage</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody *ngIf="tenants.length > 0">
@@ -26,6 +27,9 @@
                 </div>
               </td>
               <td>{{ tenant.stageName }}</td>
+              <td>
+                <a [routerLink]="['/Kanban', tenant.kanbanid]">View Kanban</a>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -45,6 +49,7 @@
               <th>Name</th>
               <th>Organizaion Name</th>
               <th>Stage</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody *ngIf="buyBoxes.length > 0">
@@ -59,6 +64,9 @@
                 </div>
               </td>
               <td>{{ buyBox.stageName }}</td>
+              <td>
+                <a [routerLink]="['/Kanban', buyBox.kanbanid]">View Kanban</a>
+              </td>
             </tr>
           </tbody>
         </table>
