@@ -3,18 +3,11 @@
   padding-bottom: 15px;
   background: var(--Card-Section-BG, #fff);
 }
-.small-logo {
-  width: 35px;
-  height: 35px;
-  border-radius: 48px;
-}
 .background {
   background: var(--Body-Page-BG, #f2f3f4);
 }
-
 .boldtext {
-  color: #fff;
-  
+  color: #fff;  
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -23,30 +16,11 @@
   text-align: left;
 }
 .brokertext {
-  color: #fff;
-  
+  color: #fff; 
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 40px;
-}
-.proposal-button {
-  display: flex;
-  padding: var(--Button-Padding-top-bottom, 12px)
-    var(--Button-Padding-left-right, 24px);
-  justify-content: center;
-  align-items: center;
-  gap: var(--Button-Gap, 8px);
-  border-radius: var(--Button-Radius, 16px);
-  background: var(--Button-Primary-BG, #001f3f);
-  color: var(--Button-Primary-Label, #fff);
-  text-align: center;
-  
-  font-size: 13px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
 }
 .custom-hr {
   border: 0;
@@ -56,7 +30,6 @@
 }
 .Osmowstext {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -68,7 +41,6 @@
 }
 .namee {
   color: #fff;
-  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -86,7 +58,6 @@
 }
 
 .broker {
-  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -95,14 +66,6 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-.email {
-  color: #fff;
-  
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
 }
 .linkedin {
   color: #fff;
@@ -117,20 +80,17 @@
   color: #7a8591;
   text-decoration: underline;
 }
-
 .line-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-
 .line {
   width: 110.5px;
   height: 1px;
   background-color: #ffffff;
 }
-
 .assistant {
   color: #fff;
   text-align: center;
@@ -162,19 +122,10 @@
 }
 .lowwhite {
   color: #afa8a8;
-  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
-}
-.card-sizee {
-  border-radius: var(--Card-Section-Lg-Radius, 20px);
-  background: var(--Card-Section-BG, #fff);
-}
-.bigcard {
-  border-radius: var(--Card-Section-Lg-Radius, 20px);
-  background: var(--Card-Section-BG, #fff);
 }
 .brokerframeee {
   display: flex;
@@ -189,36 +140,11 @@
 }
 .nameincard {
   color: #000;
-  
   font-size: 32px;
   font-style: normal;
   font-weight: 600;
   line-height: 40px;
 }
-.emailincard {
-  color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-}
-.card-bodyy {
-  position: relative;
-}
-
-.image-container {
-  position: absolute;
-  top: 30px;
-  left: -40px;
-  transform: translate(0, -50%);
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border-radius: 40px 4px;
-  border: 8px solid var(--Body-Page-BG, #f2f3f4);
-}
-
 .broker-container {
   border-radius: 40px 4px;
   position: absolute;
@@ -235,11 +161,6 @@
   border-radius: 40px 4px;
   border: 8px solid #accbed;
 }
-
-.card-bodyy img {
-  width: 100%;
-  height: 100%;
-}
 .customm-hr {
   border: 0.6;
   height: 1px;
@@ -247,17 +168,8 @@
   margin: 10px 0;
   width: 100%;
 }
-.overviewtext {
-  color: var(--Body-Heading-Color, #0c0d0e);
-  
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px;
-}
 .grayspan {
   color: var(--Body-Body-Color-Text-Icons, #7a8591);
-  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -271,9 +183,6 @@
 .cherry-logo {
   width: 184px;
   cursor: pointer;
-}
-.col-1 {
-  width: 20px;
 }
 .imagebroker {
   width: 350px;
@@ -311,7 +220,6 @@
   min-height: 150px;
   position: relative;
 }
-
 .tenant-logo {
   width: 100px;
   height: 100px;
@@ -328,23 +236,12 @@
   left: -14px;
   transform: translateY(-50%);
 }
-
 .content-right {
   bottom: 20px;
   right: 20px;
   display: flex;
   gap: 8px;
 }
-
-.share-btn,
-.proposal-btn {
-  background-color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  margin-left: 0.5rem;
-  border-radius: 8px;
-}
-
 .banner-text {
   color: #fff;
   padding: 50px 0;
@@ -403,13 +300,10 @@
   border-radius: var(--Button-Radius, 16px);
   background: var(--Colors-Primary-900, #00060d);
   border: 1px solid transparent;
-
 }
-
 .btn-submit span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -427,10 +321,8 @@
   border-radius: 20px;
   position: relative;
 }
-
 .specifications {
-  color: #fff;
-  
+  color: #fff; 
   font-size: 32px;
   font-style: normal;
   font-weight: 600;
@@ -461,9 +353,7 @@
   background: var(--Card-Section-BG, #fff);
   width: fit-content;
 }
-
 .brokerrrr {
-  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -476,7 +366,6 @@
 }
 .buyboxname {
   color: #fff;
-  
   font-size: 30px;
   font-style: normal;
   font-weight: 600;
