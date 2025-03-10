@@ -151,11 +151,11 @@
                 >
                   <div class="card-header">
                     <div class="stakeholder-info">
-                      <div class="stakeholder-avatar">
+                      <!-- <div class="stakeholder-avatar">
                         {{
                           getStackHolderName(kanban.targetStakeholderId)?.charAt(0)
                         }}
-                      </div>
+                      </div> -->
                       <div class="stakeholder-details">
                         <span class="stakeholder-name">
                           {{ getStackHolderName(kanban.targetStakeholderId) }}
@@ -171,13 +171,13 @@
                         <ng-container
                           *ngFor="let org of def?.Organization; let last = last"
                         >
-                          <div class="org-item">
+                          <!-- <div class="org-item">
                             <span class="org-badge">{{ org.Name }}</span>
                             <i
                               class="connection-icon fas fa-chevron-right"
                               *ngIf="!last"
                             ></i>
-                          </div>
+                          </div> -->
                         </ng-container>
                       </ng-container>
                     </div>
@@ -189,8 +189,7 @@
         </div>
       
         <!-- Kanban Wrap (Main Content) -->
-        <div class="col-md-9 p-0 kanban-main-content">
-          <div class="kanban-wrap">
+        <div class="col-md-10 p-0 kanban-main-content">
             <div class="table-container">
               <table role="grid" aria-label="Kanban board">
                 <thead>
@@ -276,7 +275,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
         </div>
       </div>
       
