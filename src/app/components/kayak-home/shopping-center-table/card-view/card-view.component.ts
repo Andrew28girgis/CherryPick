@@ -28,18 +28,11 @@ export class CardViewComponent implements OnInit {
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
-
-  // Use the dropdown options from the service
-  get dropdowmOptions() {
-    return this.viewManager.dropdowmOptions;
-  }
-
   selectedOption: number = 3;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
   selectedIdCard: number | null = null;
   placesRepresentative: boolean | undefined;
-  isOpen = false;
   currentView: any;
   mapViewOnePlacex = false;
   sanitizedUrl!: any;
@@ -48,8 +41,6 @@ export class CardViewComponent implements OnInit {
   selectedCity = '';
   BuyBoxName = '';
   ShareOrg: ShareOrg[] = [];
-  activeComponent: string = 'Properties';
-  selectedTab: string = 'Properties';
   shareLink: any;
   selectedId: number | null = null;
   @Output() viewChange = new EventEmitter<number>();
@@ -61,8 +52,7 @@ export class CardViewComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private PlacesService: PlacesService,
-    private viewManager: ViewManagerService, // Inject the ViewManagerService,
+    private viewManager: ViewManagerService,
     private spinner: NgxSpinnerService,
     private cdr: ChangeDetectorRef,
   ) { }
@@ -89,8 +79,10 @@ export class CardViewComponent implements OnInit {
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
     }
-    this.activeComponent = 'Properties';
-    this.selectedTab = 'Properties';
+  }
+  
+  get dropdowmOptions() {
+    return this.viewManager.dropdowmOptions;
   }
 
   async loadData() {
@@ -109,6 +101,21 @@ export class CardViewComponent implements OnInit {
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
     } catch (error) {
       console.error('Error loading data:', error);
+    }
+  }
+
+  async refreshShoppingCenters() {
+    try {
+      this.spinner.show();
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(
+        this.BuyBoxId
+      );
+      this.buyboxPlaces = await this.viewManager.getBuyBoxPlaces(this.BuyBoxId);
+      this.showbackIds = [];
+    } catch (error) {
+      console.error('Error refreshing shopping centers:', error);
+    } finally {
+      this.spinner.hide();
     }
   }
 
@@ -187,17 +194,6 @@ export class CardViewComponent implements OnInit {
     this.sanitizedUrl = this.viewManager.sanitizeUrl(url);
   }
 
-  openDeleteShoppingCenterModal(
-    modalTemplate: TemplateRef<any>,
-    shoppingCenter: any
-  ) {
-    this.DeletedSC = shoppingCenter;
-    this.shoppingCenterIdToDelete = shoppingCenter.Id;
-    this.modalService.open(modalTemplate, {
-      ariaLabelledBy: 'modal-basic-title',
-    });
-  }
-
   copyLink(link: string) {
     navigator.clipboard
       .writeText(link)
@@ -207,6 +203,17 @@ export class CardViewComponent implements OnInit {
       .catch((err) => {
         console.error('Could not copy text: ', err);
       });
+  }
+
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenter: any
+  ) {
+    this.DeletedSC = shoppingCenter;
+    this.shoppingCenterIdToDelete = shoppingCenter.Id;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
   }
 
   async deleteShCenter() {
@@ -231,50 +238,30 @@ export class CardViewComponent implements OnInit {
     }
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
-    this.spinner.show();
-
-    const body: any = {
-      Name: 'RestoreShoppingCenter',
-      MainEntity: null,
-      Params: {
-        marketsurveyid: +MarketSurveyId,
-      },
-      Json: null,
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: () => {
+  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
+    this.viewManager.restoreShoppingCenter(MarketSurveyId, Deleted)
+      .then(() => {
         const marketSurveyIdNum = Number(MarketSurveyId);
-      
+        
         this.shoppingCenters = this.shoppingCenters.map(center => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
           return center;
         });
-        
         this.cdr.markForCheck();
-        // this.refreshShoppingCenters();
-        this.spinner.hide();
-      },
-    });
+      })
   }
 
-  async refreshShoppingCenters() {
-    try {
-      this.spinner.show();
-      this.shoppingCenters = await this.viewManager.getShoppingCenters(
-        this.BuyBoxId
-      );
-      this.buyboxPlaces = await this.viewManager.getBuyBoxPlaces(this.BuyBoxId);
-      this.showbackIds = [];
-    } catch (error) {
-      console.error('Error refreshing shopping centers:', error);
-    } finally {
-      this.spinner.hide();
+  outsideClickHandler = (event: Event): void => {
+    const targetElement = event.target as HTMLElement;
+    const isInside = targetElement.closest('.shortcuts_iconCard, .ellipsis_icont');
+
+    if (!isInside) {
+      this.selectedIdCard = null;
+      document.removeEventListener('click', this.outsideClickHandler);
     }
-  }
+  };
 
   toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
     event?.stopPropagation();
@@ -289,16 +276,6 @@ export class CardViewComponent implements OnInit {
       });
     }
   }
-
-  outsideClickHandler = (event: Event): void => {
-    const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest('.shortcuts_iconCard, .ellipsis_icont');
-
-    if (!isInside) {
-      this.selectedIdCard = null;
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-  };
 
   selectOption(option: any): void {
     this.viewChange.emit(option.status)

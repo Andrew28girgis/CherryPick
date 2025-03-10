@@ -13,8 +13,6 @@ export class ShoppingCenterTableComponent implements OnInit {
   BuyBoxId!: any;
   OrgId!: any;
   selectedOption: number = 5;
-
-
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -45,7 +43,7 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: any) => {
@@ -55,7 +53,8 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem("OrgId", this.OrgId)
     })
     this.currentView = Number(localStorage.getItem("currentViewDashBord") || "5")
-    this.selectedOption = this.currentView
+    this.selectedOption = this.currentView;
+    this.filterDropdownOptions();
   }
 
   selectOption(option: any): void {
@@ -63,21 +62,28 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.currentView = option.status
     localStorage.setItem("currentViewDashBord", this.currentView.toString())
   }
-  
+
   onHighlightMarker(place: any): void {
     if (this.mapView) {
       this.mapView.highlightMarker(place);
     }
   }
-  
+
   onUnhighlightMarker(place: any): void {
     if (this.mapView) {
       this.mapView.unhighlightMarker(place);
     }
   }
+  
   onViewChange(viewStatus: number) {
     this.currentView = viewStatus
     this.selectedOption = viewStatus
     localStorage.setItem("currentViewDashBord", this.currentView.toString())
+  }
+
+  filterDropdownOptions(): void {
+    if (window.innerWidth < 768) {
+      this.dropdowmOptions = this.dropdowmOptions.filter((option: any) => option.status !== 2);
+    }
   }
 }

@@ -1,6 +1,5 @@
 import {  Component,  OnInit,  ChangeDetectorRef,  TemplateRef,  Output,  EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
 import { General } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -44,13 +43,10 @@ export class TableViewComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private cdr: ChangeDetectorRef,
     private viewManagerService: ViewManagerService
-  ) {
-    this.dropdowmOptions = this.viewManagerService.dropdowmOptions;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.General = new General();
@@ -64,16 +60,7 @@ export class TableViewComponent implements OnInit {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
-    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
     this.initializeData();
-
-    const selectedOption = this.dropdowmOptions.find(
-      (option: any) => option.status === Number.parseInt(this.currentView)
-    );
-
-    if (selectedOption) {
-      this.selectedOption = selectedOption.status;
-    }
   }
 
   async initializeData() {
@@ -102,35 +89,19 @@ export class TableViewComponent implements OnInit {
     }
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
-    this.spinner.show();
-    Deleted = false;
-
-    const body: any = {
-      Name: 'RestoreShoppingCenter',
-      MainEntity: null,
-      Params: {
-        marketsurveyid: +MarketSurveyId,
-      },
-      Json: null,
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: () => {
+  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
+    this.viewManagerService.restoreShoppingCenter(MarketSurveyId, Deleted)
+      .then(() => {
         const marketSurveyIdNum = Number(MarketSurveyId);
-      
+        
         this.shoppingCenters = this.shoppingCenters.map(center => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
           return center;
         });
-        
         this.cdr.markForCheck();
-        // this.refreshShoppingCenters();
-        this.spinner.hide();
-      },
-    });
+      })
   }
 
   openDeleteShoppingCenterModal(
@@ -207,10 +178,6 @@ export class TableViewComponent implements OnInit {
   
   toggleShortcutsCard(id: number | null): void {
     this.selectedIdCard = id;
-  }
-
-  selectOption(option: any): void {
-    this.viewChange.emit(option.status)
   }
 
   isLast(currentItem: any, array: any[]): boolean {

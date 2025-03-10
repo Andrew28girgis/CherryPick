@@ -1,15 +1,5 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  OnDestroy,
-  NgZone,
-  Output,
-  EventEmitter
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component,  OnInit,  ViewChild,  ElementRef,  AfterViewInit,  OnDestroy,  NgZone,  Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { General } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -30,47 +20,13 @@ declare const google: any;
 export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('map') mapElement!: ElementRef;
   @Output() viewChange = new EventEmitter<number>();
-
   map: any;
   markers: any[] = [];
   infoWindows: any[] = [];
-  
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
-
-  dropdowmOptions: any = [
-    {
-      text: 'Map View',
-      icon: '../../../assets/Images/Icons/map.png',
-      status: 1,
-    },
-    {
-      text: 'Side List View',
-      icon: '../../../assets/Images/Icons/element-3.png',
-      status: 2,
-    },
-    {
-      text: 'Cards View',
-      icon: '../../../assets/Images/Icons/grid-1.png',
-      status: 3,
-    },
-    {
-      text: 'Table View',
-      icon: '../../../assets/Images/Icons/grid-4.png',
-      status: 4,
-    },
-    {
-      text: 'Social View',
-      icon: '../../../assets/Images/Icons/globe-solid.svg',
-      status: 5,
-    },
-  ];
-  
-  selectedOption: number = 1;
   shoppingCenters: Center[] = [];
-  isOpen = false;
-  currentView: any;
   buyboxPlaces: BbPlace[] = [];
   savedMapView: any;
   buyboxCategories: BuyboxCategory[] = [];
@@ -80,13 +36,9 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedCity = '';
   BuyBoxName = '';
   ShareOrg: ShareOrg[] = [];
-  activeComponent: string = 'Properties';
-  selectedTab: string = 'Properties';
-
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private markerService: MapsService,
@@ -106,28 +58,17 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
-    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.getShoppingCenters(this.BuyBoxId);
     this.getBuyBoxPlaces(this.BuyBoxId);
-
-    const selectedOption = this.dropdowmOptions.find(
-      (option: any) => option.status === Number.parseInt(this.currentView)
-    );
-
-    if (selectedOption) {
-      this.selectedOption = selectedOption.status;
-    }
-    this.activeComponent = 'Properties';
-    this.selectedTab = 'Properties';
   }
+
   ngAfterViewInit(): void {
     this.initMap();
   }
 
   ngOnDestroy(): void {
-    // Clean up resources
     this.clearMarkers();
   }
 
@@ -184,6 +125,53 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
+
+  GetOrganizationById(orgId: number): void {
+    const shareOrg = this.stateService.getShareOrg() || [];
+
+    if (shareOrg && shareOrg.length > 0) {
+      this.ShareOrg = this.stateService.getShareOrg();
+      return;
+    }
+
+    const body: any = {
+      Name: 'GetOrganizationById',
+      Params: {
+        organizationid: orgId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.ShareOrg = data.json;
+        this.stateService.setShareOrg(data.json);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
+  BuyBoxPlacesCategories(buyboxId: number): void {
+    if (this.stateService.getBuyboxCategories().length > 0) {
+      this.buyboxCategories = this.stateService.getBuyboxCategories();
+      this.getShoppingCenters(buyboxId);
+      return;
+    }
+
+    const body: any = {
+      Name: 'GetRetailRelationCategories',
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.buyboxCategories = data.json;
+        this.stateService.setBuyboxCategories(data.json);
+        this.getShoppingCenters(this.BuyBoxId);
+      },
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
+
   async getAllMarker() {
     try {
       this.spinner.show();
@@ -249,6 +237,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.markerService.createCustomMarker(this.map, categoryData);
     });
   }
+  
   private onMapDragEnd(map: any) {
     this.saveMapView(map);
     this.updateShoppingCenterCoordinates();
@@ -258,10 +247,8 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
       this.shoppingCenters?.forEach((center) => {
-        // if (center.ShoppingCenter?.Places) {
         center.Latitude = center.Latitude;
         center.Longitude = center.Longitude;
-        // }
       });
     }
   }
@@ -288,6 +275,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     });
   }
+  
   private isWithinBounds(property: any, bounds: any): boolean {
     const lat = Number.parseFloat(property.Latitude);
     const lng = Number.parseFloat(property.Longitude);
@@ -299,6 +287,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return bounds?.contains({ lat, lng });
   }
+
   private saveMapView(map: any): void {
     const center = map.getCenter();
     const zoom = map.getZoom();
@@ -313,14 +302,13 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initMap(): void {
-    // Check if Google Maps API is loaded
     if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
       setTimeout(() => this.initMap(), 1000);
       return;
     }
 
     const mapOptions = {
-      center: { lat: 37.0902, lng: -95.7129 }, // Default to US center
+      center: { lat: 37.0902, lng: -95.7129 }, 
       zoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: true,
@@ -335,7 +323,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
     
-    // Add markers if shopping centers are already loaded
     if (this.shoppingCenters.length > 0) {
       this.addMarkersToMap();
     }
@@ -411,11 +398,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.infoWindows = [];
   }
 
-  selectOption(option: any): void {
-    this.viewChange.emit(option.status)
-  }
-
-  // Method to highlight a marker when hovering over a list item
   highlightMarker(place: any): void {
     if (!place.Latitude || !place.Longitude) return;
     
@@ -430,7 +412,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Method to stop highlighting a marker
   unhighlightMarker(place: any): void {
     if (!place.Latitude || !place.Longitude) return;
     
@@ -442,51 +423,5 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (markerIndex !== -1) {
       this.markers[markerIndex].setAnimation(null);
     }
-  }
-
-  GetOrganizationById(orgId: number): void {
-    const shareOrg = this.stateService.getShareOrg() || [];
-
-    if (shareOrg && shareOrg.length > 0) {
-      this.ShareOrg = this.stateService.getShareOrg();
-      return;
-    }
-
-    const body: any = {
-      Name: 'GetOrganizationById',
-      Params: {
-        organizationid: orgId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.ShareOrg = data.json;
-        this.stateService.setShareOrg(data.json);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
-
-  BuyBoxPlacesCategories(buyboxId: number): void {
-    if (this.stateService.getBuyboxCategories().length > 0) {
-      this.buyboxCategories = this.stateService.getBuyboxCategories();
-      this.getShoppingCenters(buyboxId);
-      return;
-    }
-
-    const body: any = {
-      Name: 'GetRetailRelationCategories',
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.buyboxCategories = data.json;
-        this.stateService.setBuyboxCategories(data.json);
-        this.getShoppingCenters(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
   }
 }

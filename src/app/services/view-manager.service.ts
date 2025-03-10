@@ -197,6 +197,35 @@ export class ViewManagerService {
     });
   }
 
+  restoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): Promise<Center[]> {
+    return new Promise((resolve, reject) => {
+      this.spinner.show();
+      Deleted = false;
+
+      const body: any = {
+        Name: 'RestoreShoppingCenter',
+        MainEntity: null,
+        Params: {
+          marketsurveyid: +MarketSurveyId,
+        },
+        Json: null,
+      };
+      
+      this.placesService.GenericAPI(body).subscribe({
+        next: (data) => {
+          resolve(data);
+        },
+        error: (error) => {
+          console.error('Error restoring shopping center:', error);
+          reject(error);
+        },
+        complete: () => {
+          this.spinner.hide();
+        },
+      });
+    });
+  }
+  
   // Map and Street View methods
   async initializeMap(
     elementId: string,
