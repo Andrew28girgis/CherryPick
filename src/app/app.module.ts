@@ -24,10 +24,8 @@ import { DetailsComponent } from './components/kanban/details/details.component'
 import { PropertiesComponent } from './components/kanban/properties/properties.component';
 import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
 import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
-import { AddSourceModalComponent } from './components/kanban/sources/add-source-modal/add-source-modal.component';
-import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
-import { SourcesComponent } from './components/kanban/sources/sources.component';
-import { TasksComponent } from './components/kanban/tasks/tasks.component';
+ import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
+ import { TasksComponent } from './components/kanban/tasks/tasks.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { TermsComponent } from './components/terms/terms.component';
@@ -63,10 +61,8 @@ import {
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { HeaderComponent } from './components/header/header.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { CommonModule } from '@angular/common';
 
 const msalConfig = {
   auth: {
@@ -108,10 +104,8 @@ const loginRequest = {
     DetailsComponent,
     PropertiesComponent,
     PropertiesgridviewComponentComponent,
-    PropertiesspilitviewComponent,
-    AddSourceModalComponent,
-    StakeHolderComponent,
-    SourcesComponent,
+    PropertiesspilitviewComponent, 
+    StakeHolderComponent, 
     TasksComponent,
     CommunicationComponent,
     LogoutComponent,

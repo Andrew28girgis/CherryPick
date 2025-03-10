@@ -30,20 +30,7 @@ export class MyInboxEmailListComponent implements OnInit {
       },
     });
   }
-
-  getFirstRow(body: string): string {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(body, 'text/html');
-    const tbody = doc.querySelector('tbody');
-    if (tbody) {
-      const firstRow = tbody.querySelector('tr');
-      if (firstRow) {
-        return firstRow.outerHTML;
-      }
-    }
-    return doc.body.innerHTML; 
-  }
-  
+ 
 
   GetMailInfo(mailId: number,modal: any) {
     this.microsoftMailsService.GetMailInfo(mailId).subscribe({
