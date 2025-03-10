@@ -1445,7 +1445,7 @@ td {
 }
 
 .clients {
-  display: flex;
-  flex-direction: row;
   overflow: scroll;
+  flex-direction: row;
+  display: flex;
 }
