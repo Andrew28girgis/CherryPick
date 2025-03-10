@@ -7,11 +7,13 @@
 
 .icon-option {
   display: flex;
-  flex-direction: column;
+  gap: 0.5rem;
+ 
+  /* flex-direction: column; */
   align-items: center;
   cursor: pointer;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
   transition: transform 0.2s, background-color 0.2s;
   border: 1px solid rgb(190, 190, 190);
 }
@@ -40,9 +42,9 @@
 }
 
 .icon-text {
-  font-size: 0.7rem;
-  text-align: center;
-  margin-top: 5px;
+  font-size: 0.75rem;
+  /* text-align: center; */
+  /* margin-top: 5px; */
 }
 
 .custom-icon-container {
@@ -52,22 +54,7 @@
   background: #fff;
 }
 
-.icon-option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  border: 1px solid rgb(190, 190, 190);
-}
 
-.icon-option:hover {
-  transform: scale(1.1);
-}
-
-.icon-option.selected {
-  color: blue;
-  /* Highlight the selected option */
-}
 
 .svg-container {
   display: flex;
@@ -947,9 +934,6 @@
     background-position: center;
   }
 
-  .icon-option {
-    border: none;
-  }
 
   /* ... rest of your existing styles ... */
 }
