@@ -1,27 +1,14 @@
-import {
-  Component,
-  OnInit,
-  Renderer2,
-  ChangeDetectorRef,
-  TemplateRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Component,  OnInit,  ChangeDetectorRef,  TemplateRef,  Output,  EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { General } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center } from '../../../../../models/shoppingCenters';
-import { DomSanitizer } from '@angular/platform-browser';
-import { StateService } from '../../../../services/state.service';
 import { ShareOrg } from 'src/models/shareOrg';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { ViewManagerService } from 'src/app/services/view-manager.service';
-
-declare const google: any;
 
 @Component({
   selector: 'app-table-view',
@@ -46,11 +33,8 @@ export class TableViewComponent implements OnInit {
   selectedCity = '';
   BuyBoxName = '';
   ShareOrg: ShareOrg[] = [];
-  activecomponent = 'Properties';
-  selectedTab = 'Properties';
   currentView: any;
   shoppingCenterIdToDelete: number | null = null;
-  deleteShoppingCenterModal!: TemplateRef<any>;
   showbackIds: number[] = [];
   buyboxPlaces: BbPlace[] = [];
   selectedIdCard: number | null = null;
@@ -59,14 +43,9 @@ export class TableViewComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private router: Router,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private markerService: MapsService,
-    private sanitizer: DomSanitizer,
-    private stateService: StateService,
-    private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private viewManagerService: ViewManagerService
   ) {
@@ -95,8 +74,6 @@ export class TableViewComponent implements OnInit {
     if (selectedOption) {
       this.selectedOption = selectedOption.status;
     }
-    this.activecomponent = 'Properties';
-    this.selectedTab = 'Properties';
   }
 
   async initializeData() {
@@ -156,13 +133,58 @@ export class TableViewComponent implements OnInit {
     });
   }
 
-
   getNeareastCategoryName(categoryId: number): string {
     return this.viewManagerService.getNearestCategoryName(categoryId, this.buyboxCategories);
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): string {
     return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
+  }
+
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenter: any
+  ) {
+    this.DeletedSC = shoppingCenter;
+    this.shoppingCenterIdToDelete = shoppingCenter.Id;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
+
+  async deleteShCenter() {
+    this.shoppingCenters = this.shoppingCenters.map((x) =>
+      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
+    );
+
+
+    if (this.shoppingCenterIdToDelete !== null) {
+      try {
+        this.spinner.show();
+        await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
+        this.modalService.dismissAll();
+        // await this.refreshShoppingCenters();
+      } catch (error) {
+        console.error('Error deleting shopping center:', error);
+      } finally {
+        this.spinner.hide();
+      }
+    }
+  }
+
+  async refreshShoppingCenters() {
+    try {
+      this.spinner.show();
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      console.log('this.shoppingCenters',this.shoppingCenters);
+      
+      this.showbackIds = [];
+    } catch (error) {
+      console.error('Error refreshing shopping centers:', error);
+    } finally {
+      this.spinner.hide();
+    }
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
@@ -185,6 +207,14 @@ export class TableViewComponent implements OnInit {
     }
 
     this.selectedId = this.selectedId === id ? null : id;
+  }
+  
+  toggleShortcutsCard(id: number | null): void {
+    this.selectedIdCard = id;
+  }
+
+  selectOption(option: any): void {
+    this.viewChange.emit(option.status)
   }
 
   isLast(currentItem: any, array: any[]): boolean {
@@ -255,59 +285,5 @@ export class TableViewComponent implements OnInit {
 
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url);
-  }
-
-  openDeleteShoppingCenterModal(
-    modalTemplate: TemplateRef<any>,
-    shoppingCenter: any
-  ) {
-    this.DeletedSC = shoppingCenter;
-    this.shoppingCenterIdToDelete = shoppingCenter.Id;
-    this.modalService.open(modalTemplate, {
-      ariaLabelledBy: 'modal-basic-title',
-    });
-  }
-
-  async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) =>
-      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-    );
-
-
-    if (this.shoppingCenterIdToDelete !== null) {
-      try {
-        this.spinner.show();
-        await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
-        this.modalService.dismissAll();
-        // await this.refreshShoppingCenters();
-      } catch (error) {
-        console.error('Error deleting shopping center:', error);
-      } finally {
-        this.spinner.hide();
-      }
-    }
-  }
-
-  async refreshShoppingCenters() {
-    try {
-      this.spinner.show();
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
-      console.log('this.shoppingCenters',this.shoppingCenters);
-      
-      this.showbackIds = [];
-    } catch (error) {
-      console.error('Error refreshing shopping centers:', error);
-    } finally {
-      this.spinner.hide();
-    }
-  }
-
-  toggleShortcutsCard(id: number | null): void {
-    this.selectedIdCard = id;
-  }
-
-  selectOption(option: any): void {
-    this.viewChange.emit(option.status)
   }
 }

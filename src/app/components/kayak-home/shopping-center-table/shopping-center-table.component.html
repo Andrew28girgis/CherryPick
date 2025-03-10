@@ -4,7 +4,7 @@
 
     <div class="row mb-0 mobile-n">
       <div
-        class="col-6 col-md-6 pt-2 d-flex justify-content-start align-items-center mobile-nav"
+        class="col-12 pt-2 d-flex justify-content-start align-items-center mobile-nav"
       >
         <div class="custom-icon-container">
           <div
@@ -30,14 +30,11 @@
     #mapView
   ></app-map-view>
   <div class="row" *ngIf="currentView == 2">
-    <div class="col-12 col-sm-8 cards">
+    <div class="col-12 p-0">
       <app-side-list-view
         (highlightMarker)="onHighlightMarker($event)"
         (unhighlightMarker)="onUnhighlightMarker($event)"
       ></app-side-list-view>
-    </div>
-    <div class="col-12 col-sm-4 hide-on-mobile">
-      <app-map-view #mapView></app-map-view>
     </div>
   </div>
   <app-card-view *ngIf="currentView == 3"></app-card-view>
