@@ -142,3 +142,16 @@ img[alt="logo"] {
   font-weight: 400;
   line-height: 30px;
 }
+
+::ng-deep .popover-body {
+  padding: 0 !important;
+}
+
+::ng-deep .popover-arrow::after {
+  border-top: none !important;
+  border-top-color: transparent !important;
+}
+
+::ng-deep .popover-arrow::before {
+  border-top: none !important;
+}
