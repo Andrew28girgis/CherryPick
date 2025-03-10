@@ -16,7 +16,6 @@ import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
-import { CherryExpansionComponent } from './components/cherry-expansion/cherry-expansion.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { KanbanHomeComponent } from './components/kanban/kanban-home/kanban-home.component';
 import { SidebarComponent } from './components/kanban/sidebar/sidebar.component';
@@ -103,7 +102,6 @@ const loginRequest = {
     NavbarComponent,
     LandingComponent,
     SummeryComponent,
-    CherryExpansionComponent,
     KanbanComponent,
     KanbanHomeComponent,
     SidebarComponent,

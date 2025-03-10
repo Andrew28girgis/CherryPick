@@ -63,7 +63,8 @@ export class CardViewComponent implements OnInit {
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private viewManager: ViewManagerService, // Inject the ViewManagerService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -230,7 +231,7 @@ export class CardViewComponent implements OnInit {
     }
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any) {
+  RestoreShoppingCenter(MarketSurveyId: any,Deleted :boolean) {
     this.spinner.show();
 
     const body: any = {
@@ -244,10 +245,18 @@ export class CardViewComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
-        this.spinner.hide();
+        const marketSurveyIdNum = Number(MarketSurveyId);
+      
+        this.shoppingCenters = this.shoppingCenters.map(center => {
+          if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
+            return { ...center, Deleted: false };
+          }
+          return center;
+        });
+        
+        this.cdr.markForCheck();
         // this.refreshShoppingCenters();
-        // this.loadData();
-        location.reload();
+        this.spinner.hide();
       },
     });
   }
