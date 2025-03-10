@@ -3,9 +3,7 @@ import  { ActivatedRoute, Router } from "@angular/router"
 import  { PlacesService } from "src/app/services/places.service"
 import  { NgxSpinnerService } from "ngx-spinner"
 import  { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap"
-import { SidebarComponent } from "./sidebar/sidebar.component"
 import { FilterPanelComponent } from "./filter-panel/filter-panel.component"
-import { Fbo } from "src/models/domain"
 import {  CdkDragDrop, moveItemInArray, transferArrayItem } from "@angular/cdk/drag-drop"
 import  { Kanban } from "src/models/userKanban"
 import {
@@ -17,12 +15,11 @@ import {
   LeadBroker,
 } from "src/models/kanbans"
 import { General } from "src/models/domain"
-import { FormArray,  FormBuilder,  FormGroup, Validators } from "@angular/forms"
+import {  FormBuilder,  FormGroup, Validators } from "@angular/forms"
 import  { KanbanTemplate } from "src/models/kanbanTemplates"
 import  { KanbanAction } from "src/models/kanbanActions"
 import  { OrganizationContact } from "src/models/Organiztions"
 import  { ToastrService } from "ngx-toastr"
-import { retry, finalize } from "rxjs/operators"
 import { interval,  Subscription } from "rxjs"
 import { takeWhile } from "rxjs/operators"
 
