@@ -10,6 +10,8 @@
           <div
             class="icon-option"
             *ngFor="let option of dropdowmOptions"
+            [class.d-none]="option.status == 2"
+            [class.d-sm-flex]="option.status == 2"
             (click)="selectOption(option)"
             [class.selected]="
               selectedOption === option.status || selectedOption === option
