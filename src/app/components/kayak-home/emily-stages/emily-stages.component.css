@@ -185,6 +185,26 @@
     border-radius: 50%;
     margin-right: 5px;
   }
+  .view-more-less-toggle {
+    font-size: 15px; /* Adjust font size */
+    font-weight: 500;
+    color: #007bff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Adds a gap between the icon and text */
+  }
+  
+  .view-more-less-toggle i {
+    font-size: 14px; /* Adjust icon size */
+  }
+  
+  .view-more-less-toggle:hover {
+    text-decoration: underline;
+  }
+  
+  
 /*  */
 
   /* ::ng-deep .p-accordion-header a {

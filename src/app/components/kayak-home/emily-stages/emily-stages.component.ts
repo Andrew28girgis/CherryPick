@@ -44,6 +44,18 @@ interface Column {
   styleUrls: ['./emily-stages.component.css']
 })
 export class EmilyStagesComponent implements OnInit {
+  visibleContacts: Contact[] = [];  // Initially only show two contacts
+  isViewMore = false; // State to toggle between View More and View Less
+
+  // Method to toggle between showing all contacts or just the first 2 for each organization
+  toggleViewMore(org: any) {
+    org.showMoreContacts = !org.showMoreContacts;
+  }
+
+  // This function determines how many contacts to show based on the 'showMoreContacts' flag for a given organization
+  getVisibleContacts(org: any): Contact[] {
+    return org.showMoreContacts ? org.Contact : org.Contact.slice(0, 2);
+  }
 
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];
@@ -84,10 +96,16 @@ export class EmilyStagesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    for (const stage of Object.values(this.stageEmailsMap)) {
+      stage.forEach(email => {
+        email.Organization.forEach(org => {
+          org.showMoreContacts = false; // Initialize 'showMoreContacts' for each organization
+        });
+      });
+    }
     this.buyBoxId = localStorage.getItem('BuyBoxId');
     this.loginContact = localStorage.getItem('contactId');
     console.log(this.emailBodyResponseSend);
-
     this.cols = [
       { field: 'Organizations', header: 'Organizations' },
       { field: 'Last Activity Date', header: 'Last Activity Date' },
