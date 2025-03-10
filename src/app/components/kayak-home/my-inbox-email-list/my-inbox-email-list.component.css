@@ -57,8 +57,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box; 
-  -webkit-box-orient: vertical;
+  display: -webkit-box;  
 }
 
 .from-date {
