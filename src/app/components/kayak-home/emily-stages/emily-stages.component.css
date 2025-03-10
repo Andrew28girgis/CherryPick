@@ -171,6 +171,20 @@
     }
   }
 
+  .total-emails{
+    color: #ce0000;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 22px;
+    max-width: 22px;
+    height: 22px;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
 /*  */
 
   /* ::ng-deep .p-accordion-header a {
