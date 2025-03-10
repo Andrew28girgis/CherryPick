@@ -4,6 +4,13 @@
     <div class="w-100 dashboard-item-container tenants-container">
       <div class="d-flex align-items-center justify-content-between w-100">
         <span class="container-title">Tenants</span>
+        <button
+          *ngIf="tenants && tenants.length > 0"
+          class="kanban-button"
+          [routerLink]="['/Kanban', tenants[0].kanbanid]"
+        >
+          View Kanban
+        </button>
       </div>
       <div
         class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
@@ -13,7 +20,6 @@
             <tr>
               <th>Name</th>
               <th>Stage</th>
-              <th>Action</th>
             </tr>
           </thead>
           <tbody *ngIf="tenants.length > 0">
@@ -27,14 +33,6 @@
                 </div>
               </td>
               <td>{{ tenant.stageName }}</td>
-              <td>
-                <button
-                  class="kanban-button"
-                  [routerLink]="['/Kanban', tenant.kanbanid]"
-                >
-                  View Kanban
-                </button>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -48,13 +46,27 @@
       <div
         class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
       >
-        <div class="d-flex justify-content-start w-100 p-2">
-          <input
-            type="text"
-            class="form-control w-100"
-            placeholder="Filter by name"
-            (input)="onBuyBoxSearchChange($event)"
-          />
+        <div class="row w-100 mt-2 mb-2">
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control w-100"
+              placeholder="Filter using buybox name"
+              name="buybox-name-filter"
+              [(ngModel)]="buyboxNameFilter"
+              (input)="onBuyBoxSearchChange()"
+            />
+          </div>
+          <div class="col-6">
+            <input
+              type="text"
+              class="form-control w-100"
+              placeholder="Filter using organization name"
+              name="buybox-name-filter"
+              [(ngModel)]="buyboxOrganizationFilter"
+              (input)="onBuyBoxSearchChange()"
+            />
+          </div>
         </div>
 
         <table *ngIf="filterBuyBoxes.length > 0" class="table">

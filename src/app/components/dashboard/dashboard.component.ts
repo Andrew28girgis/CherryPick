@@ -21,6 +21,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   tenants: IDashboardTenant[] = [];
   buyBoxes: IDashboardBuyBox[] = [];
   filterBuyBoxes: IDashboardBuyBox[] = [];
+  buyboxNameFilter: string = '';
+  buyboxOrganizationFilter: string = '';
   selectedEmailBody: string = '';
 
   constructor(
@@ -160,15 +162,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.modalService.open(content, { centered: true, scrollable: true });
   }
 
-  onBuyBoxSearchChange(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    if (value.trim().length > 0) {
-      this.filterBuyBoxes = this.buyBoxes.filter((b) =>
-        b.buyBoxName.toLowerCase().includes(value.toLowerCase())
-      );
-    } else {
+  onBuyBoxSearchChange(): void {
+    if (
+      !(this.buyboxNameFilter.trim().length > 0) &&
+      !(this.buyboxOrganizationFilter.trim().length > 0)
+    ) {
       this.filterBuyBoxes = [...this.buyBoxes];
+    } else {
+      this.filterBuyBoxes = this.buyBoxes.filter((b) => {
+        const nameFilter = this.buyboxNameFilter.trim().toLowerCase();
+        const orgFilter = this.buyboxOrganizationFilter.trim().toLowerCase();
+      
+        const matchesName = nameFilter ? b.buyBoxName.toLowerCase().includes(nameFilter) : true;
+        const matchesOrg = orgFilter ? b.organizationName.toLowerCase().includes(orgFilter) : true;
+      
+        return matchesName && matchesOrg;
+      });
+      
     }
+  
   }
 
   ngOnDestroy(): void {
