@@ -120,8 +120,7 @@
 }
 
 .active-route {
-  background-color: #b8c1e1;
-  /* border: 1px solid #2E3D6C; */
+  background-color: #b8c1e1; 
   color: #4d65b4;
   font-weight: 600;
 }
