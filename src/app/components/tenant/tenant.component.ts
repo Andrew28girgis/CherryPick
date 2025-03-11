@@ -1,19 +1,10 @@
-import {
-  Component,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
   NgxFileDropEntry,
   FileSystemFileEntry,
   FileSystemDirectoryEntry,
 } from 'ngx-file-drop';
-import {
-  AvailabilityTenant,
-  IFile,
-  jsonGPT,
-} from 'src/models/manage-prop';
+import { AvailabilityTenant, IFile, jsonGPT } from 'src/models/manage-prop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
 import { PlacesService } from '../../../app/services/places.service';
@@ -95,9 +86,7 @@ export class TenantComponent implements OnInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer
-  ) {
-    
-  }
+  ) {}
   ngOnInit(): void {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
@@ -119,7 +108,7 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
- 
+
         // Use destructuring to extract values from the API response
         const buyboxData = this.TenantResult.Buybox[0].BuyBoxOrganization[0];
         const managerOrganizationData =
@@ -153,11 +142,11 @@ export class TenantComponent implements OnInit {
           : [this.TenantResult.Buybox[0].Description];
 
         this.spinner.hide();
- 
+
         this.GetOrganizationBranches();
       },
       error: (err: any) => {
-         this.spinner.hide();
+        this.spinner.hide();
       },
     });
   }
@@ -174,13 +163,13 @@ export class TenantComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-         this.organizationBranches = res.json[0];
+        this.organizationBranches = res.json[0];
         this.address = this.organizationBranches.Address;
         this.states = this.organizationBranches.States;
         this.spinner.hide();
       },
       error: (err: any) => {
-         this.spinner.hide();
+        this.spinner.hide();
       },
     });
   }
@@ -188,11 +177,11 @@ export class TenantComponent implements OnInit {
   openUploadModal(id: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
- 
+
       this.selectedShoppingID = guid;
     } else {
       this.selectedShoppingID = id.toString();
-    } 
+    }
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
   public uploadFile(files: NgxFileDropEntry[]) {
@@ -230,7 +219,7 @@ export class TenantComponent implements OnInit {
                 }
               } else if (event instanceof HttpResponse) {
                 // Conversion complete; extract images from the new API response structure
-          
+
                 const response = event.body;
                 if (response && response.images) {
                   this.images = response.images.map(
@@ -242,14 +231,14 @@ export class TenantComponent implements OnInit {
                     })
                   );
                   this.pdfFileName = response.pdfFileName;
-                 }
+                }
                 this.isConverting = false;
                 this.spinner.hide();
                 this.showToast('PDF File uploaded and converted successfully!');
               }
             },
             (error) => {
-               this.isUploading = false;
+              this.isUploading = false;
               this.isConverting = false;
               this.spinner.hide();
               this.showToast('Failed to upload or convert PDF file!');
@@ -286,7 +275,6 @@ export class TenantComponent implements OnInit {
       this.showToast('Please enter a valid tenant name.');
       return;
     }
-    // Basic validation for domain format (optional, since HTML pattern handles it)
     const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     if (!domainPattern.test(this.newTenantUrl.trim())) {
       alert('Please enter a valid domain (e.g., example.com).');
@@ -343,7 +331,7 @@ export class TenantComponent implements OnInit {
         this.spinner.hide();
       },
       error: (error) => {
-         this.spinner.hide();
+        this.spinner.hide();
       },
     });
   }

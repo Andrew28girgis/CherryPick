@@ -27,8 +27,7 @@ import { PropertiesspilitviewComponent } from './components/kanban/properties/wi
  import { TasksComponent } from './components/kanban/tasks/tasks.component';
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
 import { LogoutComponent } from './components/logout/logout.component';
-import { TermsComponent } from './components/terms/terms.component';
-import { NumberFormatDirective } from './app-number-format.directive';
+import { TermsComponent } from './components/terms/terms.component'; 
 import { NumberWithCommasPipe } from './pipes/number-with-commas.pipe';
 
 // Third-Party Modules
@@ -107,8 +106,7 @@ const loginRequest = {
     TasksComponent,
     CommunicationComponent,
     LogoutComponent,
-    TermsComponent,
-    NumberFormatDirective,
+    TermsComponent, 
     NumberWithCommasPipe,
     ManagePropertiesComponent,
     DashboardComponent,

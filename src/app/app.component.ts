@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { getDomainConfig } from './config';
 import { Router } from '@angular/router';
 
 @Component({
