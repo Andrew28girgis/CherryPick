@@ -1446,7 +1446,7 @@ export class EmilyComponent implements OnInit {
       Name: 'AddEmail',
       MainEntity: null,
       Params: {
-        Body: this.formGroup.get('body')?.value + this.bodyemail,
+        Body: this.formGroup.get('body')?.value + this.emailBodyReply,
         Date: new Date().toISOString(),
         Subject: this.formGroup.get('subject')?.value,
         Direction: Number(-1),
