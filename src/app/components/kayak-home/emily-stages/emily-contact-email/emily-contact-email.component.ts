@@ -191,12 +191,23 @@ export class EmilyContactEmailComponent implements OnInit {
       (buyBoxEmail) => buyBoxEmail.mail
     );
 
+    console.log('Matching emails:', matchingEmails);
+    
     // Filter emails where the contact is a recipient (in MailsContacts)
     this.emailsSentContact = matchingEmails.filter((email: Mail) => {
-      return email.MailsContacts.some(
-        (element: MailsContact) => element.MailContactId === contact.ContactId
-      );
+      if (email.Direction == 2) {
+        // When direction is 2, filter based on the MailsContacts array
+        return email.MailsContacts.some(
+          (element: MailsContact) => element.MailContactId == contact.ContactId
+        );
+      } else if (email.Direction == 1) {
+        // When direction is 1, filter based on the ContactId directly
+        return email.ContactId == contact.ContactId;
+      }
+      return false; // If neither condition is met, return false
     });
+    
+    
 
     console.log('Loaded emails for contact:', contact.ContactId, this.emailsSentContact);
     // Apply the current filter to the newly loaded emails
@@ -219,12 +230,9 @@ export class EmilyContactEmailComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if (data.json && Array.isArray(data.json)) {
           this.BuyBoxEmails = data.json;
           console.log('BuyBoxEmails', this.BuyBoxEmails);
-        } else {
-          this.BuyBoxEmails = [];
-        }
+     
         // Call the callback function if provided
         if (callback) {
           callback();

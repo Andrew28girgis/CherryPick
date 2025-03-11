@@ -71,26 +71,6 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
   },
   {
-    path: 'Properties',
-    component: PropertiesComponent,
-    canActivate: [AuthGuardService],
-  },
-  {
-    path: 'PropertiesSpilit',
-    component: PropertiesspilitviewComponent,
-    canActivate: [AuthGuardService],
-  },
-  {
-    path: 'PropertiesGrid',
-    component: PropertiesgridviewComponentComponent,
-    canActivate: [AuthGuardService],
-  },
-  {
-    path: 'communication',
-    component: CommunicationComponent,
-    canActivate: [AuthGuardService],
-  },
-  {
     path: 'tos',
     component: TermsComponent,
   },
