@@ -54,6 +54,7 @@
   color: #ffffff;
   padding: 0.5rem 1rem;
   border-radius: 2rem;
+  white-space: nowrap;
 }
 
 .emails-container,
@@ -80,6 +81,15 @@
   overflow-y: scroll;
   scrollbar-width: none;
 }
+
+.scrollable-table{
+  width: 100%;
+  margin: 0 1rem;
+overflow-y: auto;
+overflow-x: auto;
+scrollbar-width: none;
+}
+
 .email-card {
   width: 100%;
   background-color: #edf0f8;

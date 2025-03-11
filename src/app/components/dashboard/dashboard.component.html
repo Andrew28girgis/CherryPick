@@ -15,27 +15,32 @@
       <div
         class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
       >
-        <table *ngIf="tenants.length > 0" class="table">
-          <thead class="thead-light">
-            <tr>
-              <th>Name</th>
-              <th>Stage</th>
-            </tr>
-          </thead>
-          <tbody *ngIf="tenants.length > 0">
-            <tr *ngFor="let tenant of tenants; let index = index">
-              <td>
-                <div class="d-flex align-items-center gap-2">
-                  <div *ngIf="tenant.logoURL" class="email-organization-image">
-                    <img [src]="tenant.logoURL" alt="organization-image" />
+        <div class="scrollable-table">
+          <table *ngIf="tenants.length > 0" class="table align-middle">
+            <thead class="thead-light">
+              <tr>
+                <th>Name</th>
+                <th>Stage</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="tenants.length > 0">
+              <tr *ngFor="let tenant of tenants; let index = index">
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div
+                      *ngIf="tenant.logoURL"
+                      class="email-organization-image"
+                    >
+                      <img [src]="tenant.logoURL" alt="organization-image" />
+                    </div>
+                    <span style="white-space: nowrap">{{ tenant.name }}</span>
                   </div>
-                  <span>{{ tenant.name }}</span>
-                </div>
-              </td>
-              <td>{{ tenant.stageName }}</td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+                <td style="white-space: nowrap">{{ tenant.stageName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -69,38 +74,45 @@
           </div>
         </div>
 
-        <table *ngIf="filterBuyBoxes.length > 0" class="table">
-          <thead class="thead-light">
-            <tr>
-              <th>Name</th>
-              <th>Organizaion Name</th>
-              <th>Stage</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody *ngIf="filterBuyBoxes.length > 0">
-            <tr *ngFor="let buyBox of filterBuyBoxes; let index = index">
-              <td>{{ buyBox.buyBoxName }}</td>
-              <td>
-                <div class="d-flex align-items-center gap-2">
-                  <div *ngIf="buyBox.logoURL" class="email-organization-image">
-                    <img [src]="buyBox.logoURL" alt="organization-image" />
+        <div class="scrollable-table">
+          <table *ngIf="filterBuyBoxes.length > 0" class="table align-middle">
+            <thead class="thead-light">
+              <tr>
+                <th>Name</th>
+                <th style="white-space: nowrap">Organizaion Name</th>
+                <th>Stage</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="filterBuyBoxes.length > 0">
+              <tr *ngFor="let buyBox of filterBuyBoxes; let index = index">
+                <td style="white-space: nowrap">{{ buyBox.buyBoxName }}</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div
+                      *ngIf="buyBox.logoURL"
+                      class="email-organization-image"
+                    >
+                      <img [src]="buyBox.logoURL" alt="organization-image" />
+                    </div>
+                    <span style="white-space: nowrap">{{
+                      buyBox.organizationName
+                    }}</span>
                   </div>
-                  <span>{{ buyBox.organizationName }}</span>
-                </div>
-              </td>
-              <td>{{ buyBox.stageName }}</td>
-              <td>
-                <button
-                  class="kanban-button"
-                  [routerLink]="['/Kanban', buyBox.kanbanid]"
-                >
-                  View Kanban
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+                <td style="white-space: nowrap">{{ buyBox.stageName }}</td>
+                <td>
+                  <button
+                    class="kanban-button"
+                    [routerLink]="['/Kanban', buyBox.kanbanid]"
+                  >
+                    View Kanban
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
