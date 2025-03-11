@@ -1,7 +1,6 @@
 export class General {
   activities: Activity[] = [];
 }
-
 export interface Activity {
   usertId: number;
   actionName: string;
@@ -11,4 +10,3 @@ export interface Activity {
   actionDate: Date;
   workSpacePlaceId: null;
 }
-

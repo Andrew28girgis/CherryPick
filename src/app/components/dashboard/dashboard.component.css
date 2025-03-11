@@ -82,12 +82,12 @@
   scrollbar-width: none;
 }
 
-.scrollable-table{
+.scrollable-table {
   width: 100%;
   margin: 0 1rem;
-overflow-y: auto;
-overflow-x: auto;
-scrollbar-width: none;
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 .email-card {
