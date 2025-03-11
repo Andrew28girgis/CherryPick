@@ -1,12 +1,6 @@
-.info {
-  background-color: red;
-  color: #000;
-}
 .custom-share-btn {
-  background-color: #001f3f !important;
-  border-color: #001f3f !important;
-  color: #fff !important;
-  margin: 0 !important;
+  background-color: #001f3f !important; 
+  color: #fff !important; 
 }
 .cards {
   height: 100vh;
@@ -44,11 +38,6 @@
   font-size: 16px;
   color: #817a79;
 }
-.nav-right {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
 .custom-map {
   height: 100vh;
 }
@@ -70,9 +59,9 @@
 }
 .custom-icon-container {
   display: flex;
+  gap: 15px; 
   justify-content: center;
-  align-items: center;
-  gap: 7px;
+  align-items: center; 
 }
 .icon-option {
   display: flex;
@@ -105,10 +94,6 @@
   font-size: 0.7rem;
   text-align: center;
   margin-top: 5px;
-}
-.custom-icon-container {
-  display: flex;
-  gap: 15px;
 }
 .svg-container {
   display: flex;
