@@ -630,7 +630,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
           }));
           this.kanbanList = filteredData;
           this.filteredKanbanList = [...this.kanbanList];
-
           this.filteredKanbanList.forEach(kanban => {
             kanban.kanbanStages.forEach(stage => {
               if (stage.kanbanOrganizations && stage.kanbanOrganizations.length > 0) {
