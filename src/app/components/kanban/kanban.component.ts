@@ -285,7 +285,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     body.name = 'UpdateKanbanOrganizationStage';
     body.params = {
       StageId: movedItem.kanbanStageId,
-      OrganizationId: movedItem.OrganizationId,
+      kanbanOrganizationId: movedItem.Id,
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
