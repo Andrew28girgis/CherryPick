@@ -11,17 +11,18 @@
           <div class="card-window total" (mouseenter)="onMouseHighlight(place)"
             (mouseleave)="onMouseLeaveHighlight(place)">
             <div class="card-window_c">
-              <a *ngIf="place.CenterCity"
-                [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id : 0, place.Id, BuyBoxId ]">
+              <a
+                [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]">
                 <div class="main-img">
-                  <img src="{{ place.MainImage || 'assets/Images/skeltonImage.png' }}" />
+                  <img src="{{ place.MainImage || 'assets/Images/skeltonImage.png' }}"
+                    loading="lazy" />
                 </div>
               </a>
               <div class="content-wrap card-content">
                 <div>
-                  <div *ngIf="place.CenterCity" class="d-flex justify-content-between">
+                  <div class="d-flex justify-content-between">
                     <a
-                      [routerLink]="[ '/landing', place.ShoppingCenter?.Places ? place.ShoppingCenter.Places?.[0].Id : 0,place.Id,BuyBoxId]">
+                      [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]">
                       <p class="content-title total">
                         {{
                           place.CenterName.length > 22 ? (place.CenterName | titlecase).slice(0, 22) + "..." : (place.CenterName | titlecase)
@@ -95,7 +96,7 @@
                               Street View
                             </a>
                           </li>
-                          <!-- <li *ngIf="place.Deleted != true" class="cursor">
+                          <li *ngIf="place.Deleted != true" class="cursor">
                             <a class="target" (click)="openDeleteShoppingCenterModal(
                                   deleteSingleShoppingCenterModal,
                                   place
@@ -111,7 +112,7 @@
                               <i class="fa-solid fa-trash-arrow-up emily"></i>
                               Restore
                             </a>
-                          </li> -->
+                          </li>
                         </ul>
                         <i class="fa-solid fa-caret-right"></i>
                       </div>
@@ -127,32 +128,21 @@
                     </span>
                   </div>
 
-                  <div *ngIf="place.Address" class="card-address total" (click)="openMapViewPlace(MapViewPlace, place)">
-                    <p>
-                      {{ place.Address }}, {{ place.City | titlecase }},
-                      {{ place.State }}
-                    </p>
-                  </div>
-
                   <div *ngIf="place.CenterAddress">
                     <p class="ShoppingCenterUnit" [innerHTML]="getShoppingCenterUnitSize(place)"></p>
                   </div>
 
-                  <div class="row" *ngIf="place.ShoppingCenter?.BuyBoxPlaces || place.Place">
-                    <div *ngFor="
-                        let item of place.ShoppingCenter
-                          ? place.ShoppingCenter?.BuyBoxPlaces
-                          : place.Place?.BuyBoxPlaces
-                      " class="col-12 d-flex flex-column spec">
+                  <div class="row">
+                    <div *ngFor="let item of place.ShoppingCenter?.BuyBoxPlaces" class="col-12 d-flex flex-column spec">
                       <div class="d-flex flex-column">
                         <p class="nearset-category">
                           <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
                         </p>
-                        <p style="color: #000">
+                        <p>
                           {{ item.RelationOrganizationName }}
                           <img class="logo ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                              item.RelationOrganizationId
-                            }}" [title]="item.RelationOrganizationName" alt="" />
+                                item.RelationOrganizationId
+                              }}" [title]="item.RelationOrganizationName" alt="" loading="lazy" />
                         </p>
                       </div>
                     </div>
@@ -167,14 +157,15 @@
                           place.ShoppingCenter.ManagerOrganization[0].ID
                         }}" [title]="
                           place.ShoppingCenter.ManagerOrganization[0].Name
-                        " alt="" />
+                        " alt="" loading="lazy" />
                       <span>
                         {{ place.ShoppingCenter.ManagerOrganization[0].Name }}
                       </span>
                     </div>
 
                     <img class="ms-2 total" src="../../../assets/Images/Icons/eye.png" alt="View Manager Details"
-                      [ngbPopover]="popoverContent" popoverTitle="Organization Contact Info" [placement]="'left'" />
+                      [ngbPopover]="popoverContent" popoverTitle="Organization Contact Info" [placement]="'left'"
+                      loading="lazy" />
                     <!-- <br /> -->
                     <ng-template #popoverContent>
                       <div *ngFor="
