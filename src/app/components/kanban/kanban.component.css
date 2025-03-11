@@ -314,12 +314,13 @@
 
 .search-icon {
   position: absolute;
-  top: 50%;
+  top: 12%;
   transform: translateY(-50%);
-  width: 20px; /* Icon size */
+  width: 20px;
   height: 20px;
   cursor: pointer;
   margin-left: 10px;
+  left: 22%;
 }
 
 .filter-button {

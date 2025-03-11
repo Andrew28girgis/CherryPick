@@ -26,7 +26,6 @@ import {
   StakeHolder,
   KanbanStage,
   Organization,
-  LeadBroker,
 } from 'src/models/kanbans';
 import { General } from 'src/models/domain';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -49,15 +48,15 @@ export class KanbanComponent implements OnInit, OnDestroy {
   isMobileView = false;
 
   General!: General;
-  sidebarItems!: any[];
+  // sidebarItems!: any[];
   collapse!: boolean;
   userKanbans: Kanban[] = [];
   kanbanList: KanbanCard[] = [];
   stackHolders: StakeHolder[] = [];
   selectedKanban?: Kanban;
-  selectedStackHolderId?: number;
+  // selectedStackHolderId?: number;
   kanbanTemplate: KanbanTemplate[] = [];
-  KanbanActions: KanbanAction[] = [];
+  // KanbanActions: KanbanAction[] = [];
   TargetActions: KanbanAction[] = [];
   TargetOrg!: KanbanOrganization;
   Organizations: any[] = [];
@@ -67,16 +66,16 @@ export class KanbanComponent implements OnInit, OnDestroy {
   keyword = '';
   searchResults: any[] = [];
   filteredNames: any[] = [];
-  activeTab = 'In Progress';
-  activeFilter = 'Prospect';
-  showFilterSidebar = false;
+  // activeTab = 'In Progress';
+  // activeFilter = 'Prospect';
+  // showFilterSidebar = false;
   showTableWrapper = false; // Added property
   hiddenOrganizations: { [key: number]: boolean } = {}; // Tracks visibility of organization names
   isStakeholderHidden = false; // Tracks visibility of stakeholder name
-  mobileNavOpen = false;
-  sidebarCollapsed = false;
-  isOpen = false;
-  newOrganizationForm!: FormGroup;
+  // mobileNavOpen = false;
+  // sidebarCollapsed = false;
+  // isOpen = false;
+  // newOrganizationForm!: FormGroup;
   isLoading = false;
   selectedBroker: any = null; // Added: selectedBroker property
   searchText = '';
@@ -84,6 +83,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   modalContent: any = null;
   isAnswerVisible: boolean[] = []; // Array to track visibility of answers
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>; // Add this line
+  selectedTargetKanban!: number;
 
   // kanbanStages: any[] = [];
   kanbanStages: KanbanStage[] = []; // Initialize kanbanStages array
@@ -108,15 +108,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private toastr: ToastrService
   ) {
-    this.initNewOrganizationForm();
   }
-  private loadProperties(): void {
-    this.isLoading = true;
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 0);
-  }
+
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((parms) => {
       const id = parms.get('id');
@@ -135,14 +128,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.General = new General();
     this.GetUserKanbans();
     this.GetAllStakeHolders();
-    this.loadProperties();
-
-    // Load saved sidebar state
-    const savedState = localStorage.getItem('sidebarCollapsed');
-    if (savedState) {
-      this.sidebarCollapsed = JSON.parse(savedState);
-    }
-    this.checkMobileView();
   }
 
   GetUserKanbans(): void {
@@ -153,7 +138,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.userKanbans = data.json;
-        this.userKanbans.forEach((kanban) => (kanban.isCollapsed = false));  
           
           this.userKanbans.sort((a, b) => {
             if (a.kanbanTemplateId === b.kanbanTemplateId) {
@@ -183,15 +167,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   GetKanbanDetailsWithId(id: number) {
-    // Show loading indicator
-
-    this.isLoading = true;
-
-    // Clear previous data and subscription
     this.kanbanList = [];
     this.filteredKanbanList = [];
-
-    // Unsubscribe from previous polling if active
     if (this.pollingSubscription) {
       this.pollingSubscription.unsubscribe();
     }
@@ -204,12 +181,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
       this.selectedKanban = kanban;
       this.isPollingActive = true;
-
-      // Initial load with fresh state
       this.fetchKanbanDetails();
-
-      // Set up polling for new stages and organizations
-      this.pollingSubscription = interval(30000) // Poll every 30 seconds
+      this.pollingSubscription = interval(30000)
         .pipe(takeWhile(() => this.isPollingActive))
         .subscribe(() => {
           this.checkForNewStagesAndOrganizations();
@@ -219,15 +192,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   GetKanbanDetails(kanban: Kanban) {
     this.activeKanbanId = kanban.Id;
-
-    // Show loading indicator
-    this.isLoading = true;
-
-    // Clear previous data and subscription
     this.kanbanList = [];
     this.filteredKanbanList = [];
-
-    // Unsubscribe from previous polling if active
     if (this.pollingSubscription) {
       this.pollingSubscription.unsubscribe();
     }
@@ -235,11 +201,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.selectedKanban = kanban;
     this.isPollingActive = true;
 
-    // Initial load with fresh state
     this.fetchKanbanDetails();
-
-    // Set up polling for new stages and organizations
-    this.pollingSubscription = interval(30000) // Poll every 30 seconds
+    this.pollingSubscription = interval(30000) 
       .pipe(takeWhile(() => this.isPollingActive))
       .subscribe(() => {
         this.checkForNewStagesAndOrganizations();
@@ -287,13 +250,9 @@ export class KanbanComponent implements OnInit, OnDestroy {
       );
       const newStageId = Number.parseInt(event.container.id, 10);
       movedItem.kanbanStageId = newStageId;
-
-      // Remove the item from the previous stage
       const previousStageId = Number.parseInt(event.previousContainer.id, 10);
       this.removeOrganizationFromStage(movedItem, previousStageId);
     }
-
-    // Re-enable animations after drag
     setTimeout(() => {
       document.body.classList.remove('dragging');
     }, 0);
@@ -354,17 +313,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.collapse = !this.collapse;
   }
 
-  openCreateNewKanban(content: any, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'xl',
-      scrollable: true,
-    });
-    this.General.modalObject = modalObject;
-    this.initNewOrganizationForm();
-    this.GetKanbanMatchTemplate();
-    // this.getAllOrganizations();
-  }
 
   GetKanbanMatchTemplate(): void {
     const StakeholderIds = [];
@@ -481,62 +429,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     });
     this.General.modalObject = modalObject;
   }
-
-  CreateOrganication() {
-    if (this.newOrganizationForm.valid) {
-      const newOrg = this.newOrganizationForm.value;
-      const body: any = {
-        Name: 'CreateOrganization',
-        Params: {
-          ...newOrg,
-          kanbanStageId: this.currentOpenedStage.Id,
-        },
-      };
-
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          console.log('Organization created:', data);
-          this.checkForNewStagesAndOrganizations(); // Refresh Kanban details
-          this.modalService.dismissAll();
-        },
-        error: (err) => {
-          console.error('Error creating organization:', err);
-        },
-      });
-    }
-  }
-
-  SearchOrganication(name: string): void {
-    const body: any = {
-      Name: 'SearchOrganizationByName',
-      Params: { Name: name },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.Organizations = data.json;
-      },
-    });
-  }
-
-  AddExistingOrganication(stageId: number, orgId: string): void {
-    const body: any = {
-      Name: 'AddOrganizationToKanban',
-      Params: { organizationid: orgId, kanbanstageid: stageId },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        console.log('Organization added to Kanban:', data);
-        this.GetKanbanDetails(this.selectedKanban!);
-        this.modalService.dismissAll();
-      },
-      error: (err) => {
-        console.error('Error adding organization to Kanban:', err);
-      },
-    });
-  }
-
   //Route To Broker
 
   getAllOrganizations(): void {
@@ -583,7 +475,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     });
   }
 
-  selectedTargetKanban!: number;
 
   CreateKanbanOrganization(): void {
     const body: any = {
@@ -649,38 +540,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.toastr.success('Broker selected');
   }
 
-  setActiveTab(tab: string): void {
-    this.activeTab = tab;
-  }
-
-  setActiveFilter(filter: string): void {
-    this.activeFilter = filter;
-    // this.filterKanbanList();
-  }
-
-  onSearchIconClick(): void {
-    console.log('Search icon clicked!');
-    // Add search logic here
-  }
-
-  // Add this method to your component
-  toggleFilterSidebar(): void {
-    this.showFilterSidebar = !this.showFilterSidebar;
-  }
-  toggleFilter() {
-    this.filterPanel.toggle();
-  }
-
-  onFilterChange(filters: any) {
-    console.log('Filters changed:', filters);
-    // Apply the filters to your data here
-  }
-  isRouteActive(route: string): boolean {
-    return this.router.isActive(route, true);
-  }
-
   toggleTableWrapper(): void {
-    // Added method
     this.showTableWrapper = !this.showTableWrapper;
   }
   hideOrganization(index: number): void {
@@ -691,26 +551,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   hideStakeholder(): void {
     this.isStakeholderHidden = true;
   }
-  onSidebarCollapse(collapsed: boolean): void {
-    this.sidebarCollapsed = collapsed;
-    localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
-  }
-  checkMobileView() {
-    // this.isMobileView = window.innerWidth <= 768;
-    // if (!this.isMobileView && this.isMobileMenuOpen) {
-    //   // this.isMobileMenuOpen = false;
-    // }
-  }
 
-  initNewOrganizationForm() {
-    this.newOrganizationForm = this.fb.group({
-      name: ['', Validators.required],
-      location: [''],
-      assetType: [''],
-      totalProperties: [0, Validators.min(0)],
-      leadBrokerName: [''],
-    });
-  }
 
   createKanbanByTemplate(selectedTemplate: KanbanTemplate): void {
     if (!this.selectedBroker) {
@@ -727,11 +568,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     const kanbanOwnerOrganizationId = this.selectedBroker.id1;
     const placeId = selectedOrg?.PlaceId || null;
 
-    // console.log('Template ID:', templateId);
-    // console.log('Previous Kanban ID:', prevKanbanId);
-    // console.log('Target Organization ID:', targetOrganizationId);
-    // console.log('Kanban Owner Contact ID:', kanbanOwnerContactId);
-    // console.log('Kanban Owner Organization ID:', kanbanOwnerOrganizationId);
     console.log('Place ID:', placeId);
 
     if (!templateId || !targetOrganizationId) {
@@ -770,47 +606,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
     });
   }
 
-  filterKanbanData(): void {
-    if (!this.searchText.trim()) {
-      this.filteredKanbanList = [...this.kanbanList];
-      return;
-    }
-
-    const searchLower = this.searchText.toLowerCase().trim();
-    this.filteredKanbanList = this.kanbanList
-      .map((kanban) => ({
-        ...kanban,
-        kanbanStages: kanban.kanbanStages
-          .map((stage) => ({
-            ...stage,
-            kanbanOrganizations: stage.kanbanOrganizations.filter(
-              (org) =>
-                org.Organization?.[0]?.Name?.toLowerCase().includes(
-                  searchLower
-                ) ||
-                org.Organization?.[0]?.Location?.toLowerCase().includes(
-                  searchLower
-                ) ||
-                org.Organization?.[0]?.AssetType?.toLowerCase().includes(
-                  searchLower
-                ) ||
-                org.LeadBroker?.Name?.toLowerCase().includes(searchLower) ||
-                stage.stageName.toLowerCase().includes(searchLower)
-            ),
-          }))
-          .filter((stage) => stage.kanbanOrganizations.length > 0),
-      }))
-      .filter((kanban) => kanban.kanbanStages.length > 0);
-  }
-
-  onSearchChange(event: any): void {
-    this.searchText = event.target.value;
-    this.filterKanbanData();
-  }
-
-  toggleCard(org: KanbanOrganization): void {
-    org.isExpanded = !org.isExpanded;
-  }
 
   private fetchKanbanDetails() {
     const body: any = {
@@ -916,8 +711,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
                   ...org,
                   kanbanStageId: newStage.Id,
                 }));
-
-              // Find organizations that have moved to this stage
               const movedOrgs = updatedOrgs.filter(
                 (updatedOrg: { Id: number }) =>
                   !currentStage.kanbanOrganizations.some(
@@ -925,7 +718,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
                   )
               );
 
-              // Add moved organizations to the new stage
               movedOrgs.forEach((org: KanbanOrganization) => {
                 const previousStage = currentStages.find((stage) =>
                   stage.kanbanOrganizations.some(
@@ -935,15 +727,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
                 if (previousStage) {
                   const direction =
                     previousStage.Id < newStage.Id ? 'right' : 'left';
-                  // this.animatingCards[org.Id] = `card-move-${direction}`
-                  // setTimeout(() => {
-                  //   this.animatingCards[org.Id] = "card-appear"
-                  //   setTimeout(() => {
-                  //     delete this.animatingCards[org.Id]
-                  //   }, 500)
-                  // }, 0)
-
-                  // Remove the organization from the previous stage
                   previousStage.kanbanOrganizations =
                     previousStage.kanbanOrganizations.filter(
                       (prevOrg) => prevOrg.Id !== org.Id
@@ -959,16 +742,12 @@ export class KanbanComponent implements OnInit, OnDestroy {
             return currentStage;
           }
         );
-
-        // Update filtered list
         this.filteredKanbanList = [...this.kanbanList];
 
-        // Trigger change detection
         this.crf.detectChanges();
       },
       error: (error) => {
         console.error('Error fetching Kanban details:', error);
-        // You might want to show an error message to the user here
       },
       complete: () => {
         this.isUpdating = false;
@@ -1019,9 +798,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       this.pollingSubscription.unsubscribe();
     }
   }
-  toggleCollapse(kanban: any): void {
-    kanban.isCollapsed = !kanban.isCollapsed;
-  }
+
 
   fetchCardDetails(organizationId: number, modalRef: NgbModalRef): void {
     if (!organizationId) {

@@ -8,7 +8,6 @@
               class="kanban-item"
               [ngClass]="{ 'kanban-active-item': activeKanbanId == kanban.Id }"
               (click)="GetKanbanDetails(kanban)"
-              (click)="toggleCollapse(kanban)"
             >
               {{ kanban.kanbanName }}
             </li>
@@ -30,14 +29,6 @@
                   >
                     {{ stage.stageName }}
                   </h2>
-
-                  <img
-                    src="assets/Images/Icons/more-circle.svg"
-                    alt="More options"
-                    class="optionsss"
-                    *ngIf="stage.Id === 69"
-                    (click)="openActionsForStage(ViewStageActions, stage)"
-                  />
                 </div>
               </th>
             </tr>
@@ -104,15 +95,6 @@
                                     )
                                   "
                                 />
-                                <button
-                                  class="btn btn-success add-btn"
-                                  *ngIf="stage.isQualified"
-                                  (click)="
-                                    openCreateNewKanban(chooseStackHolder, org)
-                                  "
-                                >
-                                  +
-                                </button>
                               </div>
                             </div>
                           </div>
@@ -291,23 +273,6 @@
   </div>
 </ng-template>
 
-<ng-template #ViewStageActions let-modal>
-  <div class="p-3">
-    <ng-container *ngFor="let action of TargetActions">
-      <ng-container *ngIf="action.actionLevel == 'Stage'">
-        <a
-          class="total"
-          *ngIf="action.actionType == 'Popup'"
-          (click)="openModel(addOrganization)"
-          target="_blank"
-        >
-          {{ action.actionName }}
-        </a>
-      </ng-container>
-    </ng-container>
-  </div>
-</ng-template>
-
 <ng-template #ViewTargetActions let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Actions</h5>
@@ -332,60 +297,5 @@
     <button type="button" class="btn-secondary" (click)="modal.close()">
       Close
     </button>
-  </div>
-</ng-template>
-
-<ng-template #addOrganization let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Add Organization</h4>
-    <button
-      type="button"
-      class="close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <h5>Search Existing Organizations</h5>
-    <div class="form-group">
-      <input
-        type="text"
-        placeholder="Search organizations"
-        #searchInput
-        class="form-control"
-        (input)="
-          searchInput.value.length >= 3
-            ? SearchOrganication(searchInput.value)
-            : null
-        "
-      />
-      <button
-        class="btn btn-secondary mt-2"
-        (click)="
-          searchInput.value.length >= 3
-            ? SearchOrganication(searchInput.value)
-            : null
-        "
-      >
-        Search
-      </button>
-    </div>
-
-    <ul class="list-group mt-3">
-      <li
-        *ngFor="let org of Organizations"
-        class="list-group-item d-flex justify-content-between align-items-center"
-      >
-        {{ org.name }}
-        <button
-          class="btn btn-success btn-sm"
-          (click)="AddExistingOrganication(currentOpenedStage.Id, org.id)"
-        >
-          Add
-        </button>
-      </li>
-    </ul>
   </div>
 </ng-template>
