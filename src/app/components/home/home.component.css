@@ -772,16 +772,10 @@
   right: 135%;
   width: max-content;
   top: -135%;
-}
-
+} 
 .shortcuts_iconCard {
   top: -22%;
-}
-
-.mtopp {
-  overflow-y: scroll;
-}
-
+} 
 .shortcuts_icon > ul,
 .shortcuts_iconCard > ul {
   text-decoration: none;

@@ -354,25 +354,28 @@ export class EmilyContactEmailComponent implements OnInit {
       return;
     }
     // Apply the filter based on the selected type
+    let filtered: Mail[] = [];
     switch (filterType) {
       case 'inbox':
         // Direction = 1 for inbox
-        this.filteredEmails = this.emailsSentContact.filter(email => email.Direction === 1);
+        filtered = this.emailsSentContact.filter(email => email.Direction === 1);
         break;
       case 'outbox':
         // Direction = -1 for outbox
-        this.filteredEmails = this.emailsSentContact.filter(email => email.Direction === -1);
+        filtered = this.emailsSentContact.filter(email => email.Direction === -1);
         break;
       case 'sent':
         // Direction = 2 for sent
-        this.filteredEmails = this.emailsSentContact.filter(email => email.Direction === 2);
+        filtered = this.emailsSentContact.filter(email => email.Direction === 2);
         break;
       case 'all':
       default:
         // Show all emails
-        this.filteredEmails = [...this.emailsSentContact];
+        filtered = [...this.emailsSentContact];
         break;
     }
+    // Sort emails by date in descending order (newest first)
+    this.filteredEmails = this.sortEmailsByDateDesc(filtered);
     // Update the empty message based on filter results
     if (this.filteredEmails.length === 0) {
       this.emptyMessage = `No ${filterType} emails available for this contact`;
@@ -383,5 +386,13 @@ export class EmilyContactEmailComponent implements OnInit {
         !this.filteredEmails.some(email => email.id === this.selectedEmail?.ID))) {
       this.openEmail(this.filteredEmails[0]);
     }
+  }
+  // Add this function to the EmilyContactEmailComponent class
+  sortEmailsByDateDesc(emails: Mail[]): Mail[] {
+    return [...emails].sort((a, b) => {
+      const dateA = new Date(a.Date).getTime();
+      const dateB = new Date(b.Date).getTime();
+      return dateB - dateA; // Sort descending (newest first)
+    });
   }
 }
