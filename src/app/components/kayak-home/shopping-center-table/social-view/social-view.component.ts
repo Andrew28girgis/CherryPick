@@ -16,10 +16,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center, Reaction } from '../../../../../models/shoppingCenters';
-import { StateService } from '../../../../services/state.service';
 import { ShareOrg } from 'src/models/shareOrg';
 import { LandingPlace } from 'src/models/landingPlace';
 import { NgForm } from '@angular/forms';
@@ -31,6 +29,9 @@ import { PlacesService } from 'src/app/services/places.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 declare const google: any;
+import { MapsService } from 'src/app/services/maps.service';
+import { StateService } from '../../../../services/state.service';
+
 @Component({
   selector: 'app-social-view',
   templateUrl: './social-view.component.html',
@@ -45,27 +46,24 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
   @ViewChild('StreetViewPlace', { static: true })
-  @Output()
-  viewChange = new EventEmitter<number>();
-
+  @Output() viewChange = new EventEmitter<number>();
   isPanelOpen = false;
   currentShopping: any = null;
   panelStartY = 0;
   panelCurrentY = 0;
-  readonly PANEL_SWIPE_THRESHOLD = 100;
   documentTouchMoveListener: Function | null = null;
   documentTouchEndListener: Function | null = null;
+  readonly PANEL_SWIPE_THRESHOLD = 100;
   isMobileView = false;
   StreetViewPlace!: TemplateRef<any>;
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
   BuyBoxName!: string;
-  dropdowmOptions: any[];
-  selectedOption = 5;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
   selectedIdCard: number | null = null;
+  selectedId: number | null = null;
   placeImage: string[] = [];
   replyingTo: { [key: number]: number | null } = {};
   newComments: { [key: number]: string } = {};
@@ -77,13 +75,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   clickTimeout: any;
   sanitizedUrl!: SafeResourceUrl;
   isOpen = false;
-  currentView: any;
   mapViewOnePlacex = false;
   StreetViewOnePlace!: boolean;
   selectedState = '0';
   selectedCity = '';
-  activecomponent = 'Properties';
-  selectedTab = 'Properties';
   ShareOrg: ShareOrg[] = [];
   selectedCenterId: number | null = null;
   currentIndex = -1;
@@ -104,7 +99,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   buyboxPlaces: BbPlace[] = [];
   showbackIds: number[] = [];
   mapsLoaded = false;
-
+  DeletedSC: any;
   private touchStartX = 0;
   private touchEndX = 0;
   private readonly SWIPE_THRESHOLD = 50;
@@ -112,22 +107,21 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private isOptionSelected = false;
   private categoryNameCache = new Map<number, string>();
   private unitSizeCache = new Map<string, string>();
+  private commentSortCache = new WeakMap<any[], any[]>();
+  @ViewChild('panelContent') panelContent!: ElementRef;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
-    private markerService: MapsService,
-    private stateService: StateService,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private PlacesService: PlacesService,
     private viewManagerService: ViewManagerService,
     private sanitizer: DomSanitizer,
     private ngZone: NgZone
-  ) {
-    this.dropdowmOptions = this.viewManagerService.dropdowmOptions;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.checkMobileView();
@@ -142,18 +136,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
       this.initializeData();
     });
-
-    this.currentView = localStorage.getItem('currentViewDashBord') || '5';
-
-    const selectedOption = this.dropdowmOptions.find(
-      (option: any) => option.status === Number.parseInt(this.currentView)
-    );
-
-    if (selectedOption) {
-      this.selectedOption = selectedOption.status;
-    }
-    this.activecomponent = 'Properties';
-    this.selectedTab = 'Properties';
 
     setTimeout(() => {
       this.mapsLoaded = true;
@@ -283,6 +265,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.markForCheck();
     }
   }
+
   getNeareastCategoryName(categoryId: number): string {
     if (this.categoryNameCache.has(categoryId)) {
       return this.categoryNameCache.get(categoryId)!;
@@ -295,6 +278,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.categoryNameCache.set(categoryId, result);
     return result;
   }
+
   getShoppingCenterUnitSize(shoppingCenter: any): string {
     const key = `${shoppingCenter.Id}`;
     if (this.unitSizeCache.has(key)) {
@@ -401,7 +385,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     });
   }
-  private commentSortCache = new WeakMap<any[], any[]>();
 
   sortCommentsByDate(comments: any[]): any[] {
     if (!comments) return [];
@@ -534,22 +517,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  selectOption(option: any): void {
-    this.selectedOption = option.status;
-    this.viewChange.emit(option.status);
-  }
-
-  toggleShortcutsCard(id: number | null): void {
-    this.selectedIdCard = id;
-    this.cdr.markForCheck();
-  }
-
-  toggleShortcuts(id: number, close?: string): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-      this.cdr.markForCheck();
-    }
-  }
   trackByShoppingId(index: number, item: any): number {
     return item.Id;
   }
@@ -649,7 +616,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.cdr.markForCheck();
   }
-  DeletedSC: any;
+
   openDeleteShoppingCenterModal(
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
@@ -741,7 +708,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
     this.selectedRating = rating;
-    console.log(`User rated: ${rating}`);
     this.cdr.markForCheck();
   }
 
@@ -814,7 +780,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.spinner.hide();
-        console.log('Contact added successfully:', data);
         this.newContact = {
           firstName: '',
           lastName: '',
@@ -939,10 +904,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checkMobileView();
   }
 
-  // checkMobileView() {
-  //   this.isMobileView = window.innerWidth <= 768;
-  // }
-
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean) {
     this.spinner.show();
 
@@ -981,7 +942,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
         this.BuyBoxId
       );
-      console.log('this.shoppingCenters', this.shoppingCenters);
 
       this.showbackIds = [];
     } catch (error) {
@@ -991,15 +951,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  @ViewChild('panelContent') panelContent!: ElementRef;
-
-  // Check if we're on mobile
   checkMobileView(): void {
     this.isMobileView = window.innerWidth <= 768;
     this.cdr.detectChanges();
   }
 
-  // TikTok-style panel methods
   openCustomPanel(shopping: any): void {
     this.currentShopping = shopping;
     this.isPanelOpen = true;
@@ -1007,24 +963,21 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     document.body.classList.add('panel-open');
 
-      this.renderer.listen('document', 'click', (event: Event) => {
-        const panelElement = this.panelContent?.nativeElement;
-        if (
-          panelElement &&
-          !panelElement.contains(event.target) &&
-          this.isPanelOpen
-        ) {
-          this.closeCustomPanel();
-        }
-      });
-
+    this.renderer.listen('document', 'click', (event: Event) => {
+      const panelElement = this.panelContent?.nativeElement;
+      if (
+        panelElement &&
+        !panelElement.contains(event.target) &&
+        this.isPanelOpen
+      ) {
+        this.closeCustomPanel();
+      }
+    });
   }
 
   closeCustomPanel(): void {
-    // Remove class from body
     document.body.classList.remove('panel-open');
 
-    // Animate panel closing
     if (this.panelContent) {
       this.renderer.setStyle(
         this.panelContent.nativeElement,
@@ -1037,9 +990,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         'transform 0.3s ease-out'
       );
 
-        this.isPanelOpen = false;
-        this.currentShopping = null;
-        this.cdr.markForCheck();
+      this.isPanelOpen = false;
+      this.currentShopping = null;
+      this.cdr.markForCheck();
     } else {
       this.isPanelOpen = false;
       this.currentShopping = null;
@@ -1053,7 +1006,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.panelStartY = event.touches[0].clientY;
     this.panelCurrentY = this.panelStartY;
 
-    // Add global touch move and end listeners
     this.documentTouchMoveListener = this.renderer.listen(
       'document',
       'touchmove',
@@ -1075,7 +1027,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.panelCurrentY = event.touches[0].clientY;
     const deltaY = this.panelCurrentY - this.panelStartY;
 
-    // Only allow dragging down, not up
     if (deltaY > 0) {
       event.preventDefault();
       if (this.panelContent) {
@@ -1110,8 +1061,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           'transform',
           'translateY(100%)'
         );
-          this.closeCustomPanel();
-
+        this.closeCustomPanel();
       } else {
         // Reset position
         this.renderer.setStyle(
@@ -1137,7 +1087,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Modified method to use custom panel on mobile
   openShoppingDetailsModal(modal: any, shopping: any) {
     if (this.isMobileView) {
       this.openCustomPanel(shopping);
@@ -1240,5 +1189,56 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         },
       },
     ];
+  }
+
+  outsideClickHandler = (event: Event): void => {
+    const targetElement = event.target as HTMLElement;
+    const isInside = targetElement.closest(
+      '.shortcuts_iconCard, .ellipsis_icont'
+    );
+
+    if (!isInside) {
+      this.selectedIdCard = null;
+      document.removeEventListener('click', this.outsideClickHandler);
+    }
+  };
+
+  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
+    event?.stopPropagation();
+
+    if (this.selectedIdCard === id) {
+      this.selectedIdCard = null;
+      document.removeEventListener('click', this.outsideClickHandler);
+    } else {
+      this.selectedIdCard = id;
+      setTimeout(() => {
+        document.addEventListener('click', this.outsideClickHandler);
+      });
+    }
+  }
+
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    if (close === 'close') {
+      this.selectedIdCard = null;
+      this.selectedId = null;
+      return;
+    }
+
+    const targetElement = event?.target as HTMLElement;
+    const rect = targetElement?.getBoundingClientRect();
+
+    const shortcutsIcon = document.querySelector(
+      '.shortcuts_icon'
+    ) as HTMLElement;
+
+    if (shortcutsIcon && rect) {
+      shortcutsIcon.style.top = `${
+        rect.top + window.scrollY + targetElement.offsetHeight
+      }px`;
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
+    }
+
+    this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    this.selectedId = this.selectedId === id ? null : id;
   }
 }

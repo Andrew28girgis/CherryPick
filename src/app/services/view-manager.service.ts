@@ -14,34 +14,7 @@ declare const google: any;
   providedIn: 'root',
 })
 export class ViewManagerService {
-  dropdowmOptions: any = [
-    {
-      text: 'Map View',
-      icon: '../../../assets/Images/Icons/map.png',
-      status: 1,
-    },
-    {
-      text: 'Side List View',
-      icon: '../../../assets/Images/Icons/element-3.png',
-      status: 2,
-    },
-    {
-      text: 'Cards View',
-      icon: '../../../assets/Images/Icons/grid-1.png',
-      status: 3,
-    },
-    {
-      text: 'Table View',
-      icon: '../../../assets/Images/Icons/grid-4.png',
-      status: 4,
-    },
-    {
-      text: 'Social View',
-      icon: '../../../assets/Images/Icons/globe-solid.svg',
-      status: 5,
-    },
-  ];
-
+  
   constructor(
     private placesService: PlacesService,
     private spinner: NgxSpinnerService,
