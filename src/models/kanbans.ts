@@ -78,8 +78,8 @@ export interface TableRow {
   status: 'Closed' | 'on-hold' | 'Lost';
   date: string;
   Notes: string;
-  unit:string;
-  unitImg:string;
+  unit: string;
+  unitImg: string;
 }
 
 export interface table {
@@ -102,11 +102,10 @@ export interface table2 {
     asignee: string;
     asigneeImg: string;
     due: 'Overdue' | 'Today' | 'Upcoming';
-    priority: 'High' | 'Medium' | 'Low'|  string;
+    priority: 'High' | 'Medium' | 'Low' | string;
     notes: string;
   };
 }
-
 
 export interface Message {
   id: number;
