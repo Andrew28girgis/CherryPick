@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from 'src/app/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -6,7 +6,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapsService } from 'src/app/services/maps.service';
 import { BuyboxCategory } from 'src/models/buyboxCategory';
 import { Center } from '../../../../../models/shoppingCenters';
-import { StateService } from '../../../../services/state.service';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { Polygon } from 'src/models/polygons';
 import { General } from 'src/models/domain';
@@ -19,9 +18,9 @@ declare const google: any;
   templateUrl: './side-list-view.component.html',
   styleUrls: ['./side-list-view.component.css'],
 })
-export class SideListViewComponent {
+export class SideListViewComponent implements OnInit{
   General: General = new General();
-  cardsSideList: any[] = [];
+  cardsSideList: Center[] = [];
   map: any;
   BuyBoxId!: any;
   mapViewOnePlacex: boolean = false;
@@ -44,7 +43,6 @@ export class SideListViewComponent {
     private markerService: MapsService,
     public activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private stateService: StateService,
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private sanitizer: DomSanitizer,
@@ -64,11 +62,6 @@ export class SideListViewComponent {
   }
 
   getShoppingCenters(buyboxId: number): void {
-    if (this.stateService.getShoppingCenters().length > 0) {
-      this.shoppingCenters = this.stateService.getShoppingCenters();
-      this.getBuyBoxPlaces(this.BuyBoxId);
-      return;
-    }
     this.spinner.show();
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
@@ -82,11 +75,7 @@ export class SideListViewComponent {
         this.shoppingCenters = this.shoppingCenters?.sort((a, b) =>
           a.CenterCity.localeCompare(b.CenterCity)
         );
-        this.shoppingCenters = this.shoppingCenters?.filter(
-          (element: any) => element.Deleted == false
-        );
 
-        this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
@@ -95,11 +84,6 @@ export class SideListViewComponent {
   }
 
   BuyBoxPlacesCategories(buyboxId: number): void {
-    if (this.stateService.getBuyboxCategories().length > 0) {
-      this.buyboxCategories = this.stateService.getBuyboxCategories();
-      this.getShoppingCenters(buyboxId);
-      return;
-    }
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
@@ -109,7 +93,6 @@ export class SideListViewComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buyboxCategories = data.json;
-        this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
@@ -117,11 +100,6 @@ export class SideListViewComponent {
   }
 
   getBuyBoxPlaces(buyboxId: number): void {
-    if (this.stateService.getBuyboxPlaces()?.length > 0) {
-      this.buyboxPlaces = this.stateService.getBuyboxPlaces();
-      this.getAllMarker();
-      return;
-    }
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
@@ -132,7 +110,6 @@ export class SideListViewComponent {
       next: (data) => {
 
         this.buyboxPlaces = data.json;
-        this.stateService.setBuyboxPlaces(data.json);
         this.buyboxCategories.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces?.filter((place) =>
@@ -571,11 +548,10 @@ export class SideListViewComponent {
     };
     this.PlacesService.GenericAPI(body).subscribe((data) => {
       this.modalService.dismissAll();
-      this.stateService.setShoppingCenters(data.json.shoppingCenters); 
-      this.stateService.setBuyboxCategories(data.json.buyboxCategories);
       this.ngZone.run(() => {
         this.cardsSideList = this.cardsSideList.filter(place => place.Id !== this.shoppingCenterIdToDelete);
       });
+      this.getShoppingCenters(this.BuyBoxId);
       this.spinner.hide();
     });
   }
@@ -593,10 +569,8 @@ export class SideListViewComponent {
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe((data) => {
-      this.stateService.setShoppingCenters(data.json.shoppingCenters); 
-      this.stateService.setBuyboxCategories(data.json.buyboxCategories);
-      this.toggleDeletedState(placeId, false);
       this.toggleShortcuts(placeId, 'close');
+      this.getShoppingCenters(this.BuyBoxId);
       this.spinner.hide();
     });
   }
@@ -646,13 +620,6 @@ export class SideListViewComponent {
   
     this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
-  }
-
-  toggleDeletedState(placeId: number, deleted: boolean): void {
-    const updatedPlace = this.cardsSideList.find(place => place.Id === placeId);
-    if (updatedPlace) {
-      updatedPlace.Deleted = deleted;
-    }
   }
 
   trackById(index: number, place: any): number {
