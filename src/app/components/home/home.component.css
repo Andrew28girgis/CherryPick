@@ -95,23 +95,9 @@
   text-align: center;
   margin-top: 5px;
 }
-.svg-container {
-  display: flex;
-  align-items: center;
-}
-.svg-icon:last-child {
-  margin-right: 0;
-}
 .table-text {
   color:  #7a8591;
   font-size: 1rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-}
-.table-texttt {
-  color:  #7a8591;
-   font-size: 0.8rem;
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
