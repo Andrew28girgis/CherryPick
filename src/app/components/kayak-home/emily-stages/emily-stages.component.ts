@@ -44,19 +44,6 @@ interface Column {
   styleUrls: ['./emily-stages.component.css']
 })
 export class EmilyStagesComponent implements OnInit {
-  visibleContacts: Contact[] = [];  // Initially only show two contacts
-  isViewMore = false; // State to toggle between View More and View Less
-
-  // Method to toggle between showing all contacts or just the first 2 for each organization
-  toggleViewMore(org: any) {
-    org.showMoreContacts = !org.showMoreContacts;
-  }
-
-  // This function determines how many contacts to show based on the 'showMoreContacts' flag for a given organization
-  getVisibleContacts(org: any): Contact[] {
-    return org.showMoreContacts ? org.Contact : org.Contact.slice(0, 2);
-  }
-
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];
   Stages: Stages[] = [];
@@ -137,6 +124,13 @@ export class EmilyStagesComponent implements OnInit {
         });
       });
     });
+  }
+  toggleViewMore(org: any) {
+    org.showMoreContacts = !org.showMoreContacts;
+  }
+
+  getVisibleContacts(org: any): Contact[] {
+    return org.showMoreContacts ? org.Contact : org.Contact.slice(0, 2);
   }
 // Method to handle contact click
 onContactClick(contactId: number, orgId: number) {
