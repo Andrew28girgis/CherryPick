@@ -307,7 +307,7 @@
 }
 .row-background {
   height: 45vh;
-  background-image: url("../../../assets/Images/GreyImage.png");
+  background-image: url("../../../assets/Images/DefaultImage.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -695,8 +695,8 @@
   }
   .content-right {
     bottom: 20px;
-    right: -20px;
-  }
+    right: -8px;
+}
   .linkedin {
     font-size: 14px;
   }
