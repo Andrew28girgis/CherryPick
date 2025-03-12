@@ -15,6 +15,12 @@
   transform: translateY(-4%);
 }
 
+.ShoppingCenterStage {
+  font-size: 16px;
+  color: white;
+  font-weight: 600;
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;

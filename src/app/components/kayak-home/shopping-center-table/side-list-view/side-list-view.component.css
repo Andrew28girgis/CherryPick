@@ -169,6 +169,12 @@
   width: 24px;
 }
 
+.ShoppingCenterStage {
+  font-size: 16px;
+  color: brown;
+  font-weight: 500;
+}
+
 ::ng-deep .popover-body {
   padding: 0 !important;
 }
