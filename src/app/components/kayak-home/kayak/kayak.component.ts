@@ -200,7 +200,6 @@ export class KayakComponent implements OnInit {
           this.updateMinMaxBuildingSize();
           // console.log('fv',this.filterValues);
         } else {
-          console.warn('No filters data returned.');
           this.resetFilters();
         }
         this.spinner.hide();
@@ -295,7 +294,6 @@ export class KayakComponent implements OnInit {
 
   bindShoppingCenter(id?: number): void {
     if (!this.SelectedShoppingCenterIDs.length) {
-      console.warn(' No shopping centers selected! Skipping API call.');
       return;
     }
 
@@ -535,7 +533,6 @@ export class KayakComponent implements OnInit {
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
-      console.warn('🚨 No Street View URL found!');
       this.sanitizedUrl = null; // Clear iframe
     }
   }
@@ -659,7 +656,6 @@ export class KayakComponent implements OnInit {
       !Array.isArray(this.Filters.MinMaxBuildingSize) ||
       this.Filters.MinMaxBuildingSize.length === 0
     ) {
-      console.warn('MinMaxBuildingSize data is empty or undefined.');
       return;
     }
 
@@ -674,7 +670,6 @@ export class KayakComponent implements OnInit {
       this.selectedMin = this.minBuildingSize;
       this.selectedMax = this.maxBuildingSize;
     } else {
-      console.warn('MinSize or MaxSize data is missing.');
     }
   }
 
@@ -766,7 +761,6 @@ export class KayakComponent implements OnInit {
             this.updateTenantCategories();
             this.updateMinMaxBuildingSize();
           } else {
-            console.warn('No filters data returned.');
             this.resetFilters();
           }
         }
@@ -817,7 +811,6 @@ export class KayakComponent implements OnInit {
             this.updateTenantCategories();
             this.updateMinMaxBuildingSize();
           } else {
-            console.warn('No filters data returned.');
             this.resetFilters();
           }
         }
@@ -880,7 +873,6 @@ export class KayakComponent implements OnInit {
   }
   toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
     if (!neighbourhood.Neighbourhood) {
-      console.warn('Neighbourhood is undefined, skipping selection.');
       return;
     }
 

@@ -287,7 +287,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const lng = Number.parseFloat(property.Longitude);
 
     if (isNaN(lat) || isNaN(lng)) {
-      console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
 

@@ -522,7 +522,6 @@ export class HomeComponent implements OnInit {
     const lat = parseFloat(property.Latitude);
     const lng = parseFloat(property.Longitude);
     if (isNaN(lat) || isNaN(lng)) {
-      console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
     return bounds?.contains({ lat, lng });

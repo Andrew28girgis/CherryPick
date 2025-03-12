@@ -140,7 +140,6 @@ export class LinkMicrosoftComponent implements OnInit {
         error instanceof BrowserAuthError &&
         error.errorCode === 'interaction_in_progress'
       ) {
-        console.warn('Authentication interaction already in progress.');
       } else {
       }
     }
