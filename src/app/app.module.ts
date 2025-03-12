@@ -26,6 +26,7 @@ import {
   NgbModule,
   NgbTooltipModule,
   NgbAlertModule,
+  NgbNavModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ToastrModule } from 'ngx-toastr';
@@ -112,6 +113,7 @@ const loginRequest = {
     ScrollingModule,
     NgxFileDropModule,
     TooltipModule,
+    NgbNavModule,
     MsalModule.forRoot(
       new PublicClientApplication(msalConfig),
       {

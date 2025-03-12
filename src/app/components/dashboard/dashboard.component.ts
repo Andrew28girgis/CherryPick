@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   buyboxNameFilter: string = '';
   buyboxOrganizationFilter: string = '';
   selectedEmailBody: string = '';
+  active = 1;
 
   constructor(
     private placesService: PlacesService,
@@ -58,7 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.userInBox = response.json;
         }
-      }
+      },
     };
 
     this.placesService
@@ -80,7 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.tenants = response.json;
         }
-      } 
+      },
     };
 
     this.placesService
@@ -103,7 +104,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.buyBoxes = response.json;
           this.filterBuyBoxes = response.json;
         }
-      }
+      },
     };
 
     this.placesService
@@ -151,7 +152,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.userComments = response.json;
         }
-      }
+      },
     };
 
     this.placesService
