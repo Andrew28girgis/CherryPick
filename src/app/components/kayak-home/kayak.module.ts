@@ -62,8 +62,12 @@ import { PaginatorModule } from 'primeng/paginator';
     AccordionModule,
     TableModule,
     CardModule,
+<<<<<<< HEAD
     PaginatorModule,
     EmilyComponent,
+=======
+    EmilyComponent
+>>>>>>> a211dfb2f6d3f86ced615b2cf48ca58ff76ba5e4
   ],
   exports: [
     KayakHomeComponent,
@@ -79,7 +83,7 @@ import { PaginatorModule } from 'primeng/paginator';
     MapViewComponent,
     StageEmailComponent,
     EmailDashboardComponent,
-    EmilyStagesComponent,
+    EmilyStagesComponent
   ],
 })
 export class KayakModule {}
