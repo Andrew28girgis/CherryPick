@@ -59,10 +59,7 @@ export class BuyboxDetailsComponent {
         this.buybox = data.json;
         this.managerOrganizationId = data.json.ManagerOrganizationId;
         this.organizationId = data.json.OrganizationId;
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-      },
+      }
     });
   }
 
@@ -122,10 +119,7 @@ export class BuyboxDetailsComponent {
       next: (data: any) => {
         this.contacts =
           data.json?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationContacts;
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-      },
+      }
     });
   }
 }

@@ -170,11 +170,7 @@ export class HomeComponent implements OnInit {
           size: 'lg',
           centered: true,
         });
-      },
-      error: (error: any) => {
-        console.error('Error fetching Organization Contacts:', error);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -202,11 +198,7 @@ export class HomeComponent implements OnInit {
         form.resetForm();
         this.modalService.dismissAll();
         this.openContactsModal(this.contactsModalTemplate);
-      },
-      error: (error: any) => {
-        console.error('Error adding contact:', error);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -235,8 +227,7 @@ export class HomeComponent implements OnInit {
         }
         this.stateService.setPlacesRepresentative(this.placesRepresentative);
         this.markerService.setPlacesRepresentative(this.placesRepresentative);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -256,7 +247,7 @@ export class HomeComponent implements OnInit {
         this.ShareOrg = data.json;
         this.stateService.setShareOrg(data.json);
       },
-      error: (error) => console.error('Error fetching APIs:', error),
+
     });
   }
 
@@ -277,8 +268,7 @@ export class HomeComponent implements OnInit {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -293,8 +283,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -326,8 +315,7 @@ export class HomeComponent implements OnInit {
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -356,8 +344,7 @@ export class HomeComponent implements OnInit {
           );
         });
         this.getAllMarker();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -535,7 +522,6 @@ export class HomeComponent implements OnInit {
     const lat = parseFloat(property.Latitude);
     const lng = parseFloat(property.Longitude);
     if (isNaN(lat) || isNaN(lng)) {
-      console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
     return bounds?.contains({ lat, lng });
@@ -874,11 +860,7 @@ export class HomeComponent implements OnInit {
         shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
           shopping.ShoppingCenter.Comments
         );
-      },
-      error: (error) => {
-        this.newComments[marketSurveyId] = commentText;
-        console.error('Error adding comment:', error);
-      },
+      }
     });
   }
 
@@ -918,11 +900,7 @@ export class HomeComponent implements OnInit {
             shoppingCenter.ShoppingCenter.Comments
           );
         }
-      },
-      error: (error: any) => {
-        console.error('Error adding reply:', error);
-        this.newReplies[commentId] = replyText;
-      },
+      }
     });
   }
 
@@ -1082,16 +1060,7 @@ export class HomeComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {},
-      error: (error) => {
-        if (!isLiked) {
-          // shopping.ShoppingCenter.Reactions.length--;
-          // delete this.likedShoppings[shopping.MarketSurveyId];
-        } else {
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
-        this.cdr.detectChanges();
-      },
+  
       complete: () => {
         this.isLikeInProgress = false;
         this.cdr.detectChanges();

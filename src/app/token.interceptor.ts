@@ -17,7 +17,6 @@ export class TokenInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     if (this.shouldExclude(request.url)) {
-      // If the URL is excluded, proceed without adding the token
       return next.handle(request);
     }
 
@@ -34,11 +33,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
   private shouldExclude(url: string): boolean {
     const excludedUrls = [
-      'https://api.cherrypick.com/api/BuyBox/Login', // Login API
-      'https://10.0.0.15:8082/api/BuyBox/GetSharedPlace',
-      'https://api.capsnap.ai/api/BuyBox/GetSharedPlace',
-      'http://10.0.0.15:8082/api/BrokerWithChatGPT/ConvertPdfToImages',
-      'https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages',
+      'https://api.cherrypick.com/api/BuyBox/Login'
     ];
     return excludedUrls.some((excludedUrl) => url.startsWith(excludedUrl));
   }

@@ -190,11 +190,7 @@ export class EmilyComponent implements OnInit {
         this.showMaxBuildingSize = true;
         this.onCheckboxdetailsChangeMin(true, true);
         this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -221,8 +217,7 @@ export class EmilyComponent implements OnInit {
         this.selectManagerContactsByDefault();
         this.onSelectedShoppingCenterChange();
         this.spinner.hide();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -297,11 +292,7 @@ export class EmilyComponent implements OnInit {
           this.BuyBoxOrganizationsForEmail = [];
           this.spinner.hide();
         }
-      },
-      error: (err) => {
-        this.BuyBoxOrganizationsForEmail = [];
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -445,11 +436,7 @@ export class EmilyComponent implements OnInit {
 
           this.showToast('Email Save and Send successfully!');
           this.MoveStage();
-        },
-        error: (err) => {
-          console.error('Error updating prompt:', err);
-          this.showToast('Failed to update the prompt. Please try again.');
-        },
+        }
       });
     }, 2000);
   }
@@ -478,11 +465,7 @@ export class EmilyComponent implements OnInit {
       next: (response: any) => {
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         this.showToast('Email Send successfully!');
-      },
-      error: (err) => {
-        console.error('Error updating prompt:', err);
-        this.showToast('Failed to Send the Email. Please try again.');
-      },
+      }
     });
   }
 
@@ -1186,13 +1169,7 @@ export class EmilyComponent implements OnInit {
       next: (response: any) => {
         this.emailBodyResponsetogale = false;
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-      },
-      error: (err) => {
-        console.error('Error updating prompt:', err);
-        this.showToast(
-          'Failed to update the Email template. Please try again.'
-        );
-      },
+      }
     });
   }
 
@@ -1249,18 +1226,9 @@ export class EmilyComponent implements OnInit {
               this.prompts = [];
             }
             this.spinner.hide();
-          },
-          error: (err: any) => {
-            console.error('Error fetching prompts:', err);
-            this.prompts = [];
-            this.spinner.hide();
-          },
+          }
         });
-      },
-      error: (err: any) => {
-        console.error('Error fetching category ID:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -1320,11 +1288,7 @@ export class EmilyComponent implements OnInit {
         this.selectedPromptText = this.editablePromptText;
         this.isEditing = false;
         modal.close();
-      },
-      error: (err) => {
-        console.error('Error updating prompt:', err);
-        this.showToast('Failed to update the prompt. Please try again.');
-      },
+      }
     });
   }
 
@@ -1352,10 +1316,7 @@ export class EmilyComponent implements OnInit {
         this.GetPrompts();
         this.newPromptText = '';
         this.newPromptName = '';
-      },
-      error: (err) => {
-        this.showToast('Failed to add the prompt. Please try again.');
-      },
+      }
     });
   }
 

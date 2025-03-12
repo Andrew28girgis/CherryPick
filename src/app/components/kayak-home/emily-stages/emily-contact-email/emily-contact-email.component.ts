@@ -52,7 +52,9 @@ export class EmilyContactEmailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('org', this.orgId); console.log('contact', this.contactId); console.log('buyBox', this.buyBoxId);
+    console.log('org', this.orgId);
+    console.log('contact', this.contactId);
+    console.log('buyBox', this.buyBoxId);
     // Load both APIs with Promise.all to ensure both are completed    'microdeals api and emails api'
     this.loadInitialData();
   }
@@ -134,7 +136,8 @@ export class EmilyContactEmailComponent implements OnInit {
         if (callback) {
           callback();
         }
-      },
+      }, 
+    
     });
   }
   GetBuyBoxEmails(callback?: Function): void {
@@ -161,8 +164,8 @@ export class EmilyContactEmailComponent implements OnInit {
     // Only clear and reset if selecting a different contact
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact;
-      this.emailsSentContact = []; 
-      this.filteredEmails = []; 
+      this.emailsSentContact = [];
+      this.filteredEmails = [];
       this.emptyMessage = '';
       this.selectedEmail = null;
     } else if (this.emailsSentContact.length > 0) {
@@ -233,7 +236,7 @@ export class EmilyContactEmailComponent implements OnInit {
       clearTimeout(this.scrollTimeout);
     }
     this.scrollTimeout = setTimeout(() => {
-      this.isScrolling = false; 
+      this.isScrolling = false;
     }, 500);
   }
   GetMail(mailId: number): void {

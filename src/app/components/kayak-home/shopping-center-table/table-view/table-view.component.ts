@@ -121,9 +121,6 @@ export class TableViewComponent implements OnInit {
         });
         this.cdr.markForCheck();
         this.spinner.hide();
-      })
-      .catch((error: any) => {
-        console.error('Error restore shopping center :', error);
       });
   }
 

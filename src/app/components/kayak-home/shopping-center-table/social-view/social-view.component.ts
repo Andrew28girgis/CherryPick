@@ -314,12 +314,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         );
 
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        this.newComments[marketSurveyId] = commentText;
-        console.error('Error adding comment:', error);
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
@@ -361,12 +356,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        console.error('Error adding reply:', error);
-        this.newReplies[commentId] = replyText;
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
@@ -482,14 +472,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {},
-      error: (error) => {
-        if (!isLiked) {
-        } else {
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
-        this.cdr.markForCheck();
-      },
+     
       complete: () => {
         this.isLikeInProgress = false;
         this.cdr.markForCheck();
@@ -633,12 +616,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           centered: true,
         });
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        console.error('Error fetching Organization Contacts:', error);
-        this.spinner.hide();
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
@@ -774,12 +752,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.modalService.dismissAll();
         this.openContactsModal(this.contactsModalTemplate);
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        console.error('Error adding contact:', error);
-        this.spinner.hide();
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
@@ -904,9 +877,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
         this.spinner.hide();
       })
-      .catch((error: any) => {
-        console.error('Error restore shopping center :', error);
-      });
   }
 
   async refreshShoppingCenters() {

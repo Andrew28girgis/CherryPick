@@ -93,11 +93,7 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         this.properties = data.json;
         this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching Shopping center Data:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
   // manual display and edit shopping center
@@ -120,11 +116,7 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         this.CustomPlace = data.json;
         this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching Shopping center Data:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
   // Helper method to get images as an array in display shopping center images
@@ -199,11 +191,7 @@ export class ManagePropertiesComponent implements OnInit {
         this.showToast('New tenant added successfully!');
         this.showAddTenantInput = false;
         this.newTenantName = '';
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to add new tenant. Please try again.');
-      },
+      }
     });
   }
   toggleAddPlaceInput() {
@@ -255,10 +243,7 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.showAddPlaceInput = false;
         this.spinner.hide();
-      },
-      error: (err) => {
-        this.spinner.hide();
-      },
+      }
     });
   }
   // Start editing a place
@@ -300,11 +285,7 @@ export class ManagePropertiesComponent implements OnInit {
         this.editingPlaceId = null;
         this.showEditInput = false;
         this.editedPlaceSqFT = 0;
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to edit place. Please try again!');
-      },
+      }
     });
   }
   openDeletePlaceModal(placeId: number) {
@@ -346,11 +327,7 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.showToast('Place deleted successfully!');
         this.spinner.hide();
-      },
-      error: (err) => {
-        this.showToast('Failed to delete place. Please try again.');
-        this.spinner.hide();
-      },
+      }
     });
   }
   deleteTenant(tenantId: number) {
@@ -373,11 +350,7 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.spinner.hide();
         this.showToast('Tenant deleted successfully!');
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to delete tenant. Please try again.');
-      },
+      }
     });
   }
   // manual display and edit shopping center
@@ -486,10 +459,7 @@ export class ManagePropertiesComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.spinner.hide();
-      },
-      error: (err) => {
-        this.spinner.hide();
-      },
+      }
     });
   }
   // Method to convert base64 to a SafeUrl for image display
@@ -507,10 +477,6 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data) => {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error fetching APIs:', error);
         this.spinner.hide();
       },
     });
@@ -545,11 +511,6 @@ export class ManagePropertiesComponent implements OnInit {
         this.showToast('shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error:', error);
-        this.showToast('Failed to update shopping center!');
         this.spinner.hide();
       },
     });

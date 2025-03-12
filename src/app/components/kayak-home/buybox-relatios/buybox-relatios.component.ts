@@ -68,11 +68,7 @@ export class BuyboxRelatiosComponent {
         this.spinner.hide();
         // console.log('Buybox data:', this.buybox);
         this.DisplayOrganizationRelations();
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -106,10 +102,7 @@ export class BuyboxRelatiosComponent {
     this.PlacesService.GenericAPI(body).subscribe(
       (res: any) => {
         this.retailRelations = res.json as RetailRelation[];
-      },
-      (error: any) => {
-        console.error('Error fetching Retail Relations:', error);
-      }
+      } 
     );
   }
 
@@ -144,11 +137,7 @@ export class BuyboxRelatiosComponent {
         this.tags = this.tags.filter((t) => t.id !== tag.id);
         this.showTagSuggestions = this.tags.length > 0;
         this.GetBuyBoxInfo();
-      },
-      (error: any) => {
-        console.error('Error adding organization:', error);
-        alert('Error adding organization. Please try again.');
-      }
+      } 
     );
   }
 
@@ -243,13 +232,7 @@ export class BuyboxRelatiosComponent {
         this.highlightedOrganizationIndex = -1;
         this.isSearchingOrganization = false;
         // console.log('organizations:', this.organizations);
-      },
-      (error: any) => {
-        console.error('Error searching organizations:', error);
-        this.organizations = [];
-        this.showOrganizationSuggestions = false;
-        this.isSearchingOrganization = false;
-      }
+      } 
     );
   }
 
@@ -311,13 +294,7 @@ export class BuyboxRelatiosComponent {
         this.highlightedTagIndex = -1; // Reset highlighted tag
         this.isSearchingTag = false; // Done searching
         // console.log('tags:', this.tags);
-      },
-      (error: any) => {
-        console.error('Error searching tags:', error);
-        this.tags = [];
-        this.showTagSuggestions = false;
-        this.isSearchingTag = false;
-      }
+      } 
     );
   }
 
@@ -363,12 +340,7 @@ export class BuyboxRelatiosComponent {
         this.searchTagTerm = '';
         this.searchOrganizationTerm = '';
         this.GetBuyBoxInfo();
-      },
-      (error: any) => {
-        console.error('Error adding relation:', error);
-        this.spinner.hide();
-        alert('Error adding relation. Please try again.');
-      }
+      } 
     );
   }
 

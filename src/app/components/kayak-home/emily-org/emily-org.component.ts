@@ -67,11 +67,7 @@ export class EmilyOrgComponent {
           this.BuyBoxOrganizationsForEmail = [];
           this.spinner.hide();
         }
-      },
-      error: (err) => {
-        this.BuyBoxOrganizationsForEmail = [];
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -95,11 +91,7 @@ export class EmilyOrgComponent {
           this.buyBoxMailActivity = [];
           this.spinner.hide();
         }
-      },
-      error: (err) => {
-        this.buyBoxMailActivity = [];
-        this.spinner.hide();
-      },
+      }
     });
   }
 

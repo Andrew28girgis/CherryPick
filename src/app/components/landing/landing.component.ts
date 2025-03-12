@@ -197,8 +197,7 @@ export class LandingComponent {
             : this.viewOnStreet();
         }
         this.GetPlaceNearBy(this.PlaceId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -229,8 +228,7 @@ export class LandingComponent {
         this.uniqueCategories = Array.from(uniqueCategoriesSet);
         this.uniqueCategories.sort((a, b) => a.localeCompare(b));
         this.uniqueCategories.unshift('All');
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -263,8 +261,7 @@ export class LandingComponent {
         if (data.json) {
           this.OrganizationBranches = data.json[0];
         }
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -279,8 +276,7 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.OrgManager = data.json;
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -437,8 +433,7 @@ export class LandingComponent {
       next: (data) => {
         this.NearByType = data.json;
         this.getAllMarker();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -863,8 +858,7 @@ export class LandingComponent {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {},
-      error: (error) => console.error('Error fetching APIs:', error),
+      next: (data) => {}
     });
     // this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
     //   (data) => {
@@ -1119,8 +1113,7 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.uploadFile(data.json[0].requestId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -1134,8 +1127,7 @@ export class LandingComponent {
     const formData = new FormData();
     formData.append('file', this.enriche.file);
     this.PlacesService.UploadFile(formData, id).subscribe({
-      next: (data) => {},
-      error: (error) => console.error('Error fetching APIs:', error),
+      next: (data) => {}
     });
   }
 }

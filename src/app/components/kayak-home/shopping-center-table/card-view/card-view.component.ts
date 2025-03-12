@@ -247,9 +247,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
         });
         this.cdr.markForCheck();
       })
-      .catch((error: any) => {
-        console.error('Error restore shopping center :', error);
-      });
   }
 
   outsideClickHandler = (event: Event): void => {

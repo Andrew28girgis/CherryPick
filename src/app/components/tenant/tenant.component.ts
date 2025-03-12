@@ -148,10 +148,7 @@ export class TenantComponent implements OnInit {
         this.spinner.hide();
 
         this.GetOrganizationBranches();
-      },
-      error: (err: any) => {
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -171,10 +168,7 @@ export class TenantComponent implements OnInit {
         this.address = this.organizationBranches.Address;
         this.states = this.organizationBranches.States;
         this.spinner.hide();
-      },
-      error: (err: any) => {
-        this.spinner.hide();
-      },
+      }
     });
   }
   // manual display and edit shopping center
@@ -315,11 +309,7 @@ export class TenantComponent implements OnInit {
         this.showToast('New tenant added successfully!');
         this.showAddTenantInput = false;
         this.newTenantName = '';
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to add new tenant. Please try again.');
-      },
+      }
     });
   }
   sendImagesArray() {
@@ -333,10 +323,7 @@ export class TenantComponent implements OnInit {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
         this.spinner.hide();
-      },
-      error: (error) => {
-        this.spinner.hide();
-      },
+      }
     });
   }
   sendJson() {
@@ -370,12 +357,7 @@ export class TenantComponent implements OnInit {
         this.clearModalData();
         this.modalService.dismissAll();
         this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error:', error);
-        this.showToast('Failed to update shopping center!');
-        this.spinner.hide();
-      },
+      }
     });
   }
   // Method to clear all modal data
