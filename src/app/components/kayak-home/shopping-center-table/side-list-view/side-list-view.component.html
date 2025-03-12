@@ -128,6 +128,10 @@
                     </span>
                   </div>
 
+                  <div *ngIf="place.stageName">
+                    <p class="ShoppingCenterUnit mb-1">{{place.stageName}}</p>
+                  </div>
+
                   <div *ngIf="place.CenterAddress">
                     <p class="ShoppingCenterUnit" [innerHTML]="getShoppingCenterUnitSize(place)"></p>
                   </div>
