@@ -102,8 +102,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -131,8 +130,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         });
         this.getAllMarker();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -154,8 +152,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.ShareOrg = data.json;
         this.stateService.setShareOrg(data.json);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -177,8 +174,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 

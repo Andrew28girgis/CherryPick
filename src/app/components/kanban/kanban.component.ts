@@ -97,10 +97,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
         } else {
           this.kanbanList = [];
         }
-      },
-      error: (error) => {
-        console.error('Error fetching kanban details:', error);
-      },
+      } 
     });
   }
 
@@ -189,13 +186,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
         this.kanbanList = [...this.kanbanList];
 
         this.crf.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error fetching Kanban details:', error);
-      },
-      complete: () => {
-        this.crf.detectChanges();
-      },
+      }
+      
     });
   }
 
@@ -373,12 +365,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         // Immediately check for updates after the drag operation
         this.checkForNewStagesAndOrganizations();
-      },
-      error: (error) => {
-        console.error('Error updating organization:', error);
-        // Revert the change in the view if the API call fails
-        this.checkForNewStagesAndOrganizations();
-      },
+      } 
     });
   }
 

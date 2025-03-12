@@ -479,10 +479,6 @@ export class ManagePropertiesComponent implements OnInit {
         this.showToast('Images Converted successfully!');
         this.spinner.hide();
       },
-      error: (error) => {
-        console.error('Error fetching APIs:', error);
-        this.spinner.hide();
-      },
     });
   }
   sendJson() {
@@ -515,11 +511,6 @@ export class ManagePropertiesComponent implements OnInit {
         this.showToast('shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error:', error);
-        this.showToast('Failed to update shopping center!');
         this.spinner.hide();
       },
     });

@@ -142,7 +142,6 @@ export class LinkMicrosoftComponent implements OnInit {
       ) {
         console.warn('Authentication interaction already in progress.');
       } else {
-        console.error('Login error:', error);
       }
     }
   }
@@ -164,11 +163,7 @@ export class LinkMicrosoftComponent implements OnInit {
         this.user = null;
         window.close();
         this.RemoveLinkedAccount();
-      },
-      error: (error) => {
-        console.error('Error during logout:', error);
-        window.close();
-      },
+      }
     });
   }
 

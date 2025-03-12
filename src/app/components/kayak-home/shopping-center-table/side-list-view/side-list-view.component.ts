@@ -84,8 +84,7 @@ export class SideListViewComponent implements OnInit {
 
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -100,8 +99,7 @@ export class SideListViewComponent implements OnInit {
       next: (data) => {
         this.buyboxCategories = data.json;
         this.getShoppingCenters(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -122,8 +120,7 @@ export class SideListViewComponent implements OnInit {
           );
         });
         this.getAllMarker();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -138,8 +135,7 @@ export class SideListViewComponent implements OnInit {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 

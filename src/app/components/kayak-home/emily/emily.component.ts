@@ -217,8 +217,7 @@ export class EmilyComponent implements OnInit {
         this.selectManagerContactsByDefault();
         this.onSelectedShoppingCenterChange();
         this.spinner.hide();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -1227,18 +1226,9 @@ export class EmilyComponent implements OnInit {
               this.prompts = [];
             }
             this.spinner.hide();
-          },
-          error: (err: any) => {
-            console.error('Error fetching prompts:', err);
-            this.prompts = [];
-            this.spinner.hide();
-          },
+          }
         });
-      },
-      error: (err: any) => {
-        console.error('Error fetching category ID:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
 

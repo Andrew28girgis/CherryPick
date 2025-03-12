@@ -204,12 +204,7 @@ export class KayakComponent implements OnInit {
           this.resetFilters();
         }
         this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error fetching filters:', error);
-        this.spinner.hide();
-        this.resetFilters();
-      },
+      }
     });
   }
 
@@ -409,11 +404,7 @@ export class KayakComponent implements OnInit {
           this.ShoppingCenterTenants = [];
         }
         this.spinner.hide();
-      },
-      error: (error: any) => {
-        console.error('Error fetching Shopping Center Tenants:', error);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -724,8 +715,7 @@ export class KayakComponent implements OnInit {
         this.spinner.hide();
         // this.getStandAlonePlaces(this.selectedbuyBox);
         // this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
   resetFilters(): void {
@@ -779,11 +769,7 @@ export class KayakComponent implements OnInit {
             console.warn('No filters data returned.');
             this.resetFilters();
           }
-        },
-        error: (error) => {
-          console.error('Error fetching filters:', error);
-          this.resetFilters();
-        },
+        }
       });
   }
 
@@ -834,11 +820,7 @@ export class KayakComponent implements OnInit {
             console.warn('No filters data returned.');
             this.resetFilters();
           }
-        },
-        error: (error) => {
-          console.error('Error fetching filters:', error);
-          this.resetFilters();
-        },
+        }
       });
   }
 
