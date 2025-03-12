@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component,  ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import {
   Fbo,
   General,
-  nearsetPlaces,
   Property,
 } from 'src/app/shared/models/domain';
 import { Branch } from 'src/app/shared/models/branches';
@@ -15,7 +14,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   LandingPlace,
   OtherPlace,
-  ShoppingCenter,
 } from 'src/app/shared/models/landingPlace';
 import { NearByType } from 'src/app/shared/models/nearBy';
 import { DomSanitizer } from '@angular/platform-browser';
