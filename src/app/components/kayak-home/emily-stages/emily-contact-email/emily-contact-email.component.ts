@@ -137,6 +137,7 @@ export class EmilyContactEmailComponent implements OnInit {
           callback();
         }
       }, 
+    
     });
   }
   GetBuyBoxEmails(callback?: Function): void {
@@ -155,7 +156,7 @@ export class EmilyContactEmailComponent implements OnInit {
         if (callback) {
           callback();
         }
-      }
+      },
     });
   }
   // this for get emails for contact that selected to be filter from all the emails that return in API
