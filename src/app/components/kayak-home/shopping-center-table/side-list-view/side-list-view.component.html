@@ -3,9 +3,9 @@
     {{ cardsSideList.length }} places within map area
   </p>
 </div>
-<div class="row">
+<div class="row m-0">
   <div class="col-8 p-0 d-flex flex-column cards-container">
-    <div class="row mt-1">
+    <div class="row m-0 mt-1">
       <ng-container *ngFor="let place of cardsSideList; trackBy: trackById">
         <div class="col-6">
           <div class="card-window total" (mouseenter)="onMouseHighlight(place)"
@@ -132,7 +132,7 @@
                     <p class="ShoppingCenterUnit" [innerHTML]="getShoppingCenterUnitSize(place)"></p>
                   </div>
 
-                  <div class="row">
+                  <div class="row m-0">
                     <div *ngFor="let item of place.ShoppingCenter?.BuyBoxPlaces" class="col-12 d-flex flex-column spec">
                       <div class="d-flex flex-column">
                         <p class="nearset-category">
