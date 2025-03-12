@@ -31,7 +31,7 @@
             {{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }},
             {{ shopping.CenterState }}
           </p>
-          <p class="center-address mb-1">{{ shopping.stageName }}</p>
+          <p class="ShoppingCenterStage mb-1">{{ shopping.stageName }}</p>
 
           <div>
             <p style="color: #fff" class="getShoppingCenterr" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
@@ -330,7 +330,7 @@
       </p>
 
       <div>
-        <p class="ShoppingCenterUnit mb-1">{{ currentShopping.stageName }}</p>
+        <p class="ShoppingCenterStage mb-1">{{ currentShopping.stageName }}</p>
 
         <p style="color: #7a8591" [innerHTML]="getShoppingCenterUnitSize(currentShopping)">
         </p>
@@ -636,7 +636,7 @@
             {{ currentShopping.CenterState }}
           </p>
           <div>
-            <p class="ShoppingCenterUnit mb-1">{{ currentShopping.stageName }}</p>
+            <p class="ShoppingCenterStage mb-1">{{ currentShopping.stageName }}</p>
             <p style="color: #7a8591" class="getShoppingCenterr"
               [innerHTML]="getShoppingCenterUnitSize(currentShopping)"></p>
             <div class="" style="color: #7a8591; padding: 0 !important">
