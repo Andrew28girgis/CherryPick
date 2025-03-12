@@ -14,7 +14,6 @@
   color: rgb(0, 0, 0);
   font-weight: bold;
 }
-
 .selected-email {
   background-color: #f0f0f0;
   border: 1px solid #e2e4e9;
@@ -116,7 +115,6 @@
   line-height: 32px;
   padding-bottom: 32px;
 }
-
 .body-details {
   color: #707791;
   font-size: 16px;
@@ -137,9 +135,7 @@
   gap: 8px;
   height: 40px;
   border: none;
-
   color: #fff;
-
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -163,21 +159,17 @@
   scrollbar-width: none; /* For Firefox */
   -ms-overflow-style: none; /* For Internet Explorer */
 }
-
 .card-body::-webkit-scrollbar {
   display: none; /* For WebKit-based browsers (e.g., Chrome, Safari, Edge) */
 }
-
 /* Show the scrollbar on hover or while scrolling */
 .card-body:hover {
   scrollbar-width: thin; /* For Firefox */
 }
-
 .card-body:hover::-webkit-scrollbar {
   display: block;
   width: 8px; /* Adjust width as needed */
 }
-
 .card-body:hover::-webkit-scrollbar-thumb {
   background: #ccc; /* Customize the scrollbar thumb color */
   border-radius: 4px; /* Make the scrollbar rounded */
@@ -197,7 +189,6 @@
   flex-shrink: 0;
   color: #fff;
   text-align: center;
-
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -218,7 +209,6 @@
   color: #fd7e14;
   font-size: 18px;
 }
-
 .filter-button {
   padding: 0px 5px;
   margin-right: 5px;
@@ -228,41 +218,31 @@
   color: #555;
   transition: all 0.2s ease;
 }
-
 .filter-button:hover {
   background-color: #eaeaea;
 }
-
 .filter-button.active {
   background-color: #4d65b4;
   color: white;
 }
-
-/* Make sure the filter icons are consistently styled */
 .fa-reply.inbox {
   color: #007bff;
 }
-
 .fa-share.outbox {
   color: #6c757d;
 }
-
 .fa-envelope-circle-check.send {
   color: #28a745;
 }
-/* Make sure the filter buttons use your existing icon colors */
 .filter-button:not(.active) .fa-envelope-circle-check {
   color: #28a745;
 }
-
 .filter-button:not(.active) .fa-reply {
   color: #007bff;
 }
-
 .filter-button:not(.active) .fa-share {
   color: #fd7e14;
 }
-
 /* When button is active, icons should be white */
 .filter-button.active i {
   color: white;

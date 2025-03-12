@@ -76,7 +76,6 @@ export class EmilyContactEmailComponent implements OnInit {
     // When both APIs complete, process the data
     Promise.all([microDealsPromise, emailsPromise])
       .then(() => {
-        console.log('All data loaded');
         // Find and select the previously selected contact
         if (this.contacts && this.contacts.length > 0) {
           // Try to find the previously selected contact
@@ -138,7 +137,6 @@ export class EmilyContactEmailComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error fetching BuyBoxMicroDeals', err);
         if (callback) {
           callback();
         }
