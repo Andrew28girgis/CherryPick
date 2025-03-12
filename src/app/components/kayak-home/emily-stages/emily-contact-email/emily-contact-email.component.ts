@@ -135,12 +135,6 @@ export class EmilyContactEmailComponent implements OnInit {
           callback();
         }
       },
-      error: (err) => {
-        if (callback) {
-          callback();
-        }
-        this.spinner.hide();
-      },
     });
   }
   GetBuyBoxEmails(callback?: Function): void {
@@ -159,12 +153,6 @@ export class EmilyContactEmailComponent implements OnInit {
         if (callback) {
           callback();
         }
-      },
-      error: (err) => {
-        if (callback) {
-          callback();
-        }
-        this.spinner.hide();
       },
     });
   }
