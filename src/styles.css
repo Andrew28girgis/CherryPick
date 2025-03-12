@@ -30,6 +30,10 @@ a {
   cursor: pointer;
 }
 .logo {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin: 0 10px;
   font-family: var(--app-font);
   text-transform: uppercase;
 }
@@ -156,7 +160,7 @@ a {
   padding-right: 10px;
   padding-left: 0;
 }
-.spec-head { 
+.spec-head {
   font-size: 14px;
   font-weight: 600;
   line-height: 19px;
@@ -179,15 +183,6 @@ a {
   margin-right: 10px;
   font-size: 15px;
   padding: 7px 15px;
-}
-.save-address-btn {
-  height: fit-content;
-  padding: 7px 12px;
-  background-color: #ffffff;
-  gap: 8px;
-  border-radius: 16px;
-  border: 1px 0px 0px 0px;
-  opacity: 0px;
 }
 .address-content {
   font-size: 15px;
@@ -247,28 +242,14 @@ a {
 .content-address:hover {
   text-decoration: underline;
 }
-.fa-info {
-  color: #000 !important;
-  padding: 4px 8px;
-  font-size: 12px;
-  border: 1px solid #000;
-  border-radius: 26px;
-}
 .carousel-control-prev {
   left: -121px !important;
 }
-
 .carousel-control-next {
   right: -121px !important;
 }
 .gm-style-iw-tc {
   display: none;
-}
-.logo {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  margin: 0 10px;
 }
 .custom-toast {
   visibility: hidden;
@@ -294,13 +275,6 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.close-toast {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
 }
 .CherryPick__button {
   width: auto;
