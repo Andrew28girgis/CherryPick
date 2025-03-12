@@ -1,43 +1,24 @@
-import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { AccordionModule } from 'primeng/accordion';
 import {
   BuyBoxMicroDeals,
   Stages,
   BuyBoxEmails,
-  Mail,
   Contact,
   EmailInfo,
 } from 'src/app/shared/models/buy-box-emails';
-import { CardModule } from 'primeng/card';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { TableModule } from 'primeng/table';
 import {
-  FormControl,
   FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
 } from '@angular/forms';
-import { EditorModule } from 'primeng/editor';
-import { EmilyComponent } from '../emily/emily.component';
-import { EmailService } from 'src/app/shared/services/email-body.service';
-import { Subscription } from 'rxjs';
-import { Router, RouterModule } from '@angular/router';
-interface Column {
-  field: string;
-  header: string;
-}
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-emily-stages',
   templateUrl: './emily-stages.component.html',
