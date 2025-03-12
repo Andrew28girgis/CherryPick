@@ -23,12 +23,6 @@ a {
   width: 160px;
   cursor: pointer;
 }
-.custom-scrollbar {
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--app-color) #f1f1f1;
-  cursor: pointer;
-}
 .logo {
   width: 35px;
   height: 35px;
