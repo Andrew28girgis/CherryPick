@@ -68,11 +68,7 @@ export class BuyboxRelatiosComponent {
         this.spinner.hide();
         // console.log('Buybox data:', this.buybox);
         this.DisplayOrganizationRelations();
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
 

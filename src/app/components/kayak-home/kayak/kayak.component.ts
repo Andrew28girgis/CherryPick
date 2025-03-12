@@ -328,12 +328,7 @@ export class KayakComponent implements OnInit {
         this.spinner.hide();
         this.loading = false;
         this.getShoppingCenters();
-      },
-      error: (err) => {
-        console.error(' Error in BindShoppingCenters:', err);
-        this.spinner.hide();
-        this.loading = false;
-      },
+      }
     });
   }
   UnBindShoppingCenter() {
@@ -351,12 +346,7 @@ export class KayakComponent implements OnInit {
         this.spinner.hide();
         this.loading = false;
         this.getShoppingCenters();
-      },
-      error: (err) => {
-        console.error(' Error in BindShoppingCenters:', err);
-        this.spinner.hide();
-        this.loading = false;
-      },
+      }
     });
   }
 

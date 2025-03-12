@@ -315,11 +315,7 @@ export class TenantComponent implements OnInit {
         this.showToast('New tenant added successfully!');
         this.showAddTenantInput = false;
         this.newTenantName = '';
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to add new tenant. Please try again.');
-      },
+      }
     });
   }
   sendImagesArray() {
