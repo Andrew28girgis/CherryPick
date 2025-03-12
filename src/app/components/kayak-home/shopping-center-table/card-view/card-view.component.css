@@ -59,8 +59,6 @@
   top: 5%;
 }
 
-@media (max-width: 768px) {}
-
 .h700 {
   height: 700px;
 }
@@ -173,4 +171,10 @@ img[alt="logo"] {
 
 ::ng-deep .p-element .p-paginator {
   background: transparent;
+}
+
+@media (max-width: 768px) {
+  ::ng-deep .p-element .p-paginator {
+    margin-bottom: 70px;
+  }
 }
