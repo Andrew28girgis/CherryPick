@@ -263,7 +263,6 @@ export class PolygonsControllerComponent
         const geoJson: IGeoJson = JSON.parse(polygon.json);
 
         if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
-          console.error('Invalid GeoJSON:', polygon.json);
           continue;
         }
 
@@ -289,7 +288,6 @@ export class PolygonsControllerComponent
           );
 
           if (!coordinates) {
-            console.error('Invalid coordinates for polygon:', polygon.json);
             continue;
           }
 
@@ -302,7 +300,6 @@ export class PolygonsControllerComponent
           );
         }
       } catch (error) {
-        console.error('Error parsing GeoJSON:', error, polygon.json);
       }
     }
   }
@@ -317,7 +314,6 @@ export class PolygonsControllerComponent
       const geoJson: IGeoJson = JSON.parse(polygon.json);
 
       if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
-        console.error('Invalid GeoJSON:', polygon.json);
         return null;
       }
 
@@ -328,13 +324,11 @@ export class PolygonsControllerComponent
       );
 
       if (!coordinates) {
-        console.error('Invalid coordinates for polygon:', polygon.json);
         return null;
       }
 
       return coordinates;
     } catch (error) {
-      console.error('Error parsing GeoJSON:', error, polygon.json);
     }
     return null;
   }
@@ -539,7 +533,6 @@ export class PolygonsControllerComponent
       }
       return null;
     } catch (error) {
-      console.error(error);
     }
   }
 
@@ -553,7 +546,6 @@ export class PolygonsControllerComponent
       }
       return null;
     } catch (error) {
-      console.error(error);
     }
   }
 

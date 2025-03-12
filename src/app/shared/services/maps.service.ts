@@ -767,7 +767,6 @@ export class MapsService {
         title: feature.Name,
       });
     } catch (error) {
-      console.error('Error drawing polygon:', error);
     }
   }
 
@@ -822,7 +821,6 @@ export class MapsService {
 
   // drawPolygons(map: any, response: any): void {
   //   if (!map || !response || !Array.isArray(response)) {
-  //     console.error('Invalid parameters provided to drawPolygons');
   //     return;
   //   }
 
@@ -836,7 +834,6 @@ export class MapsService {
 
   //           // Check if they are valid numbers
   //           if (isNaN(lat) || isNaN(lng)) {
-  //             console.error('Invalid coordinate:', coord);
   //             return null;
   //           }
 
@@ -908,7 +905,6 @@ export class MapsService {
   //       }
   //     });
   //   } catch (error) {
-  //     console.error('Error fetching boundary data:', error);
   //   }
   // }
 
@@ -958,7 +954,6 @@ export class MapsService {
   //       }
   //     });
   //   } catch (error) {
-  //     console.error('Error fetching boundary data:', error);
   //   }
   // }
 
@@ -1031,7 +1026,6 @@ export class MapsService {
   //       }
   //     });
   //   } catch (error) {
-  //     console.error("Error fetching boundary data:", error);
   //   }
   // }
 }

@@ -102,7 +102,6 @@ export class TableViewComponent implements OnInit {
         );
       });
     } catch (error) {
-      console.error('Error initializing data:', error);
     }
   }
 
@@ -148,7 +147,6 @@ export class TableViewComponent implements OnInit {
       );
       this.modalService.dismissAll();
     } catch (error) {
-      console.error('Error deleting shopping center:', error);
     } finally {
       this.spinner.hide();
       this.cdr.markForCheck();
@@ -166,7 +164,6 @@ export class TableViewComponent implements OnInit {
       );
       this.showbackIds = [];
     } catch (error) {
-      console.error('Error refreshing shopping centers:', error);
     } finally {
       this.spinner.hide();
     }
@@ -237,7 +234,6 @@ export class TableViewComponent implements OnInit {
       lng
     );
     if (!map) {
-      console.error('Failed to initialize map');
     }
   }
 
@@ -270,7 +266,6 @@ export class TableViewComponent implements OnInit {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -284,7 +279,6 @@ export class TableViewComponent implements OnInit {
       pitch
     );
     if (!panorama) {
-      console.error('Failed to initialize street view');
     }
   }
 

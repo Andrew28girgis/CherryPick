@@ -412,7 +412,6 @@ export class KayakComponent implements OnInit {
     this.mapViewOnePlacex = true;
 
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     // Load Google Maps API libraries
@@ -420,7 +419,6 @@ export class KayakComponent implements OnInit {
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
 
@@ -468,7 +466,6 @@ export class KayakComponent implements OnInit {
       );
       this.addMarkerToStreetView(panorama, lat, lng);
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 
@@ -484,14 +481,12 @@ export class KayakComponent implements OnInit {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
 
   setIframeUrl(url: string): void {
     if (!url) {
-      console.error('🚨 Invalid StreetView URL:', url);
       return;
     }
 
@@ -531,7 +526,6 @@ export class KayakComponent implements OnInit {
   }
   updateSortedTenants(): void {
     if (!this.Filters!.Tenants || !Array.isArray(this.Filters!.Tenants)) {
-      // console.error('Tenants list is empty or undefined.');
       this.sortedTenants = [];
       return;
     }
@@ -554,7 +548,6 @@ export class KayakComponent implements OnInit {
       !this.Filters!.ManagementOrganization ||
       !Array.isArray(this.Filters!.ManagementOrganization)
     ) {
-      // console.error('ManagementOrganization list is empty or undefined.');
       this.sortedOrgs = [];
       return;
     }
@@ -577,7 +570,6 @@ export class KayakComponent implements OnInit {
       !this.Filters?.SecondaryType ||
       !Array.isArray(this.Filters.SecondaryType)
     ) {
-      // console.error('Secondary types are empty or undefined.');
       this.secondaryTypes = [];
       return;
     }
@@ -593,7 +585,6 @@ export class KayakComponent implements OnInit {
       !this.Filters?.Neighbourhood ||
       !Array.isArray(this.Filters.Neighbourhood)
     ) {
-      // console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
     }
@@ -612,7 +603,6 @@ export class KayakComponent implements OnInit {
       !this.Filters?.TenantsCategories ||
       !Array.isArray(this.Filters.TenantsCategories)
     ) {
-      // console.error('TenantsCategories list is empty or undefined.');
       this.tenantCategories = [];
       return;
     }

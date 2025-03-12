@@ -164,13 +164,11 @@ export class SideListViewComponent implements OnInit {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
     const map = new Map(mapDiv, {
@@ -452,8 +450,7 @@ export class SideListViewComponent implements OnInit {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
         this.initializeStreetView('street-view', lat, lng, heading, pitch);
-      } else {
-        console.error("Element with id 'street-view' not found.");
+      } else { 
       }
     });
   }
@@ -467,7 +464,6 @@ export class SideListViewComponent implements OnInit {
   ): any {
     const streetViewElement = document.getElementById(elementId);
     if (!streetViewElement) {
-      console.error(`Element with id '${elementId}' not found.`);
       return null;
     }
 

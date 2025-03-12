@@ -167,7 +167,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.stateService.setBuyboxPlaces(this.buyboxPlaces);
     } catch (error) {
-      console.error('Error initializing data:', error);
       this.spinner.hide();
     }
   }
@@ -320,7 +319,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addReply(marketSurveyId: number, commentId: number): void {
     if (!this.newReplies[commentId]?.trim()) {
-      console.error('Reply text is empty');
       return;
     }
 
@@ -504,15 +502,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
 
-    if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
+    if (!lat || !lng) { 
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
-    if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
+    if (!mapDiv) { 
       return;
     }
 
@@ -556,7 +552,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -570,7 +565,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       pitch
     );
     if (!panorama) {
-      console.error('Failed to initialize street view');
     }
     this.cdr.markForCheck();
   }
@@ -698,7 +692,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       .then(() => { 
       })
       .catch((err) => {
-        console.error('Could not copy text: ', err);
       });
   }
 
@@ -779,7 +772,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.modalService.dismissAll();
     } catch (error) {
-      console.error('Error deleting shopping center:', error);
     } finally {
       this.spinner.hide();
       this.cdr.markForCheck();
@@ -886,7 +878,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.showbackIds = [];
     } catch (error) {
-      console.error('Error refreshing shopping centers:', error);
     } finally {
       this.spinner.hide();
     }
