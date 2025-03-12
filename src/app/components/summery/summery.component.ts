@@ -1,20 +1,7 @@
-import {
-  Component,
-  ViewChildren,
-  QueryList,
-  AfterViewInit,
-  ElementRef,
-  HostListener,
-  ViewChild,
-  Renderer2,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/shared/services/places.service';
-import {
-  General,
-  GroupedProperties,
-  Property,
-} from 'src/app/shared/models/domain';
+import { General } from 'src/app/shared/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PropertiesServiceService } from 'src/app/shared/services/properties-service.service';
@@ -102,13 +89,6 @@ export class SummeryComponent {
       next: (data) => {
         if (data.json != null) {
           this.buyboxTypes = data.json;
-          // if (this.buyboxTypes?.length == 1) {
-          //   this.chooseType(
-          //     this.buyboxTypes[0].id,
-          //     this.buyboxTypes[0].organizationId,
-          //     this.buyboxTypes[0].name
-          //   );
-          // }
           this.spinner.hide();
         } else {
           this.router.navigate(['/login']);
@@ -206,7 +186,6 @@ export class SummeryComponent {
   }
   onSubmit() {
     this.spinner.show();
-
     this.Obj.OrganizationId = this.selectedOrganizationId; // Set the selected organization ID
     this.Obj.ManagerOrganizationId = this.selectedManagerOrganizationId; // Set the selected manager organization ID
 
