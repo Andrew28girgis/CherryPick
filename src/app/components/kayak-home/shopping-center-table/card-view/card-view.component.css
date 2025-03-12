@@ -170,3 +170,7 @@ img[alt="logo"] {
 ::ng-deep .popover-arrow::before {
   border-top: none !important;
 }
+
+::ng-deep .p-element .p-paginator {
+  background: transparent;
+}

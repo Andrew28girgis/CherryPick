@@ -1,4 +1,4 @@
-import {  Component,  OnInit,  ChangeDetectorRef,  TemplateRef,  Output,  EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -8,6 +8,7 @@ import { Center } from '../../../../../models/shoppingCenters';
 import { ShareOrg } from 'src/models/shareOrg';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { ViewManagerService } from 'src/app/services/view-manager.service';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-table-view',
@@ -45,8 +46,9 @@ export class TableViewComponent implements OnInit {
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
     private cdr: ChangeDetectorRef,
+    private stateService: StateService,
     private viewManagerService: ViewManagerService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.General = new General();
@@ -65,17 +67,17 @@ export class TableViewComponent implements OnInit {
 
   async initializeData() {
     try {
-      // Load categories first
-      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
-
-      // Load shopping centers
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
+      this.stateService.setShoppingCenters(this.shoppingCenters);
 
-      // Load places
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
+      this.stateService.setBuyboxCategories(this.buyboxCategories);
 
-      // Load organization data
       this.ShareOrg = await this.viewManagerService.getOrganizationById(this.OrgId);
+      this.stateService.setShareOrg(this.ShareOrg);
+
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.stateService.setBuyboxPlaces(this.buyboxPlaces);
 
       // Process categories with places
       this.buyboxCategories.forEach((category) => {
@@ -90,10 +92,11 @@ export class TableViewComponent implements OnInit {
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
+    this.spinner.show();
     this.viewManagerService.restoreShoppingCenter(MarketSurveyId, Deleted)
-      .then(() => {
+      .then((response: any) => {
         const marketSurveyIdNum = Number(MarketSurveyId);
-        
+
         this.shoppingCenters = this.shoppingCenters.map(center => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
@@ -101,7 +104,11 @@ export class TableViewComponent implements OnInit {
           return center;
         });
         this.cdr.markForCheck();
+        this.spinner.hide();
       })
+      .catch((error: any) => {
+        console.error('Error restore shopping center :', error);
+      });
   }
 
   openDeleteShoppingCenterModal(
@@ -120,16 +127,18 @@ export class TableViewComponent implements OnInit {
       x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
     );
 
-    if (this.shoppingCenterIdToDelete !== null) {
-      try {
-        this.spinner.show();
-        await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete);
-        this.modalService.dismissAll();
-      } catch (error) {
-        console.error('Error deleting shopping center:', error);
-      } finally {
-        this.spinner.hide();
-      }
+    try {
+      this.spinner.show();
+      await this.viewManagerService.deleteShoppingCenter(
+        this.BuyBoxId,
+        this.shoppingCenterIdToDelete!
+      );
+      this.modalService.dismissAll();
+    } catch (error) {
+      console.error('Error deleting shopping center:', error);
+    } finally {
+      this.spinner.hide();
+      this.cdr.markForCheck();
     }
   }
 
@@ -137,7 +146,7 @@ export class TableViewComponent implements OnInit {
     try {
       this.spinner.show();
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);      
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
       this.showbackIds = [];
     } catch (error) {
       console.error('Error refreshing shopping centers:', error);
@@ -160,23 +169,23 @@ export class TableViewComponent implements OnInit {
       this.selectedId = null;
       return;
     }
-  
+
     const targetElement = event?.target as HTMLElement;
     const rect = targetElement?.getBoundingClientRect();
-  
+
     const shortcutsIcon = document.querySelector(
       '.shortcuts_icon'
     ) as HTMLElement;
-  
+
     if (shortcutsIcon && rect) {
       shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
-  
+
     this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
   }
-  
+
   toggleShortcutsCard(id: number | null): void {
     this.selectedIdCard = id;
   }

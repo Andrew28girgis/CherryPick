@@ -1,5 +1,5 @@
 <div class="row mt-2 " style="  height: calc(98vh - 58px);">
-  <ng-container *ngFor="let shopping of shoppingCenters">
+  <ng-container *ngFor="let shopping of currentShoppingCenters">
     <div class="card-window cursor col-md-4 col-sm-4 col-12">
       <div class="cardResponsive">
         <a [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId]">
@@ -187,7 +187,13 @@
       </div>
     </div>
   </ng-container>
+  <div class="flex items-center justify-start">
+    <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [showFirstLastIcon]="false" 
+     currentPageReportTemplate="{first} - {last} of {totalRecords}" ></p-paginator>
+  </div>
 </div>
+
+
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>

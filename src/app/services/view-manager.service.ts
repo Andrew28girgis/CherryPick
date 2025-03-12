@@ -140,11 +140,7 @@ export class ViewManagerService {
     });
   }
 
-  deleteShoppingCenter(
-    buyboxId: number,
-    shoppingCenterId: number | string
-  ): Promise<any> {
-    
+  deleteShoppingCenter(buyboxId: number, shoppingCenterId: number | string): Promise<any> {
     return new Promise((resolve, reject) => {
       this.spinner.show();
       const body: any = {
@@ -157,6 +153,11 @@ export class ViewManagerService {
 
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
+          const currentCenters = this.stateService.getShoppingCentersSnapshot();
+          const updatedCenters = currentCenters.map(center =>
+            center.Id === shoppingCenterId ? { ...center, Deleted: true } : center
+          );
+          this.stateService.setShoppingCenters(updatedCenters);
           resolve(data);
         },
         error: (error) => {
@@ -170,11 +171,10 @@ export class ViewManagerService {
     });
   }
 
-  restoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): Promise<Center[]> {
+  restoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
       this.spinner.show();
       Deleted = false;
-
       const body: any = {
         Name: 'RestoreShoppingCenter',
         MainEntity: null,
@@ -183,9 +183,14 @@ export class ViewManagerService {
         },
         Json: null,
       };
-      
+
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
+          const currentCenters = this.stateService.getShoppingCentersSnapshot();
+          const updatedCenters = currentCenters.map(center =>
+            Number(center.MarketSurveyId) === +MarketSurveyId ? { ...center, Deleted: false } : center
+          );
+          this.stateService.setShoppingCenters(updatedCenters);
           resolve(data);
         },
         error: (error) => {
@@ -198,6 +203,65 @@ export class ViewManagerService {
       });
     });
   }
+
+  // deleteShoppingCenter(
+  //   buyboxId: number,
+  //   shoppingCenterId: number | string
+  // ): Promise<any> {
+    
+  //   return new Promise((resolve, reject) => {
+  //     this.spinner.show();
+  //     const body: any = {
+  //       Name: 'DeleteShoppingCenterFromBuyBox',
+  //       Params: {
+  //         BuyboxId: buyboxId,
+  //         ShoppingCenterId: shoppingCenterId,
+  //       },
+  //     };
+
+  //     this.placesService.GenericAPI(body).subscribe({
+  //       next: (data) => {
+  //         resolve(data);
+  //       },
+  //       error: (error) => {
+  //         console.error('Error deleting shopping center:', error);
+  //         reject(error);
+  //       },
+  //       complete: () => {
+  //         this.spinner.hide();
+  //       },
+  //     });
+  //   });
+  // }
+
+  // restoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): Promise<Center[]> {
+  //   return new Promise((resolve, reject) => {
+  //     this.spinner.show();
+  //     Deleted = false;
+
+  //     const body: any = {
+  //       Name: 'RestoreShoppingCenter',
+  //       MainEntity: null,
+  //       Params: {
+  //         marketsurveyid: +MarketSurveyId,
+  //       },
+  //       Json: null,
+  //     };
+      
+  //     this.placesService.GenericAPI(body).subscribe({
+  //       next: (data) => {
+  //         resolve(data);
+  //       },
+  //       error: (error) => {
+  //         console.error('Error restoring shopping center:', error);
+  //         reject(error);
+  //       },
+  //       complete: () => {
+  //         this.spinner.hide();
+  //       },
+  //     });
+  //   });
+  // }
   
   // Map and Street View methods
   async initializeMap(

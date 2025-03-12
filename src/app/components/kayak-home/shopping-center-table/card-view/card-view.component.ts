@@ -1,4 +1,4 @@
-import { Component,  OnInit, ChangeDetectorRef,  TemplateRef,  Output,  EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, TemplateRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/models/domain';
@@ -8,13 +8,15 @@ import { ShareOrg } from 'src/models/shareOrg';
 import { ViewManagerService } from 'src/app/services/view-manager.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BbPlace } from 'src/models/buyboxPlaces';
+import { Subscription } from 'rxjs';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-card-view',
   templateUrl: './card-view.component.html',
   styleUrls: ['./card-view.component.css'],
 })
-export class CardViewComponent implements OnInit  {
+export class CardViewComponent implements OnInit, OnDestroy {
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
@@ -38,10 +40,25 @@ export class CardViewComponent implements OnInit  {
   showbackIds: number[] = [];
   buyboxPlaces: BbPlace[] = [];
   DeletedSC: any;
+  private subscriptions = new Subscription();
+
+
+  first: number = 0;
+  rows: number = 9;
+  totalRecords!: number;
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+  }
+  get currentShoppingCenters() {
+    return this.shoppingCenters.slice(this.first, this.first + this.rows);
+  }
+  
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
+    private stateService: StateService,
     private viewManager: ViewManagerService,
     private spinner: NgxSpinnerService,
     private cdr: ChangeDetectorRef,
@@ -58,24 +75,32 @@ export class CardViewComponent implements OnInit  {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
-    
+
+    this.subscriptions.add(
+      this.stateService.shoppingCenters$.subscribe(centers => {
+        this.shoppingCenters = centers;
+      })
+    );
+
     this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   async loadData() {
     try {
-      // Load categories first
-      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(
-        this.BuyBoxId
-      );
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
+      this.stateService.setShoppingCenters(this.shoppingCenters);
+      this.totalRecords = this.shoppingCenters.length;
 
-      // Then load shopping centers
-      this.shoppingCenters = await this.viewManager.getShoppingCenters(
-        this.BuyBoxId
-      );
+      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(this.BuyBoxId);
+      this.stateService.setBuyboxCategories(this.buyboxCategories);
 
-      // Load organization data
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
+      this.stateService.setShareOrg(this.ShareOrg);
+
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -201,9 +226,9 @@ export class CardViewComponent implements OnInit  {
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.viewManager.restoreShoppingCenter(MarketSurveyId, Deleted)
-      .then(() => {
+      .then((response: any) => {
         const marketSurveyIdNum = Number(MarketSurveyId);
-        
+
         this.shoppingCenters = this.shoppingCenters.map(center => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
@@ -212,6 +237,9 @@ export class CardViewComponent implements OnInit  {
         });
         this.cdr.markForCheck();
       })
+      .catch((error: any) => {
+        console.error('Error restore shopping center :', error);
+      });
   }
 
   outsideClickHandler = (event: Event): void => {
@@ -244,19 +272,19 @@ export class CardViewComponent implements OnInit  {
       this.selectedId = null;
       return;
     }
-  
+
     const targetElement = event?.target as HTMLElement;
     const rect = targetElement?.getBoundingClientRect();
-  
+
     const shortcutsIcon = document.querySelector(
       '.shortcuts_icon'
     ) as HTMLElement;
-  
+
     if (shortcutsIcon && rect) {
       shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
-  
+
     this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
   }

@@ -1,18 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  TemplateRef,
-  Renderer2,
-  ChangeDetectorRef,
-  AfterViewInit,
-  OnDestroy,
-  NgZone,
-  HostListener,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, TemplateRef, Renderer2, ChangeDetectorRef, AfterViewInit, OnDestroy, NgZone, HostListener, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -26,8 +12,6 @@ import { ViewManagerService } from 'src/app/services/view-manager.service';
 import { General } from 'src/models/domain';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/services/places.service';
-import { forkJoin, of } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
 declare const google: any;
 import { MapsService } from 'src/app/services/maps.service';
 import { StateService } from '../../../../services/state.service';
@@ -115,6 +99,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
+    private stateService: StateService,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private PlacesService: PlacesService,
@@ -147,41 +132,18 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async initializeData() {
     try {
-      this.spinner.show();
-      forkJoin({
-        categories: this.viewManagerService.getBuyBoxCategories(this.BuyBoxId),
-        centers: this.viewManagerService.getShoppingCenters(this.BuyBoxId),
-        org: this.viewManagerService.getOrganizationById(this.OrgId),
-        places: this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId),
-      })
-        .pipe(
-          catchError((error) => {
-            console.error('Error initializing data:', error);
-            return of({
-              categories: [],
-              centers: [],
-              org: [],
-              places: [],
-            });
-          }),
-          finalize(() => {
-            this.spinner.hide();
-            this.cdr.markForCheck();
-          })
-        )
-        .subscribe((result) => {
-          this.buyboxCategories = result.categories;
-          this.shoppingCenters = result.centers;
-          this.ShareOrg = result.org;
-          this.buyboxPlaces = result.places;
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
+      this.stateService.setShoppingCenters(this.shoppingCenters);
 
-          this.buyboxCategories.forEach((category) => {
-            category.isChecked = false;
-            category.places = this.buyboxPlaces?.filter((place) =>
-              place.RetailRelationCategories?.some((x) => x.Id === category.id)
-            );
-          });
-        });
+      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
+      this.stateService.setBuyboxCategories(this.buyboxCategories);
+
+      this.ShareOrg = await this.viewManagerService.getOrganizationById(this.OrgId);
+      this.stateService.setShareOrg(this.ShareOrg);
+
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.stateService.setBuyboxPlaces(this.buyboxPlaces);
+
     } catch (error) {
       console.error('Error initializing data:', error);
       this.spinner.hide();
@@ -904,33 +866,24 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.checkMobileView();
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean) {
+  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.spinner.show();
-
-    const body: any = {
-      Name: 'RestoreShoppingCenter',
-      MainEntity: null,
-      Params: {
-        marketsurveyid: +MarketSurveyId,
-      },
-      Json: null,
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: () => {
+    this.viewManagerService.restoreShoppingCenter(MarketSurveyId, Deleted)
+      .then((response :any) => {
         const marketSurveyIdNum = Number(MarketSurveyId);
-
-        this.shoppingCenters = this.shoppingCenters.map((center) => {
+        
+        this.shoppingCenters = this.shoppingCenters.map(center => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
           return center;
         });
-
         this.cdr.markForCheck();
         this.spinner.hide();
-      },
-    });
+      })
+      .catch((error: any) => {
+        console.error('Error restore shopping center :', error);
+      });
   }
 
   async refreshShoppingCenters() {

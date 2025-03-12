@@ -28,7 +28,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { EmilyContactEmailComponent } from './emily-stages/emily-contact-email/emily-contact-email.component';
-
+import { PaginatorModule } from 'primeng/paginator';
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -62,7 +62,8 @@ import { EmilyContactEmailComponent } from './emily-stages/emily-contact-email/e
     AccordionModule,
     TableModule,
     CardModule,
-    EmilyComponent
+    PaginatorModule,
+    EmilyComponent,
   ],
   exports: [
     KayakHomeComponent,
