@@ -167,7 +167,6 @@ export class LinkMicrosoftComponent implements OnInit {
   }
 
   getUser() {
-    console.log('go');
     const account = this.msalService.instance.getActiveAccount();
     if (account) {
       this.user = account;

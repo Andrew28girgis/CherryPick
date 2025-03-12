@@ -158,18 +158,12 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.CustomPlace = data.json?.[0] || null;
-        console.log(`custom place`);
 
         if (ShoppingcenterId !== 0) {
           this.ShoppingCenter = this.CustomPlace;
           this.GetShoppingCenterManager(this.ShoppingCenter?.Id);
         }
 
-        console.log(`custom place`);
-        console.log(this.CustomPlace);
-
-        console.log(`shopping Center`);
-        console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter && this.ShoppingCenter.Images) {
           this.placeImage = this.ShoppingCenter.Images?.split(',').map(

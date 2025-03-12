@@ -52,9 +52,6 @@ export class EmilyContactEmailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('org', this.orgId);
-    console.log('contact', this.contactId);
-    console.log('buyBox', this.buyBoxId);
     // Load both APIs with Promise.all to ensure both are completed    'microdeals api and emails api'
     this.loadInitialData();
   }
@@ -123,7 +120,6 @@ export class EmilyContactEmailComponent implements OnInit {
           if (selectedOrganization) {
             // Extract contacts from the selected organization
             this.contacts = selectedOrganization.Contact || [];
-            // console.log('Contacts for selected organization:', this.contacts);
             this.selectedOrganizationName =
               selectedOrganization.OrganizationName;
             // IMPORTANT: We no longer automatically select a contact here

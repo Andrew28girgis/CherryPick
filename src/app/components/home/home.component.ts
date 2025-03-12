@@ -309,8 +309,6 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.filter(
           (element: any) => element.Deleted == false
         );
-        console.log(`shy`);
-        console.log(this.shoppingCenter);
 
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
@@ -333,7 +331,6 @@ export class HomeComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log(`1`);
 
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
@@ -373,7 +370,6 @@ export class HomeComponent implements OnInit {
   }
 
   async getAllMarker() {
-    console.log(`hello`);
 
     try {
       this.spinner.show();
@@ -684,10 +680,8 @@ export class HomeComponent implements OnInit {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        console.log('Link copied to clipboard!');
       })
       .catch((err) => {
-        console.error('Could not copy text: ', err);
       });
   }
 
@@ -1082,7 +1076,6 @@ export class HomeComponent implements OnInit {
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
     this.selectedRating = rating;
-    console.log(`User rated: ${rating}`);
   }
 
   handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
@@ -1113,7 +1106,6 @@ export class HomeComponent implements OnInit {
   }
 
   selectCenter(centerId: number): void {
-    console.log(centerId);
 
     this.selectedCenterId = centerId;
 

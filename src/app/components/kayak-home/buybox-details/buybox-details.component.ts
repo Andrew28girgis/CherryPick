@@ -42,7 +42,6 @@ export class BuyboxDetailsComponent {
       MinBuildingSize: modalObject.MinBuildingSize ?? 0, // Default to 0
       MaxBuildingSize: modalObject.MaxBuildingSize ?? 0, // Default to 0
     };
-    // console.log('Modal Object:', this.Obj); // Ensure Obj has updated fields
   }
 
   GetBuyBoxInfo() {
@@ -82,7 +81,6 @@ export class BuyboxDetailsComponent {
         if (data.error) {
           alert('Failed To Update Data');
         } else {
-          // console.log('Buybox updated successfully:', this.Obj);
 
           // Update the buybox in the displayed list
           const index = this.buyBoxes.findIndex(

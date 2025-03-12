@@ -14,7 +14,6 @@ export class EmailService {
 
   // Method to update the value
   updateVariable(newValue: any): void { 
-    console.log('Service: Updating variable to', newValue);
     this.myVariableSubject.next(newValue);
   }
 

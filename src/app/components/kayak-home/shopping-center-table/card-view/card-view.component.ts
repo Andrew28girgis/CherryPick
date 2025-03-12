@@ -194,10 +194,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        console.log('Link copied to clipboard!');
       })
       .catch((err) => {
-        console.error('Could not copy text: ', err);
       });
   }
 
