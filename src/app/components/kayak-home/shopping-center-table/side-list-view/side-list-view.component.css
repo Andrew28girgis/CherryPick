@@ -22,7 +22,7 @@
   top: 2%;
 }
 
-.shortcuts_iconCard>ul {
+.shortcuts_iconCard > ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -32,7 +32,7 @@
   display: grid;
 }
 
-.shortcuts_iconCard>li {
+.shortcuts_iconCard > li {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -61,7 +61,7 @@
   cursor: pointer;
 }
 
-.shortcuts_iconCard>i {
+.shortcuts_iconCard > i {
   position: absolute;
   right: -8px;
   font-size: 25px;
