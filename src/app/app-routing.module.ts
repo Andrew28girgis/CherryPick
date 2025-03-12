@@ -4,7 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
-import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuardService } from './shared/services/auth-guard.service';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { DetailsComponent } from './components/kanban/details/details.component';
 import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';

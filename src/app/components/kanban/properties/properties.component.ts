@@ -3,24 +3,27 @@ import { FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { PropertiesServiceService } from '../../../services/properties-service.service';
-import { PlacesService } from '../../../services/places.service';
-import { MapsService } from '../../../services/maps.service';
-import { GoogleMap, GoogleMapsMarker, GoogleMapsBounds } from '../../../../models/google-maps.types';
-import {FilterTag ,Property} from '../../../../models/properties';
+import { PropertiesServiceService } from '../../../shared/services/properties-service.service';
+import { PlacesService } from '../../../shared/services/places.service';
+import { MapsService } from '../../../shared/services/maps.service';
+import {
+  GoogleMap,
+  GoogleMapsMarker,
+  GoogleMapsBounds,
+} from '../../../shared/models/google-maps.types';
+import { FilterTag, Property } from '../../../shared/models/properties';
 
 // Add this declaration
 declare const google: any;
 
-
 @Component({
   selector: 'app-properties',
   templateUrl: './properties.component.html',
-  styleUrls: ['./properties.component.css']
+  styleUrls: ['./properties.component.css'],
 })
 export class PropertiesComponent {
   searchControl = new FormControl('');
-  selectedCountry:string = 'USA';
+  selectedCountry: string = 'USA';
   selectedCity = 'New York';
   selectedArea = 'Albany/Buffalo/Syracuse';
   viewMode: 'grid' | 'list' | 'compact' = 'grid';
@@ -32,10 +35,25 @@ export class PropertiesComponent {
   sidebarCollapsed: boolean = false;
 
   filterTags: FilterTag[] = [
-    { id: 'shopping', icon: 'shopping-cart', label: 'Shopping Centers', active: true },
-    { id: 'tenants', icon: 'store', label: 'Complementary Tenants', active: true },
-    { id: 'competitors', icon: 'chart-bar', label: 'Competitors', active: true },
-    { id: 'demographics', icon: 'users', label: 'Demographics', active: true }
+    {
+      id: 'shopping',
+      icon: 'shopping-cart',
+      label: 'Shopping Centers',
+      active: true,
+    },
+    {
+      id: 'tenants',
+      icon: 'store',
+      label: 'Complementary Tenants',
+      active: true,
+    },
+    {
+      id: 'competitors',
+      icon: 'chart-bar',
+      label: 'Competitors',
+      active: true,
+    },
+    { id: 'demographics', icon: 'users', label: 'Demographics', active: true },
   ];
 
   properties: Property[] = [
@@ -130,8 +148,8 @@ export class PropertiesComponent {
       },
     },
   ];
-  
-list: any;
+
+  list: any;
 
   // Add new properties for map handling
   private map: any = null;
@@ -159,15 +177,17 @@ list: any;
 
   private async loadProperties(buyboxId: number) {
     try {
-      const response = await this.placesService.GetBuyBoxPlaces(buyboxId).toPromise();
+      const response = await this.placesService
+        .GetBuyBoxPlaces(buyboxId)
+        .toPromise();
       this.propertiesService.setGroupedPropertiesArray(response);
       this.properties = this.transformProperties(response);
-      
+
       // Initialize map after properties are loaded
       if (this.currentView === 'split') {
         this.initializeMap();
       }
-      
+
       this.isLoading = false;
     } catch (error) {
       console.error('Error loading properties:', error);
@@ -177,7 +197,7 @@ list: any;
 
   private transformProperties(apiResponse: any[]): Property[] {
     // Transform API response to match Property interface
-    return apiResponse.map(item => ({
+    return apiResponse.map((item) => ({
       id: item.Id,
       title: item.Name,
       address: item.Address,
@@ -188,12 +208,12 @@ list: any;
         nearestCompTenant: this.formatDistance(item.NearestTenantDistance),
         purchasePrice: this.formatPrice(item.Price),
         availableUnits: item.AvailableUnits,
-        unitSizes: this.formatUnitSizes(item.UnitSizes)
+        unitSizes: this.formatUnitSizes(item.UnitSizes),
       },
       broker: {
         name: item.Broker?.Name || '',
-        logo: item.Broker?.Logo || ''
-      }
+        logo: item.Broker?.Logo || '',
+      },
     }));
   }
 
@@ -219,17 +239,19 @@ list: any;
 
     this.clearMarkers();
 
-    this.properties.forEach(property => {
+    this.properties.forEach((property) => {
       if (property.coordinates) {
         const marker = this.mapsService.addPropertyMarker(
           this.map,
           {
             lat: property.coordinates.latitude,
-            lng: property.coordinates.longitude
+            lng: property.coordinates.longitude,
           },
           property
-        ) as GoogleMapsMarker & { addListener: (event: string, handler: () => void) => void };
-        
+        ) as GoogleMapsMarker & {
+          addListener: (event: string, handler: () => void) => void;
+        };
+
         this.markers.push(marker);
         this.bounds!.extend(marker.getPosition()!);
 
@@ -246,7 +268,7 @@ list: any;
   }
 
   private clearMarkers() {
-    this.markers.forEach(marker => marker.setMap(null));
+    this.markers.forEach((marker) => marker.setMap(null));
     this.markers = [];
   }
 
@@ -257,26 +279,34 @@ list: any;
   }
 
   private setupSearchListener(): void {
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(value => {
-      this.searchProperties(value || '');
-    });
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value) => {
+        this.searchProperties(value || '');
+      });
   }
 
   isActive(route: string): boolean {
     return this.router.url === route;
   }
   searchProperties(query: string): void {
-    this.properties = this.properties.filter(property =>
-      property.title.toLowerCase().includes(query.toLowerCase()) ||
-      property.address.toLowerCase().includes(query.toLowerCase())||
-      property.metrics.nearestCompetitor.toLowerCase().includes(query.toLowerCase()) ||
-      property.metrics.nearestCompTenant.toLowerCase().includes(query.toLowerCase()) ||
-      property.metrics.purchasePrice.toLowerCase().includes(query.toLowerCase()) ||
-      property.metrics.unitSizes.toLowerCase().includes(query.toLowerCase()) ||
-      property.broker.name.toLowerCase().includes(query.toLowerCase())
+    this.properties = this.properties.filter(
+      (property) =>
+        property.title.toLowerCase().includes(query.toLowerCase()) ||
+        property.address.toLowerCase().includes(query.toLowerCase()) ||
+        property.metrics.nearestCompetitor
+          .toLowerCase()
+          .includes(query.toLowerCase()) ||
+        property.metrics.nearestCompTenant
+          .toLowerCase()
+          .includes(query.toLowerCase()) ||
+        property.metrics.purchasePrice
+          .toLowerCase()
+          .includes(query.toLowerCase()) ||
+        property.metrics.unitSizes
+          .toLowerCase()
+          .includes(query.toLowerCase()) ||
+        property.broker.name.toLowerCase().includes(query.toLowerCase())
     );
   }
 
@@ -304,12 +334,14 @@ list: any;
   }
 
   removeFilter(tagToRemove: any): void {
-    this.filterTags = this.filterTags.filter(tag => tag.id !== tagToRemove.id);
+    this.filterTags = this.filterTags.filter(
+      (tag) => tag.id !== tagToRemove.id
+    );
   }
-  
+
   setView(view: 'dashboard' | 'split' | 'list' | 'grid'): void {
     this.currentView = view;
-    
+
     // Initialize map when switching to split view
     if (view === 'split') {
       setTimeout(() => {
@@ -319,10 +351,10 @@ list: any;
   }
   onSearchChange(event: Event): void {
     const value = (event.target as HTMLInputElement).value.toLowerCase();
-    this.filteredProperties = this.properties.filter(property =>
-      property.title.toLowerCase().includes(value) ||
-      property.address.toLowerCase().includes(value)
+    this.filteredProperties = this.properties.filter(
+      (property) =>
+        property.title.toLowerCase().includes(value) ||
+        property.address.toLowerCase().includes(value)
     );
   }
 }
-

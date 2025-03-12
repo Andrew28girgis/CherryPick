@@ -1,27 +1,26 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   Cotenant,
   Generated,
   ManagerOrganization,
   ShoppingCenterManager,
-} from 'src/models/emailGenerate';
-import { RelationNames } from 'src/models/emailGenerate';
+} from 'src/app/shared/models/emailGenerate';
+import { RelationNames } from 'src/app/shared/models/emailGenerate';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlacesService } from 'src/app/services/places.service';
-import { Center } from 'src/models/shoppingCenters';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import { Center } from 'src/app/shared/models/shoppingCenters';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { BuyBoxOrganizationsForEmail } from 'src/models/buyboxOrganizationsForEmail';
+import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganizationsForEmail';
 import { EditorModule } from 'primeng/editor';
 
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Location } from '@angular/common';
 
 @Component({
@@ -135,7 +134,7 @@ export class EmilyComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
-    private _location: Location,
+    private _location: Location
   ) {
     if (!this.buyBoxIdReply) {
       this.route.paramMap.subscribe((params) => {
@@ -464,8 +463,7 @@ export class EmilyComponent implements OnInit {
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-      },
+      next: (response: any) => {},
     });
   }
 
@@ -1458,7 +1456,6 @@ export class EmilyComponent implements OnInit {
       },
       Json: null,
     };
-
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {

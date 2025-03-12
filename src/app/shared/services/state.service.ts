@@ -1,13 +1,13 @@
- import { Injectable } from '@angular/core';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center, Place } from 'src/models/shoppingCenters';
-import { BbPlace } from 'src/models/buyboxPlaces';
-import { ShareOrg } from 'src/models/shareOrg';
-import { permission } from 'src/models/permission';
+import { Injectable } from '@angular/core';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center, Place } from 'src/app/shared/models/shoppingCenters';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { ShareOrg } from 'src/app/shared/models/shareOrg';
+import { permission } from 'src/app/shared/models/permission';
 import { BehaviorSubject } from 'rxjs';
- 
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StateService {
   private selectedSS: number | null = null;
@@ -15,14 +15,11 @@ export class StateService {
   private shoppingCenters: Center[] = [];
   private standAlone: Place[] = [];
   private buyboxPlaces: BbPlace[] = [];
-  private Permission:permission[] = [];
+  private Permission: permission[] = [];
 
-  private shareOrg: ShareOrg[] = []; 
+  private shareOrg: ShareOrg[] = [];
   private scrollPosition: number = 0;
-  placesRepresentative:boolean | undefined;
-
-
-
+  placesRepresentative: boolean | undefined;
 
   private shoppingCentersSubject = new BehaviorSubject<Center[]>([]);
   shoppingCenters$ = this.shoppingCentersSubject.asObservable();
@@ -39,7 +36,7 @@ export class StateService {
   setShoppingCenters(centers: Center[]): void {
     this.shoppingCentersSubject.next(centers);
   }
-  
+
   getShoppingCentersSnapshot(): Center[] {
     return this.shoppingCentersSubject.getValue();
   }
@@ -47,7 +44,7 @@ export class StateService {
   setBuyboxCategories(categories: BuyboxCategory[]): void {
     this.buyboxCategoriesSubject.next(categories);
   }
-  
+
   setBuyboxPlaces(places: BbPlace[]): void {
     this.buyboxPlacesSubject.next(places);
   }
@@ -55,13 +52,6 @@ export class StateService {
   setShareOrg(org: ShareOrg[]): void {
     this.shareOrgSubject.next(org);
   }
-
-
-
-
-
-
-  
 
   // Selected SS methods
   setSelectedSS(value: number) {
@@ -112,12 +102,12 @@ export class StateService {
   getShareOrg(): ShareOrg[] {
     return this.shareOrg;
   }
- 
+
   setPermission(permission: permission[]) {
     this.Permission = permission;
   }
 
-  setPlacesRepresentative(PlacesRepresentative:any) {
+  setPlacesRepresentative(PlacesRepresentative: any) {
     this.placesRepresentative = PlacesRepresentative;
   }
 
@@ -134,8 +124,7 @@ export class StateService {
     this.shoppingCenters = [];
     this.buyboxPlaces = [];
     this.shareOrg = [];
-    this.selectedSS = null; 
+    this.selectedSS = null;
     this.Permission = [];
   }
-
-} 
+}

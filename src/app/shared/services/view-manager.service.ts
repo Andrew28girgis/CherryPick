@@ -3,10 +3,10 @@ import { PlacesService } from './places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { StateService } from './state.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center } from 'src/models/shoppingCenters';
-import { BbPlace } from 'src/models/buyboxPlaces';
-import { ShareOrg } from 'src/models/shareOrg';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center } from 'src/app/shared/models/shoppingCenters';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { ShareOrg } from 'src/app/shared/models/shareOrg';
 
 declare const google: any;
 
@@ -14,7 +14,6 @@ declare const google: any;
   providedIn: 'root',
 })
 export class ViewManagerService {
-  
   constructor(
     private placesService: PlacesService,
     private spinner: NgxSpinnerService,
@@ -140,7 +139,10 @@ export class ViewManagerService {
     });
   }
 
-  deleteShoppingCenter(buyboxId: number, shoppingCenterId: number | string): Promise<any> {
+  deleteShoppingCenter(
+    buyboxId: number,
+    shoppingCenterId: number | string
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       this.spinner.show();
       const body: any = {
@@ -154,8 +156,10 @@ export class ViewManagerService {
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const currentCenters = this.stateService.getShoppingCentersSnapshot();
-          const updatedCenters = currentCenters.map(center =>
-            center.Id === shoppingCenterId ? { ...center, Deleted: true } : center
+          const updatedCenters = currentCenters.map((center) =>
+            center.Id === shoppingCenterId
+              ? { ...center, Deleted: true }
+              : center
           );
           this.stateService.setShoppingCenters(updatedCenters);
           resolve(data);
@@ -187,8 +191,10 @@ export class ViewManagerService {
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const currentCenters = this.stateService.getShoppingCentersSnapshot();
-          const updatedCenters = currentCenters.map(center =>
-            Number(center.MarketSurveyId) === +MarketSurveyId ? { ...center, Deleted: false } : center
+          const updatedCenters = currentCenters.map((center) =>
+            Number(center.MarketSurveyId) === +MarketSurveyId
+              ? { ...center, Deleted: false }
+              : center
           );
           this.stateService.setShoppingCenters(updatedCenters);
           resolve(data);
@@ -208,7 +214,7 @@ export class ViewManagerService {
   //   buyboxId: number,
   //   shoppingCenterId: number | string
   // ): Promise<any> {
-    
+
   //   return new Promise((resolve, reject) => {
   //     this.spinner.show();
   //     const body: any = {
@@ -247,7 +253,7 @@ export class ViewManagerService {
   //       },
   //       Json: null,
   //     };
-      
+
   //     this.placesService.GenericAPI(body).subscribe({
   //       next: (data) => {
   //         resolve(data);
@@ -262,7 +268,7 @@ export class ViewManagerService {
   //     });
   //   });
   // }
-  
+
   // Map and Street View methods
   async initializeMap(
     elementId: string,

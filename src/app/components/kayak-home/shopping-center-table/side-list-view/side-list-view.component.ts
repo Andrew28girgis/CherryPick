@@ -1,14 +1,20 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit, TemplateRef } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  NgZone,
+  OnInit,
+  TemplateRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MapsService } from 'src/app/services/maps.service';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center } from '../../../../../models/shoppingCenters';
-import { BbPlace } from 'src/models/buyboxPlaces';
-import { Polygon } from 'src/models/polygons';
-import { General } from 'src/models/domain';
+import { MapsService } from 'src/app/shared/services/maps.service';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center } from '../../../../shared/models/shoppingCenters';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { Polygon } from 'src/app/shared/models/polygons';
+import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 declare const google: any;
@@ -18,7 +24,7 @@ declare const google: any;
   templateUrl: './side-list-view.component.html',
   styleUrls: ['./side-list-view.component.css'],
 })
-export class SideListViewComponent implements OnInit{
+export class SideListViewComponent implements OnInit {
   General: General = new General();
   cardsSideList: Center[] = [];
   map: any;
@@ -48,9 +54,9 @@ export class SideListViewComponent implements OnInit{
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone
-  ) { }
+  ) {}
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.General = new General();
     this.savedMapView = localStorage.getItem('mapView');
     this.activatedRoute.params.subscribe((params: any) => {
@@ -108,7 +114,6 @@ export class SideListViewComponent implements OnInit{
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-
         this.buyboxPlaces = data.json;
         this.buyboxCategories.forEach((category) => {
           category.isChecked = false;
@@ -182,7 +187,7 @@ export class SideListViewComponent implements OnInit{
       title: 'Location Marker',
     });
   }
-  
+
   async getAllMarker() {
     try {
       this.spinner.show();
@@ -451,13 +456,7 @@ export class SideListViewComponent implements OnInit{
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
-        this.initializeStreetView(
-          'street-view',
-          lat,
-          lng,
-          heading,
-          pitch
-        );
+        this.initializeStreetView('street-view', lat, lng, heading, pitch);
       } else {
         console.error("Element with id 'street-view' not found.");
       }
@@ -509,7 +508,7 @@ export class SideListViewComponent implements OnInit{
   }
 
   sanitizeUrl(url: string): SafeResourceUrl {
-      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   copyLink(link: string) {
@@ -549,14 +548,20 @@ export class SideListViewComponent implements OnInit{
     this.PlacesService.GenericAPI(body).subscribe((data) => {
       this.modalService.dismissAll();
       this.ngZone.run(() => {
-        this.cardsSideList = this.cardsSideList.filter(place => place.Id !== this.shoppingCenterIdToDelete);
+        this.cardsSideList = this.cardsSideList.filter(
+          (place) => place.Id !== this.shoppingCenterIdToDelete
+        );
       });
       this.getShoppingCenters(this.BuyBoxId);
       this.spinner.hide();
     });
   }
 
-  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean,placeId : number) {
+  RestoreShoppingCenter(
+    MarketSurveyId: any,
+    Deleted: boolean,
+    placeId: number
+  ) {
     this.spinner.show();
     Deleted = false;
 
@@ -577,13 +582,15 @@ export class SideListViewComponent implements OnInit{
 
   outsideClickHandler = (event: Event): void => {
     const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest('.shortcuts_iconCard, .ellipsis_icont');
+    const isInside = targetElement.closest(
+      '.shortcuts_iconCard, .ellipsis_icont'
+    );
 
     if (!isInside) {
       this.selectedIdCard = null;
       document.removeEventListener('click', this.outsideClickHandler);
     }
-  }
+  };
 
   toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
     event?.stopPropagation();
@@ -605,24 +612,26 @@ export class SideListViewComponent implements OnInit{
       this.selectedId = null;
       return;
     }
-  
+
     const targetElement = event?.target as HTMLElement;
     const rect = targetElement?.getBoundingClientRect();
-  
+
     const shortcutsIcon = document.querySelector(
       '.shortcuts_icon'
     ) as HTMLElement;
-  
+
     if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
+      shortcutsIcon.style.top = `${
+        rect.top + window.scrollY + targetElement.offsetHeight
+      }px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
-  
+
     this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
   }
 
   trackById(index: number, place: any): number {
     return place.Id;
-  } 
+  }
 }

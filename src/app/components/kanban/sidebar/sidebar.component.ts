@@ -1,9 +1,16 @@
-import { Component, Output, EventEmitter, Input, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  Input,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SidebarService } from './sidebar.service'; // Create this service
-import { ThemeService } from '../../../services/theme.service';
+import { ThemeService } from '../../../shared/services/theme.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -40,14 +47,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      takeUntil(this.destroy$)
-    ).subscribe(() => {
-      this.updateActiveItem();
-    });
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.updateActiveItem();
+      });
     this.themeService.initializeTheme();
-
   }
 
   ngOnDestroy() {
@@ -66,7 +74,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
       return this.router.url === '/Kanban' || this.router.url === '/Done';
     }
     if (link === '/Properties') {
-      return this.router.url === '/Properties' || this.router.url === '/PropertiesSpilit' || this.router.url === '/PropertiesGrid';
+      return (
+        this.router.url === '/Properties' ||
+        this.router.url === '/PropertiesSpilit' ||
+        this.router.url === '/PropertiesGrid'
+      );
     }
     return this.router.isActive(link, true);
   }
@@ -77,7 +89,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   private updateActiveItem(): void {
-    const activeItem = this.sidebarItems.find((item) => this.isLinkActive(item.link));
+    const activeItem = this.sidebarItems.find((item) =>
+      this.isLinkActive(item.link)
+    );
     if (activeItem) {
       this.activeItem = activeItem.title;
     }
@@ -86,4 +100,3 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.themeService.toggleTheme();
   }
 }
-

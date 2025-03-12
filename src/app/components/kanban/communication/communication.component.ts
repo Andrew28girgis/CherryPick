@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { CallFilter, CallRecord, Source } from "../../../../models/comunication";
-
+import {
+  CallFilter,
+  CallRecord,
+  Source,
+} from '../../../shared/models/comunication';
 
 @Component({
   selector: 'app-communication',
   templateUrl: './communication.component.html',
-  styleUrls: ['./communication.component.css']
+  styleUrls: ['./communication.component.css'],
 })
 export class CommunicationComponent implements OnInit {
   sources: Source[] = [];
@@ -21,7 +24,7 @@ export class CommunicationComponent implements OnInit {
   filter: CallFilter = {
     search: '',
     status: ['active', 'completed', 'missed'],
-    dateRange: null
+    dateRange: null,
   };
 
   constructor() {}
@@ -49,64 +52,72 @@ export class CommunicationComponent implements OnInit {
     this.calls = [
       {
         id: '1',
-        participants: [{
-          id: '1',
-          name: 'Hassan Magdy Qasem',
-          avatar: '/assets/Images/Avatars/Mark.svg',
-          email: 'hassan@example.com',
-          department: 'Engineering'
-        }],
-        timestamp: new Date(),  // Today
+        participants: [
+          {
+            id: '1',
+            name: 'Hassan Magdy Qasem',
+            avatar: '/assets/Images/Avatars/Mark.svg',
+            email: 'hassan@example.com',
+            department: 'Engineering',
+          },
+        ],
+        timestamp: new Date(), // Today
         duration: 1800,
         status: 'completed',
         type: 'video',
         recording: true,
-        tags: ['important', 'project-review']
+        tags: ['important', 'project-review'],
       },
       {
         id: '2',
-        participants: [{
-          id: '2',
-          name: 'Andrew Cergies',
-          avatar: '/assets/Images/Avatars/hassan.svg',
-          email: 'andrew@example.com',
-          department: 'Design'
-        }],
-        timestamp: new Date(),  // Today
+        participants: [
+          {
+            id: '2',
+            name: 'Andrew Cergies',
+            avatar: '/assets/Images/Avatars/hassan.svg',
+            email: 'andrew@example.com',
+            department: 'Design',
+          },
+        ],
+        timestamp: new Date(), // Today
         duration: 900,
         status: 'completed',
         type: 'audio',
-        notes: 'Discussed new design system'
+        notes: 'Discussed new design system',
       },
       {
         id: '3',
-        participants: [{
-          id: '3',
-          name: 'Diana Lolo',
-          avatar: '/assets/Images/Avatars/Mark.svg',
-          email: 'Diana@example.com',
-          department: 'Marketing'
-        }],
-        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),  // Yesterday
+        participants: [
+          {
+            id: '3',
+            name: 'Diana Lolo',
+            avatar: '/assets/Images/Avatars/Mark.svg',
+            email: 'Diana@example.com',
+            department: 'Marketing',
+          },
+        ],
+        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
         duration: 1200,
         status: 'missed',
-        type: 'video'
+        type: 'video',
       },
       {
         id: '4',
-        participants: [{
-          id: '4',
-          name: 'Sameh Seliem',
-          avatar: '/assets/Images/Avatars/hassan.svg',
-          email: 'sameh@example.com',
-          department: 'Sales'
-        }],
-        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),  // Yesterday
+        participants: [
+          {
+            id: '4',
+            name: 'Sameh Seliem',
+            avatar: '/assets/Images/Avatars/hassan.svg',
+            email: 'sameh@example.com',
+            department: 'Sales',
+          },
+        ],
+        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
         duration: 600,
         status: 'completed',
         type: 'audio',
-        recording: true
-      }
+        recording: true,
+      },
     ];
   }
 
@@ -130,20 +141,22 @@ export class CommunicationComponent implements OnInit {
   }
 
   filterCalls(): CallRecord[] {
-    return this.calls.filter(call => {
+    return this.calls.filter((call) => {
       // Search by participant name
-      const matchesSearch = this.filter.search ? 
-        call.participants.some(p => 
-          p.name.toLowerCase().includes(this.filter.search.toLowerCase())
-        ) : true;
+      const matchesSearch = this.filter.search
+        ? call.participants.some((p) =>
+            p.name.toLowerCase().includes(this.filter.search.toLowerCase())
+          )
+        : true;
 
       // Filter by status
       const matchesStatus = this.filter.status.includes(call.status);
 
       // Filter by date range
-      const matchesDate = this.filter.dateRange ? 
-        call.timestamp >= this.filter.dateRange.start && 
-        call.timestamp <= this.filter.dateRange.end : true;
+      const matchesDate = this.filter.dateRange
+        ? call.timestamp >= this.filter.dateRange.start &&
+          call.timestamp <= this.filter.dateRange.end
+        : true;
 
       return matchesSearch && matchesStatus && matchesDate;
     });
@@ -170,23 +183,27 @@ export class CommunicationComponent implements OnInit {
     return date.toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: true
+      hour12: true,
     });
   }
 
   isToday(date: Date): boolean {
     const today = new Date();
-    return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   }
 
   isYesterday(date: Date): boolean {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    return date.getDate() === yesterday.getDate() &&
-           date.getMonth() === yesterday.getMonth() &&
-           date.getFullYear() === yesterday.getFullYear();
+    return (
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear()
+    );
   }
 
   setActiveTab(tab: string): void {

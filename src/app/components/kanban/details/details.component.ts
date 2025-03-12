@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TableRow } from '../../../../models/kanbans';
+import { TableRow } from '../../../shared/models/kanbans';
 import { FilterPanelComponent } from '../filter-panel/filter-panel.component';
 import { Router } from '@angular/router';
 
@@ -158,13 +158,14 @@ export class DetailsComponent implements OnInit {
     }
 
     const searchLower = this.searchText.toLowerCase();
-    this.filteredData = this.data.filter((row) => 
-      row.client.name.toLowerCase().includes(searchLower) ||
-      row.leadBroker.name.toLowerCase().includes(searchLower) ||
-      row.stakeholder?.name?.toLowerCase().includes(searchLower) ||
-      row.unit.toLowerCase().includes(searchLower) ||
-      row.status.toLowerCase().includes(searchLower) ||
-      row.Notes?.toLowerCase().includes(searchLower)
+    this.filteredData = this.data.filter(
+      (row) =>
+        row.client.name.toLowerCase().includes(searchLower) ||
+        row.leadBroker.name.toLowerCase().includes(searchLower) ||
+        row.stakeholder?.name?.toLowerCase().includes(searchLower) ||
+        row.unit.toLowerCase().includes(searchLower) ||
+        row.status.toLowerCase().includes(searchLower) ||
+        row.Notes?.toLowerCase().includes(searchLower)
     );
   }
 

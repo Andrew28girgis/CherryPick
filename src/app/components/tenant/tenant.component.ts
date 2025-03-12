@@ -4,10 +4,14 @@ import {
   FileSystemFileEntry,
   FileSystemDirectoryEntry,
 } from 'ngx-file-drop';
-import { AvailabilityTenant, IFile, jsonGPT } from 'src/models/manage-prop';
+import {
+  AvailabilityTenant,
+  IFile,
+  jsonGPT,
+} from 'src/app/shared/models/manage-prop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
-import { PlacesService } from '../../../app/services/places.service';
+import { PlacesService } from '../../shared/services/places.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,7 +25,7 @@ import {
   Availability,
   PropertiesDetails,
   Tenant,
-} from 'src/models/manage-prop-shoppingCenter';
+} from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';

@@ -28,7 +28,7 @@ import { PropertiesspilitviewComponent } from './components/kanban/properties/wi
 import { CommunicationComponent } from './components/kanban/communication/communication.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { TermsComponent } from './components/terms/terms.component'; 
-import { NumberWithCommasPipe } from './pipes/number-with-commas.pipe';
+import { NumberWithCommasPipe } from './shared/pipes/number-with-commas.pipe';
 
 // Third-Party Modules
 import { NgxSpinnerModule } from 'ngx-spinner';

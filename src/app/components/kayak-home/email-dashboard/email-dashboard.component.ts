@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { EmailDashboard } from 'src/models/buy-box-emails';
+import { EmailDashboard } from 'src/app/shared/models/buy-box-emails';
 import { TableModule } from 'primeng/table';
 
 interface Column {
@@ -14,20 +14,20 @@ interface Column {
 @Component({
   selector: 'app-email-dashboard',
   standalone: true,
-    imports: [CommonModule, NgxSpinnerModule, TableModule],
-    providers: [NgxSpinnerService, PlacesService],
+  imports: [CommonModule, NgxSpinnerModule, TableModule],
+  providers: [NgxSpinnerService, PlacesService],
   templateUrl: './email-dashboard.component.html',
-  styleUrl: './email-dashboard.component.css'
+  styleUrl: './email-dashboard.component.css',
 })
-export class EmailDashboardComponent implements OnInit{
+export class EmailDashboardComponent implements OnInit {
   buyBoxId!: any;
-  EmailDashboard : any[] = [];
+  EmailDashboard: any[] = [];
   cols!: Column[];
-  
+
   constructor(
     public spinner: NgxSpinnerService,
-    private PlacesService: PlacesService,
-  ) { }
+    private PlacesService: PlacesService
+  ) {}
 
   ngOnInit(): void {
     this.buyBoxId = localStorage.getItem('BuyBoxId');
@@ -35,7 +35,7 @@ export class EmailDashboardComponent implements OnInit{
     this.cols = [
       { field: 'Organizations', header: 'Organizations' },
       { field: 'Last Activity Date', header: 'Last Activity Date' },
-  ];
+    ];
     this.GetEmailDashboard();
   }
 
@@ -54,7 +54,7 @@ export class EmailDashboardComponent implements OnInit{
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
-          this.EmailDashboard = data.json;          
+          this.EmailDashboard = data.json;
         } else {
           this.EmailDashboard = [];
         }
@@ -63,6 +63,5 @@ export class EmailDashboardComponent implements OnInit{
     });
   }
 
-  openOrg(idOrg: number, IdStage: number): void {
-  }
+  openOrg(idOrg: number, IdStage: number): void {}
 }

@@ -1,9 +1,9 @@
 /// <reference types="google.maps" />
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { IGeoJson } from 'src/models/igeo-json';
-import { IMapShape } from 'src/models/imap-shape';
-import { IProperty } from 'src/models/iproperty';
+import { IGeoJson } from 'src/app/shared/models/igeo-json';
+import { IMapShape } from 'src/app/shared/models/imap-shape';
+import { IProperty } from 'src/app/shared/models/iproperty';
 declare const google: any;
 
 @Injectable({

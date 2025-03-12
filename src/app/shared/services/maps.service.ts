@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 declare const google: any;
 import { Router } from '@angular/router';
-import { permission } from 'src/models/permission';
-import { PlacesService } from 'src/app/services/places.service';
+import { permission } from 'src/app/shared/models/permission';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import { StateService } from './state.service';
 
 @Injectable({
@@ -37,20 +37,20 @@ export class MapsService {
       },
       icon: icon,
       // Use a higher zIndex to bring the marker “on top” of others
-      zIndex: 999999
+      zIndex: 999999,
     });
-  
+
     marker.markerData = markerData;
     marker.type = type;
     this.markers.push(marker);
     this.assignToMarkerArray(marker, type);
-  
+
     const infoWindow = this.createInfoWindow(markerData, type);
     this.addMarkerEventListeners(marker, infoWindow);
-  
+
     return marker;
   }
-  
+
   private addMarkerEventListeners(marker: any, infoWindow: any): void {
     marker.addListener('click', () => {
       this.handleMarkerClick(marker, infoWindow);
@@ -119,8 +119,7 @@ export class MapsService {
     markerId: any,
     shoppingCenterId?: number,
     placeType?: string
-  ): void { 
-
+  ): void {
     this.storedBuyBoxId = localStorage.getItem('BuyBoxId');
     this.storedOrgId = localStorage.getItem('OrgId');
     if (placeType == 'Shopping Center') {
@@ -128,15 +127,10 @@ export class MapsService {
         '/landing',
         markerId == shoppingCenterId ? 0 : markerId,
         shoppingCenterId,
-        this.storedBuyBoxId
+        this.storedBuyBoxId,
       ]);
     } else {
-      this.router.navigate([
-        '/landing',
-        markerId,
-        0,
-        this.storedBuyBoxId
-      ]);
+      this.router.navigate(['/landing', markerId, 0, this.storedBuyBoxId]);
     }
   }
 
@@ -673,7 +667,7 @@ export class MapsService {
 
   getPlacesRepresentative(): boolean | undefined {
     return this.placesRepresentative;
-  } 
+  }
 
   drawMultiplePolygons(map: any, polygonFeatures: any[]): void {
     polygonFeatures?.forEach((feature) => {
@@ -689,7 +683,7 @@ export class MapsService {
         lat: coord[1],
         lng: coord[0],
       }));
-  
+
       const polygon = new google.maps.Polygon({
         paths: polygonCoords,
         strokeColor: '#3498db',
@@ -699,23 +693,23 @@ export class MapsService {
         fillOpacity: 0.35,
         map: map,
       });
-  
+
       // Calculate polygon center
       const bounds = new google.maps.LatLngBounds();
       polygonCoords.forEach((coord: any) => {
         bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
       });
       const center = bounds.getCenter();
-  
+
       // Create info window for detailed information
       const infoWindow = new google.maps.InfoWindow({
         content: this.createInfoWindowContent(feature),
         disableAutoPan: true,
       });
-  
+
       // Track the currently open info window
       let openInfoWindow: google.maps.InfoWindow | null = null;
-  
+
       // Close any existing info windows before opening a new one
       const closeAllInfoWindows = () => {
         if (openInfoWindow) {
@@ -723,40 +717,40 @@ export class MapsService {
           openInfoWindow = null;
         }
       };
-  
+
       // Add hover events to the polygon
       polygon.addListener('mouseover', () => {
         // Close any existing info windows
         closeAllInfoWindows();
-  
+
         // Open info window at polygon's center
         infoWindow.setPosition(center);
         infoWindow.open(map);
         openInfoWindow = infoWindow;
-  
+
         // Optional: Change polygon style on hover
         polygon.setOptions({
           fillOpacity: 0.5,
-          strokeWeight: 3
+          strokeWeight: 3,
         });
       });
-  
+
       polygon.addListener('mouseout', () => {
         // Close the info window
         closeAllInfoWindows();
-  
+
         // Revert polygon style
         polygon.setOptions({
           fillOpacity: 0.35,
-          strokeWeight: 2
+          strokeWeight: 2,
         });
-      }); 
-  
+      });
+
       // Close info window when clicking outside
       map.addListener('click', () => {
         closeAllInfoWindows();
       });
-  
+
       // Display the polygon's name on the polygon with margin
       const polygonLabel = new google.maps.Marker({
         position: { lat: center.lat(), lng: center.lng() },
@@ -773,41 +767,60 @@ export class MapsService {
         },
         title: feature.Name,
       });
-  
     } catch (error) {
       console.error('Error drawing polygon:', error);
     }
   }
-  
+
   // Helper method to create detailed info window content
   private createInfoWindowContent(feature: any): string {
     // Helper function to format number as currency
     const formatCurrency = (value: number) => {
       return value !== null && value !== undefined && value !== 0
-        ? `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+        ? `$${value.toLocaleString('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}`
         : '';
     };
-  
+
     return `
       <div style="padding:10px; max-width:250px; color:#000">
-        <h3 style="font-size:14px ; margin:0">${feature.Name || 'Unnamed Location'}</h3>
+        <h3 style="font-size:14px ; margin:0">${
+          feature.Name || 'Unnamed Location'
+        }</h3>
         <hr style="margin:10px 0">
-        <p class="py-1"><strong>Shopping centers:</strong> ${feature.shoppingcenters !== null && feature.shoppingcenters !== undefined ? feature.shoppingcenters : 'N/A'}</p>
-        ${(feature.minForlease !== 0 || feature.maxforlease !== 0)
-          ? `<p class="py-1"><strong>Lease price:</strong> 
-             ${formatCurrency(feature.minForlease)} ${feature.minForlease !== 0 && feature.maxforlease !== 0 ? '- ' : ''}${formatCurrency(feature.maxforlease)}
+        <p class="py-1"><strong>Shopping centers:</strong> ${
+          feature.shoppingcenters !== null &&
+          feature.shoppingcenters !== undefined
+            ? feature.shoppingcenters
+            : 'N/A'
+        }</p>
+        ${
+          feature.minForlease !== 0 || feature.maxforlease !== 0
+            ? `<p class="py-1"><strong>Lease price:</strong> 
+             ${formatCurrency(feature.minForlease)} ${
+                feature.minForlease !== 0 && feature.maxforlease !== 0
+                  ? '- '
+                  : ''
+              }${formatCurrency(feature.maxforlease)}
              </p>`
-          : ''}
+            : ''
+        }
         <p class="py-1"> <strong>Spaces:</strong> 
-          ${(feature.minspace !== null && feature.minspace !== undefined && 
-             feature.maxspace !== null && feature.maxspace !== undefined) 
-             ? `${feature.minspace} sq ft - ${feature.maxspace} sq ft` 
-             : 'No space information available'}
+          ${
+            feature.minspace !== null &&
+            feature.minspace !== undefined &&
+            feature.maxspace !== null &&
+            feature.maxspace !== undefined
+              ? `${feature.minspace} sq ft - ${feature.maxspace} sq ft`
+              : 'No space information available'
+          }
         </p>
       </div>
     `;
   }
-  
+
   // drawPolygons(map: any, response: any): void {
   //   if (!map || !response || !Array.isArray(response)) {
   //     console.error('Invalid parameters provided to drawPolygons');
@@ -847,7 +860,6 @@ export class MapsService {
   //   });
   // }
 
-  
   // async fetchAndDrawPolygon(
   //   map: any,
   //   city: any,
@@ -904,8 +916,8 @@ export class MapsService {
 
   // async fetchAndDrawPolygons(
   //   map: any,
-  //   buyboxId: any, 
-  // ): Promise<void> { 
+  //   buyboxId: any,
+  // ): Promise<void> {
 
   //   // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
@@ -952,10 +964,7 @@ export class MapsService {
   //   }
   // }
 
-
-
-  
-   //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
+  //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
   //   console.log(state);
 
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
@@ -1029,8 +1038,3 @@ export class MapsService {
   //   }
   // }
 }
-
-
-
-
- 

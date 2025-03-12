@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { getDomainConfig } from '../../app/config';
+import { getDomainConfig } from '../../config';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigService {
   private domainConfig: any;
@@ -24,7 +24,4 @@ export class ConfigService {
   getFontFamily(): string {
     return this.domainConfig ? this.domainConfig.fontFamily : '';
   }
-
- 
-  
 }

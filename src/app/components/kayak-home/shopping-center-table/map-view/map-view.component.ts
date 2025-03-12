@@ -1,21 +1,31 @@
-import { Component,  OnInit,  ViewChild,  ElementRef,  AfterViewInit,  OnDestroy,  NgZone,  Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  NgZone,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
-import { General } from 'src/models/domain';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import { General } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { MapsService } from 'src/app/services/maps.service';
-import { Center, Place } from 'src/models/shoppingCenters';
-import { StateService } from '../../../../services/state.service';
-import { BbPlace } from 'src/models/buyboxPlaces';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { ShareOrg } from 'src/models/shareOrg';
+import { MapsService } from 'src/app/shared/services/maps.service';
+import { Center, Place } from 'src/app/shared/models/shoppingCenters';
+import { StateService } from '../../../../shared/services/state.service';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { ShareOrg } from 'src/app/shared/models/shareOrg';
 
 declare const google: any;
 
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
-  styleUrls: ['./map-view.component.css']
+  styleUrls: ['./map-view.component.css'],
 })
 export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('map') mapElement!: ElementRef;
@@ -237,7 +247,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.markerService.createCustomMarker(this.map, categoryData);
     });
   }
-  
+
   private onMapDragEnd(map: any) {
     this.saveMapView(map);
     this.updateShoppingCenterCoordinates();
@@ -275,7 +285,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     });
   }
-  
+
   private isWithinBounds(property: any, bounds: any): boolean {
     const lat = Number.parseFloat(property.Latitude);
     const lng = Number.parseFloat(property.Longitude);
@@ -308,7 +318,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const mapOptions = {
-      center: { lat: 37.0902, lng: -95.7129 }, 
+      center: { lat: 37.0902, lng: -95.7129 },
       zoom: 4,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       mapTypeControl: true,
@@ -322,7 +332,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    
+
     if (this.shoppingCenters.length > 0) {
       this.addMarkersToMap();
     }
@@ -336,7 +346,10 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.shoppingCenters.forEach((center: any) => {
       if (center.Latitude && center.Longitude) {
-        const position = new google.maps.LatLng(center.Latitude, center.Longitude);
+        const position = new google.maps.LatLng(
+          center.Latitude,
+          center.Longitude
+        );
         bounds.extend(position);
 
         const marker = new google.maps.Marker({
@@ -347,7 +360,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
           icon: {
             url: 'assets/Images/Icons/map-marker.png',
             scaledSize: new google.maps.Size(30, 40),
-          }
+          },
         });
 
         const infoWindow = new google.maps.InfoWindow({
@@ -366,7 +379,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (!bounds.isEmpty()) {
       this.map.fitBounds(bounds);
-      
+
       // Adjust zoom level if there's only one marker
       if (this.markers.length === 1) {
         this.ngZone.runOutsideAngular(() => {
@@ -382,30 +395,35 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     return `
       <div class="info-window">
         <h4>${center.CenterName}</h4>
-        <p>${center.CenterAddress}, ${center.CenterCity}, ${center.CenterState}</p>
-        <a href="/landing/${center.ShoppingCenter?.Places?.[0]?.Id || 0}/${center.Id}/${this.BuyBoxId}" class="info-link">View Details</a>
+        <p>${center.CenterAddress}, ${center.CenterCity}, ${
+      center.CenterState
+    }</p>
+        <a href="/landing/${center.ShoppingCenter?.Places?.[0]?.Id || 0}/${
+      center.Id
+    }/${this.BuyBoxId}" class="info-link">View Details</a>
       </div>
     `;
   }
 
   private closeAllInfoWindows(): void {
-    this.infoWindows.forEach(window => window.close());
+    this.infoWindows.forEach((window) => window.close());
   }
 
   private clearMarkers(): void {
-    this.markers.forEach(marker => marker.setMap(null));
+    this.markers.forEach((marker) => marker.setMap(null));
     this.markers = [];
     this.infoWindows = [];
   }
 
   highlightMarker(place: any): void {
     if (!place.Latitude || !place.Longitude) return;
-    
-    const markerIndex = this.markers.findIndex(marker => 
-      marker.getPosition().lat() === place.Latitude && 
-      marker.getPosition().lng() === place.Longitude
+
+    const markerIndex = this.markers.findIndex(
+      (marker) =>
+        marker.getPosition().lat() === place.Latitude &&
+        marker.getPosition().lng() === place.Longitude
     );
-    
+
     if (markerIndex !== -1) {
       this.markers[markerIndex].setAnimation(google.maps.Animation.BOUNCE);
       this.map.panTo(this.markers[markerIndex].getPosition());
@@ -414,12 +432,13 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   unhighlightMarker(place: any): void {
     if (!place.Latitude || !place.Longitude) return;
-    
-    const markerIndex = this.markers.findIndex(marker => 
-      marker.getPosition().lat() === place.Latitude && 
-      marker.getPosition().lng() === place.Longitude
+
+    const markerIndex = this.markers.findIndex(
+      (marker) =>
+        marker.getPosition().lat() === place.Latitude &&
+        marker.getPosition().lng() === place.Longitude
     );
-    
+
     if (markerIndex !== -1) {
       this.markers[markerIndex].setAnimation(null);
     }

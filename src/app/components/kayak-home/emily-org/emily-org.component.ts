@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PlacesService } from 'src/app/services/places.service';
-import { OrganizationsForEmail } from 'src/models/emailyOrganization';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import { OrganizationsForEmail } from 'src/app/shared/models/emailyOrganization';
 
 @Component({
   selector: 'app-emily-org',
   templateUrl: './emily-org.component.html',
-  styleUrls: ['./emily-org.component.css']
+  styleUrls: ['./emily-org.component.css'],
 })
 export class EmilyOrgComponent {
   buyBoxId!: number; // Change to number (remove | null)
@@ -31,19 +31,21 @@ export class EmilyOrgComponent {
     this.GetBuyBoxOrganizationsForEmail();
     this.GetGetbuyBoxMailActivity();
   }
-// Method to toggle between components and store IDs
-toggleView(data: { contactId: number, orgId: number, buyBoxId: number } | boolean) {
-  if (typeof data === 'boolean') {
-    // Handle the goBackEvent case
-    this.showContactEmail = data;
-  } else {
-    // Handle the showContactEmail case
-    this.contactId = data.contactId;
-    this.orgId = data.orgId;
-    this.buyBoxId = data.buyBoxId;
-    this.showContactEmail = true; // Show the contact email component
+  // Method to toggle between components and store IDs
+  toggleView(
+    data: { contactId: number; orgId: number; buyBoxId: number } | boolean
+  ) {
+    if (typeof data === 'boolean') {
+      // Handle the goBackEvent case
+      this.showContactEmail = data;
+    } else {
+      // Handle the showContactEmail case
+      this.contactId = data.contactId;
+      this.orgId = data.orgId;
+      this.buyBoxId = data.buyBoxId;
+      this.showContactEmail = true; // Show the contact email component
+    }
   }
-}
 
   GetBuyBoxOrganizationsForEmail() {
     this.spinner.show();

@@ -1,8 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
-import { Fbo, General, nearsetPlaces, Property } from 'src/models/domain';
-import { Branch } from 'src/models/branches';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import {
+  Fbo,
+  General,
+  nearsetPlaces,
+  Property,
+} from 'src/app/shared/models/domain';
+import { Branch } from 'src/app/shared/models/branches';
 
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -11,22 +16,21 @@ import {
   LandingPlace,
   OtherPlace,
   ShoppingCenter,
-} from 'src/models/landingPlace';
-import { NearByType } from 'src/models/nearBy';
+} from 'src/app/shared/models/landingPlace';
+import { NearByType } from 'src/app/shared/models/nearBy';
 import { DomSanitizer } from '@angular/platform-browser';
-import { PlaceCotenants } from 'src/models/PlaceCo';
-import { OrgManager } from 'src/models/organization';
-import { BuyboxOrg } from 'src/models/buyboxOrg';
-import { OrgBranch } from 'src/models/branches';
-import { permission } from 'src/models/permission';
-import { Enriche } from 'src/models/enriche';
+import { PlaceCotenants } from 'src/app/shared/models/PlaceCo';
+import { OrgManager } from 'src/app/shared/models/organization';
+import { BuyboxOrg } from 'src/app/shared/models/buyboxOrg';
+import { OrgBranch } from 'src/app/shared/models/branches';
+import { permission } from 'src/app/shared/models/permission';
+import { Enriche } from 'src/app/shared/models/enriche';
 
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css'],
 })
-
 export class LandingComponent {
   General!: General;
   place!: Property;
@@ -63,32 +67,31 @@ export class LandingComponent {
   OrgId!: number;
   sanitizedUrl: any;
   sanitizedUrlPopup: any;
-  placesRepresentative:boolean | undefined;
+  placesRepresentative: boolean | undefined;
   Permission: permission[] = [];
-  windowHistrony:any;
-  enriche!:Enriche;
+  windowHistrony: any;
+  enriche!: Enriche;
 
-   constructor(
+  constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private sanitizer: DomSanitizer,
-    
+    private sanitizer: DomSanitizer
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
   }
 
   ngOnInit(): void {
-    this.windowHistrony = window.history.length   
+    this.windowHistrony = window.history.length;
     this.initializeParams();
     this.initializeDefaults();
     //this.initializeQueryParams();
   }
-  
-  GetCustomSections(buyboxId: number): void { 
+
+  GetCustomSections(buyboxId: number): void {
     const body: any = {
       Name: 'GetCustomSections',
       Params: {
@@ -99,8 +102,10 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.Permission = data.json;
-        this.placesRepresentative = this.Permission?.find((item:permission) => item.sectionName === "PlacesRepresentative")?.visible; 
-      }
+        this.placesRepresentative = this.Permission?.find(
+          (item: permission) => item.sectionName === 'PlacesRepresentative'
+        )?.visible;
+      },
     });
   }
 
@@ -154,34 +159,32 @@ export class LandingComponent {
       next: (data) => {
         this.CustomPlace = data.json?.[0] || null;
         console.log(`custom place`);
-        
 
         if (ShoppingcenterId !== 0) {
           this.ShoppingCenter = this.CustomPlace;
           this.GetShoppingCenterManager(this.ShoppingCenter?.Id);
-
         }
 
         console.log(`custom place`);
         console.log(this.CustomPlace);
-        
+
         console.log(`shopping Center`);
         console.log(this.ShoppingCenter);
 
-        if (this.ShoppingCenter && this.ShoppingCenter.Images) { 
-          this.placeImage = this.ShoppingCenter.Images?.split(',').map((link :any) =>
-            link.trim()
-        ); 
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) {
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
+            (link: any) => link.trim()
+          );
 
-        if (this.CustomPlace.OtherPlaces) {
+          if (this.CustomPlace.OtherPlaces) {
             this.StandAlonePlace = this.CustomPlace.OtherPlaces[0];
             this.StandAlonePlace.PopulationDensity =
               +this.StandAlonePlace.PopulationDensity;
-        }
+          }
 
-        this.getMinMaxUnitSize();
+          this.getMinMaxUnitSize();
 
-        this.ShoppingCenter.StreetViewURL
+          this.ShoppingCenter.StreetViewURL
             ? this.changeStreetView(this.ShoppingCenter)
             : this.viewOnStreet();
         } else {
@@ -198,7 +201,7 @@ export class LandingComponent {
       error: (error) => console.error('Error fetching APIs:', error),
     });
   }
-  
+
   GetPlaceCotenants(placeId: number): void {
     const body: any = {
       Name: 'GetPlaceCotenants',
@@ -473,7 +476,7 @@ export class LandingComponent {
         });
       }
     } finally {
-    } 
+    }
   }
   getCityAndState(Branch: Branch) {
     const lat = Branch.Latitude;
@@ -481,12 +484,13 @@ export class LandingComponent {
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
 
     fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        Branch.City = data.address.city || data.address.town || data.address.village;
+      .then((response) => response.json())
+      .then((data) => {
+        Branch.City =
+          data.address.city || data.address.town || data.address.village;
         Branch.State = data.address.state;
       })
-      .catch(error => console.error('Error fetching city and state:', error));
+      .catch((error) => console.error('Error fetching city and state:', error));
   }
 
   getLatitude(): any {
@@ -533,7 +537,7 @@ export class LandingComponent {
       map,
       position: { lat: +markerData?.Latitude, lng: +markerData?.Longitude },
       icon: icon,
-      zIndex: 999999
+      zIndex: 999999,
     });
   }
 
@@ -849,19 +853,17 @@ export class LandingComponent {
     );
   }
 
-  sendEmojFeedBack(reaction: number) { 
+  sendEmojFeedBack(reaction: number) {
     const body: any = {
       Name: 'CreatePropertyReaction',
       Params: {
         reactionId: reaction,
-        // marketsurveyid: this.marketsurveyid, 
+        // marketsurveyid: this.marketsurveyid,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-     next: (data) => {
-     
-      },
+      next: (data) => {},
       error: (error) => console.error('Error fetching APIs:', error),
     });
     // this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
@@ -903,8 +905,8 @@ export class LandingComponent {
   viewOnStreet() {
     let lat = this.getStreetLat();
     let lng = this.getStreetLong();
-    let heading = this.getStreetHeading() || 165; 
-    let pitch = this.getStreetPitch() || 0; 
+    let heading = this.getStreetHeading() || 165;
+    let pitch = this.getStreetPitch() || 0;
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
@@ -1007,7 +1009,7 @@ export class LandingComponent {
     });
   }
 
-openStreetViewPlace(content: any, modalObject?: any) {
+  openStreetViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -1092,55 +1094,48 @@ openStreetViewPlace(content: any, modalObject?: any) {
     const capitalizeFirst = (value: string) =>
       value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : '';
 
-    const addressParts = 
-    [
+    const addressParts = [
       this.ShoppingCenter?.CenterAddress,
       capitalizeFirst(this.ShoppingCenter?.CenterCity),
       this.ShoppingCenter?.CenterState.toUpperCase(),
-    ]
+    ];
 
     return addressParts
       ? addressParts.filter(Boolean).join(', ')
       : 'Address not available';
   }
 
-
-
-
- 
   submitEnriche() {
     const body: any = {
       Name: 'CreateEnrichmentRequest',
       Params: {
-        taskid : this.enriche.taskId,
-        shoppingcenterid :+this.ShoppingCenterId,
-        context :this.enriche.context ,
-        url :this.enriche.url
+        taskid: this.enriche.taskId,
+        shoppingcenterid: +this.ShoppingCenterId,
+        context: this.enriche.context,
+        url: this.enriche.url,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-     next: (data) => {
-      this.uploadFile(data.json[0].requestId);
+      next: (data) => {
+        this.uploadFile(data.json[0].requestId);
       },
       error: (error) => console.error('Error fetching APIs:', error),
-    }); 
-}
-
-onFileChange(event: any) {
-  if (event.target.files && event.target.files.length) {
-    this.enriche.file = event.target.files[0];
+    });
   }
-}
 
-uploadFile(id:number) {
-  const formData = new FormData();
-  formData.append('file', this.enriche.file);  
-  this.PlacesService.UploadFile(formData ,id).subscribe({
-    next: (data) => {
-    },
-   error: (error) => console.error('Error fetching APIs:', error),
-   });
-}
+  onFileChange(event: any) {
+    if (event.target.files && event.target.files.length) {
+      this.enriche.file = event.target.files[0];
+    }
+  }
 
+  uploadFile(id: number) {
+    const formData = new FormData();
+    formData.append('file', this.enriche.file);
+    this.PlacesService.UploadFile(formData, id).subscribe({
+      next: (data) => {},
+      error: (error) => console.error('Error fetching APIs:', error),
+    });
+  }
 }
