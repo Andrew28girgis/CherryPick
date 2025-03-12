@@ -111,7 +111,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
       this.stateService.setShareOrg(this.ShareOrg);
     } catch (error) {
-      console.error('Error loading data:', error);
     }
   }
 
@@ -181,7 +180,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
           pitch
         );
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -194,10 +192,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        console.log('Link copied to clipboard!');
       })
       .catch((err) => {
-        console.error('Could not copy text: ', err);
       });
   }
 
@@ -225,9 +221,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
           this.shoppingCenterIdToDelete
         );
         this.modalService.dismissAll();
-      } catch (error) {
-        console.error('Error deleting shopping center:', error);
-      } finally {
+      }  finally {
         this.spinner.hide();
       }
     }

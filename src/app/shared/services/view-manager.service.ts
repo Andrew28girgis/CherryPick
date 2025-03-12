@@ -245,7 +245,6 @@ export class ViewManagerService {
     zoom: number = 14
   ): Promise<any> {
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return null;
     }
 
@@ -254,7 +253,6 @@ export class ViewManagerService {
       const mapDiv = document.getElementById(elementId) as HTMLElement;
 
       if (!mapDiv) {
-        console.error(`Element with ID "${elementId}" not found.`);
         return null;
       }
 
@@ -272,7 +270,6 @@ export class ViewManagerService {
 
       return map;
     } catch (error) {
-      console.error('Error initializing map:', error);
       return null;
     }
   }
@@ -286,7 +283,6 @@ export class ViewManagerService {
   ): any {
     const streetViewElement = document.getElementById(elementId);
     if (!streetViewElement) {
-      console.error(`Element with id '${elementId}' not found.`);
       return null;
     }
 

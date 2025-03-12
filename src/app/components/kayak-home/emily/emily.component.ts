@@ -141,7 +141,6 @@ export class EmilyComponent implements OnInit {
         this.buyBoxId = params.get('buyboxId');
         this.orgId = params.get('orgId');
         this.microDealId = params.get('microDealId');
-        console.log(this.microDealId);
         this.CenterId = params.get('CenterId');
         this.shoppingCenterOrganization = this.orgId;
       });
@@ -1200,7 +1199,6 @@ export class EmilyComponent implements OnInit {
       next: (catResponse: any) => {
         const categoryId = catResponse?.json?.[0]?.Id;
         if (!categoryId) {
-          console.error('Category ID not found.');
           this.spinner.hide();
           return;
         }
@@ -1222,7 +1220,6 @@ export class EmilyComponent implements OnInit {
                 promptText: prompt?.PromptText || 'No prompt text available',
               }));
             } else {
-              console.error('No prompts found in the response.');
               this.prompts = [];
             }
             this.spinner.hide();

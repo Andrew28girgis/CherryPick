@@ -63,7 +63,6 @@ export class CommentService {
       // Backend returned an unsuccessful response code
       errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`
     }
-    console.error(errorMessage)
     return throwError(() => new Error(errorMessage))
   }
 }

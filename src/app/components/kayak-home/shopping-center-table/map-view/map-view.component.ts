@@ -185,7 +185,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const mapElement = document.getElementById('map') as HTMLElement;
       if (!mapElement) {
-        console.error('Element with id "map" not found.');
         return;
       }
 
@@ -225,7 +224,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.createCustomMarkers(this.buyboxCategories);
     } catch (error) {
-      console.error('Error loading markers:', error);
     } finally {
       this.spinner.hide();
     }

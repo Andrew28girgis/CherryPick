@@ -110,8 +110,7 @@ export class MapsService {
           marker.markerData.CenterAddress ? 'Shopping Center' : 'Stand Alone'
         );
       });
-    } else {
-      console.log(`Button for marker ${placeId} not found`);
+    } else { 
     }
   }
 
@@ -768,7 +767,6 @@ export class MapsService {
         title: feature.Name,
       });
     } catch (error) {
-      console.error('Error drawing polygon:', error);
     }
   }
 
@@ -823,7 +821,6 @@ export class MapsService {
 
   // drawPolygons(map: any, response: any): void {
   //   if (!map || !response || !Array.isArray(response)) {
-  //     console.error('Invalid parameters provided to drawPolygons');
   //     return;
   //   }
 
@@ -837,7 +834,6 @@ export class MapsService {
 
   //           // Check if they are valid numbers
   //           if (isNaN(lat) || isNaN(lng)) {
-  //             console.error('Invalid coordinate:', coord);
   //             return null;
   //           }
 
@@ -867,7 +863,6 @@ export class MapsService {
   //   lat?: any,
   //   lng?: any
   // ): Promise<void> {
-  //   console.log(state);
 
   //   // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
@@ -910,7 +905,6 @@ export class MapsService {
   //       }
   //     });
   //   } catch (error) {
-  //     console.error('Error fetching boundary data:', error);
   //   }
   // }
 
@@ -960,12 +954,10 @@ export class MapsService {
   //       }
   //     });
   //   } catch (error) {
-  //     console.error('Error fetching boundary data:', error);
   //   }
   // }
 
   //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
-  //   console.log(state);
 
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
   //   try {
@@ -1034,7 +1026,6 @@ export class MapsService {
   //       }
   //     });
   //   } catch (error) {
-  //     console.error("Error fetching boundary data:", error);
   //   }
   // }
 }
