@@ -611,7 +611,6 @@ export class HomeComponent implements OnInit {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -629,7 +628,6 @@ export class HomeComponent implements OnInit {
       );
       this.addMarkerToStreetView(panorama, lat, lng);
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 
@@ -683,20 +681,17 @@ export class HomeComponent implements OnInit {
       .then(() => {
       })
       .catch((err) => {
-        console.error('Could not copy text: ', err);
       });
   }
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
     const map = new Map(mapDiv, {
@@ -862,7 +857,6 @@ export class HomeComponent implements OnInit {
 
   addReply(marketSurveyId: number, commentId: number): void {
     if (!this.newReplies[commentId]?.trim()) {
-      console.error('Reply text is empty');
       return;
     }
 

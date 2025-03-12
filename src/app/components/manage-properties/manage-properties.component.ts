@@ -424,7 +424,6 @@ export class ManagePropertiesComponent implements OnInit {
               }
             },
             (error) => {
-              console.error('Error during upload/conversion:', error);
               this.isUploading = false;
               this.isConverting = false;
               this.spinner.hide();

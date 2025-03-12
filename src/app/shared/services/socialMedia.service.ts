@@ -134,7 +134,6 @@
 //     const link = `localhost:4200/landing/0/${shopping.Id}/${shopping.BuyBoxId}/${shopping.OrgId}`;
 //     navigator.clipboard.writeText(link).then(() => {
 //     }, (err) => {
-//       console.error('Could not copy text: ', err);
 //     });
 //   }
 // }

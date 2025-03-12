@@ -478,7 +478,6 @@ export class LandingComponent {
           data.address.city || data.address.town || data.address.village;
         Branch.State = data.address.state;
       })
-      .catch((error) => console.error('Error fetching city and state:', error));
   }
 
   getLatitude(): any {
@@ -900,7 +899,6 @@ export class LandingComponent {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -940,7 +938,6 @@ export class LandingComponent {
         }
       );
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 
@@ -971,7 +968,6 @@ export class LandingComponent {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
@@ -979,7 +975,6 @@ export class LandingComponent {
     const mapDiv = document.getElementById('mapInPopup') as HTMLElement;
 
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
 
@@ -1026,7 +1021,6 @@ export class LandingComponent {
       if (streetViewElement) {
         this.streetMapPopup(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -1044,7 +1038,6 @@ export class LandingComponent {
       );
       this.addMarkerToStreetView(panorama, lat, lng);
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 

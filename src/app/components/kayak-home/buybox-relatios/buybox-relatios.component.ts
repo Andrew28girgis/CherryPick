@@ -107,7 +107,6 @@ export class BuyboxRelatiosComponent {
     event.stopPropagation();
 
     if (!tag || !tag.id) {
-      console.error('Invalid tag selected:', tag);
       alert('Invalid tag selected. Please try again.');
       return;
     }
