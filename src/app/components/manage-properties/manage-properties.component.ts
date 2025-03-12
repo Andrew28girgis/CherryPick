@@ -1,5 +1,4 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/shared/services/places.service';
@@ -26,7 +25,6 @@ import {
   PropertiesDetails,
   Tenant,
 } from 'src/app/shared/models/manage-prop-shoppingCenter';
-import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
 
 @Component({
   selector: 'app-manage-properties',
@@ -46,8 +44,7 @@ export class ManagePropertiesComponent implements OnInit {
   pdfFileName: string = '';
   test!: number;
   JsonPDF!: jsonGPT;
-  AvailabilityAndTenants: AvailabilityTenant = {};
-  // display and edit shopping center manually
+  AvailabilityAndTenants: AvailabilityTenant = {}; 
   CustomPlace!: PropertiesDetails | undefined;
   showInputField: string | null = null;
   newPlaceSqFT!: number;
@@ -65,7 +62,6 @@ export class ManagePropertiesComponent implements OnInit {
   @ViewChild('deletePlaceModal', { static: true })
   deletePlaceModal!: TemplateRef<any>;
   constructor(
-    private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
@@ -84,7 +80,6 @@ export class ManagePropertiesComponent implements OnInit {
       MainEntity: null,
       Params: {
         ContactId: this.contactID,
-        // ContactId: 15549,
       },
       Json: null,
     };
@@ -95,12 +90,13 @@ export class ManagePropertiesComponent implements OnInit {
       }
     });
   }
-  // manual display and edit shopping center
+
   openShoppingModal(id: number) {
     this.selectedShoppingID = id.toString();
     this.modalService.open(this.openShopping, { size: 'xl', centered: true });
     this.GetShoppingCenterDetailsById();
   }
+
   GetShoppingCenterDetailsById() {
     this.spinner.show();
     const body: any = {

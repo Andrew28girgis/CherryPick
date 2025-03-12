@@ -15,8 +15,7 @@ export class LoginComponent {
   wrongPassword = false;
   General!: General;
   logoUrl: string = '';
-  t: any;
-  r: any;
+  t: any; 
 
   constructor(
     public activatedRoute: ActivatedRoute,

@@ -21,17 +21,6 @@ const routes: Routes = [
   { path: 'kayak', component: KayakComponent },
   { path: 'MyInboxs', component: MyInboxEmailListComponent }, 
   { path: 'organization-mail/:orgId/:contactId', component: EmilyContactEmailComponent },
-  // {
-  //   path: 'emily/:buyBoxId',
-  //   component: EmilyOrgComponent, // Parent component
-  //   children: [
-  //     {
-  //       path: 'contact-email/:orgId/:emailId',
-  //       component: EmilyContactEmailComponent,
-  //       outlet: 'contactEmailOutlet' // Named router outlet
-  //     }
-  //   ]
-  // }
 ];
 
 @NgModule({
