@@ -16,7 +16,7 @@ interface Property {
 @Component({
   selector: 'app-propertiesgridview-component',
   templateUrl: './propertiesgridview-component.component.html',
-  styleUrls: ['./propertiesgridview-component.component.css']
+  styleUrls: ['./propertiesgridview-component.component.css'],
 })
 export class PropertiesgridviewComponentComponent implements OnInit {
   @Input() properties!: Property[];
@@ -30,8 +30,8 @@ export class PropertiesgridviewComponentComponent implements OnInit {
       leasePrice: '13,450-$15,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '1.59-2.12 Mi'
-      }
+        distance: '1.59-2.12 Mi',
+      },
     },
     {
       name: 'Washington Square Plaza',
@@ -40,8 +40,8 @@ export class PropertiesgridviewComponentComponent implements OnInit {
       leasePrice: '18,000-$22,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '0.8-1.2 Mi'
-      }
+        distance: '0.8-1.2 Mi',
+      },
     },
     {
       name: 'Alexandria Commons',
@@ -50,17 +50,18 @@ export class PropertiesgridviewComponentComponent implements OnInit {
       leasePrice: '10,000-$12,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '2.0-2.5 Mi'
-      }
-    },{
+        distance: '2.0-2.5 Mi',
+      },
+    },
+    {
       name: 'Prospect Target Fairfax',
       address: '9607 Fairfax Blvd, Fairfax, VA',
       unitSize: '1,214 SF-1,568 SF',
       leasePrice: '$3,450-$15,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '1.59-2.12 Mi'
-      }
+        distance: '1.59-2.12 Mi',
+      },
     },
     {
       name: 'Washington Square Plaza',
@@ -69,8 +70,8 @@ export class PropertiesgridviewComponentComponent implements OnInit {
       leasePrice: '18,000-$22,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '0.8-1.2 Mi'
-      }
+        distance: '0.8-1.2 Mi',
+      },
     },
     {
       name: 'Alexandria Commons',
@@ -79,17 +80,18 @@ export class PropertiesgridviewComponentComponent implements OnInit {
       leasePrice: '10,000-$12,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '2.0-2.5 Mi'
-      }
-    },{
+        distance: '2.0-2.5 Mi',
+      },
+    },
+    {
       name: 'Prospect Target Fairfax',
       address: '9607 Fairfax Blvd, Fairfax, VA',
       unitSize: '1,214 SF-1,568 SF',
       leasePrice: '13,450-$15,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '1.59-2.12 Mi'
-      }
+        distance: '1.59-2.12 Mi',
+      },
     },
     {
       name: 'Washington Square Plaza',
@@ -98,8 +100,8 @@ export class PropertiesgridviewComponentComponent implements OnInit {
       leasePrice: '18,000-$22,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '0.8-1.2 Mi'
-      }
+        distance: '0.8-1.2 Mi',
+      },
     },
     {
       name: 'Alexandria Commons',
@@ -108,9 +110,9 @@ export class PropertiesgridviewComponentComponent implements OnInit {
       leasePrice: '10,000-$12,000',
       nearestCompetitors: {
         logo: 'assets/Images/klnb-logo.jpg',
-        distance: '2.0-2.5 Mi'
-      }
-    }
+        distance: '2.0-2.5 Mi',
+      },
+    },
   ];
   sidebarCollapsed = false;
   searchControl = new FormControl('');
@@ -121,7 +123,7 @@ export class PropertiesgridviewComponentComponent implements OnInit {
     { id: 'shopping', label: 'Shopping Centers', active: true },
     { id: 'tenants', label: 'Complementary Tenants', active: true },
     { id: 'competitors', label: 'Competitors', active: true },
-    { id: 'demographics', label: 'Demographics', active: true }
+    { id: 'demographics', label: 'Demographics', active: true },
   ];
 
   // Store the original properties list
@@ -132,12 +134,14 @@ export class PropertiesgridviewComponentComponent implements OnInit {
     this.originalProperties = [...this.filteredProperties];
 
     // Set up search subscription
-    this.searchControl.valueChanges.pipe(
-      debounceTime(300), // Wait for 300ms pause in events
-      distinctUntilChanged() // Only emit when the current value is different from the last
-    ).subscribe(searchTerm => {
-      this.searchProperties(searchTerm);
-    });
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300), // Wait for 300ms pause in events
+        distinctUntilChanged() // Only emit when the current value is different from the last
+      )
+      .subscribe((searchTerm) => {
+        this.searchProperties(searchTerm);
+      });
     const savedState = localStorage.getItem('sidebarCollapsed');
     if (savedState) {
       this.sidebarCollapsed = JSON.parse(savedState);
@@ -151,7 +155,7 @@ export class PropertiesgridviewComponentComponent implements OnInit {
     }
 
     searchTerm = searchTerm.toLowerCase().trim();
-    this.filteredProperties = this.originalProperties.filter(property => {
+    this.filteredProperties = this.originalProperties.filter((property) => {
       return (
         property.name.toLowerCase().includes(searchTerm) ||
         property.address.toLowerCase().includes(searchTerm) ||
@@ -168,21 +172,23 @@ export class PropertiesgridviewComponentComponent implements OnInit {
 
     // Apply country filter
     if (this.selectedCountry) {
-      filtered = filtered.filter(property => 
-        property.address.toLowerCase().includes(this.selectedCountry.toLowerCase())
+      filtered = filtered.filter((property) =>
+        property.address
+          .toLowerCase()
+          .includes(this.selectedCountry.toLowerCase())
       );
     }
 
     // Apply city filter
     if (this.selectedCity) {
-      filtered = filtered.filter(property => 
+      filtered = filtered.filter((property) =>
         property.address.toLowerCase().includes(this.selectedCity.toLowerCase())
       );
     }
 
     // Apply area filter
     if (this.selectedArea) {
-      filtered = filtered.filter(property => 
+      filtered = filtered.filter((property) =>
         property.address.toLowerCase().includes(this.selectedArea.toLowerCase())
       );
     }
@@ -206,11 +212,10 @@ export class PropertiesgridviewComponentComponent implements OnInit {
   onSidebarCollapse(collapsed: boolean) {
     this.sidebarCollapsed = collapsed;
     localStorage.setItem('sidebarCollapsed', JSON.stringify(collapsed));
-
   }
 
   removeFilter(tag: any) {
-    this.filterTags = this.filterTags.filter(t => t !== tag);
+    this.filterTags = this.filterTags.filter((t) => t !== tag);
   }
 
   toggleFilterTag(tag: any) {
