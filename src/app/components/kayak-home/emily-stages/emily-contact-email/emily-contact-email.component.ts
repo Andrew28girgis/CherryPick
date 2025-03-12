@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import {
   BuyBoxEmails,
   BuyBoxMicroDeals,
@@ -137,9 +136,41 @@ export class EmilyContactEmailComponent implements OnInit {
         if (callback) {
           callback();
         }
-      }
+      },
+      error: (err) => {
+        if (callback) {
+          callback();
+        }
+        this.spinner.hide();
+      },
     });
   }
+  GetBuyBoxEmails(callback?: Function): void {
+    const body: any = {
+      Name: 'GetBuyBoxEmails',
+      MainEntity: null,
+      Params: {
+        buyboxid: this.buyBoxId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.BuyBoxEmails = data.json;
+        // Call the callback function if provided
+        if (callback) {
+          callback();
+        }
+      },
+      error: (err) => {
+        if (callback) {
+          callback();
+        }
+        this.spinner.hide();
+      },
+    });
+  }
+  // this for get emails for contact that selected to be filter from all the emails that return in API
   getEmailsForContact(contact: Contact): void {
     // Only clear and reset if selecting a different contact
     if (this.selectedContact?.ContactId !== contact.ContactId) {
@@ -175,25 +206,7 @@ export class EmilyContactEmailComponent implements OnInit {
       this.emptyMessage = 'No emails available for this contact';
     }
   }
-  GetBuyBoxEmails(callback?: Function): void {
-    const body: any = {
-      Name: 'GetBuyBoxEmails',
-      MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.BuyBoxEmails = data.json;
-        // Call the callback function if provided
-        if (callback) {
-          callback();
-        }
-      }
-    });
-  }
+  //scroll function and load email details Api
   openEmail(email: Mail): void {
     // Call GetMail() with the selected email's ID (mailId)
     this.GetMail(email.id);
@@ -273,7 +286,7 @@ export class EmilyContactEmailComponent implements OnInit {
     this.contactIdemail = contactId;
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
-  getDirection(direction: number): string {
+  getDirectionIcon(direction: number): string {
     return direction === 2
       ? 'fa-envelope-circle-check send'
       : direction === -1
