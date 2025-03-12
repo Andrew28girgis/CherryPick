@@ -41,39 +41,97 @@
                   <div
                     cdkDropList
                     [id]="stage.Id.toString()"
-                    [cdkDropListData]="stage.kanbanOrganizations || []"
+                    [cdkDropListData]="kanbanList[0].targetStakeholderId == 4 ? getCentersForStage(stage) : stage.kanbanOrganizations || []"
                     [cdkDropListConnectedTo]="
                       getConnectedLists(stage.Id.toString())
                     "
                     class="card-body"
-                    (cdkDropListDropped)="drop($event)"
+                    (cdkDropListDropped)="
+                      drop(
+                        $event,
+                        kanbanList[0].targetStakeholderId == 4
+                      )
+                    "
                   >
-                    <ng-container *ngFor="let org of stage.kanbanOrganizations">
-                      <ng-container *ngIf="org.Organization?.[0]?.Name">
-                        <tr>
-                          <div class="kanban-card" cdkDrag>
-                            <div
-                              class="d-flex justify-content-between w-100 align-items-center"
-                            >
-                              <div class="d-flex align-items-center gap-2">
-                                <img
-                                  [src]="org.Organization?.[0]?.LogoURL "
-                                  alt="Logo"
-                                  class="logo"
-                                />
-                                <span
-                                  class="kanban-title"
-                                  [title]="(org.Organization?.[0]?.Name?.length > 20 ? org.Organization?.[0]?.Name : '') || ''"
-                                  [class.truncate]="org.Organization?.[0]?.Name?.length > 20"
+                    <ng-container
+                      *ngIf="
+                        kanbanList[0].targetStakeholderId == 4;
+                        else another
+                      "
+                    >
+                      <ng-container
+                        *ngFor="let org of stage.kanbanOrganizations"
+                      >
+                        <ng-container
+                          *ngIf="org.Organization?.[0]?.ShoppingCenters&&org.Organization?.[0]?.ShoppingCenters.length>0"
+                        >
+                          <ng-container
+                            *ngFor="let center of org.Organization?.[0]?.ShoppingCenters"
+                          >
+                            <tr *ngIf="center.CenterName">
+                              <div class="kanban-card" cdkDrag>
+                                <div
+                                  class="d-flex justify-content-between w-100 align-items-center"
                                 >
-                                  {{ org.Organization?.[0]?.Name || '' }}
-                                </span>
+                                  <div class="d-flex align-items-center gap-2">
+                                    <img
+                                      *ngIf="
+                                        center.MarketSurveyShoppingCenters[0]
+                                          .ShoppingCenterRep[0].LogoURL
+                                      "
+                                      [src]="
+                                        center.MarketSurveyShoppingCenters[0]
+                                          .ShoppingCenterRep[0].LogoURL
+                                      "
+                                      alt="Logo"
+                                      class="logo"
+                                    />
+                                    <span
+                                      class="kanban-title"
+                                      [class.truncate]="
+                                        center.CenterName?.length > 20
+                                      "
+                                    >
+                                      {{ center.CenterName || "" }}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
-                            </div>
-                          </div>
-                        </tr>
+                            </tr>
+                          </ng-container>
+                        </ng-container>
                       </ng-container>
                     </ng-container>
+                    <ng-template #another>
+                      <ng-container
+                        *ngFor="let org of stage.kanbanOrganizations"
+                      >
+                        <ng-container *ngIf="org.Organization?.[0]?.Name">
+                          <tr>
+                            <div class="kanban-card" cdkDrag>
+                              <div
+                                class="d-flex justify-content-between w-100 align-items-center"
+                              >
+                                <div class="d-flex align-items-center gap-2">
+                                  <img
+                                    [src]="org.Organization?.[0]?.LogoURL "
+                                    alt="Logo"
+                                    class="logo"
+                                  />
+                                  <span
+                                    class="kanban-title"
+                                    [title]="(org.Organization?.[0]?.Name?.length > 20 ? org.Organization?.[0]?.Name : '') || ''"
+                                    [class.truncate]="org.Organization?.[0]?.Name?.length > 20"
+                                  >
+                                    {{ org.Organization?.[0]?.Name || '' }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </tr>
+                        </ng-container>
+                      </ng-container>
+                    </ng-template>
                   </div>
                 </div>
               </td>
