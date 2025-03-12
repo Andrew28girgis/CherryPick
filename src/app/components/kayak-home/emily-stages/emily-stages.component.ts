@@ -33,14 +33,14 @@ export class EmilyStagesComponent implements OnInit {
   loginContact: any;
   openedStageId: number | null = null;
   formGroup!: FormGroup;
-  @Input() emailBodyResponseSend!: any;
   currentValue: any;
+  @Input() buyBoxId!: any;
+  @Input() emailBodyResponseSend!: any;
   @Output() showContactEmail = new EventEmitter<{
     contactId: number;
     orgId: number;
     buyBoxId: number;
   }>();
-  @Input() buyBoxId!: any;
 
   constructor(
     public spinner: NgxSpinnerService,
@@ -91,7 +91,6 @@ export class EmilyStagesComponent implements OnInit {
       Params: {},
       Json: null,
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
@@ -124,13 +123,12 @@ export class EmilyStagesComponent implements OnInit {
     return org.showMoreContacts ? org.Contact : org.Contact.slice(0, 2);
   }
   onContactClick(contactId: number, orgId: number) {
-    this.showContactEmail.emit({ contactId, orgId, buyBoxId: this.buyBoxId }); // Pass buyBoxId
+    this.showContactEmail.emit({ contactId, orgId, buyBoxId: this.buyBoxId });
   }
   toggleContacts(org: any) {
     org.showContacts = !org.showContacts;
   }
   goToOrgContact(orgId: number, contactId: number) {
-    // Navigate to the new route, passing the orgId & contactId
     this.router.navigate(['/organization-mail', orgId, contactId]);
   }
   getTotalEmails(contact: Contact): number {
@@ -144,7 +142,6 @@ export class EmilyStagesComponent implements OnInit {
     if (!contacts || contacts.length === 0) {
       return 0;
     }
-
     return contacts.reduce((total, contact) => {
       return total + this.getTotalEmails(contact);
     }, 0);
