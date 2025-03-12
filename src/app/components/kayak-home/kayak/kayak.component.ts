@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from '../../../../app/services/places.service';
+import { PlacesService } from '../../../shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { KayakResult, StatesAndCities } from '../../../../models/kayak';
-import { General } from './../../../../../src/models/domain';
+import { KayakResult, StatesAndCities } from '../../../shared/models/kayak';
+import { General } from '../../../shared/models/domain';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MapsService } from './../../../../../src/app/services/maps.service';
+import { MapsService } from '../../../shared/services/maps.service';
 import { HttpClient } from '@angular/common/http';
 
 import {
@@ -24,10 +24,10 @@ import {
   SecondaryType,
   Neighbourhood,
   TenantsCategories,
-} from '../../../../models/filters';
+} from '../../../shared/models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StateService } from '../../../../../src/app/services/state.service';
-import { Center } from '../../../../models/shoppingCenters';
+import { StateService } from '../../../shared/services/state.service';
+import { Center } from '../../../shared/models/shoppingCenters';
 import { finalize, Observable, of, switchMap, tap } from 'rxjs';
 
 declare const google: any;
@@ -191,7 +191,7 @@ export class KayakComponent implements OnInit {
       next: (data: any) => {
         if (data && data.json && data.json.length > 0) {
           this.Filters = data.json[0];
-          // Update all filters dynamically      
+          // Update all filters dynamically
           this.updateSortedTenants();
           this.updateSortedOrgs();
           this.updateSecondaryTypes();
@@ -673,20 +673,22 @@ export class KayakComponent implements OnInit {
     // console.log('Sorted Tenant Categories:', this.tenantCategories);
   }
   updateMinMaxBuildingSize(): void {
-    if (!this.Filters?.MinMaxBuildingSize || 
-        !Array.isArray(this.Filters.MinMaxBuildingSize) || 
-        this.Filters.MinMaxBuildingSize.length === 0) {
+    if (
+      !this.Filters?.MinMaxBuildingSize ||
+      !Array.isArray(this.Filters.MinMaxBuildingSize) ||
+      this.Filters.MinMaxBuildingSize.length === 0
+    ) {
       console.warn('MinMaxBuildingSize data is empty or undefined.');
       return;
     }
-  
+
     const minMax = this.Filters.MinMaxBuildingSize[0];
-  
+
     // Ensure that both MinSize and MaxSize are defined
     if (minMax.MinSize != null && minMax.MaxSize != null) {
       this.minBuildingSize = minMax.MinSize;
       this.maxBuildingSize = minMax.MaxSize;
-      
+
       // Set the slider values initially
       this.selectedMin = this.minBuildingSize;
       this.selectedMax = this.maxBuildingSize;
@@ -694,7 +696,7 @@ export class KayakComponent implements OnInit {
       console.warn('MinSize or MaxSize data is missing.');
     }
   }
-  
+
   updateSliderValues(): void {
     // Update filterValues whenever the user changes the slider
     this.filterValues.minsize = this.selectedMin;
@@ -752,8 +754,8 @@ export class KayakComponent implements OnInit {
     this.filterValues.secondarytype = '';
     this.filterValues.neighbourhood = '';
     this.filterValues.tenantCategory = '';
-    this.filterValues.minsize=0;
-    this.filterValues.maxsize=0;
+    this.filterValues.minsize = 0;
+    this.filterValues.maxsize = 0;
     this.selectedCity = null;
     this.updateCitiesForSelectedState();
     this.getResult()
@@ -798,16 +800,16 @@ export class KayakComponent implements OnInit {
   onCityChange(selectedValue: string): void {
     // Set the selected city (do not reset it afterwards)
     this.filterValues.city = selectedValue;
-    
+
     // Reset other filters as needed
     this.filterValues.tenants = '';
     this.filterValues.managementOrganizationIds = '';
     this.filterValues.secondarytype = '';
     this.filterValues.neighbourhood = '';
     this.filterValues.tenantCategory = '';
-    this.filterValues.minsize=0;
-    this.filterValues.maxsize=0;
-    
+    this.filterValues.minsize = 0;
+    this.filterValues.maxsize = 0;
+
     // Chain getResult() with the GetFilters() API call
     this.getResult()
       .pipe(
@@ -849,7 +851,6 @@ export class KayakComponent implements OnInit {
         },
       });
   }
-  
 
   updateCitiesForSelectedState(): void {
     this.uniqueCities = this.KayakCitiesandStates.filter(
@@ -955,9 +956,7 @@ export class KayakComponent implements OnInit {
   }
   applyFilter(): void {
     this.getResult().subscribe({
-      next: (data) => {
-
-      }
+      next: (data) => {},
     });
   }
 }

@@ -16,19 +16,9 @@ import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
 import { KanbanComponent } from './components/kanban/kanban.component'; 
-import { SidebarComponent } from './components/kanban/sidebar/sidebar.component';
-import { FilterPanelComponent } from './components/kanban/filter-panel/filter-panel.component';
-import { EditPopupComponent } from './components/kanban/details/edit-popup/edit-popup.component';
-import { DetailsComponent } from './components/kanban/details/details.component';
-import { PropertiesComponent } from './components/kanban/properties/properties.component';
-import { PropertiesgridviewComponentComponent } from './components/kanban/properties/widgets/propertiesgridview-component/propertiesgridview-component.component';
-import { PropertiesspilitviewComponent } from './components/kanban/properties/widgets/propertiesspilitview/propertiesspilitview.component';
- import { StakeHolderComponent } from './components/kanban/stake-holders/stake-holders.component';
- import { TasksComponent } from './components/kanban/tasks/tasks.component';
-import { CommunicationComponent } from './components/kanban/communication/communication.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { TermsComponent } from './components/terms/terms.component'; 
-import { NumberWithCommasPipe } from './pipes/number-with-commas.pipe';
+import { NumberWithCommasPipe } from './shared/pipes/number-with-commas.pipe';
 
 // Third-Party Modules
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -95,16 +85,6 @@ const loginRequest = {
     LandingComponent,
     SummeryComponent,
     KanbanComponent, 
-    SidebarComponent,
-    FilterPanelComponent,
-    EditPopupComponent,
-    DetailsComponent,
-    PropertiesComponent,
-    PropertiesgridviewComponentComponent,
-    PropertiesspilitviewComponent, 
-    StakeHolderComponent, 
-    TasksComponent,
-    CommunicationComponent,
     LogoutComponent,
     TermsComponent, 
     NumberWithCommasPipe,

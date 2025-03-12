@@ -1,6 +1,6 @@
 import { Component, TemplateRef } from '@angular/core';
-import { StateCity } from 'src/models/buyboxShoppingCenter';
-import { PlacesService } from 'src/app/services/places.service';
+import { StateCity } from 'src/app/shared/models/buyboxShoppingCenter';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import { ActivatedRoute } from '@angular/router';
 
 export interface ApiParam {
@@ -38,8 +38,8 @@ export class WorkSpacesComponent {
 
   constructor(
     private PlacesService: PlacesService,
-    private route: ActivatedRoute,
-  ) { }
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.route?.paramMap.subscribe((params: any) => {
@@ -59,7 +59,7 @@ export class WorkSpacesComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.UsaStateCities = data.json as StateCity[] || null;
+        this.UsaStateCities = (data.json as StateCity[]) || null;
         const stateCodes = Array.from(
           new Set(
             this.UsaStateCities.map((stateCity) => stateCity.stateCode).filter(
@@ -173,8 +173,7 @@ export class WorkSpacesComponent {
         alert('Server Error');
         console.error('Error fetching APIs:', error);
       },
-      complete: () => {
-      },
+      complete: () => {},
     });
   }
 }

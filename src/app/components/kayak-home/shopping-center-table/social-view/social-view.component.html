@@ -17,7 +17,7 @@
     ">
     <div class="social-card mb-0 mb-sm-5 Res" [ngClass]="{ 'panel-open': currentShopping === shopping && isPanelOpen }"
       [style.backgroundImage]="
-        'url(' + (shopping.MainImage || 'assets/Images/skeltonImage.png') + ')'
+        'url(' + (shopping.MainImage || 'assets/Images/DefaultImage.png') + ')'
       ">
       <div class="card-header" (click)="
           isMobileView ? openCustomPanel(shopping) : toggleDetails(i, shopping);
@@ -71,7 +71,7 @@
           <img class="Res" [src]="
               shopping.MainImage && shopping.MainImage !== ''
                 ? shopping.MainImage
-                : 'assets/Images/skeltonImage.png'
+                : 'assets/Images/DefaultImage.png'
             " [alt]="shopping.CenterName" />
         </div>
       </div>
@@ -396,7 +396,7 @@
             General.modalObject.MainImage &&
             General.modalObject.MainImage !== ''
               ? General.modalObject.MainImage
-              : 'assets/Images/skeltonImage.png'
+              : 'assets/Images/DefaultImage.png'
           " alt="Location" class="location-image mr-3" />
         <div>
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>

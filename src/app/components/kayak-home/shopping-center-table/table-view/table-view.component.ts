@@ -1,14 +1,21 @@
-import { Component, OnInit, ChangeDetectorRef, TemplateRef, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  TemplateRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { General } from 'src/models/domain';
+import { General } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center } from '../../../../../models/shoppingCenters';
-import { ShareOrg } from 'src/models/shareOrg';
-import { BbPlace } from 'src/models/buyboxPlaces';
-import { ViewManagerService } from 'src/app/services/view-manager.service';
-import { StateService } from 'src/app/services/state.service';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center } from '../../../../shared/models/shoppingCenters';
+import { ShareOrg } from 'src/app/shared/models/shareOrg';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { ViewManagerService } from 'src/app/shared/services/view-manager.service';
+import { StateService } from 'src/app/shared/services/state.service';
 
 @Component({
   selector: 'app-table-view',
@@ -48,7 +55,7 @@ export class TableViewComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private stateService: StateService,
     private viewManagerService: ViewManagerService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.General = new General();
@@ -67,16 +74,24 @@ export class TableViewComponent implements OnInit {
 
   async initializeData() {
     try {
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
+        this.BuyBoxId
+      );
       this.stateService.setShoppingCenters(this.shoppingCenters);
 
-      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
+      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(
+        this.BuyBoxId
+      );
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
-      this.ShareOrg = await this.viewManagerService.getOrganizationById(this.OrgId);
+      this.ShareOrg = await this.viewManagerService.getOrganizationById(
+        this.OrgId
+      );
       this.stateService.setShareOrg(this.ShareOrg);
 
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
+        this.BuyBoxId
+      );
       this.stateService.setBuyboxPlaces(this.buyboxPlaces);
 
       // Process categories with places
@@ -93,11 +108,12 @@ export class TableViewComponent implements OnInit {
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.spinner.show();
-    this.viewManagerService.restoreShoppingCenter(MarketSurveyId, Deleted)
+    this.viewManagerService
+      .restoreShoppingCenter(MarketSurveyId, Deleted)
       .then((response: any) => {
         const marketSurveyIdNum = Number(MarketSurveyId);
 
-        this.shoppingCenters = this.shoppingCenters.map(center => {
+        this.shoppingCenters = this.shoppingCenters.map((center) => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
@@ -145,8 +161,12 @@ export class TableViewComponent implements OnInit {
   async refreshShoppingCenters() {
     try {
       this.spinner.show();
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
+        this.BuyBoxId
+      );
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
+        this.BuyBoxId
+      );
       this.showbackIds = [];
     } catch (error) {
       console.error('Error refreshing shopping centers:', error);
@@ -156,7 +176,10 @@ export class TableViewComponent implements OnInit {
   }
 
   getNeareastCategoryName(categoryId: number): string {
-    return this.viewManagerService.getNearestCategoryName(categoryId, this.buyboxCategories);
+    return this.viewManagerService.getNearestCategoryName(
+      categoryId,
+      this.buyboxCategories
+    );
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): string {
@@ -178,7 +201,9 @@ export class TableViewComponent implements OnInit {
     ) as HTMLElement;
 
     if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
+      shortcutsIcon.style.top = `${
+        rect.top + window.scrollY + targetElement.offsetHeight
+      }px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
 
@@ -209,7 +234,11 @@ export class TableViewComponent implements OnInit {
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
-    const map = await this.viewManagerService.initializeMap('mappopup', lat, lng);
+    const map = await this.viewManagerService.initializeMap(
+      'mappopup',
+      lat,
+      lng
+    );
     if (!map) {
       console.error('Failed to initialize map');
     }
@@ -250,9 +279,15 @@ export class TableViewComponent implements OnInit {
   }
 
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
-    const panorama = this.viewManagerService.initializeStreetView('street-view', lat, lng, heading, pitch);
+    const panorama = this.viewManagerService.initializeStreetView(
+      'street-view',
+      lat,
+      lng,
+      heading,
+      pitch
+    );
     if (!panorama) {
-      console.error("Failed to initialize street view");
+      console.error('Failed to initialize street view');
     }
   }
 

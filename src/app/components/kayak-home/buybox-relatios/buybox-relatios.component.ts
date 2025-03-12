@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PlacesService } from 'src/app/services/places.service';
-import { Organization, RetailRelation } from 'src/models/buyboxShoppingCenter';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import {
+  Organization,
+  RetailRelation,
+} from 'src/app/shared/models/buyboxShoppingCenter';
 
 @Component({
   selector: 'app-buybox-relatios',
   templateUrl: './buybox-relatios.component.html',
-  styleUrls: ['./buybox-relatios.component.css']
+  styleUrls: ['./buybox-relatios.component.css'],
 })
 export class BuyboxRelatiosComponent {
   buyBoxId!: number | null;
@@ -27,19 +30,18 @@ export class BuyboxRelatiosComponent {
   isSearchingTag: boolean = false;
   highlightedTagIndex: number = -1;
   showTagSuggestions: boolean = false;
-  tags: any[] = []; 
+  tags: any[] = [];
   originalTags: any[] = [];
   searchTagTerm: string = '';
   addedTags: any[] = [];
   RelationsOrganizations: any[] = [];
   tagInputTimeout: any;
 
-
   constructor(
     private route: ActivatedRoute,
     private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService,
-  ) { }
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -48,8 +50,6 @@ export class BuyboxRelatiosComponent {
 
     this.GetBuyBoxInfo();
     this.GetRetailRelations();
-    
-  
   }
 
   GetBuyBoxInfo() {
@@ -161,7 +161,7 @@ export class BuyboxRelatiosComponent {
   selectTag(tag: any) {
     this.selectedOrganizationId = tag.id || null;
     this.searchTagTerm = tag.name;
-    this.tags = []; 
+    this.tags = [];
     this.showTagSuggestions = false;
     this.highlightedTagIndex = -1;
     // console.log('Selected Organization ID:', this.selectedOrganizationId);
@@ -175,14 +175,22 @@ export class BuyboxRelatiosComponent {
   handleOrganizationKeydown(event: KeyboardEvent) {
     if (this.showOrganizationSuggestions && this.organizations.length > 0) {
       if (event.key === 'ArrowDown') {
-        this.highlightedOrganizationIndex = (this.highlightedOrganizationIndex + 1) % this.organizations.length;
+        this.highlightedOrganizationIndex =
+          (this.highlightedOrganizationIndex + 1) % this.organizations.length;
         event.preventDefault();
       } else if (event.key === 'ArrowUp') {
-        this.highlightedOrganizationIndex = (this.highlightedOrganizationIndex - 1 + this.organizations.length) % this.organizations.length;
+        this.highlightedOrganizationIndex =
+          (this.highlightedOrganizationIndex - 1 + this.organizations.length) %
+          this.organizations.length;
         event.preventDefault();
       } else if (event.key === 'Enter') {
-        if (this.highlightedOrganizationIndex >= 0 && this.highlightedOrganizationIndex < this.organizations.length) {
-          this.selectOrganization(this.organizations[this.highlightedOrganizationIndex]);
+        if (
+          this.highlightedOrganizationIndex >= 0 &&
+          this.highlightedOrganizationIndex < this.organizations.length
+        ) {
+          this.selectOrganization(
+            this.organizations[this.highlightedOrganizationIndex]
+          );
           event.preventDefault();
         }
       }
@@ -248,7 +256,11 @@ export class BuyboxRelatiosComponent {
   handleTagBlur(event: any) {
     setTimeout(() => {
       const relatedTarget = event.relatedTarget as HTMLElement;
-      if (relatedTarget && (relatedTarget.classList.contains('list-group-item') || relatedTarget.closest('.list-group'))) {
+      if (
+        relatedTarget &&
+        (relatedTarget.classList.contains('list-group-item') ||
+          relatedTarget.closest('.list-group'))
+      ) {
         this.showTagSuggestions = true;
       } else {
         this.showTagSuggestions = false;
@@ -279,22 +291,25 @@ export class BuyboxRelatiosComponent {
       Name: 'GetOrganizationByNameTag',
       Params: {
         Tags: term,
-        Name: '', 
+        Name: '',
       },
     };
 
     // Call the API to search
     this.PlacesService.GenericAPI(body).subscribe(
       (res: any) => {
-        this.tags = res.json as any[]; 
+        this.tags = res.json as any[];
         // console.log('API Response:', res.json); // Debugging log
-        this.tags = this.tags.filter(tag =>
-          !this.RelationsOrganizations.some(relation => relation.id === tag.id)
+        this.tags = this.tags.filter(
+          (tag) =>
+            !this.RelationsOrganizations.some(
+              (relation) => relation.id === tag.id
+            )
         );
         // console.log('Filtered Tags:', this.tags); // Log filtered tags
         this.showTagSuggestions = this.tags.length > 0;
-        this.highlightedTagIndex = -1;  // Reset highlighted tag
-        this.isSearchingTag = false;  // Done searching
+        this.highlightedTagIndex = -1; // Reset highlighted tag
+        this.isSearchingTag = false; // Done searching
         // console.log('tags:', this.tags);
       },
       (error: any) => {
@@ -309,13 +324,18 @@ export class BuyboxRelatiosComponent {
   handleTagKeydown(event: KeyboardEvent) {
     if (this.showTagSuggestions && this.tags.length > 0) {
       if (event.key === 'ArrowDown') {
-        this.highlightedTagIndex = (this.highlightedTagIndex + 1) % this.tags.length;
+        this.highlightedTagIndex =
+          (this.highlightedTagIndex + 1) % this.tags.length;
         event.preventDefault();
       } else if (event.key === 'ArrowUp') {
-        this.highlightedTagIndex = (this.highlightedTagIndex - 1 + this.tags.length) % this.tags.length;
+        this.highlightedTagIndex =
+          (this.highlightedTagIndex - 1 + this.tags.length) % this.tags.length;
         event.preventDefault();
       } else if (event.key === 'Enter') {
-        if (this.highlightedTagIndex >= 0 && this.highlightedTagIndex < this.tags.length) {
+        if (
+          this.highlightedTagIndex >= 0 &&
+          this.highlightedTagIndex < this.tags.length
+        ) {
           this.selectTag(this.tags[this.highlightedTagIndex]);
           event.preventDefault();
         }

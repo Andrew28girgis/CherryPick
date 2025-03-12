@@ -2,11 +2,11 @@ import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
-import { PlacesService } from 'src/app/services/places.service';
-import { IDashboardBuyBox } from 'src/models/idashboard-buy-box';
-import { IDashboardTenant } from 'src/models/idashboard-tenant';
-import { IUserComment } from 'src/models/iuser-comment';
-import { IUserInBox } from 'src/models/iuser-in-box';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import { IDashboardBuyBox } from 'src/app/shared/models/idashboard-buy-box';
+import { IDashboardTenant } from 'src/app/shared/models/idashboard-tenant';
+import { IUserComment } from 'src/app/shared/models/iuser-comment';
+import { IUserInBox } from 'src/app/shared/models/iuser-in-box';
 
 @Component({
   selector: 'app-dashboard',
@@ -172,15 +172,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.filterBuyBoxes = this.buyBoxes.filter((b) => {
         const nameFilter = this.buyboxNameFilter.trim().toLowerCase();
         const orgFilter = this.buyboxOrganizationFilter.trim().toLowerCase();
-      
-        const matchesName = nameFilter ? b.buyBoxName.toLowerCase().includes(nameFilter) : true;
-        const matchesOrg = orgFilter ? b.organizationName.toLowerCase().includes(orgFilter) : true;
-      
+
+        const matchesName = nameFilter
+          ? b.buyBoxName.toLowerCase().includes(nameFilter)
+          : true;
+        const matchesOrg = orgFilter
+          ? b.organizationName.toLowerCase().includes(orgFilter)
+          : true;
+
         return matchesName && matchesOrg;
       });
-      
     }
-  
   }
 
   ngOnDestroy(): void {

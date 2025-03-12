@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import { MsalService } from '@azure/msal-angular';
 import { AuthenticationResult, BrowserAuthError } from '@azure/msal-browser';
-import { MicrosoftMailsService } from 'src/app/services/microsoft-mails.service';
+import { MicrosoftMailsService } from 'src/app/shared/services/microsoft-mails.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
@@ -16,7 +16,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     MicrosoftMailsService,
     NgxSpinnerService,
     MsalService,
-    PlacesService
+    PlacesService,
   ],
   templateUrl: './link-microsoft.component.html',
   styleUrl: './link-microsoft.component.css',
@@ -36,7 +36,7 @@ export class LinkMicrosoftComponent implements OnInit {
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private msalService: MsalService,
-    private microsoftMailsService: MicrosoftMailsService,
+    private microsoftMailsService: MicrosoftMailsService
   ) {}
 
   async ngOnInit() {
@@ -45,7 +45,7 @@ export class LinkMicrosoftComponent implements OnInit {
       if (response) {
         this.msalService.instance.setActiveAccount(response.account);
       }
-      this.getUser();      
+      this.getUser();
 
       const refreshToken = localStorage.getItem('RefreshToken');
       const accessToken = localStorage.getItem('access_token');
@@ -60,7 +60,6 @@ export class LinkMicrosoftComponent implements OnInit {
   onClick() {
     this.buttonClicked.emit();
   }
-
 
   RemoveLinkedAccount() {
     this.spinner.show();
@@ -177,10 +176,9 @@ export class LinkMicrosoftComponent implements OnInit {
     console.log('go');
     const account = this.msalService.instance.getActiveAccount();
     if (account) {
-      this.user = account;      
-    }
-    else if(localStorage.getItem('accountMicrosoftLinked')){
-      this.user = true;    
+      this.user = account;
+    } else if (localStorage.getItem('accountMicrosoftLinked')) {
+      this.user = true;
     }
   }
 
@@ -223,8 +221,7 @@ export class LinkMicrosoftComponent implements OnInit {
           this.spinner.hide();
         },
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   openBodyModalContactFolders(modal: any) {

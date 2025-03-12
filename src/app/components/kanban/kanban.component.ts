@@ -1,17 +1,17 @@
 import { Component, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { Kanban } from 'src/models/userKanban';
+import { Kanban } from 'src/app/shared/models/userKanban';
 import {
   KanbanCard,
   KanbanOrganization,
   KanbanStage,
-} from 'src/models/kanbans';
+} from 'src/app/shared/models/kanbans';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 

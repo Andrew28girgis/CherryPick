@@ -14,7 +14,7 @@
               <a
                 [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]">
                 <div class="main-img">
-                  <img src="{{ place.MainImage || 'assets/Images/skeltonImage.png' }}"
+                  <img src="{{ place.MainImage || 'assets/Images/DefaultImage.png' }}"
                     loading="lazy" />
                 </div>
               </a>

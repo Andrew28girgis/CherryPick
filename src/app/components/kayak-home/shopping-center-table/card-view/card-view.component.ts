@@ -1,15 +1,23 @@
-import { Component, OnInit, ChangeDetectorRef, TemplateRef, Output, EventEmitter, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  TemplateRef,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { General } from 'src/models/domain';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center } from 'src/models/shoppingCenters';
-import { ShareOrg } from 'src/models/shareOrg';
-import { ViewManagerService } from 'src/app/services/view-manager.service';
+import { General } from 'src/app/shared/models/domain';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center } from 'src/app/shared/models/shoppingCenters';
+import { ShareOrg } from 'src/app/shared/models/shareOrg';
+import { ViewManagerService } from 'src/app/shared/services/view-manager.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BbPlace } from 'src/models/buyboxPlaces';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Subscription } from 'rxjs';
-import { StateService } from 'src/app/services/state.service';
+import { StateService } from 'src/app/shared/services/state.service';
 
 @Component({
   selector: 'app-card-view',
@@ -42,7 +50,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   DeletedSC: any;
   private subscriptions = new Subscription();
 
-
   first: number = 0;
   rows: number = 9;
   totalRecords!: number;
@@ -53,7 +60,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   get currentShoppingCenters() {
     return this.shoppingCenters.slice(this.first, this.first + this.rows);
   }
-  
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -61,8 +67,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
     private stateService: StateService,
     private viewManager: ViewManagerService,
     private spinner: NgxSpinnerService,
-    private cdr: ChangeDetectorRef,
-  ) { }
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.General = new General();
@@ -77,7 +83,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.add(
-      this.stateService.shoppingCenters$.subscribe(centers => {
+      this.stateService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
       })
     );
@@ -91,16 +97,19 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   async loadData() {
     try {
-      this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(
+        this.BuyBoxId
+      );
       this.stateService.setShoppingCenters(this.shoppingCenters);
       this.totalRecords = this.shoppingCenters.length;
 
-      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(this.BuyBoxId);
+      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(
+        this.BuyBoxId
+      );
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
       this.stateService.setShareOrg(this.ShareOrg);
-
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -225,11 +234,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
-    this.viewManager.restoreShoppingCenter(MarketSurveyId, Deleted)
+    this.viewManager
+      .restoreShoppingCenter(MarketSurveyId, Deleted)
       .then((response: any) => {
         const marketSurveyIdNum = Number(MarketSurveyId);
 
-        this.shoppingCenters = this.shoppingCenters.map(center => {
+        this.shoppingCenters = this.shoppingCenters.map((center) => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }
@@ -244,13 +254,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   outsideClickHandler = (event: Event): void => {
     const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest('.shortcuts_iconCard, .ellipsis_icont');
+    const isInside = targetElement.closest(
+      '.shortcuts_iconCard, .ellipsis_icont'
+    );
 
     if (!isInside) {
       this.selectedIdCard = null;
       document.removeEventListener('click', this.outsideClickHandler);
     }
-  }
+  };
 
   toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
     event?.stopPropagation();
@@ -281,7 +293,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
     ) as HTMLElement;
 
     if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
+      shortcutsIcon.style.top = `${
+        rect.top + window.scrollY + targetElement.offsetHeight
+      }px`;
       shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
     }
 

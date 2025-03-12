@@ -9,20 +9,24 @@ import {
   Renderer2,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/services/places.service';
-import { General, GroupedProperties, Property } from 'src/models/domain';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import {
+  General,
+  GroupedProperties,
+  Property,
+} from 'src/app/shared/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PropertiesServiceService } from 'src/app/services/properties-service.service';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center, Place } from 'src/models/shoppingCenters';
-import { BbPlace } from 'src/models/buyboxPlaces';
-import { StateService } from 'src/app/services/state.service';
-import { SidbarService } from 'src/app/services/sidbar.service';
+import { PropertiesServiceService } from 'src/app/shared/services/properties-service.service';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center, Place } from 'src/app/shared/models/shoppingCenters';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { StateService } from 'src/app/shared/services/state.service';
+import { SidbarService } from 'src/app/shared/services/sidbar.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BuyBoxModel } from 'src/models/BuyBoxModel';
-import { ApiServiceService } from 'src/app/services/api-service.service';
-import { Organization } from 'src/models/buyboxShoppingCenter';
+import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
+import { ApiServiceService } from 'src/app/shared/services/api-service.service';
+import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 
 @Component({
   selector: 'app-summery',

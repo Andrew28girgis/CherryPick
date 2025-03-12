@@ -1,20 +1,34 @@
-import { Component, OnInit, ViewChild, ElementRef, TemplateRef, Renderer2, ChangeDetectorRef, AfterViewInit, OnDestroy, NgZone, HostListener, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  TemplateRef,
+  Renderer2,
+  ChangeDetectorRef,
+  AfterViewInit,
+  OnDestroy,
+  NgZone,
+  HostListener,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BuyboxCategory } from 'src/models/buyboxCategory';
-import { Center, Reaction } from '../../../../../models/shoppingCenters';
-import { ShareOrg } from 'src/models/shareOrg';
-import { LandingPlace } from 'src/models/landingPlace';
+import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
+import { Center, Reaction } from '../../../../shared/models/shoppingCenters';
+import { ShareOrg } from 'src/app/shared/models/shareOrg';
+import { LandingPlace } from 'src/app/shared/models/landingPlace';
 import { NgForm } from '@angular/forms';
-import { BbPlace } from 'src/models/buyboxPlaces';
-import { ViewManagerService } from 'src/app/services/view-manager.service';
-import { General } from 'src/models/domain';
+import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
+import { ViewManagerService } from 'src/app/shared/services/view-manager.service';
+import { General } from 'src/app/shared/models/domain';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
 declare const google: any;
-import { MapsService } from 'src/app/services/maps.service';
-import { StateService } from '../../../../services/state.service';
+import { MapsService } from 'src/app/shared/services/maps.service';
+import { StateService } from '../../../../shared/services/state.service';
 
 @Component({
   selector: 'app-social-view',
@@ -30,7 +44,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
   @ViewChild('StreetViewPlace', { static: true })
-  @Output() viewChange = new EventEmitter<number>();
+  @Output()
+  viewChange = new EventEmitter<number>();
   isPanelOpen = false;
   currentShopping: any = null;
   panelStartY = 0;
@@ -132,18 +147,25 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async initializeData() {
     try {
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
+        this.BuyBoxId
+      );
       this.stateService.setShoppingCenters(this.shoppingCenters);
 
-      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
+      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(
+        this.BuyBoxId
+      );
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
-      this.ShareOrg = await this.viewManagerService.getOrganizationById(this.OrgId);
+      this.ShareOrg = await this.viewManagerService.getOrganizationById(
+        this.OrgId
+      );
       this.stateService.setShareOrg(this.ShareOrg);
 
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
+        this.BuyBoxId
+      );
       this.stateService.setBuyboxPlaces(this.buyboxPlaces);
-
     } catch (error) {
       console.error('Error initializing data:', error);
       this.spinner.hide();
@@ -868,11 +890,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.spinner.show();
-    this.viewManagerService.restoreShoppingCenter(MarketSurveyId, Deleted)
-      .then((response :any) => {
+    this.viewManagerService
+      .restoreShoppingCenter(MarketSurveyId, Deleted)
+      .then((response: any) => {
         const marketSurveyIdNum = Number(MarketSurveyId);
-        
-        this.shoppingCenters = this.shoppingCenters.map(center => {
+
+        this.shoppingCenters = this.shoppingCenters.map((center) => {
           if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
             return { ...center, Deleted: false };
           }

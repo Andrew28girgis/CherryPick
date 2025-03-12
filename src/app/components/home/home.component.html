@@ -138,7 +138,7 @@
         class="social-card mb-0 mb-sm-5 Res"
         [style.backgroundImage]="
           'url(' +
-          (shopping.MainImage || 'assets/Images/skeltonImage.png') +
+          (shopping.MainImage || 'assets/Images/DefaultImage.png') +
           ')'
         "
       >
@@ -236,7 +236,7 @@
               [src]="
                 shopping.MainImage && shopping.MainImage !== ''
                   ? shopping.MainImage
-                  : 'assets/Images/skeltonImage.png'
+                  : 'assets/Images/DefaultImage.png'
               "
               [alt]="shopping.CenterName"
             />
@@ -956,7 +956,7 @@
                 <div class="main-img">
                   <img
                     src="{{
-                      shopping.MainImage || 'assets/Images/skeltonImage.png'
+                      shopping.MainImage || 'assets/Images/DefaultImage.png'
                     }}"
                   />
                 </div>
@@ -1225,7 +1225,7 @@
                 <div class="main-img">
                   <img
                     src="{{
-                      place.MainImage || 'assets/Images/skeltonImage.png'
+                      place.MainImage || 'assets/Images/DefaultImage.png'
                     }}"
                   />
                 </div>
@@ -1669,7 +1669,7 @@
             General.modalObject.MainImage &&
             General.modalObject.MainImage !== ''
               ? General.modalObject.MainImage
-              : 'assets/Images/skeltonImage.png'
+              : 'assets/Images/DefaultImage.png'
           "
           alt="Location"
           class="location-image mr-3"

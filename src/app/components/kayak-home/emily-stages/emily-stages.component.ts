@@ -8,7 +8,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AccordionModule } from 'primeng/accordion';
@@ -19,7 +19,7 @@ import {
   Mail,
   Contact,
   EmailInfo,
-} from 'src/models/buy-box-emails';
+} from 'src/app/shared/models/buy-box-emails';
 import { CardModule } from 'primeng/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TableModule } from 'primeng/table';
@@ -31,7 +31,7 @@ import {
 } from '@angular/forms';
 import { EditorModule } from 'primeng/editor';
 import { EmilyComponent } from '../emily/emily.component';
-import { EmailService } from 'src/app/services/email-body.service';
+import { EmailService } from 'src/app/shared/services/email-body.service';
 import { Subscription } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 interface Column {
@@ -41,7 +41,7 @@ interface Column {
 @Component({
   selector: 'app-emily-stages',
   templateUrl: './emily-stages.component.html',
-  styleUrls: ['./emily-stages.component.css']
+  styleUrls: ['./emily-stages.component.css'],
 })
 export class EmilyStagesComponent implements OnInit {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
@@ -71,7 +71,11 @@ export class EmilyStagesComponent implements OnInit {
   private subscription: Subscription | null = null;
   currentValue: any;
 
-  @Output() showContactEmail = new EventEmitter<{ contactId: number, orgId: number, buyBoxId: number }>();
+  @Output() showContactEmail = new EventEmitter<{
+    contactId: number;
+    orgId: number;
+    buyBoxId: number;
+  }>();
   @Input() buyBoxId!: any;
 
   constructor(
@@ -79,13 +83,13 @@ export class EmilyStagesComponent implements OnInit {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private emailService: EmailService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     for (const stage of Object.values(this.stageEmailsMap)) {
-      stage.forEach(email => {
-        email.Organization.forEach(org => {
+      stage.forEach((email) => {
+        email.Organization.forEach((org) => {
           org.showMoreContacts = false; // Initialize 'showMoreContacts' for each organization
         });
       });
@@ -108,18 +112,21 @@ export class EmilyStagesComponent implements OnInit {
     this.GetBuyBoxMicroDeals();
     this.GetBuyBoxEmails();
     this.GetStages();
- 
+
     this.subscription = this.emailService.myVariable$.subscribe((newValue) => {
-      this.currentValue = newValue;  // Update the component's currentValue
-      console.log('Component: Received updated value:', newValue);  // Log the new value
+      this.currentValue = newValue; // Update the component's currentValue
+      console.log('Component: Received updated value:', newValue); // Log the new value
     });
 
     // Optional: Log current value when component loads (initial value)
-    console.log('Component: Initial value:', this.emailService.getCurrentValue());
+    console.log(
+      'Component: Initial value:',
+      this.emailService.getCurrentValue()
+    );
 
-    this.Stages.forEach(stage => {
-      this.stageEmailsMap[stage.id].forEach(email => {
-        email.Organization.forEach(org => {
+    this.Stages.forEach((stage) => {
+      this.stageEmailsMap[stage.id].forEach((email) => {
+        email.Organization.forEach((org) => {
           org.showContacts = false; // Initialize as hidden by default
         });
       });
@@ -132,10 +139,10 @@ export class EmilyStagesComponent implements OnInit {
   getVisibleContacts(org: any): Contact[] {
     return org.showMoreContacts ? org.Contact : org.Contact.slice(0, 2);
   }
-// Method to handle contact click
-onContactClick(contactId: number, orgId: number) {
-  this.showContactEmail.emit({ contactId, orgId, buyBoxId: this.buyBoxId }); // Pass buyBoxId
-}
+  // Method to handle contact click
+  onContactClick(contactId: number, orgId: number) {
+    this.showContactEmail.emit({ contactId, orgId, buyBoxId: this.buyBoxId }); // Pass buyBoxId
+  }
   toggleContacts(org: any) {
     org.showContacts = !org.showContacts;
   }
@@ -153,14 +160,14 @@ onContactClick(contactId: number, orgId: number) {
   //     if (this.openedStageId !== stageId) {
   //       this.openedStageId = stageId;
   //     }
-      
+
   //     // Toggle organization
   //     if (this.openedOrgId === orgId) {
   //       this.openedOrgId = null;
   //     } else {
   //       this.openedOrgId = orgId;
   //     }
-  //   } 
+  //   }
   //   // Stage accordion logic
   //   else {
   //     // If clicking the same stage, close it completely
@@ -179,7 +186,7 @@ onContactClick(contactId: number, orgId: number) {
     // Navigate to the new route, passing the orgId & contactId
     this.router.navigate(['/organization-mail', orgId, contactId]);
   }
-  
+
   Openaccordion(stageId: number, orgId: number) {
     if (this.openedStageId === stageId && this.openedOrgId === orgId) {
       this.openedStageId = null;
@@ -433,12 +440,12 @@ onContactClick(contactId: number, orgId: number) {
       (contact.EmailStats[0].Outbox || 0)
     );
   }
-   // Get the total number of emails for all contacts in an organization
-   getTotalOrganizationEmails(contacts: Contact[]): number {
+  // Get the total number of emails for all contacts in an organization
+  getTotalOrganizationEmails(contacts: Contact[]): number {
     if (!contacts || contacts.length === 0) {
       return 0;
     }
-    
+
     return contacts.reduce((total, contact) => {
       return total + this.getTotalEmails(contact);
     }, 0);

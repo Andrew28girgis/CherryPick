@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +30,10 @@ export class PlacesService {
   }
   // for testing local generic api
   public GenericAPILocal(body: any) {
-    return this.http.post<any>(`http://10.0.0.15:8082/api/GenericAPI/Execute`, body);
+    return this.http.post<any>(
+      `http://10.0.0.15:8082/api/GenericAPI/Execute`,
+      body
+    );
   }
 
   public loginUser(message: any) {
@@ -63,7 +66,7 @@ export class PlacesService {
       formData
     );
   }
-  public SendImagesArray(images: any,shoppingID: any) {
+  public SendImagesArray(images: any, shoppingID: any) {
     return this.http.post<any>(
       `${environment.api}/BrokerWithChatGPT/ProcessImagesWithGPT/${shoppingID}`,
       images
@@ -75,6 +78,9 @@ export class PlacesService {
       // shoppingcenterid: id,
     };
 
-    return this.http.post<any>(`${environment.api}/BrokerWithChatGPT/UpdateAvailability/${id}`,requestPayload);
+    return this.http.post<any>(
+      `${environment.api}/BrokerWithChatGPT/UpdateAvailability/${id}`,
+      requestPayload
+    );
   }
 }

@@ -10,22 +10,21 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from './../../../../src/app/services/places.service';
-import { General } from './../../../../src/models/domain';
+import { PlacesService } from '../../shared/services/places.service';
+import { General } from '../../shared/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MapsService } from '../../../../src/app/services/maps.service';
-import { BuyboxCategory } from '../../../../src/models/buyboxCategory';
-import { Center, Reaction } from '../../../../src/models/shoppingCenters';
-import { BbPlace } from '../../../../src/models/buyboxPlaces';
+import { MapsService } from '../../shared/services/maps.service';
+import { BuyboxCategory } from '../../shared/models/buyboxCategory';
+import { Center, Reaction } from '../../shared/models/shoppingCenters';
+import { BbPlace } from '../../shared/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Polygon } from '../../../../src/models/polygons';
-import { ShareOrg } from '../../../../src/models/shareOrg';
-import { StateService } from '../../../../src/app/services/state.service';
-import { permission } from '../../../../src/models/permission';
-import { LandingPlace } from 'src/models/landingPlace';
-
+import { Polygon } from '../../shared/models/polygons';
+import { ShareOrg } from '../../shared/models/shareOrg';
+import { StateService } from '../../shared/services/state.service';
+import { permission } from '../../shared/models/permission';
+import { LandingPlace } from 'src/app/shared/models/landingPlace';
 
 @Component({
   selector: 'app-home',
@@ -42,7 +41,7 @@ export class HomeComponent implements OnInit {
       text: 'Map',
       icon: '../../../assets/Images/Icons/map.png',
       status: 1,
-    }, 
+    },
     {
       text: 'Side',
       icon: '../../../assets/Images/Icons/element-3.png',
@@ -93,7 +92,7 @@ export class HomeComponent implements OnInit {
   placeImage: string[] = [];
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  likedShoppings: { [key: number]: boolean } = {}; 
+  likedShoppings: { [key: number]: boolean } = {};
   isLikeInProgress = false;
   selectedRating: string | null = null;
   clickTimeout: any;
@@ -292,8 +291,8 @@ export class HomeComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.Polygons = data.json; 
-          this.markerService.drawMultiplePolygons(this.map, this.Polygons);
+        this.Polygons = data.json;
+        this.markerService.drawMultiplePolygons(this.map, this.Polygons);
       },
       error: (error) => console.error('Error fetching APIs:', error),
     });
@@ -318,14 +317,12 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.sort((a, b) =>
           a.CenterCity.localeCompare(b.CenterCity)
         );
-        this.shoppingCenters = this.shoppingCenters?.filter((element: any) => 
-          element.Deleted == false
-      );
-      console.log(`shy`);
-      console.log(this.shoppingCenter);
-      
-      
-      
+        this.shoppingCenters = this.shoppingCenters?.filter(
+          (element: any) => element.Deleted == false
+        );
+        console.log(`shy`);
+        console.log(this.shoppingCenter);
+
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
@@ -1022,7 +1019,7 @@ export class HomeComponent implements OnInit {
           target.classList.contains('like-button') ||
           target.classList.contains('photo');
         if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
-          return; 
+          return;
         }
         this.hideAllComments();
       })
@@ -1037,69 +1034,70 @@ export class HomeComponent implements OnInit {
     }
   }
 
-   addLike(shopping: Center, reactionId: number): void {
-     
-     const contactIdStr = localStorage.getItem('contactId');
-     if (!contactIdStr) {
-       return;
-     }
-     const contactId = parseInt(contactIdStr, 10);
-     
-     if (shopping.ShoppingCenter.Reactions && shopping.ShoppingCenter.Reactions.some(
-           (reaction: Reaction) => reaction.ContactId === contactId)) {
-       return;
-     }
-     
-     if (this.isLikeInProgress) {
-       return;
-     }
- 
-     this.isLikeInProgress = true;
-     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
- 
-     if (!shopping.ShoppingCenter.Reactions) {
-       shopping.ShoppingCenter.Reactions = [];
-     }
-     
-     if (!isLiked) {
-       shopping.ShoppingCenter.Reactions.length++;
-       this.likedShoppings[shopping.MarketSurveyId] = true;
-     } 
-     // else {
-     //   shopping.ShoppingCenter.Reactions.length--;
-     //   delete this.likedShoppings[shopping.MarketSurveyId];
-     // }
- 
-     this.cdr.detectChanges();
- 
-     const body = {
-       Name: 'CreatePropertyReaction',
-       Params: {
-         MarketSurveyId: shopping.MarketSurveyId,
-         ReactionId: reactionId,
-       },
-     };
- 
-     this.PlacesService.GenericAPI(body).subscribe({
-       next: (response: any) => {
-       },
-       error: (error) => {
-         if (!isLiked) {
-           // shopping.ShoppingCenter.Reactions.length--;
-           // delete this.likedShoppings[shopping.MarketSurveyId];
-         } else {
-           shopping.ShoppingCenter.Reactions.length++;
-           this.likedShoppings[shopping.MarketSurveyId] = true;
-         }
-         this.cdr.detectChanges();
-       },
-       complete: () => {
-         this.isLikeInProgress = false;
-         this.cdr.detectChanges();
-       },
-     });
-   }
- 
+  addLike(shopping: Center, reactionId: number): void {
+    const contactIdStr = localStorage.getItem('contactId');
+    if (!contactIdStr) {
+      return;
+    }
+    const contactId = parseInt(contactIdStr, 10);
+
+    if (
+      shopping.ShoppingCenter.Reactions &&
+      shopping.ShoppingCenter.Reactions.some(
+        (reaction: Reaction) => reaction.ContactId === contactId
+      )
+    ) {
+      return;
+    }
+
+    if (this.isLikeInProgress) {
+      return;
+    }
+
+    this.isLikeInProgress = true;
+    const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+
+    if (!shopping.ShoppingCenter.Reactions) {
+      shopping.ShoppingCenter.Reactions = [];
+    }
+
+    if (!isLiked) {
+      shopping.ShoppingCenter.Reactions.length++;
+      this.likedShoppings[shopping.MarketSurveyId] = true;
+    }
+    // else {
+    //   shopping.ShoppingCenter.Reactions.length--;
+    //   delete this.likedShoppings[shopping.MarketSurveyId];
+    // }
+
+    this.cdr.detectChanges();
+
+    const body = {
+      Name: 'CreatePropertyReaction',
+      Params: {
+        MarketSurveyId: shopping.MarketSurveyId,
+        ReactionId: reactionId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {},
+      error: (error) => {
+        if (!isLiked) {
+          // shopping.ShoppingCenter.Reactions.length--;
+          // delete this.likedShoppings[shopping.MarketSurveyId];
+        } else {
+          shopping.ShoppingCenter.Reactions.length++;
+          this.likedShoppings[shopping.MarketSurveyId] = true;
+        }
+        this.cdr.detectChanges();
+      },
+      complete: () => {
+        this.isLikeInProgress = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
@@ -1110,7 +1108,7 @@ export class HomeComponent implements OnInit {
       windowClass: 'custom-modal',
     });
     this.General.modalObject = currentShopping;
-    this.General.nextModalObject = nextShopping;    
+    this.General.nextModalObject = nextShopping;
   }
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
@@ -1138,7 +1136,6 @@ export class HomeComponent implements OnInit {
     }
     return null;
   }
-
 
   toggleDetails(index: number, shopping: any): void {
     if (shopping.ShoppingCenter?.BuyBoxPlaces) {
@@ -1189,5 +1186,4 @@ export class HomeComponent implements OnInit {
       return;
     }
   }
-  
 }

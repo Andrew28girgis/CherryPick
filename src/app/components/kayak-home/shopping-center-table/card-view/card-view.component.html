@@ -5,7 +5,7 @@
         <a [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId]">
           <div class="main-img">
             <img src="{{
-                  shopping.MainImage || 'assets/Images/skeltonImage.png'
+                  shopping.MainImage || 'assets/Images/DefaultImage.png'
                 }}" [title]="shopping.CenterName" />
           </div>
           <div class="-container"></div>
@@ -187,13 +187,13 @@
       </div>
     </div>
   </ng-container>
+
+  <!-- paginator -->
   <div class="flex items-center justify-start">
     <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [showFirstLastIcon]="false" 
      currentPageReportTemplate="{first} - {last} of {totalRecords}" ></p-paginator>
   </div>
 </div>
-
-
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>

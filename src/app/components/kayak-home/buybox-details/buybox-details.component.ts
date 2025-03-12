@@ -1,39 +1,38 @@
 import { Component } from '@angular/core';
-import { PlacesService } from '../../../../../src/app/services/places.service';
+import { PlacesService } from '../../../shared/services/places.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
- @Component({
+@Component({
   selector: 'app-buybox-details',
   templateUrl: './buybox-details.component.html',
-  styleUrls: ['./buybox-details.component.css']
+  styleUrls: ['./buybox-details.component.css'],
 })
 export class BuyboxDetailsComponent {
-  buybox:any;
+  buybox: any;
   buyBoxId!: number | null;
-  managerOrganizationId!:number| null;
-  organizationId!:number| null;
-  Obj:any;
-  buyBoxes:any[]=[];
-  contacts:any[] = []
+  managerOrganizationId!: number | null;
+  organizationId!: number | null;
+  Obj: any;
+  buyBoxes: any[] = [];
+  contacts: any[] = [];
 
-
-  constructor(    private route: ActivatedRoute,
-    private modalService: NgbModal, 
-    private PlacesService: PlacesService, ){
-    
-  }
+  constructor(
+    private route: ActivatedRoute,
+    private modalService: NgbModal,
+    private PlacesService: PlacesService
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = +params.get('buyboxid')!;
     });
-    this.GetBuyBoxInfo(); 
+    this.GetBuyBoxInfo();
     this.GetBuyBoxContacts();
   }
 
   openEditProperty(content: any, modalObject: any) {
-     this.modalService.open(content, {
+    this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       scrollable: true,
     });
@@ -47,7 +46,7 @@ export class BuyboxDetailsComponent {
   }
 
   GetBuyBoxInfo() {
-     const body: any = {
+    const body: any = {
       Name: 'GetWizardBuyBoxesById',
       MainEntity: null,
       Params: {
@@ -56,77 +55,77 @@ export class BuyboxDetailsComponent {
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data:any) => {
-        this.buybox = data.json; 
-        this.managerOrganizationId=data.json.ManagerOrganizationId;
-        this.organizationId=data.json.OrganizationId;
+      next: (data: any) => {
+        this.buybox = data.json;
+        this.managerOrganizationId = data.json.ManagerOrganizationId;
+        this.organizationId = data.json.OrganizationId;
       },
       error: (err) => {
         console.error('Error fetching buybox info:', err);
-       },
+      },
     });
-  } 
-
-  onSubmit() { 
-      const body: any = {
-        Name: 'UpdateBuyBox',
-        Params: {
-          Name: this.Obj.Name,
-          OrganizationId: this.Obj.OrganizationId,
-          ManagerOrganizationId: this.Obj.ManagerOrganizationId,
-          MinBuildingSize: this.Obj.MinBuildingSize,
-          MaxBuildingSize: this.Obj.MaxBuildingSize,
-          buyboxid: this.Obj.Id,
-          Description: this.Obj.Description,
-        },
-      };
-      
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          if (data.error) {
-            alert('Failed To Update Data');
-          } else {
-            // console.log('Buybox updated successfully:', this.Obj);
-  
-            // Update the buybox in the displayed list
-            const index = this.buyBoxes.findIndex((item) => item.Id == this.Obj.Id);
-            if (index !== -1) {
-              this.buyBoxes[index] = { ...this.Obj };
-            }
-            
-            // Update the currently displayed buybox details
-            if (this.buybox.Id === this.Obj.Id) {
-              this.buybox = { ...this.Obj };
-            }
-  
-            this.closeModal();
-          }
-        }
-      });
-     
   }
 
-  closeModal()
-  { 
+  onSubmit() {
+    const body: any = {
+      Name: 'UpdateBuyBox',
+      Params: {
+        Name: this.Obj.Name,
+        OrganizationId: this.Obj.OrganizationId,
+        ManagerOrganizationId: this.Obj.ManagerOrganizationId,
+        MinBuildingSize: this.Obj.MinBuildingSize,
+        MaxBuildingSize: this.Obj.MaxBuildingSize,
+        buyboxid: this.Obj.Id,
+        Description: this.Obj.Description,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data.error) {
+          alert('Failed To Update Data');
+        } else {
+          // console.log('Buybox updated successfully:', this.Obj);
+
+          // Update the buybox in the displayed list
+          const index = this.buyBoxes.findIndex(
+            (item) => item.Id == this.Obj.Id
+          );
+          if (index !== -1) {
+            this.buyBoxes[index] = { ...this.Obj };
+          }
+
+          // Update the currently displayed buybox details
+          if (this.buybox.Id === this.Obj.Id) {
+            this.buybox = { ...this.Obj };
+          }
+
+          this.closeModal();
+        }
+      },
+    });
+  }
+
+  closeModal() {
     this.modalService.dismissAll();
   }
   GetBuyBoxContacts() {
     const body: any = {
-     Name: 'GetBuyBoxInfo',
-     MainEntity: null,
-     Params: {
-       buyboxid: this.buyBoxId,
-     },
-     Json: null,
-   };
-   this.PlacesService.GenericAPI(body).subscribe({
-     next: (data:any) => {
-      this.contacts = data.json?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationContacts;
-     },
-     error: (err) => {
-       console.error('Error fetching buybox info:', err);
+      Name: 'GetBuyBoxInfo',
+      MainEntity: null,
+      Params: {
+        buyboxid: this.buyBoxId,
       },
-   });
-  
- }
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.contacts =
+          data.json?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationContacts;
+      },
+      error: (err) => {
+        console.error('Error fetching buybox info:', err);
+      },
+    });
+  }
 }

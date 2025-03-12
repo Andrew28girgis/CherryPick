@@ -2,13 +2,31 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PlacesService } from 'src/app/services/places.service';
-import { AvailabilityTenant, IFile, jsonGPT, Properties } from 'src/models/manage-prop';
-import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
-import { HttpClient, HttpEventType, HttpRequest, HttpResponse } from '@angular/common/http';
+import { PlacesService } from 'src/app/shared/services/places.service';
+import {
+  AvailabilityTenant,
+  IFile,
+  jsonGPT,
+  Properties,
+} from 'src/app/shared/models/manage-prop';
+import {
+  NgxFileDropEntry,
+  FileSystemFileEntry,
+  FileSystemDirectoryEntry,
+} from 'ngx-file-drop';
+import {
+  HttpClient,
+  HttpEventType,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Availability, PropertiesDetails, Tenant } from 'src/models/manage-prop-shoppingCenter';
-import { ShoppingCenter } from 'src/models/landingPlace';
+import {
+  Availability,
+  PropertiesDetails,
+  Tenant,
+} from 'src/app/shared/models/manage-prop-shoppingCenter';
+import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
 
 @Component({
   selector: 'app-manage-properties',
@@ -18,19 +36,19 @@ import { ShoppingCenter } from 'src/models/landingPlace';
 export class ManagePropertiesComponent implements OnInit {
   properties: Properties[] = [];
   contactID!: any;
-  selectedShoppingID!:string | undefined;
+  selectedShoppingID!: string | undefined;
   public files: NgxFileDropEntry[] = [];
   fileName!: string;
   images: IFile[] = [];
   uploadProgress: number = 0;
   isUploading: boolean = false;
   isConverting: boolean = false;
-  pdfFileName:string='';
-  test!:number;
+  pdfFileName: string = '';
+  test!: number;
   JsonPDF!: jsonGPT;
   AvailabilityAndTenants: AvailabilityTenant = {};
   // display and edit shopping center manually
-  CustomPlace!: PropertiesDetails| undefined;
+  CustomPlace!: PropertiesDetails | undefined;
   showInputField: string | null = null;
   newPlaceSqFT!: number;
   showAddPlaceInput: boolean = false;
@@ -44,7 +62,8 @@ export class ManagePropertiesComponent implements OnInit {
   newTenantUrl: string = '';
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   @ViewChild('openShopping', { static: true }) openShopping!: TemplateRef<any>;
-  @ViewChild('deletePlaceModal', { static: true }) deletePlaceModal!: TemplateRef<any>;
+  @ViewChild('deletePlaceModal', { static: true })
+  deletePlaceModal!: TemplateRef<any>;
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
@@ -54,7 +73,7 @@ export class ManagePropertiesComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   ngOnInit() {
-    this.contactID =  localStorage.getItem('contactId')  ;
+    this.contactID = localStorage.getItem('contactId');
     // console.log('Contact ID:', this.contactID);
     this.GetContactShoppingCenters();
   }
@@ -81,13 +100,13 @@ export class ManagePropertiesComponent implements OnInit {
       },
     });
   }
-    // manual display and edit shopping center
+  // manual display and edit shopping center
   openShoppingModal(id: number) {
     this.selectedShoppingID = id.toString();
-    this.modalService.open(this.openShopping, { size: 'xl', centered: true })
+    this.modalService.open(this.openShopping, { size: 'xl', centered: true });
     this.GetShoppingCenterDetailsById();
   }
-  GetShoppingCenterDetailsById(){
+  GetShoppingCenterDetailsById() {
     this.spinner.show();
     const body: any = {
       Name: 'GetShoppingCenterDetailsById',
@@ -111,7 +130,7 @@ export class ManagePropertiesComponent implements OnInit {
   // Helper method to get images as an array in display shopping center images
   getImagesArray(): string[] {
     if (!this.CustomPlace?.Images) return [];
-    return this.CustomPlace.Images.split(',').map(url => url.trim());
+    return this.CustomPlace.Images.split(',').map((url) => url.trim());
   }
   toggleAddTenantInput() {
     // Initialize CustomPlace.Tenants if it’s null or undefined
@@ -134,7 +153,13 @@ export class ManagePropertiesComponent implements OnInit {
   }
   // Add a new tenant (send to API and update locally)
   addNewTenant() {
-    if (!this.newTenantName || this.newTenantName.trim() === '' || !this.newTenantUrl || this.newTenantUrl.trim() === '') {      this.showToast('Please enter a valid tenant name.');
+    if (
+      !this.newTenantName ||
+      this.newTenantName.trim() === '' ||
+      !this.newTenantUrl ||
+      this.newTenantUrl.trim() === ''
+    ) {
+      this.showToast('Please enter a valid tenant name.');
       return;
     }
     // Basic validation for domain format (optional, since HTML pattern handles it)
@@ -156,9 +181,9 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         // Assuming the API returns the new tenant or an updated list
         const newTenant: Tenant = {
-          Id: data.json?.Id || (this.CustomPlace?.Tenants.length! + 1), // Generate a temporary ID or use API response
+          Id: data.json?.Id || this.CustomPlace?.Tenants.length! + 1, // Generate a temporary ID or use API response
           Name: this.newTenantName,
-          URL:this.newTenantUrl,
+          URL: this.newTenantUrl,
         };
         // Add the new tenant to CustomPlace.Tenants
         if (this.CustomPlace && this.CustomPlace.Tenants) {
@@ -215,7 +240,7 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         // Assuming the API returns the new space or an updated list
         const newSpace: Availability = {
-          Id: data.json?.Id || (this.CustomPlace?.Availability.length! + 1), // Generate a temporary ID or use API response
+          Id: data.json?.Id || this.CustomPlace?.Availability.length! + 1, // Generate a temporary ID or use API response
           BuildingSizeSf: this.newPlaceSqFT,
         };
         // Add the new space to CustomPlace.Availability
@@ -228,13 +253,13 @@ export class ManagePropertiesComponent implements OnInit {
             Availability: [newSpace],
           } as PropertiesDetails;
         }
-          this.showAddPlaceInput = false;
-          this.spinner.hide();
-        },
-        error: (err) => {
-          this.spinner.hide();
-        },
-      });
+        this.showAddPlaceInput = false;
+        this.spinner.hide();
+      },
+      error: (err) => {
+        this.spinner.hide();
+      },
+    });
   }
   // Start editing a place
   startEditPlace(placeId: number, currentSqFt: number, index: number) {
@@ -248,43 +273,44 @@ export class ManagePropertiesComponent implements OnInit {
     this.editedPlaceSqFT = 0;
   }
   saveEditedPlace(placeId: number) {
-  if (!this.editedPlaceSqFT || this.editedPlaceSqFT <= 0) {
-    this.showToast('Please enter a valid SQFT');
-    return;
-  }
-  this.spinner.show();
-  const body: any = {
-    Name: 'UpdateBuildingSizeSfForAvailability',
-    Params: {
-      PlaceId: placeId,
-      ShoppingCenterId: this.selectedShoppingID,
-      NewBuildingSizeSf: this.editedPlaceSqFT,
-    },
-  };
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (data: any) => {
-      const spaceIndex = this.CustomPlace?.Availability.findIndex(
-        (space) => space.Id === placeId
-      );
-      if (spaceIndex !== -1 && this.CustomPlace?.Availability) {
-        this.CustomPlace.Availability[spaceIndex!].BuildingSizeSf = this.editedPlaceSqFT;
-      }
-      this.spinner.hide();
-      this.showToast('Place updated successfully!');
-      this.editingPlaceId = null;
-      this.showEditInput = false;
-      this.editedPlaceSqFT = 0;
-    },
-    error: (err) => {
-      this.spinner.hide();
-      this.showToast('Failed to edit place. Please try again!');
-    },
-  });
+    if (!this.editedPlaceSqFT || this.editedPlaceSqFT <= 0) {
+      this.showToast('Please enter a valid SQFT');
+      return;
+    }
+    this.spinner.show();
+    const body: any = {
+      Name: 'UpdateBuildingSizeSfForAvailability',
+      Params: {
+        PlaceId: placeId,
+        ShoppingCenterId: this.selectedShoppingID,
+        NewBuildingSizeSf: this.editedPlaceSqFT,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        const spaceIndex = this.CustomPlace?.Availability.findIndex(
+          (space) => space.Id === placeId
+        );
+        if (spaceIndex !== -1 && this.CustomPlace?.Availability) {
+          this.CustomPlace.Availability[spaceIndex!].BuildingSizeSf =
+            this.editedPlaceSqFT;
+        }
+        this.spinner.hide();
+        this.showToast('Place updated successfully!');
+        this.editingPlaceId = null;
+        this.showEditInput = false;
+        this.editedPlaceSqFT = 0;
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.showToast('Failed to edit place. Please try again!');
+      },
+    });
   }
   openDeletePlaceModal(placeId: number) {
     this.deleteId = placeId;
     this.deleteType = 'Place';
-    this.modalService.open(this.deletePlaceModal, { size: 'md'  });
+    this.modalService.open(this.deletePlaceModal, { size: 'md' });
   }
   openDeleteTenantModal(tenantId: number) {
     this.deleteId = tenantId;
@@ -358,10 +384,10 @@ export class ManagePropertiesComponent implements OnInit {
   openUploadModal(id: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
-        // console.log(guid);
-        this.selectedShoppingID = guid;
+      // console.log(guid);
+      this.selectedShoppingID = guid;
     } else {
-        this.selectedShoppingID = id.toString();
+      this.selectedShoppingID = id.toString();
     }
     // console.log('Selected Shopping ID:', this.selectedShoppingID);
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
@@ -372,7 +398,7 @@ export class ManagePropertiesComponent implements OnInit {
     this.uploadProgress = 0;
     this.isUploading = false;
     this.isConverting = false;
-    this.images=[];
+    this.images = [];
   }
   // Method to UploadPDF file
   public uploadFile(files: NgxFileDropEntry[]) {
@@ -413,13 +439,15 @@ export class ManagePropertiesComponent implements OnInit {
                 // console.log('API Response:', event.body);
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map((img: string, index: number) => ({
-                    name: `Image ${index + 1}`,
-                    type: 'image/png', // Adjust this if your images are of a different type
-                    content: img,
-                    selected: false,
-                  }));
-                  this.pdfFileName=response.pdfFileName;
+                  this.images = response.images.map(
+                    (img: string, index: number) => ({
+                      name: `Image ${index + 1}`,
+                      type: 'image/png', // Adjust this if your images are of a different type
+                      content: img,
+                      selected: false,
+                    })
+                  );
+                  this.pdfFileName = response.pdfFileName;
                   // console.log('pdfFileName:', this.pdfFileName);
                 }
                 this.isConverting = false;
@@ -451,7 +479,7 @@ export class ManagePropertiesComponent implements OnInit {
       Params: {
         ContactId: this.contactID,
         ShoppingCenterId: this.selectedShoppingID,
-        FileName:this.pdfFileName,
+        FileName: this.pdfFileName,
       },
       Json: null,
     };
@@ -471,11 +499,11 @@ export class ManagePropertiesComponent implements OnInit {
   }
   sendImagesArray() {
     this.spinner.show();
-    const selectedImages = this.images.filter(image => image.selected);
+    const selectedImages = this.images.filter((image) => image.selected);
     // Extract the content of the selected images
-    const array = selectedImages.map(image => image.content);
+    const array = selectedImages.map((image) => image.content);
     const shopID = this.selectedShoppingID;
-    this.PlacesService.SendImagesArray(array,shopID).subscribe({
+    this.PlacesService.SendImagesArray(array, shopID).subscribe({
       next: (data) => {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
@@ -490,14 +518,14 @@ export class ManagePropertiesComponent implements OnInit {
   sendJson() {
     this.spinner.show();
     const shopID = this.selectedShoppingID;
-  
+
     // Add dynamic properties for CenterName and CenterType
     this.JsonPDF = {
       ...this.JsonPDF,
       CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
     };
-  
+
     // Do not filter Availability and Tenants; send all items with their updated isAdded states
     const updatedJsonPDF = {
       ...this.JsonPDF,
@@ -510,7 +538,7 @@ export class ManagePropertiesComponent implements OnInit {
         isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
       })),
     };
-  
+
     // Send the updated JsonPDF data
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
@@ -526,7 +554,7 @@ export class ManagePropertiesComponent implements OnInit {
       },
     });
   }
-    // Method to clear all modal data
+  // Method to clear all modal data
   clearModalData() {
     this.images = []; // Clear images array
     this.JsonPDF = null!; // Clear PDF data

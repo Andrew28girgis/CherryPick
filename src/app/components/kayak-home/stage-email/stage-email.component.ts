@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { PlacesService } from 'src/app/services/places.service';
+import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AccordionModule } from 'primeng/accordion';
@@ -11,7 +11,7 @@ import {
   Mail,
   Contact,
   EmailInfo,
-} from 'src/models/buy-box-emails';
+} from 'src/app/shared/models/buy-box-emails';
 import { CardModule } from 'primeng/card';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TableModule } from 'primeng/table';
