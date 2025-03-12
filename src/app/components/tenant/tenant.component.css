@@ -307,7 +307,7 @@
 }
 .row-background {
   height: 45vh;
-  background-image: url("../../../assets/Images/DefaultImage.png");
+  background-image: url("../../../assets/Images/GreyImage.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
