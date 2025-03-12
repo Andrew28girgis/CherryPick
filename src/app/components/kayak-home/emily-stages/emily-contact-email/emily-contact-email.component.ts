@@ -284,7 +284,7 @@ export class EmilyContactEmailComponent implements OnInit {
     this.contactIdemail = contactId;
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
-  getDirection(direction: number): string {
+  getDirectionIcon(direction: number): string {
     return direction === 2
       ? 'fa-envelope-circle-check send'
       : direction === -1

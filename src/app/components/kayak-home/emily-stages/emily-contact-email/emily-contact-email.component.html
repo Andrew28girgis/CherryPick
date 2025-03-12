@@ -105,7 +105,7 @@
                 (click)="openEmail(email)"
                 [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
               >
-              <strong><i  [ngClass]="'fa-solid '+getDirection(email.Direction)" class="me-2"></i>
+              <strong><i  [ngClass]="'fa-solid '+getDirectionIcon(email.Direction)" class="me-2"></i>
                <span class="subject"> {{ email.Subject }}</span>
               </strong> 
                 <p class="date"> {{ email.Date | date : "medium" }}</p>
