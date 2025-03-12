@@ -31,6 +31,7 @@ import { LandingPlace } from 'src/app/shared/models/landingPlace';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
+
 export class HomeComponent implements OnInit {
   shoppingCenter: any;
   General!: General;
