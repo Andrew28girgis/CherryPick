@@ -22,7 +22,6 @@ import { MapViewComponent } from './shopping-center-table/map-view/map-view.comp
 import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
 import { LinkMicrosoftComponent } from './link-microsoft/link-microsoft.component';
 import { StageEmailComponent } from './stage-email/stage-email.component'; 
-import { EmailDashboardComponent } from './email-dashboard/email-dashboard.component';
 import { EmilyStagesComponent } from './emily-stages/emily-stages.component';
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
@@ -58,7 +57,6 @@ import { PaginatorModule } from 'primeng/paginator';
     SharedModule,
     LinkMicrosoftComponent,
     StageEmailComponent,
-    EmailDashboardComponent, 
     AccordionModule,
     TableModule,
     CardModule,
@@ -78,7 +76,6 @@ import { PaginatorModule } from 'primeng/paginator';
     SideListViewComponent,
     MapViewComponent,
     StageEmailComponent,
-    EmailDashboardComponent,
     EmilyStagesComponent
   ],
 })

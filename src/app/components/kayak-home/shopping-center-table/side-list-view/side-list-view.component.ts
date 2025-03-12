@@ -84,8 +84,7 @@ export class SideListViewComponent implements OnInit {
 
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -100,8 +99,7 @@ export class SideListViewComponent implements OnInit {
       next: (data) => {
         this.buyboxCategories = data.json;
         this.getShoppingCenters(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -122,8 +120,7 @@ export class SideListViewComponent implements OnInit {
           );
         });
         this.getAllMarker();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -138,8 +135,7 @@ export class SideListViewComponent implements OnInit {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -168,13 +164,11 @@ export class SideListViewComponent implements OnInit {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
     const map = new Map(mapDiv, {
@@ -295,7 +289,6 @@ export class SideListViewComponent implements OnInit {
     const lat = parseFloat(property.Latitude);
     const lng = parseFloat(property.Longitude);
     if (isNaN(lat) || isNaN(lng)) {
-      console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
     return bounds?.contains({ lat, lng });
@@ -457,8 +450,7 @@ export class SideListViewComponent implements OnInit {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
         this.initializeStreetView('street-view', lat, lng, heading, pitch);
-      } else {
-        console.error("Element with id 'street-view' not found.");
+      } else { 
       }
     });
   }
@@ -472,7 +464,6 @@ export class SideListViewComponent implements OnInit {
   ): any {
     const streetViewElement = document.getElementById(elementId);
     if (!streetViewElement) {
-      console.error(`Element with id '${elementId}' not found.`);
       return null;
     }
 
@@ -515,11 +506,8 @@ export class SideListViewComponent implements OnInit {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        console.log('Link copied to clipboard!');
       })
-      .catch((err) => {
-        console.error('Could not copy text: ', err);
-      });
+      ;
   }
 
   openDeleteShoppingCenterModal(

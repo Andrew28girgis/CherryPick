@@ -58,11 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.userInBox = response.json;
         }
-      },
-      error: (error: any) => {
-        this.spinner.hide();
-        console.error(error);
-      },
+      }
     };
 
     this.placesService
@@ -84,11 +80,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.tenants = response.json;
         }
-      },
-      error: (error: any) => {
-        this.spinner.hide();
-        console.error(error);
-      },
+      } 
     };
 
     this.placesService
@@ -111,11 +103,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.buyBoxes = response.json;
           this.filterBuyBoxes = response.json;
         }
-      },
-      error: (error: any) => {
-        this.spinner.hide();
-        console.error(error);
-      },
+      }
     };
 
     this.placesService
@@ -163,11 +151,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.userComments = response.json;
         }
-      },
-      error: (error: any) => {
-        this.spinner.hide();
-        console.error(error);
-      },
+      }
     };
 
     this.placesService

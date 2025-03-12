@@ -31,6 +31,8 @@
             {{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }},
             {{ shopping.CenterState }}
           </p>
+          <p class="ShoppingCenterStage mb-1">{{ shopping.stageName }}</p>
+
           <div>
             <p style="color: #fff" class="getShoppingCenterr" [innerHTML]="getShoppingCenterUnitSize(shopping)"></p>
           </div>
@@ -328,6 +330,8 @@
       </p>
 
       <div>
+        <p class="ShoppingCenterStage mb-1">{{ currentShopping.stageName }}</p>
+
         <p style="color: #7a8591" [innerHTML]="getShoppingCenterUnitSize(currentShopping)">
         </p>
 
@@ -616,7 +620,7 @@
   </div>
   <div class="modal-body">
     <div class="mobile-expanded-content">
-      <div class="row mt-2">
+      <div class="row m-0 mt-2">
         <ng-container *ngFor="
             let item of currentShopping?.ShoppingCenter?.BuyBoxPlaces;
             trackBy: trackByShoppingId
@@ -632,6 +636,7 @@
             {{ currentShopping.CenterState }}
           </p>
           <div>
+            <p class="ShoppingCenterStage mb-1">{{ currentShopping.stageName }}</p>
             <p style="color: #7a8591" class="getShoppingCenterr"
               [innerHTML]="getShoppingCenterUnitSize(currentShopping)"></p>
             <div class="" style="color: #7a8591; padding: 0 !important">

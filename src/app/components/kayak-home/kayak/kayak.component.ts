@@ -198,18 +198,11 @@ export class KayakComponent implements OnInit {
           this.updateNeighbourhoods();
           this.updateTenantCategories();
           this.updateMinMaxBuildingSize();
-          // console.log('fv',this.filterValues);
         } else {
-          console.warn('No filters data returned.');
           this.resetFilters();
         }
         this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error fetching filters:', error);
-        this.spinner.hide();
-        this.resetFilters();
-      },
+      }
     });
   }
 
@@ -265,7 +258,6 @@ export class KayakComponent implements OnInit {
     isChecked?: boolean
   ): void {
     this.deleteshoppingcenterID = shoppingCenterId;
-    // console.log('deleteshoppingcenterID:', this.deleteshoppingcenterID);
 
     const isAlreadyBound =
       this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
@@ -288,28 +280,22 @@ export class KayakComponent implements OnInit {
         );
         this.UnBindShoppingCenter();
       } else {
-        console.log(`hello`);
 
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
         this.bindShoppingCenter(shoppingCenterId);
       }
     }
 
-    // console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
   }
 
   bindShoppingCenter(id?: number): void {
     if (!this.SelectedShoppingCenterIDs.length) {
-      console.warn(' No shopping centers selected! Skipping API call.');
       return;
     }
 
     this.spinner.show();
     this.loading = true;
 
-    // console.log(' Binding Shopping Centers and Places...');
-    // console.log(' Shopping Center IDs:', this.SelectedShoppingCenterIDs);
-    // console.log(' Place IDs:', this.SelectedPlacesIDs);
 
     const body = {
       Name: 'BindShoppingCenters',
@@ -324,16 +310,10 @@ export class KayakComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        // console.log(' API Response:', res?.json);
         this.spinner.hide();
         this.loading = false;
         this.getShoppingCenters();
-      },
-      error: (err) => {
-        console.error(' Error in BindShoppingCenters:', err);
-        this.spinner.hide();
-        this.loading = false;
-      },
+      }
     });
   }
   UnBindShoppingCenter() {
@@ -347,16 +327,10 @@ export class KayakComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        // console.log(' API Response:', res?.json);
         this.spinner.hide();
         this.loading = false;
         this.getShoppingCenters();
-      },
-      error: (err) => {
-        console.error(' Error in BindShoppingCenters:', err);
-        this.spinner.hide();
-        this.loading = false;
-      },
+      }
     });
   }
 
@@ -372,18 +346,14 @@ export class KayakComponent implements OnInit {
       this.SelectedPlacesIDs = this.SelectedPlacesIDs.filter(
         (id) => id !== placeId
       );
-      // console.log(`Unbound place with ID: ${placeId}`);
     } else {
       this.SelectedPlacesIDs.push(placeId);
-      // console.log(`Bound place with ID: ${placeId}`);
     }
 
     if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
       this.SelectedShoppingCenterIDs.push(shoppingCenterId);
     }
 
-    // console.log('Updated Selected Places:', this.SelectedPlacesIDs);
-    // console.log(
     //   'Updated Selected Shopping Centers:',
     //   this.SelectedShoppingCenterIDs
     // );
@@ -410,7 +380,6 @@ export class KayakComponent implements OnInit {
       next: (data: any) => {
         if (data && data.json) {
           this.ShoppingCenterTenants = data.json;
-          // console.log('Fetched Tenants:', this.ShoppingCenterTenants);
           this.modalService.open(this.tenantModal, {
             size: 'lg',
             centered: true,
@@ -419,11 +388,7 @@ export class KayakComponent implements OnInit {
           this.ShoppingCenterTenants = [];
         }
         this.spinner.hide();
-      },
-      error: (error: any) => {
-        console.error('Error fetching Shopping Center Tenants:', error);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -439,7 +404,6 @@ export class KayakComponent implements OnInit {
       this.placeImage = [];
     }
 
-    // console.log('Images for Gallery:', this.placeImage);
 
     this.modalService.open(this.galleryModal, { size: 'lg', centered: true });
   }
@@ -448,7 +412,6 @@ export class KayakComponent implements OnInit {
     this.mapViewOnePlacex = true;
 
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     // Load Google Maps API libraries
@@ -456,7 +419,6 @@ export class KayakComponent implements OnInit {
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
 
@@ -504,7 +466,6 @@ export class KayakComponent implements OnInit {
       );
       this.addMarkerToStreetView(panorama, lat, lng);
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 
@@ -520,14 +481,12 @@ export class KayakComponent implements OnInit {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
 
   setIframeUrl(url: string): void {
     if (!url) {
-      console.error('🚨 Invalid StreetView URL:', url);
       return;
     }
 
@@ -541,7 +500,6 @@ export class KayakComponent implements OnInit {
   openStreetViewPlace(content: any, modalObject?: any) {
     this.General.modalObject = modalObject || {};
 
-    // console.log('✅ Opening Street View for:', this.General.modalObject);
 
     // Open modal first
     this.modalService.open(content, {
@@ -554,7 +512,6 @@ export class KayakComponent implements OnInit {
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
-      console.warn('🚨 No Street View URL found!');
       this.sanitizedUrl = null; // Clear iframe
     }
   }
@@ -569,7 +526,6 @@ export class KayakComponent implements OnInit {
   }
   updateSortedTenants(): void {
     if (!this.Filters!.Tenants || !Array.isArray(this.Filters!.Tenants)) {
-      // console.error('Tenants list is empty or undefined.');
       this.sortedTenants = [];
       return;
     }
@@ -585,7 +541,6 @@ export class KayakComponent implements OnInit {
       .filter((tenant): tenant is Tenant => tenant !== undefined);
 
     this.sortedTenants = uniqueTenants;
-    // console.log('Sorted Tenants:', this.sortedTenants);
   }
 
   updateSortedOrgs(): void {
@@ -593,7 +548,6 @@ export class KayakComponent implements OnInit {
       !this.Filters!.ManagementOrganization ||
       !Array.isArray(this.Filters!.ManagementOrganization)
     ) {
-      // console.error('ManagementOrganization list is empty or undefined.');
       this.sortedOrgs = [];
       return;
     }
@@ -609,7 +563,6 @@ export class KayakComponent implements OnInit {
       .filter((org): org is ManagementOrganization => org !== undefined);
 
     this.sortedOrgs = uniqueOrgs;
-    // console.log('Sorted Organizations:', this.sortedOrgs);
   }
 
   updateSecondaryTypes(): void {
@@ -617,7 +570,6 @@ export class KayakComponent implements OnInit {
       !this.Filters?.SecondaryType ||
       !Array.isArray(this.Filters.SecondaryType)
     ) {
-      // console.error('Secondary types are empty or undefined.');
       this.secondaryTypes = [];
       return;
     }
@@ -626,7 +578,6 @@ export class KayakComponent implements OnInit {
       (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
     );
 
-    // console.log('Sorted Secondary Types:', this.secondaryTypes);
   }
 
   updateNeighbourhoods(): void {
@@ -634,7 +585,6 @@ export class KayakComponent implements OnInit {
       !this.Filters?.Neighbourhood ||
       !Array.isArray(this.Filters.Neighbourhood)
     ) {
-      // console.error('Neighbourhood list is empty or undefined.');
       this.neighbourhoods = [];
       return;
     }
@@ -646,7 +596,6 @@ export class KayakComponent implements OnInit {
       }))
       .sort((a, b) => a.Neighbourhood.localeCompare(b.Neighbourhood));
 
-    // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
   }
 
   updateTenantCategories(): void {
@@ -654,7 +603,6 @@ export class KayakComponent implements OnInit {
       !this.Filters?.TenantsCategories ||
       !Array.isArray(this.Filters.TenantsCategories)
     ) {
-      // console.error('TenantsCategories list is empty or undefined.');
       this.tenantCategories = [];
       return;
     }
@@ -670,7 +618,6 @@ export class KayakComponent implements OnInit {
 
     this.tenantCategories = Array.from(new Set(sortedList));
 
-    // console.log('Sorted Tenant Categories:', this.tenantCategories);
   }
   updateMinMaxBuildingSize(): void {
     if (
@@ -678,7 +625,6 @@ export class KayakComponent implements OnInit {
       !Array.isArray(this.Filters.MinMaxBuildingSize) ||
       this.Filters.MinMaxBuildingSize.length === 0
     ) {
-      console.warn('MinMaxBuildingSize data is empty or undefined.');
       return;
     }
 
@@ -693,17 +639,12 @@ export class KayakComponent implements OnInit {
       this.selectedMin = this.minBuildingSize;
       this.selectedMax = this.maxBuildingSize;
     } else {
-      console.warn('MinSize or MaxSize data is missing.');
     }
   }
 
   updateSliderValues(): void {
-    // Update filterValues whenever the user changes the slider
     this.filterValues.minsize = this.selectedMin;
     this.filterValues.maxsize = this.selectedMax;
-    console.log(
-      `Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`
-    );
   }
   filterCards(): void {
     if (!this.KayakResult?.Result) {
@@ -734,8 +675,7 @@ export class KayakComponent implements OnInit {
         this.spinner.hide();
         // this.getStandAlonePlaces(this.selectedbuyBox);
         // this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
   resetFilters(): void {
@@ -786,14 +726,9 @@ export class KayakComponent implements OnInit {
             this.updateTenantCategories();
             this.updateMinMaxBuildingSize();
           } else {
-            console.warn('No filters data returned.');
             this.resetFilters();
           }
-        },
-        error: (error) => {
-          console.error('Error fetching filters:', error);
-          this.resetFilters();
-        },
+        }
       });
   }
 
@@ -841,14 +776,9 @@ export class KayakComponent implements OnInit {
             this.updateTenantCategories();
             this.updateMinMaxBuildingSize();
           } else {
-            console.warn('No filters data returned.');
             this.resetFilters();
           }
-        },
-        error: (error) => {
-          console.error('Error fetching filters:', error);
-          this.resetFilters();
-        },
+        }
       });
   }
 
@@ -908,7 +838,6 @@ export class KayakComponent implements OnInit {
   }
   toggleNeighbourhoodSelection(neighbourhood: Neighbourhood): void {
     if (!neighbourhood.Neighbourhood) {
-      console.warn('Neighbourhood is undefined, skipping selection.');
       return;
     }
 
@@ -943,7 +872,6 @@ export class KayakComponent implements OnInit {
     }
 
     this.filterValues.tenantCategory = categoryList.join(',');
-    console.log('tenant', this.filterValues.tenantCategory);
     this.getResult().subscribe({
       next: (data) => {},
     });

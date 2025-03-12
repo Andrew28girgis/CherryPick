@@ -42,7 +42,6 @@ export class BuyboxDetailsComponent {
       MinBuildingSize: modalObject.MinBuildingSize ?? 0, // Default to 0
       MaxBuildingSize: modalObject.MaxBuildingSize ?? 0, // Default to 0
     };
-    // console.log('Modal Object:', this.Obj); // Ensure Obj has updated fields
   }
 
   GetBuyBoxInfo() {
@@ -59,10 +58,7 @@ export class BuyboxDetailsComponent {
         this.buybox = data.json;
         this.managerOrganizationId = data.json.ManagerOrganizationId;
         this.organizationId = data.json.OrganizationId;
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-      },
+      }
     });
   }
 
@@ -85,7 +81,6 @@ export class BuyboxDetailsComponent {
         if (data.error) {
           alert('Failed To Update Data');
         } else {
-          // console.log('Buybox updated successfully:', this.Obj);
 
           // Update the buybox in the displayed list
           const index = this.buyBoxes.findIndex(
@@ -122,10 +117,7 @@ export class BuyboxDetailsComponent {
       next: (data: any) => {
         this.contacts =
           data.json?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationContacts;
-      },
-      error: (err) => {
-        console.error('Error fetching buybox info:', err);
-      },
+      }
     });
   }
 }

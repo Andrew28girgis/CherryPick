@@ -7,7 +7,7 @@
         <tr>
           <th>Name</th>
           <th>Address</th>
-
+          <th>Stage Name</th>
           <th *ngIf="placesRepresentative != false">Leased by</th>
           <th>Unit Size & Lease Price</th>
           <th>
@@ -40,6 +40,9 @@
                 {{ shoppingCenter.CenterState }}
 
               </div>
+            </td>
+            <td>
+              <p class="table-text mb-1">{{shoppingCenter.stageName}}</p>
             </td>
             <td *ngIf="placesRepresentative != false">
               <ng-container *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization">

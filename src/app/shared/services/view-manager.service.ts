@@ -43,12 +43,7 @@ export class ViewManagerService {
           this.stateService.setShoppingCenters(centers);
           this.spinner.hide();
           resolve(centers);
-        },
-        error: (error) => {
-          console.error('Error fetching shopping centers:', error);
-          this.spinner.hide();
-          reject(error);
-        },
+        }
       });
     });
   }
@@ -72,11 +67,7 @@ export class ViewManagerService {
           const places = data.json;
           this.stateService.setBuyboxPlaces(places);
           resolve(places);
-        },
-        error: (error) => {
-          console.error('Error fetching places:', error);
-          reject(error);
-        },
+        }
       });
     });
   }
@@ -100,11 +91,7 @@ export class ViewManagerService {
           const categories = data.json;
           this.stateService.setBuyboxCategories(categories);
           resolve(categories);
-        },
-        error: (error) => {
-          console.error('Error fetching categories:', error);
-          reject(error);
-        },
+        }
       });
     });
   }
@@ -130,11 +117,7 @@ export class ViewManagerService {
           const org = data.json;
           this.stateService.setShareOrg(org);
           resolve(org);
-        },
-        error: (error) => {
-          console.error('Error fetching organization:', error);
-          reject(error);
-        },
+        }
       });
     });
   }
@@ -163,10 +146,6 @@ export class ViewManagerService {
           );
           this.stateService.setShoppingCenters(updatedCenters);
           resolve(data);
-        },
-        error: (error) => {
-          console.error('Error deleting shopping center:', error);
-          reject(error);
         },
         complete: () => {
           this.spinner.hide();
@@ -199,10 +178,6 @@ export class ViewManagerService {
           this.stateService.setShoppingCenters(updatedCenters);
           resolve(data);
         },
-        error: (error) => {
-          console.error('Error restoring shopping center:', error);
-          reject(error);
-        },
         complete: () => {
           this.spinner.hide();
         },
@@ -229,10 +204,6 @@ export class ViewManagerService {
   //       next: (data) => {
   //         resolve(data);
   //       },
-  //       error: (error) => {
-  //         console.error('Error deleting shopping center:', error);
-  //         reject(error);
-  //       },
   //       complete: () => {
   //         this.spinner.hide();
   //       },
@@ -258,10 +229,7 @@ export class ViewManagerService {
   //       next: (data) => {
   //         resolve(data);
   //       },
-  //       error: (error) => {
-  //         console.error('Error restoring shopping center:', error);
-  //         reject(error);
-  //       },
+
   //       complete: () => {
   //         this.spinner.hide();
   //       },
@@ -277,7 +245,6 @@ export class ViewManagerService {
     zoom: number = 14
   ): Promise<any> {
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return null;
     }
 
@@ -286,7 +253,6 @@ export class ViewManagerService {
       const mapDiv = document.getElementById(elementId) as HTMLElement;
 
       if (!mapDiv) {
-        console.error(`Element with ID "${elementId}" not found.`);
         return null;
       }
 
@@ -304,7 +270,6 @@ export class ViewManagerService {
 
       return map;
     } catch (error) {
-      console.error('Error initializing map:', error);
       return null;
     }
   }
@@ -318,7 +283,6 @@ export class ViewManagerService {
   ): any {
     const streetViewElement = document.getElementById(elementId);
     if (!streetViewElement) {
-      console.error(`Element with id '${elementId}' not found.`);
       return null;
     }
 

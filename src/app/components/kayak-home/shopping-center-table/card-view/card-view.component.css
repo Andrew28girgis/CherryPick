@@ -12,7 +12,7 @@
   top: 2%;
 }
 
-.shortcuts_iconCard>ul {
+.shortcuts_iconCard > ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -22,7 +22,7 @@
   display: grid;
 }
 
-.shortcuts_iconCard>li {
+.shortcuts_iconCard > li {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -51,15 +51,13 @@
   cursor: pointer;
 }
 
-.shortcuts_iconCard>i {
+.shortcuts_iconCard > i {
   position: absolute;
   right: -8px;
   font-size: 25px;
   color: white;
   top: 5%;
 }
-
-@media (max-width: 768px) {}
 
 .h700 {
   height: 700px;
@@ -114,8 +112,8 @@ img[alt="logo"] {
   flex-direction: column;
   position: relative;
   justify-content: space-between;
-  min-height: 280px;
-  max-height: 350px;
+  /* min-height: 280px;
+  max-height: 350px; */
 }
 
 .card-address {
@@ -158,6 +156,12 @@ img[alt="logo"] {
   width: 24px;
 }
 
+.ShoppingCenterStage {
+  font-size: 16px;
+  color: #4d65b4;
+  font-weight: 700;
+}
+
 ::ng-deep .popover-body {
   padding: 0 !important;
 }
@@ -173,4 +177,10 @@ img[alt="logo"] {
 
 ::ng-deep .p-element .p-paginator {
   background: transparent;
+}
+
+@media (max-width: 768px) {
+  ::ng-deep .p-element .p-paginator {
+    margin-bottom: 70px;
+  }
 }

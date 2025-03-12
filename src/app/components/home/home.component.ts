@@ -31,6 +31,7 @@ import { LandingPlace } from 'src/app/shared/models/landingPlace';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
+
 export class HomeComponent implements OnInit {
   shoppingCenter: any;
   General!: General;
@@ -170,11 +171,7 @@ export class HomeComponent implements OnInit {
           size: 'lg',
           centered: true,
         });
-      },
-      error: (error: any) => {
-        console.error('Error fetching Organization Contacts:', error);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -202,11 +199,7 @@ export class HomeComponent implements OnInit {
         form.resetForm();
         this.modalService.dismissAll();
         this.openContactsModal(this.contactsModalTemplate);
-      },
-      error: (error: any) => {
-        console.error('Error adding contact:', error);
-        this.spinner.hide();
-      },
+      }
     });
   }
 
@@ -235,8 +228,7 @@ export class HomeComponent implements OnInit {
         }
         this.stateService.setPlacesRepresentative(this.placesRepresentative);
         this.markerService.setPlacesRepresentative(this.placesRepresentative);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -256,7 +248,7 @@ export class HomeComponent implements OnInit {
         this.ShareOrg = data.json;
         this.stateService.setShareOrg(data.json);
       },
-      error: (error) => console.error('Error fetching APIs:', error),
+
     });
   }
 
@@ -277,8 +269,7 @@ export class HomeComponent implements OnInit {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -293,8 +284,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -320,14 +310,11 @@ export class HomeComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.filter(
           (element: any) => element.Deleted == false
         );
-        console.log(`shy`);
-        console.log(this.shoppingCenter);
 
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -345,7 +332,6 @@ export class HomeComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log(`1`);
 
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
@@ -356,8 +342,7 @@ export class HomeComponent implements OnInit {
           );
         });
         this.getAllMarker();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -386,7 +371,6 @@ export class HomeComponent implements OnInit {
   }
 
   async getAllMarker() {
-    console.log(`hello`);
 
     try {
       this.spinner.show();
@@ -535,7 +519,6 @@ export class HomeComponent implements OnInit {
     const lat = parseFloat(property.Latitude);
     const lng = parseFloat(property.Longitude);
     if (isNaN(lat) || isNaN(lng)) {
-      console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
     return bounds?.contains({ lat, lng });
@@ -628,7 +611,6 @@ export class HomeComponent implements OnInit {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -646,7 +628,6 @@ export class HomeComponent implements OnInit {
       );
       this.addMarkerToStreetView(panorama, lat, lng);
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 
@@ -698,23 +679,19 @@ export class HomeComponent implements OnInit {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        console.log('Link copied to clipboard!');
       })
       .catch((err) => {
-        console.error('Could not copy text: ', err);
       });
   }
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
     const map = new Map(mapDiv, {
@@ -874,17 +851,12 @@ export class HomeComponent implements OnInit {
         shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
           shopping.ShoppingCenter.Comments
         );
-      },
-      error: (error) => {
-        this.newComments[marketSurveyId] = commentText;
-        console.error('Error adding comment:', error);
-      },
+      }
     });
   }
 
   addReply(marketSurveyId: number, commentId: number): void {
     if (!this.newReplies[commentId]?.trim()) {
-      console.error('Reply text is empty');
       return;
     }
 
@@ -918,11 +890,7 @@ export class HomeComponent implements OnInit {
             shoppingCenter.ShoppingCenter.Comments
           );
         }
-      },
-      error: (error: any) => {
-        console.error('Error adding reply:', error);
-        this.newReplies[commentId] = replyText;
-      },
+      }
     });
   }
 
@@ -1082,16 +1050,7 @@ export class HomeComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {},
-      error: (error) => {
-        if (!isLiked) {
-          // shopping.ShoppingCenter.Reactions.length--;
-          // delete this.likedShoppings[shopping.MarketSurveyId];
-        } else {
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
-        this.cdr.detectChanges();
-      },
+  
       complete: () => {
         this.isLikeInProgress = false;
         this.cdr.detectChanges();
@@ -1113,7 +1072,6 @@ export class HomeComponent implements OnInit {
 
   rate(rating: 'dislike' | 'neutral' | 'like') {
     this.selectedRating = rating;
-    console.log(`User rated: ${rating}`);
   }
 
   handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
@@ -1144,7 +1102,6 @@ export class HomeComponent implements OnInit {
   }
 
   selectCenter(centerId: number): void {
-    console.log(centerId);
 
     this.selectedCenterId = centerId;
 

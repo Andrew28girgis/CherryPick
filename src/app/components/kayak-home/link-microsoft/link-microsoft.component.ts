@@ -140,9 +140,7 @@ export class LinkMicrosoftComponent implements OnInit {
         error instanceof BrowserAuthError &&
         error.errorCode === 'interaction_in_progress'
       ) {
-        console.warn('Authentication interaction already in progress.');
       } else {
-        console.error('Login error:', error);
       }
     }
   }
@@ -164,16 +162,11 @@ export class LinkMicrosoftComponent implements OnInit {
         this.user = null;
         window.close();
         this.RemoveLinkedAccount();
-      },
-      error: (error) => {
-        console.error('Error during logout:', error);
-        window.close();
-      },
+      }
     });
   }
 
   getUser() {
-    console.log('go');
     const account = this.msalService.instance.getActiveAccount();
     if (account) {
       this.user = account;
@@ -201,7 +194,6 @@ export class LinkMicrosoftComponent implements OnInit {
         },
       });
     } catch (error) {
-      console.error('Error parsing objectTokeMsal:', error);
     }
   }
 

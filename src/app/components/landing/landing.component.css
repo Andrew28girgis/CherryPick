@@ -30,7 +30,7 @@
 }
 #hero .animated {
   animation: up-down 2s ease-in-out infinite alternate-reverse both;
-} 
+}
 .table {
   border: 1px solid #dfdfdf;
 }
@@ -47,9 +47,6 @@
   font-size: 21px;
   font-weight: 400;
   margin: 0 0 5px 0;
-}
-.backyard {
-  background-color: #f7f7f7; 
 }
 .main-section {
   border-radius: 20px;
@@ -143,7 +140,7 @@ li {
 }
 .nearset {
   color: #817a79;
-} 
+}
 .another-places {
   overflow-y: auto;
   scrollbar-width: thin;
@@ -299,126 +296,109 @@ li {
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
-  transition: filter 0.3s ease; 
+  transition: filter 0.3s ease;
 }
 .custom-carousel .carousel-indicators {
-  position: absolute; 
-  bottom: -50px; 
+  position: absolute;
+  bottom: -50px;
   left: 50%;
   transform: translateX(-50%);
-} 
+}
 .custom-carousel .carousel-indicators li {
   background-color: black;
-} 
+}
 .custom-carousel .carousel-indicators .active {
   background-color: #333; /* slightly different shade or keep it black as well */
-} 
+}
 .modal-content {
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
-} 
+}
 .modal-backdrop.show {
   background-color: transparent !important;
-} 
-.p-img{
+}
+.p-img {
   max-height: 400px;
-} 
-.enriche {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background: #0068cf; /* Primary blue color */
-  border: none;
-  border-radius: 0.25rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-} 
-.enriche:hover {
-  background: #001f3f;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-} 
-.enriche:active {
-  background: #001f3f;
-  transform: translateY(0);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-} 
-.total{
+}
+.total {
   cursor: pointer;
 }
-.ml8{
-  margin-left: 8px
+.ml8 {
+  margin-left: 8px;
 }
-.logowidth{
-  width: 184px
+.logowidth {
+  width: 184px;
 }
-.goback{
-  font-size: 24px; 
-  cursor: pointer; 
-  padding: 15px 10px
+.logo {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin: 0 10px;
 }
-.mbottom{
-  margin-bottom: 5px
+.goback {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 15px 10px;
 }
-.RelationOrganization{
+.mbottom {
+  margin-bottom: 5px;
+}
+.RelationOrganization {
   margin-inline: 10px;
   width: 30px;
   border: 2px solid #fff;
   border-radius: 50%;
 }
-.CustomPlace{
-  color: #fff; 
-  font-weight: bold; 
-  padding-inline: 5px
+.CustomPlace {
+  color: #fff;
+  font-weight: bold;
+  padding-inline: 5px;
 }
-.StandAlonePlace{
-  text-align: justify; 
-  font-size: 17px
+.StandAlonePlace {
+  text-align: justify;
+  font-size: 17px;
 }
-.sanitizedUrll{
+.sanitizedUrll {
   border: 0;
   width: 100%;
   height: 450px;
   margin-top: 20px;
   border-radius: 20px;
 }
-.streetview{
-  height: 450px; 
-  margin-top: 20px
+.streetview {
+  height: 450px;
+  margin-top: 20px;
 }
-.mapView{
-  height: 450px; 
-  margin-top: 20px; 
-  border-radius: 20px
+.mapView {
+  height: 450px;
+  margin-top: 20px;
+  border-radius: 20px;
 }
-.OrgManagerwidth{
-  width: 50px
+.OrgManagerwidth {
+  width: 50px;
 }
-.heightt{
-  height: 408px; 
-  overflow-y: auto
+.heightt {
+  height: 408px;
+  overflow-y: auto;
 }
-.nowrap{
-  text-wrap: nowrap
+.nowrap {
+  text-wrap: nowrap;
 }
-.orgbranches{
-  margin-right: 10px; 
-  width: 35px
+.orgbranches {
+  margin-right: 10px;
+  width: 35px;
 }
-.mapViewOneheight{
-  height: 700px
+.mapViewOneheight {
+  height: 700px;
 }
-.UrlPopup{
-  border: 0; 
-  width: 100%; 
-  height: 500px
+.UrlPopup {
+  border: 0;
+  width: 100%;
+  height: 500px;
 }
-.StreetViewOneheight{
-  min-height: 500px
+.StreetViewOneheight {
+  min-height: 500px;
 }
 @media (min-width: 1024px) {
   #hero {
@@ -472,4 +452,4 @@ li {
   #schedule .nav-tabs a {
     padding: 4px 25px;
   }
-} 
+}

@@ -102,8 +102,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.stateService.setShoppingCenters(data.json);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -131,8 +130,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         });
         this.getAllMarker();
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -154,8 +152,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.ShareOrg = data.json;
         this.stateService.setShareOrg(data.json);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -177,8 +174,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
+      }
     });
   }
 
@@ -189,7 +185,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const mapElement = document.getElementById('map') as HTMLElement;
       if (!mapElement) {
-        console.error('Element with id "map" not found.');
         return;
       }
 
@@ -229,7 +224,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.createCustomMarkers(this.buyboxCategories);
     } catch (error) {
-      console.error('Error loading markers:', error);
     } finally {
       this.spinner.hide();
     }
@@ -291,7 +285,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const lng = Number.parseFloat(property.Longitude);
 
     if (isNaN(lat) || isNaN(lng)) {
-      console.warn('Invalid Latitude or Longitude for property:', property);
       return false;
     }
 

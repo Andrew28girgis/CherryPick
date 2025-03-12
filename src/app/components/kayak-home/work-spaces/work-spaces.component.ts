@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { StateCity } from 'src/app/shared/models/buyboxShoppingCenter';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { ActivatedRoute } from '@angular/router';
@@ -72,11 +72,6 @@ export class WorkSpacesComponent {
 
         this.isLoadingStatesAndCities = false;
       },
-      error: (error) => {
-        console.error('Error fetching States and Cities:', error);
-        this.isLoadingStatesAndCities = false;
-        alert('Failed to load States and Cities. Please try again.');
-      },
       complete: () => {
         this.isLoadingStatesAndCities = false;
       },
@@ -115,11 +110,7 @@ export class WorkSpacesComponent {
             this.WorkSpace = { state: '', city: '' };
           }
         }
-      },
-      error: (error) => {
-        alert('Server Error');
-        console.error('Error fetching APIs:', error);
-      },
+      }
     });
   }
 
@@ -144,11 +135,7 @@ export class WorkSpacesComponent {
           this.WorkSpace.city = null;
         }
         this.GetBuyBoxWorkSpaces(this.buyBoxId as number);
-      },
-      error: (error) => {
-        alert('Server Error');
-        console.error('Error adding Workspace:', error);
-      },
+      }
     });
   }
   deleteWorkspace(id: number) {
@@ -168,12 +155,7 @@ export class WorkSpacesComponent {
           );
           this.BuyBoxWorkSpaces.splice(Index, 1);
         }
-      },
-      error: (error) => {
-        alert('Server Error');
-        console.error('Error fetching APIs:', error);
-      },
-      complete: () => {},
+      }
     });
   }
 }

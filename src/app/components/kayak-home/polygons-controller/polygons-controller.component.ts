@@ -263,7 +263,6 @@ export class PolygonsControllerComponent
         const geoJson: IGeoJson = JSON.parse(polygon.json);
 
         if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
-          console.error('Invalid GeoJSON:', polygon.json);
           continue;
         }
 
@@ -289,7 +288,6 @@ export class PolygonsControllerComponent
           );
 
           if (!coordinates) {
-            console.error('Invalid coordinates for polygon:', polygon.json);
             continue;
           }
 
@@ -302,7 +300,6 @@ export class PolygonsControllerComponent
           );
         }
       } catch (error) {
-        console.error('Error parsing GeoJSON:', error, polygon.json);
       }
     }
   }
@@ -317,7 +314,6 @@ export class PolygonsControllerComponent
       const geoJson: IGeoJson = JSON.parse(polygon.json);
 
       if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
-        console.error('Invalid GeoJSON:', polygon.json);
         return null;
       }
 
@@ -328,13 +324,11 @@ export class PolygonsControllerComponent
       );
 
       if (!coordinates) {
-        console.error('Invalid coordinates for polygon:', polygon.json);
         return null;
       }
 
       return coordinates;
     } catch (error) {
-      console.error('Error parsing GeoJSON:', error, polygon.json);
     }
     return null;
   }
@@ -370,10 +364,7 @@ export class PolygonsControllerComponent
           }
           this.addPolygonsToMap();
         }
-      },
-      error: (error: any) => {
-        console.error(error);
-      },
+      }
     };
 
     this.polygonsControllerService
@@ -411,11 +402,7 @@ export class PolygonsControllerComponent
             }
           });
         }
-      },
-      error: (error: any) => {
-        this.spinner.hide();
-        console.error(error);
-      },
+      }
     };
 
     this.polygonsControllerService
@@ -450,11 +437,7 @@ export class PolygonsControllerComponent
             this.createPropertiesMarkers(id, true);
           }
         }
-      },
-      error: (error: any) => {
-        this.spinner.hide();
-        console.error(error);
-      },
+      }
     };
 
     this.polygonsControllerService
@@ -487,10 +470,7 @@ export class PolygonsControllerComponent
       next: (response: any) => {
         if (response) {
         }
-      },
-      error: (error: any) => {
-        console.error(error);
-      },
+      }
     };
 
     this.polygonsControllerService.deletePolygon(id).subscribe(observer);
@@ -553,7 +533,6 @@ export class PolygonsControllerComponent
       }
       return null;
     } catch (error) {
-      console.error(error);
     }
   }
 
@@ -567,7 +546,6 @@ export class PolygonsControllerComponent
       }
       return null;
     } catch (error) {
-      console.error(error);
     }
   }
 
@@ -616,10 +594,7 @@ export class PolygonsControllerComponent
           this.externalPolygons = response.json;
           this.addExplorePolygonsToMap();
         }
-      },
-      error: (error: any) => {
-        console.error(error);
-      },
+      }
     };
 
     this.searchSubject
@@ -725,11 +700,7 @@ export class PolygonsControllerComponent
         //     this.createPropertiesMarkers(id, true);
         //   }
         // }
-      },
-      error: (error: any) => {
-        this.spinner.hide();
-        console.error(error);
-      },
+      }
     };
 
     this.polygonsControllerService

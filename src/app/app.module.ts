@@ -103,7 +103,7 @@ const loginRequest = {
     NgbTooltipModule,
     NgbAlertModule,
     DragDropModule,
-    ToastrModule.forRoot(), // Configuration for toastr can be added here if needed
+    ToastrModule.forRoot(), 
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,

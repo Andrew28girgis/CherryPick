@@ -167,7 +167,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.stateService.setBuyboxPlaces(this.buyboxPlaces);
     } catch (error) {
-      console.error('Error initializing data:', error);
       this.spinner.hide();
     }
   }
@@ -314,18 +313,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         );
 
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        this.newComments[marketSurveyId] = commentText;
-        console.error('Error adding comment:', error);
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
   addReply(marketSurveyId: number, commentId: number): void {
     if (!this.newReplies[commentId]?.trim()) {
-      console.error('Reply text is empty');
       return;
     }
 
@@ -361,12 +354,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        console.error('Error adding reply:', error);
-        this.newReplies[commentId] = replyText;
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
@@ -437,8 +425,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addLike(shopping: Center, reactionId: number): void {
     const contactIdStr = localStorage.getItem('ContactId');
-    if (!contactIdStr) {
-      console.log('no contact id');
+    if (!contactIdStr) { 
     }
     const contactId = Number.parseInt(contactIdStr ? contactIdStr : '0', 10);
 
@@ -448,15 +435,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         (reaction: Reaction) => reaction.ContactId === contactId
       )
     ) {
-      console.log('liked before');
       return;
     }
 
     if (this.isLikeInProgress) {
       return;
     }
-
-    console.log('adding like ');
 
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
@@ -482,14 +466,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {},
-      error: (error) => {
-        if (!isLiked) {
-        } else {
-          shopping.ShoppingCenter.Reactions.length++;
-          this.likedShoppings[shopping.MarketSurveyId] = true;
-        }
-        this.cdr.markForCheck();
-      },
+     
       complete: () => {
         this.isLikeInProgress = false;
         this.cdr.markForCheck();
@@ -525,15 +502,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
 
-    if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
+    if (!lat || !lng) { 
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
-    if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
+    if (!mapDiv) { 
       return;
     }
 
@@ -577,7 +552,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -591,7 +565,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       pitch
     );
     if (!panorama) {
-      console.error('Failed to initialize street view');
     }
     this.cdr.markForCheck();
   }
@@ -633,12 +606,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           centered: true,
         });
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        console.error('Error fetching Organization Contacts:', error);
-        this.spinner.hide();
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
@@ -721,11 +689,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   copyLink(link: string) {
     navigator.clipboard
       .writeText(link)
-      .then(() => {
-        console.log('Link copied to clipboard!');
+      .then(() => { 
       })
       .catch((err) => {
-        console.error('Could not copy text: ', err);
       });
   }
 
@@ -774,12 +740,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.modalService.dismissAll();
         this.openContactsModal(this.contactsModalTemplate);
         this.cdr.markForCheck();
-      },
-      error: (error: any) => {
-        console.error('Error adding contact:', error);
-        this.spinner.hide();
-        this.cdr.markForCheck();
-      },
+      }
     });
   }
 
@@ -811,7 +772,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       );
       this.modalService.dismissAll();
     } catch (error) {
-      console.error('Error deleting shopping center:', error);
     } finally {
       this.spinner.hide();
       this.cdr.markForCheck();
@@ -904,9 +864,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
         this.spinner.hide();
       })
-      .catch((error: any) => {
-        console.error('Error restore shopping center :', error);
-      });
   }
 
   async refreshShoppingCenters() {
@@ -921,7 +878,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.showbackIds = [];
     } catch (error) {
-      console.error('Error refreshing shopping centers:', error);
     } finally {
       this.spinner.hide();
     }

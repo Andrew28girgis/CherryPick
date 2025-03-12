@@ -222,12 +222,6 @@ export class SummeryComponent {
         this.showOrganizationSuggestions = true;
         this.highlightedOrganizationIndex = -1;
         this.isSearchingOrganization = false;
-      },
-      (error: any) => {
-        console.error('Error searching organizations:', error);
-        this.organizations = [];
-        this.showOrganizationSuggestions = false;
-        this.isSearchingOrganization = false;
       }
     );
   }

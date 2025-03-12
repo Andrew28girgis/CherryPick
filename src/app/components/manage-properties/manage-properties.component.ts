@@ -1,5 +1,4 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/shared/services/places.service';
@@ -26,7 +25,6 @@ import {
   PropertiesDetails,
   Tenant,
 } from 'src/app/shared/models/manage-prop-shoppingCenter';
-import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
 
 @Component({
   selector: 'app-manage-properties',
@@ -46,8 +44,7 @@ export class ManagePropertiesComponent implements OnInit {
   pdfFileName: string = '';
   test!: number;
   JsonPDF!: jsonGPT;
-  AvailabilityAndTenants: AvailabilityTenant = {};
-  // display and edit shopping center manually
+  AvailabilityAndTenants: AvailabilityTenant = {}; 
   CustomPlace!: PropertiesDetails | undefined;
   showInputField: string | null = null;
   newPlaceSqFT!: number;
@@ -65,7 +62,6 @@ export class ManagePropertiesComponent implements OnInit {
   @ViewChild('deletePlaceModal', { static: true })
   deletePlaceModal!: TemplateRef<any>;
   constructor(
-    private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
@@ -73,8 +69,7 @@ export class ManagePropertiesComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   ngOnInit() {
-    this.contactID = localStorage.getItem('contactId');
-    // console.log('Contact ID:', this.contactID);
+    this.contactID = localStorage.getItem('contactId'); 
     this.GetContactShoppingCenters();
   }
 
@@ -85,7 +80,6 @@ export class ManagePropertiesComponent implements OnInit {
       MainEntity: null,
       Params: {
         ContactId: this.contactID,
-        // ContactId: 15549,
       },
       Json: null,
     };
@@ -93,19 +87,16 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         this.properties = data.json;
         this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching Shopping center Data:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
-  // manual display and edit shopping center
+
   openShoppingModal(id: number) {
     this.selectedShoppingID = id.toString();
     this.modalService.open(this.openShopping, { size: 'xl', centered: true });
     this.GetShoppingCenterDetailsById();
   }
+
   GetShoppingCenterDetailsById() {
     this.spinner.show();
     const body: any = {
@@ -120,11 +111,7 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         this.CustomPlace = data.json;
         this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error fetching Shopping center Data:', err);
-        this.spinner.hide();
-      },
+      }
     });
   }
   // Helper method to get images as an array in display shopping center images
@@ -199,11 +186,7 @@ export class ManagePropertiesComponent implements OnInit {
         this.showToast('New tenant added successfully!');
         this.showAddTenantInput = false;
         this.newTenantName = '';
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to add new tenant. Please try again.');
-      },
+      }
     });
   }
   toggleAddPlaceInput() {
@@ -255,10 +238,7 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.showAddPlaceInput = false;
         this.spinner.hide();
-      },
-      error: (err) => {
-        this.spinner.hide();
-      },
+      }
     });
   }
   // Start editing a place
@@ -300,11 +280,7 @@ export class ManagePropertiesComponent implements OnInit {
         this.editingPlaceId = null;
         this.showEditInput = false;
         this.editedPlaceSqFT = 0;
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to edit place. Please try again!');
-      },
+      }
     });
   }
   openDeletePlaceModal(placeId: number) {
@@ -346,11 +322,7 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.showToast('Place deleted successfully!');
         this.spinner.hide();
-      },
-      error: (err) => {
-        this.showToast('Failed to delete place. Please try again.');
-        this.spinner.hide();
-      },
+      }
     });
   }
   deleteTenant(tenantId: number) {
@@ -373,23 +345,17 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.spinner.hide();
         this.showToast('Tenant deleted successfully!');
-      },
-      error: (err) => {
-        this.spinner.hide();
-        this.showToast('Failed to delete tenant. Please try again.');
-      },
+      }
     });
   }
   // manual display and edit shopping center
   openUploadModal(id: number) {
     if (id === undefined) {
-      const guid = crypto.randomUUID();
-      // console.log(guid);
+      const guid = crypto.randomUUID(); 
       this.selectedShoppingID = guid;
     } else {
       this.selectedShoppingID = id.toString();
-    }
-    // console.log('Selected Shopping ID:', this.selectedShoppingID);
+    } 
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
   closeModal(modal: any) {
@@ -434,9 +400,7 @@ export class ManagePropertiesComponent implements OnInit {
                   this.isUploading = false;
                   this.isConverting = true;
                 }
-              } else if (event instanceof HttpResponse) {
-                // Conversion complete; extract images from the new API response structure
-                // console.log('API Response:', event.body);
+              } else if (event instanceof HttpResponse) { 
                 const response = event.body;
                 if (response && response.images) {
                   this.images = response.images.map(
@@ -447,8 +411,7 @@ export class ManagePropertiesComponent implements OnInit {
                       selected: false,
                     })
                   );
-                  this.pdfFileName = response.pdfFileName;
-                  // console.log('pdfFileName:', this.pdfFileName);
+                  this.pdfFileName = response.pdfFileName; 
                 }
                 this.isConverting = false;
                 this.spinner.hide();
@@ -457,7 +420,6 @@ export class ManagePropertiesComponent implements OnInit {
               }
             },
             (error) => {
-              console.error('Error during upload/conversion:', error);
               this.isUploading = false;
               this.isConverting = false;
               this.spinner.hide();
@@ -486,10 +448,7 @@ export class ManagePropertiesComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.spinner.hide();
-      },
-      error: (err) => {
-        this.spinner.hide();
-      },
+      }
     });
   }
   // Method to convert base64 to a SafeUrl for image display
@@ -507,10 +466,6 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data) => {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error fetching APIs:', error);
         this.spinner.hide();
       },
     });
@@ -545,11 +500,6 @@ export class ManagePropertiesComponent implements OnInit {
         this.showToast('shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error:', error);
-        this.showToast('Failed to update shopping center!');
         this.spinner.hide();
       },
     });

@@ -1,3 +1,11 @@
+.titleResponsive{
+  color:  #686c70;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+
 .custom-share-btn {
   background-color: #001f3f !important; 
   color: #fff !important; 
@@ -11,6 +19,8 @@
 .card-window_c {
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 2px 14px rgba(0, 0, 0, 0.23);
   border-radius: 18px;
+  min-height: 100%;
+  display: grid;
 }
 .card-2 {
   background-color: #fff;
@@ -114,7 +124,7 @@
 .card-sideview {
   background-color: #fff;
   border-radius: 0 0 20px 20px;
-  min-height: 250px;
+  min-height: 280px;
   max-height: 350px;
   cursor: auto;
   display: flex;
@@ -485,6 +495,11 @@
 :host ::ng-deep .carousel-control-prev {
   left: 0;
 }  
+
+::ng-deep app-logout p {
+  margin: 0;
+}
+
 .iconic-card {
   bottom: 0% !important ;
   top: auto !important;

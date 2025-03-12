@@ -1,22 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/shared/services/places.service';
-import {
-  Fbo,
-  General,
-  nearsetPlaces,
-  Property,
-} from 'src/app/shared/models/domain';
+import { Fbo, General, Property } from 'src/app/shared/models/domain';
 import { Branch } from 'src/app/shared/models/branches';
 
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  LandingPlace,
-  OtherPlace,
-  ShoppingCenter,
-} from 'src/app/shared/models/landingPlace';
+import { LandingPlace, OtherPlace } from 'src/app/shared/models/landingPlace';
 import { NearByType } from 'src/app/shared/models/nearBy';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PlaceCotenants } from 'src/app/shared/models/PlaceCo';
@@ -88,7 +79,6 @@ export class LandingComponent {
     this.windowHistrony = window.history.length;
     this.initializeParams();
     this.initializeDefaults();
-    //this.initializeQueryParams();
   }
 
   GetCustomSections(buyboxId: number): void {
@@ -158,18 +148,11 @@ export class LandingComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.CustomPlace = data.json?.[0] || null;
-        console.log(`custom place`);
 
         if (ShoppingcenterId !== 0) {
           this.ShoppingCenter = this.CustomPlace;
           this.GetShoppingCenterManager(this.ShoppingCenter?.Id);
         }
-
-        console.log(`custom place`);
-        console.log(this.CustomPlace);
-
-        console.log(`shopping Center`);
-        console.log(this.ShoppingCenter);
 
         if (this.ShoppingCenter && this.ShoppingCenter.Images) {
           this.placeImage = this.ShoppingCenter.Images?.split(',').map(
@@ -198,7 +181,6 @@ export class LandingComponent {
         }
         this.GetPlaceNearBy(this.PlaceId);
       },
-      error: (error) => console.error('Error fetching APIs:', error),
     });
   }
 
@@ -230,7 +212,6 @@ export class LandingComponent {
         this.uniqueCategories.sort((a, b) => a.localeCompare(b));
         this.uniqueCategories.unshift('All');
       },
-      error: (error) => console.error('Error fetching APIs:', error),
     });
   }
 
@@ -264,7 +245,6 @@ export class LandingComponent {
           this.OrganizationBranches = data.json[0];
         }
       },
-      error: (error) => console.error('Error fetching APIs:', error),
     });
   }
 
@@ -280,7 +260,6 @@ export class LandingComponent {
       next: (data) => {
         this.OrgManager = data.json;
       },
-      error: (error) => console.error('Error fetching APIs:', error),
     });
   }
 
@@ -438,7 +417,6 @@ export class LandingComponent {
         this.NearByType = data.json;
         this.getAllMarker();
       },
-      error: (error) => console.error('Error fetching APIs:', error),
     });
   }
 
@@ -489,8 +467,7 @@ export class LandingComponent {
         Branch.City =
           data.address.city || data.address.town || data.address.village;
         Branch.State = data.address.state;
-      })
-      .catch((error) => console.error('Error fetching city and state:', error));
+      });
   }
 
   getLatitude(): any {
@@ -816,43 +793,18 @@ export class LandingComponent {
         map: marker.getMap(),
         shouldFocus: false,
       });
-    });
-
-    // marker.addListener('mouseout', () => {
-    //   infoWindow.close();
-    // });
+    }); 
   }
 
   private getArrowSvg(): string {
     return (
       'data:image/svg+xml;charset=UTF-8,' +
       encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-  <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
-</svg>
+       <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
+        </svg>
     `)
     );
   }
-
-  private getArrowSvgBlack(): string {
-    return (
-      'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`
-       <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_456_4378)">
-<path d="M34.0399 5.43991L27.0799 8.91991C25.1399 9.87991 22.8799 9.87991 20.9399 8.91991L13.9599 5.41991C7.99995 2.43991 1.69995 8.87991 4.81995 14.7799L6.45995 17.8599C6.67995 18.2799 7.03995 18.6199 7.47995 18.8199L32.7799 30.1999C33.8199 30.6599 35.0399 30.2399 35.5599 29.2399L43.1799 14.7599C46.2799 8.87991 39.9999 2.43991 34.0399 5.43991Z" fill="#0D0C0C"/>
-<path d="M31.1999 32.62L14.6399 25.16C12.7799 24.32 10.8999 26.32 11.8599 28.12L17.9399 39.66C20.5199 44.56 27.5199 44.56 30.0999 39.66L32.2399 35.58C32.7999 34.48 32.3199 33.14 31.1999 32.62Z" fill="#0D0C0C"/>
-</g>
-<defs>
-<clipPath id="clip0_456_4378">
-<rect width="48" height="48" fill="white"/>
-</clipPath>
-</defs>
-</svg>
-
-    `)
-    );
-  }
-
   sendEmojFeedBack(reaction: number) {
     const body: any = {
       Name: 'CreatePropertyReaction',
@@ -864,19 +816,7 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {},
-      error: (error) => console.error('Error fetching APIs:', error),
     });
-    // this.PlacesService.UpdateBuyBoxWorkSpacePlace(feedback).subscribe(
-    //   (data) => {
-    //     this.showAlert = true;
-    //     if (reaction == '') {
-    //       setTimeout(() => {
-    //         this.showAlert = false;
-    //       }, 3000);
-    //       window.scrollTo({ top: 0, behavior: 'smooth' });
-    //     }
-    //   }
-    // );
   }
 
   sendFeedBack(reaction: string) {
@@ -913,7 +853,6 @@ export class LandingComponent {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -953,7 +892,6 @@ export class LandingComponent {
         }
       );
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 
@@ -984,7 +922,6 @@ export class LandingComponent {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
     if (!lat || !lng) {
-      console.error('Latitude and longitude are required to display the map.');
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
@@ -992,7 +929,6 @@ export class LandingComponent {
     const mapDiv = document.getElementById('mapInPopup') as HTMLElement;
 
     if (!mapDiv) {
-      console.error('Element with ID "mappopup" not found.');
       return;
     }
 
@@ -1039,7 +975,6 @@ export class LandingComponent {
       if (streetViewElement) {
         this.streetMapPopup(lat, lng, heading, pitch);
       } else {
-        console.error("Element with id 'street-view' not found.");
       }
     });
   }
@@ -1057,7 +992,6 @@ export class LandingComponent {
       );
       this.addMarkerToStreetView(panorama, lat, lng);
     } else {
-      console.error("Element with id 'street-view' not found in the DOM.");
     }
   }
 
@@ -1103,39 +1037,5 @@ export class LandingComponent {
     return addressParts
       ? addressParts.filter(Boolean).join(', ')
       : 'Address not available';
-  }
-
-  submitEnriche() {
-    const body: any = {
-      Name: 'CreateEnrichmentRequest',
-      Params: {
-        taskid: this.enriche.taskId,
-        shoppingcenterid: +this.ShoppingCenterId,
-        context: this.enriche.context,
-        url: this.enriche.url,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.uploadFile(data.json[0].requestId);
-      },
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
-  }
-
-  onFileChange(event: any) {
-    if (event.target.files && event.target.files.length) {
-      this.enriche.file = event.target.files[0];
-    }
-  }
-
-  uploadFile(id: number) {
-    const formData = new FormData();
-    formData.append('file', this.enriche.file);
-    this.PlacesService.UploadFile(formData, id).subscribe({
-      next: (data) => {},
-      error: (error) => console.error('Error fetching APIs:', error),
-    });
   }
 }

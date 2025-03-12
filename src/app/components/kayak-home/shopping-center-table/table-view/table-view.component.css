@@ -12,7 +12,7 @@
   top: -135%;
 }
 
-.shortcuts_iconCard>ul {
+.shortcuts_iconCard > ul {
   text-decoration: none;
   list-style: none;
   padding: 0;
@@ -22,7 +22,7 @@
   display: grid;
 }
 
-.shortcuts_iconCard>ul>li {
+.shortcuts_iconCard > ul > li {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -36,7 +36,7 @@
   cursor: pointer;
 }
 
-.shortcuts_iconCard>ul>li>.target {
+.shortcuts_iconCard > ul > li > .target {
   display: flex;
   gap: 6px;
   color: #707791;
@@ -52,7 +52,7 @@
   align-items: center;
 }
 
-.shortcuts_iconCard>ul>li>.target i {
+.shortcuts_iconCard > ul > li > .target i {
   font-size: 16px;
   cursor: w-resize;
   width: 20px;
@@ -60,27 +60,21 @@
   color: #707791;
 }
 
-.shortcuts_iconCard>ul>li>.target svg {
+.shortcuts_iconCard > ul > li > .target svg {
   width: 20px;
   height: 20px;
 }
 
-.shortcuts_iconCard>ul>li>.target svg path {
+.shortcuts_iconCard > ul > li > .target svg path {
   fill: #707791;
 }
 
-.shortcuts_iconCard>i {
+.shortcuts_iconCard > i {
   position: absolute;
   right: -8px;
   top: 5%;
   font-size: 25px;
   color: white;
-}
-
-@media (max-width: 768px) {
-  .shortcuts_iconCard {
-    right: 5vw !important;
-  }
 }
 
 .h700 {
@@ -154,4 +148,10 @@ img[alt="logo"] {
 
 ::ng-deep .popover-arrow::before {
   border-top: none !important;
+}
+
+@media (max-width: 768px) {
+  .shortcuts_iconCard {
+    right: 5vw !important;
+  }
 }

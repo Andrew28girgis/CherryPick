@@ -18,6 +18,7 @@ export interface Center {
     MarketSurveyId:number
     ShoppingCenter: ShoppingCenter
     ParentCommentId: number 
+    stageName:string
   }
   export class Comment {
     Id?: number
