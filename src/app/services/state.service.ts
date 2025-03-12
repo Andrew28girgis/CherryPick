@@ -4,6 +4,7 @@ import { Center, Place } from 'src/models/shoppingCenters';
 import { BbPlace } from 'src/models/buyboxPlaces';
 import { ShareOrg } from 'src/models/shareOrg';
 import { permission } from 'src/models/permission';
+import { BehaviorSubject } from 'rxjs';
  
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,48 @@ export class StateService {
   private scrollPosition: number = 0;
   placesRepresentative:boolean | undefined;
 
+
+
+
+  private shoppingCentersSubject = new BehaviorSubject<Center[]>([]);
+  shoppingCenters$ = this.shoppingCentersSubject.asObservable();
+
+  private buyboxCategoriesSubject = new BehaviorSubject<BuyboxCategory[]>([]);
+  buyboxCategories$ = this.buyboxCategoriesSubject.asObservable();
+
+  private buyboxPlacesSubject = new BehaviorSubject<BbPlace[]>([]);
+  buyboxPlaces$ = this.buyboxPlacesSubject.asObservable();
+
+  private shareOrgSubject = new BehaviorSubject<ShareOrg[]>([]);
+  shareOrg$ = this.shareOrgSubject.asObservable();
+
+  setShoppingCenters(centers: Center[]): void {
+    this.shoppingCentersSubject.next(centers);
+  }
+  
+  getShoppingCentersSnapshot(): Center[] {
+    return this.shoppingCentersSubject.getValue();
+  }
+
+  setBuyboxCategories(categories: BuyboxCategory[]): void {
+    this.buyboxCategoriesSubject.next(categories);
+  }
+  
+  setBuyboxPlaces(places: BbPlace[]): void {
+    this.buyboxPlacesSubject.next(places);
+  }
+
+  setShareOrg(org: ShareOrg[]): void {
+    this.shareOrgSubject.next(org);
+  }
+
+
+
+
+
+
+  
+
   // Selected SS methods
   setSelectedSS(value: number) {
     this.selectedSS = value;
@@ -30,17 +73,17 @@ export class StateService {
   }
 
   // Data storage methods
-  setBuyboxCategories(categories: BuyboxCategory[]) {
-    this.buyboxCategories = categories;
-  }
+  // setBuyboxCategories(categories: BuyboxCategory[]) {
+  //   this.buyboxCategories = categories;
+  // }
 
   getBuyboxCategories(): BuyboxCategory[] {
     return this.buyboxCategories;
   }
 
-  setShoppingCenters(centers: Center[]) {
-    this.shoppingCenters = centers;
-  }
+  // setShoppingCenters(centers: Center[]) {
+  //   this.shoppingCenters = centers;
+  // }
 
   getShoppingCenters(): Center[] {
     return this.shoppingCenters;
@@ -54,17 +97,17 @@ export class StateService {
     return this.standAlone;
   }
 
-  setBuyboxPlaces(places: BbPlace[]) {
-    this.buyboxPlaces = places;
-  }
+  // setBuyboxPlaces(places: BbPlace[]) {
+  //   this.buyboxPlaces = places;
+  // }
 
   getBuyboxPlaces(): BbPlace[] {
     return this.buyboxPlaces;
   }
 
-  setShareOrg(org: ShareOrg[]) {
-    this.shareOrg = org;
-  }
+  // setShareOrg(org: ShareOrg[]) {
+  //   this.shareOrg = org;
+  // }
 
   getShareOrg(): ShareOrg[] {
     return this.shareOrg;
