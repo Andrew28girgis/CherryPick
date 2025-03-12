@@ -7,6 +7,7 @@ import { AuthenticationResult, BrowserAuthError } from '@azure/msal-browser';
 import { MicrosoftMailsService } from 'src/app/shared/services/microsoft-mails.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MicrosoftLoginService } from 'src/app/shared/services/microsoft-login.service';
 
 @Component({
   selector: 'app-link-microsoft',
@@ -16,6 +17,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     MicrosoftMailsService,
     NgxSpinnerService,
     MsalService,
+    MicrosoftLoginService,
     PlacesService,
   ],
   templateUrl: './link-microsoft.component.html',
@@ -30,12 +32,14 @@ export class LinkMicrosoftComponent implements OnInit {
   domainList: { domain: string; isAdded: boolean }[] = [];
   contactId: any;
   RemoveLinked: any;
+  MicrosoftLoginResponse:any;
 
   constructor(
     public spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
     private msalService: MsalService,
+    private microsoftLogin: MicrosoftLoginService,
     private microsoftMailsService: MicrosoftMailsService
   ) {}
 
@@ -143,6 +147,15 @@ export class LinkMicrosoftComponent implements OnInit {
       } else {
       }
     }
+  }
+
+  async loginMicrosoftNew(): Promise<void> {
+    this.microsoftLogin.SigninMicrosoftMails(this.contactId).subscribe({
+      next: (data: any) => {
+        this.MicrosoftLoginResponse = data;
+        console.log(this.MicrosoftLoginResponse);
+      },
+    });
   }
 
   findRefreshTokenKey() {
