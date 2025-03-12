@@ -114,6 +114,9 @@ img[alt="logo"] {
   justify-content: space-between;
   /* min-height: 280px;
   max-height: 350px; */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-address {
@@ -148,6 +151,8 @@ img[alt="logo"] {
   border-radius: 20px;
   width: 100%;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+  display: flex;
+  flex-direction: column;
 }
 
 .emily {
@@ -158,7 +163,7 @@ img[alt="logo"] {
 
 .ShoppingCenterStage {
   font-size: 16px;
-  color: #4d65b4;
+  color: #FF8028;
   font-weight: 700;
 }
 

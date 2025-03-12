@@ -137,6 +137,12 @@ img[alt="logo"] {
   line-height: 30px;
 }
 
+.ShoppingCenterStage {
+  font-size: 16px;
+  color: #FF8028;
+  font-weight: 500;
+}
+
 ::ng-deep .popover-body {
   padding: 0 !important;
 }
