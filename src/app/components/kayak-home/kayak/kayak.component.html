@@ -1,6 +1,6 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="my-3">
-  <div class="row d-flex align-items-center justify-content-center">
+  <div class="row m-0 d-flex align-items-center justify-content-center">
     <div class="search-bar d-flex flex-column flex-md-row align-items-start">
       <div class="col-md-4 col-12 d-flex align-items-start">
         <select
@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>
-    <div class="row my-3" *ngIf="KayakResult && KayakResult?.Result?.length > 0">
+    <div class="row m-0 my-3" *ngIf="KayakResult && KayakResult?.Result?.length > 0">
       <div class="col-md-4 col-12">
         <div class="card shopping-card" [ngClass]="{ selected: selectedCenter === 'total' }" (click)="selectShoppingCenter('total')">
           <div class="card-body d-flex align-items-center justify-content-center">
@@ -94,7 +94,7 @@
 
     <ng-container *ngIf="filterValues.statecode && ShoppingCenters && ShoppingCenters">
       <div *ngFor="let result of ShoppingCenters; let i = index">
-        <div class="row align-items-center">
+        <div class="row m-0 align-items-center">
           <div class="col-md-6 col-12">
             <div class="d-flex align-items-center gap-3">
               <div *ngIf="isBulkMode" class="form-check">
@@ -396,7 +396,7 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
   <div class="modal-body">
-    <div class="row">
+    <div class="row m-0">
       <div class="col-md-6" *ngIf="sortedTenants.length > 0">
         <div class="card card-filter static-height">
           <div class="card-body position-relative">

@@ -427,7 +427,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addLike(shopping: Center, reactionId: number): void {
     const contactIdStr = localStorage.getItem('ContactId');
-    if (!contactIdStr) {
+    if (!contactIdStr) { 
     }
     const contactId = Number.parseInt(contactIdStr ? contactIdStr : '0', 10);
 
@@ -443,7 +443,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.isLikeInProgress) {
       return;
     }
-
 
     this.isLikeInProgress = true;
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
@@ -696,7 +695,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   copyLink(link: string) {
     navigator.clipboard
       .writeText(link)
-      .then(() => {
+      .then(() => { 
       })
       .catch((err) => {
         console.error('Could not copy text: ', err);

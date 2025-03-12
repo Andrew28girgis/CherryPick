@@ -55,16 +55,15 @@ export class EmilyContactEmailComponent implements OnInit {
     // Load both APIs with Promise.all to ensure both are completed    'microdeals api and emails api'
     this.loadInitialData();
   }
+
   loadInitialData(): void {
     this.spinner.show();
-    // Store the currently selected contact ID before resetting
     const currentContactId = this.selectedContact?.ContactId || this.contactId;
     this.filteredEmails = [];
     this.emailsSentContact = [];
     this.selectedEmail = null;
     this.BuyBoxMicroDeals = [];
     this.BuyBoxEmails = [];
-    // Use Promise.all to ensure both API calls complete before processing
     const microDealsPromise = new Promise<void>((resolve) => {
       this.GetBuyBoxMicroDeals(resolve);
     });

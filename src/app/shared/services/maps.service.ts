@@ -110,7 +110,7 @@ export class MapsService {
           marker.markerData.CenterAddress ? 'Shopping Center' : 'Stand Alone'
         );
       });
-    } else {
+    } else { 
     }
   }
 

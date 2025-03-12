@@ -73,7 +73,7 @@ export class ManagePropertiesComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   ngOnInit() {
-    this.contactID = localStorage.getItem('contactId');
+    this.contactID = localStorage.getItem('contactId'); 
     this.GetContactShoppingCenters();
   }
 
@@ -355,11 +355,11 @@ export class ManagePropertiesComponent implements OnInit {
   // manual display and edit shopping center
   openUploadModal(id: number) {
     if (id === undefined) {
-      const guid = crypto.randomUUID();
+      const guid = crypto.randomUUID(); 
       this.selectedShoppingID = guid;
     } else {
       this.selectedShoppingID = id.toString();
-    }
+    } 
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
   closeModal(modal: any) {
@@ -404,8 +404,7 @@ export class ManagePropertiesComponent implements OnInit {
                   this.isUploading = false;
                   this.isConverting = true;
                 }
-              } else if (event instanceof HttpResponse) {
-                // Conversion complete; extract images from the new API response structure
+              } else if (event instanceof HttpResponse) { 
                 const response = event.body;
                 if (response && response.images) {
                   this.images = response.images.map(
@@ -416,7 +415,7 @@ export class ManagePropertiesComponent implements OnInit {
                       selected: false,
                     })
                   );
-                  this.pdfFileName = response.pdfFileName;
+                  this.pdfFileName = response.pdfFileName; 
                 }
                 this.isConverting = false;
                 this.spinner.hide();

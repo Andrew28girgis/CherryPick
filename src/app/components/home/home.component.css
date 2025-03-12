@@ -1,3 +1,11 @@
+.titleResponsive{
+  color:  #686c70;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+
 .custom-share-btn {
   background-color: #001f3f !important; 
   color: #fff !important; 
@@ -485,6 +493,11 @@
 :host ::ng-deep .carousel-control-prev {
   left: 0;
 }  
+
+::ng-deep app-logout p {
+  margin: 0;
+}
+
 .iconic-card {
   bottom: 0% !important ;
   top: auto !important;

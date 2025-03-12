@@ -157,13 +157,12 @@ export class LandingComponent {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.CustomPlace = data.json?.[0] || null;
+        this.CustomPlace = data.json?.[0] || null; 
 
         if (ShoppingcenterId !== 0) {
           this.ShoppingCenter = this.CustomPlace;
           this.GetShoppingCenterManager(this.ShoppingCenter?.Id);
         }
-
 
         if (this.ShoppingCenter && this.ShoppingCenter.Images) {
           this.placeImage = this.ShoppingCenter.Images?.split(',').map(

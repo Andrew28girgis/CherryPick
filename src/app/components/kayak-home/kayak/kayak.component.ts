@@ -653,7 +653,6 @@ export class KayakComponent implements OnInit {
   }
 
   updateSliderValues(): void {
-    // Update filterValues whenever the user changes the slider
     this.filterValues.minsize = this.selectedMin;
     this.filterValues.maxsize = this.selectedMax;
   }

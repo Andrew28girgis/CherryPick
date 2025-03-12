@@ -13,7 +13,7 @@ export class EmailService {
   constructor() {}
 
   // Method to update the value
-  updateVariable(newValue: any): void { 
+  updateVariable(newValue: any): void {  
     this.myVariableSubject.next(newValue);
   }
 

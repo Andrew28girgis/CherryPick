@@ -65,7 +65,7 @@ export class BuyboxRelatiosComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buybox = data.json;
-        this.spinner.hide();
+        this.spinner.hide(); 
         this.DisplayOrganizationRelations();
       }
     });
@@ -79,11 +79,11 @@ export class BuyboxRelatiosComponent {
         orgId: this.buybox.OrganizationId,
       },
     };
-    this.PlacesService.GenericAPI(body).subscribe((res) => {
+    this.PlacesService.GenericAPI(body).subscribe((res) => { 
       if (res && res.json && res.json.length > 0) {
         this.RelationsOrganizations = res.json;
         this.relationOrgId = res.json[0].id;
-      } else {
+      } else { 
       }
       this.spinner.hide();
     });
@@ -146,7 +146,7 @@ export class BuyboxRelatiosComponent {
     this.searchTagTerm = tag.name;
     this.tags = [];
     this.showTagSuggestions = false;
-    this.highlightedTagIndex = -1;
+    this.highlightedTagIndex = -1; 
   }
 
   selectOrganizationFromList(organization: Organization) {
@@ -281,8 +281,8 @@ export class BuyboxRelatiosComponent {
             )
         );
         this.showTagSuggestions = this.tags.length > 0;
-        this.highlightedTagIndex = -1; // Reset highlighted tag
-        this.isSearchingTag = false; // Done searching
+        this.highlightedTagIndex = -1; 
+        this.isSearchingTag = false; 
       } 
     );
   }

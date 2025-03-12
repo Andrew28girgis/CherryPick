@@ -333,7 +333,7 @@ export class StageEmailComponent implements OnInit {
     this.checkAndFilterEmails('sent');
   }
 
-  getReceivedEmails(matchingEmails: any, contactId: number): void {
+  getReceivedEmails(matchingEmails: any, contactId: number): void { 
 
     let mails = matchingEmails.filter((mail: Mail) => {
       if (mail.ContactId != contactId) {
@@ -447,7 +447,7 @@ export class StageEmailComponent implements OnInit {
     });
   }
 
-  Send() {
+  Send() { 
     this.AddEmail();
   }
 

@@ -511,8 +511,7 @@ export class SideListViewComponent implements OnInit {
       .writeText(link)
       .then(() => {
       })
-      .catch((err) => {
-      });
+      ;
   }
 
   openDeleteShoppingCenterModal(
