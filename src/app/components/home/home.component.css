@@ -41,11 +41,6 @@
 .custom-map {
   height: 100vh;
 }
-.navbar-line {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
 .nav-right {
   display: flex;
   align-items: center;
