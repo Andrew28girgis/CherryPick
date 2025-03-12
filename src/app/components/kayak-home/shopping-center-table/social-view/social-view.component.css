@@ -906,6 +906,65 @@ body.panel-open {
   overflow: hidden;
 }
 
+::ng-deep .popover-body {
+  padding: 0 !important;
+}
+
+::ng-deep .popover-arrow::after {
+  border-top: none !important;
+  border-top-color: transparent !important;
+}
+
+::ng-deep .popover-arrow::before {
+  border-top: none !important;
+}
+
+::ng-deep .tiktok-modal .modal-content {
+  bottom: -1px;
+  position: fixed;
+  border-radius: 12px 12px 0 0;
+  left: -1px;
+  width: 101vw;
+  box-shadow: none;
+}
+
+::ng-deep .tiktok-modal .modal-dialog {
+  margin: 0 !important;
+}
+
+::ng-deep .tiktok-backdrop.show {
+  opacity: 0;
+}
+
+::ng-deep .tiktok-modal .modal-dialog {
+  transform: translateY(97%) !important;
+  transition: transform 0.3s ease-out !important;
+}
+
+::ng-deep .shortcuts-modal .modal-dialog {
+  margin: 0 !important;
+}
+
+::ng-deep .custom-modal .modal-content {
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+::ng-deep .custom-modal {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .carousel-control-next {
+  right: 0;
+}
+
+:host ::ng-deep .carousel-control-prev {
+  left: 0;
+}
+
 @media (min-width: 769px) {
   .Res {
     border-radius: 20px !important;
@@ -1443,63 +1502,4 @@ body.panel-open {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-::ng-deep .popover-body {
-  padding: 0 !important;
-}
-
-::ng-deep .popover-arrow::after {
-  border-top: none !important;
-  border-top-color: transparent !important;
-}
-
-::ng-deep .popover-arrow::before {
-  border-top: none !important;
-}
-
-::ng-deep .tiktok-modal .modal-content {
-  bottom: -1px;
-  position: fixed;
-  border-radius: 12px 12px 0 0;
-  left: -1px;
-  width: 101vw;
-  box-shadow: none;
-}
-
-::ng-deep .tiktok-modal .modal-dialog {
-  margin: 0 !important;
-}
-
-::ng-deep .tiktok-backdrop.show {
-  opacity: 0;
-}
-
-::ng-deep .tiktok-modal .modal-dialog {
-  transform: translateY(97%) !important;
-  transition: transform 0.3s ease-out !important;
-}
-
-::ng-deep .shortcuts-modal .modal-dialog {
-  margin: 0 !important;
-}
-
-::ng-deep .custom-modal .modal-content {
-  background: transparent;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-::ng-deep .custom-modal {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-:host ::ng-deep .carousel-control-next {
-  right: 0;
-}
-
-:host ::ng-deep .carousel-control-prev {
-  left: 0;
 }
