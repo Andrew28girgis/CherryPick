@@ -65,8 +65,7 @@ export class BuyboxRelatiosComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.buybox = data.json;
-        this.spinner.hide();
-        // console.log('Buybox data:', this.buybox);
+        this.spinner.hide(); 
         this.DisplayOrganizationRelations();
       }
     });
@@ -80,14 +79,11 @@ export class BuyboxRelatiosComponent {
         orgId: this.buybox.OrganizationId,
       },
     };
-    this.PlacesService.GenericAPI(body).subscribe((res) => {
-      // console.log(res); // Log the entire response
+    this.PlacesService.GenericAPI(body).subscribe((res) => { 
       if (res && res.json && res.json.length > 0) {
         this.RelationsOrganizations = res.json;
-        // console.log('this.RelationsOrganizations', this.RelationsOrganizations);
         this.relationOrgId = res.json[0].id;
-      } else {
-        // console.error('Unexpected response format or empty response');
+      } else { 
       }
       this.spinner.hide();
     });
@@ -109,7 +105,6 @@ export class BuyboxRelatiosComponent {
   addTag(tag: any, event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
-    // console.log('Selected Tag:', tag);
 
     if (!tag || !tag.id) {
       console.error('Invalid tag selected:', tag);
@@ -132,7 +127,6 @@ export class BuyboxRelatiosComponent {
     // Call the API to add the organization
     this.PlacesService.GenericAPI(body).subscribe(
       (res: any) => {
-        // console.log('Organization added successfully:', res.json);
         this.addedTags.push(tag);
         this.tags = this.tags.filter((t) => t.id !== tag.id);
         this.showTagSuggestions = this.tags.length > 0;
@@ -152,8 +146,7 @@ export class BuyboxRelatiosComponent {
     this.searchTagTerm = tag.name;
     this.tags = [];
     this.showTagSuggestions = false;
-    this.highlightedTagIndex = -1;
-    // console.log('Selected Organization ID:', this.selectedOrganizationId);
+    this.highlightedTagIndex = -1; 
   }
 
   selectOrganizationFromList(organization: Organization) {
@@ -231,7 +224,6 @@ export class BuyboxRelatiosComponent {
         this.showOrganizationSuggestions = true;
         this.highlightedOrganizationIndex = -1;
         this.isSearchingOrganization = false;
-        // console.log('organizations:', this.organizations);
       } 
     );
   }
@@ -282,18 +274,15 @@ export class BuyboxRelatiosComponent {
     this.PlacesService.GenericAPI(body).subscribe(
       (res: any) => {
         this.tags = res.json as any[];
-        // console.log('API Response:', res.json); // Debugging log
         this.tags = this.tags.filter(
           (tag) =>
             !this.RelationsOrganizations.some(
               (relation) => relation.id === tag.id
             )
         );
-        // console.log('Filtered Tags:', this.tags); // Log filtered tags
         this.showTagSuggestions = this.tags.length > 0;
-        this.highlightedTagIndex = -1; // Reset highlighted tag
-        this.isSearchingTag = false; // Done searching
-        // console.log('tags:', this.tags);
+        this.highlightedTagIndex = -1; 
+        this.isSearchingTag = false; 
       } 
     );
   }
@@ -335,7 +324,6 @@ export class BuyboxRelatiosComponent {
     this.spinner.show();
     this.PlacesService.GenericAPI(body).subscribe(
       (res: any) => {
-        // console.log('Relation added successfully:', res.json);
         this.spinner.hide();
         this.searchTagTerm = '';
         this.searchOrganizationTerm = '';

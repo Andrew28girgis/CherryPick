@@ -141,7 +141,6 @@ export class EmilyComponent implements OnInit {
         this.buyBoxId = params.get('buyboxId');
         this.orgId = params.get('orgId');
         this.microDealId = params.get('microDealId');
-        console.log(this.microDealId);
         this.CenterId = params.get('CenterId');
         this.shoppingCenterOrganization = this.orgId;
       });

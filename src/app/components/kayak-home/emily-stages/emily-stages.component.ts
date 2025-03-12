@@ -96,7 +96,6 @@ export class EmilyStagesComponent implements OnInit {
     }
     this.buyBoxId = localStorage.getItem('BuyBoxId');
     this.loginContact = localStorage.getItem('contactId');
-    console.log(this.emailBodyResponseSend);
     this.cols = [
       { field: 'Organizations', header: 'Organizations' },
       { field: 'Last Activity Date', header: 'Last Activity Date' },
@@ -115,14 +114,9 @@ export class EmilyStagesComponent implements OnInit {
 
     this.subscription = this.emailService.myVariable$.subscribe((newValue) => {
       this.currentValue = newValue; // Update the component's currentValue
-      console.log('Component: Received updated value:', newValue); // Log the new value
     });
 
-    // Optional: Log current value when component loads (initial value)
-    console.log(
-      'Component: Initial value:',
-      this.emailService.getCurrentValue()
-    );
+  
 
     this.Stages.forEach((stage) => {
       this.stageEmailsMap[stage.id].forEach((email) => {
@@ -502,8 +496,7 @@ export class EmilyStagesComponent implements OnInit {
     });
   }
 
-  Send() {
-    console.log('Editor Content:', this.formGroup.get('text')?.value);
+  Send() { 
     this.AddEmail();
   }
 

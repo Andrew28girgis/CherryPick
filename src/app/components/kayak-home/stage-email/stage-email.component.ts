@@ -333,9 +333,7 @@ export class StageEmailComponent implements OnInit {
     this.checkAndFilterEmails('sent');
   }
 
-  getReceivedEmails(matchingEmails: any, contactId: number): void {
-    console.log(`match emails`);
-    console.log(matchingEmails);
+  getReceivedEmails(matchingEmails: any, contactId: number): void { 
 
     let mails = matchingEmails.filter((mail: Mail) => {
       if (mail.ContactId != contactId) {
@@ -449,8 +447,7 @@ export class StageEmailComponent implements OnInit {
     });
   }
 
-  Send() {
-    console.log('Editor Content:', this.formGroup.get('text')?.value);
+  Send() { 
     this.AddEmail();
   }
 

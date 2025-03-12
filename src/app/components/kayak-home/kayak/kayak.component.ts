@@ -198,7 +198,6 @@ export class KayakComponent implements OnInit {
           this.updateNeighbourhoods();
           this.updateTenantCategories();
           this.updateMinMaxBuildingSize();
-          // console.log('fv',this.filterValues);
         } else {
           this.resetFilters();
         }
@@ -259,7 +258,6 @@ export class KayakComponent implements OnInit {
     isChecked?: boolean
   ): void {
     this.deleteshoppingcenterID = shoppingCenterId;
-    // console.log('deleteshoppingcenterID:', this.deleteshoppingcenterID);
 
     const isAlreadyBound =
       this.SelectedShoppingCenterIDs.includes(shoppingCenterId);
@@ -282,14 +280,10 @@ export class KayakComponent implements OnInit {
         );
         this.UnBindShoppingCenter();
       } else {
-        console.log(`hello`);
-
         this.SelectedShoppingCenterIDs.push(shoppingCenterId);
         this.bindShoppingCenter(shoppingCenterId);
       }
     }
-
-    // console.log('Updated Selected Shopping Center IDs:', this.SelectedShoppingCenterIDs);
   }
 
   bindShoppingCenter(id?: number): void {
@@ -299,11 +293,6 @@ export class KayakComponent implements OnInit {
 
     this.spinner.show();
     this.loading = true;
-
-    // console.log(' Binding Shopping Centers and Places...');
-    // console.log(' Shopping Center IDs:', this.SelectedShoppingCenterIDs);
-    // console.log(' Place IDs:', this.SelectedPlacesIDs);
-
     const body = {
       Name: 'BindShoppingCenters',
       Params: {
@@ -317,7 +306,6 @@ export class KayakComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        // console.log(' API Response:', res?.json);
         this.spinner.hide();
         this.loading = false;
         this.getShoppingCenters();
@@ -335,7 +323,6 @@ export class KayakComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        // console.log(' API Response:', res?.json);
         this.spinner.hide();
         this.loading = false;
         this.getShoppingCenters();
@@ -355,21 +342,13 @@ export class KayakComponent implements OnInit {
       this.SelectedPlacesIDs = this.SelectedPlacesIDs.filter(
         (id) => id !== placeId
       );
-      // console.log(`Unbound place with ID: ${placeId}`);
     } else {
       this.SelectedPlacesIDs.push(placeId);
-      // console.log(`Bound place with ID: ${placeId}`);
     }
 
     if (!this.SelectedShoppingCenterIDs.includes(shoppingCenterId)) {
       this.SelectedShoppingCenterIDs.push(shoppingCenterId);
     }
-
-    // console.log('Updated Selected Places:', this.SelectedPlacesIDs);
-    // console.log(
-    //   'Updated Selected Shopping Centers:',
-    //   this.SelectedShoppingCenterIDs
-    // );
     this.bindShoppingCenter();
   }
 
@@ -393,7 +372,6 @@ export class KayakComponent implements OnInit {
       next: (data: any) => {
         if (data && data.json) {
           this.ShoppingCenterTenants = data.json;
-          // console.log('Fetched Tenants:', this.ShoppingCenterTenants);
           this.modalService.open(this.tenantModal, {
             size: 'lg',
             centered: true,
@@ -418,7 +396,6 @@ export class KayakComponent implements OnInit {
       this.placeImage = [];
     }
 
-    // console.log('Images for Gallery:', this.placeImage);
 
     this.modalService.open(this.galleryModal, { size: 'lg', centered: true });
   }
@@ -520,8 +497,6 @@ export class KayakComponent implements OnInit {
   openStreetViewPlace(content: any, modalObject?: any) {
     this.General.modalObject = modalObject || {};
 
-    // console.log('✅ Opening Street View for:', this.General.modalObject);
-
     // Open modal first
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -563,7 +538,6 @@ export class KayakComponent implements OnInit {
       .filter((tenant): tenant is Tenant => tenant !== undefined);
 
     this.sortedTenants = uniqueTenants;
-    // console.log('Sorted Tenants:', this.sortedTenants);
   }
 
   updateSortedOrgs(): void {
@@ -587,7 +561,6 @@ export class KayakComponent implements OnInit {
       .filter((org): org is ManagementOrganization => org !== undefined);
 
     this.sortedOrgs = uniqueOrgs;
-    // console.log('Sorted Organizations:', this.sortedOrgs);
   }
 
   updateSecondaryTypes(): void {
@@ -603,8 +576,6 @@ export class KayakComponent implements OnInit {
     this.secondaryTypes = [...this.Filters.SecondaryType].sort((a, b) =>
       (a.SecondaryType || '').localeCompare(b.SecondaryType || '')
     );
-
-    // console.log('Sorted Secondary Types:', this.secondaryTypes);
   }
 
   updateNeighbourhoods(): void {
@@ -623,8 +594,6 @@ export class KayakComponent implements OnInit {
         Neighbourhood: String(n.Neighbourhood || '').trim(),
       }))
       .sort((a, b) => a.Neighbourhood.localeCompare(b.Neighbourhood));
-
-    // console.log('Sorted Neighbourhoods:', this.neighbourhoods);
   }
 
   updateTenantCategories(): void {
@@ -647,8 +616,6 @@ export class KayakComponent implements OnInit {
       .sort((a, b) => a.Name.localeCompare(b.Name));
 
     this.tenantCategories = Array.from(new Set(sortedList));
-
-    // console.log('Sorted Tenant Categories:', this.tenantCategories);
   }
   updateMinMaxBuildingSize(): void {
     if (
@@ -674,12 +641,8 @@ export class KayakComponent implements OnInit {
   }
 
   updateSliderValues(): void {
-    // Update filterValues whenever the user changes the slider
     this.filterValues.minsize = this.selectedMin;
     this.filterValues.maxsize = this.selectedMax;
-    console.log(
-      `Updated filterValues: minsize=${this.filterValues.minsize}, maxsize=${this.filterValues.maxsize}`
-    );
   }
   filterCards(): void {
     if (!this.KayakResult?.Result) {
@@ -907,7 +870,6 @@ export class KayakComponent implements OnInit {
     }
 
     this.filterValues.tenantCategory = categoryList.join(',');
-    console.log('tenant', this.filterValues.tenantCategory);
     this.getResult().subscribe({
       next: (data) => {},
     });

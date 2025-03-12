@@ -127,13 +127,12 @@
 //   // Add methods for sharing functionality here
 //   shareContent(shopping: any): void {
 //     // Implement sharing logic here
-//     console.log('Sharing content:', shopping);
+ 
 //   }
 
 //   copyLinkSocial(shopping: any): void {
 //     const link = `localhost:4200/landing/0/${shopping.Id}/${shopping.BuyBoxId}/${shopping.OrgId}`;
 //     navigator.clipboard.writeText(link).then(() => {
-//       console.log('Link copied to clipboard');
 //     }, (err) => {
 //       console.error('Could not copy text: ', err);
 //     });

@@ -110,8 +110,7 @@ export class MapsService {
           marker.markerData.CenterAddress ? 'Shopping Center' : 'Stand Alone'
         );
       });
-    } else {
-      console.log(`Button for marker ${placeId} not found`);
+    } else { 
     }
   }
 
@@ -867,7 +866,6 @@ export class MapsService {
   //   lat?: any,
   //   lng?: any
   // ): Promise<void> {
-  //   console.log(state);
 
   //   // const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14&polygon_geojson=1`;
@@ -965,7 +963,6 @@ export class MapsService {
   // }
 
   //  async fetchAndDrawPolygon(map: any, city:any , state:any , area: string): Promise<void> {
-  //   console.log(state);
 
   //   const boundaryUrl = `https://nominatim.openstreetmap.org/search.php?q=${encodeURIComponent(area)}&polygon_geojson=1&format=geojson&addressdetails=1n`;
   //   try {
