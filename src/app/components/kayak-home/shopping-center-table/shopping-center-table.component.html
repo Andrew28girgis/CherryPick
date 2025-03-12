@@ -2,21 +2,13 @@
   <div class="bottom-navbar">
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-    <div class="row mb-0 mobile-n">
-      <div
-        class="col-12 pt-2 d-flex justify-content-start align-items-center mobile-nav mb-2"
-      >
+    <div class="row m-0 mb-0 mobile-n">
+      <div class="col-12 pt-2 d-flex justify-content-start align-items-center mobile-nav mb-2">
         <div class="custom-icon-container">
-          <div
-            class="icon-option"
-            *ngFor="let option of dropdowmOptions"
-            [class.d-none]="option.status == 2"
-            [class.d-sm-flex]="option.status == 2"
-            (click)="selectOption(option)"
-            [class.selected]="
+          <div class="icon-option" *ngFor="let option of dropdowmOptions" [class.d-none]="option.status == 2"
+            [class.d-sm-flex]="option.status == 2" (click)="selectOption(option)" [class.selected]="
               selectedOption === option.status || selectedOption === option
-            "
-          >
+            ">
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text d-none d-sm-flex">{{ option.text }}</span>
           </div>
@@ -26,26 +18,14 @@
   </div>
 
   <!-- The rest of your view components -->
-  <app-map-view
-    *ngIf="currentView == 1"
-    (viewChange)="onViewChange($event)"
-    #mapView
-  ></app-map-view>
-  <div class="row" *ngIf="currentView == 2">
+  <app-map-view *ngIf="currentView == 1" (viewChange)="onViewChange($event)" #mapView></app-map-view>
+  <div class="row m-0" *ngIf="currentView == 2">
     <div class="col-12 p-0">
-      <app-side-list-view
-        (highlightMarker)="onHighlightMarker($event)"
-        (unhighlightMarker)="onUnhighlightMarker($event)"
-      ></app-side-list-view>
+      <app-side-list-view (highlightMarker)="onHighlightMarker($event)"
+        (unhighlightMarker)="onUnhighlightMarker($event)"></app-side-list-view>
     </div>
   </div>
   <app-card-view *ngIf="currentView == 3"></app-card-view>
-  <app-table-view
-    *ngIf="currentView == 4"
-    (viewChange)="onViewChange($event)"
-  ></app-table-view>
-  <app-social-view
-    *ngIf="currentView == 5"
-    (viewChange)="onViewChange($event)"
-  ></app-social-view>
+  <app-table-view *ngIf="currentView == 4" (viewChange)="onViewChange($event)"></app-table-view>
+  <app-social-view *ngIf="currentView == 5" (viewChange)="onViewChange($event)"></app-social-view>
 </div>

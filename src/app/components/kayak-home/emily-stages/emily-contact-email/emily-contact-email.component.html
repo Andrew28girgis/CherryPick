@@ -2,7 +2,6 @@
 
 <div class="row p-0">
 
-  <!-- Main Content -->
   <div class="row m-0 p-0">
     <!-- Column 1: Organization and Contacts -->
     <div class="col-lg-3 p-0 m-0">
@@ -46,7 +45,6 @@
               <span class="namecontact" id="{{contact.ContactId}}">
                 {{ contact.Firstname }} {{ contact.Lastname }}
               </span>
-              
                 <span style="color: #4D65B4; font-weight: 600;" *ngIf="getTotalEmails(contact) > 0">
                   {{ getTotalEmails(contact) }}
                 </span>
@@ -69,7 +67,6 @@
         <div class="mailbox-header">
           <div class="top-left">
           <h5 class="contacts">Mail box</h5>
-
           <div class="email-filters d-flex justify-content-start align-items-center">
             <div class="filter-button" [ngClass]="{'active': selectedFilter === 'all'}" (click)="filterEmails('all')">
               <i class="fa-solid fa-envelope me-1"></i> All
@@ -94,9 +91,6 @@
             <img [src]="'../../../assets/Images/Icons/arrow-down.png'" 
             />
           </button>
-            <!-- <div class="out-icn">
-              <img [src]="'../../../assets/Images/Icons/search-normal.png'"/>
-            </div> -->
             <div class="out-icn" (click)="loadInitialData()">
               <img [src]="'../../../assets/Images/Icons/rotate-right.png'"/>
             </div>
@@ -114,11 +108,8 @@
               <strong><i  [ngClass]="'fa-solid '+getDirection(email.Direction)" class="me-2"></i>
                <span class="subject"> {{ email.Subject }}</span>
               </strong> 
-               
-
                 <p class="date"> {{ email.Date | date : "medium" }}</p>
               </div>
-
               <p *ngIf="emailsSentContact.length === 0" class="no-email-msg">
                 {{ emptyMessage }}
               </p>
@@ -139,14 +130,10 @@
       style=" overflow-y: auto; min-height: 92vh;"
       >
         <div class="card-body"
-       
-        style="min-height: 77vh; max-height: 77vh;"
+          style="min-height: 77vh; max-height: 77vh;"
         >
           <div *ngIf="selectedEmail">
             <p class="subject-details"> {{ selectedEmail.Subject }}</p>
-            <!-- <p>
-              <strong>Date:</strong> {{ selectedEmail.Date | date : "medium" }}
-            </p> -->
             <div class="body-details" [innerHTML]="selectedEmail.Body"></div>
           </div>
           <p *ngIf="!selectedEmail" class="no-email-selected">
@@ -176,29 +163,7 @@
           <app-emily [buyBoxIdReply]="buyBoxId" [orgIdReply]="orgId" [emailBodyReply]="selectedEmail?.Body"
             [selectedContactContactId]="contactId" [modal]="modal"> </app-emily>
         </div>
-        <!-- <div class="col-12 p-0">
-          <form [formGroup]="formGroup">
-              <div class="p-3">
-                <div class="d-flex pb-3 align-items-center">
-                  <label for="subject"class="IsCC_checkbox me-2">Subject: </label>
-                  <input type="text" class="input_checkbox form-control w-25" formControlName="subject" name="subject" id="subject" placeholder="Enter your subject email">
-                </div>
-                <div class="checkbox-section">
-                  <input type="checkbox"  formControlName="IsCC" name="IsCC" id="IsCC" class="form-check-input m-0"/>
-                  <label for="IsCC" class="ms-2 IsCC_checkbox" >IsCC</label>
-                </div>
-              </div>
-              {{ email }}
-              <p-editor [(ngModel)]="email" [style]="{ height: '250px' }"></p-editor>
-              <div class="d-flex justify-content-end">
-                <button type="button" (click)="Send()" class="mt-2 mb-4 me-2 buttonSave">Send</button>
-                <button class="btn btn-secondary mt-2 mb-4 me-2" (click)="modal.dismiss('Close click')">
-                  Close
-                </button>
-              </div>
-            </form>
-
-        </div> -->
+        
       </div>
     </div>
   </div>
