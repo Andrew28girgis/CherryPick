@@ -307,7 +307,7 @@
 }
 .row-background {
   height: 45vh;
-  background-image: url("../../../assets/Images/DefaultImage.png");
+  background-image: url("../../../assets/Images/GreyImage.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -463,10 +463,10 @@
   .btn-share span {
     font-size: 11px;
   }
-  .content-right {
+  .content-right{
     bottom: 20px;
-    right: -20px;
-  }
+    right: -6px;
+}
   .brokerandmangeorgimage {
     width: 110px;
     height: 110px;
@@ -590,10 +590,10 @@
   .btn-share span {
     font-size: 13px;
   }
-  .content-right {
+  .content-right{
     bottom: 20px;
-    right: -20px;
-  }
+    right: -6px;
+}
   .proposal-button {
     padding: var(--Button-Padding-top-bottom, 9px)
       var(--Button-Padding-left-right, 15px);
