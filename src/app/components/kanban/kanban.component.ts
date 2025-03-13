@@ -97,7 +97,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
         } else {
           this.kanbanList = [];
         }
-      } 
+      },
     });
   }
 
@@ -186,8 +186,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
         this.kanbanList = [...this.kanbanList];
 
         this.crf.detectChanges();
-      }
-      
+      },
     });
   }
 
@@ -341,7 +340,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         if (data.json && data.json.length > 0) {
           this.userKanbans = data.json;
-
           this.userKanbans.sort((a, b) => {
             if (a.kanbanTemplateId === b.kanbanTemplateId) {
               return a.kanbanName.localeCompare(b.kanbanName);
@@ -502,7 +500,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         // Immediately check for updates after the drag operation
         this.checkForNewStagesAndOrganizations();
-      } 
+      },
     });
   }
 
@@ -517,7 +515,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        // Immediately check for updates after the drag operation
         this.checkForNewStagesAndCenters();
       },
     });

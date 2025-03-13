@@ -55,10 +55,7 @@ export class LoginComponent {
       this.adminLogin.contactToken = this.t;
     }
     this.PlacesService.loginUser(this.adminLogin).subscribe((data: any) => {
-      localStorage.setItem(
-        'accountMicrosoftLinked',
-        data.accountMicrosoftLinked
-      );
+      localStorage.setItem('accountMicrosoftLinked', data.accountMicrosoftLinked);
       // Use the updated auth service to store the token with date
       this.authService.setToken(data.token);
       localStorage.setItem('contactId', data.contactId);
