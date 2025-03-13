@@ -3,7 +3,7 @@
 <div class="col-12 col-sm-12 d-flex justify-content-between mt-3 align-items-center Button_all pb-2 pb-sm-0">
   <a class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" 
     style="background-color: white;cursor: pointer;"
-    (click)="loginMicrosoftNew()" *ngIf="!user">
+    [href]="url" *ngIf="!user">
     <img src="assets\Images\SVG\Microsoft-pictogram.svg" class="Microsoft-icon" alt="">
     Link Microsoft
   </a>
