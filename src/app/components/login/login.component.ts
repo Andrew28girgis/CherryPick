@@ -48,10 +48,7 @@ export class LoginComponent {
       this.adminLogin.contactToken = this.t;
     }
     this.PlacesService.loginUser(this.adminLogin).subscribe((data: any) => {
-      localStorage.setItem(
-        'accountMicrosoftLinked',
-        data.accountMicrosoftLinked
-      );
+      localStorage.setItem('accountMicrosoftLinked', data.accountMicrosoftLinked);
       localStorage.setItem('token', data.token);
       localStorage.setItem('contactId', data.contactId);
       localStorage.setItem('orgId', data.orgId);

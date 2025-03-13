@@ -15,12 +15,10 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
-import { KanbanComponent } from './components/kanban/kanban.component'; 
+import { KanbanComponent } from './components/kanban/kanban.component';
 import { LogoutComponent } from './components/logout/logout.component';
-import { TermsComponent } from './components/terms/terms.component'; 
+import { TermsComponent } from './components/terms/terms.component';
 import { NumberWithCommasPipe } from './shared/pipes/number-with-commas.pipe';
-
-// Third-Party Modules
 import { NgxSpinnerModule } from 'ngx-spinner';
 import {
   NgbModule,
@@ -34,13 +32,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-
-// Custom Modules & Interceptors
 import { KayakModule } from './components/kayak-home/kayak.module';
 import { SharedModule } from './shared/shared.module';
 import { TokenInterceptor } from './token.interceptor';
- 
-// MSAL Imports
 import {
   MsalModule,
   MsalService,
@@ -85,9 +79,9 @@ const loginRequest = {
     HomeComponent,
     LandingComponent,
     SummeryComponent,
-    KanbanComponent, 
+    KanbanComponent,
     LogoutComponent,
-    TermsComponent, 
+    TermsComponent,
     NumberWithCommasPipe,
     ManagePropertiesComponent,
     DashboardComponent,
@@ -104,7 +98,7 @@ const loginRequest = {
     NgbTooltipModule,
     NgbAlertModule,
     DragDropModule,
-    ToastrModule.forRoot(), 
+    ToastrModule.forRoot(),
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
@@ -144,7 +138,7 @@ const loginRequest = {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true,
-    }
+    },
   ],
   bootstrap: [AppComponent],
 })
