@@ -4,16 +4,38 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly TOKEN_KEY = 'token';
+  private readonly LOGIN_DATE_KEY = 'loginDate';
   setToken(token: string): void {
-    localStorage.setItem('token', token);
+    localStorage.setItem(this.TOKEN_KEY, token);
+    // Save login date timestamp
+    localStorage.setItem(this.LOGIN_DATE_KEY, new Date().toISOString().split('T')[0]);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    const loginDate = localStorage.getItem(this.LOGIN_DATE_KEY);
+    // If no token or login date exists, return null
+    if (!token || !loginDate) {
+      return null;
+    }
+    // Check if login date is still today
+    const today = new Date().toISOString().split('T')[0];
+    if (loginDate === today) {
+      return token;
+    } else {
+      // If login was not today, remove the token and login date
+      this.logout();
+      return null;
+    }
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.LOGIN_DATE_KEY);
   }
   
+  isLoggedInToday(): boolean {
+    return this.getToken() !== null;
+  }
 }

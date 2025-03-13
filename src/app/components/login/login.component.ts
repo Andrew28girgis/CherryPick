@@ -4,6 +4,7 @@ import { PlacesService } from 'src/app/shared/services/places.service';
 import { General, adminLogin } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfigService } from 'src/app/shared/services/config.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,13 +17,13 @@ export class LoginComponent {
   General!: General;
   logoUrl: string = '';
   t: any; 
-
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private authService: AuthService
   ) {
     localStorage.removeItem('mapView');
   }
@@ -31,6 +32,12 @@ export class LoginComponent {
     this.General = new General();
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
+    // First check if user is already logged in today
+    if (this.authService.isLoggedInToday()) {
+      this.navigateToHome();
+      return;
+    }
+    // Otherwise handle query parameters
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.t = params.get('t');
       if (this.t) {
@@ -49,7 +56,8 @@ export class LoginComponent {
     }
     this.PlacesService.loginUser(this.adminLogin).subscribe((data: any) => {
       localStorage.setItem('accountMicrosoftLinked', data.accountMicrosoftLinked);
-      localStorage.setItem('token', data.token);
+      // Use the updated auth service to store the token with date
+      this.authService.setToken(data.token);
       localStorage.setItem('contactId', data.contactId);
       localStorage.setItem('orgId', data.orgId);
       if (data.token) {
