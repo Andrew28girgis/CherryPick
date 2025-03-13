@@ -30,6 +30,7 @@ export class LinkMicrosoftComponent implements OnInit {
   contactId: any;
   RemoveLinked: any;
   MicrosoftLoginResponse: any;
+  url : any;
 
   constructor(
     public spinner: NgxSpinnerService,
@@ -43,6 +44,7 @@ export class LinkMicrosoftComponent implements OnInit {
   async ngOnInit() {
     this.user = localStorage.getItem('accountMicrosoftLinked') === 'true';
     this.contactId = localStorage.getItem('contactId');
+    this.url = this.microsoftLogin.getSigninUrl(this.contactId);
     this.CheckMicrosoftLinked();
   }
 
@@ -67,28 +69,6 @@ export class LinkMicrosoftComponent implements OnInit {
         this.spinner.hide();
       },
     });
-  }
-
-  loginMicrosoftNew(): void {
-    const url = this.microsoftLogin.getSigninUrl(this.contactId);
-    const width = 500;
-    const height = 600;
-    const left = (window.innerWidth - width) / 2;
-    const top = (window.innerHeight - height) / 2;
-    const specs = `width=${width},height=${height},left=${left},top=${top}`;
-    const popup = window.open(url, 'MicrosoftLogin', specs);
-
-    localStorage.setItem('microsoftToken', 'true');
-
-    const receiveMessage = (event: MessageEvent) => {
-      if (event.data && event.data.token) {
-        localStorage.setItem('microsoftToken', event.data.token);
-        window.removeEventListener('message', receiveMessage);
-        if (popup) popup.close();
-      }
-    };
-
-    window.addEventListener('message', receiveMessage, false);
   }
 
   findRefreshTokenKey() {
