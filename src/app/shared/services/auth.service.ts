@@ -15,16 +15,13 @@ export class AuthService {
   getToken(): string | null {
     const token = localStorage.getItem(this.TOKEN_KEY);
     const loginDate = localStorage.getItem(this.LOGIN_DATE_KEY);
-    // If no token or login date exists, return null
     if (!token || !loginDate) {
       return null;
     }
-    // Check if login date is still today
     const today = new Date().toISOString().split('T')[0];
     if (loginDate === today) {
       return token;
     } else {
-      // If login was not today, remove the token and login date
       this.logout();
       return null;
     }
