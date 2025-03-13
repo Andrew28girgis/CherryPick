@@ -11,7 +11,7 @@
   .contacts-list {
     padding: 10px;
     background-color: #fff;
-    border-bottom: 1px solid #ddd;
+    /* border-bottom: 1px solid #ddd; */
   }
   .contact-ul {
     list-style-type: none;
