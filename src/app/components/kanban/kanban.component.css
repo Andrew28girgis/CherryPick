@@ -175,6 +175,7 @@
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 12rem;
 }
 
 /* Drag and Drop */
