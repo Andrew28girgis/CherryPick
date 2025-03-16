@@ -12,6 +12,7 @@ import {
   KanbanDragingData,
 } from 'src/app/shared/models/ikanban-details';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-kanban',
@@ -40,7 +41,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +55,13 @@ export class KanbanComponent implements OnInit, OnDestroy {
         const fetchingKanbanDetailsInterval = setInterval(() => {
           if (this.allUserKanbans && this.allUserKanbans.length > 0) {
             clearInterval(fetchingKanbanDetailsInterval);
+
+            this.userTenantsKanbans.find((k) => k.Id == +id)
+              ? (this.selectedKanbanTabId = 1)
+              : this.userBuyBoxesKanbans.find((k) => k.Id == +id)
+              ? (this.selectedKanbanTabId = 2)
+              : (this.selectedKanbanTabId = 3);
+
             const kanban = this.allUserKanbans.find((k) => k.Id == +id);
             if (kanban) {
               this.getKanban(kanban);
@@ -419,6 +428,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   }
 
   onKanbanTabSelected(tabId: number): void {
+    this.removeIdFromUrl();
     this.selectedKanbanTabId = tabId;
     switch (tabId) {
       case 1: {
@@ -497,6 +507,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
     } else {
       this.userTenantsKanbansDetails = value;
     }
+  }
+
+  removeIdFromUrl() {
+    this.location.replaceState('/Kanban');
   }
 
   ngOnDestroy() {
