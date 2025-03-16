@@ -99,6 +99,11 @@
   padding: 9px;
 }
 
+.Microsoft-icon{
+  width: 25px;
+  height: 25px;
+}
+
 @media (max-width: 768px) {
   .Button_all {
     flex-direction: column;

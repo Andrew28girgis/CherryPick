@@ -97,7 +97,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
         } else {
           this.kanbanList = [];
         }
-      } 
+      },
     });
   }
 
@@ -186,8 +186,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
         this.kanbanList = [...this.kanbanList];
 
         this.crf.detectChanges();
-      }
-      
+      },
     });
   }
 
@@ -226,6 +225,101 @@ export class KanbanComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  private checkForNewStagesAndCenters() {
+    const body: any = {
+      Name: 'GetKanbanDetails',
+      Params: {
+        kanbanId: this.selectedKanban?.Id,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        const newData = data.json;
+        const newStages: KanbanStage[] = newData[0]?.kanbanStages || [];
+        const currentStages: KanbanStage[] =
+          this.kanbanList[0]?.kanbanStages || [];
+
+        if (newStages.length > this.lastKnownStageCount) {
+          const newStageItems = newStages.filter(
+            (newStage: KanbanStage) =>
+              !currentStages.some(
+                (currentStage) => currentStage.Id === newStage.Id
+              )
+          );
+
+          newStageItems.forEach((newStage: KanbanStage) => {
+            this.kanbanList[0].kanbanStages.push(newStage);
+            this.GetStageActions(newStage);
+          });
+
+          this.lastKnownStageCount = newStages.length;
+        }
+        // Update existing stages with center data and animation
+        if (this.kanbanList[0].kanbanStages) {
+          this.kanbanList[0].kanbanStages = currentStages.map(
+            (currentStage: KanbanStage) => {
+              const newStage = newStages.find(
+                (stage: KanbanStage) => stage.Id === currentStage.Id
+              );
+              if (newStage) {
+                // Get the flattened centers for new and current stage
+                const updatedCenters = this.getCentersForStage(newStage).map(
+                  (center: any) => ({
+                    ...center,
+                    kanbanStageId: newStage.Id,
+                  })
+                );
+                const currentCenters = this.getCentersForStage(currentStage);
+                // Determine which centers have been newly added
+                const movedCenters = updatedCenters.filter(
+                  (updatedCenter: any) =>
+                    !currentCenters.some(
+                      (currentCenter: any) =>
+                        currentCenter.Id === updatedCenter.Id
+                    )
+                );
+
+                movedCenters.forEach((center: any) => {
+                  // Find the stage from which the center came and remove it there
+                  const previousStage = currentStages.find((stage) =>
+                    this.getCentersForStage(stage).some(
+                      (currentCenter: any) => currentCenter.Id === center.Id
+                    )
+                  );
+                  if (previousStage) {
+                    previousStage.kanbanOrganizations.forEach((org) => {
+                      if (org.Organization?.[0]?.ShoppingCenters) {
+                        org.Organization[0].ShoppingCenters =
+                          org.Organization[0].ShoppingCenters.filter(
+                            (c: any) => c.Id !== center.Id
+                          );
+                      }
+                    });
+                  }
+                });
+                // For center case, we simply replace the nested structure with the one from the new stage.
+                return {
+                  ...currentStage,
+                  kanbanOrganizations: newStage.kanbanOrganizations,
+                };
+              }
+              return currentStage;
+            }
+          );
+        }
+        this.kanbanList = [...this.kanbanList];
+        this.crf.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error fetching Kanban details:', error);
+      },
+      complete: () => {
+        this.crf.detectChanges();
+      },
+    });
+  }
+
   checkForKanbanUpdates(): void {
     if (this.pollingUpdatesSubscription) {
       this.pollingUpdatesSubscription.unsubscribe();
@@ -246,7 +340,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         if (data.json && data.json.length > 0) {
           this.userKanbans = data.json;
-
           this.userKanbans.sort((a, b) => {
             if (a.kanbanTemplateId === b.kanbanTemplateId) {
               return a.kanbanName.localeCompare(b.kanbanName);
@@ -302,12 +395,24 @@ export class KanbanComponent implements OnInit, OnDestroy {
       .filter((id) => id !== currentId);
   }
 
-  drop(event: CdkDragDrop<any[]>) {
+  getCentersForStage(stage: KanbanStage): any[] {
+    let centers: any[] = [];
+    for (let org of stage.kanbanOrganizations || []) {
+      if (org.Organization?.[0]?.ShoppingCenters?.length) {
+        centers = centers.concat(org.Organization[0].ShoppingCenters);
+      }
+    }
+    return centers;
+  }
+
+  drop(event: CdkDragDrop<any[]>, isProperty: boolean) {
     document.body.classList.add('dragging');
 
     let movedItem: KanbanOrganization;
 
     if (event.previousContainer === event.container) {
+      console.log('1');
+
       movedItem = event.container.data[event.previousIndex];
       moveItemInArray(
         event.container.data,
@@ -315,6 +420,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
         event.currentIndex
       );
     } else {
+      console.log('2');
+      console.log(event.previousContainer.data);
+      console.log(event.previousContainer.data[event.previousIndex]);
+
       movedItem = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
@@ -323,17 +432,21 @@ export class KanbanComponent implements OnInit, OnDestroy {
         event.currentIndex
       );
 
+      console.log(movedItem);
       const newStageId = Number.parseInt(event.container.id, 10);
       movedItem.kanbanStageId = newStageId;
+
       const previousStageId = Number.parseInt(event.previousContainer.id, 10);
-      this.removeOrganizationFromStage(movedItem, previousStageId);
+      isProperty
+        ? this.removeCenterFromStage(movedItem, previousStageId)
+        : this.removeOrganizationFromStage(movedItem, previousStageId);
     }
 
     setTimeout(() => {
       document.body.classList.remove('dragging');
     }, 0);
 
-    this.postDrag(movedItem);
+    isProperty ? this.postDragProperty(movedItem) : this.postDrag(movedItem);
   }
 
   removeOrganizationFromStage(
@@ -352,6 +465,28 @@ export class KanbanComponent implements OnInit, OnDestroy {
     }
   }
 
+  removeCenterFromStage(center: any, stageId: number) {
+    // Find the stage that matches the given stageId
+    const stage = this.kanbanList[0].kanbanStages.find(
+      (s: KanbanStage) => s.Id === stageId
+    );
+
+    if (stage) {
+      // Iterate over each KanbanOrganization in the stage
+      stage.kanbanOrganizations.forEach((org) => {
+        // Ensure the Organization array exists and has an element,
+        // and that ShoppingCenters is available on that element
+        if (org.Organization?.[0]?.ShoppingCenters) {
+          // Filter out the center that matches the one we want to remove
+          org.Organization[0].ShoppingCenters =
+            org.Organization[0].ShoppingCenters.filter(
+              (c: any) => c.CenterName !== center.CenterName
+            );
+        }
+      });
+    }
+  }
+
   postDrag(movedItem: KanbanOrganization) {
     const body: any = {
       name: 'UpdateKanbanOrganizationStage',
@@ -365,7 +500,23 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         // Immediately check for updates after the drag operation
         this.checkForNewStagesAndOrganizations();
-      } 
+      },
+    });
+  }
+
+  postDragProperty(movedItem: any) {
+    const body: any = {
+      name: 'UpdatePlaceKanbanStage',
+      params: {
+        stageid: movedItem.kanbanStageId,
+        marketsurveyid: movedItem.MarketSurveyShoppingCenters[0].MarketSurveyId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.checkForNewStagesAndCenters();
+      },
     });
   }
 

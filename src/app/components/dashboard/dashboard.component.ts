@@ -7,6 +7,7 @@ import { IDashboardBuyBox } from 'src/app/shared/models/idashboard-buy-box';
 import { IDashboardTenant } from 'src/app/shared/models/idashboard-tenant';
 import { IUserComment } from 'src/app/shared/models/iuser-comment';
 import { IUserInBox } from 'src/app/shared/models/iuser-in-box';
+import { IDashboardProperty } from 'src/app/shared/models/idashboard-property';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,9 +22,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   tenants: IDashboardTenant[] = [];
   buyBoxes: IDashboardBuyBox[] = [];
   filterBuyBoxes: IDashboardBuyBox[] = [];
+  properties: IDashboardProperty[] = [];
   buyboxNameFilter: string = '';
   buyboxOrganizationFilter: string = '';
   selectedEmailBody: string = '';
+  active = 1;
 
   constructor(
     private placesService: PlacesService,
@@ -40,6 +43,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getUserComments();
     this.getDashboardTenants();
     this.getDashboardBuyBoxes();
+    this.getDashboardProperties();
   }
 
   getUserInbox(): void {
@@ -55,7 +59,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.userInBox = response.json;
         }
-      }
+      },
     };
 
     this.placesService
@@ -77,7 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.tenants = response.json;
         }
-      } 
+      },
     };
 
     this.placesService
@@ -100,7 +104,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.buyBoxes = response.json;
           this.filterBuyBoxes = response.json;
         }
-      }
+      },
+    };
+
+    this.placesService
+      .GenericAPI(body)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(observer);
+  }
+
+  getDashboardProperties(): void {
+    this.spinner.show();
+    const body = {
+      Name: 'GetPropertiesDashboard',
+      Params: {},
+    };
+
+    const observer = {
+      next: (response: any) => {
+        this.spinner.hide();
+        if (response && response.json && response.json.length > 0) {
+          this.properties = response.json;
+        }
+      },
+      error: (error: any) => {
+        this.spinner.hide();
+        console.error(error);
+      },
     };
 
     this.placesService
@@ -122,7 +152,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (response && response.json && response.json.length > 0) {
           this.userComments = response.json;
         }
-      }
+      },
     };
 
     this.placesService

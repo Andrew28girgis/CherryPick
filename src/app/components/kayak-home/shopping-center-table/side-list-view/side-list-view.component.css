@@ -159,14 +159,20 @@
   flex-direction: column;
   position: relative;
   justify-content: space-between;
-  min-height: 280px;
-  max-height: 350px;
+  /* min-height: 280px;
+  max-height: 350px; */
 }
 
 .emily {
   font-size: 18px;
   margin-top: 3px;
   width: 24px;
+}
+
+.ShoppingCenterStage {
+  font-size: 16px;
+  color: #FF8028;
+  font-weight: 700;
 }
 
 ::ng-deep .popover-body {

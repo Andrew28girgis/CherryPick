@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, NgZone, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/shared/services/places.service';
-import { MsalService } from '@azure/msal-angular';
-import { AuthenticationResult, BrowserAuthError } from '@azure/msal-browser';
 import { MicrosoftMailsService } from 'src/app/shared/services/microsoft-mails.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { MicrosoftLoginService } from 'src/app/shared/services/microsoft-login.service';
 
 @Component({
   selector: 'app-link-microsoft',
@@ -15,7 +14,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   providers: [
     MicrosoftMailsService,
     NgxSpinnerService,
-    MsalService,
+    MicrosoftLoginService,
     PlacesService,
   ],
   templateUrl: './link-microsoft.component.html',
@@ -23,38 +22,30 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 })
 export class LinkMicrosoftComponent implements OnInit {
   @Output() buttonClicked: EventEmitter<void> = new EventEmitter();
-  user: any = null;
+  user: boolean = false;
   public ContactFolders: any;
   public ContactInfos: any;
   emailsList: { email: string; isAdded: boolean }[] = [];
   domainList: { domain: string; isAdded: boolean }[] = [];
   contactId: any;
   RemoveLinked: any;
+  MicrosoftLoginResponse: any;
+  url : any;
 
   constructor(
     public spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private PlacesService: PlacesService,
-    private msalService: MsalService,
-    private microsoftMailsService: MicrosoftMailsService
-  ) {}
+    private microsoftLogin: MicrosoftLoginService,
+    private microsoftMailsService: MicrosoftMailsService,
+    private ngZone: NgZone
+  ) { }
 
   async ngOnInit() {
+    this.user = localStorage.getItem('accountMicrosoftLinked') === 'true';
     this.contactId = localStorage.getItem('contactId');
-    this.msalService.instance.handleRedirectPromise().then((response) => {
-      if (response) {
-        this.msalService.instance.setActiveAccount(response.account);
-      }
-      this.getUser();
-
-      const refreshToken = localStorage.getItem('RefreshToken');
-      const accessToken = localStorage.getItem('access_token');
-
-      if (refreshToken && accessToken) {
-        this.GetContactFolders();
-        this.GetContactInfos();
-      }
-    });
+    this.url = this.microsoftLogin.getSigninUrl(this.contactId);
+    this.CheckMicrosoftLinked();
   }
 
   onClick() {
@@ -80,71 +71,6 @@ export class LinkMicrosoftComponent implements OnInit {
     });
   }
 
-  async waitForMsalInitialization() {
-    if (!this.msalService.instance) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-    }
-  }
-
-  async loginMicrosoft(): Promise<void> {
-    const msalInstance = this.msalService.instance;
-
-    // If an active account already exists, no need to log in again.
-    if (msalInstance.getActiveAccount()) {
-      return;
-    }
-
-    try {
-      const response = await msalInstance.loginPopup({
-        scopes: [
-          'User.Read',
-          'offline_access',
-          'https://graph.microsoft.com/Mail.Send',
-          'https://graph.microsoft.com/Mail.Read',
-        ],
-      });
-
-      const account = response?.account;
-
-      // Ensure that account information is present.
-      if (!account) {
-        throw new Error(
-          'Login succeeded, but no account information was returned.'
-        );
-      }
-
-      // Set the active account and fetch user details.
-      msalInstance.setActiveAccount(account);
-
-      localStorage.setItem('access_token', response.accessToken);
-
-      const refreshTokenKey = this.findRefreshTokenKey();
-      if (refreshTokenKey) {
-        const refreshToken = sessionStorage.getItem(refreshTokenKey);
-
-        if (refreshToken) {
-          const RefreshTokenObject = JSON.parse(refreshToken);
-          localStorage.setItem('RefreshToken', RefreshTokenObject.secret);
-          this.UpdateContactToReadEmails(
-            response.accessToken,
-            RefreshTokenObject.secret
-          );
-        }
-      }
-
-      // Call other methods you need.
-      this.getUser();
-    } catch (error) {
-      // Check for specific MSAL error when an interaction is already in progress.
-      if (
-        error instanceof BrowserAuthError &&
-        error.errorCode === 'interaction_in_progress'
-      ) {
-      } else {
-      }
-    }
-  }
-
   findRefreshTokenKey() {
     for (let i = 0; i < sessionStorage.length; i++) {
       const key = sessionStorage.key(i);
@@ -156,23 +82,48 @@ export class LinkMicrosoftComponent implements OnInit {
   }
 
   logoutMicrosoft() {
-    this.msalService.logoutPopup().subscribe({
-      next: () => {
-        this.showToast('User logged out successfully.');
-        this.user = null;
-        window.close();
-        this.RemoveLinkedAccount();
-      }
+    this.spinner.show();
+    const body: any = {
+      Name: 'MicrosoftSignOut',
+      Params: {
+        ContactId: this.contactId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        localStorage.setItem('accountMicrosoftLinked', 'false');
+        this.CheckMicrosoftLinked();
+        this.ngZone.run(() => {
+          this.user = false;
+        });
+        this.spinner.hide();
+      },
     });
   }
 
-  getUser() {
-    const account = this.msalService.instance.getActiveAccount();
-    if (account) {
-      this.user = account;
-    } else if (localStorage.getItem('accountMicrosoftLinked')) {
-      this.user = true;
-    }
+  CheckMicrosoftLinked() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'CheckMicrosoftLinked',
+      Params: {
+        ContactId: this.contactId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        localStorage.setItem('accountMicrosoftLinked', data.json[0].accountMicrosoftLinked);
+        this.ngZone.run(() => {
+          this.user = data.json[0].accountMicrosoftLinked;
+        });
+        if(this.user === true){
+          this.GetContactFolders();
+          this.GetContactInfos();
+        }
+        this.spinner.hide();
+      },
+    });
   }
 
   UpdateContactToReadEmails(AccessToken: string, RefreshToken: string): void {
@@ -213,7 +164,7 @@ export class LinkMicrosoftComponent implements OnInit {
           this.spinner.hide();
         },
       });
-    } catch (error) {}
+    } catch (error) { }
   }
 
   openBodyModalContactFolders(modal: any) {
@@ -263,7 +214,7 @@ export class LinkMicrosoftComponent implements OnInit {
       FolderName: displayName,
       IsAdded: IsAdded.target.checked,
     };
-    this.microsoftMailsService.AddFolderToBeRead(payload).subscribe(() => {});
+    this.microsoftMailsService.AddFolderToBeRead(payload).subscribe(() => { });
   }
 
   AddEmailsToBeRead(emailInput: HTMLInputElement) {

@@ -1,8 +1,7 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <nav class="navbars">
   <div class="navbar-line m-0">
-    <div
-      class="nav-right w-100 d-flex justify-content-between total">
+    <div class="nav-right w-100 d-flex justify-content-between total">
       <div class="ml8">
         <img
           alt="logo"
@@ -17,7 +16,7 @@
     </div>
   </div>
 </nav>
-<div class="backyard">
+
   <div class="container">
     <p *ngIf="showAlert" class="alert-container">
       <ngb-alert [dismissible]="false" class="alert-success">
@@ -50,8 +49,7 @@
         <ng-container *ngIf="ShoppingCenter">
           <div class="d-flex">
             <ng-container *ngFor="let near of NearByType">
-              <div
-                class="d-flex align-items-center p-0 mbottom">
+              <div class="d-flex align-items-center p-0 mbottom">
                 <ng-container
                   *ngFor="let branch of near.Branches | slice : 0 : 1"
                 >
@@ -60,7 +58,9 @@
                       branch.OrganizationId
                     }}"
                     alt=""
-                    title="{{ branch.RelationOrganization[0].Name }}" class="RelationOrganization"/>
+                    title="{{ branch.RelationOrganization[0].Name }}"
+                    class="RelationOrganization"
+                  />
                   <p>{{ branch.RelationOrganization[0].Name }}</p>
 
                   <!-- <span class="mx-2" style="color: #fff; font-weight: bold">
@@ -116,10 +116,9 @@
               </svg>
 
               <p class="m-0 px-2">
-                <span
-                  class="CustomPlace"
-                  >{{ CustomPlace.OtherPlaces.length }}</span
-                >
+                <span class="CustomPlace">{{
+                  CustomPlace.OtherPlaces.length
+                }}</span>
 
                 Available Units
               </p>
@@ -434,14 +433,11 @@
             <div
               [ngStyle]="{ display: sanitizedUrl ? 'none' : 'block' }"
               id="street-view"
-              class="streetview"></div>
+              class="streetview"
+            ></div>
           </div>
           <div class="col-md-6">
-            <div
-              id="map"
-              class="mapView"
-              *ngIf="mapView"
-            ></div>
+            <div id="map" class="mapView" *ngIf="mapView"></div>
           </div>
         </div>
       </section>
@@ -798,7 +794,7 @@
         </div>
         <div class="row m-0 py-2">
           <ng-container *ngFor="let Manager of OrgManager">
-            <div class=" col-sm-12 col-md-4 contact-card text-center">
+            <div class="col-sm-12 col-md-4 contact-card text-center">
               <p class="contact">
                 {{ Manager.firstname | titlecase }}
                 {{ Manager.lastname | titlecase }}
@@ -813,7 +809,7 @@
 
     <div class="row m-0 p-0">
       <div class="col-md-4" *ngIf="placeCotenants && placeCotenants.length > 0">
-        <div class="main-section heightt" >
+        <div class="main-section heightt">
           <div class="d-flex justify-content-between">
             <p class="main-name">Co-Tenants</p>
             <!-- <button class="enriche ms-2" (click)="open(enricheModal , 4)">
@@ -882,9 +878,12 @@
 
                 <div class="d-flex flex-column">
                   <span *ngIf="OrganizationBranches.Name" class="nearset"
-                    >{{ OrganizationBranches.Name }} 
+                    >{{ OrganizationBranches.Name }}
                   </span>
-                  <span  class="nearset">{{place.City}}<span *ngIf="place.City">,</span> {{place.State}}</span>
+                  <span class="nearset"
+                    >{{ place.City }}<span *ngIf="place.City">,</span>
+                    {{ place.State }}</span
+                  >
                 </div>
               </div>
 
@@ -929,7 +928,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
 <ng-template #mapPopup let-modal>
   <div id="mapInPopup" class="mapViewOneheight" *ngIf="mapViewOnePlacex"></div>
@@ -970,68 +969,4 @@
       </ngb-carousel>
     </div>
   </div>
-</ng-template>
-
-<ng-template #enricheModal let-modal>
-  <form (ngSubmit)="submitEnriche()" #enricheForm="ngForm">
-    <div class="modal-header d-flex justify-content-between align-items-center">
-      <!-- <span class="modal-title" id="modal-add-contact"><b>Enriche {{enriche.section}}</b></span> -->
-      <div>
-        <button
-          type="button"
-          class="btn btn-close"
-          aria-label="Close"
-          (click)="modal.dismiss('Cross click')"
-        ></button>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="mb-3">
-        <label for="context" class="form-label">Context</label>
-        <textarea
-          type="text"
-          id="context"
-          [(ngModel)]="enriche.context"
-          rows="5"
-          class="form-control"
-          required
-          name="context"
-        ></textarea>
-      </div>
-      <div class="mb-3">
-        <label for="lastName" class="form-label">URL</label>
-        <input
-          type="url"
-          id="url"
-          [(ngModel)]="enriche.url"
-          class="form-control"
-          required
-          name="url"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="fileUpload" class="form-label">Upload File</label>
-        <input
-          type="file"
-          id="fileUpload"
-          class="form-control"
-          (change)="onFileChange($event)"
-          name="fileUpload"
-          required
-        />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button type="submit" class="btn btn-primary me-2 contact-btn">
-        Save
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary contact-btn"
-        (click)="modal.close()"
-      >
-        Close
-      </button>
-    </div>
-  </form>
 </ng-template>
