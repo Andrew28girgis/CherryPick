@@ -57,3 +57,10 @@ export interface Contact {
   Firstname?: string;
   Lastname?: string;
 }
+
+export interface KanbanDragingData {
+  type: 'organization' | 'center';
+  orgIndex: number;
+  centerIndex?: number;
+  value: Organization | ShoppingCenter;
+}

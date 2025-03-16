@@ -41,6 +41,7 @@
         'col-md-12': !(activeTabKanbansList.length > 0),
         'p-0': !(activeTabKanbansList.length > 0)
       }"
+      cdkDropListGroup
     >
       <div class="h-100 d-flex align-items-center justify-content-start gap-3">
         <ng-container *ngFor="let stage of activeKanbanDetails?.kanbanStages">
@@ -75,9 +76,18 @@
                 />
               </svg>
             </div>
-            <div class="stage-content">
+            <div
+              class="stage-content"
+              cdkDropList
+              [cdkDropListData]="stage.kanbanOrganizations"
+              [id]="stage.Id.toString()"
+              (cdkDropListDropped)="onDrop($event)"
+            >
               <ng-container
-                *ngFor="let organization of stage.kanbanOrganizations"
+                *ngFor="
+                  let organization of stage.kanbanOrganizations;
+                  let orgIndex = index
+                "
               >
                 <ng-container *ngFor="let org of organization.Organization">
                   <ng-container
@@ -88,8 +98,23 @@
                       else organizationCase
                     "
                   >
-                    <ng-container *ngFor="let center of org.ShoppingCenters">
-                      <div *ngIf="center.CenterName" class="stage-card">
+                    <ng-container
+                      *ngFor="
+                        let center of org.ShoppingCenters;
+                        let centerIndex = index
+                      "
+                    >
+                      <div
+                        *ngIf="center.CenterName"
+                        class="stage-card"
+                        cdkDrag
+                        [cdkDragData]="{
+                          type: 'center',
+                          orgIndex: orgIndex,
+                          centerIndex: centerIndex,
+                          value: center
+                        }"
+                      >
                         <div
                           class="w-100 d-flex align-items-start justify-content-between gap-3"
                         >
@@ -139,7 +164,16 @@
                     </ng-container>
                   </ng-container>
                   <ng-template #organizationCase>
-                    <div *ngIf="org.Name" class="stage-card">
+                    <div
+                      *ngIf="org.Name"
+                      class="stage-card"
+                      cdkDrag
+                      [cdkDragData]="{
+                        type: 'organization',
+                        orgIndex: orgIndex,
+                        value: org
+                      }"
+                    >
                       <div
                         class="w-100 d-flex align-items-start justify-content-between gap-3"
                       >
@@ -332,3 +366,5 @@
     </div>
   </div> -->
 </div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
