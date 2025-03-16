@@ -1,31 +1,22 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <div class="col-12 col-sm-12 d-flex justify-content-between mt-3 align-items-center Button_all pb-2 pb-sm-0">
-  <!-- <button class="Emily__contant__button Emily__body__button"
-  (click)="onClick()">
-    Home
-  </button> -->
-  <button class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" *ngIf="!user"
-    style="background-color: white;"
-    (click)="loginMicrosoft()">
-    <object type="image/svg+xml"
-      data="https://s3-eu-west-1.amazonaws.com/cdn-testing.web.bas.ac.uk/scratch/bas-style-kit/ms-pictogram/ms-pictogram.svg"
-      class="x-icon"></object>
+  <a class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" 
+    style="background-color: white;cursor: pointer;"
+    [href]="url" *ngIf="!user">
+    <img src="assets\Images\SVG\Microsoft-pictogram.svg" class="Microsoft-icon" alt="">
     Link Microsoft
-  </button>
+  </a>
   <button class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" (click)="logoutMicrosoft()"
-  style="background-color: white;"
-  *ngIf="user">
-    <object type="image/svg+xml"
-      data="https://s3-eu-west-1.amazonaws.com/cdn-testing.web.bas.ac.uk/scratch/bas-style-kit/ms-pictogram/ms-pictogram.svg"
-      class="x-icon"></object>
+  style="background-color: white;" *ngIf="user">
+  <img src="assets\Images\SVG\Microsoft-pictogram.svg" class="Microsoft-icon" alt="">
     Unlink Microsoft
   </button>
-  <button *ngIf="user" class="Emily__contant__button Emily__body__button"
+  <button class="Emily__contant__button Emily__body__button" *ngIf="user"
     (click)="openBodyModalContactFolders(ViewContactFolders)">
     Configuration
   </button>
-  <button *ngIf="user" class="Emily__contant__button Emily__body__button" (click)="MyInboxlist()">
+  <button class="Emily__contant__button Emily__body__button" (click)="MyInboxlist()" *ngIf="user">
     Inbox
   </button>
 </div>

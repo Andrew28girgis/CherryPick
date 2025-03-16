@@ -93,6 +93,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
           this.allUserKanbans = [];
         }
       },
+      },
     });
   }
 
@@ -160,6 +161,93 @@ export class KanbanComponent implements OnInit, OnDestroy {
       this.activeKanbanDetails = { ...kanbanDetails };
     }
     return changeFlage;
+  private checkForNewStagesAndOrganizations() {
+    const body: any = {
+      Name: 'GetKanbanDetails',
+      Params: {
+        kanbanId: this.selectedKanban?.Id,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        const newData = data.json;
+        const newStages = newData[0]?.kanbanStages || [];
+        const currentStages = this.kanbanList[0]?.kanbanStages || [];
+
+        if (this.isDataUnchanged(newStages, currentStages)) {
+          return;
+        }
+        // Check for new stages
+        if (newStages.length > this.lastKnownStageCount) {
+          const newStageItems = newStages.filter(
+            (newStage: KanbanStage) =>
+              !currentStages.some(
+                (currentStage) => currentStage.Id === newStage.Id
+              )
+          );
+
+          newStageItems.forEach((newStage: KanbanStage) => {
+            this.kanbanList[0].kanbanStages.push(newStage);
+            this.GetStageActions(newStage);
+          });
+
+          this.lastKnownStageCount = newStages.length;
+        }
+        // Update existing stages and organizations with animation
+        if (this.kanbanList[0].kanbanStages) {
+          this.kanbanList[0].kanbanStages = currentStages.map(
+            (currentStage: KanbanStage) => {
+              const newStage = newStages.find(
+                (stage: KanbanStage) => stage.Id === currentStage.Id
+              );
+
+              if (newStage) {
+                const updatedOrgs = newStage.kanbanOrganizations
+                  .filter(
+                    (org: KanbanOrganization) =>
+                      org && org.Organization && org.Organization.length > 0
+                  )
+                  .map((org: KanbanOrganization) => ({
+                    ...org,
+                    kanbanStageId: newStage.Id,
+                  }));
+                const movedOrgs = updatedOrgs.filter(
+                  (updatedOrg: { Id: number }) =>
+                    !currentStage.kanbanOrganizations.some(
+                      (currentOrg) => currentOrg.Id === updatedOrg.Id
+                    )
+                );
+
+                movedOrgs.forEach((org: KanbanOrganization) => {
+                  const previousStage = currentStages.find((stage) =>
+                    stage.kanbanOrganizations.some(
+                      (currentOrg) => currentOrg.Id === org.Id
+                    )
+                  );
+                  if (previousStage) {
+                    const direction =
+                      previousStage.Id < newStage.Id ? 'right' : 'left';
+                    previousStage.kanbanOrganizations =
+                      previousStage.kanbanOrganizations.filter(
+                        (prevOrg) => prevOrg.Id !== org.Id
+                      );
+                  }
+                });
+                return {
+                  ...currentStage,
+                  kanbanOrganizations: updatedOrgs,
+                };
+              }
+              return currentStage;
+            }
+          );
+        }
+        this.kanbanList = [...this.kanbanList];
+
+        this.crf.detectChanges();
+      },
+    });
   }
 
   private isDeepEmpty(value: any): boolean {
@@ -258,6 +346,31 @@ export class KanbanComponent implements OnInit, OnDestroy {
             const nameA = a.Name ? a.Name.toLowerCase() : '';
             const nameB = b.Name ? b.Name.toLowerCase() : '';
             return nameA.localeCompare(nameB);
+  checkForKanbanUpdates(): void {
+    if (this.pollingUpdatesSubscription) {
+      this.pollingUpdatesSubscription.unsubscribe();
+    }
+    this.pollingUpdatesSubscription = interval(30000)
+      .pipe(takeWhile(() => this.isPollingActive))
+      .subscribe(() => {
+        this.checkForNewStagesAndOrganizations();
+      });
+  }
+
+  GetUserKanbans(): void {
+    const body: any = {
+      Name: 'GetUserKanbans',
+      Params: {},
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data.json && data.json.length > 0) {
+          this.userKanbans = data.json;
+          this.userKanbans.sort((a, b) => {
+            if (a.kanbanTemplateId === b.kanbanTemplateId) {
+              return a.kanbanName.localeCompare(b.kanbanName);
+            }
+            return a.kanbanTemplateId - b.kanbanTemplateId;
           });
         }
       });
@@ -388,6 +501,9 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.spinner.hide();
       },
+        // Immediately check for updates after the drag operation
+        this.checkForNewStagesAndOrganizations();
+      },
     });
   }
 
@@ -404,6 +520,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.spinner.hide();
+        this.checkForNewStagesAndCenters();
       },
     });
   }

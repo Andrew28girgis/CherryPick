@@ -9,9 +9,7 @@ import { environment } from '../../../environments/environment';
 export class MicrosoftLoginService {
   constructor(private http: HttpClient) {}
 
-  public SigninMicrosoftMails(ContactId: number) {
-    return this.http.get<any>(
-      `${environment.api}/auth/signin?ContactId=${ContactId}`
-    );
+  public getSigninUrl(ContactId: number): string {
+    return `${environment.api}/auth/signin?ContactId=${ContactId}`;
   }
 }
