@@ -10,6 +10,7 @@ import {
   ShoppingCenter,
   KanbanStage,
   KanbanDragingData,
+  Action,
 } from 'src/app/shared/models/ikanban-details';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Location } from '@angular/common';
@@ -264,8 +265,12 @@ export class KanbanComponent implements OnInit, OnDestroy {
       stage.kanbanOrganizations.forEach((kanbanOrg) => {
         if (kanbanOrg.Organization) {
           kanbanOrg.Organization.sort((a, b) => {
-            const nameA = a.Name ? a.Name.toLowerCase() : '';
-            const nameB = b.Name ? b.Name.toLowerCase() : '';
+            const nameA = a.OrganizationName
+              ? a.OrganizationName.toLowerCase()
+              : '';
+            const nameB = b.OrganizationName
+              ? b.OrganizationName.toLowerCase()
+              : '';
             return nameA.localeCompare(nameB);
           });
         }
@@ -511,6 +516,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   removeIdFromUrl() {
     this.location.replaceState('/Kanban');
+  }
+
+  checkForActionsDisplay(actions: Action[]): boolean {
+    return actions.some((a) => a.actionLevel == 'Target');
   }
 
   ngOnDestroy() {
