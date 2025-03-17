@@ -10,12 +10,14 @@ import { TermsComponent } from './components/terms/terms.component';
 import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
 import { TenantComponent } from './components/tenant/tenant.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'summary', component: SummeryComponent },
   { path: 'manage-properties', component: ManagePropertiesComponent },
+  { path: 'add-tenant', component: AddTenantsComponent },
   { path: 'summary/:orgId', component: SummeryComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
   {
