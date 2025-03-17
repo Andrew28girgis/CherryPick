@@ -12,6 +12,7 @@ import {
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-emily-contact-email',
@@ -41,24 +42,36 @@ export class EmilyContactEmailComponent implements OnInit {
   filteredEmails: Mail[] = [];
   selectedFilter: string = 'all'; // Default filter is 'all'
 
-  @Input() contactId!: number;
+  // @Input() contactId!: number;
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private route: ActivatedRoute,
+
   ) {}
 
   ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      const buyboxId = params.get('buyBoxId');
+      if(buyboxId){
+        this.buyBoxId= +buyboxId;
+      }
+      const orgId = params.get('organizationId');
+      if(orgId){
+        this.orgId= +orgId;
+      }
+    });
     // Load both APIs with Promise.all to ensure both are completed    'microdeals api and emails api'
     this.loadInitialData();
   }
 
   loadInitialData(): void {
     this.spinner.show();
-    const currentContactId = this.selectedContact?.ContactId || this.contactId;
+    // const currentContactId = this.selectedContact?.ContactId || this.contactId;
     this.filteredEmails = [];
     this.emailsSentContact = [];
     this.selectedEmail = null;
@@ -73,23 +86,9 @@ export class EmilyContactEmailComponent implements OnInit {
     // When both APIs complete, process the data
     Promise.all([microDealsPromise, emailsPromise])
       .then(() => {
-        // Find and select the previously selected contact
+        // Select the first contact by default if there are contacts available
         if (this.contacts && this.contacts.length > 0) {
-          // Try to find the previously selected contact
-          const contactToSelect = this.contacts.find(
-            (contact) => contact.ContactId === currentContactId
-          );
-          // If found, select it, otherwise default to the first contact
-          if (contactToSelect) {
-            this.getEmailsForContact(contactToSelect);
-          } else if (this.contacts.length > 0) {
-            // If can't find previous contact, fall back to initial contact or first in list
-            const initialContact =
-              this.contacts.find(
-                (contact) => contact.ContactId === this.contactId
-              ) || this.contacts[0];
-            this.getEmailsForContact(initialContact);
-          }
+          this.getEmailsForContact(this.contacts[0]);
         }
         this.spinner.hide();
       })
@@ -188,6 +187,9 @@ export class EmilyContactEmailComponent implements OnInit {
     this.filterEmails(this.selectedFilter);
     if (this.emailsSentContact.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
+    } else if (this.filteredEmails.length > 0) {
+      // Select the first email by default if there are emails available
+      this.openEmail(this.filteredEmails[0]);
     }
   }
   //scroll function and load email details Api
@@ -319,14 +321,14 @@ export class EmilyContactEmailComponent implements OnInit {
     if (this.filteredEmails.length === 0) {
       this.emptyMessage = `No ${filterType} emails available for this contact`;
       this.selectedEmail = null;
-    }
-    if (
-      this.filteredEmails.length > 0 &&
-      (!this.selectedEmail ||
-        !this.filteredEmails.some(
-          (email) => email.id === this.selectedEmail?.ID
-        ))
+    } else if (
+      !this.selectedEmail ||
+      !this.filteredEmails.some(
+        (email) => email.id === this.selectedEmail?.ID
+      )
     ) {
+      // If no email is selected or the selected email is not in the filtered list,
+      // select the first email in the filtered list
       this.openEmail(this.filteredEmails[0]);
     }
   }

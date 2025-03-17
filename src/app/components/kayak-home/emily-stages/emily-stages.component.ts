@@ -115,13 +115,13 @@ export class EmilyStagesComponent implements OnInit {
     return org.showMoreContacts ? org.Contact : org.Contact.slice(0, 2);
   }
   onContactClick(contactId: number, orgId: number) {
-    this.showContactEmail.emit({ contactId, orgId, buyBoxId: this.buyBoxId });
+    this.showContactEmail.emit({ contactId, buyBoxId: this.buyBoxId, orgId });
   }
   toggleContacts(org: any) {
     org.showContacts = !org.showContacts;
   }
-  goToOrgContact(orgId: number, contactId: number) {
-    this.router.navigate(['/organization-mail', orgId, contactId]);
+  goToOrgContact(orgId: number) {
+    this.router.navigate(['/organization-mail', this.buyBoxId , orgId]);
   }
   getTotalEmails(contact: Contact): number {
     return (
