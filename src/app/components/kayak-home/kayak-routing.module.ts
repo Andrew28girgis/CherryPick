@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'relations', component: BuyboxRelatiosComponent },
   { path: 'kayak', component: KayakComponent },
   { path: 'MyInboxs', component: MyInboxEmailListComponent }, 
-  { path: 'organization-mail/:orgId/:contactId', component: EmilyContactEmailComponent },
+  { path: 'organization-mail/:buyBoxId/:organizationId', component: EmilyContactEmailComponent },
 ];
 
 @NgModule({

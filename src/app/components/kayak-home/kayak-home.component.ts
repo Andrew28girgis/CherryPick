@@ -22,12 +22,12 @@ export class KayakHomeComponent implements OnInit {
       icon: '../../../assets/icons/svgs/details.svg',
       selectedIcon: '../../../assets/icons/svgs/details-selected.svg',
     },
-    {
-      id: 'Emily',
-      label: 'Emily',
-      icon: '../../../assets/icons/svgs/emily.svg',
-      selectedIcon: '../../../assets/icons/svgs/emily-selected.svg',
-    },
+    // {
+    //   id: 'Emily',
+    //   label: 'Emily',
+    //   icon: '../../../assets/icons/svgs/emily.svg',
+    //   selectedIcon: '../../../assets/icons/svgs/emily-selected.svg',
+    // },
   ];
   activeComponent: string = 'Properties';
   selectedTab: string = 'Properties';

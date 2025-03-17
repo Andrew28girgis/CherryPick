@@ -14,6 +14,7 @@ export class HeaderComponent {
     { id: 2, message: 'New notification 2', time: '1 hour ago' },
     { id: 3, message: 'New notification 3', time: '2 hours ago' },
   ];
+  
   emails: any[] = [
     {
       id: 1,
