@@ -11,9 +11,19 @@ export interface KanbanStage {
   isQualified: boolean;
   kanbanId: number;
   kanbanTemplateStageId: number;
+  Actions?: Action[];
   Id: number;
   stageName: string;
   kanbanOrganizations: KanbanOrganization[];
+}
+
+export interface Action {
+  Id: number;
+  actionName: string;
+  actionType: string;
+  actionLevel: string;
+  actionURL: string;
+  KanbanTemplateStageId: number;
 }
 
 export interface KanbanOrganization {
@@ -24,20 +34,20 @@ export interface KanbanOrganization {
 }
 
 export interface Organization {
+  OrganizationID: number;
+  OrganizationName: string;
+  OrganizationLogoURL: string;
   ShoppingCenters: ShoppingCenter[];
-  ID?: number;
-  Name?: string;
-  LogoURL?: string;
-  stakeholderId?: number;
+  OrganizationStakeholderId?: number;
 }
 
 export interface ShoppingCenter {
+  CenterName: string;
+  CenterAddress: string;
+  CenterCity: string;
+  CenterState: string;
+  MainImage: string;
   MarketSurveyShoppingCenters: MarketSurveyShoppingCenter[];
-  CenterName?: string;
-  CenterAddress?: string;
-  CenterCity?: string;
-  CenterState?: string;
-  MainImage?: string;
 }
 
 export interface MarketSurveyShoppingCenter {
@@ -46,16 +56,16 @@ export interface MarketSurveyShoppingCenter {
 }
 
 export interface ShoppingCenterRep {
+  ShoppingCenterRepId: number;
+  ShoppingCenterRepName: string;
+  ShoppingCenterRepLogoURL: string;
   Contact: Contact[];
-  id?: number;
-  Name?: string;
-  LogoURL?: string;
 }
 
 export interface Contact {
-  id?: number;
-  Firstname?: string;
-  Lastname?: string;
+  ContactId: number;
+  ContactFirstname: string;
+  ContactLastname: string;
 }
 
 export interface KanbanDragingData {
