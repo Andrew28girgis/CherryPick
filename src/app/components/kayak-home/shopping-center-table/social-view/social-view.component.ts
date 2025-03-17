@@ -27,7 +27,6 @@ import { General } from 'src/app/shared/models/domain';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/shared/services/places.service';
 declare const google: any;
-import { MapsService } from 'src/app/shared/services/maps.service';
 import { StateService } from '../../../../shared/services/state.service';
 
 @Component({
@@ -313,7 +312,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         );
 
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -354,7 +353,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -425,7 +424,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addLike(shopping: Center, reactionId: number): void {
     const contactIdStr = localStorage.getItem('ContactId');
-    if (!contactIdStr) { 
+    if (!contactIdStr) {
     }
     const contactId = Number.parseInt(contactIdStr ? contactIdStr : '0', 10);
 
@@ -466,7 +465,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {},
-     
+
       complete: () => {
         this.isLikeInProgress = false;
         this.cdr.markForCheck();
@@ -502,13 +501,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
 
-    if (!lat || !lng) { 
+    if (!lat || !lng) {
       return;
     }
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
-    if (!mapDiv) { 
+    if (!mapDiv) {
       return;
     }
 
@@ -606,7 +605,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           centered: true,
         });
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -689,10 +688,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   copyLink(link: string) {
     navigator.clipboard
       .writeText(link)
-      .then(() => { 
-      })
-      .catch((err) => {
-      });
+      .then(() => {})
+      .catch((err) => {});
   }
 
   openLink(content: any, modalObject?: any) {
@@ -740,7 +737,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.modalService.dismissAll();
         this.openContactsModal(this.contactsModalTemplate);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -863,7 +860,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.cdr.markForCheck();
         this.spinner.hide();
-      })
+      });
   }
 
   async refreshShoppingCenters() {

@@ -44,7 +44,7 @@ export class ManagePropertiesComponent implements OnInit {
   pdfFileName: string = '';
   test!: number;
   JsonPDF!: jsonGPT;
-  AvailabilityAndTenants: AvailabilityTenant = {}; 
+  AvailabilityAndTenants: AvailabilityTenant = {};
   CustomPlace!: PropertiesDetails | undefined;
   showInputField: string | null = null;
   newPlaceSqFT!: number;
@@ -69,7 +69,7 @@ export class ManagePropertiesComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   ngOnInit() {
-    this.contactID = localStorage.getItem('contactId'); 
+    this.contactID = localStorage.getItem('contactId');
     this.GetContactShoppingCenters();
   }
 
@@ -87,7 +87,7 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         this.properties = data.json;
         this.spinner.hide();
-      }
+      },
     });
   }
 
@@ -111,14 +111,15 @@ export class ManagePropertiesComponent implements OnInit {
       next: (data: any) => {
         this.CustomPlace = data.json;
         this.spinner.hide();
-      }
+      },
     });
   }
-  // Helper method to get images as an array in display shopping center images
+
   getImagesArray(): string[] {
     if (!this.CustomPlace?.Images) return [];
     return this.CustomPlace.Images.split(',').map((url) => url.trim());
   }
+
   toggleAddTenantInput() {
     // Initialize CustomPlace.Tenants if it’s null or undefined
     if (!this.CustomPlace?.Tenants) {
@@ -133,6 +134,7 @@ export class ManagePropertiesComponent implements OnInit {
       this.newTenantUrl = '';
     }
   }
+
   cancelAddTenant() {
     this.showAddTenantInput = false;
     this.newTenantName = '';
@@ -186,7 +188,7 @@ export class ManagePropertiesComponent implements OnInit {
         this.showToast('New tenant added successfully!');
         this.showAddTenantInput = false;
         this.newTenantName = '';
-      }
+      },
     });
   }
   toggleAddPlaceInput() {
@@ -238,7 +240,7 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.showAddPlaceInput = false;
         this.spinner.hide();
-      }
+      },
     });
   }
   // Start editing a place
@@ -280,7 +282,7 @@ export class ManagePropertiesComponent implements OnInit {
         this.editingPlaceId = null;
         this.showEditInput = false;
         this.editedPlaceSqFT = 0;
-      }
+      },
     });
   }
   openDeletePlaceModal(placeId: number) {
@@ -322,7 +324,7 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.showToast('Place deleted successfully!');
         this.spinner.hide();
-      }
+      },
     });
   }
   deleteTenant(tenantId: number) {
@@ -345,17 +347,17 @@ export class ManagePropertiesComponent implements OnInit {
         }
         this.spinner.hide();
         this.showToast('Tenant deleted successfully!');
-      }
+      },
     });
   }
   // manual display and edit shopping center
   openUploadModal(id: number) {
     if (id === undefined) {
-      const guid = crypto.randomUUID(); 
+      const guid = crypto.randomUUID();
       this.selectedShoppingID = guid;
     } else {
       this.selectedShoppingID = id.toString();
-    } 
+    }
     this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
   }
   closeModal(modal: any) {
@@ -400,7 +402,7 @@ export class ManagePropertiesComponent implements OnInit {
                   this.isUploading = false;
                   this.isConverting = true;
                 }
-              } else if (event instanceof HttpResponse) { 
+              } else if (event instanceof HttpResponse) {
                 const response = event.body;
                 if (response && response.images) {
                   this.images = response.images.map(
@@ -411,7 +413,7 @@ export class ManagePropertiesComponent implements OnInit {
                       selected: false,
                     })
                   );
-                  this.pdfFileName = response.pdfFileName; 
+                  this.pdfFileName = response.pdfFileName;
                 }
                 this.isConverting = false;
                 this.spinner.hide();
@@ -448,7 +450,7 @@ export class ManagePropertiesComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.spinner.hide();
-      }
+      },
     });
   }
   // Method to convert base64 to a SafeUrl for image display
