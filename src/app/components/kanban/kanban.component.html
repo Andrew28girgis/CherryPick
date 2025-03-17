@@ -235,9 +235,9 @@
                                 <ng-container
                                   *ngIf="action.actionLevel == 'Target'"
                                 >
-                                  <button ngbDropdownItem>
+                                  <a ngbDropdownItem [href]="action.actionURL+'/'+activeKanbanDetails.buyboxid+'/'+org.OrganizationID" target="_blank">
                                     {{ action.actionName }}
-                                  </button>
+                                  </a>
                                 </ng-container>
                               </ng-container>
                             </ng-container>
