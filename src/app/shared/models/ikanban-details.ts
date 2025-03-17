@@ -3,6 +3,7 @@ export interface IKanbanDetails {
   targetStakeholderId: number;
   kanbanName: string;
   kanbanTemplateId: number;
+  buyboxid: number;
   kanbanStages: KanbanStage[];
 }
 
