@@ -44,10 +44,20 @@
       cdkDropListGroup
     >
       <div class="stage-column-container">
-        <ng-container *ngFor="let stage of activeKanbanDetails?.kanbanStages">
+        <ng-container
+          *ngFor="
+            let stage of activeKanbanDetails?.kanbanStages;
+            let stageIndex = index
+          "
+        >
           <section class="stage-column">
-            <div class="stage-header">
-              <span>
+            <div
+              class="stage-header"
+              [ngStyle]="{
+                'background-color': stagesColors[stageIndex % 5].background
+              }"
+            >
+              <span [ngStyle]="{ color: stagesColors[stageIndex % 5].color }">
                 {{ stage.stageName }}
               </span>
 
@@ -235,7 +245,17 @@
                                 <ng-container
                                   *ngIf="action.actionLevel == 'Target'"
                                 >
-                                  <a ngbDropdownItem [href]="action.actionURL+'/'+activeKanbanDetails.buyboxid+'/'+org.OrganizationID" target="_blank">
+                                  <a
+                                    ngbDropdownItem
+                                    [href]="
+                                      action.actionURL +
+                                      '/' +
+                                      activeKanbanDetails.buyboxid +
+                                      '/' +
+                                      org.OrganizationID
+                                    "
+                                    target="_blank"
+                                  >
                                     {{ action.actionName }}
                                   </a>
                                 </ng-container>
