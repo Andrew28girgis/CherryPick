@@ -1,12 +1,16 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="dashboard-container">
+  <!-- <div class="d-flex justify-content-end ">
+    <button routerLink="/TenantWithPolygons" class="TenantWithPolygons">Create Tenant & Polygons</button>
+  </div> -->
+
   <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
     <li [ngbNavItem]="1">
       <button ngbNavLink>Tenant</button>
       <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container tenants-container">
           <div class="d-flex align-items-center justify-content-between w-100">
-            <span class="container-title">Tenants</span>
+            <span class="container-title"></span>
             <button
               *ngIf="tenants && tenants.length > 0"
               class="kanban-button"
@@ -57,9 +61,9 @@
       <button ngbNavLink>Buyboxes</button>
       <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container buyBoxes-container">
-          <div class="d-flex align-items-center justify-content-between w-100">
+          <!-- <div class="d-flex align-items-center justify-content-between w-100">
             <span class="container-title">Buyboxes</span>
-          </div>
+          </div> -->
           <div
             class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
           >
@@ -139,9 +143,9 @@
       <button ngbNavLink>Properties</button>
       <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container properties-container">
-          <div class="d-flex align-items-center justify-content-between w-100">
+          <!-- <div class="d-flex align-items-center justify-content-between w-100">
             <span class="container-title">Properties</span>
-          </div>
+          </div> -->
           <div
             class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
           >
@@ -184,7 +188,12 @@
                             {{ center.CenterAddress }}, {{ center.CenterCity }},
                             {{ center.CenterState }}
                           </td>
-                          <td style="white-space: nowrap">
+                          <td
+                            style="white-space: nowrap"
+                            [ngStyle]="{
+                              color: stageColorMap.get(stage.stageName)
+                            }"
+                          >
                             {{ stage.stageName }}
                           </td>
                           <td style="white-space: nowrap">
@@ -243,6 +252,56 @@
         </div>
       </ng-template>
     </li>
+    <li [ngbNavItem]="4">
+      <button ngbNavLink>Expansion Sites</button>
+      <ng-template ngbNavContent>
+        <div class="w-100 dashboard-item-container properties-container">
+          <div
+            class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
+          >
+            <div class="scrollable-table">
+              <table *ngIf="DashboardPoly && DashboardPoly.length > 0" class="table align-middle">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Area</th>
+                    <th>Tenant</th>
+                    <th>State</th>
+                    <th>Description</th>
+                    <th>Min Building Size</th>
+                    <th>Max Building Size</th>
+                    <th>Places</th>
+                    <th></th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let polygon of DashboardPoly">
+                    <ng-container *ngFor="let geo of polygon.geojsons">
+                      <tr>
+                        <td style="white-space: nowrap">{{ geo.Name }}</td>
+                        <td style="white-space: nowrap">{{ polygon.Name }}</td>
+                        <td style="white-space: nowrap">{{ geo.State ? geo.State : '-' }}</td>
+                        <td style="white-space: nowrap">{{ polygon.Description }}</td>
+                        <td style="white-space: nowrap">{{ polygon.MinBuildingSize | number }} <span *ngIf="polygon.MinBuildingSize"> SF </span></td>
+                        <td style="white-space: nowrap">{{ polygon.MaxBuildingSize | number }} <span *ngIf="polygon.MaxBuildingSize"> SF </span></td>
+                        <td style="white-space: nowrap">{{ geo.Places }}</td>
+                        <td style="white-space: nowrap">
+                          <div style="cursor: pointer;"> 
+                            <i class="fa-solid fa-share-nodes"></i>
+                          </div>
+                        </td>
+
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+    
   </ul>
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>

@@ -334,6 +334,10 @@ a {
   text-decoration: underline;
 }
 
+.kanban-action-popup .modal-content{
+  padding: 0.5rem;
+}
+
 @media (max-width: 991px) {
   .info-window {
     width: 300px;

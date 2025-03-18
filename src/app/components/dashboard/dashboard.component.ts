@@ -8,6 +8,8 @@ import { IDashboardTenant } from 'src/app/shared/models/idashboard-tenant';
 import { IUserComment } from 'src/app/shared/models/iuser-comment';
 import { IUserInBox } from 'src/app/shared/models/iuser-in-box';
 import { IDashboardProperty } from 'src/app/shared/models/idashboard-property';
+import { IDashboardPolygons } from 'src/app/shared/models/idashboard-polygons';
+import { sharedColors } from 'src/app/shared/others/shared-colors';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,10 +25,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   buyBoxes: IDashboardBuyBox[] = [];
   filterBuyBoxes: IDashboardBuyBox[] = [];
   properties: IDashboardProperty[] = [];
+  stageColorMap = new Map<string, string>();
   buyboxNameFilter: string = '';
   buyboxOrganizationFilter: string = '';
   selectedEmailBody: string = '';
-  active = 1;
+  active = 4;
+  DashboardPoly: IDashboardPolygons[] = [];
 
   constructor(
     private placesService: PlacesService,
@@ -44,6 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getDashboardTenants();
     this.getDashboardBuyBoxes();
     this.getDashboardProperties();
+    this.DashboardPolygons();
   }
 
   getUserInbox(): void {
@@ -125,6 +130,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.spinner.hide();
         if (response && response.json && response.json.length > 0) {
           this.properties = response.json;
+          this.setupPropertiesStagesColors();
         }
       },
       error: (error: any) => {
@@ -137,6 +143,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .GenericAPI(body)
       .pipe(takeUntil(this.destroy$))
       .subscribe(observer);
+  }
+  DashboardPolygons(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'DashboardPolygons',
+      MainEntity: null,
+      Params: {},
+      Json: null,
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.DashboardPoly = data.json;
+        this.spinner.hide();
+      },
+    });
   }
 
   getUserComments(): void {
@@ -197,6 +218,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return matchesName && matchesOrg;
       });
     }
+  }
+
+  setupPropertiesStagesColors(): void {
+    this.properties.forEach((property, propertyIndex) => {
+      property.ShoppingCenters.forEach((center) => {
+        center.kanbanStages.forEach((stage, stageIndex) => {
+          let colorIndex = propertyIndex + stageIndex;
+          while (true) {
+            if (
+              ![...this.stageColorMap.values()].includes(
+                sharedColors[colorIndex % sharedColors.length].color
+              )
+            ) {
+              this.stageColorMap.set(
+                stage.stageName,
+                sharedColors[colorIndex % sharedColors.length].color
+              );
+              break;
+            } else {
+              colorIndex += 1;
+            }
+          }
+        });
+      });
+    });
   }
 
   ngOnDestroy(): void {
