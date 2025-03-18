@@ -8,6 +8,7 @@ import { IDashboardTenant } from 'src/app/shared/models/idashboard-tenant';
 import { IUserComment } from 'src/app/shared/models/iuser-comment';
 import { IUserInBox } from 'src/app/shared/models/iuser-in-box';
 import { IDashboardProperty } from 'src/app/shared/models/idashboard-property';
+import { IDashboardPolygons } from 'src/app/shared/models/idashboard-polygons';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   buyboxNameFilter: string = '';
   buyboxOrganizationFilter: string = '';
   selectedEmailBody: string = '';
-  active = 1;
+  active = 4;
+  DashboardPoly:IDashboardPolygons[] = [];
 
   constructor(
     private placesService: PlacesService,
@@ -44,6 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.getDashboardTenants();
     this.getDashboardBuyBoxes();
     this.getDashboardProperties();
+    this.DashboardPolygons();
   }
 
   getUserInbox(): void {
@@ -137,6 +140,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .GenericAPI(body)
       .pipe(takeUntil(this.destroy$))
       .subscribe(observer);
+  }
+  DashboardPolygons(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'DashboardPolygons',
+      MainEntity: null,
+      Params: {},
+      Json: null,
+    };
+    this.placesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.DashboardPoly = data.json;
+        this.spinner.hide();
+      },
+    });
   }
 
   getUserComments(): void {

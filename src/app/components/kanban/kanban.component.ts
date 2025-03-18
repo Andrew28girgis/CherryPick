@@ -14,6 +14,9 @@ import {
 } from 'src/app/shared/models/ikanban-details';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Location } from '@angular/common';
+import { popupActions } from './kanban-actions/kanban-actions';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { kanbansColors } from './kanbans-colors';
 
 @Component({
   selector: 'app-kanban',
@@ -29,6 +32,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   private userBuyBoxesPropertiesKanbans: IUserKanban[] = [];
   private userBuyBoxesPropertiesKanbansDetails?: IKanbanDetails;
   private pollingInterval: number = 0;
+  stagesColors: { background: string; color: string }[] = kanbansColors;
 
   kanbanTabs: { id: number; title: string }[] = [
     { id: 1, title: 'Tenants' },
@@ -43,7 +47,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     public router: Router,
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private location: Location
+    private location: Location,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -518,8 +523,23 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.location.replaceState('/Kanban');
   }
 
-  checkForActionsDisplay(actions: Action[]): boolean {
+  checkForTargetActionsDisplay(actions: Action[]): boolean {
     return actions.some((a) => a.actionLevel == 'Target');
+  }
+
+  checkForStageActionsDisplay(actions: Action[]): boolean {
+    return actions.some((a) => a.actionLevel == 'Stage');
+  }
+
+  openActionPopup(key: string): void {
+    const modalComponent = popupActions.get(key);
+
+    if (modalComponent) {
+      const modalRef = this.modalService.open(modalComponent, {
+        windowClass: 'kanban-action-popup',
+      });
+      // modalRef.componentInstance.action = action; // Passing action as input
+    }
   }
 
   ngOnDestroy() {
