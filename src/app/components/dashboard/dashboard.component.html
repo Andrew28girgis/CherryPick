@@ -280,8 +280,8 @@
                         <td style="white-space: nowrap">{{ polygon.Name }}</td>
                         <td style="white-space: nowrap">{{ geo.State ? geo.State : '-' }}</td>
                         <td style="white-space: nowrap">{{ polygon.Description }}</td>
-                        <td style="white-space: nowrap">{{ polygon.MinBuildingSize | number }} SF</td>
-                        <td style="white-space: nowrap">{{ polygon.MaxBuildingSize | number }} SF</td>
+                        <td style="white-space: nowrap">{{ polygon.MinBuildingSize | number }} <span *ngIf="polygon.MinBuildingSize"> SF </span></td>
+                        <td style="white-space: nowrap">{{ polygon.MaxBuildingSize | number }} <span *ngIf="polygon.MaxBuildingSize"> SF </span></td>
                         <td style="white-space: nowrap">{{ geo.Places }}</td>
                       </tr>
                     </ng-container>
