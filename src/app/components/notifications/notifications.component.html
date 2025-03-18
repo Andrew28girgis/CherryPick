@@ -6,8 +6,14 @@
   
     <div class="notification-dropdown" *ngIf="dropdownVisible">
       <div class="notification-card">
-        <div class="notifications-header">Notifications</div>
-  
+        <div class="notificationsnomber">
+            <div class="notifications-header">Notifications</div>
+
+            <div class="frame">
+                <div class="number">{{ unreadCount }}</div>
+            </div>
+          </div>
+          
         <div *ngIf="notificationsArray.length > 0; else noNotifications" class="notifications-list">
           <div
             class="notification-item"

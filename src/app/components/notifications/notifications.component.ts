@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
 import { PlacesService } from '../../shared/services/places.service';
 import { CommonModule } from '@angular/common';
@@ -16,9 +16,13 @@ export class NotificationsComponent implements OnInit {
   message!: string;
   createdDate!: string;
   dropdownVisible: boolean = false;
+  unreadCount: number = 0; 
+  readCount: number = 0; 
   constructor(
     private spinner: NgxSpinnerService,
-    private PlacesService: PlacesService
+    private PlacesService: PlacesService,
+    private eRef: ElementRef
+
   ) {}
   ngOnInit(): void {
     const storedContactId = localStorage.getItem('contactId');
@@ -36,20 +40,26 @@ export class NotificationsComponent implements OnInit {
 
   GetUserNotifications(): void {
     this.spinner.show();
-
+  
     const body: any = {
       Name: 'GetUserNotifications',
       Params: {
         ContactId: this.ContactId,
       },
     };
-
-    console.log('ContactId:', body.Params.ContactId);
-
+  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        console.log('Raw response:', res);
         this.notificationsArray = res.json || [];
+  
+        // Sort the notifications by date so that the newest is at index 0
+        this.notificationsArray.sort((a, b) => {
+          return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime();
+        });
+     // Count the notifications based on 'isRead' status
+     this.readCount = this.notificationsArray.filter(notification => notification.isRead).length;
+     this.unreadCount = this.notificationsArray.filter(notification => !notification.isRead).length;
+        // Optionally set message/createdDate if needed
         if (this.notificationsArray.length > 0) {
           this.message = this.notificationsArray[0].message;
           this.createdDate = this.notificationsArray[0].createdDate;
@@ -57,6 +67,7 @@ export class NotificationsComponent implements OnInit {
           this.message = '';
           this.createdDate = '';
         }
+  
         this.spinner.hide();
       },
       error: (err: any) => {
@@ -65,7 +76,7 @@ export class NotificationsComponent implements OnInit {
       },
     });
   }
-
+  
   updateNotification(notification: any): void {
     console.log('Notification ID selected:', notification.id);
 
@@ -96,4 +107,12 @@ export class NotificationsComponent implements OnInit {
       this.notificationsArray.length - 1
     );
   }
+    // Listen for clicks on the document
+    @HostListener('document:click', ['$event'])
+    handleOutsideClick(event: Event): void {
+      // Check if the click target is inside this component.
+      if (!this.eRef.nativeElement.contains(event.target)) {
+        this.dropdownVisible = false;
+      }
+    }
 }
