@@ -1,0 +1,35 @@
+<div class="notification-container position-relative">
+    <i
+      class="fa-regular fa-bell action-icon position-relative mx-2"
+      (click)="toggleDropdown()"
+    ></i>
+  
+    <div class="notification-dropdown" *ngIf="dropdownVisible">
+      <div class="notification-card">
+        <div class="notifications-header">Notifications</div>
+  
+        <div *ngIf="notificationsArray.length > 0; else noNotifications" class="notifications-list">
+          <div
+            class="notification-item"
+            *ngFor="let notification of notificationsArray"
+            (click)="updateNotification(notification)"
+            [ngClass]="{'highlighted': notification.isRead}"
+          >
+            <div class="notification-message">
+              {{ notification.message }}
+            </div>
+            <div class="notification-date">
+              {{ notification.createdDate | date:'medium' }}
+            </div>
+
+          </div>
+
+        </div>
+
+        <ng-template #noNotifications>
+          <div class="no-notifications">No notifications available.</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  
