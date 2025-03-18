@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
-import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
 import { PlacesService } from '../../shared/services/places.service';
 import { CommonModule } from '@angular/common';
 
@@ -19,7 +18,6 @@ export class NotificationsComponent implements OnInit {
   unreadCount: number = 0; 
   readCount: number = 0; 
   constructor(
-    private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private eRef: ElementRef
 
@@ -38,7 +36,6 @@ export class NotificationsComponent implements OnInit {
   }
 
   GetUserNotifications(): void {
-    this.spinner.show();
   
     const body: any = {
       Name: 'GetUserNotifications',
@@ -67,12 +64,8 @@ export class NotificationsComponent implements OnInit {
           this.createdDate = '';
         }
   
-        this.spinner.hide();
       },
-      error: (err: any) => {
-        console.error('Error from GetUserNotifications:', err);
-        this.spinner.hide();
-      },
+
     });
   }
   
