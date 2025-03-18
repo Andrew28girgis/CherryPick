@@ -21,7 +21,6 @@
     [ngClass]="{ show: isNavbarOpen }"
     id="navbarNav"
   >
-    <!-- Navigation Links -->
     <ul class="navbar-nav mx-auto gap-3">
       <li class="nav-item">
         <a
@@ -61,7 +60,7 @@
     </ul>
 
     <!-- Action Icons -->
-  <div class="d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center">
       <!-- <i class="fa-regular fa-envelope action-icon position-relative mx-2">
         <span class="badge">{{ emails.length }}</span>
       </i>
@@ -69,7 +68,7 @@
         <span class="badge">{{ notifications.length }}</span>
       </i> -->
 
-      <!-- <app-notifications></app-notifications> -->
+      <app-notifications></app-notifications>
       <i
         class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
         (click)="logout()"
@@ -82,7 +81,6 @@
       >
         Logout
       </button> -->
-</div>
-
+    </div>
   </div>
 </nav>
