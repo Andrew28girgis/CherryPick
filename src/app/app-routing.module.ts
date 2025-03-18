@@ -11,6 +11,7 @@ import { ManagePropertiesComponent } from './components/manage-properties/manage
 import { TenantComponent } from './components/tenant/tenant.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
+import { TenantWithPolygonsComponent } from './components/tenant-with-polygons/tenant-with-polygons.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -51,6 +52,10 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+  },
+  {
+    path: 'TenantWithPolygons',
+    component: TenantWithPolygonsComponent,
   },
 
   {
