@@ -110,7 +110,7 @@ export class MapsService {
           marker.markerData.CenterAddress ? 'Shopping Center' : 'Stand Alone'
         );
       });
-    } else { 
+    } else {
     }
   }
 
@@ -718,21 +718,21 @@ export class MapsService {
       };
 
       // Add hover events to the polygon
-      polygon.addListener('mouseover', () => {
-        // Close any existing info windows
-        closeAllInfoWindows();
+      // polygon.addListener('mouseover', () => {
+      //   // Close any existing info windows
+      //   closeAllInfoWindows();
 
-        // Open info window at polygon's center
-        infoWindow.setPosition(center);
-        infoWindow.open(map);
-        openInfoWindow = infoWindow;
+      //   // Open info window at polygon's center
+      //   infoWindow.setPosition(center);
+      //   infoWindow.open(map);
+      //   openInfoWindow = infoWindow;
 
-        // Optional: Change polygon style on hover
-        polygon.setOptions({
-          fillOpacity: 0.5,
-          strokeWeight: 3,
-        });
-      });
+      //   // Optional: Change polygon style on hover
+      //   polygon.setOptions({
+      //     fillOpacity: 0.5,
+      //     strokeWeight: 3,
+      //   });
+      // });
 
       polygon.addListener('mouseout', () => {
         // Close the info window
@@ -766,8 +766,7 @@ export class MapsService {
         },
         title: feature.Name,
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   // Helper method to create detailed info window content
