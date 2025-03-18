@@ -1,8 +1,13 @@
 <div class="notification-container position-relative">
     <i
-      class="fa-regular fa-bell action-icon position-relative mx-2"
-      (click)="toggleDropdown()"
-    ></i>
+    class="fa-regular fa-bell action-icon position-relative mx-2"
+    (click)="toggleDropdown()"
+>
+    <div class="frameee">
+        <div class="numberrr">{{ unreadCount }}</div>
+    </div>
+</i>
+
   
     <div class="notification-dropdown" *ngIf="dropdownVisible">
       <div class="notification-card">

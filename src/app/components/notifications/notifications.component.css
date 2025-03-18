@@ -1,6 +1,22 @@
 .notification-container {
   position: relative;
 }
+.action-icon {
+  position: relative;
+  font-size: 24px; 
+}
+.frameee{
+  position: absolute;
+  top: -10px;
+  left: 11px;
+  background-color: red;
+  border-radius: 50%;
+  padding: 3px 5px;
+}
+.numberrr {
+  color: white; 
+  font-size: 12px; 
+}
 .action-icon:hover {
   color: #007bff; 
   cursor: pointer;
