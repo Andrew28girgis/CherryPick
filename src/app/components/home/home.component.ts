@@ -108,6 +108,7 @@ export class HomeComponent implements OnInit {
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   currentIndex = -1;
+  isMobileView = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -123,6 +124,9 @@ export class HomeComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.savedMapView = localStorage.getItem('mapView');
+    this.isMobileView = window.innerWidth <= 768;
+    console.log(`mobile view: ${this.isMobileView}`);
+    
     this.markerService.clearMarkers();
   }
 
@@ -138,7 +142,8 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
-    this.currentView = localStorage.getItem('currentView') || '5';
+   // this.currentView = localStorage.getItem('currentView') || '2';
+    this.currentView =  this.isMobileView ? '5' : '2'
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
     );
