@@ -196,6 +196,17 @@
   border: 1px solid #dee2e6;
 }
 
+.TenantWithPolygons {
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+  width: calc(100% / 6 - 6px);
+}
+
 @media only screen and (max-width: 768px) {
   .dashboard-item-container {
     width: 100%;
