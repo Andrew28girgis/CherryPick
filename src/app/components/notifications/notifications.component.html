@@ -3,7 +3,7 @@
     class="fa-regular fa-bell action-icon position-relative mx-2"
     (click)="toggleDropdown()"
 >
-    <div class="frameee">
+    <div class="frameee" *ngIf="unreadCount > 0">
         <div class="numberrr">{{ unreadCount }}</div>
     </div>
 </i>
@@ -14,7 +14,7 @@
         <div class="notificationsnomber">
             <div class="notifications-header">Notifications</div>
 
-            <div class="frame">
+            <div class="frame" *ngIf="unreadCount > 0">
                 <div class="number">{{ unreadCount }}</div>
             </div>
           </div>
