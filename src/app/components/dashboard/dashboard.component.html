@@ -270,6 +270,8 @@
                     <th>Min Building Size</th>
                     <th>Max Building Size</th>
                     <th>Places</th>
+                    <th></th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -283,6 +285,12 @@
                         <td style="white-space: nowrap">{{ polygon.MinBuildingSize | number }} <span *ngIf="polygon.MinBuildingSize"> SF </span></td>
                         <td style="white-space: nowrap">{{ polygon.MaxBuildingSize | number }} <span *ngIf="polygon.MaxBuildingSize"> SF </span></td>
                         <td style="white-space: nowrap">{{ geo.Places }}</td>
+                        <td style="white-space: nowrap">
+                          <div style="cursor: pointer;"> 
+                            <i class="fa-solid fa-share-nodes"></i>
+                          </div>
+                        </td>
+
                       </tr>
                     </ng-container>
                   </ng-container>
