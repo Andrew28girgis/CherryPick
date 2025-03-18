@@ -10,7 +10,7 @@
       <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container tenants-container">
           <div class="d-flex align-items-center justify-content-between w-100">
-            <span class="container-title">Tenants</span>
+            <!-- <span class="container-title">Tenants</span> -->
             <button
               *ngIf="tenants && tenants.length > 0"
               class="kanban-button"
@@ -61,9 +61,9 @@
       <button ngbNavLink>Buyboxes</button>
       <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container buyBoxes-container">
-          <div class="d-flex align-items-center justify-content-between w-100">
+          <!-- <div class="d-flex align-items-center justify-content-between w-100">
             <span class="container-title">Buyboxes</span>
-          </div>
+          </div> -->
           <div
             class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
           >
@@ -143,9 +143,9 @@
       <button ngbNavLink>Properties</button>
       <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container properties-container">
-          <div class="d-flex align-items-center justify-content-between w-100">
+          <!-- <div class="d-flex align-items-center justify-content-between w-100">
             <span class="container-title">Properties</span>
-          </div>
+          </div> -->
           <div
             class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
           >
@@ -256,9 +256,6 @@
       <button ngbNavLink>Expansion Sites</button>
       <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container properties-container">
-          <div class="d-flex align-items-center justify-content-between w-100">
-            <span class="container-title">Polygons</span>
-          </div>
           <div
             class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
           >
@@ -266,7 +263,7 @@
               <table *ngIf="DashboardPoly && DashboardPoly.length > 0" class="table align-middle">
                 <thead class="thead-light">
                   <tr>
-                    <th>Polygon</th>
+                    <th>Area</th>
                     <th>Tenant</th>
                     <th>State</th>
                     <th>Description</th>
