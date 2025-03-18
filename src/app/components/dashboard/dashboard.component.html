@@ -243,6 +243,51 @@
         </div>
       </ng-template>
     </li>
+    <li [ngbNavItem]="4">
+      <button ngbNavLink>Expansion Sites</button>
+      <ng-template ngbNavContent>
+        <div class="w-100 dashboard-item-container properties-container">
+          <div class="d-flex align-items-center justify-content-between w-100">
+            <span class="container-title">Polygons</span>
+          </div>
+          <div
+            class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
+          >
+            <div class="scrollable-table">
+              <table *ngIf="DashboardPoly && DashboardPoly.length > 0" class="table align-middle">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Polygon</th>
+                    <th>Tenant</th>
+                    <th>State</th>
+                    <th>Description</th>
+                    <th>Min Building Size</th>
+                    <th>Max Building Size</th>
+                    <th>Places</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let polygon of DashboardPoly">
+                    <ng-container *ngFor="let geo of polygon.geojsons">
+                      <tr>
+                        <td style="white-space: nowrap">{{ geo.Name }}</td>
+                        <td style="white-space: nowrap">{{ polygon.Name }}</td>
+                        <td style="white-space: nowrap">{{ geo.State ? geo.State : '-' }}</td>
+                        <td style="white-space: nowrap">{{ polygon.Description }}</td>
+                        <td style="white-space: nowrap">{{ polygon.MinBuildingSize | number }} SF</td>
+                        <td style="white-space: nowrap">{{ polygon.MaxBuildingSize | number }} SF</td>
+                        <td style="white-space: nowrap">{{ geo.Places }}</td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </li>
+    
   </ul>
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
