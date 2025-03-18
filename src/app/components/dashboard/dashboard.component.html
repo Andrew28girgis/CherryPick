@@ -260,7 +260,10 @@
             class="w-100 d-flex flex-column align-items-center justify-content-start gap-3 scrollable-container"
           >
             <div class="scrollable-table">
-              <table *ngIf="DashboardPoly && DashboardPoly.length > 0" class="table align-middle">
+              <table
+                *ngIf="DashboardPoly && DashboardPoly.length > 0"
+                class="table align-middle"
+              >
                 <thead class="thead-light">
                   <tr>
                     <th>Area</th>
@@ -271,7 +274,6 @@
                     <th>Max Building Size</th>
                     <th>Places</th>
                     <th></th>
-
                   </tr>
                 </thead>
                 <tbody>
@@ -280,17 +282,26 @@
                       <tr>
                         <td style="white-space: nowrap">{{ geo.Name }}</td>
                         <td style="white-space: nowrap">{{ polygon.Name }}</td>
-                        <td style="white-space: nowrap">{{ geo.State ? geo.State : '-' }}</td>
-                        <td style="white-space: nowrap">{{ polygon.Description }}</td>
-                        <td style="white-space: nowrap">{{ polygon.MinBuildingSize | number }} <span *ngIf="polygon.MinBuildingSize"> SF </span></td>
-                        <td style="white-space: nowrap">{{ polygon.MaxBuildingSize | number }} <span *ngIf="polygon.MaxBuildingSize"> SF </span></td>
+                        <td style="white-space: nowrap">
+                          {{ geo.State ? geo.State : "-" }}
+                        </td>
+                        <td style="white-space: nowrap">
+                          {{ polygon.Description }}
+                        </td>
+                        <td style="white-space: nowrap">
+                          {{ polygon.MinBuildingSize | number }}
+                          <span *ngIf="polygon.MinBuildingSize"> SF </span>
+                        </td>
+                        <td style="white-space: nowrap">
+                          {{ polygon.MaxBuildingSize | number }}
+                          <span *ngIf="polygon.MaxBuildingSize"> SF </span>
+                        </td>
                         <td style="white-space: nowrap">{{ geo.Places }}</td>
                         <td style="white-space: nowrap">
-                          <div style="cursor: pointer;"> 
+                          <div style="cursor: pointer">
                             <i class="fa-solid fa-share-nodes"></i>
                           </div>
                         </td>
-
                       </tr>
                     </ng-container>
                   </ng-container>
@@ -301,7 +312,6 @@
         </div>
       </ng-template>
     </li>
-    
   </ul>
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
