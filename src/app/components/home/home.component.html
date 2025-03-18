@@ -177,12 +177,8 @@
                     fill="white" />
                 </svg>
 
-                <span class="d-block d-sm-block">
-                  {{
-                  shopping.ShoppingCenter.Reactions
-                    ? shopping.ShoppingCenter.Reactions.length
-                    : 0
-                }}
+                <span class="d-block d-sm-block" >
+                  {{ shopping?.ShoppingCenter?.Reactions ? shopping.ShoppingCenter.Reactions.length : 0 }}
                 </span>
 
                 <!-- <span class="reactionMobile">
@@ -203,7 +199,7 @@
 
               <span class="reactionMobile">
                 {{
-                shopping.ShoppingCenter.Comments
+                shopping?.ShoppingCenter?.Comments
                   ? shopping.ShoppingCenter.Comments.length
                   : 0
               }}
