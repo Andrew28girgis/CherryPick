@@ -94,10 +94,12 @@ export class NotificationsComponent implements OnInit {
       next: (res: any) => {
         console.log('UpdateNotification response:', res);
       },
+      
       error: (err: any) => {
         console.error('Error updating notification:', err);
       },
     });
+    this.GetUserNotifications();
   }
 
   isLast(notification: any): boolean {
@@ -106,10 +108,8 @@ export class NotificationsComponent implements OnInit {
       this.notificationsArray.length - 1
     );
   }
-    // Listen for clicks on the document
     @HostListener('document:click', ['$event'])
     handleOutsideClick(event: Event): void {
-      // Check if the click target is inside this component.
       if (!this.eRef.nativeElement.contains(event.target)) {
         this.dropdownVisible = false;
       }
