@@ -1,0 +1,88 @@
+.notification-container {
+  position: relative;
+}
+.action-icon:hover {
+  color: #007bff; 
+  cursor: pointer;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 20px;
+  width: 350px; 
+  background-color: #f8f9fa; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  border-radius: var(--Radius-Radius-12, 12px);
+  z-index: 1000;
+  overflow: hidden; 
+  max-height: calc(100vh - 100px); 
+  overflow-y: auto; 
+}
+.notification-card {
+  border-radius: var(--Radius-Radius-12, 12px);
+  background: var(--Card-Section-BG, #FFF);
+  box-shadow:
+    0px 407px 114px 0px rgba(0, 0, 0, 0.00),
+    0px 260px 104px 0px rgba(0, 0, 0, 0.01),
+    0px 147px 88px 0px rgba(0, 0, 0, 0.03),
+    0px 65px 65px 0px rgba(0, 0, 0, 0.04),
+    0px 16px 36px 0px rgba(0, 0, 0, 0.05);
+}
+.notifications-header {
+  color: var(--Body-Heading-Color, #16181D);
+  text-align: left;
+  padding: 15px 20px;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; 
+}
+.notification-item{
+  background-color: #fff;
+  padding: 13px 17px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+}
+.highlighted {
+  background: var(--Body-Page-BG, #F1F1F4);}
+.notification-item:hover {
+  background-color: #f1f1f1;
+}
+.notification-message {
+  color: var(--Body-Heading-Color, #16181D);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px; 
+  text-align: left; 
+
+}
+.notification-date {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; 
+  text-align: left; 
+  margin-top: 5px;
+
+}
+.no-notifications {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+}
+.divider {
+  background: var(--Body-General-Body-Border, #E2E4E9);
+  width: 100%; /* or adjust as needed */
+  height: 1px;
+  margin: 8px 0;  /* adjust spacing above and below */
+}
+
