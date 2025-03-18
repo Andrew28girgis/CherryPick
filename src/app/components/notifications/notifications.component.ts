@@ -25,7 +25,6 @@ export class NotificationsComponent implements OnInit {
     if (storedContactId) {
       this.ContactId = +storedContactId;
       this.GetUserNotifications();
-
     }
   }
   toggleDropdown(): void {
