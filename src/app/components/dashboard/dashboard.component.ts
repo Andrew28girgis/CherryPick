@@ -8,6 +8,7 @@ import { IDashboardTenant } from 'src/app/shared/models/idashboard-tenant';
 import { IUserComment } from 'src/app/shared/models/iuser-comment';
 import { IUserInBox } from 'src/app/shared/models/iuser-in-box';
 import { IDashboardProperty } from 'src/app/shared/models/idashboard-property';
+import { sharedColors } from 'src/app/shared/others/shared-colors';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +24,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   buyBoxes: IDashboardBuyBox[] = [];
   filterBuyBoxes: IDashboardBuyBox[] = [];
   properties: IDashboardProperty[] = [];
+  stageColorMap = new Map<string, string>();
   buyboxNameFilter: string = '';
   buyboxOrganizationFilter: string = '';
   selectedEmailBody: string = '';
@@ -125,6 +127,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.spinner.hide();
         if (response && response.json && response.json.length > 0) {
           this.properties = response.json;
+          this.setupPropertiesStagesColors();
         }
       },
       error: (error: any) => {
@@ -197,6 +200,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return matchesName && matchesOrg;
       });
     }
+  }
+
+  setupPropertiesStagesColors(): void {
+    this.properties.forEach((property, propertyIndex) => {
+      property.ShoppingCenters.forEach((center) => {
+        center.kanbanStages.forEach((stage, stageIndex) => {
+          let colorIndex = propertyIndex + stageIndex;
+          while (true) {
+            if (
+              ![...this.stageColorMap.values()].includes(
+                sharedColors[colorIndex % sharedColors.length].color
+              )
+            ) {
+              this.stageColorMap.set(
+                stage.stageName,
+                sharedColors[colorIndex % sharedColors.length].color
+              );
+              break;
+            } else {
+              colorIndex += 1;
+            }
+          }
+        });
+      });
+    });
   }
 
   ngOnDestroy(): void {

@@ -184,7 +184,12 @@
                             {{ center.CenterAddress }}, {{ center.CenterCity }},
                             {{ center.CenterState }}
                           </td>
-                          <td style="white-space: nowrap">
+                          <td
+                            style="white-space: nowrap"
+                            [ngStyle]="{
+                              color: stageColorMap.get(stage.stageName)
+                            }"
+                          >
                             {{ stage.stageName }}
                           </td>
                           <td style="white-space: nowrap">
