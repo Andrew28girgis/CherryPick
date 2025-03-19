@@ -30,42 +30,43 @@
     id="navbarNav"
   >
     <ul class="navbar-nav mx-auto gap-3">
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="currentView === 'tenant'">
         <a
           [routerLink]="['/dashboard']"
           routerLinkActive="active-route"
           class="nav-link"
-          *ngIf="currentView === 'tenant'"
-          >Dashboard</a
+          >Campaign</a
         >
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="currentView === 'tenant'">
         <a
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
           class="nav-link"
-          *ngIf="currentView === 'tenant'"
-          >Kanban</a
+          >Cadence</a
         >
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="currentView === 'tenant'">
         <a
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
           class="nav-link"
-          *ngIf="currentView === 'tenant'"
           >Tenants</a
         >
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="currentView === 'landlord'">
         <a
           [routerLink]="['/landlord']"
           routerLinkActive="active-route"
           class="nav-link"
-          *ngIf="currentView === 'landlord'"
           >Properties</a
         >
       </li>
+      <!-- <li class="nav-item" *ngIf="currentView === 'tenant'">
+        <a [routerLink]="['/']" class="nav-link"
+          >Emily</a
+        >
+      </li> -->
     </ul>
 
     <!-- Action Icons -->
@@ -117,14 +118,12 @@
             >
               Logout
               <i
-              class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
-            ></i>
+                class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+              ></i>
             </a>
           </li>
         </ul>
       </div>
-
-    
     </div>
   </div>
 </nav>

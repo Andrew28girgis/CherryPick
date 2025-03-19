@@ -26,6 +26,12 @@ const routes: Routes = [
     component: HomeComponent,
     // canActivate: [AuthGuardService],
   },
+  
+  {
+    path: 'home/:buyboxid/:orgId',
+    component: HomeComponent,
+    // canActivate: [AuthGuardService],
+  },
   {
     path: 'tenant/:buyboxid',
     component: TenantComponent,

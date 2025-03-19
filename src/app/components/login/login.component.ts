@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { General, adminLogin } from 'src/app/shared/models/domain';
@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   adminLogin!: adminLogin;
   wrongPassword = false;
   General!: General;
@@ -28,7 +28,7 @@ export class LoginComponent {
     localStorage.removeItem('mapView');
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.General = new General();
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
@@ -59,12 +59,15 @@ export class LoginComponent {
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => { 
-        data.json.buyBoxId
-       this.spinner.hide();
-      }
+      next: (data) => {
+        localStorage.setItem('orgId', data.json.organizationId);
+        let buybBoxId = data.json[0].buyBoxId;
+        let organizationId = data.json[0].organizationId;
+        this.router.navigate(['/home', buybBoxId, organizationId, 's']);
+
+        this.spinner.hide();
+      },
     });
- 
   }
 
   onSubmit() {
