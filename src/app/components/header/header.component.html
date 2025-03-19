@@ -10,19 +10,20 @@
     />
   </div>
 
-<!-- Right Section -->
-<div class="d-flex ms-auto align-items-center">
-  <!-- Show notifications only on small/medium screens -->
-  <div class="d-block d-lg-none me-2">
-    <app-notifications></app-notifications>
+  <!-- Right Section -->
+  <div class="d-flex ms-auto align-items-center">
+    <!-- Show notifications only on small/medium screens -->
+    <div class="d-block d-lg-none me-2">
+      <app-notifications></app-notifications>
+    </div>
+
+
+
+    <!-- Burger Button -->
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+      <i class="fa-solid fa-bars nav-icon"></i>
+    </button>
   </div>
-
-  <!-- Burger Button -->
-  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
-    <i class="fa-solid fa-bars nav-icon"></i>
-  </button>
-</div>
-
 
   <!-- Collapsible Navbar Content -->
   <div
@@ -55,9 +56,6 @@
           >Tenants</a
         >
       </li>
-      <!-- <li class="nav-item" (click)="BackTo()">
-        <div class="nav-link">Tenants</div>
-      </li> -->
       <li class="nav-item">
         <a
           [routerLink]="['/manage-properties']"
@@ -70,29 +68,46 @@
 
     <!-- Action Icons -->
     <div class="d-flex align-items-center justify-content-center">
-      <!-- <i class="fa-regular fa-envelope action-icon position-relative mx-2">
-        <span class="badge">{{ emails.length }}</span>
-      </i>
-      <i class="fa-regular fa-bell action-icon position-relative mx-2">
-        <span class="badge">{{ notifications.length }}</span>
-      </i> -->
+          <!-- Avatar Dropdown -->
+    <div class="dropdown me-2">
+      <div class="avatar-container" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <img 
+          *ngIf="userAvatar" 
+          [src]="userAvatar" 
+          alt="User Avatar" 
+          class="rounded-circle avatar-img"
+        />
+        <div *ngIf="!userAvatar" class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center">
+          <i class="fa-solid fa-user"></i>
+        </div>
+      </div>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+        <li>
+          <a 
+            class="dropdown-item" 
+            [href]="currentView === 'tenant' ? landlordRoute : tenantRoute" 
+            target="_blank"
+          >
+            Switch to {{ currentView === 'tenant' ? 'Landlord' : 'Tenant' }}
+          </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+          <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">
+            Logout
+          </a>
+        </li>
+      </ul>
+    </div>
       <div class="d-none d-lg-block">
         <app-notifications></app-notifications>
-
       </div>
 
       <i
         class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
         (click)="logout()"
       ></i>
-
-      <!-- <button
-        class="CherryPick__button ms-4"
-        (click)="logout()"
-        style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px"
-      >
-        Logout
-      </button> -->
     </div>
   </div>
 </nav>
+
