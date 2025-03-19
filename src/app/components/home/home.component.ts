@@ -1167,7 +1167,26 @@ export class HomeComponent implements OnInit {
   copyGUID(link: string) {
     navigator.clipboard
       .writeText(link)
-      .then(() => {})
-      .catch((err) => {});
+      .then(() => {
+        this.showToast('Tenant Link Copied to Clipboard!');
+        this.modalService.dismissAll();
+      })
+      .catch((err) => {
+        console.error('Failed to copy: ', err);
+      });
+  }  
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage!.innerText = message;
+    toast!.classList.add('show');
+    setTimeout(() => {
+      toast!.classList.remove('show');
+    }, 3000);
+  }
+
+  closeToast() {
+    const toast = document.getElementById('customToast');
+    toast!.classList.remove('show');
   }
 }
