@@ -1,8 +1,10 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="dashboard-container">
-  <div class="d-flex justify-content-end ">
-    <button [routerLink]="'/tenantWithPolygons'" class="TenantWithPolygons">Add expansion campain</button>
-  </div>
+  <!-- <div class="d-flex justify-content-end">
+    <button [routerLink]="'/tenantWithPolygons'" class="TenantWithPolygons">
+      Add Expansion Campaign
+    </button>
+  </div> -->
 
   <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
     <li [ngbNavItem]="1">
@@ -141,7 +143,7 @@
     </li>
     <li [ngbNavItem]="3">
       <button ngbNavLink>Listings</button>
-      <ng-template ngbNavContent> 
+      <ng-template ngbNavContent>
         <div class="w-100 dashboard-item-container properties-container">
           <!-- <div class="d-flex align-items-center justify-content-between w-100">
             <span class="container-title">Properties</span>
@@ -266,7 +268,7 @@
               >
                 <thead class="thead-light">
                   <tr>
-                    <th>Area</th>
+                    <th>Campaign Name</th>
                     <th>Tenant</th>
                     <th>State</th>
                     <th>Description</th>
