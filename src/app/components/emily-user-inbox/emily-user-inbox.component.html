@@ -13,7 +13,7 @@
             (scroll)="onScroll()">
             <li class="contact-list" *ngFor="let buyBox of buyboxTypes">
               <div class="d-flex justify-content-between w-100"
-                [routerLink]="['/organization-mail/', buyBox.id, buyBox.organizationId, buyBox.name]">
+                [routerLink]="['/organization-mail/', buyBox.id, buyBox.organizationId]">
                 <span class="namecontact" id="{{ buyBox.name }}">
                   {{ buyBox.name }}
                 </span>
