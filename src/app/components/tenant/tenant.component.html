@@ -1,57 +1,113 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-
-<!-- <nav class="navbar-background container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center justify-content-start">
-          <img
-            class="cherry-logo"
-            [routerLink]="['/summary']"
-            src="../../../assets/Images/logo.png"
-            alt=""
-          />
-        </div>
-        <div class="d-flex align-items-center justify-content-end">
-        </div>
-      </div>
+<div class="map-container img-fluid">
+  <header class="card custom-card " [ngStyle]="{ background: buyboxcolor }">
+    <div class="col-12 d-flex align-items-center justify-content-start">
+     <div class="d-flex align-items-center justify-content-center">
+       <div>
+         <img
+           class="tenant-logo"
+           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+             buyboxid
+           }}"
+           alt="Tenant Logo"
+         />
+       </div>
+         <div class="d-flex flex-column align-items-center justify-content-center gap-2"
+         >
+           <div>
+             <span class="buyboxname">
+               {{ buyboxname }}
+             </span>
+           </div>
+           <!-- <div>
+             <div class="fast-food-badge">Fast Food</div>
+           </div> -->
+         </div>
+     </div>
     </div>
-  </div>
-</nav> -->
-<section
-  class="container red-background position-relative mt-4"
-  [ngStyle]="{ background: buyboxcolor }"
->
-  <div class="row">
-    <div class="col-12">
-      <div class="logo-container position-relative">
-        <span class="buyboxname buyboxpos position-absolute mt-5">
-          {{ buyboxname }}
-        </span>
-        <img
-          class="tenant-logo position-absolute"
-          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-            buyboxid
-          }}"
-          alt="Tenant Logo"
-        />
-
-        <!-- Absolutely positioned content in the bottom-right -->
-        <div class="content-right position-absolute d-flex gap-2">
-          <button class="btn-share">
-            <div>
-              <i class="fa-solid fa-arrow-up-right-from-square imgshare" [ngStyle]="{ color: buyboxcolor }"></i>
-            </div>
-            <span [ngStyle]="{ color: buyboxcolor }">Share</span>
-          </button>
-          <button class="btn-submit" (click)="openUploadModal(test)">
-            <span>Submit a proposal</span>
-          </button>
-        </div>
+    <div class="col-12 d-flex align-items-center justify-content-start">
+       <div class="d-flex align-items-center justify-content-center">
+         <div class="smalllframe">
+           <img
+             src="../../../assets/Images/size.png"
+             alt="Small Image"
+             class="small-image"
+           />
+         </div>
+   
+         <div class="d-flex flex-column text-center">
+           <span class="boldtext">Size needed</span>
+           <div class="d-flex justify-content-start">
+             <span class="lowwhite" style="white-space: nowrap">
+               {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
+             </span>
+             <span
+               class="lowwhite mx-2"
+               *ngIf="MinBuildingSize && MaxBuildingSize"
+             >
+               -
+             </span>
+             <span class="lowwhite">
+               {{ MaxBuildingSize ? MaxBuildingSize + " SF" : "" }}
+             </span>
+           </div>
+         </div>
+       </div>
+     </div>
+   
+     <div class="col-12 d-flex align-items-center justify-content-start">
+       <div class="d-flex align-items-center justify-content-center">
+         <div class="smalllframe">
+           <img
+             src="../../../assets/Images/SVG/bank.png"
+             alt="Small Image"
+             class="small-image"
+           />
+         </div>
+   
+         <div class="d-flex flex-column text-center">
+           <span class="boldtext">States</span>
+           <div class="d-flex justify-content-start">
+             <span class="lowwhite"> {{ states }} </span>
+           </div>
+         </div>
+       </div>
+     </div>
+   
+     <div class="col-12 d-flex align-items-center justify-content-start">
+       <div class="d-flex align-items-center justify-content-center">
+         <div class="smalllframe">
+           <img
+             src="../../../assets/Images/SVG/buildings.png"
+             alt="Small Image"
+             class="small-image"
+           />
+         </div>
+   
+         <div class="d-flex flex-column text-center">
+           <span class="boldtext">Cities</span>
+           <div class="d-flex justify-content-start">
+             <span class="lowwhite"> {{ address }} </span>
+           </div>
+         </div>
+       </div>
+     </div>
+   </header>
+  <div class="content-right d-flex gap-2">
+    <button class="btn-share" [ngStyle]="{ color: buyboxcolor, border: '1px solid ' + buyboxcolor }">
+      <div>
+        <i
+          class="fa-solid fa-arrow-up-right-from-square imgshare"
+        ></i>
       </div>
-    </div>
+      <span>Share</span>
+    </button>
+    
+    <button class="btn-submit" (click)="openUploadModal(test)">
+      <span>Submit a proposal</span>
+    </button>
   </div>
-</section>
+</div>
 
 <div class="container background mt-5">
   <div class="row">
@@ -137,87 +193,23 @@
 <div
   class="row row-background d-flex justify-content-center align-items-center mt-4"
 >
-  <div class="d-flex align-items-center justify-content-center mt-4">
-    <span class="specifications">Specifications</span>
-  </div>
-  <div class="col-4 d-flex align-items-center justify-content-center">
-    <div class="d-flex align-items-center justify-content-center">
-      <div class="smalllframe">
-        <img
-          src="../../../assets/Images/size.png"
-          alt="Small Image"
-          class="small-image"
-        />
-      </div>
-
-      <div class="d-flex flex-column text-center">
-        <span class="boldtext">Size needed</span>
-        <div class="d-flex justify-content-start">
-          <span class="lowwhite" style="white-space: nowrap">
-            {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
-          </span>
-          <span
-            class="lowwhite mx-2"
-            *ngIf="MinBuildingSize && MaxBuildingSize"
-          >
-            -
-          </span>
-          <span class="lowwhite">
-            {{ MaxBuildingSize ? MaxBuildingSize + " SF" : "" }}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-4 d-flex align-items-center justify-content-center">
-    <div class="d-flex align-items-center justify-content-center">
-      <div class="smalllframe">
-        <img
-          src="../../../assets/Images/SVG/bank.png"
-          alt="Small Image"
-          class="small-image"
-        />
-      </div>
-
-      <div class="d-flex flex-column text-center">
-        <span class="boldtext">States</span>
-        <div class="d-flex justify-content-start">
-          <span class="lowwhite"> {{ states }} </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-4 d-flex align-items-center justify-content-center">
-    <div class="d-flex align-items-center justify-content-center">
-      <div class="smalllframe">
-        <img
-          src="../../../assets/Images/SVG/buildings.png"
-          alt="Small Image"
-          class="small-image"
-        />
-      </div>
-
-      <div class="d-flex flex-column text-center">
-        <span class="boldtext">Cities</span>
-        <div class="d-flex justify-content-start">
-          <span class="lowwhite"> {{ address }} </span>
-        </div>
-      </div>
-    </div>
-  </div>
   <div
     class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0"
   >
-    <button class="btn-submit-proposel" (click)="openUploadModal(test)" [ngStyle]="{ background: buyboxcolor }">
+    <button
+      class="btn-submit-proposel"
+      (click)="openUploadModal(test)"
+      [ngStyle]="{ background: buyboxcolor }"
+    >
       <span>Submit a proposal</span>
     </button>
-    <button class="btn-share">
+    <button class="btn-share" [ngStyle]="{ color: buyboxcolor, border: '1px solid ' + buyboxcolor }">
       <div>
-        <i class="fa-solid fa-arrow-up-right-from-square imgshare" [ngStyle]="{ color: buyboxcolor }"></i>
+        <i
+          class="fa-solid fa-arrow-up-right-from-square imgshare"
+        ></i>
       </div>
-      <span [ngStyle]="{ color: buyboxcolor }">Share</span>
+      <span>Share</span>
     </button>
   </div>
 </div>
@@ -236,18 +228,11 @@
   <div class="col-4 col-md-3 col-lg-4 col-xl-3 position-relative">
     <div class="broker-container broker-containerrrr">
       <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
-      <!-- <div class="frameeeeeee">
-        <span class="brokerrrr">Broker</span>
-      </div> -->
     </div>
   </div>
 
   <div class="col-8 col-md-9 col-lg-8 col-xl-9">
     <div class="d-flex flex-column text-start">
-      <!-- <div class="d-flex align-items-center justify-content-start">
-        <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
-        <span class="nameincard">{{ lastnamemanagerorganization }}</span>
-      </div> -->
       <span class="brokertext" [innerHTML]="brokersignature"></span>
     </div>
   </div>
@@ -362,7 +347,6 @@
                   id="checkbox-{{ image.name }}"
                 />
                 <label class="form-check-label" for="checkbox-{{ image.name }}">
-                  
                 </label>
               </div>
               <img
@@ -378,129 +362,166 @@
         </div>
       </div>
       <!-- Display JsonPDF Data Section -->
-<!-- Display JsonPDF Data Section -->
-<div *ngIf="JsonPDF" class="mt-5 shopping-center-container">
-  <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8">
-      <!-- Center Information Card -->
-      <div class="card shadow-sm mb-4">
-        <div class="card-header text-white text-center" style="background-color: #e4e7e9 !important;">
-          <h4 class="mb-0 text-dark">Shopping Center Information</h4>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-12">
-              <dl class="row mb-0">
-                <ng-container *ngIf="JsonPDF.CenterName">
-                  <dt class="col-sm-4">Center Name:</dt>
-                  <dd class="col-sm-8">{{ JsonPDF.CenterName }}</dd>
-                </ng-container>
-                <ng-container *ngIf="JsonPDF.CenterType">
-                  <dt class="col-sm-4">Center Type:</dt>
-                  <dd class="col-sm-8">{{ JsonPDF.CenterType }}</dd>
-                </ng-container>
-                <ng-container *ngIf="JsonPDF.CenterAddress">
-                  <dt class="col-sm-4">Address:</dt>
-                  <dd class="col-sm-8">{{ JsonPDF.CenterAddress }}</dd>
-                </ng-container>
-                <ng-container *ngIf="JsonPDF.CenterCity">
-                  <dt class="col-sm-4">City:</dt>
-                  <dd class="col-sm-8">{{ JsonPDF.CenterCity }}</dd>
-                </ng-container>
-                <ng-container *ngIf="JsonPDF.CenterState">
-                  <dt class="col-sm-4">State:</dt>
-                  <dd class="col-sm-8">{{ JsonPDF.CenterState }}</dd>
-                </ng-container>
-                <ng-container *ngIf="JsonPDF.TotalAvailableSpace_SF">
-                  <dt class="col-sm-4">Available Space (SF):</dt>
-                  <dd class="col-sm-8">{{ JsonPDF.TotalAvailableSpace_SF }}</dd>
-                </ng-container>
-              </dl>
+      <!-- Display JsonPDF Data Section -->
+      <div *ngIf="JsonPDF" class="mt-5 shopping-center-container">
+        <div class="row justify-content-center">
+          <div class="col-md-10 col-lg-8">
+            <!-- Center Information Card -->
+            <div class="card shadow-sm mb-4">
+              <div
+                class="card-header text-white text-center"
+                style="background-color: #e4e7e9 !important"
+              >
+                <h4 class="mb-0 text-dark">Shopping Center Information</h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <dl class="row mb-0">
+                      <ng-container *ngIf="JsonPDF.CenterName">
+                        <dt class="col-sm-4">Center Name:</dt>
+                        <dd class="col-sm-8">{{ JsonPDF.CenterName }}</dd>
+                      </ng-container>
+                      <ng-container *ngIf="JsonPDF.CenterType">
+                        <dt class="col-sm-4">Center Type:</dt>
+                        <dd class="col-sm-8">{{ JsonPDF.CenterType }}</dd>
+                      </ng-container>
+                      <ng-container *ngIf="JsonPDF.CenterAddress">
+                        <dt class="col-sm-4">Address:</dt>
+                        <dd class="col-sm-8">{{ JsonPDF.CenterAddress }}</dd>
+                      </ng-container>
+                      <ng-container *ngIf="JsonPDF.CenterCity">
+                        <dt class="col-sm-4">City:</dt>
+                        <dd class="col-sm-8">{{ JsonPDF.CenterCity }}</dd>
+                      </ng-container>
+                      <ng-container *ngIf="JsonPDF.CenterState">
+                        <dt class="col-sm-4">State:</dt>
+                        <dd class="col-sm-8">{{ JsonPDF.CenterState }}</dd>
+                      </ng-container>
+                      <ng-container *ngIf="JsonPDF.TotalAvailableSpace_SF">
+                        <dt class="col-sm-4">Available Space (SF):</dt>
+                        <dd class="col-sm-8">
+                          {{ JsonPDF.TotalAvailableSpace_SF }}
+                        </dd>
+                      </ng-container>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Availability and Tenants Section -->
+            <div class="row g-4">
+              <!-- Availability Card -->
+              <div class="col-md-6" *ngIf="JsonPDF.Availability.length > 0">
+                <div class="card shadow-sm h-100">
+                  <div
+                    class="card-header text-white"
+                    style="background-color: #081c3e !important"
+                  >
+                    <h5 class="mb-0 d-flex justify-content-center">
+                      Availability
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                      <li
+                        *ngFor="let avail of JsonPDF.Availability"
+                        class="list-group-item border-0 px-0"
+                      >
+                        <div class="form-check">
+                          <input
+                            type="checkbox"
+                            class="form-check-input"
+                            [(ngModel)]="avail.isAdded"
+                            id="availCheckbox-{{ avail.id }}"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="availCheckbox-{{ avail.id }}"
+                          >
+                            <strong>Building Size:</strong>
+                            {{ avail.BuildingSizeSf }} SF
+                          </label>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tenants Card -->
+              <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                  <div
+                    class="card-header text-white"
+                    style="background-color: #081c3e !important"
+                  >
+                    <h5 class="mb-0 d-flex justify-content-center">Tenants</h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                      <li
+                        *ngFor="let tenant of JsonPDF.Tenants"
+                        class="list-group-item border-0 px-0"
+                      >
+                        <div class="form-check">
+                          <input
+                            type="checkbox"
+                            class="form-check-input"
+                            [(ngModel)]="tenant.isAdded"
+                            id="tenantCheckbox-{{ tenant.id }}"
+                          />
+                          <label
+                            class="form-check-label"
+                            for="tenantCheckbox-{{ tenant.id }}"
+                          >
+                            {{ tenant.Name }}
+                            <a
+                              *ngIf="tenant.OrgUrl"
+                              [href]="tenant.OrgUrl"
+                              target="_blank"
+                              class="tenant-link"
+                            >
+                              (Website)
+                            </a>
+                          </label>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Availability and Tenants Section -->
-      <div class="row g-4">
-        <!-- Availability Card -->
-        <div class="col-md-6" *ngIf="JsonPDF.Availability.length > 0">
-          <div class="card shadow-sm h-100">
-            <div class="card-header text-white" style="background-color: #081c3e !important;">
-              <h5 class="mb-0 d-flex justify-content-center">Availability</h5>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <li *ngFor="let avail of JsonPDF.Availability" class="list-group-item border-0 px-0">
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      [(ngModel)]="avail.isAdded"
-                      id="availCheckbox-{{ avail.id }}"
-                    />
-                    <label class="form-check-label" for="availCheckbox-{{ avail.id }}">
-                      <strong>Building Size:</strong> {{ avail.BuildingSizeSf }} SF
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tenants Card -->
-        <div class="col-md-6">
-          <div class="card shadow-sm h-100">
-            <div class="card-header text-white" style="background-color: #081c3e !important;">
-              <h5 class="mb-0 d-flex justify-content-center">Tenants</h5>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <li *ngFor="let tenant of JsonPDF.Tenants" class="list-group-item border-0 px-0">
-                  <div class="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      [(ngModel)]="tenant.isAdded"
-                      id="tenantCheckbox-{{ tenant.id }}"
-                    />
-                    <label class="form-check-label" for="tenantCheckbox-{{ tenant.id }}">
-                      {{ tenant.Name }}
-                      <a *ngIf="tenant.OrgUrl" [href]="tenant.OrgUrl" target="_blank" class="tenant-link">
-                        (Website)
-                      </a>
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      
     </div>
   </div>
   <div class="modal-footer">
     <!-- Send Selected Images Button -->
-    <div class="text-center col-12" >
+    <div class="text-center col-12">
       <div class="d-flex justify-content-end">
-      <button class="upload mx-1" (click)="sendImagesArray()" *ngIf="images.length > 0">
-        Convert Images
-      </button>
+        <button
+          class="upload mx-1"
+          (click)="sendImagesArray()"
+          *ngIf="images.length > 0"
+        >
+          Convert Images
+        </button>
         <div class="right">
-        <button class="btn btn-success" *ngIf="JsonPDF" (click)="sendJson()">
-          Submit PDF Data
-        </button>
-        <button class="btn btn-secondary mx-1" (click)="clearModalData(); closeModal(modal)">
-          Cancel
-        </button>
+          <button class="btn btn-success" *ngIf="JsonPDF" (click)="sendJson()">
+            Submit PDF Data
+          </button>
+          <button
+            class="btn btn-secondary mx-1"
+            (click)="clearModalData(); closeModal(modal)"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </ng-template>
 <div id="customToast" class="custom-toast">
