@@ -43,11 +43,28 @@ export class LoginComponent {
       this.t = params.get('t');
       if (this.t) {
         localStorage.clear();
-        this.onSubmit();
+        this.loginWithGUID();
       } else {
         localStorage.clear();
       }
     });
+  }
+
+  loginWithGUID() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetBuyBoxIdToBeShown',
+      Params: {
+        BuyBoxGUID: this.t,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => { 
+        data.json.buyBoxId
+       this.spinner.hide();
+      }
+    });
+ 
   }
 
   onSubmit() {
