@@ -16,7 +16,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Location } from '@angular/common';
 import { popupActions } from './kanban-actions/kanban-actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { kanbansColors } from './kanbans-colors';
+import { sharedColors } from '../../shared/others/shared-colors';
 
 @Component({
   selector: 'app-kanban',
@@ -32,7 +32,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   private userBuyBoxesPropertiesKanbans: IUserKanban[] = [];
   private userBuyBoxesPropertiesKanbansDetails?: IKanbanDetails;
   private pollingInterval: number = 0;
-  stagesColors: { background: string; color: string }[] = kanbansColors;
+  stagesColors: { background: string; color: string }[] = sharedColors;
 
   kanbanTabs: { id: number; title: string }[] = [
     { id: 1, title: 'Tenants' },

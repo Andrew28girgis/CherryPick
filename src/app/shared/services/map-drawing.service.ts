@@ -35,7 +35,7 @@ export class MapDrawingService {
   ): google.maps.Map {
     // set saved coordinates if exists
     const mapOptions: google.maps.MapOptions = {
-      center: { lat: lat || 37.7749, lng: lng || -122.4194 },
+      center: { lat: lat || 38.889805 , lng: lng || -77.009056      },
       zoom: zoom || 8,
     };
 

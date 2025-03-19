@@ -16,7 +16,7 @@ export class LoginComponent {
   wrongPassword = false;
   General!: General;
   logoUrl: string = '';
-  t: any; 
+  t: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -33,11 +33,12 @@ export class LoginComponent {
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
     // First check if user is already logged in today
-    if (this.authService.isLoggedInToday()) {
-      this.navigateToHome();
-      return;
-    }
-    // Otherwise handle query parameters
+    // if (this.authService.isLoggedInToday()) {
+    //   console.log(`hello`);
+
+    //   this.navigateToHome();
+    //   return;
+    // }
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.t = params.get('t');
       if (this.t) {
@@ -55,7 +56,10 @@ export class LoginComponent {
       this.adminLogin.contactToken = this.t;
     }
     this.PlacesService.loginUser(this.adminLogin).subscribe((data: any) => {
-      localStorage.setItem('accountMicrosoftLinked', data.accountMicrosoftLinked);
+      localStorage.setItem(
+        'accountMicrosoftLinked',
+        data.accountMicrosoftLinked
+      );
       // Use the updated auth service to store the token with date
       this.authService.setToken(data.token);
       localStorage.setItem('contactId', data.contactId);

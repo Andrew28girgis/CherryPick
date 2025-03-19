@@ -181,6 +181,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 12rem;
+  color: #707791;
 }
 
 /* Drag and Drop */

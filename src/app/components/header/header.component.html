@@ -10,10 +10,19 @@
     />
   </div>
 
-  <!-- Right Section (Burger Button) -->
-  <button class="navbar-toggler ms-auto" type="button" (click)="toggleNavbar()">
+<!-- Right Section -->
+<div class="d-flex ms-auto align-items-center">
+  <!-- Show notifications only on small/medium screens -->
+  <div class="d-block d-lg-none me-2">
+    <app-notifications></app-notifications>
+  </div>
+
+  <!-- Burger Button -->
+  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
     <i class="fa-solid fa-bars nav-icon"></i>
   </button>
+</div>
+
 
   <!-- Collapsible Navbar Content -->
   <div
@@ -21,7 +30,6 @@
     [ngClass]="{ show: isNavbarOpen }"
     id="navbarNav"
   >
-    <!-- Navigation Links -->
     <ul class="navbar-nav mx-auto gap-3">
       <li class="nav-item">
         <a
@@ -68,6 +76,10 @@
       <i class="fa-regular fa-bell action-icon position-relative mx-2">
         <span class="badge">{{ notifications.length }}</span>
       </i> -->
+      <div class="d-none d-lg-block">
+        <app-notifications></app-notifications>
+
+      </div>
 
       <i
         class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"

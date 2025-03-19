@@ -102,15 +102,14 @@
                   >
                     <ng-container *ngFor="let action of stage.Actions">
                       <ng-container *ngIf="action.actionLevel == 'Stage'">
-                        <ng-container *ngIf="action.actionType=='Popup'">
-                          <a
-                          ngbDropdownItem
-                          (click)="openActionPopup(action.actionName)"
-                        >
-                          {{ action.actionName }}
-                        </a>
+                        <ng-container *ngIf="action.actionType == 'Popup'">
+                          <button
+                            ngbDropdownItem
+                            (click)="openActionPopup(action.actionName)"
+                          >
+                            {{ action.actionName }}
+                          </button>
                         </ng-container>
-                        
                       </ng-container>
                     </ng-container>
                   </ng-container>
@@ -163,7 +162,7 @@
                             <img
                               *ngIf="
                                 center.MarketSurveyShoppingCenters[0]
-                                  .ShoppingCenterRep[0].ShoppingCenterRepLogoURL
+                                  .ShoppingCenterRep[0]?.ShoppingCenterRepLogoURL
                               "
                               [src]="
                                 center.MarketSurveyShoppingCenters[0]
