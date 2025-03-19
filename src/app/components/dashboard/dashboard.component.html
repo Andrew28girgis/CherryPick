@@ -1,7 +1,7 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="dashboard-container">
   <div class="d-flex justify-content-end ">
-    <button routerLink="/TenantWithPolygons" class="TenantWithPolygons">Create Tenant & Polygons</button>
+    <button [routerLink]="'/tenantWithPolygons'" class="TenantWithPolygons">Add expansion campain</button>
   </div>
 
   <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">

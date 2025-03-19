@@ -537,6 +537,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     if (modalComponent) {
       const modalRef = this.modalService.open(modalComponent, {
         windowClass: 'kanban-action-popup',
+        scrollable:true,
+         size:'xl'
       });
       // modalRef.componentInstance.action = action; // Passing action as input
     }
