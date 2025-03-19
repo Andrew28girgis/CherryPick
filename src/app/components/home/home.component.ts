@@ -107,11 +107,11 @@ export class HomeComponent implements OnInit {
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   currentIndex = -1;
-  Guid!:string;
-  GuidLink!:string;
+  Guid!: string;
+  GuidLink!: string;
   isMobileView: boolean;
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
-  
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1155,7 +1155,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.Guid = data.json[0].buyBoxLink;
         if (this.Guid) {
-          this.GuidLink = `https://cp.cherrypick.com/${this.Guid}`;
+          this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
         } else {
           this.GuidLink = '';
         }
@@ -1167,9 +1167,7 @@ export class HomeComponent implements OnInit {
   copyGUID(link: string) {
     navigator.clipboard
       .writeText(link)
-      .then(() => {
-      })
-      .catch((err) => {
-      });
+      .then(() => {})
+      .catch((err) => {});
   }
 }
