@@ -64,6 +64,8 @@ const routes: Routes = [
       import('./components/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService],
   },
+  { path: 'landlord', loadChildren: () =>
+    import('./components/landlord/landlord.module').then(m => m.LandlordModule) },
 ];
 
 @NgModule({
