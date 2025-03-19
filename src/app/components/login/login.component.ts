@@ -63,8 +63,9 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('orgId', data.json.organizationId);
         let buybBoxId = data.json[0].buyBoxId;
         let organizationId = data.json[0].organizationId;
-        this.router.navigate(['/home', buybBoxId, organizationId, 's']);
+        let buyboxName = data.json[0].name;
 
+        this.router.navigate(['/home', buybBoxId, organizationId, buyboxName]);
         this.spinner.hide();
       },
     });
