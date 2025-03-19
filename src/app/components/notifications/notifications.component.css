@@ -57,7 +57,7 @@
   background-color: #f8f9fa;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: var(--Radius-Radius-12, 12px);
-  z-index: 1000;
+  z-index: 1001;
   overflow: hidden;
   max-height: calc(100vh - 100px);
   overflow-y: auto;
