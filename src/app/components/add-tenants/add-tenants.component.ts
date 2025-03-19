@@ -5,7 +5,7 @@ import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { ApiServiceService } from 'src/app/shared/services/api-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/shared/services/places.service';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -35,7 +35,7 @@ export class AddTenantsComponent implements OnInit {
     private ApiService: ApiServiceService,
     private PlacesService: PlacesService,
     private fb: FormBuilder,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbModal
   ) {}
 
   ngOnInit() {
@@ -172,7 +172,6 @@ export class AddTenantsComponent implements OnInit {
 
   onSubmitForm() {
     if (this.siteDetailsForm.valid) {
-      this.activeModal.dismiss();
       this.spinner.show();
       const formData = this.siteDetailsForm.value;
 
@@ -187,8 +186,11 @@ export class AddTenantsComponent implements OnInit {
       this.ApiService.GenericAPI(body).subscribe({
         next: (data) => {
           this.getUserBuyBoxes();
+          this.activeModal.dismissAll({ created: true });
           this.spinner.hide();
-          this.router.navigate(['/home']);
+          this.router.navigate(['/summary']);
+          // const buyBox = data.json[0];
+          // this.router.navigate(['/dashboard/', buyBox.id, buyBox.organizationId, buyBox.name]);
         },
         error: (error) => {
           console.error('API error:', error);

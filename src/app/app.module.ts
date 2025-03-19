@@ -47,7 +47,6 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
-import { TenantWithPolygonsComponent } from './components/tenant-with-polygons/tenant-with-polygons.component';
 
 const msalConfig = {
   auth: {
@@ -88,7 +87,6 @@ const loginRequest = {
     ManagePropertiesComponent,
     DashboardComponent,
     AddTenantsComponent,
-    TenantWithPolygonsComponent
   ],
   imports: [
     BrowserModule,

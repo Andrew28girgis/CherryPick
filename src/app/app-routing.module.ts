@@ -11,7 +11,6 @@ import { TermsComponent } from './components/terms/terms.component';
 import { TenantComponent } from './components/tenant/tenant.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
-import { TenantWithPolygonsComponent } from './components/tenant-with-polygons/tenant-with-polygons.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },

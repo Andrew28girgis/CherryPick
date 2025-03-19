@@ -75,10 +75,10 @@
             <select class="form-select" formControlName="BuildingType"
             [ngClass]="{ 'is-invalid': siteDetailsForm.get('BuildingType')?.invalid && siteDetailsForm.get('BuildingType')?.touched }">
               <option value="" selected disabled>Select Building Type</option>
-              <option value="1">Free Standing</option>
-              <option value="2">Neighborhood Strip</option>
-              <option value="3">Endcap</option>
-              <option value="4">Inline Retail</option>
+              <option value="Free Standing">Free Standing</option>
+              <option value="Neighborhood Strip">Neighborhood Strip</option>
+              <option value="Endcap">Endcap</option>
+              <option value="Inline Retail">Inline Retail</option>
             </select>
           </div>
         </div>
@@ -108,10 +108,10 @@
             <select class="form-select" formControlName="TrafficDrection"
             [ngClass]="{ 'is-invalid': siteDetailsForm.get('TrafficDrection')?.invalid && siteDetailsForm.get('TrafficDrection')?.touched }">
               <option value="" selected disabled>Select Traffic Direction</option>
-              <option value="1">Northbound</option>
-              <option value="2">Southbound</option>
-              <option value="3">Two-Way</option>
-              <option value="4">Any Side</option>
+              <option value="Northbound">Northbound</option>
+              <option value="Southbound">Southbound</option>
+              <option value="Two-Way">Two-Way</option>
+              <option value="Any Side">Any Side</option>
             </select>
           </div>
         </div>
@@ -134,10 +134,10 @@
             <select class="form-select" formControlName="PropertyCondition"
             [ngClass]="{ 'is-invalid': siteDetailsForm.get('PropertyCondition')?.invalid && siteDetailsForm.get('PropertyCondition')?.touched }">
               <option value="" selected disabled>Select Property Condition</option>
-              <option value="1">Shell</option>
-              <option value="2">Vanilla Shell</option>
-              <option value="3">Second Generation</option>
-              <option value="4">Renovated</option>
+              <option value="Shell">Shell</option>
+              <option value="Vanilla Shell">Vanilla Shell</option>
+              <option value="Second Generation">Second Generation</option>
+              <option value="Renovated">Renovated</option>
             </select>
           </div>
         </div>
@@ -230,10 +230,10 @@
             <select class="form-select" formControlName="DealStructure"
             [ngClass]="{ 'is-invalid': siteDetailsForm.get('DealStructure')?.invalid && siteDetailsForm.get('DealStructure')?.touched }">
               <option value="" selected disabled>Select Deal Structure</option>
-              <option value="1">Purchase</option>
-              <option value="2">Ground Lease</option>
-              <option value="3">Lease</option>
-              <option value="4">Build-to-Suit</option>
+              <option value="Purchase">Purchase</option>
+              <option value="Ground Lease">Ground Lease</option>
+              <option value="Lease">Lease</option>
+              <option value="Build-to-Suit">Build-to-Suit</option>
             </select>
           </div>
         </div>
@@ -283,7 +283,7 @@
           <textarea class="form-control" id="OtherComments" formControlName="OtherComments" rows="2" placeholder="Comment"></textarea>
         </div>
         <div class="modal-footer no-bd p-0 mt-3">
-          <button type="submit" class="CherryPick__button">Create Tenants</button>
+          <button type="submit" class="CherryPick__button">Create</button>
         </div>
       </div>
     </form>
