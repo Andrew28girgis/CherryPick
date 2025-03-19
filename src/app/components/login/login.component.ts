@@ -33,14 +33,18 @@ export class LoginComponent {
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
     // First check if user is already logged in today
-    if (this.authService.isLoggedInToday()) {
-      this.navigateToHome();
-      return;
-    }
+    // if (this.authService.isLoggedInToday()) {
+    //   console.log(`hello`);
+      
+    //   this.navigateToHome();
+    //   return;
+    // }
     // Otherwise handle query parameters
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.t = params.get('t');
       if (this.t) {
+        console.log(`token`);
+        
         localStorage.clear();
         this.onSubmit();
       } else {
