@@ -31,7 +31,6 @@ import { LandingPlace } from 'src/app/shared/models/landingPlace';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-
 export class HomeComponent implements OnInit {
   shoppingCenter: any;
   General!: General;
@@ -126,7 +125,7 @@ export class HomeComponent implements OnInit {
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
     console.log(`mobile view: ${this.isMobileView}`);
-    
+
     this.markerService.clearMarkers();
   }
 
@@ -142,8 +141,8 @@ export class HomeComponent implements OnInit {
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
     this.GetCustomSections(this.BuyBoxId);
-   // this.currentView = localStorage.getItem('currentView') || '2';
-    this.currentView =  this.isMobileView ? '5' : '2'
+    // this.currentView = localStorage.getItem('currentView') || '2';
+    this.currentView = this.isMobileView ? '5' : '2';
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
     );
@@ -176,7 +175,7 @@ export class HomeComponent implements OnInit {
           size: 'lg',
           centered: true,
         });
-      }
+      },
     });
   }
 
@@ -204,7 +203,7 @@ export class HomeComponent implements OnInit {
         form.resetForm();
         this.modalService.dismissAll();
         this.openContactsModal(this.contactsModalTemplate);
-      }
+      },
     });
   }
 
@@ -233,7 +232,7 @@ export class HomeComponent implements OnInit {
         }
         this.stateService.setPlacesRepresentative(this.placesRepresentative);
         this.markerService.setPlacesRepresentative(this.placesRepresentative);
-      }
+      },
     });
   }
 
@@ -253,7 +252,6 @@ export class HomeComponent implements OnInit {
         this.ShareOrg = data.json;
         this.stateService.setShareOrg(data.json);
       },
-
     });
   }
 
@@ -274,7 +272,7 @@ export class HomeComponent implements OnInit {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
-      }
+      },
     });
   }
 
@@ -289,7 +287,7 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      }
+      },
     });
   }
 
@@ -319,7 +317,7 @@ export class HomeComponent implements OnInit {
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
-      }
+      },
     });
   }
 
@@ -337,7 +335,6 @@ export class HomeComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
         this.buyboxCategories.forEach((category) => {
@@ -347,7 +344,7 @@ export class HomeComponent implements OnInit {
           );
         });
         this.getAllMarker();
-      }
+      },
     });
   }
 
@@ -376,7 +373,6 @@ export class HomeComponent implements OnInit {
   }
 
   async getAllMarker() {
-
     try {
       this.spinner.show();
       const { Map } = await google.maps.importLibrary('maps');
@@ -683,10 +679,8 @@ export class HomeComponent implements OnInit {
   copyLink(link: string) {
     navigator.clipboard
       .writeText(link)
-      .then(() => {
-      })
-      .catch((err) => {
-      });
+      .then(() => {})
+      .catch((err) => {});
   }
 
   async viewOnMap(lat: number, lng: number) {
@@ -856,7 +850,7 @@ export class HomeComponent implements OnInit {
         shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
           shopping.ShoppingCenter.Comments
         );
-      }
+      },
     });
   }
 
@@ -895,7 +889,7 @@ export class HomeComponent implements OnInit {
             shoppingCenter.ShoppingCenter.Comments
           );
         }
-      }
+      },
     });
   }
 
@@ -1055,7 +1049,7 @@ export class HomeComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {},
-  
+
       complete: () => {
         this.isLikeInProgress = false;
         this.cdr.detectChanges();
@@ -1107,7 +1101,6 @@ export class HomeComponent implements OnInit {
   }
 
   selectCenter(centerId: number): void {
-
     this.selectedCenterId = centerId;
 
     const selectedIndex = this.shoppingCenters.findIndex(
