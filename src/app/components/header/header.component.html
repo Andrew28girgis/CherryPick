@@ -4,7 +4,7 @@
     <img
       alt="logo"
       class="cherry-logo"
-      [routerLink]="['/summary']"
+      [routerLink]="currentView === 'tenant' ? ['/summary'] : ['/landlord']"
       decoding="async"
       src="../../../assets/Images/logo.png"
     />
@@ -59,7 +59,7 @@
       </li>
       <li class="nav-item">
         <a
-          [routerLink]="['/manage-properties']"
+          [routerLink]="['/landlord']"
           routerLinkActive="active-route"
           class="nav-link"
           *ngIf="currentView === 'landlord'"
@@ -70,8 +70,11 @@
 
     <!-- Action Icons -->
     <div class="d-flex align-items-center justify-content-center">
+      <div class="d-none d-lg-block">
+        <app-notifications></app-notifications>
+      </div>
       <!-- Avatar Dropdown -->
-      <div class="dropdown me-2">
+      <div class="dropdown ms-2">
         <div
           class="avatar-container"
           role="button"
@@ -108,23 +111,20 @@
           <li><hr class="dropdown-divider" /></li>
           <li>
             <a
-              class="dropdown-item"
+              class="dropdown-item d-flex justify-content-between"
               href="#"
               (click)="logout(); $event.preventDefault()"
             >
               Logout
+              <i
+              class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+            ></i>
             </a>
           </li>
         </ul>
       </div>
-      <div class="d-none d-lg-block">
-        <app-notifications></app-notifications>
-      </div>
 
-      <i
-        class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
-        (click)="logout()"
-      ></i>
+    
     </div>
   </div>
 </nav>
