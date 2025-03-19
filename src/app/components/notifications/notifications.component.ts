@@ -42,21 +42,11 @@ export class NotificationsComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.notificationsArray = res.json || [];
-        this.notificationsArray.sort((a, b) => {
-          return (
-            new Date(b.createdDate).getTime() -
-            new Date(a.createdDate).getTime()
-          );
+          this.notificationsArray.sort((a, b) => {
+          return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime();
         });
-
-        // Count the notifications based on 'isRead' status
-        this.readCount = this.notificationsArray.filter(
-          (notification) => notification.isRead
-        ).length;
-        this.unreadCount = this.notificationsArray.filter(
-          (notification) => !notification.isRead
-        ).length;
-        // Optionally set message/createdDate if needed
+     this.readCount = this.notificationsArray.filter(notification => notification.isRead).length;
+     this.unreadCount = this.notificationsArray.filter(notification => !notification.isRead).length;
         if (this.notificationsArray.length > 0) {
           this.message = this.notificationsArray[0].message;
           this.createdDate = this.notificationsArray[0].createdDate;
