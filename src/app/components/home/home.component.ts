@@ -1148,7 +1148,8 @@ export class HomeComponent implements OnInit {
     const body: any = {
       Name: 'GetBuyBoxGUID',
       Params: {
-        BuyBoxId: this.BuyBoxId,
+        BuyBoxId: +this.BuyBoxId,
+        OrganizationId: +this.OrgId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -1164,6 +1165,7 @@ export class HomeComponent implements OnInit {
     });
     this.modalService.open(this.ShareWithContact, { size: 'lg' });
   }
+
   copyGUID(link: string) {
     navigator.clipboard
       .writeText(link)
@@ -1174,7 +1176,7 @@ export class HomeComponent implements OnInit {
       .catch((err) => {
         console.error('Failed to copy: ', err);
       });
-  }  
+  }
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
