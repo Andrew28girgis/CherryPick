@@ -1,4 +1,4 @@
-import { Component, ViewChild, type TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidbarService } from 'src/app/shared/services/sidbar.service';
 
@@ -7,7 +7,7 @@ import { SidbarService } from 'src/app/shared/services/sidbar.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   isCollapsed = true;
   notifications: any[] = [
     { id: 1, message: 'New notification 1', time: '5 min ago' },
@@ -36,6 +36,12 @@ export class HeaderComponent {
     },
   ];
 
+  // Avatar and view switching properties
+  userAvatar: string | null = null;
+  currentView: 'tenant' | 'landlord' = 'tenant'; // Default view, should be set from backend
+  tenantRoute = '/Kanban'; // Replace with actual route
+  landlordRoute = '/manage-properties'; // Replace with actual route
+
   @ViewChild('emailContent') emailContent!: TemplateRef<any>;
   @ViewChild('notificationContent') notificationContent!: TemplateRef<any>;
 
@@ -43,6 +49,28 @@ export class HeaderComponent {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state;
     });
+  }
+
+  ngOnInit(): void {
+    // Fetch user data from backend
+    this.fetchUserData();
+  }
+
+  fetchUserData(): void {
+    // This is a placeholder for the actual API call
+    // In a real application, you would call your backend service here
+
+    // Simulate getting data from backend
+    setTimeout(() => {
+      // Example: Set avatar from backend response
+      this.userAvatar = ''; // Replace with actual avatar URL
+
+      // Example: Get current view from backend
+      // this.currentView = backendResponse.userRole;
+
+      // For demo purposes, we'll just set a default
+      this.currentView = 'tenant';
+    }, 500);
   }
 
   toggleSidebar() {
@@ -57,6 +85,7 @@ export class HeaderComponent {
   BackTo() {
     this.router.navigate(['/dashboard']);
   }
+
   isNavbarOpen = false;
 
   toggleNavbar() {

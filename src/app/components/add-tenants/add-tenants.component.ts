@@ -1,38 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { ApiServiceService } from 'src/app/shared/services/api-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-add-tenants',
   templateUrl: './add-tenants.component.html',
   styleUrls: ['./add-tenants.component.css'],
+  providers: [NgbActiveModal]
 })
 export class AddTenantsComponent implements OnInit {
-  Obj = {
-    Id: 0,
-    Name: '',
-    Description: '',
-    FPOId: 0,
-    ComparableTypeId: 0,
-    MinBuildingSize: 0,
-    MaxBuildingSize: 0,
-    MinLandSize: 0,
-    MaxLandSize: 0,
-    AcquisitionTypeId: 0,
-    EmptyLand: 0,
-    MinBuildingUnits: 0,
-    MaxBuildingUnits: 0,
-    OrganizationId: 0,
-    ManagerOrganizationId: 0,
-    kanbanId: 0,
-    ManagerContactId: 0,
-    OrgName: '',
-  };
   selectedOrganizationId!: number; // To bind the selected organization
   searchOrganizationTerm: string = '';
   selectedOrganizationName!: string; // Holds the selected organization name
@@ -44,23 +26,29 @@ export class AddTenantsComponent implements OnInit {
   isSearchingOrganization: boolean = false;
   buyboxTypes: any[] = [];
   editing!: boolean;
+  siteDetailsForm!: FormGroup;
 
   constructor(
+    private router: Router,
     private spinner: NgxSpinnerService,
     private route: ActivatedRoute,
     private ApiService: ApiServiceService,
     private PlacesService: PlacesService,
+    private fb: FormBuilder,
     public activeModal: NgbActiveModal
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      // this.Token = params['Token'];
       this.getUserBuyBoxes();
       this.organizationId = localStorage.getItem('orgId');
     });
+
+    this.initializerForm();
   }
+
   selectOrganization(organization: Organization) {
+    this.siteDetailsForm.get('OrganizationId')?.setValue(organization.name);
     this.selectedOrganizationId = organization.id; // Store the selected organization ID
     this.selectedOrganizationName = organization.name; // Store the selected organization's name
     this.searchOrganizationTerm = organization.name; // Keep the selected name in the input field
@@ -68,15 +56,16 @@ export class AddTenantsComponent implements OnInit {
     this.showOrganizationSuggestions = false;
     this.highlightedOrganizationIndex = -1;
   }
+
   handleOrganizationBlur() {
     setTimeout(() => {
       this.showOrganizationSuggestions = false;
       this.highlightedOrganizationIndex = -1;
     }, 100);
   }
+
   onOrganizationInput(event: any) {
     const val: string = event.target.value;
-    this.searchOrganizationTerm = val;
 
     if (val.length > 2) {
       this.searchOrganization(val);
@@ -86,6 +75,7 @@ export class AddTenantsComponent implements OnInit {
       this.highlightedOrganizationIndex = -1;
     }
   }
+
   handleOrganizationKeydown(event: KeyboardEvent) {
     if (this.showOrganizationSuggestions && this.organizations.length > 0) {
       if (event.key === 'ArrowDown') {
@@ -110,31 +100,7 @@ export class AddTenantsComponent implements OnInit {
       }
     }
   }
-  onSubmit() {
-    this.activeModal.dismiss();
-    this.spinner.show();
-    this.Obj.OrganizationId = this.selectedOrganizationId; // Set the selected organization ID
-    this.Obj.ManagerOrganizationId = this.selectedManagerOrganizationId; // Set the selected manager organization ID
 
-    this.spinner.show();
-    let body: any = {
-      Name: 'CreateBuyBox',
-      Params: {
-        Name: this.Obj.Name,
-        OrganizationId: this.Obj.OrganizationId,
-        ManagerOrganizationId: this.Obj.ManagerOrganizationId,
-        MinBuildingSize: this.Obj.MinBuildingSize,
-        MaxBuildingSize: this.Obj.MaxBuildingSize,
-      },
-    };
-    this.ApiService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.getUserBuyBoxes();
-        // this.closeModal();
-        this.spinner.hide();
-      },
-    });
-  }
   searchOrganization(term: string) {
     this.isSearchingOrganization = true;
     let body: any = {
@@ -169,5 +135,68 @@ export class AddTenantsComponent implements OnInit {
         }
       },
     });
+  }
+
+  initializerForm(){
+    this.siteDetailsForm = this.fb.group({
+      Name: ['', Validators.required],
+      OrganizationId: ['', Validators.required],
+      ManagerOrganizationId: [null],
+      MinBuildingSize: [null, Validators.required],
+      MaxBuildingSize: [null, Validators.required],
+      Restrictions: [''],
+      BaseRent: [null, Validators.required],
+      BuildingSquareFootage: [null, Validators.required],
+      BuildingType: ['', Validators.required],
+      CeilingHeight: [null],
+      DealStructure: ['', Validators.required],
+      DriveThru: ['Yes', Validators.required],
+      FloodZone: [''],
+      FrontageLength: [null, Validators.required],
+      HistoricDistrict: [''],
+      LeaseTerm: [null],
+      LotSize: [null, Validators.required],
+      NNNCharges: [null, Validators.required],
+      OvernightBoardingPermitted: ['Yes', Validators.required],
+      ParkingSpaces: [null],
+      PropertyCondition: ['', Validators.required],
+      PurchasePrice: [null, Validators.required],
+      ServiceAccess: ['', Validators.required],
+      TIAllowance: [null],
+      TrafficDrection: ['', Validators.required],
+      VehiclePerDay: [null, Validators.required],
+      Zoning: ['', Validators.required],
+      OtherComments: [''],
+    });
+  }
+
+  onSubmitForm() {
+    if (this.siteDetailsForm.valid) {
+      this.activeModal.dismiss();
+      this.spinner.show();
+      const formData = this.siteDetailsForm.value;
+
+      this.siteDetailsForm.value.OrganizationId = this.selectedOrganizationId;
+      this.siteDetailsForm.value.ManagerOrganizationId = this.selectedManagerOrganizationId;
+      
+      let body: any = {
+        Name: 'CreateBuyBox',
+        Params: formData,
+      };
+      
+      this.ApiService.GenericAPI(body).subscribe({
+        next: (data) => {
+          this.getUserBuyBoxes();
+          this.spinner.hide();
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('API error:', error);
+          this.spinner.hide();
+        },
+      });
+    } else {
+      this.siteDetailsForm.markAllAsTouched();
+    }
   }
 }

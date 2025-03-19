@@ -17,6 +17,7 @@ import { StateService } from 'src/app/shared/services/state.service';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IPolygon } from 'src/app/shared/models/ipolygons-controller';
 import { IProperty } from 'src/app/shared/models/iproperty';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-polygons-controller',
@@ -28,6 +29,7 @@ export class PolygonsControllerComponent
 {
   private destroy$ = new Subject<void>();
   private searchSubject: Subject<string> = new Subject<string>();
+  public isTenantWithPolygons: boolean = false;
 
   // create observable to destroy all subscribtions when component destroyed
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
@@ -70,6 +72,7 @@ export class PolygonsControllerComponent
     private stateService: StateService,
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -88,6 +91,8 @@ export class PolygonsControllerComponent
     this.polygonsListeners();
     this.circlesListeners();
     this.getPolygonsByNameListener();
+
+    this.isTenantWithPolygons = this.router.url.includes('tenantWithPolygons');
   }
 
   ngAfterViewInit() {
