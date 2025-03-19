@@ -109,7 +109,9 @@ export class HomeComponent implements OnInit {
   currentIndex = -1;
   Guid!:string;
   GuidLink!:string;
+  isMobileView: boolean;
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
+  
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -125,7 +127,6 @@ export class HomeComponent implements OnInit {
   ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
-    console.log(`mobile view: ${this.isMobileView}`);
 
     this.markerService.clearMarkers();
   }
