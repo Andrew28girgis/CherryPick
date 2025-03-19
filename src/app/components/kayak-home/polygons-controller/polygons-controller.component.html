@@ -32,7 +32,7 @@
       [(ngModel)]="polygonSearch"
       (ngModelChange)="onSearchChange($event)"
     />
-    <div class="table-container">
+    <div class="table-container" *ngIf="!isTenantWithPolygons">
       <ng-container *ngIf="selectedPolygonOption == 1; else explorePolygons">
         <table *ngIf="polygons.length > 0; else emptyPolygons" class="table">
           <thead class="thead-light">

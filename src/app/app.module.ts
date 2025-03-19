@@ -42,7 +42,7 @@ import {
   MsalBroadcastService,
 } from '@azure/msal-angular';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
-import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
+import { ManagePropertiesComponent } from './components/landlord/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';

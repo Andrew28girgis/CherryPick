@@ -4,25 +4,24 @@
     <img
       alt="logo"
       class="cherry-logo"
-      [routerLink]="['/summary']"
+      [routerLink]="current.includes('landlord') ? ['/landlord'] : ['/summary']"
       decoding="async"
       src="../../../assets/Images/logo.png"
     />
   </div>
 
-<!-- Right Section -->
-<div class="d-flex ms-auto align-items-center">
-  <!-- Show notifications only on small/medium screens -->
-  <div class="d-block d-lg-none me-2">
-    <app-notifications></app-notifications>
+  <!-- Right Section -->
+  <div class="d-flex ms-auto align-items-center">
+    <!-- Show notifications only on small/medium screens -->
+    <div class="d-block d-lg-none me-2">
+      <app-notifications></app-notifications>
+    </div>
+
+    <!-- Burger Button -->
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+      <i class="fa-solid fa-bars nav-icon"></i>
+    </button>
   </div>
-
-  <!-- Burger Button -->
-  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
-    <i class="fa-solid fa-bars nav-icon"></i>
-  </button>
-</div>
-
 
   <!-- Collapsible Navbar Content -->
   <div
@@ -31,7 +30,7 @@
     id="navbarNav"
   >
     <ul class="navbar-nav mx-auto gap-3">
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/dashboard']"
           routerLinkActive="active-route"
@@ -39,7 +38,7 @@
           >Dashboard</a
         >
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
@@ -47,7 +46,7 @@
           >Kanban</a
         >
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
@@ -55,44 +54,77 @@
           >Tenants</a
         >
       </li>
-      <!-- <li class="nav-item" (click)="BackTo()">
-        <div class="nav-link">Tenants</div>
-      </li> -->
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="current.includes('landlord')">
         <a
-          [routerLink]="['/manage-properties']"
+          [routerLink]="['/landlord']"
           routerLinkActive="active-route"
           class="nav-link"
           >Properties</a
         >
       </li>
+      <!-- <li class="nav-item" *ngIf="currentView === 'tenant'">
+        <a [routerLink]="['/']" class="nav-link"
+          >Emily</a
+        >
+      </li> -->
     </ul>
 
     <!-- Action Icons -->
     <div class="d-flex align-items-center justify-content-center">
-      <!-- <i class="fa-regular fa-envelope action-icon position-relative mx-2">
-        <span class="badge">{{ emails.length }}</span>
-      </i>
-      <i class="fa-regular fa-bell action-icon position-relative mx-2">
-        <span class="badge">{{ notifications.length }}</span>
-      </i> -->
-      <div class="d-none d-lg-block">
+      <div class="d-none d-lg-block" *ngIf="!current.includes('landlord')">
         <app-notifications></app-notifications>
-
       </div>
-
-      <i
-        class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
-        (click)="logout()"
-      ></i>
-
-      <!-- <button
-        class="CherryPick__button ms-4"
-        (click)="logout()"
-        style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px"
-      >
-        Logout
-      </button> -->
+      <!-- Avatar Dropdown -->
+      <div class="dropdown ms-2">
+        <div
+          class="avatar-container"
+          role="button"
+          id="userDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            *ngIf="userAvatar"
+            [src]="userAvatar"
+            alt="User Avatar"
+            class="rounded-circle avatar-img"
+          />
+          <div
+            *ngIf="!userAvatar"
+            class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
+          >
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="userDropdown"
+        >
+          <li>
+            <a
+              class="dropdown-item"
+              href="#"
+              (click)="switchView(); $event.preventDefault()"
+            >
+              Switch to
+              {{ current.includes("landlord") ? "Tenant" : "Landlord" }}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a
+              class="dropdown-item d-flex justify-content-between"
+              href="#"
+              (click)="logout(); $event.preventDefault()"
+            >
+              Logout
+              <i
+                class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+              ></i>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>

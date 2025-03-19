@@ -1,0 +1,38 @@
+.container{
+    overflow-y: auto;
+}
+.Head-line{
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid #001f3f;
+  color: #001f3f;
+  width: fit-content;
+  display: block;
+}
+.label-style{
+    font-size: 16px;
+    font-weight: 500;
+    color: #707791;
+}
+
+.form-control,.form-select{
+    box-shadow: none;
+    outline: none;
+    border-radius: 8px;
+}
+.form-check-input{
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.style_radio{
+    height: 40px;
+    align-items: center;
+}
+
+.is-invalid {
+    border: 1px solid rgba(218, 0, 0, 0.12);
+    box-shadow: 0 0px 4px rgba(218, 0, 0, 1), 0 0px 4px rgba(218, 0, 0, 1);
+}
+  

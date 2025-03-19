@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { General } from 'src/app/shared/models/domain';
@@ -20,7 +20,7 @@ import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
   templateUrl: './summery.component.html',
   styleUrls: ['./summery.component.css'],
 })
-export class SummeryComponent {
+export class SummeryComponent implements OnInit{
   General!: General;
   buyboxTypes: any[] = [];
   showSummery: boolean = false;
@@ -121,12 +121,21 @@ export class SummeryComponent {
     this.router.navigate(['/home', buyboxId, orgId, name]);
   }
   open(content: any) {
-    this.editing = false;
-    this.modalService.open(content, {
+    const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       scrollable: true,
+      size: 'xl'
     });
     this.Obj = new BuyBoxModel();
+  
+    modalRef.result.then((result) => {
+      if (result && result.created) {
+        this.getUserBuyBoxes();
+        this.modalService.dismissAll();
+      }
+    }).catch((error) => {
+      this.getUserBuyBoxes();
+    });
   }
   closeModal() {
     this.editing = false;
