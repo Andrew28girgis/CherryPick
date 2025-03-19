@@ -98,7 +98,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   switchView(): void {
-    // Switch to the opposite view using the service.
     const newView = this.currentView === 'tenant' ? 'landlord' : 'tenant';
     this.userViewService.switchView(newView);
   }
