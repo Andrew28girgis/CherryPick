@@ -76,6 +76,7 @@ import { PaginatorModule } from 'primeng/paginator';
     SideListViewComponent,
     MapViewComponent,
     StageEmailComponent,
+    PolygonsControllerComponent,
     EmilyStagesComponent
   ],
 })

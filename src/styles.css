@@ -338,6 +338,10 @@ a {
   padding: 0.5rem;
 }
 
+.modal-footer{
+  border: 0;
+}
+
 @media (max-width: 991px) {
   .info-window {
     width: 300px;

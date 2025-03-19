@@ -54,8 +54,8 @@ const routes: Routes = [
     component: DashboardComponent,
   },
   {
-    path: 'TenantWithPolygons',
-    component: TenantWithPolygonsComponent,
+    path: 'tenantWithPolygons',
+    component: AddTenantsComponent,
   },
 
   {
