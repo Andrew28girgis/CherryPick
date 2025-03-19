@@ -87,14 +87,14 @@
             <label class="mb-2 label-style">Drive-Thru*</label>
             <div class="d-flex gap-5 style_radio">
               <div class="form-check">
-                <input class="form-check-input" type="radio" formControlName="DriveThru" id="Drivethru1" value="Yes"
+                <input class="form-check-input" type="radio" formControlName="DriveThru" id="Drivethru1" [value]="1"
                   checked>
                 <label class="form-check-label" for="Drivethru1">
                   Yes
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="radio" formControlName="DriveThru" id="Drivethru2" value="No">
+                <input class="form-check-input" type="radio" formControlName="DriveThru" id="Drivethru2" [value]="0">
                 <label class="form-check-label" for="Drivethru2">
                   No
                 </label>
@@ -171,23 +171,16 @@
             <div class="d-flex gap-5 style_radio">
               <div class="form-check">
                 <input class="form-check-input" type="radio" id="Overnight1"
-                  formControlName="OvernightBoardingPermitted" value="Yes" checked>
+                  formControlName="OvernightBoardingPermitted" [value]="1" checked>
                 <label class="form-check-label" for="Overnight1">
                   Yes
                 </label>
               </div>
               <div class="form-check">
                 <input class="form-check-input" type="radio" id="Overnight2"
-                  formControlName="OvernightBoardingPermitted" value="No">
+                  formControlName="OvernightBoardingPermitted" [value]="0">
                 <label class="form-check-label" for="Overnight2">
                   No
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" id="Overnight3"
-                  formControlName="OvernightBoardingPermitted" value="Unknown">
-                <label class="form-check-label" for="Overnight3">
-                  Unknown
                 </label>
               </div>
             </div>

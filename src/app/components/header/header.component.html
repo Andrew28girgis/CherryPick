@@ -4,7 +4,7 @@
     <img
       alt="logo"
       class="cherry-logo"
-      [routerLink]="currentView === 'tenant' ? ['/summary'] : ['/landlord']"
+      [routerLink]="current.includes('landlord') ? ['/landlord'] : ['/summary']"
       decoding="async"
       src="../../../assets/Images/logo.png"
     />
@@ -30,23 +30,23 @@
     id="navbarNav"
   >
     <ul class="navbar-nav mx-auto gap-3">
-      <li class="nav-item" *ngIf="currentView === 'tenant'">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/dashboard']"
           routerLinkActive="active-route"
           class="nav-link"
-          >Campaign</a
+          >Dashboard</a
         >
       </li>
-      <li class="nav-item" *ngIf="currentView === 'tenant'">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
           class="nav-link"
-          >Cadence</a
+          >Kanban</a
         >
       </li>
-      <li class="nav-item" *ngIf="currentView === 'tenant'">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
@@ -54,7 +54,7 @@
           >Tenants</a
         >
       </li>
-      <li class="nav-item" *ngIf="currentView === 'landlord'">
+      <li class="nav-item" *ngIf="current.includes('landlord')">
         <a
           [routerLink]="['/landlord']"
           routerLinkActive="active-route"
@@ -71,7 +71,7 @@
 
     <!-- Action Icons -->
     <div class="d-flex align-items-center justify-content-center">
-      <div class="d-none d-lg-block">
+      <div class="d-none d-lg-block" *ngIf="!current.includes('landlord')">
         <app-notifications></app-notifications>
       </div>
       <!-- Avatar Dropdown -->
@@ -103,10 +103,11 @@
           <li>
             <a
               class="dropdown-item"
-              [href]="currentView === 'tenant' ? landlordRoute : tenantRoute"
-              target="_blank"
+              href="#"
+              (click)="switchView(); $event.preventDefault()"
             >
-              Switch to {{ currentView === "tenant" ? "Landlord" : "Tenant" }}
+              Switch to
+              {{ current.includes("landlord") ? "Tenant" : "Landlord" }}
             </a>
           </li>
           <li><hr class="dropdown-divider" /></li>

@@ -1,121 +1,115 @@
-import { Component, ViewChild,  TemplateRef,  OnInit,  OnDestroy } from "@angular/core"
-import {  Router, NavigationEnd,  Event as RouterEvent } from "@angular/router"
-import  { SidbarService } from "src/app/shared/services/sidbar.service"
-import  { Subscription } from "rxjs"
-import { filter } from "rxjs/operators"
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { SidbarService } from 'src/app/shared/services/sidbar.service';
+import { UserViewService } from 'src/app/shared/services/user-view.service';
 
 @Component({
-  selector: "app-header",
-  templateUrl: "./header.component.html",
-  styleUrls: ["./header.component.css"],
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  isCollapsed = true
+  isCollapsed = true;
   notifications: any[] = [
-    { id: 1, message: "New notification 1", time: "5 min ago" },
-    { id: 2, message: "New notification 2", time: "1 hour ago" },
-    { id: 3, message: "New notification 3", time: "2 hours ago" },
-  ]
+    { id: 1, message: 'New notification 1', time: '5 min ago' },
+    { id: 2, message: 'New notification 2', time: '1 hour ago' },
+    { id: 3, message: 'New notification 3', time: '2 hours ago' },
+  ];
 
   emails: any[] = [
-    {
-      id: 1,
-      subject: "Upcoming meeting",
-      from: "john@example.com",
-      time: "10:00 AM",
-    },
-    {
-      id: 2,
-      subject: "Project update",
-      from: "sarah@example.com",
-      time: "11:30 AM",
-    },
-    {
-      id: 3,
-      subject: "Weekly report",
-      from: "mike@example.com",
-      time: "2:00 PM",
-    },
-  ]
+    { id: 1, subject: 'Upcoming meeting', from: 'john@example.com', time: '10:00 AM' },
+    { id: 2, subject: 'Project update', from: 'sarah@example.com', time: '11:30 AM' },
+    { id: 3, subject: 'Weekly report', from: 'mike@example.com', time: '2:00 PM' },
+  ];
 
   // Avatar and view switching properties
-  userAvatar: string | null = null
-  currentView: "tenant" | "landlord" = "tenant"
-  tenantRoute = "/summary"
-  landlordRoute = "/landlord"
-  private routerSubscription: Subscription | null = null
+  userAvatar: string | null = null;
+  currentView: 'tenant' | 'landlord' = 'tenant';
+  // New variable that will hold the current route URL.
+  current: string = '';
 
-  @ViewChild("emailContent") emailContent!: TemplateRef<any>
-  @ViewChild("notificationContent") notificationContent!: TemplateRef<any>
+  private viewSubscription: Subscription | null = null;
+  private routerSubscription: Subscription | null = null;
+
+  @ViewChild('emailContent') emailContent!: TemplateRef<any>;
+  @ViewChild('notificationContent') notificationContent!: TemplateRef<any>;
 
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
+    private userViewService: UserViewService
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
-      this.isCollapsed = state
-    })
+      this.isCollapsed = state;
+    });
   }
 
   ngOnInit(): void {
-    // Subscribe to router events to detect route changes
+    // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
-      .pipe(filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd))
+      .pipe(
+        filter(
+          (event: RouterEvent): event is NavigationEnd =>
+            event instanceof NavigationEnd
+        )
+      )
       .subscribe((event: NavigationEnd) => {
-        this.updateCurrentView(event.url)
-      })
+        this.current = event.urlAfterRedirects;
+      });
 
-    // Set initial view based on current URL
-    this.updateCurrentView(this.router.url)
+    // Initialize `current` with the current URL.
+    this.current = this.router.url;
 
-    // Fetch user avatar (or other data) from backend if needed
-    this.fetchUserAvatar()
+    // Subscribe to view changes if needed.
+    this.viewSubscription = this.userViewService.currentView$.subscribe((view) => {
+      this.currentView = view;
+    });
+
+    // Fetch user avatar.
+    this.fetchUserAvatar();
   }
 
   ngOnDestroy(): void {
-    // Clean up subscription when component is destroyed
+    if (this.viewSubscription) {
+      this.viewSubscription.unsubscribe();
+    }
     if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe()
+      this.routerSubscription.unsubscribe();
     }
-  }
-
-  updateCurrentView(url: string): void {
-    // Check if the URL contains '/landlord'
-    if (url.includes("/landlord")) {
-      this.currentView = "landlord"
-    } else {
-      this.currentView = "tenant"
-    }
-
   }
 
   fetchUserAvatar(): void {
-    // This is a placeholder for the actual API call to get user avatar
-    // In a real application, you would call your backend service here
-
-    // Simulate getting avatar from backend
+    // Placeholder for API call to get user avatar.
     setTimeout(() => {
-      this.userAvatar = "" // Replace with actual avatar URL
-    }, 500)
+      this.userAvatar = '';
+    }, 500);
   }
 
   toggleSidebar() {
-    this.sidbarService.toggleSidebar()
+    this.sidbarService.toggleSidebar();
   }
 
   logout(): void {
-    localStorage.removeItem("token")
-    this.router.navigate(["/login"])
+    localStorage.removeItem('token');
+    localStorage.removeItem('userView');
+    this.router.navigate(['/login']);
+  }
+
+  switchView(): void {
+    // Switch to the opposite view using the service.
+    const newView = this.currentView === 'tenant' ? 'landlord' : 'tenant';
+    this.userViewService.switchView(newView);
   }
 
   BackTo() {
-    this.router.navigate(["/dashboard"])
+    this.router.navigate(['/dashboard']);
   }
 
-  isNavbarOpen = false
+  isNavbarOpen = false;
 
   toggleNavbar() {
-    this.isNavbarOpen = !this.isNavbarOpen
+    this.isNavbarOpen = !this.isNavbarOpen;
   }
 }
-
