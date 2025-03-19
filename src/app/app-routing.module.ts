@@ -14,6 +14,7 @@ import { AddTenantsComponent } from "./components/add-tenants/add-tenants.compon
 // Import the route guards
 import { LandlordAccessGuard } from "./shared/guards/landlord-access.guard"
 import { TenantOnlyGuard } from "./shared/guards/tenant-only.guard"
+import { EmilyUserInboxComponent } from "./components/emily-user-inbox/emily-user-inbox.component"
 
 const routes: Routes = [
   // Public routes - accessible to everyone
@@ -71,6 +72,10 @@ const routes: Routes = [
       {
         path: "tenantWithPolygons",
         component: AddTenantsComponent,
+      },
+      {
+        path: "EmilyUserInbox",
+        component: EmilyUserInboxComponent,
       },
       {
         path: "dashboard/:buyboxid/:orgId/:buyboxName",

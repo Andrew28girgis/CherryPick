@@ -47,6 +47,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
+import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-user-inbox.component';
 
 const msalConfig = {
   auth: {
@@ -87,6 +88,7 @@ const loginRequest = {
     ManagePropertiesComponent,
     DashboardComponent,
     AddTenantsComponent,
+    EmilyUserInboxComponent
   ],
   imports: [
     BrowserModule,

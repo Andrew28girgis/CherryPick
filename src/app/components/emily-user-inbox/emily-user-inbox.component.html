@@ -1,0 +1,77 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="container-fluid p-2">
+  <div class="row m-0 p-0">
+    <!-- Column 1: Organization and Contacts -->
+    <div class="col-lg-3 p-0 m-0">
+      <div class="card" style="border: none; border-radius: 0; min-height: 80vh">
+        <div class="card-header" style="background-color: white; padding: 24px">
+          <h5 class="contacts mb-0">BuyBoxs</h5>
+        </div>
+        <div class="card-body">
+          <ul class="card-body" style="padding: 5px; overflow-y: auto; max-height: 63vh" [class.scrolling]="isScrolling"
+            (scroll)="onScroll()">
+            <li class="contact-list" *ngFor="let buyBox of buyboxTypes">
+              <div class="d-flex justify-content-between w-100"
+                [routerLink]="['/organization-mail/', buyBox.id, buyBox.organizationId, buyBox.name]">
+                <span class="namecontact" id="{{ buyBox.name }}">
+                  {{ buyBox.name }}
+                </span>
+              </div>
+            </li>
+          </ul>
+          <p *ngIf="buyboxTypes.length === 0" class="no-contact-msg">
+            No BuyBox available.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Email List Column -->
+    <div class="col-lg-4 p-0 mb-3">
+      <div class="card" [class.scrolling]="isScrolling" (scroll)="onScroll()" style="
+          border: none;
+          min-height: 85vh;
+          border-radius: 0;
+          overflow-y: auto;
+        ">
+        <div class="mailbox-header">
+          <div class="top-left">
+            <h5 class="contacts">Mail box</h5>
+          </div>
+        </div>
+        <div class="card-bodyy" style="max-height: 74vh; overflow-y: auto">
+          <div *ngIf="UserInbox">
+            <div class="email-list">
+              <div class="single-mail" style="cursor: pointer" *ngFor="let email of UserInbox"
+                (click)="openEmail(email)" [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }">
+                <strong>
+                    <i class="fa-solid fa-reply inbox me-2"></i>
+                  <span class="subject"> {{ email.Subject }}</span>
+                </strong>
+                <p class="date">{{ email.Date | date : "medium" }}</p>
+              </div>
+            </div>
+          </div>
+          <p *ngIf="UserInbox.length == 0" class="no-contact-selected">
+            No available emails.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- Email body and subject -->
+    <div class="col-lg-5 p-0 m-0" id="emailDetails">
+      <div class="email-details-body" [class.scrolling]="isScrolling" (scroll)="onScroll()"
+        style="overflow-y: auto; min-height: 85vh">
+        <div class="card-body" style="min-height: 77vh; max-height: 77vh">
+          <div *ngIf="selectedEmail">
+            <p class="subject-details">{{ selectedEmail.Subject }}</p>
+            <div class="body-details" [innerHTML]="selectedEmail.Body"></div>
+          </div>
+          <p *ngIf="!selectedEmail" class="no-email-selected">
+            Select an email to view details.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
