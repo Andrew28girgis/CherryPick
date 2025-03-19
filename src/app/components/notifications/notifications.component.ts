@@ -27,8 +27,6 @@ export class NotificationsComponent implements OnInit {
   }
   toggleDropdown(): void {
     this.dropdownVisible = !this.dropdownVisible;
-    if (this.dropdownVisible) {
-    }
   }
 
   GetUserNotifications(): void {
@@ -78,16 +76,11 @@ export class NotificationsComponent implements OnInit {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {},
+      next: (res: any) => {
+        console.log('UpdateNotification response:', res);
+      },
     });
     this.GetUserNotifications();
-  }
-
-  isLast(notification: any): boolean {
-    return (
-      this.notificationsArray.indexOf(notification) ===
-      this.notificationsArray.length - 1
-    );
   }
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event: Event): void {

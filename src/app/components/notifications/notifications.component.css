@@ -117,13 +117,6 @@
   font-size: 0.9rem;
   color: #555;
 }
-.divider {
-  background: var(--Body-General-Body-Border, #e2e4e9);
-  width: 100%;
-  height: 1px;
-  margin: 8px 0;
-}
-
 @media (max-width: 576px) {
   .notification-dropdown {
     width: 260px;
@@ -143,6 +136,7 @@
   }
 }
 @media (min-width: 576px) {
+  
 }
 @media (min-width: 768px) {
 }

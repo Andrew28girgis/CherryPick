@@ -86,12 +86,16 @@
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text">{{ option.text }}</span>
           </div>
-          <button
+          <!-- <button
             class="btn custom-share-btn ms-3 d-none d-sm-flex"
             (click)="openContactsModal(contactsModal)"
           >
             Share
-          </button>
+          </button> -->
+          <button class="btn custom-share-btn ms-3 d-none d-sm-flex"
+          (click)="OpenShareWithContactModal(ShareWithContact)"
+          >Share
+        </button>
 
           <app-logout></app-logout>
         </div>
@@ -1818,5 +1822,12 @@
         </ng-template>
       </ngb-carousel>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #ShareWithContact let-modal>
+  <div class="d-flex justify-content-between p-3 m-3 align-items-center shareborder">
+    <p class="share-link m-0">{{ GuidLink }}</p>
+    <i class="fa-solid fa-copy" (click)="copyGUID(GuidLink)" style="cursor: pointer; font-size: 20px;"></i>
   </div>
 </ng-template>
