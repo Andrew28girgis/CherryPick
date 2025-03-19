@@ -17,8 +17,6 @@
       <app-notifications></app-notifications>
     </div>
 
-
-
     <!-- Burger Button -->
     <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
       <i class="fa-solid fa-bars nav-icon"></i>
@@ -37,6 +35,7 @@
           [routerLink]="['/dashboard']"
           routerLinkActive="active-route"
           class="nav-link"
+          *ngIf="currentView === 'tenant'"
           >Dashboard</a
         >
       </li>
@@ -45,6 +44,7 @@
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
           class="nav-link"
+          *ngIf="currentView === 'tenant'"
           >Kanban</a
         >
       </li>
@@ -53,6 +53,7 @@
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
           class="nav-link"
+          *ngIf="currentView === 'tenant'"
           >Tenants</a
         >
       </li>
@@ -61,6 +62,7 @@
           [routerLink]="['/manage-properties']"
           routerLinkActive="active-route"
           class="nav-link"
+          *ngIf="currentView === 'landlord'"
           >Properties</a
         >
       </li>
@@ -68,37 +70,53 @@
 
     <!-- Action Icons -->
     <div class="d-flex align-items-center justify-content-center">
-          <!-- Avatar Dropdown -->
-    <div class="dropdown me-2">
-      <div class="avatar-container" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        <img 
-          *ngIf="userAvatar" 
-          [src]="userAvatar" 
-          alt="User Avatar" 
-          class="rounded-circle avatar-img"
-        />
-        <div *ngIf="!userAvatar" class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-user"></i>
-        </div>
-      </div>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-        <li>
-          <a 
-            class="dropdown-item" 
-            [href]="currentView === 'tenant' ? landlordRoute : tenantRoute" 
-            target="_blank"
+      <!-- Avatar Dropdown -->
+      <div class="dropdown me-2">
+        <div
+          class="avatar-container"
+          role="button"
+          id="userDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            *ngIf="userAvatar"
+            [src]="userAvatar"
+            alt="User Avatar"
+            class="rounded-circle avatar-img"
+          />
+          <div
+            *ngIf="!userAvatar"
+            class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
           >
-            Switch to {{ currentView === 'tenant' ? 'Landlord' : 'Tenant' }}
-          </a>
-        </li>
-        <li><hr class="dropdown-divider"></li>
-        <li>
-          <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault()">
-            Logout
-          </a>
-        </li>
-      </ul>
-    </div>
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="userDropdown"
+        >
+          <li>
+            <a
+              class="dropdown-item"
+              [href]="currentView === 'tenant' ? landlordRoute : tenantRoute"
+              target="_blank"
+            >
+              Switch to {{ currentView === "tenant" ? "Landlord" : "Tenant" }}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a
+              class="dropdown-item"
+              href="#"
+              (click)="logout(); $event.preventDefault()"
+            >
+              Logout
+            </a>
+          </li>
+        </ul>
+      </div>
       <div class="d-none d-lg-block">
         <app-notifications></app-notifications>
       </div>
@@ -110,4 +128,3 @@
     </div>
   </div>
 </nav>
-
