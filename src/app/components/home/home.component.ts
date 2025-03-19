@@ -108,7 +108,9 @@ export class HomeComponent implements OnInit {
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   currentIndex = -1;
-
+  Guid!:string;
+  GuidLink!:string;
+  @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -1142,5 +1144,34 @@ export class HomeComponent implements OnInit {
       this.selectedIdCard = null;
       return;
     }
+  }
+  OpenShareWithContactModal(content: any): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetBuyBoxGUID',
+      Params: {
+        BuyBoxId: this.BuyBoxId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.Guid = data.json[0].buyBoxLink;
+        if (this.Guid) {
+          this.GuidLink = `https://cp.cherrypick.com/${this.Guid}`;
+        } else {
+          this.GuidLink = '';
+        }
+        this.spinner.hide();
+      },
+    });
+    this.modalService.open(this.ShareWithContact, { size: 'lg' });
+  }
+  copyGUID(link: string) {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+      })
+      .catch((err) => {
+      });
   }
 }
