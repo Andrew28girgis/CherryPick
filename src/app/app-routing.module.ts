@@ -7,7 +7,7 @@ import { SummeryComponent } from './components/summery/summery.component';
 import { AuthGuardService } from './shared/services/auth-guard.service';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { TermsComponent } from './components/terms/terms.component';
-import { ManagePropertiesComponent } from './components/manage-properties/manage-properties.component';
+// import { ManagePropertiesComponent } from './components/landlord/manage-properties/manage-properties.component';
 import { TenantComponent } from './components/tenant/tenant.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'summary', component: SummeryComponent },
-  { path: 'manage-properties', component: ManagePropertiesComponent },
+  // { path: 'manage-properties', component: ManagePropertiesComponent },
   { path: 'add-tenant', component: AddTenantsComponent },
   { path: 'summary/:orgId', component: SummeryComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
@@ -54,8 +54,8 @@ const routes: Routes = [
     component: DashboardComponent,
   },
   {
-    path: 'TenantWithPolygons',
-    component: TenantWithPolygonsComponent,
+    path: 'tenantWithPolygons',
+    component: AddTenantsComponent,
   },
 
   {
@@ -64,6 +64,8 @@ const routes: Routes = [
       import('./components/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService],
   },
+  { path: 'landlord', loadChildren: () =>
+    import('./components/landlord/landlord.module').then(m => m.LandlordModule) },
 ];
 
 @NgModule({

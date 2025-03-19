@@ -125,6 +125,7 @@ export class SummeryComponent {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       scrollable: true,
+      size:'xl'
     });
     this.Obj = new BuyBoxModel();
   }
