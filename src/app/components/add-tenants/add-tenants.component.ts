@@ -27,6 +27,16 @@ export class AddTenantsComponent implements OnInit {
   buyboxTypes: any[] = [];
   editing!: boolean;
   siteDetailsForm!: FormGroup;
+  Options: any[] = [
+    { label: 'Yes', value: 1 },
+    { label: 'No', value: 0 }
+  ];
+  FloodZoneOptions: any[] = [
+    { label: 'Zone X', value: 'Zone X' },
+    { label: 'Zone AE', value: 'Zone AE' }
+  ];
+  IsActiveSteps: boolean = false;
+  currentStep: number = 0;
 
   constructor(
     private router: Router,
@@ -36,7 +46,7 @@ export class AddTenantsComponent implements OnInit {
     private PlacesService: PlacesService,
     private fb: FormBuilder,
     public activeModal: NgbModal
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -137,7 +147,7 @@ export class AddTenantsComponent implements OnInit {
     });
   }
 
-  initializerForm(){
+  initializerForm() {
     this.siteDetailsForm = this.fb.group({
       Name: ['', Validators.required],
       OrganizationId: ['', Validators.required],
@@ -170,25 +180,27 @@ export class AddTenantsComponent implements OnInit {
     });
   }
 
-  onSubmitForm() {
+  onSubmitForm(nextCallback?: any) {
     if (this.siteDetailsForm.valid) {
       this.spinner.show();
       const formData = this.siteDetailsForm.value;
 
       this.siteDetailsForm.value.OrganizationId = this.selectedOrganizationId;
       this.siteDetailsForm.value.ManagerOrganizationId = this.selectedManagerOrganizationId;
-      
+
       let body: any = {
         Name: 'CreateBuyBox',
         Params: formData,
       };
-      
+
       this.ApiService.GenericAPI(body).subscribe({
         next: (data) => {
           this.getUserBuyBoxes();
-          this.activeModal.dismissAll({ created: true });
           this.spinner.hide();
-          this.router.navigate(['/summary']);
+          this.IsActiveSteps = true;
+          nextCallback.emit()
+          // this.activeModal.dismissAll({ created: true });
+          // this.router.navigate(['/summary']);
           // const buyBox = data.json[0];
           // this.router.navigate(['/dashboard/', buyBox.id, buyBox.organizationId, buyBox.name]);
         },
@@ -200,5 +212,64 @@ export class AddTenantsComponent implements OnInit {
     } else {
       this.siteDetailsForm.markAllAsTouched();
     }
+  }
+
+  validateAndProceed(nextCallback: any, StepNum: number) {
+    if (StepNum == 1) {
+      if (
+        this.siteDetailsForm.get('Name')?.valid &&
+        this.siteDetailsForm.get('OrganizationId')?.valid &&
+        this.siteDetailsForm.get('MinBuildingSize')?.valid &&
+        this.siteDetailsForm.get('MaxBuildingSize')?.valid &&
+        this.siteDetailsForm.get('LotSize')?.valid &&
+        this.siteDetailsForm.get('BuildingSquareFootage')?.valid &&
+        this.siteDetailsForm.get('FrontageLength')?.valid &&
+        this.siteDetailsForm.get('BuildingType')?.valid &&
+        this.siteDetailsForm.get('DriveThru')?.valid &&
+        this.siteDetailsForm.get('TrafficDrection')?.valid &&
+        this.siteDetailsForm.get('VehiclePerDay')?.valid &&
+        this.siteDetailsForm.get('PropertyCondition')?.valid &&
+        this.siteDetailsForm.get('ServiceAccess')?.valid
+      ) {
+        nextCallback.emit();
+      } else {
+        this.siteDetailsForm.get('Name')?.markAllAsTouched();
+        this.siteDetailsForm.get('OrganizationId')?.markAllAsTouched();
+        this.siteDetailsForm.get('MinBuildingSize')?.markAllAsTouched();
+        this.siteDetailsForm.get('MaxBuildingSize')?.markAllAsTouched();
+        this.siteDetailsForm.get('LotSize')?.markAllAsTouched();
+        this.siteDetailsForm.get('BuildingSquareFootage')?.markAllAsTouched();
+        this.siteDetailsForm.get('FrontageLength')?.markAllAsTouched();
+        this.siteDetailsForm.get('BuildingType')?.markAllAsTouched();
+        this.siteDetailsForm.get('DriveThru')?.markAllAsTouched();
+        this.siteDetailsForm.get('TrafficDrection')?.markAllAsTouched();
+        this.siteDetailsForm.get('VehiclePerDay')?.markAllAsTouched();
+        this.siteDetailsForm.get('PropertyCondition')?.markAllAsTouched();
+        this.siteDetailsForm.get('ServiceAccess')?.markAllAsTouched();
+      }
+    } else if (StepNum == 2) {
+      if (
+        this.siteDetailsForm.get('Zoning')?.valid &&
+        this.siteDetailsForm.get('OvernightBoardingPermitted')?.valid &&
+        this.siteDetailsForm.get('HistoricDistrict')?.valid
+      ) {
+        nextCallback.emit();
+      } else {
+        this.siteDetailsForm.get('Zoning')?.markAllAsTouched();
+        this.siteDetailsForm.get('OvernightBoardingPermitted')?.markAllAsTouched();
+        this.siteDetailsForm.get('HistoricDistrict')?.markAllAsTouched();
+
+      }
+    } else {
+      this.siteDetailsForm.markAllAsTouched();
+    }
+  }
+
+  CreatePolygons() {
+    this.spinner.show();
+    this.getUserBuyBoxes();
+    this.activeModal.dismissAll({ created: true });
+    this.spinner.hide();
+    this.router.navigate(['/summary']);
   }
 }
