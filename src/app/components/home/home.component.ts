@@ -11,7 +11,7 @@ import {
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from '../../shared/services/places.service';
-import { General } from '../../shared/models/domain';
+import { adminLogin, General } from '../../shared/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +25,7 @@ import { ShareOrg } from '../../shared/models/shareOrg';
 import { StateService } from '../../shared/services/state.service';
 import { permission } from '../../shared/models/permission';
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -113,7 +114,8 @@ export class HomeComponent implements OnInit {
   isMobileView: boolean;
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
   @ViewChild('loginRegisterModal', { static: true }) loginRegisterModal: any;
-
+  LoginEmail!: any;
+  LoginPassword!: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -125,7 +127,8 @@ export class HomeComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private stateService: StateService,
     private renderer: Renderer2,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
@@ -140,7 +143,7 @@ export class HomeComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-      localStorage.setItem('contactId', this.ContactId);
+      this.ContactId = localStorage.getItem('contactId');
     });
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
@@ -841,7 +844,7 @@ export class HomeComponent implements OnInit {
         MarketSurveyId: shopping.MarketSurveyId,
         Comment: commentText,
         ParentCommentId: 0,
-        identity: this.ContactId,
+        // identity: this.ContactId,
       },
     };
 
@@ -877,7 +880,7 @@ export class HomeComponent implements OnInit {
         MarketSurveyId: marketSurveyId,
         Comment: replyText,
         ParentCommentId: commentId,
-        identity: this.ContactId
+        // identity: this.ContactId
       },
     };
 
@@ -1012,6 +1015,10 @@ export class HomeComponent implements OnInit {
   }
 
   addLike(shopping: Center, reactionId: number): void {
+    if (!this.isUserLoggedIn()) {
+      this.openLoginModal();
+      return;
+    }
     const contactIdStr = localStorage.getItem('contactId');
     if (!contactIdStr) {
       return;
@@ -1084,10 +1091,7 @@ export class HomeComponent implements OnInit {
   }
 
   handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
-    if (!this.isUserLoggedIn()) {
-      this.openLoginModal();
-      return;
-    }
+    
     if (this.clickTimeout) {
       clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
@@ -1203,60 +1207,91 @@ export class HomeComponent implements OnInit {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
-openLoginModal(): void {
-  this.modalService.open(this.loginRegisterModal, {
-    ariaLabelledBy: 'modal-login-register',
-    centered: true,
-    scrollable: true
-  });
-}
-registerUser(form: NgForm): void {
-  if (form.invalid) {
-    return;
+  openLoginModal(): void {
+    this.modalService.open(this.loginRegisterModal, {
+      ariaLabelledBy: 'modal-login-register',
+      centered: true,
+      scrollable: true,
+    });
   }
-  this.spinner.show();
-  const body = {
-    Name: 'AddContactToOrganization',
-    Params: {
-      FirstName: this.newContact.firstName,
-      LastName: this.newContact.lastName,
-      email: this.newContact.email,
-      password: 1234,
-      OrganizationId: this.OrgId,
-      buyboxId : this.BuyBoxId,
+  registerUser(form: NgForm): void {
+    if (form.invalid) {
+      return;
     }
-  };
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (response: any) => {
-      if (response && response.json && response.json.length > 0 && response.json[0].id) {
-        localStorage.setItem('contactId', response.json[0].id.toString());
+    this.spinner.show();
+    const body = {
+      Name: 'AddContactToOrganization',
+      Params: {
+        FirstName: this.newContact.firstName,
+        LastName: this.newContact.lastName,
+        email: this.newContact.email,
+        password: 1234,
+        OrganizationId: this.OrgId,
+        buyboxId: this.BuyBoxId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        if (
+          response &&
+          response.json &&
+          response.json.length > 0 &&
+          response.json[0].id
+        ) {
+          localStorage.setItem('contactId', response.json[0].id.toString());
+          console.log('contact after register', this.ContactId);
+          this.LoginEmail = response.json[0].email;
+          this.LoginPassword = response.json[0].password;
+          console.log(this.LoginEmail, this.LoginPassword);
+
+          this.modalService.dismissAll();
+          this.showToast('Registration successful!');
+          this.onSubmit();
+        } else if (response.error) {
+          alert('Registration failed: ' + response.error);
+        } else {
+          alert('Registration failed: Unable to process registration');
+        }
+      },
+      error: (err) => {
+        console.error('Registration error:', err);
+        alert('Registration failed: ' + (err.message || 'Unknown error'));
+        this.spinner.hide();
         this.modalService.dismissAll();
-        this.showToast('Registration successful!');
-      } else if (response.error) {
-        alert('Registration failed: ' + response.error);
-      } else {
-        alert('Registration failed: Unable to process registration');
-      }
-    },
-    error: (err) => {
-      console.error('Registration error:', err);
-      alert('Registration failed: ' + (err.message || 'Unknown error'));
-      this.spinner.hide();
-      this.modalService.dismissAll();
-    },
-    complete: () => {
-      this.spinner.hide();
-      this.modalService.dismissAll();
-    }
-  });
-}
-navigateToLogin(): void {
-  this.modalService.dismissAll();
-  this.router.navigate(['/login']);
-}
-isUserLoggedIn(): boolean {
-  const contactId = localStorage.getItem('contactId');
-  const x =contactId !== "undefined";
-  return x;
-}
+      },
+      complete: () => {
+        this.spinner.hide();
+        this.modalService.dismissAll();
+      },
+    });
+  }
+  onSubmit() {
+    const adminLoginInstance = {
+      Email: this.LoginEmail, // Ensure email is correct
+      Password: this.LoginPassword, // Ensure password is correct
+      contactToken: null, // Remove or send null if not needed
+    };
+
+    this.PlacesService.loginUser(adminLoginInstance).subscribe({
+      next: (data: any) => {
+        console.log('Login successful:', data);
+        // Handle token or user data if needed
+        localStorage.setItem('token', data.token);
+        this.authService.setToken(data.token);
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+        alert('Login failed: ' + (err.error?.message || 'Invalid credentials'));
+      },
+    });
+  }
+
+  navigateToLogin(): void {
+    this.modalService.dismissAll();
+    this.router.navigate(['/login']);
+  }
+  isUserLoggedIn(): boolean {
+    const contactId = localStorage.getItem('contactId');
+    return contactId !== null && contactId !== 'undefined';
+  }
 }
