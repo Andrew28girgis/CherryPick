@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './logs.component.html',
   styleUrl: './logs.component.css'
 })
-export class LogsComponent implements OnInit {
+export class SubmissionsComponent implements OnInit {
   submissionsArray: any[] = [];
   
   constructor(private PlacesService: PlacesService, private eRef: ElementRef) {}
