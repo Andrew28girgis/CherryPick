@@ -877,6 +877,7 @@ export class HomeComponent implements OnInit {
         MarketSurveyId: marketSurveyId,
         Comment: replyText,
         ParentCommentId: commentId,
+        identity: this.ContactId
       },
     };
 
@@ -1255,6 +1256,7 @@ navigateToLogin(): void {
 }
 isUserLoggedIn(): boolean {
   const contactId = localStorage.getItem('contactId');
-  return contactId !== null && contactId !== undefined;
+  const x =contactId !== "undefined";
+  return x;
 }
 }
