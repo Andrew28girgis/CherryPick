@@ -405,7 +405,6 @@ line-height: 24px;
   width: 100%;
   border-radius: 4px;
   background: #EDF0F8;
-  cursor: pointer;
 }
 
 .upload-container {
@@ -434,7 +433,9 @@ line-height: 24px;
   align-items: center;
   background: #FFF;
 }
-
+.cursor{
+  cursor: pointer;
+}
 .cancel-button {
   display: flex;
   height: 48px;
