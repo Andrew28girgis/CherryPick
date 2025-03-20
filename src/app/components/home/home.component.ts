@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit {
   General!: General;
   BuyBoxId!: any;
   OrgId!: any;
+  ContactId!: any;
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -139,6 +140,7 @@ export class HomeComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+      localStorage.setItem('contactId', this.ContactId);
     });
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
@@ -839,6 +841,7 @@ export class HomeComponent implements OnInit {
         MarketSurveyId: shopping.MarketSurveyId,
         Comment: commentText,
         ParentCommentId: 0,
+        identity: this.ContactId,
       },
     };
 
