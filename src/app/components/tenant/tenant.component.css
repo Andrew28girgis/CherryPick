@@ -1,4 +1,33 @@
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+.container, .row, .map-container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.map-container {
+  width: 100% !important;
+  max-width: 1440px;
+  height: auto;
+  padding: 32px;
+}
+
+.custom-card {
+  max-width: 100%;
+  width: 500px;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+
 .background {
   background: var(--Body-Page-BG, #f2f3f4);
 }
@@ -51,7 +80,6 @@
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
-  width: 1440px;
   height: 720px;
   padding: var(--Card-Section-Lg-Padding-All-Sides, 32px);
   flex-direction: column;
@@ -511,7 +539,6 @@
     gap: var(--Space-Space-24, 7px);
   }
   .map-container {
-    width: 1440px;
     height: 720px;
     padding: var(--Card-Section-Lg-Padding-All-Sides, 32px);
     gap: var(--Space-Space-12, 12px);
