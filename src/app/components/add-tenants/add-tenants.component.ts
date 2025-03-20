@@ -155,27 +155,27 @@ export class AddTenantsComponent implements OnInit {
       MinBuildingSize: [null, Validators.required],
       MaxBuildingSize: [null, Validators.required],
       Restrictions: [''],
-      BaseRent: [null, Validators.required],
-      BuildingSquareFootage: [null, Validators.required],
-      BuildingType: ['', Validators.required],
+      BaseRent: [null],
+      BuildingSquareFootage: [null],
+      BuildingType: [''],
       CeilingHeight: [null],
-      DealStructure: ['', Validators.required],
-      DriveThru: [1, Validators.required],
+      DealStructure: [''],
+      DriveThru: [1],
       FloodZone: [''],
-      FrontageLength: [null, Validators.required],
+      FrontageLength: [null],
       HistoricDistrict: [''],
       LeaseTerm: [null],
-      LotSize: [null, Validators.required],
-      NNNCharges: [null, Validators.required],
-      OvernightBoardingPermitted: [1, Validators.required],
+      LotSize: [null],
+      NNNCharges: [null],
+      OvernightBoardingPermitted: [1],
       ParkingSpaces: [null],
-      PropertyCondition: ['', Validators.required],
-      PurchasePrice: [null, Validators.required],
-      ServiceAccess: ['', Validators.required],
+      PropertyCondition: [''],
+      PurchasePrice: [null],
+      ServiceAccess: [''],
       TIAllowance: [null],
-      TrafficDrection: ['', Validators.required],
-      VehiclePerDay: [null, Validators.required],
-      Zoning: ['', Validators.required],
+      TrafficDrection: [''],
+      VehiclePerDay: [null],
+      Zoning: [''],
       OtherComments: [''],
     });
   }
@@ -220,16 +220,7 @@ export class AddTenantsComponent implements OnInit {
         this.siteDetailsForm.get('Name')?.valid &&
         this.siteDetailsForm.get('OrganizationId')?.valid &&
         this.siteDetailsForm.get('MinBuildingSize')?.valid &&
-        this.siteDetailsForm.get('MaxBuildingSize')?.valid &&
-        this.siteDetailsForm.get('LotSize')?.valid &&
-        this.siteDetailsForm.get('BuildingSquareFootage')?.valid &&
-        this.siteDetailsForm.get('FrontageLength')?.valid &&
-        this.siteDetailsForm.get('BuildingType')?.valid &&
-        this.siteDetailsForm.get('DriveThru')?.valid &&
-        this.siteDetailsForm.get('TrafficDrection')?.valid &&
-        this.siteDetailsForm.get('VehiclePerDay')?.valid &&
-        this.siteDetailsForm.get('PropertyCondition')?.valid &&
-        this.siteDetailsForm.get('ServiceAccess')?.valid
+        this.siteDetailsForm.get('MaxBuildingSize')?.valid 
       ) {
         nextCallback.emit();
       } else {
@@ -237,29 +228,20 @@ export class AddTenantsComponent implements OnInit {
         this.siteDetailsForm.get('OrganizationId')?.markAllAsTouched();
         this.siteDetailsForm.get('MinBuildingSize')?.markAllAsTouched();
         this.siteDetailsForm.get('MaxBuildingSize')?.markAllAsTouched();
-        this.siteDetailsForm.get('LotSize')?.markAllAsTouched();
-        this.siteDetailsForm.get('BuildingSquareFootage')?.markAllAsTouched();
-        this.siteDetailsForm.get('FrontageLength')?.markAllAsTouched();
-        this.siteDetailsForm.get('BuildingType')?.markAllAsTouched();
-        this.siteDetailsForm.get('DriveThru')?.markAllAsTouched();
-        this.siteDetailsForm.get('TrafficDrection')?.markAllAsTouched();
-        this.siteDetailsForm.get('VehiclePerDay')?.markAllAsTouched();
-        this.siteDetailsForm.get('PropertyCondition')?.markAllAsTouched();
-        this.siteDetailsForm.get('ServiceAccess')?.markAllAsTouched();
       }
     } else if (StepNum == 2) {
-      if (
-        this.siteDetailsForm.get('Zoning')?.valid &&
-        this.siteDetailsForm.get('OvernightBoardingPermitted')?.valid &&
-        this.siteDetailsForm.get('HistoricDistrict')?.valid
-      ) {
+      // if (
+      //   this.siteDetailsForm.get('Zoning')?.valid &&
+      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.valid &&
+      //   this.siteDetailsForm.get('HistoricDistrict')?.valid
+      // ) {
         nextCallback.emit();
-      } else {
-        this.siteDetailsForm.get('Zoning')?.markAllAsTouched();
-        this.siteDetailsForm.get('OvernightBoardingPermitted')?.markAllAsTouched();
-        this.siteDetailsForm.get('HistoricDistrict')?.markAllAsTouched();
+      // } else {
+      //   this.siteDetailsForm.get('Zoning')?.markAllAsTouched();
+      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.markAllAsTouched();
+      //   this.siteDetailsForm.get('HistoricDistrict')?.markAllAsTouched();
 
-      }
+      // }
     } else {
       this.siteDetailsForm.markAllAsTouched();
     }
