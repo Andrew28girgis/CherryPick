@@ -3,7 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandlordComponent } from './landlord.component';
 import { ManagePropertiesComponent } from './manage-properties/manage-properties.component';
 
-const routes: Routes = [{ path: '', component: ManagePropertiesComponent },
+const routes: Routes = [
+  { path: '', component: ManagePropertiesComponent },
   { path: 'manage-properties', component: ManagePropertiesComponent },
 
 
