@@ -363,6 +363,121 @@
   justify-content: center;
   align-items: center;
 }
+.space {
+  margin-top: 20px;
+  padding: 0px 30px;
+}
+.submitproposell{
+color: #000;
+font-family: Montserrat;
+font-size: 22px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; 
+}
+.filename{
+  padding: 10px 30px;
+  color: #000;
+  font-family: Montserrat;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 25px;
+}
+.outer-frame {
+  display: flex;
+  padding: 12px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  border: 1px solid #E2E4E9;
+  background: #FFF;
+  width: 100%;
+}
+.inner-frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 0;
+  gap: 8px;
+  width: 100%;
+  border-radius: 4px;
+  background: #EDF0F8;
+  cursor: pointer;
+}
+
+.upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.upload-img {
+  width: 40px; 
+  height: auto;
+}
+
+.upload-text {
+  font-size: 14px;
+  color: #7c7c7c;
+  text-align: center;
+}
+.modal-footer {
+  width: 100%;
+  padding: 5px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFF;
+}
+
+.cancel-button {
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  border-radius: 16px;
+  border: 1px solid #4D65B4;
+  background: #FFF;
+  color: #4D65B4;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+.submit-button {
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  border-radius: 16px;
+  background: #4D65B4;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+}
+
+.cancel-button:hover {
+  background: #F0F3FF;
+}
+
+.submit-button:hover {
+  background: #4055A8; 
+}
 
 @media (max-width: 576px) {
   .content-right {
