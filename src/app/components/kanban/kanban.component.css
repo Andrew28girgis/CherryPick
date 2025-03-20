@@ -92,7 +92,7 @@
   height: 100%;
   overflow-x: auto;
   padding: 0;
-  padding-left: 1rem;
+  /* padding-left: 1rem; */
   scrollbar-width: thin;
 }
 
@@ -208,6 +208,25 @@
 .cdk-drag-animating {
   min-width: 15rem;
   transition: transform 250ms var(--transition-bezier);
+}
+
+.workflow-item {
+  /* background-color: black; */
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #707791;
+  border: 1px solid #e2e4e9;
+}
+
+.breadcrumb-item{
+  cursor: pointer;
+}
+
+.activeBreadcrumb {
+  color: #4d65b4;
 }
 
 /* Animations */
