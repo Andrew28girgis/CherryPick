@@ -8,46 +8,18 @@
   width: max-content;
   margin: 0;
   min-height: 40px;
-}
-
-.selected-contact {
-  background-color: #e2e4e9;
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-}
+  height: max-content;
+}    
 
 .selected-email {
-  background-color: #f0f0f0;
+  background: #edf0f8;
   border: 1px solid #e2e4e9;
   padding: 10px;
   margin-bottom: 5px;
 }
 
-.org-data {
-  display: flex;
-  height: 40px;
-  padding: 8px;
-  align-items: center;
-  gap: 8px;
-  align-self: stretch;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #4d65b4 0%, #1a4beb 100%);
-  width: -webkit-fill-available;
-}
-
-.org-name {
-  color: #fff;
-
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 14px;
-  letter-spacing: -0.07px;
-}
-
 .contacts {
   color: #000;
-
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -56,19 +28,8 @@
 
 .contact-list {
   border-bottom: 1px solid #e2e4e9;
-  display: flex;
   padding: 12px 12px;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-self: stretch;
   cursor: pointer;
-}
-
-.buttonandname {
-  display: flex;
-  padding: 24px 22px;
-  align-items: flex-start;
-  align-self: stretch;
 }
 
 .mailbox-header {
@@ -88,10 +49,6 @@
   align-items: flex-start;
   gap: 8px;
   align-self: stretch;
-}
-
-.selected-email {
-  background: #edf0f8;
 }
 
 .subject {
@@ -141,98 +98,32 @@
   padding-top: 0;
 }
 
-.new-btn {
-  border-radius: 8px;
-  background: #4d65b4;
-  display: flex;
-  padding: 8px 16px;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  height: 40px;
-  border: none;
-  color: #fff;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 24px;
-}
-
-.out-icn {
-  cursor: pointer;
-  margin-left: 12px;
-  border-radius: 8px;
-  border: 1px solid #e2e4e9;
-  background: #fff;
-  display: flex;
-  padding: 8px;
-  align-items: center;
-  gap: 10px;
-}
-
-/* scroll */
-/* Initially hide the scrollbar */
 .card-body {
   overflow-y: auto;
   scrollbar-width: none;
-  /* For Firefox */
   -ms-overflow-style: none;
-  /* For Internet Explorer */
 }
 
 .card-body::-webkit-scrollbar {
   display: none;
-  /* For WebKit-based browsers (e.g., Chrome, Safari, Edge) */
 }
 
-/* Show the scrollbar on hover or while scrolling */
 .card-body:hover {
   scrollbar-width: thin;
-  /* For Firefox */
 }
 
 .card-body:hover::-webkit-scrollbar {
   display: block;
   width: 8px;
-  /* Adjust width as needed */
 }
 
 .card-body:hover::-webkit-scrollbar-thumb {
   background: #ccc;
-  /* Customize the scrollbar thumb color */
   border-radius: 4px;
-  /* Make the scrollbar rounded */
 }
 
 .card-bodyy {
   scrollbar-width: thin;
-  /* For Firefox */
-}
-
-.replay {
-  border-radius: 16px;
-  background: #4d65b4;
-  display: inline-flex;
-  height: 48px;
-  padding: 14px 24px;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-  color: #fff;
-  text-align: center;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px;
-  border: none;
-  max-height: 40px;
-  width: 110px;
-}
-
-.send {
-  color: #28a745;
-  font-size: 18px;
 }
 
 .inbox {
@@ -240,55 +131,23 @@
   font-size: 18px;
 }
 
-.outbox {
-  color: #fd7e14;
-  font-size: 18px;
+.buyBoxname{
+  color:#001f3f;
+  font-weight: 600;
+  font-size: 16px;
 }
 
-.filter-button {
-  padding: 0px 5px;
-  margin-right: 5px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  color: #555;
-  transition: all 0.2s ease;
+.Kayak__img{
+  width: 30px;
+  height: 30px;
+  margin-inline-end: 6px;
 }
 
-.filter-button:hover {
-  background-color: #eaeaea;
-}
-
-.filter-button.active {
-  background-color: #4d65b4;
-  color: white;
-}
-
-.fa-reply.inbox {
-  color: #007bff;
-}
-
-.fa-share.outbox {
-  color: #6c757d;
-}
-
-.fa-envelope-circle-check.send {
-  color: #28a745;
-}
-
-.filter-button:not(.active) .fa-envelope-circle-check {
-  color: #28a745;
-}
-
-.filter-button:not(.active) .fa-reply {
-  color: #007bff;
-}
-
-.filter-button:not(.active) .fa-share {
-  color: #fd7e14;
-}
-
-/* When button is active, icons should be white */
-.filter-button.active i {
-  color: white;
+.single-line {
+  display: inline-block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #707791;
 }

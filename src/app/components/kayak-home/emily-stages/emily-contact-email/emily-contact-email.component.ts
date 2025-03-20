@@ -13,6 +13,7 @@ import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-emily-contact-email',
@@ -51,7 +52,7 @@ export class EmilyContactEmailComponent implements OnInit {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private route: ActivatedRoute,
-
+    private _location: Location,
   ) {}
 
   ngOnInit() {
@@ -258,7 +259,7 @@ export class EmilyContactEmailComponent implements OnInit {
     });
   }
   goBack() {
-    this.goBackEvent.emit();
+    this._location.back();
   }
   getTotalEmails(contact: Contact): number {
     return (

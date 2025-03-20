@@ -77,7 +77,8 @@ import { PaginatorModule } from 'primeng/paginator';
     MapViewComponent,
     StageEmailComponent,
     PolygonsControllerComponent,
-    EmilyStagesComponent
+    EmilyStagesComponent,
+    LinkMicrosoftComponent
   ],
 })
 export class KayakModule {}
