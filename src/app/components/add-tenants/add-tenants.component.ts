@@ -35,8 +35,6 @@ export class AddTenantsComponent implements OnInit {
     { label: 'Zone X', value: 'Zone X' },
     { label: 'Zone AE', value: 'Zone AE' }
   ];
-  IsActiveSteps: boolean = false;
-  currentStep: number = 0;
 
   constructor(
     private router: Router,
@@ -160,14 +158,14 @@ export class AddTenantsComponent implements OnInit {
       BuildingType: [''],
       CeilingHeight: [''],
       DealStructure: [''],
-      DriveThru: [1],
+      DriveThru: [0],
       FloodZone: [''],
       FrontageLength: [''],
       HistoricDistrict: [''],
       LeaseTerm: [''],
       LotSize: [''],
       NNNCharges: [''],
-      OvernightBoardingPermitted: [1],
+      OvernightBoardingPermitted: [0],
       ParkingSpaces: [''],
       PropertyCondition: [''],
       PurchasePrice: [''],
@@ -197,10 +195,7 @@ export class AddTenantsComponent implements OnInit {
         next: (data) => {
           this.getUserBuyBoxes();
           this.spinner.hide();
-          this.IsActiveSteps = true;
           nextCallback.emit()
-          // this.activeModal.dismissAll({ created: true });
-          // this.router.navigate(['/summary']);
           // const buyBox = data.json[0];
           // this.router.navigate(['/dashboard/', buyBox.id, buyBox.organizationId, buyBox.name]);
         },
@@ -216,32 +211,15 @@ export class AddTenantsComponent implements OnInit {
 
   validateAndProceed(nextCallback: any, StepNum: number) {
     if (StepNum == 1) {
-      if (
-        this.siteDetailsForm.get('Name')?.valid &&
-        this.siteDetailsForm.get('OrganizationId')?.valid &&
-        this.siteDetailsForm.get('MinBuildingSize')?.valid &&
-        this.siteDetailsForm.get('MaxBuildingSize')?.valid 
-      ) {
+      const controlsToCheck = ['Name', 'OrganizationId', 'MinBuildingSize', 'MaxBuildingSize'];
+
+      if (controlsToCheck.every(control => this.siteDetailsForm.get(control)?.valid)) {
         nextCallback.emit();
       } else {
-        this.siteDetailsForm.get('Name')?.markAllAsTouched();
-        this.siteDetailsForm.get('OrganizationId')?.markAllAsTouched();
-        this.siteDetailsForm.get('MinBuildingSize')?.markAllAsTouched();
-        this.siteDetailsForm.get('MaxBuildingSize')?.markAllAsTouched();
+        controlsToCheck.forEach(control => this.siteDetailsForm.get(control)?.markAllAsTouched());
       }
     } else if (StepNum == 2) {
-      // if (
-      //   this.siteDetailsForm.get('Zoning')?.valid &&
-      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.valid &&
-      //   this.siteDetailsForm.get('HistoricDistrict')?.valid
-      // ) {
-        nextCallback.emit();
-      // } else {
-      //   this.siteDetailsForm.get('Zoning')?.markAllAsTouched();
-      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.markAllAsTouched();
-      //   this.siteDetailsForm.get('HistoricDistrict')?.markAllAsTouched();
-
-      // }
+      nextCallback.emit();
     } else {
       this.siteDetailsForm.markAllAsTouched();
     }

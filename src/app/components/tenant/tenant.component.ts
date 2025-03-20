@@ -180,7 +180,7 @@ export class TenantComponent implements OnInit {
     } else {
       this.selectedShoppingID = id.toString();
     }
-    this.modalService.open(this.uploadPDF, { size: 'xl', centered: true });
+    this.modalService.open(this.uploadPDF, { size: 'lg', centered: true });
   }
   public uploadFile(files: NgxFileDropEntry[]) {
     this.files = files;
