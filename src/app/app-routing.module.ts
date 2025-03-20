@@ -87,7 +87,7 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: "EmilyUserInbox",
+    path: 'EmilyUserInbox',
     component: EmilyUserInboxComponent,
     canActivate: [TenantOnlyGuard],
   },
