@@ -9,7 +9,7 @@
   margin: 0;
   min-height: 40px;
   height: max-content;
-}    
+}
 
 .selected-email {
   background: #edf0f8;
@@ -131,13 +131,13 @@
   font-size: 18px;
 }
 
-.buyBoxname{
-  color:#001f3f;
+.buyBoxname {
+  color: #001f3f;
   font-weight: 600;
   font-size: 16px;
 }
 
-.Kayak__img{
+.Kayak__img {
   width: 30px;
   height: 30px;
   margin-inline-end: 6px;
@@ -174,11 +174,11 @@
 }
 
 .Kayack__button {
-  width: auto; 
+  width: auto;
   border-radius: 10px;
   background: #001f3fc2;
   color: #fff;
-  text-align: center; 
+  text-align: center;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
