@@ -211,21 +211,15 @@ export class AddTenantsComponent implements OnInit {
 
   validateAndProceed(nextCallback: any, StepNum: number) {
     if (StepNum == 1) {
-      if (
-        this.siteDetailsForm.get('Name')?.valid &&
-        this.siteDetailsForm.get('OrganizationId')?.valid &&
-        this.siteDetailsForm.get('MinBuildingSize')?.valid &&
-        this.siteDetailsForm.get('MaxBuildingSize')?.valid 
-      ) {
+      const controlsToCheck = ['Name', 'OrganizationId', 'MinBuildingSize', 'MaxBuildingSize'];
+
+      if (controlsToCheck.every(control => this.siteDetailsForm.get(control)?.valid)) {
         nextCallback.emit();
       } else {
-        this.siteDetailsForm.get('Name')?.markAllAsTouched();
-        this.siteDetailsForm.get('OrganizationId')?.markAllAsTouched();
-        this.siteDetailsForm.get('MinBuildingSize')?.markAllAsTouched();
-        this.siteDetailsForm.get('MaxBuildingSize')?.markAllAsTouched();
+        controlsToCheck.forEach(control => this.siteDetailsForm.get(control)?.markAllAsTouched());
       }
     } else if (StepNum == 2) {
-        nextCallback.emit();
+      nextCallback.emit();
     } else {
       this.siteDetailsForm.markAllAsTouched();
     }
