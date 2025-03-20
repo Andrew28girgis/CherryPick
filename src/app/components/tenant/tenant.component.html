@@ -286,7 +286,7 @@
     <div>
       <h4 class="submitproposell">Submit a Proposal</h4>
     </div>
-    <div>
+    <div (click)="clearModalData(); closeModal(modal)" class="cursor">
       <img src="../../../assets/Images/close-circle.png" alt="" />
     </div>
   </div>
@@ -305,9 +305,9 @@
           (onFileDrop)="uploadFile($event)"
           [dropZoneClassName]="'upload-background-image'"
         >
-          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector" >
             <!-- Centered container -->
-            <div class="upload-container" (click)="openFileSelector()">
+            <div class="upload-container cursor" (click)="openFileSelector()">
               <img
                 src="../../../assets/Images/document-upload.png"
                 alt="Upload Icon"
