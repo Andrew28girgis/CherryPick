@@ -1,5 +1,7 @@
 
-
+.overfloww{
+  overflow-x: hidden;
+}
 .background {
   background: var(--Body-Page-BG, #f2f3f4);
   width: 100% !important;
@@ -312,7 +314,6 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  width: 100% !important;
 }
 .colorr {
   min-height: 150px;
