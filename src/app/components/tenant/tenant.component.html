@@ -336,49 +336,8 @@
       </div>
       <p class="text-center mt-3">Uploading...</p>
     </div>
-  <div class="modal-footer">
-    <div class="row w-100">
-      <!-- Cancel Button (Left Column) -->
-      <div class="col-6">
-        <button class="cancel-button" (click)="clearModalData(); closeModal(modal)" >Cancel</button>
-      </div>
-  
-      <!-- Submit Button (Right Column) -->
-      <div class="col-6">
-        <button class="submit-button" >Submit</button>
-      </div>
-    </div>
-  </div>
-  
-  
-
-  <div>
-    <!-- <div class="col-md-12 p-0">
-      <ngx-file-drop
-        dropZoneLabel="Drop files here"
-        (onFileDrop)="uploadFile($event)"
-        [dropZoneClassName]="'upload-background-image'"
-      >
-        <ng-template
-          ngx-file-drop-content-tmp
-          let-openFileSelector="openFileSelector"
-        >
-          <b>
-            <span class="text-dark drop-sty mx-2"> Drop File Here </span>
-          </b>
-          <button
-            type="button"
-            class="btn btn-success ml-2 secondary-color upload"
-            (click)="openFileSelector()"
-          >
-            Browse Files
-          </button>
-        </ng-template>
-      </ngx-file-drop>
-    </div> -->
-  
-    <!-- Conversion Status -->
-    <div *ngIf="isConverting" class="mt-3">
+     <!-- Conversion Status -->
+     <div *ngIf="isConverting" class="mt-3">
       <div class="text-center">
         <div class="spinner-border text-primary" role="status">
           <span class="sr-only">Loading...</span>
@@ -550,6 +509,48 @@
         </div>
       </div>
     </div>
+  <div class="modal-footer">
+    <div class="row w-100">
+      <!-- Cancel Button (Left Column) -->
+      <div class="col-6">
+        <button class="cancel-button" (click)="clearModalData(); closeModal(modal)" >Cancel</button>
+      </div>
+  
+      <!-- Submit Button (Right Column) -->
+      <div class="col-6">
+        <button class="submit-button" >Submit</button>
+      </div>
+    </div>
+  </div>
+  
+  
+
+  <div>
+    <!-- <div class="col-md-12 p-0">
+      <ngx-file-drop
+        dropZoneLabel="Drop files here"
+        (onFileDrop)="uploadFile($event)"
+        [dropZoneClassName]="'upload-background-image'"
+      >
+        <ng-template
+          ngx-file-drop-content-tmp
+          let-openFileSelector="openFileSelector"
+        >
+          <b>
+            <span class="text-dark drop-sty mx-2"> Drop File Here </span>
+          </b>
+          <button
+            type="button"
+            class="btn btn-success ml-2 secondary-color upload"
+            (click)="openFileSelector()"
+          >
+            Browse Files
+          </button>
+        </ng-template>
+      </ngx-file-drop>
+    </div> -->
+  
+   
   </div>
   <div class="modal-footer">
     <!-- Send Selected Images Button -->
