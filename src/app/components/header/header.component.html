@@ -30,20 +30,20 @@
     id="navbarNav"
   >
     <ul class="navbar-nav mx-auto gap-3">
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
+      <!-- <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/dashboard']"
           routerLinkActive="active-route"
           class="nav-link"
           >Dashboard</a
         >
-      </li>
+      </li> -->
       <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
           class="nav-link"
-          >Kanban</a
+          >Cadence</a
         >
       </li>
       <li class="nav-item" *ngIf="!current.includes('landlord')">

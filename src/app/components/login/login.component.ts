@@ -93,6 +93,6 @@ export class LoginComponent implements OnInit {
   }
 
   private navigateToHome() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/summary']);
   }
 }

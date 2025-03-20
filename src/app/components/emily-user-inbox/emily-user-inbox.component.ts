@@ -21,7 +21,6 @@ export class EmilyUserInboxComponent implements OnInit {
   isScrolling = false;
   private scrollTimeout: any;
 
-
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,

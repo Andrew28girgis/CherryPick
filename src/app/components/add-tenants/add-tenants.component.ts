@@ -12,16 +12,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   selector: 'app-add-tenants',
   templateUrl: './add-tenants.component.html',
   styleUrls: ['./add-tenants.component.css'],
-  providers: [NgbActiveModal]
+  providers: [NgbActiveModal],
 })
 export class AddTenantsComponent implements OnInit {
-  selectedOrganizationId!: number; 
+  selectedOrganizationId!: number;
   searchOrganizationTerm: string = '';
-  selectedOrganizationName!: string;  
+  selectedOrganizationName!: string;
   organizations: Organization[] = [];
   showOrganizationSuggestions: boolean = false;
   highlightedOrganizationIndex: number = -1;
-  selectedManagerOrganizationId!: number;  
+  selectedManagerOrganizationId!: number;
   organizationId!: any;
   isSearchingOrganization: boolean = false;
   buyboxTypes: any[] = [];
@@ -137,7 +137,7 @@ export class AddTenantsComponent implements OnInit {
     });
   }
 
-  initializerForm(){
+  initializerForm() {
     this.siteDetailsForm = this.fb.group({
       Name: ['', Validators.required],
       OrganizationId: ['', Validators.required],
@@ -176,13 +176,14 @@ export class AddTenantsComponent implements OnInit {
       const formData = this.siteDetailsForm.value;
 
       this.siteDetailsForm.value.OrganizationId = this.selectedOrganizationId;
-      this.siteDetailsForm.value.ManagerOrganizationId = this.selectedManagerOrganizationId;
-      
+      this.siteDetailsForm.value.ManagerOrganizationId =
+        this.selectedManagerOrganizationId;
+
       let body: any = {
         Name: 'CreateBuyBox',
         Params: formData,
       };
-      
+
       this.ApiService.GenericAPI(body).subscribe({
         next: (data) => {
           this.getUserBuyBoxes();
