@@ -1,19 +1,22 @@
 <div class="p-3">
-    <table class="procpect-table">
-        <thead class="procpect-table-head">
-            <th>User Name</th>
-            <th>Center Name</th>
-            <th>Created Date</th>
-            <th>File Name</th>
-        </thead>
-        <tbody class="procpect-table-body">
-          <tr *ngFor="let submission of submissionsArray">
-            <td>{{ submission.userName }}</td>
-            <td>{{ submission.centerName }}</td>
-            <td>{{ submission.createdDate | date:'medium' }}</td>
-            <td>{{ submission.fileName }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <table *ngIf="submissionsArray && submissionsArray.length > 0" class="procpect-table">
+    <thead class="procpect-table-head">
+      <tr>
+        <th>Center Name</th>
+        <th>Created Date</th>
+        <th>File Name</th>
+        <th>User Name</th>
+      </tr>
+    </thead>
+    <tbody class="procpect-table-body">
+      <tr *ngFor="let submission of submissionsArray">
+        <td>{{ submission.centerName }}</td>
+        <td>{{ submission.createdDate | date:'short' }}</td>
+        <td>{{ submission.fileName }}</td>
+        <td>{{ submission.userName }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
 </div>
   
