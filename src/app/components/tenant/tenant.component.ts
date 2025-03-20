@@ -148,7 +148,7 @@ export class TenantComponent implements OnInit {
         this.spinner.hide();
 
         this.GetOrganizationBranches();
-      }
+      },
     });
   }
 
@@ -168,7 +168,7 @@ export class TenantComponent implements OnInit {
         this.address = this.organizationBranches.Address;
         this.states = this.organizationBranches.States;
         this.spinner.hide();
-      }
+      },
     });
   }
   // manual display and edit shopping center
@@ -189,7 +189,7 @@ export class TenantComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           const formData = new FormData();
-          formData.append('file', file, file.name);
+          formData.append('filename', file/*, file.name*/);
           this.fileName = file.name;
           this.isUploading = true;
           this.uploadProgress = 0;
@@ -309,7 +309,7 @@ export class TenantComponent implements OnInit {
         this.showToast('New tenant added successfully!');
         this.showAddTenantInput = false;
         this.newTenantName = '';
-      }
+      },
     });
   }
   sendImagesArray() {
@@ -323,7 +323,7 @@ export class TenantComponent implements OnInit {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
         this.spinner.hide();
-      }
+      },
     });
   }
   sendJson() {
@@ -357,7 +357,7 @@ export class TenantComponent implements OnInit {
         this.clearModalData();
         this.modalService.dismissAll();
         this.spinner.hide();
-      }
+      },
     });
   }
   // Method to clear all modal data

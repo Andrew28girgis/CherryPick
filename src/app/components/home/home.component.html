@@ -92,10 +92,12 @@
           >
             Share
           </button> -->
-          <button class="btn custom-share-btn ms-3 d-none d-sm-flex"
-          (click)="OpenShareWithContactModal(ShareWithContact)"
-          >Share
-        </button>
+          <button
+            class="btn custom-share-btn ms-3 d-none d-sm-flex"
+            (click)="OpenShareWithContactModal(ShareWithContact)"
+          >
+            Share
+          </button>
 
           <app-logout></app-logout>
         </div>
@@ -201,7 +203,6 @@
               {{ showDetails[i] ? "See less" : "See more" }}
             </p>
           </div>
-
         </div>
         <div class="card-image Res tiktok-imgg">
           <div
@@ -225,7 +226,7 @@
             <button
               class="action-btn like-btn"
               [class.liked]="isLiked(shopping)"
-              (click)="handleClick(shopping, Like, i)"
+              (click)="addLike(shopping, i)"
               [disabled]="isLikeInProgress"
             >
               <svg
@@ -292,7 +293,7 @@
           <button
             class="action-btn share-btn"
             (click)="OpenShareWithContactModal(ShareWithContact)"
-            >
+          >
             <svg
               width="33"
               height="32"
@@ -1799,9 +1800,15 @@
 </ng-template>
 
 <ng-template #ShareWithContact let-modal>
-  <div class="d-flex justify-content-between p-3 m-3 align-items-center shareborder">
+  <div
+    class="d-flex justify-content-between p-3 m-3 align-items-center shareborder"
+  >
     <p class="share-link m-0">{{ GuidLink }}</p>
-    <i class="fa-solid fa-copy" (click)="copyGUID(GuidLink)" style="cursor: pointer; font-size: 20px;"></i>
+    <i
+      class="fa-solid fa-copy"
+      (click)="copyGUID(GuidLink)"
+      style="cursor: pointer; font-size: 20px"
+    ></i>
   </div>
 </ng-template>
 
@@ -1816,8 +1823,20 @@
   <div class="modal-header d-flex justify-content-between">
     <h4 class="modal-title" id="modal-login-register">Create an Account</h4>
     <div class="d-flex align-items-center">
-      <button type="button" class="btn btn-link text-decoration-none me-2" style="color: #4d65b4;" (click)="navigateToLogin()">Login</button>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+      <button
+        type="button"
+        class="btn btn-link text-decoration-none me-2"
+        style="color: #4d65b4"
+        (click)="navigateToLogin()"
+      >
+        Login
+      </button>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      ></button>
     </div>
   </div>
   <div class="modal-body">
@@ -1825,22 +1844,46 @@
     <form #registerForm="ngForm" (ngSubmit)="registerUser(registerForm)">
       <div class="mb-3">
         <label for="firstName" class="form-label">First Name</label>
-        <input type="text" class="form-control" id="firstName" name="firstName" 
-          [(ngModel)]="newContact.firstName" required>
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          name="firstName"
+          [(ngModel)]="newContact.firstName"
+          required
+        />
       </div>
       <div class="mb-3">
         <label for="lastName" class="form-label">Last Name</label>
-        <input type="text" class="form-control" id="lastName" name="lastName" 
-          [(ngModel)]="newContact.lastName" required>
+        <input
+          type="text"
+          class="form-control"
+          id="lastName"
+          name="lastName"
+          [(ngModel)]="newContact.lastName"
+          required
+        />
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" 
-          [(ngModel)]="newContact.email" required email>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          [(ngModel)]="newContact.email"
+          required
+          email
+        />
       </div>
 
       <div class="d-grid">
-        <button type="submit" class="btn btn-primary" style="background-color: #4d65b4;" [disabled]="registerForm.invalid">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          style="background-color: #4d65b4"
+          [disabled]="registerForm.invalid"
+        >
           Register
         </button>
       </div>

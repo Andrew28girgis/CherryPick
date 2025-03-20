@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { EmailInfo, Mail } from 'src/app/shared/models/buy-box-emails';
+import { Component, Input, OnInit } from '@angular/core';
+import { Contact, EmailInfo, Mail } from 'src/app/shared/models/buy-box-emails';
 import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-emily-user-inbox',
@@ -20,11 +21,18 @@ export class EmilyUserInboxComponent implements OnInit {
   selectedMicroDealId!: number;
   isScrolling = false;
   private scrollTimeout: any;
+  bodyemail: any;
+  contactIdemail: any;
+  orgId!: any;
+  buyBoxId!: any;
+  buyBoxIdReplay!: any;
+  selectedContact: any;
 
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private router: Router,
+    private modalService: NgbModal,
     private _location: Location,
   ) { }
 
@@ -36,7 +44,7 @@ export class EmilyUserInboxComponent implements OnInit {
   GetUserInbox(): void {
     this.spinner.show();
     const body: any = {
-      Name: 'GetUserInbox',
+      Name: 'GetTenantRepInbox',
       MainEntity: null,
       Params: {
       },
@@ -46,6 +54,8 @@ export class EmilyUserInboxComponent implements OnInit {
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
           this.UserInbox = data.json;
+          console.log(this.UserInbox);
+
           this.spinner.hide();
 
         } else {
@@ -55,7 +65,7 @@ export class EmilyUserInboxComponent implements OnInit {
     });
   }
 
-  GetOrgbuyBox(buyboxId:number): void {
+  GetOrgbuyBox(buyboxId: number): void {
     if (this.activeBuyBoxId === buyboxId) {
       this.OrgBuybox = [];
       this.activeBuyBoxId = null;
@@ -67,7 +77,7 @@ export class EmilyUserInboxComponent implements OnInit {
       Name: 'GetOrganizationsByBuyBox',
       MainEntity: null,
       Params: {
-        BuyBoxId:buyboxId
+        BuyBoxId: buyboxId
       },
       Json: null,
     };
@@ -82,7 +92,7 @@ export class EmilyUserInboxComponent implements OnInit {
       }
     });
   }
-  
+
   getUserBuyBoxes(): void {
     this.spinner.show();
     const body: any = {
@@ -102,14 +112,18 @@ export class EmilyUserInboxComponent implements OnInit {
     });
   }
 
-  openEmail(email: Mail): void {
+  openEmail(email: any): void {
+    this.orgId = email.organizationId;
+    this.selectedContact = email.contactId;
+    this.buyBoxIdReplay = email.buyBoxId;
+
     this.GetMail(email.id);
     setTimeout(() => {
       const emailDetailsSection = document.querySelector(
         '.email-details-body'
       ) as HTMLElement;
       if (emailDetailsSection) {
-        this.smoothScrollTo(emailDetailsSection, 300); // 300ms (0.3s) duration
+        this.smoothScrollTo(emailDetailsSection, 300);
       }
     }, 100);
   }
@@ -166,6 +180,12 @@ export class EmilyUserInboxComponent implements OnInit {
         }
       },
     });
+  }
+
+  openmodel(modal: any, body: any, contactId: any) {
+    this.bodyemail = body;
+    this.contactIdemail = contactId;
+    this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 
   goBack() {
