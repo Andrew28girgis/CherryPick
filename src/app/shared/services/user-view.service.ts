@@ -62,7 +62,7 @@ export class UserViewService {
     if (view === 'landlord') {
       this.router.navigate(['/landlord']);
     } else {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/summary']);
     }
   }
 

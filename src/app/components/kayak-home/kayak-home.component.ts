@@ -7,7 +7,6 @@ import { Location } from '@angular/common';
   templateUrl: './kayak-home.component.html',
   styleUrls: ['./kayak-home.component.css'],
 })
-
 export class KayakHomeComponent implements OnInit {
   tabs = [
     {

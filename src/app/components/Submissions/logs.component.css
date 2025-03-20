@@ -1,0 +1,23 @@
+
+.procpect-table-head th {
+    padding: 10px;
+    background-color: #e4e7e9;
+    font-size: 19px;
+    font-weight: 500;
+    color: #0d0c0c;
+    border-bottom: 1px solid #e4e4e4;
+}
+.procpect-table-body td{
+    padding-block: 5px;
+    padding-inline: 10px;
+    font-size: 16px;
+}
+.procpect-table-head th {
+    padding: 10px 8px;
+    background-color: #e4e7e9;
+    font-size: 18px;
+    font-weight: 500;
+    color: #0d0c0c;
+    border-bottom: 1px solid #e4e4e4;
+}
+  

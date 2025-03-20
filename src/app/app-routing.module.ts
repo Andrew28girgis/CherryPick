@@ -15,6 +15,7 @@ import { AddTenantsComponent } from './components/add-tenants/add-tenants.compon
 import { LandlordAccessGuard } from './shared/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './shared/guards/tenant-only.guard';
 import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-user-inbox.component';
+import { SubmissionsComponent } from './components/Submissions/logs.component';
 
 const routes: Routes = [
   // Public routes - accessible to everyone
@@ -42,6 +43,11 @@ const routes: Routes = [
   {
     path: 'summary',
     component: SummeryComponent,
+    canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'Submissions',
+    component: SubmissionsComponent,
     canActivate: [TenantOnlyGuard],
   },
   {
@@ -87,7 +93,7 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: "EmilyUserInbox",
+    path: 'EmilyUserInbox',
     component: EmilyUserInboxComponent,
     canActivate: [TenantOnlyGuard],
   },

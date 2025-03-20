@@ -81,7 +81,6 @@ export class LoginComponent implements OnInit {
         'accountMicrosoftLinked',
         data.accountMicrosoftLinked
       );
-      // Use the updated auth service to store the token with date
       this.authService.setToken(data.token);
       localStorage.setItem('contactId', data.contactId);
       localStorage.setItem('orgId', data.orgId);

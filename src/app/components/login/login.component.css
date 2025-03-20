@@ -180,7 +180,7 @@ input::placeholder {
     font-size: 14px;
   }
   .login {
-    width: 80%;
+    width: 100%;
     font-size: 16px;
   }
 }

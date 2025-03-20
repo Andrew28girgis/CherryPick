@@ -320,11 +320,15 @@
                         <div class="row gap-2 g-2">
                           <ng-container
                             *ngFor="
-                              let otherKanban of organization.OtherKanbans
+                              let otherKanban of organization.OtherKanbans;let otherKanbanIndex=index
                             "
                           >
                             <div
                               class="col-5 workflow-item"
+                              [ngStyle]="{
+                                'background-color': stagesColors[otherKanbanIndex+1 % 5].background,
+                                color: stagesColors[otherKanbanIndex+1 % 5].color
+                              }"
                               [pTooltip]="otherKanban.kanbanName"
                               tooltipPosition="top"
                               (click)="

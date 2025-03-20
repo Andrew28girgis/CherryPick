@@ -39,6 +39,14 @@
       </li> -->
       <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
+          [routerLink]="['/Submissions']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Submissions</a
+        >
+      </li>
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <a
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
           class="nav-link"
@@ -62,8 +70,11 @@
         >
       </li>
       <li class="nav-item" *ngIf="currentView === 'tenant'">
-        <a [routerLink]="['/EmilyUserInbox']" class="nav-link"
-        routerLinkActive="active-route">Emily</a
+        <a
+          [routerLink]="['/EmilyUserInbox']"
+          class="nav-link"
+          routerLinkActive="active-route"
+          >Emily</a
         >
       </li>
     </ul>
