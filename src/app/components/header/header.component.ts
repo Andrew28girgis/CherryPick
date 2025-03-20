@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef,HostListener } from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -11,6 +11,12 @@ import { UserViewService } from 'src/app/shared/services/user-view.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  isSmallScreen: boolean = window.innerWidth < 992; // Initialize screen size detection
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.isSmallScreen = window.innerWidth < 992;
+  }
   isCollapsed = true;
   notifications: any[] = [
     { id: 1, message: 'New notification 1', time: '5 min ago' },
@@ -47,6 +53,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isSmallScreen = window.innerWidth < 992; 
+
     // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
       .pipe(

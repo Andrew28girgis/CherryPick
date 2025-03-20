@@ -48,6 +48,9 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
 import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-user-inbox.component';
+import { StepperModule } from 'primeng/stepper';
+import { ButtonModule } from 'primeng/button';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 const msalConfig = {
   auth: {
@@ -111,7 +114,10 @@ const loginRequest = {
     ScrollingModule,
     NgxFileDropModule,
     TooltipModule,
+    ButtonModule,
+    StepperModule,
     NgbNavModule,
+    SelectButtonModule,
     MsalModule.forRoot(
       new PublicClientApplication(msalConfig),
       {

@@ -202,33 +202,6 @@
             </p>
           </div>
 
-          <!-- <div class="header-info Res d-sm-none d-flex">
-            <div
-              class="info-header"
-              (click)="openDetails(shoppingDetails, shopping)"
-            >
-
-              <h3 class="center-name" style="color: #fff">
-                {{ shopping.CenterName | titlecase }}
-              </h3>
-              <p class="colorr" style="color: #fff">
-                {{ shopping.CenterAddress }}
-              </p>
-              <p class="center-address" style="color: #fff">
-                {{ shopping.CenterCity | titlecase }},
-                {{ shopping.CenterState }}
-              </p>
-              <p
-                style="color: #fff"
-                class="colorr"
-                [innerHTML]="getShoppingCenterUnitSize(shopping)"
-              ></p>
-
-              <p class="see-more-btn">
-                {{ showMore[i] ? "Show Less" : "See More" }}
-              </p>
-            </div>
-          </div> -->
         </div>
         <div class="card-image Res tiktok-imgg">
           <div
@@ -1837,3 +1810,40 @@
     <p id="toastMessage"></p>
   </div>
 </div>
+
+<!-- Login/Register Modal -->
+<ng-template #loginRegisterModal let-modal>
+  <div class="modal-header d-flex justify-content-between">
+    <h4 class="modal-title" id="modal-login-register">Create an Account</h4>
+    <div class="d-flex align-items-center">
+      <button type="button" class="btn btn-link text-decoration-none me-2" style="color: #4d65b4;" (click)="navigateToLogin()">Login</button>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+  </div>
+  <div class="modal-body">
+    <!-- Register Form (Shown by Default) -->
+    <form #registerForm="ngForm" (ngSubmit)="registerUser(registerForm)">
+      <div class="mb-3">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="firstName" name="firstName" 
+          [(ngModel)]="newContact.firstName" required>
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="lastName" name="lastName" 
+          [(ngModel)]="newContact.lastName" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" 
+          [(ngModel)]="newContact.email" required email>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary" style="background-color: #4d65b4;" [disabled]="registerForm.invalid">
+          Register
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
