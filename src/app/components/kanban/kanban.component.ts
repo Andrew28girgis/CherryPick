@@ -25,22 +25,26 @@ import { sharedColors } from '../../shared/others/shared-colors';
 })
 export class KanbanComponent implements OnInit, OnDestroy {
   private allUserKanbans: IUserKanban[] = [];
-  private userTenantsKanbans: IUserKanban[] = [];
-  private userTenantsKanbansDetails?: IKanbanDetails;
-  private userBuyBoxesKanbans: IUserKanban[] = [];
-  private userBuyBoxesKanbansDetails?: IKanbanDetails;
-  private userBuyBoxesPropertiesKanbans: IUserKanban[] = [];
-  private userBuyBoxesPropertiesKanbansDetails?: IKanbanDetails;
+  private kanbanDetails?: IKanbanDetails;
+  // private userTenantsKanbans: IUserKanban[] = [];
+  // private userTenantsKanbansDetails?: IKanbanDetails;
+  // private userBuyBoxesKanbans: IUserKanban[] = [];
+  // private userBuyBoxesKanbansDetails?: IKanbanDetails;
+  // private userBuyBoxesPropertiesKanbans: IUserKanban[] = [];
+  // private userBuyBoxesPropertiesKanbansDetails?: IKanbanDetails;
   private pollingInterval: number = 0;
   stagesColors: { background: string; color: string }[] = sharedColors;
 
-  kanbanTabs: { id: number; title: string }[] = [
-    { id: 1, title: 'Tenants' },
-    { id: 2, title: 'Organizations' },
-    { id: 3, title: 'Properties' },
-  ];
+  // kanbanTabs: { id: number; title: string }[] = [
+  //   { id: 1, title: 'Tenants' },
+  //   { id: 2, title: 'Organizations' },
+  //   { id: 3, title: 'Properties' },
+  // ];
   selectedKanbanTabId: number = 1;
-  selectedKanban?: IUserKanban;
+  // selectedKanban?: IUserKanban;
+  selectedKanbanId?: number;
+
+  breadcrumbList: { kanbanId: number; name: string }[] = [];
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -57,38 +61,54 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.activatedRoute.paramMap.subscribe((parms) => {
       const id = parms.get('id');
 
-      if (id) {
-        const fetchingKanbanDetailsInterval = setInterval(() => {
-          if (this.allUserKanbans && this.allUserKanbans.length > 0) {
-            clearInterval(fetchingKanbanDetailsInterval);
+      const fetchingKanbanDetailsInterval = setInterval(() => {
+        if (this.allUserKanbans && this.allUserKanbans.length > 0) {
+          clearInterval(fetchingKanbanDetailsInterval);
+          const kanban = this.allUserKanbans.find(
+            (kanban) => kanban.targetStakeholderId == 2
+          );
+          if (kanban) {
+            this.breadcrumbList.push({
+              kanbanId: kanban.Id,
+              name: kanban.kanbanName,
+            });
 
-            this.userTenantsKanbans.find((k) => k.Id == +id)
-              ? (this.selectedKanbanTabId = 1)
-              : this.userBuyBoxesKanbans.find((k) => k.Id == +id)
-              ? (this.selectedKanbanTabId = 2)
-              : (this.selectedKanbanTabId = 3);
+            this.getKanban(kanban.Id);
+          }
+        }
+      }, 100);
+      // if (id) {
+      //   const fetchingKanbanDetailsInterval = setInterval(() => {
+      //     if (this.allUserKanbans && this.allUserKanbans.length > 0) {
+      //       clearInterval(fetchingKanbanDetailsInterval);
 
-            const kanban = this.allUserKanbans.find((k) => k.Id == +id);
-            if (kanban) {
-              this.getKanban(kanban);
-            }
-          }
-        }, 100);
-      } else {
-        const fetchingKanbanDetailsInterval = setInterval(() => {
-          if (this.allUserKanbans && this.allUserKanbans.length > 0) {
-            clearInterval(fetchingKanbanDetailsInterval);
-            const kanban = this.userTenantsKanbans[0];
-            if (kanban) {
-              this.getKanban(kanban);
-            }
-          }
-        }, 100);
-      }
+      //       this.userTenantsKanbans.find((k) => k.Id == +id)
+      //         ? (this.selectedKanbanTabId = 1)
+      //         : this.userBuyBoxesKanbans.find((k) => k.Id == +id)
+      //         ? (this.selectedKanbanTabId = 2)
+      //         : (this.selectedKanbanTabId = 3);
+
+      //       const kanban = this.allUserKanbans.find((k) => k.Id == +id);
+      //       if (kanban) {
+      //         this.getKanban(kanban);
+      //       }
+      //     }
+      //   }, 100);
+      // } else {
+      //   const fetchingKanbanDetailsInterval = setInterval(() => {
+      //     if (this.allUserKanbans && this.allUserKanbans.length > 0) {
+      //       clearInterval(fetchingKanbanDetailsInterval);
+      //       const kanban = this.userTenantsKanbans[0];
+      //       if (kanban) {
+      //         this.getKanban(kanban);
+      //       }
+      //     }
+      //   }, 100);
+      // }
     });
 
     this.pollingInterval = setInterval(() => {
-      if (this.selectedKanban) {
+      if (this.selectedKanbanId) {
         this.getKanbanDetails();
       }
     }, 5000);
@@ -103,7 +123,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         if (data.json && data.json.length > 0) {
           this.allUserKanbans = data.json;
-          this.splitAllUserKanbans();
+          // this.splitAllUserKanbans();
         } else {
           this.allUserKanbans = [];
         }
@@ -111,33 +131,33 @@ export class KanbanComponent implements OnInit, OnDestroy {
     });
   }
 
-  private splitAllUserKanbans(): void {
-    this.setupUserTenantsKanbans();
-    this.setupUserBuyBoxesKanbans();
-    this.setupUserBuyBoxesPropertiesKanbans();
-  }
+  // private splitAllUserKanbans(): void {
+  //   this.setupUserTenantsKanbans();
+  //   this.setupUserBuyBoxesKanbans();
+  //   this.setupUserBuyBoxesPropertiesKanbans();
+  // }
 
-  private setupUserTenantsKanbans(): void {
-    this.userTenantsKanbans = this.allUserKanbans.filter(
-      (k) => k.targetStakeholderId == 2
-    );
+  // private setupUserTenantsKanbans(): void {
+  //   this.userTenantsKanbans = this.allUserKanbans.filter(
+  //     (k) => k.targetStakeholderId == 2
+  //   );
 
-    this.sortKanbans(this.userTenantsKanbans);
-  }
+  //   this.sortKanbans(this.userTenantsKanbans);
+  // }
 
-  private setupUserBuyBoxesKanbans(): void {
-    this.userBuyBoxesKanbans = this.allUserKanbans.filter(
-      (k) => k.targetStakeholderId != 2 && k.targetStakeholderId != 4
-    );
-    this.sortKanbans(this.userBuyBoxesKanbans);
-  }
+  // private setupUserBuyBoxesKanbans(): void {
+  //   this.userBuyBoxesKanbans = this.allUserKanbans.filter(
+  //     (k) => k.targetStakeholderId != 2 && k.targetStakeholderId != 4
+  //   );
+  //   this.sortKanbans(this.userBuyBoxesKanbans);
+  // }
 
-  private setupUserBuyBoxesPropertiesKanbans(): void {
-    this.userBuyBoxesPropertiesKanbans = this.allUserKanbans.filter(
-      (k) => k.targetStakeholderId == 4
-    );
-    this.sortKanbans(this.userBuyBoxesPropertiesKanbans);
-  }
+  // private setupUserBuyBoxesPropertiesKanbans(): void {
+  //   this.userBuyBoxesPropertiesKanbans = this.allUserKanbans.filter(
+  //     (k) => k.targetStakeholderId == 4
+  //   );
+  //   this.sortKanbans(this.userBuyBoxesPropertiesKanbans);
+  // }
 
   private sortKanbans(kanbans: IUserKanban[]): void {
     kanbans.sort((a, b) => {
@@ -212,7 +232,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     const body: any = {
       Name: 'GetKanbanDetails',
       Params: {
-        kanbanId: this.selectedKanban?.Id,
+        kanbanId: this.selectedKanbanId,
       },
     };
 
@@ -223,43 +243,45 @@ export class KanbanComponent implements OnInit, OnDestroy {
           if (data.json[0] && this.activeKanbanDetails) {
             const checkForKanbanChanges =
               this.checkForKanbanChanges(cleanedKanbanDetails);
-            console.log(checkForKanbanChanges);
 
             return;
           }
 
-          switch (this.selectedKanban?.targetStakeholderId) {
-            case 2: {
-              this.userTenantsKanbansDetails = cleanedKanbanDetails;
-              if (this.userTenantsKanbansDetails) {
-                this.sortKanbanDetailsOrganizations(
-                  this.userTenantsKanbansDetails
-                );
-              }
-              break;
-            }
-            case 4: {
-              this.userBuyBoxesPropertiesKanbansDetails = cleanedKanbanDetails;
-              if (this.userBuyBoxesPropertiesKanbansDetails) {
-                this.sortKanbanDetailsCenters(
-                  this.userBuyBoxesPropertiesKanbansDetails
-                );
-              }
-              break;
-            }
-            default: {
-              this.userBuyBoxesKanbansDetails = cleanedKanbanDetails;
-              if (this.userBuyBoxesKanbansDetails) {
-                this.sortKanbanDetailsOrganizations(
-                  this.userBuyBoxesKanbansDetails
-                );
-              }
-            }
-          }
+          this.kanbanDetails = cleanedKanbanDetails;
+
+          // switch (this.selectedKanban?.targetStakeholderId) {
+          //   case 2: {
+          //     this.userTenantsKanbansDetails = cleanedKanbanDetails;
+          //     if (this.userTenantsKanbansDetails) {
+          //       this.sortKanbanDetailsOrganizations(
+          //         this.userTenantsKanbansDetails
+          //       );
+          //     }
+          //     break;
+          //   }
+          //   case 4: {
+          //     this.userBuyBoxesPropertiesKanbansDetails = cleanedKanbanDetails;
+          //     if (this.userBuyBoxesPropertiesKanbansDetails) {
+          //       this.sortKanbanDetailsCenters(
+          //         this.userBuyBoxesPropertiesKanbansDetails
+          //       );
+          //     }
+          //     break;
+          //   }
+          //   default: {
+          //     this.userBuyBoxesKanbansDetails = cleanedKanbanDetails;
+          //     if (this.userBuyBoxesKanbansDetails) {
+          //       this.sortKanbanDetailsOrganizations(
+          //         this.userBuyBoxesKanbansDetails
+          //       );
+          //     }
+          //   }
+          // }
         } else {
-          this.userTenantsKanbansDetails = undefined;
-          this.userBuyBoxesKanbansDetails = undefined;
-          this.userBuyBoxesPropertiesKanbansDetails = undefined;
+          this.kanbanDetails = undefined;
+          // this.userTenantsKanbansDetails = undefined;
+          // this.userBuyBoxesKanbansDetails = undefined;
+          // this.userBuyBoxesPropertiesKanbansDetails = undefined;
         }
       },
     });
@@ -427,43 +449,63 @@ export class KanbanComponent implements OnInit, OnDestroy {
     });
   }
 
-  getKanban(kanban: IUserKanban) {
-    this.userTenantsKanbansDetails = undefined;
-    this.userBuyBoxesKanbansDetails = undefined;
-    this.userBuyBoxesPropertiesKanbansDetails = undefined;
+  removeBreadcrumbItem(kanbanId: number): void {
+    if (this.breadcrumbList.length != 1) {
+      const index = this.breadcrumbList.findIndex(
+        (b) => b.kanbanId == kanbanId
+      );
 
-    this.selectedKanban = kanban;
+      if (index >= 0 && this.breadcrumbList.length - 1 != index) {
+        this.breadcrumbList = this.breadcrumbList.slice(0, index + 1);
+        this.getKanban(kanbanId);
+      }
+    }
+  }
+
+  updateKanbanId(kanbanId: number, name: string): void {
+    this.breadcrumbList.push({ kanbanId: kanbanId, name: name });
+    this.getKanban(kanbanId);
+  }
+
+  getKanban(kanbanId: number) {
+    this.kanbanDetails = undefined;
+    // this.userTenantsKanbansDetails = undefined;
+    // this.userBuyBoxesKanbansDetails = undefined;
+    // this.userBuyBoxesPropertiesKanbansDetails = undefined;
+
+    // this.selectedKanban = kanban;
+    this.selectedKanbanId = kanbanId;
 
     this.getKanbanDetails();
   }
 
-  onKanbanTabSelected(tabId: number): void {
-    this.removeIdFromUrl();
-    this.selectedKanbanTabId = tabId;
-    switch (tabId) {
-      case 1: {
-        const kanban = this.userTenantsKanbans[0];
-        if (kanban) {
-          this.getKanban(kanban);
-        }
-        break;
-      }
-      case 2: {
-        const kanban = this.userBuyBoxesKanbans[0];
-        if (kanban) {
-          this.getKanban(kanban);
-        }
-        break;
-      }
-      case 3: {
-        const kanban = this.userBuyBoxesPropertiesKanbans[0];
-        if (kanban) {
-          this.getKanban(kanban);
-        }
-        break;
-      }
-    }
-  }
+  // onKanbanTabSelected(tabId: number): void {
+  //   this.removeIdFromUrl();
+  //   this.selectedKanbanTabId = tabId;
+  //   switch (tabId) {
+  //     case 1: {
+  //       const kanban = this.userTenantsKanbans[0];
+  //       if (kanban) {
+  //         this.getKanban(kanban);
+  //       }
+  //       break;
+  //     }
+  //     case 2: {
+  //       const kanban = this.userBuyBoxesKanbans[0];
+  //       if (kanban) {
+  //         this.getKanban(kanban);
+  //       }
+  //       break;
+  //     }
+  //     case 3: {
+  //       const kanban = this.userBuyBoxesPropertiesKanbans[0];
+  //       if (kanban) {
+  //         this.getKanban(kanban);
+  //       }
+  //       break;
+  //     }
+  //   }
+  // }
 
   onDrop(event: CdkDragDrop<KanbanOrganization[]>) {
     const dragData: KanbanDragingData = event.item.data;
@@ -471,10 +513,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     const targetStageId = parseInt(event.container.id.replace('stage-', ''));
 
     if (event.previousContainer === event.container) {
-      console.log('Reordering within the same stage');
     } else {
-      console.log(`Moving ${dragData.type} to stage ${targetStageId}`);
-
       if (dragData.type === 'organization') {
         this.moveOrganization(
           dragData,
@@ -491,32 +530,37 @@ export class KanbanComponent implements OnInit, OnDestroy {
     }
   }
 
-  get activeTabKanbansList() {
-    if (this.selectedKanbanTabId == 2) {
-      return this.userBuyBoxesKanbans;
-    } else if (this.selectedKanbanTabId == 3) {
-      return this.userBuyBoxesPropertiesKanbans;
+  get activeKanbansList() {
+    if (this.allUserKanbans && this.allUserKanbans.length > 0) {
+      return this.allUserKanbans;
     }
+    // if (this.selectedKanbanTabId == 2) {
+    //   return this.userBuyBoxesKanbans;
+    // } else if (this.selectedKanbanTabId == 3) {
+    //   return this.userBuyBoxesPropertiesKanbans;
+    // }
     return [];
   }
 
   get activeKanbanDetails() {
-    if (this.selectedKanbanTabId == 2) {
-      return this.userBuyBoxesKanbansDetails!;
-    } else if (this.selectedKanbanTabId == 3) {
-      return this.userBuyBoxesPropertiesKanbansDetails!;
-    }
-    return this.userTenantsKanbansDetails!;
+    return this.kanbanDetails!;
+    // if (this.selectedKanbanTabId == 2) {
+    //   return this.userBuyBoxesKanbansDetails!;
+    // } else if (this.selectedKanbanTabId == 3) {
+    //   return this.userBuyBoxesPropertiesKanbansDetails!;
+    // }
+    // return this.userTenantsKanbansDetails!;
   }
 
   set activeKanbanDetails(value: IKanbanDetails) {
-    if (this.selectedKanbanTabId === 2) {
-      this.userBuyBoxesKanbansDetails = value;
-    } else if (this.selectedKanbanTabId === 3) {
-      this.userBuyBoxesPropertiesKanbansDetails = value;
-    } else {
-      this.userTenantsKanbansDetails = value;
-    }
+    this.kanbanDetails = value;
+    // if (this.selectedKanbanTabId === 2) {
+    //   this.userBuyBoxesKanbansDetails = value;
+    // } else if (this.selectedKanbanTabId === 3) {
+    //   this.userBuyBoxesPropertiesKanbansDetails = value;
+    // } else {
+    //   this.userTenantsKanbansDetails = value;
+    // }
   }
 
   removeIdFromUrl() {
@@ -537,8 +581,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     if (modalComponent) {
       const modalRef = this.modalService.open(modalComponent, {
         windowClass: 'kanban-action-popup',
-        scrollable:true,
-         size:'xl'
+        scrollable: true,
+        size: 'xl',
       });
       // modalRef.componentInstance.action = action; // Passing action as input
     }

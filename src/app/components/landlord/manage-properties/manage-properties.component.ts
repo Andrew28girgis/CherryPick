@@ -376,7 +376,7 @@ export class ManagePropertiesComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           const formData = new FormData();
-          formData.append('file', file, file.name);
+          formData.append('filename', file/*, file.name*/);
           this.fileName = file.name;
           this.isUploading = true;
           this.uploadProgress = 0;

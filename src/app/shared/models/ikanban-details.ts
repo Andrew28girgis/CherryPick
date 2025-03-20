@@ -28,10 +28,16 @@ export interface Action {
 }
 
 export interface KanbanOrganization {
+  OtherKanbans?: OtherKanban[];
   Organization: Organization[];
   Id?: number;
   OrganizationId?: number;
   kanbanStageId?: number;
+}
+
+export interface OtherKanban {
+  id: number;
+  kanbanName: string;
 }
 
 export interface Organization {
