@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
         'accountMicrosoftLinked',
         data.accountMicrosoftLinked
       );
-       this.authService.setToken(data.token);
+      this.authService.setToken(data.token);
       localStorage.setItem('contactId', data.contactId);
       localStorage.setItem('orgId', data.orgId);
       if (data.token) {
