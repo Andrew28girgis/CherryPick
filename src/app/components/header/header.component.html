@@ -12,8 +12,7 @@
 
   <!-- Right Section -->
   <div class="d-flex ms-auto align-items-center">
-    <!-- Show notifications only on small/medium screens -->
-    <div class="d-block d-lg-none me-2">
+    <div class="d-block d-lg-none me-2" *ngIf="isSmallScreen">
       <app-notifications></app-notifications>
     </div>
 
@@ -74,7 +73,7 @@
 
     <!-- Action Icons -->
     <div class="d-flex align-items-center justify-content-center">
-      <div class="d-none d-lg-block" *ngIf="!current.includes('landlord')">
+      <div class="d-none d-lg-block" *ngIf="!isSmallScreen && !current.includes('landlord')">
         <app-notifications></app-notifications>
       </div>
       <!-- Avatar Dropdown -->
