@@ -1,6 +1,10 @@
 
+.overfloww{
+  overflow-x: hidden;
+}
 .background {
   background: var(--Body-Page-BG, #f2f3f4);
+  width: 100% !important;
 }
 .boldtext {
   color: #fff;
@@ -51,7 +55,7 @@
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
-  width: 1440px;
+  width: 100% !important;
   height: 720px;
   padding: var(--Card-Section-Lg-Padding-All-Sides, 32px);
   flex-direction: column;
@@ -511,9 +515,7 @@
     gap: var(--Space-Space-24, 7px);
   }
   .map-container {
-    width: 1440px;
     height: 720px;
-    padding: var(--Card-Section-Lg-Padding-All-Sides, 32px);
     gap: var(--Space-Space-12, 12px);
   }
   .map-container .custom-card {
