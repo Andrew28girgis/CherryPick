@@ -225,7 +225,7 @@
             <button
               class="action-btn like-btn"
               [class.liked]="isLiked(shopping)"
-              (click)="handleClick(shopping, Like, i)"
+              (click)="addLike(shopping, i)"
               [disabled]="isLikeInProgress"
             >
               <svg

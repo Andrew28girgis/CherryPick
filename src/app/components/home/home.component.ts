@@ -1199,59 +1199,64 @@ export class HomeComponent implements OnInit {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
-openLoginModal(): void {
-  this.modalService.open(this.loginRegisterModal, {
-    ariaLabelledBy: 'modal-login-register',
-    centered: true,
-    scrollable: true
-  });
-}
-registerUser(form: NgForm): void {
-  if (form.invalid) {
-    return;
+  openLoginModal(): void {
+    this.modalService.open(this.loginRegisterModal, {
+      ariaLabelledBy: 'modal-login-register',
+      centered: true,
+      scrollable: true,
+    });
   }
-  this.spinner.show();
-  const body = {
-    Name: 'AddContactToOrganization',
-    Params: {
-      FirstName: this.newContact.firstName,
-      LastName: this.newContact.lastName,
-      email: this.newContact.email,
-      password: 1234,
-      OrganizationId: this.OrgId,
-      buyboxId : this.BuyBoxId,
+  registerUser(form: NgForm): void {
+    if (form.invalid) {
+      return;
     }
-  };
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (response: any) => {
-      if (response && response.json && response.json.length > 0 && response.json[0].id) {
-        localStorage.setItem('contactId', response.json[0].id.toString());
+    this.spinner.show();
+    const body = {
+      Name: 'AddContactToOrganization',
+      Params: {
+        FirstName: this.newContact.firstName,
+        LastName: this.newContact.lastName,
+        email: this.newContact.email,
+        password: 1234,
+        OrganizationId: this.OrgId,
+        buyboxId: this.BuyBoxId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {
+        if (
+          response &&
+          response.json &&
+          response.json.length > 0 &&
+          response.json[0].id
+        ) {
+          localStorage.setItem('contactId', response.json[0].id.toString());
+          this.modalService.dismissAll();
+          this.showToast('Registration successful!');
+        } else if (response.error) {
+          alert('Registration failed: ' + response.error);
+        } else {
+          alert('Registration failed: Unable to process registration');
+        }
+      },
+      error: (err) => {
+        console.error('Registration error:', err);
+        alert('Registration failed: ' + (err.message || 'Unknown error'));
+        this.spinner.hide();
         this.modalService.dismissAll();
-        this.showToast('Registration successful!');
-      } else if (response.error) {
-        alert('Registration failed: ' + response.error);
-      } else {
-        alert('Registration failed: Unable to process registration');
-      }
-    },
-    error: (err) => {
-      console.error('Registration error:', err);
-      alert('Registration failed: ' + (err.message || 'Unknown error'));
-      this.spinner.hide();
-      this.modalService.dismissAll();
-    },
-    complete: () => {
-      this.spinner.hide();
-      this.modalService.dismissAll();
-    }
-  });
-}
-navigateToLogin(): void {
-  this.modalService.dismissAll();
-  this.router.navigate(['/login']);
-}
-isUserLoggedIn(): boolean {
-  const contactId = localStorage.getItem('contactId');
-  return contactId !== null && contactId !== undefined;
-}
+      },
+      complete: () => {
+        this.spinner.hide();
+        this.modalService.dismissAll();
+      },
+    });
+  }
+  navigateToLogin(): void {
+    this.modalService.dismissAll();
+    this.router.navigate(['/login']);
+  }
+  isUserLoggedIn(): boolean {
+    const contactId = localStorage.getItem('contactId');
+    return contactId !== null && contactId !== undefined;
+  }
 }
