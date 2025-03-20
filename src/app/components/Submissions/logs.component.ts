@@ -10,7 +10,14 @@ import { CommonModule } from '@angular/common';
 })
 export class SubmissionsComponent implements OnInit {
   submissionsArray: any[] = [];
-  
+  centername!: string;
+  CreatedDate!: string;
+  FileName!: string;
+  UserName!: string;
+
+
+
+
   constructor(private PlacesService: PlacesService, private eRef: ElementRef) {}
   
   ngOnInit(): void {
@@ -26,6 +33,11 @@ export class SubmissionsComponent implements OnInit {
       next: (res: any) => {
         this.submissionsArray = res.json || [];
         console.log('Received submissions:', this.submissionsArray);
+        this.centername=this.submissionsArray[0].CenterName;
+        this.CreatedDate=this.submissionsArray[0].US[0].CreatedDate;
+        this.FileName=this.submissionsArray[0].US[0].FileName;
+        this.UserName=this.submissionsArray[0].UserName
+
       },
     });
   }
