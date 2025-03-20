@@ -1,5 +1,19 @@
 <div class="page-layout">
-  <section class="kanban-tabs">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <ng-container *ngFor="let item of breadcrumbList; let last = last">
+        <li
+          class="breadcrumb-item"
+          [ngClass]="{ activeBreadcrumb: last }"
+          (click)="removeBreadcrumbItem(item.kanbanId)"
+        >
+          {{ item.name }}
+        </li>
+      </ng-container>
+    </ol>
+  </nav>
+
+  <!-- <section class="kanban-tabs">
     <ul class="kanban-tabs-list">
       <ng-container *ngFor="let tab of kanbanTabs">
         <li
@@ -11,10 +25,10 @@
         </li>
       </ng-container>
     </ul>
-  </section>
+  </section> -->
 
-  <section class="h-100 row kanban-data-container">
-    <div
+  <section class="h-100 kanban-data-container">
+    <!-- <div
       *ngIf="activeTabKanbansList.length > 0"
       class="col-md-2 col-12 side-kanban"
     >
@@ -33,13 +47,13 @@
         </div>
         <hr />
       </ng-container>
-    </div>
+    </div> -->
 
     <div
-      class="col-md-10 col-12 kanban-stages"
+      class="kanban-stages"
       [ngClass]="{
-        'col-md-12': !(activeTabKanbansList.length > 0),
-        'p-0': !(activeTabKanbansList.length > 0)
+        'col-md-12': !(activeKanbansList.length > 0),
+        'p-0': !(activeKanbansList.length > 0)
       }"
       cdkDropListGroup
     >
@@ -162,7 +176,8 @@
                             <img
                               *ngIf="
                                 center.MarketSurveyShoppingCenters[0]
-                                  .ShoppingCenterRep[0]?.ShoppingCenterRepLogoURL
+                                  .ShoppingCenterRep[0]
+                                  ?.ShoppingCenterRepLogoURL
                               "
                               [src]="
                                 center.MarketSurveyShoppingCenters[0]
@@ -228,7 +243,7 @@
                             {{ org.OrganizationName }}
                           </span>
                         </div>
-                        <div ngbDropdown>
+                        <!-- <div ngbDropdown>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -292,8 +307,38 @@
                               </ng-container>
                             </ng-container>
                           </div>
-                        </div>
+                        </div> -->
                       </div>
+                      <ng-container
+                        *ngIf="
+                          organization.OtherKanbans &&
+                          organization.OtherKanbans.length > 0
+                        "
+                      >
+                        <hr />
+                        <div class="kanban-title mb-2">Workflows</div>
+                        <div class="row gap-2 g-2">
+                          <ng-container
+                            *ngFor="
+                              let otherKanban of organization.OtherKanbans
+                            "
+                          >
+                            <div
+                              class="col-5 workflow-item"
+                              [pTooltip]="otherKanban.kanbanName"
+                              tooltipPosition="top"
+                              (click)="
+                                updateKanbanId(
+                                  otherKanban.id,
+                                  otherKanban.kanbanName
+                                )
+                              "
+                            >
+                              {{ otherKanban.kanbanName }}
+                            </div>
+                          </ng-container>
+                        </div>
+                      </ng-container>
                     </div>
                   </ng-template>
                 </ng-container>

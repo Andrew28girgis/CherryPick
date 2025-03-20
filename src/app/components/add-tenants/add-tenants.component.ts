@@ -27,6 +27,16 @@ export class AddTenantsComponent implements OnInit {
   buyboxTypes: any[] = [];
   editing!: boolean;
   siteDetailsForm!: FormGroup;
+  Options: any[] = [
+    { label: 'Yes', value: 1 },
+    { label: 'No', value: 0 }
+  ];
+  FloodZoneOptions: any[] = [
+    { label: 'Zone X', value: 'Zone X' },
+    { label: 'Zone AE', value: 'Zone AE' }
+  ];
+  IsActiveSteps: boolean = false;
+  currentStep: number = 0;
 
   constructor(
     private router: Router,
@@ -36,7 +46,7 @@ export class AddTenantsComponent implements OnInit {
     private PlacesService: PlacesService,
     private fb: FormBuilder,
     public activeModal: NgbModal
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -141,43 +151,42 @@ export class AddTenantsComponent implements OnInit {
     this.siteDetailsForm = this.fb.group({
       Name: ['', Validators.required],
       OrganizationId: ['', Validators.required],
-      ManagerOrganizationId: [null],
+      ManagerOrganizationId: [''],
       MinBuildingSize: [null, Validators.required],
       MaxBuildingSize: [null, Validators.required],
       Restrictions: [''],
-      BaseRent: [null, Validators.required],
-      BuildingSquareFootage: [null, Validators.required],
-      BuildingType: ['', Validators.required],
-      CeilingHeight: [null],
-      DealStructure: ['', Validators.required],
-      DriveThru: [1, Validators.required],
+      BaseRent: [''],
+      BuildingSquareFootage: [''],
+      BuildingType: [''],
+      CeilingHeight: [''],
+      DealStructure: [''],
+      DriveThru: [1],
       FloodZone: [''],
-      FrontageLength: [null, Validators.required],
+      FrontageLength: [''],
       HistoricDistrict: [''],
-      LeaseTerm: [null],
-      LotSize: [null, Validators.required],
-      NNNCharges: [null, Validators.required],
-      OvernightBoardingPermitted: [1, Validators.required],
-      ParkingSpaces: [null],
-      PropertyCondition: ['', Validators.required],
-      PurchasePrice: [null, Validators.required],
-      ServiceAccess: ['', Validators.required],
-      TIAllowance: [null],
-      TrafficDrection: ['', Validators.required],
-      VehiclePerDay: [null, Validators.required],
-      Zoning: ['', Validators.required],
+      LeaseTerm: [''],
+      LotSize: [''],
+      NNNCharges: [''],
+      OvernightBoardingPermitted: [1],
+      ParkingSpaces: [''],
+      PropertyCondition: [''],
+      PurchasePrice: [''],
+      ServiceAccess: [''],
+      TIAllowance: [''],
+      TrafficDrection: [''],
+      VehiclePerDay: [''],
+      Zoning: [''],
       OtherComments: [''],
     });
   }
 
-  onSubmitForm() {
+  onSubmitForm(nextCallback?: any) {
     if (this.siteDetailsForm.valid) {
       this.spinner.show();
       const formData = this.siteDetailsForm.value;
 
       this.siteDetailsForm.value.OrganizationId = this.selectedOrganizationId;
-      this.siteDetailsForm.value.ManagerOrganizationId =
-        this.selectedManagerOrganizationId;
+      this.siteDetailsForm.value.ManagerOrganizationId = this.selectedManagerOrganizationId;
 
       let body: any = {
         Name: 'CreateBuyBox',
@@ -187,9 +196,11 @@ export class AddTenantsComponent implements OnInit {
       this.ApiService.GenericAPI(body).subscribe({
         next: (data) => {
           this.getUserBuyBoxes();
-          this.activeModal.dismissAll({ created: true });
           this.spinner.hide();
-          this.router.navigate(['/summary']);
+          this.IsActiveSteps = true;
+          nextCallback.emit()
+          // this.activeModal.dismissAll({ created: true });
+          // this.router.navigate(['/summary']);
           // const buyBox = data.json[0];
           // this.router.navigate(['/dashboard/', buyBox.id, buyBox.organizationId, buyBox.name]);
         },
@@ -201,5 +212,46 @@ export class AddTenantsComponent implements OnInit {
     } else {
       this.siteDetailsForm.markAllAsTouched();
     }
+  }
+
+  validateAndProceed(nextCallback: any, StepNum: number) {
+    if (StepNum == 1) {
+      if (
+        this.siteDetailsForm.get('Name')?.valid &&
+        this.siteDetailsForm.get('OrganizationId')?.valid &&
+        this.siteDetailsForm.get('MinBuildingSize')?.valid &&
+        this.siteDetailsForm.get('MaxBuildingSize')?.valid 
+      ) {
+        nextCallback.emit();
+      } else {
+        this.siteDetailsForm.get('Name')?.markAllAsTouched();
+        this.siteDetailsForm.get('OrganizationId')?.markAllAsTouched();
+        this.siteDetailsForm.get('MinBuildingSize')?.markAllAsTouched();
+        this.siteDetailsForm.get('MaxBuildingSize')?.markAllAsTouched();
+      }
+    } else if (StepNum == 2) {
+      // if (
+      //   this.siteDetailsForm.get('Zoning')?.valid &&
+      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.valid &&
+      //   this.siteDetailsForm.get('HistoricDistrict')?.valid
+      // ) {
+        nextCallback.emit();
+      // } else {
+      //   this.siteDetailsForm.get('Zoning')?.markAllAsTouched();
+      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.markAllAsTouched();
+      //   this.siteDetailsForm.get('HistoricDistrict')?.markAllAsTouched();
+
+      // }
+    } else {
+      this.siteDetailsForm.markAllAsTouched();
+    }
+  }
+
+  CreatePolygons() {
+    this.spinner.show();
+    this.getUserBuyBoxes();
+    this.activeModal.dismissAll({ created: true });
+    this.spinner.hide();
+    this.router.navigate(['/summary']);
   }
 }
