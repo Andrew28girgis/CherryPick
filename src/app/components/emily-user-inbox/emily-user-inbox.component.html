@@ -23,9 +23,10 @@
                     buyBox.organizationId
                   }}" alt="" />
                 <span class="namecontact" id="{{ buyBox.name }}">
-                  {{ buyBox.name }}
+                  {{ buyBox.name }} 
                 </span>
               </div>
+              <button class="btn Kayack__button">Send Mass Email</button>
               <ul *ngIf="OrgBuybox && activeBuyBoxId === buyBox.id">
                 <li class="d-flex justify-content-start py-2 align-items-center" *ngFor="let item of OrgBuybox"
                   [routerLink]="['/organization-mail/', buyBox.id, item.id]">

@@ -172,3 +172,19 @@
   max-height: 40px;
   width: 110px;
 }
+
+.Kayack__button {
+  width: auto; 
+  border-radius: 10px;
+  background: #001f3fc2;
+  color: #fff;
+  text-align: center; 
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 5px;
+  border: 0;
+  padding: 10px 16px;
+  margin: 10px 0;
+  white-space: nowrap;
+}
