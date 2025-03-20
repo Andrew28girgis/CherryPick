@@ -15,13 +15,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   providers: [NgbActiveModal]
 })
 export class AddTenantsComponent implements OnInit {
-  selectedOrganizationId!: number; // To bind the selected organization
+  selectedOrganizationId!: number; 
   searchOrganizationTerm: string = '';
-  selectedOrganizationName!: string; // Holds the selected organization name
+  selectedOrganizationName!: string;  
   organizations: Organization[] = [];
   showOrganizationSuggestions: boolean = false;
   highlightedOrganizationIndex: number = -1;
-  selectedManagerOrganizationId!: number; // Bound to the manager dropdown
+  selectedManagerOrganizationId!: number;  
   organizationId!: any;
   isSearchingOrganization: boolean = false;
   buyboxTypes: any[] = [];
