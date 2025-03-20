@@ -14,10 +14,6 @@ export class SubmissionsComponent implements OnInit {
   CreatedDate!: string;
   FileName!: string;
   UserName!: string;
-
-
-
-
   constructor(private PlacesService: PlacesService, private eRef: ElementRef) {}
   
   ngOnInit(): void {
@@ -32,7 +28,6 @@ export class SubmissionsComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.submissionsArray = res.json || [];
-        console.log('Received submissions:', this.submissionsArray);
         this.centername=this.submissionsArray[0].CenterName;
         this.CreatedDate=this.submissionsArray[0].US[0].CreatedDate;
         this.FileName=this.submissionsArray[0].US[0].FileName;

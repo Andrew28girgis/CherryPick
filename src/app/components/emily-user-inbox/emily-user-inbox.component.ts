@@ -33,8 +33,8 @@ export class EmilyUserInboxComponent implements OnInit {
     private PlacesService: PlacesService,
     private router: Router,
     private modalService: NgbModal,
-    private _location: Location,
-  ) { }
+    private _location: Location
+  ) {}
 
   ngOnInit() {
     this.GetUserInbox();
@@ -46,22 +46,18 @@ export class EmilyUserInboxComponent implements OnInit {
     const body: any = {
       Name: 'GetTenantRepInbox',
       MainEntity: null,
-      Params: {
-      },
+      Params: {},
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
           this.UserInbox = data.json;
-          console.log(this.UserInbox);
-
           this.spinner.hide();
-
         } else {
           this.UserInbox = [];
         }
-      }
+      },
     });
   }
 
@@ -77,7 +73,7 @@ export class EmilyUserInboxComponent implements OnInit {
       Name: 'GetOrganizationsByBuyBox',
       MainEntity: null,
       Params: {
-        BuyBoxId: buyboxId
+        BuyBoxId: buyboxId,
       },
       Json: null,
     };
@@ -89,7 +85,7 @@ export class EmilyUserInboxComponent implements OnInit {
         } else {
           this.OrgBuybox = [];
         }
-      }
+      },
     });
   }
 
