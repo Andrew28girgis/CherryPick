@@ -35,8 +35,6 @@ export class AddTenantsComponent implements OnInit {
     { label: 'Zone X', value: 'Zone X' },
     { label: 'Zone AE', value: 'Zone AE' }
   ];
-  IsActiveSteps: boolean = false;
-  currentStep: number = 0;
 
   constructor(
     private router: Router,
@@ -197,10 +195,7 @@ export class AddTenantsComponent implements OnInit {
         next: (data) => {
           this.getUserBuyBoxes();
           this.spinner.hide();
-          this.IsActiveSteps = true;
           nextCallback.emit()
-          // this.activeModal.dismissAll({ created: true });
-          // this.router.navigate(['/summary']);
           // const buyBox = data.json[0];
           // this.router.navigate(['/dashboard/', buyBox.id, buyBox.organizationId, buyBox.name]);
         },
@@ -230,18 +225,7 @@ export class AddTenantsComponent implements OnInit {
         this.siteDetailsForm.get('MaxBuildingSize')?.markAllAsTouched();
       }
     } else if (StepNum == 2) {
-      // if (
-      //   this.siteDetailsForm.get('Zoning')?.valid &&
-      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.valid &&
-      //   this.siteDetailsForm.get('HistoricDistrict')?.valid
-      // ) {
         nextCallback.emit();
-      // } else {
-      //   this.siteDetailsForm.get('Zoning')?.markAllAsTouched();
-      //   this.siteDetailsForm.get('OvernightBoardingPermitted')?.markAllAsTouched();
-      //   this.siteDetailsForm.get('HistoricDistrict')?.markAllAsTouched();
-
-      // }
     } else {
       this.siteDetailsForm.markAllAsTouched();
     }

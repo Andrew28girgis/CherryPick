@@ -18,14 +18,12 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Name*</label> -->
                     <input type="text" class="form-control" placeholder="Name *" formControlName="Name"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('Name')?.invalid && siteDetailsForm.get('Name')?.touched }" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style" for="organizationSearch">Organization*</label> -->
                     <input type="text" id="organizationSearch" name="organizationSearch"
                       class="form-control search-input" placeholder="Search Organization *"
                       formControlName="OrganizationId" (input)="onOrganizationInput($event)"
@@ -46,7 +44,6 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Min Building Size*</label> -->
                     <input type="number" class="form-control" placeholder="Min Building Size *"
                       formControlName="MinBuildingSize"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('MinBuildingSize')?.invalid && siteDetailsForm.get('MinBuildingSize')?.touched }" />
@@ -54,7 +51,6 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Max Building Size*</label> -->
                     <input type="number" class="form-control" placeholder="Max Building Size *"
                       formControlName="MaxBuildingSize"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('MaxBuildingSize')?.invalid && siteDetailsForm.get('MaxBuildingSize')?.touched }" />
@@ -62,34 +58,30 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Lot Size (Acres)* </label> -->
-                    <input type="number" class="form-control" placeholder="Lot Size (Acres) *" formControlName="LotSize"
+                    <input type="number" class="form-control" placeholder="Lot Size (Acres)" formControlName="LotSize"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('LotSize')?.invalid && siteDetailsForm.get('LotSize')?.touched }" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Building Square Footage*</label> -->
-                    <input type="number" class="form-control" placeholder="Building Square Footage *"
+                    <input type="number" class="form-control" placeholder="Building Square Footage"
                       formControlName="BuildingSquareFootage"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('BuildingSquareFootage')?.invalid && siteDetailsForm.get('BuildingSquareFootage')?.touched }" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Frontage Length* </label> -->
-                    <input type="number" class="form-control" placeholder="Frontage Length *"
+                    <input type="number" class="form-control" placeholder="Frontage Length"
                       formControlName="FrontageLength"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('FrontageLength')?.invalid && siteDetailsForm.get('FrontageLength')?.touched }" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Building Type* </label> -->
                     <select class="form-select" formControlName="BuildingType"
                       [ngStyle]="{'color': siteDetailsForm.get('BuildingType')?.value === '' ? '#707791' : 'black'}"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('BuildingType')?.invalid && siteDetailsForm.get('BuildingType')?.touched }">
-                      <option value="" selected disabled>Select Building Type *</option>
+                      <option value="" selected disabled>Select Building Type</option>
                       <option value="Free Standing">Free Standing</option>
                       <option value="Neighborhood Strip">Neighborhood Strip</option>
                       <option value="Endcap">Endcap</option>
@@ -99,7 +91,7 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-control d-flex align-items-center justify-content-between">
-                    <label class="label-style">Drive-Thru *</label>
+                    <label class="label-style">Drive-Thru</label>
                     <p-selectButton 
                     [options]="Options" 
                     formControlName="DriveThru" 
@@ -109,10 +101,9 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Traffic Direction*</label> -->
                     <select class="form-select" formControlName="TrafficDrection"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('TrafficDrection')?.invalid && siteDetailsForm.get('TrafficDrection')?.touched }">
-                      <option value="" selected disabled>Select Traffic Direction *</option>
+                      <option value="" selected disabled>Select Traffic Direction</option>
                       <option value="Northbound">Northbound</option>
                       <option value="Southbound">Southbound</option>
                       <option value="Two-Way">Two-Way</option>
@@ -122,25 +113,22 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Vehicles Per Day* </label> -->
-                    <input type="number" class="form-control" placeholder="Vehicles Per Day *"
+                    <input type="number" class="form-control" placeholder="Vehicles Per Day"
                       formControlName="VehiclePerDay"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('VehiclePerDay')?.invalid && siteDetailsForm.get('VehiclePerDay')?.touched }" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Parking Spaces </label> -->
                     <input type="number" class="form-control" placeholder="Parking Spaces"
                       formControlName="ParkingSpaces" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Property Condition* </label> -->
                     <select class="form-select" formControlName="PropertyCondition"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('PropertyCondition')?.invalid && siteDetailsForm.get('PropertyCondition')?.touched }">
-                      <option value="" selected disabled>Select Property Condition *</option>
+                      <option value="" selected disabled>Select Property Condition</option>
                       <option value="Shell">Shell</option>
                       <option value="Vanilla Shell">Vanilla Shell</option>
                       <option value="Second Generation">Second Generation</option>
@@ -150,15 +138,13 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Ceiling Height </label> -->
                     <input type="number" class="form-control" placeholder="Ceiling Height"
                       formControlName="CeilingHeight" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Loading / Service Access*</label> -->
-                    <input type="text" class="form-control" placeholder="Loading / Service Access *"
+                    <input type="text" class="form-control" placeholder="Loading / Service Access"
                       formControlName="ServiceAccess"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('ServiceAccess')?.invalid && siteDetailsForm.get('ServiceAccess')?.touched }" />
                   </div>
@@ -181,14 +167,13 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Zoning*</label> -->
-                    <input type="text" class="form-control" placeholder="Zoning *" formControlName="Zoning"
+                    <input type="text" class="form-control" placeholder="Zoning" formControlName="Zoning"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('Zoning')?.invalid && siteDetailsForm.get('Zoning')?.touched }" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-control d-flex align-items-center justify-content-between">
-                    <label class="label-style">Overnight Boarding Permitted *</label>
+                    <label class="label-style">Overnight Boarding Permitted</label>
                     <p-selectButton 
                     [options]="Options" 
                     formControlName="OvernightBoardingPermitted" 
@@ -198,7 +183,6 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Historic District or Overlay</label> -->
                     <input type="text" class="form-control" placeholder="Historic District or Overlay"
                       formControlName="HistoricDistrict" />
                   </div>
@@ -215,7 +199,6 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Exclusive Use Clauses / Restrictions</label> -->
                     <input type="text" class="form-control" placeholder="Exclusive Use Clauses / Restrictions"
                       formControlName="Restrictions" />
                   </div>
@@ -240,10 +223,9 @@
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Deal Structure* </label> -->
                     <select class="form-select" formControlName="DealStructure"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('DealStructure')?.invalid && siteDetailsForm.get('DealStructure')?.touched }">
-                      <option value="" selected disabled>Select Deal Structure *</option>
+                      <option value="" selected disabled>Select Deal Structure</option>
                       <option value="Purchase">Purchase</option>
                       <option value="Ground Lease">Ground Lease</option>
                       <option value="Lease">Lease</option>
@@ -252,43 +234,38 @@
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
-                  <!-- <label class="mb-2 label-style">Base Rent* </label> -->
                   <div class="input-group mb-3">
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" aria-label="Base Rent" formControlName="BaseRent"
-                      placeholder="Base Rent *"
+                      placeholder="Base Rent"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('BaseRent')?.invalid && siteDetailsForm.get('BaseRent')?.touched }">
                     <span class="input-group-text">.00</span>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
-                  <!-- <label class="mb-2 label-style">NNN Charges* </label> -->
                   <div class="input-group mb-3">
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" aria-label="NNN Charges" formControlName="NNNCharges"
-                      placeholder="NNN Charges *"
+                      placeholder="NNN Charges"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('NNNCharges')?.invalid && siteDetailsForm.get('NNNCharges')?.touched }">
                     <span class="input-group-text">.00</span>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
-                  <!-- <label class="mb-2 label-style">Purchase Price* </label> -->
                   <div class="input-group mb-3">
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" aria-label="Purchase Price"
-                      formControlName="PurchasePrice" placeholder="Purchase Price *"
+                      formControlName="PurchasePrice" placeholder="Purchase Price"
                       [ngClass]="{ 'is-invalid': siteDetailsForm.get('PurchasePrice')?.invalid && siteDetailsForm.get('PurchasePrice')?.touched }">
                     <span class="input-group-text">.00</span>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
                   <div class="form-group form-group-default">
-                    <!-- <label class="mb-2 label-style">Lease Term / Options</label> -->
                     <input type="text" class="form-control" placeholder="Lease Term / Options" formControlName="LeaseTerm" />
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
-                  <!-- <label class="mb-2 label-style">TI Allowance </label> -->
                   <div class="input-group mb-3">
                     <span class="input-group-text">$</span>
                     <input type="number" class="form-control" aria-label="TI Allowance" formControlName="TIAllowance"
@@ -297,13 +274,12 @@
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 mt-3">
-                  <!-- <label class="mb-2 label-style" for="OtherComments">Other Comments*</label> -->
                   <textarea class="form-control" id="OtherComments" formControlName="OtherComments" rows="2"
                     placeholder="Other Comments"></textarea>
                 </div>
               </div>
             </div>
-            <div class="d-flex pt-4 justify-content-between div_button">
+            <div class="d-flex pt-4 justify-content-between">
               <p-button (onClick)="prevCallback.emit()" class="p-button-left"><i
                   class="fa-solid fa-arrow-left me-2"></i> Back</p-button>
               <p-button (onClick)="onSubmitForm(nextCallback)" class="p-button-right">Create Tenant <i
@@ -318,15 +294,15 @@
                 <div class="col-12 mt-3">
                   <label class="Head-line"><span class="Step-num">4</span> Polygons</label>
                 </div>
-                <div>
+                <div class="p-3">
                   Location view
                 </div>
               </div>
             </div>
-            <div class="d-flex pt-4 justify-content-between div_button">
-              <p-button (onClick)="prevCallback.emit()" class="p-button-left"><i
-                  class="fa-solid fa-arrow-left me-2"></i> Back</p-button>
-              <button (click)="CreatePolygons()" class="Add__button">Create Polygons</button>
+            <div class="d-flex pt-4 justify-content-end">
+              <!-- <p-button (onClick)="prevCallback.emit()" class="p-button-left"><i
+                  class="fa-solid fa-arrow-left me-2"></i> Back</p-button> -->
+              <button (click)="CreatePolygons()" class="Add__button">Finished</button>
             </div>
           </ng-template>
         </p-stepperPanel>
