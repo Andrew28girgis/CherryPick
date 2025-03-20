@@ -82,7 +82,7 @@
                   height="24"
                   viewBox="0 0 24 24"
                   fill="none"
-                  [id]="'dropdown' + stage.Id"
+                  [id]="'dropdown' + stage.StageId"
                   ngbDropdownToggle
                 >
                   <path
@@ -103,28 +103,18 @@
                   />
                 </svg>
                 <div
-                  *ngIf="
-                    stage.Actions &&
-                    stage.Actions.length > 0 &&
-                    checkForStageActionsDisplay(stage.Actions)
-                  "
+                  *ngIf="stage.StageActions && stage.StageActions.length > 0"
                   ngbDropdownMenu
-                  [attr.aria-labelledby]="'dropdown' + stage.Id"
+                  [attr.aria-labelledby]="'dropdown' + stage.StageId"
                 >
-                  <ng-container
-                    *ngIf="stage.Actions && stage.Actions.length > 0"
-                  >
-                    <ng-container *ngFor="let action of stage.Actions">
-                      <ng-container *ngIf="action.actionLevel == 'Stage'">
-                        <ng-container *ngIf="action.actionType == 'Popup'">
-                          <button
-                            ngbDropdownItem
-                            (click)="openActionPopup(action.actionName)"
-                          >
-                            {{ action.actionName }}
-                          </button>
-                        </ng-container>
-                      </ng-container>
+                  <ng-container *ngFor="let action of stage.StageActions">
+                    <ng-container *ngIf="action.actionType == 'Popup'">
+                      <button
+                        ngbDropdownItem
+                        (click)="openActionPopup(action.actionName)"
+                      >
+                        {{ action.actionName }}
+                      </button>
                     </ng-container>
                   </ng-container>
                 </div>
@@ -133,100 +123,155 @@
             <div
               class="stage-content"
               cdkDropList
-              [cdkDropListData]="stage.kanbanOrganizations"
-              [id]="stage.Id.toString()"
+              [cdkDropListData]="
+                stage.StageOrganizations || stage.StageListings || []
+              "
+              [id]="stage.StageId.toString()"
               (cdkDropListDropped)="onDrop($event)"
             >
               <ng-container
-                *ngFor="
-                  let organization of stage.kanbanOrganizations;
-                  let orgIndex = index
+                *ngIf="
+                  stage.StageOrganizations &&
+                    stage.StageOrganizations.length > 0;
+                  else centerCase
                 "
               >
-                <ng-container *ngFor="let org of organization.Organization">
-                  <ng-container
-                    *ngIf="
-                      !org.OrganizationName &&
-                        org.ShoppingCenters.length > 0 &&
-                        org.ShoppingCenters[0].CenterName;
-                      else organizationCase
-                    "
+                <ng-container
+                  *ngFor="
+                    let organization of stage.StageOrganizations || [];
+                    let orgIndex = index
+                  "
+                >
+                  <div
+                    *ngIf="organization.OrganizationName"
+                    class="stage-card"
+                    cdkDrag
+                    [cdkDragData]="{
+                      type: 'organization',
+                      orgIndex: orgIndex,
+                      value: organization
+                    }"
                   >
+                    <div
+                      class="w-100 d-flex align-items-start justify-content-between gap-3"
+                    >
+                      <div class="d-flex align-items-center gap-2">
+                        <img
+                          *ngIf="organization.LogoURL"
+                          [src]="organization.LogoURL"
+                          alt="organization-logo"
+                          class="avatar"
+                        />
+                        <span class="kanban-title">
+                          {{ organization.OrganizationName }}
+                        </span>
+                      </div>
+                    </div>
                     <ng-container
-                      *ngFor="
-                        let center of org.ShoppingCenters;
-                        let centerIndex = index
+                      *ngIf="
+                        organization.OtherKanbans &&
+                        organization.OtherKanbans.length > 0
                       "
                     >
-                      <div
-                        *ngIf="center.CenterName"
-                        class="stage-card"
-                        cdkDrag
-                        [cdkDragData]="{
-                          type: 'center',
-                          orgIndex: orgIndex,
-                          centerIndex: centerIndex,
-                          value: center
-                        }"
-                      >
-                        <div
-                          class="w-100 d-flex align-items-start justify-content-between gap-3"
+                      <hr />
+                      <div class="kanban-title mb-2">Workflows</div>
+                      <div class="row gap-2 g-2">
+                        <ng-container
+                          *ngFor="
+                            let otherKanban of organization.OtherKanbans;
+                            let otherKanbanIndex = index
+                          "
                         >
-                          <div class="d-flex align-items-center gap-2">
-                            <img
-                              *ngIf="
-                                center.MarketSurveyShoppingCenters[0]
-                                  .ShoppingCenterRep[0]
-                                  ?.ShoppingCenterRepLogoURL
-                              "
-                              [src]="
-                                center.MarketSurveyShoppingCenters[0]
-                                  .ShoppingCenterRep[0].ShoppingCenterRepLogoURL
-                              "
-                              alt="organization-logo"
-                              class="avatar"
-                            />
-                            <span class="kanban-title">
-                              {{ center.CenterName }}
-                            </span>
-                          </div>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
+                          <div
+                            class="col-5 workflow-item"
+                            [ngStyle]="{
+                              'background-color':
+                                stagesColors[otherKanbanIndex + (1 % 5)]
+                                  .background,
+                              color:
+                                stagesColors[otherKanbanIndex + (1 % 5)].color
+                            }"
+                            [pTooltip]="otherKanban.kanbanName"
+                            tooltipPosition="top"
+                            (click)="
+                              updateKanbanId(
+                                otherKanban.id,
+                                otherKanban.kanbanName
+                              )
+                            "
                           >
-                            <path
-                              d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
-                              fill="#7A8591"
-                            />
-                            <path
-                              d="M12 13C11.44 13 11 12.55 11 12C11 11.45 11.45 11 12 11C12.55 11 13 11.45 13 12C13 12.55 12.56 13 12 13Z"
-                              fill="#7A8591"
-                            />
-                            <path
-                              d="M16 13C15.44 13 15 12.55 15 12C15 11.45 15.45 11 16 11C16.55 11 17 11.45 17 12C17 12.55 16.56 13 16 13Z"
-                              fill="#7A8591"
-                            />
-                            <path
-                              d="M8 13C7.44 13 7 12.55 7 12C7 11.45 7.45 11 8 11C8.55 11 9 11.45 9 12C9 12.55 8.56 13 8 13Z"
-                              fill="#7A8591"
-                            />
-                          </svg>
-                        </div>
+                            {{ otherKanban.kanbanName }}
+                          </div>
+                        </ng-container>
                       </div>
                     </ng-container>
-                  </ng-container>
-                  <ng-template #organizationCase>
+
+                    <g-container
+                      *ngIf="
+                        organization.Actions && organization.Actions.length > 0
+                      "
+                    >
+                      <hr />
+                      <div class="kanban-title mb-2">Actions</div>
+
+                      <ng-container
+                        *ngIf="
+                          organization.Actions &&
+                          organization.Actions.length > 0
+                        "
+                      >
+                        <div class="row gap-2 g-2">
+                          <ng-container
+                            *ngFor="
+                              let action of organization.Actions;
+                              let actionIndex = index
+                            "
+                          >
+                            <ng-container
+                              *ngIf="action.actionLevel == 'Target'"
+                            >
+                              <a
+                                class="col-5 workflow-item"
+                                [ngStyle]="{
+                                  'background-color':
+                                    stagesColors[actionIndex + (1 % 5)]
+                                      .background,
+                                  color:
+                                    stagesColors[actionIndex + (1 % 5)].color
+                                }"
+                                [pTooltip]="action.actionName"
+                                tooltipPosition="top"
+                                [href]="action.actionUrlDecode"
+                                target="_blank"
+                              >
+                                {{ action.actionName }}
+                              </a>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </ng-container>
+                    </g-container>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-template #centerCase>
+                <ng-container
+                  *ngIf="stage.StageListings && stage.StageListings.length > 0"
+                >
+                  <ng-container
+                    *ngFor="
+                      let center of stage.StageListings || [];
+                      let centerIndex = index
+                    "
+                  >
                     <div
-                      *ngIf="org.OrganizationName"
+                      *ngIf="center.CenterName"
                       class="stage-card"
                       cdkDrag
                       [cdkDragData]="{
-                        type: 'organization',
-                        orgIndex: orgIndex,
-                        value: org
+                        type: 'center',
+                        orgIndex: centerIndex,
+                        value: center
                       }"
                     >
                       <div
@@ -234,119 +279,20 @@
                       >
                         <div class="d-flex align-items-center gap-2">
                           <img
-                            *ngIf="org.OrganizationLogoURL"
-                            [src]="org.OrganizationLogoURL"
+                            *ngIf="center.LogoURL"
+                            [src]="center.LogoURL"
                             alt="organization-logo"
                             class="avatar"
                           />
                           <span class="kanban-title">
-                            {{ org.OrganizationName }}
+                            {{ center.CenterName }}
                           </span>
                         </div>
-                        <!-- <div ngbDropdown>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            [id]="'dropdown' + org.OrganizationID"
-                            ngbDropdownToggle
-                          >
-                            <path
-                              d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
-                              fill="#7A8591"
-                            />
-                            <path
-                              d="M12 13C11.44 13 11 12.55 11 12C11 11.45 11.45 11 12 11C12.55 11 13 11.45 13 12C13 12.55 12.56 13 12 13Z"
-                              fill="#7A8591"
-                            />
-                            <path
-                              d="M16 13C15.44 13 15 12.55 15 12C15 11.45 15.45 11 16 11C16.55 11 17 11.45 17 12C17 12.55 16.56 13 16 13Z"
-                              fill="#7A8591"
-                            />
-                            <path
-                              d="M8 13C7.44 13 7 12.55 7 12C7 11.45 7.45 11 8 11C8.55 11 9 11.45 9 12C9 12.55 8.56 13 8 13Z"
-                              fill="#7A8591"
-                            />
-                          </svg>
-                          <div
-                            *ngIf="
-                              stage.Actions &&
-                              stage.Actions.length > 0 &&
-                              checkForTargetActionsDisplay(stage.Actions)
-                            "
-                            ngbDropdownMenu
-                            [attr.aria-labelledby]="
-                              'dropdown' + org.OrganizationID
-                            "
-                          >
-                            <ng-container
-                              *ngIf="stage.Actions && stage.Actions.length > 0"
-                            >
-                              <ng-container
-                                *ngFor="let action of stage.Actions"
-                              >
-                                <ng-container
-                                  *ngIf="action.actionLevel == 'Target'"
-                                >
-                                  <a
-                                    ngbDropdownItem
-                                    [href]="
-                                      action.actionURL +
-                                      '/' +
-                                      activeKanbanDetails.buyboxid +
-                                      '/' +
-                                      org.OrganizationID
-                                    "
-                                    target="_blank"
-                                  >
-                                    {{ action.actionName }}
-                                  </a>
-                                </ng-container>
-                              </ng-container>
-                            </ng-container>
-                          </div>
-                        </div> -->
                       </div>
-                      <ng-container
-                        *ngIf="
-                          organization.OtherKanbans &&
-                          organization.OtherKanbans.length > 0
-                        "
-                      >
-                        <hr />
-                        <div class="kanban-title mb-2">Workflows</div>
-                        <div class="row gap-2 g-2">
-                          <ng-container
-                            *ngFor="
-                              let otherKanban of organization.OtherKanbans;let otherKanbanIndex=index
-                            "
-                          >
-                            <div
-                              class="col-5 workflow-item"
-                              [ngStyle]="{
-                                'background-color': stagesColors[otherKanbanIndex+1 % 5].background,
-                                color: stagesColors[otherKanbanIndex+1 % 5].color
-                              }"
-                              [pTooltip]="otherKanban.kanbanName"
-                              tooltipPosition="top"
-                              (click)="
-                                updateKanbanId(
-                                  otherKanban.id,
-                                  otherKanban.kanbanName
-                                )
-                              "
-                            >
-                              {{ otherKanban.kanbanName }}
-                            </div>
-                          </ng-container>
-                        </div>
-                      </ng-container>
                     </div>
-                  </ng-template>
+                  </ng-container>
                 </ng-container>
-              </ng-container>
+              </ng-template>
             </div>
           </section>
         </ng-container>
