@@ -41,7 +41,7 @@ export class EmilyContactEmailComponent implements OnInit {
   isScrolling = false;
   private scrollTimeout: any;
   filteredEmails: Mail[] = [];
-  selectedFilter: string = 'all'; // Default filter is 'all'
+  selectedFilter: string = 'inbox'; // Default filter is 'all'
 
   // @Input() contactId!: number;
   @Input() orgId!: number;
@@ -53,17 +53,17 @@ export class EmilyContactEmailComponent implements OnInit {
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private _location: Location,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       const buyboxId = params.get('buyBoxId');
-      if(buyboxId){
-        this.buyBoxId= +buyboxId;
+      if (buyboxId) {
+        this.buyBoxId = +buyboxId;
       }
       const orgId = params.get('organizationId');
-      if(orgId){
-        this.orgId= +orgId;
+      if (orgId) {
+        this.orgId = +orgId;
       }
     });
     // Load both APIs with Promise.all to ensure both are completed    'microdeals api and emails api'
@@ -84,18 +84,26 @@ export class EmilyContactEmailComponent implements OnInit {
     const emailsPromise = new Promise<void>((resolve) => {
       this.GetBuyBoxEmails(resolve);
     });
-    // When both APIs complete, process the data
     Promise.all([microDealsPromise, emailsPromise])
       .then(() => {
-        // Select the first contact by default if there are contacts available
         if (this.contacts && this.contacts.length > 0) {
-          this.getEmailsForContact(this.contacts[0]);
+          const contactWithInbox = this.contacts.find(contact =>
+            contact.EmailStats &&
+            contact.EmailStats[0] &&
+            contact.EmailStats[0].Inbox > 0
+          );
+          if (contactWithInbox) {
+            this.getEmailsForContact(contactWithInbox);
+          } else {
+            this.getEmailsForContact(this.contacts[0]);
+          }
         }
         this.spinner.hide();
       })
       .catch((error) => {
         this.spinner.hide();
       });
+
   }
   GetBuyBoxMicroDeals(callback?: Function): void {
     const body: any = {
@@ -131,8 +139,8 @@ export class EmilyContactEmailComponent implements OnInit {
         if (callback) {
           callback();
         }
-      }, 
-    
+      },
+
     });
   }
   GetBuyBoxEmails(callback?: Function): void {
@@ -277,10 +285,10 @@ export class EmilyContactEmailComponent implements OnInit {
     return direction === 2
       ? 'fa-envelope-circle-check send'
       : direction === -1
-      ? 'fa-share outbox'
-      : direction === 1
-      ? 'fa-reply inbox'
-      : '';
+        ? 'fa-share outbox'
+        : direction === 1
+          ? 'fa-reply inbox'
+          : '';
   }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
