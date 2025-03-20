@@ -1,186 +1,188 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div class="map-container img-fluid">
-  <header class="card custom-card " [ngStyle]="{ background: buyboxcolor }">
-    <div class="col-12 d-flex align-items-center justify-content-start">
-     <div class="d-flex align-items-center justify-content-center">
-       <div>
-         <img
-           class="tenant-logo"
-           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-             buyboxid
-           }}"
-           alt="Tenant Logo"
-         />
-       </div>
-         <div class="d-flex flex-column align-items-center justify-content-center gap-2"
-         >
-           <div>
-             <span class="buyboxname">
-               {{ buyboxname }}
-             </span>
-           </div>
-           <!-- <div>
-             <div class="fast-food-badge">Fast Food</div>
-           </div> -->
-         </div>
-     </div>
-    </div>
-    <div class="col-12 d-flex align-items-center justify-content-start">
+<div class="overfloww">
+  <div class="map-container img-fluid">
+    <header class="card custom-card " [ngStyle]="{ background: buyboxcolor }">
+      <div class="col-12 d-flex align-items-center justify-content-start">
        <div class="d-flex align-items-center justify-content-center">
-         <div class="smalllframe">
+         <div>
            <img
-             src="../../../assets/Images/size.png"
-             alt="Small Image"
-             class="small-image"
+             class="tenant-logo"
+             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+               buyboxid
+             }}"
+             alt="Tenant Logo"
            />
          </div>
-   
-         <div class="d-flex flex-column text-center">
-           <span class="boldtext">Size needed</span>
-           <div class="d-flex justify-content-start">
-             <span class="lowwhite" style="white-space: nowrap">
-               {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
-             </span>
-             <span
-               class="lowwhite mx-2"
-               *ngIf="MinBuildingSize && MaxBuildingSize"
-             >
-               -
-             </span>
-             <span class="lowwhite">
-               {{ MaxBuildingSize ? MaxBuildingSize + " SF" : "" }}
-             </span>
+           <div class="d-flex flex-column align-items-center justify-content-center gap-2"
+           >
+             <div>
+               <span class="buyboxname">
+                 {{ buyboxname }}
+               </span>
+             </div>
+             <!-- <div>
+               <div class="fast-food-badge">Fast Food</div>
+             </div> -->
            </div>
-         </div>
        </div>
-     </div>
-   
-     <div class="col-12 d-flex align-items-center justify-content-start">
-       <div class="d-flex align-items-center justify-content-center">
-         <div class="smalllframe">
-           <img
-             src="../../../assets/Images/SVG/bank.png"
-             alt="Small Image"
-             class="small-image"
-           />
-         </div>
-   
-         <div class="d-flex flex-column text-center">
-           <span class="boldtext">States</span>
-           <div class="d-flex justify-content-start">
-             <span class="lowwhite"> {{ states }} </span>
-           </div>
-         </div>
-       </div>
-     </div>
-   
-     <div class="col-12 d-flex align-items-center justify-content-start">
-       <div class="d-flex align-items-center justify-content-center">
-         <div class="smalllframe">
-           <img
-             src="../../../assets/Images/SVG/buildings.png"
-             alt="Small Image"
-             class="small-image"
-           />
-         </div>
-   
-         <div class="d-flex flex-column text-center">
-           <span class="boldtext">Cities</span>
-           <div class="d-flex justify-content-start">
-             <span class="lowwhite"> {{ address }} </span>
-           </div>
-         </div>
-       </div>
-     </div>
-   </header>
-  <div class="content-right d-flex gap-2">
-    <button class="btn-share" [ngStyle]="{ color: buyboxcolor, border: '1px solid ' + buyboxcolor }">
-      <div>
-        <i
-          class="fa-solid fa-arrow-up-right-from-square imgshare"
-        ></i>
       </div>
-      <span>Share</span>
-    </button>
-    
-    <button class="btn-submit" (click)="openUploadModal(test)">
-      <span>Submit a proposal</span>
-    </button>
-  </div>
-</div>
-
-<div class="container background mt-5">
-  <div class="row">
-    <div class="col-lg-8 col-md-7 order-2 order-md-0 mt-3 mt-md-0">
-      <span class="Osmowstext">
-        {{ buyboxDescription }}
-      </span>
+      <div class="col-12 d-flex align-items-center justify-content-start">
+         <div class="d-flex align-items-center justify-content-center">
+           <div class="smalllframe">
+             <img
+               src="../../../assets/Images/size.png"
+               alt="Small Image"
+               class="small-image"
+             />
+           </div>
+     
+           <div class="d-flex flex-column text-center">
+             <span class="boldtext">Size needed</span>
+             <div class="d-flex justify-content-start">
+               <span class="lowwhite" style="white-space: nowrap">
+                 {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
+               </span>
+               <span
+                 class="lowwhite mx-2"
+                 *ngIf="MinBuildingSize && MaxBuildingSize"
+               >
+                 -
+               </span>
+               <span class="lowwhite">
+                 {{ MaxBuildingSize ? MaxBuildingSize + " SF" : "" }}
+               </span>
+             </div>
+           </div>
+         </div>
+       </div>
+     
+       <div class="col-12 d-flex align-items-center justify-content-start">
+         <div class="d-flex align-items-center justify-content-center">
+           <div class="smalllframe">
+             <img
+               src="../../../assets/Images/SVG/bank.png"
+               alt="Small Image"
+               class="small-image"
+             />
+           </div>
+     
+           <div class="d-flex flex-column text-center">
+             <span class="boldtext">States</span>
+             <div class="d-flex justify-content-start">
+               <span class="lowwhite"> {{ states }} </span>
+             </div>
+           </div>
+         </div>
+       </div>
+     
+       <div class="col-12 d-flex align-items-center justify-content-start">
+         <div class="d-flex align-items-center justify-content-center">
+           <div class="smalllframe">
+             <img
+               src="../../../assets/Images/SVG/buildings.png"
+               alt="Small Image"
+               class="small-image"
+             />
+           </div>
+     
+           <div class="d-flex flex-column text-center">
+             <span class="boldtext">Cities</span>
+             <div class="d-flex justify-content-start">
+               <span class="lowwhite"> {{ address }} </span>
+             </div>
+           </div>
+         </div>
+       </div>
+     </header>
+    <div class="content-right d-flex gap-2">
+      <button class="btn-share" [ngStyle]="{ color: buyboxcolor, border: '1px solid ' + buyboxcolor }">
+        <div>
+          <i
+            class="fa-solid fa-arrow-up-right-from-square imgshare"
+          ></i>
+        </div>
+        <span>Share</span>
+      </button>
+      
+      <button class="btn-submit" (click)="openUploadModal(test)">
+        <span>Submit a proposal</span>
+      </button>
     </div>
-    <div class="col-lg-4 col-md-5 order-1 order-md-0">
-      <div class="card cardbackground" [ngStyle]="{ background: buyboxcolor }">
-        <div class="card-body">
-          <div class="d-flex align-items-center justify-content-center">
-            <div class="col-4">
-              <img
-                class="brokerandmangeorgimage"
-                [src]="brokerphoto"
-                alt="Broker Photo"
-              />
-            </div>
-
-            <div class="col-7 offset-1">
-              <div class="d-flex flex-column text-start">
-                <div class="d-flex align-items-center justify-content-start">
-                  <span class="namee me-2">
-                    {{ firstnamemanagerorganization }}
-                  </span>
-                  <span class="namee"> {{ lastnamemanagerorganization }} </span>
+  </div>
+  
+  <div class="container background mt-5">
+    <div class="row">
+      <div class="col-lg-8 col-md-7 order-2 order-md-0 mt-3 mt-md-0">
+        <span class="Osmowstext">
+          {{ buyboxDescription }}
+        </span>
+      </div>
+      <div class="col-lg-4 col-md-5 order-1 order-md-0">
+        <div class="card cardbackground" [ngStyle]="{ background: buyboxcolor }">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-center">
+              <div class="col-4">
+                <img
+                  class="brokerandmangeorgimage"
+                  [src]="brokerphoto"
+                  alt="Broker Photo"
+                />
+              </div>
+  
+              <div class="col-7 offset-1">
+                <div class="d-flex flex-column text-start">
+                  <div class="d-flex align-items-center justify-content-start">
+                    <span class="namee me-2">
+                      {{ firstnamemanagerorganization }}
+                    </span>
+                    <span class="namee"> {{ lastnamemanagerorganization }} </span>
+                  </div>
+  
+                  <div class="frameee">
+                    <span
+                      class="broker"
+                      [ngStyle]="{
+                        color: buyboxcolor,
+                        '-webkit-text-fill-color': buyboxcolor
+                      }"
+                      >broker</span
+                    >
+                  </div>
+  
+                  <a [href]="brokerlinkedin" target="_blank">
+                    <span class="linkedin">{{ brokerlinkedin }}</span>
+                  </a>
                 </div>
-
-                <div class="frameee">
-                  <span
-                    class="broker"
-                    [ngStyle]="{
-                      color: buyboxcolor,
-                      '-webkit-text-fill-color': buyboxcolor
-                    }"
-                    >broker</span
-                  >
-                </div>
-
-                <a [href]="brokerlinkedin" target="_blank">
-                  <span class="linkedin">{{ brokerlinkedin }}</span>
-                </a>
               </div>
             </div>
-          </div>
-          <div class="line-container d-flex align-items-center">
-            <span class="line"></span>
-            <span class="assistant mx-2">Assistant to</span>
-            <span class="line"></span>
-          </div>
-          <div class="d-flex align-items-center justify-content-center">
-            <div class="col-4">
-              <img
-                class="brokerandmangeorgimage"
-                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                  managementorganizationId
-                }}"
-                alt="Organization Image"
-              />
+            <div class="line-container d-flex align-items-center">
+              <span class="line"></span>
+              <span class="assistant mx-2">Assistant to</span>
+              <span class="line"></span>
             </div>
-            <div class="col-7 offset-1">
-              <div class="d-flex flex-column text-start">
-                <span class="namee"> {{ managementorganizationname }} </span>
-                <div class="frameee">
-                  <span
-                    class="broker"
-                    [ngStyle]="{
-                      color: buyboxcolor,
-                      '-webkit-text-fill-color': buyboxcolor
-                    }"
-                    >Commercial Real Estate</span
-                  >
+            <div class="d-flex align-items-center justify-content-center">
+              <div class="col-4">
+                <img
+                  class="brokerandmangeorgimage"
+                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                    managementorganizationId
+                  }}"
+                  alt="Organization Image"
+                />
+              </div>
+              <div class="col-7 offset-1">
+                <div class="d-flex flex-column text-start">
+                  <span class="namee"> {{ managementorganizationname }} </span>
+                  <div class="frameee">
+                    <span
+                      class="broker"
+                      [ngStyle]="{
+                        color: buyboxcolor,
+                        '-webkit-text-fill-color': buyboxcolor
+                      }"
+                      >Commercial Real Estate</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -189,89 +191,89 @@
       </div>
     </div>
   </div>
-</div>
-<div
-  class="row row-background d-flex justify-content-center align-items-center mt-4"
->
   <div
-    class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0"
+    class="row row-background d-flex justify-content-center align-items-center mt-4"
   >
-    <button
-      class="btn-submit-proposel"
-      (click)="openUploadModal(test)"
-      [ngStyle]="{ background: buyboxcolor }"
+    <div
+      class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0"
     >
-      <span>Submit a proposal</span>
-    </button>
-    <button class="btn-share" [ngStyle]="{ color: buyboxcolor, border: '1px solid ' + buyboxcolor }">
-      <div>
-        <i
-          class="fa-solid fa-arrow-up-right-from-square imgshare"
-        ></i>
-      </div>
-      <span>Share</span>
-    </button>
-  </div>
-</div>
-
-<div class="row mt-4">
-  <div
-    class="col-8 offset-4 offset-md-3 offset-lg-4 offset-xl-3 col-md-9 col-lg-8 col-xl-9"
-  >
-    <div class="d-flex align-items-center justify-content-start">
-      <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
-      <span class="nameincard">{{ lastnamemanagerorganization }}</span>
+      <button
+        class="btn-submit-proposel"
+        (click)="openUploadModal(test)"
+        [ngStyle]="{ background: buyboxcolor }"
+      >
+        <span>Submit a proposal</span>
+      </button>
+      <button class="btn-share" [ngStyle]="{ color: buyboxcolor, border: '1px solid ' + buyboxcolor }">
+        <div>
+          <i
+            class="fa-solid fa-arrow-up-right-from-square imgshare"
+          ></i>
+        </div>
+        <span>Share</span>
+      </button>
     </div>
   </div>
-</div>
-<div class="row colorr mt-4" [ngStyle]="{ background: buyboxcolor }">
-  <div class="col-4 col-md-3 col-lg-4 col-xl-3 position-relative">
-    <div class="broker-container broker-containerrrr">
-      <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
-    </div>
-  </div>
-
-  <div class="col-8 col-md-9 col-lg-8 col-xl-9">
-    <div class="d-flex flex-column text-start">
-      <span class="brokertext" [innerHTML]="brokersignature"></span>
-    </div>
-  </div>
-</div>
-
-<div class="container mt-4">
-  <div class="d-flex align-items-center">
-    <img
-      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-        managementorganizationId
-      }}"
-      alt="Organization Image"
-      class="organization-image"
-    />
-
-    <div class="ml-3">
-      <span class="nameincard">{{ managementorganizationname }}</span>
-      <div class="brokerframeee">
-        <span
-          class="broker"
-          [ngStyle]="{
-            color: buyboxcolor,
-            '-webkit-text-fill-color': buyboxcolor
-          }"
-        >
-          Commercial Real Estate
-        </span>
+  
+  <div class="row mt-4">
+    <div
+      class="col-8 offset-4 offset-md-3 offset-lg-4 offset-xl-3 col-md-9 col-lg-8 col-xl-9"
+    >
+      <div class="d-flex align-items-center justify-content-start">
+        <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
+        <span class="nameincard">{{ lastnamemanagerorganization }}</span>
       </div>
     </div>
   </div>
-
-  <hr class="customm-hr" />
-  <span class="grayspan" [innerHTML]="ManagerOrganizationDescription"></span>
+  <div class="row colorr mt-4" [ngStyle]="{ background: buyboxcolor }">
+    <div class="col-4 col-md-3 col-lg-4 col-xl-3 position-relative">
+      <div class="broker-container broker-containerrrr">
+        <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
+      </div>
+    </div>
+  
+    <div class="col-8 col-md-9 col-lg-8 col-xl-9">
+      <div class="d-flex flex-column text-start">
+        <span class="brokertext" [innerHTML]="brokersignature"></span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container mt-4">
+    <div class="d-flex align-items-center">
+      <img
+        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+          managementorganizationId
+        }}"
+        alt="Organization Image"
+        class="organization-image"
+      />
+  
+      <div class="ml-3">
+        <span class="nameincard">{{ managementorganizationname }}</span>
+        <div class="brokerframeee">
+          <span
+            class="broker"
+            [ngStyle]="{
+              color: buyboxcolor,
+              '-webkit-text-fill-color': buyboxcolor
+            }"
+          >
+            Commercial Real Estate
+          </span>
+        </div>
+      </div>
+    </div>
+  
+    <hr class="customm-hr" />
+    <span class="grayspan" [innerHTML]="ManagerOrganizationDescription"></span>
+  </div>
+  
+  <div class="row">
+    <div class="col-12"></div>
+  </div>
+  
 </div>
-
-<div class="row">
-  <div class="col-12"></div>
-</div>
-
 <ng-template #uploadPDF let-modal>
   <div class="d-flex justify-content-center align-items-center view-act">
     <h4 class="mb-0">Convert PDF to Images</h4>
@@ -361,7 +363,6 @@
           </div>
         </div>
       </div>
-      <!-- Display JsonPDF Data Section -->
       <!-- Display JsonPDF Data Section -->
       <div *ngIf="JsonPDF" class="mt-5 shopping-center-container">
         <div class="row justify-content-center">

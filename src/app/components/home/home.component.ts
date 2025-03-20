@@ -36,6 +36,7 @@ export class HomeComponent implements OnInit {
   General!: General;
   BuyBoxId!: any;
   OrgId!: any;
+  ContactId!: any;
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -111,6 +112,7 @@ export class HomeComponent implements OnInit {
   GuidLink!: string;
   isMobileView: boolean;
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
+  @ViewChild('loginRegisterModal', { static: true }) loginRegisterModal: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -127,7 +129,6 @@ export class HomeComponent implements OnInit {
   ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
-
     this.markerService.clearMarkers();
   }
 
@@ -139,6 +140,7 @@ export class HomeComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+      localStorage.setItem('contactId', this.ContactId);
     });
     this.BuyBoxPlacesCategories(this.BuyBoxId);
     this.GetOrganizationById(this.OrgId);
@@ -818,6 +820,10 @@ export class HomeComponent implements OnInit {
 
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
+    if (!this.isUserLoggedIn()) {
+      this.openLoginModal();
+      return;
+    }
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
 
@@ -835,6 +841,7 @@ export class HomeComponent implements OnInit {
         MarketSurveyId: shopping.MarketSurveyId,
         Comment: commentText,
         ParentCommentId: 0,
+        identity: this.ContactId,
       },
     };
 
@@ -1076,6 +1083,10 @@ export class HomeComponent implements OnInit {
   }
 
   handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
+    if (!this.isUserLoggedIn()) {
+      this.openLoginModal();
+      return;
+    }
     if (this.clickTimeout) {
       clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
@@ -1191,4 +1202,59 @@ export class HomeComponent implements OnInit {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
+openLoginModal(): void {
+  this.modalService.open(this.loginRegisterModal, {
+    ariaLabelledBy: 'modal-login-register',
+    centered: true,
+    scrollable: true
+  });
+}
+registerUser(form: NgForm): void {
+  if (form.invalid) {
+    return;
+  }
+  this.spinner.show();
+  const body = {
+    Name: 'AddContactToOrganization',
+    Params: {
+      FirstName: this.newContact.firstName,
+      LastName: this.newContact.lastName,
+      email: this.newContact.email,
+      password: 1234,
+      OrganizationId: this.OrgId,
+      buyboxId : this.BuyBoxId,
+    }
+  };
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (response: any) => {
+      if (response && response.json && response.json.length > 0 && response.json[0].id) {
+        localStorage.setItem('contactId', response.json[0].id.toString());
+        this.modalService.dismissAll();
+        this.showToast('Registration successful!');
+      } else if (response.error) {
+        alert('Registration failed: ' + response.error);
+      } else {
+        alert('Registration failed: Unable to process registration');
+      }
+    },
+    error: (err) => {
+      console.error('Registration error:', err);
+      alert('Registration failed: ' + (err.message || 'Unknown error'));
+      this.spinner.hide();
+      this.modalService.dismissAll();
+    },
+    complete: () => {
+      this.spinner.hide();
+      this.modalService.dismissAll();
+    }
+  });
+}
+navigateToLogin(): void {
+  this.modalService.dismissAll();
+  this.router.navigate(['/login']);
+}
+isUserLoggedIn(): boolean {
+  const contactId = localStorage.getItem('contactId');
+  return contactId !== null && contactId !== undefined;
+}
 }
