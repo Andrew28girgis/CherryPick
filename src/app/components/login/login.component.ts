@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
     this.logoUrl = this.configService.getLogoUrl();
     // First check if user is already logged in today
     // if (this.authService.isLoggedInToday()) {
-    //   console.log(`hello`);
+     
 
     //   this.navigateToHome();
     //   return;

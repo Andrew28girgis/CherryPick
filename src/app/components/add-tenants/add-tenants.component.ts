@@ -135,8 +135,6 @@ export class AddTenantsComponent implements OnInit {
       next: (data) => {
         if (data.json != null) {
           this.buyboxTypes = data.json;
-          console.log('buyboxTypes', this.buyboxTypes);
-
           this.spinner.hide();
         } else {
           // this.router.navigate(['/login']);
