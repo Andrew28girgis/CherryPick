@@ -3,36 +3,59 @@ export interface IKanbanDetails {
   targetStakeholderId: number;
   kanbanName: string;
   kanbanTemplateId: number;
-  buyboxid: number;
   kanbanStages: KanbanStage[];
 }
 
 export interface KanbanStage {
-  stageOrder: number;
-  isQualified: boolean;
-  kanbanId: number;
-  kanbanTemplateStageId: number;
-  Actions?: Action[];
-  Id: number;
+  StageId: number;
   stageName: string;
-  kanbanOrganizations: KanbanOrganization[];
-}
+  stageOrder: number;
+  StageActions?: StageAction[];
+  StageListings?: StageListing[];
+  StageOrganizations?: StageOrganization[];
 
-export interface Action {
-  Id: number;
-  actionName: string;
-  actionType: string;
+  // isQualified: boolean;
+  // kanbanId: number;
+  // kanbanTemplateStageId: number;
+  // Actions?: Action[];
+  // Id: number;
+  // kanbanOrganizations: KanbanOrganization[];
+}
+export interface StageAction {
+  ActionId: number;
   actionLevel: string;
-  actionURL: string;
+  actionType: string;
+  actionName: string;
   KanbanTemplateStageId: number;
 }
 
-export interface KanbanOrganization {
-  OtherKanbans?: OtherKanban[];
-  Organization: Organization[];
-  Id?: number;
-  OrganizationId?: number;
-  kanbanStageId?: number;
+export interface StageListing {
+  MarketSurveyShoppingCenterId: number;
+  ShoppingCenterId: number;
+  CenterName: string;
+  Id: number;
+  Name: string;
+  LogoURL: string;
+  ContactId: number;
+}
+
+export interface StageOrganization {
+  kanbanOrganizationid: number;
+  OrganizationId: number;
+  OrganizationName: string;
+  LogoURL: string;
+  Actions: Action[];
+  OtherKanbans: OtherKanban[];
+}
+
+export interface Action {
+  ActionId: number;
+  actionLevel: string;
+  actionType: string;
+  actionName: string;
+  actionURL: string;
+  actionUrlDecode: string;
+  KanbanTemplateStageId: number;
 }
 
 export interface OtherKanban {
@@ -40,44 +63,9 @@ export interface OtherKanban {
   kanbanName: string;
 }
 
-export interface Organization {
-  OrganizationID: number;
-  OrganizationName: string;
-  OrganizationLogoURL: string;
-  ShoppingCenters: ShoppingCenter[];
-  OrganizationStakeholderId?: number;
-}
-
-export interface ShoppingCenter {
-  CenterName: string;
-  CenterAddress: string;
-  CenterCity: string;
-  CenterState: string;
-  MainImage: string;
-  MarketSurveyShoppingCenters: MarketSurveyShoppingCenter[];
-}
-
-export interface MarketSurveyShoppingCenter {
-  ShoppingCenterRep: ShoppingCenterRep[];
-  MarketSurveyId?: number;
-}
-
-export interface ShoppingCenterRep {
-  ShoppingCenterRepId: number;
-  ShoppingCenterRepName: string;
-  ShoppingCenterRepLogoURL: string;
-  Contact: Contact[];
-}
-
-export interface Contact {
-  ContactId: number;
-  ContactFirstname: string;
-  ContactLastname: string;
-}
-
 export interface KanbanDragingData {
   type: 'organization' | 'center';
   orgIndex: number;
   centerIndex?: number;
-  value: Organization | ShoppingCenter;
+  value: StageOrganization | StageListing;
 }

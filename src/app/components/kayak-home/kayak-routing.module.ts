@@ -22,7 +22,6 @@ const routes: Routes = [
   { path: 'MyInboxs', component: MyInboxEmailListComponent }, 
   { path: 'organization-mail/:buyBoxId/:organizationId', component: EmilyContactEmailComponent },
 ];
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],

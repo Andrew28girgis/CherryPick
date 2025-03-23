@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PlacesService } from 'src/app/shared/services/places.service';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 import { OrganizationsForEmail } from 'src/app/shared/models/emailyOrganization';
 
 @Component({

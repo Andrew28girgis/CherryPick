@@ -1,22 +1,25 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/shared/services/places.service';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import { IUserKanban } from 'src/app/shared/models/iuser-kanban';
 import {
   IKanbanDetails,
-  Organization,
-  KanbanOrganization,
-  ShoppingCenter,
   KanbanStage,
   KanbanDragingData,
   Action,
+  StageOrganization,
+  StageListing,
 } from 'src/app/shared/models/ikanban-details';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Location } from '@angular/common';
 import { popupActions } from './kanban-actions/kanban-actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { sharedColors } from '../../shared/others/shared-colors';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-kanban',
@@ -26,24 +29,11 @@ import { sharedColors } from '../../shared/others/shared-colors';
 export class KanbanComponent implements OnInit, OnDestroy {
   private allUserKanbans: IUserKanban[] = [];
   private kanbanDetails?: IKanbanDetails;
-  // private userTenantsKanbans: IUserKanban[] = [];
-  // private userTenantsKanbansDetails?: IKanbanDetails;
-  // private userBuyBoxesKanbans: IUserKanban[] = [];
-  // private userBuyBoxesKanbansDetails?: IKanbanDetails;
-  // private userBuyBoxesPropertiesKanbans: IUserKanban[] = [];
-  // private userBuyBoxesPropertiesKanbansDetails?: IKanbanDetails;
   private pollingInterval: number = 0;
+
   stagesColors: { background: string; color: string }[] = sharedColors;
-
-  // kanbanTabs: { id: number; title: string }[] = [
-  //   { id: 1, title: 'Tenants' },
-  //   { id: 2, title: 'Organizations' },
-  //   { id: 3, title: 'Properties' },
-  // ];
   selectedKanbanTabId: number = 1;
-  // selectedKanban?: IUserKanban;
   selectedKanbanId?: number;
-
   breadcrumbList: { kanbanId: number; name: string }[] = [];
 
   constructor(
@@ -58,54 +48,22 @@ export class KanbanComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getUserKanbans();
 
-    this.activatedRoute.paramMap.subscribe((parms) => {
-      const id = parms.get('id');
+    const fetchingKanbanDetailsInterval = setInterval(() => {
+      if (this.allUserKanbans && this.allUserKanbans.length > 0) {
+        clearInterval(fetchingKanbanDetailsInterval);
+        const kanban = this.allUserKanbans.find(
+          (kanban) => kanban.targetStakeholderId == 2
+        );
+        if (kanban) {
+          this.breadcrumbList.push({
+            kanbanId: kanban.Id,
+            name: kanban.kanbanName,
+          });
 
-      const fetchingKanbanDetailsInterval = setInterval(() => {
-        if (this.allUserKanbans && this.allUserKanbans.length > 0) {
-          clearInterval(fetchingKanbanDetailsInterval);
-          const kanban = this.allUserKanbans.find(
-            (kanban) => kanban.targetStakeholderId == 2
-          );
-          if (kanban) {
-            this.breadcrumbList.push({
-              kanbanId: kanban.Id,
-              name: kanban.kanbanName,
-            });
-
-            this.getKanban(kanban.Id);
-          }
+          this.getKanban(kanban.Id);
         }
-      }, 100);
-      // if (id) {
-      //   const fetchingKanbanDetailsInterval = setInterval(() => {
-      //     if (this.allUserKanbans && this.allUserKanbans.length > 0) {
-      //       clearInterval(fetchingKanbanDetailsInterval);
-
-      //       this.userTenantsKanbans.find((k) => k.Id == +id)
-      //         ? (this.selectedKanbanTabId = 1)
-      //         : this.userBuyBoxesKanbans.find((k) => k.Id == +id)
-      //         ? (this.selectedKanbanTabId = 2)
-      //         : (this.selectedKanbanTabId = 3);
-
-      //       const kanban = this.allUserKanbans.find((k) => k.Id == +id);
-      //       if (kanban) {
-      //         this.getKanban(kanban);
-      //       }
-      //     }
-      //   }, 100);
-      // } else {
-      //   const fetchingKanbanDetailsInterval = setInterval(() => {
-      //     if (this.allUserKanbans && this.allUserKanbans.length > 0) {
-      //       clearInterval(fetchingKanbanDetailsInterval);
-      //       const kanban = this.userTenantsKanbans[0];
-      //       if (kanban) {
-      //         this.getKanban(kanban);
-      //       }
-      //     }
-      //   }, 100);
-      // }
-    });
+      }
+    }, 100);
 
     this.pollingInterval = setInterval(() => {
       if (this.selectedKanbanId) {
@@ -123,48 +81,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
       next: (data) => {
         if (data.json && data.json.length > 0) {
           this.allUserKanbans = data.json;
-          // this.splitAllUserKanbans();
         } else {
           this.allUserKanbans = [];
         }
       },
-    });
-  }
-
-  // private splitAllUserKanbans(): void {
-  //   this.setupUserTenantsKanbans();
-  //   this.setupUserBuyBoxesKanbans();
-  //   this.setupUserBuyBoxesPropertiesKanbans();
-  // }
-
-  // private setupUserTenantsKanbans(): void {
-  //   this.userTenantsKanbans = this.allUserKanbans.filter(
-  //     (k) => k.targetStakeholderId == 2
-  //   );
-
-  //   this.sortKanbans(this.userTenantsKanbans);
-  // }
-
-  // private setupUserBuyBoxesKanbans(): void {
-  //   this.userBuyBoxesKanbans = this.allUserKanbans.filter(
-  //     (k) => k.targetStakeholderId != 2 && k.targetStakeholderId != 4
-  //   );
-  //   this.sortKanbans(this.userBuyBoxesKanbans);
-  // }
-
-  // private setupUserBuyBoxesPropertiesKanbans(): void {
-  //   this.userBuyBoxesPropertiesKanbans = this.allUserKanbans.filter(
-  //     (k) => k.targetStakeholderId == 4
-  //   );
-  //   this.sortKanbans(this.userBuyBoxesPropertiesKanbans);
-  // }
-
-  private sortKanbans(kanbans: IUserKanban[]): void {
-    kanbans.sort((a, b) => {
-      if (a.kanbanTemplateId === b.kanbanTemplateId) {
-        return a.kanbanName.localeCompare(b.kanbanName);
-      }
-      return a.kanbanTemplateId - b.kanbanTemplateId;
     });
   }
 
@@ -179,9 +99,11 @@ export class KanbanComponent implements OnInit, OnDestroy {
       kanbanDetails.kanbanStages.forEach((stage) => {
         this.activeKanbanDetails.kanbanStages.forEach((activeKanbanStage) => {
           if (
-            stage.Id == activeKanbanStage.Id &&
-            stage.kanbanOrganizations.length !=
-              activeKanbanStage.kanbanOrganizations.length
+            stage.StageId == activeKanbanStage.StageId &&
+            (stage.StageOrganizations?.length !=
+              activeKanbanStage.StageOrganizations?.length ||
+              stage.StageListings?.length !=
+                activeKanbanStage.StageListings?.length)
           ) {
             changeFlage = true;
           }
@@ -239,87 +161,32 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json && data.json.length > 0) {
-          const cleanedKanbanDetails = this.transformEmptyArrays(data.json[0]);
+          let details: IKanbanDetails = data.json[0];
+
+          let cleanedKanbanDetails: IKanbanDetails =
+            this.transformEmptyArrays(details);
           if (data.json[0] && this.activeKanbanDetails) {
             const checkForKanbanChanges =
               this.checkForKanbanChanges(cleanedKanbanDetails);
 
             return;
           }
+          cleanedKanbanDetails.kanbanStages =
+            cleanedKanbanDetails.kanbanStages.map((s) => {
+              if (details.targetStakeholderId == 4) {
+                return s.StageListings ? s : { ...s, StageListings: [] };
+              } else {
+                return s.StageOrganizations
+                  ? s
+                  : { ...s, StageOrganizations: [] };
+              }
+            });
 
           this.kanbanDetails = cleanedKanbanDetails;
-
-          // switch (this.selectedKanban?.targetStakeholderId) {
-          //   case 2: {
-          //     this.userTenantsKanbansDetails = cleanedKanbanDetails;
-          //     if (this.userTenantsKanbansDetails) {
-          //       this.sortKanbanDetailsOrganizations(
-          //         this.userTenantsKanbansDetails
-          //       );
-          //     }
-          //     break;
-          //   }
-          //   case 4: {
-          //     this.userBuyBoxesPropertiesKanbansDetails = cleanedKanbanDetails;
-          //     if (this.userBuyBoxesPropertiesKanbansDetails) {
-          //       this.sortKanbanDetailsCenters(
-          //         this.userBuyBoxesPropertiesKanbansDetails
-          //       );
-          //     }
-          //     break;
-          //   }
-          //   default: {
-          //     this.userBuyBoxesKanbansDetails = cleanedKanbanDetails;
-          //     if (this.userBuyBoxesKanbansDetails) {
-          //       this.sortKanbanDetailsOrganizations(
-          //         this.userBuyBoxesKanbansDetails
-          //       );
-          //     }
-          //   }
-          // }
         } else {
           this.kanbanDetails = undefined;
-          // this.userTenantsKanbansDetails = undefined;
-          // this.userBuyBoxesKanbansDetails = undefined;
-          // this.userBuyBoxesPropertiesKanbansDetails = undefined;
         }
       },
-    });
-  }
-
-  private sortKanbanDetailsOrganizations(kanbanDetails: IKanbanDetails): void {
-    kanbanDetails.kanbanStages.forEach((stage) => {
-      stage.kanbanOrganizations.forEach((kanbanOrg) => {
-        if (kanbanOrg.Organization) {
-          kanbanOrg.Organization.sort((a, b) => {
-            const nameA = a.OrganizationName
-              ? a.OrganizationName.toLowerCase()
-              : '';
-            const nameB = b.OrganizationName
-              ? b.OrganizationName.toLowerCase()
-              : '';
-            return nameA.localeCompare(nameB);
-          });
-        }
-      });
-    });
-  }
-
-  private sortKanbanDetailsCenters(kanbanDetails: IKanbanDetails): void {
-    kanbanDetails.kanbanStages.forEach((stage) => {
-      stage.kanbanOrganizations.forEach((kanbanOrg) => {
-        if (kanbanOrg.Organization) {
-          kanbanOrg.Organization.forEach((org) => {
-            if (org.ShoppingCenters) {
-              org.ShoppingCenters.sort((a, b) => {
-                const centerA = a.CenterName ? a.CenterName.toLowerCase() : '';
-                const centerB = b.CenterName ? b.CenterName.toLowerCase() : '';
-                return centerA.localeCompare(centerB);
-              });
-            }
-          });
-        }
-      });
     });
   }
 
@@ -344,29 +211,18 @@ export class KanbanComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const organization = {
-      ...sourceStage.kanbanOrganizations[dragData.orgIndex],
-    };
+    const org = sourceStage.StageOrganizations?.[dragData.orgIndex];
+    if (org) {
+      const organization: StageOrganization = { ...org };
+      sourceStage.StageOrganizations?.splice(dragData.orgIndex, 1);
 
-    organization.kanbanStageId = targetStageNumId;
+      if (!targetStage.StageOrganizations) {
+        targetStage.StageOrganizations = [];
+      }
+      targetStage.StageOrganizations?.push(organization);
 
-    sourceStage.kanbanOrganizations.splice(dragData.orgIndex, 1);
-
-    targetStage.kanbanOrganizations.push(organization);
-
-    this.updateOrganizationStage(targetStageNumId, organization);
-  }
-
-  private findStageById(stageId: number): KanbanStage | null {
-    if (!this.activeKanbanDetails || !this.activeKanbanDetails.kanbanStages) {
-      return null;
+      this.updateOrganizationStage(targetStageNumId, org.kanbanOrganizationid);
     }
-
-    return (
-      this.activeKanbanDetails.kanbanStages.find(
-        (stage) => stage.Id === stageId
-      ) || null
-    );
   }
 
   private moveShoppingCenter(
@@ -385,43 +241,47 @@ export class KanbanComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const sourceOrgContainer =
-      sourceStage.kanbanOrganizations[dragData.orgIndex];
-    if (!sourceOrgContainer) {
-      console.error('Could not find source organization container');
+    if (dragData.orgIndex === -1) {
+      console.error('Could not find organization in source stage');
       return;
     }
 
-    const center = dragData.value as ShoppingCenter;
+    const org = sourceStage.StageListings?.[dragData.orgIndex];
+    if (org) {
+      const organization: StageListing = { ...org };
+      sourceStage.StageListings?.splice(dragData.orgIndex, 1);
 
-    const newOrg: Organization = {
-      ...sourceOrgContainer.Organization[0],
-      ShoppingCenters: [center],
-    };
+      if (!targetStage.StageListings) {
+        targetStage.StageListings = [];
+      }
+      targetStage.StageListings?.push(organization);
 
-    const sourceOrg = sourceOrgContainer.Organization[0];
-    sourceOrg.ShoppingCenters.splice(dragData.centerIndex!, 1);
-
-    const newOrgContainer: KanbanOrganization = {
-      Organization: [newOrg],
-      kanbanStageId: targetStageNumId,
-    };
-
-    targetStage.kanbanOrganizations.push(newOrgContainer);
-
-    this.updatePropertyStage(targetStageNumId, center);
+      this.updatePropertyStage(
+        targetStageNumId,
+        org.MarketSurveyShoppingCenterId
+      );
+    }
   }
 
-  private updateOrganizationStage(
-    stageId: number,
-    organization: KanbanOrganization
-  ) {
+  private findStageById(stageId: number): KanbanStage | null {
+    if (!this.activeKanbanDetails || !this.activeKanbanDetails.kanbanStages) {
+      return null;
+    }
+
+    return (
+      this.activeKanbanDetails.kanbanStages.find(
+        (stage) => stage.StageId === stageId
+      ) || null
+    );
+  }
+
+  private updateOrganizationStage(stageId: number, organizationId: number) {
     this.spinner.show();
     const body: any = {
       name: 'UpdateKanbanOrganizationStage',
       params: {
         StageId: stageId,
-        kanbanOrganizationId: organization.Id,
+        kanbanOrganizationId: organizationId,
       },
     };
 
@@ -432,13 +292,13 @@ export class KanbanComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updatePropertyStage(stageId: number, property: ShoppingCenter) {
+  private updatePropertyStage(stageId: number, marketSurveyId: number) {
     this.spinner.show();
     const body: any = {
       name: 'UpdatePlaceKanbanStage',
       params: {
         stageid: stageId,
-        marketsurveyid: property.MarketSurveyShoppingCenters[0].MarketSurveyId,
+        marketsurveyid: marketSurveyId,
       },
     };
 
@@ -469,49 +329,14 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   getKanban(kanbanId: number) {
     this.kanbanDetails = undefined;
-    // this.userTenantsKanbansDetails = undefined;
-    // this.userBuyBoxesKanbansDetails = undefined;
-    // this.userBuyBoxesPropertiesKanbansDetails = undefined;
 
-    // this.selectedKanban = kanban;
     this.selectedKanbanId = kanbanId;
 
     this.getKanbanDetails();
   }
 
-  // onKanbanTabSelected(tabId: number): void {
-  //   this.removeIdFromUrl();
-  //   this.selectedKanbanTabId = tabId;
-  //   switch (tabId) {
-  //     case 1: {
-  //       const kanban = this.userTenantsKanbans[0];
-  //       if (kanban) {
-  //         this.getKanban(kanban);
-  //       }
-  //       break;
-  //     }
-  //     case 2: {
-  //       const kanban = this.userBuyBoxesKanbans[0];
-  //       if (kanban) {
-  //         this.getKanban(kanban);
-  //       }
-  //       break;
-  //     }
-  //     case 3: {
-  //       const kanban = this.userBuyBoxesPropertiesKanbans[0];
-  //       if (kanban) {
-  //         this.getKanban(kanban);
-  //       }
-  //       break;
-  //     }
-  //   }
-  // }
-
-  onDrop(event: CdkDragDrop<KanbanOrganization[]>) {
+  onDrop(event: CdkDragDrop<StageOrganization[] | StageListing[]>) {
     const dragData: KanbanDragingData = event.item.data;
-
-    const targetStageId = parseInt(event.container.id.replace('stage-', ''));
-
     if (event.previousContainer === event.container) {
     } else {
       if (dragData.type === 'organization') {
@@ -534,33 +359,16 @@ export class KanbanComponent implements OnInit, OnDestroy {
     if (this.allUserKanbans && this.allUserKanbans.length > 0) {
       return this.allUserKanbans;
     }
-    // if (this.selectedKanbanTabId == 2) {
-    //   return this.userBuyBoxesKanbans;
-    // } else if (this.selectedKanbanTabId == 3) {
-    //   return this.userBuyBoxesPropertiesKanbans;
-    // }
+
     return [];
   }
 
   get activeKanbanDetails() {
     return this.kanbanDetails!;
-    // if (this.selectedKanbanTabId == 2) {
-    //   return this.userBuyBoxesKanbansDetails!;
-    // } else if (this.selectedKanbanTabId == 3) {
-    //   return this.userBuyBoxesPropertiesKanbansDetails!;
-    // }
-    // return this.userTenantsKanbansDetails!;
   }
 
   set activeKanbanDetails(value: IKanbanDetails) {
     this.kanbanDetails = value;
-    // if (this.selectedKanbanTabId === 2) {
-    //   this.userBuyBoxesKanbansDetails = value;
-    // } else if (this.selectedKanbanTabId === 3) {
-    //   this.userBuyBoxesPropertiesKanbansDetails = value;
-    // } else {
-    //   this.userTenantsKanbansDetails = value;
-    // }
   }
 
   removeIdFromUrl() {
@@ -584,7 +392,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
         scrollable: true,
         size: 'xl',
       });
-      // modalRef.componentInstance.action = action; // Passing action as input
     }
   }
 

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PlacesService } from 'src/app/shared/services/places.service';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 import {
   Organization,
   RetailRelation,
 } from 'src/app/shared/models/buyboxShoppingCenter';
-
+PlacesService
 @Component({
   selector: 'app-buybox-relatios',
   templateUrl: './buybox-relatios.component.html',

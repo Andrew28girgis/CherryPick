@@ -10,18 +10,16 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from 'src/app/shared/services/places.service';
 import { General } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { MapsService } from 'src/app/shared/services/maps.service';
 import { Center, Place } from 'src/app/shared/models/shoppingCenters';
-import { StateService } from '../../../../shared/services/state.service';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { ShareOrg } from 'src/app/shared/models/shareOrg';
-
+import { PlacesService } from 'src/app/core/services/services/places.service';
+import { MapsService } from 'src/app/core/services/services/maps.service';
+import { StateService } from 'src/app/core/services/services/state.service';
 declare const google: any;
-
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',

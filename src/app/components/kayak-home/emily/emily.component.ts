@@ -8,12 +8,10 @@ import {
 import { RelationNames } from 'src/app/shared/models/emailGenerate';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlacesService } from 'src/app/shared/services/places.service';
 import { Center } from 'src/app/shared/models/shoppingCenters';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganizationsForEmail';
 import { EditorModule } from 'primeng/editor';
-
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -22,6 +20,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Location } from '@angular/common';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-emily',

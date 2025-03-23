@@ -6,19 +6,17 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MapsService } from 'src/app/shared/services/maps.service';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Polygon } from 'src/app/shared/models/polygons';
 import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
+import { PlacesService } from 'src/app/core/services/services/places.service';
+import { MapsService } from 'src/app/core/services/services/maps.service';
 declare const google: any;
-
 @Component({
   selector: 'app-side-list-view',
   templateUrl: './side-list-view.component.html',

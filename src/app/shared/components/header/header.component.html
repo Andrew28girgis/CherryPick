@@ -1,0 +1,143 @@
+<nav class="navbar navbar-expand-lg d-flex align-items-center w-100">
+  <!-- Left Section (Logo) -->
+  <div class="d-flex align-items-center">
+    <img
+      alt="logo"
+      class="cherry-logo"
+      [routerLink]="current.includes('landlord') ? ['/landlord'] : ['/summary']"
+      decoding="async"
+      src="../../../assets/Images/logo.png"
+    />
+  </div>
+
+  <!-- Right Section -->
+  <div class="d-flex ms-auto align-items-center">
+    <div class="d-block d-lg-none me-2" *ngIf="isSmallScreen">
+      <!-- <app-notifications></app-notifications> -->
+    </div>
+
+    <!-- Burger Button -->
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+      <i class="fa-solid fa-bars nav-icon"></i>
+    </button>
+  </div>
+
+  <!-- Collapsible Navbar Content -->
+  <div
+    class="collapse navbar-collapse text-center"
+    [ngClass]="{ show: isNavbarOpen }"
+    id="navbarNav"
+  >
+    <ul class="navbar-nav mx-auto gap-3">
+      <!-- <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <a
+          [routerLink]="['/dashboard']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Dashboard</a
+        >
+      </li> -->
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <a
+          [routerLink]="['/Submissions']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Submissions</a
+        >
+      </li>
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <a
+          [routerLink]="['/Kanban']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Cadence</a
+        >
+      </li>
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <a
+          [routerLink]="['/summary']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Tenants</a
+        >
+      </li>
+      <li class="nav-item" *ngIf="current.includes('landlord')">
+        <a
+          [routerLink]="['/landlord']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          >Properties</a
+        >
+      </li>
+      <li class="nav-item" *ngIf="currentView === 'tenant'">
+        <a
+          [routerLink]="['/EmilyUserInbox']"
+          class="nav-link"
+          routerLinkActive="active-route"
+          >Emily</a
+        >
+      </li>
+    </ul>
+
+    <!-- Action Icons -->
+    <div class="d-flex align-items-center justify-content-center">
+      <div
+        class="d-none d-lg-block"
+        *ngIf="!isSmallScreen && !current.includes('landlord')"
+      >
+        <!-- <app-notifications></app-notifications> -->
+      </div>
+      <!-- Avatar Dropdown -->
+      <div class="dropdown ms-2">
+        <div
+          class="avatar-container"
+          role="button"
+          id="userDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            *ngIf="userAvatar"
+            [src]="userAvatar"
+            alt="User Avatar"
+            class="rounded-circle avatar-img"
+          />
+          <div
+            *ngIf="!userAvatar"
+            class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
+          >
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="userDropdown"
+        >
+          <li>
+            <a
+              class="dropdown-item"
+              href="#"
+              (click)="switchView(); $event.preventDefault()"
+            >
+              Switch to
+              {{ current.includes("landlord") ? "Tenant" : "Landlord" }}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a
+              class="dropdown-item d-flex justify-content-between"
+              href="#"
+              (click)="logout(); $event.preventDefault()"
+            >
+              Logout
+              <i
+                class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+              ></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

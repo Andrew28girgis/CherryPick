@@ -11,13 +11,13 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { lastValueFrom, Subject, switchMap, takeUntil } from 'rxjs';
-import { MapDrawingService } from 'src/app/shared/services/map-drawing.service';
-import { PolygonsControllerService } from 'src/app/shared/services/polygons-controller.service';
-import { StateService } from 'src/app/shared/services/state.service';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IPolygon } from 'src/app/shared/models/ipolygons-controller';
 import { IProperty } from 'src/app/shared/models/iproperty';
 import { Router } from '@angular/router';
+import { MapDrawingService } from 'src/app/core/services/services/map-drawing.service';
+import { StateService } from 'src/app/core/services/services/state.service';
+import { PolygonsControllerService } from 'src/app/core/services/services/polygons-controller.service';
 
 @Component({
   selector: 'app-polygons-controller',
