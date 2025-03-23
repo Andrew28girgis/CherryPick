@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MicrosoftMailsService } from 'src/app/shared/services/microsoft-mails.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MicrosoftMailsService } from 'src/app/core/services/services/microsoft-mails.service';
 
 @Component({
   selector: 'app-my-inbox-email-list',

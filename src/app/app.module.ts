@@ -11,13 +11,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Components & Directives
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
-import { LandingComponent } from './components/landing/landing.component';
-import { SummeryComponent } from './components/summery/summery.component';
+import { LoginComponent } from './features/login/login.component';
+import { HomeComponent } from './features/home/home.component';
+import { LandingComponent } from './features/landing/landing.component';
+import { SummeryComponent } from './features/summery/summery.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
-import { LogoutComponent } from './components/logout/logout.component';
-import { TermsComponent } from './components/terms/terms.component';
+import { LogoutComponent } from './features/logout/logout.component';
+import { TermsComponent } from './features/terms/terms.component';
 import { NumberWithCommasPipe } from './shared/pipes/number-with-commas.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import {
@@ -44,10 +44,10 @@ import {
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 import { ManagePropertiesComponent } from './components/landlord/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
-import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-user-inbox.component';
+import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
+import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';

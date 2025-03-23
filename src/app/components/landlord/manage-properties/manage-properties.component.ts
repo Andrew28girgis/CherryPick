@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PlacesService } from 'src/app/shared/services/places.service';
+
 import {
   AvailabilityTenant,
   IFile,
@@ -25,6 +25,7 @@ import {
   PropertiesDetails,
   Tenant,
 } from 'src/app/shared/models/manage-prop-shoppingCenter';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-manage-properties',

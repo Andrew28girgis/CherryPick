@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, type Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
-import { LandingComponent } from './components/landing/landing.component';
-import { SummeryComponent } from './components/summery/summery.component';
-import { AuthGuardService } from './shared/services/auth-guard.service';
-import { KanbanComponent } from './components/kanban/kanban.component';
-import { TermsComponent } from './components/terms/terms.component';
-import { TenantComponent } from './components/tenant/tenant.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
-
+import { LoginComponent } from './features/login/login.component';
+import { HomeComponent } from './features/home/home.component';
+import { LandingComponent } from './features/landing/landing.component';
+import { SummeryComponent } from './features/summery/summery.component';
+ import { KanbanComponent } from './components/kanban/kanban.component';
+import { TermsComponent } from './features/terms/terms.component';
+import { TenantComponent } from './features/tenant/tenant.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
 // Import the route guards
-import { LandlordAccessGuard } from './shared/guards/landlord-access.guard';
-import { TenantOnlyGuard } from './shared/guards/tenant-only.guard';
-import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-user-inbox.component';
-import { SubmissionsComponent } from './components/Submissions/logs.component';
+import { LandlordAccessGuard } from './core/services/guards/landlord-access.guard';
+import { TenantOnlyGuard } from './core/services/guards/tenant-only.guard';
+import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
+import { SubmissionsComponent } from './features/Submissions/logs.component';
+import { AuthService } from './core/services/services/auth.service';
+import { AuthGuardService } from './core/services/services/auth-guard.service';
 
 const routes: Routes = [
   // Public routes - accessible to everyone

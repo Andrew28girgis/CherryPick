@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { PlacesService } from '../../../shared/services/places.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-buybox-details',
