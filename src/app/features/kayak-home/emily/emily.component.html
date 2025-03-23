@@ -40,7 +40,7 @@
                             let shoppingCenter of contact.Centers;
                             let i = index
                           " class="pt-2">
-                          <p class="Contact_headD pt-2 row align-items-center cursor m-0">
+                          <p class="Contact_headD pt-2 d-flex justify-content-between align-items-center cursor m-0">
                             <input type="checkbox" [name]="'shoppingCenter' + shoppingCenter.id"
                               [id]="shoppingCenter.id" class="m-0 p-0 form-check-input col-1 cursor"
                               [(ngModel)]="shoppingCenter.selected" (ngModelChange)="
@@ -244,12 +244,12 @@
                     <div class="col-12 col-sm-6 checkbox-section-select checkbox_ISCC pb-2 gap-4"
                       *ngIf="!emailBodyReply">
                       <div class="checkbox-section align-items-center">
-                        <input type="checkbox" name="IsCC" (change)="onISCCChange($event)" id="IsCC"
+                        <input type="checkbox" [(ngModel)]="isISCcSelected" name="IsCC" (change)="onISCCChange($event)" id="IsCC"
                           class="form-check-input m-0" />
                         <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label>
                       </div>
                       <div class="checkbox-section align-items-center">
-                        <input type="checkbox" (change)="onIncludeLandingChange($event)" name="includinglandingpage"
+                        <input type="checkbox" [(ngModel)]="isLandingSelected" (change)="onIncludeLandingChange($event)" name="includinglandingpage"
                           id="includinglandingpage" class="form-check-input m-0" />
                         <label for="includinglandingpage" class="ms-2 IsCC_checkbox">Is including landing page</label>
                       </div>
@@ -285,47 +285,49 @@
               <ng-container *ngIf="!emailBodyReply">
                 <!-- API Response View  Generated Email-->
                 <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
-                  <div class="form-group mt-4" *ngIf="emailSubject || emailBodyResponse">
-                    <div class="card shadow-sm border-0">
-                      <div class="card-header text-white GeneratedEmail">
-                        <h5 class="mb-0">Generated Email</h5>
-                      </div>
-                      <div class="card-body bg-light">
-                        <div class="mb-3">
-                          <div class="d-flex justify-content-between align-items-center">
-                            <label class="fw-bold text-secondary">Email Subject:</label>
-                            <span (click)="copyEmailSubject()" class="copy-icon-container">
-                              <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
-                              <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
-                            </span>
-                          </div>
-                          <div class="p-3 border rounded bg-white text-dark">
-                            <textarea [innerHTML]="emailSubject" rows="1" class="form-control"></textarea>
-                          </div>
+                  <ng-container  *ngIf="GenerateEmailall">
+                    <div class="form-group mt-4" *ngFor="let item of GenerateEmailall">
+                      <div class="card shadow-sm border-0">
+                        <div class="card-header text-white GeneratedEmail">
+                          <h5 class="mb-0">Generated Email</h5>
                         </div>
-                        <div>
-                          <div class="d-flex justify-content-between align-items-center">
-                            <label class="fw-bold text-secondary">Email Body:</label>
-                            <span (click)="copyEmailBody()" class="copy-icon-container">
-                              <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
-                              <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
-                            </span>
+                        <div class="card-body bg-light">
+                          <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <label class="fw-bold text-secondary">Email Subject:</label>
+                              <span (click)="copyEmailSubject()" class="copy-icon-container">
+                                <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
+                                <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
+                              </span>
+                            </div>
+                            <div class="p-3 border rounded bg-white text-dark">
+                              <textarea [innerHTML]="item.emailSubject" rows="1" class="form-control"></textarea>
+                            </div>
                           </div>
-                          <div class="p-3 border rounded bg-white text-dark">
-                            <p [innerHTML]="emailBodyResponse" class="m-0"></p>
-                          </div>
-                          <div class="d-flex justify-content-end gap-2">
-                            <button class="btn btn-success mt-3" (click)="SaveTemplate()">
-                              Save
-                            </button>
-                            <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">
-                              Save and Send
-                            </button>
+                          <div>
+                            <div class="d-flex justify-content-between align-items-center">
+                              <label class="fw-bold text-secondary">Email Body:</label>
+                              <span (click)="copyEmailBody()" class="copy-icon-container">
+                                <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
+                                <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
+                              </span>
+                            </div>
+                            <div class="p-3 border rounded bg-white text-dark">
+                              <p [innerHTML]="item.emailBody" class="m-0"></p>
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                              <button class="btn btn-success mt-3" (click)="SaveTemplate()">
+                                Save
+                              </button>
+                              <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">
+                                Save and Send
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </ng-container>
                 </div>
                 <div *ngIf="
                   CheckGetSavedTemplates && CheckGetSavedTemplates.length > 0
@@ -410,7 +412,7 @@
                         <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label>
                       </div>
                       <div class="checkbox-section align-items-center">
-                        <input type="checkbox" (change)="onIncludeLandingChange($event)" name="includinglanding"
+                        <input type="checkbox" formControlName="includinglanding" (change)="onIncludeLandingChange($event)" name="includinglanding"
                           id="includinglanding" class="form-check-input m-0" />
                         <label for="includinglanding" class="ms-2 IsCC_checkbox">Is including landing page</label>
                       </div>

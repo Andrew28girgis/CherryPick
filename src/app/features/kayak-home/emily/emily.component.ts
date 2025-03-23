@@ -129,6 +129,7 @@ export class EmilyComponent implements OnInit {
   contactIdemail: any;
   isLandingSelected: boolean = false;
   isISCcSelected: boolean = false;
+  GenerateEmailall:any;
 
   constructor(
     private route: ActivatedRoute,
@@ -163,6 +164,7 @@ export class EmilyComponent implements OnInit {
       body: new FormControl(''),
       subject: new FormControl(''),
       IsCC: new FormControl(false),
+      includinglanding: new FormControl(false), 
     });
 
     this.GetBuyBoxInfo();
@@ -450,7 +452,7 @@ export class EmilyComponent implements OnInit {
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {},
+      next: (response: any) => { },
     });
   }
 
@@ -948,18 +950,23 @@ export class EmilyComponent implements OnInit {
 
     const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact;
 
+    const countSelectedContacts = this.selectedContact.length;
     if (selectedContacts?.length > 0) {
       this.selectedContact = [];
       emailContent += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
+      if(this.isISCcSelected == false){
+        emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
+      }
+
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
         if (contact.selected && contact?.Centers?.length > 0) {
-          if(this.isISCcSelected === false){
-            emailContent += `- Name: #name#\n `;
-            this.selectedContact.push(contact.id);
-          }else{
-            emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
-            this.selectedContact.push(contact.id);
-          }
+          // if (this.isISCcSelected === false) {
+          //   emailContent += `- Name: #name#\n `;
+          //   this.selectedContact.push(contact.id);
+          // } else {
+          emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
+          this.selectedContact.push(contact.id);
+          // }
         }
         contact.Centers?.forEach((sp) => {
           if (sp.selected) {
@@ -1154,40 +1161,50 @@ export class EmilyComponent implements OnInit {
 
   GenerateEmail() {
     this.spinner.show();
-  
+
     this.updateEmailBody();
     if (!this.selectedPromptId || !this.emailBody) {
       this.showToast('Please select a prompt to Generate.');
       this.spinner.hide();
       return;
     }
-
-    const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
-    let landingSnippet = "";
-    if (this.isLandingSelected) {      
-      landingSnippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+    if (this.emailBodyReply) {
+      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+      var landingSnippet = "";
+      if (this.isLandingSelected) {
+        landingSnippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+      }
+    } else {
+      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
+      landingSnippet = "";
+      if (this.isLandingSelected) {
+        landingSnippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+      }
     }
-  
+
     const promptId = Number(this.selectedPromptId);
     const context = this.emailBody;
-    if(this.emailBodyReply){
+    if (this.emailBodyReply) {
       var OrganizaitonsId = [this.orgIdReply];
-    }else{
-     OrganizaitonsId = [Number(this.orgId)];
+    } else {
+      OrganizaitonsId = [Number(this.orgId)];
     }
-    if(this.emailBodyReply){
-    var IsCC = this.formGroup.get('IsCC')?.value;
-    }else{
+    if (this.emailBodyReply) {
+      var IsCC = this.formGroup.get('IsCC')?.value;
+    } else {
       IsCC = this.isISCcSelected;
     }
-    
-    
-    this.PlacesService.generateEmail(promptId, context ,OrganizaitonsId ,IsCC ).subscribe({
+
+
+    this.PlacesService.generateEmail(promptId, context, OrganizaitonsId, IsCC).subscribe({
       next: (data: any) => {
+        // console.log(data);
+        this.GenerateEmailall= data;
+        
         this.emailSubject = data?.emailSubject || 'No subject received';
         let generatedBody = data?.emailBody || '';
-        
-        
+
+
         this.emailBodyResponse = generatedBody;
 
         if (this.isLandingSelected) {
@@ -1199,7 +1216,6 @@ export class EmilyComponent implements OnInit {
       },
     });
   }
-  
 
   UpdateEmailTemplate(email: any) {
     const body = {
@@ -1424,8 +1440,10 @@ export class EmilyComponent implements OnInit {
     });
     this.emailBody = '';
     this.groupedActivityTypes = [];
-    // this.isISCcSelected = false;
-    // this.isLandingSelected = false;
+    this.isISCcSelected = false;
+    this.isLandingSelected = false;
+    this.formGroup.get('IsCC')?.setValue(false);
+    this.formGroup.get('includinglanding')?.setValue(false);
   }
 
   showToast(message: string) {
@@ -1473,33 +1491,36 @@ export class EmilyComponent implements OnInit {
 
   onIncludeLandingChange(event: any): void {
     this.isLandingSelected = event.target.checked;
-    const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
-    
-    if(this.emailBodyReply){
-    if (!this.emailBodyResponse) {
-      this.emailBodyResponse = "";
-    }
-    
-    if (event.target.checked) {
-      if (!this.emailBodyResponse.includes(landingLink)) {
-        this.emailBodyResponse += `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+
+    if (this.emailBodyReply) {
+      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+
+      if (!this.emailBodyResponse) {
+        this.emailBodyResponse = "";
+      }
+
+      if (event.target.checked) {
+        if (!this.emailBodyResponse.includes(landingLink)) {
+          this.emailBodyResponse += `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+        }
+      } else {
+        const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+        this.emailBodyResponse = this.emailBodyResponse.replace(snippet, '');
       }
     } else {
-      const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
-      this.emailBodyResponse = this.emailBodyResponse.replace(snippet, '');
-    }
-  }else{
-    if (!this.emailBody) {
-      this.emailBody = "";
-    }
-    if (event.target.checked) {
-      if (!this.emailBody.includes(landingLink)) {
-        this.emailBody += `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
+
+      if (!this.emailBody) {
+        this.emailBody = "";
       }
-    } else {
-      const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
-      this.emailBody = this.emailBody.replace(snippet, '');
-    }
+      if (event.target.checked) {
+        if (!this.emailBody.includes(landingLink)) {
+          this.emailBody += `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+        }
+      } else {
+        const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+        this.emailBody = this.emailBody.replace(snippet, '');
+      }
     }
   }
 
