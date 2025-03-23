@@ -100,7 +100,7 @@ const routes: Routes = [
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName',
     loadChildren: () =>
-      import('./components/kayak-home/kayak.module').then((m) => m.KayakModule),
+      import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
 ];

@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Contact, EmailInfo, Mail } from 'src/app/shared/models/buy-box-emails';
- import { NgxSpinnerService } from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
+import { EmailInfo } from 'src/app/shared/models/buy-box-emails';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/core/services/places.service';
- 
+
 @Component({
   selector: 'app-emily-user-inbox',
   templateUrl: './emily-user-inbox.component.html',

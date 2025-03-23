@@ -31,7 +31,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { KayakModule } from './components/kayak-home/kayak.module';
+
 import { SharedModule } from './shared/shared.module';
 import {
   MsalModule,
@@ -51,6 +51,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { ManagePropertiesComponent } from './features/landlord/manage-properties/manage-properties.component';
 import { KanbanComponent } from './features/kanban/kanban.component';
+import { KayakModule } from './features/kayak-home/kayak.module';
 
 const msalConfig = {
   auth: {
