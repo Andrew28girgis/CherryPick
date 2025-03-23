@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { StateCity } from 'src/app/shared/models/buyboxShoppingCenter';
 import { ActivatedRoute } from '@angular/router';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 export interface ApiParam {
   id?: number;

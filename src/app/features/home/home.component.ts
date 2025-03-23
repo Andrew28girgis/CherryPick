@@ -22,10 +22,10 @@ import { Polygon } from '../../shared/models/polygons';
 import { ShareOrg } from '../../shared/models/shareOrg';
 import { permission } from '../../shared/models/permission';
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
-import { MapsService } from 'src/app/core/services/services/maps.service';
-import { AuthService } from 'src/app/core/services/services/auth.service';
-import { StateService } from 'src/app/core/services/services/state.service';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { MapsService } from 'src/app/core/services/maps.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { StateService } from 'src/app/core/services/state.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-home',

@@ -3,9 +3,9 @@ import { Component, NgZone, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { PlacesService } from 'src/app/core/services/services/places.service';
-import { MicrosoftMailsService } from 'src/app/core/services/services/microsoft-mails.service';
-import { MicrosoftLoginService } from 'src/app/core/services/services/microsoft-login.service';
+import { PlacesService } from 'src/app/core/services/places.service';
+import { MicrosoftMailsService } from 'src/app/core/services/microsoft-mails.service';
+import { MicrosoftLoginService } from 'src/app/core/services/microsoft-login.service';
 @Component({
   selector: 'app-link-microsoft',
   standalone: true,

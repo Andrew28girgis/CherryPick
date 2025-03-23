@@ -25,7 +25,7 @@ import {
   PropertiesDetails,
   Tenant,
 } from 'src/app/shared/models/manage-prop-shoppingCenter';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-manage-properties',

@@ -14,7 +14,7 @@ import { BuyboxOrg } from 'src/app/shared/models/buyboxOrg';
 import { OrgBranch } from 'src/app/shared/models/branches';
 import { permission } from 'src/app/shared/models/permission';
 import { Enriche } from 'src/app/shared/models/enriche';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-landing',

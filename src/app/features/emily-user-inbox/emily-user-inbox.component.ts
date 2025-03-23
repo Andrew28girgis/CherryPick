@@ -4,7 +4,7 @@ import { Contact, EmailInfo, Mail } from 'src/app/shared/models/buy-box-emails';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { PlacesService } from 'src/app/core/services/places.service';
  
 @Component({
   selector: 'app-emily-user-inbox',

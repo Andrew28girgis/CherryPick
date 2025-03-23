@@ -16,8 +16,8 @@ import { ShareOrg } from 'src/app/shared/models/shareOrg';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Subscription } from 'rxjs';
-import { StateService } from 'src/app/core/services/services/state.service';
-import { ViewManagerService } from 'src/app/core/services/services/view-manager.service';
+import { StateService } from 'src/app/core/services/state.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 
 @Component({
   selector: 'app-card-view',

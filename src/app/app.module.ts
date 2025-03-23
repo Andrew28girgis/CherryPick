@@ -34,7 +34,6 @@ import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { KayakModule } from './components/kayak-home/kayak.module';
 import { SharedModule } from './shared/shared.module';
-import { TokenInterceptor } from './token.interceptor';
 import {
   MsalModule,
   MsalService,
@@ -51,6 +50,7 @@ import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { TokenInterceptor } from './core/interceptors/token.interceptor';
 
 const msalConfig = {
   auth: {

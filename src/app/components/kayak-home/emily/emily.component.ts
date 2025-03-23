@@ -20,7 +20,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Location } from '@angular/common';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-emily',

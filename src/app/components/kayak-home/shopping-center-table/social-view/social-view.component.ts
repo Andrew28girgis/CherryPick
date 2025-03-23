@@ -24,9 +24,9 @@ import { NgForm } from '@angular/forms';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { General } from 'src/app/shared/models/domain';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { StateService } from 'src/app/core/services/services/state.service';
-import { ViewManagerService } from 'src/app/core/services/services/view-manager.service';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { StateService } from 'src/app/core/services/state.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 declare const google: any;
 @Component({
   selector: 'app-social-view',

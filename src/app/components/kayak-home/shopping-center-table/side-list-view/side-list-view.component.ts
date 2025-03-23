@@ -14,8 +14,8 @@ import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Polygon } from 'src/app/shared/models/polygons';
 import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { PlacesService } from 'src/app/core/services/services/places.service';
-import { MapsService } from 'src/app/core/services/services/maps.service';
+import { PlacesService } from 'src/app/core/services/places.service';
+import { MapsService } from 'src/app/core/services/maps.service';
 declare const google: any;
 @Component({
   selector: 'app-side-list-view',

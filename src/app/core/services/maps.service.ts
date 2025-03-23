@@ -3,9 +3,9 @@ import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 declare const google: any;
 import { Router } from '@angular/router';
 import { permission } from 'src/app/shared/models/permission';
-import { StateService } from './state.service';
 import { PlacesService } from './places.service';
- 
+import { StateService } from './state.service';
+
 @Injectable({
   providedIn: 'root',
 })

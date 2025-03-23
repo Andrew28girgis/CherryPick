@@ -24,9 +24,9 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Center } from '../../../shared/models/shoppingCenters';
 import { finalize, Observable, of, switchMap, tap } from 'rxjs';
-import { PlacesService } from 'src/app/core/services/services/places.service';
-import { MapsService } from 'src/app/core/services/services/maps.service';
-import { StateService } from 'src/app/core/services/services/state.service';
+import { PlacesService } from 'src/app/core/services/places.service';
+import { MapsService } from 'src/app/core/services/maps.service';
+import { StateService } from 'src/app/core/services/state.service';
 
 declare const google: any;
 

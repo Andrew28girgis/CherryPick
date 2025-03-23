@@ -10,12 +10,12 @@ import { TenantComponent } from './features/tenant/tenant.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
 // Import the route guards
-import { LandlordAccessGuard } from './core/services/guards/landlord-access.guard';
-import { TenantOnlyGuard } from './core/services/guards/tenant-only.guard';
+import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
+import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
 import { SubmissionsComponent } from './features/Submissions/logs.component';
-import { AuthService } from './core/services/services/auth.service';
-import { AuthGuardService } from './core/services/services/auth-guard.service';
+import { AuthService } from './core/services/auth.service';
+import { AuthGuardService } from './core/services/auth-guard.service';
 
 const routes: Routes = [
   // Public routes - accessible to everyone

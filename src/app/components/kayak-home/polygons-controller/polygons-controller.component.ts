@@ -15,9 +15,9 @@ import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IPolygon } from 'src/app/shared/models/ipolygons-controller';
 import { IProperty } from 'src/app/shared/models/iproperty';
 import { Router } from '@angular/router';
-import { MapDrawingService } from 'src/app/core/services/services/map-drawing.service';
-import { StateService } from 'src/app/core/services/services/state.service';
-import { PolygonsControllerService } from 'src/app/core/services/services/polygons-controller.service';
+import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
+import { StateService } from 'src/app/core/services/state.service';
+import { PolygonsControllerService } from 'src/app/core/services/polygons-controller.service';
 
 @Component({
   selector: 'app-polygons-controller',

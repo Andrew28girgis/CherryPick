@@ -9,7 +9,7 @@ import {
 } from 'src/app/shared/models/buy-box-emails';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-emily-stages',
