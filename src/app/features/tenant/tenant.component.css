@@ -540,7 +540,9 @@
 .submit-button:hover {
   background: #4055a8;
 }
-
+.paddingsubmitpdf{
+  padding-right: 20px;
+}
 @media (max-width: 576px) {
   .content-right {
     position: absolute;
