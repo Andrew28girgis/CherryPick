@@ -31,7 +31,9 @@ export class TokenInterceptor implements HttpInterceptor {
 
     const headers = {
       Authorization: `Bearer ${token}`,
-      ...(request.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(request.body instanceof FormData
+        ? {}
+        : { 'Content-Type': 'application/json' }),
     };
     const authRequest = request.clone({
       setHeaders: headers,
@@ -41,9 +43,7 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   private shouldExclude(url: string): boolean {
-    const excludedUrls = [
-      'https://api.cherrypick.com/api/BuyBox/Login'
-    ];
+    const excludedUrls = ['https://api.cherrypick.com/api/BuyBox/Login'];
     return excludedUrls.some((excludedUrl) => url.startsWith(excludedUrl));
   }
 }

@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, type Routes } from '@angular/router';
 import { LoginComponent } from './features/login/login.component';
-import { HomeComponent } from './features/home/home.component';
-import { LandingComponent } from './features/landing/landing.component';
+import { LandingComponent } from './features/market-survey/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
 import { TermsComponent } from './features/terms/terms.component';
 import { TenantComponent } from './features/tenant/tenant.component';
@@ -15,6 +14,7 @@ import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-
 import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
+import { HomeComponent } from './features/market-survey/home/home.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },

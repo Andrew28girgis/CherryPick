@@ -6,7 +6,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
-ApiServiceService
+ApiServiceService;
 @Component({
   selector: 'app-add-tenants',
   templateUrl: './add-tenants.component.html',
@@ -28,11 +28,11 @@ export class AddTenantsComponent implements OnInit {
   siteDetailsForm!: FormGroup;
   Options: any[] = [
     { label: 'Yes', value: 1 },
-    { label: 'No', value: 0 }
+    { label: 'No', value: 0 },
   ];
   FloodZoneOptions: any[] = [
     { label: 'Zone X', value: 'Zone X' },
-    { label: 'Zone AE', value: 'Zone AE' }
+    { label: 'Zone AE', value: 'Zone AE' },
   ];
 
   constructor(
@@ -43,7 +43,7 @@ export class AddTenantsComponent implements OnInit {
     private PlacesService: PlacesService,
     private fb: FormBuilder,
     public activeModal: NgbModal
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -181,7 +181,8 @@ export class AddTenantsComponent implements OnInit {
       const formData = this.siteDetailsForm.value;
 
       this.siteDetailsForm.value.OrganizationId = this.selectedOrganizationId;
-      this.siteDetailsForm.value.ManagerOrganizationId = this.selectedManagerOrganizationId;
+      this.siteDetailsForm.value.ManagerOrganizationId =
+        this.selectedManagerOrganizationId;
 
       let body: any = {
         Name: 'CreateBuyBox',
@@ -192,7 +193,7 @@ export class AddTenantsComponent implements OnInit {
         next: (data) => {
           this.getUserBuyBoxes();
           this.spinner.hide();
-          nextCallback.emit()
+          nextCallback.emit();
           // const buyBox = data.json[0];
           // this.router.navigate(['/dashboard/', buyBox.id, buyBox.organizationId, buyBox.name]);
         },
@@ -208,12 +209,23 @@ export class AddTenantsComponent implements OnInit {
 
   validateAndProceed(nextCallback: any, StepNum: number) {
     if (StepNum == 1) {
-      const controlsToCheck = ['Name', 'OrganizationId', 'MinBuildingSize', 'MaxBuildingSize'];
+      const controlsToCheck = [
+        'Name',
+        'OrganizationId',
+        'MinBuildingSize',
+        'MaxBuildingSize',
+      ];
 
-      if (controlsToCheck.every(control => this.siteDetailsForm.get(control)?.valid)) {
+      if (
+        controlsToCheck.every(
+          (control) => this.siteDetailsForm.get(control)?.valid
+        )
+      ) {
         nextCallback.emit();
       } else {
-        controlsToCheck.forEach(control => this.siteDetailsForm.get(control)?.markAllAsTouched());
+        controlsToCheck.forEach((control) =>
+          this.siteDetailsForm.get(control)?.markAllAsTouched()
+        );
       }
     } else if (StepNum == 2) {
       nextCallback.emit();

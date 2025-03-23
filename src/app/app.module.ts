@@ -12,10 +12,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Components & Directives
 import { AppComponent } from './app.component';
 import { LoginComponent } from './features/login/login.component';
-import { HomeComponent } from './features/home/home.component';
-import { LandingComponent } from './features/landing/landing.component';
+import { LandingComponent } from './features/market-survey/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
-import { LogoutComponent } from './features/logout/logout.component';
+import { LogoutComponent } from './shared/components/logout/logout.component';
 import { TermsComponent } from './features/terms/terms.component';
 import { NumberWithCommasPipe } from './shared/pipes/number-with-commas.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -31,7 +30,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-
 import { SharedModule } from './shared/shared.module';
 import {
   MsalModule,
@@ -52,6 +50,7 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { ManagePropertiesComponent } from './features/landlord/manage-properties/manage-properties.component';
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { KayakModule } from './features/kayak-home/kayak.module';
+import { HomeComponent } from './features/market-survey/home/home.component';
 
 const msalConfig = {
   auth: {
