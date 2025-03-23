@@ -1,5 +1,4 @@
-
-.overfloww{
+.overfloww {
   overflow-x: hidden;
 }
 .background {
@@ -365,24 +364,68 @@
 }
 .space {
   margin-top: 20px;
-  padding: 0px 30px;
+  padding: 0px 20px;
 }
-.submitproposell{
-color: #000;
-font-family: Montserrat;
-font-size: 22px;
-font-style: normal;
-font-weight: 600;
-line-height: 24px; 
-}
-.filename{
-  padding: 10px 30px;
+.submitproposell {
   color: #000;
   font-family: Montserrat;
-  font-size: 25px;
+  font-size: 22px;
   font-style: normal;
   font-weight: 600;
-  line-height: 25px;
+  line-height: 24px;
+}
+.dropzonee {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.filename {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
+
+.uploaded-file-container {
+  padding: 5px 5px !important;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+.convertimages {
+  padding: 10px 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 16px;
+  background: #323849;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.clear-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--Colors-Primary-500, #4d65b4);
+  text-align: right;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.uploadingpadding{
+  padding: 0px 20px;
+}
+.extractedimagespadding{
+  padding: 0px 20px;
+
 }
 .outer-frame {
   display: flex;
@@ -391,20 +434,23 @@ line-height: 24px;
   align-items: center;
   gap: 10px;
   border-radius: 12px;
-  border: 1px solid #E2E4E9;
-  background: #FFF;
+  border: 1px solid #e2e4e9;
+  background: #fff;
   width: 100%;
 }
 .inner-frame {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   padding: 25px 0;
   gap: 8px;
   width: 100%;
   border-radius: 4px;
-  background: #EDF0F8;
+  background: #edf0f8;
+}
+.filenameinnerframe {
+  padding: 5px 5px;
+  gap: 8px;
+  width: 100%;
+  border-radius: 4px;
+  background: #edf0f8;
 }
 
 .upload-container {
@@ -416,7 +462,7 @@ line-height: 24px;
 }
 
 .upload-img {
-  width: 50px; 
+  width: 50px;
   height: auto;
 }
 
@@ -427,13 +473,13 @@ line-height: 24px;
 }
 .modal-footer {
   width: 100%;
-  padding: 5px 0px;
+  padding: 10px 0px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #FFF;
+  background: #fff;
 }
-.cursor{
+.cursor {
   cursor: pointer;
 }
 .cancel-button {
@@ -445,9 +491,9 @@ line-height: 24px;
   gap: 8px;
   flex: 1 0 0;
   border-radius: 16px;
-  border: 1px solid #4D65B4;
-  background: #FFF;
-  color: #4D65B4;
+  border: 1px solid #4d65b4;
+  background: #fff;
+  color: #4d65b4;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -463,8 +509,8 @@ line-height: 24px;
   gap: 8px;
   flex: 1 0 0;
   border-radius: 16px;
-  background: #4D65B4;
-  color: #FFF;
+  background: #4d65b4;
+  color: #fff;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -473,11 +519,11 @@ line-height: 24px;
 }
 
 .cancel-button:hover {
-  background: #F0F3FF;
+  background: #f0f3ff;
 }
 
 .submit-button:hover {
-  background: #4055A8; 
+  background: #4055a8;
 }
 
 @media (max-width: 576px) {
@@ -747,11 +793,11 @@ line-height: 24px;
 }
 
 @media (min-width: 768px) {
-  .content-right {
+  .content-right{
     position: absolute;
-    top: 45px;
-    right: 75px;
-  }
+    top: 27px;
+    right: 10px;
+}
   .custom-card {
     width: 320px;
     border-radius: var(--Card-Section-Lg-Radius, 20px);

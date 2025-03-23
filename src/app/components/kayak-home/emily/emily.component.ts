@@ -127,6 +127,8 @@ export class EmilyComponent implements OnInit {
   formGroup!: FormGroup;
   bodyemail: any;
   contactIdemail: any;
+  isLandingSelected: boolean = false;
+  isISCcSelected: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -1129,11 +1131,24 @@ export class EmilyComponent implements OnInit {
       emailContent += `Reply to this email`;
       emailContent += this.emailBodyReply;
     }
+    if (this.emailBodyReply) {
+      if (this.isLandingSelected) {
+        const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+        emailContent += `\nLanding page: <a href="${landingLink}">${landingLink}</a>`;
+      }
+    } else {
+      if (this.isLandingSelected) {
+        const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
+        emailContent += `\nLanding page: <a href="${landingLink}">${landingLink}</a>`;
+      }
+    }
+
     this.emailBody = emailContent;
   }
 
   GenerateEmail() {
     this.spinner.show();
+  
     this.updateEmailBody();
     if (!this.selectedPromptId || !this.emailBody) {
       this.showToast('Please select a prompt to Generate.');
@@ -1141,18 +1156,44 @@ export class EmilyComponent implements OnInit {
       return;
     }
 
+    const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+    let landingSnippet = "";
+    if (this.isLandingSelected) {      
+      landingSnippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+    }
+  
     const promptId = Number(this.selectedPromptId);
     const context = this.emailBody;
-    this.PlacesService.generateEmail(promptId, context).subscribe({
+    if(this.emailBodyReply){
+      var OrganizaitonsId = [this.orgIdReply];
+    }else{
+     OrganizaitonsId = [Number(this.orgId)];
+    }
+    if(this.emailBodyReply){
+    var IsCC = this.formGroup.get('IsCC')?.value;
+    }else{
+      IsCC = this.isISCcSelected;
+    }
+    
+    
+    this.PlacesService.generateEmail(promptId, context ,OrganizaitonsId ,IsCC ).subscribe({
       next: (data: any) => {
         this.emailSubject = data?.emailSubject || 'No subject received';
-        this.emailBodyResponse = data?.emailBody;
+        let generatedBody = data?.emailBody || '';
+        
+        
+        this.emailBodyResponse = generatedBody;
+
+        if (this.isLandingSelected) {
+          this.emailBodyResponse += landingSnippet;
+        }
 
         this.emailId = data?.id || 'No body received';
         this.spinner.hide();
       },
     });
   }
+  
 
   UpdateEmailTemplate(email: any) {
     const body = {
@@ -1420,6 +1461,44 @@ export class EmilyComponent implements OnInit {
         this.closeModal();
       },
     });
+  }
+
+  onIncludeLandingChange(event: any): void {
+    this.isLandingSelected = event.target.checked;
+    const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+    
+    if(this.emailBodyReply){
+    if (!this.emailBodyResponse) {
+      this.emailBodyResponse = "";
+    }
+    
+    if (event.target.checked) {
+      if (!this.emailBodyResponse.includes(landingLink)) {
+        this.emailBodyResponse += `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+      }
+    } else {
+      const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+      this.emailBodyResponse = this.emailBodyResponse.replace(snippet, '');
+    }
+  }else{
+    if (!this.emailBody) {
+      this.emailBody = "";
+    }
+    if (event.target.checked) {
+      if (!this.emailBody.includes(landingLink)) {
+        this.emailBody += `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+      }
+    } else {
+      const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+      this.emailBody = this.emailBody.replace(snippet, '');
+    }
+    }
+  }
+  onISCCChange(event: any): void {
+    this.isISCcSelected = event.target.checked;
+  }
+  onLandingChange(event: any): void {
+    this.isLandingSelected = event.target.checked;
   }
 
   back() {
