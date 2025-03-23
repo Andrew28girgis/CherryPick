@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
-import { PlacesService } from '../../shared/services/places.service';
 import { CommonModule } from '@angular/common';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-notifications',

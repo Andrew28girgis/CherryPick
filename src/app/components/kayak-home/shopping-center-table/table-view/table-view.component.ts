@@ -14,8 +14,8 @@ import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
 import { ShareOrg } from 'src/app/shared/models/shareOrg';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
-import { ViewManagerService } from 'src/app/shared/services/view-manager.service';
-import { StateService } from 'src/app/shared/services/state.service';
+import { StateService } from 'src/app/core/services/services/state.service';
+import { ViewManagerService } from 'src/app/core/services/services/view-manager.service';
 
 @Component({
   selector: 'app-table-view',

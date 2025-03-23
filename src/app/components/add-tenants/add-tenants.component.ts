@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
-import { ApiServiceService } from 'src/app/shared/services/api-service.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { PlacesService } from 'src/app/shared/services/places.service';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { PlacesService } from 'src/app/core/services/services/places.service';
+import { ApiServiceService } from 'src/app/core/services/services/api-service.service';
+ApiServiceService
 @Component({
   selector: 'app-add-tenants',
   templateUrl: './add-tenants.component.html',

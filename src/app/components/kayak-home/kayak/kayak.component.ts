@@ -4,18 +4,14 @@ import {
   TemplateRef,
   ChangeDetectorRef,
   ViewChild,
-  HostListener,
 } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from '../../../shared/services/places.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { KayakResult, StatesAndCities } from '../../../shared/models/kayak';
+import { StatesAndCities } from '../../../shared/models/kayak';
 import { General } from '../../../shared/models/domain';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MapsService } from '../../../shared/services/maps.service';
 import { HttpClient } from '@angular/common/http';
-
 import {
   FilterValues,
   KayakFilters,
@@ -26,9 +22,11 @@ import {
   TenantsCategories,
 } from '../../../shared/models/filters';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StateService } from '../../../shared/services/state.service';
 import { Center } from '../../../shared/models/shoppingCenters';
 import { finalize, Observable, of, switchMap, tap } from 'rxjs';
+import { PlacesService } from 'src/app/core/services/services/places.service';
+import { MapsService } from 'src/app/core/services/services/maps.service';
+import { StateService } from 'src/app/core/services/services/state.service';
 
 declare const google: any;
 

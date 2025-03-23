@@ -13,11 +13,11 @@ import { General } from 'src/app/shared/models/domain';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from 'src/app/shared/models/shoppingCenters';
 import { ShareOrg } from 'src/app/shared/models/shareOrg';
-import { ViewManagerService } from 'src/app/shared/services/view-manager.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Subscription } from 'rxjs';
-import { StateService } from 'src/app/shared/services/state.service';
+import { StateService } from 'src/app/core/services/services/state.service';
+import { ViewManagerService } from 'src/app/core/services/services/view-manager.service';
 
 @Component({
   selector: 'app-card-view',

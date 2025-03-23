@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
-import { PlacesService } from 'src/app/shared/services/places.service';
 import { IDashboardBuyBox } from 'src/app/shared/models/idashboard-buy-box';
 import { IDashboardTenant } from 'src/app/shared/models/idashboard-tenant';
 import { IUserComment } from 'src/app/shared/models/iuser-comment';
@@ -10,7 +9,8 @@ import { IUserInBox } from 'src/app/shared/models/iuser-in-box';
 import { IDashboardProperty } from 'src/app/shared/models/idashboard-property';
 import { IDashboardPolygons } from 'src/app/shared/models/idashboard-polygons';
 import { sharedColors } from 'src/app/shared/others/shared-colors';
-
+import { PlacesService } from 'src/app/core/services/services/places.service';
+ 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',

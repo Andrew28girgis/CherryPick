@@ -11,7 +11,6 @@ import {
 } from 'src/app/shared/models/manage-prop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
-import { PlacesService } from '../../shared/services/places.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -29,6 +28,8 @@ import {
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { PlacesService } from 'src/app/core/services/services/places.service';
+
 @Component({
   selector: 'app-tenant',
   standalone: true,

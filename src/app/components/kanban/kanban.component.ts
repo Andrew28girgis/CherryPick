@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/shared/services/places.service';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -20,6 +19,7 @@ import { Location } from '@angular/common';
 import { popupActions } from './kanban-actions/kanban-actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { sharedColors } from '../../shared/others/shared-colors';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-kanban',

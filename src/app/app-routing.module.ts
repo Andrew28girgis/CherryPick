@@ -4,18 +4,18 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { SummeryComponent } from './components/summery/summery.component';
-import { AuthGuardService } from './shared/services/auth-guard.service';
-import { KanbanComponent } from './components/kanban/kanban.component';
+ import { KanbanComponent } from './components/kanban/kanban.component';
 import { TermsComponent } from './components/terms/terms.component';
 import { TenantComponent } from './components/tenant/tenant.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
-
 // Import the route guards
-import { LandlordAccessGuard } from './shared/guards/landlord-access.guard';
-import { TenantOnlyGuard } from './shared/guards/tenant-only.guard';
+import { LandlordAccessGuard } from './core/services/guards/landlord-access.guard';
+import { TenantOnlyGuard } from './core/services/guards/tenant-only.guard';
 import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-user-inbox.component';
 import { SubmissionsComponent } from './components/Submissions/logs.component';
+import { AuthService } from './core/services/services/auth.service';
+import { AuthGuardService } from './core/services/services/auth-guard.service';
 
 const routes: Routes = [
   // Public routes - accessible to everyone

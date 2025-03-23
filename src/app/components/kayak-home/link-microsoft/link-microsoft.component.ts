@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, NgZone, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlacesService } from 'src/app/shared/services/places.service';
-import { MicrosoftMailsService } from 'src/app/shared/services/microsoft-mails.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { MicrosoftLoginService } from 'src/app/shared/services/microsoft-login.service';
-
+import { PlacesService } from 'src/app/core/services/services/places.service';
+import { MicrosoftMailsService } from 'src/app/core/services/services/microsoft-mails.service';
+import { MicrosoftLoginService } from 'src/app/core/services/services/microsoft-login.service';
 @Component({
   selector: 'app-link-microsoft',
   standalone: true,

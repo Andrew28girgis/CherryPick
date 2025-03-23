@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild, TemplateRef,HostListener } fro
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { SidbarService } from 'src/app/shared/services/sidbar.service';
-import { UserViewService } from 'src/app/shared/services/user-view.service';
+import { SidbarService } from 'src/app/core/services/services/sidbar.service';
+import { UserViewService } from 'src/app/core/services/services/user-view.service';
 
 @Component({
   selector: 'app-header',

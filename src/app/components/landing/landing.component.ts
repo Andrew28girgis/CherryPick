@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from 'src/app/shared/services/places.service';
 import { Fbo, General, Property } from 'src/app/shared/models/domain';
 import { Branch } from 'src/app/shared/models/branches';
-
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +14,7 @@ import { BuyboxOrg } from 'src/app/shared/models/buyboxOrg';
 import { OrgBranch } from 'src/app/shared/models/branches';
 import { permission } from 'src/app/shared/models/permission';
 import { Enriche } from 'src/app/shared/models/enriche';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-landing',

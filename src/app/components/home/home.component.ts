@@ -10,22 +10,22 @@ import {
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlacesService } from '../../shared/services/places.service';
 import { adminLogin, General } from '../../shared/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MapsService } from '../../shared/services/maps.service';
 import { BuyboxCategory } from '../../shared/models/buyboxCategory';
 import { Center, Reaction } from '../../shared/models/shoppingCenters';
 import { BbPlace } from '../../shared/models/buyboxPlaces';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Polygon } from '../../shared/models/polygons';
 import { ShareOrg } from '../../shared/models/shareOrg';
-import { StateService } from '../../shared/services/state.service';
 import { permission } from '../../shared/models/permission';
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
-import { AuthService } from 'src/app/shared/services/auth.service';
+import { MapsService } from 'src/app/core/services/services/maps.service';
+import { AuthService } from 'src/app/core/services/services/auth.service';
+import { StateService } from 'src/app/core/services/services/state.service';
+import { PlacesService } from 'src/app/core/services/services/places.service';
 
 @Component({
   selector: 'app-home',
