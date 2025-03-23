@@ -9,11 +9,11 @@ import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
  import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
-import { PlacesService } from 'src/app/core/services/services/places.service';
-import { ApiServiceService } from 'src/app/core/services/services/api-service.service';
-import { SidbarService } from 'src/app/core/services/services/sidbar.service';
-import { StateService } from 'src/app/core/services/services/state.service';
-import { PropertiesServiceService } from 'src/app/core/services/services/properties-service.service';
+import { PlacesService } from 'src/app/core/services/places.service';
+import { ApiServiceService } from 'src/app/core/services/api-service.service';
+import { SidbarService } from 'src/app/core/services/sidbar.service';
+import { StateService } from 'src/app/core/services/state.service';
+import { PropertiesServiceService } from 'src/app/core/services/properties-service.service';
 @Component({
   selector: 'app-summery',
   templateUrl: './summery.component.html',

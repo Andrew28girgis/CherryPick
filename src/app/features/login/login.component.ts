@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { General, adminLogin } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthService } from 'src/app/core/services/services/auth.service';
-import { PlacesService } from 'src/app/core/services/services/places.service';
-import { ConfigService } from 'src/app/core/services/services/config.service';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { PlacesService } from 'src/app/core/services/places.service';
+import { ConfigService } from 'src/app/core/services/config.service';
  
 
 @Component({

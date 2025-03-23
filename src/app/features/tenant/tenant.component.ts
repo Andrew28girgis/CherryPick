@@ -28,7 +28,7 @@ import {
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { PlacesService } from 'src/app/core/services/services/places.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-tenant',
