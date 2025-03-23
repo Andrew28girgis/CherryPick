@@ -953,8 +953,13 @@ export class EmilyComponent implements OnInit {
       emailContent += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
         if (contact.selected && contact?.Centers?.length > 0) {
-          emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
-          this.selectedContact.push(contact.id);
+          if(this.isISCcSelected === false){
+            emailContent += `- Name: #name#\n `;
+            this.selectedContact.push(contact.id);
+          }else{
+            emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
+            this.selectedContact.push(contact.id);
+          }
         }
         contact.Centers?.forEach((sp) => {
           if (sp.selected) {
@@ -1131,6 +1136,7 @@ export class EmilyComponent implements OnInit {
       emailContent += `Reply to this email`;
       emailContent += this.emailBodyReply;
     }
+
     if (this.emailBodyReply) {
       if (this.isLandingSelected) {
         const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
@@ -1418,6 +1424,8 @@ export class EmilyComponent implements OnInit {
     });
     this.emailBody = '';
     this.groupedActivityTypes = [];
+    // this.isISCcSelected = false;
+    // this.isLandingSelected = false;
   }
 
   showToast(message: string) {
@@ -1494,11 +1502,9 @@ export class EmilyComponent implements OnInit {
     }
     }
   }
+
   onISCCChange(event: any): void {
     this.isISCcSelected = event.target.checked;
-  }
-  onLandingChange(event: any): void {
-    this.isLandingSelected = event.target.checked;
   }
 
   back() {
