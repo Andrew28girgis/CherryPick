@@ -82,6 +82,7 @@ export class TenantComponent implements OnInit {
   lastnamemanagerorganization!: string;
   managementorganizationname!: string;
   ManagerOrganizationDescription!: any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -100,7 +101,7 @@ export class TenantComponent implements OnInit {
   }
 
   GetBuyBoxInfo(): void {
-    this.spinner.show(); // Show the spinner before the API request
+    this.spinner.show();
 
     const body: any = {
       Name: 'GetBuyBoxInfo',
@@ -113,12 +114,10 @@ export class TenantComponent implements OnInit {
       next: (res: any) => {
         this.TenantResult = res.json[0];
 
-        // Use destructuring to extract values from the API response
         const buyboxData = this.TenantResult.Buybox[0].BuyBoxOrganization[0];
         const managerOrganizationData =
           buyboxData.ManagerOrganization[0].ManagerOrganizationContacts[0];
 
-        // Assign the properties directly
         this.buyboxid = buyboxData.BuyBoxOrganizationId;
         this.buyboxDescription = buyboxData.BuyBoxOrganizationDescription;
         this.buyboxname = buyboxData.Name;
@@ -182,52 +181,44 @@ export class TenantComponent implements OnInit {
     }
     this.modalService.open(this.uploadPDF, { size: 'lg', centered: true });
   }
-  public uploadFile(files: NgxFileDropEntry[]) {
+  public uploadFile(files: NgxFileDropEntry[]): void {
     this.files = files;
     for (const droppedFile of files) {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-          const formData = new FormData();
-          formData.append('filename', file/*, file.name*/);
+          // Set the file name immediately
           this.fileName = file.name;
+
+          const formData = new FormData();
+          formData.append('filename', file);
           this.isUploading = true;
           this.uploadProgress = 0;
 
           const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
-          // const SERVER_URL = `http://10.0.0.15:8082/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
 
-          // Create a request with progress reporting enabled
           const req = new HttpRequest('POST', SERVER_URL, formData, {
-            reportProgress: true, // Enable progress tracking
+            reportProgress: true,
             responseType: 'json',
           });
 
           this.httpClient.request(req).subscribe(
             (event: any) => {
               if (event.type === HttpEventType.UploadProgress) {
-                // Calculate upload progress percentage
-                this.uploadProgress = Math.round(
-                  (100 * event.loaded) / event.total!
-                );
+                this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
                 if (this.uploadProgress === 100) {
-                  // Upload complete, switch to converting state
                   this.isUploading = false;
                   this.isConverting = true;
                 }
               } else if (event instanceof HttpResponse) {
-                // Conversion complete; extract images from the new API response structure
-
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map(
-                    (img: string, index: number) => ({
-                      name: `Image ${index + 1}`,
-                      type: 'image/png', // Adjust this if your images are of a different type
-                      content: img,
-                      selected: false,
-                    })
-                  );
+                  this.images = response.images.map((img: string, index: number) => ({
+                    name: `Image ${index + 1}`,
+                    type: 'image/png',
+                    content: img,
+                    selected: false,
+                  }));
                   this.pdfFileName = response.pdfFileName;
                 }
                 this.isConverting = false;
@@ -240,6 +231,8 @@ export class TenantComponent implements OnInit {
               this.isConverting = false;
               this.spinner.hide();
               this.showToast('Failed to upload or convert PDF file!');
+              // Reset fileName on error by assigning an empty string
+              this.fileName = '';
             }
           );
         });
@@ -249,6 +242,8 @@ export class TenantComponent implements OnInit {
       }
     }
   }
+  
+  
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
