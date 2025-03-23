@@ -241,6 +241,19 @@
                         </option>
                       </select>
                     </div>
+                    <div class="col-12 col-sm-6 checkbox-section-select checkbox_ISCC pb-2 gap-4"
+                      *ngIf="!emailBodyReply">
+                      <div class="checkbox-section align-items-center">
+                        <input type="checkbox" name="IsCC" (change)="onISCCChange($event)" id="IsCC"
+                          class="form-check-input m-0" />
+                        <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label>
+                      </div>
+                      <div class="checkbox-section align-items-center">
+                        <input type="checkbox" (change)="onIncludeLandingChange($event)" name="includinglandingpage"
+                          id="includinglandingpage" class="form-check-input m-0" />
+                        <label for="includinglandingpage" class="ms-2 IsCC_checkbox">Is including landing page</label>
+                      </div>
+                    </div>
                     <div
                       class="col-12 col-sm-12 d-flex justify-content-between mt-3 align-items-center Button_all pb-2 pb-sm-0">
                       <button class="Emily__contant__button ms-2" (click)="GenerateEmail()">
@@ -383,20 +396,29 @@
                 </div>
               </ng-container>
               <ng-container *ngIf="emailBodyReply">
-                <div  [formGroup]="formGroup">
+                <div [formGroup]="formGroup">
                   <div class="p-3">
                     <div class="d-flex pb-3 align-items-center">
                       <label for="subject" class="IsCC_checkbox me-2">Subject: </label>
-                      <input type="text" formControlName="subject"  class="input_checkbox form-control w-25" name="subject" id="subject"
-                        placeholder="Enter your subject email">
+                      <input type="text" formControlName="subject" class="input_checkbox form-control w-25"
+                        name="subject" id="subject" placeholder="Enter your subject email">
                     </div>
-                    <div class="checkbox-section">
-                      <input type="checkbox" formControlName="IsCC" name="IsCC" id="IsCC" class="form-check-input m-0" />
-                      <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label>
+                    <div class="d-flex gap-3">
+                      <div class="checkbox-section align-items-center">
+                        <input type="checkbox" formControlName="IsCC" name="IsCC" id="IsCC"
+                          class="form-check-input m-0" />
+                        <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label>
+                      </div>
+                      <div class="checkbox-section align-items-center">
+                        <input type="checkbox" (change)="onIncludeLandingChange($event)" name="includinglanding"
+                          id="includinglanding" class="form-check-input m-0" />
+                        <label for="includinglanding" class="ms-2 IsCC_checkbox">Is including landing page</label>
+                      </div>
                     </div>
                   </div>
-  
-                  <p-editor [(ngModel)]="emailBodyResponse" formControlName="body"  [style]="{ height: '250px' }"></p-editor>
+
+                  <p-editor [(ngModel)]="emailBodyResponse" formControlName="body" [style]="{ height: '250px' }">
+                  </p-editor>
                   <div class="d-flex justify-content-end">
                     <button type="button" class="m-2 buttonSave" (click)="AddEmail()">Send</button>
                     <button class="btn btn-secondary m-2" (click)="closeModal()">

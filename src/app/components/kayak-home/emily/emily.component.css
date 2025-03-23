@@ -479,3 +479,9 @@ input {
   box-shadow: none;
   outline: none;
 }
+
+.checkbox_ISCC{
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}

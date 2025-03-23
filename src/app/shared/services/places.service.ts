@@ -51,11 +51,13 @@ export class PlacesService {
     return this.http.get<any>(`${environment.api}/BuyBox/GetUserBuyBoxes`);
   }
 
-  public generateEmail(promptId: number, context: string) {
+  public generateEmail(promptId: number, context: string, OrganizaitonsId: any, IsCC: boolean,) {
     const apiUrl = `${environment.api}/PromptHub/GenerateEmail`;
     const body = {
       promptId,
       context,
+      IsCC,
+      OrganizaitonsId ,
     };
     return this.http.post<any>(apiUrl, body);
   }

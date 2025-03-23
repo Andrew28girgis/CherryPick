@@ -54,8 +54,6 @@ export class EmilyUserInboxComponent implements OnInit {
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
           this.UserInbox = data.json;
-          console.log(this.UserInbox);
-
           this.spinner.hide();
 
         } else {
