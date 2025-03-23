@@ -4,7 +4,6 @@ import { LoginComponent } from './features/login/login.component';
 import { HomeComponent } from './features/home/home.component';
 import { LandingComponent } from './features/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
- import { KanbanComponent } from './components/kanban/kanban.component';
 import { TermsComponent } from './features/terms/terms.component';
 import { TenantComponent } from './features/tenant/tenant.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
@@ -14,22 +13,18 @@ import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
 import { SubmissionsComponent } from './features/Submissions/logs.component';
-import { AuthService } from './core/services/auth.service';
 import { AuthGuardService } from './core/services/auth-guard.service';
+import { KanbanComponent } from './features/kanban/kanban.component';
 
 const routes: Routes = [
-  // Public routes - accessible to everyone
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'tos', component: TermsComponent },
 
-  // Landing page - typically public but can be protected if needed
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
   },
-
-  // Landlord routes - only accessible by landlord users
   {
     path: 'landlord',
     loadChildren: () =>

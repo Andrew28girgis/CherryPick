@@ -15,7 +15,6 @@ import { LoginComponent } from './features/login/login.component';
 import { HomeComponent } from './features/home/home.component';
 import { LandingComponent } from './features/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
-import { KanbanComponent } from './components/kanban/kanban.component';
 import { LogoutComponent } from './features/logout/logout.component';
 import { TermsComponent } from './features/terms/terms.component';
 import { NumberWithCommasPipe } from './shared/pipes/number-with-commas.pipe';
@@ -51,6 +50,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { ManagePropertiesComponent } from './features/landlord/manage-properties/manage-properties.component';
+import { KanbanComponent } from './features/kanban/kanban.component';
 
 const msalConfig = {
   auth: {
