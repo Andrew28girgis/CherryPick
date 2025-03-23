@@ -76,8 +76,7 @@ export class NotificationsComponent implements OnInit {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => { 
-      },
+      next: (res: any) => {},
     });
     this.GetUserNotifications();
   }
