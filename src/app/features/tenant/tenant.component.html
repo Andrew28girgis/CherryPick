@@ -297,12 +297,12 @@
       </h1>
     </div>
   </div> -->
-  <div class="modal-body" style="overflow: auto; max-height: 80vh">
-    <div class="outer-frame">
-      <div class="inner-frame"  *ngIf="!fileName">
+  <div class="modal-body" style="overflow: auto;">
+    <div class="outer-frame" *ngIf="!fileName">
+      <div class="inner-frame" >
         <!-- File drop area shown if no file has been selected -->
-        <ngx-file-drop class=" dropzonee"
-         
+        <ngx-file-drop
+          class="dropzonee"
           dropZoneLabel="Drop files here"
           (onFileDrop)="uploadFile($event)"
           [dropZoneClassName]="'upload-background-image'"
@@ -324,16 +324,20 @@
             </div>
           </ng-template>
         </ngx-file-drop>
-
-  
-      
       </div>
-      <div class="filenameinnerframe" *ngIf="fileName">
-              <!-- Display file name once a file is selected -->
-              <div  class="d-flex align-items-center justify-content-between uploaded-file-container">
-                <div class="filename">{{ fileName }}</div>
-                <button class="clear-button" (click)="clearModalData()">Clear</button>
-              </div>
+    
+    </div>
+    <div class="filenameouterframe" *ngIf="fileName">
+      <div class="filenameinnerframe" >
+        <!-- Display file name once a file is selected -->
+        <div
+          class="d-flex align-items-center justify-content-between uploaded-file-container"
+        >
+          <div class="filename">{{ fileName }}</div>
+          <button class="clear-button" (click)="clearModalData()">
+            Clear
+          </button>
+        </div>
       </div>
     </div>
   </div>
