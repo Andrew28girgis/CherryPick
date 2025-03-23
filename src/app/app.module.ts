@@ -41,7 +41,6 @@ import {
   MsalBroadcastService,
 } from '@azure/msal-angular';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
-import { ManagePropertiesComponent } from './components/landlord/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
@@ -51,6 +50,7 @@ import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
+import { ManagePropertiesComponent } from './features/landlord/manage-properties/manage-properties.component';
 
 const msalConfig = {
   auth: {

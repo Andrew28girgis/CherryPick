@@ -33,7 +33,7 @@ const routes: Routes = [
   {
     path: 'landlord',
     loadChildren: () =>
-      import('./components/landlord/landlord.module').then(
+      import('./features/landlord/landlord.module').then(
         (m) => m.LandlordModule
       ),
     canActivate: [LandlordAccessGuard],
