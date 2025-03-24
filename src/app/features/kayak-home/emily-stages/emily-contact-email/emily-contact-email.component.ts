@@ -41,9 +41,9 @@ export class EmilyContactEmailComponent implements OnInit {
   isScrolling = false;
   private scrollTimeout: any;
   filteredEmails: Mail[] = [];
-  isDropdownVisible: boolean = false;  // Controls the visibility of the dropdown
-  selectedFilter: string = 'all';      // Default selected filter
-  selectedOption: string = 'All';     // Default text in the dropdown
+  isDropdownVisible: boolean = false; // Controls the visibility of the dropdown
+  selectedFilter: string = 'all'; // Default selected filter
+  selectedOption: string = 'All'; // Default text in the dropdown
 
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -53,8 +53,8 @@ export class EmilyContactEmailComponent implements OnInit {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private route: ActivatedRoute,
-    private _location: Location,
-  ) { }
+    private _location: Location
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -73,7 +73,6 @@ export class EmilyContactEmailComponent implements OnInit {
     this.isDropdownVisible = !this.isDropdownVisible;
   }
   loadInitialData(): void {
-    this.spinner.show();
     this.filteredEmails = [];
     this.emailsSentContact = [];
     this.selectedEmail = null;
@@ -88,10 +87,11 @@ export class EmilyContactEmailComponent implements OnInit {
     Promise.all([microDealsPromise, emailsPromise])
       .then(() => {
         if (this.contacts && this.contacts.length > 0) {
-          const contactWithInbox = this.contacts.find(contact =>
-            contact.EmailStats &&
-            contact.EmailStats[0] &&
-            contact.EmailStats[0].Inbox > 0
+          const contactWithInbox = this.contacts.find(
+            (contact) =>
+              contact.EmailStats &&
+              contact.EmailStats[0] &&
+              contact.EmailStats[0].Inbox > 0
           );
           if (contactWithInbox) {
             this.getEmailsForContact(contactWithInbox);
@@ -99,11 +99,8 @@ export class EmilyContactEmailComponent implements OnInit {
             this.getEmailsForContact(this.contacts[0]);
           }
         }
-        this.spinner.hide();
       })
-      .catch((error) => {
-        this.spinner.hide();
-      });
+      .catch((error) => {});
   }
   GetBuyBoxMicroDeals(callback?: Function): void {
     const body: any = {
@@ -114,25 +111,25 @@ export class EmilyContactEmailComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if (data.json && Array.isArray(data.json)) {
-          this.BuyBoxMicroDeals = data.json;
-          this.contacts = [];
-          const selectedOrganization = this.BuyBoxMicroDeals.flatMap((deal) =>
-            deal.Organization.filter((org) => org.OrganizationId === this.orgId)
-          )[0];
-          if (selectedOrganization) {
-            this.contacts = selectedOrganization.Contact || [];
-            this.selectedOrganizationName = selectedOrganization.OrganizationName;
-          }
-        } else {
-          this.BuyBoxMicroDeals = [];
+        this.BuyBoxMicroDeals = data.json;
+        this.contacts = [];
+        this.contacts =
+          this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
+            ?.Contact || [];
+        this.selectedOrganizationName =
+          this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
+            ?.OrganizationName || '';
+        this.BuyBoxMicroDeals = [];
+      // After loading contacts, load emails and then select first contact
+      this.GetBuyBoxEmails(() => {
+        if (this.contacts.length > 0) {
+          this.getEmailsForContact(this.contacts[0]);
         }
-        if (callback) {
-          callback();
-        }
-      },
-    });
-  }
+      });
+    },
+  });
+}
+
   GetBuyBoxEmails(callback?: Function): void {
     const body: any = {
       Name: 'GetBuyBoxEmails',
@@ -143,6 +140,9 @@ export class EmilyContactEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
+        console.log(`777`);
+        console.log(this.BuyBoxEmails);
+
         if (callback) {
           callback();
         }
@@ -161,20 +161,29 @@ export class EmilyContactEmailComponent implements OnInit {
       // If same contact and emails already loaded, do nothing.
       return;
     }
+    console.log(`www`);
+
+    console.log(this.BuyBoxEmails);
+
     // Since the API returns emails directly, use them as-is.
     const matchingEmails: any[] = this.BuyBoxEmails;
-    
+    console.log(`contact Emails`);
+    console.log(contact);
+    console.log(matchingEmails);
+
     // Filter emails that are related to the selected contact.
-    this.emailsSentContact = matchingEmails?.filter((email: Mail) =>
-      email?.ContactId === contact.ContactId ||
-      (email?.MailsContacts && email.MailsContacts.some(
-        (mc: MailsContact) => mc.MailContactId === contact.ContactId
-      ))
+    this.emailsSentContact = matchingEmails?.filter(
+      (email: Mail) =>
+        email?.ContactId === contact.ContactId ||
+        (email?.MailsContacts &&
+          email.MailsContacts.some(
+            (mc: MailsContact) => mc.MailContactId === contact.ContactId
+          ))
     );
-  
+
     // Apply the current filter (inbox, sent, etc.) on the loaded emails.
     this.filterEmails(this.selectedFilter);
-  
+
     // If there are no emails, show an empty message.
     if (this.emailsSentContact.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
@@ -190,7 +199,9 @@ export class EmilyContactEmailComponent implements OnInit {
     this.GetMail(email.id);
     // Smooth scroll to the email details section.
     setTimeout(() => {
-      const emailDetailsSection = document.querySelector('.email-details-body') as HTMLElement;
+      const emailDetailsSection = document.querySelector(
+        '.email-details-body'
+      ) as HTMLElement;
       if (emailDetailsSection) {
         this.smoothScrollTo(emailDetailsSection, 300); // 300ms duration.
       }
@@ -204,7 +215,10 @@ export class EmilyContactEmailComponent implements OnInit {
     function animationStep(currentTime: number) {
       const elapsedTime = currentTime - startTime;
       const progress = Math.min(elapsedTime / duration, 1);
-      const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
+      const ease =
+        progress < 0.5
+          ? 2 * progress * progress
+          : -1 + (4 - 2 * progress) * progress;
       window.scrollTo(0, startPosition + distance * ease);
       if (elapsedTime < duration) {
         requestAnimationFrame(animationStep);
@@ -260,10 +274,10 @@ export class EmilyContactEmailComponent implements OnInit {
     return direction === 2
       ? 'fa-envelope-circle-check send'
       : direction === -1
-        ? 'fa-share outbox'
-        : direction === 1
-          ? 'fa-reply inbox'
-          : '';
+      ? 'fa-share outbox'
+      : direction === 1
+      ? 'fa-reply inbox'
+      : '';
   }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
@@ -279,13 +293,19 @@ export class EmilyContactEmailComponent implements OnInit {
     let filtered: Mail[] = [];
     switch (filterType) {
       case 'inbox':
-        filtered = this.emailsSentContact.filter(email => email.Direction === 1);
+        filtered = this.emailsSentContact.filter(
+          (email) => email.Direction === 1
+        );
         break;
       case 'outbox':
-        filtered = this.emailsSentContact.filter(email => email.Direction === -1);
+        filtered = this.emailsSentContact.filter(
+          (email) => email.Direction === -1
+        );
         break;
       case 'sent':
-        filtered = this.emailsSentContact.filter(email => email.Direction === 2);
+        filtered = this.emailsSentContact.filter(
+          (email) => email.Direction === 2
+        );
         break;
       case 'all':
       default:
@@ -298,8 +318,10 @@ export class EmilyContactEmailComponent implements OnInit {
     if (this.filteredEmails.length === 0) {
       this.emptyMessage = `No ${filterType} emails available for this contact`;
       this.selectedEmail = null;
-    } else if (!this.selectedEmail ||
-      !this.filteredEmails.some(email => email.id === this.selectedEmail?.id)) {
+    } else if (
+      !this.selectedEmail ||
+      !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
+    ) {
       // If no email is selected or the selected email is not in the filtered list, select the first email.
       this.openEmail(this.filteredEmails[0]);
     }

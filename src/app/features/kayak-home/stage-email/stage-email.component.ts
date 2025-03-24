@@ -113,16 +113,16 @@ export class StageEmailComponent implements OnInit {
     const stageEmails = this.stageEmailsMap[stageId];
     if (stageEmails) {
       for (let email of stageEmails) {
-        if (email.Organization) {
-          for (let org of email.Organization) {
-            if (org.OrganizationId === orgId) {
-              if (org.Contact && org.Contact.length > 0) {
-                this.getEmailsForContact(org.Contact[0]);
-                return;
-              }
-            }
-          }
-        }
+        // if (email.Organization) {
+        //   for (let org of email.Organization) {
+        //     if (org.OrganizationId === orgId) {
+        //       if (org.Contact && org.Contact.length > 0) {
+        //         this.getEmailsForContact(org.Contact[0]);
+        //         return;
+        //       }
+        //     }
+        //   }
+        // }
       }
     }
   }
@@ -276,17 +276,17 @@ export class StageEmailComponent implements OnInit {
   }
 
   mergeStagesWithGetBuyBoxMicroDeals(): void {
-    if (this.BuyBoxMicroDeals.length > 0 && this.Stages.length > 0) {
-      this.Stages.forEach((stage: Stages) => {
-        const matchingEmails = this.BuyBoxMicroDeals.filter(
-          (buyBoxEmail: BuyBoxMicroDeals) => buyBoxEmail.StageId === stage.id
-        );
-        this.stageEmailsMap[stage.id] = matchingEmails;
-      });
-      if (!this.openedStageId && this.Stages.length > 0) {
-        this.openedStageId = this.Stages[0].id;
-      }
-    }
+    // if (this.BuyBoxMicroDeals.length > 0 && this.Stages.length > 0) {
+    //   this.Stages.forEach((stage: Stages) => {
+    //     const matchingEmails = this.BuyBoxMicroDeals.filter(
+    //       (buyBoxEmail: BuyBoxMicroDeals) => buyBoxEmail.StageId === stage.id
+    //     );
+    //     this.stageEmailsMap[stage.id] = matchingEmails;
+    //   });
+    //   if (!this.openedStageId && this.Stages.length > 0) {
+    //     this.openedStageId = this.Stages[0].id;
+    //   }
+    // }
   }
 
   OverView() {

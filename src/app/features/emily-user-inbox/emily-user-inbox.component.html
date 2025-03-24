@@ -93,7 +93,7 @@
                 style="cursor: pointer"
                 *ngFor="let email of UserInbox"
                 (click)="openEmail(email)"
-                [ngClass]="{ 'selected-email': email.id === selectedEmail?.id }"
+                [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
               >
                 <strong>
                   <i class="fa-solid fa-reply inbox me-2"></i>

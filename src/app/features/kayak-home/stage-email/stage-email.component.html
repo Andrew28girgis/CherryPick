@@ -12,7 +12,7 @@
         <p-accordion [activeIndex]="getActiveIndex(stage.id)">
           <p-accordionTab [header]="stage.title" [id]="stage.id">
             @for(email of stageEmailsMap[stage.id]; track email){
-              @for(org of email.Organization; track org){
+              <!-- @for(org of email.Organization; track org){
                 <div
                   [ngClass]="{'hide-accordion': accordionSecondClicked && getActiveIndex2(org.OrganizationId) !== 0}">
                   <p-accordion [activeIndex]="getActiveIndex2(org.OrganizationId)">
@@ -50,7 +50,7 @@
                     </p-accordionTab>
                   </p-accordion>
                 </div>
-                }
+                } -->
                 }
           </p-accordionTab>
         </p-accordion>
@@ -135,7 +135,7 @@
             </span>
             </p>
           </p-card>
-          <div class="mail_show mt-2" *ngIf="selectedEmail && selectedEmail.id === email.id">
+          <div class="mail_show mt-2" *ngIf="selectedEmail && selectedEmail.ID === email.id">
             <div class="modal-content">
               <div class="modal-body p-0 openreply">
                 <div class="row m-0 p-0 d-flex justify-content-center">

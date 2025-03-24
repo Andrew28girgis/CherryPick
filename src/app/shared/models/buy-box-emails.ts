@@ -1,7 +1,7 @@
 export interface BuyBoxMicroDeals {
-  id: number
-  StageId: number
-  Organization: Organization[]
+  OrganizationName: string
+  OrganizationId: number
+  Contact:Contact[]
 }
 
 export interface Organization {
@@ -45,6 +45,7 @@ export interface Mail {
   Subject: string
   Date: string
   Direction: number
+  FromAddress: string;
   ContactId: number
   MailsContacts: MailsContact[]
   // ID?: number;
@@ -58,14 +59,56 @@ export interface MailsContact {
 }
 
 export interface EmailInfo {
-  id: number
+  ID: number
+  FromAddress: string
+  CC: string
   Body: string
+  ToAddress: string
   Date: string
   Subject: string
   Direction: number
+  Opened: number
+  outbox: string
+  MacroDealId: number
   MicroDealId: number
   ContactId: number
   ResponseStatus: string
+  HasFollowUp: number
+  BuyBoxId: number
+  IsCC: boolean
+  ParentMailId: number
+
+  // ID: number
+  // Body: string
+  // Date: string
+  // Subject: string
+  // Direction: number
+  // Opened: number
+  // MicroDealId: number
+  // ContactId: number
+  // ResponseStatus: string
+  // BuyBoxId: number
+  // IsCC: boolean
+  // ParentMailId: number
+
+  // ID: number
+  // FromAddress: string
+  // CC: string
+  // Body: string
+  // ToAddress: string
+  // Date: string
+  // Subject: string
+  // Direction: number
+  // Opened: number
+  // outbox: string
+  // MacroDealId: number
+  // MicroDealId: number
+  // ContactId: number
+  // ResponseStatus: string
+  // HasFollowUp: number
+  // BuyBoxId: number
+  // IsCC: boolean
+  // ParentMailId: number
 }
 
 

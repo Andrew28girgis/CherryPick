@@ -42,11 +42,11 @@ export class EmilyStagesComponent implements OnInit {
 
   ngOnInit(): void {
     for (const stage of Object.values(this.stageEmailsMap)) {
-      stage.forEach((email) => {
-        email.Organization.forEach((org) => {
-          org.showMoreContacts = false; // Initialize 'showMoreContacts' for each organization
-        });
-      });
+      // stage.forEach((email) => {
+      //   email.Organization.forEach((org) => {
+      //     org.showMoreContacts = false; 
+      //   });
+      // });
     }
     this.buyBoxId = localStorage.getItem('BuyBoxId');
     this.loginContact = localStorage.getItem('contactId');
@@ -97,12 +97,12 @@ export class EmilyStagesComponent implements OnInit {
   }
   mergeStagesWithGetBuyBoxMicroDeals(): void {
     if (this.BuyBoxMicroDeals.length > 0 && this.Stages.length > 0) {
-      this.Stages.forEach((stage: Stages) => {
-        const matchingEmails = this.BuyBoxMicroDeals.filter(
-          (buyBoxEmail: BuyBoxMicroDeals) => buyBoxEmail.StageId === stage.id
-        );
-        this.stageEmailsMap[stage.id] = matchingEmails;
-      });
+      // this.Stages.forEach((stage: Stages) => {
+      //   const matchingEmails = this.BuyBoxMicroDeals.filter(
+      //     (buyBoxEmail: BuyBoxMicroDeals) => buyBoxEmail.StageId === stage.id
+      //   );
+      //   this.stageEmailsMap[stage.id] = matchingEmails;
+      // });
       if (this.Stages.length > 0) {
         this.openedStageId = this.Stages[0].id; // Open the first stage by default
       }

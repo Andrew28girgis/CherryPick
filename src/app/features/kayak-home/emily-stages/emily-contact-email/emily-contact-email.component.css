@@ -120,7 +120,7 @@
 }
 .buttonandname {
   display: flex;
-  padding: 24px 22px;
+  padding: 42px;
   align-items: flex-start;
   align-self: stretch;
 }
