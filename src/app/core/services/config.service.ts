@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getDomainConfig } from '../../config';
+import { getDomainConfig } from '../../shared/others/config';
 
 @Injectable({
   providedIn: 'root',
