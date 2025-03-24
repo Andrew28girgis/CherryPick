@@ -1,0 +1,487 @@
+.container-fluid {
+  
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.main-section-emily {
+  background-color: transparent;
+  border-radius: 12px;
+}
+
+.main-section-emily>section {
+  min-height: 90vh;
+}
+
+.checkbox-section {
+  display: flex;
+  gap: 5px;
+}
+
+.form-check-input[type="checkbox"] {
+  box-shadow: none;
+  outline: none;
+
+  &:checked {
+    border: 1px solid #001f3f;
+    background-color: #001f3f;
+  }
+
+  &:not(checked) {
+    border: 1px solid gray;
+  }
+}
+.section-Text{
+  display: flex;
+  gap: 10px;
+}
+
+.section-Text>label {
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+}
+
+.checkbox-section>label {
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+}
+
+.checkbox-section-head {
+  padding-bottom: 8px;
+}
+
+.checkbox-section-body {
+  padding-bottom: 4px;
+  padding-top: 10px;
+}
+
+.checkbox-section-body-first {
+  padding-inline-start: 20px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
+.checkbox-section-body-second {
+  padding-inline-start: 40px;
+  padding-bottom: 3px;
+  padding-top: 3px;
+}
+
+.checkbox-section-select {
+  padding-bottom: 3px;
+}
+
+.checkbox-section-select>label {
+  background: white;
+  position: relative;
+  left: 15px;
+  top: 12px;
+  padding-inline: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+}
+
+.form-select {
+  box-shadow: none;
+  outline: none;
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+  border-radius: 10px;
+}
+
+select {
+  border-radius: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  cursor: pointer;
+}
+
+select option {
+  border-radius: 10px;
+  padding: 8px;
+}
+
+select option:checked {
+  background-color: #001f3f;
+  color: white;
+}
+
+.Emily__contant__head__p {
+  color: #ff4c4c;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+}
+
+.Button_all {
+  display: flex !important;
+  justify-content: flex-end !important;
+  flex-wrap: wrap;
+  align-items: normal !important;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.Emily__contant__button {
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+  width: calc(100% / 6 - 6px);
+}
+
+.textarea>textarea {
+  box-shadow: none;
+  outline: none;
+  border-radius: 10px;
+  height: 400px;
+}
+
+.textarea>label {
+  background: white;
+  position: relative;
+  left: 15px;
+  top: 12px;
+  padding-inline: 6px;
+  color: #707791;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.005em;
+}
+
+.Emily__body__button {
+  background: #001f3f;
+  width: max-content;
+}
+
+.Emily__body__button_Microsoft {
+  background: #eeeeee;
+  width: max-content;
+  color: #4e4e4e;
+}
+
+.backgroundcolor {
+  background: #f2f3f4;
+}
+
+.OrganizationsForEmail {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.OganirzationsForEmail__img {
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.x-icon {
+  height: 1em;
+  width: 1em;
+  top: .125em;
+  position: relative;
+}
+
+.Oganirzations__img {
+  width: auto;
+  max-width: 100%;
+  border: 1px solid gainsboro;
+  border-radius: 4px;
+  height: auto;
+  max-height: 100px;
+  background: white;
+}
+
+.OrganizationsForEmail__head {
+  padding-bottom: 16px;
+}
+
+.OrganizationsForEmail__head>p {
+  color: #747474;
+  
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+}
+
+.Contact_head {
+  color: #16181d;
+  
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.Contact_head>label {
+  color: black;
+  
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.Contact_headD>label {
+  color: gray;
+  
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.crad_Contact_Mange {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  border-radius: 16px;
+  display: block;
+  justify-content: space-between;
+}
+
+.Selections-body{
+  background:  white;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
+}
+
+textarea {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.Button_Update {
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+
+.Button_add{
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 5px 10px;
+  width: 50px;
+}
+
+.delete_button {
+  background: red;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 5px 10px;
+  width: 50px;
+}
+
+.folder_p{
+  font-size: 16px;
+  font-weight: 500;
+}
+.section-Text-email{
+  display: flex;
+}
+
+.Button_Update_S {
+  background: green;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+
+.highlighted {
+  border-radius: 20px;
+  background: #c4e1ff !important;
+}
+
+.box {
+  min-height: 100px;
+  border: 1px solid rgba(220, 220, 220, 0.5);
+  border-radius: 10px;
+  height: 100%;
+}
+
+input {
+  cursor: pointer;
+}
+
+.modal-title{
+  font-size: 16px;
+  color: #747474 !important;
+  margin: 0;
+  padding: 0;
+}
+.contactname{
+  font-weight: 600; 
+  cursor: pointer
+}
+.cursor{
+  cursor: pointer;
+}
+.showMoreRelations{
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.GeneratedEmail{
+  background-color: #141e2a
+}
+.SavedTemplate{
+  align-items: center;
+  display: block
+}
+.firstlast{
+  font-size: 13px;
+  align-items: center;
+  display: block;
+  margin-top: 4px;
+}
+.creationdate{
+  font-size: 13px;
+  align-items: center;
+  display: block;
+}
+@media (max-width: 768px) {
+  .Button_all {
+    flex-direction: column;
+  }
+
+  .Emily__contant__button {
+    margin: 0 !important;
+    width: calc(100% / 1 - 0px);
+    margin-bottom: 0px;
+  }
+
+  .Emily__body__button {
+    width: 100% !important;
+  }
+}
+
+
+
+
+.buttonSave{
+  color: white;
+  background: #001f3f;
+  padding: 5px 10px;
+  border: 1px solid #001f3f;
+  cursor: pointer;
+  border-radius: 6px;  
+}
+
+
+
+.checkbox-section {
+  display: flex;
+  gap: 5px;
+}
+
+.form-check-input[type="checkbox"] {
+  box-shadow: none;
+  outline: none;
+  border: #bfbfbf 1px solid;
+  border-radius: 6px;
+
+  &:checked {
+    border: 1px solid #001f3f;
+    background-color: #001f3f;
+  }
+
+  &:not(checked) {
+    border: 1px solid gray;
+  }
+}
+
+.openreply{
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.selectedOptionDiv{
+  padding-inline: 10px;
+}
+
+.selectedOption{
+  color: #001f3f;
+  background: #001f3f52;
+  padding: 5px 10px;
+  border: 1px solid white;
+  cursor: pointer;
+  border-radius: 6px;  
+  width: max-content;
+  margin: 0;
+}
+
+.active{
+  color: white;
+  background: #001f3f;
+  padding: 5px 10px;
+  border: 1px solid #001f3f;
+  cursor: pointer;
+  border-radius: 6px; 
+  width: max-content; 
+  margin: 0;
+}
+
+.IsCC_checkbox{
+  font-size: 14px;
+  font-weight: 700;
+  color: gray;
+}
+
+.input_checkbox{
+  box-shadow: none;
+  outline: none;
+}
+
+.checkbox_ISCC{
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}

@@ -11,13 +11,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Components & Directives
 import { AppComponent } from './app.component';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
-import { LandingComponent } from './components/landing/landing.component';
-import { SummeryComponent } from './components/summery/summery.component';
-import { KanbanComponent } from './components/kanban/kanban.component';
-import { LogoutComponent } from './components/logout/logout.component';
-import { TermsComponent } from './components/terms/terms.component';
+import { LoginComponent } from './features/login/login.component';
+import { LandingComponent } from './features/market-survey/landing/landing.component';
+import { SummeryComponent } from './features/summery/summery.component';
+import { LogoutComponent } from './shared/components/logout/logout.component';
+import { TermsComponent } from './features/terms/terms.component';
 import { NumberWithCommasPipe } from './shared/pipes/number-with-commas.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import {
@@ -32,9 +30,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { KayakModule } from './components/kayak-home/kayak.module';
 import { SharedModule } from './shared/shared.module';
-import { TokenInterceptor } from './token.interceptor';
 import {
   MsalModule,
   MsalService,
@@ -42,16 +38,20 @@ import {
   MsalBroadcastService,
 } from '@azure/msal-angular';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
-import { ManagePropertiesComponent } from './components/landlord/manage-properties/manage-properties.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { AddTenantsComponent } from './components/add-tenants/add-tenants.component';
-import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-user-inbox.component';
+import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
+import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { CampaignDrawingComponent } from './components/campaign-drawing/campaign-drawing.component';
+import { TokenInterceptor } from './core/interceptors/token.interceptor';
+import { ManagePropertiesComponent } from './features/landlord/manage-properties/manage-properties.component';
+import { KanbanComponent } from './features/kanban/kanban.component';
+import { KayakModule } from './features/kayak-home/kayak.module';
+import { HomeComponent } from './features/market-survey/home/home.component';
+import { CampaignDrawingComponent } from './features/campaign-drawing/campaign-drawing.component';
 
 const msalConfig = {
   auth: {
@@ -93,7 +93,7 @@ const loginRequest = {
     DashboardComponent,
     AddTenantsComponent,
     EmilyUserInboxComponent,
-    CampaignDrawingComponent
+    CampaignDrawingComponent,
   ],
   imports: [
     BrowserModule,
