@@ -1,46 +1,61 @@
 <div class="notification-container position-relative">
-    <i
-    class="fa-regular fa-bell action-icon position-relative mx-2"
+  <svg
     (click)="toggleDropdown()"
->
-    <div class="frameee" *ngIf="unreadCount > 0">
-        <div class="numberrr">{{ unreadCount }}</div>
-    </div>
-</i>
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="25"
+    viewBox="0 0 24 25"
+    fill="none"
+  >
+    <path
+      d="M12 11.0199C11.59 11.0199 11.25 10.6799 11.25 10.2699V6.93994C11.25 6.52994 11.59 6.18994 12 6.18994C12.41 6.18994 12.75 6.52994 12.75 6.93994V10.2699C12.75 10.6899 12.41 11.0199 12 11.0199Z"
+      fill="#707791"
+    />
+    <path
+      d="M12.0201 20.85C9.44011 20.85 6.87011 20.44 4.42011 19.62C3.51011 19.32 2.82011 18.67 2.52011 17.85C2.22011 17.03 2.32011 16.09 2.81011 15.27L4.08011 13.15C4.36011 12.68 4.61011 11.8 4.61011 11.25V9.14999C4.61011 5.05999 7.93011 1.73999 12.0201 1.73999C16.1101 1.73999 19.4301 5.05999 19.4301 9.14999V11.25C19.4301 11.79 19.6801 12.68 19.9601 13.15L21.2301 15.27C21.7001 16.05 21.7801 16.98 21.4701 17.83C21.1601 18.68 20.4801 19.33 19.6201 19.62C17.1701 20.45 14.6001 20.85 12.0201 20.85ZM12.0201 3.24999C8.76011 3.24999 6.11011 5.89999 6.11011 9.15999V11.26C6.11011 12.07 5.79011 13.24 5.37011 13.93L4.10011 16.06C3.84011 16.49 3.78011 16.95 3.93011 17.35C4.08011 17.75 4.42011 18.05 4.90011 18.21C9.50011 19.74 14.5601 19.74 19.1601 18.21C19.5901 18.07 19.9201 17.75 20.0701 17.33C20.2301 16.91 20.1801 16.45 19.9501 16.06L18.6801 13.94C18.2601 13.25 17.9401 12.08 17.9401 11.27V9.16999C17.9301 5.89999 15.2801 3.24999 12.0201 3.24999Z"
+      fill="#707791"
+    />
+    <path
+      d="M11.9999 23.4001C10.9299 23.4001 9.87992 22.9601 9.11992 22.2001C8.35992 21.4401 7.91992 20.3901 7.91992 19.3201H9.41992C9.41992 20.0001 9.69992 20.6601 10.1799 21.1401C10.6599 21.6201 11.3199 21.9001 11.9999 21.9001C13.4199 21.9001 14.5799 20.7401 14.5799 19.3201H16.0799C16.0799 21.5701 14.2499 23.4001 11.9999 23.4001Z"
+      fill="#707791"
+    />
+  </svg>
+  <div class="frameee" *ngIf="unreadCount > 0">
+    <div class="numberrr">{{ unreadCount }}</div>
+  </div>
 
-  
-    <div class="notification-dropdown" *ngIf="dropdownVisible">
-      <div class="notification-card">
-        <div class="notificationsnomber">
-            <div class="notifications-header">Notifications</div>
+  <div class="notification-dropdown" *ngIf="dropdownVisible">
+    <div class="notification-card">
+      <div class="notificationsnomber">
+        <div class="notifications-header">Notifications</div>
 
-            <div class="frame" *ngIf="unreadCount > 0">
-                <div class="number">{{ unreadCount }}</div>
-            </div>
-          </div>
-          
-        <div *ngIf="notificationsArray.length > 0; else noNotifications" class="notifications-list">
-          <div
-            class="notification-item"
-            *ngFor="let notification of notificationsArray"
-            (click)="updateNotification(notification)"
-            [ngClass]="{'highlighted': notification.isRead}"
-          >
-            <div class="notification-message">
-              {{ notification.message }}
-            </div>
-            <div class="notification-date">
-              {{ notification.createdDate | date:'medium' }}
-            </div>
-
-          </div>
-
+        <div class="frame" *ngIf="unreadCount > 0">
+          <div class="number">{{ unreadCount }}</div>
         </div>
-
-        <ng-template #noNotifications>
-          <div class="no-notifications">No notifications available.</div>
-        </ng-template>
       </div>
+
+      <div
+        *ngIf="notificationsArray.length > 0; else noNotifications"
+        class="notifications-list"
+      >
+        <div
+          class="notification-item"
+          *ngFor="let notification of notificationsArray"
+          (click)="updateNotification(notification)"
+          [ngClass]="{ highlighted: notification.isRead }"
+        >
+          <div class="notification-message">
+            {{ notification.message }}
+          </div>
+          <div class="notification-date">
+            {{ notification.createdDate | date : "medium" }}
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noNotifications>
+        <div class="no-notifications">No notifications available.</div>
+      </ng-template>
     </div>
   </div>
-  
+</div>
