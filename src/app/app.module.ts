@@ -64,9 +64,9 @@ const msalConfig = {
   },
 };
 
-export function initializeMsal(msalService: MsalService) {
-  return () => msalService.instance.initialize();
-}
+// export function initializeMsal(msalService: MsalService) {
+//   return () => msalService.instance.initialize();
+// }
 
 const loginRequest = {
   scopes: [
@@ -91,7 +91,7 @@ const loginRequest = {
     ManagePropertiesComponent,
     DashboardComponent,
     AddTenantsComponent,
-    EmilyUserInboxComponent
+    EmilyUserInboxComponent,
   ],
   imports: [
     BrowserModule,
@@ -118,32 +118,32 @@ const loginRequest = {
     StepperModule,
     NgbNavModule,
     SelectButtonModule,
-    MsalModule.forRoot(
-      new PublicClientApplication(msalConfig),
-      {
-        interactionType: InteractionType.Redirect,
-        authRequest: loginRequest,
-      },
-      {
-        interactionType: InteractionType.Redirect,
-        protectedResourceMap: new Map([
-          ['https://graph.microsoft.com/v1.0/me', ['User.Read']],
-          ['https://graph.microsoft.com/v1.0/me/sendMail', ['Mail.Send']],
-        ]),
-      }
-    ),
+    // MsalModule.forRoot(
+    //   new PublicClientApplication(msalConfig),
+    //   {
+    //     interactionType: InteractionType.Redirect,
+    //     authRequest: loginRequest,
+    //   },
+    //   {
+    //     interactionType: InteractionType.Redirect,
+    //     protectedResourceMap: new Map([
+    //       ['https://graph.microsoft.com/v1.0/me', ['User.Read']],
+    //       ['https://graph.microsoft.com/v1.0/me/sendMail', ['Mail.Send']],
+    //     ]),
+    //   }
+    // ),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeMsal,
-      deps: [MsalService],
-      multi: true,
-    },
-    MsalService,
-    MsalGuard,
-    MsalBroadcastService,
+    //  {
+    //    provide: APP_INITIALIZER,
+    //    useFactory: initializeMsal,
+    //    deps: [MsalService],
+    //    multi: true,
+    //  },
+    // MsalService,
+    // MsalGuard,
+    // MsalBroadcastService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
