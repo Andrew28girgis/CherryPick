@@ -39,7 +39,7 @@
                   {{ buyBox.name }}
                 </span>
               </div>
-              <button class="btn Kayack__button">Send Mass Email</button>
+              <button class="btn Kayack__button">Send to Many</button>
               <ul *ngIf="OrgBuybox && activeBuyBoxId === buyBox.id">
                 <li
                   class="d-flex justify-content-start py-2 align-items-center"
@@ -93,7 +93,7 @@
                 style="cursor: pointer"
                 *ngFor="let email of UserInbox"
                 (click)="openEmail(email)"
-                [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
+                [ngClass]="{ 'selected-email': email.id === selectedEmail?.id }"
               >
                 <strong>
                   <i class="fa-solid fa-reply inbox me-2"></i>

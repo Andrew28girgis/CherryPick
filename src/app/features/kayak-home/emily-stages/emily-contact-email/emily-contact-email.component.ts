@@ -41,9 +41,10 @@ export class EmilyContactEmailComponent implements OnInit {
   isScrolling = false;
   private scrollTimeout: any;
   filteredEmails: Mail[] = [];
-  selectedFilter: string = 'inbox'; // Default filter is 'all'
+  isDropdownVisible: boolean = false;  // Controls the visibility of the dropdown
+  selectedFilter: string = 'all';      // Default selected filter
+  selectedOption: string = 'All';     // Default text in the dropdown
 
-  // @Input() contactId!: number;
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
@@ -66,13 +67,13 @@ export class EmilyContactEmailComponent implements OnInit {
         this.orgId = +orgId;
       }
     });
-    // Load both APIs with Promise.all to ensure both are completed    'microdeals api and emails api'
     this.loadInitialData();
   }
-
+  toggleDropdown() {
+    this.isDropdownVisible = !this.isDropdownVisible;
+  }
   loadInitialData(): void {
     this.spinner.show();
-    // const currentContactId = this.selectedContact?.ContactId || this.contactId;
     this.filteredEmails = [];
     this.emailsSentContact = [];
     this.selectedEmail = null;
@@ -103,68 +104,53 @@ export class EmilyContactEmailComponent implements OnInit {
       .catch((error) => {
         this.spinner.hide();
       });
-
   }
   GetBuyBoxMicroDeals(callback?: Function): void {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
       MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
+      Params: { buyboxid: this.buyBoxId },
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data.json && Array.isArray(data.json)) {
           this.BuyBoxMicroDeals = data.json;
-          // Reset contacts array before populating it
           this.contacts = [];
-          // Find the organization that matches the selected orgId
           const selectedOrganization = this.BuyBoxMicroDeals.flatMap((deal) =>
             deal.Organization.filter((org) => org.OrganizationId === this.orgId)
           )[0];
           if (selectedOrganization) {
-            // Extract contacts from the selected organization
             this.contacts = selectedOrganization.Contact || [];
-            this.selectedOrganizationName =
-              selectedOrganization.OrganizationName;
-            // IMPORTANT: We no longer automatically select a contact here
-            // This will be handled in the loadInitialData method after both API calls complete
+            this.selectedOrganizationName = selectedOrganization.OrganizationName;
           }
         } else {
           this.BuyBoxMicroDeals = [];
         }
-        // Call the callback function if provided
         if (callback) {
           callback();
         }
       },
-
     });
   }
   GetBuyBoxEmails(callback?: Function): void {
     const body: any = {
       Name: 'GetBuyBoxEmails',
       MainEntity: null,
-      Params: {
-        buyboxid: this.buyBoxId,
-      },
+      Params: { buyboxid: this.buyBoxId },
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        // Call the callback function if provided
         if (callback) {
           callback();
         }
       },
     });
   }
-  // this for get emails for contact that selected to be filter from all the emails that return in API
   getEmailsForContact(contact: Contact): void {
-    // Only clear and reset if selecting a different contact
+    // When a new contact is selected, reset state.
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact;
       this.emailsSentContact = [];
@@ -172,46 +158,41 @@ export class EmilyContactEmailComponent implements OnInit {
       this.emptyMessage = '';
       this.selectedEmail = null;
     } else if (this.emailsSentContact.length > 0) {
-      // If same contact and emails already loaded, don't reload
+      // If same contact and emails already loaded, do nothing.
       return;
     }
-    // Filter emails based on the contact's ContactId
-    const matchingEmails = this.BuyBoxEmails.flatMap(
-      (buyBoxEmail) => buyBoxEmail.mail
+    // Since the API returns emails directly, use them as-is.
+    const matchingEmails: any[] = this.BuyBoxEmails;
+    
+    // Filter emails that are related to the selected contact.
+    this.emailsSentContact = matchingEmails?.filter((email: Mail) =>
+      email?.ContactId === contact.ContactId ||
+      (email?.MailsContacts && email.MailsContacts.some(
+        (mc: MailsContact) => mc.MailContactId === contact.ContactId
+      ))
     );
-    // Filter emails where the contact is a recipient (in MailsContacts)
-    this.emailsSentContact = matchingEmails.filter((email: Mail) => {
-      if (email.Direction == 2) {
-        // When direction is 2, filter based on the MailsContacts array
-        return email.MailsContacts.some(
-          (element: MailsContact) => element.MailContactId == contact.ContactId
-        );
-      } else if (email.Direction == 1) {
-        // When direction is 1, filter based on the ContactId directly
-        return email.ContactId == contact.ContactId;
-      }
-      return false; // If neither condition is met, return false
-    });
-    // Apply the current filter to the newly loaded emails
+  
+    // Apply the current filter (inbox, sent, etc.) on the loaded emails.
     this.filterEmails(this.selectedFilter);
+  
+    // If there are no emails, show an empty message.
     if (this.emailsSentContact.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
     } else if (this.filteredEmails.length > 0) {
-      // Select the first email by default if there are emails available
+      // Open the first email by default.
       this.openEmail(this.filteredEmails[0]);
     }
   }
-  //scroll function and load email details Api
+
+  // Scroll function and load email details API.
   openEmail(email: Mail): void {
-    // Call GetMail() with the selected email's ID (mailId)
+    // Call GetMail() with the selected email's ID (mailId).
     this.GetMail(email.id);
-    // smoth scroll to the email details
+    // Smooth scroll to the email details section.
     setTimeout(() => {
-      const emailDetailsSection = document.querySelector(
-        '.email-details-body'
-      ) as HTMLElement;
+      const emailDetailsSection = document.querySelector('.email-details-body') as HTMLElement;
       if (emailDetailsSection) {
-        this.smoothScrollTo(emailDetailsSection, 300); // 300ms (0.3s) duration
+        this.smoothScrollTo(emailDetailsSection, 300); // 300ms duration.
       }
     }, 100);
   }
@@ -223,10 +204,7 @@ export class EmilyContactEmailComponent implements OnInit {
     function animationStep(currentTime: number) {
       const elapsedTime = currentTime - startTime;
       const progress = Math.min(elapsedTime / duration, 1);
-      const ease =
-        progress < 0.5
-          ? 2 * progress * progress
-          : -1 + (4 - 2 * progress) * progress;
+      const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
       window.scrollTo(0, startPosition + distance * ease);
       if (elapsedTime < duration) {
         requestAnimationFrame(animationStep);
@@ -249,10 +227,7 @@ export class EmilyContactEmailComponent implements OnInit {
     const body: any = {
       Name: 'GetMail',
       MainEntity: null,
-      Params: {
-        mailid: mailId,
-        identity: this.loginContact,
-      },
+      Params: { mailid: mailId, identity: this.loginContact },
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -292,55 +267,44 @@ export class EmilyContactEmailComponent implements OnInit {
   }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
-    // If no emails or contact selected, don't try to filter
-    if (!this.selectedContact || this.emailsSentContact.length === 0) {
+    this.isDropdownVisible = false; // Set this to false to hide the dropdown
+
+    // If no emails or contact selected, don't try to filter.
+    if (!this.selectedContact || this.emailsSentContact?.length === 0) {
       this.filteredEmails = [];
       this.selectedEmail = null;
       return;
     }
-    // Apply the filter based on the selected type
+    // Apply the filter based on the selected type.
     let filtered: Mail[] = [];
     switch (filterType) {
       case 'inbox':
-        // Direction = 1 for inbox
-        filtered = this.emailsSentContact.filter(
-          (email) => email.Direction === 1
-        );
+        filtered = this.emailsSentContact.filter(email => email.Direction === 1);
         break;
       case 'outbox':
-        // Direction = -1 for outbox
-        filtered = this.emailsSentContact.filter(
-          (email) => email.Direction === -1
-        );
+        filtered = this.emailsSentContact.filter(email => email.Direction === -1);
         break;
       case 'sent':
-        // Direction = 2 for sent
-        filtered = this.emailsSentContact.filter(
-          (email) => email.Direction === 2
-        );
+        filtered = this.emailsSentContact.filter(email => email.Direction === 2);
         break;
       case 'all':
       default:
-        // Show all emails
         filtered = [...this.emailsSentContact];
         break;
     }
-    // Sort emails by date in descending order (newest first)
+
+    // Sort emails by date in descending order (newest first).
     this.filteredEmails = this.sortEmailsByDateDesc(filtered);
     if (this.filteredEmails.length === 0) {
       this.emptyMessage = `No ${filterType} emails available for this contact`;
       this.selectedEmail = null;
-    } else if (
-      !this.selectedEmail ||
-      !this.filteredEmails.some(
-        (email) => email.id === this.selectedEmail?.ID
-      )
-    ) {
-      // If no email is selected or the selected email is not in the filtered list,
-      // select the first email in the filtered list
+    } else if (!this.selectedEmail ||
+      !this.filteredEmails.some(email => email.id === this.selectedEmail?.id)) {
+      // If no email is selected or the selected email is not in the filtered list, select the first email.
       this.openEmail(this.filteredEmails[0]);
     }
   }
+
   sortEmailsByDateDesc(emails: Mail[]): Mail[] {
     return [...emails].sort((a, b) => {
       const dateA = new Date(a.Date).getTime();
