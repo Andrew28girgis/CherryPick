@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef,HostListener } from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -18,6 +18,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isSmallScreen = window.innerWidth < 992;
   }
   isCollapsed = true;
+  notifications: any[] = [
+    { id: 1, message: 'New notification 1', time: '5 min ago' },
+    { id: 2, message: 'New notification 2', time: '1 hour ago' },
+    { id: 3, message: 'New notification 3', time: '2 hours ago' },
+  ];
+
+  emails: any[] = [
+    { id: 1, subject: 'Upcoming meeting', from: 'john@example.com', time: '10:00 AM' },
+    { id: 2, subject: 'Project update', from: 'sarah@example.com', time: '11:30 AM' },
+    { id: 3, subject: 'Weekly report', from: 'mike@example.com', time: '2:00 PM' },
+  ];
 
   // Avatar and view switching properties
   userAvatar: string | null = null;
@@ -54,8 +65,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe((event: NavigationEnd) => {
         this.current = event.urlAfterRedirects;
-        // Close navbar when route changes
-        this.isNavbarOpen = false;
       });
 
     // Initialize `current` with the current URL.
@@ -94,30 +103,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
     localStorage.removeItem('token');
     localStorage.removeItem('userView');
     this.router.navigate(['/login']);
-    this.isNavbarOpen = false;
   }
 
   switchView(): void {
     const newView = this.currentView === 'tenant' ? 'landlord' : 'tenant';
     this.userViewService.switchView(newView);
-    this.isNavbarOpen = false;
   }
 
   BackTo() {
     this.router.navigate(['/dashboard']);
-    this.isNavbarOpen = false;
   }
 
   isNavbarOpen = false;
 
   toggleNavbar() {
     this.isNavbarOpen = !this.isNavbarOpen;
-  }
-  
-  // New method to close navbar when clicking a nav item
-  closeNavbar() {
-    if (this.isSmallScreen) {
-      this.isNavbarOpen = false;
-    }
   }
 }
