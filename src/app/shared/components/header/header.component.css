@@ -16,17 +16,15 @@
 .nav-link {
   border-radius: var(--Radius-Radius-8, 8px);
   background: var(--Card-Section-BG, #fff);
-  display: flex;
-  height: 43px;
+  display: flex; 
   padding: 6px 12px;
   align-items: center;
   gap: 8px;
-  color: var(--Body-Text-and-Icons, #707791);
-
-  font-size: 16px;
+  color: var(--Body-Text-and-Icons, #707791); 
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 30px; /* 187.5% */
+  line-height: 10px; /* 187.5% */
 }
 
 .cherry-collapse:hover {
