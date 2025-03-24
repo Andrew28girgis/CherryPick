@@ -47,7 +47,7 @@ export interface Mail {
   Direction: number
   ContactId: number
   MailsContacts: MailsContact[]
-  ID?: number;
+  // ID?: number;
   Body?: string;
   MicroDealId?: number;
   ResponseStatus?: string;
@@ -58,7 +58,7 @@ export interface MailsContact {
 }
 
 export interface EmailInfo {
-  ID: number
+  id: number
   Body: string
   Date: string
   Subject: string
@@ -77,7 +77,7 @@ export interface EmailDashboard {
 }
 
 export interface OrganizationDashboard {
-  ID: number
+  id: number
   Name: string
   MicroDealId:any
   LastActivityDate?: string
