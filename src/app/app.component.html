@@ -1,14 +1,21 @@
-<div class="app-container" [ngClass]="{'sidebar-expanded': isSidebarExpanded, 'sidebar-collapsed': !isSidebarExpanded, 'sidebar-hovering': isHovering}">
-  <!-- Sidebar -->
-  <app-sidebar *ngIf="display" class="sidebar-area" (hoverStateChange)="onSidebarHover($event)"></app-sidebar>
-  
-  <!-- Header -->
-  <app-header *ngIf="display" class="header-area"></app-header>
-  
-  <!-- Main Content -->
-  <div class="content-area">
-    <div class="content-wrapper">
-      <router-outlet></router-outlet>
+<div class="app-container my-container" [ngClass]="{'sidebar-expanded': isSidebarExpanded, 'sidebar-collapsed': !isSidebarExpanded, 'sidebar-hovering': isHovering}">
+  <!-- Row for sidebar and content -->
+  <div class="row g-0 flex-row-container">
+    <!-- Sidebar with custom width classes -->
+    <div *ngIf="display" 
+         class="sidebar-area"
+         [ngClass]="{'sidebar-width-expanded': isSidebarExpanded, 'sidebar-width-collapsed': !isSidebarExpanded || isHovering}">
+      <app-sidebar (hoverStateChange)="onSidebarHover($event)"></app-sidebar>
+    </div>
+    
+    <!-- Main Content with custom width classes -->
+    <div class="main-content-area"
+         [ngClass]="{'content-with-expanded-sidebar': isSidebarExpanded, 'content-with-collapsed-sidebar': !isSidebarExpanded || isHovering}">
+      <app-header *ngIf="display"></app-header>
+      <div class="sub-container">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
 </div>
+

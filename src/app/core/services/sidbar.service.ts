@@ -5,16 +5,27 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class SidbarService {
-  public isCollapsed = new BehaviorSubject<boolean>(true); // Changed to true for default collapsed state
-  public isSidebarExpanded = new BehaviorSubject<boolean>(false); // Changed to false for default collapsed state
-
-  constructor() {}
+  // For sidebar expansion state
+  private isSidebarExpandedSource = new BehaviorSubject<boolean>(false);
+  isSidebarExpanded = this.isSidebarExpandedSource.asObservable();
+  
+  // For sidebar collapse state (used by header)
+  private isCollapsedSource = new BehaviorSubject<boolean>(true);
+  isCollapsed = this.isCollapsedSource.asObservable();
 
   toggleSidebar() {
-    this.isCollapsed.next(!this.isCollapsed.value);
+    // Toggle the expanded state
+    const currentExpandedState = this.isSidebarExpandedSource.value;
+    this.isSidebarExpandedSource.next(!currentExpandedState);
+    
+    // Also update the collapsed state (they're opposites)
+    this.isCollapsedSource.next(currentExpandedState);
   }
 
+
+
   setSidebarState(isExpanded: boolean) {
-    this.isSidebarExpanded.next(isExpanded);
+    this.isSidebarExpandedSource.next(isExpanded);
   }
 }
+

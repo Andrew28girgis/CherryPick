@@ -1,6 +1,11 @@
 <nav class="navbar navbar-expand-lg d-flex align-items-center w-100">
-  <!-- Left Section (Logo) -->
+  <!-- Left Section (Logo and Sidebar Toggle) -->
   <div class="d-flex align-items-center">
+    <!-- Add Sidebar Toggle Button -->
+    <button class="btn sidebar-toggle-btn me-2" (click)="toggleSidebar()">
+      <i class="fa-solid" [ngClass]="isCollapsed ? 'fa-bars' : 'fa-times'"></i>
+    </button>
+    
     <img
       alt="logo"
       class="cherry-logo"
@@ -94,3 +99,4 @@
     </div>
   </div>
 </nav>
+

@@ -1,8 +1,8 @@
 <div class="sidebar-container" [ngClass]="{'expanded': isSidebarExpanded || isHovering, 'collapsed': !isSidebarExpanded && !isHovering}">
     <!-- Toggle Button -->
-    <button class="sidebar-toggle" (click)="toggleSidebar($event)">
+    <!-- <button class="sidebar-toggle" (click)="toggleSidebar($event)">
       <i class="fa-solid" [ngClass]="{'fa-chevron-right': !isSidebarExpanded && !isHovering, 'fa-chevron-left': isSidebarExpanded || isHovering}"></i>
-    </button>
+    </button> -->
   
     <!-- Sidebar Content -->
     <div class="sidebar" (mouseenter)="onSidebarHover(true)" (mouseleave)="onSidebarHover(false)">

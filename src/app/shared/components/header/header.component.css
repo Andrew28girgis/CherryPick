@@ -1,3 +1,8 @@
+.navbar {
+  background-color: #fff;
+  padding-left: 2%;
+  padding-right: 3%;
+}
 .header {
   height: 100%;
   width: 100%;
@@ -6,6 +11,28 @@
   padding: 0 20px;
   display: flex;
   align-items: center;
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: #707791;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.sidebar-toggle-btn:hover {
+  color: #4d65b4;
+  background-color: rgba(77, 101, 180, 0.1);
+}
+
+.sidebar-toggle-btn:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .header-content {
@@ -169,14 +196,15 @@
   .header {
     padding: 0 10px;
   }
-  
+
   .actions {
     gap: 15px;
   }
 }
-.navbar-collapse{
+.navbar-collapse {
   flex: initial;
 }
-.avatar-notifcations{
+.avatar-notifcations {
   gap: 10px;
 }
+
