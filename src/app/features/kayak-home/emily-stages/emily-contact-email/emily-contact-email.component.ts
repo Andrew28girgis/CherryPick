@@ -41,7 +41,9 @@ export class EmilyContactEmailComponent implements OnInit {
   isScrolling = false;
   private scrollTimeout: any;
   filteredEmails: Mail[] = [];
-  selectedFilter: string = 'all'; // Default filter is 'inbox'
+  isDropdownVisible: boolean = false;  // Controls the visibility of the dropdown
+  selectedFilter: string = 'all';      // Default selected filter
+  selectedOption: string = 'All';     // Default text in the dropdown
 
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -67,7 +69,9 @@ export class EmilyContactEmailComponent implements OnInit {
     });
     this.loadInitialData();
   }
-
+  toggleDropdown() {
+    this.isDropdownVisible = !this.isDropdownVisible;
+  }
   loadInitialData(): void {
     this.spinner.show();
     this.filteredEmails = [];
@@ -263,6 +267,8 @@ export class EmilyContactEmailComponent implements OnInit {
   }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
+    this.isDropdownVisible = false; // Set this to false to hide the dropdown
+
     // If no emails or contact selected, don't try to filter.
     if (!this.selectedContact || this.emailsSentContact.length === 0) {
       this.filteredEmails = [];
@@ -286,6 +292,7 @@ export class EmilyContactEmailComponent implements OnInit {
         filtered = [...this.emailsSentContact];
         break;
     }
+
     // Sort emails by date in descending order (newest first).
     this.filteredEmails = this.sortEmailsByDateDesc(filtered);
     if (this.filteredEmails.length === 0) {
