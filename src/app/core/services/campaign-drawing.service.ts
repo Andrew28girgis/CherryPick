@@ -878,4 +878,12 @@ export class CampaignDrawingService {
   getDrawnList(): boolean {
     return this.drawnPolygons.length > 0 || this.drawnCircles.length > 0;
   }
+
+  get getDrawnPolygons() {
+    return this.drawnPolygons;
+  }
+
+  get getDrawnCircles() {
+    return this.drawnCircles;
+  }
 }

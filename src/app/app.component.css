@@ -43,11 +43,12 @@
 /* Make sure the content area uses flexbox for vertical layout */
 .main-content-area {
   display: flex;
+  height: 100vh;
   flex-direction: column;
   transition: all 0.3s ease;
 }
 
-.content-with-collapsed-sidebar{
+.content-with-collapsed-sidebar {
   padding-left: 0.6%;
 }
 
@@ -70,4 +71,3 @@
 .row > div {
   transition: all 0.3s ease;
 }
-
