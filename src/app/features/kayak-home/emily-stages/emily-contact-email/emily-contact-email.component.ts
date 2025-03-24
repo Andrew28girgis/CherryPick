@@ -165,7 +165,7 @@ export class EmilyContactEmailComponent implements OnInit {
     const matchingEmails: any[] = this.BuyBoxEmails;
     
     // Filter emails that are related to the selected contact.
-    this.emailsSentContact = matchingEmails.filter((email: Mail) =>
+    this.emailsSentContact = matchingEmails?.filter((email: Mail) =>
       email?.ContactId === contact.ContactId ||
       (email?.MailsContacts && email.MailsContacts.some(
         (mc: MailsContact) => mc.MailContactId === contact.ContactId
@@ -270,7 +270,7 @@ export class EmilyContactEmailComponent implements OnInit {
     this.isDropdownVisible = false; // Set this to false to hide the dropdown
 
     // If no emails or contact selected, don't try to filter.
-    if (!this.selectedContact || this.emailsSentContact.length === 0) {
+    if (!this.selectedContact || this.emailsSentContact?.length === 0) {
       this.filteredEmails = [];
       this.selectedEmail = null;
       return;

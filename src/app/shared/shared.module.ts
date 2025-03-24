@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
-import { NotificationsComponent } from "./components/notifications/notifications.component";
+import { NotificationsComponent } from './components/notifications/notifications.component';
 @NgModule({
   declarations: [HeaderComponent],
   imports: [
@@ -11,8 +11,8 @@ import { NotificationsComponent } from "./components/notifications/notifications
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    NotificationsComponent
-],
+    NotificationsComponent,
+  ],
   exports: [HeaderComponent],
 })
 export class SharedModule {}

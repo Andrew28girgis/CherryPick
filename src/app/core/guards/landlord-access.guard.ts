@@ -28,7 +28,7 @@ export class LandlordAccessGuard implements CanActivate {
     // If user is in tenant view, block access to landlord routes
     if (!isLandlordView) {
       // Redirect to dashboard if tenant tries to access landlord routes
-      return this.router.parseUrl('/dashboard');
+      return this.router.parseUrl('/summary');
     }
 
     // Allow landlord users to access landlord routes

@@ -47,7 +47,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isSmallScreen = window.innerWidth < 992; 
+    this.isSmallScreen = window.innerWidth < 992;
 
     // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
@@ -67,9 +67,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.current = this.router.url;
 
     // Subscribe to view changes if needed.
-    this.viewSubscription = this.userViewService.currentView$.subscribe((view) => {
-      this.currentView = view;
-    });
+    this.viewSubscription = this.userViewService.currentView$.subscribe(
+      (view) => {
+        this.currentView = view;
+      }
+    );
 
     // Fetch user avatar.
     this.fetchUserAvatar();
