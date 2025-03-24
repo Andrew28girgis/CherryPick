@@ -16,11 +16,11 @@
 .nav-link {
   border-radius: var(--Radius-Radius-8, 8px);
   background: var(--Card-Section-BG, #fff);
-  display: flex; 
+  display: flex;
   padding: 6px 12px;
   align-items: center;
   gap: 8px;
-  color: var(--Body-Text-and-Icons, #707791); 
+  color: var(--Body-Text-and-Icons, #707791);
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
@@ -179,7 +179,7 @@
 .dropdown-menu {
   min-width: 200px;
 }
-.avatar-notifcations{
+.avatar-notifcations {
   gap: 16px;
 }
 .dropdown-item {

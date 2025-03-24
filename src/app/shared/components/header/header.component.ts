@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef,HostListener } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  TemplateRef,
+  HostListener,
+} from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -25,9 +32,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ];
 
   emails: any[] = [
-    { id: 1, subject: 'Upcoming meeting', from: 'john@example.com', time: '10:00 AM' },
-    { id: 2, subject: 'Project update', from: 'sarah@example.com', time: '11:30 AM' },
-    { id: 3, subject: 'Weekly report', from: 'mike@example.com', time: '2:00 PM' },
+    {
+      id: 1,
+      subject: 'Upcoming meeting',
+      from: 'john@example.com',
+      time: '10:00 AM',
+    },
+    {
+      id: 2,
+      subject: 'Project update',
+      from: 'sarah@example.com',
+      time: '11:30 AM',
+    },
+    {
+      id: 3,
+      subject: 'Weekly report',
+      from: 'mike@example.com',
+      time: '2:00 PM',
+    },
   ];
 
   // Avatar and view switching properties
@@ -53,7 +75,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isSmallScreen = window.innerWidth < 992; 
+    this.isSmallScreen = window.innerWidth < 992;
 
     // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
@@ -71,9 +93,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.current = this.router.url;
 
     // Subscribe to view changes if needed.
-    this.viewSubscription = this.userViewService.currentView$.subscribe((view) => {
-      this.currentView = view;
-    });
+    this.viewSubscription = this.userViewService.currentView$.subscribe(
+      (view) => {
+        this.currentView = view;
+      }
+    );
 
     // Fetch user avatar.
     this.fetchUserAvatar();
