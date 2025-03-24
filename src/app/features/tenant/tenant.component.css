@@ -341,7 +341,6 @@
   padding: var(--Space-Space-4, 4px) var(--Space-Space-12, 12px);
   color: var(--Colors-Primary-600, #3e5190);
   text-align: center;
-  font-family: "Montserrat", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -349,7 +348,6 @@
 }
 .buyboxname {
   color: var(--Colors-Pure-White, #fff);
-  font-family: Montserrat;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -368,7 +366,6 @@
 }
 .submitproposell {
   color: #000;
-  font-family: Montserrat;
   font-size: 22px;
   font-style: normal;
   font-weight: 600;
@@ -382,7 +379,6 @@
 }
 .filename {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -414,7 +410,6 @@
   padding: 0;
   color: var(--Colors-Primary-500, #4d65b4);
   text-align: right;
-  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;

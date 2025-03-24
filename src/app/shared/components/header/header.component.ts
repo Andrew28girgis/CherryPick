@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef,HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, HostListener, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -17,35 +17,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onResize() {
     this.isSmallScreen = window.innerWidth < 992;
   }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.isNavbarOpen && this.elementRef.nativeElement.querySelector('#navbarNav') && 
+        !this.elementRef.nativeElement.querySelector('#navbarNav').contains(event.target as Node) &&
+        !this.elementRef.nativeElement.querySelector('.navbar-toggler').contains(event.target as Node)) {
+      this.isNavbarOpen = false;
+    }
+  }
   isCollapsed = true;
-  notifications: any[] = [
-    { id: 1, message: 'New notification 1', time: '5 min ago' },
-    { id: 2, message: 'New notification 2', time: '1 hour ago' },
-    { id: 3, message: 'New notification 3', time: '2 hours ago' },
-  ];
-
-  emails: any[] = [
-    { id: 1, subject: 'Upcoming meeting', from: 'john@example.com', time: '10:00 AM' },
-    { id: 2, subject: 'Project update', from: 'sarah@example.com', time: '11:30 AM' },
-    { id: 3, subject: 'Weekly report', from: 'mike@example.com', time: '2:00 PM' },
-  ];
-
-  // Avatar and view switching properties
   userAvatar: string | null = null;
   currentView: 'tenant' | 'landlord' = 'tenant';
-  // New variable that will hold the current route URL.
   current: string = '';
-
   private viewSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;
-
   @ViewChild('emailContent') emailContent!: TemplateRef<any>;
   @ViewChild('notificationContent') notificationContent!: TemplateRef<any>;
 
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
-    private userViewService: UserViewService
+    private userViewService: UserViewService,
+    private elementRef: ElementRef // Add ElementRef for DOM access
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state;
@@ -65,6 +59,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe((event: NavigationEnd) => {
         this.current = event.urlAfterRedirects;
+        // Close navbar when route changes
+        this.isNavbarOpen = false;
       });
 
     // Initialize `current` with the current URL.
@@ -116,7 +112,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isNavbarOpen = false;
 
-  toggleNavbar() {
+  toggleNavbar(event: Event) {
+    event.stopPropagation(); // Prevent document click from immediately closing
     this.isNavbarOpen = !this.isNavbarOpen;
   }
 }
