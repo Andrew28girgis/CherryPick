@@ -134,7 +134,7 @@
                 style="cursor: pointer"
                 *ngFor="let email of filteredEmails"
                 (click)="openEmail(email)"
-                [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
+                [ngClass]="{ 'selected-email': email.id === selectedEmail?.id }"
               >
                 <strong
                   ><i
