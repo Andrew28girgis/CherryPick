@@ -7,7 +7,6 @@ import { TermsComponent } from './features/terms/terms.component';
 import { TenantComponent } from './features/tenant/tenant.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
-// Import the route guards
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
@@ -20,7 +19,6 @@ const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'tos', component: TermsComponent },
-
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
@@ -33,8 +31,6 @@ const routes: Routes = [
       ),
     canActivate: [LandlordAccessGuard],
   },
-
-  // Tenant routes - only accessible by tenant users (or blocked for landlord users)
   {
     path: 'summary',
     component: SummeryComponent,
@@ -64,13 +60,11 @@ const routes: Routes = [
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [TenantOnlyGuard],
-    // canActivate: [AuthGuardService],
   },
   {
     path: 'tenant/:buyboxid',
     component: TenantComponent,
     canActivate: [TenantOnlyGuard],
-    // canActivate: [AuthGuardService],
   },
   {
     path: 'Kanban',
