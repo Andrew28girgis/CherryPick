@@ -5,3 +5,78 @@
 .sub-container {
   flex: 1;
 }
+
+.app-container {
+  display: grid;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar content";
+  grid-template-rows: 70px 1fr; /* Header height and content */
+}
+
+/* Default collapsed state */
+.sidebar-collapsed {
+  grid-template-columns: 70px 1fr; /* Width of collapsed sidebar and content */
+}
+
+/* Expanded state */
+.sidebar-expanded {
+  grid-template-columns: 250px 1fr; /* Width of expanded sidebar and content */
+}
+
+/* Hovering state - same grid as collapsed but sidebar will overlay */
+.sidebar-hovering {
+  grid-template-columns: 70px 1fr; /* Keep the same grid as collapsed */
+}
+
+/* Define grid areas */
+.sidebar-area {
+  grid-area: sidebar;
+  position: relative;
+  z-index: 10;
+}
+
+.header-area {
+  grid-area: header;
+  position: relative;
+  z-index: 5;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.content-area {
+  grid-area: content;
+  overflow-y: auto;
+  position: relative;
+  z-index: 5;
+}
+
+.content-wrapper {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Mobile responsive layout */
+@media (max-width: 768px) {
+  .app-container,
+  .sidebar-collapsed,
+  .sidebar-expanded,
+  .sidebar-hovering {
+    grid-template-areas:
+      "header"
+      "content";
+    grid-template-columns: 1fr;
+    grid-template-rows: 70px 1fr;
+  }
+
+  .sidebar-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+  }
+}

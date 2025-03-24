@@ -1,6 +1,14 @@
-<div class="my-container">
-  <app-header *ngIf="display"></app-header>
-  <div class="sub-container">
-    <router-outlet></router-outlet>
+<div class="app-container" [ngClass]="{'sidebar-expanded': isSidebarExpanded, 'sidebar-collapsed': !isSidebarExpanded, 'sidebar-hovering': isHovering}">
+  <!-- Sidebar -->
+  <app-sidebar *ngIf="display" class="sidebar-area" (hoverStateChange)="onSidebarHover($event)"></app-sidebar>
+  
+  <!-- Header -->
+  <app-header *ngIf="display" class="header-area"></app-header>
+  
+  <!-- Main Content -->
+  <div class="content-area">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>

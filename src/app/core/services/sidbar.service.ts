@@ -1,31 +1,20 @@
-import { Injectable } from "@angular/core"
-import { BehaviorSubject } from "rxjs"
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class SidbarService {
-  private collapsed = new BehaviorSubject<boolean>(true)
-  private hovering = new BehaviorSubject<boolean>(false)
+  public isCollapsed = new BehaviorSubject<boolean>(true); // Changed to true for default collapsed state
+  public isSidebarExpanded = new BehaviorSubject<boolean>(false); // Changed to false for default collapsed state
 
-  isCollapsed = this.collapsed.asObservable()
-  isHovering = this.hovering.asObservable()
+  constructor() {}
 
   toggleSidebar() {
-    this.collapsed.next(!this.collapsed.value)
+    this.isCollapsed.next(!this.isCollapsed.value);
   }
 
-  setCollapsedState(state: boolean) {
-    this.collapsed.next(state)
-  }
-
-  setHoveringState(state: boolean) {
-    this.hovering.next(state)
-  }
-
-  // Get the current value without subscribing
-  getCollapsedValue(): boolean {
-    return this.collapsed.value
+  setSidebarState(isExpanded: boolean) {
+    this.isSidebarExpanded.next(isExpanded);
   }
 }
-
