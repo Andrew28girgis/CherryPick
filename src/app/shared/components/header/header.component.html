@@ -34,6 +34,7 @@
           [routerLink]="['/dashboard']"
           routerLinkActive="active-route"
           class="nav-link"
+          (click)="closeNavbar()"
           >Dashboard</a
         >
       </li> -->
@@ -42,6 +43,7 @@
           [routerLink]="['/Submissions']"
           routerLinkActive="active-route"
           class="nav-link"
+          (click)="closeNavbar()"
           >Submissions</a
         >
       </li>
@@ -50,6 +52,7 @@
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
           class="nav-link"
+          (click)="closeNavbar()"
           >Cadence</a
         >
       </li>
@@ -58,6 +61,7 @@
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
           class="nav-link"
+          (click)="closeNavbar()"
           >Tenants</a
         >
       </li>
@@ -66,6 +70,7 @@
           [routerLink]="['/landlord']"
           routerLinkActive="active-route"
           class="nav-link"
+          (click)="closeNavbar()"
           >Properties</a
         >
       </li>
@@ -74,6 +79,7 @@
           [routerLink]="['/EmilyUserInbox']"
           class="nav-link"
           routerLinkActive="active-route"
+          (click)="closeNavbar()"
           >Emily</a
         >
       </li>
