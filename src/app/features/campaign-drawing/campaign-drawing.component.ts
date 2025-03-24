@@ -209,7 +209,7 @@ export class CampaignDrawingComponent
       Params: {
         CampaignName: this.campaignName,
         CampaignPrivacy: this.isPrivateCampaign,
-        BuyBoxId: this.buyBoxId || 211,
+        BuyBoxId: this.buyBoxId,
       },
     };
 
