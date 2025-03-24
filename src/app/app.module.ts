@@ -51,6 +51,7 @@ import { EmilyUserInboxComponent } from './components/emily-user-inbox/emily-use
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { CampaignDrawingComponent } from './components/campaign-drawing/campaign-drawing.component';
 
 const msalConfig = {
   auth: {
@@ -91,7 +92,8 @@ const loginRequest = {
     ManagePropertiesComponent,
     DashboardComponent,
     AddTenantsComponent,
-    EmilyUserInboxComponent
+    EmilyUserInboxComponent,
+    CampaignDrawingComponent
   ],
   imports: [
     BrowserModule,
