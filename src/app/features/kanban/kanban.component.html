@@ -89,7 +89,11 @@
                   <a
                     *ngIf="action.actionName.trim().length > 0"
                     class="col-5 workflow-item"
-                    style="background-color: #ffffff; color: #707791"
+                    style="
+                      background-color: #ffffff;
+                      color: #707791;
+                      cursor: pointer;
+                    "
                     [pTooltip]="action.actionName"
                     tooltipPosition="top"
                     (click)="openActionPopup(action.actionName)"
