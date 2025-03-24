@@ -1,0 +1,193 @@
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+}
+
+.map-controls-container {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  display: flex;
+  background: #ffffff;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+.map-control {
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.map-control-icon {
+  display: flex;
+  align-items: center;
+}
+
+.map-control-icon svg,
+.launch-campaign-btn-icon svg,
+.exit-draw-mode-btn-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.map-control-icon svg path {
+  fill: #707791;
+}
+
+.map-control-title {
+  color: #707791;
+}
+
+.active-map-control {
+  background-color: #dbe0f0;
+  border-color: #2e3d6c;
+}
+
+.map-control.active-map-control .map-control-icon svg path {
+  fill: #4d65b4;
+}
+
+.map-control.active-map-control .map-control-title {
+  color: #4d65b4;
+}
+
+.launch-campaign {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+}
+
+.launch-campaign-btn {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  background: #4d65b4;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+.launch-campaign-btn-icon {
+  display: flex;
+  align-items: center;
+}
+
+.launch-campaign-btn-icon svg path {
+  fill: #ffffff;
+}
+
+.launch-campaign-title {
+  color: #ffffff;
+}
+
+.exit-draw-mode {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  cursor: pointer;
+}
+
+.exit-draw-mode-btn {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  background: #ffffff;
+  border: 1px solid #ff4c4c;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+.exit-draw-mode-btn-icon {
+  display: flex;
+  align-items: center;
+}
+
+.exit-draw-mode-btn-icon svg path {
+  fill: #ff4c4c;
+}
+
+.exit-draw-mode-title {
+  color: #ff4c4c;
+}
+
+.start-drawing-btn {
+  border-color: #2e3d6c;
+}
+
+.start-drawing-btn .exit-draw-mode-title {
+  color: #2e3d6c;
+}
+
+.new-campaign-title {
+  font-weight: 600;
+}
+
+::ng-deep .p-selectbutton .p-button {
+  padding: 4px 12px;
+  box-shadow: none;
+  outline: none;
+  color: #707791 !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400 !important;
+  border: 1px solid #4d65b4;
+}
+
+::ng-deep .p-selectbutton .p-button.p-highlight {
+  background: #4d65b4;
+  color: white !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400 !important;
+  border: 1px solid #4d65b4;
+}
+.campaign-status {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.campaign-visability {
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid #c6c9d3;
+}
+
+.campaign-name-input {
+  padding: 0.75rem 1rem;
+
+  border-radius: 1rem;
+}
+
+.cancel-campaign {
+  padding: 0.5rem 0.75rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #4d65b4;
+  color: #4d65b4;
+}
+
+.save-campaign {
+  padding: 0.5rem 0.75rem;
+  background-color: #4d65b4;
+  border-radius: 1rem;
+  border: 1px solid #4d65b4;
+  color: #ffffff;
+}
