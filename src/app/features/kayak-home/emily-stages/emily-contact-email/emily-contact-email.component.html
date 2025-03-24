@@ -79,14 +79,13 @@
       >
         <div class="mailbox-header">
           <div class="dropdownall d-flex align-items-center justify-content-center" (click)="toggleDropdown()">
-            <span class="all">All</span>
+            <span class="all">{{ selectedFilter | uppercase }}</span>
             <i class="fa-solid fa-chevron-down"></i>
-            <!-- <i class="arrow-down">&#8595;</i> -->
           </div>
           
           <!-- Dropdown content (hidden by default) -->
           <div class="dropdown-content" [class.show]="isDropdownVisible">
-            <div >
+            <div>
               <h5 class="contacts">Mail box</h5>
               <div class="email-filters d-flex flex-column ">
                 <div
@@ -121,6 +120,7 @@
             </div>
           </div>
           
+          
           <div class="top-right d-flex" style="padding-top: 35px">
             <button
               class="new-btn"
@@ -142,7 +142,7 @@
                 style="cursor: pointer"
                 *ngFor="let email of filteredEmails"
                 (click)="openEmail(email)"
-                [ngClass]="{ 'selected-email': email.id === selectedEmail?.id }"
+                [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
               >
                 <strong
                   ><i
