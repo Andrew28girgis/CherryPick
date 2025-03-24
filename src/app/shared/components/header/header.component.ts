@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, HostListener, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -17,24 +17,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onResize() {
     this.isSmallScreen = window.innerWidth < 992;
   }
-  isCollapsed = true;
 
-  // Avatar and view switching properties
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.isNavbarOpen && this.elementRef.nativeElement.querySelector('#navbarNav') && 
+        !this.elementRef.nativeElement.querySelector('#navbarNav').contains(event.target as Node) &&
+        !this.elementRef.nativeElement.querySelector('.navbar-toggler').contains(event.target as Node)) {
+      this.isNavbarOpen = false;
+    }
+  }
+  isCollapsed = true;
   userAvatar: string | null = null;
   currentView: 'tenant' | 'landlord' = 'tenant';
-  // New variable that will hold the current route URL.
   current: string = '';
-
   private viewSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;
-
   @ViewChild('emailContent') emailContent!: TemplateRef<any>;
   @ViewChild('notificationContent') notificationContent!: TemplateRef<any>;
 
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
-    private userViewService: UserViewService
+    private userViewService: UserViewService,
+    private elementRef: ElementRef // Add ElementRef for DOM access
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state;
@@ -94,30 +99,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
     localStorage.removeItem('token');
     localStorage.removeItem('userView');
     this.router.navigate(['/login']);
-    this.isNavbarOpen = false;
   }
 
   switchView(): void {
     const newView = this.currentView === 'tenant' ? 'landlord' : 'tenant';
     this.userViewService.switchView(newView);
-    this.isNavbarOpen = false;
   }
 
   BackTo() {
     this.router.navigate(['/dashboard']);
-    this.isNavbarOpen = false;
   }
 
   isNavbarOpen = false;
 
-  toggleNavbar() {
+  toggleNavbar(event: Event) {
+    event.stopPropagation(); // Prevent document click from immediately closing
     this.isNavbarOpen = !this.isNavbarOpen;
-  }
-  
-  // New method to close navbar when clicking a nav item
-  closeNavbar() {
-    if (this.isSmallScreen) {
-      this.isNavbarOpen = false;
-    }
   }
 }
