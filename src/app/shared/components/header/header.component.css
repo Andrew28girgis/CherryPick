@@ -140,7 +140,6 @@
   color: #495057;
 }
 
-/* Small popup menu for mobile */
 @media (max-width: 768px) {
   .container-fluid {
     flex-wrap: wrap;
@@ -155,7 +154,6 @@
     order: 2;
   }
 
-  /* Mobile menu styling as a small popup */
   .navbar-collapse.mobile-menu {
     position: absolute;
     top: 60px;
@@ -248,7 +246,6 @@
   transform: translateX(5px);
 }
 
-/* Navbar toggler styling */
 .navbar-toggler {
   border: none;
   background: transparent;
