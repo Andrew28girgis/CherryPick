@@ -69,12 +69,7 @@
       <li class="sidebar-item">
         <a
           class="sidebar-link"
-          (click)="
-            cadenceIsOpen = !cadenceIsOpen;
-            this.cadenceService.updateKanbanId(
-              this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
-            )
-          "
+          (click)="cadenceIsOpen = !cadenceIsOpen"
           style="cursor: pointer"
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
@@ -137,6 +132,28 @@
             (cadenceIsOpen && isHovering)
           "
         >
+          <li
+            class="sidebar-item"
+            (click)="
+              this.cadenceService.updateKanbanId(
+                this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
+              )
+            "
+          >
+            <a
+              class="sidebar-link"
+              style="cursor: pointer"
+              [ngClass]="{
+                'active-kanban-overflow':
+                  (kanbanId$ | async) ===
+                  this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
+              }"
+            >
+              <span class="link-text" style="color: #72777a">
+                {{ this.allUserKanbans[0].kanbanName }}
+              </span>
+            </a>
+          </li>
           <ng-container *ngFor="let org of sideKanban.tenantOrganizations">
             <li class="sidebar-item">
               <a

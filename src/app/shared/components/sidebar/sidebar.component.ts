@@ -84,6 +84,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
       }
     );
     this.kanbanId$ = this.cadenceService.getKanbanId();
+
+    this.cadenceService.getKanbanId().subscribe((kanbanId) => {
+      if (kanbanId) {
+        this.sideKanban.tenantOrganizations.forEach((o) => {
+          this.kanbanId$.subscribe((kanbanId) => {
+            if (o.OtherKanbans.find((k) => k.id == kanbanId)) {
+              o.isOpen = true;
+            }
+          });
+        });
+      }
+    });
   }
 
   ngOnDestroy(): void {
