@@ -1,0 +1,23 @@
+<div class="checkbox-container">
+  <div class="checkbox-wrapper">
+    <ng-container *ngFor="let category of buyboxCategories">
+      <div class="d-flex mx-2 competitor">
+        <input
+          type="checkbox"
+          id="{{ category.id }}"
+          [(ngModel)]="category.isChecked"
+          (change)="onCheckboxChange(category)"
+          class="me-2"
+        />
+        <label
+          class="p-0 m-0"
+          [for]="category.id"
+          style="cursor: pointer; text-wrap: nowrap"
+        >
+          {{ category.name }}
+        </label>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<div id="map" class="custom-map"></div>

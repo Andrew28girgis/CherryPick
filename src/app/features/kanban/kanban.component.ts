@@ -322,8 +322,15 @@ export class KanbanComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateKanbanId(kanbanId: number, name: string): void {
-    this.breadcrumbList.push({ kanbanId: kanbanId, name: name });
+  updateKanbanId(
+    kanbanId: number,
+    name: string,
+    organizationName?: string
+  ): void {
+    this.breadcrumbList.push({
+      kanbanId: kanbanId,
+      name: organizationName ? organizationName + ' - ' + name : name,
+    });
     this.getKanban(kanbanId);
   }
 

@@ -1,0 +1,187 @@
+<div class="d-flex">
+  <div class="background2 col-md-8 col-sm-12 cards">
+    <div class="p-3 d-flex justify-content-between">
+      <p class="m-0 f500" style="color: #000">
+        {{ cardsSideList.length }} places within map area
+      </p>
+
+      <div
+        class="d-flex flex-row align-items-center py-2 col-4"
+        style="margin-right: 25px"
+      >
+        <ng-container *ngFor="let category of buyboxCategories">
+          <div class="d-flex mx-2 competitor">
+            <input
+              type="checkbox"
+              id="{{ category.id }}"
+              [(ngModel)]="category.isChecked"
+              (change)="onCheckboxChange(category)"
+              class="me-2"
+            />
+            <label
+              class="p-0 m-0"
+              [for]="category.id"
+              style="cursor: pointer; text-wrap: nowrap"
+            >
+              {{ category.name }}
+            </label>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="row m-0 mt-2" style="overflow-y: auto; max-height: 90vh">
+      <ng-container *ngFor="let shopping of cardsSideList">
+        <div class="card-window total col-12 col-sm-6">
+          <div class="card-window_c">
+            <a
+              [routerLink]="[
+                    '/landing',
+                    shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,
+                    shopping?.Id,
+                    BuyBoxId 
+                  ]"
+            >
+              <div class="main-img">
+                <img
+                  src="{{
+                    shopping.MainImage || 'assets/Images/DefaultImage.png'
+                  }}"
+                />
+              </div>
+            </a>
+            <div class="content-wrap card-content">
+              <div>
+                <div class="fitcontent">
+                  <a
+                    class="textdecoration"
+                    [routerLink]="[
+                      '/landing',
+                      shopping?.ShoppingCenter?.Places
+                        ? shopping?.ShoppingCenter?.Places?.[0]?.Id
+                        : 0,
+                      shopping.Id,
+                      BuyBoxId 
+                    ]"
+                  >
+                    <p class="content-title total">
+                      {{
+                        shopping.CenterName.length > 22
+                          ? (shopping.CenterName | titlecase).slice(0, 22) +
+                            "..."
+                          : (shopping.CenterName | titlecase)
+                      }}
+                    </p>
+                  </a>
+
+                  <div
+                    class="card-address total"
+                    (click)="openMapViewPlace(MapViewPlace, shopping)"
+                  >
+                    <span class="mb-5">
+                      {{ shopping.CenterAddress }},
+                      {{ shopping.CenterCity | titlecase }},
+                      {{ shopping.CenterState }}
+                    </span>
+                  </div>
+                  <div>
+                    <p
+                      class="ShoppingCenterUnit"
+                      [innerHTML]="getShoppingCenterUnitSize(shopping)"
+                    ></p>
+                  </div>
+                  <div class="row m-0">
+                    <div
+                      *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
+                      class="col-12 d-flex flex-column spec"
+                    >
+                      <div class="d-flex flex-column">
+                        <p class="nearset-category" style="color: #000">
+                          <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
+                        </p>
+                        <p style="color: #000">
+                          {{ item.RelationOrganizationName }}
+                          <img
+                            class="logo ms-2"
+                            src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                              item.RelationOrganizationId
+                            }}"
+                            [title]="item.RelationOrganizationName"
+                            alt=""
+                          />
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-md-12 spec"
+                  *ngIf="
+                    shopping.ShoppingCenter?.ManagerOrganization &&
+                    placesRepresentative != false
+                  "
+                >
+                  <hr class="small-hr mt-2" />
+                  <span class="managed-by">Leased by</span>
+                  <p class="spec-head">
+                    <img
+                      class="logo"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        shopping.ShoppingCenter.ManagerOrganization[0].ID
+                      }}"
+                      [title]="
+                        shopping.ShoppingCenter.ManagerOrganization[0].Name
+                      "
+                      alt=""
+                    />
+                    {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
+
+                    <img
+                      class="ms-2 total"
+                      src="../../../assets/Images/Icons/eye.png"
+                      alt="View Manager Details"
+                      [ngbPopover]="popoverContent"
+                      popoverTitle="Organization Contact Info"
+                      triggers="click:outside"
+                      [placement]="'top'"
+                    />
+                    <br />
+                    <ng-template #popoverContent>
+                      <div
+                        *ngFor="
+                          let org of shopping.ShoppingCenter.ManagerOrganization
+                        "
+                        class="contact-container table-texttt"
+                      >
+                        <p class="text-bold m-0">
+                          {{ org.Firstname | titlecase }}
+                          {{ org.LastName | titlecase }}
+                        </p>
+                        <p class="m-0">{{ org.CellPhone }}</p>
+                        <p class="m-0">{{ org.Email }}</p>
+                        <hr
+                          *ngIf="
+                            !isLast(
+                              org,
+                              shoppingCenter.ShoppingCenter.ManagerOrganization
+                            )
+                          "
+                        />
+                      </div>
+                    </ng-template>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="p-0 col-md-4 d-none d-sm-block">
+    <div id="map" class="custom-map"></div>
+  </div>
+</div>
+
+<ng-template #MapViewPlace let-modal>
+  <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
+</ng-template>

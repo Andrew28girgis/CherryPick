@@ -118,6 +118,7 @@ export class SummeryComponent implements OnInit{
 
   goToAllPlaces(buyboxId: number, orgId: number, name: string) {
     this.router.navigate(['/home', buyboxId, orgId, name]);
+    this.router.navigate(['/market-survey', buyboxId, orgId, name]);
   }
   open(content: any) {
     const modalRef = this.modalService.open(content, {

@@ -6,32 +6,41 @@
     'sidebar-hovering': isHovering
   }"
 >
-  <!-- Row for sidebar and content -->
-  <div class="row g-0 flex-row-container">
-    <!-- Sidebar with custom width classes -->
-    <div
-      *ngIf="display"
-      class="sidebar-area"
-      [ngClass]="{
-        'sidebar-width-expanded': isSidebarExpanded,
-        'sidebar-width-collapsed': !isSidebarExpanded || isHovering
-      }"
-    >
-      <app-sidebar (hoverStateChange)="onSidebarHover($event)"></app-sidebar>
-    </div>
+  <!-- Conditional rendering based on route -->
+  <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
+    <div class="row g-0 flex-row-container">
+      <!-- Sidebar with custom width classes -->
+      <div
+        *ngIf="display"
+        class="sidebar-area"
+        [ngClass]="{
+          'sidebar-width-expanded': isSidebarExpanded,
+          'sidebar-width-collapsed': !isSidebarExpanded || isHovering
+        }"
+      >
+        <app-sidebar (hoverStateChange)="onSidebarHover($event)"></app-sidebar>
+      </div>
 
-    <!-- Main Content with custom width classes -->
-    <div
-      class="main-content-area"
-      [ngClass]="{
-        'content-with-expanded-sidebar': isSidebarExpanded,
-        'content-with-collapsed-sidebar': !isSidebarExpanded || isHovering
-      }"
-    >
-      <app-header *ngIf="display"></app-header>
-      <div class="sub-container">
-        <router-outlet></router-outlet>
+      <!-- Main Content with custom width classes -->
+      <div
+        class="main-content-area"
+        [ngClass]="{
+          'content-with-expanded-sidebar': isSidebarExpanded,
+          'content-with-collapsed-sidebar': !isSidebarExpanded || isHovering
+        }"
+      >
+        <app-header *ngIf="display"></app-header>
+        <div class="sub-container">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-container>
+
+  <!-- Template for full-width content (Market Survey) -->
+  <ng-template #fullWidthContent>
+    <div class="full-width-content">
+      <router-outlet></router-outlet>
+    </div>
+  </ng-template>
 </div>
