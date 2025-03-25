@@ -6,10 +6,8 @@
     'sidebar-hovering': isHovering
   }"
 >
-  <!-- Conditional rendering based on route -->
   <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
     <div class="row g-0 flex-row-container">
-      <!-- Sidebar with custom width classes -->
       <div
         *ngIf="display"
         class="sidebar-area"
