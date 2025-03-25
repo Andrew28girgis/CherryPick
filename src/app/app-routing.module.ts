@@ -14,7 +14,7 @@ import { KanbanComponent } from './features/kanban/kanban.component';
 import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
-import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey/market-survey-home/market-survey.component';
+import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
