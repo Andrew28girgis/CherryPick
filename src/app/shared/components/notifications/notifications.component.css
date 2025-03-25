@@ -1,5 +1,6 @@
 .notification-container {
   position: relative;
+  cursor: pointer;
 }
 .action-icon {
   position: relative;
