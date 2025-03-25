@@ -20,6 +20,7 @@ import { popupActions } from './kanban-actions/kanban-actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { sharedColors } from '../../shared/others/shared-colors';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { CadenceService } from 'src/app/core/services/cadence.service';
 
 @Component({
   selector: 'app-kanban',
@@ -42,7 +43,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private location: Location,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private cadenceService: CadenceService
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +57,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
           (kanban) => kanban.targetStakeholderId == 2
         );
         if (kanban) {
+          this.cadenceService.updateKanbanId(kanban.Id);
           this.breadcrumbList.push({
             kanbanId: kanban.Id,
             name: kanban.kanbanName,
@@ -70,6 +73,15 @@ export class KanbanComponent implements OnInit, OnDestroy {
         this.getKanbanDetails();
       }
     }, 5000);
+
+    this.cadenceService.getKanbanId().subscribe((kanbanId) => {
+      if (kanbanId) {
+        if (this.selectedKanbanId != kanbanId) {
+          this.selectedKanbanId = kanbanId;
+          this.getKanbanDetails();
+        }
+      }
+    });
   }
 
   private getUserKanbans(): void {
@@ -99,11 +111,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
       kanbanDetails.kanbanStages.forEach((stage) => {
         this.activeKanbanDetails.kanbanStages.forEach((activeKanbanStage) => {
           if (
-            stage.StageId == activeKanbanStage.StageId &&
-            (stage.StageOrganizations?.length !=
+            stage.StageOrganizations?.length !=
               activeKanbanStage.StageOrganizations?.length ||
-              stage.StageListings?.length !=
-                activeKanbanStage.StageListings?.length)
+            stage.StageListings?.length !=
+              activeKanbanStage.StageListings?.length
           ) {
             changeFlage = true;
           }
@@ -168,7 +179,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
           if (data.json[0] && this.activeKanbanDetails) {
             const checkForKanbanChanges =
               this.checkForKanbanChanges(cleanedKanbanDetails);
-
             return;
           }
           cleanedKanbanDetails.kanbanStages =
@@ -338,6 +348,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.kanbanDetails = undefined;
 
     this.selectedKanbanId = kanbanId;
+    this.cadenceService.updateKanbanId(kanbanId);
 
     this.getKanbanDetails();
   }

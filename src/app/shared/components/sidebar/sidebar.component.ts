@@ -5,9 +5,10 @@ import {
   HostListener,
   Output,
   EventEmitter,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
@@ -15,6 +16,7 @@ import { UserViewService } from 'src/app/core/services/user-view.service';
 import { IUserKanban } from '../../models/iuser-kanban';
 import { cadenceSidebar } from '../../models/sidenavbar';
 import { IKanbanDetails } from '../../models/ikanban-details';
+import { CadenceService } from 'src/app/core/services/cadence.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -25,7 +27,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isSmallScreen: boolean = window.innerWidth < 992;
   isSidebarExpanded: boolean = false; // Default collapsed state
   isHovering: boolean = false;
-
+  kanbanId$!: Observable<number>;
   // Add output event to notify parent of hover state changes
   @Output() hoverStateChange = new EventEmitter<boolean>();
 
@@ -45,7 +47,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private sidbarService: SidbarService,
     public router: Router,
     private userViewService: UserViewService,
-    private PlacesService: PlacesService
+    private PlacesService: PlacesService,
+    protected cadenceService: CadenceService,
+    protected cdr: ChangeDetectorRef
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isSidebarExpanded = !state;
@@ -79,6 +83,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.currentView = view;
       }
     );
+    this.kanbanId$ = this.cadenceService.getKanbanId();
   }
 
   ngOnDestroy(): void {
@@ -106,7 +111,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   // Cadence
-  private allUserKanbans: IUserKanban[] = [];
+  protected allUserKanbans: IUserKanban[] = [];
   sideKanban: cadenceSidebar = { tenantOrganizations: [] }; // Initialize with a default value
   cadenceIsOpen = false;
 
@@ -118,6 +123,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.allUserKanbans = data.json;
+        this.cadenceService.updateKanbanId(
+          this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
+        );
+
         this.getKanbanDetails(
           this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
         );
@@ -135,7 +144,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        let details: IKanbanDetails = data.json[0]; 
+        let details: IKanbanDetails = data.json[0];
         details.kanbanStages.forEach((stage) => {
           if (stage.StageOrganizations) {
             stage.StageOrganizations.forEach((org) => {
@@ -146,7 +155,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
             });
           }
         });
-      }
+      },
     });
   }
 }
