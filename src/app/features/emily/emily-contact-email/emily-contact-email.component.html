@@ -26,13 +26,12 @@
         class="card"
         style="border: none; border-radius: 0; min-height: 80vh"
       >
-        <div class="card-header" style="background-color: white; padding: 24px">
-          <h5 class="contacts mb-0">Contacts</h5>
+        <div class="bg-white">
+          <h5 class="contactsh5 mb-0">Contacts</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="padding: 0;">
           <ul
-            class="card-body"
-            style="padding: 5px; overflow-y: auto; max-height: 63vh"
+            style="overflow-y: auto; max-height: 63vh; padding: 0;"
             [class.scrolling]="isScrolling"
             (scroll)="onScroll()"
           >
@@ -78,55 +77,17 @@
         "
       >
         <div class="mailbox-header">
+          <h5 class="contacts">Mail box</h5>
           <div class="dropdownall d-flex align-items-center justify-content-center" (click)="toggleDropdown()">
             <span class="all">{{ selectedFilter | uppercase }}</span>
             <i class="fa-solid fa-chevron-down"></i>
           </div>
-          
-          <!-- Dropdown content (hidden by default) -->
-          <div class="dropdown-content" [class.show]="isDropdownVisible">
-            <div>
-              <h5 class="contacts">Mail box</h5>
-              <div class="email-filters d-flex flex-column ">
-                <div
-                  class="filter-button"
-                  [ngClass]="{ active: selectedFilter === 'all' }"
-                  (click)="filterEmails('all')"
-                >
-                  <i class="fa-solid fa-envelope me-1"></i> All
-                </div>
-                <div
-                  class="filter-button"
-                  [ngClass]="{ active: selectedFilter === 'inbox' }"
-                  (click)="filterEmails('inbox')"
-                >
-                  <i class="fa-solid fa-reply me-1"></i> Inbox
-                </div>
-                <div
-                  class="filter-button"
-                  [ngClass]="{ active: selectedFilter === 'outbox' }"
-                  (click)="filterEmails('outbox')"
-                >
-                  <i class="fa-solid fa-share me-1"></i> Outbox
-                </div>
-                <div
-                  class="filter-button"
-                  [ngClass]="{ active: selectedFilter === 'sent' }"
-                  (click)="filterEmails('sent')"
-                >
-                  <i class="fa-solid fa-envelope-circle-check me-1"></i> Sent
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          
-          <div class="top-right d-flex" style="padding-top: 35px">
+          <div class=" d-flex" >
             <button
               class="new-btn"
               [routerLink]="['/emily', buyBoxId, orgId, selectedMicroDealId]"
             >
-              Compose
+              New
               <img [src]="'../../../assets/Images/Icons/arrow-down.png'" />
             </button>
             <div class="out-icn" (click)="loadInitialData()">
@@ -162,6 +123,44 @@
             Select a contact to view emails.
           </p>
         </div>
+          <!-- Dropdown content (hidden by default) -->
+          <div class="dropdown-content" [class.show]="isDropdownVisible">
+            <div>
+              <div class="email-filters d-flex flex-column ">
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'all' }"
+                  (click)="filterEmails('all')"
+                >
+                  <i class="fa-solid fa-envelope me-1"></i> All
+                </div>
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'inbox' }"
+                  (click)="filterEmails('inbox')"
+                >
+                  <i class="fa-solid fa-reply me-1"></i> Inbox
+                </div>
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'outbox' }"
+                  (click)="filterEmails('outbox')"
+                >
+                  <i class="fa-solid fa-share me-1"></i> Outbox
+                </div>
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'sent' }"
+                  (click)="filterEmails('sent')"
+                >
+                  <i class="fa-solid fa-envelope-circle-check me-1"></i> Sent
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+        
       </div>
     </div>
     <!-- Email body and subject -->
