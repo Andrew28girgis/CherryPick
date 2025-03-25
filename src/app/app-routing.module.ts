@@ -15,6 +15,7 @@ import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { HomeComponent } from './features/market-survey/home/home.component';
+import { MutipleEmailComponent } from './features/mutiple-email/mutiple-email.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -90,6 +91,11 @@ const routes: Routes = [
   {
     path: 'EmilyUserInbox',
     component: EmilyUserInboxComponent,
+    canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'MutipleEmail/:buyboxid',
+    component: MutipleEmailComponent,
     canActivate: [TenantOnlyGuard],
   },
   {

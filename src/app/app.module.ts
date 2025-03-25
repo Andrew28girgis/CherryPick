@@ -51,6 +51,7 @@ import { ManagePropertiesComponent } from './features/landlord/manage-properties
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { KayakModule } from './features/kayak-home/kayak.module';
 import { HomeComponent } from './features/market-survey/home/home.component';
+import { MutipleEmailComponent } from './features/mutiple-email/mutiple-email.component';
 
 const msalConfig = {
   auth: {
@@ -91,7 +92,8 @@ const loginRequest = {
     ManagePropertiesComponent,
     DashboardComponent,
     AddTenantsComponent,
-    EmilyUserInboxComponent
+    EmilyUserInboxComponent,
+    MutipleEmailComponent
   ],
   imports: [
     BrowserModule,

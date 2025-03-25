@@ -390,7 +390,7 @@ export class EmilyComponent implements OnInit {
     });
   }
 
-  SaveTemplate() {
+  SaveTemplate(emailItem: any) {
     this.spinner.show();
     let contactId: any;
     this.managerOrganizations[0].ManagerOrganizationContacts.forEach((c) => {
@@ -398,13 +398,15 @@ export class EmilyComponent implements OnInit {
         contactId = c.ContactId;
       }
     });
-    let contacts = this.selectedContact.join(`,`);
-    const body: any = {
+    let contacts = emailItem.recieverIds.join(',');
+
+    if (this.emailBodyReply) {
+    var body: any = {
       Name: 'SaveTemplate',
       MainEntity: null,
       Params: {
-        organizationid: this.shoppingCenterOrganization,
-        template: this.emailBodyResponse,
+        // organizationid: this.shoppingCenterOrganization,
+        Body: this.emailBodyResponse,
         subject: this.emailSubject,
         buyboxid: this.buyBoxId,
         contactid: contactId,
@@ -412,19 +414,36 @@ export class EmilyComponent implements OnInit {
       },
       Json: null,
     };
+  }else{
+      var body: any = {
+        Name: 'SaveTemplate',
+        MainEntity: null,
+        Params: {
+          // organizationid: this.shoppingCenterOrganization,
+          Body : emailItem.emailBody,
+          subject : emailItem.emailSubject,
+          buyboxid: this.buyBoxId,
+          contactid: contactId,
+          contactids: contacts,
+        },
+        Json: null,
+      };      
+    }
+
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.showToast('Email Saved successfully!');
         this.objectEmailSavedtemplate = data?.json[0];
-        this.expressionEmail = false;
+        this.GenerateEmailall = this.GenerateEmailall.filter((item:any) => item !== emailItem);
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         this.spinner.hide();
       },
     });
   }
 
-  SaveAndSendTemplate() {
-    this.SaveTemplate();
+  SaveAndSendTemplate(recieverIds? :any) {
+    this.SaveTemplate(recieverIds);
     setTimeout(() => {
       const body = {
         name: 'SendTemplate',
@@ -953,10 +972,18 @@ export class EmilyComponent implements OnInit {
     const countSelectedContacts = this.selectedContact.length;
     if (selectedContacts?.length > 0) {
       this.selectedContact = [];
+
       emailContent += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
-      if(this.isISCcSelected == false){
-        emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
+      if (this.emailBodyReply) {
+        if(this.formGroup.get('IsCC')?.value == false){
+          emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
+        }
+      }else{
+        if(this.isISCcSelected == false){
+          emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
+        }
       }
+
 
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
         if (contact.selected && contact?.Centers?.length > 0) {
@@ -965,6 +992,7 @@ export class EmilyComponent implements OnInit {
           //   this.selectedContact.push(contact.id);
           // } else {
           emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
+          emailContent += `- id: ${contact.id}\n `;
           this.selectedContact.push(contact.id);
           // }
         }

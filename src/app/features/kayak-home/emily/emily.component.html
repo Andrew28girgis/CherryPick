@@ -284,49 +284,51 @@
               <!-- API Response View Saved Template-->
               <ng-container *ngIf="!emailBodyReply">
                 <!-- API Response View  Generated Email-->
-                <div class="container-fluid h-auto backgroundcolor p-0" *ngIf="expressionEmail">
+                <div class="container-fluid h-auto backgroundcolor p-0" >
                   <ng-container  *ngIf="GenerateEmailall">
-                    <div class="form-group mt-4" *ngFor="let item of GenerateEmailall">
-                      <div class="card shadow-sm border-0">
-                        <div class="card-header text-white GeneratedEmail">
-                          <h5 class="mb-0">Generated Email</h5>
-                        </div>
-                        <div class="card-body bg-light">
-                          <div class="mb-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                              <label class="fw-bold text-secondary">Email Subject:</label>
-                              <span (click)="copyEmailSubject()" class="copy-icon-container">
-                                <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
-                                <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
-                              </span>
-                            </div>
-                            <div class="p-3 border rounded bg-white text-dark">
-                              <textarea [innerHTML]="item.emailSubject" rows="1" class="form-control"></textarea>
-                            </div>
+                    <ng-container  *ngFor="let item of GenerateEmailall">
+                      <div class="form-group mt-4" *ngIf="item.recieverIds">
+                        <div class="card shadow-sm border-0">
+                          <div class="card-header text-white GeneratedEmail">
+                            <h5 class="mb-0">Generated Email</h5>
                           </div>
-                          <div>
-                            <div class="d-flex justify-content-between align-items-center">
-                              <label class="fw-bold text-secondary">Email Body:</label>
-                              <span (click)="copyEmailBody()" class="copy-icon-container">
-                                <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
-                                <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
-                              </span>
+                          <div class="card-body bg-light">
+                            <div class="mb-3">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <label class="fw-bold text-secondary">Email Subject:</label>
+                                <span (click)="copyEmailSubject()" class="copy-icon-container">
+                                  <i class="fas fa-copy copy-sty" [hidden]="isSubjectCopied" title="Copy Email Subject"></i>
+                                  <span class="copied-text" *ngIf="isSubjectCopied">Copied!</span>
+                                </span>
+                              </div>
+                              <div class="p-3 border rounded bg-white text-dark">
+                                <textarea [innerHTML]="item.emailSubject" rows="1" class="form-control"></textarea>
+                              </div>
                             </div>
-                            <div class="p-3 border rounded bg-white text-dark">
-                              <p [innerHTML]="item.emailBody" class="m-0"></p>
-                            </div>
-                            <div class="d-flex justify-content-end gap-2">
-                              <button class="btn btn-success mt-3" (click)="SaveTemplate()">
-                                Save
-                              </button>
-                              <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate()">
-                                Save and Send
-                              </button>
+                            <div>
+                              <div class="d-flex justify-content-between align-items-center">
+                                <label class="fw-bold text-secondary">Email Body:</label>
+                                <span (click)="copyEmailBody()" class="copy-icon-container">
+                                  <i class="fas fa-copy copy-sty" [hidden]="isBodyCopied" title="Copy Email Body"></i>
+                                  <span class="copied-text" *ngIf="isBodyCopied">Copied!</span>
+                                </span>
+                              </div>
+                              <div class="p-3 border rounded bg-white text-dark">
+                                <p [innerHTML]="item.emailBody" class="m-0"></p>
+                              </div>
+                              <div class="d-flex justify-content-end gap-2">
+                                <button class="btn btn-success mt-3" (click)="SaveTemplate(item)">
+                                  Save
+                                </button>
+                                <button class="btn Button_Update_S mt-3" (click)="SaveAndSendTemplate(item)">
+                                  Save and Send
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </ng-container>
                   </ng-container>
                 </div>
                 <div *ngIf="
