@@ -28,6 +28,7 @@ export class AppComponent {
         this.router.url === '/login' ||
         this.router.url === '/tos'||
         this.router.url.startsWith('/home') ||
+        this.router.url.startsWith('/market-survey') ||
         this.router.url.startsWith('/landing')
       );
     });

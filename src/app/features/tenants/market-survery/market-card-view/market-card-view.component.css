@@ -1,0 +1,75 @@
+.card-window_c {
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 2px 14px rgba(0, 0, 0, 0.23);
+    border-radius: 18px;
+    min-height: 100%;
+    display: grid;
+    height: 600px;
+  }
+  .h700 {
+    height: 700px;
+  }
+  .main-img {
+    height: 250px;
+    background: white;
+    border-radius: 18px 18px 0 0;
+  }
+  
+  .fitcontent {
+    height: fit-content;
+    overflow: auto;
+  }
+  .textdecoration {
+    text-decoration: none;
+  }
+  .card-address {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 30px;
+    letter-spacing: -0.005em;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #7a8591;
+  }
+  .ShoppingCenterUnit {
+    font-size: 15px;
+    font-weight: 500;
+    color: #565656;
+  }
+  .spec-head {
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .managed-by {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #7a8591;
+  }
+  .logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  .background2 {
+    background-color: #f4f4f4;
+  }
+  .card-content {
+    background-color: #fff;
+    border-radius: 0 0 20px 20px;
+    min-height: 250px;
+    max-height: 350px;
+    cursor: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-content > div{
+    height: 100%;
+    display: contents;
+  }
