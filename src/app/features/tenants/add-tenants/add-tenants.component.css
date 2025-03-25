@@ -56,12 +56,11 @@
 }
 
 .search-input {
-  background: url('../../../assets/Images/Icons/search-normal.png') no-repeat left 10px center;
+  background: url('../../../../assets/Images/Icons/search-normal.png') no-repeat left 10px center;
   background-color: white;
   background-size: 16px;
   padding-left: 30px;
 }
-
 
 .style_radio {
   align-items: center;

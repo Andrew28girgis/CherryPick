@@ -49,7 +49,7 @@
 }
 .map-container {
   position: relative;
-  background-image: url("../../../assets/Images/TenantMap.png");
+  background-image: url("../../../../assets/Images/TenantMap.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -309,7 +309,7 @@
 }
 .row-background {
   height: 20vh;
-  background-image: url("../../../assets/Images/GreyImage.png");
+  background-image: url("../../../../assets/Images/GreyImage.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
