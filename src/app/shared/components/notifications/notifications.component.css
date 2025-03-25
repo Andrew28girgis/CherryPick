@@ -42,7 +42,6 @@
 
 .number {
   color: #fff;
-  font-family: Montserrat, sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -74,7 +73,6 @@
   color: var(--Body-Heading-Color, #16181d);
   text-align: left;
   padding: 15px 0 15px 15px;
-  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -94,7 +92,6 @@
 }
 .notification-message {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -103,7 +100,6 @@
 }
 .notification-date {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

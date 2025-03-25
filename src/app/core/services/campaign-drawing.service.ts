@@ -1,22 +1,25 @@
 /// <reference types="google.maps" />
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IMapShape } from 'src/app/shared/models/imap-shape';
-import { IProperty } from 'src/app/shared/models/iproperty';
 declare const google: any;
 
 @Injectable({
   providedIn: 'root',
 })
-export class MapDrawingService {
+export class CampaignDrawingService {
   private drawingManager!: google.maps.drawing.DrawingManager;
   private drawnPolygons: IMapShape[] = [];
   private drawnCircles: IMapShape[] = [];
-  private explorePolygons: IMapShape[] = [];
-  private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
-  tempMarkers: google.maps.Marker[] = [];
+  // private explorePolygons: IMapShape[] = [];
+  // private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
+  // tempMarkers: google.maps.Marker[] = [];
   private infoWindow!: google.maps.InfoWindow;
+
+  private modes: { [key: string]: google.maps.drawing.OverlayType } = {
+    polygon: google.maps.drawing.OverlayType.POLYGON,
+    circle: google.maps.drawing.OverlayType.CIRCLE,
+  };
 
   onPolygonCreated = new EventEmitter<IMapShape>();
   onPolygonChanged = new EventEmitter<IMapShape>();
@@ -24,19 +27,20 @@ export class MapDrawingService {
   onCircleCreated = new EventEmitter<IMapShape>();
   onCircleChanged = new EventEmitter<IMapShape>();
   onCircleDeleted = new EventEmitter<IMapShape>();
+  onDrawingCancel = new EventEmitter<void>();
 
-  constructor(private router: Router) {}
+  constructor() {}
 
-  initializeMap(
-    gmapContainer: ElementRef,
-    lat?: any,
-    lng?: any,
-    zoom?: any
-  ): google.maps.Map {
+  setDrawingMode(shape: string) {
+    this.drawingManager.setDrawingMode(this.modes[shape] || null);
+  }
+
+  initializeMap(gmapContainer: ElementRef): google.maps.Map {
     // set saved coordinates if exists
     const mapOptions: google.maps.MapOptions = {
-      center: { lat: lat || 38.889805, lng: lng || -77.009056 },
-      zoom: zoom || 8,
+      center: { lat: 38.889805, lng: -77.009056 },
+      zoom: 8,
+      disableDefaultUI: true,
     };
 
     // create the map
@@ -55,16 +59,8 @@ export class MapDrawingService {
     // setup drawing manager
     this.drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: null,
-      drawingControl: true,
-      drawingControlOptions: {
-        position: google.maps.ControlPosition.TOP_CENTER,
-        drawingModes: [
-          // include circles creation
-          google.maps.drawing.OverlayType.POLYGON,
-          // include polygons creation
-          google.maps.drawing.OverlayType.CIRCLE,
-        ],
-      },
+      drawingControl: false,
+
       // setup polygons styles
       polygonOptions: {
         strokeColor: '#0000FF',
@@ -93,21 +89,9 @@ export class MapDrawingService {
     this.addShapeCompletionListener(map);
   }
 
-  displayDrawingManager(map: any): void {
-    if (this.drawingManager) {
-      this.drawingManager.setMap(map);
-    }
-  }
-
-  hideDrawingManager(): void {
-    if (this.drawingManager) {
-      this.drawingManager.setMap(null);
-    }
-  }
-
   updateMapCenter(map: any, center: any): void {
     if (map) {
-      const newCenter = center ? center : { lat: 37.7749, lng: -122.4194 };
+      const newCenter = center ? center : { lat: 38.889805, lng: -77.009056 };
       map.setCenter(newCenter);
     }
   }
@@ -131,105 +115,6 @@ export class MapDrawingService {
     this.drawnCircles.forEach((c) => c.shape.setMap(null));
     this.drawnPolygons = [];
     this.drawnCircles = [];
-  }
-
-  insertExternalPolygon(
-    polygonId: number,
-    map: any,
-    coordinates: any,
-    name: string,
-    editable: boolean
-  ): void {
-    // create new polygon
-    const polygon: google.maps.Polygon = new google.maps.Polygon({
-      paths: coordinates,
-      strokeColor: '#0000FF',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#0000FF',
-      fillOpacity: 0.35,
-      editable: editable,
-      draggable: false,
-    });
-
-    polygon.set('label', name);
-
-    // Set the polygon on the map
-    polygon.setMap(null);
-
-    // push the polygon into drawn list
-    this.drawnPolygons.push({ id: polygonId, shape: polygon });
-
-    // handle click event of the polygon
-    this.addPolygonClickListener(map, polygon);
-    if (editable) {
-      // handle change event of the polygon
-      this.addPolygonChangeListener(map, polygon);
-      this.addPolygonDoubleClickListener(polygon);
-    }
-  }
-
-  insertExplorePolygon(polygonId: number, coordinates: any): void {
-    // create new polygon
-    const polygon: google.maps.Polygon = new google.maps.Polygon({
-      paths: coordinates,
-      strokeColor: '#0000FF',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#0000FF',
-      fillOpacity: 0.35,
-      editable: false,
-      draggable: false,
-    });
-
-    // Set the polygon on the map
-    polygon.setMap(null);
-
-    // push the polygon into drawn list
-    this.explorePolygons.push({ id: polygonId, shape: polygon });
-  }
-
-  completelyRemoveExplorePolygon(): void {
-    this.explorePolygons.forEach((p) => p.shape.setMap(null));
-    this.explorePolygons = [];
-  }
-
-  insertExternalCircle(
-    circleId: number,
-    map: any,
-    center: any,
-    radius: any,
-    name: string,
-    editable: boolean
-  ): void {
-    // create new circle
-    const circle = new google.maps.Circle({
-      map: map,
-      center: center,
-      radius: radius,
-      fillColor: '#FF0000',
-      fillOpacity: 0.3,
-      strokeWeight: 2,
-      strokeColor: '#FF0000',
-      editable: editable,
-      draggable: false,
-    });
-
-    circle.set('label', name);
-
-    // Set the circle on the map
-    circle.setMap(null);
-
-    // push the circle into drawn list
-    this.drawnCircles.push({ id: circleId, shape: circle });
-
-    // handle click event of the circle
-    this.addCircleClickListener(map, circle);
-    if (editable) {
-      // handle change event of the circle
-      this.addCircleChangeListener(map, circle);
-      this.addCircleDoubleClickListener(circle);
-    }
   }
 
   updatePolygonId(id: number, circle: boolean): void {
@@ -340,95 +225,6 @@ export class MapDrawingService {
     });
   }
 
-  displayShapeOnMap(id: number, map: any): void {
-    const shape =
-      this.drawnPolygons.find((p) => p.id == id) ||
-      this.drawnCircles.find((c) => c.id == id) ||
-      this.explorePolygons.find((p) => p.id == id);
-    if (shape) {
-      shape.shape.setMap(map);
-    }
-  }
-
-  hideShapeFromMap(id: number): void {
-    // get shape from the drawn list
-    const shape =
-      this.drawnPolygons.find((p) => p.id == id) ||
-      this.drawnCircles.find((c) => c.id == id) ||
-      this.explorePolygons.find((p) => p.id == id);
-    if (shape) {
-      // remove the shape from the map view
-      shape.shape.setMap(null);
-    }
-  }
-
-  createTempMarker(map: any, propertyData: any): void {
-    const icon = this.getLocationIconSvg();
-    let marker = new google.maps.Marker({
-      map,
-      position: {
-        lat: Number(propertyData.Latitude),
-        lng: Number(propertyData.Longitude),
-      },
-      icon: icon,
-      // Use a higher zIndex to bring the marker “on top” of others
-      zIndex: 999999,
-    });
-
-    marker.propertyData = propertyData;
-    this.tempMarkers.push(marker);
-    const gmapPosition = new google.maps.LatLng(
-      Number(propertyData.Latitude),
-      Number(propertyData.Longitude)
-    );
-
-    marker.addListener('click', () => {
-      this.showTempPropertyOptions(map, propertyData, gmapPosition);
-    });
-  }
-
-  createMarker(map: any, polygonId: number, propertyData: IProperty): void {
-    const icon = this.getLocationIconSvg();
-    let marker = new google.maps.Marker({
-      map,
-      position: {
-        lat: Number(propertyData.latitude),
-        lng: Number(propertyData.longitude),
-      },
-      icon: icon,
-      // Use a higher zIndex to bring the marker “on top” of others
-      zIndex: 999999,
-    });
-
-    marker.propertyData = propertyData;
-    this.markers.push({ polygonId: polygonId, marker: marker });
-    const gmapPosition = new google.maps.LatLng(
-      Number(propertyData.latitude),
-      Number(propertyData.longitude)
-    );
-
-    marker.addListener('click', () => {
-      this.showPropertyOptions(map, propertyData, gmapPosition);
-    });
-  }
-
-  displayMarker(polygonId: number, map: any): void {
-    const markers = this.markers.filter((m) => m.polygonId == polygonId);
-    if (markers && markers.length > 0) {
-      markers.forEach((m) => m.marker.setMap(map));
-    }
-  }
-
-  removeMarkers(polygonId: number): void {
-    const markers = this.markers.filter((m) => m.polygonId == polygonId);
-    markers.forEach((m) => m.marker.setMap(null));
-  }
-
-  completelyRemoveMarkers(polygonId: number): void {
-    this.removeMarkers(polygonId);
-    this.markers = this.markers.filter((m) => m.polygonId != polygonId);
-  }
-
   private initializeInfoWindow() {
     // iniialize the popup
     this.infoWindow = new google.maps.InfoWindow();
@@ -480,22 +276,6 @@ export class MapDrawingService {
       if (this.infoWindow) {
         this.hidePopupContent();
       }
-
-      // Disable dragging for all drawn polygons if they are currently draggable.
-      this.drawnPolygons.forEach((entry) => {
-        const polygon = entry.shape as google.maps.Polygon;
-        if (polygon.getDraggable()) {
-          polygon.setDraggable(false);
-        }
-      });
-
-      // Disable dragging for all drawn circles if they are currently draggable.
-      this.drawnCircles.forEach((entry) => {
-        const circle = entry.shape as google.maps.Circle;
-        if (circle.getDraggable()) {
-          circle.setDraggable(false);
-        }
-      });
     });
   }
 
@@ -551,6 +331,7 @@ export class MapDrawingService {
           } else {
             // push the circle into drawn list
             this.drawnCircles.push({ shape: newCircle });
+            // debugger;
             // take shape name
             this.showShapeNameOptions(map, newCircle, true);
             // handle click event of the circle
@@ -570,7 +351,7 @@ export class MapDrawingService {
     circle.addListener('click', (event: google.maps.MapMouseEvent) => {
       // stop map event click
       event.stop();
-
+      debugger;
       // display popup with selected circle options
       this.showCircleOptions(map, circle);
     });
@@ -619,24 +400,6 @@ export class MapDrawingService {
     });
   }
 
-  private addCircleDeleteButtonListener(
-    circle: google.maps.Circle,
-    deleteButton: any
-  ): void {
-    deleteButton.addEventListener('click', () => {
-      // remove circle from map
-      circle.setMap(null);
-      const deletedCircle = this.drawnCircles.find((c) => c.shape == circle);
-
-      // remove circle from drawn circles list
-      this.drawnCircles = this.drawnCircles.filter((c) => c.shape !== circle);
-      // emit deleted circle to component for any operation
-      this.onCircleDeleted.emit(deletedCircle);
-      // close the popup
-      this.hidePopupContent();
-    });
-  }
-
   private addPolygonClickListener(
     map: any,
     polygon: google.maps.Polygon
@@ -646,7 +409,7 @@ export class MapDrawingService {
       event.stop();
 
       // display polygon options popup
-      this.showPolygonsOptions(map, polygon, this.getPolygonCenter(polygon));
+      this.showPolygonsOptions(map, polygon);
     });
   }
 
@@ -674,7 +437,7 @@ export class MapDrawingService {
       this.hidePopupContent();
       if (resizeTimeout) clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        this.showPolygonsOptions(map, polygon, this.getPolygonCenter(polygon));
+        this.showPolygonsOptions(map, polygon);
         emitChange();
       }, 300);
     });
@@ -719,76 +482,142 @@ export class MapDrawingService {
     });
   }
 
-  private addPolygonDeleteButtonListener(
-    deleteButton: any,
-    polygon: google.maps.Polygon
-  ): void {
-    deleteButton.addEventListener('click', () => this.deletePolygon(polygon));
-  }
-
   // options dialogs
+  private getShapeTopPoint(
+    shape: google.maps.Polygon | google.maps.Circle,
+    isCircle: boolean
+  ): google.maps.LatLng | null {
+    if (isCircle) {
+      const circle = shape as google.maps.Circle;
+      const center = circle.getCenter();
+      const radius = circle.getRadius();
+
+      if (!center) return null;
+
+      // Calculate the northernmost point of the circle (top point)
+      return google.maps.geometry.spherical.computeOffset(
+        center,
+        radius,
+        0 // 0 degrees = north
+      );
+    } else {
+      const polygon = shape as google.maps.Polygon;
+      const path = polygon.getPath();
+
+      if (!path || path.getLength() === 0) return null;
+
+      // Find the northernmost point (minimum latitude) in the polygon
+      let topPoint = path.getAt(0);
+
+      for (let i = 1; i < path.getLength(); i++) {
+        const point = path.getAt(i);
+        if (point.lat() > topPoint.lat()) {
+          topPoint = point;
+        }
+      }
+
+      return topPoint;
+    }
+  }
 
   private showShapeNameOptions(
     map: google.maps.Map,
     shape: google.maps.Polygon | google.maps.Circle,
     isCircle: boolean
   ): void {
-    const position = isCircle
-      ? (shape as google.maps.Circle).getCenter()
-      : this.getPolygonCenter(shape as google.maps.Polygon);
+    const position = this.getShapeTopPoint(shape, isCircle);
 
     if (!position) return;
+
+    const offsetPosition = new google.maps.LatLng(
+      position.lat() + 0.003,
+      position.lng()
+    );
 
     const content = this.getShapeNameOptionsPopup();
 
     this.infoWindow.setContent(content);
-    this.infoWindow.setPosition(position);
+    this.infoWindow.setPosition(offsetPosition);
     this.infoWindow.open(map);
 
+    const deleteButtonInterval = setInterval(() => {
+      // get delete button
+      const deleteButton = document.getElementById('deleteShape');
+      if (deleteButton) {
+        // remove the interval when button found
+        clearInterval(deleteButtonInterval);
+        // add listener on delete button click
+        deleteButton.addEventListener('click', () => {
+          shape.setMap(null);
+          // remove popup
+          this.hidePopupContent();
+          // remove polygon from drawn polygons list
+          let list = isCircle ? this.drawnCircles : this.drawnPolygons;
+          const deletedPolygon = list.find((p) => p.shape == shape);
+          const index = list.findIndex((p) => p.shape === shape);
+          if (index !== -1) {
+            list.splice(index, 1); // Removes the item in place
+          }
+          debugger;
+          this.onDrawingCancel.emit();
+          // emit deleted polygon to component for any operation
+          isCircle
+            ? this.onCircleDeleted.emit(deletedPolygon)
+            : this.onPolygonDeleted.emit(deletedPolygon);
+        });
+      }
+    }, 100);
+
     // Add a one-time click listener on the map to hide the shape and remove its listeners.
-    const mapClickListener = map.addListener('click', () => {
-      // Hide the shape from the map.
-      shape.setMap(null);
-      // Remove all event listeners for this shape.
-      google.maps.event.clearInstanceListeners(shape);
-      // Close the infoWindow.
-      this.infoWindow.close();
-      // Remove this listener.
-      google.maps.event.removeListener(mapClickListener);
-    });
 
     setTimeout(() => {
-      const saveButton = document.getElementById('saveShapeNameBtn');
-      const input = document.getElementById(
-        'shapeNameInput'
-      ) as HTMLInputElement;
+      google.maps.event.clearListeners(map, 'click');
 
-      saveButton!.addEventListener('click', () => {
+      const mapClickListener = map.addListener('click', () => {
+        const input = document.getElementById(
+          'shapeNameInput'
+        ) as HTMLInputElement;
+        debugger;
         const targetArray = isCircle ? this.drawnCircles : this.drawnPolygons;
         const shapeEntry = targetArray.find((entry) => entry.shape === shape);
-        const name = input.value.trim();
+        // debugger
+        // const name = input.value.trim();
 
         if (shapeEntry) {
-          shapeEntry.shape.set('label', name ? name : 'Shape');
+          shapeEntry.shape.set(
+            'label',
+            input?.value?.trim().length > 0 ? input.value.trim() : 'Shape'
+          );
+          // debugger
         }
         // Remove the one-time map click listener since the shape is saved.
-        google.maps.event.removeListener(mapClickListener);
-
-        this.infoWindow.close();
 
         // emit created shape to the component for any operation
         const event = isCircle ? this.onCircleCreated : this.onPolygonCreated;
         event.emit(shapeEntry);
+        // Hide the shape from the map.
+        // shape.setMap(null);
+        // Remove all event listeners for this shape.
+        // google.maps.event.clearInstanceListeners(shape);
+        // Close the infoWindow.
+        this.infoWindow.close();
+        this.addMapListener(map);
+        // Remove this listener.
+        google.maps.event.removeListener(mapClickListener);
       });
     });
   }
 
   private showCircleOptions(map: any, circle: google.maps.Circle): void {
     // get the center of the circle
-    const center = circle.getCenter();
-    if (!center) {
-      return;
-    }
+    const position = this.getShapeTopPoint(circle, true);
+
+    if (!position) return;
+
+    const offsetPosition = new google.maps.LatLng(
+      position.lat() + 0.003,
+      position.lng()
+    );
 
     // get current circle radius
     const currentRadius = circle.getRadius();
@@ -798,120 +627,82 @@ export class MapDrawingService {
     const circleAreaMiles = Math.PI * Math.pow(currentRadiusMiles, 2);
 
     // get circle options popup
-    const optionsContent = this.getCircleOptionsPopup(
-      currentRadiusMiles,
-      circleAreaMiles
-    );
+    const optionsContent = this.getShapeOptionsPopup(circle.get('label'));
     this.infoWindow.setContent(optionsContent);
-    this.infoWindow.setPosition(center);
-    this.infoWindow.open(map);
-
-    setTimeout(() => {
-      // get delete button
-      const deleteButton = document.getElementById('deleteCircleBtn');
-      if (deleteButton) {
-        // listen for delete button click
-        this.addCircleDeleteButtonListener(circle, deleteButton);
-      }
-    }, 100);
-  }
-
-  private showPolygonsOptions(
-    map: any,
-    polygon: google.maps.Polygon,
-    position: google.maps.LatLng | null
-  ): void {
-    if (!position) return;
-
-    const polygonSizeInMiles = this.getPolygonAreaInMiles(polygon);
-    // get polygon options popup
-    const options = this.getPolygonOptionsPopup(polygonSizeInMiles);
-
-    this.infoWindow.setContent(options);
-    this.infoWindow.setPosition(position);
+    this.infoWindow.setPosition(offsetPosition);
     this.infoWindow.open(map);
 
     const deleteButtonInterval = setInterval(() => {
       // get delete button
-      const deleteButton = document.getElementById('deletePolygonBtn');
+      const deleteButton = document.getElementById('deleteShape');
       if (deleteButton) {
         // remove the interval when button found
         clearInterval(deleteButtonInterval);
         // add listener on delete button click
-        this.addPolygonDeleteButtonListener(deleteButton, polygon);
-      }
-    }, 100);
-  }
-
-  private showTempPropertyOptions(
-    map: any,
-    property: any,
-    position: google.maps.LatLng | null
-  ): void {
-    if (!position) return;
-
-    // get polygon options popup
-    const options = this.getTempPropertyOptionsPopup(property);
-
-    this.infoWindow.setContent(options);
-    this.infoWindow.setPosition(position);
-    this.infoWindow.open(map);
-
-    const deleteButtonInterval = setInterval(() => {
-      // this.addCloseButtonListener(infoWindow);
-
-      // get delete button
-      const detailsButton = document.getElementById(
-        `view-details-${property.Id}`
-      );
-      if (detailsButton) {
-        detailsButton.addEventListener('click', () => {
-          const storedBuyBoxId = localStorage.getItem('BuyBoxId');
-          this.router.navigate(['/landing', 0, property.Id, storedBuyBoxId]);
-        });
-      }
-
-      const closeButton = document.querySelector('.close-btn');
-      if (closeButton) {
-        closeButton.addEventListener('click', () => {
+        deleteButton.addEventListener('click', () => {
+          circle.setMap(null);
+          // remove popup
           this.hidePopupContent();
+          // remove polygon from drawn polygons list
+          // let list = this.drawnCircles;
+          const deletedPolygon = this.drawnCircles.find(
+            (p) => p.shape == circle
+          );
+          this.drawnCircles = this.drawnCircles.filter(
+            (p) => p.shape !== circle
+          );
+          debugger;
+          this.onDrawingCancel.emit();
+          this.onCircleDeleted.emit(deletedPolygon);
+
+          // emit deleted polygon to component for any operation
+          // this.onPolygonDeleted.emit(deletedPolygon);
         });
       }
     }, 100);
   }
 
-  private showPropertyOptions(
-    map: any,
-    property: IProperty,
-    position: google.maps.LatLng | null
-  ): void {
+  private showPolygonsOptions(map: any, polygon: google.maps.Polygon): void {
+    const position = this.getShapeTopPoint(polygon, false);
+
     if (!position) return;
 
+    const offsetPosition = new google.maps.LatLng(
+      position.lat() + 0.003,
+      position.lng()
+    );
+    const polygonSizeInMiles = this.getPolygonAreaInMiles(polygon);
     // get polygon options popup
-    const options = this.getPropertyOptionsPopup(property);
+    const options = this.getShapeOptionsPopup(polygon.get('label'));
 
     this.infoWindow.setContent(options);
-    this.infoWindow.setPosition(position);
+    this.infoWindow.setPosition(offsetPosition);
     this.infoWindow.open(map);
 
     const deleteButtonInterval = setInterval(() => {
-      // this.addCloseButtonListener(infoWindow);
-
       // get delete button
-      const detailsButton = document.getElementById(
-        `view-details-${property.id}`
-      );
-      if (detailsButton) {
-        detailsButton.addEventListener('click', () => {
-          const storedBuyBoxId = localStorage.getItem('BuyBoxId');
-          this.router.navigate(['/landing', 0, property.id, storedBuyBoxId]);
-        });
-      }
-
-      const closeButton = document.querySelector('.close-btn');
-      if (closeButton) {
-        closeButton.addEventListener('click', () => {
+      const deleteButton = document.getElementById('deleteShape');
+      if (deleteButton) {
+        // remove the interval when button found
+        clearInterval(deleteButtonInterval);
+        // add listener on delete button click
+        deleteButton.addEventListener('click', () => {
+          polygon.setMap(null);
+          // remove popup
           this.hidePopupContent();
+          // remove polygon from drawn polygons list
+          // let list = this.drawnPolygons;
+          const deletedPolygon = this.drawnPolygons.find(
+            (p) => p.shape == polygon
+          );
+          this.drawnPolygons = this.drawnPolygons.filter(
+            (p) => p.shape !== polygon
+          );
+          this.onDrawingCancel.emit();
+          this.onPolygonDeleted.emit(deletedPolygon);
+
+          // emit deleted polygon to component for any operation
+          // this.onPolygonDeleted.emit(deletedPolygon);
         });
       }
     }, 100);
@@ -940,6 +731,7 @@ export class MapDrawingService {
       google.maps.event.clearInstanceListeners(shape);
       // Close the infoWindow.
       this.infoWindow.close();
+      this.onDrawingCancel.emit();
       // Remove this listener.
       google.maps.event.removeListener(mapClickListener);
     });
@@ -954,6 +746,7 @@ export class MapDrawingService {
         cancelButton.addEventListener('click', () => {
           shape.setMap(null);
           this.hidePopupContent();
+          this.onDrawingCancel.emit();
           // Remove this listener.
           google.maps.event.removeListener(mapClickListener);
         });
@@ -964,177 +757,86 @@ export class MapDrawingService {
   // popups
 
   private getShapeNameOptionsPopup(): string {
-    return `<div
-              style="
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 1rem;
-              "
-            >
-              <input
-                id="shapeNameInput"
-                placeholder="Enter shape name"
-                type="text"
-                class="form-control"
-              />
+    return `<div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem">
+  <input
+    id="shapeNameInput"
+    placeholder="Enter shape name"
+    type="text"
+    class="form-control"
+    style="border: none; background-color: transparent; box-shadow: none"
+  />
 
-              <button
-                id="saveShapeNameBtn"
-                style="
-                  background-color: black;
-                  color: white;
-                  border: none;
-                  padding: 5px 10px;
-                  cursor: pointer;
-                  border-radius: 5px;
-                  font-size: 14px;
-                "
-              >
-                Save
-              </button>
-            </div>
+  <div style="cursor:pointer;" id="deleteShape">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M21.0002 6.72998C20.9802 6.72998 20.9502 6.72998 20.9202 6.72998C15.6302 6.19998 10.3502 5.99998 5.12016 6.52998L3.08016 6.72998C2.66016 6.76998 2.29016 6.46998 2.25016 6.04998C2.21016 5.62998 2.51016 5.26998 2.92016 5.22998L4.96016 5.02998C10.2802 4.48998 15.6702 4.69998 21.0702 5.22998C21.4802 5.26998 21.7802 5.63998 21.7402 6.04998C21.7102 6.43998 21.3802 6.72998 21.0002 6.72998Z"
+        fill="#292D32"
+      />
+      <path
+        d="M8.49977 5.72C8.45977 5.72 8.41977 5.72 8.36977 5.71C7.96977 5.64 7.68977 5.25 7.75977 4.85L7.97977 3.54C8.13977 2.58 8.35977 1.25 10.6898 1.25H13.3098C15.6498 1.25 15.8698 2.63 16.0198 3.55L16.2398 4.85C16.3098 5.26 16.0298 5.65 15.6298 5.71C15.2198 5.78 14.8298 5.5 14.7698 5.1L14.5498 3.8C14.4098 2.93 14.3798 2.76 13.3198 2.76H10.6998C9.63977 2.76 9.61977 2.9 9.46977 3.79L9.23977 5.09C9.17977 5.46 8.85977 5.72 8.49977 5.72Z"
+        fill="#292D32"
+      />
+      <path
+        d="M15.2099 22.7501H8.7899C5.2999 22.7501 5.1599 20.8201 5.0499 19.2601L4.3999 9.19007C4.3699 8.78007 4.6899 8.42008 5.0999 8.39008C5.5199 8.37008 5.8699 8.68008 5.8999 9.09008L6.5499 19.1601C6.6599 20.6801 6.6999 21.2501 8.7899 21.2501H15.2099C17.3099 21.2501 17.3499 20.6801 17.4499 19.1601L18.0999 9.09008C18.1299 8.68008 18.4899 8.37008 18.8999 8.39008C19.3099 8.42008 19.6299 8.77007 19.5999 9.19007L18.9499 19.2601C18.8399 20.8201 18.6999 22.7501 15.2099 22.7501Z"
+        fill="#292D32"
+      />
+      <path
+        d="M13.6601 17.25H10.3301C9.92008 17.25 9.58008 16.91 9.58008 16.5C9.58008 16.09 9.92008 15.75 10.3301 15.75H13.6601C14.0701 15.75 14.4101 16.09 14.4101 16.5C14.4101 16.91 14.0701 17.25 13.6601 17.25Z"
+        fill="#292D32"
+      />
+      <path
+        d="M14.5 13.25H9.5C9.09 13.25 8.75 12.91 8.75 12.5C8.75 12.09 9.09 11.75 9.5 11.75H14.5C14.91 11.75 15.25 12.09 15.25 12.5C15.25 12.91 14.91 13.25 14.5 13.25Z"
+        fill="#292D32"
+      />
+    </svg>
+  </div>
+</div>
           `;
   }
 
-  private getCircleOptionsPopup(currentRadius: number, size: number): string {
-    return `<div
-              style="
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 1rem;
-              "
-            >
-              <div style="font-weight: 500">Radius : ${currentRadius.toFixed()} MI</div>
-              <div style="font-weight: 500">Size : ${size.toFixed()} MI</div>
-              <button
-                id="deleteCircleBtn"
-                style="
-                  background-color: rgb(224, 0, 0);
-                  color: white;
-                  border: none;
-                  padding: 5px 10px;
-                  cursor: pointer;
-                  border-radius: 5px;
-                  font-size: 14px;
-                "
-              >
-                Delete
-              </button>
-            </div>
+  private getShapeOptionsPopup(label: string): string {
+    return `<div style="display: flex; align-items: center; gap: 1.5rem; padding: 0.5rem">
+  <p style="margin: 0;
+    font-weight: 500;">${label}</p>
+
+  <div style="cursor:pointer;" id="deleteShape">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M21.0002 6.72998C20.9802 6.72998 20.9502 6.72998 20.9202 6.72998C15.6302 6.19998 10.3502 5.99998 5.12016 6.52998L3.08016 6.72998C2.66016 6.76998 2.29016 6.46998 2.25016 6.04998C2.21016 5.62998 2.51016 5.26998 2.92016 5.22998L4.96016 5.02998C10.2802 4.48998 15.6702 4.69998 21.0702 5.22998C21.4802 5.26998 21.7802 5.63998 21.7402 6.04998C21.7102 6.43998 21.3802 6.72998 21.0002 6.72998Z"
+        fill="#292D32"
+      />
+      <path
+        d="M8.49977 5.72C8.45977 5.72 8.41977 5.72 8.36977 5.71C7.96977 5.64 7.68977 5.25 7.75977 4.85L7.97977 3.54C8.13977 2.58 8.35977 1.25 10.6898 1.25H13.3098C15.6498 1.25 15.8698 2.63 16.0198 3.55L16.2398 4.85C16.3098 5.26 16.0298 5.65 15.6298 5.71C15.2198 5.78 14.8298 5.5 14.7698 5.1L14.5498 3.8C14.4098 2.93 14.3798 2.76 13.3198 2.76H10.6998C9.63977 2.76 9.61977 2.9 9.46977 3.79L9.23977 5.09C9.17977 5.46 8.85977 5.72 8.49977 5.72Z"
+        fill="#292D32"
+      />
+      <path
+        d="M15.2099 22.7501H8.7899C5.2999 22.7501 5.1599 20.8201 5.0499 19.2601L4.3999 9.19007C4.3699 8.78007 4.6899 8.42008 5.0999 8.39008C5.5199 8.37008 5.8699 8.68008 5.8999 9.09008L6.5499 19.1601C6.6599 20.6801 6.6999 21.2501 8.7899 21.2501H15.2099C17.3099 21.2501 17.3499 20.6801 17.4499 19.1601L18.0999 9.09008C18.1299 8.68008 18.4899 8.37008 18.8999 8.39008C19.3099 8.42008 19.6299 8.77007 19.5999 9.19007L18.9499 19.2601C18.8399 20.8201 18.6999 22.7501 15.2099 22.7501Z"
+        fill="#292D32"
+      />
+      <path
+        d="M13.6601 17.25H10.3301C9.92008 17.25 9.58008 16.91 9.58008 16.5C9.58008 16.09 9.92008 15.75 10.3301 15.75H13.6601C14.0701 15.75 14.4101 16.09 14.4101 16.5C14.4101 16.91 14.0701 17.25 13.6601 17.25Z"
+        fill="#292D32"
+      />
+      <path
+        d="M14.5 13.25H9.5C9.09 13.25 8.75 12.91 8.75 12.5C8.75 12.09 9.09 11.75 9.5 11.75H14.5C14.91 11.75 15.25 12.09 15.25 12.5C15.25 12.91 14.91 13.25 14.5 13.25Z"
+        fill="#292D32"
+      />
+    </svg>
+  </div>
+</div>
           `;
-  }
-
-  private getPolygonOptionsPopup(sizeInMiles: number): string {
-    return `<div
-              style="
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 1rem;
-              "
-            >
-              <div style="font-weight: 500">Size : ${sizeInMiles.toFixed()} MI</div>
-              <button
-                id="deletePolygonBtn"
-                style="
-                  background-color: rgb(224, 0, 0);
-                  color: white;
-                  border: none;
-                  padding: 5px 10px;
-                  cursor: pointer;
-                  border-radius: 5px;
-                  font-size: 14px;
-                "
-              >
-                Delete
-              </button>
-            </div>
-          `;
-  }
-
-  private getPropertyOptionsPopup(property: IProperty): string {
-    return `
-            <div class="info-window">
-              <div class="main-img">
-              ${
-                property.mainImage
-                  ? `<img src="${property.mainImage}" alt="Main Image">`
-                  : ''
-              }
-                
-                <span class="close-btn">&times;</span>
-              </div>
-              <div class="content-wrap">
-                ${
-                  property.centerName
-                    ? `<p class="content-title">${property.centerName.toUpperCase()}</p>`
-                    : ''
-                }
-              <p class="address-content"> 
-                ${property.centerAddress}, ${property.centerCity}, ${
-      property.centerState
-    }
-              </p>
-              ${
-                property.landArea_SF
-                  ? `<p class="address-content">Unit Size: ${property.landArea_SF}</p>`
-                  : ''
-              }
-                <div class="buttons-wrap">
-                  <button style="margin-top: 0.5rem;" id="view-details-${
-                    property.id
-                  }" 
-                  class="view-details-card"> View Details </button>
-                </div>
-              </div>
-            </div>
-    `;
-  }
-
-  private getTempPropertyOptionsPopup(property: any): string {
-    return `
-            <div class="info-window">
-              <div class="main-img">
-              ${
-                property.MainImage
-                  ? `<img src="${property.MainImage}" alt="Main Image">`
-                  : ''
-              }
-                
-                <span class="close-btn">&times;</span>
-              </div>
-              <div class="content-wrap">
-                ${
-                  property.CenterName
-                    ? `<p class="content-title">${property.CenterName.toUpperCase()}</p>`
-                    : ''
-                }
-              <p class="address-content"> 
-                ${property.CenterAddress}, ${property.CenterCity}, ${
-      property.CenterState
-    }
-              </p>
-              ${
-                property.LandArea_SF
-                  ? `<p class="address-content">Unit Size: ${property.LandArea_SF}</p>`
-                  : ''
-              }
-                <div class="buttons-wrap">
-                  <button style="margin-top: 0.5rem;" id="view-details-${
-                    property.Id
-                  }" 
-                  class="view-details-card"> View Details </button>
-                </div>
-              </div>
-            </div>
-    `;
   }
 
   private getLargeSizeAlertPopup(sizeInMiles: number): string {
@@ -1170,13 +872,18 @@ export class MapDrawingService {
 
   // others
 
-  private getLocationIconSvg(): string {
-    return (
-      'data:image/svg+xml;charset=UTF-8,' +
-      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-      <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
-      </svg>
-    `)
-    );
+  gettDrawnList(): number {
+    return this.drawnPolygons.length || this.drawnCircles.length || 0;
+  }
+  getDrawnList(): boolean {
+    return this.drawnPolygons.length > 0 || this.drawnCircles.length > 0;
+  }
+
+  get getDrawnPolygons() {
+    return this.drawnPolygons;
+  }
+
+  get getDrawnCircles() {
+    return this.drawnCircles;
   }
 }

@@ -1,6 +1,11 @@
 <nav class="navbar navbar-expand-lg d-flex align-items-center w-100">
-  <!-- Left Section (Logo) -->
+  <!-- Left Section (Logo and Sidebar Toggle) -->
   <div class="d-flex align-items-center">
+    <!-- Add Sidebar Toggle Button -->
+    <button class="btn sidebar-toggle-btn me-2" (click)="toggleSidebar()">
+      <i class="fa-solid" [ngClass]="isCollapsed ? 'fa-bars' : 'fa-times'"></i>
+    </button>
+    
     <img
       alt="logo"
       class="cherry-logo"
@@ -15,9 +20,10 @@
     <div class="d-block d-lg-none me-2" *ngIf="isSmallScreen">
       <!-- <app-notifications></app-notifications> -->
     </div>
+    <app-notifications class=" d-flex d-sm-none "></app-notifications>
 
     <!-- Burger Button -->
-    <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar($event)">
       <i class="fa-solid fa-bars nav-icon"></i>
     </button>
   </div>
@@ -25,70 +31,22 @@
   <!-- Collapsible Navbar Content -->
   <div
     class="collapse navbar-collapse text-center"
-    [ngClass]="{ show: isNavbarOpen }"
+    [ngClass]="{ show: isNavbarOpen, 'mobile-menu': isSmallScreen }"
     id="navbarNav"
   >
-    <ul class="navbar-nav mx-auto gap-3">
-      <!-- <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          [routerLink]="['/dashboard']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          >Dashboard</a
-        >
-      </li> -->
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          [routerLink]="['/Submissions']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          >Submissions</a
-        >
-      </li>
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          [routerLink]="['/Kanban']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          >Cadence</a
-        >
-      </li>
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          [routerLink]="['/summary']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          >Tenants</a
-        >
-      </li>
-      <li class="nav-item" *ngIf="current.includes('landlord')">
-        <a
-          [routerLink]="['/landlord']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          >Properties</a
-        >
-      </li>
-      <li class="nav-item" *ngIf="currentView === 'tenant'">
-        <a
-          [routerLink]="['/EmilyUserInbox']"
-          class="nav-link"
-          routerLinkActive="active-route"
-          >Emily</a
-        >
-      </li>
-    </ul>
 
     <!-- Action Icons -->
-    <div class="d-flex align-items-center justify-content-center">
+    <div
+      class="d-flex align-items-center justify-content-center avatar-notifcations"
+    >
       <div
         class="d-none d-lg-block"
         *ngIf="!isSmallScreen && !current.includes('landlord')"
       >
-        <!-- <app-notifications></app-notifications> -->
+        <app-notifications></app-notifications>
       </div>
       <!-- Avatar Dropdown -->
-      <div class="dropdown ms-2">
+      <div class="dropdown">
         <div
           class="avatar-container"
           role="button"
@@ -141,3 +99,4 @@
     </div>
   </div>
 </nav>
+

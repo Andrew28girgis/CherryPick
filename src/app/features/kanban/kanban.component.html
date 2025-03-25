@@ -74,52 +74,36 @@
               <span [ngStyle]="{ color: stagesColors[stageIndex % 5].color }">
                 {{ stage.stageName }}
               </span>
-
-              <div ngbDropdown>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  [id]="'dropdown' + stage.StageId"
-                  ngbDropdownToggle
-                >
-                  <path
-                    d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
-                    fill="#7A8591"
-                  />
-                  <path
-                    d="M12 13C11.44 13 11 12.55 11 12C11 11.45 11.45 11 12 11C12.55 11 13 11.45 13 12C13 12.55 12.56 13 12 13Z"
-                    fill="#7A8591"
-                  />
-                  <path
-                    d="M16 13C15.44 13 15 12.55 15 12C15 11.45 15.45 11 16 11C16.55 11 17 11.45 17 12C17 12.55 16.56 13 16 13Z"
-                    fill="#7A8591"
-                  />
-                  <path
-                    d="M8 13C7.44 13 7 12.55 7 12C7 11.45 7.45 11 8 11C8.55 11 9 11.45 9 12C9 12.55 8.56 13 8 13Z"
-                    fill="#7A8591"
-                  />
-                </svg>
-                <div
-                  *ngIf="stage.StageActions && stage.StageActions.length > 0"
-                  ngbDropdownMenu
-                  [attr.aria-labelledby]="'dropdown' + stage.StageId"
-                >
-                  <ng-container *ngFor="let action of stage.StageActions">
-                    <ng-container *ngIf="action.actionType == 'Popup'">
-                      <button
-                        ngbDropdownItem
-                        (click)="openActionPopup(action.actionName)"
-                      >
-                        {{ action.actionName }}
-                      </button>
-                    </ng-container>
-                  </ng-container>
-                </div>
-              </div>
             </div>
+            <div
+              *ngIf="stage.StageActions && stage.StageActions.length > 0"
+              class="w-100 row gap-2 g-2"
+            >
+              <ng-container
+                *ngFor="
+                  let action of stage.StageActions;
+                  let actionIdex = index
+                "
+              >
+                <ng-container *ngIf="action.actionType == 'Popup'">
+                  <a
+                    *ngIf="action.actionName.trim().length > 0"
+                    class="col-5 workflow-item"
+                    style="
+                      background-color: #ffffff;
+                      color: #707791;
+                      cursor: pointer;
+                    "
+                    [pTooltip]="action.actionName"
+                    tooltipPosition="top"
+                    (click)="openActionPopup(action.actionName)"
+                  >
+                    {{ action.actionName }}
+                  </a>
+                </ng-container>
+              </ng-container>
+            </div>
+
             <div
               class="stage-content"
               cdkDropList
@@ -182,7 +166,8 @@
                             let otherKanbanIndex = index
                           "
                         >
-                          <div
+                          <a
+                            *ngIf="otherKanban.kanbanName.trim().length > 0"
                             class="col-5 workflow-item"
                             [ngStyle]="{
                               'background-color':
@@ -200,8 +185,8 @@
                               )
                             "
                           >
-                            {{ otherKanban.kanbanName }}
-                          </div>
+                            Go-to :{{ otherKanban.kanbanName }}
+                          </a>
                         </ng-container>
                       </div>
                     </ng-container>
@@ -231,6 +216,7 @@
                               *ngIf="action.actionLevel == 'Target'"
                             >
                               <a
+                                *ngIf="action.actionName.trim().length > 0"
                                 class="col-5 workflow-item"
                                 [ngStyle]="{
                                   'background-color':

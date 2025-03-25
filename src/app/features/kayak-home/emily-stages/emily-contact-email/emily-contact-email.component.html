@@ -78,41 +78,49 @@
         "
       >
         <div class="mailbox-header">
-          <div class="top-left">
-            <h5 class="contacts">Mail box</h5>
-            <div
-              class="email-filters d-flex justify-content-start align-items-center"
-            >
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'all' }"
-                (click)="filterEmails('all')"
-              >
-                <i class="fa-solid fa-envelope me-1"></i> All
-              </div>
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'inbox' }"
-                (click)="filterEmails('inbox')"
-              >
-                <i class="fa-solid fa-reply me-1"></i> Inbox
-              </div>
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'outbox' }"
-                (click)="filterEmails('outbox')"
-              >
-                <i class="fa-solid fa-share me-1"></i> Outbox
-              </div>
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'sent' }"
-                (click)="filterEmails('sent')"
-              >
-                <i class="fa-solid fa-envelope-circle-check me-1"></i> Sent
+          <div class="dropdownall d-flex align-items-center justify-content-center" (click)="toggleDropdown()">
+            <span class="all">{{ selectedFilter | uppercase }}</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+          
+          <!-- Dropdown content (hidden by default) -->
+          <div class="dropdown-content" [class.show]="isDropdownVisible">
+            <div>
+              <h5 class="contacts">Mail box</h5>
+              <div class="email-filters d-flex flex-column ">
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'all' }"
+                  (click)="filterEmails('all')"
+                >
+                  <i class="fa-solid fa-envelope me-1"></i> All
+                </div>
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'inbox' }"
+                  (click)="filterEmails('inbox')"
+                >
+                  <i class="fa-solid fa-reply me-1"></i> Inbox
+                </div>
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'outbox' }"
+                  (click)="filterEmails('outbox')"
+                >
+                  <i class="fa-solid fa-share me-1"></i> Outbox
+                </div>
+                <div
+                  class="filter-button"
+                  [ngClass]="{ active: selectedFilter === 'sent' }"
+                  (click)="filterEmails('sent')"
+                >
+                  <i class="fa-solid fa-envelope-circle-check me-1"></i> Sent
+                </div>
               </div>
             </div>
           </div>
+          
+          
           <div class="top-right d-flex" style="padding-top: 35px">
             <button
               class="new-btn"
@@ -145,7 +153,7 @@
                 </strong>
                 <p class="date">{{ email.Date | date : "medium" }}</p>
               </div>
-              <p *ngIf="emailsSentContact.length === 0" class="no-email-msg">
+              <p *ngIf="emailsSentContact?.length === 0" class="no-email-msg">
                 {{ emptyMessage }}
               </p>
             </div>
