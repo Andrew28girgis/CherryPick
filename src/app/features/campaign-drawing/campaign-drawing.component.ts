@@ -173,7 +173,7 @@ export class CampaignDrawingComponent
         this.insertNewPolygons({
           CampaignId: campaignId,
           contactId: this.contactId,
-          name: polygon.shape.get('label'),
+          name: polygon.shape.get('label') ?? 'Shape',
           city: geo.properties.city,
           state: geo.properties.state,
           geoJson: JSON.stringify(geo),
@@ -201,7 +201,7 @@ export class CampaignDrawingComponent
         this.insertNewPolygons({
           CampaignId: campaignId,
           contactId: this.contactId,
-          name: circle.shape.get('label'),
+          name: circle.shape.get('label') ?? 'Shape',
           city: geo.properties.city,
           state: geo.properties.state,
           geoJson: JSON.stringify(geo),
