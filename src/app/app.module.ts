@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Components & Directives
 import { AppComponent } from './app.component';
-import { LoginComponent } from './features/login/login.component';
+import { LoginComponent } from './shared/components/login/login.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
 import { LogoutComponent } from './shared/components/logout/logout.component';

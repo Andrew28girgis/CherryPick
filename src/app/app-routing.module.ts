@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, type Routes } from '@angular/router';
-import { LoginComponent } from './features/login/login.component';
+import { LoginComponent } from './shared/components/login/login.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
 import { TermsComponent } from './shared/components/terms/terms.component';
-import { TenantComponent } from './features/tenant/tenant.component';
+import { TenantComponent } from './features/tenants/tenant/tenant.component';
 import { DashboardComponent } from './features/tenants/dashboard/dashboard.component';
 import { AddTenantsComponent } from './features/tenants/add-tenants/add-tenants.component';
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
