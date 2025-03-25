@@ -297,9 +297,9 @@
       </h1>
     </div>
   </div> -->
-  <div class="modal-body" style="overflow: auto;">
+  <div class="modal-body" style="overflow: auto">
     <div class="outer-frame" *ngIf="!fileName">
-      <div class="inner-frame" >
+      <div class="inner-frame">
         <!-- File drop area shown if no file has been selected -->
         <ngx-file-drop
           class="dropzonee"
@@ -325,18 +325,15 @@
           </ng-template>
         </ngx-file-drop>
       </div>
-    
     </div>
     <div class="filenameouterframe" *ngIf="fileName">
-      <div class="filenameinnerframe" >
+      <div class="filenameinnerframe">
         <!-- Display file name once a file is selected -->
         <div
           class="d-flex align-items-center justify-content-between uploaded-file-container"
         >
           <div class="filename">{{ fileName }}</div>
-          <button class="clear-button" (click)="clearModalData()">
-            Clear
-          </button>
+          <button class="clear-button" (click)="clearModalData()">Clear</button>
         </div>
       </div>
     </div>
@@ -543,7 +540,9 @@
 
       <!-- Submit Button (Right Column) -->
       <div class="col-6">
-        <button class="submit-button"  (click)="sendImagesArray()" >Submit</button>
+        <button class="submit-button" (click)="sendImagesArray()">
+          Submit
+        </button>
       </div>
     </div>
   </div>
@@ -575,18 +574,20 @@
   </div>
   <div class="modal-footer">
     <!-- Send Selected Images Button -->
-    <div class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf">
-        <!-- <button
+    <div
+      class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+    >
+      <!-- <button
           class="convertimages mx-1"
           (click)="sendImagesArray()"
           *ngIf="images.length > 0"
         >
           Convert Images
         </button> -->
-          <button class="btn btn-success" *ngIf="JsonPDF" (click)="sendJson()">
-            Submit PDF Data
-          </button>
-          <!-- <button
+      <button class="btn btn-success" *ngIf="JsonPDF" (click)="sendJson()">
+        Submit PDF Data
+      </button>
+      <!-- <button
             class="btn btn-secondary mx-1"
             (click)="clearModalData(); closeModal(modal)"
           >
