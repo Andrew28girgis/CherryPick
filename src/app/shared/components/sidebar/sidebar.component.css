@@ -198,7 +198,9 @@
   margin-top: 2px;
   padding: 4px 8px;
 }
-
+.sidebar-subitem{
+  cursor: pointer;
+}
 .sidebar-subitem .sidebar-link {
   font-size: 0.9em;
   padding: 4px 12px;
@@ -226,6 +228,11 @@
 
 .sidebar-link:hover .fa-solid {
   color: #0056b3;
+}
+
+.active-kanban-overflow{
+  background-color: #f5f7fa;
+  color: #4d65b4;
 }
 
 /* Mobile Responsive */

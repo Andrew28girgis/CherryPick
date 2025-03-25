@@ -13,23 +13,27 @@
     <ul class="sidebar-nav">
       <li class="sidebar-item">
         <div class="sidebar-logo">
-            <img
-              *ngIf="isSidebarExpanded || isHovering"
-              alt="logo"
-              class="cherry-logo"
-              [routerLink]="current.includes('landlord') ? ['/landlord'] : ['/summary']"
-              decoding="async"
-              src="../../../assets/Images/logo.png"
-            />
-            <img
-              *ngIf="!isSidebarExpanded && !isHovering"
-              alt="logo"
-              class="cherry-logo"
-              [routerLink]="current.includes('landlord') ? ['/landlord'] : ['/summary']"
-              decoding="async"
-              src="../../../assets/Images/Icons/logo (1).png"
-            />
-          </div>
+          <img
+            *ngIf="isSidebarExpanded || isHovering"
+            alt="logo"
+            class="cherry-logo"
+            [routerLink]="
+              current.includes('landlord') ? ['/landlord'] : ['/summary']
+            "
+            decoding="async"
+            src="../../../assets/Images/logo.png"
+          />
+          <img
+            *ngIf="!isSidebarExpanded && !isHovering"
+            alt="logo"
+            class="cherry-logo"
+            [routerLink]="
+              current.includes('landlord') ? ['/landlord'] : ['/summary']
+            "
+            decoding="async"
+            src="../../../assets/Images/Icons/logo (1).png"
+          />
+        </div>
       </li>
       <li class="sidebar-item">
         <a
@@ -65,7 +69,12 @@
       <li class="sidebar-item">
         <a
           class="sidebar-link"
-          (click)="cadenceIsOpen = !cadenceIsOpen"
+          (click)="
+            cadenceIsOpen = !cadenceIsOpen;
+            this.cadenceService.updateKanbanId(
+              this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
+            )
+          "
           style="cursor: pointer"
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
@@ -151,25 +160,38 @@
 
               <ul class="sidebar-subnav" *ngIf="org.isOpen">
                 <li class="sidebar-subheader">Actions</li>
-                <li *ngFor="let action of org.Actions" class="sidebar-subitem">
-                  <a
-                    class="sidebar-link"
-                    href="{{ action.actionUrlDecode }}"
-                    target="_blank"
-                  >
-                    <span class="link-text">{{ action.actionName }}</span>
-                  </a>
-                </li>
+                <ng-container *ngFor="let action of org.Actions">
+                  <li class="sidebar-subitem">
+                    <a
+                      class="sidebar-link"
+                      href="{{ action.actionUrlDecode }}"
+                      target="_blank"
+                    >
+                      <span class="link-text">{{ action.actionName }}</span>
+                    </a>
+                  </li>
+                </ng-container>
 
                 <li class="sidebar-subheader">Workflows</li>
-                <li
-                  *ngFor="let otherkanban of org.OtherKanbans"
-                  class="sidebar-subitem"
-                >
-                  <a class="sidebar-link">
-                    <span class="link-text">{{ otherkanban.kanbanName }}</span>
-                  </a>
-                </li>
+                <ng-container *ngFor="let otherkanban of org.OtherKanbans">
+                  <li
+                    class="sidebar-subitem"
+                    [id]="'kanban-' + otherkanban.id"
+                    (click)="cadenceService.updateKanbanId(otherkanban.id)"
+                  >
+                    <a
+                      class="sidebar-link"
+                      [ngClass]="{
+                        'active-kanban-overflow':
+                          (kanbanId$ | async) === otherkanban.id
+                      }"
+                    >
+                      <span class="link-text">{{
+                        otherkanban.kanbanName
+                      }}</span>
+                    </a>
+                  </li>
+                </ng-container>
               </ul>
             </li>
           </ng-container>
