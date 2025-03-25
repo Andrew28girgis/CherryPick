@@ -26,6 +26,11 @@ export class MapsService {
     private stateService: StateService
   ) {}
 
+      // Add this method to get all markers
+      getAllMarkers(): google.maps.Marker[] {
+        return this.markers;
+      }
+
   createMarker(map: any, markerData: any, type: string): any {
     this.map = map;
     const icon = this.getArrowSvg();

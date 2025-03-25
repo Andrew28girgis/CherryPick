@@ -46,6 +46,12 @@ import { CampaignDrawingComponent } from './features/campaign-drawing/campaign-d
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
+import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey/market-survey-home/market-survey.component';
+import { MarketTableViewComponent } from './features/tenants/market-survery/market-survey/market-table-view/market-table-view.component';
+import { SocialMediaViewComponent } from './features/tenants/market-survery/market-survey/market-social-view/social-media-view.component';
+import { MarketSideViewComponent } from './features/tenants/market-survery/market-survey/market-side-view/market-side-view.component';
+import { MarketMapViewComponent } from './features/tenants/market-survery/market-survey/market-map-view/market-map-view.component';
+import { MarketCardViewComponent } from './features/tenants/market-survery/market-survey/market-card-view/market-card-view.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +71,12 @@ import { HomeComponent } from './features/tenants/market-survery/home/home.compo
     SidebarComponent,
     EmilyUserInboxComponent,
     CampaignDrawingComponent,
+    MarketSurveyComponent,
+    MarketTableViewComponent,
+    SocialMediaViewComponent,
+    MarketSideViewComponent,
+    MarketMapViewComponent,
+    MarketCardViewComponent,
   ],
   imports: [
     BrowserModule,

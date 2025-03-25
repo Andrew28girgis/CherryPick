@@ -1,0 +1,30 @@
+<div class="py-2 d-flex justify-content-between mb-0">
+    <p class="" style="color: #000; margin-left: 25px; margin-top: 11px">
+      {{ cardsSideList.length }} places within map area
+    </p>
+  
+    <div
+      class="d-flex flex-row align-items-center py-2"
+      style="margin-right: 25px"
+    >
+      <ng-container *ngFor="let category of buyboxCategories">
+        <div class="d-flex mx-2 competitor">
+          <input
+            type="checkbox"
+            id="{{ category.id }}"
+            [(ngModel)]="category.isChecked"
+            (change)="onCheckboxChange(category)"
+            class="me-2"
+          />
+          <label
+            class="p-0 m-0"
+            [for]="category.id"
+            style="cursor: pointer; text-wrap: nowrap"
+          >
+            {{ category.name }}
+          </label>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div id="map" class="custom-map"></div>
