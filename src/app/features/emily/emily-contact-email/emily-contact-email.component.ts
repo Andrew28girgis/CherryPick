@@ -69,9 +69,11 @@ export class EmilyContactEmailComponent implements OnInit {
     });
     this.loadInitialData();
   }
+  
   toggleDropdown() {
     this.isDropdownVisible = !this.isDropdownVisible;
   }
+
   loadInitialData(): void {
     this.filteredEmails = [];
     this.emailsSentContact = [];
@@ -102,6 +104,7 @@ export class EmilyContactEmailComponent implements OnInit {
       })
       .catch((error) => {});
   }
+
   GetBuyBoxMicroDeals(callback?: Function): void {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
@@ -141,8 +144,6 @@ export class EmilyContactEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        console.log(`777`);
-        console.log(this.BuyBoxEmails);
 
         if (callback) {
           callback();
@@ -323,7 +324,7 @@ export class EmilyContactEmailComponent implements OnInit {
       !this.selectedEmail ||
       !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
     ) {
-       this.openEmail(this.filteredEmails[0]);
+      this.openEmail(this.filteredEmails[0]);
     }
   }
 

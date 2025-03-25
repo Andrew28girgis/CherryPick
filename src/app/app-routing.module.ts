@@ -82,7 +82,7 @@ const routes: Routes = [
     path: 'Kanban/:id',
     component: KanbanComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
-  }, 
+  },
   {
     path: 'EmilyUserInbox',
     component: EmilyUserInboxComponent,

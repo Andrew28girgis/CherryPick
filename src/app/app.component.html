@@ -18,8 +18,6 @@
       >
         <app-sidebar (hoverStateChange)="onSidebarHover($event)"></app-sidebar>
       </div>
-
-      <!-- Main Content with custom width classes -->
       <div
         class="main-content-area"
         [ngClass]="{
@@ -35,7 +33,6 @@
     </div>
   </ng-container>
 
-  <!-- Template for full-width content (Market Survey) -->
   <ng-template #fullWidthContent>
     <div class="full-width-content">
       <router-outlet></router-outlet>
