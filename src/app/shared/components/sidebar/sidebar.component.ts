@@ -97,15 +97,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   onSidebarHover(isHovering: boolean) {
-    // Only apply hover effect if sidebar is collapsed
     if (!this.isSidebarExpanded) {
       this.isHovering = isHovering;
-      // Emit the hover state change to parent
       this.hoverStateChange.emit(isHovering);
     }
   }
 
-  // Cadence
   private allUserKanbans: IUserKanban[] = [];
   sideKanban: cadenceSidebar = { tenantOrganizations: [] }; // Initialize with a default value
   cadenceIsOpen = false;
