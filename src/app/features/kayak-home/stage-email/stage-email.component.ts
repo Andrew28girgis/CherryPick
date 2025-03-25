@@ -23,7 +23,7 @@ import {
 import { EditorModule } from 'primeng/editor';
 import { RouterModule } from '@angular/router';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { EmilyComponent } from '../emily/emily.component';
+import { EmilyComponent } from '../../emily/emily/emily.component';
 
 interface Column {
   field: string;

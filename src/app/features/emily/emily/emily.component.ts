@@ -129,7 +129,7 @@ export class EmilyComponent implements OnInit {
   contactIdemail: any;
   isLandingSelected: boolean = false;
   isISCcSelected: boolean = false;
-  GenerateEmailall:any;
+  GenerateEmailall: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -164,7 +164,7 @@ export class EmilyComponent implements OnInit {
       body: new FormControl(''),
       subject: new FormControl(''),
       IsCC: new FormControl(false),
-      includinglanding: new FormControl(false), 
+      includinglanding: new FormControl(false),
     });
 
     this.GetBuyBoxInfo();
@@ -192,7 +192,7 @@ export class EmilyComponent implements OnInit {
         this.showMaxBuildingSize = true;
         this.onCheckboxdetailsChangeMin(true, true);
         this.spinner.hide();
-      }
+      },
     });
   }
 
@@ -219,7 +219,7 @@ export class EmilyComponent implements OnInit {
         this.selectManagerContactsByDefault();
         this.onSelectedShoppingCenterChange();
         this.spinner.hide();
-      }
+      },
     });
   }
 
@@ -294,7 +294,7 @@ export class EmilyComponent implements OnInit {
           this.BuyBoxOrganizationsForEmail = [];
           this.spinner.hide();
         }
-      }
+      },
     });
   }
 
@@ -401,48 +401,49 @@ export class EmilyComponent implements OnInit {
     let contacts = emailItem.recieverIds.join(',');
 
     if (this.emailBodyReply) {
-    var body: any = {
-      Name: 'SaveTemplate',
-      MainEntity: null,
-      Params: {
-        // organizationid: this.shoppingCenterOrganization,
-        Body: this.emailBodyResponse,
-        subject: this.emailSubject,
-        buyboxid: this.buyBoxId,
-        contactid: contactId,
-        contactids: contacts,
-      },
-      Json: null,
-    };
-  }else{
       var body: any = {
         Name: 'SaveTemplate',
         MainEntity: null,
         Params: {
           // organizationid: this.shoppingCenterOrganization,
-          Body : emailItem.emailBody,
-          subject : emailItem.emailSubject,
+          Body: this.emailBodyResponse,
+          subject: this.emailSubject,
           buyboxid: this.buyBoxId,
           contactid: contactId,
           contactids: contacts,
         },
         Json: null,
-      };      
+      };
+    } else {
+      var body: any = {
+        Name: 'SaveTemplate',
+        MainEntity: null,
+        Params: {
+          // organizationid: this.shoppingCenterOrganization,
+          Body: emailItem.emailBody,
+          subject: emailItem.emailSubject,
+          buyboxid: this.buyBoxId,
+          contactid: contactId,
+          contactids: contacts,
+        },
+        Json: null,
+      };
     }
-
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.showToast('Email Saved successfully!');
         this.objectEmailSavedtemplate = data?.json[0];
-        this.GenerateEmailall = this.GenerateEmailall.filter((item:any) => item !== emailItem);
+        this.GenerateEmailall = this.GenerateEmailall.filter(
+          (item: any) => item !== emailItem
+        );
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         this.spinner.hide();
       },
     });
   }
 
-  SaveAndSendTemplate(recieverIds? :any) {
+  SaveAndSendTemplate(recieverIds?: any) {
     this.SaveTemplate(recieverIds);
     setTimeout(() => {
       const body = {
@@ -457,7 +458,7 @@ export class EmilyComponent implements OnInit {
 
           this.showToast('Email Save and Send successfully!');
           this.MoveStage();
-        }
+        },
       });
     }, 2000);
   }
@@ -471,7 +472,7 @@ export class EmilyComponent implements OnInit {
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => { },
+      next: (response: any) => {},
     });
   }
 
@@ -486,7 +487,7 @@ export class EmilyComponent implements OnInit {
       next: (response: any) => {
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
         this.showToast('Email Send successfully!');
-      }
+      },
     });
   }
 
@@ -975,15 +976,14 @@ export class EmilyComponent implements OnInit {
 
       emailContent += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
       if (this.emailBodyReply) {
-        if(this.formGroup.get('IsCC')?.value == false){
+        if (this.formGroup.get('IsCC')?.value == false) {
           emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
         }
-      }else{
-        if(this.isISCcSelected == false){
+      } else {
+        if (this.isISCcSelected == false) {
           emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
         }
       }
-
 
       this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
         if (contact.selected && contact?.Centers?.length > 0) {
@@ -1174,7 +1174,8 @@ export class EmilyComponent implements OnInit {
 
     if (this.emailBodyReply) {
       if (this.isLandingSelected) {
-        const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+        const landingLink =
+          'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
         emailContent += `\nLanding page: <a href="${landingLink}">${landingLink}</a>`;
       }
     } else {
@@ -1197,14 +1198,15 @@ export class EmilyComponent implements OnInit {
       return;
     }
     if (this.emailBodyReply) {
-      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
-      var landingSnippet = "";
+      const landingLink =
+        'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+      var landingSnippet = '';
       if (this.isLandingSelected) {
         landingSnippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
       }
     } else {
       const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
-      landingSnippet = "";
+      landingSnippet = '';
       if (this.isLandingSelected) {
         landingSnippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
       }
@@ -1223,15 +1225,18 @@ export class EmilyComponent implements OnInit {
       IsCC = this.isISCcSelected;
     }
 
-
-    this.PlacesService.generateEmail(promptId, context, OrganizaitonsId, IsCC).subscribe({
+    this.PlacesService.generateEmail(
+      promptId,
+      context,
+      OrganizaitonsId,
+      IsCC
+    ).subscribe({
       next: (data: any) => {
         // console.log(data);
-        this.GenerateEmailall= data;
-        
+        this.GenerateEmailall = data;
+
         this.emailSubject = data?.emailSubject || 'No subject received';
         let generatedBody = data?.emailBody || '';
-
 
         this.emailBodyResponse = generatedBody;
 
@@ -1258,7 +1263,7 @@ export class EmilyComponent implements OnInit {
       next: (response: any) => {
         this.emailBodyResponsetogale = false;
         this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-      }
+      },
     });
   }
 
@@ -1313,9 +1318,9 @@ export class EmilyComponent implements OnInit {
               this.prompts = [];
             }
             this.spinner.hide();
-          }
+          },
         });
-      }
+      },
     });
   }
 
@@ -1375,7 +1380,7 @@ export class EmilyComponent implements OnInit {
         this.selectedPromptText = this.editablePromptText;
         this.isEditing = false;
         modal.close();
-      }
+      },
     });
   }
 
@@ -1403,7 +1408,7 @@ export class EmilyComponent implements OnInit {
         this.GetPrompts();
         this.newPromptText = '';
         this.newPromptName = '';
-      }
+      },
     });
   }
 
@@ -1521,10 +1526,11 @@ export class EmilyComponent implements OnInit {
     this.isLandingSelected = event.target.checked;
 
     if (this.emailBodyReply) {
-      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
+      const landingLink =
+        'https://cp.cherrypick.com/tenant/' + this.buyBoxIdReply;
 
       if (!this.emailBodyResponse) {
-        this.emailBodyResponse = "";
+        this.emailBodyResponse = '';
       }
 
       if (event.target.checked) {
@@ -1539,7 +1545,7 @@ export class EmilyComponent implements OnInit {
       const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
 
       if (!this.emailBody) {
-        this.emailBody = "";
+        this.emailBody = '';
       }
       if (event.target.checked) {
         if (!this.emailBody.includes(landingLink)) {

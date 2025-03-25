@@ -6,9 +6,9 @@ import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
 import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-center-table.component';
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KayakComponent } from './kayak/kayak.component';
-import { EmilyComponent } from './emily/emily.component';
-import { MyInboxEmailListComponent } from './my-inbox-email-list/my-inbox-email-list.component';
-import { EmilyContactEmailComponent } from './emily-stages/emily-contact-email/emily-contact-email.component';
+import { EmilyComponent } from '../emily/emily/emily.component';
+import { MyInboxEmailListComponent } from '../emily/my-inbox-email-list/my-inbox-email-list.component';
+import { EmilyContactEmailComponent } from '../emily/emily-contact-email/emily-contact-email.component';
 
 const routes: Routes = [
   { path: '', component: KayakHomeComponent },

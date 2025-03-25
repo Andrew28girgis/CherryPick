@@ -42,7 +42,6 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
-import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
 import { StepperModule } from 'primeng/stepper';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -51,9 +50,10 @@ import { ManagePropertiesComponent } from './features/landlord/manage-properties
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { KayakModule } from './features/kayak-home/kayak.module';
 import { HomeComponent } from './features/market-survey/home/home.component';
-import { MutipleEmailComponent } from './features/mutiple-email/mutiple-email.component';
-import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
+ import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { CampaignDrawingComponent } from './features/campaign-drawing/campaign-drawing.component';
+import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
+import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 
 const msalConfig = {
   auth: {

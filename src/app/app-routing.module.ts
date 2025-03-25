@@ -9,12 +9,12 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
-import { EmilyUserInboxComponent } from './features/emily-user-inbox/emily-user-inbox.component';
 import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { HomeComponent } from './features/market-survey/home/home.component';
-import { MutipleEmailComponent } from './features/mutiple-email/mutiple-email.component';
+import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
+import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
