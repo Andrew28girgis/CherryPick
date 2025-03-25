@@ -1,3 +1,21 @@
+.checkbox-container {
+  position: fixed;
+  top: 80px;
+  right: 80px;
+  z-index: 1000;
+  font-weight: 600;
+  background-color: white;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: transparent;
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .custom-map {
-    height: 100vh;
-  }
+  height: 100vh;
+}
