@@ -1,9 +1,20 @@
-import { Component, OnInit, OnDestroy, HostListener, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { PlacesService } from 'src/app/core/services/places.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
+import { IUserKanban } from '../../models/iuser-kanban';
+import { cadenceSidebar } from '../../models/sidenavbar';
+import { IKanbanDetails } from '../../models/ikanban-details';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,7 +25,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   isSmallScreen: boolean = window.innerWidth < 992;
   isSidebarExpanded: boolean = false; // Default collapsed state
   isHovering: boolean = false;
-  
+
   // Add output event to notify parent of hover state changes
   @Output() hoverStateChange = new EventEmitter<boolean>();
 
@@ -33,7 +44,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
-    private userViewService: UserViewService
+    private userViewService: UserViewService,
+    private PlacesService: PlacesService
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isSidebarExpanded = !state;
@@ -43,13 +55,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isSmallScreen = window.innerWidth < 992; 
-    this.isSidebarExpanded = false; // Default collapsed state
-    
-    // Notify the service about initial sidebar state
+    this.getUserKanbans();
+    this.isSmallScreen = window.innerWidth < 992;
+    this.isSidebarExpanded = false;
     this.sidbarService.setSidebarState(this.isSidebarExpanded);
-
-    // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
       .pipe(
         filter(
@@ -65,9 +74,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.current = this.router.url;
 
     // Subscribe to view changes if needed.
-    this.viewSubscription = this.userViewService.currentView$.subscribe((view) => {
-      this.currentView = view;
-    });
+    this.viewSubscription = this.userViewService.currentView$.subscribe(
+      (view) => {
+        this.currentView = view;
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -92,5 +103,51 @@ export class SidebarComponent implements OnInit, OnDestroy {
       // Emit the hover state change to parent
       this.hoverStateChange.emit(isHovering);
     }
+  }
+
+  // Cadence
+  private allUserKanbans: IUserKanban[] = [];
+  sideKanban: cadenceSidebar = { tenantOrganizations: [] }; // Initialize with a default value
+  cadenceIsOpen = false;
+
+  private getUserKanbans(): void {
+    const body: any = {
+      Name: 'GetUserKanbans',
+      Params: {},
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.allUserKanbans = data.json;
+        this.getKanbanDetails(
+          this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
+        );
+      },
+    });
+  }
+
+  private getKanbanDetails(kanbanId: number): void {
+    const body: any = {
+      Name: 'GetKanbanDetails',
+      Params: {
+        kanbanId: kanbanId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        let details: IKanbanDetails = data.json[0];
+
+        details.kanbanStages.forEach((stage) => {
+          if (stage.StageOrganizations) {
+            stage.StageOrganizations.forEach((org) => {
+              this.sideKanban.tenantOrganizations.push({
+                ...org,
+                isOpen: false, // add this property for toggle
+              });
+            });
+          }
+        });
+      },
+    });
   }
 }
