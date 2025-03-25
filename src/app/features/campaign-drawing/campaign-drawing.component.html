@@ -204,7 +204,12 @@
         </button>
       </div>
       <div class="col-6">
-        <button class="w-100 save-campaign" (click)="campaignName.trim().length>0&&createNewCampaign()">Add</button>
+        <button
+          class="w-100 save-campaign"
+          (click)="campaignName.trim().length > 0 && createNewCampaign()"
+        >
+          Add
+        </button>
       </div>
     </div>
   </div>

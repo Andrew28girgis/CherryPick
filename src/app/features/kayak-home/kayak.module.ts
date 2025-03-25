@@ -16,7 +16,6 @@ import { CardViewComponent } from './shopping-center-table/card-view/card-view.c
 import { SideListViewComponent } from './shopping-center-table/side-list-view/side-list-view.component';
 import { MapViewComponent } from './shopping-center-table/map-view/map-view.component';
 import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
-import { StageEmailComponent } from './stage-email/stage-email.component'; 
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
@@ -53,7 +52,6 @@ import { KayakComponent } from './kayak/kayak.component';
     ToastrModule.forRoot(),
     SharedModule,
     LinkMicrosoftComponent,
-    StageEmailComponent,
     AccordionModule,
     TableModule,
     CardModule,
@@ -71,7 +69,6 @@ import { KayakComponent } from './kayak/kayak.component';
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
-    StageEmailComponent,
     PolygonsControllerComponent,
     LinkMicrosoftComponent,
     EmilyComponent
