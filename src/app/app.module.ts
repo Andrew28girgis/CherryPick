@@ -31,8 +31,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SharedModule } from './shared/shared.module';
-import { NgxFileDropModule } from 'ngx-file-drop';
-import { DashboardComponent } from './features/tenants/dashboard/dashboard.component';
+import { NgxFileDropModule } from 'ngx-file-drop'; 
 import { TooltipModule } from 'primeng/tooltip';
 import { AddTenantsComponent } from './features/tenants/add-tenants/add-tenants.component';
 import { StepperModule } from 'primeng/stepper';
@@ -59,8 +58,7 @@ import { HomeComponent } from './features/tenants/market-survery/home/home.compo
     LogoutComponent,
     TermsComponent,
     NumberWithCommasPipe,
-    ManagePropertiesComponent,
-    DashboardComponent,
+    ManagePropertiesComponent,  
     AddTenantsComponent,
     EmilyUserInboxComponent,
     MutipleEmailComponent,

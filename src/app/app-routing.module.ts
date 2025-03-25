@@ -5,7 +5,6 @@ import { LandingComponent } from './features/tenants/market-survery/landing/land
 import { SummeryComponent } from './features/summery/summery.component';
 import { TermsComponent } from './shared/components/terms/terms.component';
 import { TenantComponent } from './features/tenants/tenant/tenant.component';
-import { DashboardComponent } from './features/tenants/dashboard/dashboard.component';
 import { AddTenantsComponent } from './features/tenants/add-tenants/add-tenants.component';
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
@@ -76,12 +75,7 @@ const routes: Routes = [
     path: 'Kanban/:id',
     component: KanbanComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
-  },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [TenantOnlyGuard],
-  },
+  }, 
   {
     path: 'EmilyUserInbox',
     component: EmilyUserInboxComponent,
