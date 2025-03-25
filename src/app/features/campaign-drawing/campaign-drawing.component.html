@@ -111,8 +111,7 @@
       <span class="map-control-title">Polygon</span>
     </div>
   </div>
-  <!-- *ngIf="isDrawing && getDrawnList" -->
-  <div class="launch-campaign">
+  <div *ngIf="isDrawing && getDrawnList" class="launch-campaign">
     <div class="launch-campaign-btn" (click)="openNewCampaignPopup(content)">
       <div class="launch-campaign-btn-icon">
         <svg
@@ -204,7 +203,12 @@
         </button>
       </div>
       <div class="col-6">
-        <button class="w-100 save-campaign" (click)="campaignName.trim().length>0&&createNewCampaign()">Add</button>
+        <button
+          class="w-100 save-campaign"
+          (click)="campaignName.trim().length > 0 && createNewCampaign()"
+        >
+          Add
+        </button>
       </div>
     </div>
   </div>
