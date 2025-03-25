@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, type Routes } from '@angular/router';
 import { LoginComponent } from './features/login/login.component';
-import { LandingComponent } from './features/market-survey/landing/landing.component';
+import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
-import { TermsComponent } from './features/terms/terms.component';
+import { TermsComponent } from './shared/components/terms/terms.component';
 import { TenantComponent } from './features/tenant/tenant.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { AddTenantsComponent } from './features/add-tenants/add-tenants.component';
+import { DashboardComponent } from './features/tenants/dashboard/dashboard.component';
+import { AddTenantsComponent } from './features/tenants/add-tenants/add-tenants.component';
 import { LandlordAccessGuard } from './core/guards/landlord-access.guard';
 import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
-import { HomeComponent } from './features/market-survey/home/home.component';
 import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
+import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
