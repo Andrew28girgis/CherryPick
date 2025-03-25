@@ -135,19 +135,18 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        let details: IKanbanDetails = data.json[0];
-
+        let details: IKanbanDetails = data.json[0]; 
         details.kanbanStages.forEach((stage) => {
           if (stage.StageOrganizations) {
             stage.StageOrganizations.forEach((org) => {
               this.sideKanban.tenantOrganizations.push({
                 ...org,
-                isOpen: false, // add this property for toggle
+                isOpen: false,
               });
             });
           }
         });
-      },
+      }
     });
   }
 }
