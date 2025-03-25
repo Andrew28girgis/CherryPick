@@ -1,0 +1,192 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<nav class="d-none d-sm-flex">
+  <div class="navbar-line m-0" style="padding: 0px 8px">
+    <div class="nav-right row m-0">
+      <div
+        class="nav-right-responsive col-4 justify-content-strat justify-content-sm-strat gap-0 gap-sm-2"
+      >
+        <img
+          alt="logo"
+          class="cherry-logo"
+          [routerLink]="['/summary']"
+          decoding="async"
+          data-nimg="1"
+          src="../../../assets/Images/logo.png"
+        />
+        <p class="titleResponsive m-0 ms-2 d-none d-sm-flex">
+          {{ BuyBoxName }}
+        </p>
+      </div>
+
+      <div
+        class="d-flex flex-row align-items-center py-2 col-4"
+        *ngIf="currentView == 1 || currentView == 2"
+      >
+        <ng-container *ngFor="let category of buyboxCategories">
+          <div class="d-flex mx-2 competitor">
+            <input
+              type="checkbox"
+              id="{{ category.id }}"
+              [(ngModel)]="category.isChecked"
+              (change)="onCheckboxChange(category)"
+              class="me-2"
+            />
+            <label class="p-0 m-0" [for]="category.id" style="cursor: pointer">
+              {{ category.name }}
+            </label>
+          </div>
+        </ng-container>
+      </div>
+
+      <div
+        class="navbar navbar-expand-lg navbar-light col-3 justify-content-end justify-content-sm-between"
+      >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          (click)="toggleNavbar()"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse"
+          [ngClass]="{ show: navbarOpen }"
+          id="navbarNav"
+        >
+          <div
+            class="icon-option"
+            *ngFor="let option of dropdowmOptions"
+            (click)="selectOption(option)"
+            [class.selected]="
+              selectedOption === option.status || selectedOption === option
+            "
+            [ngClass]="{
+              'hide-on-mobile':
+                option.text === 'Table View' || option.text === 'Side List View'
+            }"
+          >
+            <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+            <span class="icon-text">{{ option.text }}</span>
+          </div>
+
+          <button
+            class="btn custom-share-btn ms-3 d-none d-sm-flex"
+            (click)="OpenShareWithContactModal(ShareWithContact)"
+          >
+            Share
+          </button>
+
+          <app-logout></app-logout>
+        </div>
+      </div>
+      <div
+        class="col-12 mt-2 mt-sm-0 d-flex d-sm-none p-0 justify-content-between"
+      >
+        <p class="titleResponsive m-0 ms-2">
+          {{ BuyBoxName }}
+        </p>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Social Media View (currentView == 5) -->
+<ng-container *ngIf="currentView == 5">
+  <app-social-media-view></app-social-media-view>
+</ng-container>
+
+<!-- Table View (currentView == 4) -->
+<ng-container *ngIf="currentView == 4">
+  <app-market-table-view></app-market-table-view>
+</ng-container>
+
+<!-- Cards Only View (currentView == 3) -->
+<ng-container *ngIf="currentView == 3">
+  <div class="background2 col-12">
+    <div class="row m-0 mt-2">
+      <!-- The card view is set to 'grid' layout for 3 cards per row -->
+      <app-market-card-view layout="grid"></app-market-card-view>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Side View (currentView == 2): Cards on left and Map on right -->
+<ng-container *ngIf="currentView == 2">
+  <!-- <div class="d-flex">
+    <div class="background2 col-md-8 col-sm-12 cards">
+      <div class="row m-0 mt-2" style="overflow-y: auto; max-height: 100vh">
+        <app-market-card-view layout="side"></app-market-card-view>
+      </div>
+    </div>
+    <div class="p-0 col-12 col-sm-4">
+      <app-market-map-view></app-market-map-view>
+    </div>
+  </div> -->
+  
+  <app-market-side-view></app-market-side-view>
+</ng-container>
+
+<!-- Map Only View (currentView == 1) -->
+<ng-container *ngIf="currentView == 1">
+  <div class="p-0 col-12">
+    <app-market-map-view></app-market-map-view>
+  </div>
+</ng-container>
+
+<div class="row m-0 d-sm-none fixed-bottom-mobile">
+  <div class="col-12 d-flex justify-content-around align-items-center">
+    <div class="custom-icon-container">
+      <p routerLink="/summary" class="d-flex d-sm-none Home-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#918c8a"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-house"
+        >
+          <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+          <path
+            d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+          />
+        </svg>
+      </p>
+      <div
+        class="icon-option"
+        *ngFor="let option of dropdowmOptions"
+        (click)="selectOption(option)"
+        [class.selected]="
+          selectedOption === option.status || selectedOption === option
+        "
+        [ngClass]="{
+          'hide-on-mobile': option.text === 'Side List View'
+        }"
+      >
+        <img [src]="option.icon" [alt]="option.text" class="icon-image" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #ShareWithContact let-modal>
+  <div
+    class="d-flex justify-content-between p-3 m-3 align-items-center shareborder"
+  >
+    <p class="share-link m-0">{{ GuidLink }}</p>
+    <i
+      class="fa-solid fa-copy"
+      (click)="copyGUID(GuidLink)"
+      style="cursor: pointer; font-size: 20px"
+    ></i>
+  </div>
+</ng-template>
