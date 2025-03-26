@@ -84,6 +84,8 @@ export class TenantComponent implements OnInit {
   managementorganizationname!: string;
   ManagerOrganizationDescription!: any;
   isSubmitting: boolean = false;
+  returnsubmit: boolean = false;
+
   
 
 
@@ -320,6 +322,7 @@ export class TenantComponent implements OnInit {
   }
   sendImagesArray() {
     this.isSubmitting = true;
+    this.returnsubmit = true;
     this.spinner.show();
     const selectedImages = this.images.filter((image) => image.selected);
     // Extract the content of the selected images
@@ -379,6 +382,8 @@ export class TenantComponent implements OnInit {
     this.isUploading = false; // Reset upload state
     this.isConverting = false; // Reset conversion state
     this.files = []; // Clear dropped files
+    this.returnsubmit = false;
+    
   }
   closeModal(modal: any) {
     modal.dismiss();
@@ -393,4 +398,5 @@ export class TenantComponent implements OnInit {
     const dataUrl = `data:${image.type};base64,${image.content}`;
     return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
   }
+
 }

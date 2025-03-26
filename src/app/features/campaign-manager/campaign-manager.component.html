@@ -1,5 +1,8 @@
 <div class="campaign-manager-container">
-  <div class="w-100 d-flex align-items-center justify-content-between">
+  <div
+    *ngIf="filteredCampaigns.length > 0"
+    class="w-100 d-flex align-items-center justify-content-between"
+  >
     <div class="search-campaign-container">
       <input
         type="text"
@@ -61,7 +64,7 @@
     </button>
   </div>
 
-  <div class="campaign-manager-body">
+  <div *ngIf="filteredCampaigns.length > 0" class="campaign-manager-body">
     <div class="table-responsive">
       <table class="table align-middle">
         <thead>
@@ -113,6 +116,44 @@
       </table>
     </div>
   </div>
+
+  <div *ngIf="!(filteredCampaigns.length > 0)" class="empty-campaigns">
+    <img src="../../../assets/Images/empty-state.png" alt="Empty Campaigns" />
+    <h4>Campaigns Will Appear Here!</h4>
+    <p>Create, Track, and Manage Expansion Campaigns Here.</p>
+    <button class="add-new-campaign" (click)="openAddCampaignPopup(content)">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+      >
+        <path
+          d="M10.0001 18.3333C14.5834 18.3333 18.3334 14.5833 18.3334 9.99996C18.3334 5.41663 14.5834 1.66663 10.0001 1.66663C5.41675 1.66663 1.66675 5.41663 1.66675 9.99996C1.66675 14.5833 5.41675 18.3333 10.0001 18.3333Z"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M6.66675 10H13.3334"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M10 13.3333V6.66663"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span>Add New Campaign</span>
+    </button>
+  </div>
 </div>
 
 <ng-template #content let-modal>
@@ -131,7 +172,10 @@
     </select>
 
     <div class="campaign-drawing-component">
-      <app-campaign-drawing [buyBoxId]="selectedBuyBoxId" (onCampaignCreated)="onCampaignCreated()"></app-campaign-drawing>
+      <app-campaign-drawing
+        [buyBoxId]="selectedBuyBoxId"
+        (onCampaignCreated)="onCampaignCreated()"
+      ></app-campaign-drawing>
     </div>
   </div>
 </ng-template>

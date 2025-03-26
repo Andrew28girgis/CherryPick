@@ -333,7 +333,9 @@
           class="d-flex align-items-center justify-content-between uploaded-file-container"
         >
           <div class="filename">{{ fileName }}</div>
-          <button class="clear-button" (click)="clearModalData()">Clear</button>
+          <button class="clear-button" (click)="clearModalData() ">
+            Clear
+          </button>
         </div>
       </div>
     </div>
@@ -531,7 +533,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer" *ngIf="!isSubmitting ">
+  <div class="modal-footer" *ngIf="!returnsubmit" >
     <div class="row w-100">
       <!-- Cancel Button (Left Column) -->
       <div class="col-6">
