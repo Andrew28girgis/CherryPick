@@ -28,7 +28,8 @@ export interface OtherKanban {
 }
 
 export interface IUserBuybox {
-  isOpen?: boolean; 
+  isOpen?: boolean;
+  checked: boolean;
   id: number;
   name: string;
   description: string;
@@ -68,14 +69,18 @@ export interface IUserBuybox {
   trafficDrection: any;
   vehiclePerDay: any;
   zoning: any;
+  IBuyboxOrganization: IBuyboxOrganization[];
 }
 
 export interface IBuyboxOrganization {
   isOpen?: boolean;
+  checked: boolean;
   id: number;
   name: string;
+  contacts: IBuyBoxContact[];
 }
 export interface IBuyBoxContact {
+  checked: boolean;
   id: number;
   Firstname: string;
   Lastname: string;
@@ -83,6 +88,20 @@ export interface IBuyBoxContact {
 }
 
 export interface IBuyBoxCenter {
+  checked: boolean;
   id: number;
   CenterName: string;
+}
+
+export interface buyboxChecklist {
+  buyboxId: number[];
+  organizations: OrganizationChecked[];
+}
+export interface OrganizationChecked {
+  id: number;
+  contacts: ContactsChecked[];
+}
+export interface ContactsChecked {
+  id: number;
+  shoppingCenterId: number[];
 }

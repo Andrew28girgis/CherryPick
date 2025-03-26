@@ -1,9 +1,23 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmilyService {
+  private emilyCheckList = new BehaviorSubject<any>(null); // Initial value
 
-  constructor() { }
+  constructor() {}
+
+  getCheckList(): Observable<any> {
+    return this.emilyCheckList.asObservable();
+  }
+
+  updateCheckList(checkList: any): void {
+    this.emilyCheckList.next(checkList);
+    console.log(`from service:`);
+    console.log(this.emilyCheckList.value);
+    
+    
+  }
 }
