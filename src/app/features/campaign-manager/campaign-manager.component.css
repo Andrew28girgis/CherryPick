@@ -1,0 +1,122 @@
+.campaign-manager-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  height: 100%;
+}
+
+.campaign-manager-body {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  overflow-y: auto;
+}
+
+.search-campaign-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.search-campaign-input {
+  background-color: #fff;
+  border-radius: 1rem;
+  color: #707791;
+  padding: 0.75rem 3rem;
+}
+
+.search-campaign-icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 0;
+  margin-inline: 1rem;
+}
+
+.add-new-campaign {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #4d65b4;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.add-new-campaign span {
+  color: #fff;
+}
+
+.tenant-logo {
+  height: 1.75rem;
+  width: 1.75rem;
+  border-radius: 50%;
+}
+
+.campaign-privacy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: fit-content;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+}
+
+.campaign-privacy-icon {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: black;
+}
+
+.campaign-privacy-public {
+  background-color: #eaf6ec;
+}
+
+.campaign-privacy-public .campaign-privacy-icon {
+  background-color: #208637;
+}
+
+.campaign-privacy-public span {
+  color: #208637;
+}
+
+.campaign-privacy-private {
+  background-color: #ffeded;
+}
+
+.campaign-privacy-private .campaign-privacy-icon {
+  background-color: #cc3d3d;
+}
+
+.campaign-privacy-private span {
+  color: #cc3d3d;
+}
+
+.modal-body {
+  padding: 2rem;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.campaign-drawing-component{
+    width: 100%;
+    flex: 1;
+}
+
+table {
+  line-height: 2rem;
+}

@@ -15,6 +15,7 @@ import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
+import { CampaignManagerComponent } from './features/campaign-manager/campaign-manager.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -40,6 +41,11 @@ const routes: Routes = [
   {
     path: 'Submissions',
     component: SubmissionsComponent,
+    canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'campaigns',
+    component: CampaignManagerComponent,
     canActivate: [TenantOnlyGuard],
   },
   {
