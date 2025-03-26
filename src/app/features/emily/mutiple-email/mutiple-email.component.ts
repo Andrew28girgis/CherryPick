@@ -10,11 +10,12 @@ import {
 } from 'src/app/shared/models/emailGenerate';
 import { RelationNames } from 'src/app/shared/models/emailGenerate';
 import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganizationsForEmail';
-
+import { from } from 'rxjs';
+import { concatMap, tap } from 'rxjs/operators';
 @Component({
   selector: 'app-mutiple-email',
   templateUrl: './mutiple-email.component.html',
-  styleUrl: './mutiple-email.component.css'
+  styleUrl: './mutiple-email.component.css',
 })
 export class MutipleEmailComponent implements OnInit {
   prompts: any[] = [];
@@ -23,19 +24,24 @@ export class MutipleEmailComponent implements OnInit {
   isLandingSelected: boolean = false;
   isISCcSelected: boolean = false;
   buyBoxId!: any;
+  contactId!: any;
   OrgBuybox!: any;
   bodyTemplates: string[] = [];
   bodyTemplate: string = '';
   emailBody: string = '';
   emailTemplates: {
-    organizationId: number,
-    template: string
+    organizationId: number;
+    template: string;
   }[] = [];
+  originalEmailTemplates = this.emailTemplates;
+  returnEmails :any;
 
   // GetBuyBoxInfo
   generated: Generated[] = [];
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
+  BuyBoxName: any;
+  BuyBoxOrgID: any;
   selectedContactId: number = 0;
   ShoppingCenterNames: {
     CenterName: string;
@@ -82,11 +88,10 @@ export class MutipleEmailComponent implements OnInit {
   showCotenantsWithActivity: boolean = false;
   showCotenantsWithoutActivity: boolean = false;
 
-
   constructor(
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = params.get('buyboxid');
@@ -94,19 +99,18 @@ export class MutipleEmailComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.GetPrompts();
+    this.contactId = localStorage.getItem('contactId');
     if (this.buyBoxId) {
       this.GetOrgbuyBox(this.buyBoxId);
+      this.GetMailGenerated();
     }
-
+    this.GetPrompts();
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetBuyBoxInfoDetails();
-    // this.GetBuyBoxOrganizationsForEmail();
   }
   // GetBuyBoxInfo
   GetBuyBoxInfo() {
-    // this.spinner.show();
     const body: any = {
       Name: 'GetBuyBoxInfo',
       MainEntity: null,
@@ -133,6 +137,9 @@ export class MutipleEmailComponent implements OnInit {
               ?.ManagerOrganizationName || '';
           this.BuyBoxOrganizationName =
             buyBox.BuyBoxOrganization?.[0]?.Name || '';
+
+          this.BuyBoxName = buyBox.BuyBoxOrganization?.[0]?.Name || '';
+          this.BuyBoxOrgID = buyBox.BuyBoxOrganization?.[0]?.BuyBoxOrganizationId || '';
         }
 
         // Extract Shopping Centers safely
@@ -168,7 +175,6 @@ export class MutipleEmailComponent implements OnInit {
         this.showBuyBoxDescription = true;
         this.onCheckboxBuyBoxDescriptionChange();
         this.updateGroupedActivityTypes();
-        // this.spinner.hide();
       },
     });
   }
@@ -176,7 +182,7 @@ export class MutipleEmailComponent implements OnInit {
     if (this.showShoppingCenterDescription) {
       if (this.generated?.[0]?.BuyBoxShoppingCenters) {
         this.ShoppingCenterDescription =
-          this.generated[0].BuyBoxShoppingCenters
+          this.generated[0].BuyBoxShoppingCenters;
         // .find(
         //   (center) => Number(center.ID) === Number(this.CenterId)
         // );
@@ -204,14 +210,11 @@ export class MutipleEmailComponent implements OnInit {
     }
   }
   onOrganizationManagersChange() {
-    // this.spinner.show();
     if (this.showOrganizationManagers) {
       this.loadManagerOrganizations();
       this.showMangerDescription = true;
-      // this.spinner.hide();
     } else {
       this.managerOrganizations = [];
-      // this.spinner.hide();
     }
     this.updateEmailBody();
   }
@@ -342,8 +345,6 @@ export class MutipleEmailComponent implements OnInit {
   }
   // GetRetailRelationCategories
   GetRetailRelationCategories() {
-    // this.spinner.show();
-
     const body: any = {
       Name: 'GetRetailRelationCategories',
       MainEntity: null,
@@ -356,13 +357,11 @@ export class MutipleEmailComponent implements OnInit {
       next: (data) => {
         this.relationCategoriesNames = data.json;
         this.relationCategoriesNames?.forEach((r) => (r.selected = true));
-        // this.spinner.hide();
       },
     });
   }
   // GetBuyBoxInfoDetails
   GetBuyBoxInfoDetails() {
-    // this.spinner.show();
     const body: any = {
       Name: 'GetWizardBuyBoxesById',
       MainEntity: null,
@@ -377,8 +376,7 @@ export class MutipleEmailComponent implements OnInit {
         this.showMinBuildingSize = true;
         this.showMaxBuildingSize = true;
         this.onCheckboxdetailsChangeMin(true, true);
-        // this.spinner.hide();
-      }
+      },
     });
   }
   onCheckboxdetailsChangeMin(
@@ -408,72 +406,16 @@ export class MutipleEmailComponent implements OnInit {
       this.updateEmailBody();
     }
   }
-  // GetBuyBoxOrganizationsForEmail
-  // async GetBuyBoxOrganizationsForEmail() {
-  //   this.spinner.show();
 
-  //   if (this.OrgBuybox && Array.isArray(this.OrgBuybox) && this.OrgBuybox.length > 0) {
-  //     const organizationIds = this.OrgBuybox.map((item: any) => item.id);
-
-  //     this.bodyTemplates = [];
-
-  //     if (organizationIds.length > 0) {
-  //       for (let id of organizationIds) {
-  //         const body: any = {
-  //           Name: 'GetShoppingCenterManagerContacts',
-  //           MainEntity: null,
-  //           Params: {
-  //             buyboxid: this.buyBoxId,
-  //             organizationid: id,
-  //           },
-  //           Json: null,
-  //         };
-
-  //         try {
-  //           const data = await this.PlacesService.GenericAPI(body).toPromise();
-  //           if (data?.json && Array.isArray(data.json)) {
-  //             this.BuyBoxOrganizationsForEmail = data.json;
-
-  //             // Processing contacts and centers
-  //             this.BuyBoxOrganizationsForEmail[0].Contact.forEach((c: any) => {
-  //               c.selected = true;
-  //               c.Centers?.forEach((ShoppingCenter: any) => {
-  //                 ShoppingCenter.selected = true;
-  //               });
-  //             });
-
-  //             await this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-
-  //             this.updateEmailBody();
-
-  //             const currentEmailTemplate = {
-  //               organizationId: id,
-  //               template: this.emailBody
-  //             };
-  //             this.emailTemplates.push(currentEmailTemplate);
-  //             this.bodyTemplates.push(this.emailBody);
-  //           }
-  //         } catch (error) {
-  //           console.error(`Error processing organization ID: ${id}`, error);
-  //         }
-
-  //         await new Promise(resolve => setTimeout(resolve, 0));
-  //       }
-
-  //       this.spinner.hide();
-  //     } else {
-  //       this.spinner.hide();
-  //     }
-  //   } else {
-  //     this.organizationId = null;
-  //     this.spinner.hide();
-  //   }
-  // }
   async GetBuyBoxOrganizationsForEmail() {
     this.spinner.show();
 
     try {
-      if (this.OrgBuybox && Array.isArray(this.OrgBuybox) && this.OrgBuybox.length > 0) {
+      if (
+        this.OrgBuybox &&
+        Array.isArray(this.OrgBuybox) &&
+        this.OrgBuybox.length > 0
+      ) {
         const organizationIds = this.OrgBuybox.map((item: any) => item.id);
 
         this.bodyTemplates = [];
@@ -491,25 +433,30 @@ export class MutipleEmailComponent implements OnInit {
             };
 
             try {
-              const data = await this.PlacesService.GenericAPI(body).toPromise();
+              const data = await this.PlacesService.GenericAPI(
+                body
+              ).toPromise();
               if (data?.json && Array.isArray(data.json)) {
                 this.BuyBoxOrganizationsForEmail = data.json;
 
-                this.BuyBoxOrganizationsForEmail[0].Contact.forEach((c: any) => {
-                  c.selected = true;
-                  c.Centers?.forEach((ShoppingCenter: any) => {
-                    ShoppingCenter.selected = true;
-                  });
-                });
+                this.BuyBoxOrganizationsForEmail[0].Contact.forEach(
+                  (c: any) => {
+                    c.selected = true;
+                    c.Centers?.forEach((ShoppingCenter: any) => {
+                      ShoppingCenter.selected = true;
+                    });
+                  }
+                );
 
-                await this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-
+                await this.OnCheckGetSavedTemplates(
+                  this.BuyBoxOrganizationsForEmail[0].Id
+                );
 
                 this.updateEmailBody();
 
                 const currentEmailTemplate = {
                   organizationId: id,
-                  template: this.emailBody
+                  template: this.emailBody,
                 };
                 this.emailTemplates.push(currentEmailTemplate);
                 this.bodyTemplates.push(this.emailBody);
@@ -518,7 +465,7 @@ export class MutipleEmailComponent implements OnInit {
               console.error(`Error processing organization ID: ${id}`, error);
             }
 
-            await new Promise(resolve => setTimeout(resolve, 0));
+            await new Promise((resolve) => setTimeout(resolve, 0));
           }
         }
       } else {
@@ -529,7 +476,6 @@ export class MutipleEmailComponent implements OnInit {
     }
   }
 
-
   updateEmailBody() {
     let emailContent = '';
     if (this.selectedShoppingCenter) {
@@ -537,17 +483,19 @@ export class MutipleEmailComponent implements OnInit {
         this.selectedShoppingCenter
       )}\n\n`;
     }
-
     const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact || [];
     if (selectedContacts?.length > 0) {
       this.selectedContact = [];
 
       emailContent += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
 
-      const countSelectedContacts = selectedContacts.filter(contact => contact.selected && contact?.Centers?.length > 0).length;
+      const countSelectedContacts = selectedContacts.filter(
+        (contact) => contact.selected && contact?.Centers?.length > 0
+      ).length;
 
       if (this.isISCcSelected == false) {
-        emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
+        emailContent += `- Create ${countSelectedContacts} Email For each Contact\n `;
+        // emailContent += `- Create Email\n `;
       }
       selectedContacts.forEach((contact) => {
         if (contact.selected && contact?.Centers?.length > 0) {
@@ -716,16 +664,10 @@ export class MutipleEmailComponent implements OnInit {
       });
     }
 
-    if (this.isLandingSelected) {
-      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
-      emailContent += `\nLanding page: <a href="${landingLink}">${landingLink}</a>`;
-    }
-
     this.emailBody = emailContent;
   }
 
   async OnCheckGetSavedTemplates(organizationid: number): Promise<void> {
-    // this.spinner.show();
 
     const body: any = {
       Name: 'GetSavedTemplates',
@@ -741,17 +683,16 @@ export class MutipleEmailComponent implements OnInit {
       this.PlacesService.GenericAPI(body).subscribe({
         next: (data) => {
           this.CheckGetSavedTemplates = data.json;
-          // this.spinner.hide();
           resolve();
         },
         error: (err) => {
           console.error('Error in OnCheckGetSavedTemplates:', err);
-          // this.spinner.hide();
           reject(err);
-        }
+        },
       });
     });
   }
+
 
   // updateEmailBody
   getManagerName(centerName: string): string {
@@ -781,204 +722,7 @@ export class MutipleEmailComponent implements OnInit {
     return category ? category.name : 'Unknown Category';
   }
 
-  // updateEmailBody() {
-  //   let emailContent = '';
-  //   if (this.selectedShoppingCenter) {
-  //     emailContent += `Shopping Center Representative Organization: ${this.getManagerName(
-  //       this.selectedShoppingCenter
-  //     )}\n\n`;
-  //   }
-
-  //   const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact || [];
-  //   if (selectedContacts?.length > 0) {
-  //     this.selectedContact = [];
-
-  //     emailContent += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
-
-  //     const countSelectedContacts = selectedContacts.filter(contact => contact.selected && contact?.Centers?.length > 0).length;
-
-  //     if (this.isISCcSelected == false) {
-  //       emailContent += `- Create ${countSelectedContacts} Email For each Contact and shopping Center\n `;
-  //     }
-  //     selectedContacts.forEach((contact) => {
-  //       if (contact.selected && contact?.Centers?.length > 0) {
-
-  //         emailContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
-  //         emailContent += `- id: ${contact.id}\n `;
-  //         this.selectedContact.push(contact.id);
-  //       }
-  //       contact.Centers?.forEach((sp) => {
-  //         if (sp.selected) {
-  //           emailContent += ` Shopping Center: ${sp.CenterName} \n `;
-  //         }
-  //       });
-  //     });
-
-  //     emailContent += '\n';
-  //   }
-
-  //   if (this.showCotenantsWithActivity) {
-  //     const anySelected = this.groupedActivityTypes.some((activity: any) =>
-  //       activity.Cotenants.some((co: any) => co.selected)
-  //     );
-
-  //     if (anySelected) {
-  //       emailContent += 'Cotenants in the shopping center:\n';
-  //       this.groupedActivityTypes.forEach((activity) => {
-  //         const selectedCotenants = activity.Cotenants.filter(
-  //           (co: any) => co.selected
-  //         );
-  //         if (selectedCotenants.length > 0) {
-  //           emailContent += `${activity.ActivityType}:\n`;
-  //           selectedCotenants.forEach((co: any) => {
-  //             emailContent += `- ${co.CotenantName}\n`;
-  //           });
-  //         }
-  //       });
-  //       emailContent += '\n';
-  //     }
-  //   }
-
-  //   if (this.showCotenantsWithoutActivity) {
-  //     const cotenantsWithout = this.getCotenantsWithoutActivityType(
-  //       this.selectedShoppingCenter
-  //     ).filter((co) => co.selected);
-  //     if (cotenantsWithout.length > 0) {
-  //       emailContent += 'Cotenants without shopping center:\n';
-  //       cotenantsWithout.forEach((co) => {
-  //         emailContent += `- ${co.CotenantName}\n`;
-  //       });
-  //     }
-  //   }
-
-  //   if (this.showClientProfile) {
-  //     emailContent +=
-  //       'New Tenant that wish to open on this shopping center: (' +
-  //       this.BuyBoxOrganizationName +
-  //       ')' +
-  //       '\n\n';
-  //   }
-
-  //   if (this.showMinBuildingSize) {
-  //     emailContent +=
-  //       'The Required Min Unit Size for Lease (' +
-  //       this.buybox?.MinBuildingSize +
-  //       ' Sqft)' +
-  //       '\n';
-  //   }
-
-  //   if (this.showMaxBuildingSize) {
-  //     emailContent +=
-  //       'The Required Max Unit Size for Lease (' +
-  //       this.buybox?.MaxBuildingSize +
-  //       ' Sqft)' +
-  //       '\n\n';
-  //   }
-
-  //   if (this.showRelationNames) {
-  //     const organizationName =
-  //       this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]?.Name ||
-  //       'No Organization Name';
-
-  //     const categoryMap: { [key: string]: string[] } = {};
-  //     this.relationCategoriesNames?.forEach((selectedRelation) => {
-  //       if (selectedRelation.selected) {
-  //         this.generated[0]?.Releations?.forEach((relation) => {
-  //           if (
-  //             relation.RetailRelationCategoryId === selectedRelation.id &&
-  //             relation.relationSelect &&
-  //             this.isRelationCategoryMatched(relation)
-  //           ) {
-  //             const categoryName = this.getRelationCategoryName(
-  //               relation.RetailRelationCategoryId
-  //             );
-
-  //             if (!categoryMap[categoryName]) {
-  //               categoryMap[categoryName] = [];
-  //             }
-  //             categoryMap[categoryName].push(relation.Name);
-  //           }
-  //         });
-  //       }
-  //     });
-
-  //     // Build the email content
-  //     for (const category in categoryMap) {
-  //       // Add organization name and category
-  //       emailContent += `${organizationName} ${category}\n`;
-  //       // Add the relations under this category
-  //       categoryMap[category].forEach((relationName) => {
-  //         emailContent += `- ${relationName}\n`;
-  //       });
-  //       emailContent += '\n'; // Add spacing between categories
-  //     }
-  //   }
-
-  //   if (this.showOrganizationManagers) {
-  //     this.managerOrganizations.forEach((manager) => {
-  //       emailContent +=
-  //         this.BuyBoxOrganizationName +
-  //         ` Representative Brokerage Company: ${manager.ManagerOrganizationName}\n\n`;
-
-  //       manager.ManagerOrganizationContacts.forEach((contact) => {
-  //         if (contact.selected) {
-  //           emailContent += `Broker on Charge Assistant that is sending this email: ${contact.Firstname} ${contact.LastName}\n\n`;
-  //         }
-  //       });
-  //     });
-  //   }
-
-  //   if (this.showMangerDescriptionDetails) {
-  //     this.managerOrganizations.forEach((manager) => {
-  //       emailContent += `${manager.ManagerOrganizationName} Description: ${this.MangerDescription}\n`;
-  //     });
-  //   }
-
-  //   if (this.showBuyBoxDescriptionDetails) {
-  //     emailContent +=
-  //       this.BuyBoxOrganizationName +
-  //       ' Description: (' +
-  //       this.BuyBoxDescriptionDetails +
-  //       ')' +
-  //       '\n\n';
-  //   }
-
-  //   if (this.showBuyBoxDescription) {
-  //     emailContent +=
-  //       'BuyBox Description: (' + this.BuyBoxDescription + ')' + '\n\n';
-  //   }
-
-  //   if (this.showShoppingCenterDescription) {
-  //     emailContent +=
-  //       this.ShoppingCenterName +
-  //       ' Description: (' +
-  //       this.ShoppingCenterDescriptionText +
-  //       ')' +
-  //       '\n\n';
-  //   }
-
-  //   if (this.showMangerContactSignature) {
-  //     this.managerOrganizations.forEach((manager) => {
-  //       manager.ManagerOrganizationContacts.forEach((contact) => {
-  //         if (contact.selected) {
-  //           emailContent += `\nUse This Email Signature:\n`;
-  //           emailContent += `${contact.EmailSignature}\n\n`;
-  //         }
-  //       });
-  //     });
-  //   }
-
-  //   if (this.isLandingSelected) {
-  //     const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
-  //     emailContent += `\nLanding page: <a href="${landingLink}">${landingLink}</a>`;
-  //   }
-
-  //   this.emailBody = emailContent;
-  // }
-
-
   GetPrompts() {
-    // this.spinner.show();
     const categoryBody = {
       name: 'GetPromptsCategoryId',
       params: {
@@ -989,7 +733,6 @@ export class MutipleEmailComponent implements OnInit {
       next: (catResponse: any) => {
         const categoryId = catResponse?.json?.[0]?.Id;
         if (!categoryId) {
-          // this.spinner.hide();
           return;
         }
         const promptsBody = {
@@ -1012,10 +755,9 @@ export class MutipleEmailComponent implements OnInit {
             } else {
               this.prompts = [];
             }
-            // this.spinner.hide();
-          }
+          },
         });
-      }
+      },
     });
   }
 
@@ -1032,7 +774,6 @@ export class MutipleEmailComponent implements OnInit {
   }
 
   GetOrgbuyBox(buyboxId: number): void {
-    // this.spinner.show();
     const body: any = {
       Name: 'GetOrganizationsByBuyBox',
       MainEntity: null,
@@ -1046,188 +787,163 @@ export class MutipleEmailComponent implements OnInit {
         if (data.json && Array.isArray(data.json)) {
           this.OrgBuybox = data.json;
           this.GetBuyBoxOrganizationsForEmail();
-          // this.spinner.hide();
         } else {
           this.OrgBuybox = [];
-          // this.spinner.hide();
         }
       },
     });
   }
-  GenerateEmailall: any;
 
-  // GenerateEmail() {
-  //   // this.spinner.show();
-
-  //   this.updateEmailBody();
-  //   if (!this.selectedPromptId) {
-  //     this.showToast('Please select a prompt to Generate.');
-  //     // this.spinner.hide();
-  //     return;
-  //   }
-
-  //   const promptId = Number(this.selectedPromptId);
-  //   const IsCC = this.isISCcSelected;
-  //   console.log(this.emailTemplates);
-  //   const context = '';
-  //   const OrganizaitonsId =;
-
-  //   console.log('isISCcSelected', IsCC);
-  //   console.log('promptId', promptId);
-  //   console.log('context', context);
-  //   console.log('OrganizaitonsId', OrganizaitonsId);
-
-  //   this.PlacesService.generateEmail(promptId, context, OrganizaitonsId, IsCC).subscribe({
-  //     next: (data: any) => {
-  //       console.log(data);
-  //       this.GenerateEmailall= data;
-
-  //       // this.emailSubject = data?.emailSubject || 'No subject received';
-  //       // let generatedBody = data?.emailBody || '';
-
-
-  //       // this.emailBodyResponse = generatedBody;
-
-  //       // if (this.isLandingSelected) {
-  //       //   this.emailBodyResponse += landingSnippet;
-  //       // }
-
-  //       // this.emailId = data?.id || 'No body received';
-  //       this.spinner.hide();
-  //     },
-  //   });
-  //   // this.spinner.hide();
-  // }
-  GenerateEmail() {
+  async PutMailsDraft(): Promise<void> {
     this.updateEmailBody();
-
+    
     if (!this.selectedPromptId) {
       this.showToast('Please select a prompt to Generate.');
       return;
     }
-
+    
+    this.spinner.show();
     const promptId = Number(this.selectedPromptId);
     const IsCC = this.isISCcSelected;
 
-    this.emailTemplates.forEach((emailTemplate, index) => {
-      const context = emailTemplate.template;
-      const OrganizaitonsId = emailTemplate.organizationId;
-      this.PlacesService.generateEmail(promptId, context, OrganizaitonsId, IsCC)
-        .subscribe({
-          next: (data: any) => {
-            console.log(`Response for template ${index}:`, data);
-            this.GenerateEmailall = data;
-          },
-          error: (error: any) => {
-            console.error(`Error for template ${index}:`, error);
-          }
-        });
-    });
+
+    from(this.emailTemplates)
+      .pipe(
+        concatMap((emailTemplate, index) => {
+          const body: any = {
+            Name: 'PutMailsDraft',
+            MainEntity: null,
+            Params: {
+              BuyBoxId: this.buyBoxId,
+              ContactId: this.contactId,
+              PromptId: promptId,
+              IsCC: IsCC,
+              OrganizationId: Number(emailTemplate.organizationId),
+              context: emailTemplate.template
+            },
+            Json: null,
+          };
+
+          return new Promise<void>((resolve, reject) => {
+            this.PlacesService.GenericAPI(body).subscribe({
+              next: (data) => {
+                this.GetMailGenerated();
+                resolve();
+              },
+              error: (err) => {
+                reject(err);
+              },
+            });
+          });
+        })
+      )
+      .subscribe({
+        complete: () => {
+          this.spinner.hide();
+        },
+        error: (error: any) => {
+          console.error('Error:', error);
+          this.spinner.hide();
+        },
+      });
   }
 
-  objectEmailSavedtemplate :any;
-  SaveTemplate(emailItem: any) {
+  GetMailGenerated() {
     this.spinner.show();
-    let contactId: any;
-    this.managerOrganizations[0].ManagerOrganizationContacts.forEach((c) => {
-      if (c.selected) {
-        contactId = c.ContactId;
-      }
-    });
-    let contacts = emailItem.recieverIds.join(',');
+
     var body: any = {
-      Name: 'SaveTemplate',
+      Name: 'GetMailGenerated',
       MainEntity: null,
       Params: {
-        // organizationid: this.shoppingCenterOrganization,
-        Body: emailItem.emailBody,
-        subject: emailItem.emailSubject,
-        buyboxid: this.buyBoxId,
-        contactid: contactId,
-        contactids: contacts,
+        BuyBoxId: this.buyBoxId,
+        ContactId: this.contactId,
       },
       Json: null,
     };
 
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.showToast('Email Saved successfully!');
-        this.objectEmailSavedtemplate = data?.json[0];
-        this.GenerateEmailall = this.GenerateEmailall.filter((item: any) => item !== emailItem);
-        this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
+        this.returnEmails = data.json;
         this.spinner.hide();
       },
     });
   }
 
-  SaveAndSendTemplate(recieverIds?: any) {
-    this.SaveTemplate(recieverIds);
-    setTimeout(() => {
-      const body = {
-        name: 'SendTemplate',
-        params: {
-          id: +this.objectEmailSavedtemplate?.templateId,
-        },
-      };
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (response: any) => {
-          this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
-          this.showToast('Email Save and Send successfully!');
-          this.MoveStage();
-        }
-      });
-    }, 2000);
-  }
+  SendMailTemplate(emailItem: any) {
+    this.spinner.show();
 
-  MoveStage() {
-    const body = {
-      name: 'ChangeDealStage',
-      params: {
-        stageid: 8,
-        // microdealid: this.microDealId,
+    var body: any = {
+      Name: 'SendMail',
+      MainEntity: null,
+      Params: {
+        MailId: emailItem.mailId,
       },
+      Json: null,
     };
+
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => { },
+      next: (data) => {
+        this.showToast('Email Send successfully!');
+        this.GetMailGenerated();
+        this.spinner.hide();
+      },
     });
   }
 
+  DeleteMailTemplate(emailItem: any) {
+    this.spinner.show();
 
-  SendEmailTemplate() {
-    console.log(this.emailTemplates);
+    var body: any = {
+      Name: 'DeleteMail',
+      MainEntity: null,
+      Params: {
+        MailId: emailItem.mailId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.showToast('Email Deleted successfully!');
+        this.GetMailGenerated();
+        this.spinner.hide();
+      },
+    });
   }
 
   onIncludeLandingChange(event: any): void {
     this.isLandingSelected = event.target.checked;
-
     const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
+    const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
 
-    if (!this.emailBody) {
-      this.emailBody = "";
-    }
-
-    if (event.target.checked) {
-      if (!this.emailBody.includes(landingLink)) {
-        this.emailBody += `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
+    this.emailTemplates = this.emailTemplates.map(templateItem => {
+      let updatedTemplate = templateItem.template;
+      if (this.isLandingSelected) {
+        if (!updatedTemplate.includes(snippet)) {
+          updatedTemplate += snippet;
+        }
+      } else {
+        updatedTemplate = updatedTemplate.replace(snippet, '');
       }
-    } else {
-      const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
-      this.emailBody = this.emailBody.replace(snippet, '');
-    }
-
-    this.updateEmailTemplates();
+      return { ...templateItem, template: updatedTemplate };
+    });
   }
 
   onISCCChange(event: any): void {
     this.isISCcSelected = event.target.checked;
-    this.updateEmailBody();
-    this.updateEmailTemplates();
-  }
+    const createLineRegex = /- Create .* Email For each Contact\n\s*/;
+    this.emailTemplates = this.emailTemplates.map(templateItem => {
+      let updatedTemplate = templateItem.template;
 
-  updateEmailTemplates() {
-    this.emailTemplates.forEach((template) => {
-      template.template = this.emailBody;
+      if (this.isISCcSelected) {
+        updatedTemplate = updatedTemplate.replace(createLineRegex, '');
+      } else {
+        const originalItem = this.originalEmailTemplates.find((item: any) => item.organizationId === templateItem.organizationId);
+        if (originalItem) {
+          updatedTemplate = originalItem.template;
+        }
+      }
+      return { ...templateItem, template: updatedTemplate };
     });
   }
 
