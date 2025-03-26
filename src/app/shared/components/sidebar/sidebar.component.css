@@ -175,7 +175,7 @@
 }
 
 .sidebar-item {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .sidebar-link {
@@ -219,6 +219,7 @@
 }
 
 .link-text {
+  color: #72777a;
   margin-left: 5px;
   font-size: 13px;
 }

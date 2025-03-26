@@ -31,6 +31,17 @@
           <span class="link-text">Submissions</span>
         </a>
       </li>
+
+      <li class="sidebar-item">
+        <a
+          [routerLink]="['/campaigns']"
+          routerLinkActive="active-route"
+          class="sidebar-link"
+        >
+          <span class="link-text">Campaigns</span>
+        </a>
+      </li>
+
       <li class="sidebar-item">
         <a
           class="sidebar-link"
@@ -39,19 +50,15 @@
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
         >
-          <span class="link-text">Cadence</span>
-          <span
-            style="margin-left: auto"
+          <i
             *ngIf="isSidebarExpanded || isHovering"
-          >
-            <i
-              class="fa-solid fa-chevron-down"
-              [style.transform]="
-                cadenceIsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-              "
-              style="transition: transform 0.3s ease"
-            ></i>
-          </span>
+            class="fa-solid fa-chevron-down"
+            [style.transform]="
+              cadenceIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
+            "
+            style="transition: transform 0.3s ease"
+          ></i>
+          <span class="link-text">Cadence</span>
         </a>
 
         <ul
@@ -97,7 +104,7 @@
                   <i
                     class="fa-solid fa-chevron-down"
                     [style.transform]="
-                      org.isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                      org.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
                     "
                     style="transition: transform 0.3s ease"
                   ></i>
@@ -164,7 +171,7 @@
           <i
             *ngIf="isSidebarExpanded || isHovering"
             class="fa-solid fa-chevron-down"
-            [style.transform]="emilyIsOpen ? 'rotate(180deg)' : 'rotate(0deg)'"
+            [style.transform]="emilyIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'"
             style="transition: transform 0.3s ease"
           ></i>
 
@@ -190,7 +197,7 @@
               <i
                 class="fa-solid fa-chevron-down me-1"
                 [style.transform]="
-                  userBuybox.isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                  userBuybox.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
                 "
                 style="transition: transform 0.3s ease"
               ></i>
@@ -200,7 +207,7 @@
                   userBuybox.organizationId
                 }}"
               />
-              <span class="link-text" style="color: #72777a">
+              <span class="link-text">
                 {{ userBuybox.name }}
               </span>
             </a>
@@ -220,7 +227,7 @@
                   <i
                     class="fa-solid fa-chevron-down"
                     [style.transform]="
-                      org.isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                      org.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
                     "
                     style="transition: transform 0.3s ease"
                   ></i>
@@ -234,22 +241,22 @@
                       org.id
                     }}"
                   />
-                  <span class="link-text" style="color: #72777a">
+                  <span class="link-text" >
                     {{ org.name }}
                   </span>
                 </a>
                 <ul class="sidebar-nav ms-4" *ngIf="org.isOpen">
                   <ng-container *ngFor="let contact of BuyBoxContacts">
                     <li class="sidebar-item">
-                      <div class="ms-3">
-                        <span class="link-text" style="color: #72777a">
+                      <div class="ms-4">
+                        <span class="link-text" >
                           <input type="checkbox" name="" id="" />
                           {{ contact.Firstname }} {{ contact.Lastname }}
                         </span>
                       </div>
                       <ng-container *ngFor="let center of contact.Centers">
                         <div class="ms-4">
-                          <span class="link-text" style="color: #72777a">
+                          <span class="link-text ms-4" style="color: #72777a">
                             <input type="checkbox" name="" id="" />
                             {{ center.CenterName }}
                           </span>
