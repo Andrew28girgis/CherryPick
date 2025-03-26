@@ -237,5 +237,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+
+  
   // End Emily
 }
