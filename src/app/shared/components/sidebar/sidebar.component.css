@@ -9,7 +9,7 @@
 }
 
 .sidebar-container.expanded {
-  width: 250px;
+  width: 280px;
 }
 
 .sidebar-container.collapsed {
@@ -66,7 +66,8 @@
 }
 
 .cherry-logo {
-  max-width: 100%;
+  width: 60px;
+  max-height: 60px !important;
   height: auto;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -98,6 +99,7 @@
   text-decoration: none;
   transition: all 0.3s ease;
   border-radius: 8px;
+  font-size: 14px;
   margin: 0 10px;
   white-space: nowrap;
 }
@@ -115,12 +117,15 @@
 
 .sidebar-link .link-text {
   opacity: 1;
+  font-size: 13px;
   transition: opacity 0.3s ease;
 }
 
 .collapsed .sidebar-link .link-text {
   opacity: 0;
   width: 0;
+  font-size: 13px;
+ 
   margin-left: 0;
 }
 
@@ -176,6 +181,7 @@
 .sidebar-link {
   text-decoration: none;
   display: flex;
+  cursor: pointer;
   align-items: center;
   padding: 5px 10px;
   color: #444;
@@ -198,7 +204,7 @@
   margin-top: 2px;
   padding: 4px 8px;
 }
-.sidebar-subitem{
+.sidebar-subitem {
   cursor: pointer;
 }
 .sidebar-subitem .sidebar-link {
@@ -214,6 +220,7 @@
 
 .link-text {
   margin-left: 5px;
+  font-size: 13px;
 }
 
 .sidebar-link {
@@ -230,8 +237,8 @@
   color: #0056b3;
 }
 
-.active-kanban-overflow{
-  background-color: #f5f7fa;
+.active-kanban-overflow {
+  background-color: #dae9ff;
   color: #4d65b4;
 }
 
@@ -269,6 +276,11 @@
   padding: 6px 15px;
   display: flex;
   align-items: center;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   border-bottom: 1px solid #f0f0f0;
+}
+
+.Oganirzations__img {
+  width: 20px;
+  height: 20px;
 }

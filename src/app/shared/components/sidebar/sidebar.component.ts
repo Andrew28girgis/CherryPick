@@ -14,7 +14,12 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
 import { IUserKanban } from '../../models/iuser-kanban';
-import { cadenceSidebar } from '../../models/sidenavbar';
+import {
+  cadenceSidebar,
+  IBuyBoxContact,
+  IBuyboxOrganization,
+  IUserBuybox,
+} from '../../models/sidenavbar';
 import { IKanbanDetails } from '../../models/ikanban-details';
 import { CadenceService } from 'src/app/core/services/cadence.service';
 
@@ -43,6 +48,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private viewSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;
 
+  userBuyboxes: IUserBuybox[] = [];
+  buyboxOrganizations: IBuyboxOrganization[] = [];
+  BuyBoxContacts: IBuyBoxContact[] = [];
+
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
@@ -60,6 +69,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getUserKanbans();
+    this.getUserBuyBoxes();
     this.isSmallScreen = window.innerWidth < 992;
     this.isSidebarExpanded = false;
     this.sidbarService.setSidebarState(this.isSidebarExpanded);
@@ -124,6 +134,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   protected allUserKanbans: IUserKanban[] = [];
   sideKanban: cadenceSidebar = { tenantOrganizations: [] }; // Initialize with a default value
   cadenceIsOpen = false;
+  emilyIsOpen = false;
 
   private getUserKanbans(): void {
     const body: any = {
@@ -168,4 +179,63 @@ export class SidebarComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  // Start Emily
+  getUserBuyBoxes(): void {
+    const body: any = {
+      Name: 'GetUserBuyBoxes',
+      Params: {},
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.userBuyboxes = data.json;
+      },
+    });
+  }
+
+  GetOrgbuyBox(buyboxId: number): void {
+    const body: any = {
+      Name: 'GetOrganizationsByBuyBox',
+      MainEntity: null,
+      Params: {
+        BuyBoxId: buyboxId,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data.json && Array.isArray(data.json)) {
+          this.buyboxOrganizations = data.json;
+        } else {
+          this.buyboxOrganizations = [];
+        }
+      },
+    });
+  }
+
+  GetBuyBoxOrganizationsForEmail(
+    buyboxId: number,
+    organizationId: number
+  ): void {
+    const body: any = {
+      Name: 'GetShoppingCenterManagerContacts',
+      MainEntity: null,
+      Params: {
+        buyboxid: buyboxId,
+        organizationid: organizationId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data?.json && Array.isArray(data.json)) {
+          this.BuyBoxContacts = data.json[0].Contact;
+          this.BuyBoxContacts = this.BuyBoxContacts.filter((c) => c.Centers);
+        } else {
+          this.BuyBoxContacts = [];
+        }
+      },
+    });
+  }
+  // End Emily
 }
