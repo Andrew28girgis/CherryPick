@@ -1,62 +1,62 @@
-export interface LandingPageTenants {
+export class LandingPageTenants {
   Buybox?: Buybox[]
   Releations?: Releation[]
   BuyBoxShoppingCenters?: BuyBoxShoppingCenter[]
 }
-export interface Buybox {
-    Buyboxid: number
-    Description: string
-    MinBuildingSize: number
-    MaxBuildingSize: number
-    BuyBoxOrganization: BuyBoxOrganization[]
+export class Buybox {
+    Buyboxid!: number
+    Description!: string
+    MinBuildingSize!: number
+    MaxBuildingSize!: number
+    BuyBoxOrganization!: BuyBoxOrganization[]
   }
   
-  export interface BuyBoxOrganization {
-    BuyBoxOrganizationId: number
-    Name: string
-    BuyBoxOrganizationDescription: string
-    ManagerOrganization: ManagerOrganization[]
+  export class BuyBoxOrganization {
+    BuyBoxOrganizationId!: number
+    Name!: string
+    BuyBoxOrganizationDescription!: string
+    ManagerOrganization!: ManagerOrganization[]
   }
   
-  export interface ManagerOrganization {
-    ManagerOrganizationId: number
-    ManagerOrganizationName: string
-    ManagerOrganizationDescription: string
-    ManagerOrganizationContacts: ManagerOrganizationContact[]
+  export class ManagerOrganization {
+    ManagerOrganizationId!: number
+    ManagerOrganizationName!: string
+    ManagerOrganizationDescription!: string
+    ManagerOrganizationContacts!: ManagerOrganizationContact[]
   }
   
-  export interface ManagerOrganizationContact {
-    ContactId: number
-    Firstname: string
-    LastName: string
-    EmailSignature: string
-    Profile: string
-    LinkedIn: string
-    Photo: string
+  export class ManagerOrganizationContact {
+    ContactId!: number
+    Firstname!: string
+    LastName!: string
+    EmailSignature!: string
+    Profile!: string
+    LinkedIn!: string
+    Photo!: string
   }
   
-  export interface Releation {
-    id: number
-    Name: string
-    RetailRelationCategoryId: number
+  export class Releation {
+    id!: number
+    Name!: string
+    RetailRelationCategoryId!: number
   }
   
-  export interface BuyBoxShoppingCenter {
-    ID: number
-    CenterName: string
-    ShoppingCenterManager: ShoppingCenterManager[]
-    Cotenants: Cotenant[]
+  export class BuyBoxShoppingCenter {
+    ID!: number
+    CenterName!: string
+    ShoppingCenterManager!: ShoppingCenterManager[]
+    Cotenants!: Cotenant[]
   }
   
-  export interface ShoppingCenterManager {
-    ID: number
-    Name: string
-    URL: string
-    Summary: string
+  export class ShoppingCenterManager {
+    ID!: number
+    Name!: string
+    URL!: string
+    Summary!: string
     stakeholderId?: number
-    LogoURL: string
-    minid: number
-    ShoppingCenterManagerContact: ShoppingCenterManagerContact[]
+    LogoURL!: string
+    minid!: number
+    ShoppingCenterManagerContact!: ShoppingCenterManagerContact[]
     Address?: string
     PhoneNumber?: string
     Description?: string
@@ -97,22 +97,22 @@ export interface Buybox {
     State?: string
   }
   
-  export interface ShoppingCenterManagerContact {
-    ID: number
-    Firstname: string
-    Lastname: string
-    Email: string
-    CellPhone: string
-    OrganizationId: number
+  export class ShoppingCenterManagerContact {
+    ID!: number
+    Firstname!: string
+    Lastname!: string
+    Email!: string
+    CellPhone!: string
+    OrganizationId!: number
     JobTitle?: string
     Area?: string
     FormattedCellPhone?: string
-    Password: string
+    Password!: string
     RobinFeatures?: string
-    AccountMicrosoftLinked: boolean
-    ReadEmailWithReplies: boolean
-    AccountGoogleLinked: boolean
-    VirtualEmail: string
+    AccountMicrosoftLinked!: boolean
+    ReadEmailWithReplies!: boolean
+    AccountGoogleLinked!: boolean
+    VirtualEmail!: string
     Notes?: string
     CapSnapOrgId?: number
     Email2?: string
@@ -126,8 +126,8 @@ export interface Buybox {
     Flag?: number
   }
   
-  export interface Cotenant {
-    CotenantId: number
-    CotenantName: string
+  export class Cotenant {
+    CotenantId!: number
+    CotenantName!: string
   }
   

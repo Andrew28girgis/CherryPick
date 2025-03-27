@@ -76,7 +76,8 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: 'tenant/:buyboxid',
+    // path: 'tenant/:buyboxid',
+    path: 'tenant/:buyboxid/:campaignId',
     component: TenantComponent,
     canActivate: [TenantOnlyGuard],
   },
