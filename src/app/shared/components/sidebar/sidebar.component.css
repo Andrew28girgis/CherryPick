@@ -15,8 +15,7 @@
   margin-right: 3px;
   font-size: 16px;
   color: #72777a !important;
-} 
-
+}
 .sidebar-container {
   position: fixed;
   top: 0;
@@ -33,7 +32,7 @@
 .sidebar-container.collapsed {
   width: 70px;
 }
- 
+
 .sidebar {
   height: 100%;
   width: 100%;
@@ -42,10 +41,10 @@
   flex-direction: column;
   overflow-x: hidden;
   transition: all 0.3s ease;
-} 
+}
 
 .sidebar-logo {
-  padding: 10px 15px; 
+  padding: 8px 15px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -55,11 +54,11 @@
   height: auto;
   transition: all 0.3s ease;
   cursor: pointer;
-} 
+}
 
 .sidebar-nav {
   list-style: none;
-  padding: 5px 0;
+  padding: 0;
   margin: 0;
   flex-grow: 1;
   overflow-y: auto;
@@ -67,7 +66,7 @@
 }
 
 .sidebar-item {
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 
 .sidebar-link {
@@ -97,9 +96,9 @@
 
 .sidebar-link .link-text {
   opacity: 1;
-  color: #72777a;
+  color: #707791;
   margin-left: 5px;
-  font-size: 13px; 
+  font-size: 14px;
   transition: opacity 0.3s ease;
 }
 
@@ -119,7 +118,6 @@
 .collapsed.sidebar-container:not(.expanded) .sidebar-link svg {
   margin-right: 0;
 }
- 
 
 .active-route {
   background-color: #b8c1e1;
@@ -129,7 +127,7 @@
 
 .active-route svg path {
   stroke: #4d65b4;
-}   
+}
 
 .sidebar-link {
   text-decoration: none;
@@ -148,12 +146,12 @@
 .sidebar-subnav {
   padding-left: 35px;
   border-left: 2px solid #ddd;
-}   
+}
 
 @media (max-width: 768px) {
   .sidebar-container.expanded {
     width: 250px;
-  } 
+  }
   .sidebar-container.collapsed .sidebar {
     transform: translateX(-100%);
   }
@@ -171,4 +169,4 @@
   .sidebar-container.collapsed .sidebar-toggle i {
     color: white;
   }
-}    
+}

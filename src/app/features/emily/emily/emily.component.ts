@@ -1232,7 +1232,6 @@ export class EmilyComponent implements OnInit {
       IsCC
     ).subscribe({
       next: (data: any) => {
-        // console.log(data);
         this.GenerateEmailall = data;
 
         this.emailSubject = data?.emailSubject || 'No subject received';

@@ -10,7 +10,6 @@ import {
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { PlacesService } from 'src/app/core/services/places.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
 import {

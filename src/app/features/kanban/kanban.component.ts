@@ -54,15 +54,14 @@ export class KanbanComponent implements OnInit, OnDestroy {
         const kanban = this.allUserKanbans.find(
           (kanban) => kanban.targetStakeholderId == 2
         );
-        // if (kanban) {
-        //   this.cadenceService.updateKanbanId(kanban.Id);
-        //   this.breadcrumbList.push({
-        //     kanbanId: kanban.Id,
-        //     name: kanban.kanbanName,
-        //   });
+        if (kanban) {
+          this.breadcrumbList.push({
+            kanbanId: kanban.Id,
+            name: kanban.kanbanName,
+          });
 
-        //   this.getKanban(kanban.Id);
-        // }
+          this.getKanban(kanban.Id);
+        }
       }
     }, 100);
 
