@@ -34,7 +34,7 @@ import { EmilyService } from 'src/app/core/services/emily.service';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   isSmallScreen: boolean = window.innerWidth < 992;
-  isSidebarExpanded: boolean = false; // Default collapsed state
+  isSidebarExpanded: boolean = true; // Default collapsed state
   isHovering: boolean = false;
   kanbanId$!: Observable<number>;
   // Add output event to notify parent of hover state changes
@@ -75,7 +75,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.getUserKanbans();
     this.getBuyBoxes();
     this.isSmallScreen = window.innerWidth < 992;
-    this.isSidebarExpanded = false;
+    this.isSidebarExpanded = true;
     this.sidbarService.setSidebarState(this.isSidebarExpanded);
     this.routerSubscription = this.router.events
       .pipe(
