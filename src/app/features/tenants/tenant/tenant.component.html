@@ -1,7 +1,7 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="overfloww">
   <div class="container-fluid">
-    <div class="row ">
+    <div class="row paddingrow">
       <div class="col-md-6">
         <header class="card custom-card" [ngStyle]="{ background: buyboxcolor }">
           <div class="d-flex align-items-center justify-content-center">
@@ -10,7 +10,8 @@
                 class="tenant-logo"
                 [src]="
                   'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                  (organizationid ?? '')
+                  organizationid
+
                 "
                 alt="Tenant Logo"
               />
@@ -20,7 +21,7 @@
             >
               <div>
                 <span class="buyboxname">
-                  {{TenantResult?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name ?? ''}}
+                  {{ TenantResult.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name ?? '' }}
                 </span>
               </div>
               <!-- <div>
@@ -42,8 +43,8 @@
                 <span class="boldtext">Size needed</span>
                 <div class="d-flex justify-content-start">
                   <span class="lowwhite" style="white-space: nowrap">
-                    {{ TenantResult?.Buybox?.[0]?.MinBuildingSize ?? '' }} SF -
-                    {{ TenantResult?.Buybox?.[0]?.MaxBuildingSize ?? '' }} SF
+                    {{ TenantResult.Buybox?.[0]?.MinBuildingSize  }} SF -
+                    {{ TenantResult.Buybox?.[0]?.MaxBuildingSize  }} SF
                   </span>
                 </div>
               </div>
@@ -64,7 +65,7 @@
                 <span class="boldtext">States</span>
                 <div class="d-flex justify-content-start">
                   <span class="lowwhite">
-                    {{ organizationBranches?.States }}
+                    {{ organizationBranches.States }}
                   </span>
                 </div>
               </div>
@@ -85,7 +86,7 @@
                 <span class="boldtext">Cities</span>
                 <div class="d-flex justify-content-start">
                   <span class="lowwhite">
-                    {{ organizationBranches?.Address }}
+                    {{ organizationBranches.Address }}
                   </span>
                 </div>
               </div>
@@ -130,20 +131,20 @@
     </div>
   </div>
   <div class="row mt-4 whitebackground">
-    <div class="col-md-6" *ngIf="!isFileUploaded">
+    <div class="col-md-6" >
       <div class="colpadding">
         <div class="SumbitProp">
           <span>Submit a Proposal</span>
         </div>
         <div class="d-flex flex-column justify-content-center uploadyourfile">
           <span class="lineheight"
-            >Just upload your file, and we’ll handle the rest!</span
+            >Just upload your file, and we'll handle the rest!</span
           >
           <span>PDF, DOCX, XLSX, PPTX</span>
         </div>
       </div>
     </div>
-    <div [ngClass]="{ 'col-12': isFileUploaded, 'col-md-6': !isFileUploaded }">
+    <div class="col-md-6">
       <div class="outer-frame" *ngIf="!fileName">
         <div class="inner-frame">
           <!-- File drop area shown if no file has been selected -->
@@ -210,9 +211,26 @@
           </div>
         </div>
       </div>
+      <div *ngIf="!returnsubmit" class="marginleft mt-3">
+        <div class="col-4">
+          <button
+            class="submit-button"
+            (click)="sendImagesArray()"
+            [disabled]="!isFileUploaded"
+            [ngClass]="{ 'submit-button-enabled': isFileUploaded }"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
 
-      <!-- Display Images Section -->
-      <div
+   
+    </div>
+  </div>
+  <ng-template #uploadPDF let-modal>
+
+        <!-- Display Images Section -->
+        <div
         *ngIf="images.length > 0 && !isSubmitting"
         class="extractedimagespadding"
       >
@@ -385,7 +403,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!returnsubmit" class="mt-3">
+      <div *ngIf="!returnsubmit" class="marginleft">
         <div class="col-4">
           <button
             class="submit-button"
@@ -397,14 +415,57 @@
           </button>
         </div>
       </div>
+  
+  
+    <div>
+      <!-- <div class="col-md-12 p-0">
+        <ngx-file-drop
+          dropZoneLabel="Drop files here"
+          (onFileDrop)="uploadFile($event)"
+          [dropZoneClassName]="'upload-background-image'"
+        >
+          <ng-template
+            ngx-file-drop-content-tmp
+            let-openFileSelector="openFileSelector"
+          >
+            <b>
+              <span class="text-dark drop-sty mx-2"> Drop File Here </span>
+            </b>
+            <button
+              type="button"
+              class="btn btn-success ml-2 secondary-color upload"
+              (click)="openFileSelector()"
+            >
+              Browse Files
+            </button>
+          </ng-template>
+        </ngx-file-drop>
+      </div> -->
+    </div>
+    <div class="modal-footer">
       <!-- Send Selected Images Button -->
-      <div class="col-4 d-flex align-items-center justify-content-start">
+      <div
+        class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+      >
+        <!-- <button
+            class="convertimages mx-1"
+            (click)="sendImagesArray()"
+            *ngIf="images.length > 0"
+          >
+            Convert Images
+          </button> -->
         <button class="submitpdfbutton" *ngIf="JsonPDF" (click)="sendJson()">
           Submit PDF Data
         </button>
+        <!-- <button
+              class="btn btn-secondary mx-1"
+              (click)="clearModalData(); closeModal(modal)"
+            >
+              Cancel
+            </button> -->
       </div>
     </div>
-  </div>
+  </ng-template>
   <div id="customToast" class="custom-toast">
     <div class="toast-content">
       <p id="toastMessage"></p>

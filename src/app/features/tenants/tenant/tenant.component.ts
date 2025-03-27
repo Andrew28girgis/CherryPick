@@ -62,6 +62,7 @@ export class TenantComponent implements OnInit {
   returnsubmit: boolean = false;
   organizationid!:string
   isFileUploaded: boolean = false; // To track whether a file has been uploaded
+  test!: number;  // Add this property
 
   
 
@@ -123,10 +124,9 @@ export class TenantComponent implements OnInit {
     });
   }
 
-  openUploadModal(id: number) {
+  openUploadModal(id?: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
-
       this.selectedShoppingID = guid;
     } else {
       this.selectedShoppingID = id.toString();
@@ -158,9 +158,7 @@ export class TenantComponent implements OnInit {
           this.httpClient.request(req).subscribe(
             (event: any) => {
               if (event.type === HttpEventType.UploadProgress) {
-                this.uploadProgress = Math.round(
-                  (100 * event.loaded) / event.total!
-                );
+                this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
                 if (this.uploadProgress === 100) {
                   this.isUploading = false;
                   this.isConverting = true;
@@ -168,28 +166,20 @@ export class TenantComponent implements OnInit {
               } else if (event instanceof HttpResponse) {
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map(
-                    (img: string, index: number) => ({
-                      name: `Image ${index + 1}`,
-                      type: 'image/png',
-                      content: img,
-                      selected: false,
-                    })
-                  );
+                  this.images = response.images.map((img: string, index: number) => ({
+                    name: `Image ${index + 1}`,
+                    type: 'image/png',
+                    content: img,
+                    selected: false,
+                  }));
                   this.pdfFileName = response.pdfFileName;
                   this.isConverting = false;
                   this.spinner.hide();
-                  this.showToast(
-                    'PDF File uploaded and converted successfully!'
-                  );
-
-                  // Automatically send the images if there are 3 or fewer images
-                  if (this.images.length <= 3) {
-                    this.sendJson(); // Automatically submit the images
-                  }
-  
-                  // Enable submit button after file is uploaded
-                  this.isFileUploaded = true;  // Set flag to true
+                  this.showToast('PDF File uploaded and converted successfully!');
+                  this.isFileUploaded = true;  // Enable submit button
+                  
+                  // Open the modal after images are returned and upload completes
+                  this.openUploadModal(0);  // Open the modal after the process is done
                 }
               }
             },
@@ -205,6 +195,8 @@ export class TenantComponent implements OnInit {
       }
     }
   }
+
+
   
   
   

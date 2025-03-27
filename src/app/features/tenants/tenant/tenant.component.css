@@ -1,5 +1,7 @@
 .overfloww {
   overflow-x: hidden;
+}
+.paddingrow{
   padding: 20px 20px;
 }
 .background {
@@ -638,6 +640,12 @@ line-height: 30px;
   border: none;
   border-top: 1px solid #cfc9c9;
   margin-top: 0px;
+}
+.extractedimagespadding{
+  padding: 20px;
+}
+.marginleft{
+  margin-left: 20px;
 }
 @media (max-width: 576px) {
   .cardcampaings {
