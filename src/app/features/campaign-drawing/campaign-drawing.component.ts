@@ -124,6 +124,17 @@ export class CampaignDrawingComponent
     this.modalService.open(content, { centered: true });
   }
 
+  syncMarketSurveyWithCampaign(campaignId: number): void {
+    const body: any = {
+      Name: 'SyncMarketSurveyWithCampaign',
+      Params: { CampaignId: campaignId },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      console.log(response);
+    });
+  }
+
   createNewCampaign(): void {
     this.spinner.show();
     const body: any = {
@@ -139,14 +150,19 @@ export class CampaignDrawingComponent
     debugger;
 
     this.placesService.GenericAPI(body).subscribe((response) => {
-      setTimeout(() => {
-        this.spinner.hide();
-        this.onCampaignCreated.emit();
-      }, 1000);
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        // this.modalService.dismissAll();
+        this.syncMarketSurveyWithCampaign(response.json[0].id)
         if (!this.router.url.includes('campaigns')) {
-          this.router.navigate(['/campaigns']);
+          setTimeout(() => {
+            this.spinner.hide();
+            this.modalService.dismissAll();
+            this.router.navigate(['/campaigns']);
+          }, 1000);
+        } else {
+          setTimeout(() => {
+            this.spinner.hide();
+            this.onCampaignCreated.emit();
+          }, 1000);
         }
         this.saveShapesWithCampaign(response.json[0].id);
       }

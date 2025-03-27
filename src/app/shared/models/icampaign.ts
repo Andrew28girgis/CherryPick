@@ -7,14 +7,13 @@ export interface ICampaign {
 
 export interface Campaign {
   Id: number;
-  CampaignName: string;
-  BuyBoxId: number;
   CampaignPrivacy: number;
-  CreatedDate?: string;
-  Geojsons: Geojson[];
+  CampaignName: string;
+  CreatedDate: Date;
   Submissions: Submission[];
   MailsSent: MailsSent[];
-  Stages: Stage[];
+  Sites: number;
+  Stages?: Stage[];
 }
 
 export interface Submission {
@@ -26,26 +25,6 @@ export interface MailsSent {
 }
 
 export interface Stage {
-  Id: number;
   stageName: string;
-  c: number;
-}
-
-export interface Geojson {
-  id: number;
-  Name: string;
-  state: string;
-  ShoppingCenters: ShoppingCenter[];
-}
-
-export interface ShoppingCenter {
-  Latitude: number;
-  Longitude: number;
-  InPolygon: boolean;
-  Contact: Contact[];
-}
-
-export interface Contact {
-  id: number;
-  OrganizationId: number;
+  Organizations: number;
 }
