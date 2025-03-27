@@ -64,20 +64,43 @@
     </button>
   </div>
 
-  <div *ngIf="filteredCampaigns.length > 0" class="campaign-manager-body">
+  <div
+    *ngIf="filteredCampaigns.length > 0 && stages.length > 0"
+    class="campaign-manager-body"
+  >
     <div class="table-responsive">
       <table class="table align-middle">
         <thead>
           <tr>
-            <th scope="col">Campaign</th>
-            <th scope="col">Sites</th>
-            <th scope="col">Submissions</th>
-            <th scope="col">Mails</th>
-            <!-- <th scope="col">Tenant</th>
-            <th scope="col" style="min-width: 8vw">States</th>
-            <th scope="col">Date Created</th>
-            <th scope="col">Privacy</th> -->
-            <th scope="col"></th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Campaign Name
+            </th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Tenant
+            </th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Date Created
+            </th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Privacy
+            </th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Sites
+            </th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Submissions
+            </th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Mails Sent
+            </th>
+            <th scope="col" style="white-space: nowrap; text-align: center">
+              Actions
+            </th>
+            <ng-container *ngFor="let stage of stages">
+              <th scope="col" style="white-space: nowrap; text-align: center">
+                {{ stage.stageName }}
+              </th>
+            </ng-container>
           </tr>
         </thead>
         <tbody>
@@ -86,166 +109,146 @@
               *ngFor="let campaign of c.Campaigns; let index = index"
             >
               <tr>
-                <td>
-                  <div
-                    class="d-flex flex-column align-items-start justify-content-center"
-                  >
-                    <div>Name: {{ campaign.CampaignName }}</div>
-                    <div>
-                      Tenant:
-                      <div class="d-flex align-items-center gap-2">
-                        <img
-                          *ngIf="c.organizationid"
-                          [src]="
-                            'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                            c.organizationid
-                          "
-                          [alt]="c.name"
-                          class="tenant-logo"
-                        />
-                        <span>{{ c.name }}</span>
-                      </div>
-                    </div>
-                    <div>
-                      States:
-                      <div class="d-flex align-items-center gap-1">
-                        <ng-container
-                          *ngFor="
-                            let state of getUniqueStates(campaign.Geojsons)
-                          "
-                        >
-                          <div class="d-flex align-items-center gap-1">
-                            <span>{{ state }}</span>
-                            <span>&bull;</span>
-                          </div>
-                        </ng-container>
-                      </div>
-                    </div>
-                    <div>
-                      Creation Date:
-                      {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-                    </div>
-                    <div>
-                      Privacy:
-                      <div
-                        class="campaign-privacy"
-                        [ngClass]="{
-                          'campaign-privacy-public':
-                            campaign.CampaignPrivacy == 0,
-                          'campaign-privacy-private':
-                            campaign.CampaignPrivacy == 1
-                        }"
-                      >
-                        <div class="campaign-privacy-icon"></div>
-                        <span>
-                          {{
-                            campaign.CampaignPrivacy == 0 ? "Public" : "Private"
-                          }}</span
-                        >
-                      </div>
-                    </div>
+                <td style="white-space: nowrap">
+                  {{ campaign.CampaignName }}
+                </td>
+                <td style="white-space: nowrap; text-align: center">
+                  <div class="d-flex align-items-center gap-2">
+                    <img
+                      *ngIf="c.organizationid"
+                      [src]="
+                        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                        c.organizationid
+                      "
+                      [alt]="c.name"
+                      class="tenant-logo"
+                    />
+                    <span
+                      class="tenant-name"
+                      [routerLink]="[
+                        '/dashboard',
+                        c.id,
+                        c.organizationid,
+                        c.name
+                      ]"
+                      >{{ c.name }}</span
+                    >
                   </div>
                 </td>
-                <td>
-                  {{ calculatePolygonsCentersCount(campaign.Geojsons) }}
+                <td style="white-space: nowrap; text-align: center">
+                  {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
                 </td>
-                <td>
-                  {{ campaign.Submissions[0].Submissions }}
+                <td style="white-space: nowrap; text-align: center">
+                  <div
+                    class="campaign-privacy"
+                    [ngClass]="{
+                      'campaign-privacy-public': campaign.CampaignPrivacy == 0,
+                      'campaign-privacy-private': campaign.CampaignPrivacy == 1
+                    }"
+                  >
+                    <div class="campaign-privacy-icon"></div>
+                    <span>
+                      {{
+                        campaign.CampaignPrivacy == 0 ? "Public" : "Private"
+                      }}</span
+                    >
+                  </div>
                 </td>
-                <td>
+
+                <td style="white-space: nowrap; text-align: center">
+                  <div
+                    class="d-flex align-items-center justify-content-center gap-3"
+                  >
+                    <div>{{ campaign.Sites }}</div>
+                    <svg
+                      [routerLink]="[
+                        '/dashboard',
+                        c.id,
+                        c.organizationid,
+                        c.name
+                      ]"
+                      style="cursor: pointer"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                        fill="#292D32"
+                      />
+                      <path
+                        d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
+                        fill="#292D32"
+                      />
+                      <path
+                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                        fill="#292D32"
+                      />
+                    </svg>
+                  </div>
+                </td>
+                <td style="white-space: nowrap; text-align: center">
+                  <div
+                    class="d-flex align-items-center justify-content-center gap-3"
+                  >
+                    <div>{{ campaign.Submissions[0].Submissions }}</div>
+                    <svg
+                      style="cursor: pointer"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
+                        fill="#292D32"
+                      />
+                      <path
+                        d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
+                        fill="#292D32"
+                      />
+                      <path
+                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
+                        fill="#292D32"
+                      />
+                    </svg>
+                  </div>
+                </td>
+                <td style="white-space: nowrap; text-align: center">
                   {{ campaign.MailsSent[0].MailsSent }}
                 </td>
 
-                <td>
-                  <div
-                    class="d-flex align-items-center justify-content-center gap-2"
-                  >
-                    <!-- <div
-                      class="more"
-                      pTooltip="View On Map"
-                      tooltipPosition="top"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M15.65 21.41C15.22 21.41 14.79 21.32 14.44 21.15L9.19004 18.52C8.89004 18.37 8.30004 18.38 8.01004 18.55L5.65004 19.9C4.63004 20.48 3.58004 20.56 2.79004 20.09C1.99004 19.63 1.54004 18.69 1.54004 17.51V7.79003C1.54004 6.88003 2.14004 5.85003 2.93004 5.40003L7.26004 2.92003C7.99004 2.50003 9.10004 2.47003 9.85004 2.85003L15.1 5.48003C15.4 5.63003 15.98 5.61003 16.28 5.45003L18.63 4.11003C19.65 3.53003 20.7 3.45003 21.49 3.92003C22.29 4.38003 22.74 5.32003 22.74 6.50003V16.23C22.74 17.14 22.14 18.17 21.35 18.62L17.02 21.1C16.64 21.3 16.14 21.41 15.65 21.41ZM8.64004 16.92C9.07004 16.92 9.50004 17.01 9.85004 17.18L15.1 19.81C15.4 19.96 15.98 19.94 16.28 19.78L20.61 17.3C20.93 17.12 21.24 16.58 21.24 16.22V6.49003C21.24 5.86003 21.06 5.39003 20.73 5.21003C20.41 5.03003 19.91 5.10003 19.37 5.41003L17.02 6.75003C16.29 7.17003 15.18 7.20003 14.43 6.82003L9.18004 4.19003C8.88004 4.04003 8.30004 4.06003 8.00004 4.22003L3.67004 6.70003C3.35004 6.88003 3.04004 7.42003 3.04004 7.79003V17.52C3.04004 18.15 3.22004 18.62 3.54004 18.8C3.86004 18.99 4.36004 18.91 4.91004 18.6L7.26004 17.26C7.65004 17.03 8.15004 16.92 8.64004 16.92Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M8.56006 17.75C8.15006 17.75 7.81006 17.41 7.81006 17V4C7.81006 3.59 8.15006 3.25 8.56006 3.25C8.97006 3.25 9.31006 3.59 9.31006 4V17C9.31006 17.41 8.97006 17.75 8.56006 17.75Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M15.73 20.75C15.32 20.75 14.98 20.41 14.98 20V6.62C14.98 6.21 15.32 5.87 15.73 5.87C16.14 5.87 16.48 6.21 16.48 6.62V20C16.48 20.41 16.14 20.75 15.73 20.75Z"
-                          fill="#707791"
-                        />
-                      </svg>
-                    </div> -->
-                    <div
-                      class="more"
-                      pTooltip="Go-To Emily"
-                      tooltipPosition="top"
-                      (click)="goToEmily(c, index)"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M9.98999 22.78C9.38999 22.78 8.81999 22.48 8.42999 21.95L7.23001 20.35C7.23001 20.36 7.18 20.33 7.16 20.33H6.79001C3.37001 20.33 1.25 19.4 1.25 14.79V10.79C1.25 6.58001 3.82001 5.48001 5.98001 5.29001C6.22001 5.26001 6.50001 5.25 6.79001 5.25H13.19C16.81 5.25 18.73 7.17001 18.73 10.79V14.79C18.73 15.08 18.72 15.36 18.68 15.63C18.5 17.76 17.4 20.33 13.19 20.33H12.79L11.55 21.95C11.16 22.48 10.59 22.78 9.98999 22.78ZM6.79001 6.75C6.56001 6.75 6.34 6.76 6.13 6.78C3.81 6.98 2.75 8.25001 2.75 10.79V14.79C2.75 18.22 3.81001 18.83 6.79001 18.83H7.19C7.64 18.83 8.14999 19.08 8.42999 19.44L9.63 21.05C9.85001 21.35 10.13 21.35 10.35 21.05L11.55 19.45C11.84 19.06 12.3 18.83 12.79 18.83H13.19C15.73 18.83 17 17.76 17.19 15.48C17.22 15.24 17.23 15.02 17.23 14.79V10.79C17.23 8.00001 15.98 6.75 13.19 6.75H6.79001Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M9.99023 14.19C9.43023 14.19 8.99023 13.74 8.99023 13.19C8.99023 12.64 9.44023 12.19 9.99023 12.19C10.5402 12.19 10.9902 12.64 10.9902 13.19C10.9902 13.74 10.5502 14.19 9.99023 14.19Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M13.1899 14.19C12.6299 14.19 12.1899 13.74 12.1899 13.19C12.1899 12.64 12.6399 12.19 13.1899 12.19C13.7399 12.19 14.1899 12.64 14.1899 13.19C14.1899 13.74 13.7399 14.19 13.1899 14.19Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M6.7998 14.19C6.2398 14.19 5.7998 13.74 5.7998 13.19C5.7998 12.64 6.2498 12.19 6.7998 12.19C7.3498 12.19 7.7998 12.64 7.7998 13.19C7.7998 13.74 7.3498 14.19 6.7998 14.19Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M17.9401 16.29C17.7401 16.29 17.5401 16.21 17.4001 16.06C17.2401 15.9 17.1701 15.67 17.2001 15.45C17.2301 15.24 17.2401 15.02 17.2401 14.79V10.79C17.2401 8.00001 15.9901 6.75 13.2001 6.75H6.80012C6.57012 6.75 6.35015 6.76 6.14015 6.78C5.92015 6.81 5.69013 6.72999 5.53013 6.57999C5.37013 6.41999 5.28012 6.20001 5.30012 5.98001C5.48012 3.82001 6.59012 1.25 10.8001 1.25H17.2001C20.8201 1.25 22.7401 3.17001 22.7401 6.79001V10.79C22.7401 15 20.1701 16.1 18.0101 16.29C17.9801 16.29 17.9601 16.29 17.9401 16.29ZM6.92015 5.25H13.1901C16.8101 5.25 18.7301 7.17001 18.7301 10.79V14.66C20.4301 14.24 21.2301 12.99 21.2301 10.79V6.79001C21.2301 4.00001 19.9801 2.75 17.1901 2.75H10.7901C8.59014 2.75 7.35015 3.55 6.92015 5.25Z"
-                          fill="#707791"
-                        />
-                      </svg>
-                    </div>
-                    <div
-                      class="more"
-                      pTooltip="Sync Sites"
-                      tooltipPosition="top"
-                      (click)="syncMarketSurveyWithCampaign(campaign.Id)"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M14.55 22.42C14.22 22.42 13.91 22.2 13.82 21.86C13.71 21.46 13.95 21.05 14.36 20.94C18.42 19.87 21.25 16.19 21.25 11.99C21.25 6.89 17.1 2.74 12 2.74C7.67 2.74 4.83 5.27 3.5 6.8H6.44C6.85 6.8 7.19 7.14 7.19 7.55C7.19 7.96 6.86 8.31 6.44 8.31H2.01C1.96 8.31 1.87 8.3 1.8 8.28C1.71 8.25 1.63 8.21 1.56 8.16C1.47 8.1 1.4 8.02 1.35 7.93C1.3 7.84 1.26 7.73 1.25 7.62C1.25 7.59 1.25 7.57 1.25 7.54V3C1.25 2.59 1.59 2.25 2 2.25C2.41 2.25 2.75 2.59 2.75 3V5.39C4.38 3.64 7.45 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 16.88 19.46 21.16 14.74 22.4C14.68 22.41 14.61 22.42 14.55 22.42Z"
-                          fill="#707791"
-                        />
-                        <path
-                          d="M11.29 22.73C11.27 22.73 11.25 22.72 11.24 22.72C10.16 22.65 9.1 22.41 8.1 22.02C7.81 21.91 7.61 21.62 7.62 21.31C7.62 21.22 7.64 21.13 7.67 21.05C7.82 20.67 8.27 20.48 8.64 20.62C9.51 20.96 10.42 21.16 11.34 21.23C11.73 21.25 12.04 21.59 12.04 21.99L12.03 22.03C12.01 22.42 11.68 22.73 11.29 22.73ZM5.78 20.58C5.61 20.58 5.45 20.52 5.31 20.42C4.47 19.74 3.73 18.95 3.13 18.07C3.04 17.94 2.99 17.8 2.99 17.65C2.99 17.4 3.11 17.17 3.32 17.03C3.65 16.8 4.13 16.89 4.36 17.21C4.36 17.22 4.36 17.22 4.36 17.22C4.37 17.23 4.38 17.25 4.39 17.26C4.91 18.01 5.54 18.68 6.25 19.24C6.42 19.38 6.53 19.59 6.53 19.82C6.53 19.99 6.48 20.16 6.37 20.3C6.22 20.48 6.01 20.58 5.78 20.58ZM2.44 15.7C2.11 15.7 1.82 15.49 1.73 15.18C1.41 14.15 1.25 13.08 1.25 12V11.99C1.26 11.58 1.59 11.25 2 11.25C2.41 11.25 2.75 11.59 2.75 12C2.75 12.94 2.89 13.86 3.16 14.73C3.18 14.81 3.19 14.88 3.19 14.96C3.19 15.28 2.98 15.57 2.66 15.67C2.59 15.69 2.52 15.7 2.44 15.7Z"
-                          fill="#707791"
-                        />
-                      </svg>
-                    </div>
-                  </div>
+                <td style="white-space: nowrap; text-align: center">
+                  <a class="inbox" (click)="goToEmily(c,index)">Inbox</a>
                 </td>
+
+                <ng-container *ngFor="let stage of stages">
+                  <td style="white-space: nowrap; text-align: center">
+                    <div
+                      class="d-flex flex-column align-items-center justify-content-center gap-2"
+                    >
+                      <div>
+                        {{
+                          getStageOrganizationCount(
+                            stage.stageName,
+                            campaign.Stages
+                          ) ?? "N/A"
+                        }}
+                      </div>
+                      <a
+                        class="hyber-link"
+                        *ngIf="
+                          stage.stageName.toLowerCase() ==
+                          'Precontact'.toLowerCase()
+                        "
+                        >Generate Emails</a
+                      >
+                    </div>
+                  </td>
+                </ng-container>
               </tr>
               <!-- <tr>
                 <td colspan="6">
