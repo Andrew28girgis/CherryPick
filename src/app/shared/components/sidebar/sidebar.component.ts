@@ -306,15 +306,15 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
   }
 
-  checkContacts(event: any, contacts: IBuyBoxContact[]) {
+  checkContacts(event: any, contacts: IBuyBoxContact[], org: IBuyboxOrganization) {
     const value = event.target.checked;
-    contacts.forEach((contact) => {
+    contacts.forEach(contact => {
       contact.checked = value;
-      contact.Centers?.forEach((center) => {
-        center.checked = value;
-      });
+      contact.Centers?.forEach(center => center.checked = value);
     });
+    // org.checked = contacts.some(contact => contact.checked);
   }
+  
 
   checkShoppingCenter(event: any, contact: IBuyBoxContact) {
     let value = event.target.checked;
