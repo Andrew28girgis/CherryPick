@@ -1,0 +1,52 @@
+.Emails_body {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #E2E4E9;
+  width: 70%;
+  padding: 16px;
+}
+
+.Name_Emails_body {
+  color: #16181D;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.Subject_Emails_body {
+  color: #696969;
+}
+
+.form-control {
+  padding: 5px;
+  background: #F1F1F4;
+}
+
+
+.form-controlStyle {
+  height: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.Button_Update_S,
+.Button_Update_D {
+  background: green;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+}
+
+.Button_Update_D {
+  background: brown;
+}
+
+.Kayak__img {
+  width: 30px;
+  height: 30px;
+  margin-inline-end: 6px;
+}
