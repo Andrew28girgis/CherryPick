@@ -19,8 +19,7 @@ import { Location } from '@angular/common';
 import { popupActions } from './kanban-actions/kanban-actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { sharedColors } from '../../shared/others/shared-colors';
-import { PlacesService } from 'src/app/core/services/places.service';
-import { CadenceService } from 'src/app/core/services/cadence.service';
+import { PlacesService } from 'src/app/core/services/places.service'; 
 
 @Component({
   selector: 'app-kanban',
@@ -43,8 +42,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private location: Location,
-    private modalService: NgbModal,
-    private cadenceService: CadenceService
+    private modalService: NgbModal, 
   ) {}
 
   ngOnInit(): void {
@@ -56,15 +54,15 @@ export class KanbanComponent implements OnInit, OnDestroy {
         const kanban = this.allUserKanbans.find(
           (kanban) => kanban.targetStakeholderId == 2
         );
-        if (kanban) {
-          this.cadenceService.updateKanbanId(kanban.Id);
-          this.breadcrumbList.push({
-            kanbanId: kanban.Id,
-            name: kanban.kanbanName,
-          });
+        // if (kanban) {
+        //   this.cadenceService.updateKanbanId(kanban.Id);
+        //   this.breadcrumbList.push({
+        //     kanbanId: kanban.Id,
+        //     name: kanban.kanbanName,
+        //   });
 
-          this.getKanban(kanban.Id);
-        }
+        //   this.getKanban(kanban.Id);
+        // }
       }
     }, 100);
 
@@ -74,14 +72,14 @@ export class KanbanComponent implements OnInit, OnDestroy {
       }
     }, 5000);
 
-    this.cadenceService.getKanbanId().subscribe((kanbanId) => {
-      if (kanbanId) {
-        if (this.selectedKanbanId != kanbanId) {
-          this.selectedKanbanId = kanbanId;
-          this.getKanbanDetails();
-        }
-      }
-    });
+    // this.cadenceService.getKanbanId().subscribe((kanbanId) => {
+    //   if (kanbanId) {
+    //     if (this.selectedKanbanId != kanbanId) {
+    //       this.selectedKanbanId = kanbanId;
+    //       this.getKanbanDetails();
+    //     }
+    //   }
+    // });
   }
 
   private getUserKanbans(): void {
@@ -348,7 +346,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
     this.kanbanDetails = undefined;
 
     this.selectedKanbanId = kanbanId;
-    this.cadenceService.updateKanbanId(kanbanId);
+    // this.cadenceService.updateKanbanId(kanbanId);
 
     this.getKanbanDetails();
   }
