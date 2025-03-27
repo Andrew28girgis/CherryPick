@@ -191,3 +191,15 @@
 .tenant-name:hover {
   color: #4d65b4;
 }
+
+.red {
+  color: #cc3d3d;
+}
+
+.green {
+  color: #208637;
+}
+
+.normal {
+  text-decoration: underline;
+}

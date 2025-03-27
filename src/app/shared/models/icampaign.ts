@@ -1,30 +1,31 @@
-export interface ICampaign {
-  id: number;
-  name: string;
-  organizationid: number;
-  Campaigns: Campaign[];
+export interface ICampaign  {
+  id: number
+  name: string
+  organizationid: number
+  Campaigns: Campaign[]
 }
 
 export interface Campaign {
-  Id: number;
-  CampaignPrivacy: number;
-  CampaignName: string;
-  CreatedDate: Date;
-  Submissions: Submission[];
-  MailsSent: MailsSent[];
-  Sites: number;
-  Stages?: Stage[];
+  Id: number
+  CampaignPrivacy: number
+  CampaignName: string
+  CreatedDate: string
+  Submissions?: Submission[]
+  MailsSent: MailsSent[]
+  Sites: number
+  Stages?: Stage[]
 }
 
 export interface Submission {
-  Submissions: number;
+  StatusId: number
+  Submissions: number
 }
 
 export interface MailsSent {
-  MailsSent: number;
+  MailsSent: number
 }
 
 export interface Stage {
-  stageName: string;
-  Organizations: number;
+  stageName: string
+  Organizations: number
 }
