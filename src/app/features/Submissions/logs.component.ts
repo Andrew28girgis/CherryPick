@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ActivatedRoute } from '@angular/router';
 import { submission } from 'src/app/shared/models/submissions';
-PlacesService;
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-logs',
   standalone: true,
@@ -15,7 +16,8 @@ export class SubmissionsComponent implements OnInit {
   submissionsArray: submission[] = [];    
   campaignId!:any;
 
-  constructor(private PlacesService: PlacesService,     private route: ActivatedRoute
+  constructor(private PlacesService: PlacesService,     private route: ActivatedRoute ,    private modalService: NgbModal,
+  
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +43,14 @@ export class SubmissionsComponent implements OnInit {
       next: (res: any) => {
         this.submissionsArray = res.json || [];    
       },
+    });
+  }
+
+  openSubmissions(content: any, modalObject?: any): void {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
     });
   }
 }
