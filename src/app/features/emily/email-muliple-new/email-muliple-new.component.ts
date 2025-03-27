@@ -14,16 +14,19 @@ import { from } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
-import { ContactsChecked, OrganizationChecked, buyboxChecklist } from 'src/app/shared/models/sidenavbar';
+import {
+  ContactsChecked,
+  OrganizationChecked,
+  buyboxChecklist,
+} from 'src/app/shared/models/sidenavbar';
 import { interval, Subscription } from 'rxjs';
-
 
 @Component({
   selector: 'app-email-muliple-new',
   templateUrl: './email-muliple-new.component.html',
   styleUrl: './email-muliple-new.component.css',
 })
-export class EmailMulipleNewComponent implements OnInit,OnDestroy {
+export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
@@ -36,12 +39,24 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
   bodyTemplate: string = '';
   emailBody: string = '';
   emailBody2: string = '';
+  // emailTemplates: {
+  //   organizationId: number;
+  //   templateOne: string;
+  //   templateTwo: string;
+  // }[] = [];
   emailTemplates: {
     organizationId: number;
+    contacts?: any[];
     templateOne: string;
     templateTwo: string;
   }[] = [];
-  originalEmailTemplates: { organizationId: number; templateOne: string; templateTwo: string; }[] = [];
+
+  originalEmailTemplates: {
+    organizationId: number;
+    contacts?: any[];
+    templateOne: string;
+    templateTwo: string;
+  }[] = [];
 
   // GetBuyBoxInfo
   generated: Generated[] = [];
@@ -84,6 +99,8 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
 
   // GetBuyBoxOrganizationsForEmail
   BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
+  BuyBoxOrganizationsForEmailAll: any;
+  allOrganizations: any;
   CheckGetSavedTemplates: any[] = [];
   organizationId: any;
 
@@ -114,26 +131,35 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.emilyService.getCheckList().subscribe((buyboxChecklist: buyboxChecklist) => {      
-      if (this.buyboxChecklist == null || this.buyboxChecklist == undefined) {
-        const storedChecklist = sessionStorage.getItem('buyboxChecklist');
-        if (storedChecklist) {
-          this.buyboxChecklist = JSON.parse(storedChecklist) as buyboxChecklist;
-        }
-      }
-      this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
-      this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
-    });
+    this.emilyService
+      .getCheckList()
+      .subscribe((buyboxChecklist: buyboxChecklist) => {
+        // console.log(buyboxChecklist);
 
+        if (this.buyboxChecklist == null || this.buyboxChecklist == undefined) {
+          const storedChecklist = sessionStorage.getItem('buyboxChecklist');
+          if (storedChecklist) {
+            this.buyboxChecklist = JSON.parse(
+              storedChecklist
+            ) as buyboxChecklist;
+          }
+        }
+        this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+        this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
+      });
 
     this.checklistSubscription = interval(500).subscribe(() => {
       const storedChecklist = sessionStorage.getItem('buyboxChecklist');
       if (storedChecklist) {
         const parsedChecklist = JSON.parse(storedChecklist) as buyboxChecklist;
-        if (JSON.stringify(parsedChecklist) !== JSON.stringify(this.buyboxChecklist)) {
+        if (
+          JSON.stringify(parsedChecklist) !==
+          JSON.stringify(this.buyboxChecklist)
+        ) {
           this.buyboxChecklist = parsedChecklist;
           this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
-          this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
+          this.OrganizationCheckedServices =
+            this.buyboxChecklist?.organizations;
           this.reloadData();
         }
       }
@@ -150,7 +176,7 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
     this.GetBuyBoxInfoDetails();
     this.GetMailContextGenerated();
   }
-  
+
   reloadData() {
     this.contactId = localStorage.getItem('contactId');
     if (this.buyBoxId) {
@@ -160,8 +186,8 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
     this.GetBuyBoxInfo();
     this.GetRetailRelationCategories();
     this.GetBuyBoxInfoDetails();
-    this.GetMailContextGenerated(); 
-   }
+    this.GetMailContextGenerated();
+  }
 
   ngOnDestroy() {
     if (this.checklistSubscription) {
@@ -319,7 +345,7 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
     } else {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
-          contact.selected = false;
+          contact.selected = false;``
           contact.assistantSelected = false;
         });
       });
@@ -442,92 +468,258 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
 
   async GetBuyBoxOrganizationsForEmail() {
     this.spinner.show();
-
     try {
-      if (
-        this.OrganizationCheckedServices &&
-        Array.isArray(this.OrganizationCheckedServices) &&
-        this.OrganizationCheckedServices.length > 0
-      ) {
-        const organizationIds = this.OrganizationCheckedServices.map((item: any) => item.id);
+      const body: any = {
+        Name: 'GetBuyBoxReps',
+        MainEntity: null,
+        Params: {
+          buyboxid: this.buyBoxId,
+        },
+        Json: null,
+      };
 
-        this.bodyTemplates = [];
+      const data = await this.PlacesService.GenericAPI(body).toPromise();
+      if (data?.json && Array.isArray(data.json)) {
+        this.BuyBoxOrganizationsForEmail = data.json;
 
-        if (organizationIds.length > 0) {
-          for (let id of organizationIds) {
-            const body: any = {
-              Name: 'GetShoppingCenterManagerContacts',
-              MainEntity: null,
-              Params: {
-                buyboxid: this.buyBoxId,
-                organizationid: id,
-              },
-              Json: null,
-            };
+        this.allOrganizations = this.BuyBoxOrganizationsForEmail.map(
+          (org: any) => ({
+            ...org,
+            selected: true,
+          })
+        );
+        this.allOrganizations.forEach((org:any) => {
+          org.isVisible = false; 
+        });
 
-            try {
-              const data = await this.PlacesService.GenericAPI(
-                body
-              ).toPromise();
-              if (data?.json && Array.isArray(data.json)) {
-                this.BuyBoxOrganizationsForEmail = data.json;
-
-
-                const allowedCenterIdsByContact = new Map<number, Set<number>>();
-                const selectedContactIds = new Set<number>();
-
-                this.OrganizationCheckedServices.forEach((org: any) => {
-                  org.contacts.forEach((contact: any) => {
-                    selectedContactIds.add(contact.id);
-                    allowedCenterIdsByContact.set(contact.id, new Set(contact.shoppingCenterId));
-                  });
+        this.allOrganizations.forEach((org: any) => {
+          // console.log('Organization:', org);
+          if (org.Contact && Array.isArray(org.Contact)) {
+            org.Contact.forEach((contact: any) => {
+              // console.log('Contact:', contact);
+              contact.selected = true;
+              if (
+                contact.ShoppingCenters &&
+                Array.isArray(contact.ShoppingCenters)
+              ) {
+                contact.ShoppingCenters.forEach((center: any) => {
+                  // console.log('Shopping Center:', center);
+                  center.selected = true;
                 });
-
-                this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact: any) => {
-                  if (selectedContactIds.has(contact.id)) {
-                    contact.selected = true;
-                    const allowedCenters = allowedCenterIdsByContact.get(contact.id);
-                    if (allowedCenters) {
-                      contact.Centers?.forEach((center: any) => {
-                        if (allowedCenters.has(center.id)) {
-                          center.selected = true;
-                        }
-                      });
-                    }
-                  }
-                });
-
-
-                // this.OnCheckGetSavedTemplates(c.id);
-                await this.OnCheckGetSavedTemplates(
-                  this.BuyBoxOrganizationsForEmail[0].Id
-                );
-
-                this.updateEmailBody();
-
-                const currentEmailTemplate = {
-                  organizationId: id,
-                  templateOne: this.emailBody,
-                  templateTwo: this.emailBody2,
-                };
-                this.emailTemplates.push(currentEmailTemplate);
-                this.bodyTemplates.push(this.emailBody);
               }
-            } catch (error) {
-              console.error(`Error processing organization ID: ${id}`, error);
-            }
-
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            });
           }
-          this.originalEmailTemplates = [...this.emailTemplates];
+        });
+
+        if (this.BuyBoxOrganizationsForEmail.length > 0) {
+          await this.OnCheckGetSavedTemplates(
+            this.BuyBoxOrganizationsForEmail[0].Id
+          );
         }
-      } else {
-        this.organizationId = null;
+
+        this.emailTemplates = this.allOrganizations.map((org: any) => {
+          const contactsContext =
+            org.Contact && Array.isArray(org.Contact)
+              ? org.Contact.map((contact: any) => {
+                  const centersContext =
+                    contact.ShoppingCenters &&
+                    Array.isArray(contact.ShoppingCenters)
+                      ? contact.ShoppingCenters
+                      : [];
+                  return {
+                    ...contact,
+                    shoppingCenters: centersContext,
+                  };
+                })
+              : [];
+          return {
+            organizationId: org.Id,
+            contacts: contactsContext,
+            templateOne: this.emailBody,
+            templateTwo: this.emailBody2,
+          };
+        });
+
+        this.bodyTemplates = [this.emailBody];
+        this.originalEmailTemplates = [...this.emailTemplates];
       }
+    } catch (error) {
+      console.error('Error in GetBuyBoxOrganizationsForEmail:', error);
     } finally {
       this.spinner.hide();
+      // this.updateEmailBody();
 
+      this.updateEmailBody();
     }
+  }
+
+  // onOrganizationChange(organization: any, newValue: boolean): void {
+  //   organization.selected = newValue;
+
+  //   if (!newValue) {
+  //     this.emailTemplates = this.emailTemplates.filter(
+  //       (template: any) => template.organizationId !== organization.id
+  //     );
+  //   } else {
+  //     const existingTemplate = this.originalEmailTemplates.find(
+  //       (template: any) => template.organizationId === organization.id
+  //     );
+
+  //     if (existingTemplate) {
+  //       this.emailTemplates.push(existingTemplate);
+  //     }
+  //   }
+
+  //   this.updateEmailBody();
+  // }
+
+  // onOrganizationChange(organization: any, newValue: boolean): void {
+  //   organization.selected = newValue;
+
+  //   if (organization.Contact && Array.isArray(organization.Contact)) {
+  //     organization.Contact.forEach((contact: any) => {
+  //       contact.selected = newValue;
+  //       if (contact.ShoppingCenters && Array.isArray(contact.ShoppingCenters)) {
+  //         contact.ShoppingCenters.forEach((center: any) => {
+  //           center.selected = newValue;
+  //         });
+  //       }
+  //     });
+  //   }
+
+  //   this.updateEmailBody();
+  // }
+  onOrganizationChange(organization: any, newValue: boolean): void {
+    organization.selected = newValue;
+
+    if (organization.Contact && Array.isArray(organization.Contact)) {
+      organization.Contact.forEach((contact: any) => {
+        contact.selected = newValue;
+        if (contact.ShoppingCenters && Array.isArray(contact.ShoppingCenters)) {
+          contact.ShoppingCenters.forEach((center: any) => {
+            center.selected = newValue;
+          });
+        }
+      });
+    }
+
+    // Uncheck
+    if (!newValue) {
+      this.emailTemplates = this.emailTemplates.filter(
+        (template: any) => template.organizationId !== organization.Id
+      );
+    }
+    //  Check
+    else {
+      let x = this.originalEmailTemplates.filter(
+        (template: any) => template.organizationId == organization.Id
+      );
+      this.emailTemplates.push(x[0]);
+    }
+
+    this.updateEmailBody();
+  }
+  onOrganizationChangeisVisible (organization: any, event: any) {
+    this.allOrganizations.forEach((org:any) => {
+      if (org !== organization) {
+        org.isVisible = false;
+      }
+    });
+    organization.isVisible = !organization.isVisible;
+  }
+  
+
+  onContactChange(contact: any, newValue: boolean, organizationId: any): void {
+    if (
+      !newValue &&
+      contact.ShoppingCenters &&
+      Array.isArray(contact.ShoppingCenters)
+    ) {
+      contact.ShoppingCenters.forEach((center: any) => {
+        center.selected = false;
+      });
+    } else if (
+      newValue &&
+      contact.ShoppingCenters &&
+      Array.isArray(contact.ShoppingCenters)
+    ) {
+      contact.ShoppingCenters.forEach((center: any) => {
+        center.selected = true;
+      });
+    }
+
+    // Uncheck
+    if (!newValue) {
+      this.emailTemplates.forEach((template: any) => {
+        if (template.organizationId == organizationId) {
+          template.contacts = template.contacts.filter(
+            (c: any) => c.id != contact.id
+          );
+        }
+      });
+    }
+
+    //  Check
+    else {
+      this.originalEmailTemplates.forEach((template: any) => {
+        if (template.organizationId == organizationId) {
+          let x = template.contacts.filter((c: any) => c.id == contact.id);
+
+          this.emailTemplates.forEach((template) => {
+            if (template.organizationId == organizationId) {
+              template.contacts?.push(x[0]);
+            }
+          });
+        }
+      });
+    }
+
+    this.updateEmailBody();
+  }
+
+  onShoppingCenterChange(
+    selectedContact: any,
+    shoppingCenter: any,
+    organizationId: any,
+    newValue: boolean
+  ): void {
+    this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact) => {
+      contact.Centers?.forEach((center) => {
+        if (center.id === shoppingCenter.id) {
+          center.selected = shoppingCenter.selected;
+        }
+      });
+
+      // contact.selected = contact.Centers.some((sc: any) => sc.selected);
+    });
+
+    // console.log(`before`);
+
+    // console.log(this.emailTemplat es);
+
+    // Uncheck
+    // if (!newValue) {
+    //   this.emailTemplates.forEach((template: any) => {
+    //     if (template.organizationId == organizationId) {
+    //       template.contacts.forEach((c: any) => {
+    //         if (c.id == selectedContact.id) {
+    //           c.ShoppingCenters = c.ShoppingCenters.filter(
+    //             (sc: any) => sc.id != shoppingCenter.id
+    //           );
+    //         }
+    //       });
+    //     }
+    //   });
+    //   console.log(`after`);
+    //   console.log(this.emailTemplates);
+    // }
+    // //  Check
+    // else {
+    //   // let x = this.originalEmailTemplates.filter(
+    //   //   (template: any) => template.organizationId == organization.Id
+    //   // );
+    //   // this.emailTemplates.push(x[0]);
+    // }
   }
 
   async OnCheckGetSavedTemplates(organizationid: number): Promise<void> {
@@ -556,6 +748,8 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
   }
 
   updateEmailBody() {
+    this.selectedContact = [];
+
     let templateOneContent = '';
 
     if (this.selectedShoppingCenter) {
@@ -563,37 +757,43 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
         this.selectedShoppingCenter
       )}\n\n`;
     }
-    const selectedContacts = this.BuyBoxOrganizationsForEmail[0]?.Contact || [];
-    if (selectedContacts?.length > 0) {
-      this.selectedContact = [];
 
-      templateOneContent += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
+    const selectedContactsd = this.emailTemplates;
+    selectedContactsd.forEach((template: any) => {
+      const contacts = template.contacts;
+      if (contacts?.length > 0) {
+        let output = `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
 
-      const countSelectedContacts = selectedContacts.filter(
-        (contact) => contact.selected && contact?.Centers?.length > 0
-      ).length;
+        const countSelectedContacts = contacts.filter(
+          (contact: any) =>
+            contact.selected && contact.ShoppingCenters?.length > 0
+        ).length;
 
-      if (this.isISCcSelected == false) {
-        templateOneContent += `- Create ${countSelectedContacts} Email For each Contact\n `;
-        // emailContent += `- Create Email\n `;
-      }
-      selectedContacts.forEach((contact) => {
-        if (contact.selected && contact?.Centers?.length > 0) {
-          templateOneContent += `- Name: ${contact.Firstname} ${contact.Lastname}\n `;
-          templateOneContent += `- id: ${contact.id}\n `;
-          this.selectedContact.push(contact.id);
+        if (this.isISCcSelected == false) {
+          output += `- Create ${countSelectedContacts} Email For each Contact\n `;
         }
-        contact.Centers?.forEach((sp) => {
-          if (sp.selected) {
-            templateOneContent += ` Shopping Center: ${sp.CenterName} \n `;
+
+        contacts.forEach((contact: any) => {
+          if (contact.selected && contact.ShoppingCenters?.length > 0) {
+            output += `- Name: ${contact.Firstname || ''} ${
+              contact.Lastname || ''
+            }\n `;
+            output += `- id: ${contact.id}\n `;
+            this.selectedContact.push(contact.id);
           }
+          contact.ShoppingCenters?.forEach((sp: any) => {
+            if (sp.selected) {
+              output += ` Shopping Center: ${sp.CenterName} \n `;
+            }
+          });
         });
-      });
 
-      templateOneContent += '\n';
-    }
+        output += '\n';
+        templateOneContent += output;
+      }
+    });
+
     let templateTwoContent = '';
-
     templateTwoContent += this.buildClientProfileSection();
     templateTwoContent += this.buildMinBuildingSizeSection();
     templateTwoContent += this.buildRelationNamesSection();
@@ -601,14 +801,50 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
     templateTwoContent += this.buildDescriptionSection();
     templateTwoContent += this.buildLandingChangeSection();
 
-    this.emailTemplates = this.emailTemplates.map(template => ({
-      ...template,
-      templateTwo: templateTwoContent
-    }));
+    const newTemplates = this.emailTemplates.map((template: any) => {
+      let individualTemplateOne = '';
+      const contacts = template.contacts;
+      if (contacts?.length > 0) {
+        individualTemplateOne += `${this.RepresentativeOrganizationContactsThatWillReceiveThisEmail}\n`;
+        const countSelectedContacts = contacts.filter(
+          (contact: any) =>
+            contact.selected && contact.ShoppingCenters?.length > 0
+        ).length;
+        if (!this.isISCcSelected) {
+          individualTemplateOne += `- Create ${countSelectedContacts} Email For each Contact\n `;
+        }
+        contacts.forEach((contact: any) => {
+          if (contact.selected && contact.ShoppingCenters?.length > 0) {
+            individualTemplateOne += `- Name: ${contact.Firstname || ''} ${
+              contact.Lastname || ''
+            }\n `;
+            individualTemplateOne += `- id: ${contact.id}\n `;
+          }
+          contact.ShoppingCenters?.forEach((sp: any) => {
+            if (sp.selected) {
+              individualTemplateOne += ` Shopping Center: ${sp.CenterName} \n `;
+            }
+          });
+        });
+        individualTemplateOne += '\n';
+      }
+      return {
+        ...template,
+        templateOne: individualTemplateOne,
+      };
+    });
 
+    // this.emailBody = templateOneContent;
     this.emailBody2 = templateTwoContent;
-    this.emailBody = templateOneContent;
+
+    this.emailTemplates = newTemplates;
+
+    // this.originalEmailTemplates = JSON.parse(JSON.stringify(newTemplates));
+
+    this.emailBody = newTemplates.map((t: any) => t.templateOne).join('\n');
+    // console.log(this.emailTemplates);
   }
+
   buildClientProfileSection(): string {
     if (this.showClientProfile) {
       return `New Tenant that wish to open on this shopping center: (${this.BuyBoxOrganizationName})\n\n`;
@@ -626,14 +862,22 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
   buildRelationNamesSection(): string {
     let relationContent = '';
     if (this.showRelationNames) {
-      const organizationName = this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]?.Name || 'No Organization Name';
+      const organizationName =
+        this.generated[0]?.Buybox[0]?.BuyBoxOrganization[0]?.Name ||
+        'No Organization Name';
       const categoryMap: { [key: string]: string[] } = {};
 
       this.relationCategoriesNames?.forEach((selectedRelation) => {
         if (selectedRelation.selected) {
           this.generated[0]?.Releations?.forEach((relation) => {
-            if (relation.RetailRelationCategoryId === selectedRelation.id && relation.relationSelect && this.isRelationCategoryMatched(relation)) {
-              const categoryName = this.getRelationCategoryName(relation.RetailRelationCategoryId);
+            if (
+              relation.RetailRelationCategoryId === selectedRelation.id &&
+              relation.relationSelect &&
+              this.isRelationCategoryMatched(relation)
+            ) {
+              const categoryName = this.getRelationCategoryName(
+                relation.RetailRelationCategoryId
+              );
               if (!categoryMap[categoryName]) {
                 categoryMap[categoryName] = [];
               }
@@ -718,7 +962,7 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
       isChecked = event;
     } else if (event.target) {
       isChecked = event.target.checked;
-    }    
+    }
     this.showMinBuildingSize = isChecked;
     this.updateEmailBody();
   }
@@ -745,7 +989,11 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
   }
   onIndividualRelationChange(category: RelationNames): void {
     const newValue = category.selected;
-    if (this.generated && this.generated.length > 0 && this.generated[0].Releations) {
+    if (
+      this.generated &&
+      this.generated.length > 0 &&
+      this.generated[0].Releations
+    ) {
       this.generated[0].Releations.forEach((item: any) => {
         if (item.RetailRelationCategoryId === category.id) {
           item.relationSelect = newValue;
@@ -779,8 +1027,6 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
     this.isLandingSelected = event.target.checked;
     this.updateEmailBody();
   }
-
-
 
   getManagerName(centerName: string): string {
     const center = this.ShoppingCenterNames.find(
@@ -859,28 +1105,6 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
       this.selectedPromptText = 'No prompt text available';
     }
   }
-
-  // GetOrgbuyBox(buyboxId: number): void {
-  //   const body: any = {
-  //     Name: 'GetOrganizationsByBuyBox',
-  //     MainEntity: null,
-  //     Params: {
-  //       BuyBoxId: buyboxId,
-  //     },
-  //     Json: null,
-  //   };
-  //   this.PlacesService.GenericAPI(body).subscribe({
-  //     next: (data) => {
-  //       if (data.json && Array.isArray(data.json)) {
-  //         this.OrgBuybox = data.json;
-  //         this.GetBuyBoxOrganizationsForEmail();
-  //       } else {
-  //         this.OrgBuybox = [];
-  //       }
-  //     },
-  //   });
-  // }
-
   async PutMailsDraft(): Promise<void> {
     this.updateEmailBody();
 
@@ -974,57 +1198,28 @@ export class EmailMulipleNewComponent implements OnInit,OnDestroy {
 
   onISCCChange(event: any): void {
     this.isISCcSelected = event;
-    
+
     const createLineRegex = /- Create .* Email For each Contact\n\s*/;
-    this.emailTemplates = this.emailTemplates.map((templateItem) => {
-      let updatedTemplate = templateItem.templateOne;
+    this.emailTemplates = this.emailTemplates.map((templateItem: any) => {
+      let updatedTemplate = '';
+
+      const originalTemplate =
+        this.originalEmailTemplates.find(
+          (item: any) => item.organizationId === templateItem.organizationId
+        )?.templateOne || templateItem.templateOne;
 
       if (this.isISCcSelected) {
-        updatedTemplate = updatedTemplate.replace(createLineRegex, '');
+        updatedTemplate = originalTemplate.replace(createLineRegex, '');
       } else {
-        const originalItem = this.originalEmailTemplates.find(
-          (item: any) => item.organizationId === templateItem.organizationId
-        );
-        if (originalItem) {
-          updatedTemplate = originalItem.templateOne;
-        }
+        updatedTemplate = originalTemplate;
       }
       return { ...templateItem, templateOne: updatedTemplate };
     });
+
+    this.emailBody = this.emailTemplates
+      .map((t: any) => t.templateOne)
+      .join('\n');
   }
-
-  // onRelationNamesChange() {
-  //   this.relationCategoriesNames.forEach((relation) => {
-  //     if (relation.selected) {
-  //       this.generated[0]?.Releations.forEach((item) => {
-  //         if (item.RetailRelationCategoryId === relation.id) {
-  //           item.relationSelect = true;
-  //         }
-  //       });
-  //     } else {
-  //       this.generated[0]?.Releations.forEach((item) => {
-  //         if (item.RetailRelationCategoryId === relation.id) {
-  //           item.relationSelect = false;
-  //         }
-  //       });
-  //     }
-  //   });
-  //   this.updateSelectedRelations();
-  //   this.updateEmailBody();
-  // }
-
-  // updateSelectedRelations() {
-  //   this.selectedRelations = [];
-  //   this.generated[0]?.Releations.forEach((relation) => {
-  //     if (this.isRelationCategoryMatched(relation)) {
-  //       this.selectedRelations.push({
-  //         id: relation.RetailRelationCategoryId,
-  //         name: this.getRelationCategoryName(relation.RetailRelationCategoryId),
-  //       });
-  //     }
-  //   });
-  //   this.updateEmailBody();
-  // }
 
   getRelationsForCategory(categoryId: number) {
     if (
