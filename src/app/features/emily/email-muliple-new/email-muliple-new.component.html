@@ -23,8 +23,104 @@
 
   <div class="container-GenerateEmail row">
     <!-- Selections-filters -->
+
+
     <div class="col-12 col-sm-12 mt-3 mt-sm-0">
       <div class="row d-flex p-1 p-sm-0 m-0">
+        <div class="col-12 col-sm-4 p-2" style="max-height: 300px;overflow-x: auto;">
+          <ng-container *ngIf="allOrganizations && allOrganizations.length > 0">
+            <ng-container *ngFor="let organization of allOrganizations; let i = index">
+              <div class="col-12 mt-3 mt-sm-0">
+                <div class="row d-flex p-1 p-sm-0 m-0">
+                  <section class="OrganizationsForEmail row m-0 p-0">
+                    <div class="m-0 p-0 col-12 d-flex gap-3 align-items-center pb-3" (click)="onOrganizationChangeisVisible(organization, $event)">
+                      <div class="OganirzationsForEmail__img align-items-center d-flex">
+                        <input type="checkbox" [(ngModel)]="organization.selected" class="form-check-input me-1"
+                          (ngModelChange)="onOrganizationChange(organization, $event)" />
+                        <img class="Oganirzations__img"
+                          [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + organization.Id" alt="" />
+                      </div>
+                      <div class="">
+                        <h5 class="OrganizationsForEmail__head">{{ organization.Name }}</h5>
+                      </div>
+                    </div>
+          
+                    <div class="organization" *ngIf="organization.isVisible">
+                      <div class="contacts">
+                        <ng-container *ngFor="let contact of organization.Contact">
+                          <div class="contact">
+                            <p class="ContactName">
+                              <input type="checkbox" [(ngModel)]="contact.selected" class="form-check-input"
+                                (ngModelChange)="onContactChange(contact, $event ,organization.Id )" />
+                              {{ contact.Firstname }} {{ contact.Lastname }}
+                            </p>
+          
+                            <div class="shopping-centers" *ngIf="contact.ShoppingCenters && contact.ShoppingCenters.length > 0">
+                              <ng-container *ngFor="let center of contact.ShoppingCenters">
+                                <p>
+                                  <input type="checkbox" [(ngModel)]="center.selected" class="form-check-input"
+                                    (ngModelChange)="onShoppingCenterChange(contact,  center ,organization.Id, $event )" />
+                                  {{ center.CenterName }}
+                                </p>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+          
+          <!-- <ng-container *ngIf="allOrganizations && allOrganizations.length > 0">
+            <ng-container *ngFor="let organization of allOrganizations; let i = index">
+              <div class="col-12 mt-3 mt-sm-0">
+                <div class="row d-flex p-1 p-sm-0 m-0">
+                  <section class="OrganizationsForEmail row m-0 p-0">
+                    <div class="m-0 p-0 col-12 d-flex gap-3 align-items-center pb-3">
+                      <div class="OganirzationsForEmail__img align-items-center d-flex">
+                        <input type="checkbox" [(ngModel)]="organization.selected" class="form-check-input"
+                          (ngModelChange)="onOrganizationChange(organization, $event)" />
+                        <img class="Oganirzations__img"
+                          [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + organization.Id" alt="" />
+                      </div>
+                      <div class="">
+                        <h5 class="OrganizationsForEmail__head">{{ organization.Name }}</h5>
+                      </div>
+                    </div>
+      
+                    <div class="organization">
+                      <div class="contacts">
+                        <ng-container *ngFor="let contact of organization.Contact">
+                          <div class="contact">
+                            <p class="ContactName">
+                              <input type="checkbox" [(ngModel)]="contact.selected" class="form-check-input"
+                                (ngModelChange)="onContactChange(contact, $event  ,organization.Id )" />
+                              {{ contact.Firstname }} {{ contact.Lastname }}
+                            </p>
+      
+                            <div class="shopping-centers"
+                              *ngIf="contact.ShoppingCenters && contact.ShoppingCenters.length > 0">
+                              <ng-container *ngFor="let center of contact.ShoppingCenters">
+                                <p>
+                                  <input type="checkbox" [(ngModel)]="center.selected" class="form-check-input"
+                                    (ngModelChange)="onShoppingCenterChange(contact,  center ,organization.Id, $event )" />
+                                  {{ center.CenterName }}
+                                </p>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container> -->
+        </div>
         <div class="col-12 col-sm-4 p-2">
           <div class="box p-2">
             <div class="checkbox-section-head checkbox-section">
@@ -211,7 +307,8 @@
   </div>
 </div>
 
-<div class="p-3 div-Table">
+<!-- table Get email Generated  -->
+<!-- <div class="p-3 div-Table">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -237,7 +334,7 @@
       </tr>
     </tbody>
   </table>
-</div>
+</div> -->
 
 <!-- editor selectedPrompt -->
 <ng-template #View let-modal>
@@ -291,7 +388,7 @@
     </div>
   </div>
 </ng-template>
-
+<!--  -->
 <!-- ViewEmailTemplatesContext -->
 <ng-template #ViewContext let-modal>
   <div class="modal-content">
