@@ -20,18 +20,12 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import {
-  Availability,
-  PropertiesDetails,
-  Tenant,
-} from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { OrganizationBranches } from 'src/app/shared/models/organization-branches';
 import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
-
 
 @Component({
   selector: 'app-tenant',
@@ -47,14 +41,10 @@ import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
-export class TenantComponent implements OnInit { 
+export class TenantComponent implements OnInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
-  newTenantName: string = '';
-  CustomPlace!: PropertiesDetails | undefined;
-  newTenantUrl: string = '';
   public files: NgxFileDropEntry[] = [];
   selectedShoppingID!: string | undefined;
-  showAddTenantInput: boolean = false;
   JsonPDF!: jsonGPT;
   AvailabilityAndTenants: AvailabilityTenant = {};
   fileName!: string;
@@ -64,26 +54,10 @@ export class TenantComponent implements OnInit {
   images: IFile[] = [];
   pdfFileName: string = '';
   contactID!: any;
-  test!: number;
   TenantResult: LandingPageTenants[] = [];
-  organizationBranches: OrganizationBranches[] = []; 
+  organizationBranches: OrganizationBranches[] = [];
   selectedbuyBox!: string;
-  buyboxid!: number;
-  managementorganizationId!: number;
-  buyboxDescription!: string;
-  brokerlinkedin!: string;
-  brokerphoto!: string;
-  brokersignature!: any;
-  MinBuildingSize!: number;
-  MaxBuildingSize!: number;
   buyboxcolor!: string;
-  ManagementOrganizationDesc!: string;
-  buyboxname!: string;
-  smalldescription: string[] = [];
-  firstnamemanagerorganization!: string;
-  lastnamemanagerorganization!: string;
-  managementorganizationname!: string;
-  ManagerOrganizationDescription!: any;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
 
@@ -100,15 +74,12 @@ export class TenantComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log(this.selectedbuyBox);
-      
       this.GetBuyBoxInfo();
     });
   }
 
   GetBuyBoxInfo(): void {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetBuyBoxInfo',
       Params: {
@@ -119,41 +90,7 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
-        console.log('tenant',this.TenantResult);
-        
-
-        // const buyboxData = this.TenantResult.Buybox[0].BuyBoxOrganization[0];
-        // const managerOrganizationData =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationContacts[0];
-
-        // this.buyboxid = buyboxData.BuyBoxOrganizationId;
-        // this.buyboxDescription = buyboxData.BuyBoxOrganizationDescription;
-        // this.buyboxname = buyboxData.Name;
-        // this.firstnamemanagerorganization = managerOrganizationData.Firstname;
-        // this.lastnamemanagerorganization = managerOrganizationData.LastName;
-        // this.managementorganizationname =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationName;
-        // this.ManagerOrganizationDescription =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
-        // this.managementorganizationId =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationId;
-        // this.brokerlinkedin = managerOrganizationData.LinkedIn;
-        // this.MinBuildingSize = this.TenantResult.Buybox[0].MinBuildingSize;
-        // this.MaxBuildingSize = this.TenantResult.Buybox[0].MaxBuildingSize;
-        // this.ManagementOrganizationDesc =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
-        // this.brokerphoto = managerOrganizationData.Photo;
-        // this.brokersignature = managerOrganizationData.Profile;
-        // this.buyboxcolor = '#bd3e3e';
-
-        // this.smalldescription = Array.isArray(
-        //   this.TenantResult.Buybox[0].Description
-        // )
-        //   ? this.TenantResult.Buybox[0].Description
-        //   : [this.TenantResult.Buybox[0].Description];
-
         this.spinner.hide();
-
         this.GetOrganizationBranches();
       },
     });
@@ -172,12 +109,11 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.organizationBranches = res.json[0];
-        console.log('asas',this.organizationBranches);
         this.spinner.hide();
       },
     });
   }
-  // manual display and edit shopping center
+
   openUploadModal(id: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
@@ -188,6 +124,7 @@ export class TenantComponent implements OnInit {
     }
     this.modalService.open(this.uploadPDF, { size: 'lg', centered: true });
   }
+
   public uploadFile(files: NgxFileDropEntry[]): void {
     this.files = files;
     for (const droppedFile of files) {
@@ -196,23 +133,25 @@ export class TenantComponent implements OnInit {
         fileEntry.file((file: File) => {
           // Set the file name immediately
           this.fileName = file.name;
-  
+
           const formData = new FormData();
           formData.append('filename', file);
           this.isUploading = true;
           this.uploadProgress = 0;
-  
+
           const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
-  
+
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
             responseType: 'json',
           });
-  
+
           this.httpClient.request(req).subscribe(
             (event: any) => {
               if (event.type === HttpEventType.UploadProgress) {
-                this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
+                this.uploadProgress = Math.round(
+                  (100 * event.loaded) / event.total!
+                );
                 if (this.uploadProgress === 100) {
                   this.isUploading = false;
                   this.isConverting = true;
@@ -220,17 +159,21 @@ export class TenantComponent implements OnInit {
               } else if (event instanceof HttpResponse) {
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map((img: string, index: number) => ({
-                    name: `Image ${index + 1}`,
-                    type: 'image/png',
-                    content: img,
-                    selected: false,
-                  }));
+                  this.images = response.images.map(
+                    (img: string, index: number) => ({
+                      name: `Image ${index + 1}`,
+                      type: 'image/png',
+                      content: img,
+                      selected: false,
+                    })
+                  );
                   this.pdfFileName = response.pdfFileName;
                   this.isConverting = false;
                   this.spinner.hide();
-                  this.showToast('PDF File uploaded and converted successfully!');
-  
+                  this.showToast(
+                    'PDF File uploaded and converted successfully!'
+                  );
+
                   // Automatically send the images if there are 3 or fewer images
                   if (this.images.length <= 3) {
                     this.sendJson(); // Automatically submit the images
@@ -254,10 +197,7 @@ export class TenantComponent implements OnInit {
       }
     }
   }
-  
-  
-  
-  
+
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -267,60 +207,7 @@ export class TenantComponent implements OnInit {
       toast!.classList.remove('show');
     }, 3000);
   }
-  closeToast() {
-    const toast = document.getElementById('customToast');
-    toast!.classList.remove('show');
-  }
-  // Add a new tenant (send to API and update locally)
-  addNewTenant() {
-    if (
-      !this.newTenantName ||
-      this.newTenantName.trim() === '' ||
-      !this.newTenantUrl ||
-      this.newTenantUrl.trim() === ''
-    ) {
-      this.showToast('Please enter a valid tenant name.');
-      return;
-    }
-    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    if (!domainPattern.test(this.newTenantUrl.trim())) {
-      alert('Please enter a valid domain (e.g., example.com).');
-      return;
-    }
-    this.spinner.show();
-    const body: any = {
-      Name: 'ModifyTenantsWithBranch',
-      Params: {
-        ShoppingCenterId: this.selectedShoppingID,
-        Name: this.newTenantName,
-        Url: this.newTenantUrl,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        // Assuming the API returns the new tenant or an updated list
-        const newTenant: Tenant = {
-          Id: data.json?.Id || this.CustomPlace?.Tenants.length! + 1, // Generate a temporary ID or use API response
-          Name: this.newTenantName,
-          URL: this.newTenantUrl,
-        };
-        // Add the new tenant to CustomPlace.Tenants
-        if (this.CustomPlace && this.CustomPlace.Tenants) {
-          this.CustomPlace.Tenants.push(newTenant);
-        } else {
-          // Initialize Tenants if it doesn't exist
-          this.CustomPlace = {
-            ...this.CustomPlace,
-            Tenants: [newTenant],
-          } as PropertiesDetails;
-        }
-        this.spinner.hide();
-        this.showToast('New tenant added successfully!');
-        this.showAddTenantInput = false;
-        this.newTenantName = '';
-      },
-    });
-  }
+
   sendImagesArray() {
     this.isSubmitting = true;
     this.returnsubmit = true;
@@ -337,18 +224,17 @@ export class TenantComponent implements OnInit {
       },
     });
   }
+
   sendJson() {
     this.spinner.show();
     const shopID = this.selectedShoppingID;
 
-    // Add dynamic properties for CenterName and CenterType
     this.JsonPDF = {
       ...this.JsonPDF,
       CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
     };
 
-    // Do not filter Availability and Tenants; send all items with their updated isAdded states
     const updatedJsonPDF = {
       ...this.JsonPDF,
       Availability: this.JsonPDF.Availability.map((avail) => ({
@@ -371,7 +257,6 @@ export class TenantComponent implements OnInit {
       },
     });
     this.isSubmitting = false;
-
   }
   // Method to clear all modal data
   clearModalData() {
@@ -384,8 +269,8 @@ export class TenantComponent implements OnInit {
     this.isConverting = false; // Reset conversion state
     this.files = []; // Clear dropped files
     this.returnsubmit = false;
-    
   }
+
   closeModal(modal: any) {
     modal.dismiss();
     this.fileName = '';
@@ -394,10 +279,9 @@ export class TenantComponent implements OnInit {
     this.isConverting = false;
     this.images = [];
   }
-  // Method to convert base64 to a SafeUrl for image display
+
   displayCustomImage(image: IFile): SafeUrl {
     const dataUrl = `data:${image.type};base64,${image.content}`;
     return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
   }
-
 }

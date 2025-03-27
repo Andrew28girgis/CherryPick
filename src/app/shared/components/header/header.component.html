@@ -3,99 +3,79 @@
   <div class="d-flex align-items-center">
     <!-- Add Sidebar Toggle Button -->
     <button class="btn sidebar-toggle-btn me-2" (click)="toggleSidebar()">
-      <i class="fa-solid" [ngClass]="isCollapsed ? 'fa-bars' : 'fa-times'"></i>
+      <i class="fa-solid" [ngClass]="!isCollapsed ? 'fa-bars' : 'fa-times'"></i>
     </button>
-    
-    <!-- <img
-      alt="logo"
-      class="cherry-logo"
-      [routerLink]="current.includes('landlord') ? ['/landlord'] : ['/summary']"
-      decoding="async"
-      src="../../../assets/Images/logo.png"
-    /> -->
   </div>
 
-  <!-- Right Section -->
   <div class="d-flex ms-auto align-items-center">
     <div class="d-block d-lg-none me-2" *ngIf="isSmallScreen">
       <!-- <app-notifications></app-notifications> -->
     </div>
-    <app-notifications class=" d-flex d-sm-none "></app-notifications>
-
-    <!-- Burger Button -->
-    <button class="navbar-toggler" type="button" (click)="toggleNavbar($event)">
-      <i class="fa-solid fa-bars nav-icon"></i>
-    </button>
+    <app-notifications class="d-flex d-sm-none"></app-notifications>
   </div>
 
   <!-- Collapsible Navbar Content -->
-  <div
-    class="collapse navbar-collapse text-center"
-    [ngClass]="{ show: isNavbarOpen, 'mobile-menu': isSmallScreen }"
-    id="navbarNav"
-  >
 
-    <!-- Action Icons -->
+  <!-- Action Icons -->
+  <div
+    class="d-flex align-items-center justify-content-center avatar-notifcations"
+  >
     <div
-      class="d-flex align-items-center justify-content-center avatar-notifcations"
+      class="d-none d-lg-block"
+      *ngIf="!isSmallScreen && !current.includes('landlord')"
     >
+      <app-notifications></app-notifications>
+    </div>
+    <!-- Avatar Dropdown -->
+    <div class="dropdown">
       <div
-        class="d-none d-lg-block"
-        *ngIf="!isSmallScreen && !current.includes('landlord')"
+        class="avatar-container"
+        role="button"
+        id="userDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
       >
-        <app-notifications></app-notifications>
-      </div>
-      <!-- Avatar Dropdown -->
-      <div class="dropdown">
+        <img
+          *ngIf="userAvatar"
+          [src]="userAvatar"
+          alt="User Avatar"
+          class="rounded-circle avatar-img"
+        />
         <div
-          class="avatar-container"
-          role="button"
-          id="userDropdown"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+          *ngIf="!userAvatar"
+          class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
         >
-          <img
-            *ngIf="userAvatar"
-            [src]="userAvatar"
-            alt="User Avatar"
-            class="rounded-circle avatar-img"
-          />
-          <div
-            *ngIf="!userAvatar"
-            class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
-          >
-            <i class="fa-solid fa-user"></i>
-          </div>
+          <i class="fa-solid fa-user"></i>
         </div>
-        <ul
-          class="dropdown-menu dropdown-menu-end"
-          aria-labelledby="userDropdown"
-        >
-          <li>
-            <a
-              class="dropdown-item"
-              href="#"
-              (click)="switchView(); $event.preventDefault()"
-            >
-              Switch to
-              {{ current.includes("landlord") ? "Tenant" : "Landlord" }}
-            </a>
-          </li>
-          <li><hr class="dropdown-divider" /></li>
-          <li>
-            <a
-              class="dropdown-item d-flex justify-content-between"
-              href="#"
-              (click)="logout(); $event.preventDefault()"
-            >
-              Logout
-              <i
-                class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
-              ></i>
-            </a>
-          </li>
-        </ul>
       </div>
+      <ul
+        class="dropdown-menu dropdown-menu-end"
+        aria-labelledby="userDropdown"
+      >
+        <li>
+          <a
+            class="dropdown-item"
+            href="#"
+            (click)="switchView(); $event.preventDefault()"
+          >
+            Switch to
+            {{ current.includes("landlord") ? "Tenant" : "Landlord" }}
+          </a>
+        </li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <a
+            class="dropdown-item d-flex justify-content-between"
+            href="#"
+            (click)="logout(); $event.preventDefault()"
+          >
+            Logout
+            <i
+              class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+            ></i>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>

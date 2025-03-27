@@ -34,7 +34,7 @@ import { EmilyService } from 'src/app/core/services/emily.service';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   isSmallScreen: boolean = window.innerWidth < 992;
-  isSidebarExpanded: boolean = false; // Default collapsed state
+  isSidebarExpanded: boolean = true; // Default collapsed state
   isHovering: boolean = false;
   kanbanId$!: Observable<number>;
   // Add output event to notify parent of hover state changes
@@ -75,7 +75,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.getUserKanbans();
     this.getBuyBoxes();
     this.isSmallScreen = window.innerWidth < 992;
-    this.isSidebarExpanded = false;
+    this.isSidebarExpanded = true;
     this.sidbarService.setSidebarState(this.isSidebarExpanded);
     this.routerSubscription = this.router.events
       .pipe(
@@ -219,7 +219,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
   }
 
-  getOrgnizationData(buybox: IUserBuybox, buyboxOpen: boolean): void {
+  getOrgnizationData(buybox: IUserBuybox, buyboxOpen: any): void {
     buybox.IBuyboxOrganization.forEach((org) => {
       this.getContactAndCenters(buybox.id, org, buyboxOpen);
     });
@@ -380,7 +380,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   isAnyBuyboxChecked(): boolean {
-    return this.userBuyboxes && this.userBuyboxes.some(buybox => buybox.checked);
+    return (
+      this.userBuyboxes && this.userBuyboxes.some((buybox) => buybox.checked)
+    );
   }
 
   // End Emily

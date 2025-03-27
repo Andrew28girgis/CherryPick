@@ -11,7 +11,9 @@
   <div class="sidebar">
     <ul class="sidebar-nav">
       <li class="sidebar-item">
-        <div class="sidebar-logo">
+        <div
+          class="sidebar-logo d-flex justify-content-start align-items-center"
+        >
           <img
             alt="logo"
             class="cherry-logo"
@@ -20,6 +22,9 @@
             "
             src="../../../assets/Images/Icons/logo (1).png"
           />
+          <p class="cherry mb-0" *ngIf="isSidebarExpanded">
+            Cherry<span class="pick">pick</span>
+          </p>
         </div>
       </li>
       <li class="sidebar-item">
@@ -27,7 +32,12 @@
           [routerLink]="['/Submissions']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Submissions"
         >
+          <img
+            class="img-icn"
+            src="../../../assets/Images/Icons/Dashboard.svg"
+          />
           <span class="link-text">Submissions</span>
         </a>
       </li>
@@ -37,7 +47,12 @@
           [routerLink]="['/campaigns']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Campaigns"
         >
+          <img
+            class="img-icn"
+            src="../../../assets/Images/Icons/Campains.svg"
+          />
           <span class="link-text">Campaigns</span>
         </a>
       </li>
@@ -49,14 +64,17 @@
           style="cursor: pointer"
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
+          title="Cadence"
         >
+          <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
+
           <i
             *ngIf="isSidebarExpanded || isHovering"
             class="fa-solid fa-chevron-down"
             [style.transform]="
               cadenceIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
             "
-            style="transition: transform 0.3s ease"
+            style="transition: transform 0.3s ease; margin-left: 5px"
           ></i>
           <span class="link-text">Cadence</span>
         </a>
@@ -156,32 +174,48 @@
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Tenants"
         >
+          <img class="img-icn" src="../../../assets/Images/Icons/Tenant.svg" />
           <span class="link-text">Tenants</span>
         </a>
       </li>
 
       <li class="sidebar-item">
-        <!-- [routerLink]="['/MutipleEmail']" -->
         <a
           class="sidebar-link"
           routerLinkActive="active-route"
+          [routerLink]="['/EmilyUserInbox']"
+          (click)="emilyIsOpen = !emilyIsOpen"
+          title="Emily"
         >
-          <i
-            (click)="emilyIsOpen = !emilyIsOpen"
-            *ngIf="isSidebarExpanded || isHovering"
-            class="fa-solid fa-chevron-down"
-            [style.transform]="emilyIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'"
-            style="transition: transform 0.3s ease"
-          ></i>
+          <img class="img-icn" src="../../../assets/Images/Icons/Emily.svg" />
+          <div
+            class="d-flex"
+            *ngIf="isSidebarExpanded"
+            style="margin-left: 5px"
+          >
+            <i
+              *ngIf="isSidebarExpanded || isHovering"
+              class="fa-solid fa-chevron-down"
+              [style.transform]="
+                emilyIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
+              "
+              style="transition: transform 0.3s ease"
+            ></i>
 
-          <span class="link-text d-flex justify-content-between w-100 align-items-center"
-            >Emily
-            <i *ngIf="isAnyBuyboxChecked()"
-              class="fa-solid fa-paper-plane ms-2" [routerLink]="['/MutipleEmail']"  (click)="updateCheckList()"
-              ></i
-              ></span>
-            </a>
+            <span
+              class="link-text d-flex justify-content-between w-100 align-items-center"
+              >Emily
+              <i
+                *ngIf="isAnyBuyboxChecked()"
+                class="fa-solid fa-paper-plane ms-2"
+                [routerLink]="['/MutipleEmail']"
+                (click)="updateCheckList()"
+              ></i>
+            </span>
+          </div>
+        </a>
         <ul
           class="sidebar-nav"
           *ngIf="
@@ -190,12 +224,13 @@
         >
           <ng-container *ngFor="let userBuybox of userBuyboxes">
             <li class="sidebar-item">
-              <a class="sidebar-link" style="cursor: pointer">
+              <a
+                class="sidebar-link"
+                style="cursor: pointer"
+                (click)="userBuybox.isOpen = !userBuybox.isOpen"
+              >
                 <i
-                  (click)="
-                    userBuybox.isOpen = !userBuybox.isOpen;
-                    getOrgnizationData(userBuybox, userBuybox.isOpen)
-                  "
+                  (click)="getOrgnizationData(userBuybox, userBuybox.isOpen)"
                   class="fa-solid fa-chevron-down me-1"
                   [style.transform]="
                     userBuybox.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
