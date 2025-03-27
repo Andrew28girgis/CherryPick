@@ -25,20 +25,22 @@
       </li>
       <li class="sidebar-item">
         <a
-          [routerLink]="['/Submissions']"
-          routerLinkActive="active-route"
-          class="sidebar-link"
+        [routerLink]="['/Submissions']"
+        routerLinkActive="active-route"
+        class="sidebar-link"
         >
+        <i class="fa-solid fa-paper-plane side-icn" *ngIf="!isSidebarExpanded"></i>
           <span class="link-text">Submissions</span>
         </a>
       </li>
 
       <li class="sidebar-item">
         <a
-          [routerLink]="['/campaigns']"
-          routerLinkActive="active-route"
-          class="sidebar-link"
+        [routerLink]="['/campaigns']"
+        routerLinkActive="active-route"
+        class="sidebar-link"
         >
+        <i class="fa-solid fa-calendar-check side-icn" *ngIf="!isSidebarExpanded"></i>
           <span class="link-text">Campaigns</span>
         </a>
       </li>
@@ -51,6 +53,7 @@
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
         >
+        <i class="fa-solid fa-calendar-week side-icn" *ngIf="!isSidebarExpanded"></i>
           <i
             *ngIf="isSidebarExpanded || isHovering"
             class="fa-solid fa-chevron-down"
@@ -158,6 +161,7 @@
           routerLinkActive="active-route"
           class="sidebar-link"
         >
+        <i class="fa-solid fa-house side-icn" *ngIf="!isSidebarExpanded"></i>
           <span class="link-text">Tenants</span>
         </a>
       </li>
@@ -168,6 +172,7 @@
           class="sidebar-link"
           routerLinkActive="active-route"
         >
+        <!-- <i class="fa-solid fa-paper-plane side-icn" *ngIf="!isSidebarExpanded"></i> -->
           <i
             (click)="emilyIsOpen = !emilyIsOpen"
             *ngIf="isSidebarExpanded || isHovering"
@@ -181,7 +186,8 @@
             <i *ngIf="isAnyBuyboxChecked()"
               class="fa-solid fa-paper-plane ms-2" [routerLink]="['/MutipleEmail']"  (click)="updateCheckList()"
               ></i
-              ></span>
+              >
+            </span>
             </a>
         <ul
           class="sidebar-nav"

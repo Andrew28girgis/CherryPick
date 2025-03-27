@@ -6,10 +6,15 @@
   font-family: 'Outfit', sans-serif;
   -webkit-background-clip: text;
   background-clip: text;
-    -webkit-text-fill-color: transparent; 
+  -webkit-text-fill-color: transparent; 
 }
 .pick{
   font-weight: 300;
+}
+.side-icn{
+  margin-right: 3px;
+  font-size: 16px;
+  color: #72777a !important;
 }
 /* Sidebar Container */
 .sidebar-container {
