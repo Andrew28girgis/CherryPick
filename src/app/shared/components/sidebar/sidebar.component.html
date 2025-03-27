@@ -59,8 +59,9 @@
 
       <li class="sidebar-item">
         <a
+
           class="sidebar-link"
-          (click)="cadenceIsOpen = !cadenceIsOpen"
+          (click)="cadenceIsOpen = !cadenceIsOpen ;emilyIsOpen = false"
           style="cursor: pointer"
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
@@ -68,18 +69,18 @@
         >
           <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
 
-          <i
+          <!-- <i
             *ngIf="isSidebarExpanded || isHovering"
             class="fa-solid fa-chevron-down"
             [style.transform]="
               cadenceIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
             "
             style="transition: transform 0.3s ease; margin-left: 5px"
-          ></i>
+          ></i> -->
           <span class="link-text">Cadence</span>
         </a>
 
-        <ul
+        <!-- <ul
           class="sidebar-nav ms-3"
           *ngIf="
             (cadenceIsOpen && isSidebarExpanded) ||
@@ -166,7 +167,7 @@
               </ul>
             </li>
           </ng-container>
-        </ul>
+        </ul> -->
       </li>
 
       <li class="sidebar-item">
@@ -183,6 +184,8 @@
 
       <li class="sidebar-item">
         <a
+        (click)="cadenceIsOpen = false"
+
           class="sidebar-link"
           routerLinkActive="active-route"
           [routerLink]="['/EmilyUserInbox']"
