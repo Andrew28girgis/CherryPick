@@ -16,6 +16,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Subject, takeUntil } from 'rxjs';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -54,7 +55,8 @@ export class CampaignDrawingComponent
     private modalService: NgbModal,
     private placesService: PlacesService,
     private httpClient: HttpClient,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +64,7 @@ export class CampaignDrawingComponent
       const id = localStorage.getItem('BuyBoxId');
       if (id) {
         this.buyBoxId = +id;
+        debugger;
       }
     }
     const contact = localStorage.getItem('contactId');
@@ -122,6 +125,7 @@ export class CampaignDrawingComponent
   }
 
   createNewCampaign(): void {
+    this.spinner.show();
     const body: any = {
       Name: 'CreateCampaign ',
       Params: {
@@ -132,10 +136,15 @@ export class CampaignDrawingComponent
       },
     };
 
+    debugger;
+
     this.placesService.GenericAPI(body).subscribe((response) => {
-      this.onCampaignCreated.emit();
+      setTimeout(() => {
+        this.spinner.hide();
+        this.onCampaignCreated.emit();
+      }, 1000);
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        this.modalService.dismissAll();
+        // this.modalService.dismissAll();
         if (!this.router.url.includes('campaigns')) {
           this.router.navigate(['/campaigns']);
         }
