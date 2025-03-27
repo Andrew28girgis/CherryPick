@@ -88,7 +88,24 @@
               Sites
             </th>
             <th scope="col" style="white-space: nowrap; text-align: center">
-              Submissions
+              <div
+                class="d-flex flex-column align-items-center justify-content-center gap-2"
+              >
+                <div>Submissions</div>
+                <div>
+                  <span class="normal" pTooltip="Normal" tooltipPosition="top"
+                    >N</span
+                  >
+                  -
+                  <span class="green" pTooltip="Accepted" tooltipPosition="top"
+                    >A</span
+                  >
+                  -
+                  <span class="red" pTooltip="Rejected" tooltipPosition="top"
+                    >R</span
+                  >
+                </div>
+              </div>
             </th>
             <th scope="col" style="white-space: nowrap; text-align: center">
               Mails Sent
@@ -193,27 +210,29 @@
                   <div
                     class="d-flex align-items-center justify-content-center gap-3"
                   >
-                    <div *ngIf="campaign.Submissions" style="cursor: pointer;" [routerLink]="['/submissions',campaign.Id]">
-                      <span
-                        [ngClass]="{
-                          red: campaign.Submissions[0].StatusId == -1,
-                          normal: campaign.Submissions[0].StatusId == 0,
-                          green: campaign.Submissions[0].StatusId == 1
-                        }"
-                        >{{ campaign.Submissions[0].Submissions }}</span
+                    <div
+                      *ngIf="campaign.Submissions"
+                      style="cursor: pointer"
+                      [routerLink]="['/submissions', campaign.Id]"
+                    >
+                      <ng-container
+                        *ngFor="
+                          let submission of sortedSubmissions(
+                            campaign.Submissions
+                          );
+                          let i = index
+                        "
                       >
--
-                      <span [ngClass]="{
-                        red: campaign.Submissions[1].StatusId == -1,
-                        normal: campaign.Submissions[1].StatusId == 0,
-                        green: campaign.Submissions[1].StatusId == 1
-                      }"> {{ campaign.Submissions[1].Submissions }}</span>
--
-                      <span [ngClass]="{
-                        red: campaign.Submissions[2].StatusId == -1,
-                        normal: campaign.Submissions[2].StatusId == 0,
-                        green: campaign.Submissions[2].StatusId == 1
-                      }"> {{ campaign.Submissions[2].Submissions }}</span>
+                        <span
+                          [pTooltip]="
+                            i == 0 ? 'New' : i == 1 ? 'Accepted' : 'Rejected'
+                          "
+                          tooltipPosition="top"
+                          [ngClass]="getStatusClass(submission?.StatusId)"
+                          >{{ submission?.Submissions }}</span
+                        >
+                        <span *ngIf="i < 2"> - </span>
+                      </ng-container>
                     </div>
                     <div *ngIf="!campaign.Submissions">N/A</div>
                     <!-- <svg
@@ -245,7 +264,9 @@
 
                 <td style="white-space: nowrap; text-align: center">
                   <!-- (click)="goToEmily(c, index)" -->
-                  <a class="inbox" >Inbox</a>
+                  <a class="inbox" (click)="goToEmily(c, index, false)"
+                    >Inbox</a
+                  >
                 </td>
 
                 <ng-container *ngFor="let stage of stages">
@@ -267,6 +288,7 @@
                           stage.stageName.toLowerCase() ==
                           'Precontact'.toLowerCase()
                         "
+                        (click)="goToEmily(c, index, true)"
                         >Generate Emails</a
                       >
                     </div>

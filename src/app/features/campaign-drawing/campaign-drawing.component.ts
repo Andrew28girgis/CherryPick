@@ -64,7 +64,6 @@ export class CampaignDrawingComponent
       const id = localStorage.getItem('BuyBoxId');
       if (id) {
         this.buyBoxId = +id;
-        debugger;
       }
     }
     const contact = localStorage.getItem('contactId');
@@ -131,7 +130,6 @@ export class CampaignDrawingComponent
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
-      console.log(response);
     });
   }
 
@@ -147,7 +145,6 @@ export class CampaignDrawingComponent
       },
     };
 
-    debugger;
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0 && response.json[0].id) {

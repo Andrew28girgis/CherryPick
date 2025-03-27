@@ -2,7 +2,12 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { Campaign, ICampaign, Stage } from 'src/app/shared/models/icampaign';
+import {
+  Campaign,
+  ICampaign,
+  Stage,
+  Submission,
+} from 'src/app/shared/models/icampaign';
 import { CampaignDrawingComponent } from '../campaign-drawing/campaign-drawing.component';
 import { Organization } from 'src/app/shared/models/orgnizations';
 import { EmilyService } from 'src/app/core/services/emily.service';
@@ -95,7 +100,6 @@ export class CampaignManagerComponent implements OnInit {
   }
 
   onCampaignCreated(): void {
-    debugger;
     this.getAllCampaigns();
     this.modalService.dismissAll();
   }
@@ -130,14 +134,21 @@ export class CampaignManagerComponent implements OnInit {
   //   return [...new Set(geo.map((g) => g.state))];
   // }
 
-  goToEmily(campaign: ICampaign, index: number): void {
-    
-   
-    this.getCampaignOrganizations(campaign.id,campaign.Campaigns[index].Id)
-    
-  }
+  goToEmily(campaign: ICampaign, index: number,withOrg:boolean): void {
+    if(withOrg)
+    {
 
- 
+      this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
+    }else{
+      let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+        buyboxId: [campaign.id],
+        organizations: [],
+      };
+      this.emilyService.updateCheckList(emilyObject);
+
+      this.router.navigate(['/MutipleEmail']);
+    }
+  }
 
   getKanbanTemplateStages(): void {
     const body: any = {
@@ -147,7 +158,6 @@ export class CampaignManagerComponent implements OnInit {
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       this.spinner.hide();
-      console.log(response);
       if (response.json && response.json.length > 0) {
         this.stages = response.json;
       }
@@ -168,36 +178,72 @@ export class CampaignManagerComponent implements OnInit {
     return null;
   }
 
-  getCampaignOrganizations(buboxId:number,campaignId: number): void {
+  getCampaignOrganizations(buboxId: number, campaignId: number): void {
     const body: any = {
       Name: 'GetCampaignOrganizations',
       Params: { CampaignId: campaignId },
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
-      console.log(response);
+      if (response.json && response.json.length > 0) {
+        let organizationsIds = [
+          ...new Set(response.json.map((o: any) => o.organizationId)),
+        ];
+        let organizations: {
+          id: number;
+          contacts: any[];
+        }[] = organizationsIds.map((id) => {
+          return { id: id as number, contacts: [] };
+        });
 
-    //   let organizationsIds: number[] = [];
-    // organizationsIds = [...new Set(organizationsIds)];
+        let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+          buyboxId: [buboxId],
+          organizations: organizations,
+        };
+        this.emilyService.updateCheckList(emilyObject);
 
-    // let organizations: {
-    //   id: number;
-    //   contacts: any[];
-    // }[] = [];
-    // organizations = organizationsIds.map((id) => {
-    //   return { id: id, contacts: [] };
-    // });
+        this.router.navigate(['/MutipleEmail']);
+      }
+      //   let organizationsIds: number[] = [];
+      // organizationsIds = [...new Set(organizationsIds)];
 
-    // let emilyObject: { buyboxId: number[]; organizations: any[] } = {
-    //   buyboxId: [campaign.id],
-    //   organizations: organizations,
-    // };
-    // debugger;
-    // this.emilyService.updateCheckList(emilyObject);
-    // console.log(emilyObject);
+      // let organizations: {
+      //   id: number;
+      //   contacts: any[];
+      // }[] = [];
+      // organizations = organizationsIds.map((id) => {
+      //   return { id: id, contacts: [] };
+      // });
 
-    // this.router.navigate(['/MutipleEmail']);
-      
+      // let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+      //   buyboxId: [campaign.id],
+      //   organizations: organizations,
+      // };
+      // this.emilyService.updateCheckList(emilyObject);
+
+      // this.router.navigate(['/MutipleEmail']);
     });
+  }
+
+  sortedSubmissions(submissions: Submission[]) {
+    return (
+      submissions?.sort(
+        (a, b) =>
+          this.statusSortOrder(a.StatusId) - this.statusSortOrder(b.StatusId)
+      ) || []
+    );
+  }
+
+  statusSortOrder(statusId: number | undefined): number {
+    const order: { [key: number]: number } = { 0: 0, 1: 1, [-1]: 2 };
+    return order[statusId ?? -1];
+  }
+
+  getStatusClass(statusId: number | undefined) {
+    return {
+      red: statusId === -1,
+      normal: statusId === 0,
+      green: statusId === 1,
+    };
   }
 }
