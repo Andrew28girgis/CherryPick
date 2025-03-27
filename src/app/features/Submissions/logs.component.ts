@@ -1,7 +1,9 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
-PlacesService
+import { ActivatedRoute } from '@angular/router';
+import { submission } from 'src/app/shared/models/submissions';
+PlacesService;
 @Component({
   selector: 'app-logs',
   standalone: true,
@@ -10,29 +12,34 @@ PlacesService
   styleUrl: './logs.component.css',
 })
 export class SubmissionsComponent implements OnInit {
-  submissionsArray: any[] = [];
-  centername!: string;
-  CreatedDate!: string;
-  FileName!: string;
-  UserName!: string;
-  constructor(private PlacesService: PlacesService, private eRef: ElementRef) {}
+  submissionsArray: submission[] = [];    
+  campaignId!:any;
+
+  constructor(private PlacesService: PlacesService,     private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    
+    this.route.paramMap.subscribe((params) => {
+      this.campaignId = params.get('campaignId');
+      console.log(this.campaignId);
+      
+    });
+
+
     this.fetchReceivedSubmissions();
   }
 
   fetchReceivedSubmissions(): void {
     const body: any = {
       Name: 'fetchReceivedSubmissions',
-      Params: {},
+      Params: {
+        CampaignID: this.campaignId,
+      },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.submissionsArray = res.json || [];
-        this.centername = this.submissionsArray[0].CenterName;
-        this.CreatedDate = this.submissionsArray[0].US[0].CreatedDate;
-        this.FileName = this.submissionsArray[0].US[0].FileName;
-        this.UserName = this.submissionsArray[0].UserName;
+        this.submissionsArray = res.json || [];    
       },
     });
   }
