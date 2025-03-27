@@ -69,9 +69,11 @@ export class EmilyContactEmailComponent implements OnInit {
     });
     this.loadInitialData();
   }
+  
   toggleDropdown() {
     this.isDropdownVisible = !this.isDropdownVisible;
   }
+
   loadInitialData(): void {
     this.filteredEmails = [];
     this.emailsSentContact = [];
@@ -102,6 +104,7 @@ export class EmilyContactEmailComponent implements OnInit {
       })
       .catch((error) => {});
   }
+
   GetBuyBoxMicroDeals(callback?: Function): void {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
@@ -116,19 +119,20 @@ export class EmilyContactEmailComponent implements OnInit {
         this.contacts =
           this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
             ?.Contact || [];
+
         this.selectedOrganizationName =
           this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
             ?.OrganizationName || '';
+
         this.BuyBoxMicroDeals = [];
-      // After loading contacts, load emails and then select first contact
-      this.GetBuyBoxEmails(() => {
-        if (this.contacts.length > 0) {
-          this.getEmailsForContact(this.contacts[0]);
-        }
-      });
-    },
-  });
-}
+        this.GetBuyBoxEmails(() => {
+          if (this.contacts.length > 0) {
+            this.getEmailsForContact(this.contacts[0]);
+          }
+        });
+      },
+    });
+  }
 
   GetBuyBoxEmails(callback?: Function): void {
     const body: any = {
@@ -140,8 +144,6 @@ export class EmilyContactEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        console.log(`777`);
-        console.log(this.BuyBoxEmails);
 
         if (callback) {
           callback();
@@ -322,7 +324,6 @@ export class EmilyContactEmailComponent implements OnInit {
       !this.selectedEmail ||
       !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
     ) {
-      // If no email is selected or the selected email is not in the filtered list, select the first email.
       this.openEmail(this.filteredEmails[0]);
     }
   }

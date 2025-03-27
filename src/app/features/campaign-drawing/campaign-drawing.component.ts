@@ -4,8 +4,13 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  Output,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -22,7 +27,7 @@ import { environment } from 'src/environments/environment';
   styleUrl: './campaign-drawing.component.css',
 })
 export class CampaignDrawingComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   private destroy$ = new Subject<void>();
 
@@ -38,7 +43,8 @@ export class CampaignDrawingComponent
   ];
   isPrivateCampaign: number = 1;
   campaignName: string = '';
-  buyBoxId!: number;
+  @Input() buyBoxId!: number;
+  @Output() onCampaignCreated = new EventEmitter<void>();
   contactId!: number;
 
   constructor(
@@ -49,14 +55,19 @@ export class CampaignDrawingComponent
     private httpClient: HttpClient
   ) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.buyBoxId) {
+      const id = localStorage.getItem('BuyBoxId');
+      if (id) {
+        this.buyBoxId = +id;
+      }
+    }
+  }
+
   ngOnInit(): void {
     const contact = localStorage.getItem('contactId');
     if (contact) {
       this.contactId = +contact;
-    }
-    const id = localStorage.getItem('BuyBoxId');
-    if (id) {
-      this.buyBoxId = +id;
     }
 
     this.polygonsListeners();
@@ -122,6 +133,7 @@ export class CampaignDrawingComponent
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
+      this.onCampaignCreated.emit();
       if (response.json && response.json.length > 0 && response.json[0].id) {
         this.modalService.dismissAll();
         this.saveShapesWithCampaign(response.json[0].id);

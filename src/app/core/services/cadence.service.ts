@@ -16,4 +16,5 @@ export class CadenceService {
   updateKanbanId(id: number): void {
     this.kanbanId.next(id);
   }
+  
 }

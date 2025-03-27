@@ -51,9 +51,9 @@ import { SocialMediaViewComponent } from './features/tenants/market-survery/mark
 import { MarketSideViewComponent } from './features/tenants/market-survery/market-side-view/market-side-view.component';
 import { MarketMapViewComponent } from './features/tenants/market-survery/market-map-view/market-map-view.component';
 import { MarketCardViewComponent } from './features/tenants/market-survery/market-card-view/market-card-view.component';
+import { CampaignManagerComponent } from './features/campaign-manager/campaign-manager.component';
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,8 +77,9 @@ import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or
     MarketSideViewComponent,
     MarketMapViewComponent,
     MarketCardViewComponent,
+    CampaignManagerComponent,
     EmailMulipleNewComponent,
-    MailsGenerateOrSendComponent
+    MailsGenerateOrSendComponent,
   ],
   imports: [
     BrowserModule,

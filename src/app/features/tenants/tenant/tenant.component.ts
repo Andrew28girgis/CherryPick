@@ -83,6 +83,11 @@ export class TenantComponent implements OnInit {
   lastnamemanagerorganization!: string;
   managementorganizationname!: string;
   ManagerOrganizationDescription!: any;
+  isSubmitting: boolean = false;
+  returnsubmit: boolean = false;
+
+  
+
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -190,19 +195,19 @@ export class TenantComponent implements OnInit {
         fileEntry.file((file: File) => {
           // Set the file name immediately
           this.fileName = file.name;
-
+  
           const formData = new FormData();
           formData.append('filename', file);
           this.isUploading = true;
           this.uploadProgress = 0;
-
+  
           const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
-
+  
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
             responseType: 'json',
           });
-
+  
           this.httpClient.request(req).subscribe(
             (event: any) => {
               if (event.type === HttpEventType.UploadProgress) {
@@ -221,10 +226,15 @@ export class TenantComponent implements OnInit {
                     selected: false,
                   }));
                   this.pdfFileName = response.pdfFileName;
+                  this.isConverting = false;
+                  this.spinner.hide();
+                  this.showToast('PDF File uploaded and converted successfully!');
+  
+                  // Automatically send the images if there are 3 or fewer images
+                  if (this.images.length <= 3) {
+                    this.sendJson(); // Automatically submit the images
+                  }
                 }
-                this.isConverting = false;
-                this.spinner.hide();
-                this.showToast('PDF File uploaded and converted successfully!');
               }
             },
             (error) => {
@@ -243,6 +253,8 @@ export class TenantComponent implements OnInit {
       }
     }
   }
+  
+  
   
   
   showToast(message: string) {
@@ -309,6 +321,8 @@ export class TenantComponent implements OnInit {
     });
   }
   sendImagesArray() {
+    this.isSubmitting = true;
+    this.returnsubmit = true;
     this.spinner.show();
     const selectedImages = this.images.filter((image) => image.selected);
     // Extract the content of the selected images
@@ -355,6 +369,8 @@ export class TenantComponent implements OnInit {
         this.spinner.hide();
       },
     });
+    this.isSubmitting = false;
+
   }
   // Method to clear all modal data
   clearModalData() {
@@ -366,6 +382,8 @@ export class TenantComponent implements OnInit {
     this.isUploading = false; // Reset upload state
     this.isConverting = false; // Reset conversion state
     this.files = []; // Clear dropped files
+    this.returnsubmit = false;
+    
   }
   closeModal(modal: any) {
     modal.dismiss();
@@ -380,4 +398,5 @@ export class TenantComponent implements OnInit {
     const dataUrl = `data:${image.type};base64,${image.content}`;
     return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
   }
+
 }

@@ -14,6 +14,7 @@ import { KanbanComponent } from './features/kanban/kanban.component';
 import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
+import { CampaignManagerComponent } from './features/campaign-manager/campaign-manager.component';
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 
@@ -41,6 +42,11 @@ const routes: Routes = [
   {
     path: 'Submissions',
     component: SubmissionsComponent,
+    canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'campaigns',
+    component: CampaignManagerComponent,
     canActivate: [TenantOnlyGuard],
   },
   {
@@ -83,7 +89,7 @@ const routes: Routes = [
     path: 'Kanban/:id',
     component: KanbanComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
-  }, 
+  },
   {
     path: 'EmilyUserInbox',
     component: EmilyUserInboxComponent,
