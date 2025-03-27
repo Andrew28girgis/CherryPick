@@ -14,6 +14,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, takeUntil } from 'rxjs';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
@@ -52,14 +53,17 @@ export class CampaignDrawingComponent
     private cdr: ChangeDetectorRef,
     private modalService: NgbModal,
     private placesService: PlacesService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private router:Router
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.buyBoxId) {
+      debugger
       const id = localStorage.getItem('BuyBoxId');
       if (id) {
         this.buyBoxId = +id;
+        debugger
       }
     }
   }
@@ -136,7 +140,11 @@ export class CampaignDrawingComponent
     this.placesService.GenericAPI(body).subscribe((response) => {
       this.onCampaignCreated.emit();
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        this.modalService.dismissAll();
+        // this.modalService.dismissAll();
+        if(!this.router.url.includes('campaigns')){
+          this.router.navigate(['/campaigns']);
+
+        }
         this.saveShapesWithCampaign(response.json[0].id);
       }
     });

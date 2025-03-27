@@ -2,8 +2,9 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { ICampaign } from 'src/app/shared/models/icampaign';
+import { Campaign, Geojson, ICampaign } from 'src/app/shared/models/icampaign';
 import { CampaignDrawingComponent } from '../campaign-drawing/campaign-drawing.component';
+import { Organization } from 'src/app/shared/models/orgnizations';
 
 @Component({
   selector: 'app-campaign-manager',
@@ -95,5 +96,42 @@ export class CampaignManagerComponent implements OnInit {
 
   openAddCampaignPopup(content: TemplateRef<any>): void {
     this.modalService.open(content, { centered: true, size: 'xl' });
+  }
+
+  calculatePolygonCenters(geo: Geojson): number {
+    let count = 0;
+    geo.ShoppingCenters.forEach((sc) => {
+      if (sc.InPolygon) {
+        count++;
+      }
+    });
+    return count;
+  }
+
+  getUniqueStates(geo: Geojson[]): string[] {
+    return [...new Set(geo.map((g) => g.state))];
+  }
+
+  goToEmily(campaign: Campaign): void {
+    let organizationsIds: number[] = [];
+    campaign.Geojsons.forEach((g) =>
+      g.ShoppingCenters.forEach((sc) =>
+        sc.Contact.forEach((c) => organizationsIds.push(c.OrganizationId))
+      )
+    );
+    organizationsIds = [...new Set(organizationsIds)];
+
+    let organizations: {
+      id: number;
+      contacts: any[];
+    }[] = [];
+    organizations = organizationsIds.map((id) => {
+      return { id: id, contacts: [] };
+    });
+
+    let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+      buyboxId: [campaign.BuyBoxId],
+      organizations: organizations,
+    };
   }
 }

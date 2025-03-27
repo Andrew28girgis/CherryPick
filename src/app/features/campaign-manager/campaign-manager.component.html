@@ -81,10 +81,10 @@
           <ng-container *ngFor="let c of filteredCampaigns">
             <ng-container *ngFor="let campaign of c.Campaigns">
               <tr>
-                <td>
+                <td style="border: none">
                   {{ campaign.CampaignName }}
                 </td>
-                <td>
+                <td style="border: none">
                   <div class="d-flex align-items-center gap-2">
                     <img
                       *ngIf="c.organizationid"
@@ -98,20 +98,22 @@
                     <span>{{ c.name }}</span>
                   </div>
                 </td>
-                <td>
+                <td style="border: none">
                   <div class="d-flex align-items-center gap-1">
-                    <ng-container *ngFor="let polygon of campaign.Geojsons">
+                    <ng-container
+                      *ngFor="let state of getUniqueStates(campaign.Geojsons)"
+                    >
                       <div class="d-flex align-items-center gap-1">
-                        <span>{{ polygon.state }}</span>
+                        <span>{{ state }}</span>
                         <span>&bull;</span>
                       </div>
                     </ng-container>
                   </div>
                 </td>
-                <td>
+                <td style="border: none">
                   {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
                 </td>
-                <td>
+                <td style="border: none">
                   <div
                     class="campaign-privacy"
                     [ngClass]="{
@@ -127,7 +129,7 @@
                     >
                   </div>
                 </td>
-                <td>
+                <td style="border: none">
                   <div
                     class="d-flex align-items-center justify-content-center gap-2"
                   >
@@ -165,7 +167,7 @@
                         />
                       </svg>
                     </div>
-                    <div class="more">
+                    <div class="more" (click)="goToEmily(campaign)">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -187,6 +189,26 @@
                         />
                       </svg>
                     </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="6">
+                  <div class="d-flex align-items-center gap-2">
+                    <ng-container *ngFor="let polygon of campaign.Geojsons">
+                      <div
+                        style="
+                          background-color: #4d65b4;
+                          padding: 0 0.75rem;
+                          border-radius: 0.5rem;
+                          font-size: 0.85rem;
+                          color: white;
+                        "
+                      >
+                        {{ polygon.Name }}:
+                        {{ calculatePolygonCenters(polygon) }} Sites
+                      </div>
+                    </ng-container>
                   </div>
                 </td>
               </tr>

@@ -16,5 +16,19 @@ export interface Campaign {
 
 export interface Geojson {
   id: number;
+  Name: string;
   state: string;
+  ShoppingCenters: ShoppingCenter[];
+}
+
+export interface ShoppingCenter {
+  Latitude: number;
+  Longitude: number;
+  InPolygon: boolean;
+  Contact: Contact[]
+}
+
+export interface Contact {
+  id: number
+  OrganizationId: number
 }
