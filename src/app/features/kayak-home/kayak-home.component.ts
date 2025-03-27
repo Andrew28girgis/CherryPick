@@ -16,8 +16,8 @@ export class KayakHomeComponent implements OnInit {
       selectedIcon: '../../../assets/icons/svgs/properties-selected.svg',
     },
     {
-      id: 'Details',
-      label: 'Details',
+      id: 'Market Survery',
+      label: 'Market Survery', 
       icon: '../../../assets/icons/svgs/details.svg',
       selectedIcon: '../../../assets/icons/svgs/details-selected.svg',
     },
@@ -32,7 +32,7 @@ export class KayakHomeComponent implements OnInit {
   selectedTab: string = 'Properties';
   BuyboxName: string | null = '';
   Buyboxid: any | null = '';
-
+  orgId!: any  | null;
   constructor(
     public router: Router,
     private _location: Location,
@@ -42,7 +42,12 @@ export class KayakHomeComponent implements OnInit {
   async ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.BuyboxName = params.get('buyboxName');
+      this.orgId = params.get('orgId');
+
       this.Buyboxid = params.get('buyboxid');
+      console.log(`organization id is ${this.orgId}`);
+       
+      
     });
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';

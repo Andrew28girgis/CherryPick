@@ -12,13 +12,18 @@
             [ngClass]="{ active: selectedTab === tab.id }"
             (click)="selectTab(tab.id)"
           >
-            <div class="tab-icon">
-              <img
-                [src]="selectedTab === tab.id ? tab.selectedIcon : tab.icon"
-                alt="tab-icon"
-              />
-            </div>
-            <span>{{ tab.label }}</span>
+            <a
+              href="/home/{{ Buyboxid }}/{{ orgId }}/{{ BuyboxName }}"
+              target="_blank"
+            >
+              <div class="tab-icon">
+                <img
+                  [src]="selectedTab === tab.id ? tab.selectedIcon : tab.icon"
+                  alt="tab-icon"
+                />
+              </div>
+              <span>{{ tab.label }}</span>
+            </a>
           </li>
         </ul>
       </div>
@@ -29,7 +34,7 @@
         <app-shopping-center-table
           *ngSwitchCase="'Properties'"
         ></app-shopping-center-table>
-        <app-buybox-details *ngSwitchCase="'Details'"></app-buybox-details>
+        <!-- <app-buybox-details *ngSwitchCase="'Details'"></app-buybox-details> -->
       </ng-container>
     </div>
   </div>
