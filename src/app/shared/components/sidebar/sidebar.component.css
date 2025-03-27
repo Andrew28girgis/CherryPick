@@ -1,17 +1,17 @@
 .cherry {
   margin-left: 6px;
-  background: linear-gradient(0deg, #4D65B4 0%, #5E84F1 100%);
+  background: linear-gradient(0deg, #4d65b4 0%, #5e84f1 100%);
   font-weight: 700;
   font-size: 28px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-fill-color: transparent; 
+  -webkit-text-fill-color: transparent;
 }
-.pick{
+.pick {
   font-weight: 300;
 }
-.img-icn{
+.img-icn {
   margin-right: 3px;
   font-size: 16px;
   color: #72777a !important;
@@ -143,7 +143,7 @@
   opacity: 0;
   width: 0;
   font-size: 13px;
- 
+
   margin-left: 0;
 }
 
