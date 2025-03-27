@@ -17,7 +17,5 @@ export class EmilyService {
     this.emilyCheckList.next(checkList);
     console.log(`from service:`);
     console.log(this.emilyCheckList.value);
-    
-    
   }
 }
