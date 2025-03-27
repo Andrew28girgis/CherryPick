@@ -7,19 +7,19 @@
 </div>
 
 <div class="p-3 mb-4">
-<div class="row m-0 ">
-  <div class="d-block d-sm-flex gap-2 mb-2 col-12 col-sm-6 align-items-center">
-    <img class="Kayak__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+  <div class="row m-0 ">
+    <div class="d-block d-sm-flex gap-2 mb-2 col-12 col-sm-6 align-items-center">
+      <img class="Kayak__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
       BuyBoxOrgID
     }}" alt="" />
-    <span class="BuyBoxName">{{ BuyBoxName }}</span>
-  </div>
-  <div class="container-fluid px-2 d-block d-sm-flex justify-content-end align-items-center col-12 col-sm-6">
-    <div>
-      <app-link-microsoft></app-link-microsoft>
+      <span class="BuyBoxName">{{ BuyBoxName }}</span>
+    </div>
+    <div class="container-fluid px-2 d-block d-sm-flex justify-content-end align-items-center col-12 col-sm-6">
+      <div>
+        <app-link-microsoft></app-link-microsoft>
+      </div>
     </div>
   </div>
-</div>
 
   <div class="container-GenerateEmail row">
     <!-- Selections-filters -->
@@ -34,7 +34,7 @@
             </div>
             <div class="checkbox-section-head checkbox-section">
               <input type="checkbox" name="detailsMin" id="detailsMin" class="form-check-input"
-                [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin($event)"/>
+                [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin($event)" />
               <label for="detailsMin">Min & Max Unit Size: {{ buybox?.MinBuildingSize }} ,{{
                   buybox?.MaxBuildingSize
                 }}</label>
@@ -62,7 +62,7 @@
           <div class="box p-2">
             <div class="checkbox-section">
               <input type="checkbox" name="Relation" id="Relation" class="form-check-input"
-                [(ngModel)]="showRelationNames" (change)="onShowRelationNamesChange($event)"  />
+                [(ngModel)]="showRelationNames" (change)="onShowRelationNamesChange($event)" />
               <label for="Relation">Relation Name</label>
             </div>
             <ng-container *ngIf="showRelationNames">
@@ -70,7 +70,7 @@
                 <ng-container *ngFor="let relation of relationCategoriesNames">
                   <div class="checkbox-section checkbox-section-body-first">
                     <input type="checkbox" [name]="relation.name" [id]="relation.name" class="form-check-input"
-                      [(ngModel)]="relation.selected" (change)="onIndividualRelationChange(relation)"/>
+                      [(ngModel)]="relation.selected" (change)="onIndividualRelationChange(relation)" />
                     <label [for]="relation.name">{{
                       relation.name
                     }}</label>
@@ -172,10 +172,19 @@
       </select>
     </div>
     <div class="col-12 col-sm-6 checkbox-section-select checkbox_ISCC pb-2 gap-4">
-      <div class="checkbox-section align-items-center">
-        <input type="checkbox" [(ngModel)]="isISCcSelected" name="IsCC" (change)="onISCCChange($event)"
-          (change)="onISCCChange($event)" id="IsCC" class="form-check-input m-0" />
-        <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label>
+      <div class="checkbox-section align-items-center gap-2">
+        <!-- <input type="checkbox" name="IsCC" [(ngModel)]="isISCcSelected"  (change)="onISCCChange($event)" id="IsCC" class="form-check-input m-0" /> -->
+        <!-- <label for="IsCC" class="ms-2 IsCC_checkbox">IsCC</label> -->
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="IsCC" id="IsCC1" [(ngModel)]="isISCcSelected"
+            (change)="onISCCChange(true)" [value]="true">
+          <label class="IsCC_checkbox" for="IsCC1">CC</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="IsCC" id="IsCC2" [(ngModel)]="isISCcSelected"
+            (change)="onISCCChange(false)" [value]="false">
+          <label class="IsCC_checkbox" for="IsCC2">To</label>
+        </div>
       </div>
       <div class="checkbox-section align-items-center">
         <input type="checkbox" [(ngModel)]="isLandingSelected" (change)="onLandingChangeShowChange($event)"
@@ -210,6 +219,7 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
+        <th scope="col">BuyBox Name</th>
         <th scope="col">Context</th>
         <th scope="col">Prompt Name</th>
         <th scope="col">Generated | Send</th>
@@ -220,6 +230,7 @@
       <tr *ngFor="let item of returnGetMailContextGenerated; let i = index">
         <th scope="row">{{ i+1 }}</th>
         <td class="single-lineMax" [title]="item.name">{{ item.name }}</td>
+        <td>{{ item.buyBoxName }}</td>
         <td class="single-line" (click)="openModal(ViewContext ,item.context)">{{ item.context }}</td>
         <td class="single-lineMax">{{ item.promptName }}</td>
         <td class="CountMail" [routerLink]="['/MailsList',item.mailContextId ,1]">{{ item.numberOfMailGenerated }} &nbsp;
@@ -273,7 +284,8 @@
               </p>
             </div>
             <div class="mt-3">
-              <textarea class="form-control" rows="15" [innerHTML]="template.templateOne+emailBody2" readonly></textarea>
+              <textarea class="form-control" rows="15" [innerHTML]="template.templateOne+emailBody2"
+                readonly></textarea>
             </div>
           </div>
         </div>
@@ -291,7 +303,7 @@
     <div class="modal-body">
       <div class="d-flex justify-content-center mb-3">
         <div class="Emails_bodyTemplete p-0">
-            <textarea class="form-control form-control-height" rows="15" [innerHTML]="ItemContext" readonly></textarea>
+          <textarea class="form-control form-control-height" rows="15" [innerHTML]="ItemContext" readonly></textarea>
         </div>
       </div>
     </div>

@@ -15,7 +15,6 @@ export class EmilyService {
 
   updateCheckList(checkList: any): void {
     this.emilyCheckList.next(checkList);
-    console.log(`from service:`);
-    console.log(this.emilyCheckList.value);
+    sessionStorage.setItem('buyboxChecklist', JSON.stringify(this.emilyCheckList.value));
   }
 }
