@@ -108,7 +108,6 @@ export class TenantComponent implements OnInit {
 
   GetOrganizationBranches(): void {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetOrganizationBranches',
       Params: {

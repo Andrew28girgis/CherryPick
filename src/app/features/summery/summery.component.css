@@ -149,20 +149,18 @@ button:active {
   font-size: 10px;
 }
 
-.Kayack__button {
-  width: auto;
-  min-width: 120px;
+.Kayack__button { 
   border-radius: 10px;
   background: #001f3fc2;
   color: #fff;
   text-align: center;
 
-  font-size: 12px;
+  font-size: 1vw;
   font-style: normal;
   font-weight: 500;
   line-height: 30px;
   border: 0;
-  padding: 4px 16px;
+  padding: 4px 10px;
   white-space: nowrap;
 }
 
