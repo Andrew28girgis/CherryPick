@@ -54,12 +54,15 @@ export class TenantComponent implements OnInit {
   images: IFile[] = [];
   pdfFileName: string = '';
   contactID!: any;
-  TenantResult: LandingPageTenants[] = [];
-  organizationBranches: OrganizationBranches[] = []; 
+  TenantResult!: LandingPageTenants;
+  organizationBranches!: OrganizationBranches; 
   selectedbuyBox!: string;
   buyboxcolor!: string;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
+  organizationid!:string
+  isFileUploaded: boolean = false; // To track whether a file has been uploaded
+
   
 
   constructor(
@@ -72,6 +75,8 @@ export class TenantComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   ngOnInit(): void {
+    this.buyboxcolor = '#FF5733'; 
+
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
@@ -92,7 +97,8 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
-        console.log('tenant',this.TenantResult);
+        this.organizationid = this.TenantResult?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.BuyBoxOrganizationId?.toString() ?? '';
+        console.log('tenant', this.TenantResult);
         
         this.spinner.hide();
 
@@ -176,6 +182,9 @@ export class TenantComponent implements OnInit {
                   if (this.images.length <= 3) {
                     this.sendJson(); // Automatically submit the images
                   }
+  
+                  // Enable submit button after file is uploaded
+                  this.isFileUploaded = true;  // Set flag to true
                 }
               }
             },
@@ -184,17 +193,14 @@ export class TenantComponent implements OnInit {
               this.isConverting = false;
               this.spinner.hide();
               this.showToast('Failed to upload or convert PDF file!');
-              // Reset fileName on error by assigning an empty string
               this.fileName = '';
             }
           );
         });
-      } else {
-        // Handle directory entry if needed
-        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
       }
     }
   }
+  
   
   
   showToast(message: string) {
