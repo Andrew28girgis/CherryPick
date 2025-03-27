@@ -17,10 +17,15 @@
         <td>
           <ng-container *ngFor="let file of submission.UserSubmissions">
             <div class="my-2">
-              <a target="_blank" class="btn btn-primary">{{ file.FileName }}</a>
+              <a target="_blank">{{ file.FileName }}</a>
             </div>
-        
           </ng-container>
+        </td>
+        <td>
+          {{getSumbussionCenterName(submission)}}
+        </td>
+        <td>
+          {{getSumbussionCenterAddress(submission)}}
         </td>
       </tr>
     </tbody>

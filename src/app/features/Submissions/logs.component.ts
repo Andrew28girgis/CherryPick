@@ -53,4 +53,14 @@ export class SubmissionsComponent implements OnInit {
       scrollable: true,
     });
   }
+
+  getSumbussionCenterName(submission: submission) {
+    return submission.UserSubmissions[0].ShoppingCenters[0].CenterName;
+  }
+
+  getSumbussionCenterAddress(submission: submission) {
+    return submission.UserSubmissions[0].ShoppingCenters[0].CenterCity + ', ' + submission.UserSubmissions[0].ShoppingCenters[0].CenterState;
+  }
+  
+
 }
