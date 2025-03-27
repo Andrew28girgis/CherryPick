@@ -303,3 +303,24 @@
   width: 20px;
   height: 20px;
 }
+
+.icon_style{
+  color: #5e84f1;
+  font-size: 16px;
+}
+
+.form-check-input[type="checkbox"] {
+  box-shadow: none;
+  outline: none;
+  border: #bfbfbf 1px solid;
+  border-radius: 2px;
+
+  &:checked {
+    border: 1px solid #001f3f;
+    background-color: #001f3f;
+  }
+
+  &:not(checked) {
+    border: 1px solid gray;
+  }
+}
