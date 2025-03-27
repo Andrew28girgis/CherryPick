@@ -11,7 +11,9 @@
   <div class="sidebar">
     <ul class="sidebar-nav">
       <li class="sidebar-item">
-        <div class="sidebar-logo">
+        <div
+          class="sidebar-logo d-flex justify-content-start align-items-center"
+        >
           <img
             alt="logo"
             class="cherry-logo"
@@ -20,6 +22,9 @@
             "
             src="../../../assets/Images/Icons/logo (1).png"
           />
+          <p class="cherry mb-0" *ngIf="isSidebarExpanded">
+            Cherry<span class="pick">pick</span>
+          </p>
         </div>
       </li>
       <li class="sidebar-item">
@@ -27,7 +32,12 @@
           [routerLink]="['/Submissions']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Submissions"
         >
+          <img
+            class="img-icn"
+            src="../../../assets/Images/Icons/Dashboard.svg"
+          />
           <span class="link-text">Submissions</span>
         </a>
       </li>
@@ -37,7 +47,12 @@
           [routerLink]="['/campaigns']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Campaigns"
         >
+          <img
+            class="img-icn"
+            src="../../../assets/Images/Icons/Campains.svg"
+          />
           <span class="link-text">Campaigns</span>
         </a>
       </li>
@@ -49,14 +64,17 @@
           style="cursor: pointer"
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
+          title="Cadence"
         >
+          <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
+
           <i
             *ngIf="isSidebarExpanded || isHovering"
             class="fa-solid fa-chevron-down"
             [style.transform]="
               cadenceIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
             "
-            style="transition: transform 0.3s ease"
+            style="transition: transform 0.3s ease; margin-left: 5px"
           ></i>
           <span class="link-text">Cadence</span>
         </a>
@@ -156,70 +174,48 @@
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Tenants"
         >
+          <img class="img-icn" src="../../../assets/Images/Icons/Tenant.svg" />
           <span class="link-text">Tenants</span>
         </a>
       </li>
 
       <li class="sidebar-item">
-        <!-- [routerLink]="['/MutipleEmail']" -->
-        <a
-          class="sidebar-link"
-          routerLinkActive="active-route"
-        >
-          <i
-            (click)="emilyIsOpen = !emilyIsOpen"
-            *ngIf="isSidebarExpanded || isHovering"
-            class="fa-solid fa-chevron-down"
-            [style.transform]="emilyIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'"
-            style="transition: transform 0.3s ease"
-          ></i>
+        <a class="sidebar-link" routerLinkActive="active-route" title="Emily">
+          <img class="img-icn" src="../../../assets/Images/Icons/Emily.svg" [routerLink]="['/EmilyUserInbox']" />
+          <div class="d-flex w-100" *ngIf="isSidebarExpanded" style="margin-left: 5px">
+            <i *ngIf="isSidebarExpanded || isHovering" class="fa-solid fa-chevron-down" [style.transform]="
+                emilyIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
+              " (click)="emilyIsOpen = !emilyIsOpen" style="transition: transform 0.3s ease"></i>
 
-          <span class="link-text d-flex justify-content-between w-100 align-items-center"
-            >Emily
-            <i *ngIf="isAnyBuyboxChecked()"
-              class="fa-solid fa-paper-plane ms-2" [routerLink]="['/MutipleEmail']"  (click)="updateCheckList()"
-              ></i
-              ></span>
-            </a>
-        <ul
-          class="sidebar-nav"
-          *ngIf="
+            <span (click)="emilyIsOpen = !emilyIsOpen"
+              class="link-text d-flex justify-content-between w-100 align-items-center"><span
+                [routerLink]="['/EmilyUserInbox']">Emily</span>
+              <i *ngIf="isAnyBuyboxChecked()" class="fa-solid fa-paper-plane ms-2 icon_style"
+                [routerLink]="['/MutipleEmail']" (click)="updateCheckList()"></i>
+            </span>
+          </div>
+        </a>
+        <ul class="sidebar-nav" *ngIf="
             (emilyIsOpen && isSidebarExpanded) || (emilyIsOpen && isHovering)
-          "
-        >
+          ">
           <ng-container *ngFor="let userBuybox of userBuyboxes">
             <li class="sidebar-item">
-              <a class="sidebar-link" style="cursor: pointer">
-                <i
-                  (click)="
-                    userBuybox.isOpen = !userBuybox.isOpen;
-                    getOrgnizationData(userBuybox, userBuybox.isOpen)
-                  "
-                  class="fa-solid fa-chevron-down me-1"
+              <a class="sidebar-link" style="cursor: pointer" (click)="userBuybox.isOpen = !userBuybox.isOpen">
+                <i (click)="getOrgnizationData(userBuybox, userBuybox.isOpen)" class="fa-solid fa-chevron-down me-1"
                   [style.transform]="
                     userBuybox.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
-                  "
-                  style="transition: transform 0.3s ease"
-                ></i>
-                <input
-                  (click)="$event.stopPropagation()"
-                  (change)="checkBuybox($event, userBuybox)"
-                  type="checkbox"
-                  *ngIf="userBuybox.isOpen"
-                  class="mx-1"
-                  [checked]="userBuybox.checked"
-                />
+                  " style="transition: transform 0.3s ease"></i>
+                <input (click)="$event.stopPropagation()" (change)="checkBuybox($event, userBuybox)" type="checkbox"
+                  *ngIf="userBuybox.isOpen"  class="mx-1 form-check-input" [checked]="userBuybox.checked" />
 
-                <img
-                  class="Oganirzations__img"
-                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                <img class="Oganirzations__img" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                     userBuybox.organizationId
-                  }}"
-                />
-                <span class="link-text">
+                  }}" />
+                <label class="link-text">
                   {{ userBuybox.name }}
-                </span>
+                </label>
               </a>
             </li>
 
@@ -227,57 +223,35 @@
               <ng-container *ngFor="let org of userBuybox.IBuyboxOrganization">
                 <li class="sidebar-item">
                   <a class="sidebar-link" style="cursor: pointer">
-                    <i
-                      (click)="org.isOpen = !org.isOpen"
-                      class="fa-solid fa-chevron-down"
-                      [style.transform]="
+                    <i (click)="org.isOpen = !org.isOpen" class="fa-solid fa-chevron-down" [style.transform]="
                         org.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
-                      "
-                      style="transition: transform 0.3s ease"
-                    ></i>
-                    <input
-                      (change)="checkContacts($event, org.contacts)"
-                      type="checkbox"
-                      class="mx-1"
-                      [(ngModel)]="org.checked"
-                    />
-                    <img
-                      width="20"
-                      height="20"
-                      class="me-1"
-                      style="border-radius: 50%"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      " style="transition: transform 0.3s ease"></i>
+                    <input (change)="checkContacts($event, org.contacts ,userBuybox)" type="checkbox" class="mx-1 form-check-input"
+                      [(ngModel)]="org.checked" [id]="'org'+org.id"/>
+                    <img width="20" height="20" class="me-1" style="border-radius: 50%" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         org.id
-                      }}"
-                    />
-                    <span class="link-text">
+                      }}" />
+                    <label class="link-text" [for]="'org'+org.id">
                       {{ org.name }}
-                    </span>
+                    </label>
                   </a>
                   <ul class="sidebar-nav ms-4" *ngIf="org.isOpen">
                     <ng-container *ngFor="let contact of org.contacts">
                       <li class="sidebar-item">
                         <div class="ms-4">
                           <span class="link-text">
-                            <input
-                              type="checkbox"
-                              name="contact-{{
+                            <input type="checkbox" name="contact-{{
                                 contact.Firstname + contact.Lastname
-                              }}"
-                              [(ngModel)]="contact.checked"
-                            />
+                              }}" class="form-check-input" [(ngModel)]="contact.checked" />
                             {{ contact.Firstname }} {{ contact.Lastname }}
                           </span>
                         </div>
                         <ng-container *ngFor="let center of contact.Centers">
                           <div class="ms-4">
                             <span class="link-text ms-4" style="color: #72777a">
-                              <input
-                                type="checkbox"
+                              <input type="checkbox" class="form-check-input"
                                 (change)="checkShoppingCenter($event, contact)"
-                                name="shopping-center-{{ center.CenterName }}"
-                                [(ngModel)]="center.checked"
-                              />
+                                name="shopping-center-{{ center.CenterName }}" [(ngModel)]="center.checked" />
                               {{ center.CenterName }}
                             </span>
                           </div>

@@ -2,8 +2,11 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { ICampaign } from 'src/app/shared/models/icampaign';
+import { Campaign, Geojson, ICampaign } from 'src/app/shared/models/icampaign';
 import { CampaignDrawingComponent } from '../campaign-drawing/campaign-drawing.component';
+import { Organization } from 'src/app/shared/models/orgnizations';
+import { EmilyService } from 'src/app/core/services/emily.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-campaign-manager',
@@ -20,7 +23,9 @@ export class CampaignManagerComponent implements OnInit {
   constructor(
     private placesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private emilyService: EmilyService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -40,8 +45,8 @@ export class CampaignManagerComponent implements OnInit {
       this.spinner.hide();
 
       if (response.json && response.json.length > 0) {
-        this.campaigns = response.json;
-        this.filteredCampaigns = response.json;
+        this.campaigns = [...response.json];
+        this.filteredCampaigns = [...response.json];
       } else {
         this.campaigns = [];
         this.filteredCampaigns = [];
@@ -51,9 +56,11 @@ export class CampaignManagerComponent implements OnInit {
 
   onSearchCampaign(): void {
     if (this.searchCampaign && this.searchCampaign.trim().length > 0) {
-      this.filteredCampaigns = this.campaigns.filter((campaign) =>
-        campaign.CampaignName.toLowerCase().includes(
-          this.searchCampaign.toLowerCase()
+      this.filteredCampaigns = this.campaigns.filter((c) =>
+        c.Campaigns.some((campaign) =>
+          campaign.CampaignName.toLowerCase().includes(
+            this.searchCampaign.toLowerCase()
+          )
         )
       );
     } else {
@@ -93,5 +100,57 @@ export class CampaignManagerComponent implements OnInit {
 
   openAddCampaignPopup(content: TemplateRef<any>): void {
     this.modalService.open(content, { centered: true, size: 'xl' });
+  }
+
+  calculatePolygonCenters(geo: Geojson): number {
+    let count = 0;
+    geo.ShoppingCenters.forEach((sc) => {
+      if (sc.InPolygon) {
+        count++;
+      }
+    });
+    return count;
+  }
+
+  getUniqueStates(geo: Geojson[]): string[] {
+    return [...new Set(geo.map((g) => g.state))];
+  }
+
+  goToEmily(campaign: Campaign): void {
+    let organizationsIds: number[] = [];
+    campaign.Geojsons.forEach((g) =>
+      g.ShoppingCenters.forEach((sc) =>
+        sc.Contact.forEach((c) => organizationsIds.push(c.OrganizationId))
+      )
+    );
+    organizationsIds = [...new Set(organizationsIds)];
+
+    let organizations: {
+      id: number;
+      contacts: any[];
+    }[] = [];
+    organizations = organizationsIds.map((id) => {
+      return { id: id, contacts: [] };
+    });
+
+    let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+      buyboxId: [campaign.BuyBoxId],
+      organizations: organizations,
+    };
+    this.emilyService.updateCheckList(emilyObject);
+    console.log(emilyObject);
+
+    this.router.navigate(['/MutipleEmail']);
+  }
+
+  syncMarketSurveyWithCampaign(campaignId: number): void {
+    const body: any = {
+      Name: 'SyncMarketSurveyWithCampaign',
+      Params: { CampaignId: campaignId },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      console.log(response);
+    });
   }
 }

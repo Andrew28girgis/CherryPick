@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -14,7 +14,8 @@ import { from } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
-import { ContactsChecked,OrganizationChecked ,  buyboxChecklist } from 'src/app/shared/models/sidenavbar';
+import { ContactsChecked, OrganizationChecked, buyboxChecklist } from 'src/app/shared/models/sidenavbar';
+import { interval, Subscription } from 'rxjs';
 
 
 @Component({
@@ -22,7 +23,7 @@ import { ContactsChecked,OrganizationChecked ,  buyboxChecklist } from 'src/app/
   templateUrl: './email-muliple-new.component.html',
   styleUrl: './email-muliple-new.component.css',
 })
-export class EmailMulipleNewComponent implements OnInit {
+export class EmailMulipleNewComponent implements OnInit,OnDestroy {
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
@@ -100,7 +101,9 @@ export class EmailMulipleNewComponent implements OnInit {
   returnGetMailContextGenerated: any[] = [];
   ItemContext: any;
 
-
+  OrganizationCheckedServices: OrganizationChecked[] = [];
+  buyboxChecklist!: buyboxChecklist;
+  private checklistSubscription!: Subscription;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -108,22 +111,38 @@ export class EmailMulipleNewComponent implements OnInit {
     private route: ActivatedRoute,
     private emilyService: EmilyService,
     private modalService: NgbModal
-  ) {
-    this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = params.get('buyboxid');
-    });
-  }
+  ) {}
 
   async ngOnInit() {
-    this.emilyService.getCheckList().subscribe((buyboxChecklist:buyboxChecklist) => {
-      console.log('Data from EmilyService:', buyboxChecklist);
-      // console.log('buyboxId:', buyboxChecklist.buyboxId[0]);
-      this.buyBoxId = buyboxChecklist?.buyboxId[0];
+    this.emilyService.getCheckList().subscribe((buyboxChecklist: buyboxChecklist) => {      
+      if (this.buyboxChecklist == null || this.buyboxChecklist == undefined) {
+        const storedChecklist = sessionStorage.getItem('buyboxChecklist');
+        if (storedChecklist) {
+          this.buyboxChecklist = JSON.parse(storedChecklist) as buyboxChecklist;
+        }
+      }
+      this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+      this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
+    });
+
+
+    this.checklistSubscription = interval(500).subscribe(() => {
+      const storedChecklist = sessionStorage.getItem('buyboxChecklist');
+      if (storedChecklist) {
+        const parsedChecklist = JSON.parse(storedChecklist) as buyboxChecklist;
+        if (JSON.stringify(parsedChecklist) !== JSON.stringify(this.buyboxChecklist)) {
+          this.buyboxChecklist = parsedChecklist;
+          this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+          this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
+          this.reloadData();
+        }
+      }
     });
 
     this.contactId = localStorage.getItem('contactId');
     if (this.buyBoxId) {
-      this.GetOrgbuyBox(this.buyBoxId);
+      // this.GetOrgbuyBox(this.buyBoxId);
+      this.GetBuyBoxOrganizationsForEmail();
     }
     this.GetPrompts();
     this.GetBuyBoxInfo();
@@ -131,7 +150,24 @@ export class EmailMulipleNewComponent implements OnInit {
     this.GetBuyBoxInfoDetails();
     this.GetMailContextGenerated();
   }
+  
+  reloadData() {
+    this.contactId = localStorage.getItem('contactId');
+    if (this.buyBoxId) {
+      this.GetBuyBoxOrganizationsForEmail();
+    }
+    this.GetPrompts();
+    this.GetBuyBoxInfo();
+    this.GetRetailRelationCategories();
+    this.GetBuyBoxInfoDetails();
+    this.GetMailContextGenerated(); 
+   }
 
+  ngOnDestroy() {
+    if (this.checklistSubscription) {
+      this.checklistSubscription.unsubscribe();
+    }
+  }
   // GetBuyBoxInfo
   GetBuyBoxInfo() {
     const body: any = {
@@ -409,11 +445,11 @@ export class EmailMulipleNewComponent implements OnInit {
 
     try {
       if (
-        this.OrgBuybox &&
-        Array.isArray(this.OrgBuybox) &&
-        this.OrgBuybox.length > 0
+        this.OrganizationCheckedServices &&
+        Array.isArray(this.OrganizationCheckedServices) &&
+        this.OrganizationCheckedServices.length > 0
       ) {
-        const organizationIds = this.OrgBuybox.map((item: any) => item.id);
+        const organizationIds = this.OrganizationCheckedServices.map((item: any) => item.id);
 
         this.bodyTemplates = [];
 
@@ -436,15 +472,33 @@ export class EmailMulipleNewComponent implements OnInit {
               if (data?.json && Array.isArray(data.json)) {
                 this.BuyBoxOrganizationsForEmail = data.json;
 
-                this.BuyBoxOrganizationsForEmail[0].Contact.forEach(
-                  (c: any) => {
-                    c.selected = true;
-                    c.Centers?.forEach((ShoppingCenter: any) => {
-                      ShoppingCenter.selected = true;
-                    });
-                  }
-                );
 
+                const allowedCenterIdsByContact = new Map<number, Set<number>>();
+                const selectedContactIds = new Set<number>();
+
+                this.OrganizationCheckedServices.forEach((org: any) => {
+                  org.contacts.forEach((contact: any) => {
+                    selectedContactIds.add(contact.id);
+                    allowedCenterIdsByContact.set(contact.id, new Set(contact.shoppingCenterId));
+                  });
+                });
+
+                this.BuyBoxOrganizationsForEmail[0].Contact.forEach((contact: any) => {
+                  if (selectedContactIds.has(contact.id)) {
+                    contact.selected = true;
+                    const allowedCenters = allowedCenterIdsByContact.get(contact.id);
+                    if (allowedCenters) {
+                      contact.Centers?.forEach((center: any) => {
+                        if (allowedCenters.has(center.id)) {
+                          center.selected = true;
+                        }
+                      });
+                    }
+                  }
+                });
+
+
+                // this.OnCheckGetSavedTemplates(c.id);
                 await this.OnCheckGetSavedTemplates(
                   this.BuyBoxOrganizationsForEmail[0].Id
                 );
@@ -664,11 +718,11 @@ export class EmailMulipleNewComponent implements OnInit {
       isChecked = event;
     } else if (event.target) {
       isChecked = event.target.checked;
-    }
+    }    
     this.showMinBuildingSize = isChecked;
     this.updateEmailBody();
   }
-  
+
   onCheckboxClientProfileSection(event: any) {
     this.showClientProfile = event.target.checked;
     this.updateEmailBody();
@@ -692,7 +746,7 @@ export class EmailMulipleNewComponent implements OnInit {
   onIndividualRelationChange(category: RelationNames): void {
     const newValue = category.selected;
     if (this.generated && this.generated.length > 0 && this.generated[0].Releations) {
-      this.generated[0].Releations.forEach((item:any) => {
+      this.generated[0].Releations.forEach((item: any) => {
         if (item.RetailRelationCategoryId === category.id) {
           item.relationSelect = newValue;
         }
@@ -700,7 +754,7 @@ export class EmailMulipleNewComponent implements OnInit {
     }
     this.updateEmailBody();
   }
-  
+
   onOrganizationManagersNameChange(event: any): void {
     this.showOrganizationManagers = event.target.checked;
     this.showMangerDescriptionDetails = event.target.checked;
@@ -726,7 +780,7 @@ export class EmailMulipleNewComponent implements OnInit {
     this.updateEmailBody();
   }
 
-  
+
 
   getManagerName(centerName: string): string {
     const center = this.ShoppingCenterNames.find(
@@ -806,26 +860,26 @@ export class EmailMulipleNewComponent implements OnInit {
     }
   }
 
-  GetOrgbuyBox(buyboxId: number): void {
-    const body: any = {
-      Name: 'GetOrganizationsByBuyBox',
-      MainEntity: null,
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        if (data.json && Array.isArray(data.json)) {
-          this.OrgBuybox = data.json;
-          this.GetBuyBoxOrganizationsForEmail();
-        } else {
-          this.OrgBuybox = [];
-        }
-      },
-    });
-  }
+  // GetOrgbuyBox(buyboxId: number): void {
+  //   const body: any = {
+  //     Name: 'GetOrganizationsByBuyBox',
+  //     MainEntity: null,
+  //     Params: {
+  //       BuyBoxId: buyboxId,
+  //     },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       if (data.json && Array.isArray(data.json)) {
+  //         this.OrgBuybox = data.json;
+  //         this.GetBuyBoxOrganizationsForEmail();
+  //       } else {
+  //         this.OrgBuybox = [];
+  //       }
+  //     },
+  //   });
+  // }
 
   async PutMailsDraft(): Promise<void> {
     this.updateEmailBody();
@@ -886,7 +940,7 @@ export class EmailMulipleNewComponent implements OnInit {
       Name: 'GetMailContextGenerated',
       MainEntity: null,
       Params: {
-        BuyBoxId: this.buyBoxId,
+        // BuyBoxId: this.buyBoxId,
         ContactId: this.contactId,
       },
       Json: null,
@@ -919,7 +973,8 @@ export class EmailMulipleNewComponent implements OnInit {
   }
 
   onISCCChange(event: any): void {
-    this.isISCcSelected = event.target.checked;
+    this.isISCcSelected = event;
+    
     const createLineRegex = /- Create .* Email For each Contact\n\s*/;
     this.emailTemplates = this.emailTemplates.map((templateItem) => {
       let updatedTemplate = templateItem.templateOne;

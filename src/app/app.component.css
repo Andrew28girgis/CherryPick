@@ -18,8 +18,8 @@
 
 /* Custom sidebar width classes */
 .sidebar-width-expanded {
-  width: 250px; /* Adjust to your desired expanded width */
-  min-width: 250px;
+  width: 280px; /* Adjust to your desired expanded width */
+  min-width: 280px;
   transition: all 0.3s ease;
 }
 
@@ -31,7 +31,7 @@
 
 /* Custom content width classes */
 .content-with-expanded-sidebar {
-  width: calc(100% - 250px); /* Match the expanded sidebar width */
+  width: calc(100% - 280px); /* Match the expanded sidebar width */
   transition: all 0.3s ease;
 }
 

@@ -48,7 +48,7 @@
   cursor: pointer;
 }
 
-.form-check-input[type="checkbox"] {
+.form-check-input[type="checkbox"],.form-check-input[type="radio"] {
   box-shadow: none;
   outline: none;
   border: #bfbfbf 1px solid;
@@ -162,8 +162,8 @@ select option:checked {
 }
 
 .Kayak__img {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   margin-inline-end: 6px;
 }
 

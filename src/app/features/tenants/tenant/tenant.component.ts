@@ -41,7 +41,7 @@ import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
-export class TenantComponent implements OnInit { 
+export class TenantComponent implements OnInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   public files: NgxFileDropEntry[] = [];
   selectedShoppingID!: string | undefined;
@@ -80,7 +80,6 @@ export class TenantComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log(this.selectedbuyBox); 
       this.GetBuyBoxInfo();
     });
   }
@@ -101,7 +100,6 @@ export class TenantComponent implements OnInit {
         console.log('tenant', this.TenantResult);
         
         this.spinner.hide();
-
         this.GetOrganizationBranches();
       },
     });
@@ -120,11 +118,11 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.organizationBranches = res.json[0];
-        console.log('asas',this.organizationBranches);
         this.spinner.hide();
       },
     });
   }
+
   openUploadModal(id: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
@@ -135,6 +133,7 @@ export class TenantComponent implements OnInit {
     }
     this.modalService.open(this.uploadPDF, { size: 'lg', centered: true });
   }
+
   public uploadFile(files: NgxFileDropEntry[]): void {
     this.files = files;
     for (const droppedFile of files) {
@@ -143,23 +142,25 @@ export class TenantComponent implements OnInit {
         fileEntry.file((file: File) => {
           // Set the file name immediately
           this.fileName = file.name;
-  
+
           const formData = new FormData();
           formData.append('filename', file);
           this.isUploading = true;
           this.uploadProgress = 0;
-  
+
           const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
-  
+
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
             responseType: 'json',
           });
-  
+
           this.httpClient.request(req).subscribe(
             (event: any) => {
               if (event.type === HttpEventType.UploadProgress) {
-                this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
+                this.uploadProgress = Math.round(
+                  (100 * event.loaded) / event.total!
+                );
                 if (this.uploadProgress === 100) {
                   this.isUploading = false;
                   this.isConverting = true;
@@ -167,17 +168,21 @@ export class TenantComponent implements OnInit {
               } else if (event instanceof HttpResponse) {
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map((img: string, index: number) => ({
-                    name: `Image ${index + 1}`,
-                    type: 'image/png',
-                    content: img,
-                    selected: false,
-                  }));
+                  this.images = response.images.map(
+                    (img: string, index: number) => ({
+                      name: `Image ${index + 1}`,
+                      type: 'image/png',
+                      content: img,
+                      selected: false,
+                    })
+                  );
                   this.pdfFileName = response.pdfFileName;
                   this.isConverting = false;
                   this.spinner.hide();
-                  this.showToast('PDF File uploaded and converted successfully!');
-  
+                  this.showToast(
+                    'PDF File uploaded and converted successfully!'
+                  );
+
                   // Automatically send the images if there are 3 or fewer images
                   if (this.images.length <= 3) {
                     this.sendJson(); // Automatically submit the images
@@ -212,6 +217,7 @@ export class TenantComponent implements OnInit {
       toast!.classList.remove('show');
     }, 3000);
   }
+
   sendImagesArray() {
     this.isSubmitting = true;
     this.returnsubmit = true;
@@ -228,6 +234,7 @@ export class TenantComponent implements OnInit {
       },
     });
   }
+
   sendJson() {
     this.spinner.show();
     const shopID = this.selectedShoppingID;
@@ -260,7 +267,6 @@ export class TenantComponent implements OnInit {
       },
     });
     this.isSubmitting = false;
-
   }
   // Method to clear all modal data
   clearModalData() {
@@ -273,8 +279,8 @@ export class TenantComponent implements OnInit {
     this.isConverting = false; // Reset conversion state
     this.files = []; // Clear dropped files
     this.returnsubmit = false;
-    
   }
+
   closeModal(modal: any) {
     modal.dismiss();
     this.fileName = '';
@@ -283,9 +289,9 @@ export class TenantComponent implements OnInit {
     this.isConverting = false;
     this.images = [];
   }
+
   displayCustomImage(image: IFile): SafeUrl {
     const dataUrl = `data:${image.type};base64,${image.content}`;
     return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
   }
-
 }

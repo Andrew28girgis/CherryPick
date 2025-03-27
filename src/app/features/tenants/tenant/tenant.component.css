@@ -412,7 +412,7 @@
   font-weight: 500;
   line-height: 30px;
 }
-.uploadingpadding{
+.uploadingpadding {
   padding: 0px 20px;
 }
 .inner-frame {
@@ -437,7 +437,7 @@
   width: 100%;
 }
 
-.filenameouterframe{
+.filenameouterframe {
   display: flex;
   padding: 12px;
   flex-direction: column;
