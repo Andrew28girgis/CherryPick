@@ -387,7 +387,7 @@ export class EmailMulipleNewComponent implements OnInit {
       next: (data: any) => {
         this.buybox = data.json;
         this.showMinBuildingSize = true;
-        this.onCheckboxdetailsChangeMin(true);
+        this.onCheckboxdetailsChangeMinN(true);
       },
     });
   }
@@ -648,6 +648,10 @@ export class EmailMulipleNewComponent implements OnInit {
   }
   onCheckboxdetailsChangeMin(event: any) {
     this.showMinBuildingSize = event.target.checked;
+    this.updateEmailBody();
+  }
+  onCheckboxdetailsChangeMinN(event: any) {
+    this.showMinBuildingSize = event;
     this.updateEmailBody();
   }
   onCheckboxClientProfileSection(event: any) {
