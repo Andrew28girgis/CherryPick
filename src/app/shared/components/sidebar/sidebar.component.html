@@ -11,9 +11,7 @@
   <div class="sidebar">
     <ul class="sidebar-nav">
       <li class="sidebar-item">
-        <div
-          class="sidebar-logo d-flex justify-content-center align-items-center"
-        >
+        <div class="sidebar-logo d-flex justify-content-start align-items-center" >
           <img
             alt="logo"
             class="cherry-logo"
@@ -29,20 +27,22 @@
       </li>
       <li class="sidebar-item">
         <a
-          [routerLink]="['/Submissions']"
-          routerLinkActive="active-route"
-          class="sidebar-link"
+        [routerLink]="['/Submissions']"
+        routerLinkActive="active-route"
+        class="sidebar-link"
         >
+        <i class="fa-solid fa-paper-plane side-icn" *ngIf="!isSidebarExpanded"></i>
           <span class="link-text">Submissions</span>
         </a>
       </li>
 
       <li class="sidebar-item">
         <a
-          [routerLink]="['/campaigns']"
-          routerLinkActive="active-route"
-          class="sidebar-link"
+        [routerLink]="['/campaigns']"
+        routerLinkActive="active-route"
+        class="sidebar-link"
         >
+        <i class="fa-solid fa-calendar-check side-icn" *ngIf="!isSidebarExpanded"></i>
           <span class="link-text">Campaigns</span>
         </a>
       </li>
@@ -55,6 +55,7 @@
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
         >
+        <i class="fa-solid fa-calendar-week side-icn" *ngIf="!isSidebarExpanded"></i>
           <i
             *ngIf="isSidebarExpanded || isHovering"
             class="fa-solid fa-chevron-down"
@@ -162,13 +163,18 @@
           routerLinkActive="active-route"
           class="sidebar-link"
         >
+        <i class="fa-solid fa-house side-icn" *ngIf="!isSidebarExpanded"></i>
           <span class="link-text">Tenants</span>
         </a>
       </li>
 
       <li class="sidebar-item">
         <!-- [routerLink]="['/MutipleEmail']" -->
-        <a class="sidebar-link" routerLinkActive="active-route">
+        <a
+          class="sidebar-link"
+          routerLinkActive="active-route"
+        >
+        <!-- <i class="fa-solid fa-paper-plane side-icn" *ngIf="!isSidebarExpanded"></i> -->
           <i
             (click)="emilyIsOpen = !emilyIsOpen"
             *ngIf="isSidebarExpanded || isHovering"
@@ -180,14 +186,12 @@
           <span
             class="link-text d-flex justify-content-between w-100 align-items-center"
             >Emily
-            <i
-              *ngIf="isAnyBuyboxChecked()"
-              class="fa-solid fa-paper-plane ms-2"
-              [routerLink]="['/MutipleEmail']"
-              (click)="updateCheckList()"
-            ></i
-          ></span>
-        </a>
+            <i *ngIf="isAnyBuyboxChecked()"
+              class="fa-solid fa-paper-plane ms-2" [routerLink]="['/MutipleEmail']"  (click)="updateCheckList()"
+              ></i
+              >
+            </span>
+            </a>
         <ul
           class="sidebar-nav"
           *ngIf="
