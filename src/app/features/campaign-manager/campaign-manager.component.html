@@ -264,7 +264,9 @@
 
                 <td style="white-space: nowrap; text-align: center">
                   <!-- (click)="goToEmily(c, index)" -->
-                  <a class="inbox">Inbox</a>
+                  <a class="inbox" (click)="goToEmily(c, index, false)"
+                    >Inbox</a
+                  >
                 </td>
 
                 <ng-container *ngFor="let stage of stages">
@@ -286,6 +288,7 @@
                           stage.stageName.toLowerCase() ==
                           'Precontact'.toLowerCase()
                         "
+                        (click)="goToEmily(c, index, true)"
                         >Generate Emails</a
                       >
                     </div>

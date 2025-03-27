@@ -134,8 +134,20 @@ export class CampaignManagerComponent implements OnInit {
   //   return [...new Set(geo.map((g) => g.state))];
   // }
 
-  goToEmily(campaign: ICampaign, index: number): void {
-    this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
+  goToEmily(campaign: ICampaign, index: number,withOrg:boolean): void {
+    if(withOrg)
+    {
+
+      this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
+    }else{
+      let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+        buyboxId: [campaign.id],
+        organizations: [],
+      };
+      this.emilyService.updateCheckList(emilyObject);
+
+      this.router.navigate(['/MutipleEmail']);
+    }
   }
 
   getKanbanTemplateStages(): void {
@@ -173,7 +185,25 @@ export class CampaignManagerComponent implements OnInit {
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
+      if (response.json && response.json.length > 0) {
+        let organizationsIds = [
+          ...new Set(response.json.map((o: any) => o.organizationId)),
+        ];
+        let organizations: {
+          id: number;
+          contacts: any[];
+        }[] = organizationsIds.map((id) => {
+          return { id: id as number, contacts: [] };
+        });
 
+        let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+          buyboxId: [buboxId],
+          organizations: organizations,
+        };
+        this.emilyService.updateCheckList(emilyObject);
+
+        this.router.navigate(['/MutipleEmail']);
+      }
       //   let organizationsIds: number[] = [];
       // organizationsIds = [...new Set(organizationsIds)];
 
