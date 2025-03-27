@@ -80,8 +80,7 @@ export class TenantComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log(this.selectedbuyBox);
-      
+      console.log(this.selectedbuyBox); 
       this.GetBuyBoxInfo();
     });
   }
@@ -203,8 +202,6 @@ export class TenantComponent implements OnInit {
   }
   
   
-  
-  
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -213,10 +210,6 @@ export class TenantComponent implements OnInit {
     setTimeout(() => {
       toast!.classList.remove('show');
     }, 3000);
-  }
-  closeToast() {
-    const toast = document.getElementById('customToast');
-    toast!.classList.remove('show');
   }
   sendImagesArray() {
     this.isSubmitting = true;
