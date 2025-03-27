@@ -1312,4 +1312,16 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
+  unCheckAll(event:any){
+    let value = event.target.checked;
+    this.allOrganizations.forEach((org:any) => {
+      org.selected = value;
+      org.Contact.forEach((contact:any) => {
+        contact.selected = value;
+        contact.ShoppingCenters.forEach((center:any) => {
+          center.selected = value;
+        });
+      });
+    })
+  }
 }

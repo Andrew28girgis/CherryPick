@@ -28,19 +28,20 @@
     <div class="col-12 col-sm-12 mt-3 mt-sm-0">
       <div class="row d-flex p-1 p-sm-0 m-0">
         <div class="col-12 col-sm-4 p-2" style="max-height: 300px;overflow-x: auto;">
+          <input type="checkbox" [checked]="true" (change)="unCheckAll($event)" class="form-check-input me-1 mb-2"> <label for="">All</label>
           <ng-container *ngIf="allOrganizations && allOrganizations.length > 0">
             <ng-container *ngFor="let organization of allOrganizations; let i = index">
               <div class="col-12 mt-3 mt-sm-0">
                 <div class="row d-flex p-1 p-sm-0 m-0">
                   <section class="OrganizationsForEmail row m-0 p-0">
-                    <div class="m-0 p-0 col-12 d-flex gap-3 align-items-center pb-3" (click)="onOrganizationChangeisVisible(organization, $event)">
+                    <div class="m-0 p-0 col-12 d-flex gap-3 align-items-center pb-3" >
                       <div class="OganirzationsForEmail__img align-items-center d-flex">
                         <input type="checkbox" [(ngModel)]="organization.selected" class="form-check-input me-1"
-                          (ngModelChange)="onOrganizationChange(organization, $event)" />
+                           (ngModelChange)="onOrganizationChange(organization, $event)  " />
                         <img class="Oganirzations__img"
                           [src]="'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' + organization.Id" alt="" />
                       </div>
-                      <div class="">
+                      <div class="" (click)="onOrganizationChangeisVisible(organization, $event)">
                         <h5 class="OrganizationsForEmail__head">{{ organization.Name }}</h5>
                       </div>
                     </div>
@@ -308,7 +309,7 @@
 </div>
 
 <!-- table Get email Generated  -->
-<!-- <div class="p-3 div-Table">
+<div class="p-3 div-Table">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -334,7 +335,7 @@
       </tr>
     </tbody>
   </table>
-</div> -->
+</div>
 
 <!-- editor selectedPrompt -->
 <ng-template #View let-modal>
