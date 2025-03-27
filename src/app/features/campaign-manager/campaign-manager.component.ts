@@ -5,6 +5,8 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { Campaign, Geojson, ICampaign } from 'src/app/shared/models/icampaign';
 import { CampaignDrawingComponent } from '../campaign-drawing/campaign-drawing.component';
 import { Organization } from 'src/app/shared/models/orgnizations';
+import { EmilyService } from 'src/app/core/services/emily.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-campaign-manager',
@@ -21,7 +23,9 @@ export class CampaignManagerComponent implements OnInit {
   constructor(
     private placesService: PlacesService,
     private spinner: NgxSpinnerService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private emilyService: EmilyService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -133,5 +137,20 @@ export class CampaignManagerComponent implements OnInit {
       buyboxId: [campaign.BuyBoxId],
       organizations: organizations,
     };
+    this.emilyService.updateCheckList(emilyObject);
+    console.log(emilyObject);
+
+    this.router.navigate(['/MutipleEmail']);
+  }
+
+  syncMarketSurveyWithCampaign(campaignId: number): void {
+    const body: any = {
+      Name: 'SyncMarketSurveyWithCampaign',
+      Params: { CampaignId: campaignId },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      console.log(response);
+    });
   }
 }

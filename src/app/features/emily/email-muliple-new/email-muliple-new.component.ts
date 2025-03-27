@@ -117,6 +117,8 @@ export class EmailMulipleNewComponent implements OnInit {
   async ngOnInit() {
     this.emilyService.getCheckList().subscribe((buyboxChecklist:buyboxChecklist) => {
       console.log('Data from EmilyService:', buyboxChecklist);
+      console.log(buyboxChecklist);
+      
       // console.log('buyboxId:', buyboxChecklist.buyboxId[0]);
       this.buyBoxId = buyboxChecklist?.buyboxId[0];
     });
