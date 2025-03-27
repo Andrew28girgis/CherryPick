@@ -10,8 +10,25 @@ export interface Campaign {
   CampaignName: string;
   BuyBoxId: number;
   CampaignPrivacy: number;
-  Geojsons: Geojson[];
   CreatedDate?: string;
+  Geojsons: Geojson[];
+  Submissions: Submission[];
+  MailsSent: MailsSent[];
+  Stages: Stage[];
+}
+
+export interface Submission {
+  Submissions: number;
+}
+
+export interface MailsSent {
+  MailsSent: number;
+}
+
+export interface Stage {
+  Id: number;
+  stageName: string;
+  c: number;
 }
 
 export interface Geojson {
@@ -25,10 +42,10 @@ export interface ShoppingCenter {
   Latitude: number;
   Longitude: number;
   InPolygon: boolean;
-  Contact: Contact[]
+  Contact: Contact[];
 }
 
 export interface Contact {
-  id: number
-  OrganizationId: number
+  id: number;
+  OrganizationId: number;
 }

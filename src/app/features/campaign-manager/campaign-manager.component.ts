@@ -45,8 +45,8 @@ export class CampaignManagerComponent implements OnInit {
       this.spinner.hide();
 
       if (response.json && response.json.length > 0) {
-        this.campaigns = [...response.json];
-        this.filteredCampaigns = [...response.json];
+        this.campaigns = response.json;
+        this.filteredCampaigns = response.json;
       } else {
         this.campaigns = [];
         this.filteredCampaigns = [];
@@ -94,8 +94,9 @@ export class CampaignManagerComponent implements OnInit {
   }
 
   onCampaignCreated(): void {
-    this.modalService.dismissAll();
+    debugger;
     this.getAllCampaigns();
+    this.modalService.dismissAll();
   }
 
   openAddCampaignPopup(content: TemplateRef<any>): void {
@@ -112,13 +113,25 @@ export class CampaignManagerComponent implements OnInit {
     return count;
   }
 
+  calculatePolygonsCentersCount(geos: Geojson[]): number {
+    let count = 0;
+    geos.forEach((geo) =>
+      geo.ShoppingCenters.forEach((sc) => {
+        if (sc.InPolygon) {
+          count++;
+        }
+      })
+    );
+    return count;
+  }
+
   getUniqueStates(geo: Geojson[]): string[] {
     return [...new Set(geo.map((g) => g.state))];
   }
 
-  goToEmily(campaign: Campaign): void {
+  goToEmily(campaign: ICampaign,index:number): void {
     let organizationsIds: number[] = [];
-    campaign.Geojsons.forEach((g) =>
+    campaign.Campaigns[index].Geojsons.forEach((g) =>
       g.ShoppingCenters.forEach((sc) =>
         sc.Contact.forEach((c) => organizationsIds.push(c.OrganizationId))
       )
@@ -134,9 +147,10 @@ export class CampaignManagerComponent implements OnInit {
     });
 
     let emilyObject: { buyboxId: number[]; organizations: any[] } = {
-      buyboxId: [campaign.BuyBoxId],
+      buyboxId: [campaign.id],
       organizations: organizations,
     };
+    debugger
     this.emilyService.updateCheckList(emilyObject);
     console.log(emilyObject);
 
