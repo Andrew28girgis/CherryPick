@@ -181,6 +181,9 @@ export class EmilyUserInboxComponent implements OnInit {
   openmodel(modal: any, body: any, contactId: any) {
     this.bodyemail = body;
     this.contactIdemail = contactId;
+    this.selectedContact = contactId;
+    console.log(`this.selectedContact`, this.selectedContact);
+    
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 

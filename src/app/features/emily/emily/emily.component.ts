@@ -279,13 +279,21 @@ export class EmilyComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         if (data?.json && Array.isArray(data.json)) {
-          this.BuyBoxOrganizationsForEmail = data.json;
-
+          this.BuyBoxOrganizationsForEmail = data.json; 
+          
+          
           this.BuyBoxOrganizationsForEmail[0].Contact.forEach((c: any) => {
-            c.selected = true;
-            c.Centers?.forEach((ShoppingCenter: any) => {
-              ShoppingCenter.selected = true;
-            });
+            if (c.id == this.selectedContactContactId.ContactId) {
+              c.selected = true;
+              c.Centers?.forEach((ShoppingCenter: any) => {
+                ShoppingCenter.selected = true;
+              });
+            } else {
+              c.selected = false;
+              c.Centers?.forEach((ShoppingCenter: any) => {
+                ShoppingCenter.selected = false;
+              });
+            }
           });
           this.updateEmailBody();
           this.OnCheckGetSavedTemplates(this.BuyBoxOrganizationsForEmail[0].Id);
@@ -1232,13 +1240,10 @@ export class EmilyComponent implements OnInit {
       IsCC
     ).subscribe({
       next: (data: any) => {
-        this.GenerateEmailall = data;
-
-        this.emailSubject = data?.emailSubject || 'No subject received';
-        let generatedBody = data?.emailBody || '';
-
-        this.emailBodyResponse = generatedBody;
-
+        this.GenerateEmailall = data; 
+        this.emailSubject = data[0].emailSubject || 'No subject received';
+        let generatedBody = data[0].emailBody || ''; 
+        this.emailBodyResponse = generatedBody; 
         if (this.isLandingSelected) {
           this.emailBodyResponse += landingSnippet;
         }
@@ -1508,7 +1513,7 @@ export class EmilyComponent implements OnInit {
         BuyBoxId: +this.buyBoxId,
         IsCC: this.formGroup.get('IsCC')?.value ? 1 : 0,
         FromContactId: Number(this.loginContact),
-        ContactIds: this.selectedContactContactId,
+        ContactIds: this.selectedContactContactId.ContactId,
       },
       Json: null,
     };
