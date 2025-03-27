@@ -380,7 +380,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   isAnyBuyboxChecked(): boolean {
-    return this.userBuyboxes && this.userBuyboxes.some(buybox => buybox.checked);
+    return (
+      this.userBuyboxes && this.userBuyboxes.some((buybox) => buybox.checked)
+    );
   }
 
   // End Emily

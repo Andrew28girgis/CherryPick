@@ -74,7 +74,6 @@ export class TenantComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log(this.selectedbuyBox);
       this.GetBuyBoxInfo();
     });
   }
@@ -91,10 +90,7 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
-        console.log('tenant', this.TenantResult);
-
         this.spinner.hide();
-
         this.GetOrganizationBranches();
       },
     });
@@ -113,11 +109,11 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.organizationBranches = res.json[0];
-        console.log('asas', this.organizationBranches);
         this.spinner.hide();
       },
     });
   }
+
   openUploadModal(id: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
@@ -128,6 +124,7 @@ export class TenantComponent implements OnInit {
     }
     this.modalService.open(this.uploadPDF, { size: 'lg', centered: true });
   }
+
   public uploadFile(files: NgxFileDropEntry[]): void {
     this.files = files;
     for (const droppedFile of files) {
@@ -210,6 +207,7 @@ export class TenantComponent implements OnInit {
       toast!.classList.remove('show');
     }, 3000);
   }
+
   sendImagesArray() {
     this.isSubmitting = true;
     this.returnsubmit = true;
@@ -226,6 +224,7 @@ export class TenantComponent implements OnInit {
       },
     });
   }
+
   sendJson() {
     this.spinner.show();
     const shopID = this.selectedShoppingID;
@@ -271,6 +270,7 @@ export class TenantComponent implements OnInit {
     this.files = []; // Clear dropped files
     this.returnsubmit = false;
   }
+
   closeModal(modal: any) {
     modal.dismiss();
     this.fileName = '';
@@ -279,6 +279,7 @@ export class TenantComponent implements OnInit {
     this.isConverting = false;
     this.images = [];
   }
+
   displayCustomImage(image: IFile): SafeUrl {
     const dataUrl = `data:${image.type};base64,${image.content}`;
     return this.sanitizer.bypassSecurityTrustUrl(dataUrl);

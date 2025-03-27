@@ -11,7 +11,9 @@
   <div class="sidebar">
     <ul class="sidebar-nav">
       <li class="sidebar-item">
-        <div class="sidebar-logo d-flex justify-content-center align-items-center" >
+        <div
+          class="sidebar-logo d-flex justify-content-center align-items-center"
+        >
           <img
             alt="logo"
             class="cherry-logo"
@@ -20,7 +22,9 @@
             "
             src="../../../assets/Images/Icons/logo (1).png"
           />
-          <p class="cherry mb-0" *ngIf="isSidebarExpanded">Cherry<span class="pick">pick</span></p>
+          <p class="cherry mb-0" *ngIf="isSidebarExpanded">
+            Cherry<span class="pick">pick</span>
+          </p>
         </div>
       </li>
       <li class="sidebar-item">
@@ -164,10 +168,7 @@
 
       <li class="sidebar-item">
         <!-- [routerLink]="['/MutipleEmail']" -->
-        <a
-          class="sidebar-link"
-          routerLinkActive="active-route"
-        >
+        <a class="sidebar-link" routerLinkActive="active-route">
           <i
             (click)="emilyIsOpen = !emilyIsOpen"
             *ngIf="isSidebarExpanded || isHovering"
@@ -176,13 +177,17 @@
             style="transition: transform 0.3s ease"
           ></i>
 
-          <span class="link-text d-flex justify-content-between w-100 align-items-center"
+          <span
+            class="link-text d-flex justify-content-between w-100 align-items-center"
             >Emily
-            <i *ngIf="isAnyBuyboxChecked()"
-              class="fa-solid fa-paper-plane ms-2" [routerLink]="['/MutipleEmail']"  (click)="updateCheckList()"
-              ></i
-              ></span>
-            </a>
+            <i
+              *ngIf="isAnyBuyboxChecked()"
+              class="fa-solid fa-paper-plane ms-2"
+              [routerLink]="['/MutipleEmail']"
+              (click)="updateCheckList()"
+            ></i
+          ></span>
+        </a>
         <ul
           class="sidebar-nav"
           *ngIf="
