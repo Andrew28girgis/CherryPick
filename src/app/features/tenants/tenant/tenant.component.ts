@@ -20,18 +20,12 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import {
-  Availability,
-  PropertiesDetails,
-  Tenant,
-} from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { OrganizationBranches } from 'src/app/shared/models/organization-branches';
 import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
-
 
 @Component({
   selector: 'app-tenant',
