@@ -14,6 +14,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, takeUntil } from 'rxjs';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
@@ -27,7 +28,7 @@ import { environment } from 'src/environments/environment';
   styleUrl: './campaign-drawing.component.css',
 })
 export class CampaignDrawingComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy
+  implements OnInit, AfterViewInit, OnDestroy
 {
   private destroy$ = new Subject<void>();
 
@@ -52,19 +53,17 @@ export class CampaignDrawingComponent
     private cdr: ChangeDetectorRef,
     private modalService: NgbModal,
     private placesService: PlacesService,
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private router: Router
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnInit(): void {
     if (!this.buyBoxId) {
       const id = localStorage.getItem('BuyBoxId');
       if (id) {
         this.buyBoxId = +id;
       }
     }
-  }
-
-  ngOnInit(): void {
     const contact = localStorage.getItem('contactId');
     if (contact) {
       this.contactId = +contact;
@@ -129,6 +128,7 @@ export class CampaignDrawingComponent
         CampaignName: this.campaignName,
         CampaignPrivacy: this.isPrivateCampaign,
         BuyBoxId: this.buyBoxId,
+        CreatedDate: new Date(),
       },
     };
 
@@ -136,6 +136,9 @@ export class CampaignDrawingComponent
       this.onCampaignCreated.emit();
       if (response.json && response.json.length > 0 && response.json[0].id) {
         this.modalService.dismissAll();
+        if (!this.router.url.includes('campaigns')) {
+          this.router.navigate(['/campaigns']);
+        }
         this.saveShapesWithCampaign(response.json[0].id);
       }
     });

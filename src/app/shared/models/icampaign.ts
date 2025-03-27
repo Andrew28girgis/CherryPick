@@ -1,45 +1,34 @@
 export interface ICampaign {
+  id: number;
+  name: string;
+  organizationid: number;
+  Campaigns: Campaign[];
+}
+
+export interface Campaign {
   Id: number;
   CampaignName: string;
   BuyBoxId: number;
   CampaignPrivacy: number;
-  BuyBoxes: BuyBox[];
+  Geojsons: Geojson[];
+  CreatedDate?: string;
 }
 
-export interface BuyBox {
-  Id: number;
+export interface Geojson {
+  id: number;
   Name: string;
-  MinBuildingSize: number;
-  MaxBuildingSize: number;
-  OrganizationId: number;
-  BaseRent: number;
-  BuildingSquareFootage: number;
-  BuildingType: string;
-  CeilingHeight: number;
-  DealStructure: string;
-  DriveThru: boolean;
-  FloodZone: string;
-  FrontageLength: number;
-  HistoricDistrict: string;
-  LeaseTerm: string;
-  LotSize: number;
-  NNNCharges: number;
-  OtherComments: string;
-  OvernightBoardingPermitted: boolean;
-  ParkingSpaces: number;
-  PropertyCondition: string;
-  PurchasePrice: number;
-  Restrictions: string;
-  ServiceAccess: string;
-  TIAllowance: number;
-  TrafficDrection: string;
-  VehiclePerDay: number;
-  Zoning: string;
-  BuyBoxContacts: BuyBoxContact[];
+  state: string;
+  ShoppingCenters: ShoppingCenter[];
 }
 
-export interface BuyBoxContact {
-  Id: number;
-  BuyBoxId: number;
-  ContactId: number;
+export interface ShoppingCenter {
+  Latitude: number;
+  Longitude: number;
+  InPolygon: boolean;
+  Contact: Contact[]
+}
+
+export interface Contact {
+  id: number
+  OrganizationId: number
 }
