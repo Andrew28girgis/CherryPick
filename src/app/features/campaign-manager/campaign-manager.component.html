@@ -69,67 +69,94 @@
       <table class="table align-middle">
         <thead>
           <tr>
-            <th scope="col">Campaign Name</th>
-            <th scope="col">Tenant</th>
+            <th scope="col">Campaign</th>
+            <th scope="col">Sites</th>
+            <th scope="col">Submissions</th>
+            <th scope="col">Mails</th>
+            <!-- <th scope="col">Tenant</th>
             <th scope="col" style="min-width: 8vw">States</th>
             <th scope="col">Date Created</th>
-            <th scope="col">Privacy</th>
+            <th scope="col">Privacy</th> -->
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
           <ng-container *ngFor="let c of filteredCampaigns">
-            <ng-container *ngFor="let campaign of c.Campaigns">
+            <ng-container
+              *ngFor="let campaign of c.Campaigns; let index = index"
+            >
               <tr>
-                <td style="border: none">
-                  {{ campaign.CampaignName }}
-                </td>
-                <td style="border: none">
-                  <div class="d-flex align-items-center gap-2">
-                    <img
-                      *ngIf="c.organizationid"
-                      [src]="
-                        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                        c.organizationid
-                      "
-                      [alt]="c.name"
-                      class="tenant-logo"
-                    />
-                    <span>{{ c.name }}</span>
-                  </div>
-                </td>
-                <td style="border: none">
-                  <div class="d-flex align-items-center gap-1">
-                    <ng-container
-                      *ngFor="let state of getUniqueStates(campaign.Geojsons)"
-                    >
-                      <div class="d-flex align-items-center gap-1">
-                        <span>{{ state }}</span>
-                        <span>&bull;</span>
-                      </div>
-                    </ng-container>
-                  </div>
-                </td>
-                <td style="border: none">
-                  {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
-                </td>
-                <td style="border: none">
+                <td>
                   <div
-                    class="campaign-privacy"
-                    [ngClass]="{
-                      'campaign-privacy-public': campaign.CampaignPrivacy == 0,
-                      'campaign-privacy-private': campaign.CampaignPrivacy == 1
-                    }"
+                    class="d-flex flex-column align-items-start justify-content-center"
                   >
-                    <div class="campaign-privacy-icon"></div>
-                    <span>
-                      {{
-                        campaign.CampaignPrivacy == 0 ? "Public" : "Private"
-                      }}</span
-                    >
+                    <div>Name: {{ campaign.CampaignName }}</div>
+                    <div>
+                      Tenant:
+                      <div class="d-flex align-items-center gap-2">
+                        <img
+                          *ngIf="c.organizationid"
+                          [src]="
+                            'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                            c.organizationid
+                          "
+                          [alt]="c.name"
+                          class="tenant-logo"
+                        />
+                        <span>{{ c.name }}</span>
+                      </div>
+                    </div>
+                    <div>
+                      States:
+                      <div class="d-flex align-items-center gap-1">
+                        <ng-container
+                          *ngFor="
+                            let state of getUniqueStates(campaign.Geojsons)
+                          "
+                        >
+                          <div class="d-flex align-items-center gap-1">
+                            <span>{{ state }}</span>
+                            <span>&bull;</span>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div>
+                      Creation Date:
+                      {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
+                    </div>
+                    <div>
+                      Privacy:
+                      <div
+                        class="campaign-privacy"
+                        [ngClass]="{
+                          'campaign-privacy-public':
+                            campaign.CampaignPrivacy == 0,
+                          'campaign-privacy-private':
+                            campaign.CampaignPrivacy == 1
+                        }"
+                      >
+                        <div class="campaign-privacy-icon"></div>
+                        <span>
+                          {{
+                            campaign.CampaignPrivacy == 0 ? "Public" : "Private"
+                          }}</span
+                        >
+                      </div>
+                    </div>
                   </div>
                 </td>
-                <td style="border: none">
+                <td>
+                  {{ calculatePolygonsCentersCount(campaign.Geojsons) }}
+                </td>
+                <td>
+                  {{ campaign.Submissions[0].Submissions }}
+                </td>
+                <td>
+                  {{ campaign.MailsSent[0].MailsSent }}
+                </td>
+
+                <td>
                   <div
                     class="d-flex align-items-center justify-content-center gap-2"
                   >
@@ -163,7 +190,7 @@
                       class="more"
                       pTooltip="Go-To Emily"
                       tooltipPosition="top"
-                      (click)="goToEmily(campaign)"
+                      (click)="goToEmily(c, index)"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -220,7 +247,7 @@
                   </div>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td colspan="6">
                   <div class="d-flex align-items-center gap-2">
                     <ng-container *ngFor="let polygon of campaign.Geojsons">
@@ -239,7 +266,7 @@
                     </ng-container>
                   </div>
                 </td>
-              </tr>
+              </tr> -->
             </ng-container>
           </ng-container>
         </tbody>
@@ -293,6 +320,8 @@
       id="user-buybox"
       class="form-select mb-3"
       aria-label="Buybox select"
+      name="userBuybox"
+      [(ngModel)]="selectedBuyBoxId"
     >
       <ng-container *ngFor="let buyBox of userBuyBoxes">
         <option [value]="buyBox.id">
