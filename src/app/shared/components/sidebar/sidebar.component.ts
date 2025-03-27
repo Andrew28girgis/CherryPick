@@ -219,7 +219,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
   }
 
-  getOrgnizationData(buybox: IUserBuybox, buyboxOpen: boolean): void {
+  getOrgnizationData(buybox: IUserBuybox, buyboxOpen: any): void {
     buybox.IBuyboxOrganization.forEach((org) => {
       this.getContactAndCenters(buybox.id, org, buyboxOpen);
     });
