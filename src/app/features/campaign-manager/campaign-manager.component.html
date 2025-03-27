@@ -225,7 +225,11 @@
                       >
                         <span
                           [pTooltip]="
-                            i == 0 ? 'New' : i == 1 ? 'Accepted' : 'Rejected'
+                            submission.StatusId == 0
+                              ? 'New'
+                              : submission.StatusId == 1
+                              ? 'Accepted'
+                              : 'Rejected'
                           "
                           tooltipPosition="top"
                           [ngClass]="getStatusClass(submission?.StatusId)"
