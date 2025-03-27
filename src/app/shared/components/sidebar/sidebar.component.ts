@@ -14,9 +14,18 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
 import { IUserKanban } from '../../models/iuser-kanban';
-import { cadenceSidebar } from '../../models/sidenavbar';
+import {
+  buyboxChecklist,
+  cadenceSidebar,
+  ContactsChecked,
+  IBuyBoxContact,
+  IBuyboxOrganization,
+  IUserBuybox,
+  OrganizationChecked,
+} from '../../models/sidenavbar';
 import { IKanbanDetails } from '../../models/ikanban-details';
 import { CadenceService } from 'src/app/core/services/cadence.service';
+import { EmilyService } from 'src/app/core/services/emily.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -43,23 +52,28 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private viewSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;
 
+  userBuyboxes: IUserBuybox[] = [];
+  buyboxOrganizations: IBuyboxOrganization[] = [];
+  BuyBoxContacts: IBuyBoxContact[] = [];
+
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
     private userViewService: UserViewService,
     private PlacesService: PlacesService,
     protected cadenceService: CadenceService,
-    protected cdr: ChangeDetectorRef
+    protected cdr: ChangeDetectorRef,
+    private EmilyService: EmilyService
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isSidebarExpanded = !state;
-      // Notify the service about sidebar state changes
       this.sidbarService.setSidebarState(this.isSidebarExpanded);
     });
   }
 
   ngOnInit(): void {
     this.getUserKanbans();
+    this.getBuyBoxes();
     this.isSmallScreen = window.innerWidth < 992;
     this.isSidebarExpanded = false;
     this.sidbarService.setSidebarState(this.isSidebarExpanded);
@@ -124,6 +138,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   protected allUserKanbans: IUserKanban[] = [];
   sideKanban: cadenceSidebar = { tenantOrganizations: [] }; // Initialize with a default value
   cadenceIsOpen = false;
+  emilyIsOpen = false;
 
   private getUserKanbans(): void {
     const body: any = {
@@ -168,4 +183,205 @@ export class SidebarComponent implements OnInit, OnDestroy {
       },
     });
   }
+
+  // Start Emily Sidebar
+  getBuyBoxes(): void {
+    const body: any = {
+      Name: 'GetUserBuyBoxes',
+      Params: {},
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.userBuyboxes = data.json;
+        this.userBuyboxes.forEach((buybox) => {
+          this.getOrgnizations(buybox);
+        });
+      },
+    });
+  }
+
+  getOrgnizations(buybox: IUserBuybox): void {
+    const body: any = {
+      Name: 'GetOrganizationsByBuyBox',
+      MainEntity: null,
+      Params: {
+        BuyBoxId: buybox.id,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data.json && Array.isArray(data.json)) {
+          buybox.IBuyboxOrganization = data.json;
+        } else {
+          buybox.IBuyboxOrganization = [];
+        }
+      },
+    });
+  }
+
+  getOrgnizationData(buybox: IUserBuybox, buyboxOpen: boolean): void {
+    buybox.IBuyboxOrganization.forEach((org) => {
+      this.getContactAndCenters(buybox.id, org, buyboxOpen);
+    });
+  }
+
+  getContactAndCenters(
+    buyboxId: number,
+    organization: IBuyboxOrganization,
+    isOpen: boolean
+  ): void {
+    const body: any = {
+      Name: 'GetShoppingCenterManagerContacts',
+      MainEntity: null,
+      Params: {
+        buyboxid: buyboxId,
+        organizationid: organization.id,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        if (data?.json && Array.isArray(data.json)) {
+          this.BuyBoxContacts = data.json[0].Contact;
+          organization.contacts = data.json[0].Contact;
+          organization.contacts = organization.contacts.filter(
+            (c) => c.Centers
+          );
+
+          if (!isOpen) {
+            organization.contacts.forEach((contact) => {
+              contact.checked = true;
+              contact.Centers.forEach((center) => {
+                center.checked = true;
+              });
+            });
+          }
+        } else {
+          this.BuyBoxContacts = [];
+        }
+      },
+    });
+  }
+
+  checkBuybox(event: any, buybox: IUserBuybox) {
+    const value = event.target.checked;
+    this.userBuyboxes.forEach((bb) => {
+      if (bb.id != buybox.id) {
+        bb.checked = false;
+        if (bb.IBuyboxOrganization) {
+          bb.IBuyboxOrganization.forEach((org) => {
+            org.checked = false;
+            org.contacts?.forEach((contact) => {
+              contact.checked = false;
+              contact.Centers?.forEach((center) => {
+                center.checked = false;
+              });
+            });
+          });
+        }
+      } else {
+        buybox.checked = value;
+        if (buybox.checked) {
+          buybox.IBuyboxOrganization.forEach((org) => {
+            org.checked = value;
+            org.contacts?.forEach((contact) => {
+              contact.checked = value;
+              contact.Centers?.forEach((center) => {
+                center.checked = value;
+              });
+            });
+            //this.GetBuyBoxOrganizationsForEmail(buybox.id, org);
+          });
+        } else {
+          buybox.IBuyboxOrganization.forEach((org) => {
+            org.checked = value;
+            org.contacts?.forEach((contact) => {
+              contact.checked = value;
+              contact.Centers?.forEach((center) => {
+                center.checked = value;
+              });
+            });
+          });
+        }
+      }
+    });
+  }
+
+  checkContacts(event: any, contacts: IBuyBoxContact[]) {
+    const value = event.target.checked;
+    contacts.forEach((contact) => {
+      contact.checked = value;
+      contact.Centers?.forEach((center) => {
+        center.checked = value;
+      });
+    });
+  }
+
+  checkShoppingCenter(event: any, contact: IBuyBoxContact) {
+    let value = event.target.checked;
+    contact.checked = value;
+  }
+
+  updateCheckList() {
+    let checkList: buyboxChecklist = {
+      buyboxId: [],
+      organizations: [],
+    };
+
+    this.userBuyboxes.forEach((buybox) => {
+      // Add checked buybox IDs
+      if (buybox.checked) {
+        checkList.buyboxId.push(buybox.id);
+      }
+
+      // Handle organizations
+      let orgCheckedList: OrganizationChecked[] = [];
+
+      buybox.IBuyboxOrganization?.forEach((org) => {
+        if (org.checked) {
+          let contactsCheckedList: ContactsChecked[] = [];
+
+          // Handle contacts (assuming you have IBuyboxContacts array inside org)
+          org.contacts?.forEach((contact) => {
+            if (contact.checked) {
+              // Handle shoppingCenterIds (assuming you have IShoppingCenters array inside contact)
+              let shoppingCenterCheckedIds: number[] = [];
+
+              contact.Centers.forEach((sc) => {
+                if (sc.checked) {
+                  shoppingCenterCheckedIds.push(sc.id);
+                }
+              });
+
+              // Add contact
+
+              contactsCheckedList.push({
+                id: contact.id,
+                shoppingCenterId: shoppingCenterCheckedIds,
+              });
+            }
+          });
+
+          orgCheckedList.push({
+            id: org.id,
+            contacts: contactsCheckedList,
+          });
+        }
+      });
+
+      // Combine organizations
+      if (orgCheckedList.length > 0) {
+        checkList.organizations.push(...orgCheckedList);
+      }
+    });
+
+    this.EmilyService.updateCheckList(checkList);
+
+    // console.log(checkList);
+  }
+
+  isAnyBuyboxChecked(): boolean {
+    return this.userBuyboxes && this.userBuyboxes.some(buybox => buybox.checked);
+  }
+
+  // End Emily
 }

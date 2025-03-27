@@ -5,91 +5,45 @@
     collapsed: !isSidebarExpanded && !isHovering
   }"
 >
-  <div
-    class="sidebar"
-    (mouseenter)="onSidebarHover(true)"
-    (mouseleave)="onSidebarHover(false)"
-  >
+  <!-- 
+(mouseenter)="onSidebarHover(true)"
+(mouseleave)="onSidebarHover(false)" -->
+  <div class="sidebar">
     <ul class="sidebar-nav">
       <li class="sidebar-item">
-        <div class="sidebar-logo">
+        <div class="sidebar-logo d-flex justify-content-start align-items-center" >
           <img
-            *ngIf="isSidebarExpanded || isHovering"
             alt="logo"
             class="cherry-logo"
             [routerLink]="
               current.includes('landlord') ? ['/landlord'] : ['/summary']
             "
-            decoding="async"
-            src="../../../assets/Images/logo.png"
-          />
-          <img
-            *ngIf="!isSidebarExpanded && !isHovering"
-            alt="logo"
-            class="cherry-logo"
-            [routerLink]="
-              current.includes('landlord') ? ['/landlord'] : ['/summary']
-            "
-            decoding="async"
             src="../../../assets/Images/Icons/logo (1).png"
           />
+          <p class="cherry mb-0" *ngIf="isSidebarExpanded">Cherry<span class="pick">pick</span></p>
         </div>
       </li>
       <li class="sidebar-item">
         <a
-          [routerLink]="['/Submissions']"
-          routerLinkActive="active-route"
-          class="sidebar-link"
+        [routerLink]="['/Submissions']"
+        routerLinkActive="active-route"
+        class="sidebar-link"
+        title="Submissions"
         >
-          <svg
-            style="height: 21px; width: 21px"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M17 22.75H7C2.59 22.75 1.25 21.41 1.25 17V7C1.25 2.59 2.59 1.25 7 1.25H8.5C10.25 1.25 10.8 1.82 11.5 2.75L13 4.75C13.33 5.19 13.38 5.25 14 5.25H17C21.41 5.25 22.75 6.59 22.75 11V17C22.75 21.41 21.41 22.75 17 22.75ZM7 2.75C3.42 2.75 2.75 3.43 2.75 7V17C2.75 20.57 3.42 21.25 7 21.25H17C20.58 21.25 21.25 20.57 21.25 17V11C21.25 7.43 20.58 6.75 17 6.75H14C12.72 6.75 12.3 6.31 11.8 5.65L10.3 3.65C9.78 2.96 9.62 2.75 8.5 2.75H7Z"
-              fill="#707791"
-            />
-            <path
-              d="M20 7.13C19.59 7.13 19.25 6.79 19.25 6.38V5C19.25 3.42 18.58 2.75 17 2.75H8C7.59 2.75 7.25 2.41 7.25 2C7.25 1.59 7.59 1.25 8 1.25H17C19.42 1.25 20.75 2.58 20.75 5V6.38C20.75 6.79 20.41 7.13 20 7.13Z"
-              fill="#707791"
-            />
-          </svg>
-          <span class="link-text">Submissions</span>
+        <img class="img-icn" src="../../../assets/Images/Icons/Dashboard.svg">
+        <span class="link-text">Submissions</span>
         </a>
       </li>
 
       <li class="sidebar-item">
         <a
-          [routerLink]="['/campaigns']"
-          routerLinkActive="active-route"
-          class="sidebar-link"
+        [routerLink]="['/campaigns']"
+        routerLinkActive="active-route"
+        class="sidebar-link"
+        title="Campaigns"
+
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="21"
-            height="21"
-            viewBox="0 0 21 21"
-            fill="none"
-          >
-            <path
-              d="M15.7667 10.5001C17.9333 10.5001 18.8333 9.66674 18.0333 6.9334C17.4917 5.09174 15.9083 3.5084 14.0667 2.96673C11.3333 2.16673 10.5 3.06673 10.5 5.2334V7.6334C10.5 9.66674 11.3333 10.5001 13 10.5001H15.7667Z"
-              stroke="#707791"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M17.1667 12.7499C16.3917 16.6082 12.6917 19.4082 8.48336 18.7249C5.32502 18.2166 2.78336 15.6749 2.26669 12.5166C1.59169 8.32489 4.37502 4.62489 8.21669 3.84155"
-              stroke="#707791"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+        <img class="img-icn" src="../../../assets/Images/Icons/Campains.svg">
           <span class="link-text">Campaigns</span>
         </a>
       </li>
@@ -101,56 +55,19 @@
           style="cursor: pointer"
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
+          title="Cadence"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="21"
-            height="21"
-            viewBox="0 0 21 21"
-            fill="none"
-          >
-            <path
-              d="M19.6666 19.4583H1.33325C0.991585 19.4583 0.708252 19.1749 0.708252 18.8333C0.708252 18.4916 0.991585 18.2083 1.33325 18.2083H19.6666C20.0082 18.2083 20.2916 18.4916 20.2916 18.8333C20.2916 19.1749 20.0082 19.4583 19.6666 19.4583Z"
-              fill="#707791"
-            />
-            <path
-              d="M16.9836 19.4667C16.642 19.4667 16.3586 19.1834 16.3586 18.8417V15.125C16.3586 14.7833 16.642 14.5 16.9836 14.5C17.3253 14.5 17.6086 14.7833 17.6086 15.125V18.8417C17.6086 19.1834 17.3336 19.4667 16.9836 19.4667Z"
-              fill="#707791"
-            />
-            <path
-              d="M17.0001 15.75C15.6418 15.75 14.5417 14.65 14.5417 13.2916V11.4C14.5417 10.0417 15.6418 8.94165 17.0001 8.94165C18.3584 8.94165 19.4584 10.0417 19.4584 11.4V13.2916C19.4584 14.65 18.3584 15.75 17.0001 15.75ZM17.0001 10.2C16.3334 10.2 15.7917 10.7417 15.7917 11.4083V13.3C15.7917 13.9666 16.3334 14.5083 17.0001 14.5083C17.6668 14.5083 18.2084 13.9666 18.2084 13.3V11.4083C18.2084 10.7417 17.6668 10.2 17.0001 10.2Z"
-              fill="#707791"
-            />
-            <path
-              d="M12.4164 19.4583C12.0748 19.4583 11.7914 19.175 11.7914 18.8333V5.52498C11.7914 4.19998 11.2331 3.6333 9.93311 3.6333H4.74146C3.43312 3.6333 2.86646 4.19998 2.86646 5.52498V18.8333C2.86646 19.175 2.58312 19.4583 2.24146 19.4583C1.89979 19.4583 1.61646 19.175 1.61646 18.8333V5.52498C1.61646 3.49998 2.72479 2.3833 4.74146 2.3833H9.93311C11.9414 2.3833 13.0414 3.49998 13.0414 5.52498V18.8333C13.0414 19.175 12.7581 19.4583 12.4164 19.4583Z"
-              fill="#707791"
-            />
-            <path
-              d="M9.45826 8H5.33325C4.99159 8 4.70825 7.71667 4.70825 7.375C4.70825 7.03333 4.99159 6.75 5.33325 6.75H9.45826C9.79993 6.75 10.0833 7.03333 10.0833 7.375C10.0833 7.71667 9.79993 8 9.45826 8Z"
-              fill="#707791"
-            />
-            <path
-              d="M9.45826 11.125H5.33325C4.99159 11.125 4.70825 10.8417 4.70825 10.5C4.70825 10.1583 4.99159 9.875 5.33325 9.875H9.45826C9.79993 9.875 10.0833 10.1583 10.0833 10.5C10.0833 10.8417 9.79993 11.125 9.45826 11.125Z"
-              fill="#707791"
-            />
-            <path
-              d="M7.375 19.4583C7.03333 19.4583 6.75 19.1749 6.75 18.8333V15.7083C6.75 15.3666 7.03333 15.0833 7.375 15.0833C7.71667 15.0833 8 15.3666 8 15.7083V18.8333C8 19.1749 7.71667 19.4583 7.375 19.4583Z"
-              fill="#707791"
-            />
-          </svg>
-          <span class="link-text">Cadence</span>
-          <span
-            style="margin-left: auto"
+        <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg">
+        
+          <i
             *ngIf="isSidebarExpanded || isHovering"
-          >
-            <i
-              class="fa-solid fa-chevron-down"
-              [style.transform]="
-                cadenceIsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-              "
-              style="transition: transform 0.3s ease"
-            ></i>
-          </span>
+            class="fa-solid fa-chevron-down"
+            [style.transform]="
+              cadenceIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
+            "
+            style="transition: transform 0.3s ease; margin-left: 5px;"
+          ></i>
+          <span class="link-text">Cadence</span>
         </a>
 
         <ul
@@ -196,7 +113,7 @@
                   <i
                     class="fa-solid fa-chevron-down"
                     [style.transform]="
-                      org.isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                      org.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
                     "
                     style="transition: transform 0.3s ease"
                   ></i>
@@ -248,71 +165,148 @@
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Tenants"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="21"
-            height="21"
-            viewBox="0 0 21 21"
-            fill="none"
-          >
-            <path
-              d="M16.975 11.4584H13.6083C12.8384 11.4584 12.3662 11.2795 12.0842 11.0097C11.8066 10.744 11.625 10.305 11.625 9.58341V3.91675C11.625 3.19652 11.808 2.75719 12.0869 2.49093C12.3704 2.22034 12.8432 2.04175 13.6083 2.04175H16.975C17.7449 2.04175 18.2171 2.22063 18.4991 2.49049C18.7768 2.7562 18.9583 3.19518 18.9583 3.91675V9.58341C18.9583 10.3036 18.7754 10.743 18.4964 11.0092C18.213 11.2798 17.7401 11.4584 16.975 11.4584ZM13.6083 2.29175C13.0806 2.29175 12.5756 2.35068 12.2412 2.68507C11.9031 3.02321 11.875 3.50968 11.875 3.91675V9.58341C11.875 9.99048 11.9031 10.477 12.2412 10.8151C12.5756 11.1495 13.0806 11.2084 13.6083 11.2084H16.975C17.5027 11.2084 18.0077 11.1495 18.3421 10.8151C18.6802 10.477 18.7083 9.99048 18.7083 9.58341V3.91675C18.7083 3.50968 18.6802 3.02321 18.3421 2.68507C18.0077 2.35068 17.5027 2.29175 16.975 2.29175H13.6083Z"
-              fill="#707791"
-              stroke="#707791"
-            />
-            <path
-              d="M16.975 19.4583H13.6083C11.9333 19.4583 11.125 18.6833 11.125 17.0833V15.5833C11.125 13.9833 11.9417 13.2083 13.6083 13.2083H16.975C18.65 13.2083 19.4583 13.9833 19.4583 15.5833V17.0833C19.4583 18.6833 18.6417 19.4583 16.975 19.4583ZM13.6083 14.4583C12.55 14.4583 12.375 14.7416 12.375 15.5833V17.0833C12.375 17.9249 12.55 18.2083 13.6083 18.2083H16.975C18.0333 18.2083 18.2083 17.9249 18.2083 17.0833V15.5833C18.2083 14.7416 18.0333 14.4583 16.975 14.4583H13.6083Z"
-              fill="#707791"
-            />
-            <path
-              d="M7.39175 19.4584H4.02508C2.35008 19.4584 1.54175 18.6834 1.54175 17.0834V11.4167C1.54175 9.81675 2.35841 9.04175 4.02508 9.04175H7.39175C9.06675 9.04175 9.87508 9.81675 9.87508 11.4167V17.0834C9.87508 18.6834 9.05841 19.4584 7.39175 19.4584ZM4.02508 10.2917C2.96675 10.2917 2.79175 10.5751 2.79175 11.4167V17.0834C2.79175 17.9251 2.96675 18.2084 4.02508 18.2084H7.39175C8.45008 18.2084 8.62508 17.9251 8.62508 17.0834V11.4167C8.62508 10.5751 8.45008 10.2917 7.39175 10.2917H4.02508Z"
-              fill="#707791"
-            />
-            <path
-              d="M7.39175 7.79175H4.02508C2.35008 7.79175 1.54175 7.01675 1.54175 5.41675V3.91675C1.54175 2.31675 2.35841 1.54175 4.02508 1.54175H7.39175C9.06675 1.54175 9.87508 2.31675 9.87508 3.91675V5.41675C9.87508 7.01675 9.05841 7.79175 7.39175 7.79175ZM4.02508 2.79175C2.96675 2.79175 2.79175 3.07508 2.79175 3.91675V5.41675C2.79175 6.25841 2.96675 6.54175 4.02508 6.54175H7.39175C8.45008 6.54175 8.62508 6.25841 8.62508 5.41675V3.91675C8.62508 3.07508 8.45008 2.79175 7.39175 2.79175H4.02508Z"
-              fill="#707791"
-            />
-          </svg>
+        <img class="img-icn" src="../../../assets/Images/Icons/Tenant.svg">
           <span class="link-text">Tenants</span>
         </a>
       </li>
+
       <li class="sidebar-item">
+        <!-- [routerLink]="['/MutipleEmail']" -->
         <a
-          [routerLink]="['/EmilyUserInbox']"
           class="sidebar-link"
           routerLinkActive="active-route"
+          [routerLink]="['/EmilyUserInbox']"
+          title="Emily"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="25"
-            viewBox="0 0 24 25"
-            fill="none"
-          >
-            <path
-              d="M9.98999 23.28C9.38999 23.28 8.81999 22.98 8.42999 22.45L7.23001 20.85C7.23001 20.86 7.18 20.83 7.16 20.83H6.79001C3.37001 20.83 1.25 19.9 1.25 15.29V11.29C1.25 7.08001 3.82001 5.98001 5.98001 5.79001C6.22001 5.76001 6.50001 5.75 6.79001 5.75H13.19C16.81 5.75 18.73 7.67001 18.73 11.29V15.29C18.73 15.58 18.72 15.86 18.68 16.13C18.5 18.26 17.4 20.83 13.19 20.83H12.79L11.55 22.45C11.16 22.98 10.59 23.28 9.98999 23.28ZM6.79001 7.25C6.56001 7.25 6.34 7.26 6.13 7.28C3.81 7.48 2.75 8.75001 2.75 11.29V15.29C2.75 18.72 3.81001 19.33 6.79001 19.33H7.19C7.64 19.33 8.14999 19.58 8.42999 19.94L9.63 21.55C9.85001 21.85 10.13 21.85 10.35 21.55L11.55 19.95C11.84 19.56 12.3 19.33 12.79 19.33H13.19C15.73 19.33 17 18.26 17.19 15.98C17.22 15.74 17.23 15.52 17.23 15.29V11.29C17.23 8.50001 15.98 7.25 13.19 7.25H6.79001Z"
-              fill="#707791"
-            />
-            <path
-              d="M9.99023 14.6904C9.43023 14.6904 8.99023 14.2404 8.99023 13.6904C8.99023 13.1404 9.44023 12.6904 9.99023 12.6904C10.5402 12.6904 10.9902 13.1404 10.9902 13.6904C10.9902 14.2404 10.5502 14.6904 9.99023 14.6904Z"
-              fill="#707791"
-            />
-            <path
-              d="M13.1899 14.6904C12.6299 14.6904 12.1899 14.2404 12.1899 13.6904C12.1899 13.1404 12.6399 12.6904 13.1899 12.6904C13.7399 12.6904 14.1899 13.1404 14.1899 13.6904C14.1899 14.2404 13.7399 14.6904 13.1899 14.6904Z"
-              fill="#707791"
-            />
-            <path
-              d="M6.7998 14.6904C6.2398 14.6904 5.7998 14.2404 5.7998 13.6904C5.7998 13.1404 6.2498 12.6904 6.7998 12.6904C7.3498 12.6904 7.7998 13.1404 7.7998 13.6904C7.7998 14.2404 7.3498 14.6904 6.7998 14.6904Z"
-              fill="#707791"
-            />
-            <path
-              d="M17.9401 16.79C17.7401 16.79 17.5401 16.71 17.4001 16.56C17.2401 16.4 17.1701 16.17 17.2001 15.95C17.2301 15.74 17.2401 15.52 17.2401 15.29V11.29C17.2401 8.50001 15.9901 7.25 13.2001 7.25H6.80012C6.57012 7.25 6.35015 7.26 6.14015 7.28C5.92015 7.31 5.69013 7.22999 5.53013 7.07999C5.37013 6.91999 5.28012 6.70001 5.30012 6.48001C5.48012 4.32001 6.59012 1.75 10.8001 1.75H17.2001C20.8201 1.75 22.7401 3.67001 22.7401 7.29001V11.29C22.7401 15.5 20.1701 16.6 18.0101 16.79C17.9801 16.79 17.9601 16.79 17.9401 16.79ZM6.92015 5.75H13.1901C16.8101 5.75 18.7301 7.67001 18.7301 11.29V15.16C20.4301 14.74 21.2301 13.49 21.2301 11.29V7.29001C21.2301 4.50001 19.9801 3.25 17.1901 3.25H10.7901C8.59014 3.25 7.35015 4.05 6.92015 5.75Z"
-              fill="#707791"
-            />
-          </svg>
-          <span class="link-text">Emily</span>
-        </a>
+        <img class="img-icn" src="../../../assets/Images/Icons/Emily.svg">
+        <div class="d-flex"*ngIf="isSidebarExpanded" style="margin-left: 5px;">
+          <i
+            (click)="emilyIsOpen = !emilyIsOpen"
+            *ngIf="isSidebarExpanded || isHovering"
+            class="fa-solid fa-chevron-down"
+            [style.transform]="emilyIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'"
+            style="transition: transform 0.3s ease"
+          ></i>
+
+          <span class="link-text d-flex justify-content-between w-100 align-items-center"
+            >Emily
+            <i *ngIf="isAnyBuyboxChecked()"
+              class="fa-solid fa-paper-plane ms-2" [routerLink]="['/MutipleEmail']"  (click)="updateCheckList()"
+              ></i
+              >
+            </span>
+          </div>
+            </a>
+        <ul
+          class="sidebar-nav"
+          *ngIf="
+            (emilyIsOpen && isSidebarExpanded) || (emilyIsOpen && isHovering)
+          "
+        >
+          <ng-container *ngFor="let userBuybox of userBuyboxes">
+            <li class="sidebar-item">
+              <a class="sidebar-link" style="cursor: pointer">
+                <i
+                  (click)="
+                    userBuybox.isOpen = !userBuybox.isOpen;
+                    getOrgnizationData(userBuybox, userBuybox.isOpen)
+                  "
+                  class="fa-solid fa-chevron-down me-1"
+                  [style.transform]="
+                    userBuybox.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
+                  "
+                  style="transition: transform 0.3s ease"
+                ></i>
+                <input
+                  (click)="$event.stopPropagation()"
+                  (change)="checkBuybox($event, userBuybox)"
+                  type="checkbox"
+                  *ngIf="userBuybox.isOpen"
+                  class="mx-1"
+                  [checked]="userBuybox.checked"
+                />
+
+                <img
+                  class="Oganirzations__img"
+                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                    userBuybox.organizationId
+                  }}"
+                />
+                <span class="link-text">
+                  {{ userBuybox.name }}
+                </span>
+              </a>
+            </li>
+
+            <ul class="sidebar-nav ms-4" *ngIf="userBuybox.isOpen">
+              <ng-container *ngFor="let org of userBuybox.IBuyboxOrganization">
+                <li class="sidebar-item">
+                  <a class="sidebar-link" style="cursor: pointer">
+                    <i
+                      (click)="org.isOpen = !org.isOpen"
+                      class="fa-solid fa-chevron-down"
+                      [style.transform]="
+                        org.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
+                      "
+                      style="transition: transform 0.3s ease"
+                    ></i>
+                    <input
+                      (change)="checkContacts($event, org.contacts)"
+                      type="checkbox"
+                      class="mx-1"
+                      [(ngModel)]="org.checked"
+                    />
+                    <img
+                      width="20"
+                      height="20"
+                      class="me-1"
+                      style="border-radius: 50%"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        org.id
+                      }}"
+                    />
+                    <span class="link-text">
+                      {{ org.name }}
+                    </span>
+                  </a>
+                  <ul class="sidebar-nav ms-4" *ngIf="org.isOpen">
+                    <ng-container *ngFor="let contact of org.contacts">
+                      <li class="sidebar-item">
+                        <div class="ms-4">
+                          <span class="link-text">
+                            <input
+                              type="checkbox"
+                              name="contact-{{
+                                contact.Firstname + contact.Lastname
+                              }}"
+                              [(ngModel)]="contact.checked"
+                            />
+                            {{ contact.Firstname }} {{ contact.Lastname }}
+                          </span>
+                        </div>
+                        <ng-container *ngFor="let center of contact.Centers">
+                          <div class="ms-4">
+                            <span class="link-text ms-4" style="color: #72777a">
+                              <input
+                                type="checkbox"
+                                (change)="checkShoppingCenter($event, contact)"
+                                name="shopping-center-{{ center.CenterName }}"
+                                [(ngModel)]="center.checked"
+                              />
+                              {{ center.CenterName }}
+                            </span>
+                          </div>
+                        </ng-container>
+                      </li>
+                    </ng-container>
+                  </ul>
+                </li>
+              </ng-container>
+            </ul>
+          </ng-container>
+        </ul>
       </li>
     </ul>
   </div>

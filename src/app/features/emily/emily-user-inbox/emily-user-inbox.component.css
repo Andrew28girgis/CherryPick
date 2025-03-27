@@ -100,6 +100,7 @@
 
 .card-body {
   overflow-y: auto;
+  width: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

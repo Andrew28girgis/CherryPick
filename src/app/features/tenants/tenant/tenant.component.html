@@ -8,7 +8,7 @@
             <img
               class="tenant-logo"
               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                buyboxid
+                selectedbuyBox
               }}"
               alt="Tenant Logo"
             />
@@ -18,7 +18,7 @@
           >
             <div>
               <span class="buyboxname">
-                {{ buyboxname }}
+                <!-- {{ buyboxname }} -->
               </span>
             </div>
             <!-- <div>
@@ -40,17 +40,17 @@
           <div class="d-flex flex-column text-center">
             <span class="boldtext">Size needed</span>
             <div class="d-flex justify-content-start">
-              <span class="lowwhite" style="white-space: nowrap">
+              <!-- <span class="lowwhite" style="white-space: nowrap">
                 {{ MinBuildingSize ? MinBuildingSize + " SF" : "" }}
-              </span>
-              <span
+              </span> -->
+              <!-- <span
                 class="lowwhite mx-2"
                 *ngIf="MinBuildingSize && MaxBuildingSize"
               >
                 -
-              </span>
+              </span> -->
               <span class="lowwhite">
-                {{ MaxBuildingSize ? MaxBuildingSize + " SF" : "" }}
+                <!-- {{ MaxBuildingSize ? MaxBuildingSize + " SF" : "" }} -->
               </span>
             </div>
           </div>
@@ -70,7 +70,7 @@
           <div class="d-flex flex-column text-center">
             <span class="boldtext">States</span>
             <div class="d-flex justify-content-start">
-              <span class="lowwhite"> {{ states }} </span>
+              <!-- <span class="lowwhite"> {{ states }} </span> -->
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@
           <div class="d-flex flex-column text-center">
             <span class="boldtext">Cities</span>
             <div class="d-flex justify-content-start">
-              <span class="lowwhite"> {{ address }} </span>
+              <!-- <span class="lowwhite"> {{ address }} </span> -->
             </div>
           </div>
         </div>
@@ -105,10 +105,10 @@
         </div>
         <span>Share</span>
       </button>
-
+      <!-- 
       <button class="btn-submit" (click)="openUploadModal(test)">
         <span>Submit a proposal</span>
-      </button>
+      </button> -->
     </div>
   </div>
 
@@ -116,7 +116,7 @@
     <div class="row">
       <div class="col-lg-8 col-md-7 order-2 order-md-0 mt-3 mt-md-0">
         <span class="Osmowstext">
-          {{ buyboxDescription }}
+          <!-- {{ buyboxDescription }} -->
         </span>
       </div>
       <div class="col-lg-4 col-md-5 order-1 order-md-0">
@@ -127,22 +127,22 @@
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-center">
               <div class="col-4">
-                <img
+                <!-- <img
                   class="brokerandmangeorgimage"
                   [src]="brokerphoto"
                   alt="Broker Photo"
-                />
+                /> -->
               </div>
 
               <div class="col-7 offset-1">
                 <div class="d-flex flex-column text-start">
                   <div class="d-flex align-items-center justify-content-start">
-                    <span class="namee me-2">
+                    <!-- <span class="namee me-2">
                       {{ firstnamemanagerorganization }}
                     </span>
                     <span class="namee">
                       {{ lastnamemanagerorganization }}
-                    </span>
+                    </span> -->
                   </div>
 
                   <div class="frameee">
@@ -156,9 +156,9 @@
                     >
                   </div>
 
-                  <a [href]="brokerlinkedin" target="_blank">
+                  <!-- <a [href]="brokerlinkedin" target="_blank">
                     <span class="linkedin">{{ brokerlinkedin }}</span>
-                  </a>
+                  </a> -->
                 </div>
               </div>
             </div>
@@ -169,17 +169,17 @@
             </div>
             <div class="d-flex align-items-center justify-content-center">
               <div class="col-4">
-                <img
+                <!-- <img
                   class="brokerandmangeorgimage"
                   src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                     managementorganizationId
                   }}"
                   alt="Organization Image"
-                />
+                /> -->
               </div>
               <div class="col-7 offset-1">
                 <div class="d-flex flex-column text-start">
-                  <span class="namee"> {{ managementorganizationname }} </span>
+                  <!-- <span class="namee"> {{ managementorganizationname }} </span> -->
                   <div class="frameee">
                     <span
                       class="broker"
@@ -204,13 +204,13 @@
     <div
       class="d-flex align-items-center justify-content-center gap-2 mt-md-3 mt-0"
     >
-      <button
+      <!-- <button
         class="btn-submit-proposel"
         (click)="openUploadModal(test)"
         [ngStyle]="{ background: buyboxcolor }"
       >
         <span>Submit a proposal</span>
-      </button>
+      </button> -->
       <button
         class="btn-share"
         [ngStyle]="{ color: buyboxcolor, border: '1px solid ' + buyboxcolor }"
@@ -228,37 +228,37 @@
       class="col-8 offset-4 offset-md-3 offset-lg-4 offset-xl-3 col-md-9 col-lg-8 col-xl-9"
     >
       <div class="d-flex align-items-center justify-content-start">
-        <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
-        <span class="nameincard">{{ lastnamemanagerorganization }}</span>
+        <!-- <span class="nameincard me-2">{{ firstnamemanagerorganization }}</span>
+        <span class="nameincard">{{ lastnamemanagerorganization }}</span> -->
       </div>
     </div>
   </div>
   <div class="row colorr mt-4" [ngStyle]="{ background: buyboxcolor }">
     <div class="col-4 col-md-3 col-lg-4 col-xl-3 position-relative">
       <div class="broker-container broker-containerrrr">
-        <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" />
+        <!-- <img class="imagebroker" [src]="brokerphoto" alt="Broker Photo" /> -->
       </div>
     </div>
 
     <div class="col-8 col-md-9 col-lg-8 col-xl-9">
-      <div class="d-flex flex-column text-start">
+      <!-- <div class="d-flex flex-column text-start">
         <span class="brokertext" [innerHTML]="brokersignature"></span>
-      </div>
+      </div> -->
     </div>
   </div>
 
   <div class="container mt-4">
     <div class="d-flex align-items-center">
-      <img
+      <!-- <img
         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
           managementorganizationId
         }}"
         alt="Organization Image"
         class="organization-image"
-      />
+      /> -->
 
       <div class="ml-3">
-        <span class="nameincard">{{ managementorganizationname }}</span>
+        <!-- <span class="nameincard">{{ managementorganizationname }}</span> -->
         <div class="brokerframeee">
           <span
             class="broker"
@@ -274,7 +274,7 @@
     </div>
 
     <hr class="customm-hr" />
-    <span class="grayspan" [innerHTML]="ManagerOrganizationDescription"></span>
+    <!-- <span class="grayspan" [innerHTML]="ManagerOrganizationDescription"></span> -->
   </div>
 
   <div class="row">
@@ -297,9 +297,9 @@
       </h1>
     </div>
   </div> -->
-  <div class="modal-body" style="overflow: auto;">
+  <div class="modal-body" style="overflow: auto">
     <div class="outer-frame" *ngIf="!fileName">
-      <div class="inner-frame" >
+      <div class="inner-frame">
         <!-- File drop area shown if no file has been selected -->
         <ngx-file-drop
           class="dropzonee"
@@ -325,18 +325,15 @@
           </ng-template>
         </ngx-file-drop>
       </div>
-    
     </div>
     <div class="filenameouterframe" *ngIf="fileName">
-      <div class="filenameinnerframe" >
+      <div class="filenameinnerframe">
         <!-- Display file name once a file is selected -->
         <div
           class="d-flex align-items-center justify-content-between uploaded-file-container"
         >
           <div class="filename">{{ fileName }}</div>
-          <button class="clear-button" (click)="clearModalData() ">
-            Clear
-          </button>
+          <button class="clear-button" (click)="clearModalData()">Clear</button>
         </div>
       </div>
     </div>
@@ -368,39 +365,41 @@
   </div>
 
   <!-- Display Images Section -->
-<div *ngIf="images.length > 0 && !isSubmitting" class="extractedimagespadding">
-  <h4 class="my-prop">Converted Pdf to Extracted Images</h4>
+  <div
+    *ngIf="images.length > 0 && !isSubmitting"
+    class="extractedimagespadding"
+  >
+    <h4 class="my-prop">Converted Pdf to Extracted Images</h4>
 
-  <!-- Check if the number of images is greater than 3, and only display this section if there are more than 3 images -->
-  <div *ngIf="images.length > 3">
-    <div class="row">
-      <div *ngFor="let image of images" class="col-md-4 mb-3">
-        <div class="card">
-          <div class="form-check m-2 mb-0">
-            <input
-              type="checkbox"
-              class="form-check-input input-sty"
-              style="border: 2px solid #cbcbcb"
-              [(ngModel)]="image.selected"
-              id="checkbox-{{ image.name }}"
+    <!-- Check if the number of images is greater than 3, and only display this section if there are more than 3 images -->
+    <div *ngIf="images.length > 3">
+      <div class="row">
+        <div *ngFor="let image of images" class="col-md-4 mb-3">
+          <div class="card">
+            <div class="form-check m-2 mb-0">
+              <input
+                type="checkbox"
+                class="form-check-input input-sty"
+                style="border: 2px solid #cbcbcb"
+                [(ngModel)]="image.selected"
+                id="checkbox-{{ image.name }}"
+              />
+              <label class="form-check-label" for="checkbox-{{ image.name }}">
+              </label>
+            </div>
+            <img
+              [src]="displayCustomImage(image)"
+              [alt]="image.name"
+              class="img-fluid gpt-image"
             />
-            <label class="form-check-label" for="checkbox-{{ image.name }}">
-            </label>
-          </div>
-          <img
-            [src]="displayCustomImage(image)"
-            [alt]="image.name"
-            class="img-fluid gpt-image"
-          />
-          <div class="card-body">
-            <p class="text-center mt-2">{{ image.name }}</p>
+            <div class="card-body">
+              <p class="text-center mt-2">{{ image.name }}</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- Display JsonPDF Data Section -->
   <div *ngIf="JsonPDF" class="mt-3 shopping-center-container">
@@ -534,7 +533,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer" *ngIf="!returnsubmit" >
+  <div class="modal-footer" *ngIf="!returnsubmit">
     <div class="row w-100">
       <!-- Cancel Button (Left Column) -->
       <div class="col-6">
@@ -548,7 +547,9 @@
 
       <!-- Submit Button (Right Column) -->
       <div class="col-6">
-        <button class="submit-button"  (click)="sendImagesArray()" >Submit</button>
+        <button class="submit-button" (click)="sendImagesArray()">
+          Submit
+        </button>
       </div>
     </div>
   </div>
@@ -580,18 +581,20 @@
   </div>
   <div class="modal-footer">
     <!-- Send Selected Images Button -->
-    <div class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf">
-        <!-- <button
+    <div
+      class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+    >
+      <!-- <button
           class="convertimages mx-1"
           (click)="sendImagesArray()"
           *ngIf="images.length > 0"
         >
           Convert Images
         </button> -->
-          <button class="submitpdfbutton" *ngIf="JsonPDF" (click)="sendJson()">
-            Submit PDF Data
-          </button>
-          <!-- <button
+      <button class="submitpdfbutton" *ngIf="JsonPDF" (click)="sendJson()">
+        Submit PDF Data
+      </button>
+      <!-- <button
             class="btn btn-secondary mx-1"
             (click)="clearModalData(); closeModal(modal)"
           >

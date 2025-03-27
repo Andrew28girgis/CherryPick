@@ -8,7 +8,7 @@
 
 <div class="container-fluid p-2">
   <div class="row m-0 p-0">
-    <div class="col-lg-3 p-0 m-0">
+    <!-- <div class="col-lg-3 p-0 m-0">
       <div
         class="card"
         style="border: none; border-radius: 0; min-height: 78vh"
@@ -67,8 +67,8 @@
         </div>
       </div>
     </div>
-    <!-- Email List Column -->
-    <div class="col-lg-4 p-0 mb-3">
+    Email List Column -->
+    <div class="col-lg-5 p-0 mb-3">
       <div
         class="card"
         [class.scrolling]="isScrolling"
@@ -80,11 +80,11 @@
           overflow-y: auto;
         "
       >
-        <div class="mailbox-header">
+        <!-- <div class="mailbox-header">
           <div class="top-left">
             <h5 class="contacts">Mail box</h5>
           </div>
-        </div>
+        </div> -->
         <div class="card-bodyy" style="max-height: 65vh; overflow-y: auto">
           <div *ngIf="UserInbox">
             <div class="email-list">
@@ -110,7 +110,7 @@
       </div>
     </div>
     <!-- Email body and subject -->
-    <div class="col-lg-5 p-0 m-0" id="emailDetails">
+    <div class="col-lg-7 p-0 m-0" id="emailDetails">
       <div
         class="email-details-body"
         [class.scrolling]="isScrolling"

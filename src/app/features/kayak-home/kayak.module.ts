@@ -71,6 +71,7 @@ import { KayakComponent } from './kayak/kayak.component';
     MapViewComponent,
     PolygonsControllerComponent,
     LinkMicrosoftComponent,
+    EmilyContactEmailComponent,
     EmilyComponent
   ],
 })
