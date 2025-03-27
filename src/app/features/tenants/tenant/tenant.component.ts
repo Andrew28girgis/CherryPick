@@ -98,7 +98,6 @@ export class TenantComponent implements OnInit {
       next: (res: any) => {
         this.TenantResult = res.json[0];
         this.organizationid = this.TenantResult?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.BuyBoxOrganizationId?.toString() ?? '';
-        console.log('tenant', this.TenantResult);
         
         this.spinner.hide();
         this.GetOrganizationBranches();

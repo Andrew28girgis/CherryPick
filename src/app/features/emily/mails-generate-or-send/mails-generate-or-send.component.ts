@@ -49,7 +49,6 @@ export class MailsGenerateOrSendComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
-        console.log(this.returnGetMailContextGenerated);
         this.spinner.hide();
       },
     });

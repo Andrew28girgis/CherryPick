@@ -100,7 +100,6 @@ export class CampaignManagerComponent implements OnInit {
   }
 
   onCampaignCreated(): void {
-    debugger;
     this.getAllCampaigns();
     this.modalService.dismissAll();
   }
@@ -147,7 +146,6 @@ export class CampaignManagerComponent implements OnInit {
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       this.spinner.hide();
-      console.log(response);
       if (response.json && response.json.length > 0) {
         this.stages = response.json;
       }
@@ -175,7 +173,6 @@ export class CampaignManagerComponent implements OnInit {
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
-      console.log(response);
 
       //   let organizationsIds: number[] = [];
       // organizationsIds = [...new Set(organizationsIds)];
@@ -192,9 +189,7 @@ export class CampaignManagerComponent implements OnInit {
       //   buyboxId: [campaign.id],
       //   organizations: organizations,
       // };
-      // debugger;
       // this.emilyService.updateCheckList(emilyObject);
-      // console.log(emilyObject);
 
       // this.router.navigate(['/MutipleEmail']);
     });

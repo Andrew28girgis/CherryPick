@@ -688,9 +688,7 @@ private isCenterVisible(center: any, bounds: any): boolean {
     return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
   }
   onVisibleCentersChanged(event: {total: number, visible: number, markersCount: number}) {
-    console.log('Total shopping centers:', event.total);
-    console.log('Visible shopping centers:', event.visible);
-    console.log('Visible markers:', event.markersCount);
+
     
     // You can update UI elements or perform actions based on these values
     // For example, show a summary of visible centers

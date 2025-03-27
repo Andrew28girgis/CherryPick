@@ -24,7 +24,6 @@ export class SubmissionsComponent implements OnInit {
     
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
-      console.log(this.campaignId);
       
     });
 
