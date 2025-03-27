@@ -48,7 +48,7 @@
   cursor: pointer;
 }
 
-.form-check-input[type="checkbox"] {
+.form-check-input[type="checkbox"],.form-check-input[type="radio"] {
   box-shadow: none;
   outline: none;
   border: #bfbfbf 1px solid;
