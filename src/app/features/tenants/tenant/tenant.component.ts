@@ -54,18 +54,18 @@ export class TenantComponent implements OnInit {
   images: IFile[] = [];
   pdfFileName: string = '';
   contactID!: any;
-  TenantResult!: LandingPageTenants;
-  organizationBranches!: OrganizationBranches; 
+  TenantResult!: LandingPageTenants ;
+  organizationBranches!: OrganizationBranches;
   selectedbuyBox!: string;
   buyboxcolor!: string;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
-  organizationid!:string
+  organizationid!: number;
   isFileUploaded: boolean = false; // To track whether a file has been uploaded
-  test!: number;  // Add this property
+  test!: number; // Add this property
 
-  
-
+  selectedCampaign!: number;
+  CampaignData!: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -75,14 +75,22 @@ export class TenantComponent implements OnInit {
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer
   ) {}
+
   ngOnInit(): void {
-    this.buyboxcolor = '#FF5733'; 
+    this.buyboxcolor = '#FF5733';
 
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      this.GetBuyBoxInfo();
+      this.selectedCampaign = params['campaignId'];
+      console.log('selectedCampaign', this.selectedCampaign);
+      // this.GetCampaignDetails();
     });
+    this.GetBuyBoxInfo();
+    const guid = crypto.randomUUID();
+    this.selectedShoppingID = guid;
+    console.log('guid', this.selectedShoppingID);
+    
   }
 
   GetBuyBoxInfo(): void {
@@ -97,13 +105,32 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
-        this.organizationid = this.TenantResult?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.BuyBoxOrganizationId?.toString() ?? '';
-        
+        this.organizationid = this.TenantResult.Buybox
+          ? this.TenantResult.Buybox[0].BuyBoxOrganization[0]
+              .BuyBoxOrganizationId
+          : 0;
         this.spinner.hide();
         this.GetOrganizationBranches();
       },
     });
   }
+  // GetCampaignDetails(): void {
+  //   this.spinner.show();
+  //   const body: any = {
+  //     Name: 'GetCampaignDetails',
+  //     Params: {
+  //       CampaignId: this.selectedCampaign,
+  //     },
+  //   };
+
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (res: any) => {
+  //       this.CampaignData = res.json[0];
+  //       console.log('CampaignData', this.CampaignData);
+  //       this.spinner.hide();
+  //     },
+  //   });
+  // }
 
   GetOrganizationBranches(): void {
     this.spinner.show();
@@ -116,19 +143,23 @@ export class TenantComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.organizationBranches = res.json[0];
-        this.spinner.hide();
-      },
+        if (res.json == null) {
+          this.spinner.hide(); 
+        }else{
+          this.organizationBranches = res.json[0];
+          this.spinner.hide();
+        } 
+      }
     });
   }
 
   openUploadModal(id?: number) {
-    if (id === undefined) {
-      const guid = crypto.randomUUID();
-      this.selectedShoppingID = guid;
-    } else {
-      this.selectedShoppingID = id.toString();
-    }
+    // if (id === undefined) {
+    //   const guid = crypto.randomUUID();
+    //   this.selectedShoppingID = guid;
+    // } else {
+    //   this.selectedShoppingID = id.toString();
+    // }
     this.modalService.open(this.uploadPDF, { size: 'lg', centered: true });
   }
 
@@ -156,7 +187,9 @@ export class TenantComponent implements OnInit {
           this.httpClient.request(req).subscribe(
             (event: any) => {
               if (event.type === HttpEventType.UploadProgress) {
-                this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
+                this.uploadProgress = Math.round(
+                  (100 * event.loaded) / event.total!
+                );
                 if (this.uploadProgress === 100) {
                   this.isUploading = false;
                   this.isConverting = true;
@@ -164,20 +197,24 @@ export class TenantComponent implements OnInit {
               } else if (event instanceof HttpResponse) {
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map((img: string, index: number) => ({
-                    name: `Image ${index + 1}`,
-                    type: 'image/png',
-                    content: img,
-                    selected: false,
-                  }));
+                  this.images = response.images.map(
+                    (img: string, index: number) => ({
+                      name: `Image ${index + 1}`,
+                      type: 'image/png',
+                      content: img,
+                      selected: false,
+                    })
+                  );
                   this.pdfFileName = response.pdfFileName;
                   this.isConverting = false;
                   this.spinner.hide();
-                  this.showToast('PDF File uploaded and converted successfully!');
-                  this.isFileUploaded = true;  // Enable submit button
-                  
+                  this.showToast(
+                    'PDF File uploaded and converted successfully!'
+                  );
+                  this.isFileUploaded = true; // Enable submit button
+
                   // Open the modal after images are returned and upload completes
-                  this.openUploadModal(0);  // Open the modal after the process is done
+                  this.openUploadModal(0); // Open the modal after the process is done
                 }
               }
             },
@@ -194,10 +231,6 @@ export class TenantComponent implements OnInit {
     }
   }
 
-
-  
-  
-  
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -216,6 +249,8 @@ export class TenantComponent implements OnInit {
     // Extract the content of the selected images
     const array = selectedImages.map((image) => image.content);
     const shopID = this.selectedShoppingID;
+    console.log('shopID', shopID);
+    
     this.PlacesService.SendImagesArray(array, shopID).subscribe({
       next: (data) => {
         this.JsonPDF = data;
@@ -245,6 +280,7 @@ export class TenantComponent implements OnInit {
         ...tenant,
         isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
       })),
+      CampaignId: this.selectedCampaign,
     };
 
     // Send the updated JsonPDF data
