@@ -20,11 +20,6 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import {
-  Availability,
-  PropertiesDetails,
-  Tenant,
-} from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
