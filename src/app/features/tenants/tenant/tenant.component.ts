@@ -48,12 +48,8 @@ import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
 })
 export class TenantComponent implements OnInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
-  newTenantName: string = '';
-  CustomPlace!: PropertiesDetails | undefined;
-  newTenantUrl: string = '';
   public files: NgxFileDropEntry[] = [];
   selectedShoppingID!: string | undefined;
-  showAddTenantInput: boolean = false;
   JsonPDF!: jsonGPT;
   AvailabilityAndTenants: AvailabilityTenant = {};
   fileName!: string;
@@ -63,26 +59,10 @@ export class TenantComponent implements OnInit {
   images: IFile[] = [];
   pdfFileName: string = '';
   contactID!: any;
-  test!: number;
   TenantResult: LandingPageTenants[] = [];
   organizationBranches: OrganizationBranches[] = [];
   selectedbuyBox!: string;
-  buyboxid!: number;
-  managementorganizationId!: number;
-  buyboxDescription!: string;
-  brokerlinkedin!: string;
-  brokerphoto!: string;
-  brokersignature!: any;
-  MinBuildingSize!: number;
-  MaxBuildingSize!: number;
   buyboxcolor!: string;
-  ManagementOrganizationDesc!: string;
-  buyboxname!: string;
-  smalldescription: string[] = [];
-  firstnamemanagerorganization!: string;
-  lastnamemanagerorganization!: string;
-  managementorganizationname!: string;
-  ManagerOrganizationDescription!: any;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
 
@@ -99,15 +79,13 @@ export class TenantComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log(this.selectedbuyBox);
-
+      console.log(this.selectedbuyBox); 
       this.GetBuyBoxInfo();
     });
   }
 
   GetBuyBoxInfo(): void {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetBuyBoxInfo',
       Params: {
@@ -118,39 +96,10 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
-        console.log('tenant', this.TenantResult);
+        console.log('tenant',this.TenantResult);
+        
+        this.spinner.hide();
 
-        // const buyboxData = this.TenantResult.Buybox[0].BuyBoxOrganization[0];
-        // const managerOrganizationData =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationContacts[0];
-
-        // this.buyboxid = buyboxData.BuyBoxOrganizationId;
-        // this.buyboxDescription = buyboxData.BuyBoxOrganizationDescription;
-        // this.buyboxname = buyboxData.Name;
-        // this.firstnamemanagerorganization = managerOrganizationData.Firstname;
-        // this.lastnamemanagerorganization = managerOrganizationData.LastName;
-        // this.managementorganizationname =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationName;
-        // this.ManagerOrganizationDescription =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
-        // this.managementorganizationId =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationId;
-        // this.brokerlinkedin = managerOrganizationData.LinkedIn;
-        // this.MinBuildingSize = this.TenantResult.Buybox[0].MinBuildingSize;
-        // this.MaxBuildingSize = this.TenantResult.Buybox[0].MaxBuildingSize;
-        // this.ManagementOrganizationDesc =
-        //   buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
-        // this.brokerphoto = managerOrganizationData.Photo;
-        // this.brokersignature = managerOrganizationData.Profile;
-        // this.buyboxcolor = '#bd3e3e';
-
-        // this.smalldescription = Array.isArray(
-        //   this.TenantResult.Buybox[0].Description
-        // )
-        //   ? this.TenantResult.Buybox[0].Description
-        //   : [this.TenantResult.Buybox[0].Description];
-
-        this.spinner.hide(); 
         this.GetOrganizationBranches();
       },
     });
@@ -174,7 +123,6 @@ export class TenantComponent implements OnInit {
       },
     });
   }
-  // manual display and edit shopping center
   openUploadModal(id: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
@@ -257,7 +205,8 @@ export class TenantComponent implements OnInit {
       }
     }
   }
-
+  
+  
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
@@ -266,60 +215,6 @@ export class TenantComponent implements OnInit {
     setTimeout(() => {
       toast!.classList.remove('show');
     }, 3000);
-  }
-  closeToast() {
-    const toast = document.getElementById('customToast');
-    toast!.classList.remove('show');
-  }
-  // Add a new tenant (send to API and update locally)
-  addNewTenant() {
-    if (
-      !this.newTenantName ||
-      this.newTenantName.trim() === '' ||
-      !this.newTenantUrl ||
-      this.newTenantUrl.trim() === ''
-    ) {
-      this.showToast('Please enter a valid tenant name.');
-      return;
-    }
-    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-    if (!domainPattern.test(this.newTenantUrl.trim())) {
-      alert('Please enter a valid domain (e.g., example.com).');
-      return;
-    }
-    this.spinner.show();
-    const body: any = {
-      Name: 'ModifyTenantsWithBranch',
-      Params: {
-        ShoppingCenterId: this.selectedShoppingID,
-        Name: this.newTenantName,
-        Url: this.newTenantUrl,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        // Assuming the API returns the new tenant or an updated list
-        const newTenant: Tenant = {
-          Id: data.json?.Id || this.CustomPlace?.Tenants.length! + 1, // Generate a temporary ID or use API response
-          Name: this.newTenantName,
-          URL: this.newTenantUrl,
-        };
-        // Add the new tenant to CustomPlace.Tenants
-        if (this.CustomPlace && this.CustomPlace.Tenants) {
-          this.CustomPlace.Tenants.push(newTenant);
-        } else {
-          // Initialize Tenants if it doesn't exist
-          this.CustomPlace = {
-            ...this.CustomPlace,
-            Tenants: [newTenant],
-          } as PropertiesDetails;
-        }
-        this.spinner.hide();
-        this.showToast('New tenant added successfully!');
-        this.showAddTenantInput = false;
-        this.newTenantName = '';
-      },
-    });
   }
   sendImagesArray() {
     this.isSubmitting = true;
@@ -341,14 +236,12 @@ export class TenantComponent implements OnInit {
     this.spinner.show();
     const shopID = this.selectedShoppingID;
 
-    // Add dynamic properties for CenterName and CenterType
     this.JsonPDF = {
       ...this.JsonPDF,
       CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
     };
 
-    // Do not filter Availability and Tenants; send all items with their updated isAdded states
     const updatedJsonPDF = {
       ...this.JsonPDF,
       Availability: this.JsonPDF.Availability.map((avail) => ({
@@ -392,7 +285,6 @@ export class TenantComponent implements OnInit {
     this.isConverting = false;
     this.images = [];
   }
-  // Method to convert base64 to a SafeUrl for image display
   displayCustomImage(image: IFile): SafeUrl {
     const dataUrl = `data:${image.type};base64,${image.content}`;
     return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
