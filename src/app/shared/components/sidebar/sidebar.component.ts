@@ -306,15 +306,35 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
   }
 
-  checkContacts(event: any, contacts: IBuyBoxContact[], org: IBuyboxOrganization) {
+  // checkContacts(event: any, contacts: IBuyBoxContact[]) {
+  //   const value = event.target.checked;    
+  //   contacts.forEach(contact => {
+  //     contact.checked = value;
+  //     contact?.Centers?.forEach(center => center.checked = value);
+  //   });
+  // }
+
+  checkContacts(event: any, contacts: IBuyBoxContact[], userBuybox: any) {
     const value = event.target.checked;
+
+    contacts = contacts || [];
+
     contacts.forEach(contact => {
       contact.checked = value;
-      contact.Centers?.forEach(center => center.checked = value);
+      contact.Centers = contact.Centers || [];
+      contact.Centers.forEach(center => center.checked = value);
     });
-    // org.checked = contacts.some(contact => contact.checked);
+
+    const organizations = userBuybox.IBuyboxOrganization || [];
+    const anyOrgChecked = organizations.some((org: any) => org.checked);
+
+    this.userBuyboxes.forEach(buybox => {
+      if (buybox.id === userBuybox.id) {
+        buybox.checked = anyOrgChecked;
+      }
+    });
   }
-  
+
 
   checkShoppingCenter(event: any, contact: IBuyBoxContact) {
     let value = event.target.checked;
@@ -373,9 +393,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
         checkList.organizations.push(...orgCheckedList);
       }
     });
-
     this.EmilyService.updateCheckList(checkList);
-
+    this.isSidebarExpanded = false;
+    this.sidbarService.setSidebarState(false);
     // console.log(checkList);
   }
 

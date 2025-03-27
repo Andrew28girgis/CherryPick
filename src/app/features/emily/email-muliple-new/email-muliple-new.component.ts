@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -15,6 +15,7 @@ import { concatMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
 import { ContactsChecked, OrganizationChecked, buyboxChecklist } from 'src/app/shared/models/sidenavbar';
+import { interval, Subscription } from 'rxjs';
 
 
 @Component({
@@ -22,7 +23,7 @@ import { ContactsChecked, OrganizationChecked, buyboxChecklist } from 'src/app/s
   templateUrl: './email-muliple-new.component.html',
   styleUrl: './email-muliple-new.component.css',
 })
-export class EmailMulipleNewComponent implements OnInit {
+export class EmailMulipleNewComponent implements OnInit,OnDestroy {
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
@@ -102,6 +103,7 @@ export class EmailMulipleNewComponent implements OnInit {
 
   OrganizationCheckedServices: OrganizationChecked[] = [];
   buyboxChecklist!: buyboxChecklist;
+  private checklistSubscription!: Subscription;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -122,7 +124,20 @@ export class EmailMulipleNewComponent implements OnInit {
       this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
       this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
     });
-    
+
+
+    this.checklistSubscription = interval(500).subscribe(() => {
+      const storedChecklist = sessionStorage.getItem('buyboxChecklist');
+      if (storedChecklist) {
+        const parsedChecklist = JSON.parse(storedChecklist) as buyboxChecklist;
+        if (JSON.stringify(parsedChecklist) !== JSON.stringify(this.buyboxChecklist)) {
+          this.buyboxChecklist = parsedChecklist;
+          this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+          this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
+          this.reloadData();
+        }
+      }
+    });
 
     this.contactId = localStorage.getItem('contactId');
     if (this.buyBoxId) {
@@ -135,7 +150,24 @@ export class EmailMulipleNewComponent implements OnInit {
     this.GetBuyBoxInfoDetails();
     this.GetMailContextGenerated();
   }
+  
+  reloadData() {
+    this.contactId = localStorage.getItem('contactId');
+    if (this.buyBoxId) {
+      this.GetBuyBoxOrganizationsForEmail();
+    }
+    this.GetPrompts();
+    this.GetBuyBoxInfo();
+    this.GetRetailRelationCategories();
+    this.GetBuyBoxInfoDetails();
+    this.GetMailContextGenerated(); 
+   }
 
+  ngOnDestroy() {
+    if (this.checklistSubscription) {
+      this.checklistSubscription.unsubscribe();
+    }
+  }
   // GetBuyBoxInfo
   GetBuyBoxInfo() {
     const body: any = {
