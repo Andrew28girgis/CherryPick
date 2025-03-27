@@ -28,7 +28,7 @@ import { environment } from 'src/environments/environment';
   styleUrl: './campaign-drawing.component.css',
 })
 export class CampaignDrawingComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy
+  implements OnInit, AfterViewInit, OnDestroy
 {
   private destroy$ = new Subject<void>();
 
@@ -54,21 +54,16 @@ export class CampaignDrawingComponent
     private modalService: NgbModal,
     private placesService: PlacesService,
     private httpClient: HttpClient,
-    private router:Router
+    private router: Router
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnInit(): void {
     if (!this.buyBoxId) {
-      debugger
       const id = localStorage.getItem('BuyBoxId');
       if (id) {
         this.buyBoxId = +id;
-        debugger
       }
     }
-  }
-
-  ngOnInit(): void {
     const contact = localStorage.getItem('contactId');
     if (contact) {
       this.contactId = +contact;
@@ -140,10 +135,9 @@ export class CampaignDrawingComponent
     this.placesService.GenericAPI(body).subscribe((response) => {
       this.onCampaignCreated.emit();
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        // this.modalService.dismissAll();
-        if(!this.router.url.includes('campaigns')){
+        this.modalService.dismissAll();
+        if (!this.router.url.includes('campaigns')) {
           this.router.navigate(['/campaigns']);
-
         }
         this.saveShapesWithCampaign(response.json[0].id);
       }

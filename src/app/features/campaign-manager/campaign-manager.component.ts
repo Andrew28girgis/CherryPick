@@ -45,8 +45,8 @@ export class CampaignManagerComponent implements OnInit {
       this.spinner.hide();
 
       if (response.json && response.json.length > 0) {
-        this.campaigns = response.json;
-        this.filteredCampaigns = response.json;
+        this.campaigns = [...response.json];
+        this.filteredCampaigns = [...response.json];
       } else {
         this.campaigns = [];
         this.filteredCampaigns = [];
