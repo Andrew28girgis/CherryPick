@@ -43,7 +43,6 @@ import { KanbanComponent } from './features/kanban/kanban.component';
 import { KayakModule } from './features/kayak-home/kayak.module';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { CampaignDrawingComponent } from './features/campaign-drawing/campaign-drawing.component';
-import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
@@ -52,6 +51,8 @@ import { SocialMediaViewComponent } from './features/tenants/market-survery/mark
 import { MarketSideViewComponent } from './features/tenants/market-survery/market-side-view/market-side-view.component';
 import { MarketMapViewComponent } from './features/tenants/market-survery/market-map-view/market-map-view.component';
 import { MarketCardViewComponent } from './features/tenants/market-survery/market-card-view/market-card-view.component';
+import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
+import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,6 @@ import { MarketCardViewComponent } from './features/tenants/market-survery/marke
     ManagePropertiesComponent,  
     AddTenantsComponent,
     EmilyUserInboxComponent,
-    MutipleEmailComponent,
     SidebarComponent,
     EmilyUserInboxComponent,
     CampaignDrawingComponent,
@@ -77,6 +77,8 @@ import { MarketCardViewComponent } from './features/tenants/market-survery/marke
     MarketSideViewComponent,
     MarketMapViewComponent,
     MarketCardViewComponent,
+    EmailMulipleNewComponent,
+    MailsGenerateOrSendComponent
   ],
   imports: [
     BrowserModule,
