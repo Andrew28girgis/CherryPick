@@ -62,8 +62,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private userViewService: UserViewService,
     private PlacesService: PlacesService,
     protected cadenceService: CadenceService,
-    protected cdr: ChangeDetectorRef  ,
-    private EmilyService: EmilyService 
+    protected cdr: ChangeDetectorRef,
+    private EmilyService: EmilyService
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isSidebarExpanded = !state;
@@ -73,7 +73,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getUserKanbans();
-    this.getUserBuyBoxes();
+    this.getBuyBoxes();
     this.isSmallScreen = window.innerWidth < 992;
     this.isSidebarExpanded = false;
     this.sidbarService.setSidebarState(this.isSidebarExpanded);
@@ -184,31 +184,29 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Start Emily
-  getUserBuyBoxes(): void {
+  // Start Emily Sidebar
+  getBuyBoxes(): void {
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {},
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.userBuyboxes = data.json;
         this.userBuyboxes.forEach((buybox) => {
-          this.GetOrgnizations(buybox);
+          this.getOrgnizations(buybox);
         });
       },
     });
   }
 
-  GetOrgnizations(buybox: IUserBuybox): void {
+  getOrgnizations(buybox: IUserBuybox): void {
     const body: any = {
       Name: 'GetOrganizationsByBuyBox',
       MainEntity: null,
       Params: {
         BuyBoxId: buybox.id,
       },
-      Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
@@ -221,7 +219,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
     });
   }
 
-  GetBuyBoxOrganizationsForEmail(
+  getOrgnizationData(buybox: IUserBuybox, buyboxOpen: boolean): void {
+    buybox.IBuyboxOrganization.forEach((org) => {
+      this.getContactAndCenters(buybox.id, org, buyboxOpen);
+    });
+  }
+
+  getContactAndCenters(
     buyboxId: number,
     organization: IBuyboxOrganization,
     isOpen: boolean
@@ -242,6 +246,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
           organization.contacts = organization.contacts.filter(
             (c) => c.Centers
           );
+
           if (!isOpen) {
             organization.contacts.forEach((contact) => {
               contact.checked = true;
@@ -254,12 +259,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
           this.BuyBoxContacts = [];
         }
       },
-    });
-  }
-
-  getAllOrgData(buybox: IUserBuybox, buyboxOpen: boolean): void {
-    buybox.IBuyboxOrganization.forEach((org) => {
-      this.GetBuyBoxOrganizationsForEmail(buybox.id, org, buyboxOpen);
     });
   }
 

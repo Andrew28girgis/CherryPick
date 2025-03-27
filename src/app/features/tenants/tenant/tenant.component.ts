@@ -29,6 +29,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { OrganizationBranches } from 'src/app/shared/models/organization-branches';
+import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
+
 
 @Component({
   selector: 'app-tenant',
@@ -44,7 +47,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
-export class TenantComponent implements OnInit {
+export class TenantComponent implements OnInit { 
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   newTenantName: string = '';
   CustomPlace!: PropertiesDetails | undefined;
@@ -62,8 +65,8 @@ export class TenantComponent implements OnInit {
   pdfFileName: string = '';
   contactID!: any;
   test!: number;
-  TenantResult: any = [];
-  organizationBranches: any = [];
+  TenantResult: LandingPageTenants[] = [];
+  organizationBranches: OrganizationBranches[] = []; 
   selectedbuyBox!: string;
   buyboxid!: number;
   managementorganizationId!: number;
@@ -73,8 +76,6 @@ export class TenantComponent implements OnInit {
   brokersignature!: any;
   MinBuildingSize!: number;
   MaxBuildingSize!: number;
-  address!: string;
-  states!: string;
   buyboxcolor!: string;
   ManagementOrganizationDesc!: string;
   buyboxname!: string;
@@ -85,9 +86,6 @@ export class TenantComponent implements OnInit {
   ManagerOrganizationDescription!: any;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
-
-  
-
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -102,6 +100,8 @@ export class TenantComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
+      console.log(this.selectedbuyBox);
+      
       this.GetBuyBoxInfo();
     });
   }
@@ -119,36 +119,38 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
+        console.log('tenant',this.TenantResult);
+        
 
-        const buyboxData = this.TenantResult.Buybox[0].BuyBoxOrganization[0];
-        const managerOrganizationData =
-          buyboxData.ManagerOrganization[0].ManagerOrganizationContacts[0];
+        // const buyboxData = this.TenantResult.Buybox[0].BuyBoxOrganization[0];
+        // const managerOrganizationData =
+        //   buyboxData.ManagerOrganization[0].ManagerOrganizationContacts[0];
 
-        this.buyboxid = buyboxData.BuyBoxOrganizationId;
-        this.buyboxDescription = buyboxData.BuyBoxOrganizationDescription;
-        this.buyboxname = buyboxData.Name;
-        this.firstnamemanagerorganization = managerOrganizationData.Firstname;
-        this.lastnamemanagerorganization = managerOrganizationData.LastName;
-        this.managementorganizationname =
-          buyboxData.ManagerOrganization[0].ManagerOrganizationName;
-        this.ManagerOrganizationDescription =
-          buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
-        this.managementorganizationId =
-          buyboxData.ManagerOrganization[0].ManagerOrganizationId;
-        this.brokerlinkedin = managerOrganizationData.LinkedIn;
-        this.MinBuildingSize = this.TenantResult.Buybox[0].MinBuildingSize;
-        this.MaxBuildingSize = this.TenantResult.Buybox[0].MaxBuildingSize;
-        this.ManagementOrganizationDesc =
-          buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
-        this.brokerphoto = managerOrganizationData.Photo;
-        this.brokersignature = managerOrganizationData.Profile;
-        this.buyboxcolor = '#bd3e3e';
+        // this.buyboxid = buyboxData.BuyBoxOrganizationId;
+        // this.buyboxDescription = buyboxData.BuyBoxOrganizationDescription;
+        // this.buyboxname = buyboxData.Name;
+        // this.firstnamemanagerorganization = managerOrganizationData.Firstname;
+        // this.lastnamemanagerorganization = managerOrganizationData.LastName;
+        // this.managementorganizationname =
+        //   buyboxData.ManagerOrganization[0].ManagerOrganizationName;
+        // this.ManagerOrganizationDescription =
+        //   buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
+        // this.managementorganizationId =
+        //   buyboxData.ManagerOrganization[0].ManagerOrganizationId;
+        // this.brokerlinkedin = managerOrganizationData.LinkedIn;
+        // this.MinBuildingSize = this.TenantResult.Buybox[0].MinBuildingSize;
+        // this.MaxBuildingSize = this.TenantResult.Buybox[0].MaxBuildingSize;
+        // this.ManagementOrganizationDesc =
+        //   buyboxData.ManagerOrganization[0].ManagerOrganizationDescription;
+        // this.brokerphoto = managerOrganizationData.Photo;
+        // this.brokersignature = managerOrganizationData.Profile;
+        // this.buyboxcolor = '#bd3e3e';
 
-        this.smalldescription = Array.isArray(
-          this.TenantResult.Buybox[0].Description
-        )
-          ? this.TenantResult.Buybox[0].Description
-          : [this.TenantResult.Buybox[0].Description];
+        // this.smalldescription = Array.isArray(
+        //   this.TenantResult.Buybox[0].Description
+        // )
+        //   ? this.TenantResult.Buybox[0].Description
+        //   : [this.TenantResult.Buybox[0].Description];
 
         this.spinner.hide();
 
@@ -163,15 +165,14 @@ export class TenantComponent implements OnInit {
     const body: any = {
       Name: 'GetOrganizationBranches',
       Params: {
-        organizationid: this.buyboxid,
+        organizationid: this.selectedbuyBox,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.organizationBranches = res.json[0];
-        this.address = this.organizationBranches.Address;
-        this.states = this.organizationBranches.States;
+        console.log('asas',this.organizationBranches);
         this.spinner.hide();
       },
     });
