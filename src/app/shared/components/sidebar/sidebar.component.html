@@ -5,41 +5,23 @@
     collapsed: !isSidebarExpanded && !isHovering
   }"
 >
-  <!-- 
-(mouseenter)="onSidebarHover(true)"
-(mouseleave)="onSidebarHover(false)" -->
   <div class="sidebar">
     <ul class="sidebar-nav">
       <li class="sidebar-item">
         <div
+          [routerLink]="
+            current.includes('landlord') ? ['/landlord'] : ['/campaigns']
+          "
           class="sidebar-logo d-flex justify-content-start align-items-center"
         >
           <img
-            alt="logo"
             class="cherry-logo"
-            [routerLink]="
-              current.includes('landlord') ? ['/landlord'] : ['/summary']
-            "
             src="../../../assets/Images/Icons/logo (1).png"
           />
           <p class="cherry mb-0" *ngIf="isSidebarExpanded">
             Cherry<span class="pick">pick</span>
           </p>
         </div>
-      </li>
-      <li class="sidebar-item">
-        <a
-          [routerLink]="['/Submissions']"
-          routerLinkActive="active-route"
-          class="sidebar-link"
-          title="Submissions"
-        >
-          <img
-            class="img-icn"
-            src="../../../assets/Images/Icons/Dashboard.svg"
-          />
-          <span class="link-text">Submissions</span>
-        </a>
       </li>
 
       <li class="sidebar-item">
@@ -56,120 +38,7 @@
           <span class="link-text">Campaigns</span>
         </a>
       </li>
-
-      <li class="sidebar-item">
-        <a
-
-          class="sidebar-link"
-          (click)="cadenceIsOpen = !cadenceIsOpen ;emilyIsOpen = false"
-          style="cursor: pointer"
-          [routerLink]="['/Kanban']"
-          routerLinkActive="active-route"
-          title="Cadence"
-        >
-          <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
-
-          <!-- <i
-            *ngIf="isSidebarExpanded || isHovering"
-            class="fa-solid fa-chevron-down"
-            [style.transform]="
-              cadenceIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
-            "
-            style="transition: transform 0.3s ease; margin-left: 5px"
-          ></i> -->
-          <span class="link-text">Cadence</span>
-        </a>
-
-        <!-- <ul
-          class="sidebar-nav ms-3"
-          *ngIf="
-            (cadenceIsOpen && isSidebarExpanded) ||
-            (cadenceIsOpen && isHovering)
-          "
-        >
-          <li
-            class="sidebar-item"
-            (click)="
-              this.cadenceService.updateKanbanId(
-                this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
-              )
-            "
-          >
-            <a
-              class="sidebar-link"
-              style="cursor: pointer"
-              [ngClass]="{
-                'active-kanban-overflow':
-                  (kanbanId$ | async) ===
-                  this.allUserKanbans[0].kanbanDefinitions[0].kanbanId
-              }"
-            >
-              <span class="link-text" style="color: #72777a">
-                {{ this.allUserKanbans[0].kanbanName }}
-              </span>
-            </a>
-          </li>
-          <ng-container *ngFor="let org of sideKanban.tenantOrganizations">
-            <li class="sidebar-item">
-              <a
-                class="sidebar-link"
-                (click)="org.isOpen = !org.isOpen"
-                style="cursor: pointer"
-              >
-                <span class="link-text" style="color: #72777a">
-                  {{ org.OrganizationName }}
-                </span>
-                <span style="margin-left: auto">
-                  <i
-                    class="fa-solid fa-chevron-down"
-                    [style.transform]="
-                      org.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
-                    "
-                    style="transition: transform 0.3s ease"
-                  ></i>
-                </span>
-              </a>
-
-              <ul class="sidebar-subnav" *ngIf="org.isOpen">
-                <li class="sidebar-subheader">Actions</li>
-                <ng-container *ngFor="let action of org.Actions">
-                  <li class="sidebar-subitem">
-                    <a
-                      class="sidebar-link"
-                      href="{{ action.actionUrlDecode }}"
-                      target="_blank"
-                    >
-                      <span class="link-text">{{ action.actionName }}</span>
-                    </a>
-                  </li>
-                </ng-container>
-
-                <li class="sidebar-subheader">Workflows</li>
-                <ng-container *ngFor="let otherkanban of org.OtherKanbans">
-                  <li
-                    class="sidebar-subitem"
-                    [id]="'kanban-' + otherkanban.id"
-                    (click)="cadenceService.updateKanbanId(otherkanban.id)"
-                  >
-                    <a
-                      class="sidebar-link"
-                      [ngClass]="{
-                        'active-kanban-overflow':
-                          (kanbanId$ | async) === otherkanban.id
-                      }"
-                    >
-                      <span class="link-text">{{
-                        otherkanban.kanbanName
-                      }}</span>
-                    </a>
-                  </li>
-                </ng-container>
-              </ul>
-            </li>
-          </ng-container>
-        </ul> -->
-      </li>
-
+      
       <li class="sidebar-item">
         <a
           [routerLink]="['/summary']"
@@ -183,88 +52,15 @@
       </li>
 
       <li class="sidebar-item">
-        <a class="sidebar-link" routerLinkActive="active-route" title="Emily">
-          <img class="img-icn" src="../../../assets/Images/Icons/Emily.svg" (click)="emilyIsOpen = !emilyIsOpen" />
-          <div class="d-flex w-100" *ngIf="isSidebarExpanded" style="margin-left: 5px">
-            <i *ngIf="isSidebarExpanded || isHovering" class="fa-solid fa-chevron-down" [style.transform]="
-                emilyIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
-              " (click)="emilyIsOpen = !emilyIsOpen" style="transition: transform 0.3s ease"></i>
-
-            <span (click)="emilyIsOpen = !emilyIsOpen"
-              class="link-text d-flex justify-content-between w-100 align-items-center"><span
-                [routerLink]="['/EmilyUserInbox']">Emily</span>
-              <i *ngIf="isAnyBuyboxChecked()" class="fa-solid fa-paper-plane ms-2 icon_style"
-                [routerLink]="['/MutipleEmail']" (click)="updateCheckList()"></i>
-            </span>
-          </div>
+        <a
+          class="sidebar-link"
+          [routerLink]="['/Kanban']"
+          routerLinkActive="active-route"
+          title="Cadence"
+        >
+          <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
+          <span class="link-text">Cadence</span>
         </a>
-        <ul class="sidebar-nav" *ngIf="
-            (emilyIsOpen && isSidebarExpanded) || (emilyIsOpen && isHovering)
-          ">
-          <ng-container *ngFor="let userBuybox of userBuyboxes">
-            <li class="sidebar-item">
-              <a class="sidebar-link" style="cursor: pointer" (click)="userBuybox.isOpen = !userBuybox.isOpen">
-                <i (click)="getOrgnizationData(userBuybox, userBuybox.isOpen)" class="fa-solid fa-chevron-down me-1"
-                  [style.transform]="
-                    userBuybox.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
-                  " style="transition: transform 0.3s ease"></i>
-                <input (click)="$event.stopPropagation()" (change)="checkBuybox($event, userBuybox)" type="checkbox"
-                  *ngIf="userBuybox.isOpen" class="mx-1 form-check-input" [checked]="userBuybox.checked" />
-
-                <img class="Oganirzations__img" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                    userBuybox.organizationId
-                  }}" />
-                <span class="link-text">
-                  {{ userBuybox.name }}
-                </span>
-              </a>
-            </li>
-
-            <ul class="sidebar-nav ms-4" *ngIf="userBuybox.isOpen">
-              <ng-container *ngFor="let org of userBuybox.IBuyboxOrganization">
-                <li class="sidebar-item">
-                  <a class="sidebar-link" style="cursor: pointer">
-                    <i (click)="org.isOpen = !org.isOpen" class="fa-solid fa-chevron-down" [style.transform]="
-                        org.isOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
-                      " style="transition: transform 0.3s ease"></i>
-                    <input (change)="checkContacts($event, org.contacts ,org)" type="checkbox" class="mx-1 form-check-input"
-                      [(ngModel)]="org.checked" />
-                    <img width="20" height="20" class="me-1" style="border-radius: 50%" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        org.id
-                      }}" />
-                    <span class="link-text">
-                      {{ org.name }}
-                    </span>
-                  </a>
-                  <ul class="sidebar-nav ms-4" *ngIf="org.isOpen">
-                    <ng-container *ngFor="let contact of org.contacts">
-                      <li class="sidebar-item">
-                        <div class="ms-4">
-                          <span class="link-text">
-                            <input type="checkbox" name="contact-{{
-                                contact.Firstname + contact.Lastname
-                              }}" class="form-check-input" [(ngModel)]="contact.checked" />
-                            {{ contact.Firstname }} {{ contact.Lastname }}
-                          </span>
-                        </div>
-                        <ng-container *ngFor="let center of contact.Centers">
-                          <div class="ms-4">
-                            <span class="link-text ms-4" style="color: #72777a">
-                              <input type="checkbox" class="form-check-input"
-                                (change)="checkShoppingCenter($event, contact)"
-                                name="shopping-center-{{ center.CenterName }}" [(ngModel)]="center.checked" />
-                              {{ center.CenterName }}
-                            </span>
-                          </div>
-                        </ng-container>
-                      </li>
-                    </ng-container>
-                  </ul>
-                </li>
-              </ng-container>
-            </ul>
-          </ng-container>
-        </ul>
       </li>
     </ul>
   </div>
