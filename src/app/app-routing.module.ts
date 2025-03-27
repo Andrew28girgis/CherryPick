@@ -101,6 +101,11 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
+    path: 'MutipleEmail',
+    component: EmailMulipleNewComponent,
+    canActivate: [TenantOnlyGuard],
+  },
+  {
     path: 'MailsList/:MailContextId/:IsSent',
     component: MailsGenerateOrSendComponent,
     canActivate: [TenantOnlyGuard],
