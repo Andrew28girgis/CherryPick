@@ -65,6 +65,7 @@ export class TenantComponent implements OnInit {
   buyboxcolor!: string;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
+  
 
   constructor(
     public activatedRoute: ActivatedRoute,
