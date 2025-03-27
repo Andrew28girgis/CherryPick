@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isNavbarOpen = false
     }
   }
-  isCollapsed = true
+  isCollapsed = false
   userAvatar: string | null = null
   currentView: "tenant" | "landlord" = "tenant"
   current = ""

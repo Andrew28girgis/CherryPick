@@ -415,12 +415,11 @@
   font-weight: 500;
   line-height: 30px;
 }
-.uploadingpadding{
+.uploadingpadding {
   padding: 0px 20px;
 }
-.extractedimagespadding{
+.extractedimagespadding {
   padding: 0px 20px;
-
 }
 .inner-frame {
   display: flex;
@@ -444,7 +443,7 @@
   width: 100%;
 }
 
-.filenameouterframe{
+.filenameouterframe {
   display: flex;
   padding: 12px;
   flex-direction: column;
@@ -527,7 +526,7 @@
   border: none;
   width: 100%;
 }
-.submitpdfbutton{
+.submitpdfbutton {
   display: flex;
   height: 48px;
   padding: 14px 24px;
@@ -550,7 +549,7 @@
 .submit-button:hover {
   background: #4055a8;
 }
-.paddingsubmitpdf{
+.paddingsubmitpdf {
   padding-right: 20px;
 }
 @media (max-width: 576px) {
@@ -820,11 +819,11 @@
 }
 
 @media (min-width: 768px) {
-  .content-right{
+  .content-right {
     position: absolute;
     top: 27px;
     right: 10px;
-}
+  }
   .custom-card {
     width: 320px;
     border-radius: var(--Card-Section-Lg-Radius, 20px);

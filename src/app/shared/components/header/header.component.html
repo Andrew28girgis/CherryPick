@@ -3,7 +3,7 @@
   <div class="d-flex align-items-center">
     <!-- Add Sidebar Toggle Button -->
     <button class="btn sidebar-toggle-btn me-2" (click)="toggleSidebar()">
-      <i class="fa-solid" [ngClass]="isCollapsed ? 'fa-bars' : 'fa-times'"></i>
+      <i class="fa-solid" [ngClass]="!isCollapsed ? 'fa-bars' : 'fa-times'"></i>
     </button>
   </div>
 
