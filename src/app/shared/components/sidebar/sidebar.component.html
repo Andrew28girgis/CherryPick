@@ -30,9 +30,10 @@
         [routerLink]="['/Submissions']"
         routerLinkActive="active-route"
         class="sidebar-link"
+        title="Submissions"
         >
-        <i class="fa-solid fa-paper-plane side-icn" *ngIf="!isSidebarExpanded"></i>
-          <span class="link-text">Submissions</span>
+        <img class="img-icn" src="../../../assets/Images/Icons/Dashboard.svg">
+        <span class="link-text">Submissions</span>
         </a>
       </li>
 
@@ -41,8 +42,10 @@
         [routerLink]="['/campaigns']"
         routerLinkActive="active-route"
         class="sidebar-link"
+        title="Campaigns"
+
         >
-        <i class="fa-solid fa-calendar-check side-icn" *ngIf="!isSidebarExpanded"></i>
+        <img class="img-icn" src="../../../assets/Images/Icons/Campains.svg">
           <span class="link-text">Campaigns</span>
         </a>
       </li>
@@ -54,15 +57,17 @@
           style="cursor: pointer"
           [routerLink]="['/Kanban']"
           routerLinkActive="active-route"
+          title="Cadence"
         >
-        <i class="fa-solid fa-calendar-week side-icn" *ngIf="!isSidebarExpanded"></i>
+        <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg">
+        
           <i
             *ngIf="isSidebarExpanded || isHovering"
             class="fa-solid fa-chevron-down"
             [style.transform]="
               cadenceIsOpen ? 'rotate(-90deg)' : 'rotate(0deg)'
             "
-            style="transition: transform 0.3s ease"
+            style="transition: transform 0.3s ease; margin-left: 5px;"
           ></i>
           <span class="link-text">Cadence</span>
         </a>
@@ -162,8 +167,9 @@
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
           class="sidebar-link"
+          title="Tenants"
         >
-        <i class="fa-solid fa-house side-icn" *ngIf="!isSidebarExpanded"></i>
+        <img class="img-icn" src="../../../assets/Images/Icons/Tenant.svg">
           <span class="link-text">Tenants</span>
         </a>
       </li>
@@ -173,8 +179,10 @@
         <a
           class="sidebar-link"
           routerLinkActive="active-route"
+          title="Emily"
         >
-        <!-- <i class="fa-solid fa-paper-plane side-icn" *ngIf="!isSidebarExpanded"></i> -->
+        <img class="img-icn" src="../../../assets/Images/Icons/Emily.svg">
+        <div class="d-flex"*ngIf="isSidebarExpanded" style="margin-left: 5px;">
           <i
             (click)="emilyIsOpen = !emilyIsOpen"
             *ngIf="isSidebarExpanded || isHovering"
@@ -191,6 +199,7 @@
               ></i
               >
             </span>
+          </div>
             </a>
         <ul
           class="sidebar-nav"
