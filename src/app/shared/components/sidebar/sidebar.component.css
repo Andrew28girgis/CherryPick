@@ -15,8 +15,8 @@
   margin-right: 3px;
   font-size: 16px;
   color: #72777a !important;
-}
-/* Sidebar Container */
+} 
+
 .sidebar-container {
   position: fixed;
   top: 0;
@@ -33,37 +33,7 @@
 .sidebar-container.collapsed {
   width: 70px;
 }
-
-/* Sidebar Toggle Button */
-.sidebar-toggle {
-  position: absolute;
-  top: 20px;
-  right: -15px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1001;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.sidebar-toggle:hover {
-  background-color: #f5f5f5;
-  transform: scale(1.1);
-}
-
-.sidebar-toggle i {
-  font-size: 12px;
-  color: #707791;
-}
-
-/* Sidebar */
+ 
 .sidebar {
   height: 100%;
   width: 100%;
@@ -72,30 +42,21 @@
   flex-direction: column;
   overflow-x: hidden;
   transition: all 0.3s ease;
-}
+} 
 
-/* Logo Section */
 .sidebar-logo {
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 10px 15px; 
   border-bottom: 1px solid #f0f0f0;
 }
 
 .cherry-logo {
-  width: 40px;
+  max-width: 40px;
   max-height: 40px !important;
   height: auto;
   transition: all 0.3s ease;
   cursor: pointer;
-}
+} 
 
-.collapsed .cherry-logo {
-  max-width: 40px;
-}
-
-/* Navigation */
 .sidebar-nav {
   list-style: none;
   padding: 5px 0;
@@ -136,7 +97,9 @@
 
 .sidebar-link .link-text {
   opacity: 1;
-  font-size: 13px;
+  color: #72777a;
+  margin-left: 5px;
+  font-size: 13px; 
   transition: opacity 0.3s ease;
 }
 
@@ -156,8 +119,8 @@
 .collapsed.sidebar-container:not(.expanded) .sidebar-link svg {
   margin-right: 0;
 }
+ 
 
-/* Active Route */
 .active-route {
   background-color: #b8c1e1;
   color: #4d65b4;
@@ -166,36 +129,7 @@
 
 .active-route svg path {
   stroke: #4d65b4;
-}
-
-/* Footer Section */
-.sidebar-footer {
-  padding: 15px;
-  border-top: 1px solid #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chat-icon {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.chat-icon:hover {
-  transform: scale(1.1);
-}
-
-.sidebar-nav,
-.sidebar-subnav {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-.sidebar-item {
-  margin-bottom: 10px;
-}
+}   
 
 .sidebar-link {
   text-decoration: none;
@@ -214,64 +148,12 @@
 .sidebar-subnav {
   padding-left: 35px;
   border-left: 2px solid #ddd;
-}
+}   
 
-.sidebar-subheader {
-  font-size: 0.8em;
-  font-weight: 600;
-  color: #707791;
-  margin-top: 2px;
-  padding: 4px 8px;
-}
-.sidebar-subitem {
-  cursor: pointer;
-}
-.sidebar-subitem .sidebar-link {
-  font-size: 0.9em;
-  padding: 4px 12px;
-  color: #707791;
-}
-
-.sidebar-subitem .sidebar-link:hover,
-.sidebar-subitem .sidebar-link.active-route {
-  color: #000;
-}
-
-.link-text {
-  color: #72777a;
-  margin-left: 5px;
-  font-size: 13px;
-}
-
-.sidebar-link {
-  display: flex;
-  align-items: center;
-}
-
-.sidebar-link .fa-solid {
-  color: #707791;
-  transition: transform 0.3s ease;
-}
-
-.sidebar-link:hover .fa-solid {
-  color: #0056b3;
-}
-
-.active-kanban-overflow {
-  background-color: #dae9ff;
-  color: #4d65b4;
-}
-
-/* Mobile Responsive */
 @media (max-width: 768px) {
   .sidebar-container.expanded {
     width: 250px;
-  }
-
-  /* .sidebar-container.collapsed {
-    width: 0;
-  } */
-
+  } 
   .sidebar-container.collapsed .sidebar {
     transform: translateX(-100%);
   }
@@ -289,39 +171,4 @@
   .sidebar-container.collapsed .sidebar-toggle i {
     color: white;
   }
-}
-
-/* Logo Section */
-.sidebar-logo {
-  padding: 6px 15px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.Oganirzations__img {
-  width: 20px;
-  height: 20px;
-}
-
-.icon_style{
-  color: #5e84f1;
-  font-size: 16px;
-}
-
-.form-check-input[type="checkbox"] {
-  box-shadow: none;
-  outline: none;
-  border: #bfbfbf 1px solid;
-  border-radius: 2px;
-
-  &:checked {
-    border: 1px solid #001f3f;
-    background-color: #001f3f;
-  }
-
-  &:not(checked) {
-    border: 1px solid gray;
-  }
-}
+}    
