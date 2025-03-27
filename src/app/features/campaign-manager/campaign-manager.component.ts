@@ -2,7 +2,12 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { Campaign, ICampaign, Stage } from 'src/app/shared/models/icampaign';
+import {
+  Campaign,
+  ICampaign,
+  Stage,
+  Submission,
+} from 'src/app/shared/models/icampaign';
 import { CampaignDrawingComponent } from '../campaign-drawing/campaign-drawing.component';
 import { Organization } from 'src/app/shared/models/orgnizations';
 import { EmilyService } from 'src/app/core/services/emily.service';
@@ -131,13 +136,8 @@ export class CampaignManagerComponent implements OnInit {
   // }
 
   goToEmily(campaign: ICampaign, index: number): void {
-    
-   
-    this.getCampaignOrganizations(campaign.id,campaign.Campaigns[index].Id)
-    
+    this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
   }
-
- 
 
   getKanbanTemplateStages(): void {
     const body: any = {
@@ -168,7 +168,7 @@ export class CampaignManagerComponent implements OnInit {
     return null;
   }
 
-  getCampaignOrganizations(buboxId:number,campaignId: number): void {
+  getCampaignOrganizations(buboxId: number, campaignId: number): void {
     const body: any = {
       Name: 'GetCampaignOrganizations',
       Params: { CampaignId: campaignId },
@@ -177,27 +177,48 @@ export class CampaignManagerComponent implements OnInit {
     this.placesService.GenericAPI(body).subscribe((response) => {
       console.log(response);
 
-    //   let organizationsIds: number[] = [];
-    // organizationsIds = [...new Set(organizationsIds)];
+      //   let organizationsIds: number[] = [];
+      // organizationsIds = [...new Set(organizationsIds)];
 
-    // let organizations: {
-    //   id: number;
-    //   contacts: any[];
-    // }[] = [];
-    // organizations = organizationsIds.map((id) => {
-    //   return { id: id, contacts: [] };
-    // });
+      // let organizations: {
+      //   id: number;
+      //   contacts: any[];
+      // }[] = [];
+      // organizations = organizationsIds.map((id) => {
+      //   return { id: id, contacts: [] };
+      // });
 
-    // let emilyObject: { buyboxId: number[]; organizations: any[] } = {
-    //   buyboxId: [campaign.id],
-    //   organizations: organizations,
-    // };
-    // debugger;
-    // this.emilyService.updateCheckList(emilyObject);
-    // console.log(emilyObject);
+      // let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+      //   buyboxId: [campaign.id],
+      //   organizations: organizations,
+      // };
+      // debugger;
+      // this.emilyService.updateCheckList(emilyObject);
+      // console.log(emilyObject);
 
-    // this.router.navigate(['/MutipleEmail']);
-      
+      // this.router.navigate(['/MutipleEmail']);
     });
+  }
+
+  sortedSubmissions(submissions: Submission[]) {
+    return (
+      submissions?.sort(
+        (a, b) =>
+          this.statusSortOrder(a.StatusId) - this.statusSortOrder(b.StatusId)
+      ) || []
+    );
+  }
+
+  statusSortOrder(statusId: number | undefined): number {
+    const order: { [key: number]: number } = { 0: 0, 1: 1, [-1]: 2 };
+    return order[statusId ?? -1];
+  }
+
+  getStatusClass(statusId: number | undefined) {
+    return {
+      red: statusId === -1,
+      normal: statusId === 0,
+      green: statusId === 1,
+    };
   }
 }
