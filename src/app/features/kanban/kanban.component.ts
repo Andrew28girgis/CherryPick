@@ -65,11 +65,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
       }
     }, 100);
 
-    this.pollingInterval = setInterval(() => {
-      if (this.selectedKanbanId) {
-        this.getKanbanDetails();
-      }
-    }, 5000);
+  
 
     // this.cadenceService.getKanbanId().subscribe((kanbanId) => {
     //   if (kanbanId) {

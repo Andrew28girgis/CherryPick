@@ -69,7 +69,7 @@ export class EmilyContactEmailComponent implements OnInit {
     });
     this.loadInitialData();
   }
-  
+
   toggleDropdown() {
     this.isDropdownVisible = !this.isDropdownVisible;
   }
@@ -115,14 +115,31 @@ export class EmilyContactEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxMicroDeals = data.json;
-        this.contacts = [];
-        this.contacts =
-          this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
-            ?.Contact || [];
 
-        this.selectedOrganizationName =
-          this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
-            ?.OrganizationName || '';
+        console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
+
+        this.contacts = [];
+        this.contacts = this.BuyBoxMicroDeals.flatMap((m) =>
+          m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
+            (o) => o.Contact || []
+          )
+        );
+
+           this.selectedOrganizationName =
+           this.BuyBoxMicroDeals.flatMap((m) =>
+            m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
+              (o) => o.OrganizationName || ''
+            )
+          ).join(', ');
+
+
+        console.log(`contacts`, this.contacts);
+
+ 
+
+        // this.selectedOrganizationName =
+        //   this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
+        //     ?.OrganizationName || '';
 
         this.BuyBoxMicroDeals = [];
         this.GetBuyBoxEmails(() => {
@@ -164,10 +181,8 @@ export class EmilyContactEmailComponent implements OnInit {
       return;
     }
 
-
     // Since the API returns emails directly, use them as-is.
     const matchingEmails: any[] = this.BuyBoxEmails;
-    
 
     // Filter emails that are related to the selected contact.
     this.emailsSentContact = matchingEmails?.filter(

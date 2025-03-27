@@ -1,22 +1,19 @@
 export interface BuyBoxMicroDeals {
-  OrganizationName: string
-  OrganizationId: number
-  Contact:Contact[]
+  id: number
+  StageId: number
+  Organization: Organization[]
 }
 
 export interface Organization {
-  OrganizationId: any
+  OrganizationId: number
   OrganizationName: string
   Contact: Contact[]
-  showContacts:boolean
-  showMoreContacts?: boolean;  // Add this line
-
 }
 
 export interface Contact {
   ContactId: number
-  Firstname: string
-  Lastname: string
+  Firstname?: string
+  Lastname?: string
   EmailStats: EmailStat[]
 }
 
@@ -25,6 +22,7 @@ export interface EmailStat {
   Sent: number
   Inbox: number
 }
+
 
 
 export interface Stages {
