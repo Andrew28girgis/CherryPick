@@ -129,6 +129,7 @@ export class CampaignDrawingComponent
         CampaignName: this.campaignName,
         CampaignPrivacy: this.isPrivateCampaign,
         BuyBoxId: this.buyBoxId,
+        CreatedDate: new Date(),
       },
     };
 

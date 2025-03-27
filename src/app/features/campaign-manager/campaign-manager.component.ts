@@ -51,9 +51,11 @@ export class CampaignManagerComponent implements OnInit {
 
   onSearchCampaign(): void {
     if (this.searchCampaign && this.searchCampaign.trim().length > 0) {
-      this.filteredCampaigns = this.campaigns.filter((campaign) =>
-        campaign.CampaignName.toLowerCase().includes(
-          this.searchCampaign.toLowerCase()
+      this.filteredCampaigns = this.campaigns.filter((c) =>
+        c.Campaigns.some((campaign) =>
+          campaign.CampaignName.toLowerCase().includes(
+            this.searchCampaign.toLowerCase()
+          )
         )
       );
     } else {
