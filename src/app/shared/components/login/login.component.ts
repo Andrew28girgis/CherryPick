@@ -32,12 +32,6 @@ export class LoginComponent implements OnInit {
     this.General = new General();
     this.adminLogin = new adminLogin();
     this.logoUrl = this.configService.getLogoUrl();
-    // First check if user is already logged in today
-    // if (this.authService.isLoggedInToday()) {
-
-    //   this.navigateToHome();
-    //   return;
-    // }
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.t = params.get('t');
       if (this.t) {

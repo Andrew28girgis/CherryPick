@@ -15,7 +15,7 @@
   background-color: #fff;
   padding: 1rem 2rem;
   border-radius: 1rem;
-  overflow-y: auto;
+  overflow: auto;
 }
 
 .search-campaign-container {
@@ -62,6 +62,7 @@
 }
 
 .campaign-privacy {
+  /* width: 100%; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,6 +73,7 @@
 }
 
 .campaign-privacy-icon {
+  /* width: 100%; */
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -148,6 +150,56 @@
   background-color: #f9f9f9;
 }
 
-table {
-  line-height: 2rem;
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+  margin: 0;
+}
+
+.table thead th {
+  border: 1px solid #dee2e6;
+}
+
+.table tbody td {
+  border: 1px solid #dee2e6;
+  padding: 0.85rem 0.5rem;
+  /* padding-right: 3rem; */
+}
+
+.inbox {
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  background-color: #4d65b4;
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.hyber-link {
+  text-decoration: underline;
+  font-size: 0.8rem;
+  color: #4d65b4;
+  cursor: pointer;
+}
+
+.tenant-name {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tenant-name:hover {
+  color: #4d65b4;
+}
+
+.red {
+  color: #cc3d3d;
+}
+
+.green {
+  color: #208637;
+}
+
+.normal {
+  text-decoration: underline;
 }

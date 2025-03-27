@@ -40,7 +40,7 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: 'Submissions',
+    path: 'submissions/:campaignId',
     component: SubmissionsComponent,
     canActivate: [TenantOnlyGuard],
   },

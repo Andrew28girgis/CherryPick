@@ -163,15 +163,11 @@ export class EmilyContactEmailComponent implements OnInit {
       // If same contact and emails already loaded, do nothing.
       return;
     }
-    console.log(`www`);
 
-    console.log(this.BuyBoxEmails);
 
     // Since the API returns emails directly, use them as-is.
     const matchingEmails: any[] = this.BuyBoxEmails;
-    console.log(`contact Emails`);
-    console.log(contact);
-    console.log(matchingEmails);
+    
 
     // Filter emails that are related to the selected contact.
     this.emailsSentContact = matchingEmails?.filter(

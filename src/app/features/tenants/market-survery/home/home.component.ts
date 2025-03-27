@@ -1239,10 +1239,8 @@ export class HomeComponent implements OnInit {
           response.json[0].id
         ) {
           localStorage.setItem('contactId', response.json[0].id.toString());
-          console.log('contact after register', this.ContactId);
           this.LoginEmail = response.json[0].email;
           this.LoginPassword = response.json[0].password;
-          console.log(this.LoginEmail, this.LoginPassword);
 
           this.modalService.dismissAll();
           this.showToast('Registration successful!');
@@ -1274,7 +1272,6 @@ export class HomeComponent implements OnInit {
 
     this.PlacesService.loginUser(adminLoginInstance).subscribe({
       next: (data: any) => {
-        console.log('Login successful:', data);
         // Handle token or user data if needed
         localStorage.setItem('token', data.token);
         this.authService.setToken(data.token);
