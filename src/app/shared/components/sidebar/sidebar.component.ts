@@ -13,18 +13,11 @@ import { filter } from 'rxjs/operators';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
-import { IUserKanban } from '../../models/iuser-kanban';
 import {
-  buyboxChecklist,
-  cadenceSidebar,
-  ContactsChecked,
   IBuyBoxContact,
   IBuyboxOrganization,
   IUserBuybox,
-  OrganizationChecked,
 } from '../../models/sidenavbar';
-import { IKanbanDetails } from '../../models/ikanban-details';
-import { EmilyService } from 'src/app/core/services/emily.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -59,8 +52,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     private sidbarService: SidbarService,
     public router: Router,
     private userViewService: UserViewService,
-    private PlacesService: PlacesService,
-    protected cdr: ChangeDetectorRef,
+    protected cdr: ChangeDetectorRef
   ) {
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isSidebarExpanded = !state;
@@ -92,7 +84,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.currentView = view;
       }
     );
-
   }
 
   ngOnDestroy(): void {
@@ -116,6 +107,4 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.hoverStateChange.emit(isHovering);
     }
   }
-
- 
 }
