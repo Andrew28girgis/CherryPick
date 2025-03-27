@@ -54,12 +54,17 @@ export class TenantComponent implements OnInit {
   images: IFile[] = [];
   pdfFileName: string = '';
   contactID!: any;
-  TenantResult: LandingPageTenants[] = [];
-  organizationBranches: OrganizationBranches[] = [];
+  TenantResult!: LandingPageTenants;
+  organizationBranches!: OrganizationBranches; 
   selectedbuyBox!: string;
   buyboxcolor!: string;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
+  organizationid!:string
+  isFileUploaded: boolean = false; // To track whether a file has been uploaded
+  test!: number;  // Add this property
+
+  
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -71,6 +76,8 @@ export class TenantComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) {}
   ngOnInit(): void {
+    this.buyboxcolor = '#FF5733'; 
+
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
@@ -90,6 +97,9 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
+        this.organizationid = this.TenantResult?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.BuyBoxOrganizationId?.toString() ?? '';
+        console.log('tenant', this.TenantResult);
+        
         this.spinner.hide();
         this.GetOrganizationBranches();
       },
@@ -114,10 +124,9 @@ export class TenantComponent implements OnInit {
     });
   }
 
-  openUploadModal(id: number) {
+  openUploadModal(id?: number) {
     if (id === undefined) {
       const guid = crypto.randomUUID();
-
       this.selectedShoppingID = guid;
     } else {
       this.selectedShoppingID = id.toString();
@@ -149,9 +158,7 @@ export class TenantComponent implements OnInit {
           this.httpClient.request(req).subscribe(
             (event: any) => {
               if (event.type === HttpEventType.UploadProgress) {
-                this.uploadProgress = Math.round(
-                  (100 * event.loaded) / event.total!
-                );
+                this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
                 if (this.uploadProgress === 100) {
                   this.isUploading = false;
                   this.isConverting = true;
@@ -159,25 +166,20 @@ export class TenantComponent implements OnInit {
               } else if (event instanceof HttpResponse) {
                 const response = event.body;
                 if (response && response.images) {
-                  this.images = response.images.map(
-                    (img: string, index: number) => ({
-                      name: `Image ${index + 1}`,
-                      type: 'image/png',
-                      content: img,
-                      selected: false,
-                    })
-                  );
+                  this.images = response.images.map((img: string, index: number) => ({
+                    name: `Image ${index + 1}`,
+                    type: 'image/png',
+                    content: img,
+                    selected: false,
+                  }));
                   this.pdfFileName = response.pdfFileName;
                   this.isConverting = false;
                   this.spinner.hide();
-                  this.showToast(
-                    'PDF File uploaded and converted successfully!'
-                  );
-
-                  // Automatically send the images if there are 3 or fewer images
-                  if (this.images.length <= 3) {
-                    this.sendJson(); // Automatically submit the images
-                  }
+                  this.showToast('PDF File uploaded and converted successfully!');
+                  this.isFileUploaded = true;  // Enable submit button
+                  
+                  // Open the modal after images are returned and upload completes
+                  this.openUploadModal(0);  // Open the modal after the process is done
                 }
               }
             },
@@ -186,18 +188,18 @@ export class TenantComponent implements OnInit {
               this.isConverting = false;
               this.spinner.hide();
               this.showToast('Failed to upload or convert PDF file!');
-              // Reset fileName on error by assigning an empty string
               this.fileName = '';
             }
           );
         });
-      } else {
-        // Handle directory entry if needed
-        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
       }
     }
   }
 
+
+  
+  
+  
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');

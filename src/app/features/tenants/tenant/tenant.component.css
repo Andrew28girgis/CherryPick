@@ -1,6 +1,9 @@
 .overfloww {
   overflow-x: hidden;
 }
+.paddingrow{
+  padding: 20px 20px;
+}
 .background {
   background: var(--Body-Page-BG, #f2f3f4);
   width: 100% !important;
@@ -39,7 +42,6 @@
   box-shadow: -1px 3px 17px 0px rgba(0, 0, 0, 0.1);
 }
 .custom-card {
-  width: 500px;
   border-radius: var(--Card-Section-Lg-Radius, 20px);
   display: flex;
   padding: var(--Card-Section-Lg-Padding-All-Sides, 26px);
@@ -62,11 +64,7 @@
   gap: var(--Space-Space-12, 12px);
   flex-shrink: 0;
 }
-.map-container .custom-card {
-  position: absolute;
-  top: 140px;
-  left: 50px;
-}
+
 .content-right {
   position: absolute;
   top: 45px;
@@ -152,11 +150,12 @@
   flex-shrink: 0;
 }
 .lowwhite {
-  color: #afa8a8;
+  color: var(--Colors-Pure-White, #FFF);
+  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 30px;
+  line-height: 30px; 
 }
 .brokerframeee {
   display: flex;
@@ -418,9 +417,6 @@
 .uploadingpadding {
   padding: 0px 20px;
 }
-.extractedimagespadding {
-  padding: 0px 20px;
-}
 .inner-frame {
   display: flex;
   align-items: center;
@@ -509,16 +505,16 @@
   width: 100%;
 }
 
+/* Default submit button style */
 .submit-button {
   display: flex;
-  height: 48px;
-  padding: 14px 24px;
+  padding: 10px 30px;
   justify-content: center;
   align-items: center;
   gap: 8px;
   flex: 1 0 0;
   border-radius: 16px;
-  background: #4d65b4;
+  background: #4d65b4; /* Default background color */
   color: #fff;
   font-size: 16px;
   font-weight: 600;
@@ -526,7 +522,22 @@
   border: none;
   width: 100%;
 }
-.submitpdfbutton {
+
+.submit-button:disabled {
+  border-radius: var(--Radius-Radius-16, 16px); 
+  opacity: 0.5; 
+  background: var(--Button-Primary-BG, #4D65B4); 
+  cursor: not-allowed; 
+}
+
+.submit-button:not(:disabled):hover {
+  background: #4055a8; 
+}
+
+.submit-button:hover {
+  background: #4055a8;
+}
+.submitpdfbutton{
   display: flex;
   height: 48px;
   padding: 14px 24px;
@@ -546,31 +557,104 @@
   background: #f0f3ff;
 }
 
-.submit-button:hover {
-  background: #4055a8;
-}
-.paddingsubmitpdf {
+
+.paddingsubmitpdf{
   padding-right: 20px;
 }
+.cardcampaings {
+  border-radius: var(--Card-Section-Radius, 20px);
+  background: var(--Card-Section-BG, #FFF);
+  display: flex;
+  padding: var(--Space-Space-20, 20px);
+  flex-direction: column;
+  gap: var(--Space-Space-20, 20px);
+}
+.SumbitProp{
+color: var(--Body-Heading-Color, #16181D);
+font-family: Montserrat;
+font-size: 24px;
+font-style: normal;
+font-weight: 600;line-height: 32px; 
+}
+.uploadyourfile{
+color: var(--Body-Text-and-Icons, #707791);
+font-family: Montserrat;
+font-size: 18px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; 
+margin-top: 15px;
+}
+.colpadding{
+  padding: 20px 20px;
+}
+.lineheight{
+  line-height:30px;
+}
+.whitebackground {
+  padding: 15px 5px;
+  background: var(--Colors-Pure-White, #FFF);
+}
+.campaings{
+color: var(--Body-Heading-Color, #16181D);
+font-family: Montserrat;
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; 
+}
+.campaignname{
+color: var(--Body-Text-and-Icons, #707791);
+text-align: center;
+font-family: Montserrat;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 30px; 
+}
+/* Button Styles */
+.showpolygonsbutton {
+  border-radius: var(--Radius-Radius-16, 16px);  /* Customizable border radius */
+  background: var(--Button-Primary-BG, #4D65B4);  /* Customizable background */
+  display: flex;
+  height: 32px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.showpolygonsbutton span {
+  color: var(--Button-Primary-Label, #FFF);  
+  text-align: center;
+  
+  font-family: Montserrat, sans-serif; 
+  font-size: 16px;  
+  font-style: normal;
+  font-weight: 500; 
+  line-height: 30px;  
+}
+.divider {
+  border: none;
+  border-top: 1px solid #cfc9c9;
+  margin-top: 0px;
+}
+.extractedimagespadding{
+  padding: 20px;
+}
+.marginleft{
+  margin-left: 20px;
+}
 @media (max-width: 576px) {
+  .cardcampaings {
+    margin-top: 15px;
+}
   .content-right {
     position: absolute;
     top: 12px;
     right: 6px;
-  }
-  .custom-card {
-    width: 275px;
-    border-radius: var(--Card-Section-Lg-Radius, 20px);
-    display: flex;
-    padding: var(--Card-Section-Lg-Padding-All-Sides, 12px);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--Space-Space-24, 7px);
-  }
-  .map-container .custom-card {
-    position: absolute;
-    top: 120px;
-    left: 13px;
   }
   .tenant-logo {
     width: 60px;
@@ -688,28 +772,17 @@
   }
 }
 @media (min-width: 576px) {
+  .cardcampaings {
+    margin-top: 20px;
+}
   .content-right {
     position: absolute;
     top: 12px;
     right: 6px;
   }
-  .custom-card {
-    width: 275px;
-    border-radius: var(--Card-Section-Lg-Radius, 20px);
-    display: flex;
-    padding: var(--Card-Section-Lg-Padding-All-Sides, 12px);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--Space-Space-24, 7px);
-  }
   .map-container {
     height: 720px;
     gap: var(--Space-Space-12, 12px);
-  }
-  .map-container .custom-card {
-    position: absolute;
-    top: 140px;
-    left: 50px;
   }
   .tenant-logo {
     width: 60px;
@@ -734,7 +807,7 @@
   .grayspan {
     font-size: 15px;
   }
-  .brokertext[_ngcontent-ng-c2705470804] {
+  .brokertext {
     font-size: 15px;
     line-height: 30px;
   }
@@ -819,20 +892,14 @@
 }
 
 @media (min-width: 768px) {
-  .content-right {
+  .cardcampaings {
+    margin-top: 0px;
+}
+  .content-right{
     position: absolute;
     top: 27px;
     right: 10px;
-  }
-  .custom-card {
-    width: 320px;
-    border-radius: var(--Card-Section-Lg-Radius, 20px);
-    display: flex;
-    padding: var(--Card-Section-Lg-Padding-All-Sides, 26px);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--Space-Space-24, 16px);
-  }
+}
   .tenant-logo {
     width: 80px;
     height: 80px;
@@ -925,11 +992,6 @@
     position: absolute;
     top: 45px;
     right: 75px;
-  }
-  .custom-card {
-    width: 500px;
-    padding: var(--Card-Section-Lg-Padding-All-Sides, 26px);
-    gap: var(--Space-Space-24, 16px);
   }
   .tenant-logo {
     width: 100px;

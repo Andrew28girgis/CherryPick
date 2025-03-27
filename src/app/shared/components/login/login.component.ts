@@ -5,7 +5,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ConfigService } from 'src/app/core/services/config.service';
- 
 
 @Component({
   selector: 'app-login',
@@ -35,7 +34,6 @@ export class LoginComponent implements OnInit {
     this.logoUrl = this.configService.getLogoUrl();
     // First check if user is already logged in today
     // if (this.authService.isLoggedInToday()) {
-     
 
     //   this.navigateToHome();
     //   return;
@@ -93,6 +91,6 @@ export class LoginComponent implements OnInit {
   }
 
   private navigateToHome() {
-    this.router.navigate(['/summary']);
+    this.router.navigate(['/campaigns']);
   }
 }

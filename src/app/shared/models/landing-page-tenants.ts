@@ -1,28 +1,7 @@
 export interface LandingPageTenants {
-    Buybox: Array<{
-        BuyBoxOrganization: Array<{
-            ManagerOrganization: Array<{
-                ManagerOrganizationContacts: Array<{
-                    Firstname: string;
-                    LastName: string;
-                    LinkedIn: string;
-                    Photo: string;
-                    Profile: string;
-                }>;
-                ManagerOrganizationId: number;
-                ManagerOrganizationName: string;
-                ManagerOrganizationDescription: string;
-            }>;
-            BuyBoxOrganizationId: number;
-            BuyBoxOrganizationDescription: string;
-            Name: string;
-        }>;
-        MinBuildingSize: number;
-        MaxBuildingSize: number;
-        Description: string | string[];
-    }>;
-    Releations: Releation[]
-    BuyBoxShoppingCenters: BuyBoxShoppingCenter[]
+  Buybox?: Buybox[]
+  Releations?: Releation[]
+  BuyBoxShoppingCenters?: BuyBoxShoppingCenter[]
 }
 export interface Buybox {
     Buyboxid: number
@@ -151,3 +130,4 @@ export interface Buybox {
     CotenantId: number
     CotenantName: string
   }
+  

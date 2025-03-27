@@ -15,6 +15,9 @@ export class EmilyService {
 
   updateCheckList(checkList: any): void {
     this.emilyCheckList.next(checkList);
-    sessionStorage.setItem('buyboxChecklist', JSON.stringify(this.emilyCheckList.value));
+    sessionStorage.setItem(
+      'buyboxChecklist',
+      JSON.stringify(this.emilyCheckList.value)
+    );
   }
 }

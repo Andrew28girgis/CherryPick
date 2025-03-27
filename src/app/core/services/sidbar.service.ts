@@ -6,11 +6,11 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class SidbarService {
   // For sidebar expansion state
-  private isSidebarExpandedSource = new BehaviorSubject<boolean>(false);
+  private isSidebarExpandedSource = new BehaviorSubject<boolean>(true);
   isSidebarExpanded = this.isSidebarExpandedSource.asObservable();
   
   // For sidebar collapse state (used by header)
-  private isCollapsedSource = new BehaviorSubject<boolean>(true);
+  private isCollapsedSource = new BehaviorSubject<boolean>(false);
   isCollapsed = this.isCollapsedSource.asObservable();
 
   toggleSidebar() {
