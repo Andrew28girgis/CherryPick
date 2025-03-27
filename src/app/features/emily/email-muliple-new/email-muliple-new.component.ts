@@ -13,6 +13,9 @@ import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganiz
 import { from } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EmilyService } from 'src/app/core/services/emily.service';
+import { ContactsChecked,OrganizationChecked ,  buyboxChecklist } from 'src/app/shared/models/sidenavbar';
+
 
 @Component({
   selector: 'app-email-muliple-new',
@@ -97,10 +100,13 @@ export class EmailMulipleNewComponent implements OnInit {
   returnGetMailContextGenerated: any[] = [];
   ItemContext: any;
 
+
+
   constructor(
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
+    private emilyService: EmilyService,
     private modalService: NgbModal
   ) {
     this.route.paramMap.subscribe((params) => {
@@ -109,6 +115,12 @@ export class EmailMulipleNewComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.emilyService.getCheckList().subscribe((buyboxChecklist:buyboxChecklist) => {
+      console.log('Data from EmilyService:', buyboxChecklist);
+      // console.log('buyboxId:', buyboxChecklist.buyboxId[0]);
+      this.buyBoxId = buyboxChecklist?.buyboxId[0];
+    });
+
     this.contactId = localStorage.getItem('contactId');
     if (this.buyBoxId) {
       this.GetOrgbuyBox(this.buyBoxId);
@@ -387,7 +399,7 @@ export class EmailMulipleNewComponent implements OnInit {
       next: (data: any) => {
         this.buybox = data.json;
         this.showMinBuildingSize = true;
-        this.onCheckboxdetailsChangeMinN(true);
+        this.onCheckboxdetailsChangeMin(true);
       },
     });
   }
@@ -647,13 +659,16 @@ export class EmailMulipleNewComponent implements OnInit {
     return LandingChange;
   }
   onCheckboxdetailsChangeMin(event: any) {
-    this.showMinBuildingSize = event.target.checked;
+    let isChecked;
+    if (typeof event === 'boolean') {
+      isChecked = event;
+    } else if (event.target) {
+      isChecked = event.target.checked;
+    }
+    this.showMinBuildingSize = isChecked;
     this.updateEmailBody();
   }
-  onCheckboxdetailsChangeMinN(event: any) {
-    this.showMinBuildingSize = event;
-    this.updateEmailBody();
-  }
+  
   onCheckboxClientProfileSection(event: any) {
     this.showClientProfile = event.target.checked;
     this.updateEmailBody();
