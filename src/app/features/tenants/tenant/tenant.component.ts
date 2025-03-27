@@ -65,7 +65,6 @@ export class TenantComponent implements OnInit {
   buyboxcolor!: string;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
-  
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -80,7 +79,7 @@ export class TenantComponent implements OnInit {
     this.contactID = localStorage.getItem('contactId');
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
-      console.log(this.selectedbuyBox); 
+      console.log(this.selectedbuyBox);
       this.GetBuyBoxInfo();
     });
   }
@@ -97,8 +96,8 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.TenantResult = res.json[0];
-        console.log('tenant',this.TenantResult);
-        
+        console.log('tenant', this.TenantResult);
+
         this.spinner.hide();
 
         this.GetOrganizationBranches();
@@ -206,8 +205,7 @@ export class TenantComponent implements OnInit {
       }
     }
   }
-  
-  
+
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
