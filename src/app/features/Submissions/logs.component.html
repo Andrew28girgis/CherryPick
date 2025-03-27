@@ -8,7 +8,9 @@
         <th>Contact</th>
         <th>Submissions</th>
         <th>Center Name</th>
-        <th>Center Address</th> 
+        <th>Center Address</th>
+        <th>Source</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -22,12 +24,60 @@
           </ng-container>
         </td>
         <td>
-          {{getSumbussionCenterName(submission)}}
+          <div class="d-flex justify-content-between">
+            {{ getSubmissionCenterName(submission) }}
+            <button class="inbox" (click)="openSubmissions(Places , submission)">View Places</button> 
+          </div>
+       
         </td>
         <td>
-          {{getSumbussionCenterAddress(submission)}}
+          {{ getSubmissionCenterAddress(submission) }}
         </td>
+        <td>
+          {{ getSubmissionSourceId(submission) }}
+        </td>
+        <td>
+          <div class="d-flex justify-content-between" *ngIf="submission.UserSubmissions[0].StatusId === 0">
+            <button class="accept-btn" (click)="AcceptUserSubmission(submission)">Accept</button>
+            <button class="reject-btn" (click)="RejectUsersubmission(submission)">Reject</button>
+          </div>
+          
+          <ng-container *ngIf="submission.UserSubmissions[0].StatusId === 1">
+            <span style="color: #28a745; font-weight: 600;">Accepted</span>
+          </ng-container>
+          
+          <ng-container *ngIf="submission.UserSubmissions[0].StatusId === -1">
+            <span style="color: #dc3545; font-weight: 600;">Rejected</span>
+          </ng-container>
+        </td>
+        
       </tr>
     </tbody>
   </table>
 </div>
+
+
+<ng-template #Places let-modal>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Building Size (sq.ft.)</th>
+          <th>Lease Type</th>
+          <th>Suite</th>
+          <th>For Lease Price ($)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let place of places">
+          <tr>
+            <td>{{ place.BuildingSizeSf || 'N/A' }} <span *ngIf="place.BuildingSizeSf">SF</span></td>
+            <td>{{ place.LeaseType || 'N/A' }}</td>
+            <td>{{ place.Suite || 'N/A' }}</td>
+            <td>{{ place.ForLeasePrice || '0' }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

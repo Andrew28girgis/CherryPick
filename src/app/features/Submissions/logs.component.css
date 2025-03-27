@@ -28,3 +28,54 @@ th {
   padding: 4px 10px;
   white-space: nowrap;
 }
+
+table{
+    border-radius: 10px;
+}
+
+.inbox{
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background-color: #4d65b4;
+    text-decoration: none;
+    font-size: 13px;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    height: 35px;
+    width: 110px;
+    white-space: nowrap;
+}
+.accept-btn {
+  background-color: #28a745; 
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.accept-btn:hover {
+  background-color: #218838; 
+}
+
+.reject-btn {
+  background-color: #dc3545; 
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reject-btn:hover {
+  background-color: #c82333;
+}
+
+.accept-btn, .reject-btn {
+  margin-right: 10px;
+}
