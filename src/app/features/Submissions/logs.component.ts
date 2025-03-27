@@ -16,6 +16,7 @@ export class SubmissionsComponent implements OnInit {
   submissionsArray: submission[] = [];
   campaignId!: any;
   General!: General;
+  places:IIPlace[] = [];
 
   constructor(
     private PlacesService: PlacesService,
@@ -46,33 +47,25 @@ export class SubmissionsComponent implements OnInit {
     });
   }
 
-  places:IIPlace[] = [];
-  openSubmissions(content: any, modalObject?: any): void {
+  openSubmissions(content: any, userSubmission: any): void {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-    this.places = modalObject.UserSubmissions[0].ShoppingCenters[0].Place;
-    // this.General.modalObject = modalObject;
-    console.log(`ww`);
+    this.places = userSubmission.ShoppingCenters[0].Place;
     console.log(this.places);
-    
-    
   }
 
-  getSubmissionCenterName(submission: submission) {
-    return submission.UserSubmissions[0].ShoppingCenters[0].CenterName;
-  }
-  getSubmissionCenter(submission: submission) {
-    return submission.UserSubmissions[0].ShoppingCenters[0];
+  getSubmissionCenterName(userSubmission: any) {
+    return userSubmission.ShoppingCenters[0].CenterName;
   }
 
-  getSubmissionCenterAddress(submission: submission) {
+  getSubmissionCenterAddress(userSubmission: any) {
     return (
-      submission.UserSubmissions[0].ShoppingCenters[0].CenterCity +
+      userSubmission.ShoppingCenters[0].CenterCity +
       ', ' +
-      submission.UserSubmissions[0].ShoppingCenters[0].CenterState
+      userSubmission.ShoppingCenters[0].CenterState
     );
   }
 
@@ -86,54 +79,35 @@ export class SubmissionsComponent implements OnInit {
     }
   }
 
-  acceptSubmission(submission: submission): void {
-    submission.UserSubmissions[0].StatusId = 1;
-    console.log(`Submission ${submission.Firstname} accepted!`);
-  }
-  
-  rejectSubmission(submission: submission): void {
-    submission.UserSubmissions[0].StatusId = -1;
-    console.log(`Submission ${submission.Firstname} rejected!`);
-  }
-
-
-  AcceptUserSubmission(submission: submission): void {
-    submission.UserSubmissions[0].StatusId = 1;
-  
-    const userSubmissionId = submission.UserSubmissions[0].Id; 
-    
+  AcceptUserSubmission(userSubmission: any): void {
+    userSubmission.StatusId = 1;
+    const userSubmissionId = userSubmission.Id;
     const body: any = {
       Name: 'AcceptUserSubmission',
       Params: {
         UserSubmissionId: userSubmissionId,
       },
     };
-  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.fetchReceivedSubmissions(); 
-      }
+        this.fetchReceivedSubmissions();
+      },
     });
   }
-  
-  RejectUsersubmission(submission: submission): void {
-    submission.UserSubmissions[0].StatusId = -1;
-  
-    const userSubmissionId = submission.UserSubmissions[0].Id;  
-    
+
+  RejectUsersubmission(userSubmission: any): void {
+    userSubmission.StatusId = -1;
+    const userSubmissionId = userSubmission.Id;
     const body: any = {
       Name: 'RejectUsersubmission',
       Params: {
-        UserSubmissionId: userSubmissionId, 
+        UserSubmissionId: userSubmissionId,
       },
     };
-  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.fetchReceivedSubmissions(); 
-      }
+        this.fetchReceivedSubmissions();
+      },
     });
   }
-  
-  
 }

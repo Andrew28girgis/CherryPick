@@ -14,44 +14,42 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let submission of submissionsArray">
-        <td>{{ submission.Firstname }} {{ submission.Lastname }}</td>
-        <td>
-          <ng-container *ngFor="let file of submission.UserSubmissions">
-            <div class="my-2">
-              <a target="_blank">{{ file.FileName }}</a>
-            </div>
-          </ng-container>
-        </td>
-        <td>
-          <div class="d-flex justify-content-between">
-            {{ getSubmissionCenterName(submission) }}
-            <button class="inbox" (click)="openSubmissions(Places , submission)">View Places</button> 
-          </div>
-       
-        </td>
-        <td>
-          {{ getSubmissionCenterAddress(submission) }}
-        </td>
-        <td>
-          {{ getSubmissionSourceId(submission) }}
-        </td>
-        <td>
-          <div class="d-flex justify-content-between" *ngIf="submission.UserSubmissions[0].StatusId === 0">
-            <button class="accept-btn" (click)="AcceptUserSubmission(submission)">Accept</button>
-            <button class="reject-btn" (click)="RejectUsersubmission(submission)">Reject</button>
-          </div>
-          
-          <ng-container *ngIf="submission.UserSubmissions[0].StatusId === 1">
-            <span style="color: #28a745; font-weight: 600;">Accepted</span>
-          </ng-container>
-          
-          <ng-container *ngIf="submission.UserSubmissions[0].StatusId === -1">
-            <span style="color: #dc3545; font-weight: 600;">Rejected</span>
-          </ng-container>
-        </td>
-        
-      </tr>
+      <ng-container *ngFor="let submission of submissionsArray">
+        <ng-container *ngFor="let userSubmission of submission.UserSubmissions">
+          <tr>
+            <td>{{ submission.Firstname }} {{ submission.Lastname }}</td>
+            <td>
+              <ng-container *ngFor="let file of submission.UserSubmissions">
+                <div class="my-2">
+                  <a target="_blank">{{ file.FileName }}</a>
+                </div>
+              </ng-container>
+            </td>
+            <td>
+              <div class="d-flex justify-content-between">
+                {{ getSubmissionCenterName(userSubmission) }}
+                <button class="inbox" (click)="openSubmissions(Places, userSubmission)">View Places</button>
+              </div>
+            </td>
+            <td>{{ getSubmissionCenterAddress(userSubmission) }}</td>
+            <td>{{ getSubmissionSourceId(submission) }}</td>
+            <td>
+              <div *ngIf="userSubmission.StatusId === 0" class="d-flex justify-content-between">
+                <button class="accept-btn" (click)="AcceptUserSubmission(userSubmission)">Accept</button>
+                <button class="reject-btn" (click)="RejectUsersubmission(userSubmission)">Reject</button>
+              </div>
+
+              <ng-container *ngIf="userSubmission.StatusId === 1">
+                <span style="color: #28a745; font-weight: 600;">Accepted</span>
+              </ng-container>
+
+              <ng-container *ngIf="userSubmission.StatusId === -1">
+                <span style="color: #dc3545; font-weight: 600;">Rejected</span>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
     </tbody>
   </table>
 </div>
