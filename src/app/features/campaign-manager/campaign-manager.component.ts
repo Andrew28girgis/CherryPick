@@ -22,7 +22,7 @@ export class CampaignManagerComponent implements OnInit {
   userBuyBoxes: { id: number; name: string }[] = [];
   selectedBuyBoxId: number = 0;
   campaigns: ICampaign[] = [];
-  filteredCampaigns: ICampaign[] = [];
+  filteredCampaigns?: ICampaign[];
   stages: { id: number; stageName: string }[] = [];
   searchCampaign: string = '';
 
@@ -83,7 +83,7 @@ export class CampaignManagerComponent implements OnInit {
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
-      this.spinner.hide();
+      // this.spinner.hide();
 
       if (response.json && response.json.length > 0) {
         this.userBuyBoxes = response.json.map((buybox: any) => {
