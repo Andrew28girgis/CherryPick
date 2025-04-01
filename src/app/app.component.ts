@@ -42,6 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     );
   }
+
   ngOnDestroy() {
     if (this.sidebarSubscription) {
       this.sidebarSubscription.unsubscribe();
