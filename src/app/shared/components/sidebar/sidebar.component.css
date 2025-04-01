@@ -46,6 +46,7 @@
 .sidebar-logo {
   padding: 8px 15px;
   border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
 }
 
 .cherry-logo {
@@ -53,7 +54,6 @@
   max-height: 40px !important;
   height: auto;
   transition: all 0.3s ease;
-  cursor: pointer;
 }
 
 .sidebar-nav {
