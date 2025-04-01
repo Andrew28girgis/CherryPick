@@ -86,13 +86,13 @@ export class TenantComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
       this.selectedCampaign = params['campaignId'];
-      console.log('selectedCampaign', this.selectedCampaign);
+      console.log(this.selectedCampaign);
+      
       // this.GetCampaignDetails();
     });
     this.GetBuyBoxInfo();
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
-    console.log('guid', this.selectedShoppingID);
     
   }
 
@@ -313,10 +313,15 @@ export class TenantComponent implements OnInit {
     // Send the updated JsonPDF data
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        this.showToast('shopping center updated successfully!');
+        this.showToast('Shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
         this.spinner.hide();
+      },
+      error: (error) => {
+        console.error('Error occurred while updating shopping center:', error);
+        this.spinner.hide();
+        this.showToast('Failed to update shopping center!');
       },
     });
     this.isSubmitting = false;
