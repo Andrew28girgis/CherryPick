@@ -1,77 +1,27 @@
-/* Keep your existing flexbox layout */
-.my-container {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100vh;
-}
-
-.sub-container {
-  flex: 1 !important;
-}
-
-/* Add this for the row that contains sidebar and content */
-.flex-row-container {
+/* Main container */
+.app-container {
   display: flex;
-  flex: 1;
+  flex-direction: column;
+  height: 100vh;
   width: 100%;
 }
 
-/* Custom sidebar width classes */
-.sidebar-width-expanded {
-  width: 280px; /* Adjust to your desired expanded width */
-  min-width: 280px;
-  transition: all 0.3s ease;
-}
-
-.sidebar-width-collapsed {
-  width: 60px; /* Adjust to your desired collapsed width */
-  min-width: 60px;
-  transition: all 0.3s ease;
-}
-
-/* Custom content width classes */
-.content-with-expanded-sidebar {
-  width: calc(100% - 280px); /* Match the expanded sidebar width */
-  transition: all 0.3s ease;
-}
-
-.content-with-collapsed-sidebar {
-  width: calc(100% - 60px); /* Match the collapsed sidebar width */
-  transition: all 0.3s ease;
-}
-
-/* Make sure the content area uses flexbox for vertical layout */
+/* Main content area */
 .main-content-area {
   display: flex;
-  height: 100vh;
   flex-direction: column;
-  transition: all 0.3s ease;
+  height: 100vh;
+  width: 100%;
 }
 
-.content-with-collapsed-sidebar {
-  padding-left: 0.6%;
-}
-
-/* Ensure the sidebar transitions smoothly */
-.sidebar-area {
-  transition: all 0.3s ease;
-}
-
-/* Remove the flexbox styling */
-.container-fluid {
-  min-height: 100vh;
-}
-
-.content-area {
+/* Content container */
+.content-container {
+  flex: 1;
   padding: 15px;
-  min-height: calc(100vh - 56px); /* Adjust based on your header height */
+  overflow-y: auto;
 }
 
-/* You can add transitions for smooth column resizing */
-.row > div {
-  transition: all 0.3s ease;
-}
-
+/* Full width content for special routes */
 .full-width-content {
   width: 100%;
   height: 100vh;
