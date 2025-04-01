@@ -1,4 +1,4 @@
-<div class="campaign-manager-container">
+<div *ngIf="filteredCampaigns" class="campaign-manager-container">
   <div
     *ngIf="filteredCampaigns.length > 0"
     class="w-100 d-flex align-items-center justify-content-between"
@@ -251,10 +251,7 @@
 
                 <td style="white-space: nowrap; text-align: center">
                   <!-- (click)="goToEmily(c, index)" -->
-                  <a class="inbox" 
-                  [routerLink]="['/EmilyUserInbox']"
-                    >Inbox</a
-                  >
+                  <a class="inbox" [routerLink]="['/EmilyUserInbox']">Inbox</a>
                 </td>
 
                 <ng-container *ngFor="let stage of stages">
