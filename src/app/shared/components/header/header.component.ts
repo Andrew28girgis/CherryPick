@@ -1,17 +1,17 @@
 import {
   Component,
-   OnInit,
-   OnDestroy,
+  OnInit,
+  OnDestroy,
   ViewChild,
-   TemplateRef,
+  TemplateRef,
   HostListener,
-   ElementRef,
+  ElementRef,
 } from "@angular/core"
-import {  Router, NavigationEnd,  Event as RouterEvent } from "@angular/router"
-import  { Subscription } from "rxjs"
+import { Router, NavigationEnd, Event as RouterEvent } from "@angular/router"
+import { Subscription } from "rxjs"
 import { filter } from "rxjs/operators"
-import  { SidbarService } from "src/app/core/services/sidbar.service"
-import  { UserViewService } from "src/app/core/services/user-view.service"
+import { SidbarService } from "src/app/core/services/sidbar.service"
+import { UserViewService } from "src/app/core/services/user-view.service"
 
 @Component({
   selector: "app-header",
@@ -32,11 +32,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isNavbarOpen &&
       this.elementRef.nativeElement.querySelector("#navbarNav") &&
       !this.elementRef.nativeElement.querySelector("#navbarNav").contains(event.target as Node) &&
-      !this.elementRef.nativeElement.querySelector(".navbar-toggler").contains(event.target as Node)
+      !this.elementRef.nativeElement.querySelector(".navbar-toggler")?.contains(event.target as Node)
     ) {
       this.isNavbarOpen = false
     }
   }
+  
   isCollapsed = false
   userAvatar: string | null = null
   currentView: "tenant" | "landlord" = "tenant"
@@ -51,7 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private sidbarService: SidbarService,
     public router: Router,
     private userViewService: UserViewService,
-    private elementRef: ElementRef, // Add ElementRef for DOM access
+    private elementRef: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -102,10 +103,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }, 500)
   }
 
-  toggleSidebar() {
-    this.sidbarService.toggleSidebar()
-  }
-
   logout(): void {
     localStorage.removeItem("token")
     localStorage.removeItem("userView")
@@ -117,10 +114,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userViewService.switchView(newView)
   }
 
-  BackTo() {
-    this.router.navigate(["/dashboard"])
-  }
-
   isNavbarOpen = false
 
   toggleNavbar(event: Event) {
@@ -128,4 +121,3 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isNavbarOpen = !this.isNavbarOpen
   }
 }
-

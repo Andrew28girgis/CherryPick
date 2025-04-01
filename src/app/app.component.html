@@ -1,34 +1,9 @@
-<div
-  class="app-container my-container"
-  [ngClass]="{
-    'sidebar-expanded': isSidebarExpanded,
-    'sidebar-collapsed': !isSidebarExpanded,
-    'sidebar-hovering': isHovering
-  }"
->
+<div class="app-container">
   <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
-    <div class="row g-0 flex-row-container">
-      <div
-        *ngIf="display"
-        class="sidebar-area"
-        [ngClass]="{
-          'sidebar-width-expanded': isSidebarExpanded,
-          'sidebar-width-collapsed': !isSidebarExpanded || isHovering
-        }"
-      >
-        <app-sidebar (hoverStateChange)="onSidebarHover($event)"></app-sidebar>
-      </div>
-      <div
-        class="main-content-area"
-        [ngClass]="{
-          'content-with-expanded-sidebar': isSidebarExpanded,
-          'content-with-collapsed-sidebar': !isSidebarExpanded || isHovering
-        }"
-      >
-        <app-header *ngIf="display"></app-header>
-        <div class="sub-container">
-          <router-outlet></router-outlet>
-        </div>
+    <div class="main-content-area">
+      <app-header *ngIf="display"></app-header>
+      <div class="content-container">
+        <router-outlet></router-outlet>
       </div>
     </div>
   </ng-container>
