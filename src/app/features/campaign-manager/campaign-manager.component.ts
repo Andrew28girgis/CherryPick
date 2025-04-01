@@ -35,8 +35,8 @@ export class CampaignManagerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getUserBuyBoxes();
     this.getAllCampaigns();
+    this.getUserBuyBoxes();
   }
 
   getAllCampaigns(): void {
@@ -134,12 +134,10 @@ export class CampaignManagerComponent implements OnInit {
   //   return [...new Set(geo.map((g) => g.state))];
   // }
 
-  goToEmily(campaign: ICampaign, index: number,withOrg:boolean): void {
-    if(withOrg)
-    {
-
+  goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
+    if (withOrg) {
       this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
-    }else{
+    } else {
       let emilyObject: { buyboxId: number[]; organizations: any[] } = {
         buyboxId: [campaign.id],
         organizations: [],
