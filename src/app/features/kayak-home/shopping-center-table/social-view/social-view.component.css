@@ -1,1092 +1,791 @@
-.social-card {
-  width: 700px;
-  transition: transform 0.3s ease-out;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12),
-    0 4px 8px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.06);
-  border-radius: 5px;
-}
-
-.social-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12),
-    0 4px 8px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.06);
-}
-
-.social-card.panel-open {
-  transform: translateY(-4%);
-}
-
-.ShoppingCenterStage {
-  font-size: 16px;
-  color: #FF8028;
-  font-weight: 600;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px;
-  background-color: #f8f9fa;
-  border: none;
-}
-
-.header-info {
-  flex-grow: 1;
-}
-
-.center-name {
-  color: #fff;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px;
-}
-
-.card-image img {
-  width: 100%;
-  height: 466px;
-  object-fit: cover;
-}
-
-.center-address {
-  margin-bottom: 12px;
-  font-size: 1rem;
-  color: #333;
-  width: fit-content;
-  cursor: pointer;
-}
-
-.action-btn {
-  background: none;
-  border: none;
-  color: #7f8c8d;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.comments-section {
-  padding: 16px;
-  border-top: 1px solid #ecf0f1;
-}
-
-.comment-input {
-  display: flex;
-  margin-bottom: 12px;
-}
-
-.comment-input input {
-  flex-grow: 1;
-  padding: 8px 12px;
-  border: 1px solid #ecf0f1;
-  border-radius: 20px;
-  font-size: 0.9rem;
-}
-
-.post-comment-btn {
-  background-color: #3498db;
-  color: #ffffff;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
-  margin-left: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.post-comment-btn:hover {
-  background-color: #2980b9;
-}
-
-.comment-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  height: 200px;
-  overflow-y: auto;
-}
-
-.comment-content {
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  padding: 8px 12px;
-  margin-bottom: 8px;
-}
-
-.comment-content strong {
-  font-size: 0.9rem;
-  color: #2c3e50;
-}
-
-.comment-content p {
-  font-size: 0.9rem;
-  color: #34495e;
-  margin: 4px 0 0;
-}
-
-.comment-btn:active i {
-  animation: commentAnimation 0.3s ease;
-}
-
-.comment-btn:hover svg path {
-  fill: #2980b9;
-}
-
-.like-btn:active i {
-  animation: likeAnimation 0.3s ease;
-}
-
-.share-btn:hover svg path {
-  fill: #2980b9;
-}
-
-.reaction-buttons {
-  position: relative;
-}
-
-.reply-btn {
-  background: none;
-  border: none;
-  color: #7f8c8d;
-  font-size: 0.8rem;
-  cursor: pointer;
-  margin-top: 4px;
-}
-
-.reply-btn:hover {
-  text-decoration: underline;
-}
-
-.reply-input {
-  display: flex;
-  margin-top: 8px;
-  margin-left: 20px;
-}
-
-.reply-input input {
-  flex-grow: 1;
-  padding: 6px 10px;
-  border: 1px solid #ecf0f1;
-  border-radius: 16px;
-  font-size: 0.85rem;
-}
-
-.post-reply-btn {
-  background-color: #3498db;
-  color: #ffffff;
-  border: none;
-  border-radius: 16px;
-  padding: 6px 12px;
-  margin-left: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-size: 0.85rem;
-}
-
-.post-reply-btn:hover {
-  background-color: #2980b9;
-}
-
-.reply-list {
-  list-style-type: none;
-  padding-left: 20px;
-  margin-top: 8px;
-}
-
-.cursor {
-  cursor: pointer;
-}
-
-.emily {
-  font-size: 18px;
-  margin-top: 3px;
-  width: 24px;
-}
-
-.btnborder {
-  border-radius: 4px;
-}
-
-.h700 {
-  height: 700px;
-}
-
-.shareelink {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-}
-
-.sanitizedUrl {
-  border: 0;
-  width: 100%;
-  height: 700px;
-}
-
-.deleteShopping {
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.RemoveShopping {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--app-color);
-}
-
-.Areyou {
-  font-size: 1rem;
-  color: #6c757d;
-}
-
-.modalbodyy {
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.share {
-  display: flex;
-  padding: 4px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 12px;
-  background: #fff;
-  color: #001f3f;
-  text-align: center;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px;
-}
-
-.scroll-container {
-  height: 73vh;
-  overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  position: relative;
-}
-
-.scroll-container::-webkit-scrollbar {
-  display: none;
-}
-
-.card {
-  height: 98%;
-  display: flex;
-  align-items: center;
-  scroll-snap-align: start;
-  border-bottom: 1px solid #ddd;
-  background: white;
-  transition: transform 0.5s ease-in-out;
-  border: none;
-  margin-bottom: 20px;
-}
-
-.scroll-indicator {
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 50px;
-  background: #001f3f;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.3s ease-in-out;
-  cursor: pointer;
-  z-index: 1000;
-  font-size: 20px;
-  color: white;
-}
-
-.scroll-indicator:hover {
-  background: #003366;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.scroll-indicator.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.indicators-container {
-  position: absolute;
-  gap: 25px;
-  z-index: 1000;
-  right: 10%;
-  display: flex;
-  flex-direction: column;
-  height: 60.2vh;
-  justify-content: center;
-}
-
-.ellipsis_icont {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid #7077915b;
-  width: 30px;
-  height: 30px;
-  background: transparent;
-  border-radius: 6px;
-  position: relative;
-  z-index: 1;
-}
-
-.getNeareastCategoryName {
-  color: black;
-  font-weight: bold;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-}
-
-.iconic-card {
-  bottom: -42px;
-  position: absolute;
-  top: auto !important;
-  right: 5.2vw;
-}
-
-.big-text {
-  font-size: 18px;
-  margin-top: 3px;
-  width: 24px;
-}
-
-.caret {
-  top: 86% !important;
-}
-
-.liked svg path {
-  color: #0066cc;
-  font-weight: bold;
-  fill: #0066cc;
-}
-
-.see-more-btn {
-  background: none;
-  text-decoration: underline;
-  color: white;
-  cursor: pointer;
-}
-
-.logo {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
-.modal-header {
-  border-bottom: 1px solid #e9ecef;
-  padding: 1rem;
-}
-
-.modal-title {
-  color: #0c0d0e;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px;
-}
-
-.modal-body {
-  padding: 1rem;
-}
-
-.location-image {
-  width: 80px;
-  height: 80px;
-  border-radius: 12px;
-}
-
-.location-address {
-  color: #7a8591;
-
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-}
-
-.location-card {
-  display: flex;
-  padding: 11px 6px;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  align-self: stretch;
-  border-radius: 12px;
-  border: 1px solid #caced3;
-  background: #fff;
-}
-
-.location-card:hover {
-  transform: translateY(-2px);
-}
-
-.location-card h4 {
-  color: #0c0d0e;
-  text-align: center;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px;
-}
-
-.location-card .address,
-.location-card .city {
-  color: #7a8591;
-  text-align: center;
-
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 30px;
-}
-
-.question {
-  color: #0c0d0e;
-  text-align: center;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px;
-}
-
-.reactions-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  align-self: stretch;
-  flex-wrap: wrap;
-  border-radius: 16px;
-  background: #fff;
-  display: flex;
-  padding: 12px 16px;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.or-divider {
-  color: #fff;
-  font-size: 0.875rem;
-  margin: 0.5rem 0;
-  display: flex;
-  justify-content: center;
-}
-
-.input-container {
-  margin-bottom: 20px;
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
-
-.input-container .input-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.input-container input {
-  width: 100%;
-  padding: 12px 16px;
-  padding-left: 40px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  border-radius: 16px;
-  background: #fff;
-}
-
-.rating-container {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 2rem;
-}
-
-.rating-option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.rating-label {
-  font-size: 0.875rem;
-  color: #666;
-}
-
-.rating-button {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  outline: none;
-}
-
-.rating-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-}
-
-.rating-button:hover .rating-circle {
-  transform: scale(1.05);
-}
-
-.rating-circle.dislike {
-  background-color: #ff9494;
-}
-
-.rating-circle.neutral {
-  background-color: #ffda6a;
-}
-
-.rating-circle.like {
-  background-color: #7eca8f;
-}
-
-.inner-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: white;
-  visibility: hidden;
-}
-
-.rating-button.selected .inner-circle {
-  visibility: visible;
-}
-
-.rating-button:focus .rating-circle {
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-.tiktok-header {
-  border-radius: 16px;
-  background: #fff;
-  display: flex;
-  padding: 12px 16px;
-  align-items: center;
-  gap: 12px;
-  align-self: stretch;
-}
-
-.tiktok-body {
-  padding: 0 !important;
-}
-
-.preference-options {
-  background-color: #fff;
-  border-radius: 16px;
-  background: #fff;
-  display: flex;
-  padding: 16px;
-  flex-direction: column;
-  gap: 20px;
-  align-self: stretch;
-}
-
-.or-divider {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-  margin: 20px 0;
-}
-
-.or-divider::before,
-.or-divider::after {
-  content: "";
-  flex: 1;
-  border-bottom: 1px solid #caced3;
-}
-
-.or-divider::before {
-  margin-right: 15px;
-}
-
-.or-divider::after {
-  margin-left: 15px;
-}
-
-.location-card.selected {
-  border: 4px solid #001f3f;
-  background: #e6e9ec;
-}
-
-.reply-content {
-  display: flex;
-  justify-content: space-between;
-}
-
-.carousel-wrapper {
-  touch-action: pan-y;
-  user-select: none;
-}
-
-.custom-carousel .carousel-inner {
-  overflow: hidden;
-}
-
-.custom-carousel .carousel-item {
-  transition: transform 0.6s ease-in-out;
-}
-
-.p-img {
-  max-height: 80vh;
-  object-fit: contain;
-  pointer-events: none;
-}
-
-.shortcuts_iconCard {
-  position: absolute;
-  background: white;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
-  padding: 16px;
-  border-radius: 10px;
-  text-align: start;
-  margin: 0;
-  z-index: 100;
-  right: 2vw;
-  width: max-content;
-  top: -22%;
-}
-
-.shortcuts_iconCard > ul {
-  text-decoration: none;
-  list-style: none;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  gap: 8px;
-  display: grid;
-}
-
-.shortcuts_iconCard > li {
-  display: flex;
-  gap: 6px;
-  color: #707791;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  cursor: pointer;
-}
-
-.shortcuts_iconCard .target {
-  display: flex;
-  gap: 6px;
-  color: #707791;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  padding: 0;
-  text-align: start;
-  margin: 0;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.shortcuts_iconCard > i {
-  position: absolute;
-  right: -8px;
-  top: 5%;
-  font-size: 25px;
-  color: white;
-}
-
-.tiktok-panel-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
-}
-
-.tiktok-panel {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1001;
-  height: 70vh;
-  pointer-events: none;
-}
-
-.tiktok-panel-content {
-  background-color: white;
-  border-radius: 20px 20px 0 0;
-  height: 100%;
-  transform: translateY(100%);
-  animation: slideUp 0.3s forwards;
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
-  pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.tiktok-panel-handle {
-  width: 40px;
-  height: 5px;
-  background-color: #e0e0e0;
-  border-radius: 3px;
-  margin: 10px auto;
-}
-
-.tiktok-panel-header {
-  padding: 0 16px 10px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.tiktok-panel-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.tiktok-panel-footer {
-  padding: 10px 16px;
-  border-top: 1px solid #f0f0f0;
-  text-align: center;
-}
-
-.show-less-btn {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 12px;
-  background: none;
-  border: none;
-  color: #001f3f;
-  font-size: 14px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.mobile-expanded-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-  color: #333;
-  padding-left: 12px;
-  padding-bottom: 0;
-}
-
-.mobile-expanded-item i {
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-  color: #707791;
-}
-
-.mobile-expanded-shortcuts {
-  margin-top: 16px;
-  border-radius: 20px;
-  border: 1px solid #caced3;
-  padding: 16px;
-}
-
-.tiktok-panel-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1000;
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
-}
-
-.tiktok-panel {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 1001;
-  height: 70vh;
-  pointer-events: none;
-}
-
-.tiktok-panel-content {
-  background-color: white;
-  border-radius: 20px 20px 0 0;
-  height: 100%;
-  transform: translateY(100%);
-  animation: slideUp 0.3s forwards;
-  pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.tiktok-panel-handle {
-  width: 40px;
-  height: 5px;
-  background-color: #e0e0e0;
-  border-radius: 3px;
-  margin: 10px auto;
-}
-
-.tiktok-panel-header {
-  padding: 0 16px 10px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.tiktok-panel-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.tiktok-panel-footer {
-  padding: 10px 16px;
-  border-top: 1px solid #f0f0f0;
-  text-align: center;
-}
-
-.show-less-btn {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 12px;
-  background: none;
-  border: none;
-  color: #001f3f;
-  font-size: 14px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.mobile-expanded-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-  color: #333;
-  padding-left: 12px;
-  padding-bottom: 0;
-}
-
-.mobile-expanded-item i {
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-  color: #707791;
-}
-
-.mobile-expanded-shortcuts {
-  margin-top: 16px;
-  border-radius: 20px;
-  border: 1px solid #caced3;
-  padding: 16px;
-}
-
-body.panel-open {
-  overflow: hidden;
-}
-
-::ng-deep .popover-body {
-  padding: 0 !important;
-}
-
-::ng-deep .popover-arrow::after {
-  border-top: none !important;
-  border-top-color: transparent !important;
-}
-
-::ng-deep .popover-arrow::before {
-  border-top: none !important;
-}
-
-::ng-deep .tiktok-modal .modal-content {
-  bottom: -1px;
-  position: fixed;
-  border-radius: 12px 12px 0 0;
-  left: -1px;
-  width: 101vw;
-  box-shadow: none;
-}
-
-::ng-deep .tiktok-modal .modal-dialog {
-  margin: 0 !important;
-}
-
-::ng-deep .tiktok-backdrop.show {
-  opacity: 0;
-}
-
-::ng-deep .tiktok-modal .modal-dialog {
-  transform: translateY(97%) !important;
-  transition: transform 0.3s ease-out !important;
-}
-
-::ng-deep .shortcuts-modal .modal-dialog {
-  margin: 0 !important;
-}
-
-::ng-deep .custom-modal .modal-content {
-  background: transparent;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-::ng-deep .custom-modal {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-:host ::ng-deep .carousel-control-next {
-  right: 0;
-}
-
-:host ::ng-deep .carousel-control-prev {
-  left: 0;
-}
-
-@media (min-width: 769px) {
-  .Res {
-    border-radius: 20px !important;
+  .social-card {
+    width: 700px;
+    transition: transform 0.3s ease-out;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12),
+      0 4px 8px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.06);
+    border-radius: 5px;
   }
 
-  .social-card {
-    width: 60%;
-    max-height: 466px;
-    position: relative;
+  .social-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12),
+      0 4px 8px rgba(0, 0, 0, 0.08), 0 8px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  .social-card.panel-open {
+    transform: translateY(-4%);
+  }
+
+  .ShoppingCenterStage {
+    font-size: 16px;
+    color: #FF8028;
+    font-weight: 600;
+  }
+
+  .card-header {
     display: flex;
-    flex-direction: column;
-    box-shadow: none;
-    margin: 0;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    background-color: #f8f9fa;
+    border: none;
   }
 
   .header-info {
-    position: absolute;
-    bottom: 0px;
-    z-index: 2;
-    padding-inline: 16px;
-    width: 100%;
-    padding-bottom: 16px;
-    background: rgb(0, 0, 0);
-    flex-direction: column;
-    background: linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 1) 19%,
-      rgba(0, 0, 0, 0) 100%
-    );
+    flex-grow: 1;
   }
 
-  .header-info .center-address {
+  .center-name {
     color: #fff;
-    font-size: 14px;
-    margin: 0;
-    opacity: 0.9;
-    line-height: 1.4;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
   }
 
-  .card-footer {
-    position: absolute;
-    right: 16px;
-    top: 20%;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    background: none;
-    border: none;
-    z-index: 3;
-    display: flex;
-    justify-content: space-between;
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 16px;
+  .card-image img {
+    width: 100%;
+    height: 466px;
+    object-fit: cover;
+  }
+
+  .center-address {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: #333;
+    width: fit-content;
+    cursor: pointer;
   }
 
   .action-btn {
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    background: transparent;
+    background: none;
     border: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .action-btn i {
-    font-size: 24px;
-  }
-
-  .action-btn .reactionMobile {
-    font-size: 12px;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
   }
 
   .comments-section {
-    position: sticky;
-    background: #fff;
-    max-height: 50vh;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    bottom: 10%;
+    padding: 16px;
+    border-top: 1px solid #ecf0f1;
   }
-}
 
-@media (max-width: 768px) {
-  .custom-carousel .carousel-control-prev,
-  .custom-carousel .carousel-control-next {
+  .comment-input {
+    display: flex;
+    margin-bottom: 12px;
+  }
+
+  .comment-input input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #ecf0f1;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .post-comment-btn {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .post-comment-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .comment-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    height: 200px;
+    overflow-y: auto;
+  }
+
+  .comment-content {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+  }
+
+  .comment-content strong {
+    font-size: 0.9rem;
+    color: #2c3e50;
+  }
+
+  .comment-content p {
+    font-size: 0.9rem;
+    color: #34495e;
+    margin: 4px 0 0;
+  }
+
+  .comment-btn:active i {
+    animation: commentAnimation 0.3s ease;
+  }
+
+  .comment-btn:hover svg path {
+    fill: #2980b9;
+  }
+
+  .like-btn:active i {
+    animation: likeAnimation 0.3s ease;
+  }
+
+  .share-btn:hover svg path {
+    fill: #2980b9;
+  }
+
+  .reaction-buttons {
+    position: relative;
+  }
+
+  .reply-btn {
+    background: none;
+    border: none;
+    color: #7f8c8d;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+
+  .reply-btn:hover {
+    text-decoration: underline;
+  }
+
+  .reply-input {
+    display: flex;
+    margin-top: 8px;
+    margin-left: 20px;
+  }
+
+  .reply-input input {
+    flex-grow: 1;
+    padding: 6px 10px;
+    border: 1px solid #ecf0f1;
+    border-radius: 16px;
+    font-size: 0.85rem;
+  }
+
+  .post-reply-btn {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 16px;
+    padding: 6px 12px;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 0.85rem;
+  }
+
+  .post-reply-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .reply-list {
+    list-style-type: none;
+    padding-left: 20px;
+    margin-top: 8px;
+  }
+
+  .cursor {
+    cursor: pointer;
+  }
+
+  .emily {
+    font-size: 18px;
+    margin-top: 3px;
+    width: 24px;
+  }
+
+  .btnborder {
+    border-radius: 4px;
+  }
+
+  .h700 {
+    height: 700px;
+  }
+
+  .shareelink {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .sanitizedUrl {
+    border: 0;
+    width: 100%;
+    height: 700px;
+  }
+
+  .deleteShopping {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .RemoveShopping {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--app-color);
+  }
+
+  .Areyou {
+    font-size: 1rem;
+    color: #6c757d;
+  }
+
+  .modalbodyy {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .share {
+    display: flex;
+    padding: 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 12px;
+    background: #fff;
+    color: #001f3f;
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  .scroll-container {
+    height: 73vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    position: relative;
+  }
+
+  .scroll-container::-webkit-scrollbar {
     display: none;
   }
 
-  .shopping-center-details {
+  .card {
+    height: 98%;
+    display: flex;
+    align-items: center;
+    scroll-snap-align: start;
+    border-bottom: 1px solid #ddd;
+    background: white;
+    transition: transform 0.5s ease-in-out;
+    border: none;
+    margin-bottom: 20px;
+  }
+
+  .scroll-indicator {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #001f3f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease-in-out;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 20px;
+    color: white;
+  }
+
+  .scroll-indicator:hover {
+    background: #003366;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .scroll-indicator.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .indicators-container {
+    position: absolute;
+    gap: 25px;
+    z-index: 1000;
+    right: 10%;
+    display: flex;
+    flex-direction: column;
+    height: 60.2vh;
+    justify-content: center;
+  }
+
+  .ellipsis_icont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #7077915b;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border-radius: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .getNeareastCategoryName {
+    color: black;
+    font-weight: bold;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+  }
+
+  .iconic-card {
+    bottom: -42px;
+    position: absolute;
+    top: auto !important;
+    right: 5.2vw;
+  }
+
+  .big-text {
+    font-size: 18px;
+    margin-top: 3px;
+    width: 24px;
+  }
+
+  .caret {
+    top: 86% !important;
+  }
+
+  .liked svg path {
+    color: #0066cc;
+    font-weight: bold;
+    fill: #0066cc;
+  }
+
+  .see-more-btn {
+    background: none;
+    text-decoration: underline;
+    color: white;
+    cursor: pointer;
+  }
+
+  .logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem;
+  }
+
+  .modal-title {
+    color: #0c0d0e;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .location-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+  }
+
+  .location-address {
+    color: #7a8591;
+
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+  }
+
+  .location-card {
+    display: flex;
+    padding: 11px 6px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 12px;
+    border: 1px solid #caced3;
+    background: #fff;
+  }
+
+  .location-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .location-card h4 {
+    color: #0c0d0e;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+  }
+
+  .location-card .address,
+  .location-card .city {
+    color: #7a8591;
+    text-align: center;
+
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+  }
+
+  .question {
+    color: #0c0d0e;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+  }
+
+  .reactions-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    align-self: stretch;
+    flex-wrap: wrap;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+
+  .input-container {
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .input-container .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .input-container input {
+    width: 100%;
+    padding: 12px 16px;
+    padding-left: 40px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    border-radius: 16px;
+    background: #fff;
+  }
+
+  .rating-container {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .rating-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .rating-label {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  .rating-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .rating-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+
+  .rating-button:hover .rating-circle {
+    transform: scale(1.05);
+  }
+
+  .rating-circle.dislike {
+    background-color: #ff9494;
+  }
+
+  .rating-circle.neutral {
+    background-color: #ffda6a;
+  }
+
+  .rating-circle.like {
+    background-color: #7eca8f;
+  }
+
+  .inner-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    visibility: hidden;
+  }
+
+  .rating-button.selected .inner-circle {
+    visibility: visible;
+  }
+
+  .rating-button:focus .rating-circle {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .tiktok-header {
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    padding: 12px 16px;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+  }
+
+  .tiktok-body {
+    padding: 0 !important;
+  }
+
+  .preference-options {
+    background-color: #fff;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    padding: 16px;
+    flex-direction: column;
+    gap: 20px;
+    align-self: stretch;
+  }
+
+  .or-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin: 20px 0;
+  }
+
+  .or-divider::before,
+  .or-divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #caced3;
+  }
+
+  .or-divider::before {
+    margin-right: 15px;
+  }
+
+  .or-divider::after {
+    margin-left: 15px;
+  }
+
+  .location-card.selected {
+    border: 4px solid #001f3f;
+    background: #e6e9ec;
+  }
+
+  .reply-content {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .carousel-wrapper {
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .custom-carousel .carousel-inner {
+    overflow: hidden;
+  }
+
+  .custom-carousel .carousel-item {
+    transition: transform 0.6s ease-in-out;
+  }
+
+  .p-img {
+    max-height: 80vh;
+    object-fit: contain;
+    pointer-events: none;
+  }
+
+  .shortcuts_iconCard {
+    position: absolute;
+    background: white;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+    padding: 16px;
+    border-radius: 10px;
+    text-align: start;
+    margin: 0;
+    z-index: 100;
+    right: 2vw;
+    width: max-content;
+    top: -22%;
+  }
+
+  .shortcuts_iconCard > ul {
+    text-decoration: none;
+    list-style: none;
+    padding: 0;
+    text-align: start;
+    margin: 0;
+    gap: 8px;
+    display: grid;
+  }
+
+  .shortcuts_iconCard > li {
+    display: flex;
+    gap: 6px;
+    color: #707791;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    padding: 0;
+    text-align: start;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .shortcuts_iconCard .target {
+    display: flex;
+    gap: 6px;
+    color: #707791;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    padding: 0;
+    text-align: start;
+    margin: 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .shortcuts_iconCard > i {
+    position: absolute;
+    right: -8px;
+    top: 5%;
+    font-size: 25px;
+    color: white;
+  }
+
+
+  .tiktok-panel {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.3s ease-out;
-    opacity: 0;
-    border-radius: 12px 12px 0 0;
-    background: white;
     z-index: 1001;
+    height: 70vh;
+    pointer-events: none;
   }
 
-  .shopping-center-details.expanded {
-    max-height: calc(100vh - 32px);
-    opacity: 1;
-    transition: all 0.3s ease-in;
+  .tiktok-panel-content {
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    height: 100%;
+    transform: translateY(100%);
+    animation: slideUp 0.3s forwards;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
-  .mobile-expanded-content {
-    padding: 16px;
-    max-height: calc(100vh - 64px);
+  .tiktok-panel-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+  }
+
+
+
+
+  .tiktok-panel-handle {
+    width: 40px;
+    height: 5px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    margin: 10px auto;
+  }
+
+  .tiktok-panel-header {
+    padding: 0 16px 10px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .tiktok-panel-body {
+    flex: 1;
     overflow-y: auto;
+    padding: 16px;
+  }
+
+  .tiktok-panel-footer {
+    padding: 10px 16px;
+    border-top: 1px solid #f0f0f0;
+    text-align: center;
+  }
+
+  .show-less-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 12px;
+    background: none;
+    border: none;
+    color: #001f3f;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
   }
 
   .mobile-expanded-item {
@@ -1105,426 +804,630 @@ body.panel-open {
     color: #707791;
   }
 
-  .mobile-expanded-item img.logo {
-    width: 24px;
-    height: 24px;
-    margin: 0 12px;
-    border-radius: 4px;
-  }
-
-  .mobile-expanded-item span {
-    font-size: 14px;
-    color: #707791;
-  }
-
   .mobile-expanded-shortcuts {
-    margin-top: 8px;
-    border-radius: var(--Card-Section-Lg-Radius, 20px);
-    border: 1px solid var(--Body-General-Body-Border, #caced3);
-    padding: var(--Space-Space-24, 24px) var(--Space-Space-16, 16px);
-    gap: var(--Space-Space-20, 20px);
-  }
-
-  .see-more-btn {
-    color: white;
-    font-size: 14px;
-    margin-top: 8px;
-    opacity: 0.9;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  .see-more-btn:hover {
-    opacity: 1;
-    text-decoration: underline;
-  }
-
-  .show-less-btn {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    padding: 12px;
-    background: none;
-    border: none;
-    color: #001f3f;
-    font-size: 14px;
-    text-align: center;
-    cursor: pointer;
     margin-top: 16px;
+    border-radius: 20px;
+    border: 1px solid #caced3;
+    padding: 16px;
   }
 
-  .show-less-btn:hover {
-    text-decoration: underline;
+  body.panel-open {
+    overflow: hidden;
   }
 
-  .scroll-container {
-    height: 89vh;
+  ::ng-deep .popover-body {
+    padding: 0 !important;
   }
 
-  .selected {
-    color: #007bff;
+  ::ng-deep .popover-arrow::after {
+    border-top: none !important;
+    border-top-color: transparent !important;
   }
 
-  .tiktok-imgg {
-    position: absolute;
-    top: 15%;
+  ::ng-deep .popover-arrow::before {
+    border-top: none !important;
   }
 
-  .card-header {
-    background-color: #000;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .card-image img {
-    height: auto;
-    max-height: 300px;
-  }
-
-  .center-address {
-    font-size: 0.9rem;
-  }
-
-  .card-footer {
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
-  .comment-input {
-    flex-direction: column;
-  }
-
-  .comment-input input {
-    margin-bottom: 8px;
-  }
-
-  .post-comment-btn {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .comment-list {
-    height: 50vh;
-    margin-bottom: 50px;
-  }
-
-  .social-card {
-    height: 100%;
-    max-width: none;
-    width: 100%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border-radius: 0;
+  ::ng-deep .tiktok-modal .modal-content {
+    bottom: -1px;
+    position: fixed;
+    border-radius: 12px 12px 0 0;
+    left: -1px;
+    width: 101vw;
     box-shadow: none;
-    margin: 0;
-    justify-content: space-between;
-    background-size: cover;
-    background-position: center;
   }
 
-  .social-card::before {
-    content: "";
-    position: absolute;
-    top: -10px;
-    left: -10px;
-    right: -10px;
-    bottom: -10px;
-    background-image: inherit;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    filter: blur(15px) brightness(0.7);
-    z-index: 0;
+  ::ng-deep .tiktok-modal .modal-dialog {
+    margin: 0 !important;
   }
 
-  .social-card.panel-open .card-image {
-    transition: transform 0.3s ease-out;
-    transform-origin: top center;
-    height: 34%;
-    top: 0%;
+  ::ng-deep .tiktok-backdrop.show {
+    opacity: 0;
   }
 
-  .social-card.panel-open .card-image img {
-    height: 70%;
-    width: 57%;
+  ::ng-deep .tiktok-modal .modal-dialog {
+    transform: translateY(97%) !important;
+    transition: transform 0.3s ease-out !important;
   }
 
-  .social-card .card-image {
-    transition: transform 0.3s ease-out;
-    transform-origin: top center;
+  ::ng-deep .shortcuts-modal .modal-dialog {
+    margin: 0 !important;
   }
 
-  .social-card.panel-open .header-info {
-    transform: translateY(-30%);
+  ::ng-deep .custom-modal .modal-content {
+    background: transparent;
+    border: none !important;
+    box-shadow: none !important;
   }
 
-  .social-card.panel-open .card-footer {
-    transform: translateY(-30%);
+  ::ng-deep .custom-modal {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
-  .card-image {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 23%;
+  :host ::ng-deep .carousel-control-next {
+    right: 0;
   }
 
-  .card-image img {
-    width: 100vw;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+  :host ::ng-deep .carousel-control-prev {
+    left: 0;
   }
 
-  .image-shadow {
-    position: relative;
+  @media (min-width: 769px) {
+    .Res {
+      border-radius: 20px !important;
+    }
+
+    .social-card {
+      width: 60%;
+      max-height: 466px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: none;
+      margin: 0;
+    }
+
+    .header-info {
+      position: absolute;
+      bottom: 0px;
+      z-index: 2;
+      padding-inline: 16px;
+      width: 100%;
+      padding-bottom: 16px;
+      background: rgb(0, 0, 0);
+      flex-direction: column;
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 1) 19%,
+        rgba(0, 0, 0, 0) 100%
+      );
+    }
+
+    .header-info .center-address {
+      color: #fff;
+      font-size: 14px;
+      margin: 0;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .card-footer {
+      position: absolute;
+      right: 16px;
+      top: 20%;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      background: none;
+      border: none;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 16px;
+    }
+
+    .action-btn {
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      background: transparent;
+      border: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-btn i {
+      font-size: 24px;
+    }
+
+    .action-btn .reactionMobile {
+      font-size: 12px;
+    }
+
+    .comments-section {
+      position: sticky;
+      background: #fff;
+      max-height: 50vh;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      bottom: 10%;
+    }
   }
 
-  .image-shadow::before {
-    content: "";
-    position: absolute;
+  @media (max-width: 768px) {
+    .custom-carousel .carousel-control-prev,
+    .custom-carousel .carousel-control-next {
+      display: none;
+    }
+
+    .shopping-center-details {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease-out;
+      opacity: 0;
+      border-radius: 12px 12px 0 0;
+      background: white;
+      z-index: 1001;
+    }
+
+    .shopping-center-details.expanded {
+      max-height: calc(100vh - 32px);
+      opacity: 1;
+      transition: all 0.3s ease-in;
+    }
+
+    .mobile-expanded-content {
+      padding: 16px;
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+
+    .mobile-expanded-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      color: #333;
+      padding-left: 12px;
+      padding-bottom: 0;
+    }
+
+    .mobile-expanded-item i {
+      width: 24px;
+      height: 24px;
+      margin-right: 12px;
+      color: #707791;
+    }
+
+    .mobile-expanded-item img.logo {
+      width: 24px;
+      height: 24px;
+      margin: 0 12px;
+      border-radius: 4px;
+    }
+
+    .mobile-expanded-item span {
+      font-size: 14px;
+      color: #707791;
+    }
+
+    .mobile-expanded-shortcuts {
+      margin-top: 8px;
+      border-radius: var(--Card-Section-Lg-Radius, 20px);
+      border: 1px solid var(--Body-General-Body-Border, #caced3);
+      padding: var(--Space-Space-24, 24px) var(--Space-Space-16, 16px);
+      gap: var(--Space-Space-20, 20px);
+    }
+
+    .see-more-btn {
+      color: white;
+      font-size: 14px;
+      margin-top: 8px;
+      opacity: 0.9;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .see-more-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    .show-less-btn {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      padding: 12px;
+      background: none;
+      border: none;
+      color: #001f3f;
+      font-size: 14px;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    .show-less-btn:hover {
+      text-decoration: underline;
+    }
+
+    .scroll-container {
+      height: 89vh;
+    }
+
+    .selected {
+      color: #007bff;
+    }
+
+    .tiktok-imgg {
+      position: absolute;
+      top: 15%;
+    }
+
+    .card-header {
+      background-color: #000;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .card-image img {
+      height: auto;
+      max-height: 300px;
+    }
+
+    .center-address {
+      font-size: 0.9rem;
+    }
+
+    .card-footer {
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    .comment-input {
+      flex-direction: column;
+    }
+
+    .comment-input input {
+      margin-bottom: 8px;
+    }
+
+    .post-comment-btn {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .comment-list {
+      height: 50vh;
+      margin-bottom: 50px;
+    }
+
+    .social-card {
+      height: 100%;
+      max-width: none;
+      width: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-radius: 0;
+      box-shadow: none;
+      margin: 0;
+      justify-content: space-between;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .social-card::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background-image: inherit;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: blur(15px) brightness(0.7);
+      z-index: 0;
+    }
+
+    .social-card.panel-open .card-image {
+      transition: transform 0.3s ease-out;
+      transform-origin: top center;
+      height: 34%;
+      top: 0%;
+    }
+
+    .social-card.panel-open .card-image img {
+      height: 70%;
+      width: 57%;
+    }
+
+    .social-card .card-image {
+      transition: transform 0.3s ease-out;
+      transform-origin: top center;
+    }
+
+    .social-card.panel-open .header-info {
+      transform: translateY(-30%);
+    }
+
+    .social-card.panel-open .card-footer {
+      transform: translateY(-30%);
+    }
+
+    .card-image {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 23%;
+    }
+
+    .card-image img {
+      width: 100vw;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .image-shadow {
+      position: relative;
+    }
+
+    .image-shadow::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.4) 0%,
+        transparent 100%
+      );
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .image-shadow img {
+      display: block;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-image::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 35%;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.7) 0%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    .header-info {
+      position: absolute;
+      bottom: 27%;
+      left: 16px;
+      right: 16px;
+      z-index: 0;
+      width: fit-content;
+    }
+
+    .header-info .center-address {
+      color: #fff;
+      font-size: 12px;
+      margin: 0;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .card-footer {
+      position: absolute;
+      right: 16px;
+      bottom: 13%;
+      transform: translateY(-50%);
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      padding: 0;
+      z-index: 3;
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0px;
+    }
+
+    .action-btn {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: #fff;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      background: transparent;
+      border: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-btn i {
+      font-size: 24px;
+    }
+
+    .action-btn .reactionMobile {
+      font-size: 12px;
+    }
+
+    .comments-section {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      min-height: 75%;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      padding: 12px;
+    }
+
+    .comment-list {
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    .see-more-btn {
+      color: white;
+      font-size: 14px;
+      margin-top: 8px;
+      opacity: 0.9;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .see-more-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    ::ng-deep.carousel-control-prev {
+      left: -50px !important;
+      background-color: #d3d3d3;
+    }
+
+    ::ng-deep .carousel-control-next {
+      right: -50px !important;
+      background-color: #d3d3d3;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .center-address {
+      font-size: 0.85rem;
+    }
+
+    .action-btn {
+      font-size: 0.85rem;
+    }
+
+    .comment-content strong {
+      font-size: 0.85rem;
+    }
+
+    .comment-content p {
+      font-size: 0.85rem;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes likeAnimation {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.2);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes commentAnimation {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-3px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes popIn {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    80% {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+
+  .heart-animation-container {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.4) 0%,
-      transparent 100%
-    );
-    z-index: 2;
     pointer-events: none;
+    z-index: 10000;
   }
 
-  .image-shadow img {
-    display: block;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-image::after {
-    content: "";
+  .heart {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 35%;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.7) 0%,
-      transparent 100%
-    );
-    pointer-events: none;
+    width: 200px;
+    height: 200px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff2d55'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
   }
-
-  .header-info {
-    position: absolute;
-    bottom: 27%;
-    left: 16px;
-    right: 16px;
-    z-index: 0;
-    width: fit-content;
-  }
-
-  .header-info .center-address {
-    color: #fff;
-    font-size: 12px;
-    margin: 0;
-    opacity: 0.9;
-    line-height: 1.4;
-  }
-
-  .card-footer {
-    position: absolute;
-    right: 16px;
-    bottom: 13%;
-    transform: translateY(-50%);
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    background: none;
-    border: none;
-    padding: 0;
-    z-index: 3;
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0px;
-  }
-
-  .action-btn {
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    background: transparent;
-    border: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .action-btn i {
-    font-size: 24px;
-  }
-
-  .action-btn .reactionMobile {
-    font-size: 12px;
-  }
-
-  .comments-section {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    min-height: 75%;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 12px;
-  }
-
-  .comment-list {
-    overflow-y: auto;
-    flex-grow: 1;
-  }
-
-  .see-more-btn {
-    color: white;
-    font-size: 14px;
-    margin-top: 8px;
-    opacity: 0.9;
-    text-decoration: none;
-    cursor: pointer;
-    display: inline-block;
-  }
-
-  .see-more-btn:hover {
-    opacity: 1;
-    text-decoration: underline;
-  }
-
-  ::ng-deep.carousel-control-prev {
-    left: -50px !important;
-    background-color: #d3d3d3;
-  }
-
-  ::ng-deep .carousel-control-next {
-    right: -50px !important;
-    background-color: #d3d3d3;
-  }
-}
-
-@media (max-width: 480px) {
-  .center-address {
-    font-size: 0.85rem;
-  }
-
-  .action-btn {
-    font-size: 0.85rem;
-  }
-
-  .comment-content strong {
-    font-size: 0.85rem;
-  }
-
-  .comment-content p {
-    font-size: 0.85rem;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes likeAnimation {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.2);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes commentAnimation {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-3px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes popIn {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-
-  80% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-
-.heart-animation-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 10000;
-}
-
-.heart {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff2d55'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-
-}

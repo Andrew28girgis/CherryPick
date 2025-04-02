@@ -5,7 +5,6 @@ import {
   ElementRef,
   TemplateRef,
   Renderer2,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   AfterViewInit,
   OnDestroy,
@@ -28,8 +27,6 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { StateService } from 'src/app/core/services/state.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { Subject, Subscription, fromEvent, takeUntil } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import {
   trigger,
   style,
@@ -38,26 +35,11 @@ import {
   keyframes,
 } from '@angular/animations';
 
-interface ShortcutOption {
-  icon: string;
-  label: string;
-  action: (shopping: any) => void;
-}
-
-interface ContactForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
 declare const google: any;
-
 @Component({
   selector: 'app-social-view',
   templateUrl: './social-view.component.html',
   styleUrls: ['./social-view.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('heartAnimation', [
       transition(':enter', [
@@ -102,25 +84,24 @@ declare const google: any;
 })
 export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-  @ViewChild('commentsContainer') commentsContainer?: ElementRef;
+  @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   @ViewChild('carousel') carousel!: NgbCarousel;
-  @ViewChild('carousel', { read: ElementRef }) carouselElement!: ElementRef;
-  @ViewChild('galleryModal', { static: true }) galleryModal!: TemplateRef<any>;
-  @ViewChild('contactsModal', { static: true })
-  contactsModalTemplate!: TemplateRef<any>;
+  // @ViewChild('carousel', { read: ElementRef }) carouselElement!: ElementRef;
+  @ViewChild('galleryModal', { static: true }) galleryModal: any;
+  @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
   @ViewChild('StreetViewPlace', { static: true })
-  StreetViewPlace!: TemplateRef<any>;
-  @ViewChild('panelContent') panelContent!: ElementRef;
-  @ViewChild('deleteShoppingCenterModal')
-  deleteShoppingCenterModal!: TemplateRef<any>;
-
-  @Output() viewChange = new EventEmitter<number>();
-
-  // Component state
+  @Output()
+  viewChange = new EventEmitter<number>();
   isPanelOpen = false;
-  currentShopping: Center | null = null;
+  currentShopping: any = null;
+  panelStartY = 0;
+  panelCurrentY = 0;
+  documentTouchMoveListener: Function | null = null;
+  documentTouchEndListener: Function | null = null;
+  readonly PANEL_SWIPE_THRESHOLD = 100;
   isMobileView = false;
+  StreetViewPlace!: TemplateRef<any>;
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
@@ -137,10 +118,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   showDetails: boolean[] = [];
   likedShoppings: { [key: number]: boolean } = {};
   isLikeInProgress = false;
+  clickTimeout: any;
   sanitizedUrl!: SafeResourceUrl;
   // isOpen = false;
   mapViewOnePlacex = false;
-  StreetViewOnePlace = false;
+  StreetViewOnePlace!: boolean;
   selectedState = '0';
   selectedCity = '';
   ShareOrg: ShareOrg[] = [];
@@ -149,8 +131,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedRating: string | null = null;
   CustomPlace!: LandingPlace;
   ShoppingCenter!: any;
-  shareLink = '';
-  newContact: ContactForm = {
+  globalClickListener!: (() => void)[];
+  shareLink: any;
+  newContact: any = {
     firstName: '',
     lastName: '',
     email: '',
@@ -158,36 +141,26 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   };
   OrganizationContacts: any[] = [];
   shoppingCenterIdToDelete: number | null = null;
+  deleteShoppingCenterModal!: TemplateRef<any>;
   buyboxPlaces: BbPlace[] = [];
   showbackIds: number[] = [];
   mapsLoaded = false;
   DeletedSC: any;
-
-  // Touch handling
-  private panelStartY = 0;
-  private panelCurrentY = 0;
   private touchStartX = 0;
   private touchEndX = 0;
   private readonly SWIPE_THRESHOLD = 50;
-  private readonly PANEL_SWIPE_THRESHOLD = 100;
-
+  private globalClickListenerr!: () => void;
+  private isOptionSelected = false;
+  private categoryNameCache = new Map<number, string>();
+  private unitSizeCache = new Map<string, string>();
+  private commentSortCache = new WeakMap<any[], any[]>();
+  @ViewChild('panelContent') panelContent!: ElementRef;
   heartVisible = false;
   heartX = 0;
   heartY = 0;
   private heartTimeout: any;
   private lastClickTime = 0;
   private readonly DOUBLE_CLICK_THRESHOLD = 300; // ms
-
-  // Cleanup
-  private destroy$ = new Subject<void>();
-  private subscriptions = new Subscription();
-  private documentTouchListeners: (() => void)[] = [];
-  private clickTimeout: any;
-  private categoryNameCache = new Map<number, string>();
-  private unitSizeCache = new Map<string, string>();
-  private commentSortCache = new WeakMap<any[], any[]>();
-  private mapsTimeout: any;
-  private globalClickListeners: (() => void)[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -197,7 +170,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private stateService: StateService,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
-    private placesService: PlacesService,
+    private PlacesService: PlacesService,
     private viewManagerService: ViewManagerService,
     private sanitizer: DomSanitizer,
     private ngZone: NgZone
@@ -208,8 +181,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
-
-    const paramsSub = this.activatedRoute.params.subscribe((params: any) => {
+    this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
@@ -218,84 +190,91 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.initializeData();
     });
 
-    this.subscriptions.add(paramsSub);
-
-    this.mapsTimeout = setTimeout(() => {
+    setTimeout(() => {
       this.mapsLoaded = true;
       this.cdr.markForCheck();
     }, 2000);
 
-    this.subscriptions.add(
-      fromEvent(window, 'resize')
-        .pipe(debounceTime(250), takeUntil(this.destroy$))
-        .subscribe(() => this.checkMobileView())
-    );
+    window.addEventListener('resize', this.checkMobileView.bind(this));
   }
 
   async initializeData() {
     try {
-      this.spinner.show();
-      // Load data in parallel for better performance
-      const [shoppingCenters, buyboxCategories, shareOrg, buyboxPlaces] =
-        await Promise.all([
-          this.viewManagerService.getShoppingCenters(this.BuyBoxId),
-          this.viewManagerService.getBuyBoxCategories(this.BuyBoxId),
-          this.viewManagerService.getOrganizationById(this.OrgId),
-          this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId),
-        ]);
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
+        this.BuyBoxId
+      );
+      this.stateService.setShoppingCenters(this.shoppingCenters);
 
-      this.shoppingCenters = shoppingCenters;
-      this.stateService.setShoppingCenters(shoppingCenters);
+      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(
+        this.BuyBoxId
+      );
+      this.stateService.setBuyboxCategories(this.buyboxCategories);
 
-      this.buyboxCategories = buyboxCategories;
-      this.stateService.setBuyboxCategories(buyboxCategories);
+      this.ShareOrg = await this.viewManagerService.getOrganizationById(
+        this.OrgId
+      );
+      this.stateService.setShareOrg(this.ShareOrg);
 
-      this.ShareOrg = shareOrg;
-      this.stateService.setShareOrg(shareOrg);
-
-      this.buyboxPlaces = buyboxPlaces;
-      this.stateService.setBuyboxPlaces(buyboxPlaces);
-
-      // Initialize arrays based on data length
-      this.showDetails = new Array(this.shoppingCenters.length).fill(false);
-
-      this.cdr.markForCheck();
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
+        this.BuyBoxId
+      );
+      this.stateService.setBuyboxPlaces(this.buyboxPlaces);
     } catch (error) {
-      console.error('Error initializing data:', error);
-    } finally {
       this.spinner.hide();
     }
   }
 
   ngAfterViewInit(): void {
     this.setupGlobalClickListener();
-    this.setupScrollListener();
+
+    this.ngZone.runOutsideAngular(() => {
+      const events = ['click', 'wheel', 'touchstart'];
+      this.globalClickListener = events.map((eventType) =>
+        this.renderer.listen('document', eventType, (event: Event) => {
+          const target = event.target as HTMLElement;
+          const commentsContainer = this.commentsContainer?.nativeElement;
+          const isInsideComments = commentsContainer?.contains(target);
+          const isInputFocused =
+            target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+          const isClickOnLikeOrPhoto =
+            target.classList.contains('like-button') ||
+            target.classList.contains('photo');
+          if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
+            return;
+          }
+          this.ngZone.run(() => {
+            this.hideAllComments();
+            this.cdr.markForCheck();
+          });
+        })
+      );
+    });
   }
 
   ngOnDestroy(): void {
-    // Clean up all subscriptions and listeners
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.subscriptions.unsubscribe();
-
-    this.globalClickListeners.forEach((listener) => listener());
-    this.removeGlobalTouchListeners();
+    if (this.globalClickListener) {
+      this.globalClickListenerr();
+    }
+    if (this.globalClickListener) {
+      this.globalClickListener.forEach((listener) => listener());
+    }
 
     if (this.clickTimeout) {
       clearTimeout(this.clickTimeout);
     }
+    window.removeEventListener('resize', this.checkMobileView.bind(this));
 
-    if (this.mapsTimeout) {
-      clearTimeout(this.mapsTimeout);
-    }
+    this.removeGlobalTouchListeners();
 
     document.body.classList.remove('panel-open');
-    if (this.heartTimeout) {
-      clearTimeout(this.heartTimeout);
+  }
+
+  hideAllComments(): void {
+    for (const key in this.showComments) {
+      this.showComments[key] = false;
     }
   }
 
-  // UI Interaction Methods
   scrollUp(): void {
     const container = this.scrollContainer.nativeElement;
     const cardHeight = container.querySelector('.card')?.clientHeight || 0;
@@ -314,35 +293,44 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  toggleDetails(index: number, shopping: Center, event?: Event): void {
-    if (event) {
-      event.stopPropagation();
-    }
-
+  toggleDetails(index: number, shopping: any): void {
     if (shopping.ShoppingCenter?.BuyBoxPlaces) {
       this.showDetails[index] = !this.showDetails[index];
       this.cdr.markForCheck();
     }
   }
 
-  hideAllDetails(): void {
-    this.showDetails.fill(false);
-    this.cdr.markForCheck();
+  getNeareastCategoryName(categoryId: number): string {
+    if (this.categoryNameCache.has(categoryId)) {
+      return this.categoryNameCache.get(categoryId)!;
+    }
+
+    const result = this.viewManagerService.getNearestCategoryName(
+      categoryId,
+      this.buyboxCategories
+    );
+    this.categoryNameCache.set(categoryId, result);
+    return result;
   }
 
-  toggleComments(shopping: Center, event: MouseEvent): void {
+  getShoppingCenterUnitSize(shoppingCenter: any): string {
+    const key = `${shoppingCenter.Id}`;
+    if (this.unitSizeCache.has(key)) {
+      return this.unitSizeCache.get(key)!;
+    }
+
+    const result =
+      this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
+    this.unitSizeCache.set(key, result);
+    return result;
+  }
+
+  toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
     this.cdr.markForCheck();
   }
 
-  hideAllComments(): void {
-    for (const key in this.showComments) {
-      this.showComments[key] = false;
-    }
-  }
-
-  // Comment and Reply Methods
   addComment(shopping: Center, marketSurveyId: number): void {
     if (!this.newComments[marketSurveyId]?.trim()) {
       return;
@@ -360,7 +348,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
-    const commentSub = this.placesService.GenericAPI(body).subscribe({
+    this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
         if (!shopping.ShoppingCenter.Comments) {
           shopping.ShoppingCenter.Comments = [];
@@ -369,7 +357,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         shopping.ShoppingCenter.Comments.push({
           Comment: commentText,
           CommentDate: new Date().toISOString(),
-          Id: response.json?.Id || Date.now(), // Use response ID or fallback
         });
 
         shopping.ShoppingCenter.Comments = this.sortCommentsByDate(
@@ -378,13 +365,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.cdr.markForCheck();
       },
-      error: (error) => {
-        console.error('Error adding comment:', error);
-        // Provide user feedback for error
-      },
     });
-
-    this.subscriptions.add(commentSub);
   }
 
   addReply(marketSurveyId: number, commentId: number): void {
@@ -404,20 +385,18 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
-    const replySub = this.placesService.GenericAPI(body).subscribe({
+    this.PlacesService.GenericAPI(body).subscribe({
       next: (response: any) => {
         this.replyingTo[marketSurveyId] = null;
 
         const shoppingCenter = this.shoppingCenters.find(
           (sc) => sc.MarketSurveyId === marketSurveyId
         );
-
         if (shoppingCenter && shoppingCenter.ShoppingCenter.Comments) {
           shoppingCenter.ShoppingCenter.Comments.push({
             Comment: replyText,
             CommentDate: new Date().toISOString(),
             ParentCommentId: commentId,
-            Id: response.json?.Id || Date.now(), // Use response ID or fallback
           });
 
           shoppingCenter.ShoppingCenter.Comments = this.sortCommentsByDate(
@@ -427,16 +406,26 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.cdr.markForCheck();
       },
-      error: (error) => {
-        console.error('Error adding reply:', error);
-        // Provide user feedback for error
-      },
     });
-
-    this.subscriptions.add(replySub);
   }
 
-  toggleReply(shopping: Center, commentId: number): void {
+  sortCommentsByDate(comments: any[]): any[] {
+    if (!comments) return [];
+
+    if (this.commentSortCache.has(comments)) {
+      return this.commentSortCache.get(comments)!;
+    }
+
+    const sorted = [...comments].sort(
+      (a, b) =>
+        new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
+    );
+
+    this.commentSortCache.set(comments, sorted);
+    return sorted;
+  }
+
+  toggleReply(shopping: any, commentId: number): void {
     if (!this.replyingTo[shopping.MarketSurveyId]) {
       this.replyingTo[shopping.MarketSurveyId] = null;
     }
@@ -455,32 +444,31 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Like/Reaction Methods
-  handleClick(
-    shopping: Center,
-    likeTpl: TemplateRef<any>,
-    index: number
-  ): void {
+  handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
     if (this.clickTimeout) {
       clearTimeout(this.clickTimeout);
       this.clickTimeout = null;
       this.addLike(shopping, 1);
     } else {
       this.clickTimeout = setTimeout(() => {
-        const nextShopping = this.getNextShopping(index);
-        this.open(likeTpl, shopping, nextShopping ? nextShopping : shopping);
+        this.open(likeTpl, shopping);
         this.clickTimeout = null;
       }, 250);
     }
   }
 
+  open(content: any, currentShopping: any) {
+    this.modalService.open(content, {
+      windowClass: 'custom-modal',
+    });
+    this.General.modalObject = currentShopping;
+  }
+
   addLike(shopping: Center, reactionId: number): void {
     const contactIdStr = localStorage.getItem('ContactId');
-    // if (!contactIdStr) {
-    //   return; // Handle missing contact ID
-    // }
-
-    const contactId = Number.parseInt(contactIdStr!, 10);
+    if (!contactIdStr) {
+    }
+    const contactId = Number.parseInt(contactIdStr ? contactIdStr : '0', 10);
 
     if (
       shopping.ShoppingCenter.Reactions &&
@@ -488,11 +476,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         (reaction: Reaction) => reaction.ContactId === contactId
       )
     ) {
-      return; // Already liked
+      return;
     }
 
     if (this.isLikeInProgress) {
-      return; // Prevent duplicate requests
+      return;
     }
 
     this.isLikeInProgress = true;
@@ -503,11 +491,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (!isLiked) {
-      shopping.ShoppingCenter.Reactions.push({
-        ContactId: contactId,
-        ReactionId: reactionId,
-        ReactionDate: new Date().toISOString(),
-      });
+      shopping.ShoppingCenter.Reactions.length++;
       this.likedShoppings[shopping.MarketSurveyId] = true;
     }
 
@@ -521,435 +505,28 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
-    const likeSub = this.placesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-        // Success handling if needed
-      },
-      error: (error) => {
-        console.error('Error adding like:', error);
-        // Revert UI changes on error
-        if (!isLiked) {
-          shopping.ShoppingCenter.Reactions.pop();
-          this.likedShoppings[shopping.MarketSurveyId] = false;
-        }
-      },
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (response: any) => {},
+
       complete: () => {
         this.isLikeInProgress = false;
         this.cdr.markForCheck();
       },
     });
-
-    this.subscriptions.add(likeSub);
   }
 
-  isLiked(shopping: Center): boolean {
+  isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  // Modal Methods
-  open(content: any, currentShopping: Center, nextShopping: Center) {
-    this.modalService.open(content, {
-      windowClass: 'custom-modal',
-    });
-    this.General.modalObject = currentShopping;
-    this.General.nextModalObject = nextShopping;
+  trackByShoppingId(item: any): number {
+    return item.Id;
   }
 
-  getNextShopping(currentIndex: number): Center | null {
-    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
-      const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
-      return this.shoppingCenters[nextIndex];
-    }
-    return null;
+  trackByCommentId(index: number, item: any): number {
+    return item.Id || index;
   }
 
-  async openMapViewPlace(content: TemplateRef<any>, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-
-    if (!this.mapsLoaded) {
-      this.mapsLoaded = true;
-    }
-
-    if (modalObject) {
-      this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
-    }
-  }
-
-  async viewOnMap(lat: number, lng: number) {
-    this.mapViewOnePlacex = true;
-
-    if (!lat || !lng) {
-      return;
-    }
-
-    try {
-      const { Map } = (await google.maps.importLibrary('maps')) as any;
-      const mapDiv = document.getElementById('mappopup') as HTMLElement;
-
-      if (!mapDiv) {
-        return;
-      }
-
-      const map = new Map(mapDiv, {
-        center: { lat, lng },
-        zoom: 14,
-      });
-
-      new google.maps.Marker({
-        position: { lat, lng },
-        map: map,
-        title: 'Location Marker',
-      });
-    } catch (error) {
-      console.error('Error loading map:', error);
-    }
-  }
-
-  openStreetViewPlace(content: TemplateRef<any>, modalObject?: any) {
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-
-    this.General.modalObject = modalObject;
-
-    if (this.General.modalObject.StreetViewURL) {
-      this.setIframeUrl(this.General.modalObject.StreetViewURL);
-    } else {
-      setTimeout(() => {
-        this.viewOnStreet();
-      }, 100);
-    }
-  }
-
-  viewOnStreet() {
-    this.StreetViewOnePlace = true;
-    const lat = +this.General.modalObject.StreetLatitude;
-    const lng = +this.General.modalObject.StreetLongitude;
-    const heading = this.General.modalObject.Heading || 165;
-    const pitch = this.General.modalObject.Pitch || 0;
-
-    setTimeout(() => {
-      const streetViewElement = document.getElementById('street-view');
-      if (streetViewElement) {
-        this.streetMap(lat, lng, heading, pitch);
-      } else {
-        console.error('Street view element not found');
-      }
-    });
-  }
-
-  streetMap(lat: number, lng: number, heading: number, pitch: number) {
-    try {
-      const panorama = this.viewManagerService.initializeStreetView(
-        'street-view',
-        lat,
-        lng,
-        heading,
-        pitch
-      );
-
-      if (!panorama) {
-        console.error('Failed to initialize street view');
-      }
-
-      this.cdr.markForCheck();
-    } catch (error) {
-      console.error('Error initializing street view:', error);
-    }
-  }
-
-  setIframeUrl(url: string): void {
-    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    this.cdr.markForCheck();
-  }
-
-  openGallery(shoppingCenterId: number) {
-    this.GetPlaceDetails(0, shoppingCenterId);
-    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
-  }
-
-  GetPlaceDetails(placeId: number, shoppingCenterId: number): void {
-    this.spinner.show();
-
-    const body = {
-      Name: 'GetShoppingCenterDetails',
-      Params: {
-        PlaceID: placeId,
-        shoppingcenterId: shoppingCenterId,
-        buyboxid: this.BuyBoxId,
-      },
-    };
-
-    const detailsSub = this.placesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.CustomPlace = data.json?.[0] || null;
-        this.ShoppingCenter = this.CustomPlace;
-
-        if (this.ShoppingCenter && this.ShoppingCenter.Images) {
-          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
-            (link: string) => link.trim()
-          );
-        } else {
-          this.placeImage = [];
-        }
-
-        this.spinner.hide();
-        this.cdr.markForCheck();
-      },
-      error: (error) => {
-        console.error('Error getting place details:', error);
-        this.spinner.hide();
-      },
-    });
-
-    this.subscriptions.add(detailsSub);
-  }
-
-  openContactsModal(content: TemplateRef<any>): void {
-    this.spinner.show();
-
-    const body = {
-      Name: 'GetOrganizationContacts',
-      Params: {
-        organizationId: this.OrgId,
-      },
-    };
-
-    const contactsSub = this.placesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        if (data && data.json) {
-          this.OrganizationContacts = data.json;
-        } else {
-          this.OrganizationContacts = [];
-        }
-
-        this.spinner.hide();
-        this.modalService.open(content, {
-          size: 'lg',
-          centered: true,
-        });
-
-        this.cdr.markForCheck();
-      },
-      error: (error) => {
-        console.error('Error getting organization contacts:', error);
-        this.spinner.hide();
-      },
-    });
-
-    this.subscriptions.add(contactsSub);
-  }
-
-  openAddContactModal(content: TemplateRef<any>): void {
-    this.newContact = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-    };
-
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-add-contact',
-      size: 'lg',
-      centered: true,
-      scrollable: true,
-    });
-  }
-
-  addContact(form: NgForm): void {
-    if (!form.valid) {
-      return;
-    }
-
-    this.spinner.show();
-
-    const body = {
-      Name: 'AddContactToOrganization',
-      Params: {
-        FirstName: this.newContact.firstName,
-        LastName: this.newContact.lastName,
-        OrganizationId: this.OrgId,
-        email: this.newContact.email,
-        password: this.newContact.password,
-      },
-    };
-
-    const addContactSub = this.placesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.spinner.hide();
-        this.newContact = {
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-        };
-
-        form.resetForm();
-        this.modalService.dismissAll();
-        this.openContactsModal(this.contactsModalTemplate);
-        this.cdr.markForCheck();
-      },
-      error: (error) => {
-        console.error('Error adding contact:', error);
-        this.spinner.hide();
-      },
-    });
-
-    this.subscriptions.add(addContactSub);
-  }
-
-  openDeleteShoppingCenterModal(
-    modalTemplate: TemplateRef<any>,
-    shoppingCenter: Center
-  ) {
-    this.DeletedSC = shoppingCenter;
-    this.shoppingCenterIdToDelete = shoppingCenter.Id;
-    this.modalService.open(modalTemplate, {
-      ariaLabelledBy: 'modal-basic-title',
-    });
-  }
-
-  async deleteShCenter() {
-    if (!this.shoppingCenterIdToDelete) {
-      return;
-    }
-
-    // Optimistic UI update
-    this.shoppingCenters = this.shoppingCenters.map((x) =>
-      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-    );
-
-    try {
-      this.spinner.show();
-      await this.viewManagerService.deleteShoppingCenter(
-        this.BuyBoxId,
-        this.shoppingCenterIdToDelete
-      );
-      this.modalService.dismissAll();
-      this.cdr.markForCheck();
-    } catch (error) {
-      console.error('Error deleting shopping center:', error);
-      // Revert optimistic update on error
-      this.shoppingCenters = this.shoppingCenters.map((x) =>
-        x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: false } : x
-      );
-    } finally {
-      this.spinner.hide();
-    }
-  }
-
-  async RestoreShoppingCenter(
-    marketSurveyId: number,
-    deleted: boolean
-  ): Promise<void> {
-    this.spinner.show();
-
-    try {
-      await this.viewManagerService.restoreShoppingCenter(
-        marketSurveyId,
-        deleted
-      );
-
-      const marketSurveyIdNum = Number(marketSurveyId);
-      this.shoppingCenters = this.shoppingCenters.map((center) => {
-        if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
-          return { ...center, Deleted: false };
-        }
-        return center;
-      });
-
-      this.cdr.markForCheck();
-    } catch (error) {
-      console.error('Error restoring shopping center:', error);
-    } finally {
-      this.spinner.hide();
-    }
-  }
-
-  async refreshShoppingCenters() {
-    try {
-      this.spinner.show();
-
-      const [shoppingCenters, buyboxPlaces] = await Promise.all([
-        this.viewManagerService.getShoppingCenters(this.BuyBoxId),
-        this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId),
-      ]);
-
-      this.shoppingCenters = shoppingCenters;
-      this.buyboxPlaces = buyboxPlaces;
-      this.showbackIds = [];
-
-      this.cdr.markForCheck();
-    } catch (error) {
-      console.error('Error refreshing shopping centers:', error);
-    } finally {
-      this.spinner.hide();
-    }
-  }
-
-  openLink(content: TemplateRef<any>, modalObject?: any) {
-    this.shareLink = '';
-
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-
-    if (modalObject) {
-      if (modalObject.CenterAddress) {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
-      } else {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
-      }
-    } else {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
-    }
-
-    this.cdr.markForCheck();
-  }
-
-  copyLink(link: string) {
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        // Could add a toast notification here
-      })
-      .catch((err) => {
-        console.error('Failed to copy link:', err);
-      });
-  }
-
-  selectCenter(centerId: number): void {
-    this.selectedCenterId = centerId;
-    const selectedIndex = this.shoppingCenters.findIndex(
-      (center) => center.Id === centerId
-    );
-
-    if (selectedIndex !== -1) {
-      this.General.modalObject = this.shoppingCenters[selectedIndex];
-      this.currentIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
-      let nextIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
-      while (nextIndex === selectedIndex) {
-        nextIndex = (nextIndex + 1) % this.shoppingCenters.length;
-      }
-      this.General.nextModalObject = this.shoppingCenters[nextIndex];
-      this.cdr.markForCheck();
-    }
-  }
-
-  rate(rating: 'dislike' | 'neutral' | 'like') {
-    this.selectedRating = rating;
-    this.cdr.markForCheck();
-  }
-
-  // Touch event handlers
   onTouchStart(event: TouchEvent) {
     this.touchStartX = event.touches[0].clientX;
   }
@@ -973,16 +550,87 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.touchEndX = 0;
   }
 
-  // Panel methods
-  openCustomPanel(shopping: Center): void {
+  private setupGlobalClickListener(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.globalClickListenerr = this.renderer.listen(
+        'document',
+        'click',
+        (event: Event) => {
+          if (this.isOptionSelected) {
+            this.isOptionSelected = false;
+            return;
+          }
+
+          const target = event.target as HTMLElement;
+          const expandedDetails = document.querySelector(
+            '.shopping-center-details.expanded'
+          );
+          const seeMoreBtn = document.querySelector('.see-more-btn');
+
+          if (
+            expandedDetails &&
+            !expandedDetails.contains(target) &&
+            seeMoreBtn &&
+            !seeMoreBtn.contains(target)
+          ) {
+            this.ngZone.run(() => {
+              this.showDetails.fill(false);
+              this.cdr.markForCheck();
+            });
+          }
+        }
+      );
+    });
+
+    this.setupScrollListener();
+  }
+
+  private setupScrollListener(): void {
+    this.ngZone.runOutsideAngular(() => {
+      const scrollHandler = () => {
+        if (!this.isOptionSelected) {
+          this.ngZone.run(() => {
+            this.showDetails.fill(false);
+            this.cdr.markForCheck();
+          });
+        }
+      };
+
+      this.scrollContainer.nativeElement.addEventListener(
+        'scroll',
+        scrollHandler,
+        { passive: true }
+      );
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkMobileView();
+  }
+
+  checkMobileView(): void {
+    this.isMobileView = window.innerWidth <= 768;
+    this.cdr.detectChanges();
+  }
+
+  openCustomPanel(shopping: any): void {
     this.currentShopping = shopping;
     this.isPanelOpen = true;
     this.cdr.markForCheck();
 
     document.body.classList.add('panel-open');
 
-    // Add listener for panel touch events
-    this.removeGlobalTouchListeners();
+    this.renderer.listen('document', 'click', (event: Event) => {
+      const panelElement = this.panelContent?.nativeElement;
+      if (
+        panelElement &&
+        !panelElement.contains(event.target) &&
+        this.isPanelOpen
+      ) {
+        this.closeCustomPanel();
+      }
+    });
   }
 
   closeCustomPanel(): void {
@@ -1016,11 +664,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.panelStartY = event.touches[0].clientY;
     this.panelCurrentY = this.panelStartY;
 
-    // Clean up existing listeners first
-    this.removeGlobalTouchListeners();
-
-    // Add new listeners
-    const touchMoveListener = this.renderer.listen(
+    this.documentTouchMoveListener = this.renderer.listen(
       'document',
       'touchmove',
       (e: TouchEvent) => {
@@ -1028,15 +672,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
 
-    const touchEndListener = this.renderer.listen(
+    this.documentTouchEndListener = this.renderer.listen(
       'document',
       'touchend',
       (e: TouchEvent) => {
         this.handlePanelTouchEnd(e);
       }
     );
-
-    this.documentTouchListeners.push(touchMoveListener, touchEndListener);
   }
 
   handlePanelTouchMove(event: TouchEvent): void {
@@ -1044,6 +686,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const deltaY = this.panelCurrentY - this.panelStartY;
 
     if (deltaY > 0) {
+      event.preventDefault();
       if (this.panelContent) {
         this.renderer.setStyle(
           this.panelContent.nativeElement,
@@ -1091,81 +734,179 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   removeGlobalTouchListeners(): void {
-    this.documentTouchListeners.forEach((listener) => {
-      if (typeof listener === 'function') {
-        listener();
+    if (this.documentTouchMoveListener) {
+      this.documentTouchMoveListener();
+      this.documentTouchMoveListener = null;
+    }
+
+    if (this.documentTouchEndListener) {
+      this.documentTouchEndListener();
+      this.documentTouchEndListener = null;
+    }
+  }
+
+  outsideClickHandler = (event: Event): void => {
+    const targetElement = event.target as HTMLElement;
+    const isInside = targetElement.closest(
+      '.shortcuts_iconCard, .ellipsis_icont'
+    );
+
+    if (!isInside) {
+      this.selectedIdCard = null;
+      document.removeEventListener('click', this.outsideClickHandler);
+    }
+  };
+
+  // Fix for the handleContentDoubleClick method
+  handleContentDoubleClick(event: MouseEvent, shopping: Center): void {
+    console.log('Double click detected'); // Add this for debugging
+    const clickTime = new Date().getTime();
+    const timeDiff = clickTime - this.lastClickTime;
+
+    if (timeDiff < this.DOUBLE_CLICK_THRESHOLD) {
+      // This is a double click
+      event.preventDefault();
+      event.stopPropagation();
+
+      // Set heart position - adjust to be relative to viewport
+      this.heartX = event.clientX;
+      this.heartY = event.clientY;
+
+      console.log('Heart position:', this.heartX, this.heartY); // Add this for debugging
+
+      // Show heart animation
+      this.showHeartAnimation();
+
+      // Add like
+      this.addLike(shopping, 1);
+
+      // Reset click time
+      this.lastClickTime = 0;
+    } else {
+      // This is a first click
+      this.lastClickTime = clickTime;
+    }
+  }
+  showHeartAnimation(): void {
+    // Use NgZone to ensure animations run smoothly
+    this.ngZone.run(() => {
+      // Clear any existing timeout to prevent conflicts
+      if (this.heartTimeout) {
+        clearTimeout(this.heartTimeout);
+        this.heartTimeout = null;
       }
-    });
-    this.documentTouchListeners = [];
-  }
 
-  // Utility methods
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkMobileView();
-  }
+      // Hide any existing heart first (if visible) to ensure clean animation
+      this.heartVisible = false;
 
-  checkMobileView(): void {
-    const wasMobile = this.isMobileView;
-    this.isMobileView = window.innerWidth <= 768;
-
-    if (wasMobile !== this.isMobileView) {
+      // Force immediate update before showing new heart
       this.cdr.detectChanges();
-    }
+
+      // Small delay before showing new heart to ensure DOM is ready
+      setTimeout(() => {
+        // Show the heart
+        this.heartVisible = true;
+        this.cdr.detectChanges();
+
+        this.heartTimeout = setTimeout(() => {
+          this.heartVisible = false;
+          this.cdr.detectChanges();
+        }, 3000);
+      }, 10);
+    });
   }
 
-  getNeareastCategoryName(categoryId: number): string {
-    if (this.categoryNameCache.has(categoryId)) {
-      return this.categoryNameCache.get(categoryId)!;
-    }
+  copyLink(link: string) {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {})
+      .catch((err) => {});
+  }
 
-    const result = this.viewManagerService.getNearestCategoryName(
-      categoryId,
-      this.buyboxCategories
+  openLink(content: any, modalObject?: any) {
+    this.shareLink = '';
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    if (modalObject) {
+      if (modalObject.CenterAddress) {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
+      } else {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
+      }
+    } else {
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
+    }
+    this.cdr.markForCheck();
+  }
+
+  addContact(form: NgForm): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'AddContactToOrganization',
+      Params: {
+        FirstName: this.newContact.firstName,
+        LastName: this.newContact.lastName,
+        OrganizationId: this.OrgId,
+        email: this.newContact.email,
+        password: this.newContact.password,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.spinner.hide();
+        this.newContact = {
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+        };
+        form.resetForm();
+        this.modalService.dismissAll();
+        this.openContactsModal(this.contactsModalTemplate);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  openAddContactModal(content: any): void {
+    this.newContact = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-add-contact',
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+    });
+  }
+
+  async deleteShCenter() {
+    this.shoppingCenters = this.shoppingCenters.map((x) =>
+      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
     );
-    this.categoryNameCache.set(categoryId, result);
-    return result;
-  }
 
-  getShoppingCenterUnitSize(shoppingCenter: any): string {
-    const key = `${shoppingCenter.Id}`;
-    if (this.unitSizeCache.has(key)) {
-      return this.unitSizeCache.get(key)!;
+    try {
+      this.spinner.show();
+      await this.viewManagerService.deleteShoppingCenter(
+        this.BuyBoxId,
+        this.shoppingCenterIdToDelete!
+      );
+      this.modalService.dismissAll();
+    } catch (error) {
+    } finally {
+      this.spinner.hide();
+      this.cdr.markForCheck();
     }
-
-    const result =
-      this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
-    this.unitSizeCache.set(key, result);
-    return result;
   }
 
-  sortCommentsByDate(comments: any[]): any[] {
-    if (!comments) return [];
-
-    if (this.commentSortCache.has(comments)) {
-      return this.commentSortCache.get(comments)!;
-    }
-
-    const sorted = [...comments].sort(
-      (a, b) =>
-        new Date(b.CommentDate).getTime() - new Date(a.CommentDate).getTime()
-    );
-
-    this.commentSortCache.set(comments, sorted);
-    return sorted;
-  }
-
-  // Tracking methods for ngFor optimization
-  trackByShoppingId(index: number, item: any): number {
-    return item.Id || index;
-  }
-
-  trackByCommentId(index: number, item: any): number {
-    return item.Id || index;
-  }
-
-  // Mobile shortcuts
-  getMobileShortcutOptions(shopping: any): ShortcutOption[] {
+  getMobileShortcutOptions(shopping: any): any[] {
     if (!shopping) return [];
 
     return [
@@ -1234,40 +975,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
   }
 
-  handleOptionClick(event: Event, option: ShortcutOption, shopping: any): void {
-    event.stopPropagation();
-    option.action(shopping);
-  }
-
-  // Shortcuts card
-  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
-    if (event) {
-      event.stopPropagation();
-    }
-
-    if (this.selectedIdCard === id) {
-      this.selectedIdCard = null;
-      document.removeEventListener('click', this.outsideClickHandler);
-    } else {
-      this.selectedIdCard = id;
-      setTimeout(() => {
-        document.addEventListener('click', this.outsideClickHandler);
-      });
-    }
-  }
-
-  outsideClickHandler = (event: Event): void => {
-    const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest(
-      '.shortcuts_iconCard, .ellipsis_icont'
-    );
-
-    if (!isInside) {
-      this.selectedIdCard = null;
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-  };
-
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
     if (close === 'close') {
       this.selectedIdCard = null;
@@ -1293,139 +1000,175 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedId = this.selectedId === id ? null : id;
   }
 
-  openShoppingDetailsModal(modal: any, shopping: any) {
-    if (this.isMobileView) {
-      this.openCustomPanel(shopping);
-    } else {
-      this.currentShopping = shopping;
-      this.modalService
-        .open(modal, {
-          windowClass: 'tiktok-modal',
-          size: 'xl',
-          animation: true,
-          centered: true,
-          scrollable: true,
-          backdrop: true,
-          keyboard: true,
-          backdropClass: 'tiktok-backdrop',
-        })
-        .result.then(
-          () => {
-            this.currentShopping = null;
-          },
-          () => {
-            this.currentShopping = null;
-          }
-        );
+  async openMapViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    if (!this.mapsLoaded) {
+      this.mapsLoaded = true;
     }
+
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
-  private setupGlobalClickListener(): void {
-    this.ngZone.runOutsideAngular(() => {
-      const clickListener = this.renderer.listen(
-        'document',
-        'click',
-        (event: Event) => {
-          const target = event.target as HTMLElement;
-          const commentsContainer = this.commentsContainer?.nativeElement;
-          const isInsideComments = commentsContainer?.contains(target);
-          const isInputFocused =
-            target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
-          const isClickOnLikeOrPhoto =
-            target.classList.contains('like-button') ||
-            target.classList.contains('photo');
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true;
 
-          if (isInsideComments || isInputFocused || isClickOnLikeOrPhoto) {
-            return;
-          }
+    if (!lat || !lng) {
+      return;
+    }
+    const { Map } = (await google.maps.importLibrary('maps')) as any;
+    const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
-          this.ngZone.run(() => {
-            this.hideAllComments();
-            this.cdr.markForCheck();
-          });
-        }
-      );
+    if (!mapDiv) {
+      return;
+    }
 
-      this.globalClickListeners.push(clickListener);
+    const map = new Map(mapDiv, {
+      center: { lat, lng },
+      zoom: 14,
+    });
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: map,
+      title: 'Location Marker',
     });
   }
 
-  private setupScrollListener(): void {
-    if (!this.scrollContainer?.nativeElement) return;
-
-    this.ngZone.runOutsideAngular(() => {
-      const scrollHandler = () => {
-        this.ngZone.run(() => {
-          this.hideAllDetails();
-          this.cdr.markForCheck();
-        });
-      };
-
-      const scrollSub = fromEvent(this.scrollContainer.nativeElement, 'scroll')
-        .pipe(debounceTime(200), takeUntil(this.destroy$))
-        .subscribe(scrollHandler);
-
-      this.subscriptions.add(scrollSub);
+  openStreetViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
     });
-  }
+    this.General.modalObject = modalObject;
 
-  // Fix for the handleContentDoubleClick method
-  handleContentDoubleClick(event: MouseEvent, shopping: Center): void {
-    console.log('Double click detected'); // Add this for debugging
-    const clickTime = new Date().getTime();
-    const timeDiff = clickTime - this.lastClickTime;
-
-    if (timeDiff < this.DOUBLE_CLICK_THRESHOLD) {
-      // This is a double click
-      event.preventDefault();
-      event.stopPropagation();
-
-      // Set heart position - adjust to be relative to viewport
-      this.heartX = event.clientX;
-      this.heartY = event.clientY;
-
-      console.log('Heart position:', this.heartX, this.heartY); // Add this for debugging
-
-      // Show heart animation
-      this.showHeartAnimation();
-
-      // Add like
-      this.addLike(shopping, 1);
-
-      // Reset click time
-      this.lastClickTime = 0;
+    if (this.General.modalObject.StreetViewURL) {
+      this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
-      // This is a first click
-      this.lastClickTime = clickTime;
-    }
-  }
-  showHeartAnimation(): void {
-    // Use NgZone to ensure animations run smoothly
-    this.ngZone.run(() => {
-      // Clear any existing timeout to prevent conflicts
-      if (this.heartTimeout) {
-        clearTimeout(this.heartTimeout);
-        this.heartTimeout = null;
-      }
-
-      // Hide any existing heart first (if visible) to ensure clean animation
-      this.heartVisible = false;
-
-      // Force immediate update before showing new heart
-      this.cdr.detectChanges();
-
-      // Small delay before showing new heart to ensure DOM is ready
       setTimeout(() => {
-        // Show the heart
-        this.heartVisible = true;
-        this.cdr.detectChanges();
+        this.viewOnStreet();
+      }, 100);
+    }
+  }
 
-        // Hide the heart after animation completes
-        this.heartTimeout = setTimeout(() => {
-          this.heartVisible = false;
-          this.cdr.detectChanges();
-        }, 3000); // Match animation duration
-      }, 10);
+  viewOnStreet() {
+    this.StreetViewOnePlace = true;
+    const lat = +this.General.modalObject.StreetLatitude;
+    const lng = +this.General.modalObject.StreetLongitude;
+    const heading = this.General.modalObject.Heading || 165;
+    const pitch = this.General.modalObject.Pitch || 0;
+
+    setTimeout(() => {
+      const streetViewElement = document.getElementById('street-view');
+      if (streetViewElement) {
+        this.streetMap(lat, lng, heading, pitch);
+      } else {
+      }
     });
+  }
+
+  streetMap(lat: number, lng: number, heading: number, pitch: number) {
+    const panorama = this.viewManagerService.initializeStreetView(
+      'street-view',
+      lat,
+      lng,
+      heading,
+      pitch
+    );
+    if (!panorama) {
+    }
+    this.cdr.markForCheck();
+  }
+
+  setIframeUrl(url: string): void {
+    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.cdr.markForCheck();
+  }
+
+  openDeleteShoppingCenterModal(
+    modalTemplate: TemplateRef<any>,
+    shoppingCenter: any
+  ) {
+    this.DeletedSC = shoppingCenter;
+    this.shoppingCenterIdToDelete = shoppingCenter.Id;
+    this.modalService.open(modalTemplate, {
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
+
+  openContactsModal(content: any): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetOrganizationContacts',
+      Params: {
+        organizationId: this.OrgId,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        if (data && data.json) {
+          this.OrganizationContacts = data.json;
+        } else {
+          this.OrganizationContacts = [];
+        }
+        this.spinner.hide();
+        this.modalService.open(content, {
+          size: 'lg',
+          centered: true,
+        });
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  openGallery(shpping: number) {
+    this.GetPlaceDetails(0, shpping);
+    this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
+  }
+
+  GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
+    const body: any = {
+      Name: 'GetShoppingCenterDetails',
+      Params: {
+        PlaceID: placeId,
+        shoppingcenterId: ShoppingcenterId,
+        buyboxid: this.BuyBoxId,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.CustomPlace = data.json?.[0] || null;
+        this.ShoppingCenter = this.CustomPlace;
+
+        if (this.ShoppingCenter && this.ShoppingCenter.Images) {
+          this.placeImage = this.ShoppingCenter.Images?.split(',').map(
+            (link: any) => link.trim()
+          );
+        }
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
+    this.spinner.show();
+    this.viewManagerService
+      .restoreShoppingCenter(MarketSurveyId, Deleted)
+      .then(() => {
+        const marketSurveyIdNum = Number(MarketSurveyId);
+
+        this.shoppingCenters = this.shoppingCenters.map((center) => {
+          if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
+            return { ...center, Deleted: false };
+          }
+          return center;
+        });
+        this.cdr.markForCheck();
+        this.spinner.hide();
+      });
   }
 }

@@ -146,7 +146,9 @@
         <div class="reaction-buttons">
           <button
             class="action-btn like-btn"
-            [class.liked]="isLiked(shopping)"
+            [class.liked]="(shopping?.ShoppingCenter?.Reactions?.length || 0) >= 1"
+            
+
             (click)="handleClick(shopping, Like, i)"
             (dblclick)="handleContentDoubleClick($event, shopping)"
             [disabled]="isLikeInProgress"
@@ -236,7 +238,7 @@
             "
             class="ellipsis_icont d-none d-sm-flex"
             [ngbPopover]="shortcutspopover"
-            (click)="toggleShortcutsCard(shopping.Id)"
+            (click)="toggleShortcuts(shopping.Id)"
           >
             <i class="fa-solid fa-ellipsis"></i>
           </button>
@@ -665,7 +667,6 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'dislike'"
-              (click)="rate('dislike')"
             >
               <div class="rating-circle dislike">
                 <div class="inner-circle"></div>
@@ -679,8 +680,7 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'neutral'"
-              (click)="rate('neutral')"
-            >
+              >
               <div class="rating-circle neutral">
                 <div class="inner-circle"></div>
               </div>
@@ -692,8 +692,7 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'like'"
-              (click)="rate('like')"
-            >
+              >
               <div class="rating-circle like">
                 <div class="inner-circle"></div>
               </div>
@@ -738,8 +737,7 @@
           class="location-card"
           style="cursor: pointer"
           [class.selected]="selectedCenterId === General.modalObject.Id"
-          (click)="selectCenter(General.modalObject.Id)"
-        >
+          >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">
@@ -751,9 +749,7 @@
         <div
           class="location-card next-center"
           style="cursor: pointer"
-          [class.selected]="selectedCenterId === General.nextModalObject.Id"
-          (click)="selectCenter(General.nextModalObject.Id)"
-        >
+          >
           <h4 class="modal-title">{{ General.nextModalObject.CenterName }}</h4>
           <p class="address">{{ General.nextModalObject.CenterAddress }}</p>
           <p class="address">
@@ -1018,7 +1014,7 @@
               style="display: flex; width: 100%"
             >
               <span
-                (click)="handleOptionClick($event, option, currentShopping)"
+                (click)="option.action(currentShopping)"
                 >{{ option.label }}</span
               >
               <svg
