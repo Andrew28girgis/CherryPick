@@ -203,3 +203,201 @@
 .normal {
   text-decoration: underline;
 }
+
+
+
+@media (max-width: 767px) {
+  /* Container adjustments */
+  .campaign-manager-container {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .tenant-name {
+    white-space: pre-wrap;
+    max-width: 60%;
+  }
+  
+  /* Header section adjustments */
+  .w-100.d-flex.align-items-center.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 350px; /* Match card width */
+    width: 100%;
+  }
+  
+  .search-campaign-container {
+    width: 100%;
+  }
+  
+  .search-campaign-input {
+    width: 100%;
+  }
+  
+  .add-new-campaign {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Campaign manager body adjustments */
+  .campaign-manager-body {
+    padding: 0;
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Table to cards transformation */
+  .table-responsive {
+    border: none;
+    max-width: 350px; /* Fixed width for cards */
+    width: 100%;
+  }
+  
+  .table {
+    border: none;
+  }
+  
+  .table thead {
+    display: none;
+  }
+  
+  .table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    position: relative;
+    width: 350px;
+  }
+  
+  .table tbody td {
+    display: block;
+    border: none;
+    padding: 0.4rem 0;
+    text-align: left;
+    position: relative;
+    font-size: 0.9rem;
+  }
+  
+  .table tbody tr td:first-child {
+    font-weight: 600;
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0.4rem;
+    padding-right: 90px;
+    white-space: normal; 
+  }
+  
+  .table tbody tr td:nth-child(4) {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0;
+  }
+  
+  .campaign-privacy {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .table tbody tr td:nth-child(2) {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .table tbody tr td:nth-child(3) {
+    font-size: 0.75rem;
+    color: #707791;
+    position: absolute;
+    top: 3.8rem;
+    right: 0.75rem;
+    padding: 0;
+  }
+  
+  .table tbody tr td:nth-child(5),
+  .table tbody tr td:nth-child(6),
+  .table tbody tr td:nth-child(7) {
+    display: inline-block;
+    width: 33%;
+    text-align: center;
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+  }
+  
+  .table tbody tr td:nth-child(5)::before {
+    content: "Sites: ";
+    font-weight: normal;
+    color: #707791;
+  }
+  
+  .table tbody tr td:nth-child(6)::before {
+    content: "Submissions: ";
+    font-weight: normal;
+    color: #707791;
+  }
+  
+  .table tbody tr td:nth-child(7)::before {
+    content: "Mails: ";
+    font-weight: normal;
+    color: #707791;
+  }
+  
+  .table tbody tr td:nth-child(8) {
+    padding-top: 0.5rem;
+    margin-top: 0.4rem;
+    border-top: 1px solid #eee;
+    text-align: center;
+  }
+  
+  .inbox {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .table tbody tr td:nth-child(n+9) {
+    display: inline-block;
+    width: 50%;
+    padding: 0.4rem;
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+  }
+  
+  .table tbody tr td:nth-child(n+9)::before {
+    content: attr(scope); 
+    display: block;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+  }
+  
+  .hyber-link {
+    font-size: 0.75rem;
+  }
+  
+  .empty-campaigns {
+    padding: 1.5rem 1rem;
+    max-width: 350px;
+    width: 100%;
+  }
+  
+  .empty-campaigns img {
+    max-width: 70%;
+  }
+  
+  .empty-campaigns h4 {
+    font-size: 1.1rem;
+  }
+  
+  .empty-campaigns p {
+    font-size: 0.9rem;
+  }
+}

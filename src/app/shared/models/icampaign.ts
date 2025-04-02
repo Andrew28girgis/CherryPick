@@ -14,6 +14,7 @@ export interface Campaign {
   MailsSent: MailsSent[]
   Sites: number
   Stages?: Stage[]
+  expanded?: boolean
 }
 
 export interface Submission {

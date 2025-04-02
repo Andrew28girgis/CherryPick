@@ -1,30 +1,34 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import {
+  Component,
+   OnInit,
+   TemplateRef,
+  HostListener,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
-  Campaign,
   ICampaign,
   Stage,
   Submission,
 } from 'src/app/shared/models/icampaign';
-import { CampaignDrawingComponent } from '../campaign-drawing/campaign-drawing.component';
-import { Organization } from 'src/app/shared/models/orgnizations';
-import { EmilyService } from 'src/app/core/services/emily.service';
-import { Router } from '@angular/router';
+import  { EmilyService } from 'src/app/core/services/emily.service';
+import  { Router } from '@angular/router';
 
 @Component({
   selector: 'app-campaign-manager',
   templateUrl: './campaign-manager.component.html',
-  styleUrl: './campaign-manager.component.css',
+  styleUrls: ['./campaign-manager.component.css'],
 })
 export class CampaignManagerComponent implements OnInit {
   userBuyBoxes: { id: number; name: string }[] = [];
-  selectedBuyBoxId: number = 0;
+  selectedBuyBoxId = 0;
   campaigns: ICampaign[] = [];
   filteredCampaigns?: ICampaign[];
   stages: { id: number; stageName: string }[] = [];
-  searchCampaign: string = '';
+  searchCampaign = '';
+  viewMode: 'table' | 'card' = 'table'; // Default to table view on desktop
+  isMobile = false;
 
   constructor(
     private placesService: PlacesService,
@@ -32,11 +36,44 @@ export class CampaignManagerComponent implements OnInit {
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router
-  ) {}
+  ) {
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
+    // On mobile, we don't show the toggle and always use the responsive table
+    // that transforms into cards via CSS
+  }
+
+  toggleView(mode: 'table' | 'card'): void {
+    if (!this.isMobile) {
+      this.viewMode = mode;
+      // Save preference in localStorage
+      localStorage.setItem('campaignViewMode', mode);
+    }
+  }
+
+  toggleExpand(campaign: any): void {
+    campaign.expanded = !campaign.expanded;
+  }
 
   ngOnInit(): void {
     this.getAllCampaigns();
     this.getUserBuyBoxes();
+
+    // Check if there's a saved preference for view mode
+    const savedViewMode = localStorage.getItem('campaignViewMode') as
+      | 'table'
+      | 'card';
+    if (savedViewMode && !this.isMobile) {
+      this.viewMode = savedViewMode;
+    }
   }
 
   getAllCampaigns(): void {
@@ -81,8 +118,6 @@ export class CampaignManagerComponent implements OnInit {
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
-      // this.spinner.hide();
-
       if (response.json && response.json.length > 0) {
         this.userBuyBoxes = response.json.map((buybox: any) => {
           return {
@@ -106,37 +141,11 @@ export class CampaignManagerComponent implements OnInit {
     this.modalService.open(content, { centered: true, size: 'xl' });
   }
 
-  // calculatePolygonCenters(geo: Geojson): number {
-  //   let count = 0;
-  //   geo.ShoppingCenters.forEach((sc) => {
-  //     if (sc.InPolygon) {
-  //       count++;
-  //     }
-  //   });
-  //   return count;
-  // }
-
-  // calculatePolygonsCentersCount(geos: Geojson[]): number {
-  //   let count = 0;
-  //   geos.forEach((geo) =>
-  //     geo.ShoppingCenters.forEach((sc) => {
-  //       if (sc.InPolygon) {
-  //         count++;
-  //       }
-  //     })
-  //   );
-  //   return count;
-  // }
-
-  // getUniqueStates(geo: Geojson[]): string[] {
-  //   return [...new Set(geo.map((g) => g.state))];
-  // }
-
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
     if (withOrg) {
       this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
     } else {
-      let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+      const emilyObject: { buyboxId: number[]; organizations: any[] } = {
         buyboxId: [campaign.id],
         organizations: [],
       };
@@ -182,40 +191,22 @@ export class CampaignManagerComponent implements OnInit {
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0) {
-        let organizationsIds = [
+        const organizationsIds = [
           ...new Set(response.json.map((o: any) => o.organizationId)),
         ];
-        let organizations: {
+        const organizations: {
           id: number;
           contacts: any[];
         }[] = organizationsIds.map((id) => {
           return { id: id as number, contacts: [] };
         });
-        let emilyObject: { buyboxId: number[]; organizations: any[] } = {
+        const emilyObject: { buyboxId: number[]; organizations: any[] } = {
           buyboxId: [buboxId],
           organizations: organizations,
         };
         this.emilyService.updateCheckList(emilyObject);
         this.router.navigate(['/MutipleEmail']);
       }
-      //   let organizationsIds: number[] = [];
-      // organizationsIds = [...new Set(organizationsIds)];
-
-      // let organizations: {
-      //   id: number;
-      //   contacts: any[];
-      // }[] = [];
-      // organizations = organizationsIds.map((id) => {
-      //   return { id: id, contacts: [] };
-      // });
-
-      // let emilyObject: { buyboxId: number[]; organizations: any[] } = {
-      //   buyboxId: [campaign.id],
-      //   organizations: organizations,
-      // };
-      // this.emilyService.updateCheckList(emilyObject);
-
-      // this.router.navigate(['/MutipleEmail']);
     });
   }
 
