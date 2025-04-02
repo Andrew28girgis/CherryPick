@@ -9,7 +9,7 @@
             <tbody>
               <tr *ngFor="let notification of getNotificationsByCategory(1)">
                 <td class="message-task col-10">{{ notification.message }}</td>
-                <td  class="message-task col-2">
+                <td  class="message-task col-2 text-end">
                   {{ notification.createdDate | date }}
                 </td>
                 <!-- <td>
@@ -36,7 +36,7 @@
             <tbody>
               <tr *ngFor="let notification of getNotificationsByCategory(2)">
                 <td class="message-task col-10">{{ notification.message }}</td>
-                <td class="message-task col-2">
+                <td class="message-task col-2 text-end">
                   {{ notification.createdDate | date }}
                 </td>
                 <!-- <td>
@@ -64,7 +64,7 @@
               <tbody>
                 <tr *ngFor="let notification of getNotificationsByCategory(3)">
                   <td class="message-task col-10">{{ notification.message }}</td>
-                  <td  class="message-task col-2">
+                  <td  class="message-task col-2 text-end">
                     {{ notification.createdDate | date }}
                   </td>
                   <!-- <td>
@@ -93,7 +93,7 @@
               <tbody>
                 <tr *ngFor="let notification of getNotificationsByCategory(4)">
                   <td class="message-task col-10">{{ notification.message }}</td>
-                  <td class="message-task col-2">
+                  <td class="message-task col-2 text-end">
                     {{ notification.createdDate | date }}
                   </td>
                   <!-- <td>
