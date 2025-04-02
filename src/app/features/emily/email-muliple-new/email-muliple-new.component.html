@@ -6,7 +6,7 @@
   </div>
 </div>
 
-<div class="p-3 mb-4">
+<div class="p-3 mb-2">
   <div class="row m-0 ">
     <div class="d-block d-sm-flex gap-2 mb-2 col-12 col-sm-6 align-items-center">
       <img class="Kayak__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -20,6 +20,15 @@
       </div>
     </div>
   </div>
+<div class="d-flex justify-content-center">
+    <span class="advanced" (click)="toggleAdvanced()">
+      Advanced
+      <i class="ms-1" [ngClass]="isAdvancedVisible ? 'fa-solid fa-arrow-up' : 'fa-solid fa-arrow-down'"></i>
+    </span>
+</div>
+
+  <div *ngIf="isAdvancedVisible">
+    <div class="card card-body" style="width: 100%;">
 
   <div class="container-GenerateEmail row">
     <!-- Selections-filters -->
@@ -262,7 +271,7 @@
       <label for="discussionDropdown">Select Prompt</label>
       <select class="form-select form-select-lg" aria-label="Large select example" id="discussionDropdown"
         [(ngModel)]="selectedPromptId" (change)="updatePrompt()">
-        <option value="" selected>Select Prompt</option>
+        <!-- <option value="" selected>Select Prompt</option> -->
         <option *ngFor="let prompt of prompts" [value]="prompt.id">
           {{ prompt?.name }}
         </option>
@@ -306,6 +315,10 @@
       </button>
     </div>
   </div>
+</div>
+
+
+</div>
 </div>
 
 <!-- table Get email Generated  -->
