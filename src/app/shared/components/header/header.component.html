@@ -12,7 +12,12 @@
           current.includes('landlord') ? ['/landlord'] : ['/campaigns']
         "
       />
-      <p class="cherry mb-0 d-none d-lg-block">
+      <p
+        class="cherry mb-0 d-none d-lg-block"
+        [routerLink]="
+          current.includes('landlord') ? ['/landlord'] : ['/campaigns']
+        "
+      >
         Cherry<span class="pick">pick</span>
       </p>
     </div>
@@ -34,7 +39,7 @@
     id="navbarNav"
   >
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/campaigns']"
           routerLinkActive="active-route"
@@ -48,7 +53,7 @@
           <span>Campaigns</span>
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/tasks']"
           routerLinkActive="active-route"
@@ -62,7 +67,7 @@
           <span>Tasks</span>
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/summary']"
           routerLinkActive="active-route"
@@ -73,7 +78,7 @@
           <span>Tenants</span>
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           class="nav-link"
           [routerLink]="['/Kanban']"
@@ -82,6 +87,17 @@
         >
           <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
           <span>Cadence</span>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="current.includes('landlord')">
+        <a
+          class="nav-link"
+          [routerLink]="['/landlord']"
+          routerLinkActive="active-route"
+          title="Cadence"
+        >
+          <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
+          <span>Properties</span>
         </a>
       </li>
     </ul>
