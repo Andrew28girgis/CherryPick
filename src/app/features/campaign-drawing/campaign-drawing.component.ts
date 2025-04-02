@@ -17,7 +17,7 @@ import {
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Subject, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { IPolygon } from 'src/app/shared/models/ipolygons-controller';
@@ -129,8 +129,7 @@ export class CampaignDrawingComponent
       Params: { CampaignId: campaignId },
     };
 
-    this.placesService.GenericAPI(body).subscribe((response) => {
-    });
+    this.placesService.GenericAPI(body).subscribe((response) => {});
   }
 
   createNewCampaign(): void {
@@ -145,10 +144,8 @@ export class CampaignDrawingComponent
       },
     };
 
-
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        this.syncMarketSurveyWithCampaign(response.json[0].id)
         if (!this.router.url.includes('campaigns')) {
           setTimeout(() => {
             this.spinner.hide();
@@ -166,7 +163,7 @@ export class CampaignDrawingComponent
     });
   }
 
-  insertNewPolygons(data: {
+  async insertNewPolygons(data: {
     contactId: number;
     CampaignId: number;
     name: string;
@@ -175,7 +172,7 @@ export class CampaignDrawingComponent
     geoJson: any;
     center: string;
     radius: string;
-  }): void {
+  }): Promise<void> {
     const body: any = {
       State: data.state,
       City: data.city,
@@ -189,12 +186,9 @@ export class CampaignDrawingComponent
       Radius: data.radius,
     };
 
-    this.httpClient
-      .post<any>(`${environment.api}/GeoJson/AddGeoJson`, body)
-      .subscribe({
-        next: (response) => {},
-        error: (error) => {},
-      });
+    const response = await firstValueFrom(
+      this.httpClient.post<any>(`${environment.api}/GeoJson/AddGeoJson`, body)
+    );
   }
 
   async saveShapesWithCampaign(campaignId: number): Promise<void> {
@@ -207,7 +201,7 @@ export class CampaignDrawingComponent
           polygon.shape as google.maps.Polygon
         );
 
-        this.insertNewPolygons({
+        await this.insertNewPolygons({
           CampaignId: campaignId,
           contactId: this.contactId,
           name: polygon.shape.get('label') ?? 'Shape',
@@ -235,7 +229,7 @@ export class CampaignDrawingComponent
           polygon
         );
 
-        this.insertNewPolygons({
+        await this.insertNewPolygons({
           CampaignId: campaignId,
           contactId: this.contactId,
           name: circle.shape.get('label') ?? 'Shape',
@@ -248,6 +242,7 @@ export class CampaignDrawingComponent
       }
     }
 
+    this.syncMarketSurveyWithCampaign(campaignId);
     this.campaignDrawingService.clearDrawnLists();
   }
 
