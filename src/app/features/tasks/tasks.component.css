@@ -1,65 +1,78 @@
 .card {
-    height: 100%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-    overflow: hidden;
-  }
+  height: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+}
 
-  .table thead tr th {
-    white-space: nowrap;
-    padding: 15px;
-  }
-  /* .table tbody tr td {
+.table thead tr th {
+  white-space: nowrap;
+  padding: 15px;
+}
+/* .table tbody tr td {
     white-space: nowrap;
   } */
-  
-  .card-header {
-    font-weight: bold;
-    background-color: #fff !important;
-    /* background-color: #dadada !important;
+
+.card-header {
+  font-weight: bold;
+  background-color: #fff !important;
+  /* background-color: #dadada !important;
     color: rgb(0, 0, 0) !important; */
-    display: flex;
-    justify-content: center;
-    padding: 15px;
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 5px 10px;
+}
+
+/* Custom scrollbar */
+.table-responsive::-webkit-scrollbar {
+  width: 8px;
+}
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.action-wrap {
+  margin-block: 30px;
+}
+
+.task-head {
+  font-weight: 600;
+  color: #4d65b4 
+
+}
+
+.message-task {
+  white-space: nowrap;
+  padding-block: 15px;
+  color: #001f3f;
+  font-size: 15px;
+}
+/* For better mobile responsiveness */
+@media (max-width: 767.98px) {
+  .table th,
+  .table td {
+    padding: 0.5rem;
   }
-  
-  .badge {
-    font-size: 0.75rem;
-    padding: 5px 10px;
+
+  .table th:nth-child(2),
+  .table td:nth-child(2) {
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  
-  /* Custom scrollbar */
-  .table-responsive::-webkit-scrollbar {
-    width: 8px;
-  }
-  .table-responsive::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
-  .table-responsive::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
-  .table-responsive::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  .action-wrap{
-    margin-block: 30px;
-  }
-  .task-head{
-    font-weight: 600;
-  }
-  /* For better mobile responsiveness */
-  @media (max-width: 767.98px) {
-    .table th, .table td {
-      padding: 0.5rem;
-    }
-    
-    .table th:nth-child(2), 
-    .table td:nth-child(2) {
-      max-width: 80px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
+}
