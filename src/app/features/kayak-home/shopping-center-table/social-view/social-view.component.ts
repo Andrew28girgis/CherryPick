@@ -522,12 +522,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     const likeSub = this.placesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-        // Success handling if needed
-      },
+      next: (response: any) => {},
       error: (error) => {
-        console.error('Error adding like:', error);
-        // Revert UI changes on error
         if (!isLiked) {
           shopping.ShoppingCenter.Reactions.pop();
           this.likedShoppings[shopping.MarketSurveyId] = false;
