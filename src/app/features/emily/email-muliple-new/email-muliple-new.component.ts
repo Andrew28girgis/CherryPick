@@ -30,8 +30,8 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
-  isLandingSelected: boolean = false;
-  isISCcSelected: boolean = false;
+  isLandingSelected: boolean = true;
+  isISCcSelected: boolean = true;
   buyBoxId!: any;
   contactId!: any;
   OrgBuybox!: any;
@@ -121,6 +121,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   OrganizationCheckedServices: OrganizationChecked[] = [];
   buyboxChecklist!: buyboxChecklist;
   private checklistSubscription!: Subscription;
+  isAdvancedVisible = false; // Initially, the section is hidden
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -175,6 +176,9 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     this.GetRetailRelationCategories();
     this.GetBuyBoxInfoDetails();
     this.GetMailContextGenerated();
+  }
+  toggleAdvanced() {
+    this.isAdvancedVisible = !this.isAdvancedVisible;
   }
 
   reloadData() {
@@ -1085,8 +1089,11 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
                 name: prompt?.Name || 'Unnamed Prompt',
                 promptText: prompt?.PromptText || 'No prompt text available',
               }));
+              // Set the first prompt as selected by default
+              this.selectedPromptId = this.prompts[0].id;
             } else {
               this.prompts = [];
+              this.selectedPromptId = ''; // Reset if no prompts available
             }
           },
         });

@@ -1,1 +1,117 @@
-<p>tasks works!</p>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 action-wrap">
+      <h5 class="mb-2 task-head">Reactions</h5>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle m-0">
+            <tbody>
+              <tr *ngFor="let notification of getNotificationsByCategory(1)">
+                <td class="message-task col-10">{{ notification.message }}</td>
+                <td  class="message-task col-2 text-end">
+                  {{ notification.createdDate | date }}
+                </td>
+                <!-- <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td> -->
+              </tr>
+              <tr *ngIf="getNotificationsByCategory(1).length === 0">
+                <td colspan="3" class="text-center">
+                  No notifications in this category
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 action-wrap">
+      <h5 class="mb-2 task-head">Email Generated</h5>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table align-middle m-0">
+            <tbody>
+              <tr *ngFor="let notification of getNotificationsByCategory(2)">
+                <td class="message-task col-10">{{ notification.message }}</td>
+                <td class="message-task col-2 text-end">
+                  {{ notification.createdDate | date }}
+                </td>
+                <!-- <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td> -->
+              </tr>
+              <tr *ngIf="getNotificationsByCategory(2).length === 0">
+                <td colspan="3" class="text-center">
+                  No notifications in this category
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 action-wrap">
+      <h5 class="mb-2 task-head">Sync</h5>
+      <div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table align-middle m-0">
+              <tbody>
+                <tr *ngFor="let notification of getNotificationsByCategory(3)">
+                  <td class="message-task col-10">{{ notification.message }}</td>
+                  <td  class="message-task col-2 text-end">
+                    {{ notification.createdDate | date }}
+                  </td>
+                  <!-- <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td> -->
+                </tr>
+                <tr *ngIf="getNotificationsByCategory(3).length === 0">
+                  <td colspan="3" class="text-center">
+                    No notifications in this category
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 action-wrap">
+      <h5 class="mb-2 task-head">Proposal Submissions</h5>
+      <div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table align-middle m-0">
+              <tbody>
+                <tr *ngFor="let notification of getNotificationsByCategory(4)">
+                  <td class="message-task col-10">{{ notification.message }}</td>
+                  <td class="message-task col-2 text-end">
+                    {{ notification.createdDate | date }}
+                  </td>
+                  <!-- <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td> -->
+                </tr>
+                <tr *ngIf="getNotificationsByCategory(4).length === 0">
+                  <td colspan="3" class="text-center">
+                    No notifications in this category
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
