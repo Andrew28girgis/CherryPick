@@ -1,3 +1,11 @@
+.advanced{
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  color: #4d65b4;
+  font-weight: 600;
+  cursor: pointer;
+}
 .container-GenerateEmail {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
   background-color: white;
