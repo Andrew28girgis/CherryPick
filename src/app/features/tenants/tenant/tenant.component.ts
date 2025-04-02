@@ -63,6 +63,9 @@ export class TenantComponent implements OnInit {
   organizationid!: number;
   isFileUploaded: boolean = false; // To track whether a file has been uploaded
   test!: number; // Add this property
+  isClearing: boolean = false; // Flag to track if data is being cleared
+  uploadRequest: any; // Store the upload request to cancel it if needed
+
 
   selectedCampaign!: number;
   CampaignData!: any;
@@ -83,13 +86,13 @@ export class TenantComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
       this.selectedCampaign = params['campaignId'];
-      console.log('selectedCampaign', this.selectedCampaign);
+      console.log(this.selectedCampaign);
+      
       // this.GetCampaignDetails();
     });
     this.GetBuyBoxInfo();
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
-    console.log('guid', this.selectedShoppingID);
     
   }
 
@@ -164,39 +167,63 @@ export class TenantComponent implements OnInit {
   }
 
   public uploadFile(files: NgxFileDropEntry[]): void {
+    // Reset the file list (important if the user clears the modal)
     this.files = files;
+  
+    // If the modal was cleared before uploading, reset the upload state
+    if (this.isClearing) {
+      this.isClearing = false; // Reset clearing flag
+      this.isUploading = true; // Start the upload process
+      this.uploadProgress = 0; // Reset progress bar to 0
+      this.isConverting = false; // Reset conversion state
+      this.isFileUploaded = false; // Reset file upload state
+      this.images = []; // Clear any previous images
+    }
+  
+    // Ensure the progress bar is visible right from the start
+    this.isUploading = true; // Set the uploading flag before starting the file upload
+    this.uploadProgress = 0; // Ensure the progress bar starts at 0%
+  
     for (const droppedFile of files) {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-          // Set the file name immediately
+          // Set the file name immediately when the file is dropped
           this.fileName = file.name;
-
+  
+          // Create FormData and append the file
           const formData = new FormData();
           formData.append('filename', file);
-          this.isUploading = true;
-          this.uploadProgress = 0;
-
+  
           const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
-
+  
+          // Create the HTTP request with progress tracking
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
             responseType: 'json',
           });
-
-          this.httpClient.request(req).subscribe(
+  
+          // Store the HTTP request to be able to cancel if needed
+          this.uploadRequest = this.httpClient.request(req).subscribe(
             (event: any) => {
+              // If modal data is cleared, abort processing images
+              if (this.isClearing) {
+                console.log("Modal data is being cleared, aborting image processing.");
+                return; // Abort if modal data is cleared
+              }
+  
               if (event.type === HttpEventType.UploadProgress) {
+                // Update progress bar based on the current upload progress
                 this.uploadProgress = Math.round(
                   (100 * event.loaded) / event.total!
                 );
                 if (this.uploadProgress === 100) {
-                  this.isUploading = false;
-                  this.isConverting = true;
+                  this.isUploading = false; // Stop showing the progress bar once the upload is complete
+                  this.isConverting = true; // Start converting the images
                 }
               } else if (event instanceof HttpResponse) {
                 const response = event.body;
-                if (response && response.images) {
+                if (response && response.images && !this.isClearing) {
                   this.images = response.images.map(
                     (img: string, index: number) => ({
                       name: `Image ${index + 1}`,
@@ -208,12 +235,10 @@ export class TenantComponent implements OnInit {
                   this.pdfFileName = response.pdfFileName;
                   this.isConverting = false;
                   this.spinner.hide();
-                  this.showToast(
-                    'PDF File uploaded and converted successfully!'
-                  );
+                  this.showToast('PDF File uploaded and converted successfully!');
                   this.isFileUploaded = true; // Enable submit button
-
-                  // Open the modal after images are returned and upload completes
+                  
+                  // Open the modal after images are returned and the upload completes
                   this.openUploadModal(0); // Open the modal after the process is done
                 }
               }
@@ -230,6 +255,8 @@ export class TenantComponent implements OnInit {
       }
     }
   }
+  
+  
 
   showToast(message: string) {
     const toast = document.getElementById('customToast');
@@ -286,29 +313,40 @@ export class TenantComponent implements OnInit {
     // Send the updated JsonPDF data
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        this.showToast('shopping center updated successfully!');
+        this.showToast('Shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
         this.spinner.hide();
       },
+      error: (error) => {
+        console.error('Error occurred while updating shopping center:', error);
+        this.spinner.hide();
+        this.showToast('Failed to update shopping center!');
+      },
     });
     this.isSubmitting = false;
   }
-  // Method to clear all modal data
   clearModalData() {
-    this.images = []; // Clear images array
-    this.JsonPDF = null!; // Clear PDF data
-    this.AvailabilityAndTenants = {}; // Clear "Our Data"
-    this.fileName = ''; // Clear file name
-    this.uploadProgress = 0; // Reset upload progress
-    this.isUploading = false; // Reset upload state
-    this.isConverting = false; // Reset conversion state
-    this.files = []; // Clear dropped files
-    this.returnsubmit = false;
+    if (this.uploadRequest) {
+      this.uploadRequest.unsubscribe();
+    }
+        this.isClearing = true;
+    
+    this.images = []; 
+    this.JsonPDF = null!; 
+    this.AvailabilityAndTenants = {}; 
+    this.fileName = ''; 
+    this.uploadProgress = 0; 
+    this.isUploading = false;
+    this.isConverting = false; 
+    this.files = []; 
+    this.returnsubmit = false; 
+    this.isFileUploaded = false; 
   }
 
   closeModal(modal: any) {
     modal.dismiss();
+    this.isClearing = false; 
     this.fileName = '';
     this.uploadProgress = 0;
     this.isUploading = false;
