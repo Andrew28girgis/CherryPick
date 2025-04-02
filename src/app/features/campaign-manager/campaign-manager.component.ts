@@ -35,8 +35,8 @@ export class CampaignManagerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getUserBuyBoxes();
     this.getAllCampaigns();
+    this.getUserBuyBoxes();
   }
 
   getAllCampaigns(): void {
@@ -55,7 +55,6 @@ export class CampaignManagerComponent implements OnInit {
         this.campaigns = [];
         this.filteredCampaigns = [];
       }
-
       this.getKanbanTemplateStages();
     });
   }
@@ -76,7 +75,6 @@ export class CampaignManagerComponent implements OnInit {
 
   getUserBuyBoxes(): void {
     this.spinner.show();
-
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {},
@@ -150,7 +148,7 @@ export class CampaignManagerComponent implements OnInit {
 
   getKanbanTemplateStages(): void {
     const body: any = {
-      Name: 'GetKanbanTemplateStages  ',
+      Name: 'GetKanbanTemplateStages',
       Params: { KanbanTemplateId: 5 },
     };
 
@@ -193,13 +191,11 @@ export class CampaignManagerComponent implements OnInit {
         }[] = organizationsIds.map((id) => {
           return { id: id as number, contacts: [] };
         });
-
         let emilyObject: { buyboxId: number[]; organizations: any[] } = {
           buyboxId: [buboxId],
           organizations: organizations,
         };
         this.emilyService.updateCheckList(emilyObject);
-
         this.router.navigate(['/MutipleEmail']);
       }
       //   let organizationsIds: number[] = [];
