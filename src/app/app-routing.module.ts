@@ -17,6 +17,7 @@ import { MarketSurveyComponent } from './features/tenants/market-survery/market-
 import { CampaignManagerComponent } from './features/campaign-manager/campaign-manager.component';
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
+import { TasksComponent } from './features/tasks/tasks.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -37,6 +38,11 @@ const routes: Routes = [
   {
     path: 'summary',
     component: SummeryComponent,
+    canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'tasks',
+    component: TasksComponent,
     canActivate: [TenantOnlyGuard],
   },
   {

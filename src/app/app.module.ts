@@ -54,6 +54,7 @@ import { MarketCardViewComponent } from './features/tenants/market-survery/marke
 import { CampaignManagerComponent } from './features/campaign-manager/campaign-manager.component';
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
+import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,6 +81,7 @@ import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or
     CampaignManagerComponent,
     EmailMulipleNewComponent,
     MailsGenerateOrSendComponent,
+    MutipleEmailComponent
   ],
   imports: [
     BrowserModule,

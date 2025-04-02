@@ -27,17 +27,66 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { StateService } from 'src/app/core/services/state.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { PlacesService } from 'src/app/core/services/places.service';
+import {
+  trigger,
+  style,
+  animate,
+  transition,
+  keyframes,
+} from '@angular/animations';
+
 declare const google: any;
 @Component({
   selector: 'app-social-view',
   templateUrl: './social-view.component.html',
   styleUrls: ['./social-view.component.css'],
+  animations: [
+    trigger('heartAnimation', [
+      transition(':enter', [
+        animate(
+          '3s cubic-bezier(0.17, 0.89, 0.32, 1.28)',
+          keyframes([
+            style({
+              transform: 'scale(0)',
+              opacity: 0,
+              offset: 0,
+            }),
+            style({
+              transform: 'scale(1.2)',
+              opacity: 0.9,
+              offset: 0.15,
+            }),
+            style({
+              transform: 'scale(1)',
+              opacity: 1,
+              offset: 0.3,
+            }),
+            style({
+              transform: 'scale(1.1) translateY(-40px)',
+              opacity: 1,
+              offset: 0.5,
+            }),
+            style({
+              transform: 'scale(1) translateY(-80px)',
+              opacity: 0.9,
+              offset: 0.7,
+            }),
+            style({
+              transform: 'scale(0.8) translateY(-120px)',
+              opacity: 0,
+              offset: 1,
+            }),
+          ])
+        ),
+      ]),
+    ]),
+  ],
 })
 export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   @ViewChild('carousel') carousel!: NgbCarousel;
-  @ViewChild('carousel', { read: ElementRef }) carouselElement!: ElementRef;
+  // @ViewChild('carousel', { read: ElementRef }) carouselElement!: ElementRef;
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
@@ -71,7 +120,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   isLikeInProgress = false;
   clickTimeout: any;
   sanitizedUrl!: SafeResourceUrl;
-  isOpen = false;
+  // isOpen = false;
   mapViewOnePlacex = false;
   StreetViewOnePlace!: boolean;
   selectedState = '0';
@@ -106,6 +155,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private unitSizeCache = new Map<string, string>();
   private commentSortCache = new WeakMap<any[], any[]>();
   @ViewChild('panelContent') panelContent!: ElementRef;
+  heartVisible = false;
+  heartX = 0;
+  heartY = 0;
+  private heartTimeout: any;
+  private lastClickTime = 0;
+  private readonly DOUBLE_CLICK_THRESHOLD = 300; // ms
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -209,10 +264,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     window.removeEventListener('resize', this.checkMobileView.bind(this));
 
-    // Make sure to clean up any panel listeners
     this.removeGlobalTouchListeners();
 
-    // Ensure body class is removed
     document.body.classList.remove('panel-open');
   }
 
@@ -398,27 +451,17 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.addLike(shopping, 1);
     } else {
       this.clickTimeout = setTimeout(() => {
-        const nextShopping = this.getNextShopping(index);
-        this.open(likeTpl, shopping, nextShopping);
+        this.open(likeTpl, shopping);
         this.clickTimeout = null;
       }, 250);
     }
   }
 
-  open(content: any, currentShopping: any, nextShopping: any) {
+  open(content: any, currentShopping: any) {
     this.modalService.open(content, {
       windowClass: 'custom-modal',
     });
     this.General.modalObject = currentShopping;
-    this.General.nextModalObject = nextShopping;
-  }
-
-  getNextShopping(currentIndex: number): any {
-    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
-      const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
-      return this.shoppingCenters[nextIndex];
-    }
-    return null;
   }
 
   addLike(shopping: Center, reactionId: number): void {
@@ -476,12 +519,485 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
 
-  trackByShoppingId(index: number, item: any): number {
+  trackByShoppingId(item: any): number {
     return item.Id;
   }
 
   trackByCommentId(index: number, item: any): number {
     return item.Id || index;
+  }
+
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.touches[0].clientX;
+  }
+
+  onTouchMove(event: TouchEvent) {
+    this.touchEndX = event.touches[0].clientX;
+  }
+
+  onTouchEnd() {
+    if (!this.carousel) return;
+
+    const swipeDistance = this.touchEndX - this.touchStartX;
+    if (Math.abs(swipeDistance) > this.SWIPE_THRESHOLD) {
+      if (swipeDistance > 0) {
+        this.carousel.prev();
+      } else {
+        this.carousel.next();
+      }
+    }
+    this.touchStartX = 0;
+    this.touchEndX = 0;
+  }
+
+  private setupGlobalClickListener(): void {
+    this.ngZone.runOutsideAngular(() => {
+      this.globalClickListenerr = this.renderer.listen(
+        'document',
+        'click',
+        (event: Event) => {
+          if (this.isOptionSelected) {
+            this.isOptionSelected = false;
+            return;
+          }
+
+          const target = event.target as HTMLElement;
+          const expandedDetails = document.querySelector(
+            '.shopping-center-details.expanded'
+          );
+          const seeMoreBtn = document.querySelector('.see-more-btn');
+
+          if (
+            expandedDetails &&
+            !expandedDetails.contains(target) &&
+            seeMoreBtn &&
+            !seeMoreBtn.contains(target)
+          ) {
+            this.ngZone.run(() => {
+              this.showDetails.fill(false);
+              this.cdr.markForCheck();
+            });
+          }
+        }
+      );
+    });
+
+    this.setupScrollListener();
+  }
+
+  private setupScrollListener(): void {
+    this.ngZone.runOutsideAngular(() => {
+      const scrollHandler = () => {
+        if (!this.isOptionSelected) {
+          this.ngZone.run(() => {
+            this.showDetails.fill(false);
+            this.cdr.markForCheck();
+          });
+        }
+      };
+
+      this.scrollContainer.nativeElement.addEventListener(
+        'scroll',
+        scrollHandler,
+        { passive: true }
+      );
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkMobileView();
+  }
+
+  checkMobileView(): void {
+    this.isMobileView = window.innerWidth <= 768;
+    this.cdr.detectChanges();
+  }
+
+  openCustomPanel(shopping: any): void {
+    this.currentShopping = shopping;
+    this.isPanelOpen = true;
+    this.cdr.markForCheck();
+
+    document.body.classList.add('panel-open');
+
+    this.renderer.listen('document', 'click', (event: Event) => {
+      const panelElement = this.panelContent?.nativeElement;
+      if (
+        panelElement &&
+        !panelElement.contains(event.target) &&
+        this.isPanelOpen
+      ) {
+        this.closeCustomPanel();
+      }
+    });
+  }
+
+  closeCustomPanel(): void {
+    document.body.classList.remove('panel-open');
+
+    if (this.panelContent) {
+      this.renderer.setStyle(
+        this.panelContent.nativeElement,
+        'transform',
+        'translateY(100%)'
+      );
+      this.renderer.setStyle(
+        this.panelContent.nativeElement,
+        'transition',
+        'transform 0.3s ease-out'
+      );
+
+      this.isPanelOpen = false;
+      this.currentShopping = null;
+      this.cdr.markForCheck();
+    } else {
+      this.isPanelOpen = false;
+      this.currentShopping = null;
+      this.cdr.markForCheck();
+    }
+
+    this.removeGlobalTouchListeners();
+  }
+
+  handlePanelTouchStart(event: TouchEvent): void {
+    this.panelStartY = event.touches[0].clientY;
+    this.panelCurrentY = this.panelStartY;
+
+    this.documentTouchMoveListener = this.renderer.listen(
+      'document',
+      'touchmove',
+      (e: TouchEvent) => {
+        this.handlePanelTouchMove(e);
+      }
+    );
+
+    this.documentTouchEndListener = this.renderer.listen(
+      'document',
+      'touchend',
+      (e: TouchEvent) => {
+        this.handlePanelTouchEnd(e);
+      }
+    );
+  }
+
+  handlePanelTouchMove(event: TouchEvent): void {
+    this.panelCurrentY = event.touches[0].clientY;
+    const deltaY = this.panelCurrentY - this.panelStartY;
+
+    if (deltaY > 0) {
+      event.preventDefault();
+      if (this.panelContent) {
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transform',
+          `translateY(${deltaY}px)`
+        );
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transition',
+          'none'
+        );
+      }
+    }
+  }
+
+  handlePanelTouchEnd(event: TouchEvent): void {
+    const deltaY = this.panelCurrentY - this.panelStartY;
+
+    if (this.panelContent) {
+      this.renderer.setStyle(
+        this.panelContent.nativeElement,
+        'transition',
+        'transform 0.3s ease-out'
+      );
+
+      if (deltaY > this.PANEL_SWIPE_THRESHOLD) {
+        // Swipe down - close the panel
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transform',
+          'translateY(100%)'
+        );
+        this.closeCustomPanel();
+      } else {
+        // Reset position
+        this.renderer.setStyle(
+          this.panelContent.nativeElement,
+          'transform',
+          'translateY(0)'
+        );
+      }
+    }
+
+    this.removeGlobalTouchListeners();
+  }
+
+  removeGlobalTouchListeners(): void {
+    if (this.documentTouchMoveListener) {
+      this.documentTouchMoveListener();
+      this.documentTouchMoveListener = null;
+    }
+
+    if (this.documentTouchEndListener) {
+      this.documentTouchEndListener();
+      this.documentTouchEndListener = null;
+    }
+  }
+
+  outsideClickHandler = (event: Event): void => {
+    const targetElement = event.target as HTMLElement;
+    const isInside = targetElement.closest(
+      '.shortcuts_iconCard, .ellipsis_icont'
+    );
+
+    if (!isInside) {
+      this.selectedIdCard = null;
+      document.removeEventListener('click', this.outsideClickHandler);
+    }
+  };
+
+  // Fix for the handleContentDoubleClick method
+  handleContentDoubleClick(event: MouseEvent, shopping: Center): void {
+    console.log('Double click detected'); // Add this for debugging
+    const clickTime = new Date().getTime();
+    const timeDiff = clickTime - this.lastClickTime;
+
+    if (timeDiff < this.DOUBLE_CLICK_THRESHOLD) {
+      // This is a double click
+      event.preventDefault();
+      event.stopPropagation();
+
+      // Set heart position - adjust to be relative to viewport
+      this.heartX = event.clientX;
+      this.heartY = event.clientY;
+
+      console.log('Heart position:', this.heartX, this.heartY); // Add this for debugging
+
+      // Show heart animation
+      this.showHeartAnimation();
+
+      // Add like
+      this.addLike(shopping, 1);
+
+      // Reset click time
+      this.lastClickTime = 0;
+    } else {
+      // This is a first click
+      this.lastClickTime = clickTime;
+    }
+  }
+  showHeartAnimation(): void {
+    // Use NgZone to ensure animations run smoothly
+    this.ngZone.run(() => {
+      // Clear any existing timeout to prevent conflicts
+      if (this.heartTimeout) {
+        clearTimeout(this.heartTimeout);
+        this.heartTimeout = null;
+      }
+
+      // Hide any existing heart first (if visible) to ensure clean animation
+      this.heartVisible = false;
+
+      // Force immediate update before showing new heart
+      this.cdr.detectChanges();
+
+      // Small delay before showing new heart to ensure DOM is ready
+      setTimeout(() => {
+        // Show the heart
+        this.heartVisible = true;
+        this.cdr.detectChanges();
+
+        this.heartTimeout = setTimeout(() => {
+          this.heartVisible = false;
+          this.cdr.detectChanges();
+        }, 3000);
+      }, 10);
+    });
+  }
+
+  copyLink(link: string) {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {})
+      .catch((err) => {});
+  }
+
+  openLink(content: any, modalObject?: any) {
+    this.shareLink = '';
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    if (modalObject) {
+      if (modalObject.CenterAddress) {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
+      } else {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
+      }
+    } else {
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
+    }
+    this.cdr.markForCheck();
+  }
+
+  addContact(form: NgForm): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'AddContactToOrganization',
+      Params: {
+        FirstName: this.newContact.firstName,
+        LastName: this.newContact.lastName,
+        OrganizationId: this.OrgId,
+        email: this.newContact.email,
+        password: this.newContact.password,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.spinner.hide();
+        this.newContact = {
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+        };
+        form.resetForm();
+        this.modalService.dismissAll();
+        this.openContactsModal(this.contactsModalTemplate);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  openAddContactModal(content: any): void {
+    this.newContact = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-add-contact',
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+    });
+  }
+
+  async deleteShCenter() {
+    this.shoppingCenters = this.shoppingCenters.map((x) =>
+      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
+    );
+
+    try {
+      this.spinner.show();
+      await this.viewManagerService.deleteShoppingCenter(
+        this.BuyBoxId,
+        this.shoppingCenterIdToDelete!
+      );
+      this.modalService.dismissAll();
+    } catch (error) {
+    } finally {
+      this.spinner.hide();
+      this.cdr.markForCheck();
+    }
+  }
+
+  getMobileShortcutOptions(shopping: any): any[] {
+    if (!shopping) return [];
+
+    return [
+      {
+        icon: 'fa-regular fa-envelope big-text',
+        label: 'Emily',
+        action: (s: any) => {
+          window.open(
+            `/emily/${this.BuyBoxId}/${s.ShoppingCenter.ManagerOrganization[0].ID}/${s.Id}`,
+            '_blank'
+          );
+        },
+      },
+      {
+        icon: 'fa-solid fa-images big-text',
+        label: 'View Gallery',
+        action: (s: any) => {
+          this.openGallery(s.Id);
+        },
+      },
+      {
+        icon: 'fa-solid fa-file-lines',
+        label: 'View Details',
+        action: (s: any) => {
+          this.router.navigate([
+            '/landing',
+            s.ShoppingCenter.Places ? s.ShoppingCenter.Places[0].Id : 0,
+            s.Id,
+            this.BuyBoxId,
+          ]);
+        },
+      },
+      {
+        icon: 'fa-solid fa-map-location-dot big-text',
+        label: 'View Location',
+        action: (s: any) => {
+          this.openMapViewPlace(this.MapViewPlace, s);
+        },
+      },
+      {
+        icon: 'fa-solid fa-street-view',
+        label: 'Street View',
+        action: (s: any) => {
+          this.openStreetViewPlace(this.StreetViewPlace, s);
+        },
+      },
+      {
+        icon: shopping.Deleted
+          ? 'fa-solid fa-trash-arrow-up big-text'
+          : 'fa-regular fa-trash-can big-text',
+        label: shopping.Deleted ? 'Restore' : 'Remove Shopping',
+        action: (shopping: any) => {
+          if (shopping.Deleted) {
+            this.RestoreShoppingCenter(
+              shopping.MarketSurveyId,
+              shopping.Deleted
+            );
+          } else {
+            this.openDeleteShoppingCenterModal(
+              this.deleteShoppingCenterModal,
+              shopping
+            );
+          }
+        },
+      },
+    ];
+  }
+
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    if (close === 'close') {
+      this.selectedIdCard = null;
+      this.selectedId = null;
+      return;
+    }
+
+    const targetElement = event?.target as HTMLElement;
+    const rect = targetElement?.getBoundingClientRect();
+
+    const shortcutsIcon = document.querySelector(
+      '.shortcuts_icon'
+    ) as HTMLElement;
+
+    if (shortcutsIcon && rect) {
+      shortcutsIcon.style.top = `${
+        rect.top + window.scrollY + targetElement.offsetHeight
+      }px`;
+      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
+    }
+
+    this.selectedIdCard = this.selectedIdCard === id ? null : id;
+    this.selectedId = this.selectedId === id ? null : id;
   }
 
   async openMapViewPlace(content: any, modalObject?: any) {
@@ -638,217 +1154,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  selectCenter(centerId: number): void {
-    this.selectedCenterId = centerId;
-    const selectedIndex = this.shoppingCenters.findIndex(
-      (center) => center.Id === centerId
-    );
-
-    if (selectedIndex !== -1) {
-      this.General.modalObject = this.shoppingCenters[selectedIndex];
-      this.currentIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
-      let nextIndex = (this.currentIndex + 1) % this.shoppingCenters.length;
-      while (nextIndex === selectedIndex) {
-        nextIndex = (nextIndex + 1) % this.shoppingCenters.length;
-      }
-      this.General.nextModalObject = this.shoppingCenters[nextIndex];
-      this.cdr.markForCheck();
-    }
-  }
-
-  rate(rating: 'dislike' | 'neutral' | 'like') {
-    this.selectedRating = rating;
-    this.cdr.markForCheck();
-  }
-
-  onTouchStart(event: TouchEvent) {
-    this.touchStartX = event.touches[0].clientX;
-  }
-
-  onTouchMove(event: TouchEvent) {
-    this.touchEndX = event.touches[0].clientX;
-  }
-
-  onTouchEnd() {
-    if (!this.carousel) return;
-
-    const swipeDistance = this.touchEndX - this.touchStartX;
-    if (Math.abs(swipeDistance) > this.SWIPE_THRESHOLD) {
-      if (swipeDistance > 0) {
-        this.carousel.prev();
-      } else {
-        this.carousel.next();
-      }
-    }
-    this.touchStartX = 0;
-    this.touchEndX = 0;
-  }
-
-  copyLink(link: string) {
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {})
-      .catch((err) => {});
-  }
-
-  openLink(content: any, modalObject?: any) {
-    this.shareLink = '';
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-    if (modalObject) {
-      if (modalObject.CenterAddress) {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
-      } else {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
-      }
-    } else {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
-    }
-    this.cdr.markForCheck();
-  }
-
-  addContact(form: NgForm): void {
-    this.spinner.show();
-    const body: any = {
-      Name: 'AddContactToOrganization',
-      Params: {
-        FirstName: this.newContact.firstName,
-        LastName: this.newContact.lastName,
-        OrganizationId: this.OrgId,
-        email: this.newContact.email,
-        password: this.newContact.password,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.spinner.hide();
-        this.newContact = {
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-        };
-        form.resetForm();
-        this.modalService.dismissAll();
-        this.openContactsModal(this.contactsModalTemplate);
-        this.cdr.markForCheck();
-      },
-    });
-  }
-
-  openAddContactModal(content: any): void {
-    this.newContact = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-    };
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-add-contact',
-      size: 'lg',
-      centered: true,
-      scrollable: true,
-    });
-  }
-
-  async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) =>
-      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-    );
-
-    try {
-      this.spinner.show();
-      await this.viewManagerService.deleteShoppingCenter(
-        this.BuyBoxId,
-        this.shoppingCenterIdToDelete!
-      );
-      this.modalService.dismissAll();
-    } catch (error) {
-    } finally {
-      this.spinner.hide();
-      this.cdr.markForCheck();
-    }
-  }
-
-  private setupGlobalClickListener(): void {
-    this.ngZone.runOutsideAngular(() => {
-      this.globalClickListenerr = this.renderer.listen(
-        'document',
-        'click',
-        (event: Event) => {
-          if (this.isOptionSelected) {
-            this.isOptionSelected = false;
-            return;
-          }
-
-          const target = event.target as HTMLElement;
-          const expandedDetails = document.querySelector(
-            '.shopping-center-details.expanded'
-          );
-          const seeMoreBtn = document.querySelector('.see-more-btn');
-
-          if (
-            expandedDetails &&
-            !expandedDetails.contains(target) &&
-            seeMoreBtn &&
-            !seeMoreBtn.contains(target)
-          ) {
-            this.ngZone.run(() => {
-              this.hideAllDetails();
-              this.cdr.markForCheck();
-            });
-          }
-        }
-      );
-    });
-
-    this.setupScrollListener();
-  }
-
-  private setupScrollListener(): void {
-    this.ngZone.runOutsideAngular(() => {
-      const scrollHandler = () => {
-        if (!this.isOptionSelected) {
-          this.ngZone.run(() => {
-            this.hideAllDetails();
-            this.cdr.markForCheck();
-          });
-        }
-      };
-
-      this.scrollContainer.nativeElement.addEventListener(
-        'scroll',
-        scrollHandler,
-        { passive: true }
-      );
-    });
-  }
-
-  hideAllDetails(): void {
-    this.showDetails.fill(false);
-  }
-
-  toggleDetailsMobile(index: number, shopping: any): void {
-    if (shopping.ShoppingCenter?.BuyBoxPlaces) {
-      this.showDetails[index] = !this.showDetails[index];
-      this.cdr.markForCheck();
-    }
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    this.checkMobileView();
-  }
-
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.spinner.show();
     this.viewManagerService
       .restoreShoppingCenter(MarketSurveyId, Deleted)
-      .then((response: any) => {
+      .then(() => {
         const marketSurveyIdNum = Number(MarketSurveyId);
 
         this.shoppingCenters = this.shoppingCenters.map((center) => {
@@ -860,313 +1170,5 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
         this.spinner.hide();
       });
-  }
-
-  async refreshShoppingCenters() {
-    try {
-      this.spinner.show();
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
-        this.BuyBoxId
-      );
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
-        this.BuyBoxId
-      );
-
-      this.showbackIds = [];
-    } catch (error) {
-    } finally {
-      this.spinner.hide();
-    }
-  }
-
-  checkMobileView(): void {
-    this.isMobileView = window.innerWidth <= 768;
-    this.cdr.detectChanges();
-  }
-
-  openCustomPanel(shopping: any): void {
-    this.currentShopping = shopping;
-    this.isPanelOpen = true;
-    this.cdr.markForCheck();
-
-    document.body.classList.add('panel-open');
-
-    this.renderer.listen('document', 'click', (event: Event) => {
-      const panelElement = this.panelContent?.nativeElement;
-      if (
-        panelElement &&
-        !panelElement.contains(event.target) &&
-        this.isPanelOpen
-      ) {
-        this.closeCustomPanel();
-      }
-    });
-  }
-
-  closeCustomPanel(): void {
-    document.body.classList.remove('panel-open');
-
-    if (this.panelContent) {
-      this.renderer.setStyle(
-        this.panelContent.nativeElement,
-        'transform',
-        'translateY(100%)'
-      );
-      this.renderer.setStyle(
-        this.panelContent.nativeElement,
-        'transition',
-        'transform 0.3s ease-out'
-      );
-
-      this.isPanelOpen = false;
-      this.currentShopping = null;
-      this.cdr.markForCheck();
-    } else {
-      this.isPanelOpen = false;
-      this.currentShopping = null;
-      this.cdr.markForCheck();
-    }
-
-    this.removeGlobalTouchListeners();
-  }
-
-  handlePanelTouchStart(event: TouchEvent): void {
-    this.panelStartY = event.touches[0].clientY;
-    this.panelCurrentY = this.panelStartY;
-
-    this.documentTouchMoveListener = this.renderer.listen(
-      'document',
-      'touchmove',
-      (e: TouchEvent) => {
-        this.handlePanelTouchMove(e);
-      }
-    );
-
-    this.documentTouchEndListener = this.renderer.listen(
-      'document',
-      'touchend',
-      (e: TouchEvent) => {
-        this.handlePanelTouchEnd(e);
-      }
-    );
-  }
-
-  handlePanelTouchMove(event: TouchEvent): void {
-    this.panelCurrentY = event.touches[0].clientY;
-    const deltaY = this.panelCurrentY - this.panelStartY;
-
-    if (deltaY > 0) {
-      event.preventDefault();
-      if (this.panelContent) {
-        this.renderer.setStyle(
-          this.panelContent.nativeElement,
-          'transform',
-          `translateY(${deltaY}px)`
-        );
-        this.renderer.setStyle(
-          this.panelContent.nativeElement,
-          'transition',
-          'none'
-        );
-      }
-    }
-  }
-
-  handlePanelTouchEnd(event: TouchEvent): void {
-    const deltaY = this.panelCurrentY - this.panelStartY;
-
-    if (this.panelContent) {
-      this.renderer.setStyle(
-        this.panelContent.nativeElement,
-        'transition',
-        'transform 0.3s ease-out'
-      );
-
-      if (deltaY > this.PANEL_SWIPE_THRESHOLD) {
-        // Swipe down - close the panel
-        this.renderer.setStyle(
-          this.panelContent.nativeElement,
-          'transform',
-          'translateY(100%)'
-        );
-        this.closeCustomPanel();
-      } else {
-        // Reset position
-        this.renderer.setStyle(
-          this.panelContent.nativeElement,
-          'transform',
-          'translateY(0)'
-        );
-      }
-    }
-
-    this.removeGlobalTouchListeners();
-  }
-
-  removeGlobalTouchListeners(): void {
-    if (this.documentTouchMoveListener) {
-      this.documentTouchMoveListener();
-      this.documentTouchMoveListener = null;
-    }
-
-    if (this.documentTouchEndListener) {
-      this.documentTouchEndListener();
-      this.documentTouchEndListener = null;
-    }
-  }
-
-  openShoppingDetailsModal(modal: any, shopping: any) {
-    if (this.isMobileView) {
-      this.openCustomPanel(shopping);
-    } else {
-      this.currentShopping = shopping;
-      this.modalService
-        .open(modal, {
-          windowClass: 'tiktok-modal',
-          size: 'xl',
-          animation: true,
-          centered: true,
-          scrollable: true,
-          backdrop: true,
-          keyboard: true,
-          backdropClass: 'tiktok-backdrop',
-        })
-        .result.then(
-          (result) => {
-            this.currentShopping = null;
-          },
-          (reason) => {
-            this.currentShopping = null;
-          }
-        );
-    }
-  }
-
-  handleOptionClick(event: Event, option: any, shopping: any): void {
-    // Stop event propagation to prevent panel from closing
-    event.stopPropagation();
-
-    // Execute the option's action
-    option.action(shopping);
-  }
-
-  getMobileShortcutOptions(shopping: any): any[] {
-    if (!shopping) return [];
-
-    return [
-      {
-        icon: 'fa-regular fa-envelope big-text',
-        label: 'Emily',
-        action: (s: any) => {
-          window.open(
-            `/emily/${this.BuyBoxId}/${s.ShoppingCenter.ManagerOrganization[0].ID}/${s.Id}`,
-            '_blank'
-          );
-        },
-      },
-      {
-        icon: 'fa-solid fa-images big-text',
-        label: 'View Gallery',
-        action: (s: any) => {
-          this.openGallery(s.Id);
-        },
-      },
-      {
-        icon: 'fa-solid fa-file-lines',
-        label: 'View Details',
-        action: (s: any) => {
-          this.router.navigate([
-            '/landing',
-            s.ShoppingCenter.Places ? s.ShoppingCenter.Places[0].Id : 0,
-            s.Id,
-            this.BuyBoxId,
-          ]);
-        },
-      },
-      {
-        icon: 'fa-solid fa-map-location-dot big-text',
-        label: 'View Location',
-        action: (s: any) => {
-          this.openMapViewPlace(this.MapViewPlace, s);
-        },
-      },
-      {
-        icon: 'fa-solid fa-street-view',
-        label: 'Street View',
-        action: (s: any) => {
-          this.openStreetViewPlace(this.StreetViewPlace, s);
-        },
-      },
-      {
-        icon: shopping.Deleted
-          ? 'fa-solid fa-trash-arrow-up big-text'
-          : 'fa-regular fa-trash-can big-text',
-        label: shopping.Deleted ? 'Restore' : 'Remove Shopping',
-        action: (shopping: any) => {
-          if (shopping.Deleted) {
-            this.RestoreShoppingCenter(
-              shopping.MarketSurveyId,
-              shopping.Deleted
-            );
-          } else {
-            this.openDeleteShoppingCenterModal(
-              this.deleteShoppingCenterModal,
-              shopping
-            );
-          }
-        },
-      },
-    ];
-  }
-
-  outsideClickHandler = (event: Event): void => {
-    const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest(
-      '.shortcuts_iconCard, .ellipsis_icont'
-    );
-
-    if (!isInside) {
-      this.selectedIdCard = null;
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-  };
-
-  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
-    event?.stopPropagation();
-
-    if (this.selectedIdCard === id) {
-      this.selectedIdCard = null;
-      document.removeEventListener('click', this.outsideClickHandler);
-    } else {
-      this.selectedIdCard = id;
-      setTimeout(() => {
-        document.addEventListener('click', this.outsideClickHandler);
-      });
-    }
-  }
-
-  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-      this.selectedId = null;
-      return;
-    }
-
-    const targetElement = event?.target as HTMLElement;
-    const rect = targetElement?.getBoundingClientRect();
-
-    const shortcutsIcon = document.querySelector(
-      '.shortcuts_icon'
-    ) as HTMLElement;
-
-    if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${
-        rect.top + window.scrollY + targetElement.offsetHeight
-      }px`;
-      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
-    }
-
-    this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    this.selectedId = this.selectedId === id ? null : id;
   }
 }
