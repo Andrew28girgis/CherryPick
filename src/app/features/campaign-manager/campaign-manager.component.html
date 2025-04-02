@@ -1,8 +1,5 @@
 <div *ngIf="filteredCampaigns" class="campaign-manager-container">
-  <div
-    *ngIf="filteredCampaigns.length > 0"
-    class="w-100 d-flex align-items-center justify-content-between"
-  >
+  <div class="w-100 d-flex align-items-center justify-content-between">
     <div class="search-campaign-container">
       <input
         type="text"
@@ -30,45 +27,56 @@
         />
       </svg>
     </div>
-    <button class="add-new-campaign" (click)="openAddCampaignPopup(content)">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-      >
-        <path
-          d="M10.0001 18.3333C14.5834 18.3333 18.3334 14.5833 18.3334 9.99996C18.3334 5.41663 14.5834 1.66663 10.0001 1.66663C5.41675 1.66663 1.66675 5.41663 1.66675 9.99996C1.66675 14.5833 5.41675 18.3333 10.0001 18.3333Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M6.66675 10H13.3334"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M10 13.3333V6.66663"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-      <span>Add New Campaign</span>
-    </button>
+    <div class="d-flex align-items-center gap-3">
+ 
+      <button class="add-new-campaign" (click)="openAddCampaignPopup(content)">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+        >
+          <path
+            d="M10.0001 18.3333C14.5834 18.3333 18.3334 14.5833 18.3334 9.99996C18.3334 5.41663 14.5834 1.66663 10.0001 1.66663C5.41675 1.66663 1.66675 5.41663 1.66675 9.99996C1.66675 14.5833 5.41675 18.3333 10.0001 18.3333Z"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M6.66675 10H13.3334"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M10 13.3333V6.66663"
+            stroke="white"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>Add New Campaign</span>
+      </button>
+    </div>
   </div>
 
   <div
     *ngIf="filteredCampaigns.length > 0 && stages.length > 0"
     class="campaign-manager-body"
   >
-    <div class="table-responsive">
+    <!-- Card View Component -->
+    <app-campaign-manager-card-view 
+      *ngIf="viewMode === 'card' && !isMobile"
+      [filteredCampaigns]="filteredCampaigns"
+      [stages]="stages"
+    ></app-campaign-manager-card-view>
+    
+    <!-- Table View (Original) -->
+    <div class="table-responsive" *ngIf="viewMode === 'table' || isMobile">
       <table class="table align-middle">
         <thead>
           <tr>
@@ -206,27 +214,6 @@
                       </ng-container>
                     </div>
                     <div *ngIf="!campaign.Submissions">N/A</div>
-                    <!-- <svg
-                      style="cursor: pointer"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M12.9999 11.75C12.8099 11.75 12.6199 11.68 12.4699 11.53C12.1799 11.24 12.1799 10.76 12.4699 10.47L20.6699 2.26999C20.9599 1.97999 21.4399 1.97999 21.7299 2.26999C22.0199 2.55999 22.0199 3.03999 21.7299 3.32999L13.5299 11.53C13.3799 11.68 13.1899 11.75 12.9999 11.75Z"
-                        fill="#292D32"
-                      />
-                      <path
-                        d="M22 7.55C21.59 7.55 21.25 7.21 21.25 6.8V2.75H17.2C16.79 2.75 16.45 2.41 16.45 2C16.45 1.59 16.79 1.25 17.2 1.25H22C22.41 1.25 22.75 1.59 22.75 2V6.8C22.75 7.21 22.41 7.55 22 7.55Z"
-                        fill="#292D32"
-                      />
-                      <path
-                        d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H11C11.41 1.25 11.75 1.59 11.75 2C11.75 2.41 11.41 2.75 11 2.75H9C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V13C21.25 12.59 21.59 12.25 22 12.25C22.41 12.25 22.75 12.59 22.75 13V15C22.75 20.43 20.43 22.75 15 22.75Z"
-                        fill="#292D32"
-                      />
-                    </svg> -->
                   </div>
                 </td>
                 <td style="white-space: nowrap; text-align: center">
@@ -234,7 +221,6 @@
                 </td>
 
                 <td style="white-space: nowrap; text-align: center">
-                  <!-- (click)="goToEmily(c, index)" -->
                   <a class="inbox" [routerLink]="['/EmilyUserInbox']">Inbox</a>
                 </td>
 
@@ -264,26 +250,6 @@
                   </td>
                 </ng-container>
               </tr>
-              <!-- <tr>
-                <td colspan="6">
-                  <div class="d-flex align-items-center gap-2">
-                    <ng-container *ngFor="let polygon of campaign.Geojsons">
-                      <div
-                        style="
-                          background-color: #4d65b4;
-                          padding: 0 0.75rem;
-                          border-radius: 0.5rem;
-                          font-size: 0.85rem;
-                          color: white;
-                        "
-                      >
-                        {{ polygon.Name }}:
-                        {{ calculatePolygonCenters(polygon) }} Sites
-                      </div>
-                    </ng-container>
-                  </div>
-                </td>
-              </tr> -->
             </ng-container>
           </ng-container>
         </tbody>
@@ -295,38 +261,6 @@
     <img src="../../../assets/Images/empty-state.png" alt="Empty Campaigns" />
     <h4>Campaigns Will Appear Here!</h4>
     <p>Create, Track, and Manage Expansion Campaigns Here.</p>
-    <button class="add-new-campaign" (click)="openAddCampaignPopup(content)">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-      >
-        <path
-          d="M10.0001 18.3333C14.5834 18.3333 18.3334 14.5833 18.3334 9.99996C18.3334 5.41663 14.5834 1.66663 10.0001 1.66663C5.41675 1.66663 1.66675 5.41663 1.66675 9.99996C1.66675 14.5833 5.41675 18.3333 10.0001 18.3333Z"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M6.66675 10H13.3334"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M10 13.3333V6.66663"
-          stroke="white"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-      <span>Add New Campaign</span>
-    </button>
   </div>
 </div>
 
@@ -357,3 +291,4 @@
 </ng-template>
 
 <ngx-spinner type="ball-scale-multiple"> </ngx-spinner>
+
