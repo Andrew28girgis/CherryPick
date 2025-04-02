@@ -337,7 +337,7 @@
   bottom: -42px;
   position: absolute;
   top: auto !important;
-  right: 5.2vw;
+  right: 2.2vw;
 }
 .big-text {
   font-size: 18px;
@@ -1113,25 +1113,6 @@ body.panel-open {
 }
 ::ng-deep .popover-arrow::before {
   border-top: none !important;
-}
-::ng-deep .tiktok-modal .modal-content {
-  bottom: -1px;
-  position: fixed;
-  border-radius: 12px 12px 0 0;
-  left: -1px;
-  width: 101vw;
-  box-shadow: none;
-}
-::ng-deep .tiktok-modal .modal-dialog,
-::ng-deep .shortcuts-modal .modal-dialog {
-  margin: 0 !important;
-}
-::ng-deep .tiktok-backdrop.show {
-  opacity: 0;
-}
-::ng-deep .tiktok-modal .modal-dialog {
-  transform: translateY(97%) !important;
-  transition: transform 0.3s ease-out !important;
 }
 ::ng-deep .custom-modal .modal-content,
 ::ng-deep .custom-modal {

@@ -146,9 +146,9 @@
         <div class="reaction-buttons">
           <button
             class="action-btn like-btn"
-            [class.liked]="(shopping?.ShoppingCenter?.Reactions?.length || 0) >= 1"
-            
-
+            [class.liked]="
+              (shopping?.ShoppingCenter?.Reactions?.length || 0) >= 1
+            "
             (click)="handleClick(shopping, Like, i)"
             (dblclick)="handleContentDoubleClick($event, shopping)"
             [disabled]="isLikeInProgress"
@@ -570,8 +570,7 @@
               fill="none"
             >
               <path
-                d="M5.94 13.78C5.81333 13.78 5.68667 13.7333 5.58667 13.6333C5.39333 13.44 5.39333 13.12 5.58667 12.9267L9.93333 8.58001C10.2533 8.26001 10.2533 7.74001 9.93333 7.42001L5.58667 3.07335C5.39333 2.88001 5.39333 2.56001 5.58667 2.36668C5.78 2.17335 6.1 2.17335 6.29333 2.36668L10.64 6.71335C10.98 7.05335 11.1733 7.51335 11.1733 8.00001C11.1733 8.48668 
-                10.9867 8.94668 10.64 9.28668L6.29333 13.6333C6.19333 13.7267 6.06667 13.78 5.94 13.78Z"
+                d="M5.94 13.78C5.81333 13.78 5.68667 13.7333 5.58667 13.6333C5.39333 13.44 5.39333 13.12 5.58667 12.9267L9.93333 8.58001C10.2533 8.26001 10.2533 7.74001 9.93333 7.42001L5.58667 3.07335C5.39333 2.88001 5.39333 2.56001 5.58667 2.36668C5.78 2.17335 6.1 2.17335 6.29333 2.36668L10.64 6.71335C10.98 7.05335 11.1733 7.51335 11.1733 8.00001C11.1733 8.48668       10.9867 8.94668 10.64 9.28668L6.29333 13.6333C6.19333 13.7267 6.06667 13.78 5.94 13.78Z"
                 fill="#7A8591"
               />
             </svg>
@@ -680,7 +679,7 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'neutral'"
-              >
+            >
               <div class="rating-circle neutral">
                 <div class="inner-circle"></div>
               </div>
@@ -692,7 +691,7 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'like'"
-              >
+            >
               <div class="rating-circle like">
                 <div class="inner-circle"></div>
               </div>
@@ -737,7 +736,7 @@
           class="location-card"
           style="cursor: pointer"
           [class.selected]="selectedCenterId === General.modalObject.Id"
-          >
+        >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
           <p class="address">
@@ -746,10 +745,7 @@
           </p>
         </div>
         <div class="or-divider">or</div>
-        <div
-          class="location-card next-center"
-          style="cursor: pointer"
-          >
+        <div class="location-card next-center" style="cursor: pointer">
           <h4 class="modal-title">{{ General.nextModalObject.CenterName }}</h4>
           <p class="address">{{ General.nextModalObject.CenterAddress }}</p>
           <p class="address">
@@ -819,7 +815,7 @@
 <ng-template #ShareLink let-modal>
   <div class="d-flex p-3 m-3 align-items-center shareelink">
     <p>{{ shareLink }}</p>
-    <i class="fa-solid fa-copy ms-3 cursor" (click)="copyLink(shareLink)"></i>
+    <i class="fa-solid fa-copay ms-3 cursor" (click)="copyLink(shareLink)"></i>
   </div>
 </ng-template>
 
