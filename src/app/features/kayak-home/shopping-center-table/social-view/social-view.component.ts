@@ -235,7 +235,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   async initializeData() {
     try {
       this.spinner.show();
-
       // Load data in parallel for better performance
       const [shoppingCenters, buyboxCategories, shareOrg, buyboxPlaces] =
         await Promise.all([
