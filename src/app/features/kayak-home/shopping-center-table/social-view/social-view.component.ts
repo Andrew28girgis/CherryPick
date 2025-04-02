@@ -550,96 +550,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.touchEndX = 0;
   }
 
-  copyLink(link: string) {
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {})
-      .catch((err) => {});
-  }
-
-  openLink(content: any, modalObject?: any) {
-    this.shareLink = '';
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'lg',
-      scrollable: true,
-    });
-    if (modalObject) {
-      if (modalObject.CenterAddress) {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
-      } else {
-        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
-      }
-    } else {
-      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
-    }
-    this.cdr.markForCheck();
-  }
-
-  addContact(form: NgForm): void {
-    this.spinner.show();
-    const body: any = {
-      Name: 'AddContactToOrganization',
-      Params: {
-        FirstName: this.newContact.firstName,
-        LastName: this.newContact.lastName,
-        OrganizationId: this.OrgId,
-        email: this.newContact.email,
-        password: this.newContact.password,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-        this.spinner.hide();
-        this.newContact = {
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-        };
-        form.resetForm();
-        this.modalService.dismissAll();
-        this.openContactsModal(this.contactsModalTemplate);
-        this.cdr.markForCheck();
-      },
-    });
-  }
-
-  openAddContactModal(content: any): void {
-    this.newContact = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-    };
-    this.modalService.open(content, {
-      ariaLabelledBy: 'modal-add-contact',
-      size: 'lg',
-      centered: true,
-      scrollable: true,
-    });
-  }
-
-  async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) =>
-      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-    );
-
-    try {
-      this.spinner.show();
-      await this.viewManagerService.deleteShoppingCenter(
-        this.BuyBoxId,
-        this.shoppingCenterIdToDelete!
-      );
-      this.modalService.dismissAll();
-    } catch (error) {
-    } finally {
-      this.spinner.hide();
-      this.cdr.markForCheck();
-    }
-  }
-
   private setupGlobalClickListener(): void {
     this.ngZone.runOutsideAngular(() => {
       this.globalClickListenerr = this.renderer.listen(
@@ -906,6 +816,96 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  copyLink(link: string) {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {})
+      .catch((err) => {});
+  }
+
+  openLink(content: any, modalObject?: any) {
+    this.shareLink = '';
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    if (modalObject) {
+      if (modalObject.CenterAddress) {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.ShoppingCenter.Places[0].Id}/${modalObject.Id}/${this.BuyBoxId}`;
+      } else {
+        this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/landing/${modalObject.Id}/0/${this.BuyBoxId}`;
+      }
+    } else {
+      this.shareLink = `https://cp.cherrypick.com/?t=${this.ShareOrg[0].token}&r=/home/${this.BuyBoxId}/${this.OrgId}`;
+    }
+    this.cdr.markForCheck();
+  }
+
+  addContact(form: NgForm): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'AddContactToOrganization',
+      Params: {
+        FirstName: this.newContact.firstName,
+        LastName: this.newContact.lastName,
+        OrganizationId: this.OrgId,
+        email: this.newContact.email,
+        password: this.newContact.password,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        this.spinner.hide();
+        this.newContact = {
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+        };
+        form.resetForm();
+        this.modalService.dismissAll();
+        this.openContactsModal(this.contactsModalTemplate);
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  openAddContactModal(content: any): void {
+    this.newContact = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+    };
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-add-contact',
+      size: 'lg',
+      centered: true,
+      scrollable: true,
+    });
+  }
+
+  async deleteShCenter() {
+    this.shoppingCenters = this.shoppingCenters.map((x) =>
+      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
+    );
+
+    try {
+      this.spinner.show();
+      await this.viewManagerService.deleteShoppingCenter(
+        this.BuyBoxId,
+        this.shoppingCenterIdToDelete!
+      );
+      this.modalService.dismissAll();
+    } catch (error) {
+    } finally {
+      this.spinner.hide();
+      this.cdr.markForCheck();
+    }
+  }
+
   getMobileShortcutOptions(shopping: any): any[] {
     if (!shopping) return [];
 
@@ -1158,7 +1158,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.spinner.show();
     this.viewManagerService
       .restoreShoppingCenter(MarketSurveyId, Deleted)
-      .then((response: any) => {
+      .then(() => {
         const marketSurveyIdNum = Number(MarketSurveyId);
 
         this.shoppingCenters = this.shoppingCenters.map((center) => {

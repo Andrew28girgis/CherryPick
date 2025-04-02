@@ -477,13 +477,6 @@
     margin-bottom: 20px;
   }
 
-  .or-divider {
-    color: #fff;
-    font-size: 0.875rem;
-    margin: 0.5rem 0;
-    display: flex;
-    justify-content: center;
-  }
 
   .input-container {
     margin-bottom: 20px;
@@ -719,16 +712,6 @@
     color: white;
   }
 
-  .tiktok-panel-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-    opacity: 0;
-    animation: fadeIn 0.3s forwards;
-  }
 
   .tiktok-panel {
     position: fixed;
@@ -753,67 +736,6 @@
     overflow: hidden;
   }
 
-  .tiktok-panel-handle {
-    width: 40px;
-    height: 5px;
-    background-color: #e0e0e0;
-    border-radius: 3px;
-    margin: 10px auto;
-  }
-
-  .tiktok-panel-header {
-    padding: 0 16px 10px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .tiktok-panel-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-  }
-
-  .tiktok-panel-footer {
-    padding: 10px 16px;
-    border-top: 1px solid #f0f0f0;
-    text-align: center;
-  }
-
-  .show-less-btn {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    padding: 12px;
-    background: none;
-    border: none;
-    color: #001f3f;
-    font-size: 14px;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  .mobile-expanded-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 0;
-    color: #333;
-    padding-left: 12px;
-    padding-bottom: 0;
-  }
-
-  .mobile-expanded-item i {
-    width: 24px;
-    height: 24px;
-    margin-right: 12px;
-    color: #707791;
-  }
-
-  .mobile-expanded-shortcuts {
-    margin-top: 16px;
-    border-radius: 20px;
-    border: 1px solid #caced3;
-    padding: 16px;
-  }
-
   .tiktok-panel-overlay {
     position: fixed;
     top: 0;
@@ -825,27 +747,8 @@
     animation: fadeIn 0.3s forwards;
   }
 
-  .tiktok-panel {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1001;
-    height: 70vh;
-    pointer-events: none;
-  }
 
-  .tiktok-panel-content {
-    background-color: white;
-    border-radius: 20px 20px 0 0;
-    height: 100%;
-    transform: translateY(100%);
-    animation: slideUp 0.3s forwards;
-    pointer-events: auto;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+
 
   .tiktok-panel-handle {
     width: 40px;
