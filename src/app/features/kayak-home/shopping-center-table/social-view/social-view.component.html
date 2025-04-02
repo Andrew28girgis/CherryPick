@@ -20,7 +20,7 @@
 <!-- Heart animation overlay -->
 <div class="heart-animation-container" *ngIf="heartVisible">
   <div
-  [@heartAnimation]
+    [@heartAnimation]
     class="heart"
     [style.top.px]="heartY - 50"
     [style.left.px]="heartX - 50"
@@ -34,6 +34,7 @@
       let i = index;
       trackBy: trackByShoppingId
     "
+    (dblclick)="handleContentDoubleClick($event, shopping)"
   >
     <div
       class="social-card mb-0 mb-sm-5 Res"
@@ -129,8 +130,7 @@
           [style.width]="isMobileView ? '100vw' : ''"
         >
           <img
-          (dblclick)="handleContentDoubleClick($event, shopping)"
-
+            (dblclick)="handleContentDoubleClick($event, shopping)"
             class="Res"
             [src]="
               shopping.MainImage && shopping.MainImage !== ''
@@ -149,7 +149,6 @@
             [class.liked]="isLiked(shopping)"
             (click)="handleClick(shopping, Like, i)"
             (dblclick)="handleContentDoubleClick($event, shopping)"
-
             [disabled]="isLikeInProgress"
           >
             <svg
