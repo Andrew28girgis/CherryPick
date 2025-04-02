@@ -1,1 +1,141 @@
-<p>tasks works!</p>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Reactions</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let notification of getNotificationsByCategory(1)">
+                                    <td>{{notification.message}}</td>
+                                    <td style="white-space: nowrap;">{{notification.createdDate | date:'medium'}}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="getNotificationsByCategory(1).length === 0">
+                                    <td colspan="3" class="text-center">No notifications in this category</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Email Generated</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let notification of getNotificationsByCategory(2)">
+                                    <td>{{notification.message}}</td>
+                                    <td style="white-space: nowrap;">{{notification.createdDate | date:'medium'}}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="getNotificationsByCategory(2).length === 0">
+                                    <td colspan="3" class="text-center">No notifications in this category</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Sync</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let notification of getNotificationsByCategory(3)">
+                                    <td>{{notification.message}}</td>
+                                    <td style="white-space: nowrap;">{{notification.createdDate | date:'medium'}}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="getNotificationsByCategory(3).length === 0">
+                                    <td colspan="3" class="text-center">No notifications in this category</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Proposal Submissions</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let notification of getNotificationsByCategory(4)">
+                                    <td>{{notification.message}}</td>
+                                    <td style="white-space: nowrap;">{{notification.createdDate | date:'medium'}}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
+                                            {{notification.isRead ? 'Read' : 'Unread'}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="getNotificationsByCategory(4).length === 0">
+                                    <td colspan="3" class="text-center">No notifications in this category</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
