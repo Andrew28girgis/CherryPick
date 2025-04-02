@@ -27,7 +27,7 @@ export class CampaignManagerComponent implements OnInit {
   filteredCampaigns?: ICampaign[];
   stages: { id: number; stageName: string }[] = [];
   searchCampaign = '';
-  viewMode: 'table' | 'card' = 'table'; // Default to table view on desktop
+  viewMode: 'table' | 'card' = 'table';
   isMobile = false;
 
   constructor(
@@ -47,8 +47,16 @@ export class CampaignManagerComponent implements OnInit {
 
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
-    // On mobile, we don't show the toggle and always use the responsive table
-    // that transforms into cards via CSS
+    // On mobile, always use the responsive card view
+    if (this.isMobile) {
+      this.viewMode = 'card';  // Automatically switch to card view for mobile
+    } else {
+      // For larger screens, check localStorage for user preference
+      const savedViewMode = localStorage.getItem('campaignViewMode') as 'table' | 'card';
+      if (savedViewMode) {
+        this.viewMode = savedViewMode;
+      }
+    }
   }
 
   toggleView(mode: 'table' | 'card'): void {
