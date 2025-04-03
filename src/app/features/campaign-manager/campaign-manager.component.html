@@ -196,37 +196,59 @@
               </div>
               <div class="stat-item">
                 <div class="stat-label">Submissions</div>
-                <div class="stat-value">
-                  <div
-                    *ngIf="campaign.Submissions"
-                    style="cursor: pointer"
-                    [routerLink]="['/submissions', campaign.Id]"
+                <div
+                class="d-flex align-items-center justify-content-center gap-3"
+              >
+                <div
+                  *ngIf="campaign.Submissions"
+                  style="cursor: pointer"
+                  [routerLink]="['/submissions', campaign.Id]"
+                >
+                  <span style="color: orange" title="New Submissions">{{
+                    getSubmissionsCountNew(campaign.Submissions)
+                  }}</span>
+                  |
+                  <span
+                    style="color: rgb(0, 207, 35)"
+                    title="Accepted Submissions"
+                    >{{
+                      getSumbmissionsCountAcceppted(campaign.Submissions)
+                    }}</span
                   >
-                    <ng-container
-                      *ngFor="
-                        let submission of sortedSubmissions(
-                          campaign.Submissions
-                        );
-                        let i = index
+                  |
+                  <span
+                    style="color: rgb(207, 0, 0)"
+                    title="Rejected Submissions"
+                    >{{
+                      getSumbmissionsCountRejected(campaign.Submissions)
+                    }}</span
+                  >
+
+                  <ng-container
+                    *ngFor="
+                      let submission of sortedSubmissions(
+                        campaign.Submissions
+                      );
+                      let i = index
+                    "
+                  >
+                    <!-- <span
+                      [pTooltip]="
+                        submission.StatusId == 0
+                          ? 'New'
+                          : submission.StatusId == 1
+                          ? 'Accepted'
+                          : 'Rejected'
                       "
+                      tooltipPosition="top"
+                      [ngClass]="getStatusClass(submission?.StatusId)"
+                      >{{ submission }}</span
                     >
-                      <span
-                        [pTooltip]="
-                          submission.StatusId == 0
-                            ? 'New'
-                            : submission.StatusId == 1
-                            ? 'Accepted'
-                            : 'Rejected'
-                        "
-                        tooltipPosition="top"
-                        [ngClass]="getStatusClass(submission?.StatusId)"
-                        >{{ submission }}</span
-                      >
-                      <span *ngIf="i < 2"> - </span>
-                    </ng-container>
-                  </div>
-                  <div *ngIf="!campaign.Submissions">N/A</div>
+                    <span *ngIf="i < 2"> - </span> -->
+                  </ng-container>
                 </div>
+                <div *ngIf="!campaign.Submissions">N/A</div>
+              </div>
               </div>
               <div class="stat-item">
                 <div class="stat-label">Mails Sent</div>
@@ -298,12 +320,12 @@
       <table class="table align-middle">
         <thead>
           <tr>
-            <th style="width: 250px;">Campaign Name</th>
-            <th style="text-align: center">Date Created</th>
+            <th style="width: 250px;">Name</th>
+            <th style="text-align: center">Date</th>
             <th style="text-align: center">Privacy</th>
             <th style="text-align: center">Sites</th>
             <th style="text-align: center">Submissions</th>
-            <th style="text-align: center">Mails Sent</th>
+            <th style="text-align: center">Sent</th>
             <th style="text-align: center">Actions</th>
             <ng-container *ngFor="let stage of stages">
               <th scope="col" style="text-align: center">
