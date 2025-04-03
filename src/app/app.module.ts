@@ -55,6 +55,7 @@ import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/ema
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { CampaignManagerComponent } from './features/campaign-manager/campaign-manager.component';
+import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,8 @@ import { CampaignManagerComponent } from './features/campaign-manager/campaign-m
     CampaignManagerComponent,
     EmailMulipleNewComponent,
     MailsGenerateOrSendComponent,
-    MutipleEmailComponent
+    MutipleEmailComponent  ,
+    BreadcrumbComponent
   ],
   imports: [
     BrowserModule,

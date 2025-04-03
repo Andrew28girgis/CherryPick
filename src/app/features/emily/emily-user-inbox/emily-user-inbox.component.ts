@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-emily-user-inbox',
@@ -33,10 +34,15 @@ export class EmilyUserInboxComponent implements OnInit {
     private PlacesService: PlacesService,
     private router: Router,
     private modalService: NgbModal,
-    private _location: Location
+    private _location: Location,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit() {
+    this.breadcrumbService.addBreadcrumb({
+      label: 'Inbox',
+      url: '/',
+    });
     this.GetUserInbox();
     this.getUserBuyBoxes();
   }
@@ -183,7 +189,7 @@ export class EmilyUserInboxComponent implements OnInit {
     this.contactIdemail = contactId;
     this.selectedContact = contactId;
     console.log(`this.selectedContact`, this.selectedContact);
-    
+
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 

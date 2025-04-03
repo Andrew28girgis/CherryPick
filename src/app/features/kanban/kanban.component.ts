@@ -2,8 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { IUserKanban } from 'src/app/shared/models/iuser-kanban';
 import {
@@ -20,6 +18,7 @@ import { popupActions } from './kanban-actions/kanban-actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { sharedColors } from '../../shared/others/shared-colors';
 import { PlacesService } from 'src/app/core/services/places.service'; 
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-kanban',
@@ -43,9 +42,14 @@ export class KanbanComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private location: Location,
     private modalService: NgbModal, 
+    private breadcrumbService: BreadcrumbService,
+
   ) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Cadence', url: '/Kanban' }
+   ]);
     this.getUserKanbans();
 
     const fetchingKanbanDetailsInterval = setInterval(() => {

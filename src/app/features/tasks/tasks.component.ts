@@ -4,6 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { CommonModule } from '@angular/common';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { notificationCategory } from 'src/app/shared/models/notificationCategory';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-tasks',
@@ -28,9 +29,13 @@ export class TasksComponent implements OnInit {
   constructor(
     private placesService: PlacesService,
     private spinner: NgxSpinnerService,
+    private breadcrumbService: BreadcrumbService,
   ) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Tasks', url: '/campaigns' }
+   ]);
     const storedContactId = localStorage.getItem('contactId');
     if (storedContactId) {
       this.ContactId = +storedContactId;

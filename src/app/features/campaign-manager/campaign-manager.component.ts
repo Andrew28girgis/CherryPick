@@ -14,6 +14,7 @@ import {
 } from 'src/app/shared/models/icampaign';
 import  { EmilyService } from 'src/app/core/services/emily.service';
 import  { Router } from '@angular/router';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-campaign-manager',
@@ -35,11 +36,28 @@ export class CampaignManagerComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private emilyService: EmilyService,
-    private router: Router
+    private router: Router,
+    private breadcrumbService: BreadcrumbService,
   ) {
     this.checkScreenSize();
   }
 
+  ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+       { label: 'Campaigns', url: '/campaigns' }
+    ]);
+    this.getAllCampaigns();
+    this.getUserBuyBoxes();
+
+    // Check if there's a saved preference for view mode
+    const savedViewMode = localStorage.getItem('campaignViewMode') as
+      | 'table'
+      | 'card';
+    if (savedViewMode && !this.isMobile) {
+      this.viewMode = savedViewMode;
+    }
+  }
+  
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScreenSize();
@@ -71,18 +89,7 @@ export class CampaignManagerComponent implements OnInit {
     campaign.expanded = !campaign.expanded;
   }
 
-  ngOnInit(): void {
-    this.getAllCampaigns();
-    this.getUserBuyBoxes();
-
-    // Check if there's a saved preference for view mode
-    const savedViewMode = localStorage.getItem('campaignViewMode') as
-      | 'table'
-      | 'card';
-    if (savedViewMode && !this.isMobile) {
-      this.viewMode = savedViewMode;
-    }
-  }
+ 
 
   getAllCampaigns(): void {
     this.spinner.show();
