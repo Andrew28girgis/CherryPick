@@ -10,8 +10,8 @@ export interface Campaign {
   CampaignPrivacy: number
   CampaignName: string
   CreatedDate: string
-  Submissions?: Submission[]
-  MailsSent: MailsSent[]
+  MailsSent: number
+  Submissions?: Submission[] 
   Sites: number
   Stages?: Stage[]
   expanded?: boolean

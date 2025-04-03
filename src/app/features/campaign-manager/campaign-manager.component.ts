@@ -246,4 +246,7 @@ export class CampaignManagerComponent implements OnInit {
       green: statusId === 1,
     };
   }
+
+ 
+  
 }

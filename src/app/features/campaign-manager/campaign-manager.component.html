@@ -231,7 +231,7 @@
               <div class="stat-item">
                 <div class="stat-label">Mails Sent</div>
                 <div class="stat-value" *ngIf="campaign.MailsSent">
-                  {{ campaign.MailsSent[0].MailsSent }}
+                  {{ campaign.MailsSent }}
                 </div>
               </div>
             </div>
@@ -269,9 +269,7 @@
                   <div class="stage-item">
                     <div class="stage-name">{{ kanbanStage.stageName }}</div>
                     <div class="stage-value">
-                      {{
-                     kanbanStage.kanbanOrganizations.length
-                      }}
+                      {{ kanbanStage.kanbanOrganizations[0].Id ? kanbanStage.kanbanOrganizations.length : 0 }} 
                     </div>
                     <a
                       class="hyber-link"
@@ -432,8 +430,10 @@
                     <div *ngIf="!campaign.Submissions">N/A</div>
                   </div>
                 </td>
-                <td style="white-space: nowrap; text-align: center" >
-                <ng-container *ngIf="campaign.MailsSent"> {{ campaign.MailsSent[0].MailsSent }}</ng-container> 
+                <td style="white-space: nowrap; text-align: center">
+                  <ng-container *ngIf="campaign.MailsSent">
+                    {{ campaign.MailsSent }}</ng-container
+                  >
                 </td>
 
                 <td style="white-space: nowrap; text-align: center">
@@ -449,16 +449,22 @@
                 </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
                   <td style="white-space: nowrap; text-align: center">
-                    <div class="d-flex flex-column align-items-center justify-content-center gap-2">
-                      <div>{{ kanbanStage.kanbanOrganizations.length }}</div>
-                      <a class="hyber-link"
-                         *ngIf="kanbanStage.stageName.toLowerCase() == 'Precontact'.toLowerCase()"
-                         (click)="goToEmily(c, index, true)">Generate Emails</a>
+                    <div
+                      class="d-flex flex-column align-items-center justify-content-center gap-2"
+                    >
+                      <div>{{ kanbanStage.kanbanOrganizations[0].Id ? kanbanStage.kanbanOrganizations.length : 0 }} </div>
+                      <a
+                        class="hyber-link"
+                        *ngIf="
+                          kanbanStage.stageName.toLowerCase() ==
+                          'Precontact'.toLowerCase()
+                        "
+                        (click)="goToEmily(c, index, true)"
+                        >Generate Emails</a
+                      >
                     </div>
                   </td>
                 </ng-container>
-      
-                
               </tr>
             </ng-container>
           </ng-container>
