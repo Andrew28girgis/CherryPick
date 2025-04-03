@@ -167,6 +167,7 @@
   overflow: hidden;
   border: 1px solid #dee2e6;
   margin: 0;
+  table-layout: fixed; /* Ensures that column widths are respected */
 }
 
 .table thead th {
