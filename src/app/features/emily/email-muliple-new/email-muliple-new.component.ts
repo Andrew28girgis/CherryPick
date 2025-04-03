@@ -804,12 +804,12 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     });
 
     let templateTwoContent = '';
+    templateTwoContent += this.buildLandingChangeSection();
     templateTwoContent += this.buildClientProfileSection();
     templateTwoContent += this.buildMinBuildingSizeSection();
     templateTwoContent += this.buildRelationNamesSection();
     templateTwoContent += this.buildManagerSection();
     templateTwoContent += this.buildDescriptionSection();
-    templateTwoContent += this.buildLandingChangeSection();
 
     const newTemplates = this.emailTemplates.map((template: any) => {
       let individualTemplateOne = '';
@@ -962,7 +962,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     let LandingChange = '';
     if (this.isLandingSelected) {
       const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
-      LandingChange += `\nLanding page: <a href="${landingLink}">${landingLink}</a>`;
+      LandingChange += `\nPlease Include a paragraph so encourage the email recipients  to click on this link to fill in the available spaces or submit a shopping center pdf brochure: \n\n <a href="${landingLink}">${landingLink}</a>\n\n`;
     }
     return LandingChange;
   }
