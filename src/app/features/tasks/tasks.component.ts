@@ -9,13 +9,14 @@ import {
   SubmissionNotificationResponse,
   SyncNotificationResponse,
 } from 'src/app/shared/models/notificationCategory';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import  { EmilyService } from 'src/app/core/services/emily.service';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [CommonModule, NgxSpinnerModule],
+  imports: [CommonModule, NgxSpinnerModule , RouterModule],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
@@ -37,7 +38,9 @@ export class TasksComponent implements OnInit {
     private placesService: PlacesService,
     private spinner: NgxSpinnerService,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private emilyService: EmilyService,
+
   ) {}
 
   ngOnInit(): void {
@@ -277,5 +280,31 @@ export class TasksComponent implements OnInit {
     setTimeout(() => {
       toast!.classList.remove('show');
     }, 3000);
+  }
+  getCampaignOrganizations(buboxId: number, campaignId: number): void {
+    const body: any = {
+      Name: 'GetCampaignOrganizations',
+      Params: { CampaignId: campaignId },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      if (response.json && response.json.length > 0) {
+        const organizationsIds = [
+          ...new Set(response.json.map((o: any) => o.organizationId)),
+        ];
+        const organizations: {
+          id: number;
+          contacts: any[];
+        }[] = organizationsIds.map((id) => {
+          return { id: id as number, contacts: [] };
+        });
+        const emilyObject: { buyboxId: number[]; organizations: any[] } = {
+          buyboxId: [buboxId],
+          organizations: organizations,
+        };
+        this.emilyService.updateCheckList(emilyObject);
+        this.router.navigate(['/MutipleEmail']);
+      }
+    });
   }
 }

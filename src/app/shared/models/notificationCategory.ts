@@ -5,6 +5,8 @@ export interface notificationCategory {
     isRead: boolean
     createdDate: string
     notificationCategoryId?: number
+    buyBoxId: number 
+    campaignId: number 
   }
     export interface EmailNotificationResponse {
     id: number;
