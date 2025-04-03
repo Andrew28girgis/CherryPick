@@ -10,7 +10,7 @@ export class General {
   nearsetPlaces!: nearsetPlaces;
   comparable!: Comparable[];
   SpecificPlaces!: SpecificPlaces[];
-
+  comparisonObject: any;
 }
 
 export class AllPlaces{
