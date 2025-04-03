@@ -2,173 +2,205 @@
 
 <div class="container-fluid p-0">
   <div class="row m-0 p-0">
-    <div class="col-lg-3 p-0 m-0">
-      <div class="buttonandname">
-        <button class="back" (click)="goBack()">
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <div class="org-data ms-2">
-          <img
-            [src]="
-              'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-              orgId
-            "
-            width="30"
-            height="30"
-            style="border-radius: 50%"
-          />
+    <div class="col-7 p-0 m-0">
+      <div class="col-12">
+        <div class="buttonandname">
+          <div class="w-100 d-flex align-item-center-justify-content-between">
+            <div class="d-flex align-items-start">
+              <button class="back" (click)="goBack()">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <div class="org-data ms-2">
+                <img
+                  [src]="
+                    'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                    orgId
+                  "
+                  width="30"
+                  height="30"
+                  style="border-radius: 50%"
+                />
 
-          <select class="micro-deals" (change)="onMicroDealChange($event)">
-            <ng-container *ngFor="let bb of BuyBoxMicroDeals">
-              <ng-container *ngFor="let org of bb.Organization">
-                <option [value]="org.OrganizationId">
-                  {{ org.OrganizationName }}
-                </option>
-              </ng-container>
-            </ng-container>
-          </select>
-
-          <!-- <h5 class="org-name mb-0">{{ selectedOrganizationName }}</h5> -->
-        </div>
-      </div>
-
-      <div
-        class="card"
-        style="border: none; border-radius: 0; min-height: 80vh"
-      >
-        <div class="bg-white">
-          <h5 class="contactsh5 mb-0">Contacts</h5>
-        </div>
-        <div class="card-body" style="padding: 0">
-          <ul
-            style="overflow-y: auto; max-height: 63vh; padding: 0"
-            [class.scrolling]="isScrolling"
-            (scroll)="onScroll()"
-          >
-            <li
-              class="contact-list"
-              *ngFor="let contact of contacts"
-              (click)="getEmailsForContact(contact)"
-              [ngClass]="{
-                'selected-contact':
-                  contact.ContactId === selectedContact?.ContactId
-              }"
-            >
-              <div class="d-flex justify-content-between w-100">
-                <span class="namecontact" id="{{ contact.ContactId }}">
-                  {{ contact.Firstname }} {{ contact.Lastname }}
-                </span>
-                <span
-                  style="color: #4d65b4; font-weight: 600"
-                  *ngIf="getTotalEmails(contact) > 0"
+                <select
+                  class="micro-deals"
+                  (change)="onMicroDealChange($event)"
                 >
-                  {{ getTotalEmails(contact) }}
-                </span>
+                  <ng-container *ngFor="let bb of BuyBoxMicroDeals">
+                    <ng-container *ngFor="let org of bb.Organization">
+                      <option [value]="org.OrganizationId">
+                        {{ org.OrganizationName }}
+                      </option>
+                    </ng-container>
+                  </ng-container>
+                </select>
+
+                <!-- <h5 class="org-name mb-0">{{ selectedOrganizationName }}</h5> -->
               </div>
-            </li>
-          </ul>
-          <p *ngIf="contacts.length === 0" class="no-contact-msg">
-            No contacts available in this organization.
-          </p>
-        </div>
-      </div>
-    </div>
-    <!-- Email List Column -->
-    <div class="col-lg-4 p-0 mb-3">
-      <div
-        class="card"
-        [class.scrolling]="isScrolling"
-        (scroll)="onScroll()"
-        style="
-          border: none;
-          min-height: 92vh;
-          border-radius: 0;
-          overflow-y: auto;
-        "
-      >
-        <div class="mailbox-header">
-          <h5 class="contacts">Mail box</h5>
-          <div
-            class="dropdownall d-flex align-items-center justify-content-center"
-            (click)="toggleDropdown()"
-          >
-            <span class="all">{{ selectedFilter | uppercase }}</span>
-            <i class="fa-solid fa-chevron-down"></i>
-          </div>
-          <div class="d-flex">
-            <button
-              class="new-btn"
-              [routerLink]="['/emily', buyBoxId, orgId, selectedMicroDealId]"
-            >
-              New
-              <img [src]="'../../../assets/Images/Icons/arrow-down.png'" />
-            </button>
-            <div class="out-icn" (click)="loadInitialData()">
-              <img [src]="'../../../assets/Images/Icons/rotate-right.png'" />
+            </div>
+
+            <div class="w-100 d-flex flex-column" style="position: relative">
+              <div class="w-100 ms-2 mailbox-header">
+                <div class="d-flex align-items-center gap-2">
+                  <div
+                    class="dropdownall d-flex align-items-center justify-content-center"
+                    style="flex: 1"
+                    (click)="toggleDropdown()"
+                  >
+                    <span class="all">{{ selectedFilter | uppercase }}</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </div>
+                  <!-- <button
+                    class="new-btn"
+                    [routerLink]="[
+                      '/emily',
+                      buyBoxId,
+                      orgId,
+                      selectedMicroDealId
+                    ]"
+                  >
+                    New
+                    <img
+                      [src]="'../../../assets/Images/Icons/arrow-down.png'"
+                    />
+                  </button> -->
+                  <!-- <div class="out-icn" (click)="loadInitialData()">
+                    <img
+                      [src]="'../../../assets/Images/Icons/rotate-right.png'"
+                    />
+                  </div> -->
+                </div>
+              </div>
+              <div class="dropdown-content" [class.show]="isDropdownVisible">
+                <div>
+                  <div class="email-filters d-flex flex-column">
+                    <div
+                      class="filter-button"
+                      [ngClass]="{ active: selectedFilter === 'all' }"
+                      (click)="filterEmails('all')"
+                    >
+                      <i class="fa-solid fa-envelope me-1"></i> All
+                    </div>
+                    <div
+                      class="filter-button"
+                      [ngClass]="{ active: selectedFilter === 'inbox' }"
+                      (click)="filterEmails('inbox')"
+                    >
+                      <i class="fa-solid fa-reply me-1"></i> Inbox
+                    </div>
+                    <div
+                      class="filter-button"
+                      [ngClass]="{ active: selectedFilter === 'outbox' }"
+                      (click)="filterEmails('outbox')"
+                    >
+                      <i class="fa-solid fa-share me-1"></i> Outbox
+                    </div>
+                    <div
+                      class="filter-button"
+                      [ngClass]="{ active: selectedFilter === 'sent' }"
+                      (click)="filterEmails('sent')"
+                    >
+                      <i class="fa-solid fa-envelope-circle-check me-1"></i>
+                      Sent
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="card-bodyy" style="max-height: 74vh; overflow-y: auto">
-          <div *ngIf="selectedContact">
-            <div class="email-list">
-              <div
-                class="single-mail"
-                style="cursor: pointer"
-                *ngFor="let email of filteredEmails"
-                (click)="openEmail(email)"
-                [ngClass]="{ 'selected-email': email.id === selectedEmail?.ID }"
+      </div>
+      <div class="row m-0 p-0">
+        <div class="col-lg-5 p-0 m-0">
+          <div
+            class="card"
+            style="border: none; border-radius: 0; min-height: 80vh"
+          >
+            <div class="bg-white">
+              <h5 class="contactsh5 mb-0">Contacts</h5>
+            </div>
+            <div class="card-body" style="padding: 0">
+              <ul
+                style="overflow-y: auto; max-height: 63vh; padding: 0"
+                [class.scrolling]="isScrolling"
+                (scroll)="onScroll()"
               >
-                <strong
-                  ><i
-                    [ngClass]="'fa-solid ' + getDirectionIcon(email.Direction)"
-                    class="me-2"
-                  ></i>
-                  <span class="subject"> {{ email.Subject }}</span>
-                </strong>
-                <p class="date">{{ email.Date | date : "medium" }}</p>
-              </div>
-              <p *ngIf="emailsSentContact?.length === 0" class="no-email-msg">
-                {{ emptyMessage }}
+                <li
+                  class="contact-list"
+                  *ngFor="let contact of contacts"
+                  (click)="getEmailsForContact(contact)"
+                  [ngClass]="{
+                    'selected-contact':
+                      contact.ContactId === selectedContact?.ContactId
+                  }"
+                >
+                  <div class="d-flex justify-content-between w-100">
+                    <span class="namecontact" id="{{ contact.ContactId }}">
+                      {{ contact.Firstname }} {{ contact.Lastname }}
+                    </span>
+                    <span
+                      style="color: #4d65b4; font-weight: 600"
+                      *ngIf="getTotalEmails(contact) > 0"
+                    >
+                      {{ getTotalEmails(contact) }}
+                    </span>
+                  </div>
+                </li>
+              </ul>
+              <p *ngIf="contacts.length === 0" class="no-contact-msg">
+                No contacts available in this organization.
               </p>
             </div>
           </div>
-          <p *ngIf="!selectedContact" class="no-contact-selected">
-            Select a contact to view emails.
-          </p>
         </div>
-        <!-- Dropdown content (hidden by default) -->
-        <div class="dropdown-content" [class.show]="isDropdownVisible">
-          <div>
-            <div class="email-filters d-flex flex-column">
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'all' }"
-                (click)="filterEmails('all')"
-              >
-                <i class="fa-solid fa-envelope me-1"></i> All
+        <!-- Email List Column -->
+        <div class="col-lg-7 p-0 mb-3">
+          <div
+            class="card"
+            [class.scrolling]="isScrolling"
+            (scroll)="onScroll()"
+            style="
+              border: none;
+              min-height: 92vh;
+              border-radius: 0;
+              overflow-y: auto;
+            "
+          >
+            <div class="card-bodyy" style="max-height: 74vh; overflow-y: auto">
+              <div *ngIf="selectedContact">
+                <div class="email-list">
+                  <div
+                    class="single-mail"
+                    style="cursor: pointer"
+                    *ngFor="let email of filteredEmails"
+                    (click)="openEmail(email)"
+                    [ngClass]="{
+                      'selected-email': email.id === selectedEmail?.ID
+                    }"
+                  >
+                    <strong
+                      ><i
+                        [ngClass]="
+                          'fa-solid ' + getDirectionIcon(email.Direction)
+                        "
+                        class="me-2"
+                      ></i>
+                      <span class="subject"> {{ email.Subject }}</span>
+                    </strong>
+                    <p class="date">{{ email.Date | date : "medium" }}</p>
+                  </div>
+                  <p
+                    *ngIf="emailsSentContact?.length === 0"
+                    class="no-email-msg"
+                  >
+                    {{ emptyMessage }}
+                  </p>
+                </div>
               </div>
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'inbox' }"
-                (click)="filterEmails('inbox')"
-              >
-                <i class="fa-solid fa-reply me-1"></i> Inbox
-              </div>
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'outbox' }"
-                (click)="filterEmails('outbox')"
-              >
-                <i class="fa-solid fa-share me-1"></i> Outbox
-              </div>
-              <div
-                class="filter-button"
-                [ngClass]="{ active: selectedFilter === 'sent' }"
-                (click)="filterEmails('sent')"
-              >
-                <i class="fa-solid fa-envelope-circle-check me-1"></i> Sent
-              </div>
+              <p *ngIf="!selectedContact" class="no-contact-selected">
+                Select a contact to view emails.
+              </p>
             </div>
+            <!-- Dropdown content (hidden by default) -->
           </div>
         </div>
       </div>
