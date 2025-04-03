@@ -268,6 +268,7 @@ export class TasksComponent implements OnInit {
       });
     });
   }
+
   showToast(message: string) {
     const toast = document.getElementById('customToast');
     const toastMessage = document.getElementById('toastMessage');
