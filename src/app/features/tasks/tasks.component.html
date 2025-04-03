@@ -1,5 +1,5 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div class="">
+<div class="container-fluid">
   <div class="row">
     <div class="col-md-12 action-wrap">
       <h5 class="mb-2 task-head">Reactions</h5>
@@ -12,7 +12,7 @@
                   (click)="markAsRead(notification)">
                 <td class="message-task col-10">{{ notification.message }}</td>
                 <td class="message-task col-2 text-end">
-                  {{ notification.createdDate | date }}
+                  {{ notification.createdDate | date : "medium" }}
                 </td>
               </tr>
               <tr *ngIf="getNotificationsByCategory(1).length === 0">
@@ -31,13 +31,16 @@
         <div class="table-responsive">
           <table class="table align-middle m-0">
             <tbody>
-              <tr style="cursor: pointer;"
+              <tr 
                *ngFor="let notification of getNotificationsByCategory(2)" 
                   [ngClass]="{'unread': !notification.isRead}"
-                  (click)="handleNotificationClick(notification)">
+                  (click)="markAsRead(notification)">
                 <td class="message-task col-10">{{ notification.message }}</td>
                 <td class="message-task col-2 text-end">
                   {{ notification.createdDate | date : "medium" }}
+                </td>
+                <td>
+                    <button class="view" (click)="GetNotificationActions(notification)"> View Emails</button>
                 </td>
               </tr>
               <tr *ngIf="getNotificationsByCategory(2).length === 0">
@@ -57,13 +60,16 @@
           <div class="table-responsive">
             <table class="table align-middle m-0">
               <tbody>
-                <tr style="cursor: pointer;"
+                <tr
                  *ngFor="let notification of getNotificationsByCategory(3)" 
                     [ngClass]="{'unread': !notification.isRead}"
-                    (click)="handleNotificationClick(notification)">
+                    (click)="markAsRead(notification)">
                   <td class="message-task col-10">{{ notification.message }}</td>
                   <td class="message-task col-2 text-end">
-                    {{ notification.createdDate | date }}
+                    {{ notification.createdDate | date : "medium" }}
+                  </td>
+                  <td>
+                    <button class="view" (click)="GetNotificationActions(notification)">View Places</button>
                   </td>
                 </tr>
                 <tr *ngIf="getNotificationsByCategory(3).length === 0">
@@ -84,13 +90,16 @@
           <div class="table-responsive">
             <table class="table align-middle m-0">
               <tbody>
-                <tr style="cursor: pointer;"
+                <tr
                  *ngFor="let notification of getNotificationsByCategory(4)" 
                     [ngClass]="{'unread': !notification.isRead}"
-                    (click)="handleNotificationClick(notification)">
+                    (click)="markAsRead(notification)">
                   <td class="message-task col-10">{{ notification.message }}</td>
                   <td class="message-task col-2 text-end">
                     {{ notification.createdDate | date : "medium" }}
+                  </td>
+                  <td>
+                    <button class="view" (click)="GetNotificationActions(notification)">View Submissions</button>
                   </td>
                 </tr>
                 <tr *ngIf="getNotificationsByCategory(4).length === 0">
