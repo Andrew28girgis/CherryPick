@@ -15,6 +15,25 @@ export interface Campaign {
   Sites: number
   Stages?: Stage[]
   expanded?: boolean
+  Kanban: KanbanStage[]; 
+
+}
+export interface MailsSent {
+  MailsSent: number;
+}
+
+export interface KanbanStage {
+  Id: number;
+  stageName: string;
+  stageOrder: number;
+  isQualified: boolean;
+  KanbanTemplateId: number;
+  kanbanOrganizations: KanbanOrganization[]; 
+}
+export interface KanbanOrganization {
+  Id: number;
+  OrganizationId: number;
+  kanbanStageId: number;
 }
 
 export interface Submission {
