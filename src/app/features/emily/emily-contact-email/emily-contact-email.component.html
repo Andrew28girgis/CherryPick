@@ -18,19 +18,16 @@
             style="border-radius: 50%"
           />
 
-          <select *ngIf="BuyBoxMicroDeals" >
+          <select class="micro-deals" (change)="onMicroDealChange($event)">
             <ng-container *ngFor="let bb of BuyBoxMicroDeals">
               <ng-container *ngFor="let org of bb.Organization">
-                <option [value]="org.OrganizationId">{{ org.OrganizationName }}</option>
-
+                <option [value]="org.OrganizationId">
+                  {{ org.OrganizationName }}
+                </option>
               </ng-container>
             </ng-container>
           </select>
-        
-          <!-- <select>
-            
-            <option *ngFor="let item of list" [value]="item">{{item}}</option>
-          </select> -->
+
           <!-- <h5 class="org-name mb-0">{{ selectedOrganizationName }}</h5> -->
         </div>
       </div>
