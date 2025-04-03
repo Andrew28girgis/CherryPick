@@ -5,55 +5,79 @@
   >
     <thead>
       <tr>
-        <th>Contact</th>
-        <th>Submissions</th>
-        <th>Center Name</th>
-        <th>Center Address</th>
-        <th>Source</th>
-        <th>Actions</th>
+        <th>Buybox & Campaign</th>
+        <th>Submission</th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let submission of submissionsArray">
-        <ng-container *ngFor="let userSubmission of submission.UserSubmissions">
-          <tr>
-            <td>{{ submission.Firstname }} {{ submission.Lastname }}</td>
-            <td>
-              <ng-container *ngFor="let file of submission.UserSubmissions">
-                <div class="my-2">
-                  <a target="_blank">{{ file.FileName }}</a>
+        <tr>
+          <td>
+            <div>{{ submission.Name }}</div>
+            <div>{{ submission.Campaigns[0].CampaignName }}</div>
+          </td>
+          <td>
+            <ng-container
+              *ngFor="let Sc of submission.Campaigns[0].ShoppingCenters"
+            >
+              <div class="sub-wrap">
+                <div class="d-flex justify-content-between my-2 mx-3">
+                  <div><b>Shopping Center:</b> {{ Sc.CenterName }}</div>
+                  <button
+                    class="btn btn-primary"
+                    style="padding: 4px 15px"
+                    (click)="openPlaces(Places, Sc.Places)"
+                  >
+                    View places
+                  </button>
                 </div>
-              </ng-container>
-            </td>
-            <td>
-              <div class="d-flex justify-content-between">
-                {{ getSubmissionCenterName(userSubmission) }}
-                <button class="inbox" (click)="openSubmissions(Places, userSubmission)">View Places</button>
-              </div>
-            </td>
-            <td>{{ getSubmissionCenterAddress(userSubmission) }}</td>
-            <td>{{ getSubmissionSourceId(submission) }}</td>
-            <td>
-              <div *ngIf="userSubmission.StatusId === 0" class="d-flex justify-content-between">
-                <button class="accept-btn" (click)="AcceptUserSubmission(userSubmission)">Accept</button>
-                <button class="reject-btn" (click)="RejectUsersubmission(userSubmission)">Reject</button>
-              </div>
+                <div class="my-2 mx-3">
+                  <div>
+                    <b>User:</b> {{ Sc.UserName }}
+                    <ng-container *ngFor="let Submission of Sc.UserSubmissions">
+                      <span class="mx-3">
+                        {{ Submission.CreatedDate | date }}</span
+                      >
+                      <div *ngIf="Submission.StatusId !== 0">
+                        <span
+                          class="badge-success"
+                          *ngIf="Submission.StatusId == 1"
+                          >Accepted</span
+                        >
+                        <span
+                          class="badge-danger"
+                          *ngIf="Submission.StatusId == -1"
+                          >Rejected</span
+                        >
+                      </div>
+                      <div *ngIf="Submission.StatusId == 0">
+                        <button
+                          (click)="AcceptUserSubmission(Submission)"
+                          class="btn btn-success me-2 my-0"
+                          style="padding: 5px; font-size: 14px"
+                        >
+                          Accept
+                        </button>
+                        <button
+                        (click)="RejectUsersubmission(Submission)"
 
-              <ng-container *ngIf="userSubmission.StatusId === 1">
-                <span style="color: #28a745; font-weight: 600;">Accepted</span>
-              </ng-container>
-
-              <ng-container *ngIf="userSubmission.StatusId === -1">
-                <span style="color: #dc3545; font-weight: 600;">Rejected</span>
-              </ng-container>
-            </td>
-          </tr>
-        </ng-container>
+                          class="btn btn-danger ms-2 my-0"
+                          style="padding: 5px; font-size: 14px"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
       </ng-container>
     </tbody>
   </table>
 </div>
-
 
 <ng-template #Places let-modal>
   <div class="table-responsive">
@@ -62,17 +86,16 @@
         <tr>
           <th>Building Size (sq.ft.)</th>
           <th>Lease Type</th>
-          <th>Suite</th>
-          <th>For Lease Price ($)</th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let place of places">
           <tr>
-            <td>{{ place.BuildingSizeSf || 'N/A' }} <span *ngIf="place.BuildingSizeSf">SF</span></td>
-            <td>{{ place.LeaseType || 'N/A' }}</td>
-            <td>{{ place.Suite || 'N/A' }}</td>
-            <td>{{ place.ForLeasePrice || '0' }}</td>
+            <td>
+              {{ place.BuildingSizeSf || "N/A" }}
+              <span *ngIf="place.BuildingSizeSf">SF</span>
+            </td>
+            <td>{{ place.ForLeasePrice }}</td>
           </tr>
         </ng-container>
       </tbody>

@@ -1,33 +1,43 @@
 export interface submission {
-  id: number;
-  Firstname: string;
-  Lastname: string;
-  UserSubmissions: UserSubmission[];
+  Id: number
+  Name: string
+  Description: string
+  ComparableTypeId: number
+  MinBuildingSize: number
+  MaxBuildingSize: number
+  OrganizationId: number
+  ManagerOrganizationId: number
+  ManagerContactId: number
+  Campaigns: Campaign[]
 }
 
-export interface UserSubmission {
-  Id: number;
-  UserId: number;
-  ShoppingCenterId: number;
-  FileName: string;
-  SourceId: number;
-  StatusId: number;
-  CreatedDate: string;
-  CampaignId: number;
-  ShoppingCenters: ShoppingCenter[];
+export interface Campaign {
+  Id: number
+  CampaignName: string
+  BuyBoxId: number
+  CampaignPrivacy: number
+  CreatedDate: string
+  ShoppingCenters: ShoppingCenter[]
 }
 
 export interface ShoppingCenter {
-  id: number;
-  CenterName: string;
-  CenterCity: string;
-  CenterState: string;
-  Place: IIPlace[];
+  CenterName: string
+  UserName: string
+  UserSubmissions: UserSubmission[]
+  Places:Places[] 
 }
 
-export interface IIPlace {
-  BuildingSizeSf?: number;
-  ForLeasePrice?: number;
-  LeaseType?: string;
-  Suite?: string;
+export interface UserSubmission {
+  Id: number
+  UserId: number
+  ShoppingCenterId: number
+  CreatedDate: string
+  CampaignId: number
+  StatusId: number
+  SourceId: number
+}
+
+export interface Places {
+  BuildingSizeSf: number
+  ForLeasePrice: number
 }

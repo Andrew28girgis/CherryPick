@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ActivatedRoute } from '@angular/router';
-import { IIPlace, submission } from 'src/app/shared/models/submissions';
+import { submission ,Places } from 'src/app/shared/models/submissions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/app/shared/models/domain';
 @Component({
@@ -16,7 +16,7 @@ export class SubmissionsComponent implements OnInit {
   submissionsArray: submission[] = [];
   campaignId!: any;
   General!: General;
-  places:IIPlace[] = [];
+  places: Places[] = [];
 
   constructor(
     private PlacesService: PlacesService,
@@ -43,18 +43,20 @@ export class SubmissionsComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.submissionsArray = res.json || [];
+        console.log(`yy`);
+
+        console.log(this.submissionsArray);
       },
     });
   }
 
-  openSubmissions(content: any, userSubmission: any): void {
+  openPlaces(content: any, scPlaces: any): void {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-    this.places = userSubmission.ShoppingCenters[0].Place;
-    console.log(this.places);
+    this.places = scPlaces; 
   }
 
   getSubmissionCenterName(userSubmission: any) {
@@ -69,15 +71,15 @@ export class SubmissionsComponent implements OnInit {
     );
   }
 
-  getSubmissionSourceId(submission: submission) {
-    if (submission.UserSubmissions[0].SourceId == 1) {
-      return 'Landing Page';
-    } else if (submission.UserSubmissions[0].SourceId == 2) {
-      return 'Email';
-    } else {
-      return 'Internal';
-    }
-  }
+  // getSubmissionSourceId(submission: submission) {
+  //   if (submission.UserSubmissions[0].SourceId == 1) {
+  //     return 'Landing Page';
+  //   } else if (submission.UserSubmissions[0].SourceId == 2) {
+  //     return 'Email';
+  //   } else {
+  //     return 'Internal';
+  //   }
+  // }
 
   AcceptUserSubmission(userSubmission: any): void {
     userSubmission.StatusId = 1;
