@@ -61,6 +61,18 @@
   color: #001f3f;
   font-size: 15px;
 }
+.view{
+    background: #4d65b4;
+    color: white;
+    border-radius: 10px;
+    border: 0;
+    text-align: center;
+    height: max-content;
+    padding: 9px;
+    width: fit-content;
+    text-wrap: nowrap;
+    min-width: 150px;
+}
 /* For better mobile responsiveness */
 @media (max-width: 767.98px) {
   .table th,
