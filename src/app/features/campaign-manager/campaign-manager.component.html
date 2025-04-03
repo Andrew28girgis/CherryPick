@@ -230,7 +230,7 @@
               </div>
               <div class="stat-item">
                 <div class="stat-label">Mails Sent</div>
-                <div class="stat-value">
+                <div class="stat-value" *ngIf="campaign.MailsSent">
                   {{ campaign.MailsSent[0].MailsSent }}
                 </div>
               </div>
