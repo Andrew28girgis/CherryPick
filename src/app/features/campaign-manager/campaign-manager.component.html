@@ -405,7 +405,7 @@
                 </td>
 
                 <td style="white-space: nowrap; text-align: center">
-                  <a class="inbox" [routerLink]="['/EmilyUserInbox']">Inbox</a>
+                  <a class="inbox" [routerLink]="['/organization-mail',c.id,c.organizationid]">Inbox</a>
                 </td>
 
                 <ng-container *ngFor="let stage of stages">
