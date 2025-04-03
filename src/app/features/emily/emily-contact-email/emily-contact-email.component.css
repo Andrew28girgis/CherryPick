@@ -93,9 +93,10 @@
   margin-top: 5px;
   width: 200px;
   padding: 10px;
-  top: 75px;
-  left: 50px;
+  top: 40px;
+  left: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 }
 
 /* Show the dropdown when it's toggled */
@@ -121,7 +122,7 @@
 }
 .buttonandname {
   display: flex;
-  padding: 42px;
+  padding: 25px;
   align-items: flex-start;
   align-self: stretch;
   background: var(--Colors-Primary-100, #dbe0f0);
