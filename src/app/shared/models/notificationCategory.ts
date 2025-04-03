@@ -40,6 +40,8 @@ export interface notificationCategory {
     mailId: number;
     email: string | null;
     responseStatus1: any | null;
+    organizationName:string | null;
+    buyBoxName:string | null;
     }
 
     export interface SyncNotificationResponse {
