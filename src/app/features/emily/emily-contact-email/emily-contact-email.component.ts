@@ -141,7 +141,7 @@ export class EmilyContactEmailComponent implements OnInit {
         //   this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
         //     ?.OrganizationName || '';
 
-        this.BuyBoxMicroDeals = [];
+        // this.BuyBoxMicroDeals = [];
         this.GetBuyBoxEmails(() => {
           if (this.contacts.length > 0) {
             this.getEmailsForContact(this.contacts[0]);

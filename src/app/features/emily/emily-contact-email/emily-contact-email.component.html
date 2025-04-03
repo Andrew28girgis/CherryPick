@@ -17,7 +17,21 @@
             height="30"
             style="border-radius: 50%"
           />
-          <h5 class="org-name mb-0">{{ selectedOrganizationName }}</h5>
+
+          <select *ngIf="BuyBoxMicroDeals" >
+            <ng-container *ngFor="let bb of BuyBoxMicroDeals">
+              <ng-container *ngFor="let org of bb.Organization">
+                <option [value]="org.OrganizationId">{{ org.OrganizationName }}</option>
+
+              </ng-container>
+            </ng-container>
+          </select>
+        
+          <!-- <select>
+            
+            <option *ngFor="let item of list" [value]="item">{{item}}</option>
+          </select> -->
+          <!-- <h5 class="org-name mb-0">{{ selectedOrganizationName }}</h5> -->
         </div>
       </div>
 
