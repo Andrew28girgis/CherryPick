@@ -15,8 +15,8 @@
   font-weight: bold;
 }
 .selected-email {
-  border-bottom: 1px solid var(--Body-General-Body-Border, #E2E4E9);
-  background: var(--Colors-Primary-50, #EDF0F8);
+  border-bottom: 1px solid var(--Body-General-Body-Border, #e2e4e9);
+  background: var(--Colors-Primary-50, #edf0f8);
   padding: 10px;
   margin-bottom: 5px;
 }
@@ -65,8 +65,8 @@
   align-items: center;
   gap: 8px;
   border-radius: 8px;
-  border: 1px solid #E2E4E9;
-  background: #FFF;
+  border: 1px solid #e2e4e9;
+  background: #fff;
   cursor: pointer;
 }
 .all {
@@ -87,8 +87,8 @@
 .dropdown-content {
   display: none;
   position: absolute;
-  background: #FFF;
-  border: 1px solid #E2E4E9;
+  background: #fff;
+  border: 1px solid #e2e4e9;
   border-radius: 8px;
   margin-top: 5px;
   width: 200px;
@@ -124,10 +124,10 @@
   padding: 42px;
   align-items: flex-start;
   align-self: stretch;
-  background: var(--Colors-Primary-100, #DBE0F0);
+  background: var(--Colors-Primary-100, #dbe0f0);
 }
 .mailbox-header[_ngcontent-ng-c3909253692] {
-  background: var(--Colors-Primary-100, #DBE0F0);
+  background: var(--Colors-Primary-100, #dbe0f0);
   display: flex;
   padding: 41px 12px;
   justify-content: space-between;
@@ -142,7 +142,6 @@
   align-items: flex-start;
   gap: 8px;
   align-self: stretch;
-  
 }
 .selected-email {
   background: #edf0f8;
@@ -162,7 +161,7 @@
   line-height: 24px;
   letter-spacing: -0.07px;
 }
-.email-list{
+.email-list {
   margin-top: 20px;
 }
 .email-details-body {
@@ -313,4 +312,16 @@
 /* When button is active, icons should be white */
 .filter-button.active i {
   color: white;
+}
+
+.micro-deals {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  width: 10rem;
+  outline: none;
+}
+
+.micro-deals option {
+  color: black;
 }

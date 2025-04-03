@@ -29,12 +29,22 @@
     </div>
     <div class="d-flex align-items-center gap-3">
       <div class="view-toggle">
-        <button 
-          class="toggle-btn" 
+        <button
+          class="toggle-btn"
           [class.active]="viewMode === 'table'"
           (click)="toggleView('table')"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
             <line x1="3" y1="9" x2="21" y2="9"></line>
             <line x1="3" y1="15" x2="21" y2="15"></line>
@@ -42,12 +52,22 @@
             <line x1="15" y1="3" x2="15" y2="21"></line>
           </svg>
         </button>
-        <button 
-          class="toggle-btn" 
+        <button
+          class="toggle-btn"
           [class.active]="viewMode === 'card'"
           (click)="toggleView('card')"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
             <rect x="14" y="14" width="7" height="7"></rect>
@@ -109,12 +129,11 @@
               >
                 <div class="campaign-privacy-icon"></div>
                 <span>
-                  
                   {{ campaign.CampaignPrivacy == 0 ? "Public" : "Private" }}
                 </span>
               </div>
             </div>
-            
+
             <div class="tenant-section">
               <div class="d-flex align-items-center gap-2">
                 <img
@@ -128,24 +147,22 @@
                 />
                 <span
                   class="tenant-name"
-                  [routerLink]="[
-                    '/dashboard',
-                    c.id,
-                    c.organizationid,
-                    c.name
-                  ]"
-                >{{ c.name }}</span>
+                  [routerLink]="['/dashboard', c.id, c.organizationid, c.name]"
+                  >{{ c.name }}</span
+                >
               </div>
               <div class="date-created">
                 {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
               </div>
             </div>
-            
+
             <div class="campaign-stats">
               <div class="stat-item">
                 <div class="stat-label">Sites</div>
                 <div class="stat-value">
-                  <div class="d-flex align-items-center justify-content-center gap-2">
+                  <div
+                    class="d-flex align-items-center justify-content-center gap-2"
+                  >
                     <div>{{ campaign.Sites }}</div>
                     <svg
                       [routerLink]="[
@@ -203,7 +220,8 @@
                         "
                         tooltipPosition="top"
                         [ngClass]="getStatusClass(submission?.StatusId)"
-                      >{{ submission?.Submissions }}</span>
+                        >{{ submission?.Submissions }}</span
+                      >
                       <span *ngIf="i < 2"> - </span>
                     </ng-container>
                   </div>
@@ -212,44 +230,61 @@
               </div>
               <div class="stat-item">
                 <div class="stat-label">Mails Sent</div>
-                <div class="stat-value">{{ campaign.MailsSent[0].MailsSent }}</div>
+                <div class="stat-value">
+                  {{ campaign.MailsSent[0].MailsSent }}
+                </div>
               </div>
             </div>
-            
+
             <div class="campaign-actions">
-              <a class="inbox" [routerLink]="['/EmilyUserInbox']">Inbox</a>
+              <a
+                class="inbox"
+                [routerLink]="['/organization-mail', c.id, c.organizationid]"
+                >Inbox</a
+              >
               <button class="expand-btn" (click)="toggleExpand(campaign)">
-                {{ campaign.expanded ? 'Hide Stages' : 'Show Stages' }}
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="16" 
-                  height="16" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  stroke-width="2" 
-                  stroke-linecap="round" 
+                {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
                   stroke-linejoin="round"
-                  [style.transform]="campaign.expanded ? 'rotate(180deg)' : 'rotate(0)'"
+                  [style.transform]="
+                    campaign.expanded ? 'rotate(180deg)' : 'rotate(0)'
+                  "
                 >
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
             </div>
-            
+
             <div class="campaign-stages" [class.expanded]="campaign.expanded">
               <div class="stages-grid">
                 <ng-container *ngFor="let stage of stages">
                   <div class="stage-item">
                     <div class="stage-name">{{ stage.stageName }}</div>
                     <div class="stage-value">
-                      {{ getStageOrganizationCount(stage.stageName, campaign.Stages) ?? "N/A" }}
+                      {{
+                        getStageOrganizationCount(
+                          stage.stageName,
+                          campaign.Stages
+                        ) ?? "N/A"
+                      }}
                     </div>
                     <a
                       class="hyber-link"
-                      *ngIf="stage.stageName.toLowerCase() == 'Precontact'.toLowerCase()"
+                      *ngIf="
+                        stage.stageName.toLowerCase() ==
+                        'Precontact'.toLowerCase()
+                      "
                       (click)="goToEmily(c, index, true)"
-                    >Generate Emails</a>
+                      >Generate Emails</a
+                    >
                   </div>
                 </ng-container>
               </div>
@@ -258,7 +293,7 @@
         </ng-container>
       </ng-container>
     </div>
-    
+
     <!-- Original Table View -->
     <div class="table-responsive" *ngIf="viewMode === 'table'">
       <table class="table align-middle">
@@ -405,7 +440,15 @@
                 </td>
 
                 <td style="white-space: nowrap; text-align: center">
-                  <a class="inbox" [routerLink]="['/EmilyUserInbox']">Inbox</a>
+                  <a
+                    class="inbox"
+                    [routerLink]="[
+                      '/organization-mail',
+                      c.id,
+                      c.organizationid
+                    ]"
+                    >Inbox</a
+                  >
                 </td>
 
                 <ng-container *ngFor="let stage of stages">
@@ -475,4 +518,3 @@
 </ng-template>
 
 <ngx-spinner type="ball-scale-multiple"> </ngx-spinner>
-

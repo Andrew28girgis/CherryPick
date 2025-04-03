@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-kayak-home',
@@ -17,7 +18,7 @@ export class KayakHomeComponent implements OnInit {
     },
     {
       id: 'Market Survery',
-      label: 'Market Survery', 
+      label: 'Market Survery',
       icon: '../../../assets/icons/svgs/details.svg',
       selectedIcon: '../../../assets/icons/svgs/details-selected.svg',
     },
@@ -32,22 +33,26 @@ export class KayakHomeComponent implements OnInit {
   selectedTab: string = 'Properties';
   BuyboxName: string | null = '';
   Buyboxid: any | null = '';
-  orgId!: any  | null;
+  orgId!: any | null;
   constructor(
     public router: Router,
     private _location: Location,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   async ngOnInit() {
+    this.breadcrumbService.addBreadcrumb({
+      label: 'Dashboard',
+      url: '/',
+    });
+
     this.route.paramMap.subscribe((params) => {
       this.BuyboxName = params.get('buyboxName');
       this.orgId = params.get('orgId');
 
       this.Buyboxid = params.get('buyboxid');
       console.log(`organization id is ${this.orgId}`);
-       
-      
     });
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';

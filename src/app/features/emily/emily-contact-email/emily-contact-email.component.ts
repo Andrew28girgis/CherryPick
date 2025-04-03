@@ -105,6 +105,20 @@ export class EmilyContactEmailComponent implements OnInit {
       .catch((error) => {});
   }
 
+  onMicroDealChange(event: any): void {
+    console.log(event.target.value);
+    this.contacts =
+      this.BuyBoxMicroDeals.flatMap((m) => m.Organization).find(
+        (o) => o.OrganizationId == event.target.value
+      )?.Contact || [];
+
+    this.GetBuyBoxEmails(() => {
+      if (this.contacts.length > 0) {
+        this.getEmailsForContact(this.contacts[0]);
+      }
+    });
+  }
+
   GetBuyBoxMicroDeals(callback?: Function): void {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
@@ -119,29 +133,21 @@ export class EmilyContactEmailComponent implements OnInit {
         console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
 
         this.contacts = [];
-        this.contacts = this.BuyBoxMicroDeals.flatMap((m) =>
+        this.contacts = this.BuyBoxMicroDeals[0].Organization[0]?.Contact || [];
+
+        this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
           m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
-            (o) => o.Contact || []
+            (o) => o.OrganizationName || ''
           )
-        );
-
-           this.selectedOrganizationName =
-           this.BuyBoxMicroDeals.flatMap((m) =>
-            m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
-              (o) => o.OrganizationName || ''
-            )
-          ).join(', ');
-
+        ).join(', ');
 
         console.log(`contacts`, this.contacts);
-
- 
 
         // this.selectedOrganizationName =
         //   this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
         //     ?.OrganizationName || '';
 
-        this.BuyBoxMicroDeals = [];
+        // this.BuyBoxMicroDeals = [];
         this.GetBuyBoxEmails(() => {
           if (this.contacts.length > 0) {
             this.getEmailsForContact(this.contacts[0]);

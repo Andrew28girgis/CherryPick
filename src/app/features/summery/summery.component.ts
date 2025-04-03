@@ -14,6 +14,8 @@ import { ApiServiceService } from 'src/app/core/services/api-service.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { StateService } from 'src/app/core/services/state.service';
 import { PropertiesServiceService } from 'src/app/core/services/properties-service.service';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
+
 @Component({
   selector: 'app-summery',
   templateUrl: './summery.component.html',
@@ -58,7 +60,9 @@ export class SummeryComponent implements OnInit{
     private stateService: StateService,
     private sidbarService: SidbarService,
     private modalService: NgbModal,
-    private ApiService: ApiServiceService
+    private ApiService: ApiServiceService ,
+    private breadcrumbService: BreadcrumbService,
+
   ) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)
@@ -66,6 +70,9 @@ export class SummeryComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Tenants', url: '/summary' }
+   ]);
     this.stateService.clearAll();
     this.General = new General();
     this.route.queryParams.subscribe((params) => {

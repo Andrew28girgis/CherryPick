@@ -20,6 +20,7 @@ import {
   buyboxChecklist,
 } from 'src/app/shared/models/sidenavbar';
 import { interval, Subscription } from 'rxjs';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-email-muliple-new',
@@ -128,10 +129,15 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
     private emilyService: EmilyService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   async ngOnInit() {
+    this.breadcrumbService.addBreadcrumb({
+      label: 'Generate Email',
+      url: '/',
+    });
     this.emilyService
       .getCheckList()
       .subscribe((buyboxChecklist: buyboxChecklist) => {
@@ -349,7 +355,8 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     } else {
       this.managerOrganizations.forEach((manager) => {
         manager.ManagerOrganizationContacts.forEach((contact) => {
-          contact.selected = false;``
+          contact.selected = false;
+          ``;
           contact.assistantSelected = false;
         });
       });
@@ -492,8 +499,8 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
             selected: true,
           })
         );
-        this.allOrganizations.forEach((org:any) => {
-          org.isVisible = false; 
+        this.allOrganizations.forEach((org: any) => {
+          org.isVisible = false;
         });
 
         this.allOrganizations.forEach((org: any) => {
@@ -623,15 +630,14 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
 
     this.updateEmailBody();
   }
-  onOrganizationChangeisVisible (organization: any, event: any) {
-    this.allOrganizations.forEach((org:any) => {
+  onOrganizationChangeisVisible(organization: any, event: any) {
+    this.allOrganizations.forEach((org: any) => {
       if (org !== organization) {
         org.isVisible = false;
       }
     });
     organization.isVisible = !organization.isVisible;
   }
-  
 
   onContactChange(contact: any, newValue: boolean, organizationId: any): void {
     if (
@@ -1319,16 +1325,16 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
-  unCheckAll(event:any){
+  unCheckAll(event: any) {
     let value = event.target.checked;
-    this.allOrganizations.forEach((org:any) => {
+    this.allOrganizations.forEach((org: any) => {
       org.selected = value;
-      org.Contact.forEach((contact:any) => {
+      org.Contact.forEach((contact: any) => {
         contact.selected = value;
-        contact.ShoppingCenters.forEach((center:any) => {
+        contact.ShoppingCenters.forEach((center: any) => {
           center.selected = value;
         });
       });
-    })
+    });
   }
 }
