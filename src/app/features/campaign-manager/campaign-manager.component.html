@@ -220,7 +220,7 @@
                         "
                         tooltipPosition="top"
                         [ngClass]="getStatusClass(submission?.StatusId)"
-                        >{{ submission?.Submissions }}</span
+                        >{{ submission }}</span
                       >
                       <span *ngIf="i < 2"> - </span>
                     </ng-container>
@@ -269,7 +269,11 @@
                   <div class="stage-item">
                     <div class="stage-name">{{ kanbanStage.stageName }}</div>
                     <div class="stage-value">
-                      {{ kanbanStage.kanbanOrganizations[0].Id ? kanbanStage.kanbanOrganizations.length : 0 }} 
+                      {{
+                        kanbanStage.kanbanOrganizations[0].Id
+                          ? kanbanStage.kanbanOrganizations.length
+                          : 0
+                      }}
                     </div>
                     <a
                       class="hyber-link"
@@ -294,8 +298,7 @@
       <table class="table align-middle">
         <thead>
           <tr>
-            <th scope="col" style="white-space: nowrap">Campaign Name</th>
-            <th scope="col" style="white-space: nowrap">Tenant</th>
+            <th class="col-3" style="white-space: nowrap">Campaign Name</th>
             <th scope="col" style="white-space: nowrap">Date Created</th>
             <th scope="col" style="white-space: nowrap">Privacy</th>
             <th scope="col" style="white-space: nowrap">Sites</th>
@@ -315,10 +318,8 @@
               *ngFor="let campaign of c.Campaigns; let index = index"
             >
               <tr>
-                <td style="white-space: nowrap">
+                <td >
                   {{ campaign.CampaignName }}
-                </td>
-                <td style="white-space: nowrap; text-align: center">
                   <div class="d-flex align-items-center gap-2">
                     <img
                       *ngIf="c.organizationid"
@@ -341,6 +342,8 @@
                     >
                   </div>
                 </td>
+                
+         
                 <td style="white-space: nowrap; text-align: center">
                   {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
                 </td>
@@ -404,6 +407,26 @@
                       style="cursor: pointer"
                       [routerLink]="['/submissions', campaign.Id]"
                     >
+                      <span style="color: orange" title="New Submissions">{{
+                        getSubmissionsCountNew(campaign.Submissions)
+                      }}</span>
+                      |
+                      <span
+                        style="color: rgb(0, 207, 35)"
+                        title="Accepted Submissions"
+                        >{{
+                          getSumbmissionsCountAcceppted(campaign.Submissions)
+                        }}</span
+                      >
+                      |
+                      <span
+                        style="color: rgb(207, 0, 0)"
+                        title="Rejected Submissions"
+                        >{{
+                          getSumbmissionsCountRejected(campaign.Submissions)
+                        }}</span
+                      >
+
                       <ng-container
                         *ngFor="
                           let submission of sortedSubmissions(
@@ -412,7 +435,7 @@
                           let i = index
                         "
                       >
-                        <span
+                        <!-- <span
                           [pTooltip]="
                             submission.StatusId == 0
                               ? 'New'
@@ -422,9 +445,9 @@
                           "
                           tooltipPosition="top"
                           [ngClass]="getStatusClass(submission?.StatusId)"
-                          >{{ submission?.Submissions }}</span
+                          >{{ submission }}</span
                         >
-                        <span *ngIf="i < 2"> - </span>
+                        <span *ngIf="i < 2"> - </span> -->
                       </ng-container>
                     </div>
                     <div *ngIf="!campaign.Submissions">N/A</div>
@@ -452,7 +475,13 @@
                     <div
                       class="d-flex flex-column align-items-center justify-content-center gap-2"
                     >
-                      <div>{{ kanbanStage.kanbanOrganizations[0].Id ? kanbanStage.kanbanOrganizations.length : 0 }} </div>
+                      <div>
+                        {{
+                          kanbanStage.kanbanOrganizations[0].Id
+                            ? kanbanStage.kanbanOrganizations.length
+                            : 0
+                        }}
+                      </div>
                       <a
                         class="hyber-link"
                         *ngIf="

@@ -37,8 +37,13 @@ export interface KanbanOrganization {
 }
 
 export interface Submission {
+  Id: number
+  UserId: number
+  ShoppingCenterId: number
+  CreatedDate: string
+  CampaignId: number
   StatusId: number
-  Submissions: number
+  SourceId: number
 }
 
 export interface MailsSent {
