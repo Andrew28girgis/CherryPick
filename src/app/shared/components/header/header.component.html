@@ -41,20 +41,6 @@
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
-          [routerLink]="['/campaigns']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          title="Campaigns"
-        >
-          <img
-            class="img-icn"
-            src="../../../assets/Images/Icons/Campains.svg"
-          />
-          <span>Campaigns</span>
-        </a>
-      </li>
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
           [routerLink]="['/tasks']"
           routerLinkActive="active-route"
           class="nav-link"
@@ -67,6 +53,21 @@
           <span>Tasks</span>
         </a>
       </li>
+      <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <a
+          [routerLink]="['/campaigns']"
+          routerLinkActive="active-route"
+          class="nav-link"
+          title="Campaigns"
+        >
+          <img
+            class="img-icn"
+            src="../../../assets/Images/Icons/Campains.svg"
+          />
+          <span>Campaigns</span>
+        </a>
+      </li>
+   
       <li class="nav-item" *ngIf="!current.includes('landlord')">
         <a
           [routerLink]="['/summary']"
