@@ -248,7 +248,7 @@
               *ngIf="selectedIdCard === shopping.Id"
             >
               <ul>
-                <li>
+                <!-- <li>
                   <a
                     class="target"
                     target="_blank"
@@ -264,7 +264,7 @@
                     <i class="fa-regular fa-envelope big-text"></i>
                     Emily
                   </a>
-                </li>
+                </li> -->
                 <li>
                   <a class="target" (click)="openGallery(shopping.Id)">
                     <i class="fa-solid fa-images big-text"></i>
@@ -666,6 +666,7 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'dislike'"
+              (click)="selectRating('dislike')"
             >
               <div class="rating-circle dislike">
                 <div class="inner-circle"></div>
@@ -679,6 +680,7 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'neutral'"
+              (click)="selectRating('neutral')"
             >
               <div class="rating-circle neutral">
                 <div class="inner-circle"></div>
@@ -691,6 +693,7 @@
               type="button"
               class="rating-button"
               [class.selected]="selectedRating === 'like'"
+              (click)="selectRating('like')"
             >
               <div class="rating-circle like">
                 <div class="inner-circle"></div>
@@ -727,7 +730,11 @@
             fill="#7A8591"
           />
         </svg>
-        <input type="text" placeholder="Add a note" />
+        <input 
+          type="text" 
+          placeholder="Add a note" 
+          [(ngModel)]="feedbackNote"
+        />
       </div>
 
       <!-- Location Preference Section -->
@@ -736,6 +743,7 @@
           class="location-card"
           style="cursor: pointer"
           [class.selected]="selectedCenterId === General.modalObject.Id"
+          (click)="selectCenterAndContinue(General.modalObject, modal)"
         >
           <h4 class="modal-title">{{ General.modalObject.CenterName }}</h4>
           <p class="address">{{ General.modalObject.CenterAddress }}</p>
@@ -745,14 +753,47 @@
           </p>
         </div>
         <div class="or-divider">or</div>
-        <div class="location-card next-center" style="cursor: pointer">
-          <h4 class="modal-title">{{ General.nextModalObject.CenterName }}</h4>
-          <p class="address">{{ General.nextModalObject.CenterAddress }}</p>
+        <div 
+          class="location-card next-center" 
+          style="cursor: pointer"
+          [class.selected]="selectedCenterId === General.comparisonObject?.Id"
+          (click)="selectCenterAndContinue(General.comparisonObject, modal)"
+          *ngIf="General.comparisonObject"
+        >
+          <h4 class="modal-title">{{ General.comparisonObject?.CenterName }}</h4>
+          <p class="address">{{ General.comparisonObject?.CenterAddress }}</p>
           <p class="address">
-            {{ General.nextModalObject.CenterCity | titlecase }},
-            {{ General.nextModalObject.CenterState }}
+            {{ General.comparisonObject?.CenterCity | titlecase }},
+            {{ General.comparisonObject?.CenterState }}
           </p>
         </div>
+        <div 
+          class="location-card next-center no-more-centers" 
+          style="cursor: not-allowed; opacity: 0.6;"
+          *ngIf="!General.comparisonObject"
+        >
+          <h4 class="modal-title">No more shopping centers</h4>
+          <p class="address">There are no other shopping centers to compare</p>
+        </div>
+      </div>
+
+      <!-- Skip Button -->
+      <div class="d-flex justify-content-between mt-3">
+        <button 
+          class="btn btn-secondary px-4 py-2" 
+          (click)="skipComparison(modal)"
+          [disabled]="!General.comparisonObject"
+        >
+          Skip
+        </button>
+        
+        <button 
+          class="btn btn-primary px-4 py-2" 
+          [disabled]="!selectedRating"
+          (click)="submitFeedback(modal)"
+        >
+          Submit Feedback
+        </button>
       </div>
     </div>
   </div>

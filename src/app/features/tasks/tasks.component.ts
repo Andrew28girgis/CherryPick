@@ -39,6 +39,9 @@ export class TasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Tasks', url: '/campaigns' }
+   ]);
     const storedContactId = localStorage.getItem('contactId');
     if (storedContactId) {
       this.ContactId = +storedContactId;

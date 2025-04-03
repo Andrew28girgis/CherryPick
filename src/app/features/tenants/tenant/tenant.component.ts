@@ -54,21 +54,19 @@ export class TenantComponent implements OnInit {
   images: IFile[] = [];
   pdfFileName: string = '';
   contactID!: any;
-  TenantResult!: LandingPageTenants ;
+  TenantResult!: LandingPageTenants;
   organizationBranches!: OrganizationBranches;
   selectedbuyBox!: string;
   buyboxcolor!: string;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
   organizationid!: number;
-  isFileUploaded: boolean = false; // To track whether a file has been uploaded
-  test!: number; // Add this property
-  isClearing: boolean = false; // Flag to track if data is being cleared
-  uploadRequest: any; // Store the upload request to cancel it if needed
-
-
+  isFileUploaded: boolean = false;
+  isClearing: boolean = false;
+  uploadRequest: any;
   selectedCampaign!: number;
   CampaignData!: any;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -87,13 +85,12 @@ export class TenantComponent implements OnInit {
       this.selectedbuyBox = params['buyboxid'];
       this.selectedCampaign = params['campaignId'];
       console.log(this.selectedCampaign);
-      
+
       // this.GetCampaignDetails();
     });
     this.GetBuyBoxInfo();
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
-    
   }
 
   GetBuyBoxInfo(): void {
@@ -147,12 +144,12 @@ export class TenantComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         if (res.json == null) {
-          this.spinner.hide(); 
-        }else{
+          this.spinner.hide();
+        } else {
           this.organizationBranches = res.json[0];
           this.spinner.hide();
-        } 
-      }
+        }
+      },
     });
   }
 
@@ -167,51 +164,50 @@ export class TenantComponent implements OnInit {
   }
 
   public uploadFile(files: NgxFileDropEntry[]): void {
-    // Reset the file list (important if the user clears the modal)
     this.files = files;
-  
-    // If the modal was cleared before uploading, reset the upload state
+
     if (this.isClearing) {
-      this.isClearing = false; // Reset clearing flag
-      this.isUploading = true; // Start the upload process
-      this.uploadProgress = 0; // Reset progress bar to 0
-      this.isConverting = false; // Reset conversion state
-      this.isFileUploaded = false; // Reset file upload state
-      this.images = []; // Clear any previous images
+      this.isClearing = false;
+      this.isUploading = true;
+      this.uploadProgress = 0;
+      this.isConverting = false;
+      this.isFileUploaded = false;
+      this.images = [];
     }
-  
-    // Ensure the progress bar is visible right from the start
-    this.isUploading = true; // Set the uploading flag before starting the file upload
-    this.uploadProgress = 0; // Ensure the progress bar starts at 0%
-  
+
+    this.isUploading = true;
+    this.uploadProgress = 0;
+
     for (const droppedFile of files) {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           // Set the file name immediately when the file is dropped
           this.fileName = file.name;
-  
+
           // Create FormData and append the file
           const formData = new FormData();
           formData.append('filename', file);
-  
+
           const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
-  
+
           // Create the HTTP request with progress tracking
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
             responseType: 'json',
           });
-  
+
           // Store the HTTP request to be able to cancel if needed
           this.uploadRequest = this.httpClient.request(req).subscribe(
             (event: any) => {
               // If modal data is cleared, abort processing images
               if (this.isClearing) {
-                console.log("Modal data is being cleared, aborting image processing.");
+                console.log(
+                  'Modal data is being cleared, aborting image processing.'
+                );
                 return; // Abort if modal data is cleared
               }
-  
+
               if (event.type === HttpEventType.UploadProgress) {
                 // Update progress bar based on the current upload progress
                 this.uploadProgress = Math.round(
@@ -235,11 +231,13 @@ export class TenantComponent implements OnInit {
                   this.pdfFileName = response.pdfFileName;
                   this.isConverting = false;
                   this.spinner.hide();
-                  this.showToast('PDF File uploaded and converted successfully!');
+                  this.showToast(
+                    'PDF File uploaded and converted successfully!'
+                  );
                   this.isFileUploaded = true; // Enable submit button
-                  
+
                   // Open the modal after images are returned and the upload completes
-                  this.openUploadModal(0); // Open the modal after the process is done
+                  this.openUploadModal(0);
                 }
               }
             },
@@ -255,8 +253,6 @@ export class TenantComponent implements OnInit {
       }
     }
   }
-  
-  
 
   showToast(message: string) {
     const toast = document.getElementById('customToast');
@@ -277,7 +273,7 @@ export class TenantComponent implements OnInit {
     const array = selectedImages.map((image) => image.content);
     const shopID = this.selectedShoppingID;
     console.log('shopID', shopID);
-    
+
     this.PlacesService.SendImagesArray(array, shopID).subscribe({
       next: (data) => {
         this.JsonPDF = data;
@@ -326,27 +322,27 @@ export class TenantComponent implements OnInit {
     });
     this.isSubmitting = false;
   }
+
   clearModalData() {
     if (this.uploadRequest) {
       this.uploadRequest.unsubscribe();
     }
-        this.isClearing = true;
-    
-    this.images = []; 
-    this.JsonPDF = null!; 
-    this.AvailabilityAndTenants = {}; 
-    this.fileName = ''; 
-    this.uploadProgress = 0; 
+    this.isClearing = true;
+    this.images = [];
+    this.JsonPDF = null!;
+    this.AvailabilityAndTenants = {};
+    this.fileName = '';
+    this.uploadProgress = 0;
     this.isUploading = false;
-    this.isConverting = false; 
-    this.files = []; 
-    this.returnsubmit = false; 
-    this.isFileUploaded = false; 
+    this.isConverting = false;
+    this.files = [];
+    this.returnsubmit = false;
+    this.isFileUploaded = false;
   }
 
   closeModal(modal: any) {
     modal.dismiss();
-    this.isClearing = false; 
+    this.isClearing = false;
     this.fileName = '';
     this.uploadProgress = 0;
     this.isUploading = false;

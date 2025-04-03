@@ -132,7 +132,7 @@
                     <ng-template #shortcutspopover>
                       <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shoppingCenter.Id">
                         <ul>
-                          <li>
+                          <!-- <li>
                             <a class="target" [href]="
                                 '/emily/' +
                                 BuyBoxId +
@@ -144,7 +144,7 @@
                               <i class="fa-regular fa-envelope big-text"></i>
                               Emily
                             </a>
-                          </li>
+                          </li> -->
 
                           <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
                             <a class="target" [routerLink]="[

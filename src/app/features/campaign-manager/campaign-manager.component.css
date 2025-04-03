@@ -1,3 +1,4 @@
+/* General Container for the Campaign Manager */
 .campaign-manager-container {
   padding: 1rem;
   display: flex;
@@ -8,16 +9,17 @@
   height: 100%;
 }
 
+/* Body of the Campaign Manager */
 .campaign-manager-body {
   flex: 1;
   width: 100%;
   height: 100%;
-  background-color: #fff;
-  padding: 1rem 2rem;
+  padding: 1rem 0.2rem;
   border-radius: 1rem;
   overflow: auto;
 }
 
+/* Search Campaign Container */
 .search-campaign-container {
   display: flex;
   align-items: center;
@@ -25,6 +27,7 @@
   position: relative;
 }
 
+/* Search Input */
 .search-campaign-input {
   background-color: #fff;
   border-radius: 1rem;
@@ -32,6 +35,7 @@
   padding: 0.75rem 3rem;
 }
 
+/* Search Icon Positioning */
 .search-campaign-icon {
   width: 20px;
   height: 20px;
@@ -40,6 +44,7 @@
   margin-inline: 1rem;
 }
 
+/* Add New Campaign Button */
 .add-new-campaign {
   display: flex;
   align-items: center;
@@ -55,14 +60,15 @@
   color: #fff;
 }
 
+/* Tenant Logo */
 .tenant-logo {
   height: 1.75rem;
   width: 1.75rem;
   border-radius: 50%;
 }
 
+/* Campaign Privacy Styles */
 .campaign-privacy {
-  /* width: 100%; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,13 +79,13 @@
 }
 
 .campaign-privacy-icon {
-  /* width: 100%; */
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
   background-color: black;
 }
 
+/* Public Campaign Styles */
 .campaign-privacy-public {
   background-color: #eaf6ec;
 }
@@ -92,6 +98,7 @@
   color: #208637;
 }
 
+/* Private Campaign Styles */
 .campaign-privacy-private {
   background-color: #ffeded;
 }
@@ -104,6 +111,7 @@
   color: #cc3d3d;
 }
 
+/* Modal Body */
 .modal-body {
   padding: 2rem;
   height: 85vh;
@@ -114,11 +122,13 @@
   width: 100%;
 }
 
+/* Campaign Drawing Component */
 .campaign-drawing-component {
   width: 100%;
   flex: 1;
 }
 
+/* Empty Campaigns State */
 .empty-campaigns {
   display: flex;
   flex-direction: column;
@@ -132,6 +142,7 @@
   font-weight: 600;
 }
 
+/* More Button Styles */
 .more {
   width: 1.5rem;
   height: 1.5rem;
@@ -150,6 +161,7 @@
   background-color: #f9f9f9;
 }
 
+/* Table Styles */
 .table {
   border-radius: 10px;
   overflow: hidden;
@@ -164,9 +176,9 @@
 .table tbody td {
   border: 1px solid #dee2e6;
   padding: 0.85rem 0.5rem;
-  /* padding-right: 3rem; */
 }
 
+/* Inbox Button */
 .inbox {
   padding: 0.5rem 1rem;
   border-radius: 1rem;
@@ -176,6 +188,7 @@
   cursor: pointer;
 }
 
+/* Hyperlink Style */
 .hyber-link {
   text-decoration: underline;
   font-size: 0.8rem;
@@ -183,6 +196,7 @@
   cursor: pointer;
 }
 
+/* Tenant Name Styling */
 .tenant-name {
   text-decoration: underline;
   cursor: pointer;
@@ -192,6 +206,7 @@
   color: #4d65b4;
 }
 
+/* Status Colors */
 .red {
   color: #cc3d3d;
 }
@@ -202,4 +217,363 @@
 
 .normal {
   text-decoration: underline;
+}
+
+/* View Toggle Styles */
+.view-toggle {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  color: #707791;
+  transition: all 0.2s ease;
+}
+
+.toggle-btn.active {
+  background-color: #4d65b4;
+  color: white;
+}
+
+/* Card View Styles */
+.campaign-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.campaign-card {
+  height: fit-content;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campaign-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.campaign-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.campaign-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.tenant-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.date-created {
+  font-size: 0.85rem;
+  color: #707791;
+}
+
+.campaign-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #707791;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-weight: 500;
+}
+
+.campaign-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid #eee;
+}
+
+.expand-btn {
+  background: none;
+  border: none;
+  color: #4d65b4;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.expand-btn:hover {
+  background-color: rgba(77, 101, 180, 0.1);
+}
+
+.campaign-stages {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.campaign-stages.expanded {
+  max-height: 500px;
+}
+
+.stages-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.stage-item {
+  background-color: #f9f9f9;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stage-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.stage-value {
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+  .view-toggle {
+    display: none;
+  }
+
+  .campaign-manager-container {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tenant-name {
+    white-space: pre-wrap;
+    max-width: 60%;
+  }
+
+  .w-100.d-flex.align-items-center.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 350px;
+    width: 100%;
+  }
+
+  .search-campaign-container {
+    width: 100%;
+  }
+
+  .search-campaign-input {
+    width: 100%;
+  }
+
+  .add-new-campaign {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .campaign-manager-body {
+    padding: 0;
+    background-color: transparent;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .table-responsive {
+    border: none;
+    max-width: 350px;
+    width: 100%;
+  }
+
+  .table {
+    border: none;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    position: relative;
+    width: 350px;
+  }
+
+  .table tbody td {
+    display: block;
+    border: none;
+    padding: 0.4rem 0;
+    text-align: left;
+    position: relative;
+    font-size: 0.9rem;
+  }
+
+  .table tbody tr td:first-child {
+    font-weight: 600;
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0.4rem;
+    padding-right: 90px;
+    white-space: normal;
+  }
+
+  .table tbody tr td:nth-child(4) {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0;
+  }
+
+  .campaign-privacy {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .table tbody tr td:nth-child(2) {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.4rem;
+    border-bottom: 1px solid #eee;
+  }
+
+  .table tbody tr td:nth-child(3) {
+    font-size: 0.75rem;
+    color: #707791;
+    position: absolute;
+    top: 3.8rem;
+    right: 0.75rem;
+    padding: 0;
+  }
+
+  .table tbody tr td:nth-child(5),
+  .table tbody tr td:nth-child(6),
+  .table tbody tr td:nth-child(7) {
+    display: inline-block;
+    width: 33%;
+    text-align: center;
+    padding: 0.4rem 0;
+    font-size: 0.85rem;
+  }
+
+  .table tbody tr td:nth-child(5)::before {
+    content: "Sites: ";
+    font-weight: normal;
+    color: #707791;
+  }
+
+  .table tbody tr td:nth-child(6)::before {
+    content: "Submissions: ";
+    font-weight: normal;
+    color: #707791;
+  }
+
+  .table tbody tr td:nth-child(7)::before {
+    content: "Mails: ";
+    font-weight: normal;
+    color: #707791;
+  }
+
+  .table tbody tr td:nth-child(8) {
+    padding-top: 0.5rem;
+    margin-top: 0.4rem;
+    border-top: 1px solid #eee;
+    text-align: center;
+  }
+
+  .inbox {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .table tbody tr td:nth-child(n + 9) {
+    display: inline-block;
+    width: 50%;
+    padding: 0.4rem;
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .table tbody tr td:nth-child(n + 9)::before {
+    content: attr(scope);
+    display: block;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+  }
+
+  .hyber-link {
+    font-size: 0.75rem;
+  }
+
+  .empty-campaigns {
+    padding: 1.5rem 1rem;
+    max-width: 350px;
+    width: 100%;
+  }
+
+  .empty-campaigns img {
+    max-width: 70%;
+  }
+
+  .empty-campaigns h4 {
+    font-size: 1.1rem;
+  }
+
+  .empty-campaigns p {
+    font-size: 0.9rem;
+  }
 }

@@ -36,7 +36,7 @@
                       </button>
                       <div class="shortcuts_iconCard" *ngIf="selectedIdCard === place.Id">
                         <ul>
-                          <li class="cursor">
+                          <!-- <li class="cursor">
                             <a class="target" [href]="
                                   '/emily/' +
                                   BuyBoxId +
@@ -49,7 +49,7 @@
                               <i class="fa-regular fa-envelope emily"></i>
                               Emily
                             </a>
-                          </li>
+                          </li> -->
                           <li (click)="toggleShortcuts(place.Id, 'close')">
                             <a class="target"
                               [routerLink]="['/landing',place?.ShoppingCenter?.Places?.[0]?.Id || 0,place?.Id,BuyBoxId]">

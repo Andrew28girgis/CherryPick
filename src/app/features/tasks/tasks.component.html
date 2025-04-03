@@ -1,5 +1,5 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div class="container">
+<div class="">
   <div class="row">
     <div class="col-md-12 action-wrap">
       <h5 class="mb-2 task-head">Reactions</h5>
@@ -37,7 +37,7 @@
                   (click)="handleNotificationClick(notification)">
                 <td class="message-task col-10">{{ notification.message }}</td>
                 <td class="message-task col-2 text-end">
-                  {{ notification.createdDate | date }}
+                  {{ notification.createdDate | date : "medium" }}
                 </td>
               </tr>
               <tr *ngIf="getNotificationsByCategory(2).length === 0">
@@ -90,7 +90,7 @@
                     (click)="handleNotificationClick(notification)">
                   <td class="message-task col-10">{{ notification.message }}</td>
                   <td class="message-task col-2 text-end">
-                    {{ notification.createdDate | date }}
+                    {{ notification.createdDate | date : "medium" }}
                   </td>
                 </tr>
                 <tr *ngIf="getNotificationsByCategory(4).length === 0">
