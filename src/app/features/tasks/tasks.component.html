@@ -7,16 +7,13 @@
         <div class="table-responsive">
           <table class="table align-middle m-0">
             <tbody>
-              <tr *ngFor="let notification of getNotificationsByCategory(1)">
+              <tr *ngFor="let notification of getNotificationsByCategory(1)" 
+                  [ngClass]="{'unread': !notification.isRead}"
+                  (click)="markAsRead(notification)">
                 <td class="message-task col-10">{{ notification.message }}</td>
-                <td  class="message-task col-2 text-end">
+                <td class="message-task col-2 text-end">
                   {{ notification.createdDate | date }}
                 </td>
-                <!-- <td>
-                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
-                                            {{notification.isRead ? 'Read' : 'Unread'}}
-                                        </span>
-                                    </td> -->
               </tr>
               <tr *ngIf="getNotificationsByCategory(1).length === 0">
                 <td colspan="3" class="text-center">
@@ -34,16 +31,14 @@
         <div class="table-responsive">
           <table class="table align-middle m-0">
             <tbody>
-              <tr *ngFor="let notification of getNotificationsByCategory(2)">
+              <tr style="cursor: pointer;"
+               *ngFor="let notification of getNotificationsByCategory(2)" 
+                  [ngClass]="{'unread': !notification.isRead}"
+                  (click)="handleNotificationClick(notification)">
                 <td class="message-task col-10">{{ notification.message }}</td>
                 <td class="message-task col-2 text-end">
                   {{ notification.createdDate | date }}
                 </td>
-                <!-- <td>
-                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
-                                            {{notification.isRead ? 'Read' : 'Unread'}}
-                                        </span>
-                                    </td> -->
               </tr>
               <tr *ngIf="getNotificationsByCategory(2).length === 0">
                 <td colspan="3" class="text-center">
@@ -62,16 +57,14 @@
           <div class="table-responsive">
             <table class="table align-middle m-0">
               <tbody>
-                <tr *ngFor="let notification of getNotificationsByCategory(3)">
+                <tr style="cursor: pointer;"
+                 *ngFor="let notification of getNotificationsByCategory(3)" 
+                    [ngClass]="{'unread': !notification.isRead}"
+                    (click)="handleNotificationClick(notification)">
                   <td class="message-task col-10">{{ notification.message }}</td>
-                  <td  class="message-task col-2 text-end">
+                  <td class="message-task col-2 text-end">
                     {{ notification.createdDate | date }}
                   </td>
-                  <!-- <td>
-                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
-                                            {{notification.isRead ? 'Read' : 'Unread'}}
-                                        </span>
-                                    </td> -->
                 </tr>
                 <tr *ngIf="getNotificationsByCategory(3).length === 0">
                   <td colspan="3" class="text-center">
@@ -91,16 +84,14 @@
           <div class="table-responsive">
             <table class="table align-middle m-0">
               <tbody>
-                <tr *ngFor="let notification of getNotificationsByCategory(4)">
+                <tr style="cursor: pointer;"
+                 *ngFor="let notification of getNotificationsByCategory(4)" 
+                    [ngClass]="{'unread': !notification.isRead}"
+                    (click)="handleNotificationClick(notification)">
                   <td class="message-task col-10">{{ notification.message }}</td>
                   <td class="message-task col-2 text-end">
                     {{ notification.createdDate | date }}
                   </td>
-                  <!-- <td>
-                                        <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
-                                            {{notification.isRead ? 'Read' : 'Unread'}}
-                                        </span>
-                                    </td> -->
                 </tr>
                 <tr *ngIf="getNotificationsByCategory(4).length === 0">
                   <td colspan="3" class="text-center">
@@ -115,3 +106,57 @@
     </div>
   </div>
 </div>
+
+<ng-template #EmailView let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">{{getCurrentEmail().subject}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <div class="email-meta mb-3">
+        <div><strong>Date:</strong> {{getCurrentEmail().date | date:'medium'}}</div>
+        <div *ngIf="getCurrentEmail().fromAddress"><strong>From:</strong> {{getCurrentEmail().fromAddress}}</div>
+        <div *ngIf="getCurrentEmail().toAddress"><strong>To:</strong> {{getCurrentEmail().toAddress}}</div>
+        <div *ngIf="getCurrentEmail().cc"><strong>CC:</strong> {{getCurrentEmail().cc}}</div>
+        <div *ngIf="getCurrentEmail().bcc"><strong>BCC:</strong> {{getCurrentEmail().bcc}}</div>
+      </div>
+      <div class="email-body" [innerHTML]="getCurrentEmail().body"></div>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+      <div>
+        <button type="button" class="btn btn-outline-primary me-2" 
+                [disabled]="selectedEmailIndex === 0"
+                (click)="previousEmail()">
+          Previous Email
+        </button>
+        <button type="button" class="btn btn-outline-primary" 
+                [disabled]="selectedEmailIndex === emailData.length - 1"
+                (click)="nextEmail()">
+          Next Email
+        </button>
+        <span class="ms-3" *ngIf="emailData.length > 1">
+          Email {{selectedEmailIndex + 1}} of {{emailData.length}}
+        </span>
+      </div>
+        <div class="div">
+            <button *ngIf="getCurrentEmail().direction==4"
+            type="button" class="btn btn-primary me-2"
+                  (click)="sendEmail(getCurrentEmail())">
+            <i class="fas fa-paper-plane"></i> Send
+          </button>
+          <button *ngIf="getCurrentEmail().direction==4"
+          type="button"
+          class="btn btn-success me-2"
+          (click)="sendAllEmails()">
+            <i class="fas fa-paper-plane"></i> Send All
+          </button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </div>
+  </ng-template>
+
+  <div id="customToast" class="custom-toast">
+    <div class="toast-content">
+      <p id="toastMessage"></p>
+    </div>
+  </div>
