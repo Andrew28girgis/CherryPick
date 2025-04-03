@@ -16,6 +16,7 @@ export class CampaignDrawingService {
     polygon: google.maps.drawing.OverlayType.POLYGON,
     circle: google.maps.drawing.OverlayType.CIRCLE,
   };
+  private explorePolygons: IMapShape[] = [];
 
   onPolygonCreated = new EventEmitter<IMapShape>();
   onCircleCreated = new EventEmitter<IMapShape>();
@@ -671,6 +672,118 @@ export class CampaignDrawingService {
     this.drawnCircles.forEach((c) => c.shape.setMap(null));
     this.drawnPolygons = [];
     this.drawnCircles = [];
+  }
+
+  completelyRemoveExplorePolygon(): void {
+    this.explorePolygons.forEach((p) => p.shape.setMap(null));
+    this.explorePolygons = [];
+  }
+
+  insertExplorePolygon(polygonId: number, coordinates: any,name:string): void {
+    // create new polygon
+    const polygon: google.maps.Polygon = new google.maps.Polygon({
+      paths: coordinates,
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+      editable: false,
+      draggable: false,
+    });
+
+    // Set the polygon on the map
+    polygon.setMap(null);
+
+    polygon.set(
+      'label',
+      name.trim().length>0 ? name : 'Shape'
+    );
+
+    // push the polygon into drawn list
+    this.explorePolygons.push({ id: polygonId, shape: polygon });
+  }
+  
+  insertExplorePolygonToMyPolygons(map:any,polygonId: number, coordinates: any,name:string): void {
+    // create new polygon
+    const polygon: google.maps.Polygon = new google.maps.Polygon({
+      paths: coordinates,
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+      editable: false,
+      draggable: false,
+    });
+
+    // Set the polygon on the map
+    polygon.setMap(null);
+
+    polygon.set(
+      'label',
+      name.trim().length>0 ? name : 'Shape'
+    );
+
+    // push the polygon into drawn list
+    this.drawnPolygons.push({ id: polygonId, shape: polygon });
+
+    this.addPolygonClickListener(map, polygon);
+            this.addPolygonChangeListener(map, polygon);
+            this.addPolygonDoubleClickListener(polygon);
+  }
+
+  hideShapeFromMap(id: number): void {
+    // get shape from the drawn list
+    const shape =
+      this.drawnPolygons.find((p) => p.id == id) ||
+      this.drawnCircles.find((c) => c.id == id) ||
+      this.explorePolygons.find((p) => p.id == id);
+      // debugger
+    if (shape) {
+      // remove the shape from the map view
+      shape.shape.setMap(null);
+    }
+  }
+
+  updateMapZoom(map: any, coordinates: any[]): void {
+    if (map) {
+      const bounds = new google.maps.LatLngBounds();
+
+      // Extend the bounds to include each coordinate
+      coordinates.forEach((point) => {
+        bounds.extend(point);
+      });
+
+      // Adjust the map to fit the bounds with optional padding
+      map.fitBounds(bounds, { padding: 20 });
+    }
+  }
+
+  updateMapCenter(map: any, center: any): void {
+    if (map) {
+      const newCenter = center ? center : { lat: 37.7749, lng: -122.4194 };
+      map.setCenter(newCenter);
+    }
+  }
+  displayShapeOnMap(id: number, map: any): void {
+    const shape =
+      this.drawnPolygons.find((p) => p.id == id) ||
+      this.drawnCircles.find((c) => c.id == id) ||
+      this.explorePolygons.find((p) => p.id == id);
+    if (shape) {
+      shape.shape.setMap(map);
+    }
+  }
+
+  hideMyPolygons(): void {
+    this.drawnPolygons.forEach((d) => d.shape.setMap(null));
+    this.drawnCircles.forEach((c) => c.shape.setMap(null));
+  }
+
+  displayMyPolygons(map: any): void {
+    this.drawnPolygons.forEach((d) => d.shape.setMap(map));
+    this.drawnCircles.forEach((c) => c.shape.setMap(map));
   }
 
   get getDrawnPolygons() {

@@ -298,15 +298,15 @@
       <table class="table align-middle">
         <thead>
           <tr>
-            <th class="col-3" style="white-space: nowrap">Campaign Name</th>
-            <th scope="col" style="white-space: nowrap">Date Created</th>
-            <th scope="col" style="white-space: nowrap">Privacy</th>
-            <th scope="col" style="white-space: nowrap">Sites</th>
-            <th scope="col" style="white-space: nowrap">Submissions</th>
-            <th scope="col" style="white-space: nowrap">Mails Sent</th>
-            <th scope="col" style="white-space: nowrap">Actions</th>
+            <th style="width: 250px;">Campaign Name</th>
+            <th style="text-align: center">Date Created</th>
+            <th style="text-align: center">Privacy</th>
+            <th style="text-align: center">Sites</th>
+            <th style="text-align: center">Submissions</th>
+            <th style="text-align: center">Mails Sent</th>
+            <th style="text-align: center">Actions</th>
             <ng-container *ngFor="let stage of stages">
-              <th scope="col" style="white-space: nowrap; text-align: center">
+              <th scope="col" style="text-align: center">
                 {{ stage.stageName }}
               </th>
             </ng-container>
@@ -318,7 +318,7 @@
               *ngFor="let campaign of c.Campaigns; let index = index"
             >
               <tr>
-                <td >
+                <td style="width: 250px;">
                   {{ campaign.CampaignName }}
                   <div class="d-flex align-items-center gap-2">
                     <img
@@ -344,10 +344,10 @@
                 </td>
                 
          
-                <td style="white-space: nowrap; text-align: center">
+                <td style="text-align: center">
                   {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
                 </td>
-                <td style="white-space: nowrap; text-align: center">
+                <td style="text-align: center">
                   <div
                     class="campaign-privacy"
                     [ngClass]="{
@@ -364,7 +364,7 @@
                   </div>
                 </td>
 
-                <td style="white-space: nowrap; text-align: center">
+                <td style="text-align: center">
                   <div
                     class="d-flex align-items-center justify-content-center gap-3"
                   >
@@ -398,7 +398,7 @@
                     </svg>
                   </div>
                 </td>
-                <td style="white-space: nowrap; text-align: center">
+                <td style="text-align: center">
                   <div
                     class="d-flex align-items-center justify-content-center gap-3"
                   >
@@ -453,13 +453,13 @@
                     <div *ngIf="!campaign.Submissions">N/A</div>
                   </div>
                 </td>
-                <td style="white-space: nowrap; text-align: center">
+                <td style="text-align: center">
                   <ng-container *ngIf="campaign.MailsSent">
                     {{ campaign.MailsSent }}</ng-container
                   >
                 </td>
 
-                <td style="white-space: nowrap; text-align: center">
+                <td style="text-align: center">
                   <a
                     class="inbox"
                     [routerLink]="[
@@ -471,7 +471,7 @@
                   >
                 </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
-                  <td style="white-space: nowrap; text-align: center">
+                  <td style="text-align: center">
                     <div
                       class="d-flex flex-column align-items-center justify-content-center gap-2"
                     >
