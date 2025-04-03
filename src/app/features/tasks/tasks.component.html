@@ -9,8 +9,8 @@
             <tbody>
               <tr *ngFor="let notification of getNotificationsByCategory(1)">
                 <td class="message-task col-10">{{ notification.message }}</td>
-                <td  class="message-task col-2 text-end">
-                  {{ notification.createdDate | date }}
+                <td class="message-task col-2 text-end">
+                  {{ notification.createdDate | date : "medium" }}
                 </td>
                 <!-- <td>
                                         <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
@@ -37,7 +37,7 @@
               <tr *ngFor="let notification of getNotificationsByCategory(2)">
                 <td class="message-task col-10">{{ notification.message }}</td>
                 <td class="message-task col-2 text-end">
-                  {{ notification.createdDate | date }}
+                  {{ notification.createdDate | date : "medium" }}
                 </td>
                 <!-- <td>
                                         <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
@@ -63,9 +63,11 @@
             <table class="table align-middle m-0">
               <tbody>
                 <tr *ngFor="let notification of getNotificationsByCategory(3)">
-                  <td class="message-task col-10">{{ notification.message }}</td>
-                  <td  class="message-task col-2 text-end">
-                    {{ notification.createdDate | date }}
+                  <td class="message-task col-10">
+                    {{ notification.message }}
+                  </td>
+                  <td class="message-task col-2 text-end">
+                    {{ notification.createdDate | date : "medium" }}
                   </td>
                   <!-- <td>
                                         <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
@@ -92,9 +94,11 @@
             <table class="table align-middle m-0">
               <tbody>
                 <tr *ngFor="let notification of getNotificationsByCategory(4)">
-                  <td class="message-task col-10">{{ notification.message }}</td>
+                  <td class="message-task col-10">
+                    {{ notification.message }}
+                  </td>
                   <td class="message-task col-2 text-end">
-                    {{ notification.createdDate | date }}
+                    {{ notification.createdDate | date : "medium" }}
                   </td>
                   <!-- <td>
                                         <span class="badge" [ngClass]="notification.isRead ? 'bg-secondary' : 'bg-danger'">
