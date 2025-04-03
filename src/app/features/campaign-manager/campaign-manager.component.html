@@ -435,8 +435,8 @@
                     <div *ngIf="!campaign.Submissions">N/A</div>
                   </div>
                 </td>
-                <td style="white-space: nowrap; text-align: center">
-                  {{ campaign.MailsSent[0].MailsSent }}
+                <td style="white-space: nowrap; text-align: center" >
+                <ng-container *ngIf="campaign.MailsSent"> {{ campaign.MailsSent[0].MailsSent }}</ng-container> 
                 </td>
 
                 <td style="white-space: nowrap; text-align: center">
