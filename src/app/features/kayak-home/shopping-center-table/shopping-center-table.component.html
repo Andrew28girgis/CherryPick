@@ -18,14 +18,14 @@
   </div>
 
   <!-- The rest of your view components -->
-  <app-map-view *ngIf="currentView == 1" (viewChange)="onViewChange($event)" #mapView></app-map-view>
+  <app-map-view *ngIf="currentView == 1"(viewChange)="onViewChange($event)" #mapView></app-map-view>
   <div class="row m-0" *ngIf="currentView == 2">
     <div class="col-12 p-0">
       <app-side-list-view (highlightMarker)="onHighlightMarker($event)"
         (unhighlightMarker)="onUnhighlightMarker($event)"></app-side-list-view>
     </div>
   </div>
-  <app-card-view *ngIf="currentView == 3"></app-card-view>
-  <app-table-view *ngIf="currentView == 4" (viewChange)="onViewChange($event)"></app-table-view>
-  <app-social-view *ngIf="currentView == 5" (viewChange)="onViewChange($event)"></app-social-view>
+  <app-card-view [hidden]="currentView !== 3"></app-card-view>
+  <app-table-view  [hidden]="currentView !==4" (viewChange)="onViewChange($event)"></app-table-view>
+  <app-social-view  [hidden]="currentView !== 5" (viewChange)="onViewChange($event)"></app-social-view>
 </div>
