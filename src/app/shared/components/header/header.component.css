@@ -58,17 +58,34 @@
   font-size: 14px;
 }
 
-.nav-link:hover {
+/* Apply hover effect only to non-active links */
+.nav-link:not(.active-route):hover {
   background-color: #f5f7fa;
   color: #4d65b4;
+}
+
+/* Fix: Prevent hover effect on active links */
+.nav-link.active-route:hover {
+  background-color: #b8c1e1;
+  color: #4d65b4 !important;
 }
 
 .img-icn {
   margin-right: 8px;
   font-size: 16px;
-  color: #72777a !important;
+  /* Default filter for gray color */
+  filter: brightness(0) saturate(100%) invert(46%) sepia(9%) saturate(382%) hue-rotate(173deg) brightness(94%) contrast(87%);
 }
 
+.nav-link.active-route .img-icn {
+  /* Filter for #4d65b4 blue color */
+  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%) hue-rotate(202deg) brightness(92%) contrast(87%);
+}
+
+/* Also apply the blue filter on hover for non-active items */
+.nav-link:not(.active-route):hover .img-icn {
+  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%) hue-rotate(202deg) brightness(92%) contrast(87%);
+}
 .active-route {
   background-color: #b8c1e1;
   color: #4d65b4 !important;

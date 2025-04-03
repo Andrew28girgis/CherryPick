@@ -146,6 +146,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   showbackIds: number[] = [];
   mapsLoaded = false;
   DeletedSC: any;
+  feedbackNote: string = '';
+  feedbackSubmitted: boolean = false;
+  feedbackData: any[] = [];
+  viewedCenters: Set<number> = new Set();
   private touchStartX = 0;
   private touchEndX = 0;
   private readonly SWIPE_THRESHOLD = 50;
@@ -455,13 +459,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.clickTimeout = null;
       }, 250);
     }
-  }
-
-  open(content: any, currentShopping: any) {
-    this.modalService.open(content, {
-      windowClass: 'custom-modal',
-    });
-    this.General.modalObject = currentShopping;
   }
 
   addLike(shopping: Center, reactionId: number): void {
@@ -1170,5 +1167,116 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
         this.spinner.hide();
       });
+  }
+
+  selectRating(rating: string): void {
+    this.selectedRating = rating;
+    this.cdr.markForCheck();
+  }
+
+  selectCenterAndContinue(selectedCenter: any, modal: any): void {
+    if (!selectedCenter) return;
+
+    this.selectedCenterId = selectedCenter.Id;
+
+    if (this.selectedRating) {
+      this.submitFeedback(modal, false);
+    } else {
+      this.updateComparisonView(selectedCenter);
+    }
+  }
+
+  updateComparisonView(selectedCenter: any): void {
+    this.viewedCenters.add(selectedCenter.Id);
+
+    this.General.modalObject = selectedCenter;
+
+    this.loadNextComparisonCenter();
+
+    this.selectedRating = null;
+    this.feedbackNote = '';
+
+    this.cdr.markForCheck();
+  }
+
+  loadNextComparisonCenter(): void {
+    const availableCenters = this.shoppingCenters.filter(
+      (center) =>
+        !this.viewedCenters.has(center.Id) &&
+        center.Id !== this.General.modalObject.Id
+    );
+
+    if (availableCenters.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availableCenters.length);
+      this.General.comparisonObject = availableCenters[randomIndex];
+    } else {
+      this.General.comparisonObject = null;
+    }
+  }
+
+  skipComparison(modal: any): void {
+    if (!this.General.comparisonObject) return;
+
+    this.updateComparisonView(this.General.comparisonObject);
+  }
+
+  submitFeedback(modal: any, closeModal: boolean = true): void {
+    if (!this.selectedRating) {
+      return;
+    }
+
+    const feedback = {
+      id: Date.now(), // Temporary ID until API integration
+      centerId: this.selectedCenterId || this.General.modalObject.Id,
+      rating: this.selectedRating,
+      note: this.feedbackNote || '',
+      timestamp: new Date().toISOString(),
+      userId: localStorage.getItem('ContactId') || 'anonymous',
+    };
+
+    this.feedbackData.push(feedback);
+
+    this.feedbackSubmitted = true;
+
+    if (this.selectedRating === 'like') {
+      const shopping = this.shoppingCenters.find(
+        (s) => s.Id === feedback.centerId
+      );
+      if (shopping) {
+        this.addLike(shopping, 1);
+      }
+    }
+
+    if (closeModal) {
+      this.resetFeedbackForm();
+
+      modal.close();
+    } else {
+      const selectedCenter = this.shoppingCenters.find(
+        (s) => s.Id === feedback.centerId
+      );
+      if (selectedCenter) {
+        this.updateComparisonView(selectedCenter);
+      }
+    }
+  }
+
+  resetFeedbackForm(): void {
+    this.selectedRating = null;
+    this.selectedCenterId = null;
+    this.feedbackNote = '';
+    this.feedbackSubmitted = false;
+    this.viewedCenters.clear();
+    this.cdr.markForCheck();
+  }
+
+  open(content: any, currentShopping: any) {
+    this.resetFeedbackForm();
+    this.General.modalObject = currentShopping;
+    this.viewedCenters.add(currentShopping.Id);
+    this.loadNextComparisonCenter();
+    this.modalService.open(content, {
+      windowClass: 'custom-modal',
+    });
   }
 }
