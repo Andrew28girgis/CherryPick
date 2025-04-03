@@ -184,20 +184,6 @@ export class CampaignManagerComponent implements OnInit {
     });
   }
 
-  getStageOrganizationCount(
-    stageName: string,
-    stages?: Stage[]
-  ): number | null {
-    if (stages) {
-      return (
-        stages.find(
-          (stage) => stage.stageName.toLowerCase() == stageName.toLowerCase()
-        )?.Organizations || null
-      );
-    }
-    return null;
-  }
-
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
     const body: any = {
       Name: 'GetCampaignOrganizations',
@@ -246,4 +232,7 @@ export class CampaignManagerComponent implements OnInit {
       green: statusId === 1,
     };
   }
+
+ 
+  
 }
