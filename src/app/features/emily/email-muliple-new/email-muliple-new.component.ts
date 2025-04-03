@@ -141,8 +141,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     this.emilyService
       .getCheckList()
       .subscribe((buyboxChecklist: buyboxChecklist) => {
-        // console.log(buyboxChecklist);
-
+ 
         if (this.buyboxChecklist == null || this.buyboxChecklist == undefined) {
           const storedChecklist = sessionStorage.getItem('buyboxChecklist');
           if (storedChecklist) {
@@ -852,6 +851,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     // this.originalEmailTemplates = JSON.parse(JSON.stringify(newTemplates));
 
     this.emailBody = newTemplates.map((t: any) => t.templateOne).join('\n');
+
     // console.log(this.emailTemplates);
   }
 
@@ -1118,6 +1118,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
       this.selectedPromptText = 'No prompt text available';
     }
   }
+
   async PutMailsDraft(): Promise<void> {
     this.updateEmailBody();
 
@@ -1130,9 +1131,11 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     const promptId = Number(this.selectedPromptId);
     const IsCC = this.isISCcSelected;
 
+ 
+
     from(this.emailTemplates)
       .pipe(
-        concatMap((emailTemplate, index) => {
+        concatMap((emailTemplate) => {
           const body: any = {
             Name: 'PutMailsDraft',
             MainEntity: null,
@@ -1142,7 +1145,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
               PromptId: promptId,
               IsCC: IsCC,
               OrganizationId: Number(emailTemplate.organizationId),
-              context: `${emailTemplate.templateOne}${emailTemplate.templateTwo}`,
+              context: `${emailTemplate.templateOne}${this.emailBody2}`,
             },
             Json: null,
           };
@@ -1161,10 +1164,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         complete: () => {
-          this.spinner.hide();
-        },
-        error: (error: any) => {
-          console.error('Error:', error);
+          this.GetMailContextGenerated(); 
           this.spinner.hide();
         },
       });

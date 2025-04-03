@@ -197,42 +197,42 @@
               <div class="stat-item">
                 <div class="stat-label">Submissions</div>
                 <div
-                class="d-flex align-items-center justify-content-center gap-3"
-              >
-                <div
-                  *ngIf="campaign.Submissions"
-                  style="cursor: pointer"
-                  [routerLink]="['/submissions', campaign.Id]"
+                  class="d-flex align-items-center justify-content-center gap-3"
                 >
-                  <span style="color: orange" title="New Submissions">{{
-                    getSubmissionsCountNew(campaign.Submissions)
-                  }}</span>
-                  |
-                  <span
-                    style="color: rgb(0, 207, 35)"
-                    title="Accepted Submissions"
-                    >{{
-                      getSumbmissionsCountAcceppted(campaign.Submissions)
-                    }}</span
+                  <div
+                    *ngIf="campaign.Submissions"
+                    style="cursor: pointer"
+                    [routerLink]="['/submissions', campaign.Id]"
                   >
-                  |
-                  <span
-                    style="color: rgb(207, 0, 0)"
-                    title="Rejected Submissions"
-                    >{{
-                      getSumbmissionsCountRejected(campaign.Submissions)
-                    }}</span
-                  >
+                    <span style="color: orange" title="New Submissions">{{
+                      getSubmissionsCountNew(campaign.Submissions)
+                    }}</span>
+                    |
+                    <span
+                      style="color: rgb(0, 207, 35)"
+                      title="Accepted Submissions"
+                      >{{
+                        getSumbmissionsCountAcceppted(campaign.Submissions)
+                      }}</span
+                    >
+                    |
+                    <span
+                      style="color: rgb(207, 0, 0)"
+                      title="Rejected Submissions"
+                      >{{
+                        getSumbmissionsCountRejected(campaign.Submissions)
+                      }}</span
+                    >
 
-                  <ng-container
-                    *ngFor="
-                      let submission of sortedSubmissions(
-                        campaign.Submissions
-                      );
-                      let i = index
-                    "
-                  >
-                    <!-- <span
+                    <ng-container
+                      *ngFor="
+                        let submission of sortedSubmissions(
+                          campaign.Submissions
+                        );
+                        let i = index
+                      "
+                    >
+                      <!-- <span
                       [pTooltip]="
                         submission.StatusId == 0
                           ? 'New'
@@ -245,10 +245,10 @@
                       >{{ submission }}</span
                     >
                     <span *ngIf="i < 2"> - </span> -->
-                  </ng-container>
+                    </ng-container>
+                  </div>
+                  <div *ngIf="!campaign.Submissions">N/A</div>
                 </div>
-                <div *ngIf="!campaign.Submissions">N/A</div>
-              </div>
               </div>
               <div class="stat-item">
                 <div class="stat-label">Mails Sent</div>
@@ -320,7 +320,7 @@
       <table class="table align-middle">
         <thead>
           <tr>
-            <th style="width: 250px;">Name</th>
+            <th style="width: 250px">Name</th>
             <th style="text-align: center">Date</th>
             <th style="text-align: center">Privacy</th>
             <th style="text-align: center">Sites</th>
@@ -340,7 +340,7 @@
               *ngFor="let campaign of c.Campaigns; let index = index"
             >
               <tr>
-                <td style="width: 250px;">
+                <td style="width: 250px">
                   {{ campaign.CampaignName }}
                   <div class="d-flex align-items-center gap-2">
                     <img
@@ -364,8 +364,7 @@
                     >
                   </div>
                 </td>
-                
-         
+
                 <td style="text-align: center">
                   {{ (campaign.CreatedDate | date : "MMM d, y") ?? "N/A" }}
                 </td>
