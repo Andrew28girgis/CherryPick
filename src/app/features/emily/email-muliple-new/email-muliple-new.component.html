@@ -19,6 +19,30 @@
         alt=""
       />
       <span class="BuyBoxName">{{ BuyBoxName }}</span>
+      
+      <button
+      class="Emily__contant__button Emily__contant__Generate mx-3"
+      (click)="PutMailsDraft()"
+    >
+      <svg
+        width="14"
+        height="20"
+        viewBox="0 0 14 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
+          stroke="white"
+          stroke-width="1.5"
+          stroke-miterlimit="10"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      Generate Emails
+    </button>
+
     </div>
     <div
       class="container-fluid px-2 d-block d-sm-flex justify-content-end align-items-center col-12 col-sm-6"
@@ -563,7 +587,7 @@
 </div>
 
 <!-- table Get email Generated  -->
-<div class="p-3 div-Table">
+<div class="p-3 div-Table" *ngIf="returnGetMailContextGenerated.length > 0 ">
   <table class="table table-striped">
     <thead>
       <tr>
