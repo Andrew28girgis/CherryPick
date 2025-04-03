@@ -80,10 +80,10 @@ export class TasksComponent implements OnInit {
   markAsRead(notification: notificationCategory): void {
     notification.isRead = true;
   }
-  handleNotificationClick(notification: notificationCategory): void {
-    this.markAsRead(notification);
-    this.GetNotificationActions(notification);
-  }
+  // handleNotificationClick(notification: notificationCategory): void {
+  //   this.markAsRead(notification);
+  //   this.GetNotificationActions(notification);
+  // }
 
   GetNotificationActions(notification: notificationCategory): void {
     this.spinner.show();
