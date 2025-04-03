@@ -69,6 +69,9 @@
                     {{ notification.createdDate | date : "medium" }}
                   </td>
                   <td>
+                    <button class="view" (click)="getCampaignOrganizations(notification.buyBoxId,notification.campaignId)">Generate emails</button>
+                  </td>
+                  <td>
                     <button class="view" (click)="GetNotificationActions(notification)">View Places</button>
                   </td>
                 </tr>
@@ -117,13 +120,19 @@
 </div>
 
 <ng-template #EmailView let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title">{{getCurrentEmail().subject}}</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title"> {{getCurrentEmail().buyBoxName}}</h4>
+        <div class="d-flex">
+            <h4 class="modal-title" style="margin-right: 20px;"> {{getCurrentEmail().organizationName}} </h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style=" min-height: 75vh; max-height: 75vh;overflow-y: auto;">
       <div class="email-meta mb-3">
-        <div><strong>Date:</strong> {{getCurrentEmail().date | date:'medium'}}</div>
+        <div class="d-flex justify-content-between">
+            <div><strong>Subject:</strong> {{getCurrentEmail().subject}}</div>
+            <div><strong>Date:</strong> {{getCurrentEmail().date | date:'medium'}}</div>
+        </div>
         <div *ngIf="getCurrentEmail().fromAddress"><strong>From:</strong> {{getCurrentEmail().fromAddress}}</div>
         <div *ngIf="getCurrentEmail().toAddress"><strong>To:</strong> {{getCurrentEmail().toAddress}}</div>
         <div *ngIf="getCurrentEmail().cc"><strong>CC:</strong> {{getCurrentEmail().cc}}</div>

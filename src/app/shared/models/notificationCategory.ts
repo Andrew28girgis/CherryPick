@@ -5,6 +5,8 @@ export interface notificationCategory {
     isRead: boolean
     createdDate: string
     notificationCategoryId?: number
+    buyBoxId: number 
+    campaignId: number 
   }
     export interface EmailNotificationResponse {
     id: number;
@@ -40,6 +42,8 @@ export interface notificationCategory {
     mailId: number;
     email: string | null;
     responseStatus1: any | null;
+    organizationName:string | null;
+    buyBoxName:string | null;
     }
 
     export interface SyncNotificationResponse {

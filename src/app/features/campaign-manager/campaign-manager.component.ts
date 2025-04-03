@@ -1,19 +1,11 @@
-import {
-  Component,
-   OnInit,
-   TemplateRef,
-  HostListener,
-} from '@angular/core';
+import { submission } from './../../shared/models/submissions';
+import { Component, OnInit, TemplateRef, HostListener } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
-import {
-  ICampaign,
-  Stage,
-  Submission,
-} from 'src/app/shared/models/icampaign';
-import  { EmilyService } from 'src/app/core/services/emily.service';
-import  { Router } from '@angular/router';
+import { ICampaign, Submission } from 'src/app/shared/models/icampaign';
+import { EmilyService } from 'src/app/core/services/emily.service';
+import { Router } from '@angular/router';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
@@ -37,14 +29,14 @@ export class CampaignManagerComponent implements OnInit {
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
-    private breadcrumbService: BreadcrumbService,
+    private breadcrumbService: BreadcrumbService
   ) {
     this.checkScreenSize();
   }
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbs([
-       { label: 'Campaigns', url: '/campaigns' }
+      { label: 'Campaigns', url: '/campaigns' },
     ]);
     this.getAllCampaigns();
     this.getUserBuyBoxes();
@@ -57,7 +49,7 @@ export class CampaignManagerComponent implements OnInit {
       this.viewMode = savedViewMode;
     }
   }
-  
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScreenSize();
@@ -67,10 +59,12 @@ export class CampaignManagerComponent implements OnInit {
     this.isMobile = window.innerWidth <= 767;
     // On mobile, always use the responsive card view
     if (this.isMobile) {
-      this.viewMode = 'card';  // Automatically switch to card view for mobile
+      this.viewMode = 'card'; // Automatically switch to card view for mobile
     } else {
       // For larger screens, check localStorage for user preference
-      const savedViewMode = localStorage.getItem('campaignViewMode') as 'table' | 'card';
+      const savedViewMode = localStorage.getItem('campaignViewMode') as
+        | 'table'
+        | 'card';
       if (savedViewMode) {
         this.viewMode = savedViewMode;
       }
@@ -88,8 +82,6 @@ export class CampaignManagerComponent implements OnInit {
   toggleExpand(campaign: any): void {
     campaign.expanded = !campaign.expanded;
   }
-
- 
 
   getAllCampaigns(): void {
     this.spinner.show();
@@ -184,20 +176,6 @@ export class CampaignManagerComponent implements OnInit {
     });
   }
 
-  getStageOrganizationCount(
-    stageName: string,
-    stages?: Stage[]
-  ): number | null {
-    if (stages) {
-      return (
-        stages.find(
-          (stage) => stage.stageName.toLowerCase() == stageName.toLowerCase()
-        )?.Organizations || null
-      );
-    }
-    return null;
-  }
-
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
     const body: any = {
       Name: 'GetCampaignOrganizations',
@@ -245,5 +223,18 @@ export class CampaignManagerComponent implements OnInit {
       normal: statusId === 0,
       green: statusId === 1,
     };
+  }
+
+  getSubmissionsCountNew(submissions: Submission[]) {
+    return submissions.filter(s => s.StatusId == 0).length;
+  }
+
+  getSumbmissionsCountAcceppted(submissions:Submission[]){
+    return submissions.filter(s => s.StatusId == 1).length;
+
+  }
+
+  getSumbmissionsCountRejected(submissions:Submission[]){
+    return submissions.filter(s => s.StatusId == -1).length;
   }
 }
