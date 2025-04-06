@@ -76,16 +76,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.isNavbarOpen = false;
       });
 
-    this.current = this.router.url
+    this.current = this.router.url;
 
-    this.viewSubscription = this.userViewService.currentView$.subscribe((view) => {
-      this.currentView = view
-    })
+    this.viewSubscription = this.userViewService.currentView$.subscribe(
+      (view) => {
+        this.currentView = view;
+      }
+    );
 
-    this.sidebarSubscription = this.sidbarService.isCollapsed.subscribe((state: boolean) => {
-      this.isCollapsed = state
-    })
-    this.fetchUserAvatar()
+    this.sidebarSubscription = this.sidbarService.isCollapsed.subscribe(
+      (state: boolean) => {
+        this.isCollapsed = state;
+      }
+    );
+    this.fetchUserAvatar();
   }
 
   ngOnDestroy(): void {
@@ -101,7 +105,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   fetchUserAvatar(): void {
-      this.userAvatar = ""
+    this.userAvatar = '';
   }
 
   logout(): void {
@@ -118,7 +122,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isNavbarOpen = false;
 
   toggleNavbar(event: Event) {
-    event.stopPropagation() 
-    this.isNavbarOpen = !this.isNavbarOpen
+    event.stopPropagation();
+    this.isNavbarOpen = !this.isNavbarOpen;
   }
 }
