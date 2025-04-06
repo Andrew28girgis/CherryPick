@@ -1,4 +1,14 @@
+:host {
+  display: block;
+  height: 70px;
+  margin-bottom: 20px;
+}
 .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   background-color: #fff;
   padding: 0.5rem 3%;
   border-bottom: 1px solid #e9e9e9;
@@ -74,17 +84,20 @@
   margin-right: 8px;
   font-size: 16px;
   /* Default filter for gray color */
-  filter: brightness(0) saturate(100%) invert(46%) sepia(9%) saturate(382%) hue-rotate(173deg) brightness(94%) contrast(87%);
+  filter: brightness(0) saturate(100%) invert(46%) sepia(9%) saturate(382%)
+    hue-rotate(173deg) brightness(94%) contrast(87%);
 }
 
 .nav-link.active-route .img-icn {
   /* Filter for #4d65b4 blue color */
-  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%) hue-rotate(202deg) brightness(92%) contrast(87%);
+  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%)
+    hue-rotate(202deg) brightness(92%) contrast(87%);
 }
 
 /* Also apply the blue filter on hover for non-active items */
 .nav-link:not(.active-route):hover .img-icn {
-  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%) hue-rotate(202deg) brightness(92%) contrast(87%);
+  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%)
+    hue-rotate(202deg) brightness(92%) contrast(87%);
 }
 .active-route {
   background-color: #b8c1e1;
