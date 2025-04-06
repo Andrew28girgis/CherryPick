@@ -1,4 +1,6 @@
-<div *ngIf="filteredCampaigns" class="campaign-manager-container">
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+<div class="campaign-manager-container">
+  <!-- Search and buttons - always visible -->
   <div class="w-100 d-flex align-items-center justify-content-between">
     <div class="search-campaign-container">
       <input
@@ -110,8 +112,104 @@
     </div>
   </div>
 
+  <!-- Skeleton loading for Card View -->
+  <div class="campaign-manager-body" *ngIf="isLoading && viewMode === 'card'">
+    <div class="campaign-cards-container">
+      <div class="campaign-card skeleton-card" *ngFor="let i of skeletonCardArray">
+        <div class="campaign-card-header">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-privacy"></div>
+        </div>
+        <div class="tenant-section">
+          <div class="d-flex align-items-center gap-2">
+            <div class="skeleton-logo"></div>
+            <div class="skeleton-tenant-name"></div>
+          </div>
+          <div class="skeleton-date"></div>
+        </div>
+        <div class="campaign-stats">
+          <div class="stat-item">
+            <div class="skeleton-stat-label"></div>
+            <div class="skeleton-stat-value"></div>
+          </div>
+          <div class="stat-item">
+            <div class="skeleton-stat-label"></div>
+            <div class="skeleton-stat-value"></div>
+          </div>
+          <div class="stat-item">
+            <div class="skeleton-stat-label"></div>
+            <div class="skeleton-stat-value"></div>
+          </div>
+        </div>
+        <div class="campaign-actions">
+          <div class="skeleton-button"></div>
+          <div class="skeleton-button"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton loading for Table View -->
+  <div class="campaign-manager-body" *ngIf="isLoading && viewMode === 'table'">
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th style="width: 250px">Name</th>
+            <th style="text-align: center">Date</th>
+            <th style="text-align: center">Privacy</th>
+            <th style="text-align: center">Sites</th>
+            <th style="text-align: center">Submissions</th>
+            <th style="text-align: center">Sent</th>
+            <th style="text-align: center">Actions</th>
+            <ng-container *ngFor="let i of skeletonStagesArray">
+              <th scope="col" style="text-align: center">
+                <div class="skeleton-stage-header"></div>
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of skeletonTableArray">
+            <td style="width: 250px">
+              <div class="skeleton-campaign-name"></div>
+              <div class="d-flex align-items-center gap-2 mt-2">
+                <div class="skeleton-logo"></div>
+                <div class="skeleton-tenant-name"></div>
+              </div>
+            </td>
+            <td style="text-align: center">
+              <div class="skeleton-date-cell"></div>
+            </td>
+            <td style="text-align: center">
+              <div class="skeleton-privacy-cell"></div>
+            </td>
+            <td style="text-align: center">
+              <div class="skeleton-sites-cell"></div>
+            </td>
+            <td style="text-align: center">
+              <div class="skeleton-submissions-cell"></div>
+            </td>
+            <td style="text-align: center">
+              <div class="skeleton-sent-cell"></div>
+            </td>
+            <td style="text-align: center">
+              <div class="skeleton-actions-cell"></div>
+            </td>
+            <ng-container *ngFor="let j of skeletonStagesArray">
+              <td style="text-align: center">
+                <div class="skeleton-stage-cell"></div>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Actual content -->
   <div
-    *ngIf="filteredCampaigns.length > 0 && stages.length > 0"
+    *ngIf="!isLoading && filteredCampaigns && filteredCampaigns.length > 0 && stages.length > 0"
     class="campaign-manager-body"
   >
     <div class="campaign-cards-container" *ngIf="viewMode === 'card'">
@@ -232,19 +330,6 @@
                         let i = index
                       "
                     >
-                      <!-- <span
-                      [pTooltip]="
-                        submission.StatusId == 0
-                          ? 'New'
-                          : submission.StatusId == 1
-                          ? 'Accepted'
-                          : 'Rejected'
-                      "
-                      tooltipPosition="top"
-                      [ngClass]="getStatusClass(submission?.StatusId)"
-                      >{{ submission }}</span
-                    >
-                    <span *ngIf="i < 2"> - </span> -->
                     </ng-container>
                   </div>
                   <div *ngIf="!campaign.Submissions">N/A</div>
@@ -456,19 +541,6 @@
                           let i = index
                         "
                       >
-                        <!-- <span
-                          [pTooltip]="
-                            submission.StatusId == 0
-                              ? 'New'
-                              : submission.StatusId == 1
-                              ? 'Accepted'
-                              : 'Rejected'
-                          "
-                          tooltipPosition="top"
-                          [ngClass]="getStatusClass(submission?.StatusId)"
-                          >{{ submission }}</span
-                        >
-                        <span *ngIf="i < 2"> - </span> -->
                       </ng-container>
                     </div>
                     <div *ngIf="!campaign.Submissions">N/A</div>
@@ -523,7 +595,7 @@
     </div>
   </div>
 
-  <div *ngIf="!(filteredCampaigns.length > 0)" class="empty-campaigns">
+  <div *ngIf="!isLoading && !(filteredCampaigns && filteredCampaigns.length > 0)" class="empty-campaigns">
     <img src="../../../assets/Images/empty-state.png" alt="Empty Campaigns" />
     <h4>Campaigns Will Appear Here!</h4>
     <p>Create, Track, and Manage Expansion Campaigns Here.</p>
@@ -556,4 +628,4 @@
   </div>
 </ng-template>
 
-<ngx-spinner type="ball-scale-multiple"> </ngx-spinner>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

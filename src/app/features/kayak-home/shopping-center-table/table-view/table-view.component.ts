@@ -5,6 +5,7 @@ import {
   TemplateRef,
   Output,
   EventEmitter,
+  OnDestroy,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
@@ -16,13 +17,14 @@ import { ShareOrg } from 'src/app/shared/models/shareOrg';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { StateService } from 'src/app/core/services/state.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-table-view',
   templateUrl: './table-view.component.html',
   styleUrls: ['./table-view.component.css'],
 })
-export class TableViewComponent implements OnInit {
+export class TableViewComponent implements OnInit, OnDestroy {
   General: General = new General();
   BuyBoxId!: any;
   OrgId!: any;
@@ -47,6 +49,12 @@ export class TableViewComponent implements OnInit {
   selectedIdCard: number | null = null;
   @Output() viewChange = new EventEmitter<number>();
   DeletedSC: any;
+  
+  // Loading state for skeleton
+  isLoading = true;
+  // Interval for hiding spinner
+  private spinnerHideInterval: any;
+  private subscriptions = new Subscription();
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -58,6 +66,11 @@ export class TableViewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Set up interval to continuously hide spinner
+    this.spinnerHideInterval = setInterval(() => {
+      this.hideSpinner();
+    }, 100);
+    
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -72,8 +85,28 @@ export class TableViewComponent implements OnInit {
     this.initializeData();
   }
 
+  ngOnDestroy(): void {
+    // Clear the interval when component is destroyed
+    if (this.spinnerHideInterval) {
+      clearInterval(this.spinnerHideInterval);
+    }
+    this.subscriptions.unsubscribe();
+  }
+
+  // Method to hide spinner
+  private hideSpinner(): void {
+    try {
+      this.spinner.hide();
+    } catch (error) {
+      // Ignore errors
+    }
+  }
+
   async initializeData() {
     try {
+      this.isLoading = true; // Show skeleton
+      this.hideSpinner(); // Hide any spinner
+      
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
         this.BuyBoxId
       );
@@ -102,11 +135,18 @@ export class TableViewComponent implements OnInit {
         );
       });
     } catch (error) {
+      // Handle error
+    } finally {
+      this.isLoading = false; // Hide skeleton
+      this.hideSpinner(); // Make sure spinner is hidden
+      this.cdr.detectChanges();
     }
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
-    this.spinner.show();
+    this.isLoading = true; // Show skeleton
+    this.hideSpinner(); // Hide any spinner
+    
     this.viewManagerService
       .restoreShoppingCenter(MarketSurveyId, Deleted)
       .then((response: any) => {
@@ -119,7 +159,10 @@ export class TableViewComponent implements OnInit {
           return center;
         });
         this.cdr.markForCheck();
-        this.spinner.hide();
+      })
+      .finally(() => {
+        this.isLoading = false; // Hide skeleton
+        this.hideSpinner(); // Make sure spinner is hidden
       });
   }
 
@@ -127,6 +170,7 @@ export class TableViewComponent implements OnInit {
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
   ) {
+    this.hideSpinner(); // Hide spinner before opening modal
     this.DeletedSC = shoppingCenter;
     this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
@@ -140,22 +184,28 @@ export class TableViewComponent implements OnInit {
     );
 
     try {
-      this.spinner.show();
+      this.isLoading = true; // Show skeleton
+      this.hideSpinner(); // Hide any spinner
+      
       await this.viewManagerService.deleteShoppingCenter(
         this.BuyBoxId,
         this.shoppingCenterIdToDelete!
       );
       this.modalService.dismissAll();
     } catch (error) {
+      // Handle error
     } finally {
-      this.spinner.hide();
+      this.isLoading = false; // Hide skeleton
+      this.hideSpinner(); // Make sure spinner is hidden
       this.cdr.markForCheck();
     }
   }
 
   async refreshShoppingCenters() {
     try {
-      this.spinner.show();
+      this.isLoading = true; // Show skeleton
+      this.hideSpinner(); // Hide any spinner
+      
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
         this.BuyBoxId
       );
@@ -164,8 +214,10 @@ export class TableViewComponent implements OnInit {
       );
       this.showbackIds = [];
     } catch (error) {
+      // Handle error
     } finally {
-      this.spinner.hide();
+      this.isLoading = false; // Hide skeleton
+      this.hideSpinner(); // Make sure spinner is hidden
     }
   }
 
@@ -218,6 +270,7 @@ export class TableViewComponent implements OnInit {
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
+    this.hideSpinner(); // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -234,10 +287,13 @@ export class TableViewComponent implements OnInit {
       lng
     );
     if (!map) {
+      // Handle error
     }
+    this.hideSpinner(); // Hide spinner after map is initialized
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
+    this.hideSpinner(); // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -266,7 +322,9 @@ export class TableViewComponent implements OnInit {
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
+        // Handle error
       }
+      this.hideSpinner(); // Hide spinner after street view is initialized
     });
   }
 
@@ -279,10 +337,11 @@ export class TableViewComponent implements OnInit {
       pitch
     );
     if (!panorama) {
+      // Handle error
     }
   }
 
   setIframeUrl(url: string): void {
     this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url);
   }
-}
+} 

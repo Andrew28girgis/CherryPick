@@ -1,3 +1,45 @@
+/* Skeleton loading styles */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-text {
+  height: 20px;
+  width: 90%;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  margin: 15px 0;
+}
+
+.skeleton-date {
+  height: 20px;
+  width: 150px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  margin: 15px 0;
+  float: right;
+}
+
+.skeleton-button {
+  height: 38px;
+  width: 150px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 10px;
+  margin: 5px 0;
+}
+
+/* Original styles */
 .card {
   height: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -51,8 +93,7 @@
 
 .task-head {
   font-weight: 600;
-  color: #4d65b4 
-
+  color: #4d65b4;
 }
 
 .message-task {
@@ -61,17 +102,17 @@
   color: #001f3f;
   font-size: 15px;
 }
-.view{
-    background: #4d65b4;
-    color: white;
-    border-radius: 10px;
-    border: 0;
-    text-align: center;
-    height: max-content;
-    padding: 9px;
-    width: fit-content;
-    text-wrap: nowrap;
-    min-width: 150px;
+.view {
+  background: #4d65b4;
+  color: white;
+  border-radius: 10px;
+  border: 0;
+  text-align: center;
+  height: max-content;
+  padding: 9px;
+  width: fit-content;
+  text-wrap: nowrap;
+  min-width: 150px;
 }
 /* For better mobile responsiveness */
 @media (max-width: 767.98px) {
@@ -88,3 +129,34 @@
     text-overflow: ellipsis;
   }
 }
+
+/* Toast styles */
+.custom-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #333;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.custom-toast.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+}
+
+.toast-content p {
+  margin: 0;
+}
+

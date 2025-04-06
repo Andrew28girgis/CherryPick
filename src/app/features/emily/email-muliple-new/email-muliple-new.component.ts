@@ -32,7 +32,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   selectedPromptId: string = '';
   selectedPromptText: string = '';
   isLandingSelected: boolean = true;
-  isISCcSelected: boolean = false;
+  isISCcSelected: boolean = true;
   buyBoxId!: any;
   contactId!: any;
   OrgBuybox!: any;

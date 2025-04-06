@@ -1,3 +1,163 @@
+/* Skeleton loading styles */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-card {
+  height: auto;
+  min-height: 300px;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 70%;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-privacy {
+  height: 28px;
+  width: 80px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 20px;
+}
+
+.skeleton-logo {
+  height: 28px;
+  width: 28px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 50%;
+}
+
+.skeleton-tenant-name {
+  height: 18px;
+  width: 120px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-date {
+  height: 16px;
+  width: 100px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-stat-label {
+  height: 14px;
+  width: 60px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeleton-stat-value {
+  height: 18px;
+  width: 40px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-button {
+  height: 36px;
+  width: 100px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 20px;
+}
+
+/* Table skeleton styles */
+.skeleton-campaign-name {
+  height: 20px;
+  width: 80%;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-date-cell {
+  height: 18px;
+  width: 80px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  margin: 0 auto;
+}
+
+.skeleton-privacy-cell {
+  height: 28px;
+  width: 80px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+.skeleton-sites-cell,
+.skeleton-submissions-cell,
+.skeleton-sent-cell {
+  height: 18px;
+  width: 60px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  margin: 0 auto;
+}
+
+.skeleton-actions-cell {
+  height: 36px;
+  width: 80px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 20px;
+  margin: 0 auto;
+}
+
+.skeleton-stage-cell {
+  height: 18px;
+  width: 40px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  margin: 0 auto;
+}
+
+.skeleton-stage-header {
+  height: 16px;
+  width: 80px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+  margin: 0 auto;
+}
+
 /* General Container for the Campaign Manager */
 .campaign-manager-container {
   padding: 1rem;
@@ -172,6 +332,12 @@
 
 .table thead th {
   border: 1px solid #dee2e6;
+  white-space: normal; /* Allow text to wrap */
+  word-wrap: break-word; /* Break words if needed */
+  vertical-align: middle; /* Center text vertically */
+  line-height: 1.2; /* Tighter line height for wrapped text */
+  padding: 0.75rem 0.5rem; /* Consistent padding */
+  font-size: 0.9rem; /* Slightly smaller font size to fit more text */
 }
 
 .table tbody td {
@@ -578,3 +744,4 @@
     font-size: 0.9rem;
   }
 }
+

@@ -189,3 +189,137 @@ img[alt="logo"] {
     margin-bottom: 70px;
   }
 }
+
+/* Add these styles to your existing CSS file */
+
+/* Skeleton loading styles */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-card {
+  min-height: 100%;
+  border-radius: 20px;
+  width: 100%;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+  display: flex;
+  flex-direction: column;
+  overflow:0,0,0.19, 0 8px 26px rgba(0,0,0,0.23);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.skeleton-img {
+  height: 180px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 20px 20px 0 0;
+}
+
+.skeleton-title {
+  height: 24px;
+  width: 70%;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-button {
+  height: 30px;
+  width: 30px;
+  margin-top: 16px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 6px;
+}
+
+.skeleton-address {
+  height: 16px;
+  width: 90%;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-category {
+  height: 16px;
+  width: 40%;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-text {
+  height: 16px;
+  width: 80%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-text-sm {
+  height: 14px;
+  width: 60%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-footer {
+  height: 40px;
+  width: 100%;
+  margin-top: 8px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-paginator {
+  height: 40px;
+  width: 300px;
+  margin: 20px 0;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+/* Your existing CSS below */
+.shortcuts_iconCard {
+  position: absolute;
+  background: white;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
+  padding: 16px;
+  border-radius: 10px;
+  text-align: start;
+  margin: 0;
+  z-index: 100;
+  right: 14%;
+  width: max-content;
+  top: 2%;
+}
+

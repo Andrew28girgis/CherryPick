@@ -1,6 +1,37 @@
 <div class="py-2">
+  <!-- Skeleton loading for table -->
+  <div class="mtopp" *ngIf="isLoading">
+    <table class="procpect-table">
+      <thead class="procpect-table-head">
+        <tr>
+          <th><div class="skeleton-header"></div></th>
+          <th><div class="skeleton-header"></div></th>
+          <th><div class="skeleton-header"></div></th>
+          <th><div class="skeleton-header"></div></th>
+          <th><div class="skeleton-header"></div></th>
+          <th><div class="skeleton-header"></div></th>
+          <th><div class="skeleton-header"></div></th>
+        </tr>
+      </thead>
+      <tbody class="procpect-table-body">
+        <ng-container *ngFor="let i of [1,2,3,4,5,6,7,8]">
+          <tr>
+            <td><div class="skeleton-cell"></div></td>
+            <td><div class="skeleton-cell"></div></td>
+            <td><div class="skeleton-cell"></div></td>
+            <td><div class="skeleton-cell"></div></td>
+            <td><div class="skeleton-cell"></div></td>
+            <td><div class="skeleton-cell"></div></td>
+            <td><div class="skeleton-cell-small"></div></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Actual table content -->
   <div class="mtopp" *ngIf="
-        showShoppingCenters && shoppingCenters && shoppingCenters.length > 0
+        !isLoading && showShoppingCenters && shoppingCenters && shoppingCenters.length > 0
       ">
     <table class="procpect-table">
       <thead class="procpect-table-head">
@@ -132,20 +163,6 @@
                     <ng-template #shortcutspopover>
                       <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shoppingCenter.Id">
                         <ul>
-                          <!-- <li>
-                            <a class="target" [href]="
-                                '/emily/' +
-                                BuyBoxId +
-                                '/' +
-                                shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID +
-                                '/' +
-                                shoppingCenter.Id
-                              " target="_blank">
-                              <i class="fa-regular fa-envelope big-text"></i>
-                              Emily
-                            </a>
-                          </li> -->
-
                           <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
                             <a class="target" [routerLink]="[
                                 '/landing',
@@ -231,8 +248,14 @@
   </div>
 </div>
 
-<div class="pt-2 d-flex justify-content-center align-items-center heightt" *ngIf="shoppingCenters?.length == 0">
+<!-- No data message -->
+<div class="pt-2 d-flex justify-content-center align-items-center heightt" *ngIf="!isLoading && shoppingCenters?.length == 0">
   <p class="fontweight">No data Shopping Center</p>
+</div>
+
+<!-- Skeleton loading for no data message -->
+<div class="pt-2 d-flex justify-content-center align-items-center heightt" *ngIf="isLoading">
+  <div class="skeleton-no-data"></div>
 </div>
 
 <ng-template #StreetViewPlace let-modal>

@@ -1,3 +1,53 @@
+/* Skeleton loading styles */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-header {
+  height: 24px;
+  width: 80%;
+  margin: 8px 0;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-cell {
+  height: 20px;
+  width: 90%;
+  margin: 10px 0;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-cell-small {
+  height: 20px;
+  width: 30px;
+  margin: 10px auto;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-no-data {
+  height: 24px;
+  width: 200px;
+  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+/* Your existing CSS */
 .shortcuts_iconCard {
   position: absolute;
   background: white;

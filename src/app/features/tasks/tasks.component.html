@@ -1,11 +1,27 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 <div class="container-fluid">
   <div class="row">
+    <!-- Reactions Section -->
     <div class="col-md-12 action-wrap">
       <h5 class="mb-2 task-head">Reactions</h5>
       <div class="card-body p-0">
         <div class="table-responsive">
-          <table class="table align-middle m-0">
+          <!-- Skeleton loading for Reactions -->
+          <table class="table align-middle m-0" *ngIf="isLoading">
+            <tbody>
+              <tr *ngFor="let i of skeletonArray">
+                <td class="col-10">
+                  <div class="skeleton-text"></div>
+                </td>
+                <td class="col-2 text-end">
+                  <div class="skeleton-date"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- Actual content for Reactions -->
+          <table class="table align-middle m-0" *ngIf="!isLoading">
             <tbody>
               <tr *ngFor="let notification of getNotificationsByCategory(1)" 
                   [ngClass]="{'unread': !notification.isRead}"
@@ -25,11 +41,31 @@
         </div>
       </div>
     </div>
+    
+    <!-- Email Generated Section -->
     <div class="col-md-12 action-wrap">
       <h5 class="mb-2 task-head">Email Generated</h5>
       <div class="card-body p-0">
         <div class="table-responsive">
-          <table class="table align-middle m-0">
+          <!-- Skeleton loading for Email Generated -->
+          <table class="table align-middle m-0" *ngIf="isLoading">
+            <tbody>
+              <tr *ngFor="let i of skeletonArray">
+                <td class="col-10">
+                  <div class="skeleton-text"></div>
+                </td>
+                <td class="col-2 text-end">
+                  <div class="skeleton-date"></div>
+                </td>
+                <td>
+                  <div class="skeleton-button"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- Actual content for Email Generated -->
+          <table class="table align-middle m-0" *ngIf="!isLoading">
             <tbody>
               <tr 
                *ngFor="let notification of getNotificationsByCategory(2)" 
@@ -53,12 +89,35 @@
         </div>
       </div>
     </div>
+    
+    <!-- Sync Section -->
     <div class="col-md-12 action-wrap">
       <h5 class="mb-2 task-head">Sync</h5>
       <div>
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table class="table align-middle m-0">
+            <!-- Skeleton loading for Sync -->
+            <table class="table align-middle m-0" *ngIf="isLoading">
+              <tbody>
+                <tr *ngFor="let i of skeletonArray">
+                  <td class="col-10">
+                    <div class="skeleton-text"></div>
+                  </td>
+                  <td class="col-2 text-end">
+                    <div class="skeleton-date"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton-button"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton-button"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <!-- Actual content for Sync -->
+            <table class="table align-middle m-0" *ngIf="!isLoading">
               <tbody>
                 <tr
                  *ngFor="let notification of getNotificationsByCategory(3)" 
@@ -86,12 +145,32 @@
         </div>
       </div>
     </div>
+    
+    <!-- Proposal Submissions Section -->
     <div class="col-md-12 action-wrap">
       <h5 class="mb-2 task-head">Proposal Submissions</h5>
       <div>
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table class="table align-middle m-0">
+            <!-- Skeleton loading for Proposal Submissions -->
+            <table class="table align-middle m-0" *ngIf="isLoading">
+              <tbody>
+                <tr *ngFor="let i of skeletonArray">
+                  <td class="col-10">
+                    <div class="skeleton-text"></div>
+                  </td>
+                  <td class="col-2 text-end">
+                    <div class="skeleton-date"></div>
+                  </td>
+                  <td>
+                    <div class="skeleton-button"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <!-- Actual content for Proposal Submissions -->
+            <table class="table align-middle m-0" *ngIf="!isLoading">
               <tbody>
                 <tr
                  *ngFor="let notification of getNotificationsByCategory(4)" 
@@ -119,6 +198,7 @@
   </div>
 </div>
 
+<!-- Email Modal Template -->
 <ng-template #EmailView let-modal>
     <div class="modal-header d-flex justify-content-between">
         <h4 class="modal-title"> {{getCurrentEmail().buyBoxName}}</h4>
@@ -178,3 +258,5 @@
       <p id="toastMessage"></p>
     </div>
   </div>
+
+  
