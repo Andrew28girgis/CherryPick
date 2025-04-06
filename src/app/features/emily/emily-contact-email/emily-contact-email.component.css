@@ -60,7 +60,7 @@
 .dropdownall {
   position: relative;
   display: flex;
-  padding: 8px 16px;
+  padding: 8px 10px;
   justify-content: center;
   align-items: center;
   gap: 8px;
