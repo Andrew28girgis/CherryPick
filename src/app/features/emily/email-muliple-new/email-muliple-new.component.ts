@@ -123,7 +123,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   buyboxChecklist!: buyboxChecklist;
   private checklistSubscription!: Subscription;
   isAdvancedVisible = false; // Initially, the section is hidden
-
+  BatchGuid!:string;
   constructor(
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -181,6 +181,9 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     this.GetRetailRelationCategories();
     this.GetBuyBoxInfoDetails();
     this.GetMailContextGenerated();
+
+    const guid = crypto.randomUUID();
+      this.BatchGuid = guid;
   }
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
@@ -1146,6 +1149,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
               IsCC: IsCC,
               OrganizationId: Number(emailTemplate.organizationId),
               context: `${emailTemplate.templateOne}${this.emailBody2}`,
+              BatchGuid: this.BatchGuid,
             },
             Json: null,
           };
