@@ -31,7 +31,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { SharedModule } from './shared/shared.module';
-import { NgxFileDropModule } from 'ngx-file-drop'; 
+import { NgxFileDropModule } from 'ngx-file-drop';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddTenantsComponent } from './features/tenants/add-tenants/add-tenants.component';
 import { StepperModule } from 'primeng/stepper';
@@ -54,7 +54,7 @@ import { MarketCardViewComponent } from './features/tenants/market-survery/marke
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
- import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
+import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
 import { CampaignManagerComponent } from './features/campaign/campaign-manager/campaign-manager.component';
 
 @NgModule({
@@ -68,7 +68,7 @@ import { CampaignManagerComponent } from './features/campaign/campaign-manager/c
     LogoutComponent,
     TermsComponent,
     NumberWithCommasPipe,
-    ManagePropertiesComponent,  
+    ManagePropertiesComponent,
     AddTenantsComponent,
     EmilyUserInboxComponent,
     SidebarComponent,
@@ -83,8 +83,8 @@ import { CampaignManagerComponent } from './features/campaign/campaign-manager/c
     CampaignManagerComponent,
     EmailMulipleNewComponent,
     MailsGenerateOrSendComponent,
-    MutipleEmailComponent  ,
-    BreadcrumbComponent
+    MutipleEmailComponent,
+    BreadcrumbComponent,
   ],
   imports: [
     BrowserModule,

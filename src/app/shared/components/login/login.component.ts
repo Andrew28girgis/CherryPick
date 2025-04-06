@@ -57,7 +57,6 @@ export class LoginComponent implements OnInit {
         let buybBoxId = data.json[0].buyBoxId;
         let organizationId = data.json[0].organizationId;
         let buyboxName = data.json[0].name;
-
         this.router.navigate(['/home', buybBoxId, organizationId, buyboxName]);
         this.spinner.hide();
       },
