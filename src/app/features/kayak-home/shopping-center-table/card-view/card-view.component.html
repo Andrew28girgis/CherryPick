@@ -1,4 +1,38 @@
-<div class="row m-0 mt-2">
+<!-- Skeleton loading template -->
+<div class="row m-0 mt-2" *ngIf="isLoading">
+  <ng-container *ngFor="let i of [1,2,3,4,5,6]">
+    <div class="card-window cursor col-md-4 col-sm-4 col-12">
+      <div class="cardResponsive skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="content-wrap card-content">
+          <div>
+            <div class="d-flex justify-content-between">
+              <div class="skeleton-title"></div>
+              <div class="skeleton-button"></div>
+            </div>
+            <div class="skeleton-address"></div>
+            <div class="skeleton-category"></div>
+            <div class="row m-0">
+              <div class="col-12 d-flex flex-column spec">
+                <div class="d-flex flex-column">
+                  <div class="skeleton-text"></div>
+                  <div class="skeleton-text-sm"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 spec">
+            <hr class="small-hr mt-1 mb-1" />
+            <div class="skeleton-footer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Actual content when loaded -->
+<div class="row m-0 mt-2" *ngIf="!isLoading">
   <ng-container *ngFor="let shopping of currentShoppingCenters">
     <div class="card-window cursor col-md-4 col-sm-4 col-12">
       <div class="cardResponsive">
@@ -33,20 +67,6 @@
                 </button>
                 <div class="shortcuts_iconCard" *ngIf="selectedIdCard === shopping.Id">
                   <ul>
-                    <!-- <li class="cursor">
-                      <a class="target" [href]="
-                            '/emily/' +
-                            BuyBoxId +
-                            '/' +
-                            shopping.ShoppingCenter.ManagerOrganization[0]
-                              .ID +
-                            '/' +
-                            shopping?.Id
-                          " target="_blank">
-                        <i class="fa-regular fa-envelope emily"></i>
-                        Emily
-                      </a>
-                    </li> -->
                     <li (click)="toggleShortcuts(shopping.Id, 'close')">
                       <a class="target"
                         [routerLink]="['/landing',shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,shopping?.Id,BuyBoxId]">
@@ -192,10 +212,15 @@
   </ng-container>
 
   <!-- paginator -->
-  <div class="flex items-center justify-start">
+  <div class="flex items-center justify-start" *ngIf="!isLoading">
     <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [showFirstLastIcon]="false" 
      currentPageReportTemplate="{first} - {last} of {totalRecords}" ></p-paginator>
   </div>
+</div>
+
+<!-- Skeleton loading for paginator -->
+<div class="flex items-center justify-start" *ngIf="isLoading">
+  <div class="skeleton-paginator"></div>
 </div>
 
 <ng-template #MapViewPlace let-modal>

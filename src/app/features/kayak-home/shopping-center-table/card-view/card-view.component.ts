@@ -50,6 +50,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
   DeletedSC: any;
   private subscriptions = new Subscription();
 
+  // Loading state for skeleton
+  isLoading = true;
+  // Interval for hiding spinner
+  private spinnerHideInterval: any;
+
   first: number = 0;
   rows: number = 9;
   totalRecords!: number;
@@ -71,6 +76,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Set up interval to continuously hide spinner
+    this.spinnerHideInterval = setInterval(() => {
+      this.hideSpinner();
+    }, 100);
+
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -92,11 +102,27 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Clear the interval when component is destroyed
+    if (this.spinnerHideInterval) {
+      clearInterval(this.spinnerHideInterval);
+    }
     this.subscriptions.unsubscribe();
+  }
+
+  // Method to hide spinner
+  private hideSpinner(): void {
+    try {
+      this.spinner.hide();
+    } catch (error) {
+      // Ignore errors
+    }
   }
 
   async loadData() {
     try {
+      this.isLoading = true; // Show skeleton
+      this.hideSpinner(); // Hide any spinner
+
       this.shoppingCenters = await this.viewManager.getShoppingCenters(
         this.BuyBoxId
       );
@@ -111,6 +137,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
       this.stateService.setShareOrg(this.ShareOrg);
     } catch (error) {
+      // Handle error
+    } finally {
+      this.isLoading = false; // Hide skeleton
+      this.hideSpinner(); // Make sure spinner is hidden
+      this.cdr.detectChanges();
     }
   }
 
@@ -130,6 +161,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   async openMapViewPlace(content: any, modalObject?: any) {
+    this.hideSpinner(); // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -142,9 +174,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
       modalObject.Latitude,
       modalObject.Longitude
     );
+    this.hideSpinner(); // Hide spinner after map is initialized
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
+    this.hideSpinner(); // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -160,6 +194,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.viewOnStreet();
       }, 100);
     }
+    this.hideSpinner(); // Hide spinner after street view is initialized
   }
 
   viewOnStreet() {
@@ -180,7 +215,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
           pitch
         );
       } else {
+        // Handle error
       }
+      this.hideSpinner(); // Hide spinner after street view is initialized
     });
   }
 
@@ -192,8 +229,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
     navigator.clipboard
       .writeText(link)
       .then(() => {
+        // Success
       })
       .catch((err) => {
+        // Error
       });
   }
 
@@ -201,6 +240,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
   ) {
+    this.hideSpinner(); // Hide spinner before opening modal
     this.DeletedSC = shoppingCenter;
     this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
@@ -215,19 +255,26 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
     if (this.shoppingCenterIdToDelete !== null) {
       try {
-        this.spinner.show();
+        this.isLoading = true; // Show skeleton
+        this.hideSpinner(); // Hide any spinner
+
         await this.viewManager.deleteShoppingCenter(
           this.BuyBoxId,
           this.shoppingCenterIdToDelete
         );
         this.modalService.dismissAll();
-      }  finally {
-        this.spinner.hide();
+      } finally {
+        this.isLoading = false; // Hide skeleton
+        this.hideSpinner(); // Make sure spinner is hidden
+        this.cdr.detectChanges();
       }
     }
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
+    this.isLoading = true; // Show skeleton
+    this.hideSpinner(); // Hide any spinner
+
     this.viewManager
       .restoreShoppingCenter(MarketSurveyId, Deleted)
       .then((response: any) => {
@@ -239,8 +286,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
           }
           return center;
         });
+        this.isLoading = false; // Hide skeleton
+        this.hideSpinner(); // Make sure spinner is hidden
         this.cdr.markForCheck();
       })
+      .catch((error) => {
+        // Handle error
+        this.isLoading = false; // Hide skeleton
+        this.hideSpinner(); // Make sure spinner is hidden
+      });
   }
 
   outsideClickHandler = (event: Event): void => {
