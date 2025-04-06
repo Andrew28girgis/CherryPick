@@ -383,4 +383,5 @@ color: #4d65b4;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 200px;
+  cursor: pointer;
 }

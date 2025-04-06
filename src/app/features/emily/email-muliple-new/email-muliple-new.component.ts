@@ -32,7 +32,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   selectedPromptId: string = '';
   selectedPromptText: string = '';
   isLandingSelected: boolean = true;
-  isISCcSelected: boolean = true;
+  isISCcSelected: boolean = false;
   buyBoxId!: any;
   contactId!: any;
   OrgBuybox!: any;
@@ -123,7 +123,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   buyboxChecklist!: buyboxChecklist;
   private checklistSubscription!: Subscription;
   isAdvancedVisible = false; // Initially, the section is hidden
-
+  BatchGuid!:string;
   constructor(
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -181,6 +181,9 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     this.GetRetailRelationCategories();
     this.GetBuyBoxInfoDetails();
     this.GetMailContextGenerated();
+
+    const guid = crypto.randomUUID();
+      this.BatchGuid = guid;
   }
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
@@ -777,10 +780,12 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
           (contact: any) =>
             contact.selected && contact.ShoppingCenters?.length > 0
         ).length;
+        
 
-        if (this.isISCcSelected == false) {
+        if (this.isISCcSelected == true) {
           output += `- Create ${countSelectedContacts} Email For each Contact\n `;
         }
+        
 
         contacts.forEach((contact: any) => {
           if (contact.selected && contact.ShoppingCenters?.length > 0) {
@@ -819,7 +824,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
           (contact: any) =>
             contact.selected && contact.ShoppingCenters?.length > 0
         ).length;
-        if (!this.isISCcSelected) {
+        if (this.isISCcSelected) {
           individualTemplateOne += `- Create ${countSelectedContacts} Email For each Contact\n `;
         }
         contacts.forEach((contact: any) => {
@@ -1146,6 +1151,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
               IsCC: IsCC,
               OrganizationId: Number(emailTemplate.organizationId),
               context: `${emailTemplate.templateOne}${this.emailBody2}`,
+              BatchGuid: this.BatchGuid,
             },
             Json: null,
           };
@@ -1232,6 +1238,8 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     this.emailBody = this.emailTemplates
       .map((t: any) => t.templateOne)
       .join('\n');
+
+      this.updateEmailBody();
   }
 
   getRelationsForCategory(categoryId: number) {
@@ -1325,6 +1333,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
   }
+
   unCheckAll(event: any) {
     let value = event.target.checked;
     this.allOrganizations.forEach((org: any) => {
@@ -1336,5 +1345,13 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
         });
       });
     });
+  
+    if (!value) {
+      this.emailTemplates = [];
+    } else {
+      this.emailTemplates = [...this.originalEmailTemplates];
+    }
+    
+    this.updateEmailBody();
   }
 }
