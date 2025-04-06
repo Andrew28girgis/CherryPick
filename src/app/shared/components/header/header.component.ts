@@ -67,20 +67,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.isNavbarOpen = false
       })
 
-    // Initialize `current` with the current URL.
     this.current = this.router.url
 
-    // Subscribe to view changes if needed.
     this.viewSubscription = this.userViewService.currentView$.subscribe((view) => {
       this.currentView = view
     })
 
-    // Subscribe to sidebar collapsed state
     this.sidebarSubscription = this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state
     })
-
-    // Fetch user avatar.
     this.fetchUserAvatar()
   }
 
@@ -97,10 +92,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   fetchUserAvatar(): void {
-    // Placeholder for API call to get user avatar.
-    setTimeout(() => {
       this.userAvatar = ""
-    }, 500)
   }
 
   logout(): void {
@@ -117,7 +109,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isNavbarOpen = false
 
   toggleNavbar(event: Event) {
-    event.stopPropagation() // Prevent document click from immediately closing
+    event.stopPropagation() 
     this.isNavbarOpen = !this.isNavbarOpen
   }
 }
