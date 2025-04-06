@@ -237,7 +237,6 @@
       <h4 class="my-prop">Converted Pdf to Extracted Images</h4>
 
       <!-- Check if the number of images is greater than 3, and only display this section if there are more than 3 images -->
-      <div *ngIf="images.length > 3">
         <div class="row">
           <div *ngFor="let image of images" class="col-md-4 mb-3">
             <div class="card">
@@ -263,7 +262,6 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
 
     <!-- Display JsonPDF Data Section -->
