@@ -74,6 +74,13 @@ export class PlacesService {
       images
     );
   }
+  public SendImagesArrayWithBuyBoxId(images: any, shoppingID: any, buyboxid: any) {
+    return this.http.post<any>(
+      `${environment.api}/BrokerWithChatGPT/ProcessImagesWithGPT/${shoppingID}?buyboxId=${buyboxid}`,
+      images
+    );
+  }
+  
   public SendJsonData(data: any, id: any) {
     const requestPayload = {
       ...data, // Spread the existing data
