@@ -6,7 +6,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
-ApiServiceService;
+
 @Component({
   selector: 'app-add-tenants',
   templateUrl: './add-tenants.component.html',
