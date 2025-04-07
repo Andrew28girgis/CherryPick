@@ -5,7 +5,7 @@ import { CampaignManagerComponent } from './campaign-manager/campaign-manager.co
 const routes: Routes = [
   { path: '', component: CampaignManagerComponent },
   {
-    path: 'ataglance',
+    path: 'ataglance/:id',
     loadChildren: () =>
       import('./ataglance/ataglance.module').then((m) => m.AtaglanceModule),
   },

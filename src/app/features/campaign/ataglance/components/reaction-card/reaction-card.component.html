@@ -1,11 +1,16 @@
 <div class="reaction-card">
   <div class="w-100 d-flex flex-column justify-content-center gap-3">
     <div class="d-flex align-items-center gap-3">
-      <div class="avatar-icon"></div>
+      <div *ngIf="reaction.logoURL" class="avatar-icon">
+        <img src="{{ reaction.logoURL }}" alt="{{ reaction.centerAddress }}" />
+      </div>
       <div class="title">
-        Sameh Seliem <span class="reaction">Liked</span> a Shopping Center
+        {{ reaction.userFirstName }} {{ reaction.userLastName }}
+        <span class="reaction">Liked</span> a Shopping Center
       </div>
     </div>
-    <div class="center-name">1234 Elm Street, Springfield, IL</div>
+    <div class="center-name">
+      {{ reaction.centerAddress }}
+    </div>
   </div>
 </div>

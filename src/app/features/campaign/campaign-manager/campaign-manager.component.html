@@ -434,26 +434,33 @@
             >
               <tr>
                 <td style="width: 250px">
-                  {{ campaign.CampaignName }}
-                  <div class="d-flex align-items-center gap-2">
-                    <img
-                      *ngIf="c.organizationid"
-                      [src]="
-                        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                        c.organizationid
-                      "
-                      [alt]="c.name"
-                      class="tenant-logo"
-                    />
-                    <span
-                      class="tenant-name"
-                      [routerLink]="[
-                        '/dashboard',
-                        c.id,
-                        c.organizationid,
-                        c.name
-                      ]"
-                      >{{ c.name }}</span
+                  <div class="d-flex flex-column justify-content-start gap-2">
+                    {{ campaign.CampaignName }}
+                    <div class="d-flex align-items-center gap-2">
+                      <img
+                        *ngIf="c.organizationid"
+                        [src]="
+                          'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                          c.organizationid
+                        "
+                        [alt]="c.name"
+                        class="tenant-logo"
+                      />
+                      <span
+                        class="tenant-name"
+                        [routerLink]="[
+                          '/dashboard',
+                          c.id,
+                          c.organizationid,
+                          c.name
+                        ]"
+                        >{{ c.name }}</span
+                      >
+                    </div>
+                    <a
+                      class="inbox text-center"
+                      [routerLink]="['./ataglance', campaign.Id]"
+                      >At a Glance</a
                     >
                   </div>
                 </td>
@@ -570,7 +577,6 @@
                     ]"
                     >Inbox</a
                   >
-                  <a class="inbox" [routerLink]="['./ataglance']">Ataglance</a>
                 </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
                   <td style="text-align: center">

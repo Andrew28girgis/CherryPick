@@ -27,3 +27,8 @@
   background-color: red;
   border-radius: 50%;
 }
+
+.avatar-icon img {
+  height: 100%;
+  width: 100%;
+}

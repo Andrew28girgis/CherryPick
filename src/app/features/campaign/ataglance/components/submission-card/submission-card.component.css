@@ -1,7 +1,6 @@
 .submission-card {
   display: flex;
   align-items: start;
-  /* justify-content: center; */
   gap: 1rem;
   width: 100%;
 }
@@ -11,7 +10,13 @@
   height: 0.75rem;
   border-radius: 50%;
   background-color: #ff4c4c;
-  /* box-sizing: content-box; */
+}
+
+.submission-card .gray-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: #e2e4e9;
 }
 
 .submission-card .title {
@@ -25,6 +30,11 @@
 .avatar-icon {
   width: 1.75rem;
   height: 1.75rem;
-  background-color: red;
+  background-color: #fff;
   border-radius: 50%;
+}
+
+.avatar-icon img {
+  height: 100%;
+  width: 100%;
 }

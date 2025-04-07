@@ -7,6 +7,7 @@ import { CommentCardComponent } from './components/comment-card/comment-card.com
 import { ReactionCardComponent } from './components/reaction-card/reaction-card.component';
 import { SubmissionCardComponent } from './components/submission-card/submission-card.component';
 import { TodoCardComponent } from './components/todo-card/todo-card.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { TodoCardComponent } from './components/todo-card/todo-card.component';
   ],
   imports: [
     CommonModule,
-    AtaglanceRoutingModule
+    AtaglanceRoutingModule,
+    NgxSpinnerModule
   ]
 })
 export class AtaglanceModule { }

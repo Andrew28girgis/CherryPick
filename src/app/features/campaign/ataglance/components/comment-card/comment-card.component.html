@@ -1,14 +1,19 @@
 <div class="comment-card">
   <div class="w-100 d-flex flex-column justify-content-center gap-3">
     <div class="d-flex align-items-center gap-3">
-      <div class="avatar-icon"></div>
-      <div class="title">Sameh Seliem Center</div>
+      <div *ngIf="comment.logoURL" class="avatar-icon">
+        <img src="{{ comment.logoURL }}" alt="{{ comment.centerAddress }}" />
+      </div>
+      <div class="title">
+        {{ comment.userFirstName }} {{ comment.userLastName }}
+      </div>
     </div>
     <div class="comment-data">
-      <span>1234 Elm Street, Springfield, IL</span>
+      <span>
+        {{ comment.centerAddress }}
+      </span>
       <p>
-        Amazing property in a prime location! Spacious, modern, and perfect for
-        families or investors. Don't miss out!
+        {{ comment.comment }}
       </p>
     </div>
   </div>
