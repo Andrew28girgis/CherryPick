@@ -42,7 +42,6 @@ import { ManagePropertiesComponent } from './features/landlord/manage-properties
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { KayakModule } from './features/kayak-home/kayak.module';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
-import { CampaignDrawingComponent } from './features/campaign/campaign-drawing/campaign-drawing.component';
 import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
@@ -55,7 +54,6 @@ import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/ema
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
-import { CampaignManagerComponent } from './features/campaign/campaign-manager/campaign-manager.component';
 
 @NgModule({
   declarations: [
@@ -73,14 +71,12 @@ import { CampaignManagerComponent } from './features/campaign/campaign-manager/c
     EmilyUserInboxComponent,
     SidebarComponent,
     EmilyUserInboxComponent,
-    CampaignDrawingComponent,
     MarketSurveyComponent,
     MarketTableViewComponent,
     SocialMediaViewComponent,
     MarketSideViewComponent,
     MarketMapViewComponent,
     MarketCardViewComponent,
-    CampaignManagerComponent,
     EmailMulipleNewComponent,
     MailsGenerateOrSendComponent,
     MutipleEmailComponent,

@@ -52,18 +52,12 @@ const routes: Routes = [
   },
   {
     path: 'campaigns',
-    component: CampaignManagerComponent,
-    canActivate: [TenantOnlyGuard],
-  },
-  {
-    path: 'ataglance',
     loadChildren: () =>
-      import('./features/ataglance/ataglance.module').then(
-        (m) => m.AtaglanceModule
+      import('./features/campaign/campaign.module').then(
+        (m) => m.CampaignModule
       ),
     canActivate: [TenantOnlyGuard],
   },
-
   {
     path: 'add-tenant',
     component: AddTenantsComponent,
