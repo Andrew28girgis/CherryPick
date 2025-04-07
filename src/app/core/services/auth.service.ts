@@ -9,7 +9,10 @@ export class AuthService {
   setToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
     // Save login date timestamp
-    localStorage.setItem(this.LOGIN_DATE_KEY, new Date().toISOString().split('T')[0]);
+    localStorage.setItem(
+      this.LOGIN_DATE_KEY,
+      new Date().toISOString().split('T')[0]
+    );
   }
 
   getToken(): string | null {
@@ -31,7 +34,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.LOGIN_DATE_KEY);
   }
-  
+
   isLoggedInToday(): boolean {
     return this.getToken() !== null;
   }

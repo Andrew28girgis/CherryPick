@@ -7,7 +7,6 @@ import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.c
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
- 
 })
 export class AppComponent implements OnInit {
   logoUrl!: string;
@@ -35,10 +34,7 @@ export class AppComponent implements OnInit {
           this.router.url.startsWith('/market-survey') ||
           this.router.url.startsWith('/landing')
         );
-
       }
     });
   }
-
-
 }

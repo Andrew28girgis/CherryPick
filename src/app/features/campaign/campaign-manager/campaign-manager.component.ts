@@ -1,5 +1,10 @@
-import { submission } from './../../shared/models/submissions';
-import { Component, OnInit, TemplateRef, HostListener, OnDestroy } from '@angular/core';
+ import {
+  Component,
+  OnInit,
+  TemplateRef,
+  HostListener,
+  OnDestroy,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -23,7 +28,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   searchCampaign = '';
   viewMode: 'table' | 'card' = 'table';
   isMobile = false;
-  
+
   // Loading state
   isLoading: boolean = true;
   // Skeleton arrays for different views
@@ -51,7 +56,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     this.spinnerHideInterval = setInterval(() => {
       this.hideSpinner();
     }, 100);
-    
+
     this.breadcrumbService.setBreadcrumbs([
       { label: 'Campaigns', url: '/campaigns' },
     ]);
@@ -72,7 +77,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
     if (this.spinnerHideInterval) {
       clearInterval(this.spinnerHideInterval);
     }
-    
+
     // Clean up all subscriptions
     this.subscriptions.unsubscribe();
   }
@@ -122,7 +127,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   getAllCampaigns(): void {
     this.isLoading = true; // Show skeleton
     this.hideSpinner(); // Hide any spinner
-    
+
     const body: any = {
       Name: 'GetUserCampaigns',
       Params: {},
@@ -142,9 +147,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       error: () => {
         this.isLoading = false; // Hide skeleton on error
         this.hideSpinner(); // Make sure spinner is hidden
-      }
+      },
     });
-    
+
     this.subscriptions.add(subscription);
   }
 
@@ -165,7 +170,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   getUserBuyBoxes(): void {
     this.isLoading = true; // Show skeleton
     this.hideSpinner(); // Hide any spinner
-    
+
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {},
@@ -188,9 +193,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.hideSpinner(); // Make sure spinner is hidden
-      }
+      },
     });
-    
+
     this.subscriptions.add(subscription);
   }
 
@@ -206,7 +211,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
     this.hideSpinner(); // Hide spinner before navigation
-    
+
     if (withOrg) {
       this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
     } else {
@@ -223,7 +228,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   getKanbanTemplateStages(): void {
     this.isLoading = true; // Show skeleton
     this.hideSpinner(); // Hide any spinner
-    
+
     const body: any = {
       Name: 'GetKanbanTemplateStages',
       Params: { KanbanTemplateId: 5 },
@@ -240,16 +245,16 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       error: () => {
         this.isLoading = false; // Hide skeleton on error
         this.hideSpinner(); // Make sure spinner is hidden
-      }
+      },
     });
-    
+
     this.subscriptions.add(subscription);
   }
 
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
     this.isLoading = true; // Show skeleton
     this.hideSpinner(); // Hide any spinner
-    
+
     const body: any = {
       Name: 'GetCampaignOrganizations',
       Params: { CampaignId: campaignId },
@@ -280,9 +285,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       error: () => {
         this.isLoading = false; // Hide skeleton on error
         this.hideSpinner(); // Make sure spinner is hidden
-      }
+      },
     });
-    
+
     this.subscriptions.add(subscription);
   }
 
@@ -309,14 +314,14 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   getSubmissionsCountNew(submissions: Submission[]) {
-    return submissions.filter(s => s.StatusId == 0).length;
+    return submissions.filter((s) => s.StatusId == 0).length;
   }
 
-  getSumbmissionsCountAcceppted(submissions:Submission[]){
-    return submissions.filter(s => s.StatusId == 1).length;
+  getSumbmissionsCountAcceppted(submissions: Submission[]) {
+    return submissions.filter((s) => s.StatusId == 1).length;
   }
 
-  getSumbmissionsCountRejected(submissions:Submission[]){
-    return submissions.filter(s => s.StatusId == -1).length;
+  getSumbmissionsCountRejected(submissions: Submission[]) {
+    return submissions.filter((s) => s.StatusId == -1).length;
   }
 }
