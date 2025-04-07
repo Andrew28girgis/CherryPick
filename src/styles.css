@@ -332,11 +332,11 @@ a {
   text-decoration: underline;
 }
 
-.kanban-action-popup .modal-content{
+.kanban-action-popup .modal-content {
   padding: 0.5rem;
 }
 
-.modal-footer{
+.modal-footer {
   border: 0;
 }
 
@@ -380,7 +380,6 @@ a {
 }
 
 @media (max-width: 400px) {
-
   .procpect-table-head th,
   .procpect-table-body td {
     font-size: 12px;

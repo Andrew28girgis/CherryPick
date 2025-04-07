@@ -114,6 +114,7 @@ export class TenantComponent implements OnInit {
       },
     });
   }
+
   // GetCampaignDetails(): void {
   //   this.spinner.show();
   //   const body: any = {
@@ -165,7 +166,6 @@ export class TenantComponent implements OnInit {
 
   public uploadFile(files: NgxFileDropEntry[]): void {
     this.files = files;
-
     if (this.isClearing) {
       this.isClearing = false;
       this.isUploading = true;

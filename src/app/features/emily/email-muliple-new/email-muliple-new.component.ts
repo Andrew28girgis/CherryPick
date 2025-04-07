@@ -15,7 +15,6 @@ import { concatMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
 import {
-  ContactsChecked,
   OrganizationChecked,
   buyboxChecklist,
 } from 'src/app/shared/models/sidenavbar';
@@ -123,7 +122,9 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   buyboxChecklist!: buyboxChecklist;
   private checklistSubscription!: Subscription;
   isAdvancedVisible = false; // Initially, the section is hidden
-  BatchGuid!:string;
+  BatchGuid!: string;
+  campaignId: any;
+  
   constructor(
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -134,6 +135,10 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+     this.campaignId = params.get('campaignId');
+    });
+    
     this.breadcrumbService.addBreadcrumb({
       label: 'Generate Email',
       url: '/',
@@ -141,7 +146,6 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     this.emilyService
       .getCheckList()
       .subscribe((buyboxChecklist: buyboxChecklist) => {
- 
         if (this.buyboxChecklist == null || this.buyboxChecklist == undefined) {
           const storedChecklist = sessionStorage.getItem('buyboxChecklist');
           if (storedChecklist) {
@@ -183,7 +187,8 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     this.GetMailContextGenerated();
 
     const guid = crypto.randomUUID();
-      this.BatchGuid = guid;
+    this.BatchGuid = guid;
+
   }
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
@@ -780,12 +785,10 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
           (contact: any) =>
             contact.selected && contact.ShoppingCenters?.length > 0
         ).length;
-        
 
         if (this.isISCcSelected == true) {
           output += `- Create ${countSelectedContacts} Email For each Contact\n `;
         }
-        
 
         contacts.forEach((contact: any) => {
           if (contact.selected && contact.ShoppingCenters?.length > 0) {
@@ -966,7 +969,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   buildLandingChangeSection(): string {
     let LandingChange = '';
     if (this.isLandingSelected) {
-      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
+      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId + '/' + this.campaignId;
       LandingChange += `\nPlease Include a paragraph so encourage the email recipients  to click on this link to fill in the available spaces or submit a shopping center pdf brochure: \n\n <a href="${landingLink}">${landingLink}</a>\n\n`;
     }
     return LandingChange;
@@ -1136,8 +1139,6 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
     const promptId = Number(this.selectedPromptId);
     const IsCC = this.isISCcSelected;
 
- 
-
     from(this.emailTemplates)
       .pipe(
         concatMap((emailTemplate) => {
@@ -1170,7 +1171,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         complete: () => {
-          this.GetMailContextGenerated(); 
+          this.GetMailContextGenerated();
           this.spinner.hide();
         },
       });
@@ -1199,7 +1200,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
 
   onIncludeLandingChange(event: any): void {
     this.isLandingSelected = event.target.checked;
-    const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId;
+    const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId + '/' + this.campaignId;
     const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
 
     this.emailTemplates = this.emailTemplates.map((templateItem) => {
@@ -1239,7 +1240,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
       .map((t: any) => t.templateOne)
       .join('\n');
 
-      this.updateEmailBody();
+    this.updateEmailBody();
   }
 
   getRelationsForCategory(categoryId: number) {
@@ -1345,13 +1346,13 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
         });
       });
     });
-  
+
     if (!value) {
       this.emailTemplates = [];
     } else {
       this.emailTemplates = [...this.originalEmailTemplates];
     }
-    
+
     this.updateEmailBody();
   }
 }
