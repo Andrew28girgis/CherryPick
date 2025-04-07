@@ -52,7 +52,10 @@ const routes: Routes = [
   },
   {
     path: 'campaigns',
-    component: CampaignManagerComponent,
+    loadChildren: () =>
+      import('./features/campaign/campaign.module').then(
+        (m) => m.CampaignModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {

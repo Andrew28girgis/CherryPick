@@ -466,6 +466,7 @@ export class ManagePropertiesComponent implements OnInit {
     // Extract the content of the selected images
     const array = selectedImages.map((image) => image.content);
     const shopID = this.selectedShoppingID;
+    
     this.PlacesService.SendImagesArray(array, shopID).subscribe({
       next: (data) => {
         this.JsonPDF = data;

@@ -1,0 +1,40 @@
+.submission-card {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+  width: 100%;
+}
+
+.submission-card .dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: #ff4c4c;
+}
+
+.submission-card .gray-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: #e2e4e9;
+}
+
+.submission-card .title {
+  font-weight: 600;
+}
+
+.submission-card .time {
+  color: #707791;
+}
+
+.avatar-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.avatar-icon img {
+  height: 100%;
+  width: 100%;
+}
