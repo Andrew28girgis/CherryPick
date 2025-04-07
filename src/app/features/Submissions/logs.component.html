@@ -1,82 +1,160 @@
-<div class="p-3 table-responsive">
-  <table
-    class="table align-middle"
-    *ngIf="submissionsArray && submissionsArray.length > 0"
-  >
-    <thead>
-      <tr>
-        <th>Buybox & Campaign</th>
-        <th>Submission</th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngFor="let submission of submissionsArray">
-        <tr>
-          <td>
-            <div>{{ submission.Name }}</div>
-            <div>{{ submission.Campaigns[0].CampaignName }}</div>
-          </td>
-          <td>
-            <ng-container
-              *ngFor="let Sc of submission.Campaigns[0].ShoppingCenters"
-            >
-              <div class="sub-wrap">
-                <div class="d-flex justify-content-between my-2 mx-3">
-                  <div><b>Shopping Center:</b> {{ Sc.CenterName }}</div>
-                  <button
-                    class="btn btn-primary"
-                    style="padding: 4px 15px"
-                    (click)="openPlaces(Places, Sc.Places)"
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-between align-items-center">
+    <div class="col-md-6">
+      <div class="d-flex align-items-center">
+        <img
+          *ngIf="submissionsArray[0].OrganizationId"
+          [src]="
+            'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+            submissionsArray[0].OrganizationId
+          "
+          class="tenant-logo"
+        />
+        <h3 class="mx-3 org-name">
+      {{ submissionsArray[0].Name }}
+      </h3>
+      <!-- {{ submissionsArray[0].Campaigns[0].CampaignName }} -->
+    </div>
+    </div>
+    <div class="col-md-6">
+      <div class="col-md-12 d-flex justify-content-between">
+      <div class="col-md-6 accepted-card">
+        <div class="col-3">
+          <div class="icon-card-accept">
+            <img
+            class="img-icn"
+            src="../../../assets/Images/Icons/like.svg"
+          />
+          </div>
+        </div>
+        <div class="col-9">
+          <h3 class="accepted-number">
+          {{acceptedSubmissions}}
+        </h3>
+        <h3 class="accepted-text">Accepted Submissions</h3>
+      </div>
+    </div>
+      <div class="col-md-6 accepted-card ms-3">
+        <div class="col-3">
+          <div class="icon-card-reject">
+            <img
+            class="img-icn"
+            src="../../../assets/Images/Icons/dislike.svg"
+          />
+          </div>
+        </div>
+        <div class="col-9">
+          <h3 class="accepted-number">
+          {{ rejectedSubmissions }}
+          </h3>
+          <h3 class="accepted-text">Rejected Submissions</h3>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  </div>
+  <div class="row">
+    <!-- Wrapper that replaces the table -->
+  <!-- Loop over each submission -->
+  <div class="submissions-list" *ngIf="submissionsArray && submissionsArray.length > 0">
+    <ng-container *ngFor="let submission of submissionsArray">
+      <!-- Loop over each Shopping Center -->
+      <ng-container *ngFor="let sc of submission.Campaigns[0].ShoppingCenters">
+        <!-- Loop over each User in the Shopping Center -->
+        <ng-container *ngFor="let user of sc.C">
+          <!-- Loop over each User Submission -->
+          <ng-container *ngFor="let userSubmission of user.UserSubmissions">
+            <div class="submission-card d-flex align-items-center">
+            <!-- Left: Building Image -->
+            <div class="building-image me-3">
+              <img
+                src="{{ sc.MainImage}}"
+                alt="Building"
+                class="img"
+              />
+            </div>
+            
+              <!-- Left Info: Center Name, Status, Places, Date, Add Note -->
+              <div class="left-info d-flex justify-content-between col-12">
+                <!-- Name & Status -->
+                <div class="mb-2 col-5" style="display: flex; flex-direction: column;">
+                  <h5 class="mb-0 me-3 center-name" style="padding-bottom: 8px;">{{ sc.CenterName }}</h5>
+                  <h5 class="mb-0 me-3 date-created" style="padding-bottom: 8px;">{{ sc.CenterAddress }}</h5>
+                  
+                  <!-- Show accepted/rejected/pending status -->
+                   <div class="div"  style="padding-bottom: 8px;">
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'badge-success': userSubmission.StatusId == 1,
+                      'badge-danger': userSubmission.StatusId == -1
+                    }"
                   >
-                    View places
-                  </button>
+                    <!-- Display text based on status -->
+                    {{
+                      userSubmission.StatusId == 1
+                        ? 'Accepted'
+                        : (userSubmission.StatusId == -1 ? 'Rejected' : 'Pending')
+                    }}
+                  </span>
                 </div>
-                <div class="my-2 mx-3">
-                  <div>
-                    <b>User:</b> {{ Sc.UserName }}
-                    <ng-container *ngFor="let Submission of Sc.UserSubmissions">
-                      <span class="mx-3">
-                        {{ Submission.CreatedDate | date }}</span
-                      >
-                      <div *ngIf="Submission.StatusId !== 0">
-                        <span
-                          class="badge-success"
-                          *ngIf="Submission.StatusId == 1"
-                          >Accepted</span
-                        >
-                        <span
-                          class="badge-danger"
-                          *ngIf="Submission.StatusId == -1"
-                          >Rejected</span
-                        >
-                      </div>
-                      <div *ngIf="Submission.StatusId == 0">
-                        <button
-                          (click)="AcceptUserSubmission(Submission)"
-                          class="btn btn-success me-2 my-0"
-                          style="padding: 5px; font-size: 14px"
-                        >
-                          Accept
-                        </button>
-                        <button
-                        (click)="RejectUsersubmission(Submission)"
-
-                          class="btn btn-danger ms-2 my-0"
-                          style="padding: 5px; font-size: 14px"
-                        >
-                          Reject
-                        </button>
-                      </div>
+                
+                
+                <!-- Add Note button -->
+                <button
+                  class="add-note mb-2"
+                  (click)="openAddNoteModal(userSubmission.Id)"
+                >
+                  Add Note
+                </button>
+                </div>
+                <!-- Places -->
+                <div class="mb-2 col-2 d-flex flex-column" style="align-items: baseline;">
+                  <span class="date-created">Places</span>
+                  <a
+                    class="ms-2 places"
+                    (click)="openPlaces(Places, sc.Places)"
+                  >
+                    {{ sc.Places.length || 0 }} Places
+                    <img
+                    class="img-icn"
+                    src="../../../assets/Images/Icons/eye-place.svg"
+                  />
+                  </a>
+                </div>
+                <!-- Date Created -->
+                <div class="mb-2 col-2 d-flex flex-column" style="align-items: baseline;">
+                  <span class="date-created">Date Created</span>
+                  <span class="date ms-2">
+                    {{ userSubmission.CreatedDate | date }}
+                  </span>
+                </div>
+                <!-- User Name -->
+                <div class="mb-2 col-3 d-flex flex-column" style="align-items: baseline;">
+                  <span class="date-created">User Name('s)</span>
+                  <div class="user-name">
+                    <ng-container *ngFor="let user of sc.C">
+                      <span>{{ user.FirstName }} {{ user.LastName }}</span><br />
                     </ng-container>
                   </div>
                 </div>
               </div>
-            </ng-container>
-          </td>
-        </tr>
+            <!-- Far Right: Match Circle (if you have a match value) -->
+            <!-- <div class="match-circle ms-3">
+              <div class="circle">
+                <span>{{ userSubmission.Match || 75 }}%</span>
+              </div>
+            </div> -->
+          </div>
+          <!-- End .submission-card -->
+        </ng-container>
       </ng-container>
-    </tbody>
-  </table>
+    </ng-container>
+    </ng-container>
+  </div>
+  </div>
 </div>
 
 <ng-template #Places let-modal>
@@ -100,5 +178,20 @@
         </ng-container>
       </tbody>
     </table>
+  </div>
+</ng-template>
+
+<ng-template #AddNote let-modal>
+  <div class="d-flex justify-content-center align-items-center view-act">
+    <h4 class="mb-0">Add Notes</h4>
+  </div>
+  <div class="modal-body" style="overflow: auto; max-height: 80vh">
+  
+  <textarea rows="3" class="form-control" placeholder="Write Notes Here" aria-label="Write Notes"
+  [(ngModel)]="Notes" >
+</textarea>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" (click)="InsertTenantNotes()">Add</button>
   </div>
 </ng-template>

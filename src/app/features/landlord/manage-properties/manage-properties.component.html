@@ -196,6 +196,11 @@
                   </div>
                 </div>
               </div>
+              <div *ngIf="JsonPDF">
+                <textarea rows="3" class="form-control" placeholder="Write Notes Here"
+                  [(ngModel)]="Notes" >
+                </textarea>
+              </div>
             </div>
           </div>
         </div>
