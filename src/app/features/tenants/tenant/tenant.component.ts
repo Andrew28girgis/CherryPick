@@ -84,8 +84,6 @@ export class TenantComponent implements OnInit {
     this.activatedRoute.params.subscribe((params) => {
       this.selectedbuyBox = params['buyboxid'];
       this.selectedCampaign = params['campaignId'];
-      console.log(this.selectedCampaign);
-
       // this.GetCampaignDetails();
     });
     this.GetBuyBoxInfo();
@@ -272,9 +270,10 @@ export class TenantComponent implements OnInit {
     // Extract the content of the selected images
     const array = selectedImages.map((image) => image.content);
     const shopID = this.selectedShoppingID;
-    console.log('shopID', shopID);
+    const buyboxid=this.selectedbuyBox
 
-    this.PlacesService.SendImagesArray(array, shopID).subscribe({
+
+    this.PlacesService.SendImagesArrayWithBuyBoxId(array, shopID, buyboxid).subscribe({
       next: (data) => {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
