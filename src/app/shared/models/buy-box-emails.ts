@@ -1,10 +1,4 @@
 export interface BuyBoxMicroDeals {
-  id: number
-  StageId: number
-  Organization: Organization[]
-}
-
-export interface Organization {
   OrganizationId: number
   OrganizationName: string
   Contact: Contact[]

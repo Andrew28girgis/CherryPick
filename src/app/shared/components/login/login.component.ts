@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-     if (this.t) {
+    if (this.t) {
       this.adminLogin.contactToken = this.t;
     }
     this.PlacesService.loginUser(this.adminLogin).subscribe((data: any) => {
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
       if (data.token) {
         this.navigateToHome();
       }
-     });
+    });
   }
 
   private navigateToHome() {
