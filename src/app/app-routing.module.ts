@@ -56,6 +56,15 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
+    path: 'ataglance',
+    loadChildren: () =>
+      import('./features/ataglance/ataglance.module').then(
+        (m) => m.AtaglanceModule
+      ),
+    canActivate: [TenantOnlyGuard],
+  },
+
+  {
     path: 'add-tenant',
     component: AddTenantsComponent,
     canActivate: [TenantOnlyGuard],

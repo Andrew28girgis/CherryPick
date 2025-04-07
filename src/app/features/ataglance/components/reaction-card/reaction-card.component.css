@@ -1,0 +1,29 @@
+.reaction-card {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+  width: 100%;
+}
+
+.reaction-card .center-name {
+  width: 100%;
+  background-color: #edf0f8;
+  text-align: center;
+  border-left: 1px solid #ff4c4c;
+  border-right: 1px solid #ff4c4c;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-weight: 600;
+}
+
+.reaction-card .reaction {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.avatar-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  background-color: red;
+  border-radius: 50%;
+}
