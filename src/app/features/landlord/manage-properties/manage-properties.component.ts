@@ -62,6 +62,7 @@ export class ManagePropertiesComponent implements OnInit {
   @ViewChild('openShopping', { static: true }) openShopping!: TemplateRef<any>;
   @ViewChild('deletePlaceModal', { static: true })
   deletePlaceModal!: TemplateRef<any>;
+  Notes: string = '';
   constructor(
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
@@ -496,6 +497,7 @@ export class ManagePropertiesComponent implements OnInit {
         ...tenant,
         isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
       })),
+      Notes: this.Notes, // Add Notes to the JsonPDF object
     };
 
     // Send the updated JsonPDF data
@@ -527,9 +529,5 @@ export class ManagePropertiesComponent implements OnInit {
     setTimeout(() => {
       toast!.classList.remove('show');
     }, 3000);
-  }
-  closeToast() {
-    const toast = document.getElementById('customToast');
-    toast!.classList.remove('show');
   }
 }
