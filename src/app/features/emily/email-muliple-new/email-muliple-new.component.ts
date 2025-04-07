@@ -824,7 +824,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
           (contact: any) =>
             contact.selected && contact.ShoppingCenters?.length > 0
         ).length;
-        if (this.isISCcSelected) {
+        if (!this.isISCcSelected) {
           individualTemplateOne += `- Create ${countSelectedContacts} Email For each Contact\n `;
         }
         contacts.forEach((contact: any) => {
