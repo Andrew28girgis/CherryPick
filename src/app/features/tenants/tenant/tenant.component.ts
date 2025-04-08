@@ -66,6 +66,9 @@ export class TenantComponent implements OnInit {
   uploadRequest: any;
   selectedCampaign!: number;
   CampaignData!: any;
+  showFullReason: boolean = false;
+  
+
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -151,7 +154,9 @@ export class TenantComponent implements OnInit {
       },
     });
   }
-
+  toggleReason() {
+    this.showFullReason = !this.showFullReason;
+  }
   openUploadModal(id?: number) {
     // if (id === undefined) {
     //   const guid = crypto.randomUUID();
