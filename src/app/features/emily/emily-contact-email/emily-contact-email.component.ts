@@ -145,7 +145,7 @@ export class EmilyContactEmailComponent implements OnInit {
           this.contacts = this.BuyBoxMicroDeals[0].Contact;
           this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
         }
-        
+
         // this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
         //   m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
         //     (o) => o.OrganizationName || ''
@@ -227,10 +227,10 @@ export class EmilyContactEmailComponent implements OnInit {
     this.selected = email;
     this.GetMail(email.id);
   }
-  
+
   goBackk(): void {
     this.selected = null;
-  }  
+  }
   GetMail(mailId: number): void {
     const body: any = {
       Name: 'GetMail',
