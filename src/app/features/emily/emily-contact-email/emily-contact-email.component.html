@@ -1,14 +1,14 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="container-fluid p-0">
+<div class="container p-0">
   <div class="row m-0 p-0">
     <div class="col-12">
       <div class="buttonandname">
         <div class="w-100 d-flex align-item-center-justify-content-between">
           <div class="d-flex align-items-start">
-            <button class="back" (click)="goBack()">
+            <!-- <button class="back" (click)="goBack()">
               <i class="fa-solid fa-arrow-left"></i>
-            </button>
+            </button> -->
             <div class="org-data ms-2">
               <img
                 [src]="
@@ -111,10 +111,7 @@
     <div class="row m-0 p-0">
       <!-- Contacts list - always visible -->
       <div class="col-lg-3 p-0 m-0">
-        <div class="card" style="border: none; border-radius: 0; min-height: 80vh">
-          <div class="bg-white">
-            <h5 class="contactsh5 mb-0">Contacts</h5>
-          </div>
+        <div class="card" style="border: none; border-radius: 0; min-height: 100vh"> 
           <div class="card-body" style="padding: 0">
             <ul style="overflow-y: auto; max-height: 63vh; padding: 0" [class.scrolling]="isScrolling" (scroll)="onScroll()">
               <li class="contact-list" *ngFor="let contact of contacts" (click)="getEmailsForContact(contact)"

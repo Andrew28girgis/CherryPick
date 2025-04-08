@@ -120,13 +120,11 @@
 }
 .buttonandname {
   display: flex;
-  padding: 25px;
+  padding: 25px 0;
   align-items: flex-start;
-  align-self: stretch;
-  background: var(--Colors-Primary-100, #dbe0f0);
+  align-self: stretch; 
 }
-.mailbox-header {
-  background: var(--Colors-Primary-100, #dbe0f0);
+.mailbox-header { 
   display: flex;
   padding: 0 12px;
   justify-content: space-between;
