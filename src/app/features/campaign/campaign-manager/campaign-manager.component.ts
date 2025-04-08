@@ -202,7 +202,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       };
       this.emilyService.updateCheckList(emilyObject);
 
-      this.router.navigate(['/MutipleEmail']);
+      this.router.navigate(['/MutipleEmail' , campaign.id ]);
     }
   }
 
@@ -258,7 +258,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
             organizations: organizations,
           };
           this.emilyService.updateCheckList(emilyObject);
-          this.router.navigate(['/MutipleEmail']);
+          this.router.navigate(['/MutipleEmail' ,campaignId]);
         }
         this.isLoading = false; // Hide skeleton
           // Make sure spinner is hidden
