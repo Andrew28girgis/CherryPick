@@ -1110,7 +1110,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
               this.selectedPromptId = this.prompts[0].id;
             } else {
               this.prompts = [];
-              this.selectedPromptId = ''; // Reset if no prompts available
+              this.selectedPromptId = ''; 
             }
           },
         });
