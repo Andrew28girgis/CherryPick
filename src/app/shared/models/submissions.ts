@@ -26,6 +26,8 @@ export interface ShoppingCenter {
   UserSubmissions: UserSubmission[]
   Places:Places[] 
   CenterAddress: string
+  CenterCity: string
+  CenterState: string
   MainImage: string
   C: User[];
 }
