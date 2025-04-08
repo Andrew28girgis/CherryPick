@@ -680,10 +680,6 @@
   cursor: pointer;
   color: #888;
 }
-
-.search-button i {
-  font-size: 18px;
-}
 /* Animations */
 @keyframes slideUp {
   from {
