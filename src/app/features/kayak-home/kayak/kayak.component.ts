@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
+   
 import { StatesAndCities } from '../../../shared/models/kayak';
 import { General } from '../../../shared/models/domain';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -86,7 +86,7 @@ export class KayakComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService,
+       
     private markerService: MapsService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
@@ -122,7 +122,7 @@ export class KayakComponent implements OnInit {
   }
 
   GetStates(): void {
-    this.spinner.show();
+      
     const body: any = { Name: 'GetStates', Params: {} };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
@@ -132,13 +132,13 @@ export class KayakComponent implements OnInit {
             this.KayakCitiesandStates.map((item: any) => item.stateCode.trim())
           ),
         ];
-        this.spinner.hide();
+             
       },
     });
   }
 
   getBindedShoppingCenters(): void {
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetMarketSurveyShoppingCentersByBBoxId',
       Params: {
@@ -151,12 +151,12 @@ export class KayakComponent implements OnInit {
         this.SelectedShoppingCenterIDs = res.json.map(
           (item: any) => item.shoppingCenterId
         );
-        this.spinner.hide();
+             
       },
     });
   }
   getResult(): Observable<any> {
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetResult',
       Params: this.filterValues,
@@ -169,7 +169,7 @@ export class KayakComponent implements OnInit {
         this.ShoppingCenters = this.KayakResult.Result;
         this.getBindedShoppingCentersNumber();
       }),
-      finalize(() => this.spinner.hide())
+           
     );
   }
   GetFilters(): void {
@@ -177,7 +177,7 @@ export class KayakComponent implements OnInit {
       this.resetFilters();
       return;
     }
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetFilters',
       Params: {
@@ -199,7 +199,7 @@ export class KayakComponent implements OnInit {
         } else {
           this.resetFilters();
         }
-        this.spinner.hide();
+             
       }
     });
   }
@@ -291,7 +291,7 @@ export class KayakComponent implements OnInit {
       return;
     }
 
-    this.spinner.show();
+      
     this.loading = true;
 
 
@@ -308,14 +308,14 @@ export class KayakComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        this.spinner.hide();
+             
         this.loading = false;
         this.getShoppingCenters();
       }
     });
   }
   UnBindShoppingCenter() {
-    this.spinner.show();
+      
     const body: any = {
       Name: 'DeleteShoppingCenterFromBuyBox',
       Params: {
@@ -325,7 +325,7 @@ export class KayakComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res) => {
-        this.spinner.hide();
+             
         this.loading = false;
         this.getShoppingCenters();
       }
@@ -365,7 +365,7 @@ export class KayakComponent implements OnInit {
   @ViewChild('tenantModal', { static: true }) tenantModal!: TemplateRef<any>;
 
   GetShoppingCenterTenants(shoppingCenterId: number): void {
-    this.spinner.show();
+      
 
     const body: any = {
       Name: 'GetShoppingCenterTenants',
@@ -385,7 +385,7 @@ export class KayakComponent implements OnInit {
         } else {
           this.ShoppingCenterTenants = [];
         }
-        this.spinner.hide();
+             
       }
     });
   }
@@ -659,7 +659,7 @@ export class KayakComponent implements OnInit {
     );
   }
   getShoppingCenters(): void {
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -670,7 +670,6 @@ export class KayakComponent implements OnInit {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
-        this.spinner.hide();
         // this.getStandAlonePlaces(this.selectedbuyBox);
         // this.getBuyBoxPlaces(this.BuyBoxId);
       }

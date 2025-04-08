@@ -6,7 +6,7 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
+   
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
@@ -47,7 +47,7 @@ export class SideListViewComponent implements OnInit {
     private markerService: MapsService,
     public activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService,
+        
     private PlacesService: PlacesService,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
@@ -66,7 +66,7 @@ export class SideListViewComponent implements OnInit {
   }
 
   getShoppingCenters(buyboxId: number): void {
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -80,7 +80,7 @@ export class SideListViewComponent implements OnInit {
           a.CenterCity.localeCompare(b.CenterCity)
         );
 
-        this.spinner.hide();
+             
         this.getBuyBoxPlaces(this.BuyBoxId);
       }
     });
@@ -182,7 +182,7 @@ export class SideListViewComponent implements OnInit {
 
   async getAllMarker() {
     try {
-      this.spinner.show();
+        
       const { Map } = await google.maps.importLibrary('maps');
       if (this.savedMapView) {
         const { lat, lng, zoom } = JSON.parse(this.savedMapView);
@@ -222,7 +222,7 @@ export class SideListViewComponent implements OnInit {
       this.GetPolygons();
       this.createCustomMarkers(this.buyboxCategories);
     } finally {
-      this.spinner.hide();
+           
     }
   }
 
@@ -520,7 +520,7 @@ export class SideListViewComponent implements OnInit {
   }
 
   deleteShCenter() {
-    this.spinner.show();
+      
 
     const body: any = {
       Name: 'DeleteShoppingCenterFromBuyBox',
@@ -539,7 +539,7 @@ export class SideListViewComponent implements OnInit {
         );
       });
       this.getShoppingCenters(this.BuyBoxId);
-      this.spinner.hide();
+           
     });
   }
 
@@ -548,7 +548,7 @@ export class SideListViewComponent implements OnInit {
     Deleted: boolean,
     placeId: number
   ) {
-    this.spinner.show();
+      
     Deleted = false;
 
     const body: any = {
@@ -562,7 +562,7 @@ export class SideListViewComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe((data) => {
       this.toggleShortcuts(placeId, 'close');
       this.getShoppingCenters(this.BuyBoxId);
-      this.spinner.hide();
+           
     });
   }
 

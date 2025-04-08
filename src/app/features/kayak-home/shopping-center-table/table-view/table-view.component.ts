@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
-import { NgxSpinnerService } from 'ngx-spinner';
+   
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
@@ -59,7 +59,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService,
+        
     private cdr: ChangeDetectorRef,
     private stateService: StateService,
     private viewManagerService: ViewManagerService
@@ -68,7 +68,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Set up interval to continuously hide spinner
     this.spinnerHideInterval = setInterval(() => {
-      this.hideSpinner();
+       
     }, 100);
     
     this.General = new General();
@@ -96,7 +96,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   // Method to hide spinner
   private hideSpinner(): void {
     try {
-      this.spinner.hide();
+           
     } catch (error) {
       // Ignore errors
     }
@@ -105,7 +105,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   async initializeData() {
     try {
       this.isLoading = true; // Show skeleton
-      this.hideSpinner(); // Hide any spinner
+        // Hide any spinner
       
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
         this.BuyBoxId
@@ -138,14 +138,14 @@ export class TableViewComponent implements OnInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-      this.hideSpinner(); // Make sure spinner is hidden
+        // Make sure spinner is hidden
       this.cdr.detectChanges();
     }
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
-    this.hideSpinner(); // Hide any spinner
+      // Hide any spinner
     
     this.viewManagerService
       .restoreShoppingCenter(MarketSurveyId, Deleted)
@@ -162,7 +162,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       })
       .finally(() => {
         this.isLoading = false; // Hide skeleton
-        this.hideSpinner(); // Make sure spinner is hidden
+          // Make sure spinner is hidden
       });
   }
 
@@ -170,7 +170,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
   ) {
-    this.hideSpinner(); // Hide spinner before opening modal
+      // Hide spinner before opening modal
     this.DeletedSC = shoppingCenter;
     this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
@@ -185,7 +185,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
     try {
       this.isLoading = true; // Show skeleton
-      this.hideSpinner(); // Hide any spinner
+        // Hide any spinner
       
       await this.viewManagerService.deleteShoppingCenter(
         this.BuyBoxId,
@@ -196,7 +196,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-      this.hideSpinner(); // Make sure spinner is hidden
+        // Make sure spinner is hidden
       this.cdr.markForCheck();
     }
   }
@@ -204,7 +204,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   async refreshShoppingCenters() {
     try {
       this.isLoading = true; // Show skeleton
-      this.hideSpinner(); // Hide any spinner
+        // Hide any spinner
       
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
         this.BuyBoxId
@@ -217,7 +217,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-      this.hideSpinner(); // Make sure spinner is hidden
+        // Make sure spinner is hidden
     }
   }
 
@@ -270,7 +270,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
-    this.hideSpinner(); // Hide spinner before opening modal
+      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -289,11 +289,11 @@ export class TableViewComponent implements OnInit, OnDestroy {
     if (!map) {
       // Handle error
     }
-    this.hideSpinner(); // Hide spinner after map is initialized
+      // Hide spinner after map is initialized
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
-    this.hideSpinner(); // Hide spinner before opening modal
+      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -324,7 +324,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       } else {
         // Handle error
       }
-      this.hideSpinner(); // Hide spinner after street view is initialized
+        // Hide spinner after street view is initialized
     });
   }
 
