@@ -45,6 +45,7 @@ export class EmilyContactEmailComponent implements OnInit {
   selectedFilter: string = 'all'; // Default selected filter
   selectedOption: string = 'All'; // Default text in the dropdown
   selectedMicro: any;
+  selected: any = null;
 
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -144,7 +145,7 @@ export class EmilyContactEmailComponent implements OnInit {
           this.contacts = this.BuyBoxMicroDeals[0].Contact;
           this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
         }
-
+        
         // this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
         //   m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
         //     (o) => o.OrganizationName || ''
@@ -190,6 +191,7 @@ export class EmilyContactEmailComponent implements OnInit {
       this.filteredEmails = [];
       this.emptyMessage = '';
       this.selectedEmail = null;
+      this.selected = null; // Reset selected email to show the list view
     } else if (this.emailsSentContact.length > 0) {
       // If same contact and emails already loaded, do nothing.
       return;
@@ -216,54 +218,19 @@ export class EmilyContactEmailComponent implements OnInit {
       this.emptyMessage = 'No emails available for this contact';
     } else if (this.filteredEmails.length > 0) {
       // Open the first email by default.
-      this.openEmail(this.filteredEmails[0]);
+      // this.openEmail(this.filteredEmails[0]); // Commented out to not auto-select
     }
   }
 
   // Scroll function and load email details API.
   openEmail(email: Mail): void {
-    // Call GetMail() with the selected email's ID (mailId).
+    this.selected = email;
     this.GetMail(email.id);
-    // Smooth scroll to the email details section.
-    setTimeout(() => {
-      const emailDetailsSection = document.querySelector(
-        '.email-details-body'
-      ) as HTMLElement;
-      if (emailDetailsSection) {
-        this.smoothScrollTo(emailDetailsSection, 300); // 300ms duration.
-      }
-    }, 100);
   }
-  smoothScrollTo(element: HTMLElement, duration: number) {
-    const targetPosition = element.getBoundingClientRect().top + window.scrollY;
-    const startPosition = window.scrollY;
-    const distance = targetPosition - startPosition;
-    const startTime = performance.now();
-    function animationStep(currentTime: number) {
-      const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-      const ease =
-        progress < 0.5
-          ? 2 * progress * progress
-          : -1 + (4 - 2 * progress) * progress;
-      window.scrollTo(0, startPosition + distance * ease);
-      if (elapsedTime < duration) {
-        requestAnimationFrame(animationStep);
-      }
-    }
-    requestAnimationFrame(animationStep);
-  }
-  onScroll(): void {
-    if (!this.isScrolling) {
-      this.isScrolling = true;
-    }
-    if (this.scrollTimeout) {
-      clearTimeout(this.scrollTimeout);
-    }
-    this.scrollTimeout = setTimeout(() => {
-      this.isScrolling = false;
-    }, 500);
-  }
+  
+  goBackk(): void {
+    this.selected = null;
+  }  
   GetMail(mailId: number): void {
     const body: any = {
       Name: 'GetMail',
@@ -309,6 +276,7 @@ export class EmilyContactEmailComponent implements OnInit {
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
     this.isDropdownVisible = false; // Set this to false to hide the dropdown
+    this.selected = null; // Reset selected email to show the list view
 
     // If no emails or contact selected, don't try to filter.
     if (!this.selectedContact || this.emailsSentContact?.length === 0) {
@@ -349,7 +317,8 @@ export class EmilyContactEmailComponent implements OnInit {
       !this.selectedEmail ||
       !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
     ) {
-      this.openEmail(this.filteredEmails[0]);
+      // Don't auto-select the first email anymore
+      // this.openEmail(this.filteredEmails[0]);
     }
   }
 
