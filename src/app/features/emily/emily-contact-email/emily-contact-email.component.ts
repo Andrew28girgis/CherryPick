@@ -133,24 +133,23 @@ export class EmilyContactEmailComponent implements OnInit {
         console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
 
         this.contacts = [];
-        const microDeal = this.BuyBoxMicroDeals.find((deal) => deal.OrganizationId === this.orgId);
+        const microDeal = this.BuyBoxMicroDeals.find(
+          (deal) => deal.OrganizationId === this.orgId
+        );
 
-        if (microDeal) { 
+        if (microDeal) {
           this.selectedMicro = microDeal.OrganizationId;
-          this.contacts = microDeal.Contact; 
-        } else { 
+          this.contacts = microDeal.Contact;
+        } else {
           this.contacts = this.BuyBoxMicroDeals[0].Contact;
           this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
-
         }
-        
 
         // this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
         //   m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
         //     (o) => o.OrganizationName || ''
         //   )
         // ).join(', ');
-
 
         // this.selectedOrganizationName =
         //   this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)

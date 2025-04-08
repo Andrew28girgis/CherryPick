@@ -124,7 +124,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   isAdvancedVisible = false; // Initially, the section is hidden
   BatchGuid!: string;
   campaignId: any;
-  
+
   constructor(
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -136,9 +136,9 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-     this.campaignId = params.get('campaignId');
+      this.campaignId = params.get('campaignId');
     });
-    
+
     this.breadcrumbService.addBreadcrumb({
       label: 'Generate Email',
       url: '/',
@@ -188,7 +188,6 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
 
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
-
   }
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
@@ -969,7 +968,11 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   buildLandingChangeSection(): string {
     let LandingChange = '';
     if (this.isLandingSelected) {
-      const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId + '/' + this.campaignId;
+      const landingLink =
+        'https://cp.cherrypick.com/tenant/' +
+        this.buyBoxId +
+        '/' +
+        this.campaignId;
       LandingChange += `\nPlease Include a paragraph so encourage the email recipients  to click on this link to fill in the available spaces or submit a shopping center pdf brochure: \n\n <a href="${landingLink}">${landingLink}</a>\n\n`;
     }
     return LandingChange;
@@ -1177,14 +1180,13 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
       });
   }
 
-  GetMailContextGenerated() {
-    this.spinner.show();
-
-    var body: any = {
+ GetMailContextGenerated() {
+   this.spinner.show();
+   var body: any = {
       Name: 'GetMailContextGenerated',
       MainEntity: null,
       Params: {
-        // BuyBoxId: this.buyBoxId,
+        campaignId: this.campaignId,
         ContactId: this.contactId,
       },
       Json: null,
@@ -1192,7 +1194,7 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.returnGetMailContextGenerated = data.json;
+        this.returnGetMailContextGenerated = data.json; 
         this.spinner.hide();
       },
     });
@@ -1200,7 +1202,11 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
 
   onIncludeLandingChange(event: any): void {
     this.isLandingSelected = event.target.checked;
-    const landingLink = 'https://cp.cherrypick.com/tenant/' + this.buyBoxId + '/' + this.campaignId;
+    const landingLink =
+      'https://cp.cherrypick.com/tenant/' +
+      this.buyBoxId +
+      '/' +
+      this.campaignId;
     const snippet = `<br>Landing page: <a href="${landingLink}">${landingLink}</a>`;
 
     this.emailTemplates = this.emailTemplates.map((templateItem) => {
