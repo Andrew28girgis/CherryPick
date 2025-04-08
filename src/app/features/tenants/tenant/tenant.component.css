@@ -49,6 +49,21 @@
   align-items: flex-start;
   gap: var(--Space-Space-24, 16px);
 }
+.truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;  
+  overflow: hidden;
+}
+.toggle-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.toggle-link:hover {
+  color: #0056b3;
+}
 .map-container {
   position: relative;
   background-image: url("../../../../assets/Images/TenantMap.png");
