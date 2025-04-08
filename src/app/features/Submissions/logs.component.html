@@ -151,26 +151,32 @@
 </div>
 
 <ng-template #Places let-modal>
-  <div class="table-responsive">
-    <table class="table align-middle">
-      <thead>
-        <tr>
-          <th>Building Size (sq.ft.)</th>
-          <th>Lease Type</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let place of places">
+  <div class="modal-header">
+    <h4 class="modal-title">Available Places</h4>
+  </div>
+  <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead>
           <tr>
-            <td>
-              {{ place.BuildingSizeSf || "N/A" }}
-              <span *ngIf="place.BuildingSizeSf">SF</span>
-            </td>
-            <td>{{ place.ForLeasePrice }}</td>
+            <th scope="col">Building Size (sq.ft.)</th>
+            <th scope="col">Lease Price</th>
           </tr>
-        </ng-container>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <tr *ngIf="places.length === 0">
+            <td colspan="2">No places available.</td>
+          </tr>
+          <tr *ngFor="let place of places">
+            <td>{{ place.BuildingSizeSf ? (place.BuildingSizeSf | number) + ' SF' : 'N/A' }}</td>
+            <td>{{ place.ForLeasePrice ? (place.ForLeasePrice | currency) : 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
   </div>
 </ng-template>
 
@@ -185,6 +191,7 @@
 </textarea>
 </div>
 <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss('Cancel click')">Cancel</button>
     <button class="btn btn-primary" (click)="InsertTenantNotes()">Add</button>
   </div>
 </ng-template>
