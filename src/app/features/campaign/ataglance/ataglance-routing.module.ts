@@ -8,5 +8,4 @@ const routes: Routes = [{ path: '', component: AtaglanceComponent }];
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-
 export class AtaglanceRoutingModule {}
