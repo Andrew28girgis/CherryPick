@@ -1,4 +1,4 @@
- import {
+import {
   Component,
   OnInit,
   TemplateRef,
@@ -6,7 +6,7 @@
   OnDestroy,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-     
+
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ICampaign, Submission } from 'src/app/shared/models/icampaign';
 import { EmilyService } from 'src/app/core/services/emily.service';
@@ -38,11 +38,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   // Subscription to manage and clean up subscriptions
   private subscriptions = new Subscription();
   // Interval for hiding spinner
-       
 
   constructor(
     private placesService: PlacesService,
-        
+
     private modalService: NgbModal,
     private emilyService: EmilyService,
     private router: Router,
@@ -70,7 +69,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -107,7 +105,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getAllCampaigns(): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
+    // Hide any spinner
 
     const body: any = {
       Name: 'GetUserCampaigns',
@@ -127,7 +125,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-          // Make sure spinner is hidden
+        // Make sure spinner is hidden
       },
     });
 
@@ -150,7 +148,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getUserBuyBoxes(): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
+    // Hide any spinner
 
     const body: any = {
       Name: 'GetUserBuyBoxes',
@@ -170,10 +168,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         } else {
           this.userBuyBoxes = [];
         }
-          // Make sure spinner is hidden
+        // Make sure spinner is hidden
       },
       error: () => {
-          // Make sure spinner is hidden
+        // Make sure spinner is hidden
       },
     });
 
@@ -186,12 +184,12 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   openAddCampaignPopup(content: TemplateRef<any>): void {
-      // Hide spinner before opening modal
+    // Hide spinner before opening modal
     this.modalService.open(content, { centered: true, size: 'xl' });
   }
 
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
-      // Hide spinner before navigation
+    // Hide spinner before navigation
 
     if (withOrg) {
       this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
@@ -202,13 +200,13 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       };
       this.emilyService.updateCheckList(emilyObject);
 
-      this.router.navigate(['/MutipleEmail' , campaign.id ]);
+      this.router.navigate(['/MutipleEmail', campaign.id]);
     }
   }
 
   getKanbanTemplateStages(): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
+    // Hide any spinner
 
     const body: any = {
       Name: 'GetKanbanTemplateStages',
@@ -221,11 +219,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.stages = response.json;
         }
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+        // Make sure spinner is hidden
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-          // Make sure spinner is hidden
+        // Make sure spinner is hidden
       },
     });
 
@@ -234,7 +232,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
+    // Hide any spinner
 
     const body: any = {
       Name: 'GetCampaignOrganizations',
@@ -258,14 +256,14 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
             organizations: organizations,
           };
           this.emilyService.updateCheckList(emilyObject);
-          this.router.navigate(['/MutipleEmail' ,campaignId]);
+          this.router.navigate(['/MutipleEmail', campaignId]);
         }
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+        // Make sure spinner is hidden
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-          // Make sure spinner is hidden
+        // Make sure spinner is hidden
       },
     });
 
