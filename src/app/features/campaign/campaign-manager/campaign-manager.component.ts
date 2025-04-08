@@ -1,4 +1,4 @@
-import {
+ import {
   Component,
   OnInit,
   TemplateRef,
@@ -38,7 +38,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   // Subscription to manage and clean up subscriptions
   private subscriptions = new Subscription();
   // Interval for hiding spinner
-  private spinnerHideInterval: any;
+       
 
   constructor(
     private placesService: PlacesService,
@@ -52,11 +52,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Set up interval to continuously hide spinner
-    this.spinnerHideInterval = setInterval(() => {
-       
-    }, 100);
-
     this.breadcrumbService.setBreadcrumbs([
       { label: 'Campaigns', url: '/campaigns' },
     ]);
@@ -73,23 +68,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear the interval when component is destroyed
-    if (this.spinnerHideInterval) {
-      clearInterval(this.spinnerHideInterval);
-    }
-
-    // Clean up all subscriptions
     this.subscriptions.unsubscribe();
   }
 
-  // Method to hide spinner
-  private hideSpinner(): void {
-    try {
-           
-    } catch (error) {
-      // Ignore errors
-    }
-  }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
@@ -138,8 +119,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
-          console.log(`this.campaigns`, this.filteredCampaigns);
-          
         } else {
           this.campaigns = [];
           this.filteredCampaigns = [];
@@ -222,11 +201,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         organizations: [],
       };
       this.emilyService.updateCheckList(emilyObject);
-      console.log(`s`);
-      
-      console.log(campaign.id);
-      
-      this.router.navigate(['/MutipleEmail' , campaign.id]);
+
+      this.router.navigate(['/MutipleEmail']);
     }
   }
 
@@ -282,7 +258,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
             organizations: organizations,
           };
           this.emilyService.updateCheckList(emilyObject);
-          this.router.navigate(['/MutipleEmail' ,campaignId]);
+          this.router.navigate(['/MutipleEmail']);
         }
         this.isLoading = false; // Hide skeleton
           // Make sure spinner is hidden

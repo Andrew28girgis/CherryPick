@@ -53,7 +53,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   // Loading state for skeleton
   isLoading = true;
   // Interval for hiding spinner
-  private spinnerHideInterval: any;
+       
   private subscriptions = new Subscription();
 
   constructor(
@@ -66,11 +66,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Set up interval to continuously hide spinner
-    this.spinnerHideInterval = setInterval(() => {
-       
-    }, 100);
-    
+
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -86,10 +82,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear the interval when component is destroyed
-    if (this.spinnerHideInterval) {
-      clearInterval(this.spinnerHideInterval);
-    }
+
     this.subscriptions.unsubscribe();
   }
 

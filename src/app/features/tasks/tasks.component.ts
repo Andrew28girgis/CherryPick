@@ -2,7 +2,6 @@ import { Component,  OnInit,  TemplateRef, ViewChild,  OnDestroy } from "@angula
 import  { PlacesService } from "src/app/core/services/places.service"
 import  { NgxSpinnerService } from "ngx-spinner"
 import { CommonModule } from "@angular/common"
-import { NgxSpinnerModule } from "ngx-spinner"
 import  {
   EmailNotificationResponse,
   notificationCategory,
@@ -17,7 +16,7 @@ import { Subscription } from "rxjs"
 @Component({
   selector: "app-tasks",
   standalone: true,
-  imports: [CommonModule, NgxSpinnerModule, RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: "./tasks.component.html",
   styleUrl: "./tasks.component.css",
 })
@@ -35,29 +34,17 @@ export class TasksComponent implements OnInit, OnDestroy {
   @ViewChild("EmailView", { static: false }) EmailView!: TemplateRef<any>
   selectedEmailIndex = 0 // Track the currently selected email
 
-  // Loading state
   isLoading = true
-  // Skeleton arrays for different categories
   skeletonArray = Array(3).fill(0)
-  // Subscription to manage and clean up subscriptions
   private subscriptions = new Subscription()
-  // Interval for hiding spinner
-  private spinnerHideInterval: any
-
   constructor(
     private placesService: PlacesService,
-    private spinner: NgxSpinnerService,
     private router: Router,
     private modalService: NgbModal,
     private emilyService: EmilyService,
   ) {}
 
   ngOnInit(): void {
-    // Set up interval to continuously hide spinner
-    this.spinnerHideInterval = setInterval(() => {
-      this.hideSpinner()
-    }, 100)
-
     const storedContactId = localStorage.getItem("contactId")
     if (storedContactId) {
       this.ContactId = +storedContactId
@@ -66,27 +53,12 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear the interval when component is destroyed
-    if (this.spinnerHideInterval) {
-      clearInterval(this.spinnerHideInterval)
-    }
-
-    // Clean up all subscriptions
     this.subscriptions.unsubscribe()
   }
 
-  // Method to hide spinner
-  private hideSpinner(): void {
-    try {
-      this.spinner.hide()
-    } catch (error) {
-      // Ignore errors
-    }
-  }
 
   GetUserNotifications(): void {
     this.isLoading = true // Show skeleton
-    this.hideSpinner() // Hide any spinner
 
     const body: any = {
       Name: "GetUserNotifications",
@@ -99,11 +71,11 @@ export class TasksComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.UserNotifications = res.json || []
         this.isLoading = false // Hide skeleton
-        this.hideSpinner() // Make sure spinner is hidden
+             
       },
       error: () => {
         this.isLoading = false // Hide skeleton on error
-        this.hideSpinner() // Make sure spinner is hidden
+             
       },
     })
 
@@ -124,7 +96,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   GetNotificationActions(notification: notificationCategory): void {
     this.isLoading = true // Show skeleton
-    this.hideSpinner() // Hide any spinner
+         
 
     const body: any = {
       Name: "GetNotificationActions",
@@ -136,7 +108,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     const subscription = this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.isLoading = false // Hide skeleton
-        this.hideSpinner() // Make sure spinner is hidden
+             
 
         if (!res.json) {
           console.error("Empty response from GetNotificationActions")
@@ -191,7 +163,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.error("Error fetching notification actions", err)
         this.isLoading = false // Hide skeleton on error
-        this.hideSpinner() // Make sure spinner is hidden
+             
       },
     })
 
@@ -199,7 +171,6 @@ export class TasksComponent implements OnInit, OnDestroy {
   }
 
   openEmailModal(): void {
-    this.hideSpinner() // Hide spinner before opening modal
     this.modalService.open(this.EmailView, {
       size: "lg",
       centered: true,
@@ -231,7 +202,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = true // Show skeleton
-    this.hideSpinner() // Hide any spinner
+         
 
     const body: any = {
       Name: "SendMail",
@@ -247,11 +218,11 @@ export class TasksComponent implements OnInit, OnDestroy {
         this.showToast("Email sent successfully")
         this.modalService.dismissAll()
         this.isLoading = false // Hide skeleton
-        this.hideSpinner() // Make sure spinner is hidden
+             
       },
       error: () => {
         this.isLoading = false // Hide skeleton on error
-        this.hideSpinner() // Make sure spinner is hidden
+             
       },
     })
 
@@ -274,7 +245,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     let errorCount = 0
 
     this.isLoading = true // Show skeleton
-    this.hideSpinner() // Hide any spinner
+         
 
     // Send each eligible email one by one - iterate through filtered array
     eligibleEmails.forEach((email) => {
@@ -295,7 +266,7 @@ export class TasksComponent implements OnInit, OnDestroy {
           if (--emailCount === 0) {
             this.modalService.dismissAll()
             this.isLoading = false // Hide skeleton
-            this.hideSpinner() // Make sure spinner is hidden
+                 
           }
         },
         error: () => {
@@ -303,7 +274,7 @@ export class TasksComponent implements OnInit, OnDestroy {
           // Check if all emails have been processed
           if (--emailCount === 0) {
             this.isLoading = false // Hide skeleton on error
-            this.hideSpinner() // Make sure spinner is hidden
+                 
           }
         },
       })
@@ -324,7 +295,7 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
     this.isLoading = true // Show skeleton
-    this.hideSpinner() // Hide any spinner
+         
 
     const body: any = {
       Name: "GetCampaignOrganizations",
@@ -349,11 +320,11 @@ export class TasksComponent implements OnInit, OnDestroy {
           this.router.navigate(["/MutipleEmail"])
         }
         this.isLoading = false // Hide skeleton
-        this.hideSpinner() // Make sure spinner is hidden
+             
       },
       error: () => {
         this.isLoading = false // Hide skeleton on error
-        this.hideSpinner() // Make sure spinner is hidden
+             
       },
     })
 

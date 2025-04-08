@@ -170,7 +170,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   // Loading state for skeleton
   isLoading = true;
   // Interval for hiding spinner
-  private spinnerHideInterval: any;
+       
   private subscriptions = new Subscription();
 
   constructor(
@@ -188,10 +188,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Set up interval to continuously hide spinner
-    this.spinnerHideInterval = setInterval(() => {
-       
-    }, 100);
     
     this.checkMobileView();
     this.General = new General();
@@ -284,10 +280,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear the interval when component is destroyed
-    if (this.spinnerHideInterval) {
-      clearInterval(this.spinnerHideInterval);
-    }
+
     this.subscriptions.unsubscribe();
     
     if (this.globalClickListener) {

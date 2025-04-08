@@ -53,7 +53,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   // Loading state for skeleton
   isLoading = true;
   // Interval for hiding spinner
-  private spinnerHideInterval: any;
+       
 
   first: number = 0;
   rows: number = 9;
@@ -76,11 +76,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Set up interval to continuously hide spinner
-    this.spinnerHideInterval = setInterval(() => {
-       
-    }, 100);
-
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -102,10 +97,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear the interval when component is destroyed
-    if (this.spinnerHideInterval) {
-      clearInterval(this.spinnerHideInterval);
-    }
     this.subscriptions.unsubscribe();
   }
 
