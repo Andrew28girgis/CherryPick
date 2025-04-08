@@ -221,10 +221,6 @@ img[alt="logo"] {
   cursor: pointer;
   color: #888;
 }
-
-.search-button i {
-  font-size: 18px;
-}
 @media (max-width: 768px) {
   .shortcuts_iconCard {
     right: 5vw !important;
