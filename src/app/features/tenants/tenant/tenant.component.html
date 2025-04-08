@@ -301,11 +301,28 @@
                       <dd class="col-sm-8">{{ JsonPDF.CenterState }}</dd>
                     </ng-container>
                     <ng-container *ngIf="JsonPDF.TotalAvailableSpace_SF">
-                      <dt class="col-sm-4">Available Space (SF):</dt>
+                      <dt class="col-sm-4">Available Space:</dt>
                       <dd class="col-sm-8">
-                        {{ JsonPDF.TotalAvailableSpace_SF }}
+                        {{ JsonPDF.TotalAvailableSpace_SF }}  <strong>SF</strong>
                       </dd>
                     </ng-container>
+                    <ng-container *ngIf="JsonPDF.percentage">
+                      <dt class="col-sm-4">Percentage:</dt>
+                      <dd class="col-sm-8">
+                        {{ JsonPDF.percentage }}%
+                      </dd>
+                    </ng-container>
+                    <ng-container *ngIf="JsonPDF.reason">
+                      <dt class="col-sm-4">Reason:</dt>
+                      <dd class="col-sm-8">
+                        <div [ngClass]="{'truncate': !showFullReason}">
+                          {{ JsonPDF.reason }}
+                        </div>
+                        <span (click)="toggleReason()" class="toggle-link">
+                          {{ showFullReason ? 'View Less' : 'View More' }}
+                        </span>
+                      </dd>
+                    </ng-container> 
                   </dl>
                 </div>
               </div>
