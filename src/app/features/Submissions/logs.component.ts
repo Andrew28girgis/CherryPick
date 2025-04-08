@@ -35,7 +35,6 @@ export class SubmissionsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
-      console.log(this.campaignId);
     });
     this.contactID = localStorage.getItem('contactId');
     this.fetchReceivedSubmissions();
@@ -167,5 +166,14 @@ export class SubmissionsComponent implements OnInit {
     this.spinner.hide();
     this.Notes = '';
     this.fetchReceivedSubmissions();
+  }
+  getProgressColor(percentage: number): string {
+    if (percentage > 75) {
+      return '#28A745'; // Green for above 80%
+    } else if (percentage >= 50) {
+      return '#ffc107'; // Yellow for between 50% and 80%
+    } else {
+      return '#FF4C4C'; // Red for below 50%
+    }
   }
 }
