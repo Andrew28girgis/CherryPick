@@ -225,55 +225,12 @@ export class EmilyContactEmailComponent implements OnInit {
   // Scroll function and load email details API.
   openEmail(email: Mail): void {
     this.selected = email;
-
-    // Call GetMail() with the selected email's ID (mailId).
     this.GetMail(email.id);
-    // Smooth scroll to the email details section.
-    setTimeout(() => {
-      const emailDetailsSection = document.querySelector(
-        '.email-details-body'
-      ) as HTMLElement;
-      if (emailDetailsSection) {
-        this.smoothScrollTo(emailDetailsSection, 300); // 300ms duration.
-      }
-    }, 100);
   }
   
   goBackk(): void {
-    // Clear the selected email so the email list is shown again.
     this.selected = null;
-  }
-
-  smoothScrollTo(element: HTMLElement, duration: number) {
-    const targetPosition = element.getBoundingClientRect().top + window.scrollY;
-    const startPosition = window.scrollY;
-    const distance = targetPosition - startPosition;
-    const startTime = performance.now();
-    function animationStep(currentTime: number) {
-      const elapsedTime = currentTime - startTime;
-      const progress = Math.min(elapsedTime / duration, 1);
-      const ease =
-        progress < 0.5
-          ? 2 * progress * progress
-          : -1 + (4 - 2 * progress) * progress;
-      window.scrollTo(0, startPosition + distance * ease);
-      if (elapsedTime < duration) {
-        requestAnimationFrame(animationStep);
-      }
-    }
-    requestAnimationFrame(animationStep);
-  }
-  onScroll(): void {
-    if (!this.isScrolling) {
-      this.isScrolling = true;
-    }
-    if (this.scrollTimeout) {
-      clearTimeout(this.scrollTimeout);
-    }
-    this.scrollTimeout = setTimeout(() => {
-      this.isScrolling = false;
-    }, 500);
-  }
+  }  
   GetMail(mailId: number): void {
     const body: any = {
       Name: 'GetMail',
