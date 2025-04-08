@@ -138,8 +138,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (prevUrl) {
       this.router.navigateByUrl(prevUrl);
     } else {
-      // Fallback to a default route or use location.back()
-      this.router.navigate(['/campaigns']); // or whatever default route makes sense
+      this.router.navigate(['/campaigns']);
     }
   }
 
