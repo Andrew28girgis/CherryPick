@@ -8,31 +8,55 @@
 
 <div class="p-3 mb-2">
   <div class="row m-0">
-    <div class="d-block d-sm-flex gap-2 mb-2 col-12 col-sm-6 align-items-center">
-      <img class="Kayak__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+    <div
+      class="d-block d-sm-flex gap-2 mb-2 col-12 col-sm-6 align-items-center"
+    >
+      <img
+        class="Kayak__img ms-2"
+        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
           BuyBoxOrgID
-        }}" alt="" />
+        }}"
+        alt=""
+      />
       <span class="BuyBoxName">{{ BuyBoxName }}</span>
 
-      <button class="Emily__contant__button Emily__contant__Generate mx-3" (click)="PutMailsDraft()">
-        <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <button
+        class="Emily__contant__button Emily__contant__Generate mx-3"
+        (click)="PutMailsDraft()"
+      >
+        <svg
+          width="14"
+          height="20"
+          viewBox="0 0 14 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
-            stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+            stroke="white"
+            stroke-width="1.5"
+            stroke-miterlimit="10"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
-        Generate Emails
+        Launch Emails
       </button>
-
     </div>
-    <div class="container-fluid px-2 d-block d-sm-flex justify-content-end align-items-center col-12 col-sm-6">
+    <div
+      class="container-fluid px-2 d-block d-sm-flex justify-content-end align-items-center col-12 col-sm-6"
+    >
       <div class="d-flex justify-content-center mx-3">
         <span class="advanced" (click)="toggleAdvanced()">
           Advanced
-          <i class="ms-1" [ngClass]="
+          <i
+            class="ms-1"
+            [ngClass]="
               isAdvancedVisible
                 ? 'fa-solid fa-arrow-up'
                 : 'fa-solid fa-arrow-down'
-            "></i>
+            "
+          ></i>
         </span>
       </div>
       <div>
@@ -46,31 +70,62 @@
       <!-- Selections-filters -->
       <div class="col-12 col-sm-12 mt-3 mt-sm-0">
         <div class="row d-flex p-1 p-sm-0 m-0">
-          <div class="col-12 col-sm-3 p-2" style="max-height: 300px; overflow-x: auto">
+          <div
+            class="col-12 col-sm-3 p-2"
+            style="max-height: 300px; overflow-x: auto"
+          >
             <div class="mb-1">
-              <input type="checkbox" id="all" [checked]="true" (change)="unCheckAll($event)" class="form-check-input me-2 mb-2" />
+              <input
+                type="checkbox"
+                id="all"
+                [checked]="true"
+                (change)="unCheckAll($event)"
+                class="form-check-input me-2 mb-2"
+              />
               <label for="all">All</label>
             </div>
-            <ng-container *ngIf="allOrganizations && allOrganizations.length > 0">
-              <ng-container *ngFor="let organization of allOrganizations; let i = index">
+            <ng-container
+              *ngIf="allOrganizations && allOrganizations.length > 0"
+            >
+              <ng-container
+                *ngFor="let organization of allOrganizations; let i = index"
+              >
                 <div class="col-12 mt-3 mt-sm-0">
                   <div class="row d-flex p-1 p-sm-0 m-0">
                     <section class="OrganizationsForEmail row m-0 p-0">
-                      <div class="m-0 p-0 col-12 d-flex gap-3 align-items-center pb-3">
-                        <div class="OganirzationsForEmail__img align-items-center d-flex">
-                          <input type="checkbox" [(ngModel)]="organization.selected" class="form-check-input me-1"
+                      <div
+                        class="m-0 p-0 col-12 d-flex gap-3 align-items-center pb-3"
+                      >
+                        <div
+                          class="OganirzationsForEmail__img align-items-center d-flex"
+                        >
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="organization.selected"
+                            class="form-check-input me-1"
                             (ngModelChange)="
                               onOrganizationChange(organization, $event)
-                            " />
-                          <img class="Oganirzations__img" [src]="
+                            "
+                          />
+                          <img
+                            class="Oganirzations__img"
+                            [src]="
                               'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
                               organization.Id
-                            " alt="" />
+                            "
+                            alt=""
+                          />
                         </div>
-                        <div class="" (click)="
+                        <div
+                          class=""
+                          (click)="
                             onOrganizationChangeisVisible(organization, $event)
-                          ">
-                          <h5 class="OrganizationsForEmail__head" [title]="organization.Name">
+                          "
+                        >
+                          <h5
+                            class="OrganizationsForEmail__head"
+                            [title]="organization.Name"
+                          >
                             {{ organization.Name }}
                           </h5>
                         </div>
@@ -78,27 +133,41 @@
 
                       <div class="organization" *ngIf="organization.isVisible">
                         <div class="contacts">
-                          <ng-container *ngFor="let contact of organization.Contact">
+                          <ng-container
+                            *ngFor="let contact of organization.Contact"
+                          >
                             <div class="contact">
                               <p class="ContactName">
-                                <input type="checkbox" [(ngModel)]="contact.selected" class="form-check-input"
+                                <input
+                                  type="checkbox"
+                                  [(ngModel)]="contact.selected"
+                                  class="form-check-input"
                                   (ngModelChange)="
                                     onContactChange(
                                       contact,
                                       $event,
                                       organization.Id
                                     )
-                                  " />
+                                  "
+                                />
                                 {{ contact.Firstname }} {{ contact.Lastname }}
                               </p>
 
-                              <div class="shopping-centers" *ngIf="
+                              <div
+                                class="shopping-centers"
+                                *ngIf="
                                   contact.ShoppingCenters &&
                                   contact.ShoppingCenters.length > 0
-                                ">
-                                <ng-container *ngFor="let center of contact.ShoppingCenters">
+                                "
+                              >
+                                <ng-container
+                                  *ngFor="let center of contact.ShoppingCenters"
+                                >
                                   <p>
-                                    <input type="checkbox" [(ngModel)]="center.selected" class="form-check-input"
+                                    <input
+                                      type="checkbox"
+                                      [(ngModel)]="center.selected"
+                                      class="form-check-input"
                                       (ngModelChange)="
                                         onShoppingCenterChange(
                                           contact,
@@ -106,7 +175,8 @@
                                           organization.Id,
                                           $event
                                         )
-                                      " />
+                                      "
+                                    />
                                     {{ center.CenterName }}
                                   </p>
                                 </ng-container>
@@ -125,67 +195,142 @@
             <div class="col-12 col-sm-4 p-2">
               <div class="box p-2">
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="Parts" id="Parts" class="form-check-input" [(ngModel)]="showClientProfile"
-                    (change)="onCheckboxClientProfileSection($event)" />
+                  <input
+                    type="checkbox"
+                    name="Parts"
+                    id="Parts"
+                    class="form-check-input"
+                    [(ngModel)]="showClientProfile"
+                    (change)="onCheckboxClientProfileSection($event)"
+                  />
                   <label for="Parts">{{ BuyBoxOrganizationName }}</label>
                 </div>
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="detailsMin" id="detailsMin" class="form-check-input"
-                    [(ngModel)]="showMinBuildingSize" (change)="onCheckboxdetailsChangeMin($event)" />
-                  <label for="detailsMin">Min & Max Unit Size: {{ buybox?.MinBuildingSize }} ,{{
+                  <input
+                    type="checkbox"
+                    name="detailsMin"
+                    id="detailsMin"
+                    class="form-check-input"
+                    [(ngModel)]="showMinBuildingSize"
+                    (change)="onCheckboxdetailsChangeMin($event)"
+                  />
+                  <label for="detailsMin"
+                    >Min & Max Unit Size: {{ buybox?.MinBuildingSize }} ,{{
                       buybox?.MaxBuildingSize
-                    }}</label>
+                    }}</label
+                  >
                 </div>
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="BuyBoxOrganizationDescription" id="BuyBoxOrganizationDescription"
-                    class="form-check-input" [(ngModel)]="showBuyBoxDescriptionDetails" (change)="
+                  <input
+                    type="checkbox"
+                    name="BuyBoxOrganizationDescription"
+                    id="BuyBoxOrganizationDescription"
+                    class="form-check-input"
+                    [(ngModel)]="showBuyBoxDescriptionDetails"
+                    (change)="
                       onCheckboxBuyBoxDescriptionDetailsProfileChange($event)
-                    " />
-                  <label for="BuyBoxOrganizationDescription">{{ BuyBoxOrganizationName }} Profile</label>
+                    "
+                  />
+                  <label for="BuyBoxOrganizationDescription"
+                    >{{ BuyBoxOrganizationName }} Profile</label
+                  >
                 </div>
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="showBuyBoxDescription" id="showBuyBoxDescription" class="form-check-input"
-                    [(ngModel)]="showBuyBoxDescription" (change)="onCheckboxBuyBoxDescriptionProfileChange($event)" />
+                  <input
+                    type="checkbox"
+                    name="showBuyBoxDescription"
+                    id="showBuyBoxDescription"
+                    class="form-check-input"
+                    [(ngModel)]="showBuyBoxDescription"
+                    (change)="onCheckboxBuyBoxDescriptionProfileChange($event)"
+                  />
                   <label for="showBuyBoxDescription">BuyBox Profile</label>
                 </div>
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="showShoppingCenterDescription" id="showShoppingCenterDescription"
-                    class="form-check-input" [(ngModel)]="showShoppingCenterDescription" (change)="
+                  <input
+                    type="checkbox"
+                    name="showShoppingCenterDescription"
+                    id="showShoppingCenterDescription"
+                    class="form-check-input"
+                    [(ngModel)]="showShoppingCenterDescription"
+                    (change)="
                       onCheckShoppingCenterDescriptionProfileChange($event)
-                    " />
-                  <label for="showShoppingCenterDescription">{{ ShoppingCenterNameText }} Profile</label>
+                    "
+                  />
+                  <label for="showShoppingCenterDescription"
+                    >{{ ShoppingCenterNameText }} Profile</label
+                  >
                 </div>
               </div>
             </div>
-            <div class="col-12 col-sm-4 p-2 Section_height" *ngIf="(generated?.[0]?.Releations || []).length > 0">
+            <div
+              class="col-12 col-sm-4 p-2 Section_height"
+              *ngIf="(generated?.[0]?.Releations || []).length > 0"
+            >
               <div class="box p-2">
                 <div class="checkbox-section">
-                  <input type="checkbox" name="Relation" id="Relation" class="form-check-input"
-                    [(ngModel)]="showRelationNames" (change)="onShowRelationNamesChange($event)" />
+                  <input
+                    type="checkbox"
+                    name="Relation"
+                    id="Relation"
+                    class="form-check-input"
+                    [(ngModel)]="showRelationNames"
+                    (change)="onShowRelationNamesChange($event)"
+                  />
                   <label for="Relation">Relation Name</label>
                 </div>
                 <ng-container *ngIf="showRelationNames">
-                  <ng-container *ngIf="generated.length > 0 && generated[0].Releations">
-                    <ng-container *ngFor="let relation of relationCategoriesNames">
+                  <ng-container
+                    *ngIf="generated.length > 0 && generated[0].Releations"
+                  >
+                    <ng-container
+                      *ngFor="let relation of relationCategoriesNames"
+                    >
                       <div class="checkbox-section checkbox-section-body-first">
-                        <input type="checkbox" [name]="relation.name" [id]="relation.name" class="form-check-input"
-                          [(ngModel)]="relation.selected" (change)="onIndividualRelationChange(relation)" />
+                        <input
+                          type="checkbox"
+                          [name]="relation.name"
+                          [id]="relation.name"
+                          class="form-check-input"
+                          [(ngModel)]="relation.selected"
+                          (change)="onIndividualRelationChange(relation)"
+                        />
                         <label [for]="relation.name">{{ relation.name }}</label>
                       </div>
-  
+
                       <!-- Show relationships only if there are relationships in the category -->
-                      <ng-container *ngIf="getRelationsForCategory(relation.id).length > 0">
-                        <ng-container *ngFor="let item of getVisibleRelations(relation.id)">
-                          <div class="checkbox-section checkbox-section-body-first">
-                            <input type="checkbox" [name]="item.Name" [id]="item.Name" class="form-check-input"
-                              [(ngModel)]="item.relationSelect" (change)="updateEmailBody()" />
+                      <ng-container
+                        *ngIf="getRelationsForCategory(relation.id).length > 0"
+                      >
+                        <ng-container
+                          *ngFor="let item of getVisibleRelations(relation.id)"
+                        >
+                          <div
+                            class="checkbox-section checkbox-section-body-first"
+                          >
+                            <input
+                              type="checkbox"
+                              [name]="item.Name"
+                              [id]="item.Name"
+                              class="form-check-input"
+                              [(ngModel)]="item.relationSelect"
+                              (change)="updateEmailBody()"
+                            />
                             <label [for]="item.Name">{{ item.Name }}</label>
                           </div>
                         </ng-container>
-  
+
                         <!-- Show More/Show Less button only if the number of relationships is more than 3 -->
-                        <div class="d-flex justify-content-end" *ngIf="getRelationsForCategory(relation.id).length > 3">
-                          <span (click)="toggleShowMore(relation.id)" class="showMoreRelations">
+                        <div
+                          class="d-flex justify-content-end"
+                          *ngIf="
+                            getRelationsForCategory(relation.id).length > 3
+                          "
+                        >
+                          <span
+                            (click)="toggleShowMore(relation.id)"
+                            class="showMoreRelations"
+                          >
                             {{
                               showMoreRelations[relation.id]
                                 ? "Show Less"
@@ -203,46 +348,93 @@
               <div class="box p-2">
                 <!-- Manager Organizations and Contacts -->
                 <div class="checkbox-section">
-                  <input type="checkbox" [name]="ManagerOrganizationName" [id]="ManagerOrganizationName"
-                    class="form-check-input" [(ngModel)]="showOrganizationManagers"
-                    (change)="onOrganizationManagersNameChange($event)" />
+                  <input
+                    type="checkbox"
+                    [name]="ManagerOrganizationName"
+                    [id]="ManagerOrganizationName"
+                    class="form-check-input"
+                    [(ngModel)]="showOrganizationManagers"
+                    (change)="onOrganizationManagersNameChange($event)"
+                  />
                   <label [for]="ManagerOrganizationName">{{
                     ManagerOrganizationName
                   }}</label>
                 </div>
-                <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
-                  <input type="checkbox" name="ManagerOrganizationDescriptionDetails"
-                    id="ManagerOrganizationDescriptionDetails" class="form-check-input"
-                    [(ngModel)]="showMangerDescriptionDetails" (change)="onMangerDescriptionDetailsShowChange($event)" />
-                  <label for="ManagerOrganizationDescriptionDetails">{{ ManagerOrganizationName }} Profile</label>
+                <div
+                  class="checkbox-section checkbox-section-body-first"
+                  *ngIf="showOrganizationManagers"
+                >
+                  <input
+                    type="checkbox"
+                    name="ManagerOrganizationDescriptionDetails"
+                    id="ManagerOrganizationDescriptionDetails"
+                    class="form-check-input"
+                    [(ngModel)]="showMangerDescriptionDetails"
+                    (change)="onMangerDescriptionDetailsShowChange($event)"
+                  />
+                  <label for="ManagerOrganizationDescriptionDetails"
+                    >{{ ManagerOrganizationName }} Profile</label
+                  >
                 </div>
-                <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
-                  <input type="checkbox" name="TenantRep" id="TenantRep" class="form-check-input"
-                    [(ngModel)]="showMangerDescription" (change)="onMangerDescriptionShowChange($event)" />
+                <div
+                  class="checkbox-section checkbox-section-body-first"
+                  *ngIf="showOrganizationManagers"
+                >
+                  <input
+                    type="checkbox"
+                    name="TenantRep"
+                    id="TenantRep"
+                    class="form-check-input"
+                    [(ngModel)]="showMangerDescription"
+                    (change)="onMangerDescriptionShowChange($event)"
+                  />
                   <label for="TenantRep">Tenant Rep. Description</label>
                 </div>
                 <ng-container *ngIf="showMangerDescription">
                   <ng-container *ngIf="showOrganizationManagers">
                     <ng-container *ngFor="let manager of managerOrganizations">
-                      <ng-container *ngFor="
+                      <ng-container
+                        *ngFor="
                           let contact of manager.ManagerOrganizationContacts
-                        ">
-                        <div *ngIf="showOrganizationManagers" class="checkbox-section checkbox-section-body-second">
-                          <input type="checkbox" [name]="contact.Firstname + contact.LastName"
-                            [id]="contact.Firstname + contact.LastName" class="form-check-input"
-                            [(ngModel)]="contact.selected" (change)="onContactCheckboxChange()"
-                            [checked]="contact.selected" />
-                          <label [for]="contact.Firstname + contact.LastName">{{ contact.Firstname }}
-                            {{ contact.LastName }}</label>
+                        "
+                      >
+                        <div
+                          *ngIf="showOrganizationManagers"
+                          class="checkbox-section checkbox-section-body-second"
+                        >
+                          <input
+                            type="checkbox"
+                            [name]="contact.Firstname + contact.LastName"
+                            [id]="contact.Firstname + contact.LastName"
+                            class="form-check-input"
+                            [(ngModel)]="contact.selected"
+                            (change)="onContactCheckboxChange()"
+                            [checked]="contact.selected"
+                          />
+                          <label [for]="contact.Firstname + contact.LastName"
+                            >{{ contact.Firstname }}
+                            {{ contact.LastName }}</label
+                          >
                         </div>
                         <ng-container *ngIf="contact.selected">
-                          <div class="checkbox-section checkbox-section-body-second" *ngIf="showOrganizationManagers">
-                            <input type="checkbox" name="MangerContactSignature" id="MangerContactSignature"
-                              class="form-check-input" [(ngModel)]="showMangerContactSignature" (change)="
+                          <div
+                            class="checkbox-section checkbox-section-body-second"
+                            *ngIf="showOrganizationManagers"
+                          >
+                            <input
+                              type="checkbox"
+                              name="MangerContactSignature"
+                              id="MangerContactSignature"
+                              class="form-check-input"
+                              [(ngModel)]="showMangerContactSignature"
+                              (change)="
                                 onMangerContactSignatureShowChange($event)
-                              " />
-                            <label for="MangerContactSignature">{{ contact.Firstname }}
-                              {{ contact.LastName }} Signature</label>
+                              "
+                            />
+                            <label for="MangerContactSignature"
+                              >{{ contact.Firstname }}
+                              {{ contact.LastName }} Signature</label
+                            >
                           </div>
                         </ng-container>
                       </ng-container>
@@ -256,47 +448,98 @@
       </div>
       <div class="col-12 col-sm-6 checkbox-section-select pb-2">
         <label for="discussionDropdown">Select Prompt</label>
-        <select class="form-select form-select-lg" aria-label="Large select example" id="discussionDropdown"
-          [(ngModel)]="selectedPromptId" (change)="updatePrompt()">
+        <select
+          class="form-select form-select-lg"
+          aria-label="Large select example"
+          id="discussionDropdown"
+          [(ngModel)]="selectedPromptId"
+          (change)="updatePrompt()"
+        >
           <!-- <option value="" selected>Select Prompt</option> -->
           <option *ngFor="let prompt of prompts" [value]="prompt.id">
             {{ prompt?.name }}
           </option>
         </select>
       </div>
-      <div class="col-12 col-sm-6 checkbox-section-select checkbox_ISCC pb-2 gap-4">
+      <div
+        class="col-12 col-sm-6 checkbox-section-select checkbox_ISCC pb-2 gap-4"
+      >
         <div class="checkbox-section align-items-center gap-3">
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="IsCC" id="IsCC1" [(ngModel)]="isISCcSelected"
-              (change)="onISCCChange(true)" [value]="true" />
+            <input
+              class="form-check-input"
+              type="radio"
+              name="IsCC"
+              id="IsCC1"
+              [(ngModel)]="isISCcSelected"
+              (change)="onISCCChange(true)"
+              [value]="true"
+            />
             <label class="IsCC_checkbox" for="IsCC1">CC</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="IsCC" id="IsCC2" [(ngModel)]="isISCcSelected"
-              (change)="onISCCChange(false)" [value]="false" />
+            <input
+              class="form-check-input"
+              type="radio"
+              name="IsCC"
+              id="IsCC2"
+              [(ngModel)]="isISCcSelected"
+              (change)="onISCCChange(false)"
+              [value]="false"
+            />
             <label class="IsCC_checkbox" for="IsCC2">To</label>
           </div>
         </div>
         <div class="checkbox-section align-items-center">
-          <input type="checkbox" [(ngModel)]="isLandingSelected" (change)="onLandingChangeShowChange($event)"
-            name="includinglandingpage" id="includinglandingpage" class="form-check-input m-0" />
-          <label for="includinglandingpage" class="ms-2 IsCC_checkbox">Is including landing page</label>
+          <input
+            type="checkbox"
+            [(ngModel)]="isLandingSelected"
+            (change)="onLandingChangeShowChange($event)"
+            name="includinglandingpage"
+            id="includinglandingpage"
+            class="form-check-input m-0"
+          />
+          <label for="includinglandingpage" class="ms-2 IsCC_checkbox"
+            >Is including landing page</label
+          >
         </div>
       </div>
-      <div class="col-12 col-sm-12 checkbox_ISCC gap-2 pb-2 d-flex justify-content-end">
-        <button class="Emily__contant__button" (click)="openPromptTextModal(View)">
+      <div
+        class="col-12 col-sm-12 checkbox_ISCC gap-2 pb-2 d-flex justify-content-end"
+      >
+        <button
+          class="Emily__contant__button"
+          (click)="openPromptTextModal(View)"
+        >
           <i class="fas fa-sign-in-alt px-1"></i>
           Prompt
         </button>
-        <button class="Emily__contant__button" (click)="openModal(ViewEmailTemplatesContext)">
+        <button
+          class="Emily__contant__button"
+          (click)="openModal(ViewEmailTemplatesContext)"
+        >
           <i class="fa-solid fa-file-lines px-1"></i>
           View Emails Context
         </button>
-        <button class="Emily__contant__button Emily__contant__Generate ms-2" (click)="PutMailsDraft()">
-          <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <button
+          class="Emily__contant__button Emily__contant__Generate ms-2"
+          (click)="PutMailsDraft()"
+        >
+          <svg
+            width="14"
+            height="20"
+            viewBox="0 0 14 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
-              stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+              stroke="white"
+              stroke-width="1.5"
+              stroke-miterlimit="10"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           Generate
         </button>
@@ -306,7 +549,7 @@
 </div>
 
 <!-- table Get email Generated  -->
-<div class="p-3 div-Table" *ngIf="returnGetMailContextGenerated.length > 0 ">
+<div class="p-3 div-Table" *ngIf="returnGetMailContextGenerated.length > 0">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -328,7 +571,10 @@
           {{ item.context }}
         </td>
         <td class="single-lineMax">{{ item.promptName }}</td>
-        <td class="CountMail" [routerLink]="['/MailsList', item.mailContextId, 1]">
+        <td
+          class="CountMail"
+          [routerLink]="['/MailsList', item.mailContextId, 1]"
+        >
           {{ item.numberOfMailGenerated }} &nbsp; | &nbsp;
           {{ item.mailSendCount }} &nbsp;
           <i class="fa-solid fa-arrows-turn-right ms-3"></i>
@@ -346,14 +592,29 @@
       <h3 class="modal-title text-light">Prompt editor</h3>
     </div>
     <div class="modal-body">
-      <textarea *ngIf="isEditing" class="form-control" rows="15" [(ngModel)]="editablePromptText"></textarea>
-      <textarea *ngIf="!isEditing" [innerHTML]="selectedPromptText" readonly rows="15" class="form-control"></textarea>
+      <textarea
+        *ngIf="isEditing"
+        class="form-control"
+        rows="15"
+        [(ngModel)]="editablePromptText"
+      ></textarea>
+      <textarea
+        *ngIf="!isEditing"
+        [innerHTML]="selectedPromptText"
+        readonly
+        rows="15"
+        class="form-control"
+      ></textarea>
     </div>
     <div class="modal-footer">
       <button *ngIf="!isEditing" class="btn btn-warning" (click)="editPrompt()">
         Edit
       </button>
-      <button *ngIf="isEditing" class="btn btn-success" (click)="savePrompt(modal)">
+      <button
+        *ngIf="isEditing"
+        class="btn btn-success"
+        (click)="savePrompt(modal)"
+      >
         Save
       </button>
       <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">
@@ -374,14 +635,22 @@
         <div class="d-flex justify-content-center mb-3">
           <div class="Emails_bodyTemplete">
             <div class="d-flex gap-4 align-items-center">
-              <img class="Kayak__img ms-2" src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+              <img
+                class="Kayak__img ms-2"
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                   template.organizationId
-                }}" alt="" />
+                }}"
+                alt=""
+              />
               <p class="m-0 Name_Emails_body">Context</p>
             </div>
             <div class="mt-3">
-              <textarea class="form-control" rows="15" [innerHTML]="template.templateOne + emailBody2"
-                readonly></textarea>
+              <textarea
+                class="form-control"
+                rows="15"
+                [innerHTML]="template.templateOne + emailBody2"
+                readonly
+              ></textarea>
             </div>
           </div>
         </div>
@@ -399,7 +668,12 @@
     <div class="modal-body">
       <div class="d-flex justify-content-center mb-3">
         <div class="Emails_bodyTemplete p-0">
-          <textarea class="form-control form-control-height" rows="15" [innerHTML]="ItemContext" readonly></textarea>
+          <textarea
+            class="form-control form-control-height"
+            rows="15"
+            [innerHTML]="ItemContext"
+            readonly
+          ></textarea>
         </div>
       </div>
     </div>

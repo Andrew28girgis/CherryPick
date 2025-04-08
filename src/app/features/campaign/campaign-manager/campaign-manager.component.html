@@ -107,7 +107,7 @@
             stroke-linejoin="round"
           />
         </svg>
-        <span>Add New Campaign</span>
+        <span>Add Campaign</span>
       </button>
     </div>
   </div>
@@ -115,7 +115,10 @@
   <!-- Skeleton loading for Card View -->
   <div class="campaign-manager-body" *ngIf="isLoading && viewMode === 'card'">
     <div class="campaign-cards-container">
-      <div class="campaign-card skeleton-card" *ngFor="let i of skeletonCardArray">
+      <div
+        class="campaign-card skeleton-card"
+        *ngFor="let i of skeletonCardArray"
+      >
         <div class="campaign-card-header">
           <div class="skeleton-title"></div>
           <div class="skeleton-privacy"></div>
@@ -209,7 +212,12 @@
 
   <!-- Actual content -->
   <div
-    *ngIf="!isLoading && filteredCampaigns && filteredCampaigns.length > 0 && stages.length > 0"
+    *ngIf="
+      !isLoading &&
+      filteredCampaigns &&
+      filteredCampaigns.length > 0 &&
+      stages.length > 0
+    "
     class="campaign-manager-body"
   >
     <div class="campaign-cards-container" *ngIf="viewMode === 'card'">
@@ -389,7 +397,7 @@
                         'Precontact'.toLowerCase()
                       "
                       (click)="goToEmily(c, index, true)"
-                      >Generate Emails</a
+                      >Launch Campaign</a
                     >
                   </div>
                 </ng-container>
@@ -426,27 +434,34 @@
             >
               <tr>
                 <td style="width: 250px">
-                  {{ campaign.CampaignName }}
-                  <div class="d-flex align-items-center gap-2">
-                    <img
-                      *ngIf="c.organizationid"
-                      [src]="
-                        'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                        c.organizationid
-                      "
-                      [alt]="c.name"
-                      class="tenant-logo"
-                    />
-                    <span
-                      class="tenant-name"
-                      [routerLink]="[
-                        '/dashboard',
-                        c.id,
-                        c.organizationid,
-                        c.name
-                      ]"
-                      >{{ c.name }}</span
-                    >
+                  <div class="d-flex flex-column justify-content-start gap-2">
+                    {{ campaign.CampaignName }}
+                    <div class="d-flex align-items-center gap-2">
+                      <img
+                        *ngIf="c.organizationid"
+                        [src]="
+                          'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                          c.organizationid
+                        "
+                        [alt]="c.name"
+                        class="tenant-logo"
+                      />
+                      <span
+                        class="tenant-name"
+                        [routerLink]="[
+                          '/dashboard',
+                          c.id,
+                          c.organizationid,
+                          c.name
+                        ]"
+                        >{{ c.name }}</span
+                      >
+                    </div>
+                    <!-- <a
+                      class="inbox text-center"
+                      [routerLink]="['./ataglance', campaign.Id]"
+                      >At a Glance</a
+                    > -->
                   </div>
                 </td>
 
@@ -582,7 +597,7 @@
                           'Precontact'.toLowerCase()
                         "
                         (click)="goToEmily(c, index, true)"
-                        >Generate Emails</a
+                        >Launch Campaign</a
                       >
                     </div>
                   </td>
@@ -595,7 +610,10 @@
     </div>
   </div>
 
-  <div *ngIf="!isLoading && !(filteredCampaigns && filteredCampaigns.length > 0)" class="empty-campaigns">
+  <div
+    *ngIf="!isLoading && !(filteredCampaigns && filteredCampaigns.length > 0)"
+    class="empty-campaigns"
+  >
     <img src="../../../assets/Images/empty-state.png" alt="Empty Campaigns" />
     <h4>Campaigns Will Appear Here!</h4>
     <p>Create, Track, and Manage Expansion Campaigns Here.</p>

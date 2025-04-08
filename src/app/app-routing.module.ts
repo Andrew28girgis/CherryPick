@@ -52,7 +52,10 @@ const routes: Routes = [
   },
   {
     path: 'campaigns',
-    component: CampaignManagerComponent,
+    loadChildren: () =>
+      import('./features/campaign/campaign.module').then(
+        (m) => m.CampaignModule
+      ),
     canActivate: [TenantOnlyGuard],
   },
   {
@@ -103,15 +106,15 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: 'MutipleEmail/:buyboxid',
+    path: 'MutipleEmail/:campaignId',
     component: EmailMulipleNewComponent,
     canActivate: [TenantOnlyGuard],
   },
-  {
-    path: 'MutipleEmail',
-    component: EmailMulipleNewComponent,
-    canActivate: [TenantOnlyGuard],
-  },
+  // {
+  //   path: 'MutipleEmail',
+  //   component: EmailMulipleNewComponent,
+  //   canActivate: [TenantOnlyGuard],
+  // },
   {
     path: 'MailsList/:MailContextId/:IsSent',
     component: MailsGenerateOrSendComponent,

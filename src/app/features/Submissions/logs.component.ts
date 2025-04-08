@@ -1,14 +1,16 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ActivatedRoute } from '@angular/router';
 import { submission ,Places } from 'src/app/shared/models/submissions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/app/shared/models/domain';
+import { FormsModule } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-logs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './logs.component.html',
   styleUrl: './logs.component.css',
 })
@@ -17,11 +19,17 @@ export class SubmissionsComponent implements OnInit {
   campaignId!: any;
   General!: General;
   places: Places[] = [];
-
+  @ViewChild('AddNote', { static: true }) AddNote!: TemplateRef<any>;
+  Notes: string = '';
+  SubmID!:number;
+  contactID!: any;
+  acceptedSubmissions: number = 0;
+  rejectedSubmissions: number = 0;
   constructor(
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private spinner: NgxSpinnerService,
   ) {}
 
   ngOnInit(): void {
@@ -29,7 +37,7 @@ export class SubmissionsComponent implements OnInit {
       this.campaignId = params.get('campaignId');
       console.log(this.campaignId);
     });
-
+    this.contactID = localStorage.getItem('contactId');
     this.fetchReceivedSubmissions();
   }
 
@@ -43,12 +51,34 @@ export class SubmissionsComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.submissionsArray = res.json || [];
-        console.log(`yy`);
+        let acceptedCount = 0;
+        let rejectedCount = 0;
 
-        console.log(this.submissionsArray);
+        if (this.submissionsArray.length) {
+          const campaigns = this.submissionsArray[0].Campaigns || [];
+          campaigns.forEach((campaign: any) => {
+            const shoppingCenters = campaign.ShoppingCenters || [];
+            shoppingCenters.forEach((center: any) => {
+              const users = center.C || [];
+              users.forEach((user: any) => {
+                const submissions = user.UserSubmissions || [];
+                submissions.forEach((submission: any) => {
+                  if (submission.StatusId === 1) {
+                    acceptedCount++;
+                  } else if (submission.StatusId === -1) {
+                    rejectedCount++;
+                  }
+                });
+              });
+            });
+          });
+        }
+        this.acceptedSubmissions = acceptedCount;
+        this.rejectedSubmissions = rejectedCount;
       },
     });
   }
+  
 
   openPlaces(content: any, scPlaces: any): void {
     this.modalService.open(content, {
@@ -111,5 +141,31 @@ export class SubmissionsComponent implements OnInit {
         this.fetchReceivedSubmissions();
       },
     });
+  }
+  openAddNoteModal(SubmissionId: number) {
+    this.modalService.open(this.AddNote, { size: 'xl', centered: true });
+    this.SubmID= SubmissionId;
+  }
+  InsertTenantNotes() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'InsertTenantNotes',
+      MainEntity: null,
+      Params: {
+        ContactId: Number(this.contactID),
+        SubmissionId: this.SubmID,
+        Notes: this.Notes,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+      },
+      
+    });
+    this.modalService.dismissAll();
+    this.spinner.hide();
+    this.Notes = '';
+    this.fetchReceivedSubmissions();
   }
 }

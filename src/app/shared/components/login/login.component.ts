@@ -57,7 +57,6 @@ export class LoginComponent implements OnInit {
         let buybBoxId = data.json[0].buyBoxId;
         let organizationId = data.json[0].organizationId;
         let buyboxName = data.json[0].name;
-
         this.router.navigate(['/home', buybBoxId, organizationId, buyboxName]);
         this.spinner.hide();
       },
@@ -65,7 +64,6 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.spinner.show();
     if (this.t) {
       this.adminLogin.contactToken = this.t;
     }
@@ -80,7 +78,6 @@ export class LoginComponent implements OnInit {
       if (data.token) {
         this.navigateToHome();
       }
-      this.spinner.hide();
     });
   }
 

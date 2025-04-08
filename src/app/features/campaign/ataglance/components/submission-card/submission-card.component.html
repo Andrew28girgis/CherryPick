@@ -1,0 +1,21 @@
+<div class="submission-card">
+  <div class="dot"></div>
+  <div class="d-flex flex-column justify-content-start gap-2 me-auto">
+    <div class="title">
+      {{ submission.centerAddress }}
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <div class="avatar-icon">
+        <img src="{{ submission.logoURL }}" alt="{{ submission.orgName }}" />
+      </div>
+      <div>
+        {{ submission.orgName }}
+      </div>
+      <div class="gray-dot"></div>
+      <div>{{ submission.userFirstName }} {{ submission.userLastName }}</div>
+    </div>
+    <div class="time">
+      {{ submission.createdDate | date : "mediumDate" }}
+    </div>
+  </div>
+</div>

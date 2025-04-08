@@ -1,4 +1,4 @@
- import {
+import {
   Component,
   OnInit,
   TemplateRef,
@@ -138,6 +138,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         if (response.json && response.json.length > 0) {
           this.campaigns = response.json;
           this.filteredCampaigns = response.json;
+          console.log(`this.campaigns`, this.filteredCampaigns);
+          
         } else {
           this.campaigns = [];
           this.filteredCampaigns = [];
@@ -220,8 +222,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         organizations: [],
       };
       this.emilyService.updateCheckList(emilyObject);
-
-      this.router.navigate(['/MutipleEmail']);
+      console.log(`s`);
+      
+      console.log(campaign.id);
+      
+      this.router.navigate(['/MutipleEmail' , campaign.id]);
     }
   }
 
@@ -277,7 +282,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
             organizations: organizations,
           };
           this.emilyService.updateCheckList(emilyObject);
-          this.router.navigate(['/MutipleEmail']);
+          this.router.navigate(['/MutipleEmail' ,campaignId]);
         }
         this.isLoading = false; // Hide skeleton
           // Make sure spinner is hidden

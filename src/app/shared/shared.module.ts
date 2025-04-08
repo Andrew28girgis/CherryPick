@@ -15,4 +15,5 @@ import { NotificationsComponent } from './components/notifications/notifications
   ],
   exports: [HeaderComponent],
 })
+
 export class SharedModule {}

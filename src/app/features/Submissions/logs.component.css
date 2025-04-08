@@ -109,3 +109,181 @@ table{
   padding: 5px 12px;
   font-size: 13px;
 }
+.view-act {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 20px;
+}
+.view-act h4 {
+  font-weight: 700;
+  font-size: 20px;
+  color: #001f3f;
+}
+.tenant-logo {
+  height: 64px;
+  width: 64px;
+  border-radius: 50%;
+}
+.org-name{
+font-size: 35px;
+font-style: normal;
+font-weight: 600;
+line-height: 56px;
+}
+.accepted-card{
+display: flex;
+padding:  20px;
+align-items: center;
+gap:  16px;
+border-radius:  20px;
+background:  #FFF;
+}
+.accepted-text{
+color:  #16181D;
+font-size: 20px;
+font-style: normal;
+font-weight: 400;
+line-height: 28px;
+}
+.accepted-number{
+color: #16181D;
+font-size: 44px;
+font-style: normal;
+font-weight: 600;
+line-height: 56px;
+margin-bottom: 0;
+}
+.icon-card-accept{
+display: flex;
+padding: 15px;
+align-items: center;
+gap: 10px;
+border-radius: 50%;
+background: #28A745;
+}
+.icon-card-reject{
+display: flex;
+padding: 15px;
+align-items: center;
+gap: 10px;
+border-radius:50%;
+background: #FF4C4C;
+}
+.submissions-list {
+  border-radius: 20px;
+  background-color: white;
+  margin-top: 10px;
+  padding: 2rem;
+
+}
+
+.submission-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border: none;
+  border-bottom: 1px solid #E2E4E9;
+  margin-bottom: 10px;
+}
+
+/* Example badge styling */
+.badge-success {
+  padding: 0.3rem 0.6rem;
+  color: #fff;
+  background-color: #28a745;
+  border-radius: 4px;
+}
+
+.badge-danger {
+  padding: 0.3rem 0.6rem;
+  color: #fff;
+  background-color: #dc3545;
+  border-radius: 4px;
+}
+.badge-success{
+  display: flex;
+  padding:  4px  12px;
+  justify-content: center;
+  align-items: center;
+  gap:  4px;
+  border-radius: 16px;
+  background-color:  #EAF6EC;
+  color:#28A745;
+  width: 100px;
+
+}
+.badge-danger{
+  display: flex;
+  padding:  4px  12px;
+  justify-content: center;
+  align-items: center;
+  gap:  4px;
+  border-radius: 16px;
+  background-color: #FFEDED;
+  color: #FF4C4C;
+  width: 100px;
+}
+.add-note{
+  display: flex;
+height: 32px;
+padding: 14px 24px;
+justify-content: center;
+align-items: center;
+gap: 8px;
+border-radius: 16px;
+border: none;
+background:  #4D65B4;
+width: 120px;
+color: #ffffff;
+}
+.center-name{
+  color: #16181D;
+/* font-family: Montserrat; */
+font-size: 18px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px; 
+}
+.places{
+  color:  #4D65B4;
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; 
+  cursor: pointer;
+}
+.date-created{
+  color: #707791;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px;
+letter-spacing: -0.07px;
+}
+.date{
+  color:  #16181D;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 30px; 
+}
+.user-name{
+color:  #16181D;
+text-align: center;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 30px;
+}
+.linee{
+width: 1196px;
+height: 10px;
+background:  #E2E4E9;
+}
+.img{
+  width: 100px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  height: 100px;
+  object-fit: cover;
+}

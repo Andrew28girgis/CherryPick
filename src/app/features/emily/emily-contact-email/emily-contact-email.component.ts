@@ -44,6 +44,7 @@ export class EmilyContactEmailComponent implements OnInit {
   isDropdownVisible: boolean = false; // Controls the visibility of the dropdown
   selectedFilter: string = 'all'; // Default selected filter
   selectedOption: string = 'All'; // Default text in the dropdown
+  selectedMicro: any;
 
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -106,11 +107,10 @@ export class EmilyContactEmailComponent implements OnInit {
   }
 
   onMicroDealChange(event: any): void {
-    console.log(event.target.value);
+    const selectedOrgId = event.target.value;
     this.contacts =
-      this.BuyBoxMicroDeals.flatMap((m) => m.Organization).find(
-        (o) => o.OrganizationId == event.target.value
-      )?.Contact || [];
+      this.BuyBoxMicroDeals.find((org) => org.OrganizationId == selectedOrgId)
+        ?.Contact || [];
 
     this.GetBuyBoxEmails(() => {
       if (this.contacts.length > 0) {
@@ -133,15 +133,23 @@ export class EmilyContactEmailComponent implements OnInit {
         console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
 
         this.contacts = [];
-        this.contacts = this.BuyBoxMicroDeals[0].Organization[0]?.Contact || [];
+        const microDeal = this.BuyBoxMicroDeals.find(
+          (deal) => deal.OrganizationId === this.orgId
+        );
 
-        this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
-          m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
-            (o) => o.OrganizationName || ''
-          )
-        ).join(', ');
+        if (microDeal) {
+          this.selectedMicro = microDeal.OrganizationId;
+          this.contacts = microDeal.Contact;
+        } else {
+          this.contacts = this.BuyBoxMicroDeals[0].Contact;
+          this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
+        }
 
-        console.log(`contacts`, this.contacts);
+        // this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
+        //   m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
+        //     (o) => o.OrganizationName || ''
+        //   )
+        // ).join(', ');
 
         // this.selectedOrganizationName =
         //   this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)

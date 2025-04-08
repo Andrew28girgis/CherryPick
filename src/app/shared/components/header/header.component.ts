@@ -120,9 +120,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   isNavbarOpen = false;
-
   toggleNavbar(event: Event) {
     event.stopPropagation();
     this.isNavbarOpen = !this.isNavbarOpen;
   }
+  
 }

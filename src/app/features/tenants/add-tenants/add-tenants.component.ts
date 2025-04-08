@@ -191,12 +191,10 @@ export class AddTenantsComponent implements OnInit {
 
       this.ApiService.GenericAPI(body).subscribe({
         next: (data) => {
-          if(data.json&&data.json.length>0&&data.json[0].id)
-          {
-            localStorage.setItem('BuyBoxId',data.json[0].id)
-            
+          if (data.json && data.json.length > 0 && data.json[0].id) {
+            localStorage.setItem('BuyBoxId', data.json[0].id);
           }
-          
+
           this.getUserBuyBoxes();
           this.spinner.hide();
           nextCallback.emit();

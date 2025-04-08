@@ -22,15 +22,15 @@
                 />
 
                 <select
-                  class="micro-deals"
+                  class="micro-deals" 
+                  [(ngModel)]="selectedMicro"
                   (change)="onMicroDealChange($event)"
                 >
                   <ng-container *ngFor="let bb of BuyBoxMicroDeals">
-                    <ng-container *ngFor="let org of bb.Organization">
-                      <option [value]="org.OrganizationId">
-                        {{ org.OrganizationName }}
+                       <option [value]="bb.OrganizationId">
+                        {{ bb.OrganizationName }}
                       </option>
-                    </ng-container>
+                  
                   </ng-container>
                 </select>
 

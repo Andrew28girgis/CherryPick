@@ -25,6 +25,17 @@ export interface ShoppingCenter {
   UserName: string
   UserSubmissions: UserSubmission[]
   Places:Places[] 
+  CenterAddress: string
+  CenterCity: string
+  CenterState: string
+  MainImage: string
+  C: User[];
+}
+
+export interface User {
+  FirstName: string;
+  LastName: string;
+  UserSubmissions: UserSubmission[];
 }
 
 export interface UserSubmission {
