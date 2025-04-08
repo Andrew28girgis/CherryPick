@@ -11,13 +11,13 @@ import { TenantOnlyGuard } from './core/guards/tenant-only.guard';
 import { SubmissionsComponent } from './features/Submissions/logs.component';
 import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
-import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
-import { CampaignManagerComponent } from './features/campaign/campaign-manager/campaign-manager.component';
+import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact-email.component';
+
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -107,11 +107,6 @@ const routes: Routes = [
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
-    path: 'EmilyUserInbox',
-    component: EmilyUserInboxComponent,
-    canActivate: [TenantOnlyGuard],
-  },
-  {
     path: 'MutipleEmail/:campaignId',
     component: EmailMulipleNewComponent,
     canActivate: [TenantOnlyGuard],
@@ -131,6 +126,8 @@ const routes: Routes = [
     component: AddTenantsComponent,
     canActivate: [TenantOnlyGuard],
   },
+  { path: 'organization-mail/:buyBoxId/:organizationId/:campaignId', component: EmilyContactEmailComponent },
+
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName',
     loadChildren: () =>

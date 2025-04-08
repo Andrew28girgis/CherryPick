@@ -7,8 +7,6 @@ import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-c
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KayakComponent } from './kayak/kayak.component';
 import { EmilyComponent } from '../emily/emily/emily.component';
-import { MyInboxEmailListComponent } from '../emily/my-inbox-email-list/my-inbox-email-list.component';
-import { EmilyContactEmailComponent } from '../emily/emily-contact-email/emily-contact-email.component';
 
 const routes: Routes = [
   { path: '', component: KayakHomeComponent },
@@ -18,9 +16,8 @@ const routes: Routes = [
   { path: 'work-spaces', component: WorkSpacesComponent },
   { path: 'shopping-table', component: ShoppingCenterTableComponent },
   { path: 'relations', component: BuyboxRelatiosComponent },
-  { path: 'kayak', component: KayakComponent },
-  { path: 'MyInboxs', component: MyInboxEmailListComponent }, 
-  { path: 'organization-mail/:buyBoxId/:organizationId', component: EmilyContactEmailComponent },
+  { path: 'kayak', component: KayakComponent }, 
+
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

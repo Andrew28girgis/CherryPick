@@ -38,14 +38,14 @@ export class EmilyContactEmailComponent implements OnInit {
   organization: any = {};
   contacts: Contact[] = [];
   emails: EmailInfo[] = [];
-  isScrolling = false;
-  private scrollTimeout: any;
+  isScrolling = false; 
   filteredEmails: Mail[] = [];
   isDropdownVisible: boolean = false; // Controls the visibility of the dropdown
   selectedFilter: string = 'all'; // Default selected filter
   selectedOption: string = 'All'; // Default text in the dropdown
   selectedMicro: any;
   selected: any = null;
+  campaignId: any;
 
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -61,6 +61,8 @@ export class EmilyContactEmailComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       const buyboxId = params.get('buyBoxId');
+      this.campaignId = params.get('campaignId');
+      
       if (buyboxId) {
         this.buyBoxId = +buyboxId;
       }
@@ -184,7 +186,9 @@ export class EmilyContactEmailComponent implements OnInit {
     });
   }
   getEmailsForContact(contact: Contact): void {
-    // When a new contact is selected, reset state.
+ 
+      
+      
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact;
       this.emailsSentContact = [];
@@ -258,6 +262,9 @@ export class EmilyContactEmailComponent implements OnInit {
       (contact.EmailStats[0].Inbox || 0) +
       (contact.EmailStats[0].Outbox || 0)
     );
+  }
+  openCompoase(modal: any, ) {
+    this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
   openmodel(modal: any, body: any, contactId: any) {
     this.bodyemail = body;

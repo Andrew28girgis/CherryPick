@@ -102,13 +102,10 @@
               </div>
             </div>
           </div>
-            <button class="new-btn"
-              [routerLink]="['/emily', buyBoxId, orgId , selectedMicroDealId ]"
-              >
-              Compose
-              <img [src]="'../../../assets/Images/Icons/arrow-down.png'"
-              />
-             </button>
+          <button class="new-btn" (click)="openCompoase(openCompose)">
+            Compose
+            <img [src]="'../../../assets/Images/Icons/arrow-down.png'" />
+          </button>
         </div>
       </div>
     </div>
@@ -255,6 +252,23 @@
             [modal]="modal"
           >
           </app-emily>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #openCompose let-modal>
+  <div class="modal-content">
+    <div class="modal-body p-0">
+      <div class="row m-0 p-2 d-flex justify-content-center">
+        <div class="d-flex gap-3 selectedOptionDiv">
+          <app-email-muliple-new
+            [ComposeCampaignId]="campaignId"
+            [ComposeOrgId]="selectedMicro"
+            [ComposeContactId]="selectedContact?.ContactId ?? 0"
+          >
+          </app-email-muliple-new>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -124,6 +124,10 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   isAdvancedVisible = false; // Initially, the section is hidden
   BatchGuid!: string;
   campaignId: any;
+
+  @Input() ComposeCampaignId !:number ;
+  @Input() ComposeOrgId !:number;
+  @Input() ComposeContactId !:number;
 
   constructor(
     private spinner: NgxSpinnerService,

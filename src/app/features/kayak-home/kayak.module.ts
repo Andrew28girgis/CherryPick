@@ -19,8 +19,7 @@ import { PolygonsControllerComponent } from './polygons-controller/polygons-cont
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
-import { EmilyContactEmailComponent } from '../emily/emily-contact-email/emily-contact-email.component';
-import { PaginatorModule } from 'primeng/paginator';
+ import { PaginatorModule } from 'primeng/paginator';
 import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component';
 import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
@@ -39,8 +38,8 @@ import { KayakComponent } from './kayak/kayak.component';
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
-    PolygonsControllerComponent,
-    EmilyContactEmailComponent
+    PolygonsControllerComponent
+    
   ],
   imports: [
     CommonModule,
@@ -70,9 +69,8 @@ import { KayakComponent } from './kayak/kayak.component';
     SideListViewComponent,
     MapViewComponent,
     PolygonsControllerComponent,
-    LinkMicrosoftComponent,
-    EmilyContactEmailComponent,
-    EmilyComponent
+    LinkMicrosoftComponent, 
+    EmilyComponent ,
   ],
 })
 export class KayakModule {}

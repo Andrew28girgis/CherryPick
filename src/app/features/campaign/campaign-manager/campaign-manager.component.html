@@ -354,7 +354,7 @@
             <div class="campaign-actions">
               <a
                 class="inbox"
-                [routerLink]="['/organization-mail', c.id, c.organizationid]"
+                [routerLink]="['/organization-mail', c.id, c.organizationid , campaign.Id]"
                 >Inbox</a
               >
               <button class="expand-btn" (click)="toggleExpand(campaign)">
@@ -573,7 +573,8 @@
                     [routerLink]="[
                       '/organization-mail',
                       c.id,
-                      c.organizationid
+                      c.organizationid,
+                      campaign.Id
                     ]"
                     >Inbox</a
                   >
