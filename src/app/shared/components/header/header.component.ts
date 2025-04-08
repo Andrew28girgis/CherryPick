@@ -12,6 +12,8 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
+import { Location } from '@angular/common';
+import { NavigationService } from 'src/app/core/services/navigation-service.service';
 
 @Component({
   selector: 'app-header',
@@ -51,16 +53,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private sidebarSubscription: Subscription | null = null;
   @ViewChild('emailContent') emailContent!: TemplateRef<any>;
   @ViewChild('notificationContent') notificationContent!: TemplateRef<any>;
+  previousUrl: string | null = null; // New property for tracking previous URL
+
 
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
     private userViewService: UserViewService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private location: Location,
+    private navigationService: NavigationService ,
+
   ) {}
 
   ngOnInit(): void {
     this.isSmallScreen = window.innerWidth < 992;
+
+    this.current = this.router.url;
 
     // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
@@ -124,5 +133,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.isNavbarOpen = !this.isNavbarOpen;
   }
-  
+  goBack() {
+    const prevUrl = this.navigationService.getPreviousUrl();
+    if (prevUrl) {
+      this.router.navigateByUrl(prevUrl);
+    } else {
+      this.router.navigate(['/campaigns']);
+    }
+  }
+
 }

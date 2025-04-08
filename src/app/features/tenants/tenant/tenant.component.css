@@ -166,7 +166,6 @@
 }
 .lowwhite {
   color: var(--Colors-Pure-White, #FFF);
-  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -586,14 +585,12 @@
 }
 .SumbitProp{
 color: var(--Body-Heading-Color, #16181D);
-font-family: Montserrat;
 font-size: 24px;
 font-style: normal;
 font-weight: 600;line-height: 32px; 
 }
 .uploadyourfile{
 color: var(--Body-Text-and-Icons, #707791);
-font-family: Montserrat;
 font-size: 18px;
 font-style: normal;
 font-weight: 400;
@@ -612,7 +609,6 @@ margin-top: 15px;
 }
 .campaings{
 color: var(--Body-Heading-Color, #16181D);
-font-family: Montserrat;
 font-size: 18px;
 font-style: normal;
 font-weight: 600;
@@ -621,7 +617,6 @@ line-height: 24px;
 .campaignname{
 color: var(--Body-Text-and-Icons, #707791);
 text-align: center;
-font-family: Montserrat;
 font-size: 16px;
 font-style: normal;
 font-weight: 500;
@@ -645,7 +640,6 @@ line-height: 30px;
   color: var(--Button-Primary-Label, #FFF);  
   text-align: center;
   
-  font-family: Montserrat, sans-serif; 
   font-size: 16px;  
   font-style: normal;
   font-weight: 500; 
