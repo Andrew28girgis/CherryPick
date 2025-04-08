@@ -21,15 +21,14 @@
               />
 
               <select
-                class="micro-deals" 
+                class="micro-deals"
                 [(ngModel)]="selectedMicro"
                 (change)="onMicroDealChange($event)"
               >
                 <ng-container *ngFor="let bb of BuyBoxMicroDeals">
-                     <option [value]="bb.OrganizationId">
-                      {{ bb.OrganizationName }}
-                    </option>
-                
+                  <option [value]="bb.OrganizationId">
+                    {{ bb.OrganizationName }}
+                  </option>
                 </ng-container>
               </select>
             </div>
@@ -46,7 +45,7 @@
                   <span class="all">{{ selectedFilter | uppercase }}</span>
                   <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                   <!-- <button
+                <!-- <button
                     class="new-btn"
                     [routerLink]="[
                       '/emily',
@@ -60,7 +59,7 @@
                       [src]="'../../../assets/Images/Icons/arrow-down.png'"
                     />
                   </button> -->
-                  <!-- <div class="out-icn" (click)="loadInitialData()">
+                <!-- <div class="out-icn" (click)="loadInitialData()">
                     <img
                       [src]="'../../../assets/Images/Icons/rotate-right.png'"
                     />
@@ -106,21 +105,37 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Main content area with contacts and email content -->
     <div class="row m-0 p-0">
       <!-- Contacts list - always visible -->
       <div class="col-lg-3 p-0 m-0">
-        <div class="card" style="border: none; border-radius: 0; min-height: 100vh"> 
-          <div class="card-body" style="padding: 0 ; border-right: 1px solid #e2e4e9;">
-            <ul style="overflow-y: auto; max-height: 63vh; padding: 0" >
-              <li class="contact-list" *ngFor="let contact of contacts" (click)="getEmailsForContact(contact)"
-                [ngClass]="{'selected-contact': contact.ContactId === selectedContact?.ContactId}">
+        <div
+          class="card"
+          style="border: none; border-radius: 0; min-height: 100vh"
+        >
+          <div
+            class="card-body"
+            style="padding: 0; border-right: 1px solid #e2e4e9"
+          >
+            <ul style="overflow-y: auto; max-height: 63vh; padding: 0">
+              <li
+                class="contact-list"
+                *ngFor="let contact of contacts"
+                (click)="getEmailsForContact(contact)"
+                [ngClass]="{
+                  'selected-contact':
+                    contact.ContactId === selectedContact?.ContactId
+                }"
+              >
                 <div class="d-flex justify-content-between w-100">
                   <span class="namecontact" id="{{ contact.ContactId }}">
                     {{ contact.Firstname }} {{ contact.Lastname }}
                   </span>
-                  <span style="color: #4d65b4; font-weight: 600" *ngIf="getTotalEmails(contact) > 0">
+                  <span
+                    style="color: #4d65b4; font-weight: 600"
+                    *ngIf="getTotalEmails(contact) > 0"
+                  >
                     {{ getTotalEmails(contact) }}
                   </span>
                 </div>
@@ -132,21 +147,40 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Email list - shown when no email is selected -->
       <div class="col-lg-9 p-0 mb-3" *ngIf="!selected">
-        <div class="card" 
-          style="border: none; min-height: 80vh; border-radius: 0; overflow-y: auto">
+        <div
+          class="card"
+          style="
+            border: none;
+            min-height: 80vh;
+            border-radius: 0;
+            overflow-y: auto;
+          "
+        >
           <div class="card-bodyy" style="max-height: 74vh; overflow-y: auto">
             <div *ngIf="selectedContact">
               <div class="email-list">
-                <div class="single-mail" style="cursor: pointer" *ngFor="let email of filteredEmails"
-                  (click)="openEmail(email)" [ngClass]="{'selected-email': email.id === selectedEmail?.ID}">
+                <div
+                  class="single-mail"
+                  style="cursor: pointer"
+                  *ngFor="let email of filteredEmails"
+                  (click)="openEmail(email)"
+                  [ngClass]="{
+                    'selected-email': email.id === selectedEmail?.ID
+                  }"
+                >
                   <strong>
-                    <i [ngClass]="'fa-solid ' + getDirectionIcon(email.Direction)" class="me-2"></i>
+                    <i
+                      [ngClass]="
+                        'fa-solid ' + getDirectionIcon(email.Direction)
+                      "
+                      class="me-2"
+                    ></i>
                     <span class="subject"> {{ email.Subject }}</span>
                   </strong>
-                  <p class="date">{{ email.Date | date : 'medium' }}</p>
+                  <p class="date">{{ email.Date | date : "medium" }}</p>
                 </div>
                 <p *ngIf="emailsSentContact?.length === 0" class="no-email-msg">
                   {{ emptyMessage }}
@@ -159,11 +193,13 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Email body - shown when an email is selected -->
       <div class="col-lg-9 p-0 m-0" id="emailDetails" *ngIf="selected">
-        <div class="email-details-body"  
-          style="overflow-y: auto; min-height: 91vh">
+        <div
+          class="email-details-body"
+          style="overflow-y: auto; min-height: 91vh"
+        >
           <div class="card-body" style="min-height: 77vh; max-height: 77vh">
             <!-- Back button to return to email list -->
             <button class="back" (click)="goBackk()">
@@ -178,8 +214,17 @@
             </p>
           </div>
           <div class="d-flex justify-content-end w-100">
-            <button class="replay" *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 1"
-              (click)="openmodel(openreply, selectedEmail?.Body, selectedContact?.ContactId)">
+            <button
+              class="replay"
+              *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 1"
+              (click)="
+                openmodel(
+                  openreply,
+                  selectedEmail?.Body,
+                  selectedContact?.ContactId
+                )
+              "
+            >
               <img [src]="'../../../assets/Images/Icons/send.png'" />
               Reply
             </button>

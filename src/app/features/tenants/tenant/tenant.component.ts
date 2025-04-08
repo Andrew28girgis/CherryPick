@@ -67,9 +67,7 @@ export class TenantComponent implements OnInit {
   selectedCampaign!: number;
   CampaignData!: any;
   showFullReason: boolean = false;
-  
-
-
+  guid!: string;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -82,16 +80,34 @@ export class TenantComponent implements OnInit {
 
   ngOnInit(): void {
     this.buyboxcolor = '#FF5733';
-
     this.contactID = localStorage.getItem('contactId');
+
     this.activatedRoute.params.subscribe((params) => {
-      this.selectedbuyBox = params['buyboxid'];
-      this.selectedCampaign = params['campaignId'];
+      this.guid = params['guid'];
+      this.GetCampaignFromGuid();
       // this.GetCampaignDetails();
     });
-    this.GetBuyBoxInfo();
+
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
+  }
+
+  GetCampaignFromGuid(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetCampaignFromGuid',
+      Params: {
+        GUID: this.guid,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.selectedCampaign = res.json[0].id;
+        this.selectedbuyBox = res.json[0].buyBoxId;
+        this.GetBuyBoxInfo();
+      },
+    });
   }
 
   GetBuyBoxInfo(): void {
@@ -275,10 +291,13 @@ export class TenantComponent implements OnInit {
     // Extract the content of the selected images
     const array = selectedImages.map((image) => image.content);
     const shopID = this.selectedShoppingID;
-    const buyboxid=this.selectedbuyBox
+    const buyboxid = this.selectedbuyBox;
 
-
-    this.PlacesService.SendImagesArrayWithBuyBoxId(array, shopID, buyboxid).subscribe({
+    this.PlacesService.SendImagesArrayWithBuyBoxId(
+      array,
+      shopID,
+      buyboxid
+    ).subscribe({
       next: (data) => {
         this.JsonPDF = data;
         this.showToast('Images Converted successfully!');
