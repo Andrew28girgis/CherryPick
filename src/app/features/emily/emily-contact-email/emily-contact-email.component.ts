@@ -45,6 +45,7 @@ export class EmilyContactEmailComponent implements OnInit {
   selectedFilter: string = 'all'; // Default selected filter
   selectedOption: string = 'All'; // Default text in the dropdown
   selectedMicro: any;
+  selected: any = null;
 
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -133,22 +134,23 @@ export class EmilyContactEmailComponent implements OnInit {
         console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
 
         this.contacts = [];
-        const microDeal = this.BuyBoxMicroDeals.find((deal) => deal.OrganizationId === this.orgId);
+        const microDeal = this.BuyBoxMicroDeals.find(
+          (deal) => deal.OrganizationId === this.orgId
+        );
 
-        if (microDeal) { 
+        if (microDeal) {
           this.selectedMicro = microDeal.OrganizationId;
-          this.contacts = microDeal.Contact; 
-        } else { 
+          this.contacts = microDeal.Contact;
+        } else {
           this.contacts = this.BuyBoxMicroDeals[0].Contact;
+          this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
         }
         
-
         // this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
         //   m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
         //     (o) => o.OrganizationName || ''
         //   )
         // ).join(', ');
-
 
         // this.selectedOrganizationName =
         //   this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
@@ -189,6 +191,7 @@ export class EmilyContactEmailComponent implements OnInit {
       this.filteredEmails = [];
       this.emptyMessage = '';
       this.selectedEmail = null;
+      this.selected = null; // Reset selected email to show the list view
     } else if (this.emailsSentContact.length > 0) {
       // If same contact and emails already loaded, do nothing.
       return;
@@ -215,12 +218,14 @@ export class EmilyContactEmailComponent implements OnInit {
       this.emptyMessage = 'No emails available for this contact';
     } else if (this.filteredEmails.length > 0) {
       // Open the first email by default.
-      this.openEmail(this.filteredEmails[0]);
+      // this.openEmail(this.filteredEmails[0]); // Commented out to not auto-select
     }
   }
 
   // Scroll function and load email details API.
   openEmail(email: Mail): void {
+    this.selected = email;
+
     // Call GetMail() with the selected email's ID (mailId).
     this.GetMail(email.id);
     // Smooth scroll to the email details section.
@@ -233,6 +238,12 @@ export class EmilyContactEmailComponent implements OnInit {
       }
     }, 100);
   }
+  
+  goBackk(): void {
+    // Clear the selected email so the email list is shown again.
+    this.selected = null;
+  }
+
   smoothScrollTo(element: HTMLElement, duration: number) {
     const targetPosition = element.getBoundingClientRect().top + window.scrollY;
     const startPosition = window.scrollY;
@@ -308,6 +319,7 @@ export class EmilyContactEmailComponent implements OnInit {
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
     this.isDropdownVisible = false; // Set this to false to hide the dropdown
+    this.selected = null; // Reset selected email to show the list view
 
     // If no emails or contact selected, don't try to filter.
     if (!this.selectedContact || this.emailsSentContact?.length === 0) {
@@ -348,7 +360,8 @@ export class EmilyContactEmailComponent implements OnInit {
       !this.selectedEmail ||
       !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
     ) {
-      this.openEmail(this.filteredEmails[0]);
+      // Don't auto-select the first email anymore
+      // this.openEmail(this.filteredEmails[0]);
     }
   }
 

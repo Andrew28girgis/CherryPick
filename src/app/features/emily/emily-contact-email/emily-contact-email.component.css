@@ -127,7 +127,7 @@
   align-self: stretch;
   background: var(--Colors-Primary-100, #dbe0f0);
 }
-.mailbox-header[_ngcontent-ng-c3909253692] {
+.mailbox-header {
   background: var(--Colors-Primary-100, #dbe0f0);
   display: flex;
   padding: 41px 12px;

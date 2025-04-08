@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PlacesService } from './places.service';
-import { NgxSpinnerService } from 'ngx-spinner';
+     
 import { StateService } from './state.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -16,7 +16,7 @@ declare const google: any;
 export class ViewManagerService {
   constructor(
     private placesService: PlacesService,
-    private spinner: NgxSpinnerService,
+    
     private stateService: StateService,
     private sanitizer: DomSanitizer
   ) {}
@@ -29,7 +29,6 @@ export class ViewManagerService {
         return;
       }
 
-      this.spinner.show();
       const body: any = {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
@@ -41,7 +40,7 @@ export class ViewManagerService {
         next: (data) => {
           const centers = data.json;
           this.stateService.setShoppingCenters(centers);
-          this.spinner.hide();
+               
           resolve(centers);
         }
       });
@@ -127,7 +126,6 @@ export class ViewManagerService {
     shoppingCenterId: number | string
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.spinner.show();
       const body: any = {
         Name: 'DeleteShoppingCenterFromBuyBox',
         Params: {
@@ -148,7 +146,7 @@ export class ViewManagerService {
           resolve(data);
         },
         complete: () => {
-          this.spinner.hide();
+               
         },
       });
     });
@@ -156,7 +154,6 @@ export class ViewManagerService {
 
   restoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.spinner.show();
       Deleted = false;
       const body: any = {
         Name: 'RestoreShoppingCenter',
@@ -179,7 +176,7 @@ export class ViewManagerService {
           resolve(data);
         },
         complete: () => {
-          this.spinner.hide();
+               
         },
       });
     });
@@ -205,7 +202,7 @@ export class ViewManagerService {
   //         resolve(data);
   //       },
   //       complete: () => {
-  //         this.spinner.hide();
+  //              
   //       },
   //     });
   //   });
@@ -231,7 +228,7 @@ export class ViewManagerService {
   //       },
 
   //       complete: () => {
-  //         this.spinner.hide();
+  //              
   //       },
   //     });
   //   });

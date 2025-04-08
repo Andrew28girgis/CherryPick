@@ -13,7 +13,7 @@ import { General } from 'src/app/shared/models/domain';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from 'src/app/shared/models/shoppingCenters';
 import { ShareOrg } from 'src/app/shared/models/shareOrg';
-import { NgxSpinnerService } from 'ngx-spinner';
+   
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Subscription } from 'rxjs';
 import { StateService } from 'src/app/core/services/state.service';
@@ -53,7 +53,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   // Loading state for skeleton
   isLoading = true;
   // Interval for hiding spinner
-  private spinnerHideInterval: any;
+       
 
   first: number = 0;
   rows: number = 9;
@@ -71,16 +71,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     private stateService: StateService,
     private viewManager: ViewManagerService,
-    private spinner: NgxSpinnerService,
+        
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Set up interval to continuously hide spinner
-    this.spinnerHideInterval = setInterval(() => {
-      this.hideSpinner();
-    }, 100);
-
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
@@ -102,17 +97,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear the interval when component is destroyed
-    if (this.spinnerHideInterval) {
-      clearInterval(this.spinnerHideInterval);
-    }
     this.subscriptions.unsubscribe();
   }
 
   // Method to hide spinner
   private hideSpinner(): void {
     try {
-      this.spinner.hide();
+           
     } catch (error) {
       // Ignore errors
     }
@@ -121,7 +112,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   async loadData() {
     try {
       this.isLoading = true; // Show skeleton
-      this.hideSpinner(); // Hide any spinner
+        // Hide any spinner
 
       this.shoppingCenters = await this.viewManager.getShoppingCenters(
         this.BuyBoxId
@@ -140,7 +131,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-      this.hideSpinner(); // Make sure spinner is hidden
+        // Make sure spinner is hidden
       this.cdr.detectChanges();
     }
   }
@@ -161,7 +152,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
 
   async openMapViewPlace(content: any, modalObject?: any) {
-    this.hideSpinner(); // Hide spinner before opening modal
+      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -174,11 +165,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
       modalObject.Latitude,
       modalObject.Longitude
     );
-    this.hideSpinner(); // Hide spinner after map is initialized
+      // Hide spinner after map is initialized
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
-    this.hideSpinner(); // Hide spinner before opening modal
+      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -194,7 +185,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.viewOnStreet();
       }, 100);
     }
-    this.hideSpinner(); // Hide spinner after street view is initialized
+      // Hide spinner after street view is initialized
   }
 
   viewOnStreet() {
@@ -217,7 +208,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       } else {
         // Handle error
       }
-      this.hideSpinner(); // Hide spinner after street view is initialized
+        // Hide spinner after street view is initialized
     });
   }
 
@@ -240,7 +231,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
   ) {
-    this.hideSpinner(); // Hide spinner before opening modal
+      // Hide spinner before opening modal
     this.DeletedSC = shoppingCenter;
     this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
@@ -256,7 +247,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.isLoading = true; // Show skeleton
-        this.hideSpinner(); // Hide any spinner
+          // Hide any spinner
 
         await this.viewManager.deleteShoppingCenter(
           this.BuyBoxId,
@@ -265,7 +256,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.modalService.dismissAll();
       } finally {
         this.isLoading = false; // Hide skeleton
-        this.hideSpinner(); // Make sure spinner is hidden
+          // Make sure spinner is hidden
         this.cdr.detectChanges();
       }
     }
@@ -273,7 +264,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
-    this.hideSpinner(); // Hide any spinner
+      // Hide any spinner
 
     this.viewManager
       .restoreShoppingCenter(MarketSurveyId, Deleted)
@@ -287,13 +278,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
           return center;
         });
         this.isLoading = false; // Hide skeleton
-        this.hideSpinner(); // Make sure spinner is hidden
+          // Make sure spinner is hidden
         this.cdr.markForCheck();
       })
       .catch((error) => {
         // Handle error
         this.isLoading = false; // Hide skeleton
-        this.hideSpinner(); // Make sure spinner is hidden
+          // Make sure spinner is hidden
       });
   }
 
