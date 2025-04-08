@@ -140,6 +140,8 @@ export class EmilyContactEmailComponent implements OnInit {
           this.contacts = microDeal.Contact; 
         } else { 
           this.contacts = this.BuyBoxMicroDeals[0].Contact;
+          this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
+
         }
         
 
