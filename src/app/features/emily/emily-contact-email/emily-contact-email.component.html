@@ -2,7 +2,7 @@
 
 <div class="container p-0">
   <div class="row m-0 p-0">
-    <div class="col-12">
+    <div class="col-12 p-0">
       <div class="buttonandname">
         <div class="w-100 d-flex align-item-center-justify-content-between">
           <div class="d-flex align-items-start">
@@ -112,8 +112,8 @@
       <!-- Contacts list - always visible -->
       <div class="col-lg-3 p-0 m-0">
         <div class="card" style="border: none; border-radius: 0; min-height: 100vh"> 
-          <div class="card-body" style="padding: 0">
-            <ul style="overflow-y: auto; max-height: 63vh; padding: 0" [class.scrolling]="isScrolling" (scroll)="onScroll()">
+          <div class="card-body" style="padding: 0 ; border-right: 1px solid #e2e4e9;">
+            <ul style="overflow-y: auto; max-height: 63vh; padding: 0" >
               <li class="contact-list" *ngFor="let contact of contacts" (click)="getEmailsForContact(contact)"
                 [ngClass]="{'selected-contact': contact.ContactId === selectedContact?.ContactId}">
                 <div class="d-flex justify-content-between w-100">
@@ -135,7 +135,7 @@
       
       <!-- Email list - shown when no email is selected -->
       <div class="col-lg-9 p-0 mb-3" *ngIf="!selected">
-        <div class="card" [class.scrolling]="isScrolling" (scroll)="onScroll()"
+        <div class="card" 
           style="border: none; min-height: 80vh; border-radius: 0; overflow-y: auto">
           <div class="card-bodyy" style="max-height: 74vh; overflow-y: auto">
             <div *ngIf="selectedContact">
@@ -162,7 +162,7 @@
       
       <!-- Email body - shown when an email is selected -->
       <div class="col-lg-9 p-0 m-0" id="emailDetails" *ngIf="selected">
-        <div class="email-details-body" [class.scrolling]="isScrolling" (scroll)="onScroll()"
+        <div class="email-details-body"  
           style="overflow-y: auto; min-height: 91vh">
           <div class="card-body" style="min-height: 77vh; max-height: 77vh">
             <!-- Back button to return to email list -->
