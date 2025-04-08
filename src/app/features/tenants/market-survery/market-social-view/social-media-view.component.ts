@@ -11,7 +11,7 @@ import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center, Reaction } from 'src/app/shared/models/shoppingCenters';
 import { StateService } from 'src/app/core/services/state.service';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { NgxSpinnerService } from 'ngx-spinner';
+   
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/app/shared/models/domain';
@@ -65,7 +65,7 @@ export class SocialMediaViewComponent implements OnInit {
   constructor(
     private stateService: StateService,
     private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService,
+        
     private renderer: Renderer2,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
@@ -112,7 +112,7 @@ export class SocialMediaViewComponent implements OnInit {
       this.getBuyBoxPlaces(this.BuyBoxId);
       return;
     }
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -130,7 +130,7 @@ export class SocialMediaViewComponent implements OnInit {
         );
 
         this.stateService.setShoppingCenters(this.shoppingCenters);
-        this.spinner.hide();
+             
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
     });
@@ -437,7 +437,7 @@ export class SocialMediaViewComponent implements OnInit {
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
   OpenShareWithContactModal(content: any): void {
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetBuyBoxGUID',
       Params: {
@@ -453,7 +453,7 @@ export class SocialMediaViewComponent implements OnInit {
         } else {
           this.GuidLink = '';
         }
-        this.spinner.hide();
+             
       },
     });
     this.modalService.open(this.ShareWithContact, { size: 'lg' });

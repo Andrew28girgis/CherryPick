@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
-import { NgxSpinnerService } from 'ngx-spinner';
+   
 import { Center, Place } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -48,7 +48,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService,
+        
     private markerService: MapsService,
     private stateService: StateService,
     private ngZone: NgZone
@@ -86,7 +86,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.spinner.show();
+      
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -98,7 +98,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
-        this.spinner.hide();
+             
         this.getBuyBoxPlaces(this.BuyBoxId);
       }
     });
@@ -178,7 +178,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async getAllMarker() {
     try {
-      this.spinner.show();
+        
       const { Map } = await google.maps.importLibrary('maps');
 
       const mapElement = document.getElementById('map') as HTMLElement;
@@ -223,7 +223,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.createCustomMarkers(this.buyboxCategories);
     } catch (error) {
     } finally {
-      this.spinner.hide();
+           
     }
   }
 

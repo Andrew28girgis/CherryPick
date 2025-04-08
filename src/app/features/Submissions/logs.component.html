@@ -56,7 +56,6 @@
   </div>
   </div>
   <div class="row">
-    <!-- Wrapper that replaces the table -->
   <!-- Loop over each submission -->
   <div class="submissions-list" *ngIf="submissionsArray && submissionsArray.length > 0">
     <ng-container *ngFor="let submission of submissionsArray">
@@ -67,9 +66,6 @@
           <!-- Loop over each User Submission -->
           <ng-container *ngFor="let userSubmission of user.UserSubmissions">
             <div class="submission-card d-flex align-items-center">
-            <!-- Left: Building Image -->
-
-            
               <!-- Left Info: Center Name, Status, Places, Date, Add Note -->
               <div class="left-info d-flex justify-content-between col-12">
                 <div class="me-3 col-1 building-image ">
@@ -145,13 +141,12 @@
                 <span>{{ userSubmission.Match || 75 }}%</span>
               </div>
             </div> -->
-          </div>
-          <!-- End .submission-card -->
+           </div>
+          </ng-container>
         </ng-container>
       </ng-container>
     </ng-container>
-    </ng-container>
-  </div>
+   </div>
   </div>
 </div>
 
