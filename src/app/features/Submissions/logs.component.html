@@ -68,20 +68,20 @@
           <ng-container *ngFor="let userSubmission of user.UserSubmissions">
             <div class="submission-card d-flex align-items-center">
             <!-- Left: Building Image -->
-            <div class="building-image me-3">
-              <img
-                src="{{ sc.MainImage}}"
-                alt="Building"
-                class="img"
-              />
-            </div>
+
             
               <!-- Left Info: Center Name, Status, Places, Date, Add Note -->
               <div class="left-info d-flex justify-content-between col-12">
-                <!-- Name & Status -->
+                <div class="me-3 col-1 building-image ">
+                  <img
+                    src="{{ sc.MainImage}}"
+                    alt="Building"
+                    class="img"
+                  />
+                </div>
                 <div class="mb-2 col-5" style="display: flex; flex-direction: column;">
                   <h5 class="mb-0 me-3 center-name" style="padding-bottom: 8px;">{{ sc.CenterName }}</h5>
-                  <h5 class="mb-0 me-3 date-created" style="padding-bottom: 8px;">{{ sc.CenterAddress }}</h5>
+                  <h5 class="mb-0 me-3 date-created" style="padding-bottom: 8px;">{{ sc.CenterAddress }}, {{sc.CenterState}}, {{sc.CenterCity}}</h5>
                   
                   <!-- Show accepted/rejected/pending status -->
                    <div class="div"  style="padding-bottom: 8px;">
@@ -110,7 +110,6 @@
                   Add Note
                 </button>
                 </div>
-                <!-- Places -->
                 <div class="mb-2 col-2 d-flex flex-column" style="align-items: baseline;">
                   <span class="date-created">Places</span>
                   <a
@@ -124,21 +123,20 @@
                   />
                   </a>
                 </div>
-                <!-- Date Created -->
                 <div class="mb-2 col-2 d-flex flex-column" style="align-items: baseline;">
                   <span class="date-created">Date Created</span>
                   <span class="date ms-2">
                     {{ userSubmission.CreatedDate | date }}
                   </span>
                 </div>
-                <!-- User Name -->
-                <div class="mb-2 col-3 d-flex flex-column" style="align-items: baseline;">
-                  <span class="date-created">User Name('s)</span>
+                <div class="mb-2 col-2 d-flex flex-column" style="align-items: baseline;">
+                  <span class="date-created">Submission Users</span>
                   <div class="user-name">
                     <ng-container *ngFor="let user of sc.C">
-                      <span>{{ user.FirstName }} {{ user.LastName }}</span><br />
+                     <div> <span class="date">{{ user.FirstName }} {{ user.LastName }}</span> </div>
                     </ng-container>
                   </div>
+                  
                 </div>
               </div>
             <!-- Far Right: Match Circle (if you have a match value) -->
