@@ -2,16 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { Cotenant, Generated, ShoppingCenterManager } from 'src/app/shared/models/emailGenerate';
+import {
+  Cotenant,
+  Generated,
+  ShoppingCenterManager,
+} from 'src/app/shared/models/emailGenerate';
 import { RelationNames } from 'src/app/shared/models/emailGenerate';
 import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganizationsForEmail';
 import { from } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
-import { OrganizationChecked, buyboxChecklist } from 'src/app/shared/models/sidenavbar';
+import {
+  OrganizationChecked,
+  buyboxChecklist,
+} from 'src/app/shared/models/sidenavbar';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
-import { GenerateContextDTO, GetContactManagerDTO, GetManagerOrgDTO } from 'src/app/shared/models/GenerateContext';
+import {
+  GenerateContextDTO,
+  GetContactManagerDTO,
+  GetManagerOrgDTO,
+} from 'src/app/shared/models/GenerateContext';
 
 @Component({
   selector: 'app-new-muliple-email',
@@ -24,7 +35,7 @@ export class NewMulipleEmailComponent implements OnInit {
   BatchGuid!: string;
   campaignId: any;
   organizationId: any;
-  
+
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
@@ -70,7 +81,7 @@ export class NewMulipleEmailComponent implements OnInit {
     CotenantsWithoutActivityType: Cotenant[];
     ShoppingCenterManager: ShoppingCenterManager[];
   }[] = [];
-  
+
   bodyTemplates: string[] = [];
   isEditing: boolean = false;
   isEditingBody: boolean = false;
@@ -124,19 +135,17 @@ export class NewMulipleEmailComponent implements OnInit {
         this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
       });
 
-      const storedChecklist = sessionStorage.getItem('buyboxChecklist');
-      if (storedChecklist) {
-        const parsedChecklist = JSON.parse(storedChecklist) as buyboxChecklist;
-        if (
-          JSON.stringify(parsedChecklist) !==
-          JSON.stringify(this.buyboxChecklist)
-        ) {
-          this.buyboxChecklist = parsedChecklist;
-          this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
-          this.OrganizationCheckedServices =
-            this.buyboxChecklist?.organizations;
-        }
+    const storedChecklist = sessionStorage.getItem('buyboxChecklist');
+    if (storedChecklist) {
+      const parsedChecklist = JSON.parse(storedChecklist) as buyboxChecklist;
+      if (
+        JSON.stringify(parsedChecklist) !== JSON.stringify(this.buyboxChecklist)
+      ) {
+        this.buyboxChecklist = parsedChecklist;
+        this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+        this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
       }
+    }
 
     this.contactId = localStorage.getItem('contactId');
     if (this.buyBoxId) {
@@ -244,7 +253,7 @@ export class NewMulipleEmailComponent implements OnInit {
       this.ShowComplementaries = false;
     }
   }
-  
+
   GetRetailRelationCategories() {
     const body: any = {
       Name: 'GetRetailRelationCategories',
@@ -608,7 +617,7 @@ export class NewMulipleEmailComponent implements OnInit {
 
   async PutMailsDraft(): Promise<void> {
     this.updateEmailBody();
-   await this.PutGenerateContext();
+    await this.PutGenerateContext();
 
     if (!this.selectedPromptId) {
       this.showToast('Please select a prompt to Generate.');
