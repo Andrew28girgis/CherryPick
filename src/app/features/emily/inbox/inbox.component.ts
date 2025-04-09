@@ -299,10 +299,10 @@ export class InboxComponent implements OnInit {
     return direction === 2
       ? 'fa-reply send'
       : direction === -1
-        ? 'fa-share outbox'
-        : direction === 1
-          ? 'fa-reply inbox'
-          : '';
+      ? 'fa-reply outbox'
+      : direction === 1
+      ? 'fa-share inbox'
+      : '';
   }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;

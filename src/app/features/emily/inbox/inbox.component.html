@@ -82,26 +82,18 @@
                   >
                     <i class="fa-solid fa-envelope me-1"></i> All
                   </div>
-                  <div
-                    class="filter-button"
-                    [ngClass]="{ active: selectedFilter === 'inbox' }"
-                    (click)="filterEmails('inbox')"
-                  >
-                    <i class="fa-solid fa-reply me-1"></i> Inbox
+                  <div class="filter-button" [ngClass]="{ active: selectedFilter === 'inbox' }"
+                    (click)="filterEmails('inbox')">
+                    <i class="fa-solid fa-share me-1"></i> Inbox
                   </div>
-                  <div
-                    class="filter-button"
-                    [ngClass]="{ active: selectedFilter === 'outbox' }"
-                    (click)="filterEmails('outbox')"
-                  >
-                    <i class="fa-solid fa-share me-1"></i> Outbox
+                  <div class="filter-button" [ngClass]="{ active: selectedFilter === 'outbox' }"
+                    (click)="filterEmails('outbox')">
+                    <i class="fa-solid fa-reply me-1"></i> Outbox
                   </div>
-                  <div
-                    class="filter-button"
-                    [ngClass]="{ active: selectedFilter === 'sent' }"
-                    (click)="filterEmails('sent')"
-                  >
-                    <i class="fa-solid fa-envelope-circle-check me-1"></i>
+                  <div class="filter-button" [ngClass]="{ active: selectedFilter === 'sent' }"
+                    (click)="filterEmails('sent')">
+                    <i class="fa-solid fa-reply me-1" style="color: green;"></i>
+                    <!-- <i class="fa-solid fa-envelope-circle-check me-1"></i> -->
                     Sent
                   </div>
                 </div>
