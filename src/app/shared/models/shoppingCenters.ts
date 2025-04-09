@@ -50,6 +50,7 @@ export interface Center {
     Suburban?: boolean
     Neighbourhood?: string
     isDropdownOpen?: boolean
+    CampaignId?: number
   }
   export class Comment {
     Id?: number
