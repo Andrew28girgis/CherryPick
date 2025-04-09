@@ -143,17 +143,17 @@
       <div class="ataglance-section">
         <div class="ataglance-section-header">
           <div class="title">Things To do</div>
-          <div class="padge">25</div>
+          <div class="padge">
+            {{ campaignEmails.length }}
+          </div>
         </div>
         <div class="ataglance-section-body">
-          <div class="w-100">
-            <app-todo-card></app-todo-card>
-          </div>
-          <hr class="w-100" />
-          <div class="w-100">
-            <app-todo-card></app-todo-card>
-          </div>
-          <hr class="w-100" />
+          <ng-container *ngFor="let email of campaignEmails">
+            <div class="w-100">
+              <app-todo-card [email]="email"></app-todo-card>
+            </div>
+            <hr class="w-100" />
+          </ng-container>
         </div>
       </div>
     </div>

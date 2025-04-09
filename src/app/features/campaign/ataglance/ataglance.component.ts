@@ -9,6 +9,7 @@ import { IcampaignReaction } from './models/icampaign-reaction';
 import { IcampaignComment } from './models/icampaign-comment';
 import { ICampaignOrgCadence } from './models/icampaign-org-cadence';
 import { ICampaignSiteCadence } from './models/icampaign-site-cadence';
+import { ICampaignEmail } from './models/icampaign-email';
 
 @Component({
   selector: 'app-ataglance',
@@ -23,6 +24,7 @@ export class AtaglanceComponent implements OnInit {
   campaignComments: IcampaignComment[] = [];
   campaignOrgCadence!: ICampaignOrgCadence;
   campaignSiteCadence!: ICampaignSiteCadence;
+  campaignEmails: ICampaignEmail[] = [];
   componentLoaded: boolean = false;
 
   constructor(
@@ -51,6 +53,7 @@ export class AtaglanceComponent implements OnInit {
       comments: this.getCampaignComments(),
       orgCadence: this.getCampaignOrgCadence(),
       siteCadence: this.getCampaignSiteCadence(),
+      emails: this.getCampaignEmails(),
     }).subscribe({
       next: (result) => {
         this.spinner.hide();
@@ -77,6 +80,10 @@ export class AtaglanceComponent implements OnInit {
 
         if (result.siteCadence.json && result.siteCadence.json.length > 0) {
           this.campaignSiteCadence = result.siteCadence.json[0];
+        }
+
+        if (result.emails.json && result.emails.json.length > 0) {
+          this.campaignEmails = result.emails.json;
         }
 
         this.componentLoaded = true;
@@ -140,6 +147,16 @@ export class AtaglanceComponent implements OnInit {
   getCampaignSiteCadence(): Observable<any> {
     const body = {
       name: 'GetStagesShoppingCenters',
+      params: {
+        CampaignId: this.campaignId,
+      },
+    };
+    return this.placeService.GenericAPI(body);
+  }
+
+  getCampaignEmails(): Observable<any> {
+    const body = {
+      name: 'GetCampaignEmails',
       params: {
         CampaignId: this.campaignId,
       },
