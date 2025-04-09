@@ -48,7 +48,7 @@ export class InboxComponent implements OnInit {
   selected: any = null;
   campaignId: any;
   emailBodyResponse: any;
-  emailSubject:any
+  emailSubject: any;
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
@@ -264,7 +264,9 @@ export class InboxComponent implements OnInit {
   }
   openCompoase(modal: any) {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
+    this.GetContactShoppingCenters();
   }
+
   openmodel(modal: any, body: any, contactId: any) {
     this.bodyemail = body;
     this.contactIdemail = contactId;
@@ -335,5 +337,17 @@ export class InboxComponent implements OnInit {
       return dateB - dateA;
     });
   }
- 
+
+  GetContactShoppingCenters(): void {
+    const body: any = {
+      Name: 'GetShoppingCentersForContact',
+      MainEntity: null,
+      Params: {},
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        console.log(data.json);
+      },
+    });
+  }
 }
