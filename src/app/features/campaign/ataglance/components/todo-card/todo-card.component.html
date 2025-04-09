@@ -38,7 +38,7 @@
       {{ email.createdDate | date : "mediumDate" }}
     </div>
   </div>
-  <button>
+  <button (click)="getCampaignEmailActions(email.id)">
     <span>View Email</span>
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -71,3 +71,98 @@
     </svg>
   </button>
 </div>
+
+<ng-template #emailContent let-modal>
+  <div class="modal-header d-flex justify-content-between">
+    <div class="w-100 d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+  </div>
+  <div
+    class="modal-body"
+    style="min-height: 75vh; max-height: 75vh; overflow-y: auto"
+  >
+    <div class="email-meta mb-3">
+      <div class="d-flex justify-content-between">
+        <div><strong>Subject:</strong> {{ getCurrentEmail.subject }}</div>
+        <div>
+          <strong>Date:</strong> {{ getCurrentEmail.date | date : "medium" }}
+        </div>
+      </div>
+      <div *ngIf="getCurrentEmail.fromAddress">
+        <strong>From:</strong> {{ getCurrentEmail.fromAddress }}
+      </div>
+      <div *ngIf="getCurrentEmail.toAddress">
+        <strong>To:</strong> {{ getCurrentEmail.toAddress }}
+      </div>
+      <div *ngIf="getCurrentEmail.cc">
+        <strong>CC:</strong> {{ getCurrentEmail.cc }}
+      </div>
+      <div *ngIf="getCurrentEmail.bcc">
+        <strong>BCC:</strong> {{ getCurrentEmail.bcc }}
+      </div>
+    </div>
+    <div class="email-body" [innerHTML]="getCurrentEmail.body"></div>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-primary me-2"
+        [disabled]="selectedEmailIndex === 0"
+        (click)="previousEmail()"
+      >
+        Previous Email
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        [disabled]="selectedEmailIndex === emailsContent.length - 1"
+        (click)="nextEmail()"
+      >
+        Next Email
+      </button>
+      <span class="ms-3" *ngIf="emailsContent.length > 1">
+        Email {{ selectedEmailIndex + 1 }} of {{ emailsContent.length }}
+      </span>
+    </div>
+    <div class="div">
+      <button
+        *ngIf="getCurrentEmail.direction == 4"
+        type="button"
+        class="btn btn-primary me-2"
+        (click)="sendEmail(getCurrentEmail)"
+      >
+        <i class="fas fa-paper-plane"></i> Send
+      </button>
+      <button
+        *ngIf="getCurrentEmail.direction == 4"
+        type="button"
+        class="btn btn-success me-2"
+        (click)="sendAllEmails()"
+      >
+        <i class="fas fa-paper-plane"></i> Send All
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="modal.close('Close click')"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
