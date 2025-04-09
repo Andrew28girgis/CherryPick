@@ -497,7 +497,7 @@ export class NewMulipleEmailComponent implements OnInit {
       this.showToast('Please select a prompt to Generate.');
       return;
     }
-
+  
     this.spinner.show();
     const requests = this.ManagerOrgDTO.map(async (managerOrg) => {
       const body: GenerateContextDTO = {
@@ -515,20 +515,21 @@ export class NewMulipleEmailComponent implements OnInit {
         GetContactManagers: managerOrg.GetContactManagers,
         OrganizationId: managerOrg.OrganizationId,
       };
-
+  
       try {
-        const response = await this.PlacesService.GenerateContext(
-          body
-        ).toPromise();
+        const response = await this.PlacesService.GenerateContext(body).toPromise();
         this.ResponseContextEmail.push(response);
         return response;
       } catch (error) {
         console.error('Error executing API call for', body, ':', error);
-        throw error; // Rethrow to ensure Promise.all catches it
+        throw error; 
       }
     });
+  
+    await Promise.all(requests);
     this.spinner.hide();
   }
+  
 
   GetPrompts() {
     const categoryBody = {
