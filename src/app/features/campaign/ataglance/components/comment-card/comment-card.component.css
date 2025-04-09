@@ -1,6 +1,6 @@
 .comment-card {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   gap: 1rem;
   width: 100%;
 }
