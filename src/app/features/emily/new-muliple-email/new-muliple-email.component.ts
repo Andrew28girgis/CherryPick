@@ -607,6 +607,7 @@ export class NewMulipleEmailComponent implements OnInit {
 
   async PutMailsDraft(): Promise<void> {
     this.updateEmailBody();
+    this. PutGenerateContext();
 
     if (!this.selectedPromptId) {
       this.showToast('Please select a prompt to Generate.');

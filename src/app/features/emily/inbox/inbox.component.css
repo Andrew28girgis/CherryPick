@@ -13,12 +13,14 @@
   color: rgb(0, 0, 0);
   font-weight: bold;
 }
+
 .selected-email {
   border-bottom: 1px solid var(--Body-General-Body-Border, #e2e4e9);
   background: var(--Colors-Primary-50, #edf0f8);
   padding: 10px;
   margin-bottom: 5px;
 }
+
 .org-data {
   display: flex;
   height: 40px;
@@ -30,6 +32,7 @@
   background: linear-gradient(90deg, #4d65b4 0%, #1a4beb 100%);
   width: -webkit-fill-available;
 }
+
 .org-name {
   color: #fff;
   font-size: 14px;
@@ -38,6 +41,7 @@
   line-height: 14px;
   letter-spacing: -0.07px;
 }
+
 .contactsh5 {
   color: #000;
   font-size: 16px;
@@ -46,6 +50,7 @@
   line-height: 30px;
   padding: 24px;
 }
+
 .contact-list {
   display: flex;
   padding: 12px 24px;
@@ -54,6 +59,7 @@
   align-self: stretch;
   cursor: pointer;
 }
+
 .dropdownall {
   position: relative;
   display: flex;
@@ -66,6 +72,7 @@
   background: #fff;
   cursor: pointer;
 }
+
 .all {
   color: #707791;
   font-size: 14px;
@@ -116,9 +123,11 @@
   background-color: #007bff;
   color: #fff;
 }
+
 .buttonandname {
   padding: 0 0 25px 0;
 }
+
 .mailbox-header {
   display: flex;
   padding: 0 12px;
@@ -126,6 +135,7 @@
   align-items: center;
   align-self: stretch;
 }
+
 .single-mail {
   border-bottom: 1px solid #e2e4e9;
   display: flex;
@@ -133,9 +143,11 @@
   align-items: center;
   justify-content: space-between;
 }
+
 .selected-email {
   background: #edf0f8;
 }
+
 .subject {
   color: #16181d;
   font-size: 14px;
@@ -143,6 +155,7 @@
   font-weight: 600;
   line-height: 24px;
 }
+
 .date {
   color: #707791;
   font-size: 14px;
@@ -151,6 +164,7 @@
   line-height: 24px;
   letter-spacing: -0.07px;
 }
+
 .email-details-body {
   background-color: white;
   display: flex;
@@ -160,6 +174,7 @@
   gap: 32px;
   flex: 1 0 0;
 }
+
 .subject-details {
   color: #16181d;
   font-size: 16px;
@@ -168,6 +183,7 @@
   line-height: 32px;
   padding-bottom: 32px;
 }
+
 .body-details {
   color: #707791;
   font-size: 16px;
@@ -178,6 +194,7 @@
   white-space: pre;
   padding-top: 0;
 }
+
 .new-btn {
   border-radius: 8px;
   background: #4d65b4;
@@ -194,6 +211,7 @@
   font-weight: 600;
   line-height: 24px;
 }
+
 .out-icn {
   cursor: pointer;
   margin-left: 12px;
@@ -205,34 +223,50 @@
   align-items: center;
   gap: 10px;
 }
+
 /* scroll */
 /* Initially hide the scrollbar */
 .card-body {
   overflow-y: auto;
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer */
+  scrollbar-width: none;
+  /* For Firefox */
+  -ms-overflow-style: none;
+  /* For Internet Explorer */
 }
+
 .card-body {
   min-width: -webkit-fill-available;
 }
+
 .card-body::-webkit-scrollbar {
-  display: none; /* For WebKit-based browsers (e.g., Chrome, Safari, Edge) */
+  display: none;
+  /* For WebKit-based browsers (e.g., Chrome, Safari, Edge) */
 }
+
 /* Show the scrollbar on hover or while scrolling */
 .card-body:hover {
-  scrollbar-width: thin; /* For Firefox */
+  scrollbar-width: thin;
+  /* For Firefox */
 }
+
 .card-body:hover::-webkit-scrollbar {
   display: block;
-  width: 8px; /* Adjust width as needed */
+  width: 8px;
+  /* Adjust width as needed */
 }
+
 .card-body:hover::-webkit-scrollbar-thumb {
-  background: #ccc; /* Customize the scrollbar thumb color */
-  border-radius: 4px; /* Make the scrollbar rounded */
+  background: #ccc;
+  /* Customize the scrollbar thumb color */
+  border-radius: 4px;
+  /* Make the scrollbar rounded */
 }
+
 .card-bodyy {
-  scrollbar-width: thin; /* For Firefox */
+  scrollbar-width: thin;
+  /* For Firefox */
 }
+
 .replay {
   border-radius: 16px;
   background: #4d65b4;
@@ -253,18 +287,22 @@
   max-height: 40px;
   width: 110px;
 }
+
 .send {
   color: #28a745;
   font-size: 18px;
 }
-.outbox {
+
+.inbox {
   color: #007bff;
   font-size: 18px;
 }
-.inbox {
+
+.outbox {
   color: #fd7e14;
   font-size: 18px;
 }
+
 .filter-button {
   padding: 0px 5px;
   margin-right: 5px;
@@ -274,31 +312,40 @@
   color: #555;
   transition: all 0.2s ease;
 }
+
 .filter-button:hover {
   background-color: #eaeaea;
 }
+
 .filter-button.active {
   background-color: #4d65b4;
   color: white;
 }
+
 .fa-reply.inbox {
   color: #007bff;
 }
+
 .fa-share.outbox {
   color: #6c757d;
 }
+
 .fa-envelope-circle-check.send {
   color: #28a745;
 }
+
 .filter-button:not(.active) .fa-envelope-circle-check {
   color: #28a745;
 }
+
 .filter-button:not(.active) .fa-reply {
   color: #007bff;
 }
+
 .filter-button:not(.active) .fa-share {
   color: #fd7e14;
 }
+
 /* When button is active, icons should be white */
 .filter-button.active i {
   color: white;
@@ -315,6 +362,7 @@
 .micro-deals option {
   color: black;
 }
+
 .buttonSave {
   color: white;
   background: #001f3f;
@@ -322,4 +370,44 @@
   border: 1px solid #001f3f;
   cursor: pointer;
   border-radius: 6px;
+}
+
+
+.form-check-input[type="checkbox"] {
+  box-shadow: none;
+  outline: none;
+  border: #bfbfbf 1px solid;
+  border-radius: 6px;
+
+  &:checked {
+    border: 1px solid #001f3f;
+    background-color: #001f3f;
+  }
+
+  &:not(checked) {
+    border: 1px solid gray;
+  }
+}
+
+.new-btnCompose {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  color: #4d65b4;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+.new-btnCompose>i {
+  padding-top: 2px;
+}
+
+.new-btnCompose:hover {
+  background-color: #4d65b4;
+  color: white;
+  border-radius: 8px;
 }
