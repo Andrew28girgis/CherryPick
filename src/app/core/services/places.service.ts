@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +60,11 @@ export class PlacesService {
       IsCC,
       OrganizaitonsId ,
     };
+    return this.http.post<any>(apiUrl, body);
+  }
+
+  public GenerateContext(body: GenerateContextDTO) {
+    const apiUrl = `${environment.api}/PromptHub/GenerateContext`;
     return this.http.post<any>(apiUrl, body);
   }
 

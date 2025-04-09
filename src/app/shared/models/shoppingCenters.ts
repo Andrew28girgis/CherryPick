@@ -5,20 +5,51 @@ export interface Center {
     CenterAddress: string
     CenterCity: string
     CenterState: string
-    Neighbourhood: string
+    AnchorGLA_SF?: number
+    CenterCounty: string
+    CenterRBA_GLA?: number
+    LandArea_SF?: number
     Latitude: number
     Longitude: number
-    Deleted?: boolean
+    NumberOfParkingSpaces?: number
+    NumberOfPropertiesInCenter?: number
+    PercentLeased?: number
+    SmallestSpaceAvailable?: number
+    SubmarketCluster: string
+    SubmarketName: string
+    TotalAvailableSpace_SF?: number
+    YearBuilt?: number
+    YearRenovated?: number
+    NumberOfStores?: number
+    SignageImage: string
     MainImage: string
-    Heading: number 
+    ZipCode?: string
+    PlaceKey?: string
+    StreetViewURL: string
+    Description: string
     DocsLink: string
-    Pitch: number
-    StreetLatitude: number
-    StreetLongitude: number
-    MarketSurveyId:number
+    Employees: number
+    HouseholdIncome: number
+    Images: string
+    Notes: string
+    PopulationDensity: number
+    SitePlan: string
+    SiteSelectionReason: string
+    MarketSurveyId: number
+    Deleted: boolean
+    kanbanStageId: number
+    stageName: string
+    kanbanId: number
     ShoppingCenter: ShoppingCenter
-    ParentCommentId: number 
-    stageName:string
+    AnchorTenants?: string
+    AverageWeightedRent?: string
+    MarketName?: string
+    SubletVacantSpace?: number
+    Gallary?: string
+    ZoningCode?: string
+    Suburban?: boolean
+    Neighbourhood?: string
+    isDropdownOpen?: boolean
   }
   export class Comment {
     Id?: number

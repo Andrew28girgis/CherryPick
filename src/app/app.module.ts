@@ -50,10 +50,10 @@ import { MarketSideViewComponent } from './features/tenants/market-survery/marke
 import { MarketMapViewComponent } from './features/tenants/market-survery/market-map-view/market-map-view.component';
 import { MarketCardViewComponent } from './features/tenants/market-survery/market-card-view/market-card-view.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
-import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
-import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
-import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact-email.component';
+import { InboxComponent } from './features/emily/inbox/inbox.component';
+import { EditorModule } from 'primeng/editor';
+import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 
 @NgModule({
   declarations: [
@@ -76,10 +76,9 @@ import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact
     MarketMapViewComponent,
     MarketCardViewComponent, 
     MailsGenerateOrSendComponent,
-    MutipleEmailComponent,
-    BreadcrumbComponent,
-    EmailMulipleNewComponent,
-    EmilyContactEmailComponent
+    BreadcrumbComponent, 
+    InboxComponent,
+    NewMulipleEmailComponent
   ],
   imports: [
     BrowserModule,
@@ -106,6 +105,7 @@ import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact
     StepperModule,
     NgbNavModule,
     SelectButtonModule,
+    EditorModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

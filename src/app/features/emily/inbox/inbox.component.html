@@ -81,21 +81,22 @@
                     [ngClass]="{ active: selectedFilter === 'inbox' }"
                     (click)="filterEmails('inbox')"
                   >
-                    <i class="fa-solid fa-reply me-1"></i> Inbox
+                    <i class="fa-solid fa-share me-1"></i> Inbox
                   </div>
                   <div
                     class="filter-button"
                     [ngClass]="{ active: selectedFilter === 'outbox' }"
                     (click)="filterEmails('outbox')"
                   >
-                    <i class="fa-solid fa-share me-1"></i> Outbox
+                    <i class="fa-solid fa-reply me-1"></i> Outbox
                   </div>
                   <div
                     class="filter-button"
                     [ngClass]="{ active: selectedFilter === 'sent' }"
                     (click)="filterEmails('sent')"
                   >
-                    <i class="fa-solid fa-envelope-circle-check me-1"></i>
+                  <i class="fa-solid fa-reply me-1" style="color: green;"></i>
+                  <!-- <i class="fa-solid fa-reply me-1"></i> -->
                     Sent
                   </div>
                 </div>
@@ -262,14 +263,46 @@
   <div class="modal-content">
     <div class="modal-body p-0">
       <div class="row m-0 p-2 d-flex justify-content-center">
-        <div class="d-flex gap-3 selectedOptionDiv">
-          <app-email-muliple-new
-            [ComposeCampaignId]="campaignId"
-            [ComposeOrgId]="selectedMicro"
-            [ComposeContactId]="selectedContact?.ContactId ?? 0"
-          >
-          </app-email-muliple-new>
+        <div class="d-flex justify-content-between">
+          <h5>New Message</h5>
+          <button class="new-btn">Launch Email</button>
+
         </div>
+        <div class="p-3">
+          <div class="d-flex pb-3 align-items-center">
+            <label for="subject" class="IsCC_checkbox me-2">Subject: </label>
+            <input
+              type="text"
+              [(ngModel)]="emailSubject"
+              class="input_checkbox form-control w-50"
+              name="subject"
+              id="subject"
+              placeholder="Subject"
+            />
+          </div>
+          <div class="gap-3">
+            <div class="checkbox-section d-flex align-items-center">
+              <input
+                type="checkbox"
+                name="includinglanding"
+                id="includinglanding"
+                class="form-check-input m-0"
+              />
+              <label for="includinglanding" class="ms-2 IsCC_checkbox"
+                >Is including landing page</label
+              >
+            </div>
+          </div>
+        </div>
+        <p-editor
+          [(ngModel)]="emailBodyResponse"
+          formControlName="body"
+          [style]="{ height: '250px' }"
+        >
+        </p-editor>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button type="button" class="m-3 buttonSave">Send</button>
       </div>
     </div>
   </div>

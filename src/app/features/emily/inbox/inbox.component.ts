@@ -14,13 +14,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { EditorModule } from 'primeng/editor';
 
 @Component({
-  selector: 'app-emily-contact-email',
-  templateUrl: './emily-contact-email.component.html',
-  styleUrls: ['./emily-contact-email.component.css'],
+  selector: 'app-inbox',
+  templateUrl: './inbox.component.html',
+  styleUrls: ['./inbox.component.css'],
 })
-export class EmilyContactEmailComponent implements OnInit {
+export class InboxComponent implements OnInit {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];
   Stages: Stages[] = [];
@@ -38,7 +39,7 @@ export class EmilyContactEmailComponent implements OnInit {
   organization: any = {};
   contacts: Contact[] = [];
   emails: EmailInfo[] = [];
-  isScrolling = false; 
+  isScrolling = false;
   filteredEmails: Mail[] = [];
   isDropdownVisible: boolean = false; // Controls the visibility of the dropdown
   selectedFilter: string = 'all'; // Default selected filter
@@ -46,7 +47,8 @@ export class EmilyContactEmailComponent implements OnInit {
   selectedMicro: any;
   selected: any = null;
   campaignId: any;
-
+  emailBodyResponse: any;
+  emailSubject: any;
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
@@ -62,7 +64,7 @@ export class EmilyContactEmailComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const buyboxId = params.get('buyBoxId');
       this.campaignId = params.get('campaignId');
-      
+
       if (buyboxId) {
         this.buyBoxId = +buyboxId;
       }
@@ -186,9 +188,6 @@ export class EmilyContactEmailComponent implements OnInit {
     });
   }
   getEmailsForContact(contact: Contact): void {
- 
-      
-      
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact;
       this.emailsSentContact = [];
@@ -263,9 +262,11 @@ export class EmilyContactEmailComponent implements OnInit {
       (contact.EmailStats[0].Outbox || 0)
     );
   }
-  openCompoase(modal: any, ) {
+  openCompoase(modal: any) {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
+    this.GetContactShoppingCenters();
   }
+
   openmodel(modal: any, body: any, contactId: any) {
     this.bodyemail = body;
     this.contactIdemail = contactId;
@@ -334,6 +335,19 @@ export class EmilyContactEmailComponent implements OnInit {
       const dateA = new Date(a.Date).getTime();
       const dateB = new Date(b.Date).getTime();
       return dateB - dateA;
+    });
+  }
+
+  GetContactShoppingCenters(): void {
+    const body: any = {
+      Name: 'GetShoppingCentersForContact',
+      MainEntity: null,
+      Params: {},
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        console.log(data.json);
+      },
     });
   }
 }
