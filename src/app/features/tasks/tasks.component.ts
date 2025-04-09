@@ -317,7 +317,7 @@ export class TasksComponent implements OnInit, OnDestroy {
             organizations: organizations,
           }
           this.emilyService.updateCheckList(emilyObject)
-          this.router.navigate(["/MutipleEmail"])
+          this.router.navigate(["/MutipleEmail" , campaignId])
         }
         this.isLoading = false // Hide skeleton
              

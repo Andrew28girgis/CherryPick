@@ -18,6 +18,7 @@ import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/ema
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
 import { CampaignManagerComponent } from './features/campaign/campaign-manager/campaign-manager.component';
+import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -107,7 +108,7 @@ const routes: Routes = [
   },
   {
     path: 'MutipleEmail/:campaignId',
-    component: EmailMulipleNewComponent,
+    component: NewMulipleEmailComponent,
     canActivate: [TenantOnlyGuard],
   },
   // {

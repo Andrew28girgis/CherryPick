@@ -54,6 +54,7 @@ import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/ema
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
+import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.c
     MailsGenerateOrSendComponent,
     MutipleEmailComponent,
     BreadcrumbComponent,
+    NewMulipleEmailComponent,
   ],
   imports: [
     BrowserModule,
