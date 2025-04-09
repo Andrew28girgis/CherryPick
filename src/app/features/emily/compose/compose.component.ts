@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { EditorModule } from 'primeng/editor';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-compose',
@@ -18,14 +19,23 @@ import { EditorModule } from 'primeng/editor';
     RouterModule,
   ],
   templateUrl: './compose.component.html',
-  styleUrl: './compose.component.css'
+  styleUrl: './compose.component.css',
 })
 export class ComposeComponent {
   formGroup!: FormGroup;
   emailSubject: string = '';
   emailBodyResponse: any;
-  @Input() ComposeCampaignId !:number ;
-  @Input() ComposeOrgId !:number;
-  @Input() ComposeContactId !:number
-  
+  @Input() ComposeCampaignId!: number;
+  @Input() ComposeOrgId!: number;
+  @Input() ComposeContactId!: number;
+
+  constructor(
+    public spinner: NgxSpinnerService,
+    private PlacesService: PlacesService,
+    private modalService: NgbModal,
+    private route: ActivatedRoute,
+    private _location: Location
+  ) {}
+
+  ngOnInit() {}
 }
