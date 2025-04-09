@@ -174,5 +174,13 @@
         </li>
       </ul>
     </div>
+          <!-- Toggle button for mobile -->
+  <button
+  class="navbar-toggler d-lg-none"
+  type="button"
+  (click)="toggleNavbar($event)"
+>
+  <i class="fa-solid" [ngClass]="isNavbarOpen ? 'fa-times' : 'fa-bars'"></i>
+</button>
   </div>
 </nav>

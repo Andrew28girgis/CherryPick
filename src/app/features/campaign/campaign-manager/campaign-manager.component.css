@@ -547,6 +547,9 @@
 
 /* Mobile Styles */
 @media (max-width: 767px) {
+  .toggle-cont{
+    width: 100%;
+  }
   .view-toggle {
     display: none;
   }
