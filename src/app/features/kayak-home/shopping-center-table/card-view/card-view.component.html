@@ -46,7 +46,7 @@
       </div>
     </div>
   
-  <ng-container *ngFor="let shopping of filteredCenters">
+  <ng-container *ngFor="let shopping of filteredCenters | slice: first:(first + rows)">
     <div class="card-window cursor col-md-4 col-sm-4 col-12">
       <div class="cardResponsive">
         <a

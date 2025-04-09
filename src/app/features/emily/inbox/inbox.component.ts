@@ -15,6 +15,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { EditorModule } from 'primeng/editor';
+import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
+import { debounceTime } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-inbox',
@@ -47,20 +50,27 @@ export class InboxComponent implements OnInit {
   selectedMicro: any;
   selected: any = null;
   campaignId: any;
-  emailBodyResponse: any;
-  emailSubject: any;
+  emailBody: string = '';
+  emailSubject: string = '';
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
+
+  contactId!: any;
+  BatchGuid!: string;
+  inputChanged: Subject<void> = new Subject<void>();
+
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private _location: Location
-  ) {}
+  ) { }
 
   ngOnInit() {
+    this.contactId = localStorage.getItem('contactId');
+
     this.route.paramMap.subscribe((params) => {
       const buyboxId = params.get('buyBoxId');
       this.campaignId = params.get('campaignId');
@@ -74,6 +84,14 @@ export class InboxComponent implements OnInit {
       }
     });
     this.loadInitialData();
+    const guid = crypto.randomUUID();
+    this.BatchGuid = guid;
+
+    this.inputChanged.pipe(
+      debounceTime(300)
+    ).subscribe(() => {
+      this.onInputChange();
+    });
   }
 
   toggleDropdown() {
@@ -108,7 +126,7 @@ export class InboxComponent implements OnInit {
           }
         }
       })
-      .catch((error) => {});
+      .catch((error) => { });
   }
 
   onMicroDealChange(event: any): void {
@@ -135,7 +153,7 @@ export class InboxComponent implements OnInit {
       next: (data) => {
         this.BuyBoxMicroDeals = data.json;
 
-        console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
+        // console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
 
         this.contacts = [];
         const microDeal = this.BuyBoxMicroDeals.find(
@@ -263,8 +281,13 @@ export class InboxComponent implements OnInit {
     );
   }
   openCompoase(modal: any) {
-    this.modalService.open(modal, { size: 'xl', backdrop: true });
+    this.listcenterName = [];
+    this.emailSubject = '';
+    this.emailBody = '';
+    this.ContextEmail ='';
+    this.showGenerateSection = false;
     this.GetContactShoppingCenters();
+    this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 
   openmodel(modal: any, body: any, contactId: any) {
@@ -276,10 +299,10 @@ export class InboxComponent implements OnInit {
     return direction === 2
       ? 'fa-envelope-circle-check send'
       : direction === -1
-      ? 'fa-share outbox'
-      : direction === 1
-      ? 'fa-reply inbox'
-      : '';
+        ? 'fa-share outbox'
+        : direction === 1
+          ? 'fa-reply inbox'
+          : '';
   }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
@@ -338,6 +361,14 @@ export class InboxComponent implements OnInit {
     });
   }
 
+  GetShoppingCenters: any[] = [];
+  ResponseContextEmail: any;
+  GenrateEmail: any;
+  ContextEmail: any;
+  listcenterName: string[] = [];
+  showGenerateSection: boolean = false;
+  isEmailBodyEmpty: boolean = true;
+
   GetContactShoppingCenters(): void {
     const body: any = {
       Name: 'GetShoppingCentersForContact',
@@ -346,8 +377,161 @@ export class InboxComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        console.log(data.json);
+        this.GetShoppingCenters = data.json;
       },
     });
+  }
+
+  onCheckboxChange(event: any, item: any) {
+    this.showGenerateSection = true;
+    if (event.target.checked) {
+      if (!this.listcenterName.includes(item.centerName)) {
+        this.listcenterName.push(item.centerName);
+      }
+    } else {
+      const index = this.listcenterName.indexOf(item.centerName);
+      if (index > -1) {
+        this.listcenterName.splice(index, 1);
+      }
+    }
+    this.showGenerateSection = this.listcenterName.length > 0;
+  }
+
+  async PutGenerateContext(): Promise<void> {
+    this.ResponseContextEmail = {};
+
+    const ContactName = `${this.selectedContact?.Firstname ?? ''} ${this.selectedContact?.Lastname ?? ''}`.trim();
+    const ContantID = Number(this.selectedContact?.ContactId);
+    const ContantShoppingCenter = this.listcenterName;
+
+    this.spinner.show();
+    const body: GenerateContextDTO = {
+      ContactId: this.contactId,
+      BuyBoxId: this.buyBoxId,
+      CampaignId: this.campaignId,
+      AddMinMaxSize: true,
+      AddCompetitors: true,
+      AddComplementaries: true,
+      AddBuyBoxManageOrgDesc: true,
+      AddSpecificBuyBoxDesc: true,
+      AddBuyBoxDesc: true,
+      AddLandLordPage: true,
+      IsCC: true,
+      GetContactManagers: [{
+        ContactId: ContantID,
+        ContactName: ContactName,
+        ShoppingCentersName: ContantShoppingCenter
+      }],
+      OrganizationId: this.orgId,
+    };
+
+    this.PlacesService.GenerateContext(body).subscribe({
+      next: (data) => {
+        this.ResponseContextEmail = data;
+        this.ContextEmail = this.ResponseContextEmail.context
+        this.ContextEmail = this.ContextEmail.replace(/\n/g, '<br>');
+        this.showGenerateSection = true;
+        this.spinner.hide();
+      },
+    });
+  }
+
+  async PutComposeEmail(): Promise<void> {
+    this.spinner.show();
+    const body: any = {
+      Name: 'ComposeEmail',
+      MainEntity: null,
+      Params: {
+        BuyBoxId: this.buyBoxId,
+        CampaignId: this.campaignId,
+        RecieverId: [Number(this.selectedContact?.ContactId)].join(','),
+        Subject: this.emailSubject,
+        Body: this.emailBody,
+      },
+      Json: null,
+    };
+    
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.GenrateEmail = data.json;
+        this.spinner.hide();
+        this.showGenerateSection = false;
+        this.modalService.dismissAll();
+        this.listcenterName = [];
+        this.emailSubject = '';
+        this.emailBody = '';
+        this.ContextEmail ='';
+        this.showToast('Send Success');
+      },
+    });
+  }
+
+  async PutMailsDraft(): Promise<void> {
+    this.PutGenerateContext();
+
+    this.spinner.show();
+    const body: any = {
+      Name: 'PutMailsDraft',
+      MainEntity: null,
+      Params: {
+        BuyBoxId: this.buyBoxId,
+        ContactId: this.contactId,
+        PromptId: 21,
+        IsCC: true,
+        OrganizationId: this.orgId,
+        context: this.ContextEmail,
+        BatchGuid: this.BatchGuid,
+        CampaignId: this.campaignId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.spinner.hide();
+        this.showGenerateSection = false;
+        this.modalService.dismissAll();
+        this.listcenterName = [];
+        this.emailSubject = '';
+        this.emailBody = '';
+        this.ContextEmail ='';
+       this.showToast('Generate Success');
+      }
+    });
+  }
+
+  Send(showGenerate: string) {
+    if (this.emailSubject || this.ContextEmail || this.emailBody) {
+      const ToggleGenerate = showGenerate;
+      if (ToggleGenerate == 'Generate') {
+        this.PutMailsDraft();
+        // console.log('Generate');
+      } else {
+        this.PutComposeEmail();
+        // console.log('Send');
+      }
+    } else {
+      alert('Please write the Email first then click send');
+    }
+  }
+
+  onInputChange(): void {
+    const subjectEmpty = !this.emailSubject || this.emailSubject.trim() === '';
+    const bodyTrimmed = (this.emailBody || '').trim();
+    this.isEmailBodyEmpty = (bodyTrimmed === '' || bodyTrimmed === '<p></p>');
+
+    if (!subjectEmpty || !this.isEmailBodyEmpty) {
+      this.showGenerateSection = false;
+    }
+  }
+
+  showToast(message: string) {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage!.innerText = message;
+    toast!.classList.add('show');
+    setTimeout(() => {
+      toast!.classList.remove('show');
+    }, 3000);
   }
 }
