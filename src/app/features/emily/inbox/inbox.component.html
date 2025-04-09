@@ -16,12 +16,21 @@
               <i class="fa-solid fa-arrow-left"></i>
             </button> -->
             <div class="org-data ms-2">
-              <img [src]="
+              <img
+                [src]="
                   'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
                   orgId
-                " width="30" height="30" style="border-radius: 50%" />
+                "
+                width="30"
+                height="30"
+                style="border-radius: 50%"
+              />
 
-              <select class="micro-deals" [(ngModel)]="selectedMicro" (change)="onMicroDealChange($event)">
+              <select
+                class="micro-deals"
+                [(ngModel)]="selectedMicro"
+                (change)="onMicroDealChange($event)"
+              >
                 <ng-container *ngFor="let bb of BuyBoxMicroDeals">
                   <option [value]="bb.OrganizationId">
                     {{ bb.OrganizationName }}
@@ -34,8 +43,11 @@
           <div class="w-100 d-flex flex-column" style="position: relative">
             <div class="w-100 ms-2 mailbox-header">
               <div class="d-flex align-items-center gap-2">
-                <div class="dropdownall d-flex align-items-center justify-content-center" style="flex: 1"
-                  (click)="toggleDropdown()">
+                <div
+                  class="dropdownall d-flex align-items-center justify-content-center"
+                  style="flex: 1"
+                  (click)="toggleDropdown()"
+                >
                   <span class="all">{{ selectedFilter | uppercase }}</span>
                   <i class="fa-solid fa-chevron-down"></i>
                 </div>
@@ -63,20 +75,32 @@
             <div class="dropdown-content" [class.show]="isDropdownVisible">
               <div>
                 <div class="email-filters d-flex flex-column">
-                  <div class="filter-button" [ngClass]="{ active: selectedFilter === 'all' }"
-                    (click)="filterEmails('all')">
+                  <div
+                    class="filter-button"
+                    [ngClass]="{ active: selectedFilter === 'all' }"
+                    (click)="filterEmails('all')"
+                  >
                     <i class="fa-solid fa-envelope me-1"></i> All
                   </div>
-                  <div class="filter-button" [ngClass]="{ active: selectedFilter === 'inbox' }"
-                    (click)="filterEmails('inbox')">
+                  <div
+                    class="filter-button"
+                    [ngClass]="{ active: selectedFilter === 'inbox' }"
+                    (click)="filterEmails('inbox')"
+                  >
                     <i class="fa-solid fa-reply me-1"></i> Inbox
                   </div>
-                  <div class="filter-button" [ngClass]="{ active: selectedFilter === 'outbox' }"
-                    (click)="filterEmails('outbox')">
+                  <div
+                    class="filter-button"
+                    [ngClass]="{ active: selectedFilter === 'outbox' }"
+                    (click)="filterEmails('outbox')"
+                  >
                     <i class="fa-solid fa-share me-1"></i> Outbox
                   </div>
-                  <div class="filter-button" [ngClass]="{ active: selectedFilter === 'sent' }"
-                    (click)="filterEmails('sent')">
+                  <div
+                    class="filter-button"
+                    [ngClass]="{ active: selectedFilter === 'sent' }"
+                    (click)="filterEmails('sent')"
+                  >
                     <i class="fa-solid fa-envelope-circle-check me-1"></i>
                     Sent
                   </div>
@@ -96,22 +120,38 @@
     <div class="row m-0 p-0">
       <!-- Contacts list - always visible -->
       <div class="col-lg-3 p-0 m-0">
-        <div class="card" style="border: none; border-radius: 0; min-height: 100vh">
-          <div class="card-body" style="padding: 0; border-right: 1px solid #e2e4e9">
+        <div
+          class="card"
+          style="border: none; border-radius: 0; min-height: 100vh"
+        >
+          <div
+            class="card-body"
+            style="padding: 0; border-right: 1px solid #e2e4e9"
+          >
             <ul style="overflow-y: auto; max-height: 63vh; padding: 0">
-              <li class="contact-list" *ngFor="let contact of contacts" (click)="getEmailsForContact(contact)"
+              <li
+                class="contact-list"
+                *ngFor="let contact of contacts"
+                (click)="getEmailsForContact(contact)"
                 [ngClass]="{
                   'selected-contact':
                     contact.ContactId === selectedContact?.ContactId
-                }">
+                }"
+              >
                 <div class="d-flex justify-content-between w-100">
                   <span class="namecontact" id="{{ contact.ContactId }}">
                     {{ contact.Firstname }} {{ contact.Lastname }}
                   </span>
-                  <span style="color: #4d65b4; font-weight: 600" *ngIf="getTotalEmails(contact) > 0">
+                  <span
+                    style="color: #4d65b4; font-weight: 600"
+                    *ngIf="getTotalEmails(contact) > 0"
+                  >
                     {{ getTotalEmails(contact) }}
                   </span>
-                  <button class="new-btnCompose" (click)="openCompoase(openCompose)">
+                  <button
+                    class="new-btnCompose"
+                    (click)="openCompoase(openCompose)"
+                  >
                     Compose
                     <i class="fa-solid fa-arrow-right"></i>
                   </button>
@@ -127,23 +167,34 @@
 
       <!-- Email list - shown when no email is selected -->
       <div class="col-lg-9 p-0 mb-3" *ngIf="!selected">
-        <div class="card" style="
+        <div
+          class="card"
+          style="
             border: none;
             min-height: 80vh;
             border-radius: 0;
             overflow-y: auto;
-          ">
+          "
+        >
           <div class="card-bodyy" style="max-height: 74vh; overflow-y: auto">
             <div *ngIf="selectedContact">
               <div class="email-list">
-                <div class="single-mail" style="cursor: pointer" *ngFor="let email of filteredEmails"
-                  (click)="openEmail(email)" [ngClass]="{
+                <div
+                  class="single-mail"
+                  style="cursor: pointer"
+                  *ngFor="let email of filteredEmails"
+                  (click)="openEmail(email)"
+                  [ngClass]="{
                     'selected-email': email.id === selectedEmail?.ID
-                  }">
+                  }"
+                >
                   <strong>
-                    <i [ngClass]="
+                    <i
+                      [ngClass]="
                         'fa-solid ' + getDirectionIcon(email.Direction)
-                      " class="me-2"></i>
+                      "
+                      class="me-2"
+                    ></i>
                     <span class="subject"> {{ email.Subject }}</span>
                   </strong>
                   <p class="date">{{ email.Date | date : "medium" }}</p>
@@ -162,7 +213,10 @@
 
       <!-- Email body - shown when an email is selected -->
       <div class="col-lg-9 p-0 m-0" id="emailDetails" *ngIf="selected">
-        <div class="email-details-body" style="overflow-y: auto; min-height: 91vh">
+        <div
+          class="email-details-body"
+          style="overflow-y: auto; min-height: 91vh"
+        >
           <div class="card-body" style="min-height: 77vh; max-height: 77vh">
             <!-- Back button to return to email list -->
             <button class="back" (click)="goBackk()">
@@ -177,13 +231,17 @@
             </p>
           </div>
           <div class="d-flex justify-content-end w-100">
-            <button class="replay" *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 1" (click)="
+            <button
+              class="replay"
+              *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 1"
+              (click)="
                 openmodel(
                   openreply,
                   selectedEmail?.Body,
                   selectedContact?.ContactId
                 )
-              ">
+              "
+            >
               <img [src]="'../../../assets/Images/Icons/send.png'" />
               Reply
             </button>
@@ -199,8 +257,13 @@
     <div class="modal-body p-0">
       <div class="row m-0 p-2 d-flex justify-content-center">
         <div class="d-flex gap-3 selectedOptionDiv">
-          <app-emily [buyBoxIdReply]="buyBoxId" [orgIdReply]="orgId" [emailBodyReply]="selectedEmail?.Body"
-            [selectedContactContactId]="selectedContact" [modal]="modal">
+          <app-emily
+            [buyBoxIdReply]="buyBoxId"
+            [orgIdReply]="orgId"
+            [emailBodyReply]="selectedEmail?.Body"
+            [selectedContactContactId]="selectedContact"
+            [modal]="modal"
+          >
           </app-emily>
         </div>
       </div>
@@ -214,28 +277,57 @@
       <div class="row m-0 p-2 d-flex justify-content-center">
         <div class="d-flex justify-content-between">
           <h5>New Message</h5>
-          <button class="new-btn" (click)="PutGenerateContext()"
-            *ngIf="(!emailSubject || emailSubject.trim() === '') && isEmailBodyEmpty">Launch
-            Email</button>
+          <button
+            class="new-btn"
+            (click)="PutGenerateContext()"
+            *ngIf="
+              (!emailSubject || emailSubject.trim() === '') && isEmailBodyEmpty
+            "
+          >
+            Launch Email
+          </button>
         </div>
         <div class="p-3">
-          <div class="d-flex pb-3 align-items-center gap-3"
-            *ngIf="(!emailSubject || emailSubject.trim() === '') && isEmailBodyEmpty">
-            <label for="subject" class="IsCC_checkbox me-2">ShoppingCenters: </label>
+          <div
+            class="d-flex pb-3 align-items-center gap-3"
+            *ngIf="
+              (!emailSubject || emailSubject.trim() === '') && isEmailBodyEmpty
+            "
+          >
+            <label for="subject" class="IsCC_checkbox me-2"
+              >ShoppingCenters:
+            </label>
             <ng-container *ngFor="let item of GetShoppingCenters">
               <div class="d-flex gap-1">
-                <input type="checkbox" [id]="'GetShoppingCenters' + item.id" class="form-check-input me-2 mb-2"
-                  (change)="onCheckboxChange($event, item)" />
-                <label [for]="'GetShoppingCenters' + item.id" class="IsCC_checkbox me-2">
+                <input
+                  type="checkbox"
+                  [id]="'GetShoppingCenters' + item.id"
+                  class="form-check-input me-2 mb-2"
+                  (change)="onCheckboxChange($event, item)"
+                />
+                <label
+                  [for]="'GetShoppingCenters' + item.id"
+                  class="IsCC_checkbox me-2"
+                >
                   {{ item.centerName }}
                 </label>
               </div>
             </ng-container>
           </div>
-          <div class="d-flex pb-3 align-items-center" *ngIf="!showGenerateSection">
+          <div
+            class="d-flex pb-3 align-items-center"
+            *ngIf="!showGenerateSection"
+          >
             <label for="subject" class="IsCC_checkbox me-2">Subject: </label>
-            <input type="text" (ngModelChange)="onInputChange()" [(ngModel)]="emailSubject"
-              class="input_checkbox form-control w-50" name="subject" id="subject" placeholder="Subject" />
+            <input
+              type="text"
+              (ngModelChange)="onInputChange()"
+              [(ngModel)]="emailSubject"
+              class="input_checkbox form-control w-50"
+              name="subject"
+              id="subject"
+              placeholder="Subject"
+            />
           </div>
           <!-- <div class="gap-3">
             <div class="checkbox-section d-flex align-items-center">
@@ -252,7 +344,11 @@
           </div> -->
         </div>
         <div *ngIf="!showGenerateSection">
-          <p-editor [(ngModel)]="emailBody" [style]="{ height: '350px' }"   (keyup)="onInputChange()">
+          <p-editor
+            [(ngModel)]="emailBody"
+            [style]="{ height: '350px' }"
+            (keyup)="onInputChange()"
+          >
           </p-editor>
         </div>
         <div *ngIf="showGenerateSection">
@@ -261,8 +357,12 @@
         </div>
       </div>
       <div class="d-flex justify-content-end">
-        <button type="button" class="m-3 buttonSave" (click)="Send(showGenerateSection ? 'Generate' : 'Send')">
-          {{ showGenerateSection ? 'Generate' : 'Send' }}
+        <button
+          type="button"
+          class="m-3 buttonSave"
+          (click)="Send(showGenerateSection ? 'Generate' : 'Send')"
+        >
+          {{ showGenerateSection ? "Generate" : "Send" }}
         </button>
       </div>
     </div>
