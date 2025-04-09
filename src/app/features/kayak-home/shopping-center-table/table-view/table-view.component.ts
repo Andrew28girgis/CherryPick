@@ -33,8 +33,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
-  filteredCenters: Center[] = []; // This will contain the filtered shopping centers
-  searchQuery: string = ''; // This will hold the search query from the input
+  filteredCenters: Center[] = []; 
+  searchQuery: string = ''; 
   selectedId: number | null = null;
   placesRepresentative: boolean | undefined;
   StreetViewOnePlace!: boolean;
@@ -105,7 +105,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
       this.stateService.setShoppingCenters(this.shoppingCenters);
       
-      this.filteredCenters = this.shoppingCenters; // Initially set filteredCenters to all centers
+      this.filteredCenters = this.shoppingCenters; 
       this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
@@ -122,21 +122,15 @@ export class TableViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Filter shopping centers based on search query
   filterCenters() {
     if (this.searchQuery.trim()) {
       this.filteredCenters = this.shoppingCenters.filter((center) =>
         center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.filteredCenters = this.shoppingCenters; // Show all centers if search query is empty
+      this.filteredCenters = this.shoppingCenters;
     }
   }
-
-  get currentShoppingCenters() {
-    return this.filteredCenters; // Use filtered centers here
-  }
-
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
       // Hide any spinner

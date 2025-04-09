@@ -31,8 +31,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   selectedOption: number = 3;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
-  filteredCenters: Center[] = []; // This will contain the filtered shopping centers
-  searchQuery: string = ''; // This will hold the search query from the input
+  filteredCenters: Center[] = []; 
+  searchQuery: string = ''; 
   selectedIdCard: number | null = null;
   placesRepresentative: boolean | undefined;
   currentView: any;
@@ -64,10 +64,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.first = event.first;
     this.rows = event.rows;
   }
-  // Variable to hold the filtered list of shopping centers
-  get currentShoppingCenters() {
-    return this.filteredCenters.slice(this.first, this.first + this.rows);
-  }
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -92,7 +88,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.stateService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
-        this.filteredCenters = centers; // Initially set filteredCenters to all centers
+        this.filteredCenters = centers; 
       })
     );
 
@@ -119,7 +115,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
       this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
       this.stateService.setShoppingCenters(this.shoppingCenters);
-      this.filteredCenters = this.shoppingCenters; // Initialize the filteredCenters with the full list
+      this.filteredCenters = this.shoppingCenters; 
       this.totalRecords = this.shoppingCenters.length;
 
       this.buyboxCategories = await this.viewManager.getBuyBoxCategories(this.BuyBoxId);
@@ -143,10 +139,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
         center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.filteredCenters = this.shoppingCenters; // Show all centers if search query is empty
+      this.filteredCenters = this.shoppingCenters; 
     }
 
-    this.totalRecords = this.filteredCenters.length; // Update the total record count after filtering
+    this.totalRecords = this.filteredCenters.length;
   }
 
   getNeareastCategoryName(categoryId: number): string {
