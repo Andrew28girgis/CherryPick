@@ -32,7 +32,7 @@ import { environment } from 'src/environments/environment';
   styleUrl: './campaign-drawing.component.css',
 })
 export class CampaignDrawingComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
   private destroy$ = new Subject<void>();
 
@@ -48,7 +48,7 @@ export class CampaignDrawingComponent
   ];
   isPrivateCampaign: number = 1;
   campaignName: string = '';
-  @Input() buyBoxId!: number;
+  buyBoxId!: number;
   @Output() onCampaignCreated = new EventEmitter<void>();
   contactId!: number;
 
@@ -78,6 +78,8 @@ export class CampaignDrawingComponent
   polygonSearch: string = '';
   externalPolygons: IPolygon[] = [];
   displayedExternalPolygons: number[] = [];
+  isCollapsed = true;
+  @Input() userBuyBoxes: { id: number; name: string }[] = [];
   private searchSubject: Subject<string> = new Subject<string>();
 
   constructor(
@@ -91,6 +93,11 @@ export class CampaignDrawingComponent
     // private mapDrawingService: MapDrawingService,
     private polygonsControllerService: PolygonsControllerService
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.userBuyBoxes.length > 0) {
+      this.buyBoxId = this.userBuyBoxes[0].id;
+    }
+  }
 
   ngOnInit(): void {
     if (!this.buyBoxId) {
@@ -466,24 +473,53 @@ export class CampaignDrawingComponent
   }
 
   attachPolygonToCampaign(polygonId: number): void {
-    const polygon = this.externalPolygons.find((p) => p.id == polygonId);
-  
-    // this.campaignDrawingService.hideMyPolygons()
-    this.campaignDrawingService.hideShapeFromMap(polygonId);
-    if (polygon) {
-      const coordinates = this.getPolygonCoordinates(polygon);
-      if (coordinates) {
-        this.campaignDrawingService.insertExplorePolygonToMyPolygons(
-          this.map,
-          polygon.id,
-          coordinates,
-          polygon.name
-        );
+    if (this.detectIncludeInSearch(polygonId)) {
+      this.campaignDrawingService.removePolygonWithId(polygonId);
+    } else {
+      const polygon = this.externalPolygons.find((p) => p.id == polygonId);
+
+      // this.campaignDrawingService.hideMyPolygons()
+      this.campaignDrawingService.hideShapeFromMap(polygonId);
+      if (polygon) {
+        const coordinates = this.getPolygonCoordinates(polygon);
+        if (coordinates) {
+          this.campaignDrawingService.updateMapZoom(this.map, coordinates);
+          this.campaignDrawingService.insertExplorePolygonToMyPolygons(
+            this.map,
+            polygon.id,
+            coordinates,
+            polygon.name
+          );
+        }
       }
     }
-    this.externalPolygons = this.externalPolygons.filter(
-      (p) => p.id != polygonId
-    );
+    // this.externalPolygons = this.externalPolygons.filter(
+    //   (p) => p.id != polygonId
+    // );
+  }
+
+  removePolygonWithIndex(index: number): void {
+    this.campaignDrawingService.removePolygonWithIndex(index);
+  }
+
+  detectIncludeInSearch(id: number): boolean {
+    const drawnPolygons = this.campaignDrawingService.getDrawnPolygons;
+    const drawnCircles = this.campaignDrawingService.getDrawnCircles;
+    if (
+      drawnPolygons.find((p) => p.id == id) ||
+      drawnCircles.find((c) => c.id == id)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  get getDrawnPolygons() {
+    return this.campaignDrawingService.getDrawnPolygons;
+  }
+
+  get getDrawnCircles() {
+    return this.campaignDrawingService.getDrawnCircles;
   }
 
   ngOnDestroy(): void {

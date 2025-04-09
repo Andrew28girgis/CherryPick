@@ -285,7 +285,7 @@
 /* Campaign Drawing Component */
 .campaign-drawing-component {
   width: 100%;
-  flex: 1;
+  height: 100%;
 }
 
 /* Empty Campaigns State */

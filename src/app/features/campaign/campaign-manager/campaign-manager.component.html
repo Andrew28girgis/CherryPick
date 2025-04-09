@@ -622,24 +622,9 @@
 
 <ng-template #content let-modal>
   <div class="modal-body">
-    <label for="user-buybox" class="form-label mb-2">Select Tenants</label>
-    <select
-      id="user-buybox"
-      class="form-select mb-3"
-      aria-label="Buybox select"
-      name="userBuybox"
-      [(ngModel)]="selectedBuyBoxId"
-    >
-      <ng-container *ngFor="let buyBox of userBuyBoxes">
-        <option [value]="buyBox.id">
-          {{ buyBox.name }}
-        </option>
-      </ng-container>
-    </select>
-
     <div class="campaign-drawing-component">
       <app-campaign-drawing
-        [buyBoxId]="selectedBuyBoxId"
+        [userBuyBoxes]="userBuyBoxes"
         (onCampaignCreated)="onCampaignCreated()"
       ></app-campaign-drawing>
     </div>

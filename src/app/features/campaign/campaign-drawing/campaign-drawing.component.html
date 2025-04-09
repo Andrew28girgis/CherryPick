@@ -1,5 +1,5 @@
 <div class="h-100 d-flex flex-column">
-  <div class="polygons-options">
+  <!-- <div class="polygons-options">
     <ul class="d-flex align-items-center justify-content-center">
       <li
         *ngFor="let option of polygonsOptions"
@@ -20,69 +20,366 @@
         <span>{{ option.title }}</span>
       </li>
     </ul>
-  </div>
-  <!-- <div *ngIf="selectedPolygonOption != 1" class="row m-0">
-    <div class="col-md-6 col-sm-12 ps-0 buybox-polygons-container">
-      <input
-        *ngIf="selectedPolygonOption == 2"
-        type="text"
-        class="form-control mb-3 search-polygons"
-        name="search-polygons"
-        placeholder="Search with name"
-        [(ngModel)]="polygonSearch"
-        (ngModelChange)="onSearchChange($event)"
-      />
-      <div class="table-container">
-        <table
-          *ngIf="externalPolygons.length > 0; else emptyPolygons"
-          class="table"
-        >
-          <thead class="thead-light">
-            <tr>
-              <th>Name</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody *ngIf="externalPolygons.length > 0">
-            <tr *ngFor="let polygon of externalPolygons; let index = index">
-              <td>
-                {{ polygon.name }}
-              </td>
-              <td class="text-center">
-                <ng-container
-                  *ngIf="
-                    displayedExternalPolygons.includes(polygon.id);
-                    else displayExternal
-                  "
-                >
-                  <button
-                    class="btn btn-secondary me-3"
-                    (click)="toggleDisplayedExternalPolygon(polygon)"
-                  >
-                    Hide
-                  </button>
-                </ng-container>
-                <ng-template #displayExternal>
-                  <button
-                    class="btn btn-primary me-3"
-                    (click)="toggleDisplayedExternalPolygon(polygon)"
-                  >
-                    View
-                  </button>
-                </ng-template>
-                <button class="btn btn-dark">Add to buybox</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="col-md-6 col-sm-12 pe-0 buybox-map-container">
-      <div #mapContainer class="map-container"></div>
-    </div>
   </div> -->
+  <div class="mb-3">
+    <input
+      type="text"
+      class="form-control search-polygons"
+      name="search-polygons"
+      placeholder="Search with name"
+      [(ngModel)]="polygonSearch"
+      (ngModelChange)="onSearchChange($event)"
+    />
+  </div>
 
   <div class="map-wrapper">
+    <div
+      *ngIf="polygonSearch.trim().length > 0"
+      class="dragable-polygons"
+      cdkDragBoundary=".map-wrapper"
+      cdkDrag
+    >
+      <table
+        *ngIf="externalPolygons.length > 0; else emptyPolygons"
+        class="table"
+      >
+        <thead class="thead-light">
+          <tr>
+            <th>Name</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="externalPolygons.length > 0">
+          <tr *ngFor="let polygon of externalPolygons; let index = index">
+            <td>
+              {{ polygon.name }}
+            </td>
+            <td class="text-center">
+              <div class="w-100 d-flex align-items-center gap-2">
+                <button
+                  *ngIf="!detectIncludeInSearch(polygon.id)"
+                  class="w-100 btn"
+                  [ngClass]="{
+                    'btn-primary': !displayedExternalPolygons.includes(
+                      polygon.id
+                    ),
+                    'btn-secondary': displayedExternalPolygons.includes(
+                      polygon.id
+                    )
+                  }"
+                  (click)="toggleDisplayedExternalPolygon(polygon)"
+                >
+                  {{
+                    displayedExternalPolygons.includes(polygon.id)
+                      ? "Hide"
+                      : "View"
+                  }}
+                </button>
+
+                <button
+                  class="w-100 btn"
+                  [ngClass]="{
+                    'btn-danger': detectIncludeInSearch(polygon.id),
+                    'btn-dark': !detectIncludeInSearch(polygon.id)
+                  }"
+                  (click)="attachPolygonToCampaign(polygon.id)"
+                >
+                  {{ detectIncludeInSearch(polygon.id) ? "Remove" : "Add" }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      #mapContainer
+      class="map-container"
+      [ngStyle]="{ width: selectedPolygonOption == 2 ? '50%' : '100%' }"
+    ></div>
+
+    <div *ngIf="selectedPolygonOption == 1">
+      <!-- <div class="exit-draw-mode">
+        <div
+          class="exit-draw-mode-btn"
+          [ngClass]="{ 'start-drawing-btn': !isDrawing }"
+        >
+          <div *ngIf="isDrawing" class="exit-draw-mode-btn-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M9.57 18.82C9.38 18.82 9.19 18.75 9.04 18.6L2.97 12.53C2.68 12.24 2.68 11.76 2.97 11.47L9.04 5.4C9.33 5.11 9.81 5.11 10.1 5.4C10.39 5.69 10.39 6.17 10.1 6.46L4.56 12L10.1 17.54C10.39 17.83 10.39 18.31 10.1 18.6C9.96 18.75 9.76 18.82 9.57 18.82Z"
+              />
+              <path
+                d="M20.5 12.75H3.67C3.26 12.75 2.92 12.41 2.92 12C2.92 11.59 3.26 11.25 3.67 11.25H20.5C20.91 11.25 21.25 11.59 21.25 12C21.25 12.41 20.91 12.75 20.5 12.75Z"
+              />
+            </svg>
+          </div>
+          <span class="exit-draw-mode-title" (click)="switchDrawingMode()">
+            {{ isDrawing ? "Exit Draw Mode" : "Start Drawing" }}</span
+          >
+        </div>
+      </div> -->
+
+      <div *ngIf="isDrawing" class="map-controls-container">
+        <div
+          class="map-control"
+          [ngClass]="{ 'active-map-control': selectedDrawingModeId == 1 }"
+          (click)="startDrawing(1, 'move')"
+        >
+          <div class="map-control-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M14.0402 22.75H9.2502C7.6302 22.75 6.1602 22.12 5.1002 20.96C4.0402 19.81 3.5302 18.29 3.6702 16.68C4.0102 12.58 7.6302 9.25 11.7502 9.25C15.5402 9.25 19.1202 12.29 19.7502 16.02C20.0502 17.8 19.6102 19.48 18.5302 20.76C17.4302 22.04 15.8402 22.75 14.0402 22.75ZM11.7402 10.75C8.3902 10.75 5.4402 13.47 5.1602 16.81C5.0602 18 5.4302 19.11 6.2002 19.95C6.9702 20.79 8.0502 21.25 9.2402 21.25H14.0302C15.3802 21.25 16.5702 20.73 17.3602 19.8C18.1502 18.87 18.4702 17.61 18.2502 16.27C17.7502 13.23 14.8302 10.75 11.7402 10.75Z"
+              />
+              <path
+                d="M10.4702 8.25C8.68022 8.25 7.22021 6.79 7.22021 5C7.22021 3.21 8.68022 1.75 10.4702 1.75C12.2602 1.75 13.7202 3.21 13.7202 5C13.7202 6.79 12.2702 8.25 10.4702 8.25ZM10.4702 3.25C9.51022 3.25 8.72022 4.04 8.72022 5C8.72022 5.96 9.51022 6.75 10.4702 6.75C11.4302 6.75 12.2202 5.96 12.2202 5C12.2202 4.04 11.4402 3.25 10.4702 3.25Z"
+              />
+              <path
+                d="M17.2998 9.44995C15.7798 9.44995 14.5498 8.21995 14.5498 6.69995C14.5498 5.17995 15.7798 3.94995 17.2998 3.94995C18.8198 3.94995 20.0498 5.17995 20.0498 6.69995C20.0498 8.21995 18.8198 9.44995 17.2998 9.44995ZM17.2998 5.44995C16.6098 5.44995 16.0498 6.00995 16.0498 6.69995C16.0498 7.38995 16.6098 7.94995 17.2998 7.94995C17.9898 7.94995 18.5498 7.38995 18.5498 6.69995C18.5498 6.00995 17.9898 5.44995 17.2998 5.44995Z"
+              />
+              <path
+                d="M21 13.45C19.76 13.45 18.75 12.44 18.75 11.2C18.75 9.95995 19.76 8.94995 21 8.94995C22.24 8.94995 23.25 9.95995 23.25 11.2C23.25 12.44 22.24 13.45 21 13.45ZM21 10.45C20.59 10.45 20.25 10.79 20.25 11.2C20.25 11.61 20.59 11.95 21 11.95C21.41 11.95 21.75 11.61 21.75 11.2C21.75 10.79 21.41 10.45 21 10.45Z"
+              />
+              <path
+                d="M3.97021 11.45C2.45021 11.45 1.22021 10.22 1.22021 8.69995C1.22021 7.17995 2.45021 5.94995 3.97021 5.94995C5.49021 5.94995 6.72021 7.17995 6.72021 8.69995C6.72021 10.22 5.49021 11.45 3.97021 11.45ZM3.97021 7.44995C3.28021 7.44995 2.72021 8.00995 2.72021 8.69995C2.72021 9.38995 3.28021 9.94995 3.97021 9.94995C4.66021 9.94995 5.22021 9.38995 5.22021 8.69995C5.22021 8.00995 4.66021 7.44995 3.97021 7.44995Z"
+              />
+            </svg>
+          </div>
+          <span class="map-control-title">Move</span>
+        </div>
+        <div
+          class="map-control"
+          [ngClass]="{ 'active-map-control': selectedDrawingModeId == 2 }"
+          (click)="startDrawing(2, 'circle')"
+        >
+          <div class="map-control-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M16.3702 22.77C16.3602 22.77 16.3602 22.77 16.3502 22.77C15.3402 22.76 14.5002 22.14 14.2002 21.17L12.3502 15.22C12.1002 14.4 12.3102 13.52 12.9202 12.93C13.5202 12.34 14.3902 12.12 15.1902 12.37L21.1502 14.22C22.1102 14.52 22.7402 15.36 22.7502 16.37C22.7602 17.37 22.1502 18.22 21.1902 18.54L19.5602 19.09C19.3302 19.17 19.1502 19.34 19.0802 19.57L18.5202 21.21C18.2102 22.16 17.3702 22.77 16.3702 22.77ZM14.5102 13.77C14.2402 13.77 14.0602 13.92 13.9802 13.99C13.7702 14.2 13.7002 14.49 13.7902 14.78L15.6402 20.73C15.8002 21.24 16.2402 21.26 16.3802 21.27C16.5202 21.27 16.9502 21.23 17.1102 20.74L17.6702 19.1C17.8902 18.43 18.4302 17.9 19.1002 17.67L20.7302 17.12C21.2302 16.96 21.2602 16.52 21.2602 16.39C21.2602 16.26 21.2202 15.82 20.7202 15.66L14.7602 13.81C14.6602 13.78 14.5802 13.77 14.5102 13.77Z"
+              />
+              <path
+                d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 12.41 22.41 12.75 22 12.75C21.59 12.75 21.25 12.41 21.25 12C21.25 6.9 17.1 2.75 12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C12.41 21.25 12.75 21.59 12.75 22C12.75 22.41 12.41 22.75 12 22.75Z"
+              />
+            </svg>
+          </div>
+          <span class="map-control-title">Circle</span>
+        </div>
+        <div
+          class="map-control"
+          [ngClass]="{ 'active-map-control': selectedDrawingModeId == 3 }"
+          (click)="startDrawing(3, 'polygon')"
+        >
+          <div class="map-control-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M10.4299 18.37C10.2799 18.37 10.1399 18.33 10.0099 18.24C9.79991 18.1 9.67991 17.87 9.67991 17.62C9.67991 17.47 9.66991 17.31 9.64991 17.15C9.55991 16.44 9.23991 15.82 8.69991 15.28C8.15991 14.74 7.48991 14.4 6.76991 14.31C6.64991 14.3 6.47991 14.29 6.31991 14.3C6.05991 14.32 5.81991 14.21 5.66991 14C5.51991 13.8 5.47991 13.53 5.55991 13.29C5.70991 12.88 5.92991 12.51 6.18991 12.21L7.72991 10.27C10.3799 6.96 15.7499 2.98 19.6799 1.4C20.5099 1.08 21.3999 1.27 22.0099 1.87C22.6399 2.5 22.8299 3.4 22.4999 4.22C20.9199 8.16 16.9499 13.52 13.6399 16.17L11.6699 17.75C11.2999 18.02 10.9999 18.19 10.6999 18.31C10.6199 18.35 10.5199 18.37 10.4299 18.37ZM7.53991 12.94C8.37991 13.16 9.12991 13.6 9.75991 14.23C10.3899 14.85 10.8099 15.57 11.0199 16.37L12.7099 15.01C15.8499 12.5 19.6199 7.41 21.1099 3.67C21.2599 3.3 21.0499 3.04 20.9499 2.95C20.8799 2.88 20.6199 2.66 20.2199 2.81C16.4999 4.31 11.4099 8.08 8.88991 11.22L7.53991 12.94Z"
+              />
+              <path
+                d="M4.07987 22.75C3.32987 22.75 2.60987 22.45 2.06987 21.91C1.44987 21.29 1.14987 20.43 1.24987 19.55L1.51987 17.09C1.77987 14.65 3.77987 12.84 6.25987 12.79C6.44987 12.78 6.69987 12.79 6.92987 12.81C8.01987 12.95 8.98987 13.44 9.76987 14.22C10.5399 14.99 10.9999 15.91 11.1399 16.94C11.1699 17.16 11.1899 17.4 11.1899 17.61C11.1899 18.93 10.6799 20.16 9.75987 21.09C8.98987 21.85 7.99987 22.32 6.87987 22.46L4.40987 22.73C4.29987 22.74 4.18987 22.75 4.07987 22.75ZM6.44987 14.3C6.40987 14.3 6.35987 14.3 6.31987 14.3C4.80987 14.33 3.20987 15.36 3.00987 17.26L2.73987 19.72C2.68987 20.14 2.83987 20.55 3.12987 20.85C3.41987 21.14 3.82987 21.29 4.23987 21.24L6.69987 20.97C7.46987 20.87 8.15987 20.55 8.67987 20.03C9.31987 19.39 9.67987 18.53 9.67987 17.61C9.67987 17.46 9.66987 17.3 9.64987 17.14C9.55987 16.43 9.23987 15.81 8.69987 15.27C8.15987 14.73 7.48987 14.39 6.76987 14.3C6.68987 14.3 6.56987 14.3 6.44987 14.3Z"
+              />
+              <path
+                d="M14.2398 15.22C13.8298 15.22 13.4898 14.88 13.4898 14.47C13.4898 12.27 11.6998 10.49 9.50977 10.49C9.09977 10.49 8.75977 10.15 8.75977 9.74C8.75977 9.33 9.08977 8.99 9.49977 8.99C12.5198 8.99 14.9798 11.45 14.9798 14.47C14.9898 14.89 14.6498 15.22 14.2398 15.22Z"
+              />
+            </svg>
+          </div>
+          <span class="map-control-title">Polygon</span>
+        </div>
+      </div>
+      <!-- *ngIf="isDrawing && getDrawnList" -->
+      <div *ngIf="isDrawing && getDrawnList" class="launch-campaign">
+        <div
+          class="launch-campaign-btn"
+          (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseExample"
+        >
+          <div class="launch-campaign-btn-icon">
+            
+          </div>
+          <span class="launch-campaign-title"> Manage Campaign</span>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="d-flex gap-2 h-100">
+      <div
+        *ngIf="selectedPolygonOption == 2"
+        class="d-flex flex-column"
+        style="width: 50%"
+      >
+        <input
+          type="text"
+          class="form-control mb-3 search-polygons"
+          name="search-polygons"
+          placeholder="Search with name"
+          [(ngModel)]="polygonSearch"
+          (ngModelChange)="onSearchChange($event)"
+        />
+        <div class="table-container">
+          <table
+            *ngIf="externalPolygons.length > 0; else emptyPolygons"
+            class="table"
+          >
+            <thead class="thead-light">
+              <tr>
+                <th>Name</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="externalPolygons.length > 0">
+              <tr *ngFor="let polygon of externalPolygons; let index = index">
+                <td>
+                  {{ polygon.name }}
+                </td>
+                <td class="text-center">
+                  <ng-container
+                    *ngIf="
+                      displayedExternalPolygons.includes(polygon.id);
+                      else displayExternal
+                    "
+                  >
+                    <button
+                      class="btn btn-secondary me-3"
+                      (click)="toggleDisplayedExternalPolygon(polygon)"
+                    >
+                      Hide
+                    </button>
+                  </ng-container>
+                  <ng-template #displayExternal>
+                    <button
+                      class="btn btn-primary me-3"
+                      (click)="toggleDisplayedExternalPolygon(polygon)"
+                    >
+                      View
+                    </button>
+                  </ng-template>
+                  <button
+                    class="btn btn-dark"
+                    (click)="attachPolygonToCampaign(polygon.id)"
+                  >
+                    Add to campaign
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+    </div> -->
+    <div
+      class="collaped-popup"
+      #collapse="ngbCollapse"
+      [(ngbCollapse)]="isCollapsed"
+    >
+      <div class="card" style="border-radius: 0.5rem">
+        <div class="card-body">
+          <table class="table mb-3">
+            <thead class="thead-light">
+              <tr>
+                <th>Name</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let polygon of getDrawnPolygons; let index = index">
+                <td>
+                  {{ polygon.shape.get("label") ?? "Shape" }}
+                </td>
+                <td class="text-center">
+                  <div class="w-100 d-flex align-items-center gap-2">
+                    <button
+                      class="btn btn-danger"
+                      (click)="removePolygonWithIndex(index)"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngFor="let circle of getDrawnCircles; let index = index">
+                <td>
+                  {{ circle.shape.get("label") ?? "Shape" }}
+                </td>
+                <td class="text-center">
+                  <div class="w-100 d-flex align-items-center gap-2">
+                    <button class="btn btn-danger">Remove</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <label for="user-buybox" class="form-label mb-2"
+            >Select Tenants</label
+          >
+          <select
+            id="user-buybox"
+            class="form-select mb-3"
+            aria-label="Buybox select"
+            name="userBuybox"
+            [(ngModel)]="buyBoxId"
+          >
+            <ng-container *ngFor="let buyBox of userBuyBoxes">
+              <option [value]="buyBox.id">
+                {{ buyBox.name }}
+              </option>
+            </ng-container>
+          </select>
+          <div
+            class="launch-campaign-btn"
+            (click)="openNewCampaignPopup(content)"
+          >
+            <div class="launch-campaign-btn-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
+                />
+                <path
+                  d="M16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                />
+                <path
+                  d="M12 16.75C11.59 16.75 11.25 16.41 11.25 16V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V16C12.75 16.41 12.41 16.75 12 16.75Z"
+                />
+              </svg>
+            </div>
+            <span class="launch-campaign-title">
+              Launch Expansion Campaigns</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="map-wrapper">
     <div class="d-flex gap-2 h-100">
       <div
         *ngIf="selectedPolygonOption == 2"
@@ -295,7 +592,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <ng-template #content let-modal>
@@ -385,7 +682,7 @@
       style="width: 50%"
     />
     <div class="text-center" style="font-size: 1.5rem; font-weight: 700">
-      Your polygons will appear here
+      Your searched polygons will appear here
     </div>
   </div>
 </ng-template>

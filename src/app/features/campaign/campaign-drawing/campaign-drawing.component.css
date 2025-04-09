@@ -70,7 +70,6 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  cursor: pointer;
 }
 
 .launch-campaign-btn {
@@ -82,6 +81,7 @@
   border-radius: 0.5rem;
   border: 1px solid transparent;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }
 
 .launch-campaign-btn-icon {
@@ -244,4 +244,48 @@
 
 .table tbody td {
   border: 1px solid #dee2e6;
+}
+
+.dragable-polygons {
+  width: 30%;
+  height: 75%;
+  border: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  cursor: move;
+  display: inline-flex;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: center;
+  background: #fff;
+  border-radius: 0.5rem;
+  margin-right: 25px;
+  position: absolute;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 10px;
+  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+  overflow: hidden;
+  overflow-y: auto;
+  top: 0.5rem;
+  left: 0.5rem;
+  /* bottom: 0.5rem;
+  left: 0.5rem; */
+}
+
+.dragable-polygons:active {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.collaped-popup {
+  position: absolute;
+  top: 3.5rem;
+  right: 0.5rem;
+  max-width: 30%;
+  max-height: 75%;
+  overflow: hidden;
+  overflow-y: auto;
 }
