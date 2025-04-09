@@ -54,6 +54,7 @@ import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-em
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
+import { EditorModule } from 'primeng/editor';
 
 @NgModule({
   declarations: [
@@ -106,6 +107,7 @@ import { InboxComponent } from './features/emily/inbox/inbox.component';
     StepperModule,
     NgbNavModule,
     SelectButtonModule,
+    EditorModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

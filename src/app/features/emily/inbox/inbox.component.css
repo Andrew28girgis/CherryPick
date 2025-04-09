@@ -47,7 +47,7 @@
   padding: 24px;
 }
 .contact-list {
-   display: flex;
+  display: flex;
   padding: 12px 24px;
   justify-content: space-between;
   align-items: flex-start;
@@ -116,10 +116,10 @@
   background-color: #007bff;
   color: #fff;
 }
-.buttonandname { 
-  padding: 0 0 25px 0; 
+.buttonandname {
+  padding: 0 0 25px 0;
 }
-.mailbox-header { 
+.mailbox-header {
   display: flex;
   padding: 0 12px;
   justify-content: space-between;
@@ -129,7 +129,7 @@
 .single-mail {
   border-bottom: 1px solid #e2e4e9;
   display: flex;
-  padding: 10px  ;
+  padding: 10px;
   align-items: center;
   justify-content: space-between;
 }
@@ -150,11 +150,11 @@
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.07px;
-} 
+}
 .email-details-body {
   background-color: white;
   display: flex;
-  padding: 10px ;
+  padding: 10px;
   flex-direction: column;
   align-items: flex-start;
   gap: 32px;
@@ -211,9 +211,8 @@
   overflow-y: auto;
   scrollbar-width: none; /* For Firefox */
   -ms-overflow-style: none; /* For Internet Explorer */
-  
 }
-.card-body{
+.card-body {
   min-width: -webkit-fill-available;
 }
 .card-body::-webkit-scrollbar {
@@ -315,4 +314,12 @@
 
 .micro-deals option {
   color: black;
+}
+.buttonSave {
+  color: white;
+  background: #001f3f;
+  padding: 5px 10px;
+  border: 1px solid #001f3f;
+  cursor: pointer;
+  border-radius: 6px;
 }

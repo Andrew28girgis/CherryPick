@@ -29,7 +29,7 @@ export class LinkMicrosoftComponent implements OnInit {
   contactId: any;
   RemoveLinked: any;
   MicrosoftLoginResponse: any;
-  url : any;
+  url: any;
 
   constructor(
     public spinner: NgxSpinnerService,
@@ -38,7 +38,7 @@ export class LinkMicrosoftComponent implements OnInit {
     private microsoftLogin: MicrosoftLoginService,
     private microsoftMailsService: MicrosoftMailsService,
     private ngZone: NgZone
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.user = localStorage.getItem('accountMicrosoftLinked') === 'true';
@@ -112,11 +112,14 @@ export class LinkMicrosoftComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        localStorage.setItem('accountMicrosoftLinked', data.json[0].accountMicrosoftLinked);
+        localStorage.setItem(
+          'accountMicrosoftLinked',
+          data.json[0].accountMicrosoftLinked
+        );
         this.ngZone.run(() => {
           this.user = data.json[0].accountMicrosoftLinked;
         });
-        if(this.user === true){
+        if (this.user === true) {
           this.GetContactFolders();
           this.GetContactInfos();
         }
@@ -143,8 +146,7 @@ export class LinkMicrosoftComponent implements OnInit {
           this.GetContactFolders();
         },
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   AcceptToReadReplyEmails(canRead: any): void {
@@ -163,7 +165,7 @@ export class LinkMicrosoftComponent implements OnInit {
           this.spinner.hide();
         },
       });
-    } catch (error) { }
+    } catch (error) {}
   }
 
   openBodyModalContactFolders(modal: any) {
@@ -213,7 +215,7 @@ export class LinkMicrosoftComponent implements OnInit {
       FolderName: displayName,
       IsAdded: IsAdded.target.checked,
     };
-    this.microsoftMailsService.AddFolderToBeRead(payload).subscribe(() => { });
+    this.microsoftMailsService.AddFolderToBeRead(payload).subscribe(() => {});
   }
 
   AddEmailsToBeRead(emailInput: HTMLInputElement) {

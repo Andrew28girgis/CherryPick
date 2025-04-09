@@ -14,6 +14,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { EditorModule } from 'primeng/editor';
 
 @Component({
   selector: 'app-inbox',
@@ -46,7 +47,8 @@ export class InboxComponent implements OnInit {
   selectedMicro: any;
   selected: any = null;
   campaignId: any;
-
+  emailBodyResponse: any;
+  emailSubject:any
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
@@ -333,4 +335,5 @@ export class InboxComponent implements OnInit {
       return dateB - dateA;
     });
   }
+ 
 }
