@@ -35,8 +35,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
-  filteredCenters: Center[] = []; // This will contain the filtered shopping centers
-  searchQuery: string = ''; // This will hold the search query from the input
+  filteredCenters: Center[] = []; 
+  searchQuery: string = ''; 
   selectedId: number | null = null;
   placesRepresentative: boolean | undefined;
   StreetViewOnePlace!: boolean;
@@ -113,7 +113,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
     }
       
-      this.filteredCenters = this.shoppingCenters; // Initially set filteredCenters to all centers
+      this.filteredCenters = this.shoppingCenters; 
       this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
@@ -129,93 +129,16 @@ export class TableViewComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
-  GetKanbanStages(kanbanID: number): void {
-    const body: any = {
-      Name: 'GetKanbanStages',
-      Params: {
-        kanbanid: kanbanID,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        this.KanbanStages = res.json || [];
-        this.cdr.detectChanges();
-      }
-    });
-  }
-  // Toggle dropdown visibility
-toggleDropdown(shoppingCenter: any): void {
-  // Close any open dropdown
-  if (this.activeDropdown && this.activeDropdown !== shoppingCenter) {
-    this.activeDropdown.isDropdownOpen = false;
-  }
-  // Toggle current dropdown
-  shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
-  // Set as active dropdown
-  this.activeDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
-  // If opening this dropdown, load kanban stages if not already loaded
-  if (shoppingCenter.isDropdownOpen && (!this.KanbanStages || this.KanbanStages.length === 0)) {
-    this.GetKanbanStages(shoppingCenter.kanbanId);
-  }
-}
-// Get stage name for the selected ID
-getSelectedStageName(stageId: number): string {
-  if (!this.KanbanStages) return 'Select Stage';
-  const stage = this.KanbanStages.find(s => s.id === stageId);
-  return stage ? stage.stageName : 'Select Stage';
-}
-selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-  // Close the dropdown
-  shoppingCenter.isDropdownOpen = false;
-  this.activeDropdown = null;
-  this.UpdatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter);
-}
-// Update the API method to work with the new dropdown
-UpdatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-  const body: any = {
-    Name: 'UpdatePlaceKanbanStage',
-    Params: {
-      stageid: stageId,
-      marketsurveyid: marketSurveyId,
-    },
-  };
-  
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (res: any) => {
-      // Update local data after successful API call
-      shoppingCenter.kanbanStageId = stageId;
-      shoppingCenter.stageName = this.getSelectedStageName(stageId);
-      this.cdr.detectChanges();
-    }
-    
-  });
-}
-@HostListener('document:click', ['$event'])
-handleDocumentClick(event: MouseEvent): void {
-  // Check if click is outside any dropdown
-  const target = event.target as HTMLElement | null;
-  if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
-    this.activeDropdown.isDropdownOpen = false;
-    this.activeDropdown = null;
-    this.cdr.detectChanges();
-  }
-}
 
-  // Filter shopping centers based on search query
   filterCenters() {
     if (this.searchQuery.trim()) {
       this.filteredCenters = this.shoppingCenters.filter((center) =>
         center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.filteredCenters = this.shoppingCenters; // Show all centers if search query is empty
-    }    
+      this.filteredCenters = this.shoppingCenters;
+    }
   }
-
-  get currentShoppingCenters() {
-    return this.filteredCenters; // Use filtered centers here    
-  }
-
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
       // Hide any spinner
