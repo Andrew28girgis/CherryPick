@@ -274,11 +274,11 @@ export class InboxComponent implements OnInit {
   }
   getDirectionIcon(direction: number): string {
     return direction === 2
-      ? 'fa-envelope-circle-check send'
+      ? 'fa-reply send'
       : direction === -1
-      ? 'fa-share outbox'
+      ? 'fa-reply outbox'
       : direction === 1
-      ? 'fa-reply inbox'
+      ? 'fa-share inbox'
       : '';
   }
   filterEmails(filterType: string): void {
