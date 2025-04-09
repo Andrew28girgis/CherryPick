@@ -20,10 +20,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/app/config.ts",
-              "src/staticwebapp.config.json",
-              "src/manifest.webmanifest"
+              "src/assets"
             ],
             "styles": [
               "node_modules/quill/dist/quill.snow.css",
@@ -38,8 +35,7 @@
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/popper.js/dist/umd/popper.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
             ],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json",
