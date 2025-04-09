@@ -332,8 +332,7 @@
 .tenant-logo {
   width: 90px;
   height: 90px;
-  aspect-ratio: 1/1;
-  margin-right: 15px;
+  border-radius: 120px;
 }
 .btn-share {
   display: flex;
