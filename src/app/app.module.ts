@@ -42,7 +42,6 @@ import { ManagePropertiesComponent } from './features/landlord/manage-properties
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { KayakModule } from './features/kayak-home/kayak.module';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
-import { EmilyUserInboxComponent } from './features/emily/emily-user-inbox/emily-user-inbox.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
 import { MarketTableViewComponent } from './features/tenants/market-survery/market-table-view/market-table-view.component';
@@ -50,10 +49,11 @@ import { SocialMediaViewComponent } from './features/tenants/market-survery/mark
 import { MarketSideViewComponent } from './features/tenants/market-survery/market-side-view/market-side-view.component';
 import { MarketMapViewComponent } from './features/tenants/market-survery/market-map-view/market-map-view.component';
 import { MarketCardViewComponent } from './features/tenants/market-survery/market-card-view/market-card-view.component';
-import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
+import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
+import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact-email.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 
 @NgModule({
@@ -69,20 +69,19 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
     NumberWithCommasPipe,
     ManagePropertiesComponent,
     AddTenantsComponent,
-    EmilyUserInboxComponent,
     SidebarComponent,
-    EmilyUserInboxComponent,
     MarketSurveyComponent,
     MarketTableViewComponent,
     SocialMediaViewComponent,
     MarketSideViewComponent,
     MarketMapViewComponent,
-    MarketCardViewComponent,
-    EmailMulipleNewComponent,
+    MarketCardViewComponent, 
     MailsGenerateOrSendComponent,
     MutipleEmailComponent,
     BreadcrumbComponent,
-    NewMulipleEmailComponent,
+    EmailMulipleNewComponent,
+    EmilyContactEmailComponent,
+    NewMulipleEmailComponent
   ],
   imports: [
     BrowserModule,

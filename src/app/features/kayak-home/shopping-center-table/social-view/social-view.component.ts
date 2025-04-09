@@ -109,6 +109,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   BuyBoxName!: string;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
+  filteredCenters: Center[] = []; 
+  searchQuery: string = '';
   selectedIdCard: number | null = null;
   selectedId: number | null = null;
   placeImage: string[] = [];
@@ -228,6 +230,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.BuyBoxId
       );
       this.stateService.setShoppingCenters(this.shoppingCenters);
+      this.filteredCenters = this.shoppingCenters;
+
 
       this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(
         this.BuyBoxId
@@ -249,6 +253,16 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isLoading = false; // Hide skeleton
         // Make sure spinner is hidden
       this.cdr.detectChanges();
+    }
+  }
+
+  filterCenters() {
+    if (this.searchQuery.trim()) {
+      this.filteredCenters = this.shoppingCenters.filter((center) =>
+        center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.filteredCenters = this.shoppingCenters; 
     }
   }
 

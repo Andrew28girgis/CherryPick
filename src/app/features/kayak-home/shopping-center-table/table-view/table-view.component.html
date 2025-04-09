@@ -30,9 +30,24 @@
   </div>
 
   <!-- Actual table content -->
+  <div class="row">
+    <div class="d-flex align-items-center justify-content-end">
+      
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search..."
+          [(ngModel)]="searchQuery"
+          (input)="filterCenters()"
+        />
+      </div>
+    </div>
+  </div>
   <div class="mtopp" *ngIf="
         !isLoading && showShoppingCenters && shoppingCenters && shoppingCenters.length > 0
       ">
+    
     <table class="procpect-table">
       <thead class="procpect-table-head">
         <tr>
@@ -53,7 +68,7 @@
         </tr>
       </thead>
       <tbody class="procpect-table-body">
-        <ng-container *ngFor="let shoppingCenter of shoppingCenters">
+        <ng-container *ngFor="let shoppingCenter of filteredCenters">
           <tr>
             <td>
               <div class="d-flex justify-content-between">

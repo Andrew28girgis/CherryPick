@@ -46,6 +46,7 @@ export interface UserSubmission {
   CampaignId: number
   StatusId: number
   SourceId: number
+  Percentage: number
 }
 
 export interface Places {

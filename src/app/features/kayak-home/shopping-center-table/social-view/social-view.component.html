@@ -34,9 +34,23 @@
     </div>
   </div>
 </div>
-
+<div class="row">
+  <div class="d-flex align-items-center justify-content-end">
+    
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search..."
+        [(ngModel)]="searchQuery"
+        (input)="filterCenters()"
+      />
+    </div>
+  </div>
+</div>
 <!-- Actual content -->
 <div class="indicators-container" *ngIf="shoppingCenters.length > 0 && !isLoading">
+
   <div
     class="scroll-indicator up-indicator d-none d-sm-flex"
     (click)="scrollUp()"
@@ -66,7 +80,7 @@
   <div
     class="card"
     *ngFor="
-      let shopping of shoppingCenters;
+      let shopping of filteredCenters;
       let i = index;
       trackBy: trackByShoppingId
     "

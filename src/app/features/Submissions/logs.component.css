@@ -237,7 +237,6 @@ color: #ffffff;
 }
 .center-name{
   color: #16181D;
-/* font-family: Montserrat; */
 font-size: 18px;
 font-style: normal;
 font-weight: 600;
@@ -286,4 +285,35 @@ background:  #E2E4E9;
   margin-bottom: 20px;
   height: 100px;
   object-fit: cover;
+}
+.circular-chart {
+  width: 80px;
+  height: 80px;
+  display: block;
+  margin: auto;
+  position: relative;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #eee; /* Background circle color */
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dasharray 0.3s ease;
+}
+
+.percentage-text {
+  font-size: 10px;
+  font-weight: bold;
+}
+.percentage-text-match {
+  font-size: 5px;
+  font-weight: bold;
 }

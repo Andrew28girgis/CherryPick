@@ -322,4 +322,31 @@ img[alt="logo"] {
   width: max-content;
   top: 2%;
 }
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  outline: none; 
+}
+
+.search-input:focus {
+  border: 1px solid #ccc; 
+  box-shadow: none; 
+}
+.search-button {
+  position: absolute;
+  left: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #888;
+}
+
 

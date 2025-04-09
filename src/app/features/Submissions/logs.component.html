@@ -4,16 +4,16 @@
     <div class="col-md-6">
       <div class="d-flex align-items-center">
         <img
-          *ngIf="submissionsArray[0].OrganizationId"
+          *ngIf="submissionsArray[0]?.OrganizationId"
           [src]="
             'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
             submissionsArray[0].OrganizationId
           "
           class="tenant-logo"
         />
-        <h3 class="mx-3 org-name">
-      {{ submissionsArray[0].Name }}
-      </h3>
+        <h3 *ngIf="submissionsArray[0]?.Name" class="mx-3 org-name">
+          {{ submissionsArray[0].Name }}
+        </h3>        
       <!-- {{ submissionsArray[0].Campaigns[0].CampaignName }} -->
     </div>
     </div>
@@ -75,7 +75,7 @@
                     class="img"
                   />
                 </div>
-                <div class="mb-2 col-5" style="display: flex; flex-direction: column;">
+                <div class="mb-2 col-4" style="display: flex; flex-direction: column;">
                   <h5 class="mb-0 me-3 center-name" style="padding-bottom: 8px;">{{ sc.CenterName }}</h5>
                   <h5 class="mb-0 me-3 date-created" style="padding-bottom: 8px;">{{ sc.CenterAddress }}, {{sc.CenterState}}, {{sc.CenterCity}}</h5>
                   
@@ -125,14 +125,49 @@
                     {{ userSubmission.CreatedDate | date }}
                   </span>
                 </div>
-                <div class="mb-2 col-2 d-flex flex-column" style="align-items: baseline;">
-                  <span class="date-created">Submission Users</span>
-                  <div class="user-name">
-                    <ng-container *ngFor="let user of sc.C">
-                     <div> <span class="date">{{ user.FirstName }} {{ user.LastName }}</span> </div>
-                    </ng-container>
-                  </div>
-                  
+                <div class="mb-2 col-3 d-flex flex-column" style="align-items: baseline;">
+                    <div class="d-flex w-100" style="justify-content: space-around;">
+                      <div class="user-name">
+                        <span class="date-created">Submission Users</span>
+                        <ng-container *ngFor="let user of sc.C">
+                        <div> <span class="date">{{ user.FirstName }} {{ user.LastName }}</span> </div>
+                        </ng-container>
+                      </div>
+                      <div class="progress-circle">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                          <path
+                            class="circle-bg"
+                            d="M18 2.0845
+                               a 15.9155 15.9155 0 0 1 0 31.831
+                               a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <path
+                            class="circle"
+                            [attr.stroke]="getProgressColor( userSubmission.Percentage )"
+                            [attr.stroke-dasharray]=" userSubmission.Percentage  + ', 100'"
+                            d="M18 2.0845
+                               a 15.9155 15.9155 0 0 1 0 31.831
+                               a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <text
+                          x="50%" y="35%"
+                          class="percentage-text-match"
+                          dominant-baseline="middle"
+                          text-anchor="middle"
+                          [attr.fill]="getProgressColor( userSubmission.Percentage )">
+                          Match
+                        </text>                      
+                          <text
+                          x="50%" y="60%"
+                          class="percentage-text"
+                          dominant-baseline="middle"
+                          text-anchor="middle"
+                          [attr.fill]="getProgressColor( userSubmission.Percentage )">
+                          {{ userSubmission.Percentage }}%
+                        </text>                      
+                        </svg>
+                      </div>  
+                  </div>               
                 </div>
               </div>
             <!-- Far Right: Match Circle (if you have a match value) -->
@@ -151,26 +186,32 @@
 </div>
 
 <ng-template #Places let-modal>
-  <div class="table-responsive">
-    <table class="table align-middle">
-      <thead>
-        <tr>
-          <th>Building Size (sq.ft.)</th>
-          <th>Lease Type</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let place of places">
+  <div class="modal-header">
+    <h4 class="modal-title">Available Places</h4>
+  </div>
+  <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead>
           <tr>
-            <td>
-              {{ place.BuildingSizeSf || "N/A" }}
-              <span *ngIf="place.BuildingSizeSf">SF</span>
-            </td>
-            <td>{{ place.ForLeasePrice }}</td>
+            <th scope="col">Building Size (sq.ft.)</th>
+            <th scope="col">Lease Price</th>
           </tr>
-        </ng-container>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <tr *ngIf="places.length === 0">
+            <td colspan="2">No places available.</td>
+          </tr>
+          <tr *ngFor="let place of places">
+            <td>{{ place.BuildingSizeSf ? (place.BuildingSizeSf | number) + ' SF' : 'N/A' }}</td>
+            <td>{{ place.ForLeasePrice ? (place.ForLeasePrice | currency) : 'N/A' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss('Close click')">Close</button>
   </div>
 </ng-template>
 
@@ -185,6 +226,7 @@
 </textarea>
 </div>
 <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss('Cancel click')">Cancel</button>
     <button class="btn btn-primary" (click)="InsertTenantNotes()">Add</button>
   </div>
 </ng-template>

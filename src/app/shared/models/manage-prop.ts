@@ -31,7 +31,10 @@ export interface Properties {
     Tenants: Tenant[]
     CenterNameIsAdded?: boolean; // Optional property for CenterName checkbox
     CenterTypeIsAdded?: boolean; // Optional property for CenterType checkbox
-    CampaignId:number
+    CampaignId:number;
+    percentage:number;
+    reason:string;
+
   }
   
   export interface Tenant {

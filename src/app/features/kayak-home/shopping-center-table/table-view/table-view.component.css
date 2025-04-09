@@ -205,7 +205,33 @@ img[alt="logo"] {
 ::ng-deep .popover-arrow::before {
   border-top: none !important;
 }
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
 
+.search-input {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  margin-right: 20px;
+  border-radius: 10px;
+  outline: none; 
+}
+
+.search-input:focus {
+  border: 1px solid #ccc; 
+  box-shadow: none; 
+}
+.search-button {
+  position: absolute;
+  left: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #888;
+}
 @media (max-width: 768px) {
   .shortcuts_iconCard {
     right: 5vw !important;

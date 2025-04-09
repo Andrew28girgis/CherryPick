@@ -415,4 +415,8 @@ export class KanbanComponent implements OnInit, OnDestroy {
       clearInterval(this.pollingInterval);
     }
   }
+  storeOriginUrl(): void {
+    // Save current route to session storage
+    sessionStorage.setItem('originUrl', this.router.url);
+  }
 }

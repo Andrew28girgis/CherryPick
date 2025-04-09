@@ -33,6 +33,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
+  filteredCenters: Center[] = []; 
+  searchQuery: string = ''; 
   selectedId: number | null = null;
   placesRepresentative: boolean | undefined;
   StreetViewOnePlace!: boolean;
@@ -98,44 +100,37 @@ export class TableViewComponent implements OnInit, OnDestroy {
   async initializeData() {
     try {
       this.isLoading = true; // Show skeleton
-        // Hide any spinner
+      // Hide any spinner
       
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
-        this.BuyBoxId
-      );
+      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
       this.stateService.setShoppingCenters(this.shoppingCenters);
-
-      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(
-        this.BuyBoxId
-      );
+      
+      this.filteredCenters = this.shoppingCenters; 
+      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
-      this.ShareOrg = await this.viewManagerService.getOrganizationById(
-        this.OrgId
-      );
+      this.ShareOrg = await this.viewManagerService.getOrganizationById(this.OrgId);
       this.stateService.setShareOrg(this.ShareOrg);
 
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
-        this.BuyBoxId
-      );
+      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
       this.stateService.setBuyboxPlaces(this.buyboxPlaces);
-
-      // Process categories with places
-      this.buyboxCategories.forEach((category) => {
-        category.isChecked = false;
-        category.places = this.buyboxPlaces?.filter((place) =>
-          place.RetailRelationCategories?.some((x) => x.Id === category.id)
-        );
-      });
     } catch (error) {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
       this.cdr.detectChanges();
     }
   }
 
+  filterCenters() {
+    if (this.searchQuery.trim()) {
+      this.filteredCenters = this.shoppingCenters.filter((center) =>
+        center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.filteredCenters = this.shoppingCenters;
+    }
+  }
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
       // Hide any spinner

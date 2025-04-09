@@ -31,6 +31,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   selectedOption: number = 3;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
+  filteredCenters: Center[] = []; 
+  searchQuery: string = ''; 
   selectedIdCard: number | null = null;
   placesRepresentative: boolean | undefined;
   currentView: any;
@@ -62,10 +64,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.first = event.first;
     this.rows = event.rows;
   }
-  get currentShoppingCenters() {
-    return this.shoppingCenters.slice(this.first, this.first + this.rows);
-  }
-
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -90,6 +88,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.stateService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
+        this.filteredCenters = centers; 
       })
     );
 
@@ -112,17 +111,14 @@ export class CardViewComponent implements OnInit, OnDestroy {
   async loadData() {
     try {
       this.isLoading = true; // Show skeleton
-        // Hide any spinner
+      // Hide any spinner
 
-      this.shoppingCenters = await this.viewManager.getShoppingCenters(
-        this.BuyBoxId
-      );
+      this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
       this.stateService.setShoppingCenters(this.shoppingCenters);
+      this.filteredCenters = this.shoppingCenters; 
       this.totalRecords = this.shoppingCenters.length;
 
-      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(
-        this.BuyBoxId
-      );
+      this.buyboxCategories = await this.viewManager.getBuyBoxCategories(this.BuyBoxId);
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
       this.ShareOrg = await this.viewManager.getOrganizationById(this.OrgId);
@@ -131,9 +127,22 @@ export class CardViewComponent implements OnInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
+      // Make sure spinner is hidden
       this.cdr.detectChanges();
     }
+  }
+
+  // Filter shopping centers based on search query
+  filterCenters() {
+    if (this.searchQuery.trim()) {
+      this.filteredCenters = this.shoppingCenters.filter((center) =>
+        center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    } else {
+      this.filteredCenters = this.shoppingCenters; 
+    }
+
+    this.totalRecords = this.filteredCenters.length;
   }
 
   getNeareastCategoryName(categoryId: number): string {
