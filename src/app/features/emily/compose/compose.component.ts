@@ -21,7 +21,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './compose.component.html',
   styleUrl: './compose.component.css',
 })
-export class ComposeComponent {
+export class ComposeComponent implements OnInit {
   formGroup!: FormGroup;
   emailSubject: string = '';
   emailBodyResponse: any;
@@ -35,7 +35,15 @@ export class ComposeComponent {
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private _location: Location
-  ) {}
+  ) {
+    console.log('ComposeComponent initialized');
 
-  ngOnInit() {}
+  }
+
+  ngOnInit() {
+    
+    console.log('ComposeCampaignId:', this.ComposeCampaignId);
+    console.log('ComposeOrgId:', this.ComposeOrgId);
+    console.log('ComposeContactId:', this.ComposeContactId);
+  }
 }
