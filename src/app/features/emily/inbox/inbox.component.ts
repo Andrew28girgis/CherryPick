@@ -16,11 +16,11 @@ import { Location } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
-  selector: 'app-emily-contact-email',
-  templateUrl: './emily-contact-email.component.html',
-  styleUrls: ['./emily-contact-email.component.css'],
+  selector: 'app-inbox',
+  templateUrl: './inbox.component.html',
+  styleUrls: ['./inbox.component.css'],
 })
-export class EmilyContactEmailComponent implements OnInit {
+export class InboxComponent implements OnInit {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];
   Stages: Stages[] = [];
@@ -38,7 +38,7 @@ export class EmilyContactEmailComponent implements OnInit {
   organization: any = {};
   contacts: Contact[] = [];
   emails: EmailInfo[] = [];
-  isScrolling = false; 
+  isScrolling = false;
   filteredEmails: Mail[] = [];
   isDropdownVisible: boolean = false; // Controls the visibility of the dropdown
   selectedFilter: string = 'all'; // Default selected filter
@@ -62,7 +62,7 @@ export class EmilyContactEmailComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       const buyboxId = params.get('buyBoxId');
       this.campaignId = params.get('campaignId');
-      
+
       if (buyboxId) {
         this.buyBoxId = +buyboxId;
       }
@@ -186,9 +186,6 @@ export class EmilyContactEmailComponent implements OnInit {
     });
   }
   getEmailsForContact(contact: Contact): void {
- 
-      
-      
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact;
       this.emailsSentContact = [];
@@ -263,7 +260,7 @@ export class EmilyContactEmailComponent implements OnInit {
       (contact.EmailStats[0].Outbox || 0)
     );
   }
-  openCompoase(modal: any, ) {
+  openCompoase(modal: any) {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
   openmodel(modal: any, body: any, contactId: any) {

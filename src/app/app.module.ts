@@ -53,7 +53,7 @@ import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or
 import { MutipleEmailComponent } from './features/emily/mutiple-email/mutiple-email.component';
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
-import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact-email.component';
+import { InboxComponent } from './features/emily/inbox/inbox.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +79,7 @@ import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact
     MutipleEmailComponent,
     BreadcrumbComponent,
     EmailMulipleNewComponent,
-    EmilyContactEmailComponent
+    InboxComponent
   ],
   imports: [
     BrowserModule,

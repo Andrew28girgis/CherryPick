@@ -16,8 +16,7 @@ import { MarketSurveyComponent } from './features/tenants/market-survery/market-
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
-import { EmilyContactEmailComponent } from './features/emily/inbox/emily-contact-email.component';
-
+import { InboxComponent } from './features/emily/inbox/inbox.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -126,7 +125,10 @@ const routes: Routes = [
     component: AddTenantsComponent,
     canActivate: [TenantOnlyGuard],
   },
-  { path: 'organization-mail/:buyBoxId/:organizationId/:campaignId', component: EmilyContactEmailComponent },
+  {
+    path: 'organization-mail/:buyBoxId/:organizationId/:campaignId',
+    component: InboxComponent,
+  },
 
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName',

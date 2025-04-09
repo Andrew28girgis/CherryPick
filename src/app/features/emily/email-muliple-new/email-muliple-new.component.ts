@@ -125,9 +125,6 @@ export class EmailMulipleNewComponent implements OnInit, OnDestroy {
   BatchGuid!: string;
   campaignId: any;
 
-  @Input() ComposeCampaignId !:number ;
-  @Input() ComposeOrgId !:number;
-  @Input() ComposeContactId !:number;
 
   constructor(
     private spinner: NgxSpinnerService,
