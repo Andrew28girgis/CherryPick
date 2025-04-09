@@ -16,15 +16,12 @@
             "outputPath": "dist/comman",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [
-              "node_modules/quill/dist/quill.snow.css",
-              "node_modules/quill/dist/quill.bubble.css",
+            "styles": [ 
               "node_modules/primeng/resources/themes/lara-light-indigo/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -96,18 +93,13 @@
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+          "options": { 
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/app/config.ts",
-              "src/manifest.webmanifest"
+              "src/assets"
             ],
-            "styles": [
-              "node_modules/quill/dist/quill.snow.css",
-              "node_modules/quill/dist/quill.bubble.css",
+            "styles": [ 
               "node_modules/primeng/resources/themes/lara-light-indigo/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",

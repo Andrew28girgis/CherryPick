@@ -15,7 +15,6 @@ import { HomeComponent } from './features/tenants/market-survery/home/home.compo
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
  import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
-import { CampaignManagerComponent } from './features/campaign/campaign-manager/campaign-manager.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 
@@ -83,35 +82,21 @@ const routes: Routes = [
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [TenantOnlyGuard],
+  }, 
+  {
+    path: 'Kanban',
+    component: KanbanComponent,
   },
-  // {
-  //   // path: 'tenant/:buyboxid',
-  //   path: 'tenant/:buyboxid/:campaignId',
-  //   component: TenantComponent,
-  //   canActivate: [TenantOnlyGuard],
-  // },
-
   {
     path: ':guid',
     component: TenantComponent,
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: 'Kanban',
-    component: KanbanComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard],
-  },
-  {
-    path: 'Kanban/:id',
-    component: KanbanComponent,
-    canActivate: [AuthGuardService, TenantOnlyGuard],
-  },
-  {
     path: 'MutipleEmail/:campaignId',
     component: NewMulipleEmailComponent,
     canActivate: [TenantOnlyGuard],
   },
- 
   {
     path: 'MailsList/:MailContextId/:IsSent',
     component: MailsGenerateOrSendComponent,
@@ -126,7 +111,6 @@ const routes: Routes = [
     path: 'organization-mail/:buyBoxId/:organizationId/:campaignId',
     component: InboxComponent,
   },
-
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName',
     loadChildren: () =>
