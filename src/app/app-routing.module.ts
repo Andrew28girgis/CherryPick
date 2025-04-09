@@ -82,15 +82,21 @@ const routes: Routes = [
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [TenantOnlyGuard],
-  }, 
+  },
   {
     path: 'Kanban',
     component: KanbanComponent,
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: ':guid',
     component: TenantComponent,
     canActivate: [TenantOnlyGuard],
+  }, 
+  {
+    path: 'Kanban/:id',
+    component: KanbanComponent,
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'MutipleEmail/:campaignId',
