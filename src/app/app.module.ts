@@ -55,6 +55,7 @@ import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.c
 import { EmailMulipleNewComponent } from './features/emily/email-muliple-new/email-muliple-new.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { EditorModule } from 'primeng/editor';
+import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { EditorModule } from 'primeng/editor';
     MutipleEmailComponent,
     BreadcrumbComponent,
     EmailMulipleNewComponent,
-    InboxComponent
+    InboxComponent,
+    NewMulipleEmailComponent
   ],
   imports: [
     BrowserModule,
