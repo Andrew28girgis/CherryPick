@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  HostListener,
   NgZone,
   OnInit,
   TemplateRef,
@@ -42,7 +43,8 @@ export class SideListViewComponent implements OnInit {
   sanitizedUrl!: any;
   shareLink: any;
   StreetViewOnePlace!: boolean;
-
+  KanbanStages: any[] = [];
+  activeDropdown: any = null;
   constructor(
     private markerService: MapsService,
     public activatedRoute: ActivatedRoute,
@@ -82,8 +84,83 @@ export class SideListViewComponent implements OnInit {
 
              
         this.getBuyBoxPlaces(this.BuyBoxId);
+    // Get kanban stages using the first kanban ID from the first shopping center
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
+    }
       }
     });
+  }
+    GetKanbanStages(kanbanID: number): void {
+      const body: any = {
+        Name: 'GetKanbanStages',
+        Params: {
+          kanbanid: kanbanID,
+        },
+      };
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          this.KanbanStages = res.json || [];
+          this.cdr.detectChanges();
+        }
+      });
+    }
+    // Toggle dropdown visibility
+  toggleDropdown(shoppingCenter: any): void {
+    // Close any open dropdown
+    if (this.activeDropdown && this.activeDropdown !== shoppingCenter) {
+      this.activeDropdown.isDropdownOpen = false;
+    }
+    // Toggle current dropdown
+    shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
+    // Set as active dropdown
+    this.activeDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
+    // If opening this dropdown, load kanban stages if not already loaded
+    if (shoppingCenter.isDropdownOpen && (!this.KanbanStages || this.KanbanStages.length === 0)) {
+      this.GetKanbanStages(shoppingCenter.kanbanId);
+    }
+  }
+  // Get stage name for the selected ID
+  getSelectedStageName(stageId: number): string {
+    if (!this.KanbanStages) return 'Select Stage';
+    const stage = this.KanbanStages.find(s => s.id === stageId);
+    return stage ? stage.stageName : 'Select Stage';
+  }
+  selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+    // Close the dropdown
+    shoppingCenter.isDropdownOpen = false;
+    this.activeDropdown = null;
+    this.UpdatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter);
+  }
+  // Update the API method to work with the new dropdown
+  UpdatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+    const body: any = {
+      Name: 'UpdatePlaceKanbanStage',
+      Params: {
+        stageid: stageId,
+        marketsurveyid: marketSurveyId,
+      },
+    };
+    
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        // Update local data after successful API call
+        shoppingCenter.kanbanStageId = stageId;
+        shoppingCenter.stageName = this.getSelectedStageName(stageId);
+        this.cdr.detectChanges();
+      }
+      
+    });
+  }
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent): void {
+    // Check if click is outside any dropdown
+    const target = event.target as HTMLElement | null;
+    if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
+      this.activeDropdown.isDropdownOpen = false;
+      this.activeDropdown = null;
+      this.cdr.detectChanges();
+    }
   }
 
   BuyBoxPlacesCategories(buyboxId: number): void {

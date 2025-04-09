@@ -256,7 +256,22 @@
               </span>
             </div>
             <div *ngIf="shopping.stageName">
-              <p class="ShoppingCenterStage mb-1">{{ shopping.stageName }}</p>
+              <!-- <p class="ShoppingCenterStage mb-1">{{ shopping.stageName }}</p> -->
+              <div class="custom-dropdown" style="width: 200px;">
+                <div class="selected-option" (click)="toggleDropdown(shopping)">
+                  {{ getSelectedStageName(shopping.kanbanStageId) }}
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-options" [class.show]="shopping.isDropdownOpen">
+                  <div 
+                    *ngFor="let stage of KanbanStages" 
+                    class="dropdown-item" 
+                    [class.active]="stage.id === shopping.kanbanStageId"
+                    (click)="selectStage(shopping.MarketSurveyId, stage.id, shopping)">
+                    {{stage.stageName}}
+                  </div>
+                </div>
+              </div>
             </div>
             <div>
               <p

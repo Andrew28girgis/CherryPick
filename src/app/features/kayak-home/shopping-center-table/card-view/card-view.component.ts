@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
+  HostListener,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,6 +19,7 @@ import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Subscription } from 'rxjs';
 import { StateService } from 'src/app/core/services/state.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-card-view',
@@ -60,6 +62,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   first: number = 0;
   rows: number = 9;
   totalRecords!: number;
+  KanbanStages: any[] = [];
+  activeDropdown: any = null;
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
@@ -74,7 +78,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
     private stateService: StateService,
     private viewManager: ViewManagerService,
         
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private PlacesService: PlacesService,
   ) {}
 
   ngOnInit(): void {
@@ -121,6 +126,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.stateService.setShoppingCenters(this.shoppingCenters);
       this.filteredCenters = this.shoppingCenters; // Initialize the filteredCenters with the full list
       this.totalRecords = this.shoppingCenters.length;
+     // Get kanban stages using the first kanban ID from the first shopping center
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
+    }
 
       this.buyboxCategories = await this.viewManager.getBuyBoxCategories(this.BuyBoxId);
       this.stateService.setBuyboxCategories(this.buyboxCategories);
@@ -136,6 +145,77 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  GetKanbanStages(kanbanID: number): void {
+    const body: any = {
+      Name: 'GetKanbanStages',
+      Params: {
+        kanbanid: kanbanID,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.KanbanStages = res.json || [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  // Toggle dropdown visibility
+toggleDropdown(shoppingCenter: any): void {
+  // Close any open dropdown
+  if (this.activeDropdown && this.activeDropdown !== shoppingCenter) {
+    this.activeDropdown.isDropdownOpen = false;
+  }
+  // Toggle current dropdown
+  shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
+  // Set as active dropdown
+  this.activeDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
+  // If opening this dropdown, load kanban stages if not already loaded
+  if (shoppingCenter.isDropdownOpen && (!this.KanbanStages || this.KanbanStages.length === 0)) {
+    this.GetKanbanStages(shoppingCenter.kanbanId);
+  }
+}
+// Get stage name for the selected ID
+getSelectedStageName(stageId: number): string {
+  if (!this.KanbanStages) return 'Select Stage';
+  const stage = this.KanbanStages.find(s => s.id === stageId);
+  return stage ? stage.stageName : 'Select Stage';
+}
+selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  // Close the dropdown
+  shoppingCenter.isDropdownOpen = false;
+  this.activeDropdown = null;
+  this.UpdatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter);
+}
+// Update the API method to work with the new dropdown
+UpdatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  const body: any = {
+    Name: 'UpdatePlaceKanbanStage',
+    Params: {
+      stageid: stageId,
+      marketsurveyid: marketSurveyId,
+    },
+  };
+  
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (res: any) => {
+      // Update local data after successful API call
+      shoppingCenter.kanbanStageId = stageId;
+      shoppingCenter.stageName = this.getSelectedStageName(stageId);
+      this.cdr.detectChanges();
+    }
+    
+  });
+}
+@HostListener('document:click', ['$event'])
+handleDocumentClick(event: MouseEvent): void {
+  // Check if click is outside any dropdown
+  const target = event.target as HTMLElement | null;
+  if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
+    this.activeDropdown.isDropdownOpen = false;
+    this.activeDropdown = null;
+    this.cdr.detectChanges();
+  }
+}
   // Filter shopping centers based on search query
   filterCenters() {
     if (this.searchQuery.trim()) {

@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
+  HostListener,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
@@ -18,6 +19,7 @@ import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { StateService } from 'src/app/core/services/state.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription } from 'rxjs';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-table-view',
@@ -55,7 +57,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
   // Loading state for skeleton
   isLoading = true;
   // Interval for hiding spinner
-       
+  KanbanStages: any[] = [];
+  activeDropdown: any = null;
   private subscriptions = new Subscription();
 
   constructor(
@@ -64,7 +67,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
         
     private cdr: ChangeDetectorRef,
     private stateService: StateService,
-    private viewManagerService: ViewManagerService
+    private viewManagerService: ViewManagerService,
+    private PlacesService: PlacesService,
   ) {}
 
   ngOnInit(): void {
@@ -104,6 +108,10 @@ export class TableViewComponent implements OnInit, OnDestroy {
       
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
       this.stateService.setShoppingCenters(this.shoppingCenters);
+       // Get kanban stages using the first kanban ID from the first shopping center
+    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
+      this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
+    }
       
       this.filteredCenters = this.shoppingCenters; // Initially set filteredCenters to all centers
       this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
@@ -121,6 +129,77 @@ export class TableViewComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
+  GetKanbanStages(kanbanID: number): void {
+    const body: any = {
+      Name: 'GetKanbanStages',
+      Params: {
+        kanbanid: kanbanID,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.KanbanStages = res.json || [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
+  // Toggle dropdown visibility
+toggleDropdown(shoppingCenter: any): void {
+  // Close any open dropdown
+  if (this.activeDropdown && this.activeDropdown !== shoppingCenter) {
+    this.activeDropdown.isDropdownOpen = false;
+  }
+  // Toggle current dropdown
+  shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
+  // Set as active dropdown
+  this.activeDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
+  // If opening this dropdown, load kanban stages if not already loaded
+  if (shoppingCenter.isDropdownOpen && (!this.KanbanStages || this.KanbanStages.length === 0)) {
+    this.GetKanbanStages(shoppingCenter.kanbanId);
+  }
+}
+// Get stage name for the selected ID
+getSelectedStageName(stageId: number): string {
+  if (!this.KanbanStages) return 'Select Stage';
+  const stage = this.KanbanStages.find(s => s.id === stageId);
+  return stage ? stage.stageName : 'Select Stage';
+}
+selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  // Close the dropdown
+  shoppingCenter.isDropdownOpen = false;
+  this.activeDropdown = null;
+  this.UpdatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter);
+}
+// Update the API method to work with the new dropdown
+UpdatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  const body: any = {
+    Name: 'UpdatePlaceKanbanStage',
+    Params: {
+      stageid: stageId,
+      marketsurveyid: marketSurveyId,
+    },
+  };
+  
+  this.PlacesService.GenericAPI(body).subscribe({
+    next: (res: any) => {
+      // Update local data after successful API call
+      shoppingCenter.kanbanStageId = stageId;
+      shoppingCenter.stageName = this.getSelectedStageName(stageId);
+      this.cdr.detectChanges();
+    }
+    
+  });
+}
+@HostListener('document:click', ['$event'])
+handleDocumentClick(event: MouseEvent): void {
+  // Check if click is outside any dropdown
+  const target = event.target as HTMLElement | null;
+  if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
+    this.activeDropdown.isDropdownOpen = false;
+    this.activeDropdown = null;
+    this.cdr.detectChanges();
+  }
+}
 
   // Filter shopping centers based on search query
   filterCenters() {
@@ -130,11 +209,11 @@ export class TableViewComponent implements OnInit, OnDestroy {
       );
     } else {
       this.filteredCenters = this.shoppingCenters; // Show all centers if search query is empty
-    }
+    }    
   }
 
   get currentShoppingCenters() {
-    return this.filteredCenters; // Use filtered centers here
+    return this.filteredCenters; // Use filtered centers here    
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
