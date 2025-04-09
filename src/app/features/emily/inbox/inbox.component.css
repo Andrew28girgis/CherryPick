@@ -293,12 +293,11 @@
   font-size: 18px;
 }
 
-.inbox {
+.outbox {
   color: #007bff;
   font-size: 18px;
 }
-
-.outbox {
+.inbox {
   color: #fd7e14;
   font-size: 18px;
 }
