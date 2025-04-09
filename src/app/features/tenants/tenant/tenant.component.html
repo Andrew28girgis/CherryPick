@@ -1,158 +1,444 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<div class="overfloww">
-  <div class="container-fluid">
-    <div class="row paddingrow">
-      <div class="col-md-12" *ngIf="TenantResult && TenantResult.Buybox">
-        <header
-          class="card custom-card"
-          [ngStyle]="{ background: buyboxcolor }"
-        >
-          <div class="d-flex align-items-center justify-content-center">
-            <div>
-              <img
-                class="tenant-logo"
-                [src]="
-                  'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                  organizationid
-                "
-                alt="Tenant Logo"
-              />
-            </div>
-            <div
-              class="d-flex flex-column align-items-center justify-content-center gap-2"
-            >
-              <div>
-                <span class="buyboxname">
-                  {{ TenantResult.Buybox[0].BuyBoxOrganization[0].Name }}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 d-flex align-items-center justify-content-start">
+<div class="allpage">
+  <div class="overfloww allbackground">
+    <div class="container">
+      <div class="row">
+        <div class="col-12" *ngIf="TenantResult && TenantResult.Buybox">
+          <!-- <div class="icon-text-container d-flex align-items-center">
+            <i class="fa-solid fa-chevron-left chevoo"></i>
+            <span class="text">Back to ... </span>
+          </div> -->
+          
+          <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center justify-content-center">
-              <div class="smalllframe">
+              <div>
                 <img
-                  src="../../../assets/Images/size.png"
-                  alt="Small Image"
-                  class="small-image"
+                  class="tenant-logo"
+                  [src]="
+                    'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+                    organizationid
+                  "
+                  alt="Tenant Logo"
                 />
               </div>
-
-              <div class="d-flex flex-column text-center">
-                <span class="boldtext">Size needed</span>
-                <div class="d-flex justify-content-start">
-                  <span class="lowwhite" style="white-space: nowrap">
-                    {{ TenantResult.Buybox[0].MinBuildingSize }} SF -
-                    {{ TenantResult.Buybox[0].MaxBuildingSize }} SF
+              <div
+                class="d-flex flex-column align-items-center justify-content-center gap-2"
+              >
+                <div>
+                  <span class="buyboxname">
+                    {{ TenantResult.Buybox[0].BuyBoxOrganization[0].Name }}
                   </span>
                 </div>
               </div>
             </div>
+            <div class="sharebtn">
+              <img src="../../../../assets/Images/Icons/share.png" />
+              <span>Share</span>
+            </div>
           </div>
-
-          <div class="col-12 d-flex align-items-center justify-content-start">
-            <div class="d-flex align-items-center justify-content-center">
-              <div class="smalllframe">
-                <img
-                  src="../../../assets/Images/SVG/bank.png"
-                  alt="Small Image"
-                  class="small-image"
-                />
+          <div class="divider dividertop">
+         <div class="my-3">
+          <span class="BuyboxSpecifications ">
+            Buybox Specifications
+          </span>
+         </div>
+            <div class="col-12 d-flex "> 
+              <div class="col-4 d-flex flex-column align-items-start justify-content-center somegap">
+                <div class="smalllframe">
+                  <img
+                    src="../../../assets/Images/size.png"
+                    alt="Small Image"
+                    class="small-image"
+                  />
+                </div>
+  
+                <div>
+                  <span class="smalltitle">Size needed</span>
+                </div>
+                <div class="d-flex align-items-center justify-content-center">
+                  <span class="boldtext" style="white-space: nowrap">
+                    {{ TenantResult.Buybox[0].MinBuildingSize }} -
+                    {{ TenantResult.Buybox[0].MaxBuildingSize }} SF
+                  </span>
+                </div>
               </div>
-
-              <div class="d-flex flex-column text-center">
-                <span class="boldtext">States</span>
-                <div class="d-flex justify-content-start">
+              <div class="col-4 d-flex flex-column align-items-center justify-content-center somegap">
+                <div class="smalllframe d-flex align-items-center justify-content-center">
+                  <img
+                    src="../../../assets/Images/SVG/bank.png"
+                    alt="Small Image"
+                    class="small-image"
+                  />
+                </div>
+  
+                <div >
+                  <span class="smalltitle">States</span>
+                </div>
+  
+                <div class="d-flex align-items-center justify-content-center">
                   <span
-                    class="lowwhite"
+                    class="boldtext"
                     *ngIf="organizationBranches && organizationBranches.States"
                   >
                     {{ organizationBranches.States }}
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div class="col-12 d-flex align-items-center justify-content-start">
-            <div class="d-flex align-items-center justify-content-center">
-              <div class="smalllframe">
-                <img
-                  src="../../../assets/Images/SVG/buildings.png"
-                  alt="Small Image"
-                  class="small-image"
-                />
-              </div>
-
-              <div class="d-flex flex-column text-center">
-                <span class="boldtext">Cities</span>
-                <div class="d-flex justify-content-start">
-                  <span class="lowwhite"
-                  *ngIf="organizationBranches && organizationBranches.Address">
+              <div class="col-4 d-flex flex-column align-items-center justify-content-end somegap">
+                <div class="smalllframe">
+                  <img
+                    src="../../../assets/Images/SVG/buildings.png"
+                    alt="Small Image"
+                    class="small-image"
+                  />
+                </div>
+  
+                <div>
+                  <span class="smalltitle">Cities</span>
+                </div>
+  
+                <div class="d-flex align-items-center justify-content-center">
+                  <span
+                    class="boldtext"
+                    *ngIf="organizationBranches && organizationBranches.Address"
+                  >
                     {{ organizationBranches.Address }}
                   </span>
                 </div>
               </div>
             </div>
           </div>
-        </header>
-      </div>
-      <!-- <div class="col-md-6">
-        <div class="card cardcampaings">
-          <div class="campaings">
-            <span>Campaigns</span>
-          </div>
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="campaignname">
-              <span>Campaign Name</span>
-            </div>
-            <div class="showpolygons">
-              <button class="showpolygonsbutton">
-                <span>Show Polygons</span>
-              </button>
-              
-            </div>
-  
-          </div>
-  <div class="divider">
-  
-  </div>
-          <div class="d-flex align-items-center justify-content-between">
-            <div class="campaignname">
-              <span>Campaign Name</span>
-            </div>
-            <div class="showpolygons">
-              <button class="showpolygonsbutton">
-                <span>Show Polygons</span>
-              </button>
-              
-            </div>
-  
-          </div>
-        </div>
-      </div> -->
-    </div>
-  </div>
-  <div class="row mt-4 whitebackground">
-    <div class="col-md-6">
-      <div class="colpadding">
-        <div class="SumbitProp">
-          <span>Submit a Proposal</span>
-        </div>
-        <div class="d-flex flex-column justify-content-center uploadyourfile">
-          <span class="lineheight"
-            >Just upload your file, and we'll handle the rest!</span
-          >
-          <span>PDF, DOCX, XLSX, PPTX</span>
         </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <div class="outer-frame" *ngIf="!fileName">
-        <div class="inner-frame">
-          <!-- File drop area shown if no file has been selected -->
+  
+      <div class="divider dividertop">
+        <div class="row mtopp">
+          <div class="col-12">
+            <div class="outer-frame">
+              <div
+                class="inner-frame d-flex flex-column align-items-center justify-content-center"
+              >
+                <div>
+                  <img
+                    src="../../../../assets/Images/Icons/information.png"
+                    alt="Upload Icon"
+                  />
+                </div>
+                <div>
+                  <span class="upload-text"
+                    >Just upload your <strong>Proposal</strong> file, and we’ll
+                    handle the rest!</span
+                  >
+                </div>
+                <div>
+                  <span class="upload-text">PDF, DOCX, XLSX, PPTX</span>
+                </div>
+              </div>
+              <div
+                class="d-flex flex-column gap-4 align-items-center justify-content-center"
+              >
+                <div>
+                  <img
+                    src="../../../../assets/Images/Icons/UploadIcon.png"
+                    alt=""
+                  />
+                </div>
+              </div>
+              <div class="d-flex align-items-center justify-content-center">
+                <span class="uploadspan"
+                  >Upload or drag and drop your file here.</span
+                >
+              </div>
+              <ngx-file-drop
+                class="dropzonee hidden-dropzone"
+                dropZoneLabel="Drop files here"
+                (onFileDrop)="uploadFile($event)"
+                [dropZoneClassName]="'upload-background-image'"
+              >
+                <ng-template
+                  ngx-file-drop-content-tmp
+                  let-openFileSelector="openFileSelector"
+                >
+                  <div
+                    class="upload-container cursor"
+                    (click)="openFileSelector()"
+                  >
+                    <div class="d-flex align-items-center justify-content-center">
+                      <div class="uploadbtn cursor">
+                        <img
+                          src="../../../../assets/Images/Icons/choosefile.png"
+                        />
+                        <span>Choose File</span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ngx-file-drop>
+              <!-- File name and progress bar section -->
+              <div class="filenameouterframe" *ngIf="fileName">
+                <div class="filenameinnerframe">
+                  <div
+                    class="d-flex align-items-center justify-content-between uploaded-file-container"
+                  >
+                    <div class="filename">{{ fileName }}</div>
+                    <button class="clear-button" (click)="clearModalData()">
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- <div *ngIf="!returnsubmit" class="marginleft mt-3">
+          <div class="col-4">
+            <button
+              class="submit-button"
+              (click)="sendImagesArray()"
+              [disabled]="!isFileUploaded"
+              [ngClass]="{ 'submit-button-enabled': isFileUploaded }"
+            >
+              Submit
+            </button>
+          </div>
+        </div> -->
+            </div>
+          </div>
+          <!-- Progress Bar -->
+          <div *ngIf="isUploading && !isSubmitting" class="mt-2 uploadingpadding">
+            <div class="progress w-100">
+              <div
+                class="progress-bar progress-bar-striped"
+                role="progressbar"
+                [style.width]="uploadProgress + '%'"
+                [attr.aria-valuenow]="uploadProgress"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {{ uploadProgress }}%
+              </div>
+            </div>
+            <p class="text-center mt-3">Uploading...</p>
+          </div>
+  
+          <!-- Conversion Status -->
+          <div *ngIf="isConverting && !isSubmitting" class="mt-3">
+            <div class="text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+          <ng-template #uploadPDF let-modal>
+            <!-- Display Images Section -->
+            <div
+              *ngIf="images.length > 0 && !isSubmitting"
+              class="extractedimagespadding"
+            >
+              <h4 class="my-prop">Converted Pdf to Extracted Images</h4>
+  
+              <!-- Check if the number of images is greater than 3, and only display this section if there are more than 3 images -->
+              <div class="row">
+                <div *ngFor="let image of images" class="col-md-4 mb-3">
+                  <div class="card">
+                    <div class="form-check m-2 mb-0">
+                      <input
+                        type="checkbox"
+                        class="form-check-input input-sty"
+                        style="border: 2px solid #cbcbcb"
+                        [(ngModel)]="image.selected"
+                        id="checkbox-{{ image.name }}"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="checkbox-{{ image.name }}"
+                      >
+                      </label>
+                    </div>
+                    <img
+                      [src]="displayCustomImage(image)"
+                      [alt]="image.name"
+                      class="img-fluid gpt-image"
+                    />
+                    <div class="card-body">
+                      <p class="text-center mt-2">{{ image.name }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- Display JsonPDF Data Section -->
+            <div *ngIf="JsonPDF" class="mt-3 shopping-center-container">
+              <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                  <!-- Center Information Card -->
+                  <div class="card shadow-sm mb-4">
+                    <div
+                      class="card-header text-white text-center"
+                      style="background-color: #e4e7e9 !important"
+                    >
+                      <h4 class="mb-0 text-dark">Shopping Center Information</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-12">
+                          <dl class="row mb-0">
+                            <ng-container *ngIf="JsonPDF.CenterName">
+                              <dt class="col-sm-4">Center Name:</dt>
+                              <dd class="col-sm-8">{{ JsonPDF.CenterName }}</dd>
+                            </ng-container>
+                            <ng-container *ngIf="JsonPDF.CenterType">
+                              <dt class="col-sm-4">Center Type:</dt>
+                              <dd class="col-sm-8">{{ JsonPDF.CenterType }}</dd>
+                            </ng-container>
+                            <ng-container *ngIf="JsonPDF.CenterAddress">
+                              <dt class="col-sm-4">Address:</dt>
+                              <dd class="col-sm-8">
+                                {{ JsonPDF.CenterAddress }}
+                              </dd>
+                            </ng-container>
+                            <ng-container *ngIf="JsonPDF.CenterCity">
+                              <dt class="col-sm-4">City:</dt>
+                              <dd class="col-sm-8">{{ JsonPDF.CenterCity }}</dd>
+                            </ng-container>
+                            <ng-container *ngIf="JsonPDF.CenterState">
+                              <dt class="col-sm-4">State:</dt>
+                              <dd class="col-sm-8">{{ JsonPDF.CenterState }}</dd>
+                            </ng-container>
+                            <ng-container *ngIf="JsonPDF.TotalAvailableSpace_SF">
+                              <dt class="col-sm-4">Available Space:</dt>
+                              <dd class="col-sm-8">
+                                {{ JsonPDF.TotalAvailableSpace_SF }}
+                                <strong>SF</strong>
+                              </dd>
+                            </ng-container>
+                            <ng-container *ngIf="JsonPDF.percentage">
+                              <dt class="col-sm-4">Percentage:</dt>
+                              <dd class="col-sm-8">{{ JsonPDF.percentage }}%</dd>
+                            </ng-container>
+                            <ng-container *ngIf="JsonPDF.reason">
+                              <dt class="col-sm-4">Reason:</dt>
+                              <dd class="col-sm-8">
+                                <div [ngClass]="{ truncate: !showFullReason }">
+                                  {{ JsonPDF.reason }}
+                                </div>
+                                <span
+                                  (click)="toggleReason()"
+                                  class="toggle-link"
+                                >
+                                  {{ showFullReason ? "View Less" : "View More" }}
+                                </span>
+                              </dd>
+                            </ng-container>
+                          </dl>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <!-- Availability and Tenants Section -->
+                  <div class="row g-4">
+                    <!-- Availability Card -->
+                    <div class="col-md-6" *ngIf="JsonPDF.Availability.length > 0">
+                      <div class="card shadow-sm h-100">
+                        <div
+                          class="card-header text-white"
+                          style="background-color: #081c3e !important"
+                        >
+                          <h5 class="mb-0 d-flex justify-content-center">
+                            Availability
+                          </h5>
+                        </div>
+                        <div class="card-body">
+                          <ul class="list-group list-group-flush">
+                            <li
+                              *ngFor="let avail of JsonPDF.Availability"
+                              class="list-group-item border-0 px-0"
+                            >
+                              <div class="form-check">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                  [(ngModel)]="avail.isAdded"
+                                  id="availCheckbox-{{ avail.id }}"
+                                />
+                                <label
+                                  class="form-check-label"
+                                  for="availCheckbox-{{ avail.id }}"
+                                >
+                                  <strong>Building Size:</strong>
+                                  {{ avail.BuildingSizeSf }} SF
+                                </label>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- Tenants Card -->
+                    <div class="col-md-6">
+                      <div class="card shadow-sm h-100">
+                        <div
+                          class="card-header text-white"
+                          style="background-color: #081c3e !important"
+                        >
+                          <h5 class="mb-0 d-flex justify-content-center">
+                            Tenants
+                          </h5>
+                        </div>
+                        <div class="card-body">
+                          <ul class="list-group list-group-flush">
+                            <li
+                              *ngFor="let tenant of JsonPDF.Tenants"
+                              class="list-group-item border-0 px-0"
+                            >
+                              <div class="form-check">
+                                <input
+                                  type="checkbox"
+                                  class="form-check-input"
+                                  [(ngModel)]="tenant.isAdded"
+                                  id="tenantCheckbox-{{ tenant.id }}"
+                                />
+                                <label
+                                  class="form-check-label"
+                                  for="tenantCheckbox-{{ tenant.id }}"
+                                >
+                                  {{ tenant.Name }}
+                                  <a
+                                    *ngIf="tenant.OrgUrl"
+                                    [href]="tenant.OrgUrl"
+                                    target="_blank"
+                                    class="tenant-link"
+                                  >
+                                    (Website)
+                                  </a>
+                                </label>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="!returnsubmit" class="marginleft">
+              <div class="col-4">
+                <button
+                  class="submit-button"
+                  (click)="sendImagesArray()"
+                  [disabled]="!isFileUploaded"
+                  [ngClass]="{ 'submit-button-enabled': isFileUploaded }"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+  
+            <div>
+              <!-- <div class="col-md-12 p-0">
           <ngx-file-drop
-            class="dropzonee"
             dropZoneLabel="Drop files here"
             (onFileDrop)="uploadFile($event)"
             [dropZoneClassName]="'upload-background-image'"
@@ -161,325 +447,55 @@
               ngx-file-drop-content-tmp
               let-openFileSelector="openFileSelector"
             >
-              <div class="upload-container cursor" (click)="openFileSelector()">
-                <img
-                  src="../../../assets/Images/document-upload.png"
-                  alt="Upload Icon"
-                  class="upload-img"
-                />
-                <span class="upload-text"
-                  >Just upload your file, and we'll handle the rest!</span
-                >
-                <span class="upload-text">PDF, DOCX, XLSX, PPTX</span>
-              </div>
+              <b>
+                <span class="text-dark drop-sty mx-2"> Drop File Here </span>
+              </b>
+              <button
+                type="button"
+                class="btn btn-success ml-2 secondary-color upload"
+                (click)="openFileSelector()"
+              >
+                Browse Files
+              </button>
             </ng-template>
           </ngx-file-drop>
-        </div>
-      </div>
-      <div class="filenameouterframe" *ngIf="fileName">
-        <div class="filenameinnerframe">
-          <!-- Display file name once a file is selected -->
-          <div
-            class="d-flex align-items-center justify-content-between uploaded-file-container"
-          >
-            <div class="filename">{{ fileName }}</div>
-            <button class="clear-button" (click)="clearModalData()">
-              Clear
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Progress Bar -->
-      <div *ngIf="isUploading && !isSubmitting" class="mt-2 uploadingpadding">
-        <div class="progress">
-          <div
-            class="progress-bar progress-bar-striped"
-            role="progressbar"
-            [style.width]="uploadProgress + '%'"
-            [attr.aria-valuenow]="uploadProgress"
-            aria-valuemin="0"
-            aria-valuemax="100"
-          >
-            {{ uploadProgress }}%
-          </div>
-        </div>
-        <p class="text-center mt-3">Uploading...</p>
-      </div>
-      <!-- Conversion Status -->
-      <div *ngIf="isConverting && !isSubmitting" class="mt-3">
-        <div class="text-center">
-          <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        </div>
-      </div>
-      <!-- <div *ngIf="!returnsubmit" class="marginleft mt-3">
-        <div class="col-4">
-          <button
-            class="submit-button"
-            (click)="sendImagesArray()"
-            [disabled]="!isFileUploaded"
-            [ngClass]="{ 'submit-button-enabled': isFileUploaded }"
-          >
-            Submit
-          </button>
-        </div>
-      </div> -->
-    </div>
-  </div>
-  <ng-template #uploadPDF let-modal>
-    <!-- Display Images Section -->
-    <div
-      *ngIf="images.length > 0 && !isSubmitting"
-      class="extractedimagespadding"
-    >
-      <h4 class="my-prop">Converted Pdf to Extracted Images</h4>
-
-      <!-- Check if the number of images is greater than 3, and only display this section if there are more than 3 images -->
-        <div class="row">
-          <div *ngFor="let image of images" class="col-md-4 mb-3">
-            <div class="card">
-              <div class="form-check m-2 mb-0">
-                <input
-                  type="checkbox"
-                  class="form-check-input input-sty"
-                  style="border: 2px solid #cbcbcb"
-                  [(ngModel)]="image.selected"
-                  id="checkbox-{{ image.name }}"
-                />
-                <label class="form-check-label" for="checkbox-{{ image.name }}">
-                </label>
-              </div>
-              <img
-                [src]="displayCustomImage(image)"
-                [alt]="image.name"
-                class="img-fluid gpt-image"
-              />
-              <div class="card-body">
-                <p class="text-center mt-2">{{ image.name }}</p>
-              </div>
+        </div> -->
             </div>
-          </div>
-        </div>
-    </div>
-
-    <!-- Display JsonPDF Data Section -->
-    <div *ngIf="JsonPDF" class="mt-3 shopping-center-container">
-      <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-          <!-- Center Information Card -->
-          <div class="card shadow-sm mb-4">
-            <div
-              class="card-header text-white text-center"
-              style="background-color: #e4e7e9 !important"
+            <div class="modal-footer">
+              <!-- Send Selected Images Button -->
+              <div
+                class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+              >
+                <!-- <button
+              class="convertimages mx-1"
+              (click)="sendImagesArray()"
+              *ngIf="images.length > 0"
             >
-              <h4 class="mb-0 text-dark">Shopping Center Information</h4>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-12">
-                  <dl class="row mb-0">
-                    <ng-container *ngIf="JsonPDF.CenterName">
-                      <dt class="col-sm-4">Center Name:</dt>
-                      <dd class="col-sm-8">{{ JsonPDF.CenterName }}</dd>
-                    </ng-container>
-                    <ng-container *ngIf="JsonPDF.CenterType">
-                      <dt class="col-sm-4">Center Type:</dt>
-                      <dd class="col-sm-8">{{ JsonPDF.CenterType }}</dd>
-                    </ng-container>
-                    <ng-container *ngIf="JsonPDF.CenterAddress">
-                      <dt class="col-sm-4">Address:</dt>
-                      <dd class="col-sm-8">{{ JsonPDF.CenterAddress }}</dd>
-                    </ng-container>
-                    <ng-container *ngIf="JsonPDF.CenterCity">
-                      <dt class="col-sm-4">City:</dt>
-                      <dd class="col-sm-8">{{ JsonPDF.CenterCity }}</dd>
-                    </ng-container>
-                    <ng-container *ngIf="JsonPDF.CenterState">
-                      <dt class="col-sm-4">State:</dt>
-                      <dd class="col-sm-8">{{ JsonPDF.CenterState }}</dd>
-                    </ng-container>
-                    <ng-container *ngIf="JsonPDF.TotalAvailableSpace_SF">
-                      <dt class="col-sm-4">Available Space:</dt>
-                      <dd class="col-sm-8">
-                        {{ JsonPDF.TotalAvailableSpace_SF }}  <strong>SF</strong>
-                      </dd>
-                    </ng-container>
-                    <ng-container *ngIf="JsonPDF.percentage">
-                      <dt class="col-sm-4">Percentage:</dt>
-                      <dd class="col-sm-8">
-                        {{ JsonPDF.percentage }}%
-                      </dd>
-                    </ng-container>
-                    <ng-container *ngIf="JsonPDF.reason">
-                      <dt class="col-sm-4">Reason:</dt>
-                      <dd class="col-sm-8">
-                        <div [ngClass]="{'truncate': !showFullReason}">
-                          {{ JsonPDF.reason }}
-                        </div>
-                        <span (click)="toggleReason()" class="toggle-link">
-                          {{ showFullReason ? 'View Less' : 'View More' }}
-                        </span>
-                      </dd>
-                    </ng-container> 
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Availability and Tenants Section -->
-          <div class="row g-4">
-            <!-- Availability Card -->
-            <div class="col-md-6" *ngIf="JsonPDF.Availability.length > 0">
-              <div class="card shadow-sm h-100">
-                <div
-                  class="card-header text-white"
-                  style="background-color: #081c3e !important"
-                >
-                  <h5 class="mb-0 d-flex justify-content-center">
-                    Availability
-                  </h5>
-                </div>
-                <div class="card-body">
-                  <ul class="list-group list-group-flush">
-                    <li
-                      *ngFor="let avail of JsonPDF.Availability"
-                      class="list-group-item border-0 px-0"
-                    >
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          [(ngModel)]="avail.isAdded"
-                          id="availCheckbox-{{ avail.id }}"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="availCheckbox-{{ avail.id }}"
-                        >
-                          <strong>Building Size:</strong>
-                          {{ avail.BuildingSizeSf }} SF
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tenants Card -->
-            <div class="col-md-6">
-              <div class="card shadow-sm h-100">
-                <div
-                  class="card-header text-white"
-                  style="background-color: #081c3e !important"
-                >
-                  <h5 class="mb-0 d-flex justify-content-center">Tenants</h5>
-                </div>
-                <div class="card-body">
-                  <ul class="list-group list-group-flush">
-                    <li
-                      *ngFor="let tenant of JsonPDF.Tenants"
-                      class="list-group-item border-0 px-0"
-                    >
-                      <div class="form-check">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          [(ngModel)]="tenant.isAdded"
-                          id="tenantCheckbox-{{ tenant.id }}"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="tenantCheckbox-{{ tenant.id }}"
-                        >
-                          {{ tenant.Name }}
-                          <a
-                            *ngIf="tenant.OrgUrl"
-                            [href]="tenant.OrgUrl"
-                            target="_blank"
-                            class="tenant-link"
-                          >
-                            (Website)
-                          </a>
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="!returnsubmit" class="marginleft">
-      <div class="col-4">
-        <button
-          class="submit-button"
-          (click)="sendImagesArray()"
-          [disabled]="!isFileUploaded"
-          [ngClass]="{ 'submit-button-enabled': isFileUploaded }"
-        >
-          Submit
-        </button>
-      </div>
-    </div>
-
-    <div>
-      <!-- <div class="col-md-12 p-0">
-        <ngx-file-drop
-          dropZoneLabel="Drop files here"
-          (onFileDrop)="uploadFile($event)"
-          [dropZoneClassName]="'upload-background-image'"
-        >
-          <ng-template
-            ngx-file-drop-content-tmp
-            let-openFileSelector="openFileSelector"
-          >
-            <b>
-              <span class="text-dark drop-sty mx-2"> Drop File Here </span>
-            </b>
-            <button
-              type="button"
-              class="btn btn-success ml-2 secondary-color upload"
-              (click)="openFileSelector()"
-            >
-              Browse Files
-            </button>
-          </ng-template>
-        </ngx-file-drop>
-      </div> -->
-    </div>
-    <div class="modal-footer">
-      <!-- Send Selected Images Button -->
-      <div
-        class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
-      >
-        <!-- <button
-            class="convertimages mx-1"
-            (click)="sendImagesArray()"
-            *ngIf="images.length > 0"
-          >
-            Convert Images
-          </button> -->
-        <button class="submitpdfbutton" *ngIf="JsonPDF" (click)="sendJson()">
-          Submit PDF Data
-        </button>
-        <!-- <button
-              class="btn btn-secondary mx-1"
-              (click)="clearModalData(); closeModal(modal)"
-            >
-              Cancel
+              Convert Images
             </button> -->
+                <button
+                  class="submitpdfbutton"
+                  *ngIf="JsonPDF"
+                  (click)="sendJson()"
+                >
+                  Submit PDF Data
+                </button>
+                <!-- <button
+                class="btn btn-secondary mx-1"
+                (click)="clearModalData(); closeModal(modal)"
+              >
+                Cancel
+              </button> -->
+              </div>
+            </div>
+          </ng-template>
+          <div id="customToast" class="custom-toast">
+            <div class="toast-content">
+              <p id="toastMessage"></p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </ng-template>
-  <div id="customToast" class="custom-toast">
-    <div class="toast-content">
-      <p id="toastMessage"></p>
     </div>
   </div>
 </div>

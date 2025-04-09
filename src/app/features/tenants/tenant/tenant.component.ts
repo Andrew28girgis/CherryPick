@@ -57,7 +57,6 @@ export class TenantComponent implements OnInit {
   TenantResult!: LandingPageTenants;
   organizationBranches!: OrganizationBranches;
   selectedbuyBox!: string;
-  buyboxcolor!: string;
   isSubmitting: boolean = false;
   returnsubmit: boolean = false;
   organizationid!: number;
@@ -79,7 +78,6 @@ export class TenantComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.buyboxcolor = '#FF5733';
     this.contactID = localStorage.getItem('contactId');
 
     this.activatedRoute.params.subscribe((params) => {
