@@ -82,6 +82,6 @@ export class LoginComponent implements OnInit {
   }
 
   private navigateToHome() {
-    this.router.navigate(['/campaigns']);
+    this.router.navigate(['/tasks']);
   }
 }

@@ -838,6 +838,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.heartX = event.clientX;
       this.heartY = event.clientY;
 
+      const contactIdStr = localStorage.getItem('ContactId');
+      if (!contactIdStr) {
+        return;
+      }
       // Show heart animation
       this.showHeartAnimation();
 

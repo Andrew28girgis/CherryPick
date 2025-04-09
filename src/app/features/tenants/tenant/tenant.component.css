@@ -1,21 +1,54 @@
 .overfloww {
-  overflow-x: hidden;
+  width: 80%;
+  margin: auto;
+  margin-top: 15px;
 }
-.paddingrow{
+.allbackground {
+  background: var(--Body-Page-BG, #f1f1f4);
+}
+.paddingrow {
   padding: 20px 20px;
 }
 .background {
   background: var(--Body-Page-BG, #f2f3f4);
-  width: 100% !important;
 }
-.boldtext {
-  color: #fff;
+/* .icon-text-container {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px; 
+  margin-bottom: 15px;
+  gap: 8px;                 
+}
+
+.chevoo {
+ font-size: 16px;         
+}
+
+.text {
+  font-size: 18px;             
+} */
+.BuyboxSpecifications {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  align-self: flex-start;
-  text-align: left;
+}
+.somegap{
+  gap: 6px;
+}
+.smalltitle {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
 }
 .brokertext {
   color: #fff;
@@ -41,18 +74,10 @@
   border-radius: var(--Radius-Radius-12, 12px);
   box-shadow: -1px 3px 17px 0px rgba(0, 0, 0, 0.1);
 }
-.custom-card {
-  border-radius: var(--Card-Section-Lg-Radius, 20px);
-  display: flex;
-  padding: var(--Card-Section-Lg-Padding-All-Sides, 26px);
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--Space-Space-24, 16px);
-}
 .truncate {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;  
+  -webkit-line-clamp: 2;
   overflow: hidden;
 }
 .toggle-link {
@@ -78,6 +103,57 @@
   align-items: center;
   gap: var(--Space-Space-12, 12px);
   flex-shrink: 0;
+}
+.sharebtn {
+  border-radius: var(--Radius-Radius-16, 16px);
+  border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #4d65b4);
+  background: var(--Button-Secondary-BG, #fff);
+  display: flex;
+  padding: 5px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.sharebtn img {
+  width: 20px;
+  height: 20px;
+}
+
+.sharebtn span {
+  color: var(--Button-Secondary-Label-Default, #4d65b4);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.uploadbtn {
+  display: flex;
+  padding: 4px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #4d65b4);
+  width: fit-content;
+  height: fit-content;
+}
+
+.uploadbtn img {
+  width: 20px;
+  height: 20px;
+}
+
+.uploadbtn span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
 }
 
 .content-right {
@@ -164,12 +240,13 @@
   align-items: center;
   flex-shrink: 0;
 }
-.lowwhite {
-  color: var(--Colors-Pure-White, #FFF);
+.boldtext {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 30px; 
+  font-weight: 600;
+  line-height: 30px;
 }
 .brokerframeee {
   display: flex;
@@ -253,11 +330,9 @@
   border-bottom-right-radius: 15px;
 }
 .tenant-logo {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   aspect-ratio: 1/1;
-  border-radius: 120px;
-  border: 4px solid var(--Body-Page-BG, #f2f3f4);
   margin-right: 15px;
 }
 .btn-share {
@@ -360,12 +435,12 @@
   line-height: 30px;
 }
 .buyboxname {
-  color: var(--Colors-Pure-White, #fff);
-  font-size: 24px;
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 44px;
   font-style: normal;
   font-weight: 600;
-  line-height: 32px;
-  white-space: nowrap;
+  line-height: 56px;
 }
 .imgshare {
   display: flex;
@@ -431,14 +506,17 @@
 .uploadingpadding {
   padding: 0px 20px;
 }
-.inner-frame {
+
+.inner-frame{
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 24px 33px;
   width: 100%;
-  height: 300px;
-  border-radius: 4px;
-  background: #edf0f8;
+  gap: 12px;
+  border-radius: var(--Radius-Radius-12, 12px);
+  border: 1px solid var(--Colors-Positive-500, #28a745);
+  background: var(--Colors-Positive-100, #eaf6ec);
 }
 
 .outer-frame {
@@ -447,12 +525,16 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  border-radius: 12px;
-  border: 1px solid #e2e4e9;
-  background: #fff;
+  border-radius: var(--Card-Section-Radius, 20px);
+  border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
   width: 100%;
 }
-
+/* Apply height 0px to the hidden dropzone */
+.hidden-dropzone {
+  height: 0px !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 .filenameouterframe {
   display: flex;
   padding: 12px;
@@ -486,9 +568,22 @@
 }
 
 .upload-text {
-  font-size: 17px;
-  color: #7c7c7c;
+  color: var(--Colors-Positive-500, #28a745);
   text-align: center;
+  font-family: Montserrat;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+.uploadspan {
+  color: var(--Body-Text-and-Icons, #707791);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
 }
 .modal-footer {
   width: 100%;
@@ -538,20 +633,20 @@
 }
 
 .submit-button:disabled {
-  border-radius: var(--Radius-Radius-16, 16px); 
-  opacity: 0.5; 
-  background: var(--Button-Primary-BG, #4D65B4); 
-  cursor: not-allowed; 
+  border-radius: var(--Radius-Radius-16, 16px);
+  opacity: 0.5;
+  background: var(--Button-Primary-BG, #4d65b4);
+  cursor: not-allowed;
 }
 
 .submit-button:not(:disabled):hover {
-  background: #4055a8; 
+  background: #4055a8;
 }
 
 .submit-button:hover {
   background: #4055a8;
 }
-.submitpdfbutton{
+.submitpdfbutton {
   display: flex;
   height: 48px;
   padding: 14px 24px;
@@ -571,61 +666,64 @@
   background: #f0f3ff;
 }
 
-
-.paddingsubmitpdf{
+.paddingsubmitpdf {
   padding-right: 20px;
+}
+.custom-toast {
+  width: fit-content;
 }
 .cardcampaings {
   border-radius: var(--Card-Section-Radius, 20px);
-  background: var(--Card-Section-BG, #FFF);
+  background: var(--Card-Section-BG, #fff);
   display: flex;
   padding: var(--Space-Space-20, 20px);
   flex-direction: column;
   gap: var(--Space-Space-20, 20px);
 }
-.SumbitProp{
-color: var(--Body-Heading-Color, #16181D);
-font-size: 24px;
-font-style: normal;
-font-weight: 600;line-height: 32px; 
+.SumbitProp {
+  color: var(--Body-Heading-Color, #16181d);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
 }
-.uploadyourfile{
-color: var(--Body-Text-and-Icons, #707791);
-font-size: 18px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; 
-margin-top: 15px;
+.uploadyourfile {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  margin-top: 15px;
 }
-.colpadding{
+.colpadding {
   padding: 20px 20px;
 }
-.lineheight{
-  line-height:30px;
+.lineheight {
+  line-height: 30px;
 }
 .whitebackground {
   padding: 15px 5px;
-  background: var(--Colors-Pure-White, #FFF);
+  background: var(--Colors-Pure-White, #fff);
 }
-.campaings{
-color: var(--Body-Heading-Color, #16181D);
-font-size: 18px;
-font-style: normal;
-font-weight: 600;
-line-height: 24px; 
+.campaings {
+  color: var(--Body-Heading-Color, #16181d);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
 }
-.campaignname{
-color: var(--Body-Text-and-Icons, #707791);
-text-align: center;
-font-size: 16px;
-font-style: normal;
-font-weight: 500;
-line-height: 30px; 
+.campaignname {
+  color: var(--Body-Text-and-Icons, #707791);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
 }
 /* Button Styles */
 .showpolygonsbutton {
-  border-radius: var(--Radius-Radius-16, 16px);  /* Customizable border radius */
-  background: var(--Button-Primary-BG, #4D65B4);  /* Customizable background */
+  border-radius: var(--Radius-Radius-16, 16px); /* Customizable border radius */
+  background: var(--Button-Primary-BG, #4d65b4); /* Customizable background */
   display: flex;
   height: 32px;
   padding: 14px 24px;
@@ -637,29 +735,35 @@ line-height: 30px;
 }
 
 .showpolygonsbutton span {
-  color: var(--Button-Primary-Label, #FFF);  
+  color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  
-  font-size: 16px;  
+
+  font-size: 16px;
   font-style: normal;
-  font-weight: 500; 
-  line-height: 30px;  
+  font-weight: 500;
+  line-height: 30px;
 }
 .divider {
   border: none;
-  border-top: 1px solid #cfc9c9;
+  border-top: 1px solid #e2e4e9;
   margin-top: 0px;
 }
-.extractedimagespadding{
+.dividertop {
+  margin-top: 20px;
+}
+.mtopp {
+  margin-top: 20px;
+}
+.extractedimagespadding {
   padding: 20px;
 }
-.marginleft{
+.marginleft {
   margin-left: 20px;
 }
 @media (max-width: 576px) {
   .cardcampaings {
     margin-top: 15px;
-}
+  }
   .content-right {
     position: absolute;
     top: 12px;
@@ -711,14 +815,14 @@ line-height: 30px;
     padding: 12px;
     margin-right: 8px;
   }
-  .lowwhite {
+  .boldtext {
     font-size: 12px;
   }
   .small-image {
     width: 15px;
     height: 15px;
   }
-  .boldtext {
+  .smalltitle {
     font-size: 13px;
   }
   .container {
@@ -783,7 +887,7 @@ line-height: 30px;
 @media (min-width: 576px) {
   .cardcampaings {
     margin-top: 20px;
-}
+  }
   .content-right {
     position: absolute;
     top: 12px;
@@ -798,7 +902,7 @@ line-height: 30px;
     height: 60px;
   }
   .buyboxname {
-    font-size: 22px;
+    font-size: 30px;
   }
   .organization-image {
     width: 60px;
@@ -823,7 +927,7 @@ line-height: 30px;
   .nameincard {
     font-size: 20px;
   }
-  .lowwhite {
+  .boldtext {
     font-size: 12px;
   }
   .btn-submit-proposel span {
@@ -881,7 +985,7 @@ line-height: 30px;
       var(--Button-Padding-left-right, 15px);
     font-size: 13px;
   }
-  .boldtext {
+  .smalltitle {
     font-size: 15px;
   }
   .frame {
@@ -901,23 +1005,24 @@ line-height: 30px;
 }
 
 @media (min-width: 768px) {
+  .buyboxname {
+    font-size: 44px;
+  }
   .cardcampaings {
     margin-top: 0px;
-}
-  .content-right{
+  }
+  .content-right {
     position: absolute;
     top: 27px;
     right: 10px;
-}
+  }
   .tenant-logo {
     width: 80px;
     height: 80px;
     aspect-ratio: 1 / 1;
-    border-radius: 120px;
-    border: 4px solid var(--Body-Page-BG, #f2f3f4);
     margin-right: 15px;
   }
-  .boldtext {
+  .smalltitle {
     font-size: 16px;
   }
   .broker-container {
@@ -984,7 +1089,7 @@ line-height: 30px;
   .linkedin {
     font-size: 14px;
   }
-  .lowwhite {
+  .boldtext {
     font-size: 15px;
   }
   .btn-submit-proposel span {
@@ -1003,8 +1108,8 @@ line-height: 30px;
     right: 75px;
   }
   .tenant-logo {
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     aspect-ratio: 1/1;
     margin-right: 15px;
   }
@@ -1017,7 +1122,7 @@ line-height: 30px;
   .Osmowstext {
     font-size: 16px;
   }
-  .boldtext {
+  .smalltitle {
     font-size: 16px;
   }
   .brokerandmangeorgimage {
@@ -1035,7 +1140,7 @@ line-height: 30px;
     top: -75px;
     left: 5px;
   }
-  .lowwhite {
+  .boldtext {
     font-size: 16px;
   }
 }

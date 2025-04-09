@@ -56,7 +56,7 @@
           <th>Stage Name</th>
           <th *ngIf="placesRepresentative != false">Leased by</th>
           <th>Unit Size & Lease Price</th>
-          <th>
+          <th *ngIf="shoppingCenters[0].ShoppingCenter">
             <ng-container *ngFor="
                   let item of shoppingCenters[0].ShoppingCenter.BuyBoxPlaces;
                   let i = index
@@ -88,7 +88,22 @@
               </div>
             </td>
             <td>
-              <p class="table-text ShoppingCenterStage mb-1">{{shoppingCenter.stageName}}</p>
+              <!-- <p class="table-text ShoppingCenterStage mb-1">{{shoppingCenter.stageName}}</p> -->
+              <div class="custom-dropdown" style="width: 200px;">
+                <div class="selected-option" (click)="toggleDropdown(shoppingCenter)">
+                  {{ getSelectedStageName(shoppingCenter.kanbanStageId) }}
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="dropdown-options" [class.show]="shoppingCenter.isDropdownOpen">
+                  <div 
+                    *ngFor="let stage of KanbanStages" 
+                    class="dropdown-item" 
+                    [class.active]="stage.id === shoppingCenter.kanbanStageId"
+                    (click)="selectStage(shoppingCenter.MarketSurveyId, stage.id, shoppingCenter)">
+                    {{stage.stageName}}
+                  </div>
+                </div>
+              </div>
             </td>
             <td *ngIf="placesRepresentative != false">
               <ng-container *ngIf="shoppingCenter.ShoppingCenter?.ManagerOrganization">
@@ -139,7 +154,7 @@
               </ng-container>
             </td>
             <td class="table-text" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></td>
-            <td>
+            <td *ngIf="shoppingCenters[0].ShoppingCenter">
               <ng-container *ngIf="
                     shoppingCenter?.ShoppingCenter?.BuyBoxPlaces;
                     else emptyTd
@@ -213,7 +228,7 @@
                           </li>
                           <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
                             <a class="target"  
-                                [routerLink]="['/organization-mail', BuyBoxId, shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID]"
+                                [routerLink]="['/organization-mail', BuyBoxId, shoppingCenter.ShoppingCenter.ManagerOrganization[0].ID , shoppingCenter.CampaignId]"
                               >
                               <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">

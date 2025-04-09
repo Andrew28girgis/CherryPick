@@ -79,7 +79,7 @@
                           </li>
                           <li  >
                             <a class="target"  
-                            [routerLink]="['/organization-mail', BuyBoxId, place.ShoppingCenter.ManagerOrganization[0].ID]"
+                            [routerLink]="['/organization-mail', BuyBoxId, place.ShoppingCenter.ManagerOrganization[0].ID, place.CampaignId]"
                               >
                               <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -157,7 +157,22 @@
                   </div>
 
                   <div *ngIf="place.stageName">
-                    <p class="ShoppingCenterStage mb-1">{{place.stageName}}</p>
+                    <!-- <p class="ShoppingCenterStage mb-1">{{place.stageName}}</p> -->
+                    <div class="custom-dropdown" style="width: 200px;">
+                      <div class="selected-option" (click)="toggleDropdown(place)">
+                        {{ getSelectedStageName(place.kanbanStageId) }}
+                        <i class="fas fa-chevron-down"></i>
+                      </div>
+                      <div class="dropdown-options" [class.show]="place.isDropdownOpen">
+                        <div 
+                          *ngFor="let stage of KanbanStages" 
+                          class="dropdown-item" 
+                          [class.active]="stage.id === place.kanbanStageId"
+                          (click)="selectStage(place.MarketSurveyId, stage.id, place)">
+                          {{stage.stageName}}
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div *ngIf="place.CenterAddress">
