@@ -457,20 +457,31 @@
                         "
                         [alt]="c.name"
                         class="tenant-logo"
-                        style="
-                          width: 48px;
-                          height: 48px ;
-                          border-radius: 50%;
-                        "
+                        style="width: 48px; height: 48px; border-radius: 50%"
                       />
                       <span
-                      class="tenant-name"
-                      [routerLink]="['/dashboard', c.id, c.organizationid, c.name]"
-                      style="font-size: 14px; color: #333; max-width: 150px; word-break: break-word;"
-                    >
+                        class="tenant-name"
+                        [routerLink]="[
+                          '/dashboard',
+                          c.id,
+                          c.organizationid,
+                          c.name
+                        ]"
+                        style="
+                          font-size: 14px;
+                          color: #333;
+                          max-width: 150px;
+                          word-break: break-word;
+                        "
+                      >
                         {{ c.name }}
                       </span>
                     </div>
+                    <a
+                      class="inbox text-center"
+                      [routerLink]="['./ataglance', campaign.Id]"
+                      >At a Glance</a
+                    >
                   </div>
                 </td>
 
