@@ -10,6 +10,24 @@
   </div>
 </div>
 
+<div class="indicators-container" *ngIf="isLoading">
+
+  <div
+    class="scroll-indicator up-indicator d-none d-sm-flex"
+    (click)="scrollUp()"
+    #upIndicator
+  >
+    <i class="fas fa-chevron-up"></i>
+  </div>
+  <div
+    class="scroll-indicator down-indicator d-none d-sm-flex"
+    (click)="scrollDown()"
+    #downIndicator
+  >
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</div>
+
 <div class="scroll-container" *ngIf="isLoading">
   <div class="card" *ngFor="let i of [1,2,3]">
     <div class="social-card mb-0 mb-sm-5 Res skeleton-social-card">
@@ -392,7 +410,7 @@
                     Street View
                   </a>
                 </li>
-                <li *ngIf="shopping.Deleted != true">
+                <!-- <li *ngIf="shopping.Deleted != true">
                   <a
                     class="target"
                     (click)="
@@ -406,7 +424,7 @@
                     <i class="fa-regular fa-trash-can big-text"></i>
                     Remove Shopping
                   </a>
-                </li>
+                </li> -->
                 <li *ngIf="shopping.Deleted == true">
                   <a
                     class="target"
