@@ -345,16 +345,19 @@
 }
 
 .table thead th {
+  background-color: #f8f9fa; /* light background for header clarity */
+
   border: 1px solid #dee2e6;
   white-space: normal;
   vertical-align: middle;
-  padding: 0.75rem 0.3rem;
+  text-align: center; /* centers the header content */
+  padding: 0.75rem 0rem;
   font-size: 0.8rem;
 }
 
 .table tbody td {
   border: 1px solid #dee2e6;
-  padding: 0.85rem 0.5rem;
+  padding: 0.85rem -0.5rem;
 }
 
 /* Inbox Button */
@@ -767,7 +770,4 @@
   .empty-campaigns p {
     font-size: 0.9rem;
   }
-
-  
 }
-
