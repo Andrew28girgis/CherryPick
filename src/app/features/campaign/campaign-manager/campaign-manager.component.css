@@ -366,6 +366,8 @@
   text-decoration: none;
   color: #fff;
   cursor: pointer;
+  align-items: center;
+  gap: 5px;
 }
 
 /* Hyperlink Style */
@@ -768,4 +770,7 @@
   .empty-campaigns p {
     font-size: 0.9rem;
   }
+}
+.mail{
+  background-color: #0077b6;
 }
