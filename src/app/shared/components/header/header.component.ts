@@ -7,9 +7,14 @@ import {
   HostListener,
   ElementRef,
 } from '@angular/core';
-import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
+import {
+  Router,
+  NavigationEnd,
+  Event as RouterEvent,
+  ActivatedRoute,
+} from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
 import { Location } from '@angular/common';
@@ -55,21 +60,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @ViewChild('notificationContent') notificationContent!: TemplateRef<any>;
   previousUrl: string | null = null; // New property for tracking previous URL
 
-
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
     private userViewService: UserViewService,
     private elementRef: ElementRef,
-    private location: Location,
-    private navigationService: NavigationService ,
-
+    private navigationService: NavigationService,
+    private activatedRoute: ActivatedRoute
   ) {}
+
+  display: boolean = true;
 
   ngOnInit(): void {
     this.isSmallScreen = window.innerWidth < 992;
 
     this.current = this.router.url;
+
+    this.router.events
+    .pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => {
+        // Traverse the activated route to the deepest child
+        let route = this.activatedRoute;
+        while (route.firstChild) {
+          route = route.firstChild;
+        }
+        return route;
+      }),
+      mergeMap(route => route.data)
+    )
+    .subscribe((data:any) => {
+   
+      
+      // If the current route has data { hideHeader: true }, then do not display the header.
+      this.display = !data.hideHeader;
+     
+    });
 
     // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
@@ -141,5 +167,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.router.navigate(['/campaigns']);
     }
   }
-
 }
