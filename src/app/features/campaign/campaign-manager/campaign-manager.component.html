@@ -358,7 +358,7 @@
                   c.organizationid,
                   campaign.Id
                 ]"
-                >Inbox</a
+                >Emily</a
               >
               <button class="expand-btn" (click)="toggleExpand(campaign)">
                 {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
@@ -457,17 +457,23 @@
                         "
                         [alt]="c.name"
                         class="tenant-logo"
-                        style="
-                          width: 48px;
-                          height: 48px ;
-                          border-radius: 50%;
-                        "
+                        style="width: 48px; height: 48px; border-radius: 50%"
                       />
                       <span
-                      class="tenant-name"
-                      [routerLink]="['/dashboard', c.id, c.organizationid, c.name]"
-                      style="font-size: 14px; color: #333; max-width: 150px; word-break: break-word;"
-                    >
+                        class="tenant-name"
+                        [routerLink]="[
+                          '/dashboard',
+                          c.id,
+                          c.organizationid,
+                          c.name
+                        ]"
+                        style="
+                          font-size: 14px;
+                          color: #333;
+                          max-width: 150px;
+                          word-break: break-word;
+                        "
+                      >
                         {{ c.name }}
                       </span>
                     </div>
@@ -585,7 +591,7 @@
                       c.organizationid,
                       campaign.Id
                     ]"
-                    >Inbox</a
+                    >Emily</a
                   >
                 </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
