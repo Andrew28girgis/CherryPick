@@ -429,7 +429,6 @@
             <th style="text-align: center">Sites</th>
             <th style="text-align: center">Submissions</th>
             <th style="text-align: center">Sent</th>
-            <th style="text-align: center">Actions</th>
             <ng-container *ngFor="let stage of stages">
               <th scope="col" style="text-align: center">
                 {{ stage.stageName }}
@@ -454,7 +453,7 @@
 
                     <div
                       class="d-flex align-items-center gap-2"
-                      style="flex-wrap: wrap"
+                      style="flex-wrap: wrap; margin-block: 5px"
                     >
                       <img
                         *ngIf="c.organizationid"
@@ -484,11 +483,27 @@
                         {{ c.name }}
                       </span>
                     </div>
-                    <a
-                      class="inbox text-center"
-                      [routerLink]="['./ataglance', campaign.Id]"
-                      >At a Glance</a
-                    >
+                    <div class="d-flex justify-content-between">
+                      <div>
+                        <a
+                          class="inbox text-center"
+                          [routerLink]="['./ataglance', campaign.Id]"
+                          >At a Glance</a
+                        >
+                      </div>
+                      <div class="inbox mail text-center">
+                        <i class="fa-regular fa-envelope me-2"></i>
+                        <a
+                          [routerLink]="[
+                            '/organization-mail',
+                            c.id,
+                            c.organizationid,
+                            campaign.Id
+                          ]"
+                          >Emily</a
+                        >
+                      </div>
+                    </div>
                   </div>
                 </td>
 
@@ -594,20 +609,6 @@
                   >
                 </td>
 
-                <td style="text-align: center">
-                  <div class="inbox mail d-flex justify-content-between">
-                    <i class="fa-regular fa-envelope"></i>
-                    <a
-                      [routerLink]="[
-                        '/organization-mail',
-                        c.id,
-                        c.organizationid,
-                        campaign.Id
-                      ]"
-                      >Emily</a
-                    >
-                  </div>
-                </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
                   <td style="text-align: center">
                     <div

@@ -360,11 +360,12 @@
 
 /* Inbox Button */
 .inbox {
-  padding:10px;
+  padding: 5px 8px;
   border-radius: 1rem;
   background-color: #4d65b4;
   text-decoration: none;
   color: #fff;
+  font-size: 15px;
   cursor: pointer;
   align-items: center;
   gap: 5px;
@@ -771,10 +772,10 @@
     font-size: 0.9rem;
   }
 }
-.mail{
+.mail {
   background-color: #0077b6;
 }
-.mail a{
+.mail a {
   color: #fff;
-width: max-content ;
+  width: max-content;
 }
