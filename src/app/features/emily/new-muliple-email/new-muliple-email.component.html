@@ -315,7 +315,6 @@
         <th scope="col">Org Name</th>
         <th scope="col">BuyBox Name</th>
         <th scope="col">Context</th>
-        <th scope="col">Contact</th>
         <th scope="col">SC</th>
         <th scope="col">Prompt Name</th>
         <th scope="col">Generated | Send</th>
@@ -332,10 +331,16 @@
           {{ item.Context }}ViewContext
         </td>
         <td>
-          <p class="mb-0 Name_contact" *ngFor="let contact of item.C"> &bull;
-            {{ contact.Firstname }}&nbsp;{{ contact.Lastname }}</p>
+          <div class="mb-0 Name_contact" *ngFor="let contact of item.C">
+              <div class="contact-container table-text" *ngFor="let SC of contact.SC">
+                <p class="table-CenterName m-0">&bull; {{ SC.CenterName }}</p>
+              </div>
+              <div class="mb-1 table-Contactname">
+                {{ contact.Firstname }}&nbsp;{{ contact.Lastname }}
+              </div>
+          </div>
         </td>
-        <td>
+        <!-- <td>
           <img class="ms-2 cursor d-block img_SC" *ngFor="let contact of item.C"
             src="../../../assets/Images/Icons/eye.png" alt="View Shopping Center" [ngbPopover]="popoverContent"
             popoverTitle="Shopping Center Info" triggers="click:outside" [placement]="'top'"
@@ -348,7 +353,7 @@
               </div>
             </div>
           </ng-template>
-        </td>
+        </td> -->
         <td class="single-lineMax">{{ item.C[0].SC[0].P[0].PromptName }}</td>
         <td class="CountMail" [routerLink]="['/MailsList', item.MailContextId, 1]">
           {{ item.NumberOfMailGenerated }} &nbsp; | &nbsp;
