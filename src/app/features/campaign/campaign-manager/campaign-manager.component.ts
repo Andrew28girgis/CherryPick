@@ -185,7 +185,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   openAddCampaignPopup(content: TemplateRef<any>): void {
     // Hide spinner before opening modal
-    this.modalService.open(content, { centered: true, size: 'xl' });
+    this.modalService.open(content, { centered: true, fullscreen: true });
   }
 
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {

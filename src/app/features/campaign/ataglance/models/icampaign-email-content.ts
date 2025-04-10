@@ -1,0 +1,33 @@
+export interface ICampaignEmailContent {
+  id: number;
+  bcc: any;
+  fromAddress: any;
+  cc: any;
+  body: string;
+  messageId: any;
+  toAddress: any;
+  date: string;
+  subject: string;
+  direction: number;
+  uid: any;
+  opened: any;
+  dealId: any;
+  outbox: any;
+  macroDealId: any;
+  microDealId: any;
+  activeDealId: any;
+  contactId: number;
+  responseStatus: any;
+  hasFollowUp: any;
+  isFollowUp: any;
+  followUpDate: any;
+  emailAccountId: any;
+  buyBoxId: number;
+  isCC: boolean;
+  parentMailId: number;
+  mailContextId: number;
+  campaignId: any;
+  buyBoxName: string;
+  organizationId: number;
+  organizationName: string;
+}
