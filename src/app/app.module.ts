@@ -1,7 +1,4 @@
-import {
-  NgModule,
-  CUSTOM_ELEMENTS_SCHEMA,
-} from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -53,6 +50,7 @@ import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.c
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { EditorModule } from 'primeng/editor';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
+import { CampaignModule } from './features/campaign/campaign.module';
 
 @NgModule({
   declarations: [
@@ -105,6 +103,7 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
     NgbNavModule,
     SelectButtonModule,
     EditorModule,
+    CampaignModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

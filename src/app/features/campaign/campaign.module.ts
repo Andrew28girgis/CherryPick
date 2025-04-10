@@ -19,7 +19,8 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
     NgxSpinnerModule,
     SelectButtonModule,
     DragDropModule,
-    NgbCollapseModule
+    NgbCollapseModule,
   ],
+  exports: [CampaignDrawingComponent],
 })
 export class CampaignModule {}
