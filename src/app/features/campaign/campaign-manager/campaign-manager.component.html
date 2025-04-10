@@ -348,18 +348,26 @@
                 </div>
               </div>
             </div>
-
+            <a
+              class="inbox text-center"
+              [routerLink]="['./ataglance', campaign.Id]"
+              >At a Glance</a
+            >
             <div class="campaign-actions">
-              <a
-                class="inbox"
+              <div
+                class="inbox mail d-flex justify-content-between">
+                <i class="fa-regular fa-envelope"></i>
+                <a
                 [routerLink]="[
                   '/organization-mail',
                   c.id,
                   c.organizationid,
                   campaign.Id
                 ]"
-                >Inbox</a
+                >Emily</a
               >
+              </div>
+
               <button class="expand-btn" (click)="toggleExpand(campaign)">
                 {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
                 <svg
@@ -588,16 +596,19 @@
                 </td>
 
                 <td style="text-align: center">
+                  <div
+                  class="inbox mail d-flex justify-content-between">
+                  <i class="fa-regular fa-envelope"></i>
                   <a
-                    class="inbox"
-                    [routerLink]="[
-                      '/organization-mail',
-                      c.id,
-                      c.organizationid,
-                      campaign.Id
-                    ]"
-                    >Inbox</a
-                  >
+                  [routerLink]="[
+                    '/organization-mail',
+                    c.id,
+                    c.organizationid,
+                    campaign.Id
+                  ]"
+                  >Emily</a
+                >
+                </div>
                 </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
                   <td style="text-align: center">
