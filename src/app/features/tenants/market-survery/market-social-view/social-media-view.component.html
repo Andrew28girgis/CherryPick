@@ -26,7 +26,19 @@
     >
       <div class="card-header" (click)="toggleDetails(i, shopping)">
         <div class="header-info Res">
-          <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
+          <h3 class="center-name">
+            {{ shopping.CenterName | titlecase }}
+            <span
+              *ngIf="
+                shopping.kanbanTemplateStageId === 43 ||
+                shopping.kanbanTemplateStageId === 44
+              "
+              class="center-address shoppingcenterdata total"
+              style="color: #fff"
+            >
+              <b> ( {{ shopping.stageName | titlecase }} )</b>
+            </span>
+          </h3>
           <p
             class="center-address shoppingcenterdata total"
             style="color: #fff"
