@@ -221,10 +221,20 @@
 }
 
 /* Tenant Logo */
+.tenant-logo-card {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+}
 .tenant-logo {
   height: 1.75rem;
   width: 1.75rem;
   border-radius: 50%;
+}
+
+.tenant-header {
+  justify-content: center;
+  width: 100%;
 }
 
 /* Campaign Privacy Styles */
@@ -236,6 +246,10 @@
   width: fit-content;
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
+}
+
+.campaign-privacy {
+  margin-left: auto;
 }
 
 .campaign-privacy-icon {
@@ -366,6 +380,17 @@
   text-decoration: underline;
   cursor: pointer;
 }
+.tenant-name-card {
+  text-decoration: none;
+  cursor: pointer;
+
+  color: #16181d;
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
 
 .tenant-name:hover {
   color: #4d65b4;
@@ -423,7 +448,7 @@
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  /* gap: 1rem; */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -444,7 +469,6 @@
   margin: 0;
   color: #333;
   flex: 1;
-  padding-right: 1rem;
 }
 
 .tenant-section {
@@ -488,7 +512,6 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 0.75rem;
-  border-top: 1px solid #eee;
 }
 
 .expand-btn {
@@ -547,7 +570,7 @@
 
 /* Mobile Styles */
 @media (max-width: 767px) {
-  .toggle-cont{
+  .toggle-cont {
     width: 100%;
   }
   .view-toggle {
@@ -744,4 +767,13 @@
   .empty-campaigns p {
     font-size: 0.9rem;
   }
+  .card__Kayak_buttons {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+ 
+  
 }
+

@@ -303,4 +303,5 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   getSumbmissionsCountRejected(submissions: Submission[]) {
     return submissions.filter((s) => s.StatusId == -1).length;
   }
+
 }
