@@ -414,13 +414,13 @@
             <button 
               class="action-btn accept" 
               [class.selected]="selectedActionType[shopping.Id] === 'accept'"
-              (click)="acceptShoppingCenter(shopping.Id)">
+              (click)="acceptShoppingCenter(shopping)">
               Accept
             </button>
             <button 
               class="action-btn reject" 
               [class.selected]="selectedActionType[shopping.Id] === 'reject'"
-              (click)="rejectShoppingCenter(shopping.Id)">
+              (click)="rejectShoppingCenter(shopping)">
               Reject
             </button>
           </div>

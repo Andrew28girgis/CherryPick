@@ -4,6 +4,7 @@
   </p>
 </div>
 <div class="row m-0">
+  
   <div class="col-8 p-0 d-flex flex-column cards-container">
     <div class="row m-0 mt-1">
       <ng-container *ngFor="let place of cardsSideList; trackBy: trackById">
@@ -316,6 +317,7 @@
                       [innerHTML]="getShoppingCenterUnitSize(place)"
                     ></p>
                   </div>
+                  <p-toast position="top-right"></p-toast>
 
                   <div class="row m-0">
                     <div
@@ -404,10 +406,26 @@
                     </ng-template>
                   </div>
                 </div>
+                <div class="action-buttons mt-3 d-flex justify-content-between">
+                  <button 
+                    class="action-btn accept" 
+                    [class.selected]="selectedActionType[place.Id] === 'accept'"
+                    (click)="acceptShoppingCenter(place)">
+                    Accept
+                  </button>
+                  <button 
+                    class="action-btn reject" 
+                    [class.selected]="selectedActionType[place.Id] === 'reject'"
+                    (click)="rejectShoppingCenter(place)">
+                    Reject
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+          
         </div>
+      
       </ng-container>
     </div>
   </div>

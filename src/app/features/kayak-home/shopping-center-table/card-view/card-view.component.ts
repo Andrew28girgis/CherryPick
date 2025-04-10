@@ -433,18 +433,18 @@ handleDocumentClick(event: MouseEvent): void {
     this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
   }
-  acceptShoppingCenter(shoppingId: number): void {
+  acceptShoppingCenter(shopping: any): void {
     // Toggle selection
-    if (this.selectedActionType[shoppingId] === "accept") {
-      delete this.selectedActionType[shoppingId]
+    if (this.selectedActionType[shopping.Id] === "accept") {
+      delete this.selectedActionType[shopping.Id]
     } else {
-      this.selectedActionType[shoppingId] = "accept"
+      this.selectedActionType[shopping.Id] = "accept"
 
       // Show toast message
       this.messageService.add({
         severity: "success",
         summary: "Shopping Center Accepted",
-        detail: "The shopping center has been successfully accepted.",
+        detail: `The shopping center "${shopping.CenterName}" has been successfully accepted.`,
         life: 3000,
       })
 
@@ -455,24 +455,20 @@ handleDocumentClick(event: MouseEvent): void {
     this.cdr.detectChanges()
   }
 
-  rejectShoppingCenter(shoppingId: number): void {
+  rejectShoppingCenter(shopping: any): void {
     // Toggle selection
-    if (this.selectedActionType[shoppingId] === "reject") {
-      delete this.selectedActionType[shoppingId]
+    if (this.selectedActionType[shopping.Id] === "reject") {
+      delete this.selectedActionType[shopping.Id]
     } else {
-      this.selectedActionType[shoppingId] = "reject"
-
+      this.selectedActionType[shopping.Id] = "reject"
       // Show toast message
       this.messageService.add({
         severity: "error",
-        summary: "Shopping Center Rejected",
-        detail: "The shopping center has been rejected.",
+        summary: `Shopping Center Rejected`,
+        detail: `The shopping center "${shopping.CenterName}" has been rejected.`,
         life: 3000,
       })
 
-      // Here you would typically call your API to update the status
-      // For example:
-      // this.updateShoppingCenterStatus(shoppingId, 'rejected');
     }
     this.cdr.detectChanges()
   }

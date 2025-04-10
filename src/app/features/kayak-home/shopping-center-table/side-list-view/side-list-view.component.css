@@ -241,3 +241,65 @@
 ::ng-deep .popover-arrow::before {
   border-top: none !important;
 }
+
+/* Action button styles */
+.action-btn {
+  flex: 1;
+  background-color: #e9ecef;
+  color: #707791;
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.action-btn:first-child {
+  margin-right: 8px;
+}
+
+.action-btn:hover {
+  background-color: #dee2e6;
+}
+
+.action-btn.selected {
+  animation: pulse 0.5s;
+}
+
+.action-btn.accept.selected {
+  background-color: #28a745;
+  color: white;
+}
+
+.action-btn.reject.selected {
+  background-color: #dc3545;
+  color: white;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Toast styles */
+:host ::ng-deep .p-toast .p-toast-message {
+  border-radius: 4px;
+}
+
+:host ::ng-deep .p-toast .p-toast-message-success {
+  background-color: #eff8f1;
+  border-left: 6px solid #28a745;
+  color: #1f2937;
+}
+
+:host ::ng-deep .p-toast .p-toast-message-error {
+  background-color: #fef2f2;
+  border-left: 6px solid #dc3545;
+  color: #1f2937;
+}
