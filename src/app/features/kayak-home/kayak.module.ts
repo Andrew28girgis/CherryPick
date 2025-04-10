@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/api';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KayakRoutingModule } from './kayak-routing.module';
@@ -24,7 +25,7 @@ import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.c
 import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KayakComponent } from './kayak/kayak.component';
-
+import { ToastModule } from 'primeng/toast';
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -41,6 +42,9 @@ import { KayakComponent } from './kayak/kayak.component';
     PolygonsControllerComponent
     
   ],
+   providers: [
+      MessageService,
+    ],
   imports: [
     CommonModule,
     KayakRoutingModule,
@@ -55,6 +59,7 @@ import { KayakComponent } from './kayak/kayak.component';
     TableModule,
     CardModule,
     PaginatorModule,
+    ToastModule,
     EmilyComponent,
   ],
   exports: [
@@ -72,5 +77,7 @@ import { KayakComponent } from './kayak/kayak.component';
     LinkMicrosoftComponent, 
     EmilyComponent ,
   ],
+  
 })
+
 export class KayakModule {}

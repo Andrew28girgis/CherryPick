@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 import { StateService } from 'src/app/core/services/state.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { PlacesService } from 'src/app/core/services/places.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-card-view',
   templateUrl: './card-view.component.html',
@@ -57,7 +57,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   // Loading state for skeleton
   isLoading = true;
   // Interval for hiding spinner
-       
+  selectedActionType: { [key: number]: string } = {}
+
 
   first: number = 0;
   rows: number = 9;
@@ -68,6 +69,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.first = event.first;
     this.rows = event.rows;
   }
+  messageService: MessageService
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -76,7 +78,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
         
     private cdr: ChangeDetectorRef,
     private PlacesService: PlacesService,
-  ) {}
+    messageService: MessageService,
+
+  ) {
+    this.messageService = messageService;
+  }
 
   ngOnInit(): void {
     this.General = new General();
@@ -426,5 +432,48 @@ handleDocumentClick(event: MouseEvent): void {
 
     this.selectedIdCard = this.selectedIdCard === id ? null : id;
     this.selectedId = this.selectedId === id ? null : id;
+  }
+  acceptShoppingCenter(shoppingId: number): void {
+    // Toggle selection
+    if (this.selectedActionType[shoppingId] === "accept") {
+      delete this.selectedActionType[shoppingId]
+    } else {
+      this.selectedActionType[shoppingId] = "accept"
+
+      // Show toast message
+      this.messageService.add({
+        severity: "success",
+        summary: "Shopping Center Accepted",
+        detail: "The shopping center has been successfully accepted.",
+        life: 3000,
+      })
+
+      // Here you would typically call your API to update the status
+      // For example:
+      // this.updateShoppingCenterStatus(shoppingId, 'accepted');
+    }
+    this.cdr.detectChanges()
+  }
+
+  rejectShoppingCenter(shoppingId: number): void {
+    // Toggle selection
+    if (this.selectedActionType[shoppingId] === "reject") {
+      delete this.selectedActionType[shoppingId]
+    } else {
+      this.selectedActionType[shoppingId] = "reject"
+
+      // Show toast message
+      this.messageService.add({
+        severity: "error",
+        summary: "Shopping Center Rejected",
+        detail: "The shopping center has been rejected.",
+        life: 3000,
+      })
+
+      // Here you would typically call your API to update the status
+      // For example:
+      // this.updateShoppingCenterStatus(shoppingId, 'rejected');
+    }
+    this.cdr.detectChanges()
   }
 }

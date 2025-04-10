@@ -328,6 +328,8 @@
               ></p>
             </div>
             <div class="row m-0">
+              <p-toast position="top-right"></p-toast>
+
               <div
                 *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
                 class="col-12 d-flex flex-column spec"
@@ -408,6 +410,20 @@
               </ng-template>
             </div>
           </div>
+          <div class="action-buttons mt-3 d-flex justify-content-between">
+            <button 
+              class="action-btn accept" 
+              [class.selected]="selectedActionType[shopping.Id] === 'accept'"
+              (click)="acceptShoppingCenter(shopping.Id)">
+              Accept
+            </button>
+            <button 
+              class="action-btn reject" 
+              [class.selected]="selectedActionType[shopping.Id] === 'reject'"
+              (click)="rejectShoppingCenter(shopping.Id)">
+              Reject
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -425,7 +441,6 @@
     ></p-paginator>
   </div>
 </div>
-
 <!-- Skeleton loading for paginator -->
 <div class="flex items-center justify-start" *ngIf="isLoading">
   <div class="skeleton-paginator"></div>
