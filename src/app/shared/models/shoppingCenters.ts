@@ -35,6 +35,7 @@ export interface Center {
     PopulationDensity: number
     SitePlan: string
     SiteSelectionReason: string
+    kanbanTemplateStageId: number
     MarketSurveyId: number
     Deleted: boolean
     kanbanStageId: number

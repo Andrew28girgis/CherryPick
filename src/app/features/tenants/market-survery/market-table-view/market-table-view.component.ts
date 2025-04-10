@@ -95,6 +95,13 @@ export class MarketTableViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
 
+        this.shoppingCenters = this.shoppingCenters?.filter(
+          (element: any) => [42, 43, 44].includes(element.kanbanTemplateStageId)
+        );
+        
+        console.log(`xx`);
+        
+        console.log(this.shoppingCenters);
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);

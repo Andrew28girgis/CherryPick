@@ -71,20 +71,20 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
-    data: { hideHeader: true }  
+    data: { hideHeader: true },
   },
   {
     path: 'market-survey/:buyboxid/:orgId/:buyboxName',
     component: MarketSurveyComponent,
     canActivate: [TenantOnlyGuard],
-    data: { hideHeader: true }  
+    data: { hideHeader: true },
     // canActivate: [AuthGuardService],
   },
   {
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [TenantOnlyGuard],
-    data: { hideHeader: true }  
+    data: { hideHeader: true },
   },
   {
     path: 'Kanban',
