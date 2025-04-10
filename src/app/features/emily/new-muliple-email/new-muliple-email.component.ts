@@ -9,8 +9,8 @@ import {
 } from 'src/app/shared/models/emailGenerate';
 import { RelationNames } from 'src/app/shared/models/emailGenerate';
 import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganizationsForEmail';
-import { from } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { from, Observable, of , forkJoin } from 'rxjs';
+import { concatMap ,tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
 import {
@@ -464,6 +464,11 @@ export class NewMulipleEmailComponent implements OnInit {
                 (sp: any) => sp.CenterName
               ) || [];
 
+              const selectedShoppingCentersID =
+              contact.ShoppingCenters?.filter((sp: any) => sp.selected).map(
+                (sp: any) => sp.id
+              ) || [];
+
             const orgId = template.organizationId;
             if (!managerOrgMap[orgId]) {
               managerOrgMap[orgId] = [];
@@ -474,6 +479,7 @@ export class NewMulipleEmailComponent implements OnInit {
                 contact.Lastname || ''
               }`,
               ShoppingCentersName: selectedShoppingCentersNames,
+              ShoppingCentersID: selectedShoppingCentersID,
             });
 
             contact.ShoppingCenters?.forEach((sp: any) => {
@@ -650,7 +656,16 @@ export class NewMulipleEmailComponent implements OnInit {
           return new Promise<void>((resolve, reject) => {
             this.PlacesService.GenericAPI(body).subscribe({
               next: (data) => {
-                resolve();
+                const x = data.json
+                this.AddMailContextReceivers(x[0].id , x[0].organizationId).subscribe({
+                  next: () => {
+                  },
+                  error: () => {
+                  },
+                  complete: () => {
+                    resolve();
+                  }
+                });
               },
               error: (err) => {
                 reject(err);
@@ -665,6 +680,41 @@ export class NewMulipleEmailComponent implements OnInit {
           this.spinner.hide();
         },
       });
+  }
+
+  AddMailContextReceivers(Mid : number , OrgID:number): Observable<any>  {
+    console.log(this.ManagerOrgDTO);
+    
+    const org = this.ManagerOrgDTO.find((org: any) => org.OrganizationId === OrgID);
+
+    if (!org || !org.GetContactManagers || org.GetContactManagers.length === 0) {
+      return of(null);
+    }
+  
+    this.spinner.show();
+    
+    const observables = org.GetContactManagers.map((manager: any) => {
+      const ContactSCIds = manager.ShoppingCentersID.join(',');
+
+      const body: any = {
+        Name: 'AddMailContextReceivers',
+        MainEntity: null,
+        Params: {
+          MailContextId: Mid,
+          ContactId: manager.ContactId,
+          ShoppingCenterIds: ContactSCIds,
+        },
+        Json: null,
+      };
+  
+      return this.PlacesService.GenericAPI(body);
+    });
+  
+    return forkJoin(observables).pipe(
+      tap(() => {
+        this.spinner.hide();
+      })
+    );
   }
 
   getGeneratedEmails() {
