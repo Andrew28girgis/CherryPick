@@ -257,11 +257,9 @@
                   class="tenant-logo-card"
                 />
                 <h3 class="campaign-name">{{ campaign.CampaignName }}</h3>
-                
               </div>
             </div>
 
- 
             <div class="campaign-stats">
               <div class="stat-item">
                 <div class="stat-label">Sites</div>
@@ -438,10 +436,19 @@
               *ngFor="let campaign of c.Campaigns; let index = index"
             >
               <tr>
-                <td style="width: 250px">
-                  <div class="d-flex flex-column justify-content-start gap-2">
-                    {{ campaign.CampaignName }}
-                    <div class="d-flex align-items-center gap-2">
+                <td style="width: 250px; vertical-align: top">
+                  <div
+                    class="d-flex flex-column gap-2"
+                    style="min-height: 100%; padding: 8px"
+                  >
+                    <div style="font-weight: 600">
+                      {{ campaign.CampaignName }}
+                    </div>
+
+                    <div
+                      class="d-flex align-items-center gap-2"
+                      style="flex-wrap: wrap"
+                    >
                       <img
                         *ngIf="c.organizationid"
                         [src]="
@@ -450,23 +457,20 @@
                         "
                         [alt]="c.name"
                         class="tenant-logo"
+                        style="
+                          width: 48px;
+                          height: 48px ;
+                          border-radius: 50%;
+                        "
                       />
                       <span
-                        class="tenant-name"
-                        [routerLink]="[
-                          '/dashboard',
-                          c.id,
-                          c.organizationid,
-                          c.name
-                        ]"
-                        >{{ c.name }}</span
-                      >
+                      class="tenant-name"
+                      [routerLink]="['/dashboard', c.id, c.organizationid, c.name]"
+                      style="font-size: 14px; color: #333; max-width: 150px; word-break: break-word;"
+                    >
+                        {{ c.name }}
+                      </span>
                     </div>
-                    <!-- <a
-                      class="inbox text-center"
-                      [routerLink]="['./ataglance', campaign.Id]"
-                      >At a Glance</a
-                    > -->
                   </div>
                 </td>
 

@@ -767,13 +767,7 @@
   .empty-campaigns p {
     font-size: 0.9rem;
   }
-  .card__Kayak_buttons {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-wrap: nowrap;
-  }
- 
+
   
 }
 
