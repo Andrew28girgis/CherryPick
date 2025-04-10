@@ -347,8 +347,13 @@
                   {{ campaign.MailsSent }}
                 </div>
               </div>
+              
             </div>
-
+            <a
+            class="inbox text-center"
+            [routerLink]="['./ataglance', campaign.Id]"
+            >At a Glance</a
+          >
             <div class="campaign-actions">
               <a
                 class="inbox"
