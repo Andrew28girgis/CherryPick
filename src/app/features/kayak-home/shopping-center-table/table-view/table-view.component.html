@@ -251,7 +251,7 @@
                                   d="M12 22.75C11.59 22.75 11.25 22.41 11.25 22V19C11.25 18.59 11.59 18.25 12 18.25C12.41 18.25 12.75 18.59 12.75 19V22C12.75 22.41 12.41 22.75 12 22.75Z"
                                   fill="#707791" />
                               </svg>
-                              Inbox
+                              Contact Broker
                             </a>
                           </li>
                           <li (click)="toggleShortcuts(shoppingCenter.Id, 'close')">
@@ -273,7 +273,7 @@
                               Street View
                             </a>
                           </li>
-                          <li *ngIf="shoppingCenter.Deleted != true">
+                          <!-- <li *ngIf="shoppingCenter.Deleted != true">
                             <a class="target" (click)="
                               openDeleteShoppingCenterModal(
                                 deleteSingleShoppingCenterModal,
@@ -283,7 +283,7 @@
                               <i class="fa-regular fa-trash-can big-text"></i>
                               Remove Shopping
                             </a>
-                          </li>
+                          </li> -->
                           <li (click)="toggleShortcuts(shoppingCenter.Id, 'close');RestoreShoppingCenter(shoppingCenter.MarketSurveyId,shoppingCenter.Deleted)"
                             *ngIf="shoppingCenter.Deleted == true">
                             <a class="target">
