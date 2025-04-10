@@ -175,7 +175,7 @@
                             fill="#707791"
                           />
                         </svg>
-                        Inbox
+                        Contact Broker
                       </a>
                     </li>
                     <li (click)="toggleShortcuts(shopping.Id, 'close')">
@@ -211,7 +211,7 @@
                         Street View
                       </a>
                     </li>
-                    <li *ngIf="shopping.Deleted != true" class="cursor">
+                    <!-- <li *ngIf="shopping.Deleted != true" class="cursor">
                       <a
                         class="target"
                         (click)="
@@ -225,7 +225,7 @@
                         <i class="fa-regular fa-trash-can emily"></i>
                         Remove Shopping
                       </a>
-                    </li>
+                    </li> -->
                     <li *ngIf="shopping.Deleted == true">
                       <a
                         class="target"
