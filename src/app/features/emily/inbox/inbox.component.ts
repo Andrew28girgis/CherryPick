@@ -69,7 +69,6 @@ export class InboxComponent implements OnInit {
     private route: ActivatedRoute,
     private _location: Location,
     private sanitizer: DomSanitizer
-
   ) {}
 
   ngOnInit() {
@@ -266,7 +265,9 @@ export class InboxComponent implements OnInit {
         if (data.json && Array.isArray(data.json)) {
           this.selectedEmail = data.json[0];
           this.selectedMicroDealId = this.selectedEmail!.MicroDealId;
-          this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(this.selectedEmail!.Body);
+          this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(
+            this.selectedEmail!.Body
+          );
         } else {
           this.selectedEmail = null;
         }
@@ -276,13 +277,13 @@ export class InboxComponent implements OnInit {
   goBack() {
     this._location.back();
   }
-  // getTotalEmails(contact: Contact): number {
-  //   return (
-  //     (contact.EmailStats[0].Sent || 0) +
-  //     (contact.EmailStats[0].Inbox || 0) +
-  //     (contact.EmailStats[0].Outbox || 0)
-  //   );
-  // }
+  getTotalEmails(EmailStats: any): number {
+    return (
+      (EmailStats.Sent || 0) +
+      (EmailStats.Inbox || 0) +
+      (EmailStats.Outbox || 0)
+    );
+  }
   openCompoase(modal: any) {
     this.listcenterName = [];
     this.emailSubject = '';

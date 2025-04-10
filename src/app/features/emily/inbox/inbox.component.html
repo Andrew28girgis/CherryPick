@@ -143,12 +143,7 @@
                   <span class="namecontact" id="{{ contact.ContactId }}">
                     {{ contact.Firstname }} {{ contact.Lastname }}
                   </span>
-                  <!-- <span
-                    style="color: #4d65b4; font-weight: 600"
-                    *ngIf="getTotalEmails(contact) > 0"
-                  >
-                    {{ getTotalEmails(contact) }}
-                  </span> -->
+
                   <button
                     class="new-btnCompose"
                     (click)="openCompoase(openCompose)"
@@ -157,6 +152,22 @@
                     <i class="fa-solid fa-arrow-right"></i>
                   </button>
                 </div>
+                <ng-container *ngFor="let sc of contact.ShoppingCenters">
+                  <div>
+                    <span
+                    class="shopping-center"
+                    style="font-size: 12px; color: #4d65b4; font-weight: 600"
+                    >{{ sc.CenterName }}</span
+                  >
+                  <span
+                    style="color: #4d65b4; font-weight: 600"
+                    *ngIf="getTotalEmails(sc.EmailStats[0]) > 0"
+                  >
+                    {{ getTotalEmails(sc.EmailStats[0]) }}
+                  </span>
+                  </div>
+                
+                </ng-container>
               </li>
             </ul>
             <p *ngIf="contacts.length === 0" class="no-contact-msg">
@@ -225,7 +236,7 @@
             </button>
             <div *ngIf="selectedEmail">
               <p class="subject-details">{{ selectedEmail.Subject }}</p>
-              <div class="body-details" [innerHTML]="emailBodySafe"></div> 
+              <div class="body-details" [innerHTML]="emailBodySafe"></div>
             </div>
             <p *ngIf="!selectedEmail" class="no-email-selected">
               Select an email to view details.
@@ -276,9 +287,9 @@
   <div class="modal-content">
     <div class="modal-body p-0">
       <div class="row m-0 p-2 d-flex justify-content-center">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-start">
           <h5>New Message</h5>
-          <button
+          <!-- <button
             class="new-btn"
             (click)="PutGenerateContext()"
             *ngIf="
@@ -286,10 +297,10 @@
             "
           >
             Generate Email
-          </button>
+          </button> -->
         </div>
         <div class="p-3">
-          <div
+          <!-- <div
             class="d-flex pb-3 align-items-center gap-3"
             *ngIf="
               (!emailSubject || emailSubject.trim() === '') && isEmailBodyEmpty
@@ -314,7 +325,7 @@
                 </label>
               </div>
             </ng-container>
-          </div>
+          </div> -->
           <div
             class="d-flex pb-3 align-items-center"
             *ngIf="!showGenerateSection"

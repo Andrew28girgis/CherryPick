@@ -52,11 +52,7 @@
 }
 
 .contact-list {
-  display: flex;
   padding: 12px 24px;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-self: stretch;
   cursor: pointer;
 }
 
