@@ -213,7 +213,6 @@ export class InboxComponent implements OnInit {
       this.selectedEmail = null;
       this.selected = null; // Reset selected email to show the list view
     } else if (this.emailsSentContact.length > 0) {
-      // If same contact and emails already loaded, do nothing.
       return;
     }
 
