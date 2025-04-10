@@ -29,6 +29,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 export class TableViewComponent implements OnInit, OnDestroy {
   General: General = new General();
   BuyBoxId!: any;
+  campaignid!:any;
   OrgId!: any;
   dropdowmOptions: any = [];
   selectedOption: number = 4;
@@ -114,6 +115,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
     }
       
       this.filteredCenters = this.shoppingCenters; 
+      
       this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
       this.stateService.setBuyboxCategories(this.buyboxCategories);
 
@@ -129,6 +131,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     }
   }
+  
   GetKanbanStages(kanbanID: number): void {
     const body: any = {
       Name: 'GetKanbanStages',
