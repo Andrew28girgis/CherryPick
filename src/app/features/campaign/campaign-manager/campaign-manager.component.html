@@ -354,18 +354,17 @@
               >At a Glance</a
             >
             <div class="campaign-actions">
-              <div
-                class="inbox mail d-flex justify-content-between">
+              <div class="inbox mail d-flex justify-content-between">
                 <i class="fa-regular fa-envelope"></i>
                 <a
-                [routerLink]="[
-                  '/organization-mail',
-                  c.id,
-                  c.organizationid,
-                  campaign.Id
-                ]"
-                >Emily</a
-              >
+                  [routerLink]="[
+                    '/organization-mail',
+                    c.id,
+                    c.organizationid,
+                    campaign.Id
+                  ]"
+                  >Emily</a
+                >
               </div>
 
               <button class="expand-btn" (click)="toggleExpand(campaign)">
@@ -596,19 +595,18 @@
                 </td>
 
                 <td style="text-align: center">
-                  <div
-                  class="inbox mail d-flex justify-content-between">
-                  <i class="fa-regular fa-envelope"></i>
-                  <a
-                  [routerLink]="[
-                    '/organization-mail',
-                    c.id,
-                    c.organizationid,
-                    campaign.Id
-                  ]"
-                  >Emily</a
-                >
-                </div>
+                  <div class="inbox mail d-flex justify-content-between">
+                    <i class="fa-regular fa-envelope"></i>
+                    <a
+                      [routerLink]="[
+                        '/organization-mail',
+                        c.id,
+                        c.organizationid,
+                        campaign.Id
+                      ]"
+                      >Emily</a
+                    >
+                  </div>
                 </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
                   <td style="text-align: center">

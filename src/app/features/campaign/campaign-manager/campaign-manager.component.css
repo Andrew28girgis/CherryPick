@@ -360,7 +360,7 @@
 
 /* Inbox Button */
 .inbox {
-  padding: 0.5rem 1rem;
+  padding:10px;
   border-radius: 1rem;
   background-color: #4d65b4;
   text-decoration: none;
