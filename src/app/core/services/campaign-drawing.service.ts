@@ -679,14 +679,18 @@ export class CampaignDrawingService {
     this.explorePolygons = [];
   }
 
-  insertExplorePolygon(polygonId: number, coordinates: any,name:string): void {
+  insertExplorePolygon(
+    polygonId: number,
+    coordinates: any,
+    name: string
+  ): void {
     // create new polygon
     const polygon: google.maps.Polygon = new google.maps.Polygon({
       paths: coordinates,
-      strokeColor: '#0000FF',
+      strokeColor: '#AA00FF',
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: '#0000FF',
+      fillColor: '#AA00FF',
       fillOpacity: 0.35,
       editable: false,
       draggable: false,
@@ -695,42 +699,41 @@ export class CampaignDrawingService {
     // Set the polygon on the map
     polygon.setMap(null);
 
-    polygon.set(
-      'label',
-      name.trim().length>0 ? name : 'Shape'
-    );
+    polygon.set('label', name.trim().length > 0 ? name : 'Shape');
 
     // push the polygon into drawn list
     this.explorePolygons.push({ id: polygonId, shape: polygon });
   }
-  
-  insertExplorePolygonToMyPolygons(map:any,polygonId: number, coordinates: any,name:string): void {
+
+  insertExplorePolygonToMyPolygons(
+    map: any,
+    polygonId: number,
+    coordinates: any,
+    name: string
+  ): void {
     // create new polygon
     const polygon: google.maps.Polygon = new google.maps.Polygon({
       paths: coordinates,
-      strokeColor: '#0000FF',
+      strokeColor: '#AA00FF',
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: '#0000FF',
+      fillColor: '#AA00FF',
       fillOpacity: 0.35,
       editable: false,
       draggable: false,
     });
 
     // Set the polygon on the map
-    polygon.setMap(null);
+    polygon.setMap(map);
 
-    polygon.set(
-      'label',
-      name.trim().length>0 ? name : 'Shape'
-    );
+    polygon.set('label', name.trim().length > 0 ? name : 'Shape');
 
     // push the polygon into drawn list
     this.drawnPolygons.push({ id: polygonId, shape: polygon });
 
     this.addPolygonClickListener(map, polygon);
-            this.addPolygonChangeListener(map, polygon);
-            this.addPolygonDoubleClickListener(polygon);
+    this.addPolygonChangeListener(map, polygon);
+    this.addPolygonDoubleClickListener(polygon);
   }
 
   hideShapeFromMap(id: number): void {
@@ -739,7 +742,7 @@ export class CampaignDrawingService {
       this.drawnPolygons.find((p) => p.id == id) ||
       this.drawnCircles.find((c) => c.id == id) ||
       this.explorePolygons.find((p) => p.id == id);
-      // debugger
+    // debugger
     if (shape) {
       // remove the shape from the map view
       shape.shape.setMap(null);
@@ -784,6 +787,27 @@ export class CampaignDrawingService {
   displayMyPolygons(map: any): void {
     this.drawnPolygons.forEach((d) => d.shape.setMap(map));
     this.drawnCircles.forEach((c) => c.shape.setMap(map));
+  }
+
+  removePolygonWithId(polygonId: number): void {
+    this.hideShapeFromMap(polygonId);
+    this.drawnPolygons = this.drawnPolygons.filter((p) => p.id != polygonId);
+  }
+
+  removePolygonWithIndex(index: number): void {
+    let polygon = this.drawnPolygons[index];
+    if (polygon) {
+      polygon.shape.setMap(null);
+      this.drawnPolygons.splice(index, 1);
+    }
+  }
+
+  removeCircleWithIndex(index: number): void {
+    let circle = this.drawnCircles[index];
+    if (circle) {
+      circle.shape.setMap(null);
+      this.drawnCircles.splice(index, 1);
+    }
   }
 
   get getDrawnPolygons() {

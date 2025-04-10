@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-mails-generate-or-send',
@@ -13,11 +14,13 @@ export class MailsGenerateOrSendComponent {
   IsSent!: any;
   contactId!: any;
   returnGetMailContextGenerated!: any;
+  emailBody!: SafeHtml;
 
   constructor(
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
-    private PlacesService: PlacesService
+    private PlacesService: PlacesService,
+    private sanitizer: DomSanitizer
   ) {
     this.route.paramMap.subscribe((params) => {
       this.MailContextId = params.get('MailContextId');
@@ -49,6 +52,8 @@ export class MailsGenerateOrSendComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
+        // Sanitize and apply HTML content to emailBody
+        this.emailBody = this.sanitizer.bypassSecurityTrustHtml(this.returnGetMailContextGenerated[0].body);
         this.spinner.hide();
       },
     });
@@ -90,6 +95,30 @@ export class MailsGenerateOrSendComponent {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.showToast('Email Deleted successfully!');
+        this.ReadSpecificMails();
+        this.spinner.hide();
+      },
+    });
+  }
+
+  updateBody(event: any, returnEmail: any) {
+    returnEmail.body = event.target.innerHTML;
+    this.UpdateGeneration(returnEmail);
+  }
+  UpdateGeneration(emailItem?: any) {
+    this.spinner.show();
+    var body: any = {
+      Name: 'UpdateGeneration',
+      MainEntity: null,
+      Params: {
+        id: emailItem.mailId,
+        body: emailItem.body,
+        subject: emailItem.subject,
+      },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
         this.ReadSpecificMails();
         this.spinner.hide();
       },

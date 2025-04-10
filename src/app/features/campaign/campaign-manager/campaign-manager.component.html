@@ -347,8 +347,13 @@
                   {{ campaign.MailsSent }}
                 </div>
               </div>
+              
             </div>
-
+            <a
+            class="inbox text-center"
+            [routerLink]="['./ataglance', campaign.Id]"
+            >At a Glance</a
+          >
             <div class="campaign-actions">
               <a
                 class="inbox"
@@ -477,6 +482,11 @@
                         {{ c.name }}
                       </span>
                     </div>
+                    <a
+                      class="inbox text-center"
+                      [routerLink]="['./ataglance', campaign.Id]"
+                      >At a Glance</a
+                    >
                   </div>
                 </td>
 
@@ -637,25 +647,19 @@
 </div>
 
 <ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add Campaign</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
   <div class="modal-body">
-    <label for="user-buybox" class="form-label mb-2">Select Tenants</label>
-    <select
-      id="user-buybox"
-      class="form-select mb-3"
-      aria-label="Buybox select"
-      name="userBuybox"
-      [(ngModel)]="selectedBuyBoxId"
-    >
-      <ng-container *ngFor="let buyBox of userBuyBoxes">
-        <option [value]="buyBox.id">
-          {{ buyBox.name }}
-        </option>
-      </ng-container>
-    </select>
-
     <div class="campaign-drawing-component">
       <app-campaign-drawing
-        [buyBoxId]="selectedBuyBoxId"
+        [userBuyBoxes]="userBuyBoxes"
         (onCampaignCreated)="onCampaignCreated()"
       ></app-campaign-drawing>
     </div>

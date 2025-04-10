@@ -225,9 +225,21 @@ div {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 250px;
+  max-width: 150px;
   cursor: pointer;
   color: #4d65b4;
+}
+
+.Name_contact{
+  font-size: 16px;
+  color: #000;
+  font-weight: 500px;
+  line-height: 20px;
+}
+
+.img_SC{
+  line-height: 20px;
+
 }
 
 .single-lineMax {

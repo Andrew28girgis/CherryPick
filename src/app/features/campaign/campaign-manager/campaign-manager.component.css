@@ -287,8 +287,6 @@
 
 /* Modal Body */
 .modal-body {
-  padding: 2rem;
-  height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -299,7 +297,7 @@
 /* Campaign Drawing Component */
 .campaign-drawing-component {
   width: 100%;
-  flex: 1;
+  height: 100%;
 }
 
 /* Empty Campaigns State */
@@ -351,7 +349,7 @@
   white-space: normal;
   vertical-align: middle;
   text-align: center; /* centers the header content */
-  padding: 0.75rem 0rem;
+  padding: 0.75rem 0.3rem;
   font-size: 0.8rem;
 }
 

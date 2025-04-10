@@ -23,6 +23,7 @@ import {
   GetContactManagerDTO,
   GetManagerOrgDTO,
 } from 'src/app/shared/models/GenerateContext';
+import { MailContextGenerated } from 'src/app/shared/models/MailContextGenerated';
 
 @Component({
   selector: 'app-new-muliple-email',
@@ -60,7 +61,7 @@ export class NewMulipleEmailComponent implements OnInit {
   CheckGetSavedTemplates: any[] = [];
   selectedContact: number[] = [];
   showMoreRelations: { [key: number]: boolean } = {};
-  returnGetMailContextGenerated: any[] = [];
+  returnGetMailContextGenerated: MailContextGenerated[] = [];
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
   MangerDescription: string = '';
@@ -101,6 +102,7 @@ export class NewMulipleEmailComponent implements OnInit {
     templateTwo: string;
   }[] = [];
   ResponseContextEmail: any[] = [];
+  selectedContactSC: any = null;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -682,9 +684,7 @@ export class NewMulipleEmailComponent implements OnInit {
       });
   }
 
-  AddMailContextReceivers(Mid : number , OrgID:number): Observable<any>  {
-    console.log(this.ManagerOrgDTO);
-    
+  AddMailContextReceivers(Mid : number , OrgID:number): Observable<any>  {    
     const org = this.ManagerOrgDTO.find((org: any) => org.OrganizationId === OrgID);
 
     if (!org || !org.GetContactManagers || org.GetContactManagers.length === 0) {
@@ -732,6 +732,8 @@ export class NewMulipleEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
+        console.log( this.returnGetMailContextGenerated );
+        
         this.spinner.hide();
       },
     });
@@ -805,7 +807,6 @@ export class NewMulipleEmailComponent implements OnInit {
   }
 
   async openModal(modal: any, ItemContext?: any) {
-    await this.PutGenerateContext();
     this.ItemContext = ItemContext;
     this.modalService.open(modal, {
       ariaLabelledBy: 'modal-basic-title',
