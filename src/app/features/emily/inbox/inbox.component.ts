@@ -66,7 +66,7 @@ export class InboxComponent implements OnInit {
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private _location: Location
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.contactId = localStorage.getItem('contactId');
@@ -87,9 +87,7 @@ export class InboxComponent implements OnInit {
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
 
-    this.inputChanged.pipe(
-      debounceTime(300)
-    ).subscribe(() => {
+    this.inputChanged.pipe(debounceTime(300)).subscribe(() => {
       this.onInputChange();
     });
   }
@@ -125,10 +123,9 @@ export class InboxComponent implements OnInit {
           //   this.getEmailsForContact(this.contacts[0]);
           // }
           this.getEmailsForContact(this.contacts[0]);
-
         }
       })
-      .catch((error) => { });
+      .catch((error) => {});
   }
 
   onMicroDealChange(event: any): void {
@@ -286,7 +283,7 @@ export class InboxComponent implements OnInit {
     this.listcenterName = [];
     this.emailSubject = '';
     this.emailBody = '';
-    this.ContextEmail ='';
+    this.ContextEmail = '';
     this.showGenerateSection = false;
     this.GetContactShoppingCenters();
     this.modalService.open(modal, { size: 'xl', backdrop: true });
@@ -402,7 +399,9 @@ export class InboxComponent implements OnInit {
   async PutGenerateContext(): Promise<void> {
     this.ResponseContextEmail = {};
 
-    const ContactName = `${this.selectedContact?.Firstname ?? ''} ${this.selectedContact?.Lastname ?? ''}`.trim();
+    const ContactName = `${this.selectedContact?.Firstname ?? ''} ${
+      this.selectedContact?.Lastname ?? ''
+    }`.trim();
     const ContantID = Number(this.selectedContact?.ContactId);
     const ContantShoppingCenter = this.listcenterName;
 
@@ -419,18 +418,20 @@ export class InboxComponent implements OnInit {
       AddBuyBoxDesc: true,
       AddLandLordPage: true,
       IsCC: true,
-      GetContactManagers: [{
-        ContactId: ContantID,
-        ContactName: ContactName,
-        ShoppingCentersName: ContantShoppingCenter
-      }],
+      GetContactManagers: [
+        {
+          ContactId: ContantID,
+          ContactName: ContactName,
+          ShoppingCentersName: ContantShoppingCenter,
+        },
+      ],
       OrganizationId: this.orgId,
     };
 
     this.PlacesService.GenerateContext(body).subscribe({
       next: (data) => {
         this.ResponseContextEmail = data;
-        this.ContextEmail = this.ResponseContextEmail.context
+        this.ContextEmail = this.ResponseContextEmail.context;
         this.ContextEmail = this.ContextEmail.replace(/\n/g, '<br>');
         this.showGenerateSection = true;
         this.spinner.hide();
@@ -452,7 +453,7 @@ export class InboxComponent implements OnInit {
       },
       Json: null,
     };
-    
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.GenrateEmail = data.json;
@@ -462,7 +463,7 @@ export class InboxComponent implements OnInit {
         this.listcenterName = [];
         this.emailSubject = '';
         this.emailBody = '';
-        this.ContextEmail ='';
+        this.ContextEmail = '';
         this.showToast('Send Success');
       },
     });
@@ -496,9 +497,9 @@ export class InboxComponent implements OnInit {
         this.listcenterName = [];
         this.emailSubject = '';
         this.emailBody = '';
-        this.ContextEmail ='';
-       this.showToast('Generate Success');
-      }
+        this.ContextEmail = '';
+        this.showToast('Generate Success');
+      },
     });
   }
 
@@ -520,7 +521,7 @@ export class InboxComponent implements OnInit {
   onInputChange(): void {
     const subjectEmpty = !this.emailSubject || this.emailSubject.trim() === '';
     const bodyTrimmed = (this.emailBody || '').trim();
-    this.isEmailBodyEmpty = (bodyTrimmed === '' || bodyTrimmed === '<p></p>');
+    this.isEmailBodyEmpty = bodyTrimmed === '' || bodyTrimmed === '<p></p>';
 
     if (!subjectEmpty || !this.isEmailBodyEmpty) {
       this.showGenerateSection = false;
