@@ -18,6 +18,7 @@ import { EditorModule } from 'primeng/editor';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-inbox',
@@ -59,13 +60,16 @@ export class InboxComponent implements OnInit {
   contactId!: any;
   BatchGuid!: string;
   inputChanged: Subject<void> = new Subject<void>();
+  emailBodySafe!: SafeHtml;
 
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private route: ActivatedRoute,
-    private _location: Location
+    private _location: Location,
+    private sanitizer: DomSanitizer
+
   ) {}
 
   ngOnInit() {
@@ -262,6 +266,7 @@ export class InboxComponent implements OnInit {
         if (data.json && Array.isArray(data.json)) {
           this.selectedEmail = data.json[0];
           this.selectedMicroDealId = this.selectedEmail!.MicroDealId;
+          this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(this.selectedEmail!.Body);
         } else {
           this.selectedEmail = null;
         }

@@ -225,7 +225,7 @@
             </button>
             <div *ngIf="selectedEmail">
               <p class="subject-details">{{ selectedEmail.Subject }}</p>
-              <div class="body-details" [innerHTML]="selectedEmail.Body"></div>
+              <div class="body-details" [innerHTML]="emailBodySafe"></div> 
             </div>
             <p *ngIf="!selectedEmail" class="no-email-selected">
               Select an email to view details.
