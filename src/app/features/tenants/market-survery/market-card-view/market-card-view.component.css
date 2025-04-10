@@ -121,21 +121,3 @@
     transform: scale(1);
   }
 }
-
-/* Toast styles */
-:host ::ng-deep .p-toast .p-toast-message {
-  border-radius: 4px;
-}
-
-:host ::ng-deep .p-toast .p-toast-message-success {
-  background-color: #eff8f1;
-  border-left: 6px solid #28a745;
-  color: #1f2937;
-}
-
-:host ::ng-deep .p-toast .p-toast-message-error {
-  background-color: #fef2f2;
-  border-left: 6px solid #dc3545;
-  color: #1f2937;
-}
-

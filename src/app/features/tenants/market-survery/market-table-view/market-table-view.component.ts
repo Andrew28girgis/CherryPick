@@ -8,7 +8,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MessageService } from 'primeng/api';
 
 declare const google: any;
 
@@ -33,7 +32,6 @@ export class MarketTableViewComponent implements OnInit {
   isMobileView!: boolean;
   selectedActionType: { [key: number]: string } = {};
 
-  messageService: MessageService;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -42,10 +40,8 @@ export class MarketTableViewComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
-    messageService: MessageService,
     private cdr: ChangeDetectorRef
   ) {
-    this.messageService = messageService;
   }
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: any) => {
@@ -332,17 +328,7 @@ export class MarketTableViewComponent implements OnInit {
     } else {
       this.selectedActionType[shopping.Id] = 'accept';
 
-      // Show toast message
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Shopping Center Accepted',
-        detail: `The shopping center "${shopping.CenterName}" has been successfully accepted.`,
-        life: 3000,
-      });
-
-      // Here you would typically call your API to update the status
-      // For example:
-      // this.updateShoppingCenterStatus(shoppingId, 'accepted');
+   
     }
     this.cdr.detectChanges();
   }
@@ -353,13 +339,6 @@ export class MarketTableViewComponent implements OnInit {
       delete this.selectedActionType[shopping.Id];
     } else {
       this.selectedActionType[shopping.Id] = 'reject';
-      // Show toast message
-      this.messageService.add({
-        severity: 'error',
-        summary: `Shopping Center Rejected`,
-        detail: `The shopping center "${shopping.CenterName}" has been rejected.`,
-        life: 3000,
-      });
     }
     this.cdr.detectChanges();
   }
