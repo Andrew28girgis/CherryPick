@@ -1,7 +1,6 @@
 import {
   NgModule,
   CUSTOM_ELEMENTS_SCHEMA,
-  APP_INITIALIZER,
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -74,11 +73,11 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
     SocialMediaViewComponent,
     MarketSideViewComponent,
     MarketMapViewComponent,
-    MarketCardViewComponent, 
+    MarketCardViewComponent,
     MailsGenerateOrSendComponent,
-    BreadcrumbComponent, 
+    BreadcrumbComponent,
     InboxComponent,
-    NewMulipleEmailComponent
+    NewMulipleEmailComponent,
   ],
   imports: [
     BrowserModule,
@@ -105,7 +104,7 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
     StepperModule,
     NgbNavModule,
     SelectButtonModule,
-    EditorModule
+    EditorModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

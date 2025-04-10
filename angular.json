@@ -17,13 +17,15 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
-
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/app/config.ts",
+              "src/staticwebapp.config.json",
+              "src/manifest.webmanifest"
             ],
-            "styles": [ 
+            "styles": [
               "node_modules/quill/dist/quill.snow.css",
               "node_modules/quill/dist/quill.bubble.css",
               "node_modules/primeng/resources/themes/lara-light-indigo/theme.css",
@@ -36,10 +38,10 @@
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "./node_modules/popper.js/dist/umd/popper.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
-            "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json",
+            "serviceWorker": false,
             "allowedCommonJsDependencies": [
               "quill-delta"
             ]
@@ -103,9 +105,11 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/app/config.ts",
+              "src/manifest.webmanifest"
             ],
-            "styles": [ 
+            "styles": [
               "node_modules/quill/dist/quill.snow.css",
               "node_modules/quill/dist/quill.bubble.css",
               "node_modules/primeng/resources/themes/lara-light-indigo/theme.css",
