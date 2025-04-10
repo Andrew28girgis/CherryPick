@@ -7,6 +7,9 @@ import { forkJoin, Observable } from 'rxjs';
 import { IcampaignSubmission } from './models/icampaign-submission';
 import { IcampaignReaction } from './models/icampaign-reaction';
 import { IcampaignComment } from './models/icampaign-comment';
+import { ICampaignOrgCadence } from './models/icampaign-org-cadence';
+import { ICampaignSiteCadence } from './models/icampaign-site-cadence';
+import { ICampaignEmail } from './models/icampaign-email';
 
 @Component({
   selector: 'app-ataglance',
@@ -19,6 +22,9 @@ export class AtaglanceComponent implements OnInit {
   campaignSubmissions: IcampaignSubmission[] = [];
   campaignReactions: IcampaignReaction[] = [];
   campaignComments: IcampaignComment[] = [];
+  campaignOrgCadence!: ICampaignOrgCadence;
+  campaignSiteCadence!: ICampaignSiteCadence;
+  campaignEmails: ICampaignEmail[] = [];
   componentLoaded: boolean = false;
 
   constructor(
@@ -45,6 +51,9 @@ export class AtaglanceComponent implements OnInit {
       submissions: this.getCampaignSubmissions(),
       reactions: this.getCampaignReactions(),
       comments: this.getCampaignComments(),
+      orgCadence: this.getCampaignOrgCadence(),
+      siteCadence: this.getCampaignSiteCadence(),
+      emails: this.getCampaignEmails(),
     }).subscribe({
       next: (result) => {
         this.spinner.hide();
@@ -63,6 +72,18 @@ export class AtaglanceComponent implements OnInit {
 
         if (result.comments.json && result.comments.json.length > 0) {
           this.campaignComments = result.comments.json;
+        }
+
+        if (result.orgCadence.json && result.orgCadence.json.length > 0) {
+          this.campaignOrgCadence = result.orgCadence.json[0];
+        }
+
+        if (result.siteCadence.json && result.siteCadence.json.length > 0) {
+          this.campaignSiteCadence = result.siteCadence.json[0];
+        }
+
+        if (result.emails.json && result.emails.json.length > 0) {
+          this.campaignEmails = result.emails.json;
         }
 
         this.componentLoaded = true;
@@ -106,6 +127,36 @@ export class AtaglanceComponent implements OnInit {
   getCampaignComments(): Observable<any> {
     const body = {
       name: 'GetCampaignComments',
+      params: {
+        CampaignId: this.campaignId,
+      },
+    };
+    return this.placeService.GenericAPI(body);
+  }
+
+  getCampaignOrgCadence(): Observable<any> {
+    const body = {
+      name: 'GetStagesOrgs',
+      params: {
+        CampaignId: this.campaignId,
+      },
+    };
+    return this.placeService.GenericAPI(body);
+  }
+
+  getCampaignSiteCadence(): Observable<any> {
+    const body = {
+      name: 'GetStagesShoppingCenters',
+      params: {
+        CampaignId: this.campaignId,
+      },
+    };
+    return this.placeService.GenericAPI(body);
+  }
+
+  getCampaignEmails(): Observable<any> {
+    const body = {
+      name: 'GetCampaignEmails',
       params: {
         CampaignId: this.campaignId,
       },
