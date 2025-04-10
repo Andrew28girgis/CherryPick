@@ -793,13 +793,20 @@ export class CampaignDrawingService {
     this.hideShapeFromMap(polygonId);
     this.drawnPolygons = this.drawnPolygons.filter((p) => p.id != polygonId);
   }
-  
+
   removePolygonWithIndex(index: number): void {
-    let polygon = this.drawnPolygons[index]
-    if(polygon)
-    {
-      polygon.shape.setMap(null)
-      this.drawnPolygons.splice(index,1);
+    let polygon = this.drawnPolygons[index];
+    if (polygon) {
+      polygon.shape.setMap(null);
+      this.drawnPolygons.splice(index, 1);
+    }
+  }
+
+  removeCircleWithIndex(index: number): void {
+    let circle = this.drawnCircles[index];
+    if (circle) {
+      circle.shape.setMap(null);
+      this.drawnCircles.splice(index, 1);
     }
   }
 

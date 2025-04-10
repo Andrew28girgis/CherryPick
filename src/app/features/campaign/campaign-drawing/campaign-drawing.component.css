@@ -74,13 +74,14 @@
 
 .launch-campaign-btn {
   align-items: center;
+  justify-content: center;
   display: flex;
   gap: 0.5rem;
   background: #4d65b4;
   padding: 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid transparent;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25); */
   cursor: pointer;
 }
 
@@ -248,14 +249,16 @@
 
 .dragable-polygons {
   width: 30%;
-  height: 75%;
+  height: 100%;
   border: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
   cursor: move;
   display: inline-flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   text-align: center;
+  gap: 1rem;
   background: #fff;
   border-radius: 0.5rem;
   margin-right: 25px;
@@ -269,10 +272,13 @@
 
   overflow: hidden;
   overflow-y: auto;
-  top: 0.5rem;
-  left: 0.5rem;
-  /* bottom: 0.5rem;
-  left: 0.5rem; */
+  top: 0rem;
+  left: 0rem;
+}
+
+.dragable-polygons .h-50 {
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 .dragable-polygons:active {

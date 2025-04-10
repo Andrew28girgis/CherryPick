@@ -19,7 +19,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { firstValueFrom, Subject, switchMap, takeUntil } from 'rxjs';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
-import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { PolygonsControllerService } from 'src/app/core/services/polygons-controller.service';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
@@ -35,13 +34,12 @@ export class CampaignDrawingComponent
   implements OnInit, AfterViewInit, OnDestroy, OnChanges
 {
   private destroy$ = new Subject<void>();
+  private searchSubject: Subject<string> = new Subject<string>();
 
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
 
   map!: google.maps.Map;
-  // polygons: IPolygon[] = [];
   selectedDrawingModeId: number = 1;
-  isDrawing: boolean = true;
   visabilityOptions: any[] = [
     { label: 'Private', value: 1 },
     { label: 'Public', value: 0 },
@@ -49,38 +47,13 @@ export class CampaignDrawingComponent
   isPrivateCampaign: number = 1;
   campaignName: string = '';
   buyBoxId!: number;
-  @Output() onCampaignCreated = new EventEmitter<void>();
   contactId!: number;
-
-  polygonsOptions: {
-    id: number;
-    title: string;
-    icon: string;
-    selectedIcon: string;
-  }[] = [
-    {
-      id: 1,
-      title: 'Draw Polygons',
-      icon: '../../../../assets/icons/svgs/buyBox-polygons.svg',
-      selectedIcon:
-        '../../../../assets/icons/svgs/buyBox-polygons-selected.svg',
-    },
-    {
-      id: 2,
-      title: 'Explore Polygons',
-      icon: '../../../../assets/icons/svgs/explore-polygons.svg',
-      selectedIcon:
-        '../../../../assets/icons/svgs/explore-polygons-selected.svg',
-    },
-  ];
-
-  selectedPolygonOption: number = 1;
   polygonSearch: string = '';
   externalPolygons: IPolygon[] = [];
   displayedExternalPolygons: number[] = [];
-  isCollapsed = true;
+
+  @Output() onCampaignCreated = new EventEmitter<void>();
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
-  private searchSubject: Subject<string> = new Subject<string>();
 
   constructor(
     private campaignDrawingService: CampaignDrawingService,
@@ -90,7 +63,6 @@ export class CampaignDrawingComponent
     private httpClient: HttpClient,
     private router: Router,
     private spinner: NgxSpinnerService,
-    // private mapDrawingService: MapDrawingService,
     private polygonsControllerService: PolygonsControllerService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
@@ -150,10 +122,6 @@ export class CampaignDrawingComponent
       .subscribe(() => {
         this.startDrawing(1, 'move');
       });
-  }
-
-  switchDrawingMode(): void {
-    this.isDrawing = !this.isDrawing;
   }
 
   get getDrawnList() {
@@ -304,46 +272,6 @@ export class CampaignDrawingComponent
 
     this.syncMarketSurveyWithCampaign(campaignId);
     this.campaignDrawingService.clearDrawnLists();
-  }
-
-  onPolygonOptionChange(optionId: number): void {
-    this.selectedPolygonOption = optionId;
-    if (optionId == 1) {
-      this.navigateToMyPolygons();
-    } else {
-      this.navigateToExplorePolygons();
-    }
-  }
-
-  navigateToExplorePolygons(): void {
-    this.campaignDrawingService.hideMyPolygons();
-    // this.polygons.forEach((p) =>
-    //   this.mapDrawingService.completelyRemoveMarkers(p.id)
-    // );
-    // this.polygons = [];
-    // this.selectedPolygonsIds.clear();
-    // this.selectedPolygon = null;
-    // this.properties = [];
-    // this.mapDrawingService.clearDrawnLists();
-    // if (this.map) {
-    //   this.switchDrawingMode()
-    //   // this.mapDrawingService.hideDrawingManager();
-    // }
-  }
-
-  navigateToMyPolygons(): void {
-    // this.externalPolygons.forEach((p) =>
-    //   this.mapDrawingService.completelyRemoveMarkers(p.id)
-    // );
-    this.polygonSearch = '';
-    this.externalPolygons = [];
-    this.displayedExternalPolygons = [];
-    this.campaignDrawingService.completelyRemoveExplorePolygon();
-    this.campaignDrawingService.displayMyPolygons(this.map);
-    // if (this.map) {
-    //   this.mapDrawingService.displayDrawingManager(this.map);
-    // }
-    // this.getAllPolygons();
   }
 
   onSearchChange(value: string): void {
@@ -500,6 +428,9 @@ export class CampaignDrawingComponent
 
   removePolygonWithIndex(index: number): void {
     this.campaignDrawingService.removePolygonWithIndex(index);
+  }
+  removeCircleWithIndex(index: number): void {
+    this.campaignDrawingService.removeCircleWithIndex(index);
   }
 
   detectIncludeInSearch(id: number): boolean {
