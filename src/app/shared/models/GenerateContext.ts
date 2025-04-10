@@ -20,6 +20,7 @@ export interface GetContactManagerDTO
      ContactId : number;
      ContactName : string;
      ShoppingCentersName :string[];
+     ShoppingCentersID? :string[];
 }
 
 

@@ -13,15 +13,15 @@ import { AuthGuardService } from './core/services/auth-guard.service';
 import { KanbanComponent } from './features/kanban/kanban.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
 import { MarketSurveyComponent } from './features/tenants/market-survery/market-survey-home/market-survey.component';
- import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
+import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or-send/mails-generate-or-send.component';
 import { TasksComponent } from './features/tasks/tasks.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'tos', component: TermsComponent },
+  { path: '', component: LoginComponent, data: { hideHeader: true } },
+  { path: 'login', component: LoginComponent, data: { hideHeader: true } },
+  { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
@@ -71,17 +71,20 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
+    data: { hideHeader: true },
   },
   {
     path: 'market-survey/:buyboxid/:orgId/:buyboxName',
     component: MarketSurveyComponent,
     canActivate: [TenantOnlyGuard],
+    data: { hideHeader: true },
     // canActivate: [AuthGuardService],
   },
   {
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,
     canActivate: [TenantOnlyGuard],
+    data: { hideHeader: true },
   },
   {
     path: 'Kanban',
@@ -92,7 +95,8 @@ const routes: Routes = [
     path: ':guid',
     component: TenantComponent,
     canActivate: [TenantOnlyGuard],
-  }, 
+    data: { hideHeader: true },
+  },
   {
     path: 'Kanban/:id',
     component: KanbanComponent,

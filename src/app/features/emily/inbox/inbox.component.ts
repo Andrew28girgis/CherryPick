@@ -113,17 +113,19 @@ export class InboxComponent implements OnInit {
     Promise.all([microDealsPromise, emailsPromise])
       .then(() => {
         if (this.contacts && this.contacts.length > 0) {
-          const contactWithInbox = this.contacts.find(
-            (contact) =>
-              contact.EmailStats &&
-              contact.EmailStats[0] &&
-              contact.EmailStats[0].Inbox > 0
-          );
-          if (contactWithInbox) {
-            this.getEmailsForContact(contactWithInbox);
-          } else {
-            this.getEmailsForContact(this.contacts[0]);
-          }
+          // const contactWithInbox = this.contacts.find(
+          //   (contact) =>
+          //     contact.EmailStats &&
+          //     contact.EmailStats[0] &&
+          //     contact.EmailStats[0].Inbox > 0
+          // );
+          // if (contactWithInbox) {
+          //   this.getEmailsForContact(contactWithInbox);
+          // } else {
+          //   this.getEmailsForContact(this.contacts[0]);
+          // }
+          this.getEmailsForContact(this.contacts[0]);
+
         }
       })
       .catch((error) => { });
@@ -273,13 +275,13 @@ export class InboxComponent implements OnInit {
   goBack() {
     this._location.back();
   }
-  getTotalEmails(contact: Contact): number {
-    return (
-      (contact.EmailStats[0].Sent || 0) +
-      (contact.EmailStats[0].Inbox || 0) +
-      (contact.EmailStats[0].Outbox || 0)
-    );
-  }
+  // getTotalEmails(contact: Contact): number {
+  //   return (
+  //     (contact.EmailStats[0].Sent || 0) +
+  //     (contact.EmailStats[0].Inbox || 0) +
+  //     (contact.EmailStats[0].Outbox || 0)
+  //   );
+  // }
   openCompoase(modal: any) {
     this.listcenterName = [];
     this.emailSubject = '';

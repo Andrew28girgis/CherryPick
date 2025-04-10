@@ -70,6 +70,16 @@
                             "..."
                           : (shopping.CenterName | titlecase)
                       }}
+
+                      <span
+                        *ngIf="
+                          shopping.kanbanTemplateStageId === 43 ||
+                          shopping.kanbanTemplateStageId === 44
+                        "
+                        class="center-address shoppingcenterdata total"
+                      >
+                        <b> ( {{ shopping.stageName | titlecase }} )</b>
+                      </span>
                     </p>
                   </a>
 

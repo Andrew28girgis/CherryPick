@@ -12,10 +12,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-market-card-view',
   templateUrl: './market-card-view.component.html',
-  styleUrls: ['./market-card-view.component.css']
+  styleUrls: ['./market-card-view.component.css'],
 })
 export class MarketCardViewComponent implements OnInit {
-
   General: any = {};
   BuyBoxId!: any;
   OrgId!: any;
@@ -32,15 +31,13 @@ export class MarketCardViewComponent implements OnInit {
   @Input() layout: 'grid' | 'side' = 'grid'; // default layout
 
   constructor(
-            public activatedRoute: ActivatedRoute,
-            private stateService: StateService,
-            private PlacesService: PlacesService,
-            private spinner: NgxSpinnerService,
-            private modalService: NgbModal,
-            private sanitizer: DomSanitizer,
-
-
-  ) { }
+    public activatedRoute: ActivatedRoute,
+    private stateService: StateService,
+    private PlacesService: PlacesService,
+    private spinner: NgxSpinnerService,
+    private modalService: NgbModal,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: any) => {
@@ -94,7 +91,9 @@ export class MarketCardViewComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.filter(
           (element: any) => element.Deleted == false
         );
-
+        this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
+          [42, 43, 44].includes(element.kanbanTemplateStageId)
+        );
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
         this.getBuyBoxPlaces(this.BuyBoxId);
@@ -310,5 +309,4 @@ export class MarketCardViewComponent implements OnInit {
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }
-
 }
