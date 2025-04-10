@@ -6,8 +6,14 @@ export interface BuyBoxMicroDeals {
 
 export interface Contact {
   ContactId: number
-  Firstname?: string
-  Lastname?: string
+  Firstname: string
+  Lastname: string
+  ShoppingCenters: ShoppingCenter[]
+}
+
+export interface ShoppingCenter {
+  id: number
+  CenterName: string
   EmailStats: EmailStat[]
 }
 
