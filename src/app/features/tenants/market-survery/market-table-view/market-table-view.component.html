@@ -198,7 +198,7 @@
         <ng-template #emptyTd> </ng-template>
 
         <td>
-          <div class="d-flex justify-content-center align-items-center total">
+          <div class="d-flex justify-content-center align-items-center total d-flex flex-column">
             <div class="d-flex gap16">
               <div class="framee">
                 <a
@@ -289,6 +289,21 @@
                   />
                 </svg>
               </div>
+
+            </div>
+            <div class="action-buttons mt-3 d-flex justify-content-between flex-column">
+              <button 
+                class="action-btn accept" 
+                [class.selected]="selectedActionType[shoppingCenter.Id] === 'accept'"
+                (click)="acceptShoppingCenter(shoppingCenter)">
+                Accept
+              </button>
+              <button 
+                class="action-btn reject" 
+                [class.selected]="selectedActionType[shoppingCenter.Id] === 'reject'"
+                (click)="rejectShoppingCenter(shoppingCenter)">
+                Reject
+              </button>
             </div>
           </div>
         </td>

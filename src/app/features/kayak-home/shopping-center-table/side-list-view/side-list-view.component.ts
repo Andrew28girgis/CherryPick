@@ -17,7 +17,6 @@ import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { MapsService } from 'src/app/core/services/maps.service';
-import { MessageService } from 'primeng/api';
 
 declare const google: any;
 @Component({
@@ -47,8 +46,6 @@ export class SideListViewComponent implements OnInit {
   StreetViewOnePlace!: boolean;
   KanbanStages: any[] = [];
   activeDropdown: any = null;
-  selectedActionType: { [key: number]: string } = {}
-  messageService: MessageService
 
   constructor(
     private markerService: MapsService,
@@ -59,10 +56,8 @@ export class SideListViewComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,    
-    messageService: MessageService,
 
   ) {
-    this.messageService = messageService;
   }
 
   ngOnInit(): void {
@@ -705,44 +700,5 @@ export class SideListViewComponent implements OnInit {
 
   trackById(index: number, place: any): number {
     return place.Id;
-  }
-  acceptShoppingCenter(shopping: any): void {
-    // Toggle selection
-    if (this.selectedActionType[shopping.Id] === "accept") {
-      delete this.selectedActionType[shopping.Id]
-    } else {
-      this.selectedActionType[shopping.Id] = "accept"
-
-      // Show toast message
-      this.messageService.add({
-        severity: "success",
-        summary: "Shopping Center Accepted",
-        detail: `The shopping center "${shopping.CenterName}" has been successfully accepted.`,
-        life: 3000,
-      })
-
-      // Here you would typically call your API to update the status
-      // For example:
-      // this.updateShoppingCenterStatus(shoppingId, 'accepted');
-    }
-    this.cdr.detectChanges()
-  }
-
-  rejectShoppingCenter(shopping: any): void {
-    // Toggle selection
-    if (this.selectedActionType[shopping.Id] === "reject") {
-      delete this.selectedActionType[shopping.Id]
-    } else {
-      this.selectedActionType[shopping.Id] = "reject"
-      // Show toast message
-      this.messageService.add({
-        severity: "error",
-        summary: `Shopping Center Rejected`,
-        detail: `The shopping center "${shopping.CenterName}" has been rejected.`,
-        life: 3000,
-      })
-
-    }
-    this.cdr.detectChanges()
   }
 }

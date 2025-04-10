@@ -73,6 +73,8 @@
                     [innerHTML]="getShoppingCenterUnitSize(shopping)"
                   ></p>
                 </div>
+                <p-toast position="top-right"></p-toast>
+
                 <div class="row m-0">
                   <div
                     *ngFor="let item of shopping.ShoppingCenter?.BuyBoxPlaces"
@@ -155,7 +157,20 @@
                 </p>
               </div>
             </div>
-
+            <div class="action-buttons mt-3 d-flex justify-content-between">
+              <button 
+                class="action-btn accept" 
+                [class.selected]="selectedActionType[shopping.Id] === 'accept'"
+                (click)="acceptShoppingCenter(shopping)">
+                Accept
+              </button>
+              <button 
+                class="action-btn reject" 
+                [class.selected]="selectedActionType[shopping.Id] === 'reject'"
+                (click)="rejectShoppingCenter(shopping)">
+                Reject
+              </button>
+            </div>
             <!-- <div class="buttons-wrap">
           <button
             class="view-details-card"
@@ -209,6 +224,7 @@
             </svg>
           </div>
         </div> -->
+        
           </div>
         </div>
       </div>

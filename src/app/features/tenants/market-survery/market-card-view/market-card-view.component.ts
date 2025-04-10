@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StateService } from 'src/app/core/services/state.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -8,6 +8,7 @@ import { Center } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-market-card-view',
@@ -28,7 +29,11 @@ export class MarketCardViewComponent implements OnInit {
   mapViewOnePlacex: boolean = false;
   sanitizedUrl!: any;
   StreetViewOnePlace!: boolean;
+  selectedActionType: { [key: number]: string } = {}
+
   @Input() layout: 'grid' | 'side' = 'grid'; // default layout
+
+  messageService: MessageService
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -36,8 +41,14 @@ export class MarketCardViewComponent implements OnInit {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer,
+    messageService: MessageService,
+    private cdr: ChangeDetectorRef,
+
+  ) {
+    this.messageService = messageService;
+  }
+
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: any) => {
@@ -308,5 +319,44 @@ export class MarketCardViewComponent implements OnInit {
   getNeareastCategoryName(categoryId: number) {
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
+  }
+  acceptShoppingCenter(shopping: any): void {
+    // Toggle selection
+    if (this.selectedActionType[shopping.Id] === "accept") {
+      delete this.selectedActionType[shopping.Id]
+    } else {
+      this.selectedActionType[shopping.Id] = "accept"
+
+      // Show toast message
+      this.messageService.add({
+        severity: "success",
+        summary: "Shopping Center Accepted",
+        detail: `The shopping center "${shopping.CenterName}" has been successfully accepted.`,
+        life: 3000,
+      })
+
+      // Here you would typically call your API to update the status
+      // For example:
+      // this.updateShoppingCenterStatus(shoppingId, 'accepted');
+    }
+    this.cdr.detectChanges()
+  }
+
+  rejectShoppingCenter(shopping: any): void {
+    // Toggle selection
+    if (this.selectedActionType[shopping.Id] === "reject") {
+      delete this.selectedActionType[shopping.Id]
+    } else {
+      this.selectedActionType[shopping.Id] = "reject"
+      // Show toast message
+      this.messageService.add({
+        severity: "error",
+        summary: `Shopping Center Rejected`,
+        detail: `The shopping center "${shopping.CenterName}" has been rejected.`,
+        life: 3000,
+      })
+
+    }
+    this.cdr.detectChanges()
   }
 }

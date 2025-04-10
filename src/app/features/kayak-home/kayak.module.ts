@@ -25,7 +25,6 @@ import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.c
 import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KayakComponent } from './kayak/kayak.component';
-import { ToastModule } from 'primeng/toast';
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -42,9 +41,6 @@ import { ToastModule } from 'primeng/toast';
     PolygonsControllerComponent
     
   ],
-   providers: [
-      MessageService,
-    ],
   imports: [
     CommonModule,
     KayakRoutingModule,
@@ -59,7 +55,6 @@ import { ToastModule } from 'primeng/toast';
     TableModule,
     CardModule,
     PaginatorModule,
-    ToastModule,
     EmilyComponent,
   ],
   exports: [

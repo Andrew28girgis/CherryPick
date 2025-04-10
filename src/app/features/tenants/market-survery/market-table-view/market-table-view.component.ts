@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StateService } from 'src/app/core/services/state.service';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -8,14 +8,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { MessageService } from 'primeng/api';
 
 declare const google: any;
 
 @Component({
   selector: 'app-market-table-view',
   templateUrl: './market-table-view.component.html',
-  styleUrls: ['./market-table-view.component.css']
+  styleUrls: ['./market-table-view.component.css'],
 })
 export class MarketTableViewComponent implements OnInit {
   General: any = {};
@@ -31,17 +31,22 @@ export class MarketTableViewComponent implements OnInit {
 
   currentView: any;
   isMobileView!: boolean;
+  selectedActionType: { [key: number]: string } = {};
+
+  messageService: MessageService;
 
   constructor(
-        public activatedRoute: ActivatedRoute,
-        private stateService: StateService,
-        private PlacesService: PlacesService,
-        private spinner: NgxSpinnerService,
-        private modalService: NgbModal,
-        private sanitizer: DomSanitizer,
-
-  ) { }
-
+    public activatedRoute: ActivatedRoute,
+    private stateService: StateService,
+    private PlacesService: PlacesService,
+    private spinner: NgxSpinnerService,
+    private modalService: NgbModal,
+    private sanitizer: DomSanitizer,
+    messageService: MessageService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.messageService = messageService;
+  }
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
@@ -95,12 +100,12 @@ export class MarketTableViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
 
-        this.shoppingCenters = this.shoppingCenters?.filter(
-          (element: any) => [42, 43, 44].includes(element.kanbanTemplateStageId)
+        this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
+          [42, 43, 44].includes(element.kanbanTemplateStageId)
         );
-        
+
         console.log(`xx`);
-        
+
         console.log(this.shoppingCenters);
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();
@@ -132,83 +137,83 @@ export class MarketTableViewComponent implements OnInit {
     let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
     return categories[0]?.name;
   }
-      openMapViewPlace(content: any, modalObject?: any) {
-        this.modalService.open(content, {
-          ariaLabelledBy: 'modal-basic-title',
-          size: 'lg',
-          scrollable: true,
-        });
-        this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+  openMapViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
+  }
+  async viewOnMap(lat: number, lng: number) {
+    this.mapViewOnePlacex = true;
+    if (!lat || !lng) {
+      return;
+    }
+    const { Map } = (await google.maps.importLibrary('maps')) as any;
+    const mapDiv = document.getElementById('mappopup') as HTMLElement;
+    if (!mapDiv) {
+      return;
+    }
+    const map = new Map(mapDiv, {
+      center: { lat, lng },
+      zoom: 14,
+    });
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map: map,
+      title: 'Location Marker',
+    });
+  }
+  openStreetViewPlace(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.General.modalObject = modalObject;
+
+    if (this.General.modalObject.StreetViewURL) {
+      this.setIframeUrl(this.General.modalObject.StreetViewURL);
+    } else {
+      setTimeout(() => {
+        this.viewOnStreet();
+      }, 100);
+    }
+  }
+  setIframeUrl(url: string): void {
+    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+  viewOnStreet() {
+    this.StreetViewOnePlace = true;
+    let lat = +this.General.modalObject.StreetLatitude;
+    let lng = +this.General.modalObject.StreetLongitude;
+    let heading = this.General.modalObject.Heading || 165;
+    let pitch = this.General.modalObject.Pitch || 0;
+
+    setTimeout(() => {
+      const streetViewElement = document.getElementById('street-view');
+      if (streetViewElement) {
+        this.streetMap(lat, lng, heading, pitch);
+      } else {
       }
-      async viewOnMap(lat: number, lng: number) {
-        this.mapViewOnePlacex = true;
-        if (!lat || !lng) {
-          return;
+    });
+  }
+  streetMap(lat: number, lng: number, heading: number, pitch: number) {
+    const streetViewElement = document.getElementById('street-view');
+    if (streetViewElement) {
+      const panorama = new google.maps.StreetViewPanorama(
+        streetViewElement as HTMLElement,
+        {
+          position: { lat: lat, lng: lng },
+          pov: { heading: heading, pitch: 0 }, // Dynamic heading and pitch
+          zoom: 1,
         }
-        const { Map } = (await google.maps.importLibrary('maps')) as any;
-        const mapDiv = document.getElementById('mappopup') as HTMLElement;
-        if (!mapDiv) {
-          return;
-        }
-        const map = new Map(mapDiv, {
-          center: { lat, lng },
-          zoom: 14,
-        });
-        const marker = new google.maps.Marker({
-          position: { lat, lng },
-          map: map,
-          title: 'Location Marker',
-        });
-      }
-      openStreetViewPlace(content: any, modalObject?: any) {
-        this.modalService.open(content, {
-          ariaLabelledBy: 'modal-basic-title',
-          size: 'lg',
-          scrollable: true,
-        });
-        this.General.modalObject = modalObject;
-  
-        if (this.General.modalObject.StreetViewURL) {
-          this.setIframeUrl(this.General.modalObject.StreetViewURL);
-        } else {
-          setTimeout(() => {
-            this.viewOnStreet();
-          }, 100);
-        }
-      }
-      setIframeUrl(url: string): void {
-        this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      }
-      viewOnStreet() {
-        this.StreetViewOnePlace = true;
-        let lat = +this.General.modalObject.StreetLatitude;
-        let lng = +this.General.modalObject.StreetLongitude;
-        let heading = this.General.modalObject.Heading || 165;
-        let pitch = this.General.modalObject.Pitch || 0;
-  
-        setTimeout(() => {
-          const streetViewElement = document.getElementById('street-view');
-          if (streetViewElement) {
-            this.streetMap(lat, lng, heading, pitch);
-          } else {
-          }
-        });
-      }
-      streetMap(lat: number, lng: number, heading: number, pitch: number) {
-        const streetViewElement = document.getElementById('street-view');
-        if (streetViewElement) {
-          const panorama = new google.maps.StreetViewPanorama(
-            streetViewElement as HTMLElement,
-            {
-              position: { lat: lat, lng: lng },
-              pov: { heading: heading, pitch: 0 }, // Dynamic heading and pitch
-              zoom: 1,
-            }
-          );
-          // this.addMarkerToStreetView(panorama, lat, lng);
-        } else {
-        }
-      }
+      );
+      // this.addMarkerToStreetView(panorama, lat, lng);
+    } else {
+    }
+  }
 
   isLast(currentItem: any, array: any[]): boolean {
     return array.indexOf(currentItem) === array.length - 1;
@@ -319,5 +324,43 @@ export class MarketTableViewComponent implements OnInit {
   }
   trackByIndex(index: number, item: any): number {
     return index; // Return the index to track by the position
+  }
+  acceptShoppingCenter(shopping: any): void {
+    // Toggle selection
+    if (this.selectedActionType[shopping.Id] === 'accept') {
+      delete this.selectedActionType[shopping.Id];
+    } else {
+      this.selectedActionType[shopping.Id] = 'accept';
+
+      // Show toast message
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Shopping Center Accepted',
+        detail: `The shopping center "${shopping.CenterName}" has been successfully accepted.`,
+        life: 3000,
+      });
+
+      // Here you would typically call your API to update the status
+      // For example:
+      // this.updateShoppingCenterStatus(shoppingId, 'accepted');
+    }
+    this.cdr.detectChanges();
+  }
+
+  rejectShoppingCenter(shopping: any): void {
+    // Toggle selection
+    if (this.selectedActionType[shopping.Id] === 'reject') {
+      delete this.selectedActionType[shopping.Id];
+    } else {
+      this.selectedActionType[shopping.Id] = 'reject';
+      // Show toast message
+      this.messageService.add({
+        severity: 'error',
+        summary: `Shopping Center Rejected`,
+        detail: `The shopping center "${shopping.CenterName}" has been rejected.`,
+        life: 3000,
+      });
+    }
+    this.cdr.detectChanges();
   }
 }

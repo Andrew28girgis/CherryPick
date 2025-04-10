@@ -1,4 +1,4 @@
-import { Component, EventEmitter, NgZone, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, NgZone, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -12,6 +12,7 @@ import { Polygon } from 'src/app/shared/models/polygons';
 import { MapsService } from 'src/app/core/services/maps.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-market-side-view',
@@ -36,6 +37,10 @@ export class MarketSideViewComponent implements OnInit {
   sanitizedUrl!: any;
   StreetViewOnePlace!: boolean;
   placesRepresentative: boolean | undefined;
+  selectedActionType: { [key: number]: string } = {}
+
+
+  messageService: MessageService
 
   @Output() visibleCentersChanged = new EventEmitter<any[]>();
   visibleMarkersCount: number = 0;
@@ -53,8 +58,10 @@ export class MarketSideViewComponent implements OnInit {
     private ngZone: NgZone,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
-
-  ) { 
+    messageService: MessageService,
+    private cdr: ChangeDetectorRef,
+  ) {
+    this.messageService = messageService;
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
     this.markerService.clearMarkers();
@@ -695,5 +702,45 @@ private isCenterVisible(center: any, bounds: any): boolean {
     
     // You can update UI elements or perform actions based on these values
     // For example, show a summary of visible centers
+  }
+  
+  acceptShoppingCenter(shopping: any): void {
+    // Toggle selection
+    if (this.selectedActionType[shopping.Id] === "accept") {
+      delete this.selectedActionType[shopping.Id]
+    } else {
+      this.selectedActionType[shopping.Id] = "accept"
+
+      // Show toast message
+      this.messageService.add({
+        severity: "success",
+        summary: "Shopping Center Accepted",
+        detail: `The shopping center "${shopping.CenterName}" has been successfully accepted.`,
+        life: 3000,
+      })
+
+      // Here you would typically call your API to update the status
+      // For example:
+      // this.updateShoppingCenterStatus(shoppingId, 'accepted');
+    }
+    this.cdr.detectChanges()
+  }
+
+  rejectShoppingCenter(shopping: any): void {
+    // Toggle selection
+    if (this.selectedActionType[shopping.Id] === "reject") {
+      delete this.selectedActionType[shopping.Id]
+    } else {
+      this.selectedActionType[shopping.Id] = "reject"
+      // Show toast message
+      this.messageService.add({
+        severity: "error",
+        summary: `Shopping Center Rejected`,
+        detail: `The shopping center "${shopping.CenterName}" has been rejected.`,
+        life: 3000,
+      })
+
+    }
+    this.cdr.detectChanges()
   }
 }
