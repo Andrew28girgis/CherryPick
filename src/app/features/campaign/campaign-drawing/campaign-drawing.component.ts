@@ -66,7 +66,7 @@ export class CampaignDrawingComponent
     private polygonsControllerService: PolygonsControllerService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.userBuyBoxes.length > 0) {
+    if (changes['userBuyBoxes'] && this.userBuyBoxes.length > 0) {
       this.buyBoxId = this.userBuyBoxes[0].id;
     }
   }

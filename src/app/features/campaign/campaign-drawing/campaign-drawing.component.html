@@ -126,24 +126,26 @@
               </tr>
             </tbody>
           </table>
-          <label
-            for="user-buybox"
-            class="form-label w-100 d-flex justify-content-start"
-            >Select Tenants</label
-          >
-          <select
-            id="user-buybox"
-            class="form-select mb-3"
-            aria-label="Buybox select"
-            name="userBuybox"
-            [(ngModel)]="buyBoxId"
-          >
-            <ng-container *ngFor="let buyBox of userBuyBoxes">
-              <option [value]="buyBox.id">
-                {{ buyBox.name }}
-              </option>
-            </ng-container>
-          </select>
+          <ng-container *ngIf="userBuyBoxes && userBuyBoxes.length > 0">
+            <label
+              for="user-buybox"
+              class="form-label w-100 d-flex justify-content-start"
+              >Select Tenants</label
+            >
+            <select
+              id="user-buybox"
+              class="form-select mb-3"
+              aria-label="Buybox select"
+              name="userBuybox"
+              [(ngModel)]="buyBoxId"
+            >
+              <ng-container *ngFor="let buyBox of userBuyBoxes">
+                <option [value]="buyBox.id">
+                  {{ buyBox.name }}
+                </option>
+              </ng-container>
+            </select>
+          </ng-container>
           <div
             class="launch-campaign-btn"
             (click)="openNewCampaignPopup(content)"
