@@ -356,6 +356,7 @@
             <div class="campaign-actions">
               <div
                 class="inbox mail d-flex justify-content-between">
+                <i class="fa-regular fa-envelope"></i>
                 <a
                 [routerLink]="[
                   '/organization-mail',
@@ -365,7 +366,6 @@
                 ]"
                 >Emily</a
               >
-                <i class="fa-regular fa-envelope"></i><a>Inbox</a>
               </div>
 
               <button class="expand-btn" (click)="toggleExpand(campaign)">
@@ -597,18 +597,18 @@
 
                 <td style="text-align: center">
                   <div
-                    class="inbox mail d-flex justify-content-between">
-                    <a
-                    [routerLink]="[
-                      '/organization-mail',
-                      c.id,
-                      c.organizationid,
-                      campaign.Id
-                    ]"
-                    >Emily</a
-                  >
-                    <i class="fa-regular fa-envelope"></i><a>Inbox</a>
-                  </div>
+                  class="inbox mail d-flex justify-content-between">
+                  <i class="fa-regular fa-envelope"></i>
+                  <a
+                  [routerLink]="[
+                    '/organization-mail',
+                    c.id,
+                    c.organizationid,
+                    campaign.Id
+                  ]"
+                  >Emily</a
+                >
+                </div>
                 </td>
                 <ng-container *ngFor="let kanbanStage of campaign.Kanban">
                   <td style="text-align: center">
