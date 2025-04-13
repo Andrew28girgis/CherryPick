@@ -118,10 +118,13 @@ export class NewMulipleEmailComponent implements OnInit {
       this.campaignId = params.get('campaignId');
     });
 
-    this.breadcrumbService.addBreadcrumb({
-      label: 'Generate Email',
-      url: `/MutipleEmail/${this.campaignId}`,
-    });
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Campaigns', url: '/campaigns' },
+      { 
+        label: 'Dashboard', 
+        url: `/MutipleEmail/${this.campaignId}`
+      }
+    ]);
 
     this.emilyService
       .getCheckList()
