@@ -5,7 +5,7 @@ import { MapViewComponent } from './map-view/map-view.component';
 @Component({
   selector: 'app-shopping-center-table',
   templateUrl: './shopping-center-table.component.html',
-  styleUrls: ['./shopping-center-table.component.css']
+  styleUrls: ['./shopping-center-table.component.css'],
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
@@ -40,28 +40,28 @@ export class ShoppingCenterTableComponent implements OnInit {
       status: 5,
     },
   ];
-option: any;
+  option: any;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-  ) { }
+  constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid
-      this.OrgId = params.orgId
-      localStorage.setItem("BuyBoxId", this.BuyBoxId)
-      localStorage.setItem("OrgId", this.OrgId)
-    })
-    this.currentView = Number(localStorage.getItem("currentViewDashBord") || "5")
+      this.BuyBoxId = params.buyboxid;
+      this.OrgId = params.orgId;
+      localStorage.setItem('BuyBoxId', this.BuyBoxId);
+      localStorage.setItem('OrgId', this.OrgId);
+    });
+    this.currentView = Number(
+      localStorage.getItem('currentViewDashBord') || '5'
+    );
     this.selectedOption = this.currentView;
     this.filterDropdownOptions();
   }
 
   selectOption(option: any): void {
-    this.selectedOption = option.status
-    this.currentView = option.status
-    localStorage.setItem("currentViewDashBord", this.currentView.toString())
+    this.selectedOption = option.status;
+    this.currentView = option.status;
+    localStorage.setItem('currentViewDashBord', this.currentView.toString());
   }
 
   onHighlightMarker(place: any): void {
@@ -75,16 +75,18 @@ option: any;
       this.mapView.unhighlightMarker(place);
     }
   }
-  
+
   onViewChange(viewStatus: number) {
-    this.currentView = viewStatus
-    this.selectedOption = viewStatus
-    localStorage.setItem("currentViewDashBord", this.currentView.toString())
+    this.currentView = viewStatus;
+    this.selectedOption = viewStatus;
+    localStorage.setItem('currentViewDashBord', this.currentView.toString());
   }
 
   filterDropdownOptions(): void {
     if (window.innerWidth < 768) {
-      this.dropdowmOptions = this.dropdowmOptions.filter((option: any) => option.status !== 2);
+      this.dropdowmOptions = this.dropdowmOptions.filter(
+        (option: any) => option.status !== 2
+      );
     }
   }
 }
