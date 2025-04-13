@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   isCollapsed = false;
   userAvatar: string | null = null;
-  currentView: 'tenant' | 'landlord' = 'tenant';
+  currentView: 'campaigns' | 'landlord' = 'campaigns';
   current = '';
   private viewSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;
@@ -150,8 +150,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   switchView(): void {
-    const newView = this.currentView === 'tenant' ? 'landlord' : 'tenant';
+    const newView = this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
     this.userViewService.switchView(newView);
+    // Navigate to the appropriate route when switching views
+    this.router.navigate([newView]);
   }
 
   isNavbarOpen = false;
