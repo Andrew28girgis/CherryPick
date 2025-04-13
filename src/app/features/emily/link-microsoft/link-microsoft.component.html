@@ -1,24 +1,44 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
-<div class="col-12 col-sm-12 d-flex justify-content-between align-items-center Button_all pb-2 pb-sm-0">
-  <a class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" 
-    style="background-color: white;cursor: pointer;"
-    [href]="url" *ngIf="!user">
-    <img src="assets\Images\SVG\Microsoft-pictogram.svg" class="Microsoft-icon" alt="">
+<div
+  class="col-12 col-sm-12 d-flex justify-content-between align-items-center Button_all pb-2 pb-sm-0"
+>
+  <a
+    class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft"
+    style="background-color: white; cursor: pointer"
+    [href]="url"
+    *ngIf="!user"
+  >
+    <img
+      src="assets\Images\SVG\Microsoft-pictogram.svg"
+      class="Microsoft-icon"
+      alt=""
+    />
     Link Microsoft
   </a>
-  <button class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft" (click)="logoutMicrosoft()"
-  style="background-color: white;" *ngIf="user">
-  <img src="assets\Images\SVG\Microsoft-pictogram.svg" class="Microsoft-icon" alt="">
+  <button
+    class="Emily__contant__button Emily__body__button Emily__body__button_Microsoft"
+    (click)="logoutMicrosoft()"
+    style="background-color: white"
+    *ngIf="user"
+  >
+    <img
+      src="assets\Images\SVG\Microsoft-pictogram.svg"
+      class="Microsoft-icon"
+      alt=""
+    />
     Unlink Microsoft
   </button>
-  <button class="Emily__contant__button Emily__body__button" *ngIf="user"
-    (click)="openBodyModalContactFolders(ViewContactFolders)">
+  <button
+    class="Emily__contant__button Emily__body__button"
+    *ngIf="user"
+    (click)="openBodyModalContactFolders(ViewContactFolders)"
+  >
     Configuration
   </button>
-  <button class="Emily__contant__button Emily__body__button" (click)="MyInboxlist()" *ngIf="user">
+  <!-- <button class="Emily__contant__button Emily__body__button" (click)="MyInboxlist()" *ngIf="user">
     Inbox
-  </button>
+  </button> -->
 </div>
 
 <ng-template #ViewContactFolders let-modal>
@@ -32,8 +52,13 @@
       <div class="row m-0 mb-3">
         <div class="col-12 p-0 row m-0">
           <div class="checkbox-section p-0">
-            <input type="checkbox" name="ReadReply" id="ReadReply" class="form-check-input"
-              (change)="AcceptToReadReplyEmails($event)" />
+            <input
+              type="checkbox"
+              name="ReadReply"
+              id="ReadReply"
+              class="form-check-input"
+              (change)="AcceptToReadReplyEmails($event)"
+            />
             <label for="ReadReply">Accept To Read Reply Emails</label>
           </div>
         </div>
@@ -46,8 +71,14 @@
         <div class="col-10 p-0 row m-0">
           <div *ngFor="let item of ContactFolders" class="col-6 col-sm-4">
             <div class="checkbox-section">
-              <input type="checkbox" [name]="item.id" [id]="item.id" class="form-check-input" [checked]="item.isChecked"
-                (change)="AddFolderToBeRead(item.id, item.displayName, $event)" />
+              <input
+                type="checkbox"
+                [name]="item.id"
+                [id]="item.id"
+                class="form-check-input"
+                [checked]="item.isChecked"
+                (change)="AddFolderToBeRead(item.id, item.displayName, $event)"
+              />
               <label [for]="item.id">
                 {{ item.displayName }}
               </label>
@@ -59,16 +90,29 @@
       <div class="section-Text-email mt-2 row m-0">
         <label for="AddEmailsToBeRead" class="col-2 p-0 m-0">Email :</label>
         <div class="col-10 p-0 m-0 d-flex gap-3">
-          <input type="email" name="AddEmailsToBeRead" id="AddEmailsToBeRead" #emailInput>
-          <button (click)="AddEmailsToBeRead(emailInput)" class="Button_add">Add</button>
+          <input
+            type="email"
+            name="AddEmailsToBeRead"
+            id="AddEmailsToBeRead"
+            #emailInput
+          />
+          <button (click)="AddEmailsToBeRead(emailInput)" class="Button_add">
+            Add
+          </button>
         </div>
       </div>
 
-      <div *ngFor="let item of emailsList" class="section-Text-email mt-2 row m-0">
+      <div
+        *ngFor="let item of emailsList"
+        class="section-Text-email mt-2 row m-0"
+      >
         <label class="col-2 p-0 m-0">Email added:</label>
         <div class="col-10 p-0 m-0 d-flex gap-3">
-          <input type="email" [value]="item.email" disabled>
-          <button (click)="deleteEmailsToBeRead(item.email)" class="delete_button">
+          <input type="email" [value]="item.email" disabled />
+          <button
+            (click)="deleteEmailsToBeRead(item.email)"
+            class="delete_button"
+          >
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
@@ -77,23 +121,36 @@
       <div class="section-Text-email mt-2 row m-0">
         <label for="AddDomainToBeRead" class="col-2 p-0 m-0">Domain :</label>
         <div class="col-10 p-0 m-0 d-flex gap-3">
-          <input type="text" name="AddDomainToBeRead" id="AddDomainToBeRead" #domainInput>
-          <button (click)="AddDomainToBeRead(domainInput)" class="Button_add">Add</button>
+          <input
+            type="text"
+            name="AddDomainToBeRead"
+            id="AddDomainToBeRead"
+            #domainInput
+          />
+          <button (click)="AddDomainToBeRead(domainInput)" class="Button_add">
+            Add
+          </button>
         </div>
       </div>
 
       <div *ngFor="let item of domainList" class="section-Text-email mt-2">
         <label class="col-2 p-0 m-0">Domain added:</label>
         <div class="col-10 p-0 m-0 d-flex gap-3">
-          <input type="text" [value]="item.domain" disabled>
-          <button (click)="deleteDomainToBeRead(item.domain)" class="delete_button">
+          <input type="text" [value]="item.domain" disabled />
+          <button
+            (click)="deleteDomainToBeRead(item.domain)"
+            class="delete_button"
+          >
             <i class="fa-solid fa-trash"></i>
           </button>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-secondary" (click)="modal.dismiss('Close click');GetContactInfos();">
+      <button
+        class="btn btn-secondary"
+        (click)="modal.dismiss('Close click'); GetContactInfos()"
+      >
         Confirm
       </button>
     </div>

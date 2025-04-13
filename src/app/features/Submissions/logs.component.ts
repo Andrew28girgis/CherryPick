@@ -1,16 +1,24 @@
-import { Component, OnInit, ElementRef, ViewChild, TemplateRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  TemplateRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ActivatedRoute } from '@angular/router';
-import { submission ,Places } from 'src/app/shared/models/submissions';
+import { submission, Places } from 'src/app/shared/models/submissions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { General } from 'src/app/shared/models/domain';
 import { FormsModule } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
+
 @Component({
   selector: 'app-logs',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './logs.component.html',
   styleUrl: './logs.component.css',
 })
@@ -21,7 +29,7 @@ export class SubmissionsComponent implements OnInit {
   places: Places[] = [];
   @ViewChild('AddNote', { static: true }) AddNote!: TemplateRef<any>;
   Notes: string = '';
-  SubmID!:number;
+  SubmID!: number;
   contactID!: any;
   acceptedSubmissions: number = 0;
   rejectedSubmissions: number = 0;
@@ -30,12 +38,18 @@ export class SubmissionsComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private spinner: NgxSpinnerService,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
     });
+    this.breadcrumbService.addBreadcrumb({
+      label: 'Submissions',
+      url: `/campaigns/${this.campaignId}`,
+    });
+
     this.contactID = localStorage.getItem('contactId');
     this.fetchReceivedSubmissions();
   }
@@ -77,7 +91,6 @@ export class SubmissionsComponent implements OnInit {
       },
     });
   }
-  
 
   openPlaces(content: any, scPlaces: any): void {
     this.modalService.open(content, {
@@ -85,7 +98,7 @@ export class SubmissionsComponent implements OnInit {
       size: 'lg',
       scrollable: true,
     });
-    this.places = scPlaces; 
+    this.places = scPlaces;
   }
 
   getSubmissionCenterName(userSubmission: any) {
@@ -143,7 +156,7 @@ export class SubmissionsComponent implements OnInit {
   }
   openAddNoteModal(SubmissionId: number) {
     this.modalService.open(this.AddNote, { size: 'xl', centered: true });
-    this.SubmID= SubmissionId;
+    this.SubmID = SubmissionId;
   }
   InsertTenantNotes() {
     this.spinner.show();
@@ -158,9 +171,7 @@ export class SubmissionsComponent implements OnInit {
       Json: null,
     };
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data: any) => {
-      },
-      
+      next: (data: any) => {},
     });
     this.modalService.dismissAll();
     this.spinner.hide();

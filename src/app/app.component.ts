@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -7,8 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
+  display: boolean = false;
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
-  constructor() {}
-
-  ngOnInit() {}
+  ngOnInit() {
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe(() => {
+      const childRoute = this.activatedRoute.firstChild;
+      // Check for 'hideHeader' in route data
+      if (childRoute && childRoute.snapshot.data['hideHeader']) {
+        this.display = false;
+      } else {
+        this.display = true;
+      }
+    });
 }
+  }
+

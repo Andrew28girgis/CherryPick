@@ -155,17 +155,18 @@
                 <ng-container *ngFor="let sc of contact.ShoppingCenters">
                   <div>
                     <span
-                      class="shopping-center"
-                      style="font-size: 12px; color: #4d65b4; font-weight: 600"
-                      >{{ sc.CenterName }}</span
-                    >
-                    <span
-                      style="color: #4d65b4; font-weight: 600"
-                      *ngIf="getTotalEmails(sc.EmailStats[0]) > 0"
-                    >
-                      {{ getTotalEmails(sc.EmailStats[0]) }}
-                    </span>
+                    class="shopping-center"
+                    style="font-size: 12px; color: #4d65b4; font-weight: 600"
+                    >{{ sc.CenterName }}</span
+                  >
+                  <span
+                    style="color: #4d65b4; font-weight: 600"
+                    *ngIf="getTotalEmails(sc.EmailStats[0]) > 0"
+                  >
+                    {{ getTotalEmails(sc.EmailStats[0]) }}
+                  </span>
                   </div>
+                
                 </ng-container>
               </li>
             </ul>
