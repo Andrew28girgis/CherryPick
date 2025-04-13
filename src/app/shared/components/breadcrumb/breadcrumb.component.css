@@ -19,7 +19,7 @@
 .breadcrumb-item a {
   color: #fff !important;
   display: block;
-  background: #3498db;
+  background: #4d65b4;
   text-decoration: none;
   position: relative;
   height: 40px;
@@ -40,11 +40,16 @@
   content: "";
   position: absolute;
   top: 0;
-  border: 0 solid #3498db;
-  border-width: 20px 10px;
+  border: 0 solid #4d65b4;
+  border-width: 20px 13px;
   width: 0;
+  margin-left: -1px;
   height: 0;
 }
+.breadcrumb-item:first-child a::before  {
+  border: none;
+}
+
 
 .breadcrumb-item a:before {
   left: -20px;
@@ -54,7 +59,7 @@
 .breadcrumb-item a:after {
   left: 100%;
   border-color: transparent;
-  border-left-color: #3498db;
+  border-left-color: #4d65b4;
 }
 
 .breadcrumb-item a:hover:before {

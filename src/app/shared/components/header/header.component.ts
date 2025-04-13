@@ -161,12 +161,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.isNavbarOpen = !this.isNavbarOpen;
   }
-  goBack() {
-    const prevUrl = this.navigationService.getPreviousUrl();
-    if (prevUrl) {
-      this.router.navigateByUrl(prevUrl);
-    } else {
-      this.router.navigate(['/campaigns']);
-    }
-  }
+
 }
