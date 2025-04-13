@@ -19,6 +19,7 @@ import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-inbox',
@@ -68,7 +69,9 @@ export class InboxComponent implements OnInit {
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private _location: Location,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private breadcrumbService: BreadcrumbService
+
   ) {}
 
   ngOnInit() {
@@ -86,6 +89,11 @@ export class InboxComponent implements OnInit {
         this.orgId = +orgId;
       }
     });
+    this.breadcrumbService.addBreadcrumb({
+      label: 'Emily',
+      url: `/organization-mail/${this.buyBoxId}/${this.orgId}/${this.campaignId}`,
+    });
+
     this.loadInitialData();
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
