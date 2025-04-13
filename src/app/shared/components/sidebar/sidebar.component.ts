@@ -38,7 +38,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   // New variable that will hold the current route URL.
   current: string = '';
-  currentView: 'tenant' | 'landlord' = 'tenant';
+  currentView: 'campaigns' | 'landlord' = 'campaigns';
 
   private viewSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;

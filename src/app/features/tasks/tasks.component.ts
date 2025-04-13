@@ -12,6 +12,7 @@ import {  Router, RouterModule } from "@angular/router"
 import  { NgbModal } from "@ng-bootstrap/ng-bootstrap"
 import  { EmilyService } from "src/app/core/services/emily.service"
 import { Subscription } from "rxjs"
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: "app-tasks",
@@ -42,9 +43,14 @@ export class TasksComponent implements OnInit, OnDestroy {
     private router: Router,
     private modalService: NgbModal,
     private emilyService: EmilyService,
+    private breadcrumbService: BreadcrumbService
+
   ) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Tasks', url: '/tasks' },
+    ]);
     const storedContactId = localStorage.getItem("contactId")
     if (storedContactId) {
       this.ContactId = +storedContactId
