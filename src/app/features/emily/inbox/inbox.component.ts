@@ -14,7 +14,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { EditorModule } from 'primeng/editor';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -71,7 +70,6 @@ export class InboxComponent implements OnInit {
     private _location: Location,
     private sanitizer: DomSanitizer,
     private breadcrumbService: BreadcrumbService
-
   ) {}
 
   ngOnInit() {
