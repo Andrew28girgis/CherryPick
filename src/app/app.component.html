@@ -2,7 +2,7 @@
 <div class="app-container">
   <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
     <div class="main-content-area">
-      <!-- <app-breadcrumb *ngIf="display"></app-breadcrumb> -->
+      <app-breadcrumb *ngIf="display"></app-breadcrumb>
       <div class="content-container">
         <router-outlet></router-outlet>
       </div>

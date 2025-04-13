@@ -120,8 +120,9 @@ export class NewMulipleEmailComponent implements OnInit {
 
     this.breadcrumbService.addBreadcrumb({
       label: 'Generate Email',
-      url: '/',
+      url: `/MutipleEmail/${this.campaignId}`,
     });
+
     this.emilyService
       .getCheckList()
       .subscribe((buyboxChecklist: buyboxChecklist) => {

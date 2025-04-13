@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
- import { General } from 'src/app/shared/models/domain';
+import { General } from 'src/app/shared/models/domain';
 declare const google: any;
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -8,7 +8,7 @@ import { Center, Place } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
- import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
+import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ApiServiceService } from 'src/app/core/services/api-service.service';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
@@ -21,7 +21,7 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
   templateUrl: './summery.component.html',
   styleUrls: ['./summery.component.css'],
 })
-export class SummeryComponent implements OnInit{
+export class SummeryComponent implements OnInit {
   General!: General;
   buyboxTypes: any[] = [];
   showSummery: boolean = false;
@@ -62,9 +62,8 @@ export class SummeryComponent implements OnInit{
     private stateService: StateService,
     private sidbarService: SidbarService,
     private modalService: NgbModal,
-    private ApiService: ApiServiceService ,
-    private breadcrumbService: BreadcrumbService,
-
+    private ApiService: ApiServiceService,
+    private breadcrumbService: BreadcrumbService
   ) {
     this.sidbarService.isCollapsed.subscribe(
       (state: boolean) => (this.isCollapsed = state)
@@ -73,8 +72,8 @@ export class SummeryComponent implements OnInit{
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbs([
-      { label: 'Tenants', url: '/summary' }
-   ]);
+      { label: 'Tenants', url: '/summary' },
+    ]);
     this.stateService.clearAll();
     this.General = new General();
     this.route.queryParams.subscribe((params) => {
@@ -85,7 +84,7 @@ export class SummeryComponent implements OnInit{
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state;
     });
-    this.modalOpened = false;  
+    this.modalOpened = false;
   }
 
   getUserBuyBoxes(): void {
@@ -140,18 +139,20 @@ export class SummeryComponent implements OnInit{
     const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       scrollable: true,
-      size: 'xl'
+      size: 'xl',
     });
     this.Obj = new BuyBoxModel();
-  
-    modalRef.result.then((result) => {
-      if (result && result.created) {
+
+    modalRef.result
+      .then((result) => {
+        if (result && result.created) {
+          this.getUserBuyBoxes();
+          this.modalService.dismissAll();
+        }
+      })
+      .catch((error) => {
         this.getUserBuyBoxes();
-        this.modalService.dismissAll();
-      }
-    }).catch((error) => {
-      this.getUserBuyBoxes();
-    });
+      });
   }
   closeModal() {
     this.editing = false;
@@ -241,13 +242,11 @@ export class SummeryComponent implements OnInit{
         Name: term,
       },
     };
-    this.ApiService.GenericAPI(body).subscribe(
-      (res: any) => {
-        this.organizations = res.json as Organization[];
-        this.showOrganizationSuggestions = true;
-        this.highlightedOrganizationIndex = -1;
-        this.isSearchingOrganization = false;
-      }
-    );
+    this.ApiService.GenericAPI(body).subscribe((res: any) => {
+      this.organizations = res.json as Organization[];
+      this.showOrganizationSuggestions = true;
+      this.highlightedOrganizationIndex = -1;
+      this.isSearchingOrganization = false;
+    });
   }
 }
