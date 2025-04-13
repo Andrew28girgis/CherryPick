@@ -10,10 +10,7 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   display: boolean = false;
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.router.events
