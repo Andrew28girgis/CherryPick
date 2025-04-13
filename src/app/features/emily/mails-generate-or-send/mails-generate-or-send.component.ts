@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-mails-generate-or-send',
@@ -20,7 +21,9 @@ export class MailsGenerateOrSendComponent {
     private route: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private breadcrumbService: BreadcrumbService
+
   ) {
     this.route.paramMap.subscribe((params) => {
       this.MailContextId = params.get('MailContextId');
@@ -33,6 +36,10 @@ export class MailsGenerateOrSendComponent {
     if (this.MailContextId && this.IsSent) {
       this.ReadSpecificMails();
     }
+        this.breadcrumbService.addBreadcrumb({
+      label: 'MailsList',
+      url: `MailsList/${this.MailContextId}/${this.IsSent}`,
+    });
   }
 
   ReadSpecificMails() {
