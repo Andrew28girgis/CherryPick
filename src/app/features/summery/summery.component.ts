@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
  import { General } from 'src/app/shared/models/domain';
 declare const google: any;
@@ -49,6 +49,8 @@ export class SummeryComponent implements OnInit{
   selectedOrganizationId!: number; // To bind the selected organization
   searchOrganizationTerm: string = '';
   selectedOrganizationName!: string; // Holds the selected organization name
+  @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;
+  modalOpened: boolean = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -83,6 +85,7 @@ export class SummeryComponent implements OnInit{
     this.sidbarService.isCollapsed.subscribe((state: boolean) => {
       this.isCollapsed = state;
     });
+    this.modalOpened = false;  
   }
 
   getUserBuyBoxes(): void {
@@ -95,6 +98,12 @@ export class SummeryComponent implements OnInit{
       next: (data) => {
         if (data.json != null) {
           this.buyboxTypes = data.json;
+
+          if (this.buyboxTypes.length === 0 && !this.modalOpened) {
+            this.modalOpened = true;
+            this.open(this.buyBoxProperty);
+          }
+
           this.spinner.hide();
         } else {
           this.router.navigate(['/login']);
