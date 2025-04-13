@@ -193,7 +193,10 @@
             </div>
           </div>
           <!-- Progress Bar -->
-          <div *ngIf="isUploading && !isSubmitting" class="mt-2 uploadingpadding">
+          <div
+            *ngIf="isUploading && !isSubmitting"
+            class="mt-2 uploadingpadding"
+          >
             <div class="progress w-100">
               <div
                 class="progress-bar progress-bar-striped"
@@ -219,7 +222,10 @@
           </div>
           <ng-template #uploadPDF let-modal>
             <!-- Display Images Section -->
-            <div *ngIf="images.length > 0 && !isSubmitting" class="extractedimagespadding">
+            <div
+              *ngIf="images.length > 0 && !isSubmitting"
+              class="extractedimagespadding"
+            >
               <h4 class="my-prop">Converted Pdf to Extracted Images</h4>
               <div class="row">
                 <div *ngFor="let image of images" class="col-md-4 mb-3">
@@ -257,8 +263,7 @@
                 <div class="col-md-10 col-lg-8">
                   <!-- Center Information Card -->
                   <div class="card shadow-sm mb-4">
-                    <div
-                      class="card-header text-white text-center background">
+                    <div class="card-header text-white text-center background">
                       <h4 class="mb-0 text-dark">
                         Shopping Center Information
                       </h4>
@@ -331,10 +336,12 @@
                   <!-- Availability and Tenants Section -->
                   <div class="row g-4">
                     <!-- Availability Card -->
-                    <div class="col-md-6" *ngIf="JsonPDF.Availability.length > 0">
+                    <div
+                      class="col-md-6"
+                      *ngIf="JsonPDF.Availability.length > 0"
+                    >
                       <div class="card shadow-sm h-100">
-                        <div
-                          class="card-header text-white blackbackground">
+                        <div class="card-header text-white blackbackground">
                           <h5 class="mb-0 d-flex justify-content-center">
                             Availability
                           </h5>
@@ -369,8 +376,7 @@
                     <!-- Tenants Card -->
                     <div class="col-md-6">
                       <div class="card shadow-sm h-100">
-                        <div
-                          class="card-header text-white blackbg">
+                        <div class="card-header text-white blackbg">
                           <h5 class="mb-0 d-flex justify-content-center">
                             Tenants
                           </h5>
@@ -425,11 +431,12 @@
               </div>
             </div>
 
-            <div>
-            </div>
+            <div></div>
             <div class="modal-footer">
               <!-- Send Selected Images Button -->
-              <div class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf">
+              <div
+                class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+              >
                 <button
                   class="submitpdfbutton"
                   *ngIf="JsonPDF"
