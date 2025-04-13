@@ -42,8 +42,6 @@ export class KayakHomeComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-
-
     this.route.paramMap.subscribe((params) => {
       this.BuyboxName = params.get('buyboxName');
       this.orgId = params.get('orgId');
@@ -56,10 +54,10 @@ export class KayakHomeComponent implements OnInit {
 
     this.breadcrumbService.setBreadcrumbs([
       { label: 'Tenants', url: '/tenants' },
-      { 
-        label: `${this.BuyboxName}-Dashboard`, 
-        url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`
-      }
+      {
+        label: `${this.BuyboxName}-Dashboard`,
+        url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`,
+      },
     ]);
   }
 
