@@ -10,23 +10,19 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   display: boolean = false;
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe(() => {
-      const childRoute = this.activatedRoute.firstChild;
-      // Check for 'hideHeader' in route data
-      if (childRoute && childRoute.snapshot.data['hideHeader']) {
-        this.display = false;
-      } else {
-        this.display = true;
-      }
-    });
-}
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        const childRoute = this.activatedRoute.firstChild;
+        // Check for 'hideHeader' in route data
+        if (childRoute && childRoute.snapshot.data['hideHeader']) {
+          this.display = false;
+        } else {
+          this.display = true;
+        }
+      });
   }
-
+}
