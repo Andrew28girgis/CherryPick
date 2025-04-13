@@ -15,6 +15,7 @@ import { OrgBranch } from 'src/app/shared/models/branches';
 import { permission } from 'src/app/shared/models/permission';
 import { Enriche } from 'src/app/shared/models/enriche';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-landing',
@@ -61,6 +62,9 @@ export class LandingComponent {
   Permission: permission[] = [];
   windowHistrony: any;
   enriche!: Enriche;
+  placeId!: any;
+  shoppingId!: any;
+  buyBoxId!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -68,16 +72,28 @@ export class LandingComponent {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private modalService: NgbModal,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private breadcrumbService: BreadcrumbService,
   ) {
     localStorage.removeItem('placeLat');
     localStorage.removeItem('placeLon');
   }
 
   ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.placeId = params.get('placeId');
+      this.shoppingId = params.get('shoppingId');
+      this.buyBoxId = params.get('buyBoxId');
+    });
+    
     this.windowHistrony = window.history.length;
     this.initializeParams();
     this.initializeDefaults();
+
+    this.breadcrumbService.addBreadcrumb({
+      label: 'Details',
+      url: `/landing/${this.placeId}/${this.shoppingId}/${this.buyBoxId}`,
+    });
   }
 
   GetCustomSections(buyboxId: number): void {

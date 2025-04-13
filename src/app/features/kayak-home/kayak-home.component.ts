@@ -54,10 +54,13 @@ export class KayakHomeComponent implements OnInit {
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
 
-    this.breadcrumbService.addBreadcrumb({
-      label: 'Dashboard',
-      url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`,
-    });
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Tenants', url: '/tenants' },
+      { 
+        label: 'Dashboard', 
+        url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`
+      }
+    ]);
   }
 
   selectTab(tabId: string): void {
