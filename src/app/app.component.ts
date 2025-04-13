@@ -26,6 +26,10 @@ export class AppComponent implements OnInit {
       } else {
         this.display = true;
       }
+      const currentUrl = this.router.url;
+      if (currentUrl.startsWith('/Kanban')) {
+        this.display = false;
+      }
     });
 }
   }
