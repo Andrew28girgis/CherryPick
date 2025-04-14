@@ -22,26 +22,26 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 })
 export class InboxComponent implements OnInit {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
-  BuyBoxEmails: BuyBoxEmails[] = []; 
+  BuyBoxEmails: BuyBoxEmails[] = [];
   emailsSentContact: Mail[] = [];
-  selectedContact: Contact | null = null; 
+  selectedContact: Contact | null = null;
   loginContact: any;
   emptyMessage: string = 'Select Contact in organization';
-  selectedEmail: EmailInfo | null = null;    
+  selectedEmail: EmailInfo | null = null;
   organization: any = {};
-  contacts: Contact[] = [];  
-  filteredEmails: Mail[] = []; 
+  contacts: Contact[] = [];
+  filteredEmails: Mail[] = [];
   selectedFilter: string = 'all';
   selectedMicro: any;
   selected: any = null;
   campaignId: any;
   emailBody: string = '';
-  emailSubject: string = ''; 
+  emailSubject: string = '';
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
   contactId!: any;
-  BatchGuid!: string; 
+  BatchGuid!: string;
   emailBodySafe!: SafeHtml;
 
   constructor(
@@ -193,7 +193,7 @@ export class InboxComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.selectedEmail = data.json[0]; 
+        this.selectedEmail = data.json[0];
         this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(
           this.selectedEmail!.Body
         );
@@ -232,7 +232,7 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  openmodel(modal: any, body: any, contactId: any) {  
+  openmodel(modal: any, body: any, contactId: any) {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 
@@ -247,7 +247,7 @@ export class InboxComponent implements OnInit {
   }
 
   filterEmails(filterType: string): void {
-    this.selectedFilter = filterType; 
+    this.selectedFilter = filterType;
     this.selected = null; // Reset selected email to show the list view
 
     // If no emails or contact selected, don't try to filter.
@@ -301,8 +301,6 @@ export class InboxComponent implements OnInit {
   listcenterName: string[] = [];
   showGenerateSection: boolean = false;
   isEmailBodyEmpty: boolean = true;
-
-
 
   onCheckboxChange(event: any, item: any) {
     this.showGenerateSection = true;
@@ -448,5 +446,4 @@ export class InboxComponent implements OnInit {
       toast!.classList.remove('show');
     }, 3000);
   }
-
 }

@@ -340,6 +340,14 @@ a {
   border: 0;
 }
 
+.buttonSave{
+  color: white;
+  background: #001f3f;
+  padding: 5px 10px;
+  border: 1px solid #001f3f;
+  cursor: pointer;
+  border-radius: 6px;  
+}
 @media (max-width: 991px) {
   .info-window {
     width: 300px;

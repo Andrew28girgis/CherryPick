@@ -54,7 +54,7 @@ export class EmailInboxComponent implements OnInit {
   OrganizationCheckedServices: OrganizationChecked[] = [];
   showMoreRelations: { [key: number]: boolean } = {};
   returnGetMailContextGenerated: MailContextGenerated[] = [];
-  returnGetMailContext!:any;
+  returnGetMailContext!: any;
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
   MangerDescription: string = '';
@@ -466,10 +466,9 @@ export class EmailInboxComponent implements OnInit {
       },
     });
   }
-  ReadSpecificMails(mailContextId: number) {
+  ReadSpecificMails(mailContextId: number): void {
     this.spinner.show();
-
-    var body: any = {
+    const body: any = {
       Name: 'ReadSpecificMails',
       MainEntity: null,
       Params: {
@@ -481,8 +480,37 @@ export class EmailInboxComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.returnGetMailContextGenerated = data.json;
-        this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(this.returnGetMailContext[0].body);
+        const response = data.json;
+        if (!response || response.length === 0) {
+          setTimeout(() => {
+            this.ReadSpecificMails(mailContextId);
+          }, 3000);
+        } else {
+          this.returnGetMailContextGenerated = response[0].body;
+          this.emailSubject = response[0].subject;
+          this.spinner.hide();
+        }
+      },
+    });
+  }
+
+  Send() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'ComposeEmail',
+      MainEntity: null,
+      Params: {
+        BuyBoxId: +this.buyBoxId,
+        CampaignId: +this.campaignId,
+        RecieverId: [Number(this.selectedContactContactId.ContactId)].join(','),
+        Subject: this.emailSubject,
+        Body: this.returnGetMailContextGenerated,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
         this.spinner.hide();
       },
     });
