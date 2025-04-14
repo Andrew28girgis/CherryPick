@@ -52,9 +52,13 @@
                     : 'fa-solid fa-chevron-right'
                 "
               ></i>
-              <img 
-               class="logo" 
-               src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{bb.OrganizationId}}" title="Kimco Realty">
+              <img
+                class="logo"
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  bb.OrganizationId
+                }}"
+                title="Kimco Realty"
+              />
               {{ bb.OrganizationName }}
             </p>
 
@@ -105,7 +109,11 @@
       </div>
     </div>
     <!-- Email list - shown when no email is selected -->
-    <div class="col-lg-9 p-0 mb-3" *ngIf="!selected" style="border-left:1px solid #ccc">
+    <div
+      class="col-lg-9 p-0 mb-3"
+      *ngIf="!selected"
+      style="border-left: 1px solid #ccc"
+    >
       <div
         class="card"
         style="
@@ -117,7 +125,7 @@
         "
       >
         <div class="card-bodyy" style="max-height: 74vh; overflow-y: auto">
-          <div >
+          <div>
             <div class="email-list">
               <div
                 class="single-mail"
@@ -142,13 +150,17 @@
               </p>
             </div>
           </div>
-     
         </div>
       </div>
     </div>
 
     <!-- Email body - shown when an email is selected -->
-    <div class="col-lg-9 p-0 m-0" id="emailDetails" *ngIf="selected" style="border-left:1px solid #ccc">
+    <div
+      class="col-lg-9 p-0 m-0"
+      id="emailDetails"
+      *ngIf="selected"
+      style="border-left: 1px solid #ccc"
+    >
       <div
         class="email-details-body"
         style="overflow-y: auto; min-height: 91vh"
