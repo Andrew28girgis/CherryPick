@@ -466,6 +466,7 @@ export class EmailInboxComponent implements OnInit {
       },
     });
   }
+
   ReadSpecificMails(mailContextId: number): void {
     this.spinner.show();
     const body: any = {
@@ -526,3 +527,4 @@ export class EmailInboxComponent implements OnInit {
     }, 3000);
   }
 }
+ 
