@@ -10,7 +10,7 @@
 
 .selected-contact {
   background-color: #e2e4e9;
-  color: rgb(0, 0, 0); 
+  color: rgb(0, 0, 0);
 }
 
 .selected-email {
@@ -120,7 +120,7 @@
 }
 
 .buttonandname {
-  padding: 0 0 25px 0;
+  padding: 0 0 5px 0;
 }
 
 .mailbox-header {
@@ -153,10 +153,6 @@
 .date {
   color: #707791;
   font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 24px;
-  letter-spacing: -0.07px;
 }
 
 .email-details-body {
@@ -184,7 +180,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
-  padding: 25px; 
+  padding: 25px;
   padding-top: 0;
 }
 
@@ -259,7 +255,18 @@
   scrollbar-width: thin;
   /* For Firefox */
 }
-
+.card {
+  border: none;
+  border-radius: 0;
+  min-height: 100vh;
+}
+.buybox-name {
+  margin:  20px;
+  font-weight: 600;
+  color: #22242b;
+  cursor: pointer;
+  font-size: 13px;
+}
 .replay {
   border-radius: 16px;
   background: #4d65b4;
@@ -364,7 +371,6 @@
   border-radius: 6px;
 }
 
-
 .form-check-input[type="checkbox"] {
   box-shadow: none;
   outline: none;
@@ -394,7 +400,7 @@
   background-color: transparent;
 }
 
-.new-btnCompose>i {
+.new-btnCompose > i {
   padding-top: 2px;
 }
 

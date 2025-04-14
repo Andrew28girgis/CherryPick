@@ -1,6 +1,7 @@
 export interface BuyBoxMicroDeals {
   OrganizationId: number
   OrganizationName: string
+  isOpen: boolean
   Contact: Contact[]
 }
 
@@ -41,13 +42,12 @@ export interface BuyBoxEmails {
 export interface Mail {
   id: number
   Subject: string
+  Body?: string;
   Date: string
   Direction: number
-  FromAddress: string;
-  ContactId: number
-  MailsContacts: MailsContact[]
-  // ID?: number;
-  Body?: string;
+  FromAddress?: string;
+  ContactId?: number
+  MailsContacts?: MailsContact[]
   MicroDealId?: number;
   ResponseStatus?: string;
 }

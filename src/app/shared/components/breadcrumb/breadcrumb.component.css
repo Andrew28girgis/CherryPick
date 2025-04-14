@@ -1,6 +1,6 @@
 .breadcrumb {
   display: flex;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0;
   margin: 0;
   list-style: none;
   border-radius: 0.25rem;
@@ -46,10 +46,9 @@
   margin-left: -1px;
   height: 0;
 }
-.breadcrumb-item:first-child a::before  {
+.breadcrumb-item:first-child a::before {
   border: none;
 }
-
 
 .breadcrumb-item a:before {
   left: -20px;

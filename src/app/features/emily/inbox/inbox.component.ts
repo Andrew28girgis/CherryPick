@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import {
   BuyBoxEmails,
   BuyBoxMicroDeals,
@@ -7,16 +6,12 @@ import {
   EmailInfo,
   Mail,
   MailsContact,
-  Stages,
 } from 'src/app/shared/models/buy-box-emails';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
-import { debounceTime } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
@@ -27,39 +22,26 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 })
 export class InboxComponent implements OnInit {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
-  BuyBoxEmails: BuyBoxEmails[] = [];
-  Stages: Stages[] = [];
+  BuyBoxEmails: BuyBoxEmails[] = []; 
   emailsSentContact: Mail[] = [];
-  selectedContact: Contact | null = null;
-  Emails: EmailInfo[] = [];
+  selectedContact: Contact | null = null; 
   loginContact: any;
   emptyMessage: string = 'Select Contact in organization';
-  selectedEmail: EmailInfo | null = null;
-  selectedMicroDealId!: number;
-  formGroup!: FormGroup;
-  bodyemail: any;
-  contactIdemail: any;
-  selectedOrganizationName!: string;
+  selectedEmail: EmailInfo | null = null;    
   organization: any = {};
-  contacts: Contact[] = [];
-  emails: EmailInfo[] = [];
-  isScrolling = false;
-  filteredEmails: Mail[] = [];
-  isDropdownVisible: boolean = false; // Controls the visibility of the dropdown
-  selectedFilter: string = 'all'; // Default selected filter
-  selectedOption: string = 'All'; // Default text in the dropdown
+  contacts: Contact[] = [];  
+  filteredEmails: Mail[] = []; 
+  selectedFilter: string = 'all';
   selectedMicro: any;
   selected: any = null;
   campaignId: any;
   emailBody: string = '';
-  emailSubject: string = '';
+  emailSubject: string = ''; 
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
   @Output() goBackEvent = new EventEmitter<void>();
-
   contactId!: any;
-  BatchGuid!: string;
-  inputChanged: Subject<void> = new Subject<void>();
+  BatchGuid!: string; 
   emailBodySafe!: SafeHtml;
 
   constructor(
@@ -67,17 +49,16 @@ export class InboxComponent implements OnInit {
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private route: ActivatedRoute,
-    private _location: Location,
     private sanitizer: DomSanitizer,
     private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
-      this.buyBoxId = Number(params.get('buyBoxId')) ;
+      this.buyBoxId = Number(params.get('buyBoxId'));
       this.campaignId = params.get('campaignId') || null;
       this.contactId = localStorage.getItem('contactId');
-      this.orgId = Number(params.get('organizationId')) ;
+      this.orgId = Number(params.get('organizationId'));
     });
     this.updateBreadcrumb();
     this.getBuyBoxMicroDeals();
@@ -103,9 +84,22 @@ export class InboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        console.log('Emails', this.BuyBoxEmails);
+        this.filteredEmails = this.sortEmailsByDateDesc(data.json);
+
+        console.log('Emails', this.filteredEmails);
       },
     });
+  }
+
+  toggleBB(bb: any) {
+    if (bb.isOpen) {
+      bb.isOpen = false;
+      return;
+    }
+
+    this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
+
+    bb.isOpen = true;
   }
 
   getBuyBoxMicroDeals() {
@@ -119,7 +113,7 @@ export class InboxComponent implements OnInit {
       next: (data) => {
         this.BuyBoxMicroDeals = data.json;
         console.log('MicroDeals', this.BuyBoxMicroDeals);
-        
+
         this.contacts = [];
         const microDeal = this.BuyBoxMicroDeals.find(
           (deal) => deal.OrganizationId === this.orgId
@@ -136,21 +130,6 @@ export class InboxComponent implements OnInit {
     });
   }
 
-
-  toggleDropdown() {
-    this.isDropdownVisible = !this.isDropdownVisible;
-  }
-
-  onMicroDealChange(event: any): void {
-    const selectedOrgId = event.target.value;
-    this.contacts =
-      this.BuyBoxMicroDeals.find((org) => org.OrganizationId == selectedOrgId)
-        ?.Contact || [];
-
-    this.getBuyBoxEmails();
-  }
-
- 
   getEmailsForContact(contact: Contact): void {
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact;
@@ -188,15 +167,23 @@ export class InboxComponent implements OnInit {
     }
   }
 
-  // Scroll function and load email details API.
+  sortEmailsByDateDesc(emails: Mail[]): Mail[] {
+    return [...emails].sort((a, b) => {
+      const dateA = new Date(a.Date).getTime();
+      const dateB = new Date(b.Date).getTime();
+      return dateB - dateA;
+    });
+  }
+
+  goBack(): void {
+    this.selected = null;
+  }
+
   openEmail(email: Mail): void {
     this.selected = email;
     this.GetMail(email.id);
   }
 
-  goBackk(): void {
-    this.selected = null;
-  }
   GetMail(mailId: number): void {
     const body: any = {
       Name: 'GetMail',
@@ -206,21 +193,14 @@ export class InboxComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if (data.json && Array.isArray(data.json)) {
-          this.selectedEmail = data.json[0];
-          this.selectedMicroDealId = this.selectedEmail!.MicroDealId;
-          this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(
-            this.selectedEmail!.Body
-          );
-        } else {
-          this.selectedEmail = null;
-        }
+        this.selectedEmail = data.json[0]; 
+        this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(
+          this.selectedEmail!.Body
+        );
       },
     });
   }
-  goBack() {
-    this._location.back();
-  }
+
   getTotalEmails(EmailStats: any): number {
     return (
       (EmailStats.Sent || 0) +
@@ -228,6 +208,7 @@ export class InboxComponent implements OnInit {
       (EmailStats.Outbox || 0)
     );
   }
+
   openCompoase(modal: any) {
     this.listcenterName = [];
     this.emailSubject = '';
@@ -238,11 +219,23 @@ export class InboxComponent implements OnInit {
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 
-  openmodel(modal: any, body: any, contactId: any) {
-    this.bodyemail = body;
-    this.contactIdemail = contactId;
+  GetContactShoppingCenters(): void {
+    const body: any = {
+      Name: 'GetShoppingCentersForContact',
+      MainEntity: null,
+      Params: {},
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.GetShoppingCenters = data.json;
+      },
+    });
+  }
+
+  openmodel(modal: any, body: any, contactId: any) {  
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
+
   getDirectionIcon(direction: number): string {
     return direction === 2
       ? 'fa-reply send'
@@ -252,9 +245,9 @@ export class InboxComponent implements OnInit {
       ? 'fa-share inbox'
       : '';
   }
+
   filterEmails(filterType: string): void {
-    this.selectedFilter = filterType;
-    this.isDropdownVisible = false; // Set this to false to hide the dropdown
+    this.selectedFilter = filterType; 
     this.selected = null; // Reset selected email to show the list view
 
     // If no emails or contact selected, don't try to filter.
@@ -301,14 +294,6 @@ export class InboxComponent implements OnInit {
     }
   }
 
-  sortEmailsByDateDesc(emails: Mail[]): Mail[] {
-    return [...emails].sort((a, b) => {
-      const dateA = new Date(a.Date).getTime();
-      const dateB = new Date(b.Date).getTime();
-      return dateB - dateA;
-    });
-  }
-
   GetShoppingCenters: any[] = [];
   ResponseContextEmail: any;
   GenrateEmail: any;
@@ -317,18 +302,7 @@ export class InboxComponent implements OnInit {
   showGenerateSection: boolean = false;
   isEmailBodyEmpty: boolean = true;
 
-  GetContactShoppingCenters(): void {
-    const body: any = {
-      Name: 'GetShoppingCentersForContact',
-      MainEntity: null,
-      Params: {},
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.GetShoppingCenters = data.json;
-      },
-    });
-  }
+
 
   onCheckboxChange(event: any, item: any) {
     this.showGenerateSection = true;
@@ -456,15 +430,14 @@ export class InboxComponent implements OnInit {
     if (this.emailSubject || this.ContextEmail || this.emailBody) {
       const ToggleGenerate = showGenerate;
       if (ToggleGenerate == 'Generate') {
-        this.PutMailsDraft(); 
+        this.PutMailsDraft();
       } else {
-        this.PutComposeEmail(); 
+        this.PutComposeEmail();
       }
     } else {
       alert('Please write the Email first then click send');
     }
   }
-
 
   showToast(message: string) {
     const toast = document.getElementById('customToast');
@@ -475,4 +448,5 @@ export class InboxComponent implements OnInit {
       toast!.classList.remove('show');
     }, 3000);
   }
+
 }
