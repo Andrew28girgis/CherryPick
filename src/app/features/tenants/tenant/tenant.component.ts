@@ -5,9 +5,11 @@ import {
   FileSystemDirectoryEntry,
 } from 'ngx-file-drop';
 import {
+  Availability,
   AvailabilityTenant,
   IFile,
   jsonGPT,
+  Tenant,
 } from 'src/app/shared/models/manage-prop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
@@ -67,6 +69,13 @@ export class TenantComponent implements OnInit {
   CampaignData!: any;
   showFullReason: boolean = false;
   guid!: string;
+  //
+  userSubmission: any;
+  jsonGUID!:string;
+  showAddAvailabilityInput = false;
+  newAvailabilitySize: number | undefined;
+  showAddTenantInput = false;
+  newTenantName = '';
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -78,6 +87,10 @@ export class TenantComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe((params) => {
+      this.userSubmission = params.get('userSubmission');
+      console.log('User Submission:', this.userSubmission);
+    });
     this.contactID = localStorage.getItem('contactId');
 
     this.activatedRoute.params.subscribe((params) => {
@@ -88,6 +101,7 @@ export class TenantComponent implements OnInit {
 
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
+    this.GetUserSubmissionData();
   }
 
   GetCampaignFromGuid(): void {
@@ -107,6 +121,45 @@ export class TenantComponent implements OnInit {
       },
     });
   }
+  GetUserSubmissionData(): void {
+    if (this.userSubmission) {
+      this.spinner.show();
+      const body: any = {
+        Name: 'GetUserSubmissionData',
+        Params: {
+          UserSubmissionId: this.userSubmission,
+        },
+      };
+  
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          // Parse the JSON string from jsonResponse and assign it to JsonPDF
+          const parsedJson = JSON.parse(res.json[0].jsonResponse);
+          // Now parsedJson will be an object and can be used normally
+          this.JsonPDF = parsedJson;
+
+          if (this.JsonPDF.Availability) {
+            this.JsonPDF.Availability.forEach(avail => {
+              avail.isAdded = true;
+            });
+          }
+          if (this.JsonPDF.Tenants) {
+            this.JsonPDF.Tenants.forEach(tenant => {
+              tenant.isAdded = true;
+            });
+          }
+          console.log('JsonPDF', this.JsonPDF);
+          console.log('isSubmitted', this.JsonPDF.IsSubmitted);
+          
+          this.AvailabilityAndTenants = res.json[0].AvailabilityAndTenants;
+          this.isFileUploaded = true;
+          this.spinner.hide();
+          this.jsonGUID=this.JsonPDF.FolderGuid;
+        }
+      });
+    }
+  }
+  
 
   GetBuyBoxInfo(): void {
     this.spinner.show();
@@ -187,9 +240,6 @@ export class TenantComponent implements OnInit {
       this.isClearing = false;
       this.isUploading = true;
       this.uploadProgress = 0;
-      this.isConverting = false;
-      this.isFileUploaded = false;
-      this.images = [];
     }
 
     this.isUploading = true;
@@ -199,77 +249,63 @@ export class TenantComponent implements OnInit {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
-          // Set the file name immediately when the file is dropped
           this.fileName = file.name;
-
-          // Create FormData and append the file
           const formData = new FormData();
           formData.append('filename', file);
 
-          const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}`;
+          const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
 
-          // Create the HTTP request with progress tracking
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
-            responseType: 'json',
+            responseType: 'text',  // Change responseType to 'text'
           });
 
-          // Store the HTTP request to be able to cancel if needed
-          this.uploadRequest = this.httpClient.request(req).subscribe(
-            (event: any) => {
-              // If modal data is cleared, abort processing images
+          this.uploadRequest = this.httpClient.request(req).subscribe({
+            next: (event: any) => {
               if (this.isClearing) {
-                console.log(
-                  'Modal data is being cleared, aborting image processing.'
-                );
-                return; // Abort if modal data is cleared
+                console.log('Modal data is being cleared, aborting image processing.');
+                return;
               }
-
+  
               if (event.type === HttpEventType.UploadProgress) {
-                // Update progress bar based on the current upload progress
-                this.uploadProgress = Math.round(
-                  (100 * event.loaded) / event.total!
-                );
+                this.uploadProgress = Math.round((100 * event.loaded) / event.total!);
                 if (this.uploadProgress === 100) {
-                  this.isUploading = false; // Stop showing the progress bar once the upload is complete
-                  this.isConverting = true; // Start converting the images
+                  this.isUploading = false;
+                  console.log('Upload completed successfully');
                 }
               } else if (event instanceof HttpResponse) {
-                const response = event.body;
-                if (response && response.images && !this.isClearing) {
-                  this.images = response.images.map(
-                    (img: string, index: number) => ({
-                      name: `Image ${index + 1}`,
-                      type: 'image/png',
-                      content: img,
-                      selected: false,
-                    })
-                  );
-                  this.pdfFileName = response.pdfFileName;
-                  this.isConverting = false;
-                  this.spinner.hide();
-                  this.showToast(
-                    'PDF File uploaded and converted successfully!'
-                  );
-                  this.isFileUploaded = true; // Enable submit button
-
-                  // Open the modal after images are returned and the upload completes
-                  this.openUploadModal(0);
+                // Handle the response as plain text
+                if (event.status === 200) {
+                  const responseText = event.body as string;
+                  if (responseText.includes("The pdf has been submitted successfully")) {
+                    this.spinner.hide();
+                    this.showToast('PDF file successfully uploaded. You will receive an email notification with the submission data');
+                  } else {
+                    // If the response isn't what we expect
+                    this.showToast('Unexpected response from server');
+                  }
+                  console.log('Upload response:', event); // Log success
                 }
               }
             },
-            (error) => {
-              this.isUploading = false;
-              this.isConverting = false;
-              this.spinner.hide();
-              this.showToast('Failed to upload or convert PDF file!');
-              this.fileName = '';
-            }
-          );
+            error: (error) => {
+              // Only show error if it's a genuine error
+              if (!this.isClearing) {
+                this.isUploading = false;
+                this.isConverting = false;
+                this.spinner.hide();
+                // Log error details
+                console.log('Upload failed with error:', error); // Log error details
+                // Show a failure message
+                this.showToast('Failed to upload or convert PDF file!');
+              }
+            },
+          });
         });
       }
     }
-  }
+  }  
+  
 
   showToast(message: string) {
     const toast = document.getElementById('customToast');
@@ -278,7 +314,7 @@ export class TenantComponent implements OnInit {
     toast!.classList.add('show');
     setTimeout(() => {
       toast!.classList.remove('show');
-    }, 3000);
+    }, 5000);
   }
 
   sendImagesArray() {
@@ -306,43 +342,55 @@ export class TenantComponent implements OnInit {
 
   sendJson() {
     this.spinner.show();
-    const shopID = this.selectedShoppingID;
-
-    this.JsonPDF = {
+    this.isSubmitting = true; // Set submitting state early
+    const shopID = this.jsonGUID;
+    const updatedJsonPDF = {
       ...this.JsonPDF,
       CenterNameIsAdded: this.JsonPDF.CenterNameIsAdded || false,
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
-    };
-
-    const updatedJsonPDF = {
-      ...this.JsonPDF,
       Availability: this.JsonPDF.Availability.map((avail) => ({
         ...avail,
-        isAdded: avail.isAdded || false, // Ensure isAdded is always defined
+        isAdded: avail.isAdded !== false, // Default to true if undefined
       })),
       Tenants: this.JsonPDF.Tenants.map((tenant) => ({
         ...tenant,
-        isAdded: tenant.isAdded || false, // Ensure isAdded is always defined
+        isAdded: tenant.isAdded !== false, // Default to true if undefined
       })),
       CampaignId: this.selectedCampaign,
+      userSubmissionId: this.userSubmission,
+      IsSubmitted: true,
     };
-
-    // Send the updated JsonPDF data
-    this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
-      next: (data) => {
+  
+     // Modify the request to expect a plain text response
+  this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
+    next: (data) => {
+      // Check if the response is a plain text success message
+      const responseText = data as string;  // We expect a text response
+      if (responseText && responseText.includes('Shopping center updated successfully')) {
         this.showToast('Shopping center updated successfully!');
         this.clearModalData();
         this.modalService.dismissAll();
-        this.spinner.hide();
-      },
-      error: (error) => {
-        console.error('Error occurred while updating shopping center:', error);
-        this.spinner.hide();
+      } else {
         this.showToast('Failed to update shopping center!');
-      },
-    });
-    this.isSubmitting = false;
-  }
+      }
+      this.isSubmitting = false;
+      this.spinner.hide();
+    },
+    error: (error) => {
+      // Only show error if the request actually fails
+      console.error('Error occurred while updating shopping center:', error);
+      // Check if it's a genuine error (e.g., network issues or server failure)
+      if (error.status !== 200) {
+        this.showToast('Failed to update shopping center!');
+      } else {
+        // Handle any non-network errors (e.g., unexpected message or API-specific issues)
+        this.showToast('Unexpected error occurred during submission!');
+      }
+      this.isSubmitting = false;
+      this.spinner.hide();
+    }
+  });
+}
 
   clearModalData() {
     if (this.uploadRequest) {
@@ -374,5 +422,81 @@ export class TenantComponent implements OnInit {
   displayCustomImage(image: IFile): SafeUrl {
     const dataUrl = `data:${image.type};base64,${image.content}`;
     return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
+  }
+  // Replace the existing methods with these new ones
+  toggleAddAvailability(): void {
+    this.showAddAvailabilityInput = !this.showAddAvailabilityInput;
+    if (!this.showAddAvailabilityInput) {
+      this.newAvailabilitySize = undefined;
+    }
+  }
+  toggleAddTenant(): void {
+    this.showAddTenantInput = !this.showAddTenantInput;
+    if (!this.showAddTenantInput) {
+      this.newTenantName = '';
+    }
+  }
+  addNewAvailability(): void {
+    if (this.newAvailabilitySize) {
+      const newId = this.JsonPDF.Availability.length > 0 
+        ? Math.max(...this.JsonPDF.Availability.map(a => a.id)) + 1 
+        : 1;
+      
+      this.JsonPDF.Availability.push({
+        id: 0,
+        BuildingSizeSf: this.newAvailabilitySize,
+        isAdded: true,
+        ForLeasePrice: 0,
+        LeaseType: '',
+        Suite: '',
+        IsSecondGeneration: false,
+        SecondaryType: ''
+      });
+      
+      this.newAvailabilitySize = undefined;
+      this.showAddAvailabilityInput = false;
+    }
+  }
+  addNewTenant(): void {
+    if (this.newTenantName.trim()) {
+      const newId = this.JsonPDF.Tenants.length > 0 
+        ? Math.max(...this.JsonPDF.Tenants.map(t => t.id)) + 1 
+        : 1;
+      
+      this.JsonPDF.Tenants.push({
+        id: 0,
+        Name: this.newTenantName,
+        BuildingSizeSf: 0,
+        SecondaryType: '',
+        OrgUrl: '',
+        isAdded: true
+      });
+      
+      this.newTenantName = '';
+      this.showAddTenantInput = false;
+    }
+  }
+  // Submit function to handle additional input values
+  submitNewData() {
+      // Handle logic for adding new data from the input fields
+      this.JsonPDF.Availability.forEach(avail => {
+        if (avail.addInputVisible && avail.newBuildingSize) {
+          // You can add the new availability logic here
+          avail.BuildingSizeSf += avail.newBuildingSize; // Example
+        }
+      });
+      this.JsonPDF.Tenants.forEach(tenant => {
+        if (tenant.addInputVisible && tenant.newName) {
+          // You can add the new tenant logic here
+          this.JsonPDF.Tenants.push({
+            id: this.JsonPDF.Tenants.length + 1, // Example of generating a new ID
+            Name: tenant.newName,
+            BuildingSizeSf: 0, // Example default value
+            SecondaryType: '',
+            OrgUrl: '',
+            isAdded: true
+          });
+        }
+      });
   }
 }

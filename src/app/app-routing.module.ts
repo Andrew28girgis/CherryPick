@@ -99,6 +99,12 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   {
+    path: ':guid/:userSubmission',
+    component: TenantComponent,
+    canActivate: [TenantOnlyGuard],
+    data: { hideHeader: true },
+  },
+  {
     path: 'Kanban/:id',
     component: KanbanComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],

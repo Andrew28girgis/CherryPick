@@ -34,6 +34,9 @@ export interface Properties {
     CampaignId:number;
     percentage:number;
     reason:string;
+    FolderGuid:string;
+    IsSubmitted:boolean;
+    userSubmissionId:number;
 
   }
   
@@ -44,6 +47,8 @@ export interface Properties {
     SecondaryType: string
     OrgUrl: string
     isAdded: boolean
+    addInputVisible?: boolean;  // Tracks visibility of input field for adding new tenants
+    newName?: string;  // Holds the new tenant name entered by the user
   }
   
   export interface AvailabilityTenant {
@@ -60,4 +65,6 @@ export interface Properties {
     IsSecondGeneration: boolean
     SecondaryType: string
     isAdded: boolean
+    addInputVisible?: boolean;  // Tracks visibility of input field for adding new availability
+    newBuildingSize?: number;  // Holds the new building size entered by the user
   }
