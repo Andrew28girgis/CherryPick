@@ -35,79 +35,344 @@
             <div class="my-3">
               <span class="BuyboxSpecifications"> Buybox Specifications </span>
             </div>
-            <div class="col-12 d-flex">
-              <div
-                class="col-4 d-flex flex-column align-items-start justify-content-center somegap"
-              >
-                <div class="smalllframe">
-                  <img
-                    src="../../../assets/Images/size.png"
-                    alt="Small Image"
-                    class="small-image"
-                  />
+                <div class="row">
+                    <!-- Size Range -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].MinBuildingSize || TenantResult.Buybox[0].MaxBuildingSize">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/size.png" alt="Size" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Size needed</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].MinBuildingSize }} - {{ TenantResult.Buybox[0].MaxBuildingSize }} SF
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Ceiling Height -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].CeilingHeight">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/height.png" alt="Ceiling Height" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Ceiling Height</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].CeilingHeight }} ft
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Drive Thru -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].DriveThru !== undefined">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/drive-thru.png" alt="Drive Thru" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Drive Thru</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].DriveThru ? 'Required' : 'Not Required' }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Overnight Boarding -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].OvernightBoardingPermitted !== undefined">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/overnight.png" alt="Overnight Boarding" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Overnight Boarding</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].OvernightBoardingPermitted ? 'Permitted' : 'Not Permitted' }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Building Type -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].BuildingType">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/building.png" alt="Building Type" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Building Type</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].BuildingType }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Deal Structure -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].DealStructure">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/deal.png" alt="Deal Structure" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Deal Structure</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].DealStructure }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Lease Term -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].LeaseTerm">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/lease.png" alt="Lease Term" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Lease Term</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].LeaseTerm }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- NNN Charges -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].NNNCharges">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/charges.png" alt="NNN Charges" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">NNN Charges</div>
+                          <div class="spec-value">
+                            ${{ TenantResult.Buybox[0].NNNCharges | number }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- TI Allowance -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].TIAllowance">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/allowance.png" alt="TI Allowance" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">TI Allowance</div>
+                          <div class="spec-value">
+                            ${{ TenantResult.Buybox[0].TIAllowance | number }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Parking Spaces -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].ParkingSpaces">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/parking.png" alt="Parking Spaces" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Parking Spaces</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].ParkingSpaces }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Base Rent -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].BaseRent">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/rent.png" alt="Base Rent" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Base Rent</div>
+                          <div class="spec-value">
+                            ${{ TenantResult.Buybox[0].BaseRent | number }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Building Square Footage -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].BuildingSquareFootage">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/square-footage.png" alt="Building Square Footage" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Building Square Footage</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].BuildingSquareFootage }} SF
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Flood Zone -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].FloodZone">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/flood.png" alt="Flood Zone" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Flood Zone</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].FloodZone }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Frontage Length -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].FrontageLength">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/frontage.png" alt="Frontage Length" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Frontage Length</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].FrontageLength }} ft
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Historic District -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].HistoricDistrict">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/historic.png" alt="Historic District" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Historic District</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].HistoricDistrict }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Lot Size -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].LotSize">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/lot-size.png" alt="Lot Size" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Lot Size</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].LotSize }} acres
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Property Condition -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].PropertyCondition">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/condition.png" alt="Property Condition" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Property Condition</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].PropertyCondition }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Purchase Price -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].PurchasePrice">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/price.png" alt="Purchase Price" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Purchase Price</div>
+                          <div class="spec-value">
+                            ${{ TenantResult.Buybox[0].PurchasePrice | number }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Restrictions -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].Restrictions">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/restrictions.png" alt="Restrictions" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Restrictions</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].Restrictions }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Service Access -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].ServiceAccess">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/access.png" alt="Service Access" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Service Access</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].ServiceAccess }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Traffic Direction -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].TrafficDrection">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/traffic.png" alt="Traffic Direction" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Traffic Direction</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].TrafficDrection }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Vehicles Per Day -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].VehiclePerDay">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/vehicles.png" alt="Vehicles Per Day" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Vehicles Per Day</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].VehiclePerDay }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Zoning -->
+                    <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].Zoning">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/zoning.png" alt="Zoning" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Zoning</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].Zoning }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Other Comments -->
+                    <div class="col-12 mb-3" *ngIf="TenantResult.Buybox[0].OtherComments">
+                      <div class="spec-item">
+                        <div class="spec-icon">
+                          <img src="../../../assets/Images/SVG/comments.png" alt="Other Comments" />
+                        </div>
+                        <div class="spec-content">
+                          <div class="spec-title">Other Comments</div>
+                          <div class="spec-value">
+                            {{ TenantResult.Buybox[0].OtherComments }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
-
-                <div>
-                  <span class="smalltitle">Size needed</span>
-                </div>
-                <div class="d-flex align-items-center justify-content-center">
-                  <span class="boldtext" style="white-space: nowrap">
-                    {{ TenantResult.Buybox[0].MinBuildingSize }} -
-                    {{ TenantResult.Buybox[0].MaxBuildingSize }} SF
-                  </span>
-                </div>
-              </div>
-              <div
-                class="col-4 d-flex flex-column align-items-center justify-content-center somegap"
-              >
-                <div
-                  class="smalllframe d-flex align-items-center justify-content-center"
-                >
-                  <img
-                    src="../../../assets/Images/SVG/bank.png"
-                    alt="Small Image"
-                    class="small-image"
-                  />
-                </div>
-
-                <div>
-                  <span class="smalltitle">States</span>
-                </div>
-
-                <div class="d-flex align-items-center justify-content-center">
-                  <span
-                    class="boldtext"
-                    *ngIf="organizationBranches && organizationBranches.States"
-                  >
-                    {{ organizationBranches.States }}
-                  </span>
-                </div>
-              </div>
-              <div
-                class="col-4 d-flex flex-column align-items-center justify-content-end somegap"
-              >
-                <div class="smalllframe">
-                  <img
-                    src="../../../assets/Images/SVG/buildings.png"
-                    alt="Small Image"
-                    class="small-image"
-                  />
-                </div>
-
-                <div>
-                  <span class="smalltitle">Cities</span>
-                </div>
-
-                <div class="d-flex align-items-center justify-content-center">
-                  <span
-                    class="boldtext"
-                    *ngIf="organizationBranches && organizationBranches.Address"
-                  >
-                    {{ organizationBranches.Address }}
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

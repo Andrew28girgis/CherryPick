@@ -9,6 +9,29 @@ export class Buybox {
     MinBuildingSize!: number
     MaxBuildingSize!: number
     BuyBoxOrganization!: BuyBoxOrganization[]
+    CeilingHeight!:number
+    DriveThru!:boolean
+    OvernightBoardingPermitted!:boolean
+    BuildingType!:string
+    DealStructure!:string
+    LeaseTerm!:string
+    NNNCharges!:number
+    TIAllowance!:number 
+    ParkingSpaces!:number 
+    OtherComments!:string
+    BaseRent!:number
+    BuildingSquareFootage!:number
+    FloodZone!:string
+    FrontageLength!:number
+    HistoricDistrict!:string
+    LotSize!:number
+    PropertyCondition!:string
+    PurchasePrice!:number
+    Restrictions!:string
+    ServiceAccess!:string
+    TrafficDrection!:string
+    VehiclePerDay!:number
+    Zoning!:string
   }
   
   export class BuyBoxOrganization {

@@ -14,7 +14,7 @@ import {
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-   
+
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center, Reaction } from '../../../../shared/models/shoppingCenters';
@@ -109,7 +109,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   BuyBoxName!: string;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
-  filteredCenters: Center[] = []; 
+  filteredCenters: Center[] = [];
   searchQuery: string = '';
   selectedIdCard: number | null = null;
   selectedId: number | null = null;
@@ -168,18 +168,17 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private heartTimeout: any;
   private lastClickTime = 0;
   private readonly DOUBLE_CLICK_THRESHOLD = 300; // ms
-  
+
   // Loading state for skeleton
   isLoading = true;
-  // Interval for hiding spinner
-       
+
   private subscriptions = new Subscription();
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
-        
+
     private stateService: StateService,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
@@ -190,7 +189,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    
     this.checkMobileView();
     this.General = new General();
     this.selectedState = '';
@@ -212,26 +210,14 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     window.addEventListener('resize', this.checkMobileView.bind(this));
   }
 
-  // Method to hide spinner
-  private hideSpinner(): void {
-    try {
-           
-    } catch (error) {
-      // Ignore errors
-    }
-  }
-
   async initializeData() {
     try {
       this.isLoading = true; // Show skeleton
-        // Hide any spinner
-      
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
         this.BuyBoxId
       );
       this.stateService.setShoppingCenters(this.shoppingCenters);
       this.filteredCenters = this.shoppingCenters;
-
 
       this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(
         this.BuyBoxId
@@ -251,7 +237,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
       this.cdr.detectChanges();
     }
   }
@@ -262,7 +247,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     } else {
-      this.filteredCenters = this.shoppingCenters; 
+      this.filteredCenters = this.shoppingCenters;
     }
   }
 
@@ -294,9 +279,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-
     this.subscriptions.unsubscribe();
-    
+
     if (this.globalClickListener) {
       this.globalClickListenerr();
     }
@@ -394,10 +378,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
+      next: () => {
         if (!shopping.ShoppingCenter.Comments) {
           shopping.ShoppingCenter.Comments = [];
         }
@@ -412,13 +394,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         );
 
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
         this.cdr.markForCheck();
       },
       error: () => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
-      }
+      },
     });
   }
 
@@ -440,10 +420,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
+
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {
+      next: () => {
         this.replyingTo[marketSurveyId] = null;
 
         const shoppingCenter = this.shoppingCenters.find(
@@ -462,13 +441,13 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
         this.cdr.markForCheck();
       },
       error: () => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
-      }
+         
+      },
     });
   }
 
@@ -521,7 +500,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addLike(shopping: Center, reactionId: number): void {
-    const contactIdStr = localStorage.getItem('ContactId');
+    const contactIdStr = localStorage.getItem('contactId');
     if (!contactIdStr) {
       return;
     }
@@ -540,10 +519,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.isLikeInProgress = true;
-    this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
     const isLiked = this.likedShoppings[shopping.MarketSurveyId];
 
     if (!shopping.ShoppingCenter.Reactions) {
@@ -566,15 +541,15 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {},
+      next: () => {},
       error: () => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
         this.isLikeInProgress = false;
       },
       complete: () => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
         this.isLikeInProgress = false;
         this.cdr.markForCheck();
       },
@@ -681,7 +656,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openCustomPanel(shopping: any): void {
-      // Hide spinner before opening panel
     this.currentShopping = shopping;
     this.isPanelOpen = true;
     this.cdr.markForCheck();
@@ -824,13 +798,25 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   };
 
-  // Fix for the handleContentDoubleClick method
   handleContentDoubleClick(event: MouseEvent, shopping: Center): void {
     const clickTime = new Date().getTime();
     const timeDiff = clickTime - this.lastClickTime;
+    const contactIdStr = localStorage.getItem('contactId');
 
+    if (!contactIdStr) {
+      return;
+    }
+    const contactId = Number.parseInt(contactIdStr ? contactIdStr : '0', 10);
+
+    if (
+      shopping.ShoppingCenter.Reactions &&
+      shopping.ShoppingCenter.Reactions.some(
+        (reaction: Reaction) => reaction.ContactId === contactId
+      )
+    ) {
+      return;
+    }
     if (timeDiff < this.DOUBLE_CLICK_THRESHOLD) {
-      // This is a double click
       event.preventDefault();
       event.stopPropagation();
 
@@ -838,7 +824,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.heartX = event.clientX;
       this.heartY = event.clientY;
 
-      const contactIdStr = localStorage.getItem('ContactId');
       if (!contactIdStr) {
         return;
       }
@@ -855,7 +840,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.lastClickTime = clickTime;
     }
   }
-  
+
   showHeartAnimation(): void {
     // Use NgZone to ensure animations run smoothly
     this.ngZone.run(() => {
@@ -893,7 +878,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openLink(content: any, modalObject?: any) {
-      // Hide spinner before opening modal
     this.shareLink = '';
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -914,8 +898,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addContact(form: NgForm): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
+
     const body: any = {
       Name: 'AddContactToOrganization',
       Params: {
@@ -930,7 +913,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
         this.newContact = {
           firstName: '',
           lastName: '',
@@ -944,13 +926,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: () => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
-      }
+         
+      },
     });
   }
 
   openAddContactModal(content: any): void {
-      // Hide spinner before opening modal
     this.newContact = {
       firstName: '',
       lastName: '',
@@ -972,8 +953,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     try {
       this.isLoading = true; // Show skeleton
-        // Hide any spinner
-      
+       
+
       await this.viewManagerService.deleteShoppingCenter(
         this.BuyBoxId,
         this.shoppingCenterIdToDelete!
@@ -983,7 +964,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
+       
       this.cdr.markForCheck();
     }
   }
@@ -1083,7 +1064,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async openMapViewPlace(content: any, modalObject?: any) {
-      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -1102,16 +1082,16 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!lat || !lng) {
       return;
     }
-    
+
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
+     
+
     const { Map } = (await google.maps.importLibrary('maps')) as any;
     const mapDiv = document.getElementById('mappopup') as HTMLElement;
 
     if (!mapDiv) {
       this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
+       
       return;
     }
 
@@ -1124,13 +1104,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       map: map,
       title: 'Location Marker',
     });
-    
+
     this.isLoading = false; // Hide skeleton
-      // Make sure spinner is hidden
+     
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
-      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -1155,7 +1134,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const pitch = this.General.modalObject.Pitch || 0;
 
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
+     
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
@@ -1164,7 +1143,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         // Handle error
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
       }
     });
   }
@@ -1181,7 +1160,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       // Handle error
     }
     this.isLoading = false; // Hide skeleton
-      // Make sure spinner is hidden
+     
     this.cdr.markForCheck();
   }
 
@@ -1194,7 +1173,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
   ) {
-      // Hide spinner before opening modal
     this.DeletedSC = shoppingCenter;
     this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
@@ -1204,8 +1182,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   openContactsModal(content: any): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
+     
+
     const body: any = {
       Name: 'GetOrganizationContacts',
       Params: {
@@ -1220,7 +1198,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           this.OrganizationContacts = [];
         }
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
         this.modalService.open(content, {
           size: 'lg',
           centered: true,
@@ -1229,21 +1207,20 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       error: () => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
-      }
+         
+      },
     });
   }
 
   openGallery(shpping: number) {
-      // Hide spinner before opening gallery
     this.GetPlaceDetails(0, shpping);
     this.modalService.open(this.galleryModal, { size: 'xl', centered: true });
   }
 
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
+     
+
     const body: any = {
       Name: 'GetShoppingCenterDetails',
       Params: {
@@ -1264,20 +1241,20 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         }
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
         this.cdr.markForCheck();
       },
       error: () => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
-      }
+         
+      },
     });
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
-    
+     
+
     this.viewManagerService
       .restoreShoppingCenter(MarketSurveyId, Deleted)
       .then(() => {
@@ -1291,11 +1268,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.cdr.markForCheck();
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
       })
       .catch(() => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+         
       });
   }
 
@@ -1401,7 +1378,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   open(content: any, currentShopping: any) {
-      // Hide spinner before opening modal
     this.resetFeedbackForm();
     this.General.modalObject = currentShopping;
     this.viewedCenters.add(currentShopping.Id);

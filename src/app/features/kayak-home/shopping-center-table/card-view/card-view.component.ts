@@ -103,19 +103,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  // Method to hide spinner
-  private hideSpinner(): void {
-    try {
-           
-    } catch (error) {
-      // Ignore errors
-    }
-  }
 
   async loadData() {
     try {
       this.isLoading = true; // Show skeleton
-      // Hide any spinner
+       
 
       this.shoppingCenters = await this.viewManager.getShoppingCenters(this.BuyBoxId);
       this.stateService.setShoppingCenters(this.shoppingCenters);
@@ -135,7 +127,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-      // Make sure spinner is hidden
+       
       this.cdr.detectChanges();
     }
   }
@@ -240,7 +232,6 @@ handleDocumentClick(event: MouseEvent): void {
   }
 
   async openMapViewPlace(content: any, modalObject?: any) {
-      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -253,11 +244,9 @@ handleDocumentClick(event: MouseEvent): void {
       modalObject.Latitude,
       modalObject.Longitude
     );
-      // Hide spinner after map is initialized
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
-      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -273,7 +262,6 @@ handleDocumentClick(event: MouseEvent): void {
         this.viewOnStreet();
       }, 100);
     }
-      // Hide spinner after street view is initialized
   }
 
   viewOnStreet() {
@@ -296,7 +284,6 @@ handleDocumentClick(event: MouseEvent): void {
       } else {
         // Handle error
       }
-        // Hide spinner after street view is initialized
     });
   }
 
@@ -319,7 +306,6 @@ handleDocumentClick(event: MouseEvent): void {
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
   ) {
-      // Hide spinner before opening modal
     this.DeletedSC = shoppingCenter;
     this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
@@ -335,7 +321,7 @@ handleDocumentClick(event: MouseEvent): void {
     if (this.shoppingCenterIdToDelete !== null) {
       try {
         this.isLoading = true; // Show skeleton
-          // Hide any spinner
+           
 
         await this.viewManager.deleteShoppingCenter(
           this.BuyBoxId,
@@ -344,7 +330,7 @@ handleDocumentClick(event: MouseEvent): void {
         this.modalService.dismissAll();
       } finally {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+           
         this.cdr.detectChanges();
       }
     }
@@ -352,7 +338,7 @@ handleDocumentClick(event: MouseEvent): void {
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
+       
 
     this.viewManager
       .restoreShoppingCenter(MarketSurveyId, Deleted)
@@ -366,13 +352,13 @@ handleDocumentClick(event: MouseEvent): void {
           return center;
         });
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+           
         this.cdr.markForCheck();
       })
       .catch((error) => {
         // Handle error
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+           
       });
   }
 
