@@ -2,7 +2,7 @@
   class="navbar navbar-expand-lg d-flex align-items-center w-100"
   *ngIf="display"
 >
-<div class="container-fluid">
+  <div class="container-fluid">
     <div class="d-flex align-items-center">
       <!-- Logo Section -->
       <div
@@ -24,18 +24,6 @@
           Cherry<span class="pick">pick</span>
         </p>
       </div>
-
-      <!-- Toggle button for mobile -->
-      <button
-        class="navbar-toggler d-lg-none"
-        type="button"
-        (click)="toggleNavbar($event)"
-      >
-        <i
-          class="fa-solid"
-          [ngClass]="isNavbarOpen ? 'fa-times' : 'fa-bars'"
-        ></i>
-      </button>
     </div>
 
     <!-- Navigation Items -->
@@ -192,5 +180,5 @@
         ></i>
       </button>
     </div>
-</div>
+  </div>
 </nav>
