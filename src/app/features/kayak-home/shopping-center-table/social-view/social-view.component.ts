@@ -816,7 +816,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   };
 
-  // Fix for the handleContentDoubleClick method
   handleContentDoubleClick(event: MouseEvent, shopping: Center): void {
     const clickTime = new Date().getTime();
     const timeDiff = clickTime - this.lastClickTime;
