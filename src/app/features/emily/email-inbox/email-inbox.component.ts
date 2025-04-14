@@ -8,15 +8,23 @@ import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganiz
 import { from, Observable, of, forkJoin, firstValueFrom } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OrganizationChecked, buyboxChecklist } from 'src/app/shared/models/sidenavbar';
-import { GenerateContextDTO, GetContactManagerDTO, GetManagerOrgDTO } from 'src/app/shared/models/GenerateContext';
+import {
+  OrganizationChecked,
+  buyboxChecklist,
+} from 'src/app/shared/models/sidenavbar';
+import {
+  GenerateContextDTO,
+  GetContactManagerDTO,
+  GetManagerOrgDTO,
+} from 'src/app/shared/models/GenerateContext';
 import { MailContextGenerated } from 'src/app/shared/models/MailContextGenerated';
 import { EmilyService } from 'src/app/core/services/emily.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-email-inbox',
   templateUrl: './email-inbox.component.html',
-  styleUrl: './email-inbox.component.css'
+  styleUrl: './email-inbox.component.css',
 })
 export class EmailInboxComponent implements OnInit {
   buyBoxId!: any;
@@ -46,6 +54,7 @@ export class EmailInboxComponent implements OnInit {
   OrganizationCheckedServices: OrganizationChecked[] = [];
   showMoreRelations: { [key: number]: boolean } = {};
   returnGetMailContextGenerated: MailContextGenerated[] = [];
+  returnGetMailContext!:any;
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
   MangerDescription: string = '';
@@ -71,7 +80,7 @@ export class EmailInboxComponent implements OnInit {
   @Input() selectedContactContactId!: any;
   @Input() modal: any;
   emailSubject: string = '';
-  emailBodyResponse: string = '';
+  emailBodyResponse!: SafeHtml;
 
   constructor(
     private spinner: NgxSpinnerService,
@@ -79,29 +88,33 @@ export class EmailInboxComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: NgbModal,
     private emilyService: EmilyService,
-  ) { }
+    private sanitizer: DomSanitizer
+  ) {}
 
   async ngOnInit() {
     this.contactId = localStorage.getItem('contactId');
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
+    console.log('selectedContactContactId', this.selectedContactContactId);
 
     this.route.paramMap.subscribe((params) => {
       this.campaignId = params.get('campaignId');
     });
 
-    this.emilyService.getCheckList().subscribe((buyboxChecklist: buyboxChecklist) => {
-      if (this.buyboxChecklist == null || this.buyboxChecklist == undefined) {
-        const storedChecklist = sessionStorage.getItem('buyboxChecklist');
-        if (storedChecklist) {
-          this.buyboxChecklist = JSON.parse(
-            storedChecklist
-          ) as buyboxChecklist;
+    this.emilyService
+      .getCheckList()
+      .subscribe((buyboxChecklist: buyboxChecklist) => {
+        if (this.buyboxChecklist == null || this.buyboxChecklist == undefined) {
+          const storedChecklist = sessionStorage.getItem('buyboxChecklist');
+          if (storedChecklist) {
+            this.buyboxChecklist = JSON.parse(
+              storedChecklist
+            ) as buyboxChecklist;
+          }
         }
-      }
-      this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
-      this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
-    });
+        this.buyBoxId = this.buyboxChecklist?.buyboxId[0];
+        this.OrganizationCheckedServices = this.buyboxChecklist?.organizations;
+      });
 
     const storedChecklist = sessionStorage.getItem('buyboxChecklist');
     if (storedChecklist) {
@@ -291,17 +304,22 @@ export class EmailInboxComponent implements OnInit {
   }
 
   transformToDTO(data: any): GetContactManagerDTO {
-    const center = data.ShoppingCenters && data.ShoppingCenters.length > 0 ? data.ShoppingCenters[0] : null;
+    const center =
+      data.ShoppingCenters && data.ShoppingCenters.length > 0
+        ? data.ShoppingCenters[0]
+        : null;
     return {
       ContactId: data.ContactId,
       ContactName: `${data.Firstname} ${data.Lastname}`,
       ShoppingCentersName: center ? [center.CenterName.trim()] : [],
-      ShoppingCentersID: center ? [center.id.toString()] : []
+      ShoppingCentersID: center ? [center.id.toString()] : [],
     };
   }
 
   async GenerateContext(): Promise<void> {
-    const dto: GetContactManagerDTO = this.transformToDTO(this.selectedContactContactId);
+    const dto: GetContactManagerDTO = this.transformToDTO(
+      this.selectedContactContactId
+    );
 
     if (!this.selectedPromptId) {
       this.showToast('Please select a prompt to Generate.');
@@ -328,7 +346,9 @@ export class EmailInboxComponent implements OnInit {
     };
 
     try {
-      const data = await firstValueFrom(this.PlacesService.GenerateContext(body));
+      const data = await firstValueFrom(
+        this.PlacesService.GenerateContext(body)
+      );
       this.ResponseContextEmail = JSON.stringify(data.context, null, 2);
       this.spinner.hide();
     } catch (error) {
@@ -350,7 +370,6 @@ export class EmailInboxComponent implements OnInit {
     const promptId = Number(this.selectedPromptId);
     const IsCC = this.isISCcSelected;
 
-
     const body: any = {
       Name: 'PutMailsDraft',
       MainEntity: null,
@@ -369,55 +388,49 @@ export class EmailInboxComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        const x = data.json
+        const x = data.json;
         this.AddMailContextReceivers(x[0].id, x[0].organizationId).subscribe({
-          next: () => {
-          },
-          error: () => {
-          },
+          next: () => {},
+          error: () => {},
           complete: () => {
-            this.getGeneratedEmails();
+            this.ReadSpecificMails(x[0].id);
             this.spinner.hide();
-          }
+          },
         });
-      }
+      },
     });
   }
 
   AddMailContextReceivers(Mid: number, OrgID: number): Observable<any> {
-    const org = this.ManagerOrgDTO.find((org: any) => org.OrganizationId === OrgID);
-
-    if (!org || !org.GetContactManagers || org.GetContactManagers.length === 0) {
-      return of(null);
-    }
-
     this.spinner.show();
 
-    const observables = org.GetContactManagers.map((manager: any) => {
-      const ContactSCIds = manager.ShoppingCentersID.join(',');
+    // Assuming this.selectedContactContactId is a single contact object
+    const manager = this.selectedContactContactId;
+    // If ShoppingCenters is an array and you need to combine something, do so appropriately:
+    const ContactSCIds = manager.ShoppingCenters.map(
+      (sc: { id: any }) => sc.id
+    ).join(',');
 
-      const body: any = {
-        Name: 'AddMailContextReceivers',
-        MainEntity: null,
-        Params: {
-          MailContextId: Mid,
-          ContactId: manager.ContactId,
-          ShoppingCenterIds: ContactSCIds,
-        },
-        Json: null,
-      };
+    const body: any = {
+      Name: 'AddMailContextReceivers',
+      MainEntity: null,
+      Params: {
+        MailContextId: Mid,
+        ContactId: manager.ContactId,
+        ShoppingCenterIds: ContactSCIds,
+      },
+      Json: null,
+    };
 
-      return this.PlacesService.GenericAPI(body);
-    });
-
-    return forkJoin(observables).pipe(
+    // You might not even need forkJoin if you're only calling one API
+    return this.PlacesService.GenericAPI(body).pipe(
       tap(() => {
         this.spinner.hide();
       })
     );
   }
 
-  getGeneratedEmails() {
+  getGeneratedEmails(mailContextId: number): void {
     this.spinner.show();
     var body: any = {
       Name: 'GetMailContextGenerated',
@@ -432,6 +445,44 @@ export class EmailInboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
+        console.log(`before`, this.returnGetMailContextGenerated);
+
+        this.returnGetMailContextGenerated =
+          this.returnGetMailContextGenerated.filter((r: any) => {
+            if (r.MailContextId == mailContextId) {
+              this.emailBodyResponse = r.Body;
+              this.emailSubject = r.Subject;
+            }
+          });
+        console.log(`this.mailContextId`, mailContextId);
+        console.log(
+          `this.returnGetMailContextGenerated`,
+          this.returnGetMailContextGenerated
+        );
+        console.log(`this.emailBodyResponse`, this.emailBodyResponse);
+        console.log(`this.emailSubject`, this.emailSubject);
+
+        this.spinner.hide();
+      },
+    });
+  }
+  ReadSpecificMails(mailContextId: number) {
+    this.spinner.show();
+
+    var body: any = {
+      Name: 'ReadSpecificMails',
+      MainEntity: null,
+      Params: {
+        MailContextId: Number(mailContextId),
+        IsSent: 0,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.returnGetMailContextGenerated = data.json;
+        this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(this.returnGetMailContext[0].body);
         this.spinner.hide();
       },
     });
