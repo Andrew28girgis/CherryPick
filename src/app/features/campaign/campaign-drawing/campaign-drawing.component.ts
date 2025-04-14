@@ -154,6 +154,7 @@ export class CampaignDrawingComponent
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0) {
         this.userPolygons = response.json;
+        this.addUserPolygonsToMap();
       }
     });
   }
@@ -412,6 +413,19 @@ export class CampaignDrawingComponent
 
   addExplorePolygonsToMap(): void {
     for (let polygon of this.externalPolygons) {
+      const coordinates = this.getPolygonCoordinates(polygon);
+      if (coordinates) {
+        this.campaignDrawingService.insertExplorePolygon(
+          polygon.id,
+          coordinates,
+          polygon.name
+        );
+      }
+    }
+  }
+
+  addUserPolygonsToMap(): void {
+    for (let polygon of this.userPolygons) {
       const coordinates = this.getPolygonCoordinates(polygon);
       if (coordinates) {
         this.campaignDrawingService.insertExplorePolygon(
