@@ -73,84 +73,42 @@ export class InboxComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.contactId = localStorage.getItem('contactId');
-
     this.route.paramMap.subscribe((params) => {
-      const buyboxId = params.get('buyBoxId');
-      this.campaignId = params.get('campaignId');
-
-      if (buyboxId) {
-        this.buyBoxId = +buyboxId;
-      }
-      const orgId = params.get('organizationId');
-      if (orgId) {
-        this.orgId = +orgId;
-      }
+      this.buyBoxId = Number(params.get('buyBoxId')) ;
+      this.campaignId = params.get('campaignId') || null;
+      this.contactId = localStorage.getItem('contactId');
+      this.orgId = Number(params.get('organizationId')) ;
     });
+    this.updateBreadcrumb();
+    this.getBuyBoxMicroDeals();
+    this.getBuyBoxEmails();
+    const guid = crypto.randomUUID();
+    this.BatchGuid = guid;
+  }
+
+  updateBreadcrumb() {
     this.breadcrumbService.addBreadcrumb({
       label: 'Emily',
       url: `/organization-mail/${this.buyBoxId}/${this.orgId}/${this.campaignId}`,
     });
+  }
 
-    this.loadInitialData();
-    const guid = crypto.randomUUID();
-    this.BatchGuid = guid;
-
-    this.inputChanged.pipe(debounceTime(300)).subscribe(() => {
-      this.onInputChange();
+  getBuyBoxEmails(): void {
+    const body: any = {
+      Name: 'GetBuyBoxEmails',
+      MainEntity: null,
+      Params: { buyboxid: this.buyBoxId },
+      Json: null,
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.BuyBoxEmails = data.json;
+        console.log('Emails', this.BuyBoxEmails);
+      },
     });
   }
 
-  toggleDropdown() {
-    this.isDropdownVisible = !this.isDropdownVisible;
-  }
-
-  loadInitialData(): void {
-    this.filteredEmails = [];
-    this.emailsSentContact = [];
-    this.selectedEmail = null;
-    this.BuyBoxMicroDeals = [];
-    this.BuyBoxEmails = [];
-    const microDealsPromise = new Promise<void>((resolve) => {
-      this.GetBuyBoxMicroDeals(resolve);
-    });
-    const emailsPromise = new Promise<void>((resolve) => {
-      this.GetBuyBoxEmails(resolve);
-    });
-    Promise.all([microDealsPromise, emailsPromise])
-      .then(() => {
-        if (this.contacts && this.contacts.length > 0) {
-          // const contactWithInbox = this.contacts.find(
-          //   (contact) =>
-          //     contact.EmailStats &&
-          //     contact.EmailStats[0] &&
-          //     contact.EmailStats[0].Inbox > 0
-          // );
-          // if (contactWithInbox) {
-          //   this.getEmailsForContact(contactWithInbox);
-          // } else {
-          //   this.getEmailsForContact(this.contacts[0]);
-          // }
-          this.getEmailsForContact(this.contacts[0]);
-        }
-      })
-      .catch((error) => {});
-  }
-
-  onMicroDealChange(event: any): void {
-    const selectedOrgId = event.target.value;
-    this.contacts =
-      this.BuyBoxMicroDeals.find((org) => org.OrganizationId == selectedOrgId)
-        ?.Contact || [];
-
-    this.GetBuyBoxEmails(() => {
-      if (this.contacts.length > 0) {
-        this.getEmailsForContact(this.contacts[0]);
-      }
-    });
-  }
-
-  GetBuyBoxMicroDeals(callback?: Function): void {
+  getBuyBoxMicroDeals() {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
       MainEntity: null,
@@ -160,9 +118,8 @@ export class InboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxMicroDeals = data.json;
-
-        // console.log(`BuyBoxMicroDeals`, this.BuyBoxMicroDeals);
-
+        console.log('MicroDeals', this.BuyBoxMicroDeals);
+        
         this.contacts = [];
         const microDeal = this.BuyBoxMicroDeals.find(
           (deal) => deal.OrganizationId === this.orgId
@@ -175,44 +132,25 @@ export class InboxComponent implements OnInit {
           this.contacts = this.BuyBoxMicroDeals[0].Contact;
           this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
         }
-
-        // this.selectedOrganizationName = this.BuyBoxMicroDeals.flatMap((m) =>
-        //   m.Organization.filter((o) => o.OrganizationId === this.orgId).flatMap(
-        //     (o) => o.OrganizationName || ''
-        //   )
-        // ).join(', ');
-
-        // this.selectedOrganizationName =
-        //   this.BuyBoxMicroDeals.find((m) => m.OrganizationId == this.orgId)
-        //     ?.OrganizationName || '';
-
-        // this.BuyBoxMicroDeals = [];
-        this.GetBuyBoxEmails(() => {
-          if (this.contacts.length > 0) {
-            this.getEmailsForContact(this.contacts[0]);
-          }
-        });
       },
     });
   }
 
-  GetBuyBoxEmails(callback?: Function): void {
-    const body: any = {
-      Name: 'GetBuyBoxEmails',
-      MainEntity: null,
-      Params: { buyboxid: this.buyBoxId },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.BuyBoxEmails = data.json;
 
-        if (callback) {
-          callback();
-        }
-      },
-    });
+  toggleDropdown() {
+    this.isDropdownVisible = !this.isDropdownVisible;
   }
+
+  onMicroDealChange(event: any): void {
+    const selectedOrgId = event.target.value;
+    this.contacts =
+      this.BuyBoxMicroDeals.find((org) => org.OrganizationId == selectedOrgId)
+        ?.Contact || [];
+
+    this.getBuyBoxEmails();
+  }
+
+ 
   getEmailsForContact(contact: Contact): void {
     if (this.selectedContact?.ContactId !== contact.ContactId) {
       this.selectedContact = contact;
@@ -518,26 +456,15 @@ export class InboxComponent implements OnInit {
     if (this.emailSubject || this.ContextEmail || this.emailBody) {
       const ToggleGenerate = showGenerate;
       if (ToggleGenerate == 'Generate') {
-        this.PutMailsDraft();
-        // console.log('Generate');
+        this.PutMailsDraft(); 
       } else {
-        this.PutComposeEmail();
-        // console.log('Send');
+        this.PutComposeEmail(); 
       }
     } else {
       alert('Please write the Email first then click send');
     }
   }
 
-  onInputChange(): void {
-    const subjectEmpty = !this.emailSubject || this.emailSubject.trim() === '';
-    const bodyTrimmed = (this.emailBody || '').trim();
-    this.isEmailBodyEmpty = bodyTrimmed === '' || bodyTrimmed === '<p></p>';
-
-    if (!subjectEmpty || !this.isEmailBodyEmpty) {
-      this.showGenerateSection = false;
-    }
-  }
 
   showToast(message: string) {
     const toast = document.getElementById('customToast');

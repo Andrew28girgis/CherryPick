@@ -11,37 +11,9 @@
     <div class="col-12 p-0">
       <div class="buttonandname">
         <div class="w-100 d-flex align-item-center-justify-content-between">
-          <div class="d-flex align-items-start">
-            <!-- <button class="back" (click)="goBack()">
-              <i class="fa-solid fa-arrow-left"></i>
-            </button> -->
-            <div class="org-data ms-2">
-              <img
-                [src]="
-                  'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
-                  orgId
-                "
-                width="30"
-                height="30"
-                style="border-radius: 50%"
-              />
+         
 
-              <select
-                class="micro-deals"
-                [(ngModel)]="selectedMicro"
-                (change)="onMicroDealChange($event)"
-              >
-                <ng-container *ngFor="let bb of BuyBoxMicroDeals">
-                  <option [value]="bb.OrganizationId">
-                    {{ bb.OrganizationName }}
-                  </option>
-                </ng-container>
-              </select>
-            </div>
-          </div>
-
-          <div class="w-100 d-flex flex-column" style="position: relative">
-            <div class="w-100 ms-2 mailbox-header">
+             <div class="w-100 ms-2 mailbox-header">
               <div class="d-flex align-items-center gap-2">
                 <div
                   class="dropdownall d-flex align-items-center justify-content-center"
@@ -51,25 +23,7 @@
                   <span class="all">{{ selectedFilter | uppercase }}</span>
                   <i class="fa-solid fa-chevron-down"></i>
                 </div>
-                <!-- <button
-                    class="new-btn"
-                    [routerLink]="[
-                      '/emily',
-                      buyBoxId,
-                      orgId,
-                      selectedMicroDealId
-                    ]"
-                  >
-                    New
-                    <img
-                      [src]="'../../../assets/Images/Icons/arrow-down.png'"
-                    />
-                  </button> -->
-                <!-- <div class="out-icn" (click)="loadInitialData()">
-                    <img
-                      [src]="'../../../assets/Images/Icons/rotate-right.png'"
-                    />
-                  </div> -->
+          
               </div>
             </div>
             <div class="dropdown-content" [class.show]="isDropdownVisible">
@@ -108,7 +62,7 @@
                 </div>
               </div>
             </div>
-          </div>
+ 
           <!-- <button class="new-btn" (click)="openCompoase(openCompose)">
             Compose
             <img [src]="'../../../assets/Images/Icons/arrow-down.png'" />
@@ -129,10 +83,12 @@
             class="card-body"
             style="padding: 0; border-right: 1px solid #e2e4e9"
           >
-            <ul style="overflow-y: auto; max-height: 63vh; padding: 0">
-              <li
+            <ul style="overflow-y: auto; max-height: 100vh; padding: 0">
+              <ng-container *ngFor="let bb of BuyBoxMicroDeals">
+               <p style="    margin: 3px 20px;font-weight: 700;"> {{ bb.OrganizationName }} </p>
+                <li
                 class="contact-list"
-                *ngFor="let contact of contacts"
+                *ngFor="let contact of bb.Contact"
                 (click)="getEmailsForContact(contact)"
                 [ngClass]="{
                   'selected-contact':
@@ -168,6 +124,8 @@
                   </div>
                 </ng-container>
               </li>
+               </ng-container>
+              
             </ul>
             <p *ngIf="contacts.length === 0" class="no-contact-msg">
               No contacts available in this organization.
@@ -228,7 +186,7 @@
           class="email-details-body"
           style="overflow-y: auto; min-height: 91vh"
         >
-          <div class="card-body" style="min-height: 77vh; max-height: 77vh">
+          <div class="card-body" >
             <!-- Back button to return to email list -->
             <button class="back" (click)="goBackk()">
               <i class="fa-solid fa-arrow-left"></i>
@@ -339,7 +297,6 @@
             <label for="subject" class="IsCC_checkbox me-2">Subject: </label>
             <input
               type="text"
-              (ngModelChange)="onInputChange()"
               [(ngModel)]="emailSubject"
               class="input_checkbox form-control w-50"
               name="subject"
@@ -365,7 +322,6 @@
           <p-editor
             [(ngModel)]="emailBody"
             [style]="{ height: '350px' }"
-            (keyup)="onInputChange()"
           >
           </p-editor>
         </div>
