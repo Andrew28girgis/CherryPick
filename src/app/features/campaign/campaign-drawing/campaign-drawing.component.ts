@@ -23,6 +23,13 @@ import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IPolygon } from 'src/app/shared/models/ipolygons-controller';
 import { environment } from 'src/environments/environment';
 
+interface ShoppingCenter {
+  id: number;
+  centerName: string;
+  latitude: number;
+  longitude: number;
+}
+
 @Component({
   selector: 'app-campaign-drawing',
   templateUrl: './campaign-drawing.component.html',
@@ -49,6 +56,12 @@ export class CampaignDrawingComponent
   polygonSearch: string = '';
   externalPolygons: IPolygon[] = [];
   displayedExternalPolygons: number[] = [];
+  polygonShoppingCenters: Map<number, ShoppingCenter[]> = new Map<
+    number,
+    ShoppingCenter[]
+  >();
+  searchedPolygonId: number = 0;
+  displayedPolygonsCenters: number[] = [];
 
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
@@ -297,6 +310,34 @@ export class CampaignDrawingComponent
     }
   }
 
+  getShoppingCentersByPolygonId(polygonId: number): void {
+    this.searchedPolygonId = polygonId;
+    const body: any = {
+      Name: 'GetShoppingCentersByPolygonId',
+      Params: {
+        PolygonId: polygonId,
+      },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      if (response.json) {
+        this.searchedPolygonId = 0;
+        this.polygonShoppingCenters.set(
+          polygonId,
+          response.json.length > 0 ? response.json : []
+        );
+      }
+    });
+  }
+
+  checkHaveShoppingCenters(polygonId: number): boolean {
+    return this.polygonShoppingCenters.has(polygonId);
+  }
+
+  getShoppingCentersForPolygon(polygonId: number): ShoppingCenter[] {
+    return this.polygonShoppingCenters.get(polygonId)!;
+  }
+
   toggleDisplayedExternalPolygon(polygon: IPolygon): void {
     const check = this.displayedExternalPolygons.includes(polygon.id);
     if (check) {
@@ -306,6 +347,12 @@ export class CampaignDrawingComponent
         (id) => id != polygon.id
       );
     } else {
+      const shoppingCenters = this.polygonShoppingCenters.has(polygon.id);
+      if (shoppingCenters) {
+        //view
+      } else {
+        this.getShoppingCentersByPolygonId(polygon.id);
+      }
       // this.createPropertiesMarkers(polygon.id, false, true);
       this.displayedExternalPolygons.push(polygon.id);
       const coordinates = this.getPolygonCoordinates(polygon);
@@ -457,6 +504,24 @@ export class CampaignDrawingComponent
       return true;
     }
     return false;
+  }
+
+  viewShoppingCenterOnMap(polygonId: number): void {
+    if (this.displayedPolygonsCenters.includes(polygonId)) {
+      this.displayedPolygonsCenters = this.displayedPolygonsCenters.filter(
+        (p) => p != polygonId
+      );
+      this.campaignDrawingService.removeMarkers(polygonId);
+    } else {
+      this.displayedPolygonsCenters.push(polygonId);
+      if (this.campaignDrawingService.isMarkersExists(polygonId)) {
+        this.campaignDrawingService.displayMarker(polygonId, this.map);
+      } else {
+        for (let center of this.getShoppingCentersForPolygon(polygonId)) {
+          this.campaignDrawingService.createMarker(this.map, polygonId, center);
+        }
+      }
+    }
   }
 
   get getDrawnPolygons() {
