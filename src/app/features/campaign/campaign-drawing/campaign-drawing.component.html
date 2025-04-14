@@ -9,17 +9,42 @@
       (ngModelChange)="onSearchChange($event)"
     />
   </div>
+  <div class="row g-3 mb-3">
+    <div class="d-flex gap-2">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        name="user-polygons"
+        id="user-polygons"
+        [(ngModel)]="displayUserPolygons"
+      />
+      <label class="form-check-label" for="user-polygons">
+        Display my polygons
+      </label>
+    </div>
+  </div>
 
   <div class="map-wrapper">
-    <ng-container *ngIf="polygonSearch.trim().length > 0 || getDrawnList">
+    <ng-container
+      *ngIf="
+        (displayUserPolygons && userPolygons.length > 0) ||
+        polygonSearch.trim().length > 0 ||
+        getDrawnList
+      "
+    >
       <div class="dragable-polygons" cdkDragBoundary=".map-wrapper" cdkDrag>
         <div
-          *ngIf="polygonSearch.trim().length > 0"
+          *ngIf="polygonSearch.trim().length > 0||
+                (displayUserPolygons && userPolygons.length > 0)"
           class="w-100 h-50 ps-2 pe-2"
           [ngClass]="{ 'h-100': !getDrawnList }"
         >
           <table
-            *ngIf="externalPolygons.length > 0; else emptyPolygons"
+            *ngIf="
+              externalPolygons.length > 0 ||
+                (displayUserPolygons && userPolygons.length > 0);
+              else emptyPolygons
+            "
             class="table"
           >
             <thead class="thead-light">
@@ -28,9 +53,14 @@
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
-            <tbody *ngIf="externalPolygons.length > 0">
+            <tbody
+              *ngIf="
+                externalPolygons.length > 0 ||
+                (displayUserPolygons && userPolygons.length > 0)
+              "
+            >
               <ng-container
-                *ngFor="let polygon of externalPolygons; let index = index"
+                *ngFor="let polygon of concatSearchResult(); let index = index"
               >
                 <tr *ngIf="!detectIncludeInSearch(polygon.id)">
                   <td>

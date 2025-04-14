@@ -62,6 +62,8 @@ export class CampaignDrawingComponent
   >();
   searchedPolygonId: number = 0;
   displayedPolygonsCenters: number[] = [];
+  userPolygons: IPolygon[] = [];
+  displayUserPolygons: boolean = false;
 
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
@@ -93,6 +95,7 @@ export class CampaignDrawingComponent
     this.circlesListeners();
     this.drawingCancelListener();
     this.getPolygonsByNameListener();
+    this.getUserPolygons();
   }
 
   ngAfterViewInit(): void {
@@ -140,6 +143,19 @@ export class CampaignDrawingComponent
     } else {
       alert('Plese select a buybox first.');
     }
+  }
+
+  getUserPolygons(): void {
+    const body: any = {
+      Name: 'GetUserPolygons',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      if (response.json && response.json.length > 0) {
+        this.userPolygons = response.json;
+      }
+    });
   }
 
   syncMarketSurveyWithCampaign(campaignId: number): void {
@@ -342,15 +358,15 @@ export class CampaignDrawingComponent
     const check = this.displayedExternalPolygons.includes(polygon.id);
     if (check) {
       // this.mapDrawingService.removeMarkers(polygon.id);
+      this.displayedPolygonsCenters = [];
+      this.campaignDrawingService.completelyRemoveMarkers(polygon.id);
       this.campaignDrawingService.hideShapeFromMap(polygon.id);
       this.displayedExternalPolygons = this.displayedExternalPolygons.filter(
         (id) => id != polygon.id
       );
     } else {
       const shoppingCenters = this.polygonShoppingCenters.has(polygon.id);
-      if (shoppingCenters) {
-        //view
-      } else {
+      if (!shoppingCenters) {
         this.getShoppingCentersByPolygonId(polygon.id);
       }
       // this.createPropertiesMarkers(polygon.id, false, true);
@@ -522,6 +538,13 @@ export class CampaignDrawingComponent
         }
       }
     }
+  }
+
+  concatSearchResult(): IPolygon[] {
+    if (this.displayUserPolygons && this.userPolygons.length > 0) {
+      return [...this.externalPolygons, ...this.userPolygons];
+    }
+    return this.externalPolygons;
   }
 
   get getDrawnPolygons() {
