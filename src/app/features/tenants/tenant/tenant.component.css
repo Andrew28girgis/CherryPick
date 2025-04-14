@@ -1,3 +1,80 @@
+
+
+.BuyboxSpecifications {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Specification item styles */
+.spec-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  height: 100%;
+}
+
+.spec-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9f5ff;
+  border-radius: 50%;
+}
+
+.spec-icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.spec-content {
+  flex: 1;
+}
+
+.spec-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.spec-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Shopping centers list */
+.shopping-centers-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.shopping-center-item {
+  background: #f0f7ff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #0066cc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .spec-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .spec-icon {
+    margin-bottom: 8px;
+  }
+}
 .overfloww {
   width: 80%;
   margin: auto;
