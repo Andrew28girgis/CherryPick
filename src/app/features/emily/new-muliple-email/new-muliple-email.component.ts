@@ -519,6 +519,8 @@ export class NewMulipleEmailComponent implements OnInit {
     this.spinner.show();
     const requests = this.ManagerOrgDTO.map(async (managerOrg) => {
       const body: GenerateContextDTO = {
+        // IsReply :false,
+        // OldMail : '',
         ContactId: this.contactId,
         BuyBoxId: this.buyBoxId,
         CampaignId: this.campaignId,

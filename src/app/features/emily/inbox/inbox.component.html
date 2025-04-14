@@ -267,15 +267,22 @@
   <div class="modal-content">
     <div class="modal-body p-0">
       <div class="row m-0 p-2 d-flex justify-content-center">
-        <div class="d-flex gap-3 selectedOptionDiv">
-          <app-emily
+        <div>
+          <!-- <app-emily
             [buyBoxIdReply]="buyBoxId"
             [orgIdReply]="orgId"
             [emailBodyReply]="selectedEmail?.Body"
             [selectedContactContactId]="selectedContact"
             [modal]="modal"
           >
-          </app-emily>
+          </app-emily> -->
+          <app-email-inbox [buyBoxIdReply]="buyBoxId"
+          [orgIdReply]="orgId"
+          [emailBodyReply]="selectedEmail?.Body"
+          [selectedContactContactId]="selectedContact"
+          [modal]="modal">
+
+          </app-email-inbox>
         </div>
       </div>
     </div>

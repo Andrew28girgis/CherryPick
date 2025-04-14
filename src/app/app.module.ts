@@ -51,6 +51,7 @@ import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { EditorModule } from 'primeng/editor';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { CampaignModule } from './features/campaign/campaign.module';
+import { EmailInboxComponent } from './features/emily/email-inbox/email-inbox.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { CampaignModule } from './features/campaign/campaign.module';
     BreadcrumbComponent,
     InboxComponent,
     NewMulipleEmailComponent,
+    EmailInboxComponent,
   ],
   imports: [
     BrowserModule,
