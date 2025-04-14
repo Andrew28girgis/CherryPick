@@ -118,10 +118,18 @@ export class NewMulipleEmailComponent implements OnInit {
       this.campaignId = params.get('campaignId');
     });
 
-    this.breadcrumbService.addBreadcrumb({
-      label: 'Generate Email',
-      url: '/',
-    });
+    if(this.breadcrumbService.getBreadcrumbsLength() > 2 ){
+        this.breadcrumbService.removeLastBreadcrumb();
+    }else{
+    this.breadcrumbService.addBreadcrumb(
+      { 
+        label: `Generate Emails`, 
+        url: `/MutipleEmail/${this.campaignId}`
+      }
+    );
+  }
+
+
     this.emilyService
       .getCheckList()
       .subscribe((buyboxChecklist: buyboxChecklist) => {
@@ -518,6 +526,8 @@ export class NewMulipleEmailComponent implements OnInit {
     this.spinner.show();
     const requests = this.ManagerOrgDTO.map(async (managerOrg) => {
       const body: GenerateContextDTO = {
+        // IsReply :false,
+        // OldMail : '',
         ContactId: this.contactId,
         BuyBoxId: this.buyBoxId,
         CampaignId: this.campaignId,

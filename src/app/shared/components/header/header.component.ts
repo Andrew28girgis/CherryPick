@@ -1,12 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  TemplateRef,
-  HostListener,
-  ElementRef,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   Router,
   NavigationEnd,
@@ -17,85 +9,50 @@ import { Subscription } from 'rxjs';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { SidbarService } from 'src/app/core/services/sidbar.service';
 import { UserViewService } from 'src/app/core/services/user-view.service';
-import { Location } from '@angular/common';
-import { NavigationService } from 'src/app/core/services/navigation-service.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
-  isSmallScreen: boolean = window.innerWidth < 992; // Initialize screen size detection
-
-  @HostListener('window:resize', [])
-  onResize() {
-    this.isSmallScreen = window.innerWidth < 992;
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (
-      this.isNavbarOpen &&
-      this.elementRef.nativeElement.querySelector('#navbarNav') &&
-      !this.elementRef.nativeElement
-        .querySelector('#navbarNav')
-        .contains(event.target as Node) &&
-      !this.elementRef.nativeElement
-        .querySelector('.navbar-toggler')
-        ?.contains(event.target as Node)
-    ) {
-      this.isNavbarOpen = false;
-    }
-  }
-
+export class HeaderComponent implements OnInit {
+  isSmallScreen: boolean = window.innerWidth < 992;
   isCollapsed = false;
   userAvatar: string | null = null;
-  currentView: 'tenant' | 'landlord' = 'tenant';
+  currentView: 'campaigns' | 'landlord' = 'campaigns';
   current = '';
   private viewSubscription: Subscription | null = null;
   private routerSubscription: Subscription | null = null;
   private sidebarSubscription: Subscription | null = null;
-  @ViewChild('emailContent') emailContent!: TemplateRef<any>;
-  @ViewChild('notificationContent') notificationContent!: TemplateRef<any>;
-  previousUrl: string | null = null; // New property for tracking previous URL
+  isNavbarOpen = false;
+  display: boolean = true;
 
   constructor(
     private sidbarService: SidbarService,
     public router: Router,
     private userViewService: UserViewService,
-    private elementRef: ElementRef,
-    private navigationService: NavigationService,
     private activatedRoute: ActivatedRoute
   ) {}
 
-  display: boolean = true;
-
   ngOnInit(): void {
     this.isSmallScreen = window.innerWidth < 992;
-
     this.current = this.router.url;
-
     this.router.events
-    .pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(() => {
-        // Traverse the activated route to the deepest child
-        let route = this.activatedRoute;
-        while (route.firstChild) {
-          route = route.firstChild;
-        }
-        return route;
-      }),
-      mergeMap(route => route.data)
-    )
-    .subscribe((data:any) => {
-   
-      
-      // If the current route has data { hideHeader: true }, then do not display the header.
-      this.display = !data.hideHeader;
-     
-    });
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        map(() => {
+          let route = this.activatedRoute;
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        }),
+        mergeMap((route) => route.data)
+      )
+      .subscribe((data: any) => {
+        // If the current route has data { hideHeader: true }, then do not display the header.
+        this.display = !data.hideHeader;
+      });
 
     // Subscribe to router events to update the `current` variable whenever the route changes.
     this.routerSubscription = this.router.events
@@ -126,19 +83,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
     this.fetchUserAvatar();
   }
-
-  ngOnDestroy(): void {
-    if (this.viewSubscription) {
-      this.viewSubscription.unsubscribe();
-    }
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
-    }
-    if (this.sidebarSubscription) {
-      this.sidebarSubscription.unsubscribe();
-    }
-  }
-
+  
   fetchUserAvatar(): void {
     this.userAvatar = '';
   }
@@ -150,21 +95,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   switchView(): void {
-    const newView = this.currentView === 'tenant' ? 'landlord' : 'tenant';
+    const newView = this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
     this.userViewService.switchView(newView);
+    this.router.navigate([newView]);
   }
 
-  isNavbarOpen = false;
   toggleNavbar(event: Event) {
     event.stopPropagation();
     this.isNavbarOpen = !this.isNavbarOpen;
-  }
-  goBack() {
-    const prevUrl = this.navigationService.getPreviousUrl();
-    if (prevUrl) {
-      this.router.navigateByUrl(prevUrl);
-    } else {
-      this.router.navigate(['/campaigns']);
-    }
   }
 }

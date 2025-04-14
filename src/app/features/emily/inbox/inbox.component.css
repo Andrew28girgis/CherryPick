@@ -52,11 +52,7 @@
 }
 
 .contact-list {
-  display: flex;
   padding: 12px 24px;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-self: stretch;
   cursor: pointer;
 }
 
@@ -190,8 +186,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 30px;
-  padding: 25px;
-  white-space: pre;
+  padding: 25px; 
   padding-top: 0;
 }
 

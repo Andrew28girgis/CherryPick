@@ -1,40 +1,19 @@
-:host {
-  height: 70px;
-  margin-bottom: 20px;
-}
 .navbar {
-  width: 100%;
-  z-index: 1000;
   background-color: #fff;
-  padding: -0.5rem 3%;
   border-bottom: 1px solid #e9e9e9;
-  height: 70px;
 }
-
-.header {
-  height: 100%;
-  width: 100%;
-  background-color: #fff;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-}
-
-/* Logo Styling */
 .sidebar-logo {
   cursor: pointer;
 }
-
 .cherry-logo {
-  max-width: 40px;
-  max-height: 40px !important;
+  max-width: 30px;
+  max-height: 30px !important;
   height: auto;
   transition: all 0.3s ease;
   cursor: pointer;
 }
-
 .cherry {
-  margin-left: 6px;
+  margin: 0 6px;
   background: linear-gradient(0deg, #4d65b4 0%, #5e84f1 100%);
   font-weight: 700;
   font-size: 24px;
@@ -42,16 +21,12 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 .pick {
   font-weight: 300;
 }
-
-/* Navigation Items */
 .navbar-nav .nav-item {
   margin: 0 5px;
 }
-
 .nav-link {
   display: flex;
   align-items: center;
@@ -62,27 +37,20 @@
   border-radius: 8px;
   font-size: 14px;
 }
-
-/* Apply hover effect only to non-active links */
 .nav-link:not(.active-route):hover {
   background-color: #f5f7fa;
   color: #4d65b4;
 }
-
-/* Fix: Prevent hover effect on active links */
 .nav-link.active-route:hover {
   background-color: #b8c1e1;
   color: #4d65b4 !important;
 }
-
 .img-icn {
   margin-right: 8px;
   font-size: 16px;
-  /* Default filter for gray color */
   filter: brightness(0) saturate(100%) invert(46%) sepia(9%) saturate(382%)
     hue-rotate(173deg) brightness(94%) contrast(87%);
 }
-
 .nav-link.active-route .img-icn {
   /* Filter for #4d65b4 blue color */
   filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%)
@@ -99,8 +67,6 @@
   color: #4d65b4 !important;
   font-weight: 600;
 }
-
-/* Navbar Toggle Button */
 .navbar-toggler {
   background: transparent;
   border: none;
@@ -111,18 +77,14 @@
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
 }
-
 .navbar-toggler:hover {
   color: #4d65b4;
   background-color: rgba(77, 101, 180, 0.1);
 }
-
 .navbar-toggler:focus {
   outline: none;
   box-shadow: none;
 }
-
-/* Avatar */
 .avatar-container {
   width: 40px;
   height: 40px;
@@ -132,17 +94,14 @@
   border: 2px solid #e0e0e0;
   transition: all 0.3s ease;
 }
-
 .avatar-container:hover {
   border-color: #4d65b4;
 }
-
 .avatar-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
 .avatar-placeholder {
   width: 100%;
   height: 100%;
@@ -152,8 +111,6 @@
   align-items: center;
   justify-content: center;
 }
-
-/* Dropdown Menu */
 .dropdown-menu {
   min-width: 200px;
   border-radius: 10px;
@@ -161,7 +118,6 @@
   border: none;
   padding: 10px;
 }
-
 .dropdown-item {
   border-radius: 8px;
   padding: 10px 15px;
@@ -171,27 +127,22 @@
   display: flex;
   align-items: center;
 }
-
 .dropdown-item:hover {
   background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
   transform: translateX(5px);
 }
-
 .action-icon {
   font-size: 1.25rem;
   color: #707791;
   cursor: pointer;
   transition: color 0.3s ease;
 }
-
 .action-icon:hover {
   color: #4d65b4;
 }
-
 .avatar-notifcations {
   gap: 10px;
 }
-
 .navbar-nav {
   display: flex;
   justify-content: center;
@@ -222,28 +173,4 @@
   .nav-link {
     padding: 12px 15px;
   }
-}
-.custom-back-button {
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 50%;
-  background-color: #f0f0f5;
-  color: #707791;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: background-color 0.2s, transform 0.2s;
-  margin: 0 10px;
-}
-
-.custom-back-button:hover {
-  background-color: #e4e6ed;
-  transform: scale(1.05);
-}
-
-.custom-back-button:active {
-  transform: scale(0.95);
 }

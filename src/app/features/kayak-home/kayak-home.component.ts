@@ -42,11 +42,6 @@ export class KayakHomeComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.breadcrumbService.addBreadcrumb({
-      label: 'Dashboard',
-      url: '/',
-    });
-
     this.route.paramMap.subscribe((params) => {
       this.BuyboxName = params.get('buyboxName');
       this.orgId = params.get('orgId');
@@ -56,6 +51,14 @@ export class KayakHomeComponent implements OnInit {
     });
     this.activeComponent = 'Properties';
     this.selectedTab = 'Properties';
+
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'My Tenants', url: '/summary' },
+      { 
+        label: `${this.BuyboxName}-Dashboard`, 
+        url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`
+      }
+    ]);
   }
 
   selectTab(tabId: string): void {

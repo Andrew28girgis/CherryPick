@@ -14,10 +14,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { EditorModule } from 'primeng/editor';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { debounceTime } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-inbox',
@@ -59,13 +60,16 @@ export class InboxComponent implements OnInit {
   contactId!: any;
   BatchGuid!: string;
   inputChanged: Subject<void> = new Subject<void>();
+  emailBodySafe!: SafeHtml;
 
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private modalService: NgbModal,
     private route: ActivatedRoute,
-    private _location: Location
+    private _location: Location,
+    private sanitizer: DomSanitizer,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit() {
@@ -83,6 +87,11 @@ export class InboxComponent implements OnInit {
         this.orgId = +orgId;
       }
     });
+    this.breadcrumbService.addBreadcrumb({
+      label: 'Emily',
+      url: `/organization-mail/${this.buyBoxId}/${this.orgId}/${this.campaignId}`,
+    });
+
     this.loadInitialData();
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
@@ -262,6 +271,9 @@ export class InboxComponent implements OnInit {
         if (data.json && Array.isArray(data.json)) {
           this.selectedEmail = data.json[0];
           this.selectedMicroDealId = this.selectedEmail!.MicroDealId;
+          this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(
+            this.selectedEmail!.Body
+          );
         } else {
           this.selectedEmail = null;
         }
@@ -271,13 +283,13 @@ export class InboxComponent implements OnInit {
   goBack() {
     this._location.back();
   }
-  // getTotalEmails(contact: Contact): number {
-  //   return (
-  //     (contact.EmailStats[0].Sent || 0) +
-  //     (contact.EmailStats[0].Inbox || 0) +
-  //     (contact.EmailStats[0].Outbox || 0)
-  //   );
-  // }
+  getTotalEmails(EmailStats: any): number {
+    return (
+      (EmailStats.Sent || 0) +
+      (EmailStats.Inbox || 0) +
+      (EmailStats.Outbox || 0)
+    );
+  }
   openCompoase(modal: any) {
     this.listcenterName = [];
     this.emailSubject = '';

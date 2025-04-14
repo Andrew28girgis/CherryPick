@@ -1,5 +1,7 @@
 export interface GenerateContextDTO
 {
+     IsReply? :boolean;
+     OldMail?:string;
      ContactId : number;
      BuyBoxId : number;
      CampaignId : number;

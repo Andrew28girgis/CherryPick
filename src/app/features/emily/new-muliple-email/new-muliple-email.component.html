@@ -162,7 +162,7 @@
                           ">
                           <div class="checkbox-section checkbox-section-body-first">
                             <label [for]="item.Name" class="ms-3 label-Relations" [title]="item.Name">
-                              {{ item.Name }}
+                              &bull; {{ item.Name }}
                             </label>
                           </div>
                         </ng-container>
@@ -206,7 +206,7 @@
                           ">
                           <div class="checkbox-section checkbox-section-body-first">
                             <label [for]="item.Name" class="ms-3 label-Relations" [title]="item.Name">
-                              {{ item.Name }}
+                              &bull; {{ item.Name }}
                             </label>
                           </div>
                         </ng-container>
@@ -317,7 +317,7 @@
         <th scope="col">Context</th>
         <th scope="col">SC</th>
         <th scope="col">Prompt Name</th>
-        <th scope="col">Generated | Send</th>
+        <th scope="col">Generated</th>
         <th scope="col">Created Date</th>
       </tr>
     </thead>
@@ -358,8 +358,7 @@
         <td class="CountMail" [routerLink]="['/MailsList', item.MailContextId, 1]">
           {{ item.NumberOfMailGenerated }} &nbsp; | &nbsp;
           {{ item.C[0].SC[0].P[0].BB[0].O[0].MailSendCount }} &nbsp;
-          <i class="fa-solid fa-arrows-turn-right ms-3"></i>
-        </td>
+         </td>
         <td>{{ item.CreatedDate | date : "medium" }}</td>
       </tr>
     </tbody>
