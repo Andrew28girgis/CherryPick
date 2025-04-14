@@ -482,11 +482,7 @@ export class EmailInboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
-        console.log(`this.returnGetMailContextGenerated`, data.json);
-        // Sanitize and apply HTML content to emailBody
         this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(this.returnGetMailContext[0].body);
-        console.log(`this.returnGetMailContextGenerated`, this.returnGetMailContext[0].body);
-
         this.spinner.hide();
       },
     });
