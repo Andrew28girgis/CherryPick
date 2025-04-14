@@ -6,11 +6,9 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -31,7 +29,7 @@ import { environment } from 'src/environments/environment';
   styleUrl: './campaign-drawing.component.css',
 })
 export class CampaignDrawingComponent
-  implements OnInit, AfterViewInit, OnDestroy, OnChanges
+  implements OnInit, AfterViewInit, OnDestroy
 {
   private destroy$ = new Subject<void>();
   private searchSubject: Subject<string> = new Subject<string>();
@@ -65,11 +63,6 @@ export class CampaignDrawingComponent
     private spinner: NgxSpinnerService,
     private polygonsControllerService: PolygonsControllerService
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userBuyBoxes'] && this.userBuyBoxes.length > 0) {
-      this.buyBoxId = this.userBuyBoxes[0].id;
-    }
-  }
 
   ngOnInit(): void {
     if (!this.buyBoxId) {
@@ -129,7 +122,11 @@ export class CampaignDrawingComponent
   }
 
   openNewCampaignPopup(content: TemplateRef<any>): void {
-    this.modalService.open(content, { centered: true });
+    if (this.buyBoxId) {
+      this.modalService.open(content, { centered: true });
+    } else {
+      alert('Plese select a buybox first.');
+    }
   }
 
   syncMarketSurveyWithCampaign(campaignId: number): void {
