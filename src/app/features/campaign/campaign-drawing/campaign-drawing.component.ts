@@ -283,6 +283,23 @@ export class CampaignDrawingComponent
       this.campaignDrawingService.completelyRemoveExplorePolygon();
     }
   }
+  centerShapeOnMap(polygon: IPolygon): void {
+    if (this.displayedExternalPolygons.includes(polygon.id)) {
+      const coordinates = this.getPolygonCoordinates(polygon);
+      const point = this.getMapCenter(polygon.json);
+
+      if (coordinates) {
+        this.campaignDrawingService.updateMapZoom(this.map, coordinates);
+      } else {
+        if (point) {
+          this.campaignDrawingService.updateMapCenter(this.map, point);
+        } else {
+          this.campaignDrawingService.updateMapCenter(this.map, null);
+        }
+      }
+    }
+  }
+
   toggleDisplayedExternalPolygon(polygon: IPolygon): void {
     const check = this.displayedExternalPolygons.includes(polygon.id);
     if (check) {

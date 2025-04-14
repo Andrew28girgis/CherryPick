@@ -34,7 +34,16 @@
               >
                 <tr *ngIf="!detectIncludeInSearch(polygon.id)">
                   <td>
-                    {{ polygon.name }}
+                    <div
+                      class="d-flex align-items-center justify-content-between"
+                    >
+                      <span>{{ polygon.name }}</span>
+                      <ng-container
+                        *ngIf="displayedExternalPolygons.includes(polygon.id)"
+                      >
+                        <button (click)="centerShapeOnMap(polygon)">.</button>
+                      </ng-container>
+                    </div>
                   </td>
                   <td class="text-center">
                     <div class="w-100 d-flex align-items-center gap-2">
