@@ -4,6 +4,13 @@ import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { IMapShape } from 'src/app/shared/models/imap-shape';
 declare const google: any;
 
+interface ShoppingCenter {
+  id: number;
+  centerName: string;
+  latitude: number;
+  longitude: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -17,6 +24,7 @@ export class CampaignDrawingService {
     circle: google.maps.drawing.OverlayType.CIRCLE,
   };
   private explorePolygons: IMapShape[] = [];
+  private markers: { polygonId: number; marker: google.maps.Marker }[] = [];
 
   onPolygonCreated = new EventEmitter<IMapShape>();
   onCircleCreated = new EventEmitter<IMapShape>();
@@ -528,6 +536,16 @@ export class CampaignDrawingService {
           `;
   }
 
+  private getLocationIconSvg(): string {
+    return (
+      'data:image/svg+xml;charset=UTF-8,' +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+      <path d="M27.4933 11.2666C26.0933 5.10659 20.72 2.33325 16 2.33325C16 2.33325 16 2.33325 15.9867 2.33325C11.28 2.33325 5.89334 5.09325 4.49334 11.2533C2.93334 18.1333 7.14667 23.9599 10.96 27.6266C12.3733 28.9866 14.1867 29.6666 16 29.6666C17.8133 29.6666 19.6267 28.9866 21.0267 27.6266C24.84 23.9599 29.0533 18.1466 27.4933 11.2666ZM16 17.9466C13.68 17.9466 11.8 16.0666 11.8 13.7466C11.8 11.4266 13.68 9.54658 16 9.54658C18.32 9.54658 20.2 11.4266 20.2 13.7466C20.2 16.0666 18.32 17.9466 16 17.9466Z" fill="#FF4C4C"/>
+      </svg>
+    `)
+    );
+  }
+
   initializeMap(gmapContainer: ElementRef): google.maps.Map {
     const mapOptions: google.maps.MapOptions = {
       center: { lat: 38.889805, lng: -77.009056 },
@@ -808,6 +826,52 @@ export class CampaignDrawingService {
       circle.shape.setMap(null);
       this.drawnCircles.splice(index, 1);
     }
+  }
+
+  isMarkersExists(polygonId: number): boolean {
+    const markers = this.markers.filter((m) => m.polygonId == polygonId);
+    if (markers && markers.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  createMarker(
+    map: any,
+    polygonId: number,
+    propertyData: ShoppingCenter
+  ): void {
+    const icon = this.getLocationIconSvg();
+    let marker = new google.maps.Marker({
+      map,
+      position: {
+        lat: Number(propertyData.latitude),
+        lng: Number(propertyData.longitude),
+      },
+      icon: icon,
+      // Use a higher zIndex to bring the marker “on top” of others
+      zIndex: 999999,
+    });
+
+    marker.propertyData = propertyData;
+    this.markers.push({ polygonId: polygonId, marker: marker });
+  }
+
+  displayMarker(polygonId: number, map: any): void {
+    const markers = this.markers.filter((m) => m.polygonId == polygonId);
+    if (markers && markers.length > 0) {
+      markers.forEach((m) => m.marker.setMap(map));
+    }
+  }
+
+  removeMarkers(polygonId: number): void {
+    const markers = this.markers.filter((m) => m.polygonId == polygonId);
+    markers.forEach((m) => m.marker.setMap(null));
+  }
+
+  completelyRemoveMarkers(polygonId: number): void {
+    this.removeMarkers(polygonId);
+    this.markers = this.markers.filter((m) => m.polygonId != polygonId);
   }
 
   get getDrawnPolygons() {
