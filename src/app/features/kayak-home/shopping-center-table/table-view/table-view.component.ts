@@ -93,19 +93,12 @@ export class TableViewComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  // Method to hide spinner
-  private hideSpinner(): void {
-    try {
-           
-    } catch (error) {
-      // Ignore errors
-    }
-  }
+
 
   async initializeData() {
     try {
       this.isLoading = true; // Show skeleton
-      // Hide any spinner
+       
       
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
       this.stateService.setShoppingCenters(this.shoppingCenters);
@@ -215,7 +208,7 @@ handleDocumentClick(event: MouseEvent): void {
   }
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
     this.isLoading = true; // Show skeleton
-      // Hide any spinner
+       
     
     this.viewManagerService
       .restoreShoppingCenter(MarketSurveyId, Deleted)
@@ -232,7 +225,7 @@ handleDocumentClick(event: MouseEvent): void {
       })
       .finally(() => {
         this.isLoading = false; // Hide skeleton
-          // Make sure spinner is hidden
+           
       });
   }
 
@@ -240,7 +233,6 @@ handleDocumentClick(event: MouseEvent): void {
     modalTemplate: TemplateRef<any>,
     shoppingCenter: any
   ) {
-      // Hide spinner before opening modal
     this.DeletedSC = shoppingCenter;
     this.shoppingCenterIdToDelete = shoppingCenter.Id;
     this.modalService.open(modalTemplate, {
@@ -255,7 +247,7 @@ handleDocumentClick(event: MouseEvent): void {
 
     try {
       this.isLoading = true; // Show skeleton
-        // Hide any spinner
+         
       
       await this.viewManagerService.deleteShoppingCenter(
         this.BuyBoxId,
@@ -266,7 +258,7 @@ handleDocumentClick(event: MouseEvent): void {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
+         
       this.cdr.markForCheck();
     }
   }
@@ -274,7 +266,7 @@ handleDocumentClick(event: MouseEvent): void {
   async refreshShoppingCenters() {
     try {
       this.isLoading = true; // Show skeleton
-        // Hide any spinner
+         
       
       this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
         this.BuyBoxId
@@ -287,7 +279,7 @@ handleDocumentClick(event: MouseEvent): void {
       // Handle error
     } finally {
       this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
+         
     }
   }
 
@@ -340,7 +332,6 @@ handleDocumentClick(event: MouseEvent): void {
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
-      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -359,11 +350,9 @@ handleDocumentClick(event: MouseEvent): void {
     if (!map) {
       // Handle error
     }
-      // Hide spinner after map is initialized
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
-      // Hide spinner before opening modal
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
@@ -394,7 +383,6 @@ handleDocumentClick(event: MouseEvent): void {
       } else {
         // Handle error
       }
-        // Hide spinner after street view is initialized
     });
   }
 

@@ -105,7 +105,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getAllCampaigns(): void {
     this.isLoading = true; // Show skeleton
-    // Hide any spinner
+     
 
     const body: any = {
       Name: 'GetUserCampaigns',
@@ -125,7 +125,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-        // Make sure spinner is hidden
+         
       },
     });
 
@@ -148,7 +148,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getUserBuyBoxes(): void {
     this.isLoading = true; // Show skeleton
-    // Hide any spinner
+     
 
     const body: any = {
       Name: 'GetUserBuyBoxes',
@@ -168,10 +168,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         } else {
           this.userBuyBoxes = [];
         }
-        // Make sure spinner is hidden
+         
       },
       error: () => {
-        // Make sure spinner is hidden
+         
       },
     });
 
@@ -184,12 +184,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   openAddCampaignPopup(content: TemplateRef<any>): void {
-    // Hide spinner before opening modal
     this.modalService.open(content, { centered: true, fullscreen: true });
   }
 
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
-    // Hide spinner before navigation
 
     if (withOrg) {
       this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
@@ -206,7 +204,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getKanbanTemplateStages(): void {
     this.isLoading = true; // Show skeleton
-    // Hide any spinner
+     
 
     const body: any = {
       Name: 'GetKanbanTemplateStages',
@@ -219,11 +217,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.stages = response.json;
         }
         this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
+         
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-        // Make sure spinner is hidden
+         
       },
     });
 
@@ -232,7 +230,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
     this.isLoading = true; // Show skeleton
-    // Hide any spinner
+     
 
     const body: any = {
       Name: 'GetCampaignOrganizations',
@@ -259,11 +257,11 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.router.navigate(['/MutipleEmail', campaignId]);
         }
         this.isLoading = false; // Hide skeleton
-        // Make sure spinner is hidden
+         
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-        // Make sure spinner is hidden
+         
       },
     });
 
