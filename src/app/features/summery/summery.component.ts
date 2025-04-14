@@ -72,7 +72,7 @@ export class SummeryComponent implements OnInit {
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbs([
-      { label: 'Tenants', url: '/summary' },
+      { label: 'My Tenants', url: '/summary' },
     ]);
     this.stateService.clearAll();
     this.General = new General();

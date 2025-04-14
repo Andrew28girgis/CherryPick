@@ -25,6 +25,7 @@ const routes: Routes = [
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
+    data: { hideHeader: true },
   },
   {
     path: 'landlord',

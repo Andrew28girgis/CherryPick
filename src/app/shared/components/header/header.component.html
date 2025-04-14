@@ -1,188 +1,196 @@
-<nav class="navbar navbar-expand-lg d-flex align-items-center w-100" 
- 
-*ngIf="display" 
-[ngClass]="{'p-4': current === '/summary'}">
-  <button
-    class="custom-back-button"
-    [ngClass]="{'d-none': current === '/summary'}"
-    (click)="goBack()"
-    title="Go Back"
-  >
-    <i class="fa-solid fa-arrow-left"></i>
-  </button>
-  <!-- Left Section (Logo and Sidebar Toggle) -->
-  <div class="d-flex align-items-center">
-    <!-- Logo Section -->
-    <div
-      class="sidebar-logo d-flex justify-content-start align-items-center me-4"
-    >
-      <img
-        class="cherry-logo"
-        src="../../../assets/Images/Icons/logo (1).png"
-        [routerLink]="
-          current.includes('landlord') ? ['/landlord'] : ['/campaigns']
-        "
-      />
-      <p
-        class="cherry mb-0 d-none d-lg-block"
-        [routerLink]="
-          current.includes('landlord') ? ['/landlord'] : ['/campaigns']
-        "
-      >
-        Cherry<span class="pick">pick</span>
-      </p>
-    </div>
-
-    <!-- Toggle button for mobile -->
-    <button
-      class="navbar-toggler d-lg-none"
-      type="button"
-      (click)="toggleNavbar($event)"
-    >
-      <i class="fa-solid" [ngClass]="isNavbarOpen ? 'fa-times' : 'fa-bars'"></i>
-    </button>
-  </div>
-
-  <!-- Navigation Items -->
-  <div
-    class="collapse navbar-collapse"
-    [ngClass]="{ show: isNavbarOpen }"
-    id="navbarNav"
-  >
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          [routerLink]="['/tasks']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          title="Campaigns"
-        >
-          <img
-            class="img-icn"
-            src="../../../assets/Images/Icons/task-square.svg"
-          />
-          <span>Tasks</span>
-        </a>
-      </li>
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          [routerLink]="['/campaigns']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          title="Campaigns"
-        >
-          <img
-            class="img-icn"
-            src="../../../assets/Images/Icons/Campains.svg"
-          />
-          <span>Campaigns</span>
-        </a>
-      </li>
-
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          [routerLink]="['/summary']"
-          routerLinkActive="active-route"
-          class="nav-link"
-          title="Tenants"
-        >
-          <img class="img-icn" src="../../../assets/Images/Icons/Tenant.svg" />
-          <span>Tenants</span>
-        </a>
-      </li>
-      <li class="nav-item" *ngIf="!current.includes('landlord')">
-        <a
-          class="nav-link"
-          [routerLink]="['/Kanban']"
-          routerLinkActive="active-route"
-          title="Cadence"
-        >
-          <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
-          <span>Cadence</span>
-        </a>
-      </li>
-      <li class="nav-item" *ngIf="current.includes('landlord')">
-        <a
-          class="nav-link"
-          [routerLink]="['/landlord']"
-          routerLinkActive="active-route"
-          title="Cadence"
-        >
-          <img class="img-icn" src="../../../assets/Images/Icons/Cadence.svg" />
-          <span>Properties</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Right Section (Notifications and User Profile) -->
-  <div
-    class="d-flex align-items-center justify-content-end avatar-notifcations ms-auto"
-  >
-    <div
-      class="d-none d-lg-block"
-      *ngIf="!isSmallScreen && !current.includes('landlord')"
-    >
-      <app-notifications></app-notifications>
-    </div>
-
-    <div class="dropdown">
+<nav
+  class="navbar navbar-expand-lg d-flex align-items-center w-100"
+  *ngIf="display"
+>
+<div class="container-fluid">
+    <div class="d-flex align-items-center">
+      <!-- Logo Section -->
       <div
-        class="avatar-container"
-        role="button"
-        id="userDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
+        class="sidebar-logo d-flex justify-content-start align-items-center me-4"
       >
         <img
-          *ngIf="userAvatar"
-          [src]="userAvatar"
-          alt="User Avatar"
-          class="rounded-circle avatar-img"
+          class="cherry-logo"
+          src="../../../assets/Images/Icons/logo (1).png"
+          [routerLink]="
+            current.includes('landlord') ? ['/landlord'] : ['/campaigns']
+          "
         />
-        <div
-          *ngIf="!userAvatar"
-          class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
+        <p
+          class="cherry mb-0 d-none d-lg-block"
+          [routerLink]="
+            current.includes('landlord') ? ['/landlord'] : ['/campaigns']
+          "
         >
-          <i class="fa-solid fa-user"></i>
-        </div>
+          Cherry<span class="pick">pick</span>
+        </p>
       </div>
-      <ul
-        class="dropdown-menu dropdown-menu-end"
-        aria-labelledby="userDropdown"
+
+      <!-- Toggle button for mobile -->
+      <button
+        class="navbar-toggler d-lg-none"
+        type="button"
+        (click)="toggleNavbar($event)"
       >
-        <li>
+        <i
+          class="fa-solid"
+          [ngClass]="isNavbarOpen ? 'fa-times' : 'fa-bars'"
+        ></i>
+      </button>
+    </div>
+
+    <!-- Navigation Items -->
+    <div
+      class="collapse navbar-collapse"
+      [ngClass]="{ show: isNavbarOpen }"
+      id="navbarNav"
+    >
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item" *ngIf="!current.includes('landlord')">
           <a
-            class="dropdown-item"
-            href="#"
-            (click)="switchView(); $event.preventDefault()"
+            [routerLink]="['/tasks']"
+            routerLinkActive="active-route"
+            class="nav-link"
+            title="Campaigns"
           >
-            Switch to
-            {{ current.includes("landlord") ? "Tenant" : "Landlord" }}
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/task-square.svg"
+            />
+            <span>Tasks</span>
           </a>
         </li>
-        <li><hr class="dropdown-divider" /></li>
-        <li>
+        <li class="nav-item" *ngIf="!current.includes('landlord')">
           <a
-            class="dropdown-item d-flex justify-content-between"
-            href="#"
-            (click)="logout(); $event.preventDefault()"
+            [routerLink]="['/campaigns']"
+            routerLinkActive="active-route"
+            class="nav-link"
+            title="Campaigns"
           >
-            Logout
-            <i
-              class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
-            ></i>
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/Campains.svg"
+            />
+            <span>Campaigns</span>
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="!current.includes('landlord')">
+          <a
+            [routerLink]="['/summary']"
+            routerLinkActive="active-route"
+            class="nav-link"
+            title="Tenants"
+          >
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/Tenant.svg"
+            />
+            <span>Tenants</span>
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="!current.includes('landlord')">
+          <a
+            class="nav-link"
+            [routerLink]="['/Kanban']"
+            routerLinkActive="active-route"
+            title="Cadence"
+          >
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/Cadence.svg"
+            />
+            <span>Cadence</span>
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="current.includes('landlord')">
+          <a
+            class="nav-link"
+            [routerLink]="['/landlord']"
+            routerLinkActive="active-route"
+            title="Cadence"
+          >
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/Cadence.svg"
+            />
+            <span>Properties</span>
           </a>
         </li>
       </ul>
     </div>
-          <!-- Toggle button for mobile -->
-  <button
-  class="navbar-toggler d-lg-none"
-  type="button"
-  (click)="toggleNavbar($event)"
->
-  <i class="fa-solid" [ngClass]="isNavbarOpen ? 'fa-times' : 'fa-bars'"></i>
-</button>
-  </div>
+
+    <!-- Right Section (Notifications and User Profile) -->
+    <div
+      class="d-flex align-items-center justify-content-end avatar-notifcations ms-auto"
+    >
+      <div
+        class="d-none d-lg-block"
+        *ngIf="!isSmallScreen && !current.includes('landlord')"
+      >
+        <app-notifications></app-notifications>
+      </div>
+
+      <div class="dropdown">
+        <div
+          class="avatar-container"
+          role="button"
+          id="userDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img
+            *ngIf="userAvatar"
+            [src]="userAvatar"
+            alt="User Avatar"
+            class="rounded-circle avatar-img"
+          />
+          <div
+            *ngIf="!userAvatar"
+            class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center"
+          >
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="userDropdown"
+        >
+          <li>
+            <a
+              class="dropdown-item"
+              href="#"
+              (click)="switchView(); $event.preventDefault()"
+            >
+              Switch to
+              {{ current.includes("landlord") ? "campaigns" : "Landlord" }}
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a
+              class="dropdown-item d-flex justify-content-between"
+              href="#"
+              (click)="logout(); $event.preventDefault()"
+            >
+              Logout
+              <i
+                class="fa-solid fa-arrow-right-from-bracket action-icon position-relative mx-2"
+              ></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- Toggle button for mobile -->
+      <button
+        class="navbar-toggler d-lg-none"
+        type="button"
+        (click)="toggleNavbar($event)"
+      >
+        <i
+          class="fa-solid"
+          [ngClass]="isNavbarOpen ? 'fa-times' : 'fa-bars'"
+        ></i>
+      </button>
+    </div>
+</div>
 </nav>

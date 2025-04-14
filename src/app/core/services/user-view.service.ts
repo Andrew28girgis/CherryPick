@@ -7,16 +7,16 @@ import { filter } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class UserViewService {
-  private currentViewSubject = new BehaviorSubject<'tenant' | 'landlord'>(
-    'tenant'
+  private currentViewSubject = new BehaviorSubject<'campaigns' | 'landlord'>(
+    'campaigns'
   );
-  public currentView$: Observable<'tenant' | 'landlord'> =
+  public currentView$: Observable<'campaigns' | 'landlord'> =
     this.currentViewSubject.asObservable();
 
   constructor(private router: Router) {
     // Initialize view based on current URL or localStorage
     const savedView = localStorage.getItem('userView') as
-      | 'tenant'
+      | 'campaigns'
       | 'landlord'
       | null;
 
@@ -38,7 +38,7 @@ export class UserViewService {
       .subscribe((event: NavigationEnd) => {
         // Only update view from URL if it's a landlord route
         // This prevents tenant routes from changing the view
-        if (event.url.includes('/landlord')) {
+        if (event.url.includes('/campaigns')) {
           this.updateViewFromUrl(event.url);
         }
       });
@@ -46,7 +46,7 @@ export class UserViewService {
 
   private updateViewFromUrl(url: string): void {
     const isLandlordRoute = url.includes('/landlord');
-    const newView = isLandlordRoute ? 'landlord' : 'tenant';
+    const newView = isLandlordRoute ? 'landlord' : 'campaigns';
 
     // Update localStorage
     localStorage.setItem('userView', newView);
@@ -55,18 +55,18 @@ export class UserViewService {
     this.currentViewSubject.next(newView);
   }
 
-  public switchView(view: 'tenant' | 'landlord'): void {
+  public switchView(view: 'campaigns' | 'landlord'): void {
     localStorage.setItem('userView', view);
     this.currentViewSubject.next(view);
 
     if (view === 'landlord') {
       this.router.navigate(['/landlord']);
     } else {
-      this.router.navigate(['/summary']);
+      this.router.navigate(['/campaigns']);
     }
   }
 
-  public getCurrentView(): 'tenant' | 'landlord' {
+  public getCurrentView(): 'campaigns' | 'landlord' {
     return this.currentViewSubject.value;
   }
 }

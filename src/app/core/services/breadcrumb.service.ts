@@ -7,9 +7,8 @@ export interface BreadcrumbItem {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class BreadcrumbService {
   private breadcrumbs = new BehaviorSubject<BreadcrumbItem[]>([]);
 
@@ -46,4 +45,8 @@ export class BreadcrumbService {
   clearBreadcrumbs() {
     this.breadcrumbs.next([]);
   }
-} 
+  
+  getBreadcrumbsLength() {
+    return this.breadcrumbs.getValue().length;
+  }
+}
