@@ -64,6 +64,7 @@ export class CampaignDrawingComponent
   displayedPolygonsCenters: number[] = [];
   userPolygons: IPolygon[] = [];
   displayUserPolygons: boolean = false;
+  isSearching: boolean = false;
 
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
@@ -302,6 +303,7 @@ export class CampaignDrawingComponent
   }
 
   onSearchChange(value: string): void {
+    this.isSearching = true;
     this.externalPolygons = [];
     this.displayedExternalPolygons = [];
     if (value.trim().length > 0) {
@@ -393,11 +395,16 @@ export class CampaignDrawingComponent
   getPolygonsByNameListener(): void {
     const observer = {
       next: (response: any) => {
-        if (response.json && response.json.length > 0) {
+        this.isSearching = false;
+        if (response && response.length > 0) {
           // this.campaignDrawingService.completelyRemoveExplorePolygon();
-          this.externalPolygons = response.json;
+          this.externalPolygons = response;
           this.addExplorePolygonsToMap();
         }
+      },
+      error: (error: any) => {
+        this.isSearching = false;
+        console.error(error);
       },
     };
 
