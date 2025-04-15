@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -9,6 +10,7 @@ import { MapViewComponent } from './map-view/map-view.component';
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
+  
   currentView: number = 5;
   BuyBoxId!: any;
   OrgId!: any;
@@ -45,9 +47,11 @@ export class ShoppingCenterTableComponent implements OnInit {
       status: 6,
     },
   ];
-  option: any;
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private shoppingCenterService: ViewManagerService
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: any) => {
@@ -56,17 +60,25 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
+    
+    // Get saved view from localStorage or default to social view (5)
     this.currentView = Number(
       localStorage.getItem('currentViewDashBord') || '5'
     );
     this.selectedOption = this.currentView;
+    
+    // Set current view in service
+    this.shoppingCenterService.setCurrentView(this.currentView);
+    
     this.filterDropdownOptions();
   }
 
   selectOption(option: any): void {
     this.selectedOption = option.status;
     this.currentView = option.status;
-    localStorage.setItem('currentViewDashBord', this.currentView.toString());
+    
+    // Update current view in service
+    this.shoppingCenterService.setCurrentView(this.currentView);
   }
 
   onHighlightMarker(place: any): void {
@@ -81,10 +93,12 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-  onViewChange(viewStatus: number) {
+  onViewChange(viewStatus: any) {
     this.currentView = viewStatus;
     this.selectedOption = viewStatus;
-    localStorage.setItem('currentViewDashBord', this.currentView.toString());
+    
+    // Update current view in service
+    this.shoppingCenterService.setCurrentView(this.currentView);
   }
 
   filterDropdownOptions(): void {
