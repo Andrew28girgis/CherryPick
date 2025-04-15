@@ -78,7 +78,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
   CampaignData!: any;
   showFullReason: boolean = false;
   guid!: string;
-  //
+  removeavailable:boolean=false;
+  removetenant:boolean=false;  
   userSubmission: any;
   jsonGUID!: string;
   showAddAvailabilityInput = false;
@@ -449,12 +450,14 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   // Replace the existing methods with these new ones
   toggleAddAvailability(): void {
+    this.removeavailable=true;
     this.showAddAvailabilityInput = !this.showAddAvailabilityInput;
     if (!this.showAddAvailabilityInput) {
       this.newAvailabilitySize = undefined;
     }
   }
   toggleAddTenant(): void {
+    this.removetenant=true;
     this.showAddTenantInput = !this.showAddTenantInput;
     if (!this.showAddTenantInput) {
       this.newTenantName = '';
