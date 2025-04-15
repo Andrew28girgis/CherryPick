@@ -20,7 +20,6 @@ import { InboxComponent } from './features/emily/inbox/inbox.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
-
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
   { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
   {
@@ -60,11 +59,6 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard],
   },
   {
-    path: 'MutipleEmail/:campaignId',
-    component: NewMulipleEmailComponent,
-    canActivate: [TenantOnlyGuard],
-  },
-  {
     path: 'add-tenant',
     component: AddTenantsComponent,
     canActivate: [TenantOnlyGuard],
@@ -99,24 +93,17 @@ const routes: Routes = [
       import('./features/kanban/kanban.module').then((m) => m.KanbanModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-  {
-    path: ':guid',
-    component: TenantComponent,
-    canActivate: [TenantOnlyGuard],
-    data: { hideHeader: true },
-  },
-  {
-    path: ':guid/:userSubmission',
-    component: TenantComponent,
-    canActivate: [TenantOnlyGuard],
-    data: { hideHeader: true },
-  },
+
   {
     path: 'Kanban/:id',
     component: KanbanComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-
+  {
+    path: 'MutipleEmail/:campaignId',
+    component: NewMulipleEmailComponent,
+    canActivate: [TenantOnlyGuard],
+  },
   {
     path: 'MailsList/:MailContextId/:IsSent',
     component: MailsGenerateOrSendComponent,
@@ -136,6 +123,18 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
+  },
+  {
+    path: ':guid',
+    component: TenantComponent,
+    canActivate: [TenantOnlyGuard],
+    data: { hideHeader: true },
+  },
+  {
+    path: ':guid/:userSubmission',
+    component: TenantComponent,
+    canActivate: [TenantOnlyGuard],
+    data: { hideHeader: true },
   },
 ];
 
