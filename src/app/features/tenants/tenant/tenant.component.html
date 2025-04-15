@@ -31,9 +31,9 @@
               <span>Share</span>
             </div>
           </div>
-          <div class="row mt-3">
-            <div class="col-md-3">
-              <div *ngIf="TenantResult" class="heightimportant">
+          <div class="row mt-3 d-flex align-items-stretch">
+            <div class="col-md-3 d-flex flex-column">
+              <div *ngIf="TenantResult" class="heightimportant" >
                 <div class="card shoppingcentercard">
                   <div
                     class="card-body d-flex flex-column"
@@ -499,9 +499,32 @@
                       </div>
 
                       <button class="SubmitBrochure w-100">
-                        Submit Brochure
+                        <ngx-file-drop
+                        class="dropzonee hidden-dropzone"
+                        dropZoneLabel="Drop files here"
+                        (onFileDrop)="uploadFile($event)"
+                        [dropZoneClassName]="'upload-background-image'"
+                      >
+                        <ng-template
+                          ngx-file-drop-content-tmp
+                          let-openFileSelector="openFileSelector"
+                        >
+                          <div
+                            class="upload-container cursor"
+                            (click)="openFileSelector()"
+                          >
+                            <div
+                              class="d-flex align-items-center justify-content-center"
+                            >
+                              <div class="submitbronchure cursor">
+                                <span>Submit Brochure</span>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ngx-file-drop>
                       </button>
-                      <button class="ManualSubmission mt-2 w-100">
+                      <button class="ManualSubmission mt-2 w-100" (click)="openShoppingModal(shopping.id)">
                         Manual Submission
                       </button>
 
@@ -873,3 +896,192 @@
     <p id="toastMessage"></p>
   </div>
 </div>
+
+<ng-template #openShopping let-modal>
+  <div class="modal-header bg-light border-bottom">
+    <h4 class="w-100 text-center" style="font-weight: 600">
+      {{ CustomPlace?.CenterName }}
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body p-4" style="overflow: auto; max-height: 80vh">
+    <div class="container-fluid">
+      <div class="row m-0 g-3 align-items-start">
+        <!-- Images Section -->
+        <!-- <div class="col-md-6">
+          <div class="image-container rounded shadow-sm">
+            <div
+              *ngIf="getImagesArray().length > 1; else singleImage"
+              class="carousel-container"
+            >
+              <div
+                id="propertyCarousel"
+                class="carousel slide"
+                data-bs-ride="carousel"
+              >
+                <div class="carousel-inner">
+                  <div *ngFor="let imageUrl of getImagesArray(); let i = index" class="carousel-item"
+                    [ngClass]="{'active': i === 0}">
+                    <img [src]="imageUrl" alt="Property Image" class="d-block w-100 rounded">
+                  </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel"
+                  data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel"
+                  data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+            </div>
+            <ng-template #singleImage>
+              <img
+                [src]="getImagesArray()[0]"
+                alt="Property Image"
+                class="img-fluid rounded shadow-sm"
+              />
+            </ng-template>
+          </div>
+        </div> -->
+        <!-- Details Section -->
+        <div class="col-md-12">
+          <div class="details-container p-3 bg-light rounded shadow-sm">
+            <p class="mb-3" style="color: #7a8591;"><b>Address:</b> {{CustomPlace?.CenterAddress}},
+              {{CustomPlace?.CenterCity}}, {{CustomPlace?.CenterState}} {{CustomPlace?.ZipCode}}</p>
+            <!-- Avalibitlty Section -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 style="color: #7a8591;"> <b>Available Spaces</b></h6>
+              <i class="fa-solid fa-plus cursor-pointer text-primary" style="cursor: pointer;"
+                (click)="toggleAddPlaceInput()"></i>
+            </div>
+
+            <div class="mb-4" *ngIf="CustomPlace?.Availability">
+              <div *ngFor="let space of CustomPlace?.Availability; let i = index" class="py-2 border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span style="color:#7a8591;">{{space.BuildingSizeSf}} sqft</span>
+                  <div>
+                    <!-- <button class="btn_edit mx-1" (click)="startEditPlace(space.Id, space.BuildingSizeSf, i)">
+                      <i class="fa-regular fa-pen-to-square text-secondary d-flex justify-content-center"></i>
+                    </button> -->
+
+                    <button class="btn_trash" (click)="openDeletePlaceModal(space.Id)" data-bs-toggle="modal"
+                      data-bs-target="#deletePlaceModal">
+                      <i class="fa fa-trash text-danger d-flex justify-content-center"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Input field for editing the space -->
+                <!-- <div *ngIf="editingPlaceId === space.Id && showEditInput" class="mt-3 d-flex align-items-center gap-2">
+                  <input type="number" class="form-control" placeholder="Edit square footage"
+                    [(ngModel)]="editedPlaceSqFT" min="1">
+                  <button class="btn btn-success btn-sm" (click)="saveEditedPlace(space.Id)">
+                    Save
+                  </button>
+                  <button class="btn btn-danger btn-sm" (click)="cancelEditPlace()">
+                    Cancel
+                  </button>
+                </div> -->
+              </div>
+
+              <!-- Input field for adding a new place -->
+              <div *ngIf="showAddPlaceInput" class="mt-3 d-flex align-items-center gap-2">
+                <input type="number" class="form-control" placeholder="Enter square footage" [(ngModel)]="newPlaceSqFT"
+                  min="1">
+                  <!-- (click)="addNewPlace()" -->
+                <button class="btn btn-success btn-sm" (click)="addNewPlace()">
+                  Add
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="cancelAddPlace()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+
+            <!-- Tenants Section -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 style="color: #7a8591;"><b>Tenants</b></h6>
+              <i class="fa-solid fa-plus cursor-pointer text-primary" style="cursor: pointer;"
+                (click)="toggleAddTenantInput()"></i>
+            </div>
+            <div *ngIf="CustomPlace?.Tenants">
+              <div *ngFor="let tenant of CustomPlace?.Tenants"
+                class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                <span style="color:#7a8591;">{{tenant.Name}} -
+                  <a *ngIf="tenant.URL" [href]="tenant.URL" target="_blank" class="tenant-link">
+                    {{tenant.URL}}
+                  </a>
+                </span>
+                <button class="btn_trash" (click)="openDeleteTenantModal(tenant.Id)" data-bs-toggle="modal"
+                  data-bs-target="#deletePlaceModal">
+                  <i class="fa fa-trash text-danger d-flex justify-content-center"></i>
+                </button>
+              </div>
+
+              <!-- Input field for adding a new tenant -->
+              <div
+                *ngIf="showAddTenantInput"
+                class="mt-3 d-flex align-items-center gap-2"
+              >
+                <div class="d-flex align-items-center gap-2">
+                  <input type="text" class="form-control" placeholder="Organization name" [(ngModel)]="newNameTenant"
+                    required>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <input type="text" class="form-control" placeholder="URL (example.com)" [(ngModel)]="newUrlTenant"
+                    #tenantUrl="ngModel" required pattern="[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+">
+                  <div *ngIf="tenantUrl.invalid && (tenantUrl.dirty || tenantUrl.touched)"
+                    class="text-danger small mt-1">
+                    Please enter a valid domain (e.g., example.com)
+                  </div>
+                </div>
+                <!--  (click)="addTenantNew()" -->
+                <button class="btn btn-success btn-sm" (click)="addTenantNew()">
+                  Add
+                </button>
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="cancelAddTenant()"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #deletePlaceModal let-modal>
+  <div class="modal-body-general p-4 rounded" style="
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    ">
+    <h2 class="text-center mb-4" style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)">
+      Delete {{deleteType}} <!-- Dynamic title based on what’s being deleted -->
+    </h2>
+    <p class="text-center" style="font-size: 1rem; color: #6c757d">
+      Are you sure you want to delete this {{ deleteType }}?
+    </p>
+
+    <div class="d-flex justify-content-center mt-4">
+      <button type="button" class="btn btn-secondary me-4 px-4 py-2" (click)="modal.dismiss('Cancel click')"
+        style="border-radius: 4px">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-danger px-4 py-2" (click)="confirmDelete(modal)" style="border-radius: 4px">
+        Delete
+      </button>
+    </div>
+  </div>
+</ng-template>
