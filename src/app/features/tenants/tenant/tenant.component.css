@@ -1,3 +1,30 @@
+.btn_trash{
+  background: transparent;
+    color: rgb(224, 0, 0);
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(224, 0, 0);
+    padding-inline: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn_edit{
+    background: transparent;
+    color: rgb(107, 119, 133,1);
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(107, 119, 133,1);
+    padding-inline: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.input-sty{
+  margin-top: 0px;
+  margin-left: -22px;
+  border: 2px solid #cbcbcb;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
 .BuyboxSpecifications {
   font-size: 18px;
   font-weight: 600;
