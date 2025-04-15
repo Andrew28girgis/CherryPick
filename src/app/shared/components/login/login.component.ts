@@ -3,9 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { General, adminLogin } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { PlacesService } from 'src/app/core/services/places.service';
-import { ConfigService } from 'src/app/core/services/config.service';
-
+import { PlacesService } from 'src/app/core/services/places.service';  
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,15 +12,13 @@ import { ConfigService } from 'src/app/core/services/config.service';
 export class LoginComponent implements OnInit {
   adminLogin!: adminLogin;
   wrongPassword = false;
-  General!: General;
-  logoUrl: string = '';
+  General!: General; 
   t: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService,
-    private configService: ConfigService,
+    private spinner: NgxSpinnerService, 
     private authService: AuthService
   ) {
     localStorage.removeItem('mapView');
@@ -30,8 +26,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.General = new General();
-    this.adminLogin = new adminLogin();
-    this.logoUrl = this.configService.getLogoUrl();
+    this.adminLogin = new adminLogin(); 
     this.activatedRoute.queryParamMap.subscribe((params) => {
       this.t = params.get('t');
       if (this.t) {

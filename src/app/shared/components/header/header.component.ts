@@ -6,8 +6,7 @@ import {
   ActivatedRoute,
 } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators';
-import { SidbarService } from 'src/app/core/services/sidbar.service';
+import { filter, map, mergeMap } from 'rxjs/operators'; 
 import { UserViewService } from 'src/app/core/services/user-view.service';
 
 @Component({
@@ -27,8 +26,7 @@ export class HeaderComponent implements OnInit {
   isNavbarOpen = false;
   display: boolean = true;
 
-  constructor(
-    private sidbarService: SidbarService,
+  constructor( 
     public router: Router,
     private userViewService: UserViewService,
     private activatedRoute: ActivatedRoute
@@ -76,11 +74,7 @@ export class HeaderComponent implements OnInit {
       }
     );
 
-    this.sidebarSubscription = this.sidbarService.isCollapsed.subscribe(
-      (state: boolean) => {
-        this.isCollapsed = state;
-      }
-    );
+   
     this.fetchUserAvatar();
   }
   
