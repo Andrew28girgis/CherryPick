@@ -34,125 +34,149 @@
     >
       <div class="dragable-polygons" cdkDragBoundary=".map-wrapper" cdkDrag>
         <div
-          *ngIf="polygonSearch.trim().length > 0||
-                (displayUserPolygons && userPolygons.length > 0)"
+          *ngIf="
+            polygonSearch.trim().length > 0 ||
+            (displayUserPolygons && userPolygons.length > 0)
+          "
           class="w-100 h-50 ps-2 pe-2"
           [ngClass]="{ 'h-100': !getDrawnList }"
         >
-          <table
-            *ngIf="
-              externalPolygons.length > 0 ||
-                (displayUserPolygons && userPolygons.length > 0);
-              else emptyPolygons
-            "
-            class="table"
-          >
-            <thead class="thead-light">
-              <tr>
-                <th>Name</th>
-                <th class="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody
+          <ng-container *ngIf="isSearching; else searchTable">
+            <div class="h-100 d-flex align-items-center justify-content-center">
+              <div
+                class="spinner-border"
+                role="status"
+                style="width: 3rem; height: 3rem"
+              >
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #searchTable>
+            <table
               *ngIf="
                 externalPolygons.length > 0 ||
-                (displayUserPolygons && userPolygons.length > 0)
+                  (displayUserPolygons && userPolygons.length > 0);
+                else emptyPolygons
               "
+              class="table"
             >
-              <ng-container
-                *ngFor="let polygon of concatSearchResult(); let index = index"
-              >
-                <tr *ngIf="!detectIncludeInSearch(polygon.id)">
-                  <td>
-                    <div
-                      class="d-flex align-items-center justify-content-between"
-                    >
-                      <span>{{ polygon.name }}</span>
-                      <ng-container
-                        *ngIf="displayedExternalPolygons.includes(polygon.id)"
-                      >
-                        <svg
-                          (click)="centerShapeOnMap(polygon)"
-                          style="height: 1.5rem; width: 1.5rem; cursor: pointer"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          id="aim"
-                        >
-                          <path
-                            d="M21,11H19.93A8,8,0,0,0,13,4.07V3a1,1,0,0,0-2,0V4.07A8,8,0,0,0,4.07,11H3a1,1,0,0,0,0,2H4.07A8,8,0,0,0,11,19.93V21a1,1,0,0,0,2,0V19.93A8,8,0,0,0,19.93,13H21a1,1,0,0,0,0-2Zm-4,2h.91A6,6,0,0,1,13,17.91V17a1,1,0,0,0-2,0v.91A6,6,0,0,1,6.09,13H7a1,1,0,0,0,0-2H6.09A6,6,0,0,1,11,6.09V7a1,1,0,0,0,2,0V6.09A6,6,0,0,1,17.91,11H17a1,1,0,0,0,0,2Zm-5-2a1,1,0,1,0,1,1A1,1,0,0,0,12,11Z"
-                          ></path>
-                        </svg>
-                      </ng-container>
-                    </div>
-                  </td>
-                  <td class="text-center">
-                    <div class="w-100 d-flex align-items-center gap-2">
-                      <button
-                        *ngIf="!detectIncludeInSearch(polygon.id)"
-                        class="w-100 btn"
-                        [ngClass]="{
-                          'btn-primary': !displayedExternalPolygons.includes(
-                            polygon.id
-                          ),
-                          'btn-secondary': displayedExternalPolygons.includes(
-                            polygon.id
-                          )
-                        }"
-                        (click)="toggleDisplayedExternalPolygon(polygon)"
-                      >
-                        {{
-                          displayedExternalPolygons.includes(polygon.id)
-                            ? "Hide"
-                            : "View"
-                        }}
-                      </button>
-
-                      <button
-                        class="w-100 btn"
-                        [ngClass]="{
-                          'btn-danger': detectIncludeInSearch(polygon.id),
-                          'btn-dark': !detectIncludeInSearch(polygon.id)
-                        }"
-                        (click)="attachPolygonToCampaign(polygon.id)"
-                      >
-                        {{
-                          detectIncludeInSearch(polygon.id) ? "Remove" : "Add"
-                        }}
-                      </button>
-                      <ng-container
-                        *ngIf="
-                          checkHaveShoppingCenters(polygon.id) &&
-                          getShoppingCentersForPolygon(polygon.id) &&
-                          getShoppingCentersForPolygon(polygon.id).length > 0 &&
-                          displayedExternalPolygons.includes(polygon.id)
-                        "
-                      >
-                        <button
-                          class="btn btn-success"
-                          (click)="viewShoppingCenterOnMap(polygon.id)"
-                        >
-                        
-                          {{ getShoppingCentersForPolygon(polygon.id).length }}
-                        </button>
-                      </ng-container>
-
-                      <button
-                        *ngIf="searchedPolygonId == polygon.id"
-                        class="btn btn-success"
-                      >
-                        <div
-                          class="spinner-border spinner-border-sm"
-                          role="status"
-                        >
-                          <span class="visually-hidden">Loading...</span>
-                        </div>
-                      </button>
-                    </div>
-                  </td>
+              <thead class="thead-light">
+                <tr>
+                  <th>Name</th>
+                  <th class="text-center">Actions</th>
                 </tr>
-              </ng-container>
-            </tbody>
-          </table>
+              </thead>
+              <tbody
+                *ngIf="
+                  externalPolygons.length > 0 ||
+                  (displayUserPolygons && userPolygons.length > 0)
+                "
+              >
+                <ng-container
+                  *ngFor="
+                    let polygon of concatSearchResult();
+                    let index = index
+                  "
+                >
+                  <tr *ngIf="!detectIncludeInSearch(polygon.id)">
+                    <td>
+                      <div
+                        class="d-flex align-items-center justify-content-between"
+                      >
+                        <span>{{ polygon.name }}</span>
+                        <ng-container
+                          *ngIf="displayedExternalPolygons.includes(polygon.id)"
+                        >
+                          <svg
+                            (click)="centerShapeOnMap(polygon)"
+                            style="
+                              height: 1.5rem;
+                              width: 1.5rem;
+                              cursor: pointer;
+                            "
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            id="aim"
+                          >
+                            <path
+                              d="M21,11H19.93A8,8,0,0,0,13,4.07V3a1,1,0,0,0-2,0V4.07A8,8,0,0,0,4.07,11H3a1,1,0,0,0,0,2H4.07A8,8,0,0,0,11,19.93V21a1,1,0,0,0,2,0V19.93A8,8,0,0,0,19.93,13H21a1,1,0,0,0,0-2Zm-4,2h.91A6,6,0,0,1,13,17.91V17a1,1,0,0,0-2,0v.91A6,6,0,0,1,6.09,13H7a1,1,0,0,0,0-2H6.09A6,6,0,0,1,11,6.09V7a1,1,0,0,0,2,0V6.09A6,6,0,0,1,17.91,11H17a1,1,0,0,0,0,2Zm-5-2a1,1,0,1,0,1,1A1,1,0,0,0,12,11Z"
+                            ></path>
+                          </svg>
+                        </ng-container>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="w-100 d-flex align-items-center gap-2">
+                        <button
+                          *ngIf="!detectIncludeInSearch(polygon.id)"
+                          class="w-100 btn"
+                          [ngClass]="{
+                            'btn-primary': !displayedExternalPolygons.includes(
+                              polygon.id
+                            ),
+                            'btn-secondary': displayedExternalPolygons.includes(
+                              polygon.id
+                            )
+                          }"
+                          (click)="toggleDisplayedExternalPolygon(polygon)"
+                        >
+                          {{
+                            displayedExternalPolygons.includes(polygon.id)
+                              ? "Hide"
+                              : "View"
+                          }}
+                        </button>
+
+                        <button
+                          class="w-100 btn"
+                          [ngClass]="{
+                            'btn-danger': detectIncludeInSearch(polygon.id),
+                            'btn-dark': !detectIncludeInSearch(polygon.id)
+                          }"
+                          (click)="attachPolygonToCampaign(polygon.id)"
+                        >
+                          {{
+                            detectIncludeInSearch(polygon.id) ? "Remove" : "Add"
+                          }}
+                        </button>
+                        <ng-container
+                          *ngIf="
+                            checkHaveShoppingCenters(polygon.id) &&
+                            getShoppingCentersForPolygon(polygon.id) &&
+                            getShoppingCentersForPolygon(polygon.id).length >
+                              0 &&
+                            displayedExternalPolygons.includes(polygon.id)
+                          "
+                        >
+                          <button
+                            class="btn btn-success"
+                            (click)="viewShoppingCenterOnMap(polygon.id)"
+                          >
+                            {{
+                              getShoppingCentersForPolygon(polygon.id).length
+                            }}
+                          </button>
+                        </ng-container>
+
+                        <button
+                          *ngIf="searchedPolygonId == polygon.id"
+                          class="btn btn-success"
+                        >
+                          <div
+                            class="spinner-border spinner-border-sm"
+                            role="status"
+                          >
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </ng-template>
         </div>
         <hr
           *ngIf="polygonSearch.trim().length > 0 && getDrawnList"
@@ -428,7 +452,7 @@
       style="width: 50%"
     />
     <div class="text-center" style="font-size: 1.5rem; font-weight: 700">
-      Your polygons will appear here
+      No polygons founded
     </div>
   </div>
 </ng-template>

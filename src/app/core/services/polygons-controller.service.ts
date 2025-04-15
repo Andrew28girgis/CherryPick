@@ -106,7 +106,7 @@ export class PolygonsControllerService {
 
     return this.placesService.GenericAPI(body);
   }
-  
+
   getExplorePolygonProperties(polygonId: number): Observable<any> {
     const body: any = {
       Name: 'GetShoppingcentersIntersectingPolygon',
@@ -119,14 +119,7 @@ export class PolygonsControllerService {
   }
 
   getPolygonsByName(name: string): Observable<any> {
-    const body: any = {
-      Name: 'GetPolygonsByName',
-      Params: {
-        Name: name,
-      },
-    };
-
-    return this.placesService.GenericAPI(body);
+    return this.httpClient.get(`${environment.api}/GetLocationData/${name}`);
   }
 
   attachPolygonToBuyBox(buyBoxId: number, polygonId: number): Observable<any> {
