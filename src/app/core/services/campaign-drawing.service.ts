@@ -702,6 +702,10 @@ export class CampaignDrawingService {
     coordinates: any,
     name: string
   ): void {
+    const shape = this.explorePolygons.find((p) => p.id === polygonId);
+    if (shape) {
+      return;
+    }
     // create new polygon
     const polygon: google.maps.Polygon = new google.maps.Polygon({
       paths: coordinates,

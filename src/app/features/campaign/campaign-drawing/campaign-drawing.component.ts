@@ -80,12 +80,12 @@ export class CampaignDrawingComponent
   ) {}
 
   ngOnInit(): void {
-    if (!this.buyBoxId) {
-      const id = localStorage.getItem('BuyBoxId');
-      if (id) {
-        this.buyBoxId = +id;
-      }
-    }
+    // if (!this.buyBoxId) {
+    //   const id = localStorage.getItem('BuyBoxId');
+    //   if (id) {
+    //     this.buyBoxId = +id;
+    //   }
+    // }
     const contact = localStorage.getItem('contactId');
     if (contact) {
       this.contactId = +contact;
@@ -306,9 +306,10 @@ export class CampaignDrawingComponent
     this.displayedExternalPolygons = [];
     if (value.trim().length > 0) {
       this.searchSubject.next(value);
-    } else {
-      this.campaignDrawingService.completelyRemoveExplorePolygon();
     }
+    // else {
+    //   this.campaignDrawingService.completelyRemoveExplorePolygon();
+    // }
   }
   centerShapeOnMap(polygon: IPolygon): void {
     if (this.displayedExternalPolygons.includes(polygon.id)) {
@@ -393,7 +394,7 @@ export class CampaignDrawingComponent
     const observer = {
       next: (response: any) => {
         if (response.json && response.json.length > 0) {
-          this.campaignDrawingService.completelyRemoveExplorePolygon();
+          // this.campaignDrawingService.completelyRemoveExplorePolygon();
           this.externalPolygons = response.json;
           this.addExplorePolygonsToMap();
         }
@@ -495,7 +496,9 @@ export class CampaignDrawingComponent
     if (this.detectIncludeInSearch(polygonId)) {
       this.campaignDrawingService.removePolygonWithId(polygonId);
     } else {
-      const polygon = this.externalPolygons.find((p) => p.id == polygonId);
+      const polygon =
+        this.externalPolygons.find((p) => p.id == polygonId) ||
+        this.userPolygons.find((p) => p.id == polygonId);
 
       // this.campaignDrawingService.hideMyPolygons()
       this.campaignDrawingService.hideShapeFromMap(polygonId);
