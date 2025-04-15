@@ -886,7 +886,6 @@ export class CampaignDrawingService {
     // const coordinates = polygon.geoJson?.geometry.coordinates[0].map((coord: number[]) => {
     //   return { lat: coord[1], lng: coord[0] };
     // });
-  console.log(coordinates);
   
     const polygonObj = new google.maps.Polygon({
       paths: coordinates,
