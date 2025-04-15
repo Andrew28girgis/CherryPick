@@ -46,7 +46,8 @@
       </div>
     </div>
   
-  <ng-container *ngFor="let shopping of filteredCenters | slice: first:(first + rows)">
+  <ng-container *ngFor="let shopping of filteredCenters ">
+    <!-- | slice: first:(first + rows)" -->
     <div class="card-window cursor col-md-4 col-sm-4 col-12">
       <div class="cardResponsive">
         <a
@@ -416,7 +417,7 @@
   </ng-container>
 
   <!-- paginator -->
-  <div class="flex items-center justify-start" *ngIf="!isLoading">
+  <!-- <div class="flex items-center justify-start" *ngIf="!isLoading">
     <p-paginator
       (onPageChange)="onPageChange($event)"
       [first]="first"
@@ -425,7 +426,7 @@
       [showFirstLastIcon]="false"
       currentPageReportTemplate="{first} - {last} of {totalRecords}"
     ></p-paginator>
-  </div>
+  </div> -->
 </div>
 <!-- Skeleton loading for paginator -->
 <div class="flex items-center justify-start" *ngIf="isLoading">

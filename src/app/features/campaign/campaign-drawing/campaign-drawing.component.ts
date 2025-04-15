@@ -303,10 +303,10 @@ export class CampaignDrawingComponent
   }
 
   onSearchChange(value: string): void {
-    this.isSearching = true;
     this.externalPolygons = [];
     this.displayedExternalPolygons = [];
     if (value.trim().length > 0) {
+      this.isSearching = true;
       this.searchSubject.next(value);
     }
     // else {
@@ -346,6 +346,7 @@ export class CampaignDrawingComponent
           polygonId,
           response.json.length > 0 ? response.json : []
         );
+        this.viewShoppingCenterOnMap(polygonId);
       }
     });
   }
@@ -362,7 +363,9 @@ export class CampaignDrawingComponent
     const check = this.displayedExternalPolygons.includes(polygon.id);
     if (check) {
       // this.mapDrawingService.removeMarkers(polygon.id);
-      this.displayedPolygonsCenters = [];
+      this.displayedPolygonsCenters = this.displayedPolygonsCenters.filter(
+        (p) => p != polygon.id
+      );
       this.campaignDrawingService.completelyRemoveMarkers(polygon.id);
       this.campaignDrawingService.hideShapeFromMap(polygon.id);
       this.displayedExternalPolygons = this.displayedExternalPolygons.filter(
@@ -372,6 +375,8 @@ export class CampaignDrawingComponent
       const shoppingCenters = this.polygonShoppingCenters.has(polygon.id);
       if (!shoppingCenters) {
         this.getShoppingCentersByPolygonId(polygon.id);
+      } else {
+        this.viewShoppingCenterOnMap(polygon.id);
       }
       // this.createPropertiesMarkers(polygon.id, false, true);
       this.displayedExternalPolygons.push(polygon.id);
@@ -547,19 +552,12 @@ export class CampaignDrawingComponent
   }
 
   viewShoppingCenterOnMap(polygonId: number): void {
-    if (this.displayedPolygonsCenters.includes(polygonId)) {
-      this.displayedPolygonsCenters = this.displayedPolygonsCenters.filter(
-        (p) => p != polygonId
-      );
-      this.campaignDrawingService.removeMarkers(polygonId);
+    this.displayedPolygonsCenters.push(polygonId);
+    if (this.campaignDrawingService.isMarkersExists(polygonId)) {
+      this.campaignDrawingService.displayMarker(polygonId, this.map);
     } else {
-      this.displayedPolygonsCenters.push(polygonId);
-      if (this.campaignDrawingService.isMarkersExists(polygonId)) {
-        this.campaignDrawingService.displayMarker(polygonId, this.map);
-      } else {
-        for (let center of this.getShoppingCentersForPolygon(polygonId)) {
-          this.campaignDrawingService.createMarker(this.map, polygonId, center);
-        }
+      for (let center of this.getShoppingCentersForPolygon(polygonId)) {
+        this.campaignDrawingService.createMarker(this.map, polygonId, center);
       }
     }
   }

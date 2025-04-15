@@ -9,6 +9,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [CampaignDrawingComponent, CampaignManagerComponent],
@@ -20,6 +21,7 @@ import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
     SelectButtonModule,
     DragDropModule,
     NgbCollapseModule,
+    TooltipModule
   ],
   exports: [CampaignDrawingComponent],
 })
