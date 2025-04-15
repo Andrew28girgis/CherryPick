@@ -496,17 +496,17 @@
                           >At a Glance</a
                         >
                       </div>
-                      <div class="inbox mail text-center">
+                      <div
+                        class="inbox mail text-center"
+                        [routerLink]="[
+                          '/organization-mail',
+                          c.id,
+                          c.organizationid,
+                          campaign.Id
+                        ]"
+                      >
                         <i class="fa-regular fa-envelope me-2"></i>
-                        <a
-                          [routerLink]="[
-                            '/organization-mail',
-                            c.id,
-                            c.organizationid,
-                            campaign.Id
-                          ]"
-                          >Emily</a
-                        >
+                        <a>Emily</a>
                       </div>
                     </div>
                   </div>

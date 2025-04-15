@@ -2,6 +2,13 @@ import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 
+interface Notification {
+  id: number;
+  message: string;
+  createdDate: string;
+  isRead: boolean;
+}
+
 @Component({
   selector: 'app-notifications',
   standalone: true,
@@ -10,79 +17,91 @@ import { PlacesService } from 'src/app/core/services/places.service';
   styleUrl: './notifications.component.css',
 })
 export class NotificationsComponent implements OnInit {
-  ContactId!: number;
-  notificationsArray: any[] = [];
-  message!: string;
-  createdDate!: string;
+  private contactId: number = 0;
+  notifications: Notification[] = [];
   dropdownVisible: boolean = false;
   unreadCount: number = 0;
   readCount: number = 0;
-  constructor(private PlacesService: PlacesService, private eRef: ElementRef) {}
+
+  constructor(
+    private placesService: PlacesService,
+    private elementRef: ElementRef
+  ) {}
+
   ngOnInit(): void {
     const storedContactId = localStorage.getItem('contactId');
     if (storedContactId) {
-      this.ContactId = +storedContactId;
-      this.GetUserNotifications();
+      this.contactId = +storedContactId;
+      this.fetchUserNotifications();
     }
   }
+
   toggleDropdown(): void {
     this.dropdownVisible = !this.dropdownVisible;
   }
 
-  GetUserNotifications(): void {
-    const body: any = {
+  fetchUserNotifications(): void {
+    const request = {
       Name: 'GetUserNotifications',
       Params: {
-        ContactId: this.ContactId,
+        ContactId: this.contactId,
       },
     };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        this.notificationsArray = res.json || [];
-        this.notificationsArray.sort((a, b) => {
-          return (
-            new Date(b.createdDate).getTime() -
-            new Date(a.createdDate).getTime()
-          );
-        });
-        this.readCount = this.notificationsArray.filter(
-          (notification) => notification.isRead
-        ).length;
-        this.unreadCount = this.notificationsArray.filter(
-          (notification) => !notification.isRead
-        ).length;
-        if (this.notificationsArray.length > 0) {
-          this.message = this.notificationsArray[0].message;
-          this.createdDate = this.notificationsArray[0].createdDate;
-        } else {
-          this.message = '';
-          this.createdDate = '';
-        }
+    this.placesService.GenericAPI(request).subscribe({
+      next: (response: any) => {
+        this.notifications = (response.json || []) as Notification[];
+        this.sortNotificationsByDate();
+        this.updateNotificationCounts();
+      },
+      error: (error) => {
+        console.error('Error fetching notifications:', error);
       },
     });
   }
 
-  updateNotification(notification: any): void {
-    if (!notification.isRead) {
-      notification.isRead = true;
+  private sortNotificationsByDate(): void {
+    this.notifications.sort(
+      (a, b) =>
+        new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+    );
+  }
+
+  private updateNotificationCounts(): void {
+    this.readCount = this.notifications.filter(
+      (notification) => notification.isRead
+    ).length;
+    this.unreadCount = this.notifications.filter(
+      (notification) => !notification.isRead
+    ).length;
+  }
+
+  markNotificationAsRead(notification: Notification): void {
+    if (notification.isRead) {
+      return;
     }
 
-    const body: any = {
+    const request = {
       Name: 'UpdateNotification',
       Params: {
         NotificationId: notification.id,
       },
     };
 
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {},
+    this.placesService.GenericAPI(request).subscribe({
+      next: () => {
+        notification.isRead = true;
+        this.updateNotificationCounts();
+      },
+      error: (error) => {
+        console.error('Error updating notification:', error);
+      },
     });
-    this.GetUserNotifications();
   }
+
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event: Event): void {
-    if (!this.eRef.nativeElement.contains(event.target)) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
       this.dropdownVisible = false;
     }
   }

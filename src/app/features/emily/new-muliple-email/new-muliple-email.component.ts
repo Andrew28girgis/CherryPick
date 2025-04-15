@@ -9,8 +9,8 @@ import {
 } from 'src/app/shared/models/emailGenerate';
 import { RelationNames } from 'src/app/shared/models/emailGenerate';
 import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganizationsForEmail';
-import { from, Observable, of , forkJoin } from 'rxjs';
-import { concatMap ,tap } from 'rxjs/operators';
+import { from, Observable, of, forkJoin } from 'rxjs';
+import { concatMap, tap } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
 import {
@@ -36,12 +36,10 @@ export class NewMulipleEmailComponent implements OnInit {
   BatchGuid!: string;
   campaignId: any;
   organizationId: any;
-
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
   editablePromptText: string = '';
-
   isLandingSelected: boolean = true;
   isISCcSelected: boolean = true;
   showRelationNames: boolean = true;
@@ -52,7 +50,6 @@ export class NewMulipleEmailComponent implements OnInit {
   ShowCompetitors: boolean = true;
   ShowComplementaries: boolean = true;
   showMinBuildingSize: boolean = true;
-
   generated: Generated[] = [];
   relationCategoriesNames: RelationNames[] = [];
   BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
@@ -118,17 +115,14 @@ export class NewMulipleEmailComponent implements OnInit {
       this.campaignId = params.get('campaignId');
     });
 
-    if(this.breadcrumbService.getBreadcrumbsLength() > 2 ){
-        this.breadcrumbService.removeLastBreadcrumb();
-    }else{
-    this.breadcrumbService.addBreadcrumb(
-      { 
-        label: `Generate Emails`, 
-        url: `/MutipleEmail/${this.campaignId}`
-      }
-    );
-  }
-
+    if (this.breadcrumbService.getBreadcrumbsLength() > 2) {
+      this.breadcrumbService.removeLastBreadcrumb();
+    } else {
+      this.breadcrumbService.addBreadcrumb({
+        label: `Generate Emails`,
+        url: `/MutipleEmail/${this.campaignId}`,
+      });
+    }
 
     this.emilyService
       .getCheckList()
@@ -474,7 +468,7 @@ export class NewMulipleEmailComponent implements OnInit {
                 (sp: any) => sp.CenterName
               ) || [];
 
-              const selectedShoppingCentersID =
+            const selectedShoppingCentersID =
               contact.ShoppingCenters?.filter((sp: any) => sp.selected).map(
                 (sp: any) => sp.id
               ) || [];
@@ -522,7 +516,7 @@ export class NewMulipleEmailComponent implements OnInit {
       this.showToast('Please select a prompt to Generate.');
       return;
     }
-  
+
     this.spinner.show();
     const requests = this.ManagerOrgDTO.map(async (managerOrg) => {
       const body: GenerateContextDTO = {
@@ -542,21 +536,22 @@ export class NewMulipleEmailComponent implements OnInit {
         GetContactManagers: managerOrg.GetContactManagers,
         OrganizationId: managerOrg.OrganizationId,
       };
-  
+
       try {
-        const response = await this.PlacesService.GenerateContext(body).toPromise();
+        const response = await this.PlacesService.GenerateContext(
+          body
+        ).toPromise();
         this.ResponseContextEmail.push(response);
         return response;
       } catch (error) {
         console.error('Error executing API call for', body, ':', error);
-        throw error; 
+        throw error;
       }
     });
-  
+
     await Promise.all(requests);
     this.spinner.hide();
   }
-  
 
   GetPrompts() {
     const categoryBody = {
@@ -668,15 +663,16 @@ export class NewMulipleEmailComponent implements OnInit {
           return new Promise<void>((resolve, reject) => {
             this.PlacesService.GenericAPI(body).subscribe({
               next: (data) => {
-                const x = data.json
-                this.AddMailContextReceivers(x[0].id , x[0].organizationId).subscribe({
-                  next: () => {
-                  },
-                  error: () => {
-                  },
+                const x = data.json;
+                this.AddMailContextReceivers(
+                  x[0].id,
+                  x[0].organizationId
+                ).subscribe({
+                  next: () => {},
+                  error: () => {},
                   complete: () => {
                     resolve();
-                  }
+                  },
                 });
               },
               error: (err) => {
@@ -694,15 +690,21 @@ export class NewMulipleEmailComponent implements OnInit {
       });
   }
 
-  AddMailContextReceivers(Mid : number , OrgID:number): Observable<any>  {    
-    const org = this.ManagerOrgDTO.find((org: any) => org.OrganizationId === OrgID);
+  AddMailContextReceivers(Mid: number, OrgID: number): Observable<any> {
+    const org = this.ManagerOrgDTO.find(
+      (org: any) => org.OrganizationId === OrgID
+    );
 
-    if (!org || !org.GetContactManagers || org.GetContactManagers.length === 0) {
+    if (
+      !org ||
+      !org.GetContactManagers ||
+      org.GetContactManagers.length === 0
+    ) {
       return of(null);
     }
-  
+
     this.spinner.show();
-    
+
     const observables = org.GetContactManagers.map((manager: any) => {
       const ContactSCIds = manager.ShoppingCentersID.join(',');
 
@@ -716,10 +718,10 @@ export class NewMulipleEmailComponent implements OnInit {
         },
         Json: null,
       };
-  
+
       return this.PlacesService.GenericAPI(body);
     });
-  
+
     return forkJoin(observables).pipe(
       tap(() => {
         this.spinner.hide();
@@ -742,8 +744,8 @@ export class NewMulipleEmailComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
-        console.log( this.returnGetMailContextGenerated );
-        
+        console.log(this.returnGetMailContextGenerated);
+
         this.spinner.hide();
       },
     });

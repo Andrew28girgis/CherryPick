@@ -44,6 +44,14 @@ export class InboxComponent implements OnInit {
   BatchGuid!: string;
   emailBodySafe!: SafeHtml;
 
+  GetShoppingCenters: any[] = [];
+  ResponseContextEmail: any;
+  GenrateEmail: any;
+  ContextEmail: any;
+  listcenterName: string[] = [];
+  showGenerateSection: boolean = false;
+  isEmailBodyEmpty: boolean = true;
+
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -61,8 +69,8 @@ export class InboxComponent implements OnInit {
       this.orgId = Number(params.get('organizationId'));
     });
     this.updateBreadcrumb();
-    this.getBuyBoxMicroDeals();
-    this.getBuyBoxEmails();
+    this.getOrganizations();
+    this.getAllEmails();
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
   }
@@ -74,7 +82,7 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  getBuyBoxEmails(): void {
+  getAllEmails(): void {
     const body: any = {
       Name: 'GetBuyBoxEmails',
       MainEntity: null,
@@ -84,9 +92,7 @@ export class InboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxEmails = data.json;
-        this.filteredEmails = this.sortEmailsByDateDesc(data.json);
-
-        console.log('Emails', this.filteredEmails);
+        this.filteredEmails = this.sortEmails(data.json);
       },
     });
   }
@@ -96,13 +102,11 @@ export class InboxComponent implements OnInit {
       bb.isOpen = false;
       return;
     }
-
     this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
-
     bb.isOpen = true;
   }
 
-  getBuyBoxMicroDeals() {
+  getOrganizations() {
     const body: any = {
       Name: 'GetBuyBoxMicroDeals',
       MainEntity: null,
@@ -112,8 +116,6 @@ export class InboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.BuyBoxMicroDeals = data.json;
-        console.log('MicroDeals', this.BuyBoxMicroDeals);
-
         this.contacts = [];
         const microDeal = this.BuyBoxMicroDeals.find(
           (deal) => deal.OrganizationId === this.orgId
@@ -154,20 +156,14 @@ export class InboxComponent implements OnInit {
             (mc: MailsContact) => mc.MailContactId === contact.ContactId
           ))
     );
-
-    // Apply the current filter (inbox, sent, etc.) on the loaded emails.
     this.filterEmails(this.selectedFilter);
-
-    // If there are no emails, show an empty message.
     if (this.emailsSentContact.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
     } else if (this.filteredEmails.length > 0) {
-      // Open the first email by default.
-      // this.openEmail(this.filteredEmails[0]); // Commented out to not auto-select
     }
   }
 
-  sortEmailsByDateDesc(emails: Mail[]): Mail[] {
+  sortEmails(emails: Mail[]): Mail[] {
     return [...emails].sort((a, b) => {
       const dateA = new Date(a.Date).getTime();
       const dateB = new Date(b.Date).getTime();
@@ -181,10 +177,10 @@ export class InboxComponent implements OnInit {
 
   openEmail(email: Mail): void {
     this.selected = email;
-    this.GetMail(email.id);
+    this.getOneMail(email.id);
   }
 
-  GetMail(mailId: number): void {
+  getOneMail(mailId: number): void {
     const body: any = {
       Name: 'GetMail',
       MainEntity: null,
@@ -201,7 +197,7 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  getTotalEmails(EmailStats: any): number {
+  getTotalEmailsCount(EmailStats: any): number {
     return (
       (EmailStats.Sent || 0) +
       (EmailStats.Inbox || 0) +
@@ -209,21 +205,24 @@ export class InboxComponent implements OnInit {
     );
   }
 
-  openCompoase(modal: any) {
+  openCompoase(modal: any, contactId: number) {
     this.listcenterName = [];
     this.emailSubject = '';
     this.emailBody = '';
     this.ContextEmail = '';
     this.showGenerateSection = false;
-    this.GetContactShoppingCenters();
+    this.GetContactShoppingCenters(contactId);
     this.modalService.open(modal, { size: 'xl', backdrop: true });
   }
 
-  GetContactShoppingCenters(): void {
+  GetContactShoppingCenters(contactId: number): void {
     const body: any = {
       Name: 'GetShoppingCentersForContact',
       MainEntity: null,
-      Params: {},
+      Params: {
+        ContactId: contactId,
+        CampaignId: this.campaignId,
+      },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
@@ -279,9 +278,7 @@ export class InboxComponent implements OnInit {
         filtered = [...this.emailsSentContact];
         break;
     }
-
-    // Sort emails by date in descending order (newest first).
-    this.filteredEmails = this.sortEmailsByDateDesc(filtered);
+    this.filteredEmails = this.sortEmails(filtered);
     if (this.filteredEmails.length === 0) {
       this.emptyMessage = `No ${filterType} emails available for this contact`;
       this.selectedEmail = null;
@@ -289,18 +286,8 @@ export class InboxComponent implements OnInit {
       !this.selectedEmail ||
       !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
     ) {
-      // Don't auto-select the first email anymore
-      // this.openEmail(this.filteredEmails[0]);
     }
   }
-
-  GetShoppingCenters: any[] = [];
-  ResponseContextEmail: any;
-  GenrateEmail: any;
-  ContextEmail: any;
-  listcenterName: string[] = [];
-  showGenerateSection: boolean = false;
-  isEmailBodyEmpty: boolean = true;
 
   onCheckboxChange(event: any, item: any) {
     this.showGenerateSection = true;
@@ -317,14 +304,11 @@ export class InboxComponent implements OnInit {
     this.showGenerateSection = this.listcenterName.length > 0;
   }
 
-  async PutGenerateContext(): Promise<void> {
+  generateContext() {
     this.ResponseContextEmail = {};
-
     const ContactName = `${this.selectedContact?.Firstname ?? ''} ${
       this.selectedContact?.Lastname ?? ''
     }`.trim();
-    const ContantID = Number(this.selectedContact?.ContactId);
-    const ContantShoppingCenter = this.listcenterName;
 
     this.spinner.show();
     const body: GenerateContextDTO = {
@@ -341,9 +325,9 @@ export class InboxComponent implements OnInit {
       IsCC: true,
       GetContactManagers: [
         {
-          ContactId: ContantID,
+          ContactId: Number(this.selectedContact?.ContactId),
           ContactName: ContactName,
-          ShoppingCentersName: ContantShoppingCenter,
+          ShoppingCentersName: this.listcenterName,
         },
       ],
       OrganizationId: this.orgId,
@@ -352,22 +336,80 @@ export class InboxComponent implements OnInit {
     this.PlacesService.GenerateContext(body).subscribe({
       next: (data) => {
         this.ResponseContextEmail = data;
-        this.ContextEmail = this.ResponseContextEmail.context;
-        this.ContextEmail = this.ContextEmail.replace(/\n/g, '<br>');
+        this.ContextEmail = this.ResponseContextEmail.context.replace(
+          /\n/g,
+          '<br>'
+        );
         this.showGenerateSection = true;
-        this.spinner.hide();
+        this.putMailsDraft();
       },
     });
   }
 
-  async PutComposeEmail(): Promise<void> {
+  putMailsDraft() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'PutMailsDraft',
+      MainEntity: null,
+      Params: {
+        BuyBoxId: this.buyBoxId,
+        ContactId: this.contactId,
+        PromptId: 21,
+        IsCC: true,
+        OrganizationId: this.orgId,
+        context: this.ContextEmail,
+        BatchGuid: this.BatchGuid,
+        CampaignId: this.campaignId,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.getGeneratedEmail(data.json[0].id);
+        this.showGenerateSection = false;
+        this.listcenterName = [];
+        this.ContextEmail = '';
+      },
+    });
+  }
+
+  getGeneratedEmail(mailContextId: number): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'ReadSpecificMails',
+      MainEntity: null,
+      Params: {
+        MailContextId: Number(mailContextId),
+        IsSent: 0,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        const response = data.json;
+        if (!response || response.length === 0) {
+          setTimeout(() => {
+            this.getGeneratedEmail(mailContextId);
+          }, 3000);
+        } else {
+          this.emailBody = response[0].body;
+          this.emailSubject = response[0].subject;
+          this.spinner.hide();
+        }
+      },
+    });
+  }
+
+  sendEmail() {
     this.spinner.show();
     const body: any = {
       Name: 'ComposeEmail',
       MainEntity: null,
       Params: {
-        BuyBoxId: this.buyBoxId,
-        CampaignId: this.campaignId,
+        BuyBoxId: +this.buyBoxId,
+        CampaignId: +this.campaignId,
         RecieverId: [Number(this.selectedContact?.ContactId)].join(','),
         Subject: this.emailSubject,
         Body: this.emailBody,
@@ -390,51 +432,9 @@ export class InboxComponent implements OnInit {
     });
   }
 
-  async PutMailsDraft(): Promise<void> {
-    this.PutGenerateContext();
-
-    this.spinner.show();
-    const body: any = {
-      Name: 'PutMailsDraft',
-      MainEntity: null,
-      Params: {
-        BuyBoxId: this.buyBoxId,
-        ContactId: this.contactId,
-        PromptId: 21,
-        IsCC: true,
-        OrganizationId: this.orgId,
-        context: this.ContextEmail,
-        BatchGuid: this.BatchGuid,
-        CampaignId: this.campaignId,
-      },
-      Json: null,
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.spinner.hide();
-        this.showGenerateSection = false;
-        this.modalService.dismissAll();
-        this.listcenterName = [];
-        this.emailSubject = '';
-        this.emailBody = '';
-        this.ContextEmail = '';
-        this.showToast('Generate Success');
-      },
-    });
-  }
-
-  Send(showGenerate: string) {
-    if (this.emailSubject || this.ContextEmail || this.emailBody) {
-      const ToggleGenerate = showGenerate;
-      if (ToggleGenerate == 'Generate') {
-        this.PutMailsDraft();
-      } else {
-        this.PutComposeEmail();
-      }
-    } else {
-      alert('Please write the Email first then click send');
-    }
+  showAllEmails() {
+    this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
+    this.getAllEmails();
   }
 
   showToast(message: string) {
