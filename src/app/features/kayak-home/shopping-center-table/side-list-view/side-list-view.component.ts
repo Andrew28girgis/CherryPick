@@ -32,7 +32,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   map: any;
   BuyBoxId!: any;
   orgId!: any;
-  
+
   mapViewOnePlacex: boolean = false;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
@@ -50,7 +50,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   StreetViewOnePlace!: boolean;
   KanbanStages: any[] = [];
   activeDropdown: any = null;
-  
+
   private subscriptions = new Subscription();
 
   constructor(
@@ -67,40 +67,44 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.General = new General();
     this.savedMapView = localStorage.getItem('mapView');
-    
+
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
-      
+
       // Initialize data using the centralized service
-      this.shoppingCenterService.initializeData(this.BuyBoxId,this.orgId);
+      this.shoppingCenterService.initializeData(this.BuyBoxId, this.orgId);
     });
 
     // Subscribe to data from the centralized service
     this.subscriptions.add(
-      this.shoppingCenterService.buyboxCategories$.subscribe(categories => {
+      this.shoppingCenterService.buyboxCategories$.subscribe((categories) => {
         this.buyboxCategories = categories;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.shoppingCenters$.subscribe(centers => {
+      this.shoppingCenterService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
-        
+
         // Get kanban stages using the first kanban ID from the first shopping center
-        if (this.shoppingCenters && this.shoppingCenters.length > 0 && !this.KanbanStages.length) {
+        if (
+          this.shoppingCenters &&
+          this.shoppingCenters.length > 0 &&
+          !this.KanbanStages.length
+        ) {
           this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
         }
-        
+
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.buyboxPlaces$.subscribe(places => {
+      this.shoppingCenterService.buyboxPlaces$.subscribe((places) => {
         this.buyboxPlaces = places;
-        
+
         if (this.buyboxCategories && this.buyboxPlaces) {
           this.buyboxCategories.forEach((category) => {
             category.isChecked = false;
@@ -108,24 +112,24 @@ export class SideListViewComponent implements OnInit, OnDestroy {
               place.RetailRelationCategories?.some((x) => x.Id === category.id)
             );
           });
-          
+
           // Initialize map after we have all the data
           this.getAllMarker();
         }
-        
+
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.selectedId$.subscribe(id => {
+      this.shoppingCenterService.selectedId$.subscribe((id) => {
         this.selectedId = id;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.selectedIdCard$.subscribe(id => {
+      this.shoppingCenterService.selectedIdCard$.subscribe((id) => {
         this.selectedIdCard = id;
         this.cdr.detectChanges();
       })
@@ -147,7 +151,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.KanbanStages = res.json || [];
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -162,7 +166,10 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     // Set as active dropdown
     this.activeDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
     // If opening this dropdown, load kanban stages if not already loaded
-    if (shoppingCenter.isDropdownOpen && (!this.KanbanStages || this.KanbanStages.length === 0)) {
+    if (
+      shoppingCenter.isDropdownOpen &&
+      (!this.KanbanStages || this.KanbanStages.length === 0)
+    ) {
       this.GetKanbanStages(shoppingCenter.kanbanId);
     }
   }
@@ -170,11 +177,15 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   // Get stage name for the selected ID
   getSelectedStageName(stageId: number): string {
     if (!this.KanbanStages) return 'Select Stage';
-    const stage = this.KanbanStages.find(s => s.id === stageId);
+    const stage = this.KanbanStages.find((s) => s.id === stageId);
     return stage ? stage.stageName : 'Select Stage';
   }
 
-  selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  selectStage(
+    marketSurveyId: number,
+    stageId: number,
+    shoppingCenter: any
+  ): void {
     // Close the dropdown
     shoppingCenter.isDropdownOpen = false;
     this.activeDropdown = null;
@@ -182,7 +193,11 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   }
 
   // Update the API method to work with the new dropdown
-  UpdatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  UpdatePlaceKanbanStage(
+    marketSurveyId: number,
+    stageId: number,
+    shoppingCenter: any
+  ): void {
     const body: any = {
       Name: 'UpdatePlaceKanbanStage',
       Params: {
@@ -190,14 +205,14 @@ export class SideListViewComponent implements OnInit, OnDestroy {
         marketsurveyid: marketSurveyId,
       },
     };
-    
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         // Update local data after successful API call
         shoppingCenter.kanbanStageId = stageId;
         shoppingCenter.stageName = this.getSelectedStageName(stageId);
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
@@ -223,7 +238,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      }
+      },
     });
   }
 
@@ -500,17 +515,16 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   }
 
   deleteShCenter() {
-    this.shoppingCenterService.deleteShoppingCenter(
-      this.BuyBoxId,
-      this.shoppingCenterIdToDelete!
-    ).then(() => {
-      this.modalService.dismissAll();
-      this.ngZone.run(() => {
-        this.cardsSideList = this.cardsSideList.filter(
-          (place) => place.Id !== this.shoppingCenterIdToDelete
-        );
+    this.shoppingCenterService
+      .deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete!)
+      .then(() => {
+        this.modalService.dismissAll();
+        this.ngZone.run(() => {
+          this.cardsSideList = this.cardsSideList.filter(
+            (place) => place.Id !== this.shoppingCenterIdToDelete
+          );
+        });
       });
-    });
   }
 
   RestoreShoppingCenter(
@@ -518,7 +532,8 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     Deleted: boolean,
     placeId: number
   ) {
-    this.shoppingCenterService.restoreShoppingCenter(MarketSurveyId, Deleted)
+    this.shoppingCenterService
+      .restoreShoppingCenter(MarketSurveyId, Deleted)
       .then(() => {
         this.toggleShortcuts(placeId, 'close');
       });
