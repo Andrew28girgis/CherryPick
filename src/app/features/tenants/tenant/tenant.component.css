@@ -1,5 +1,3 @@
-
-
 .BuyboxSpecifications {
   font-size: 18px;
   font-weight: 600;
@@ -37,15 +35,26 @@
 }
 
 .spec-title {
-  font-size: 14px;
-  color: #666;
+  color: var(--Body-Text-and-Icons, #707791);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
   margin-bottom: 4px;
+  margin-top: 10px;
 }
 
 .spec-value {
-  font-size: 16px;
+  color: var(--Body-Heading-Color, #16181D);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 17px;
+  font-style: normal;
   font-weight: 600;
-  color: #333;
+  line-height: 30px; 
 }
 
 /* Shopping centers list */
@@ -62,7 +71,23 @@
   font-size: 14px;
   color: #0066cc;
 }
-
+.centrename{
+color: var(--Body-Heading-Color, #16181D);
+font-family: Montserrat;
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 30px;
+}
+.centreaddress{
+color: var(--Body-Text-and-Icons, #707791);
+font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: 24px; 
+letter-spacing: -0.07px;
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .spec-item {
@@ -70,7 +95,7 @@
     align-items: center;
     text-align: center;
   }
-  
+
   .spec-icon {
     margin-bottom: 8px;
   }
@@ -272,6 +297,7 @@
   border-radius: var(--Card-Section-Radius, 20px);
   border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
   width: 100%;
+  background-color: #fff;
 }
 .hidden-dropzone {
   height: 0px !important;
@@ -402,9 +428,10 @@
   margin-left: 20px;
 }
 .ShoppingCenterInformation {
-  color: var(--Body-Heading-Color, #16181d);
+  color: #4d65b4;
+  text-align: center;
   font-family: Montserrat;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
@@ -449,16 +476,21 @@
   line-height: 30px;
 }
 .shoppingcentercard {
+  height: 100%;
   border-radius: var(--Card-Section-Radius, 20px);
   background: var(--Card-Section-BG, #fff);
 }
+.shoppingcentersize{
+  width: 18rem;
+  height: 540px;
+}
 .custom-hr {
-  border: none; 
-  height: 2px; 
-  background: var(--Body-General-Body-Border, #737783); 
+  border: none;
+  height: 2px;
+  background: var(--Body-General-Body-Border, #737783);
   margin: 10px 0;
 }
-.BuildingSize{
+.BuildingSize {
   color: var(--Body-Text-and-Icons, #707791);
   font-family: Montserrat;
   font-size: 17px;
@@ -467,15 +499,130 @@
   line-height: 24px;
   letter-spacing: -0.07px;
 }
-.BuildingAndTenant{
+.BuildingAndTenant {
   color: var(--Body-Text-and-Icons, #707791);
   font-family: Montserrat;
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
-  line-height: 24px; 
+  line-height: 24px;
   letter-spacing: -0.07px;
 }
+.card {
+  margin-bottom: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.card-img-top {
+  max-height: 200px;
+  object-fit: cover;
+  border-bottom: 2px solid #ddd;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  padding: 10px 20px;
+}
+.SubmitBrochure {
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #4d65b4);
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+.SubmitBrochure:hover {
+  background: var(--Button-Primary-BG-hover, #4052a0);
+}
+.ManualSubmission {
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: var(--Radius-Radius-16, 16px);
+  border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #4d65b4);
+  background: var(--Button-Secondary-BG, #fff);
+  color: var(--Button-Secondary-Label-Default, #4d65b4);
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  cursor: pointer;
+}
+
+.ManualSubmission:hover {
+  background: var(--Button-Secondary-BG-hover, #f2f3f7);
+  border-color: var(--Button-Secondary-Stroke-Color-Hover, #4052a0);
+}
+.title{
+  color: var(--Body-Heading-Color, #16181D);
+  font-family: Montserrat;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.subtitle{
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+.somespace{
+  margin-right: 7px;
+}
+.submitnewproposel{
+color: var(--Body-Heading-Color, #16181D);
+text-align: center;
+font-family: Montserrat;
+font-size: 24px;
+font-style: normal;
+font-weight: 600;
+line-height: 32px; 
+}
+.submitproposelsize{
+  height: 540px;
+}
+.heightimportant{
+  height: 100 !important;
+}
+
 @media (max-width: 576px) {
   .tenant-logo {
     width: 60px;
@@ -567,4 +714,3 @@
     font-size: 16px;
   }
 }
-

@@ -64,6 +64,8 @@
               <thead class="thead-light">
                 <tr>
                   <th>Name</th>
+                  <th>City</th>
+                  <th>State</th>
                   <th class="text-center">Actions</th>
                 </tr>
               </thead>
@@ -106,6 +108,8 @@
                         </ng-container>
                       </div>
                     </td>
+                    <td>{{ polygon.city }}</td>
+                    <td>{{ polygon.state }}</td>
                     <td class="text-center">
                       <div class="w-100 d-flex align-items-center gap-2">
                         <button
@@ -144,14 +148,16 @@
                           *ngIf="
                             checkHaveShoppingCenters(polygon.id) &&
                             getShoppingCentersForPolygon(polygon.id) &&
-                            getShoppingCentersForPolygon(polygon.id).length >
-                              0 &&
                             displayedExternalPolygons.includes(polygon.id)
                           "
                         >
                           <button
                             class="btn btn-success"
-                            (click)="viewShoppingCenterOnMap(polygon.id)"
+                            [pTooltip]="
+                              getShoppingCentersForPolygon(polygon.id).length +
+                              ' Sites'
+                            "
+                            tooltipPosition="top"
                           >
                             {{
                               getShoppingCentersForPolygon(polygon.id).length

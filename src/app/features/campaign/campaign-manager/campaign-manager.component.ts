@@ -105,7 +105,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getAllCampaigns(): void {
     this.isLoading = true; // Show skeleton
-     
 
     const body: any = {
       Name: 'GetUserCampaigns',
@@ -125,7 +124,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-         
       },
     });
 
@@ -148,7 +146,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getUserBuyBoxes(): void {
     this.isLoading = true; // Show skeleton
-     
 
     const body: any = {
       Name: 'GetUserBuyBoxes',
@@ -168,11 +165,8 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
         } else {
           this.userBuyBoxes = [];
         }
-         
       },
-      error: () => {
-         
-      },
+      error: () => {},
     });
 
     this.subscriptions.add(subscription);
@@ -184,11 +178,10 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   openAddCampaignPopup(content: TemplateRef<any>): void {
-    this.modalService.open(content, { centered: true, fullscreen: true });
+    this.modalService.open(content, { centered: true, size: 'xl' });
   }
 
   goToEmily(campaign: ICampaign, index: number, withOrg: boolean): void {
-
     if (withOrg) {
       this.getCampaignOrganizations(campaign.id, campaign.Campaigns[index].Id);
     } else {
@@ -204,7 +197,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getKanbanTemplateStages(): void {
     this.isLoading = true; // Show skeleton
-     
 
     const body: any = {
       Name: 'GetKanbanTemplateStages',
@@ -217,11 +209,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.stages = response.json;
         }
         this.isLoading = false; // Hide skeleton
-         
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-         
       },
     });
 
@@ -230,7 +220,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getCampaignOrganizations(buboxId: number, campaignId: number): void {
     this.isLoading = true; // Show skeleton
-     
 
     const body: any = {
       Name: 'GetCampaignOrganizations',
@@ -257,11 +246,9 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
           this.router.navigate(['/MutipleEmail', campaignId]);
         }
         this.isLoading = false; // Hide skeleton
-         
       },
       error: () => {
         this.isLoading = false; // Hide skeleton on error
-         
       },
     });
 
@@ -301,5 +288,4 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   getSumbmissionsCountRejected(submissions: Submission[]) {
     return submissions.filter((s) => s.StatusId == -1).length;
   }
-
 }
