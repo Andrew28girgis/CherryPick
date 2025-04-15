@@ -42,19 +42,23 @@ export interface BuyBoxEmails {
 export interface Mail {
   id: number
   Subject: string
-  Body?: string;
   Date: string
   Direction: number
-  FromAddress?: string;
-  ContactId?: number
-  MailsContacts?: MailsContact[]
-  MicroDealId?: number;
-  ResponseStatus?: string;
+  ContactId: number
+  O: O[]
+}
+
+export interface O {
+  OrganizationId: number
+  OrganizationName: string
+  MailsContacts: MailsContact[]
 }
 
 export interface MailsContact {
   MailContactId: number
 }
+
+ 
 
 export interface EmailInfo {
   ID: number

@@ -136,6 +136,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
         if (microDeal) {
           this.selectedMicro = microDeal.OrganizationId;
           this.contacts = microDeal.Contact;
+          this.getEmailsForContact(this.contacts[0]);
           this.BuyBoxMicroDeals.forEach((item) => {
             if (item.OrganizationId === this.selectedMicro) {
               item.isOpen = true;
@@ -193,15 +194,23 @@ export class InboxComponent implements OnInit, AfterViewChecked {
     // Since the API returns emails directly, use them as-is.
     const matchingEmails: any[] = this.BuyBoxEmails;
 
+
     // Filter emails that are related to the selected contact.
     this.emailsSentContact = matchingEmails?.filter(
       (email: Mail) =>
         email?.ContactId === contact.ContactId ||
-        (email?.MailsContacts &&
-          email.MailsContacts.some(
-            (mc: MailsContact) => mc.MailContactId === contact.ContactId
+        (email?.O &&
+          email.O.some(
+            (organization: { MailsContacts: { MailContactId: number }[] }) =>
+              organization.MailsContacts.some(
+                (mc: { MailContactId: number }) =>
+                  mc.MailContactId === contact.ContactId
+              )
           ))
     );
+
+    console.log('matchingEmails', this.emailsSentContact);
+
     this.filterEmails(this.selectedFilter);
     if (this.emailsSentContact.length === 0) {
       this.emptyMessage = 'No emails available for this contact';
