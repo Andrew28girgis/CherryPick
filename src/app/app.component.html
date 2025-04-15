@@ -1,17 +1,19 @@
-<app-header></app-header>
-<div class="app-container container-fluid">
-  <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
-    <div class="main-content-area">
-      <app-breadcrumb *ngIf="display"></app-breadcrumb>
-      <div class="content-container">
+<div class="app-container">
+  <app-header></app-header>
+  <div class="container-fluid">
+    <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
+      <div class="main-content-area">
+        <app-breadcrumb *ngIf="display"></app-breadcrumb>
+        <div class="content-container">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #fullWidthContent>
+      <div class="full-width-content">
         <router-outlet></router-outlet>
       </div>
-    </div>
-  </ng-container>
-
-  <ng-template #fullWidthContent>
-    <div class="full-width-content">
-      <router-outlet></router-outlet>
-    </div>
-  </ng-template>
+    </ng-template>
+  </div>
 </div>

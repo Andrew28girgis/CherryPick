@@ -20,6 +20,7 @@ import { InboxComponent } from './features/emily/inbox/inbox.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
+
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
   { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
   {
@@ -56,6 +57,11 @@ const routes: Routes = [
       import('./features/campaign/campaign.module').then(
         (m) => m.CampaignModule
       ),
+    canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'MutipleEmail/:campaignId',
+    component: NewMulipleEmailComponent,
     canActivate: [TenantOnlyGuard],
   },
   {
@@ -110,11 +116,7 @@ const routes: Routes = [
     component: KanbanComponent,
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-  {
-    path: 'MutipleEmail/:campaignId',
-    component: NewMulipleEmailComponent,
-    canActivate: [TenantOnlyGuard],
-  },
+
   {
     path: 'MailsList/:MailContextId/:IsSent',
     component: MailsGenerateOrSendComponent,
