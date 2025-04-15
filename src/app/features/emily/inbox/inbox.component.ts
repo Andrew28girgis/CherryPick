@@ -1,4 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   BuyBoxEmails,
   BuyBoxMicroDeals,
@@ -20,7 +31,7 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
   templateUrl: './inbox.component.html',
   styleUrls: ['./inbox.component.css'],
 })
-export class InboxComponent implements OnInit {
+export class InboxComponent implements OnInit, AfterViewChecked {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];
   emailsSentContact: Mail[] = [];
@@ -58,15 +69,16 @@ export class InboxComponent implements OnInit {
     private modalService: NgbModal,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
       this.buyBoxId = Number(params.get('buyBoxId'));
       this.campaignId = params.get('campaignId') || null;
-      this.contactId = localStorage.getItem('contactId');
       this.orgId = Number(params.get('organizationId'));
+      this.contactId = localStorage.getItem('contactId');
     });
     this.updateBreadcrumb();
     this.getOrganizations();
@@ -124,12 +136,46 @@ export class InboxComponent implements OnInit {
         if (microDeal) {
           this.selectedMicro = microDeal.OrganizationId;
           this.contacts = microDeal.Contact;
+          this.BuyBoxMicroDeals.forEach((item) => {
+            if (item.OrganizationId === this.selectedMicro) {
+              item.isOpen = true;
+              this.scrollToOpenItem(item);
+            }
+          });
         } else {
           this.contacts = this.BuyBoxMicroDeals[0].Contact;
           this.selectedMicro = this.BuyBoxMicroDeals[0].OrganizationId;
         }
+        this.changeDetectorRef.detectChanges();
       },
     });
+  }
+  @ViewChildren('itemRef') itemRefs: QueryList<any> | undefined;
+
+  ngAfterViewChecked() {
+    // After view checks, try scrolling to the first opened item
+    const firstOpenItem = this.BuyBoxMicroDeals.find((item) => item.isOpen);
+    if (firstOpenItem) {
+      this.scrollToOpenItem(firstOpenItem);
+    }
+  }
+
+  scrollToOpenItem(bb: any): void {
+    // Find the corresponding element using the data-org-id attribute
+    const element = this.itemRefs
+      ?.toArray()
+      .find(
+        (item) =>
+          item.nativeElement.getAttribute('data-org-id') ===
+          bb.OrganizationId.toString()
+      );
+    if (element) {
+      // Scroll the item into view
+      element.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
   }
 
   getEmailsForContact(contact: Contact): void {
