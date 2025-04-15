@@ -881,4 +881,30 @@ export class CampaignDrawingService {
   get getDrawnCircles() {
     return this.drawnCircles;
   }
+  displayPolygon(coordinates: any, map: any): void {
+    // Convert the geoJSON coordinates into a google.maps.LatLng[] array
+    // const coordinates = polygon.geoJson?.geometry.coordinates[0].map((coord: number[]) => {
+    //   return { lat: coord[1], lng: coord[0] };
+    // });
+  console.log(coordinates);
+  
+    const polygonObj = new google.maps.Polygon({
+      paths: coordinates,
+      strokeColor: '#AA00FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#AA00FF',
+      fillOpacity: 0.35,
+      editable: false,
+      draggable: false,
+      // You can set other options like strokeColor, fillColor, etc.
+    });
+
+    polygonObj.setMap(map);
+      // debugger
+    // return polygonObj;
+  }
+  hidePolygon(polygonObj: google.maps.Polygon): void {
+    polygonObj.setMap(null);
+  }
 }

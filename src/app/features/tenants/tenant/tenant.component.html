@@ -35,7 +35,7 @@
             <div class="my-3">
               <span class="BuyboxSpecifications"> Buybox Specifications </span>
             </div>
-            <div class="col-md-12 d-flex">
+            <div class="col-md-12 d-flex" style="gap: 10px">
               <div class="col-md-8">
                 <div class="row">
                   <!-- Size Range -->
@@ -351,7 +351,10 @@
                     </div>
                   </div>
                   <!-- Lot Size -->
-                  <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].LotSize">
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].LotSize"
+                  >
                     <div class="spec-item">
                       <div class="spec-icon">
                         <img
@@ -488,7 +491,10 @@
                     </div>
                   </div>
                   <!-- Zoning -->
-                  <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].Zoning">
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].Zoning"
+                  >
                     <div class="spec-item">
                       <div class="spec-icon">
                         <img
@@ -527,10 +533,17 @@
                 </div>
               </div>
               <div class="col-md-4">
-                Map
+                <div #mapContainer id="map" style="width: 100%; height: 400px;"></div>
+                <!-- <div *ngFor="let poly of customPolygons; let i = index">
+                  <span>{{ poly.geoJson.properties.NAME }}</span>
+                  <input
+                    type="checkbox"
+                    [checked]="poly.visible"
+                    (change)="togglePolygonVisibility(poly)"
+                  />
+                </div> -->
               </div>
             </div>
-
           </div>
         </div>
       </div>
