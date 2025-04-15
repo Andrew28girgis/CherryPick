@@ -7,7 +7,7 @@
 </div>
 
 <div class="container-fluid p-0">
-  <div class="d-flex align-item-center justify-content-end">
+  <div class="d-flex align-items-center justify-content-end">
     <div
       class="filter-button"
       [ngClass]="{ active: selectedFilter === 'all' }"
@@ -15,6 +15,7 @@
     >
       <i class="fa-solid fa-envelope me-1"></i> All
     </div>
+
     <div
       class="filter-button"
       [ngClass]="{ active: selectedFilter === 'inbox' }"
@@ -37,6 +38,7 @@
       <i class="fa-solid fa-reply me-1" style="color: green"></i>
       Sent
     </div>
+    <button class="replay" (click)="showAllEmails()">Show All</button>
   </div>
 
   <div class="row m-0 p-0">
@@ -80,7 +82,7 @@
 
                   <button
                     class="new-btnCompose"
-                    (click)="openCompoase(openCompose)"
+                    (click)="openCompoase(composeEmail, contact.ContactId)"
                   >
                     Compose
                     <i class="fa-solid fa-arrow-right"></i>
@@ -96,9 +98,9 @@
                     >
                     <span
                       style="color: #4d65b4; font-weight: 600"
-                      *ngIf="getTotalEmails(sc.EmailStats[0]) > 0"
+                      *ngIf="getTotalEmailsCount(sc.EmailStats[0]) > 0"
                     >
-                      {{ getTotalEmails(sc.EmailStats[0]) }}
+                      {{ getTotalEmailsCount(sc.EmailStats[0]) }}
                     </span>
                   </div>
                 </ng-container>
@@ -108,7 +110,6 @@
         </ul>
       </div>
     </div>
-    <!-- Email list - shown when no email is selected -->
     <div
       class="col-lg-9 p-0 mb-3"
       *ngIf="!selected"
@@ -174,9 +175,6 @@
             <p class="subject-details">{{ selectedEmail.Subject }}</p>
             <div class="body-details" [innerHTML]="emailBodySafe"></div>
           </div>
-          <p *ngIf="!selectedEmail" class="no-email-selected">
-            Select an email to view details.
-          </p>
         </div>
         <div class="d-flex justify-content-end w-100">
           <button
@@ -184,7 +182,7 @@
             *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 1"
             (click)="
               openmodel(
-                openreply,
+                replyEmail,
                 selectedEmail?.Body,
                 selectedContact?.ContactId
               )
@@ -199,7 +197,7 @@
   </div>
 </div>
 
-<ng-template #openreply let-modal>
+<ng-template #replyEmail let-modal>
   <div class="modal-content">
     <div class="modal-body p-0">
       <div class="row m-0 p-2 d-flex justify-content-center">
@@ -216,29 +214,18 @@
   </div>
 </ng-template>
 
-<ng-template #openCompose let-modal>
+<ng-template #composeEmail let-modal>
   <div class="modal-content">
     <div class="modal-body p-0">
       <div class="row m-0 p-2 d-flex justify-content-center">
-        <div class="d-flex justify-content-start">
+        <div class="d-flex justify-content-between align-items-center">
           <h5>New Message</h5>
-          <!-- <button
-            class="new-btn"
-            (click)="PutGenerateContext()"
-            *ngIf="
-              (!emailSubject || emailSubject.trim() === '') && isEmailBodyEmpty
-            "
-          >
+          <button class="new-btn" (click)="generateContext()">
             Generate Email
-          </button> -->
+          </button>
         </div>
         <div class="p-3">
-          <!-- <div
-            class="d-flex pb-3 align-items-center gap-3"
-            *ngIf="
-              (!emailSubject || emailSubject.trim() === '') && isEmailBodyEmpty
-            "
-          >
+          <div class="d-flex pb-3 align-items-center gap-3">
             <label for="subject" class="IsCC_checkbox me-2"
               >Shopping Centers:
             </label>
@@ -258,7 +245,20 @@
                 </label>
               </div>
             </ng-container>
-          </div> -->
+          </div>
+          <div class="gap-3">
+            <div class="checkbox-section d-flex align-items-center">
+              <input
+                type="checkbox"
+                name="includinglanding"
+                id="includinglanding"
+                class="form-check-input m-0"
+              />
+              <label for="includinglanding" class="ms-2 IsCC_checkbox"
+                >Is including landing page</label
+              >
+            </div>
+          </div>
           <div
             class="d-flex pb-3 align-items-center"
             *ngIf="!showGenerateSection"
@@ -273,19 +273,6 @@
               placeholder="Subject"
             />
           </div>
-          <!-- <div class="gap-3">
-            <div class="checkbox-section d-flex align-items-center">
-              <input
-                type="checkbox"
-                name="includinglanding"
-                id="includinglanding"
-                class="form-check-input m-0"
-              />
-              <label for="includinglanding" class="ms-2 IsCC_checkbox"
-                >Is including landing page</label
-              >
-            </div>
-          </div> -->
         </div>
         <div *ngIf="!showGenerateSection">
           <p-editor [(ngModel)]="emailBody" [style]="{ height: '350px' }">
@@ -297,12 +284,8 @@
         </div>
       </div>
       <div class="d-flex justify-content-end">
-        <button
-          type="button"
-          class="m-3 buttonSave"
-          (click)="Send(showGenerateSection ? 'Generate' : 'Send')"
-        >
-          {{ showGenerateSection ? "Generate" : "Send" }}
+        <button type="button" class="m-3 buttonSave" (click)="sendEmail()">
+          Send
         </button>
       </div>
     </div>
