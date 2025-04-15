@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   Router,
   NavigationEnd,
@@ -6,36 +6,84 @@ import {
   ActivatedRoute,
 } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators'; 
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { UserViewService } from 'src/app/core/services/user-view.service';
+
+export type UserView = 'campaigns' | 'landlord';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
-  isSmallScreen: boolean = window.innerWidth < 992;
-  isCollapsed = false;
-  userAvatar: string | null = null;
-  currentView: 'campaigns' | 'landlord' = 'campaigns';
-  current = '';
-  private viewSubscription: Subscription | null = null;
-  private routerSubscription: Subscription | null = null;
-  private sidebarSubscription: Subscription | null = null;
+export class HeaderComponent implements OnInit, OnDestroy {
+  // UI State
+  readonly MOBILE_BREAKPOINT = 992;
+  isSmallScreen = window.innerWidth < this.MOBILE_BREAKPOINT;
   isNavbarOpen = false;
-  display: boolean = true;
+  displayHeader = true;
 
-  constructor( 
+  // User State
+  userAvatar: string | null = null;
+  currentView: UserView = 'campaigns';
+  currentRoute = '';
+
+  // Subscriptions
+  private subscriptions: Subscription[] = [];
+
+  constructor(
     public router: Router,
     private userViewService: UserViewService,
     private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.isSmallScreen = window.innerWidth < 992;
-    this.current = this.router.url;
-    this.router.events
+    this.initializeScreenSize();
+    this.setupRouteSubscriptions();
+    this.setupUserViewSubscription();
+    this.fetchUserAvatar();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub?.unsubscribe());
+  }
+
+  /**
+   * Toggles the navigation menu in mobile view
+   */
+  toggleNavbar(event: Event): void {
+    event.stopPropagation();
+    this.isNavbarOpen = !this.isNavbarOpen;
+  }
+
+  /**
+   * Switches between campaign and landlord views
+   */
+  switchView(): void {
+    const newView: UserView =
+      this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
+    this.userViewService.switchView(newView);
+    this.router.navigate([newView]);
+  }
+
+  /**
+   * Handles user logout by clearing storage and redirecting to login
+   */
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userView');
+    this.router.navigate(['/login']);
+  }
+
+  // Private Methods
+  private initializeScreenSize(): void {
+    this.isSmallScreen = window.innerWidth < this.MOBILE_BREAKPOINT;
+    this.currentRoute = this.router.url;
+  }
+
+  private setupRouteSubscriptions(): void {
+    // Subscribe to route data to handle header visibility
+    const routeDataSub = this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         map(() => {
@@ -47,13 +95,12 @@ export class HeaderComponent implements OnInit {
         }),
         mergeMap((route) => route.data)
       )
-      .subscribe((data: any) => {
-        // If the current route has data { hideHeader: true }, then do not display the header.
-        this.display = !data.hideHeader;
+      .subscribe((data) => {
+        this.displayHeader = !data['hideHeader'];
       });
 
-    // Subscribe to router events to update the `current` variable whenever the route changes.
-    this.routerSubscription = this.router.events
+    // Subscribe to navigation events to update current route
+    const navigationSub = this.router.events
       .pipe(
         filter(
           (event: RouterEvent): event is NavigationEnd =>
@@ -61,41 +108,22 @@ export class HeaderComponent implements OnInit {
         )
       )
       .subscribe((event: NavigationEnd) => {
-        this.current = event.urlAfterRedirects;
-        // Close navbar when route changes
-        this.isNavbarOpen = false;
+        this.currentRoute = event.urlAfterRedirects;
+        this.isNavbarOpen = false; // Close navbar on route change
       });
 
-    this.current = this.router.url;
-
-    this.viewSubscription = this.userViewService.currentView$.subscribe(
-      (view) => {
-        this.currentView = view;
-      }
-    );
-
-   
-    this.fetchUserAvatar();
+    this.subscriptions.push(routeDataSub, navigationSub);
   }
-  
-  fetchUserAvatar(): void {
+
+  private setupUserViewSubscription(): void {
+    const viewSub = this.userViewService.currentView$.subscribe((view) => {
+      this.currentView = view;
+    });
+    this.subscriptions.push(viewSub);
+  }
+
+  private fetchUserAvatar(): void {
+    // TODO: Implement user avatar fetching logic
     this.userAvatar = '';
-  }
-
-  logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userView');
-    this.router.navigate(['/login']);
-  }
-
-  switchView(): void {
-    const newView = this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
-    this.userViewService.switchView(newView);
-    this.router.navigate([newView]);
-  }
-
-  toggleNavbar(event: Event) {
-    event.stopPropagation();
-    this.isNavbarOpen = !this.isNavbarOpen;
   }
 }
