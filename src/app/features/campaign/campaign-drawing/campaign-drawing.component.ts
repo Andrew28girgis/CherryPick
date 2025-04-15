@@ -303,10 +303,10 @@ export class CampaignDrawingComponent
   }
 
   onSearchChange(value: string): void {
-    this.isSearching = true;
     this.externalPolygons = [];
     this.displayedExternalPolygons = [];
     if (value.trim().length > 0) {
+      this.isSearching = true;
       this.searchSubject.next(value);
     }
     // else {

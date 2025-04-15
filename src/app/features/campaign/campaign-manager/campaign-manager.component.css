@@ -293,6 +293,10 @@
   width: 100%;
 }
 
+.modal-body {
+  height: 80vh;
+}
+
 /* Campaign Drawing Component */
 .campaign-drawing-component {
   width: 100%;
