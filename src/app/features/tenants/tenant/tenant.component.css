@@ -76,7 +76,7 @@
   }
 }
 .overfloww {
-  width: 80%;
+  /* width: 80%; */
   margin: auto;
   margin-top: 15px;
 }
@@ -400,6 +400,81 @@
 }
 .marginleft {
   margin-left: 20px;
+}
+.ShoppingCenterInformation {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.shoppingcentertitle {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
+}
+.shoppingsubtitle {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
+}
+.AddAvailablebutton {
+  border-radius: 16px;
+  background: #4d65b4;
+  display: flex;
+  height: 32px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.AddAvailablebuttontext {
+  color: #fff;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.shoppingcentercard {
+  border-radius: var(--Card-Section-Radius, 20px);
+  background: var(--Card-Section-BG, #fff);
+}
+.custom-hr {
+  border: none; 
+  height: 2px; 
+  background: var(--Body-General-Body-Border, #737783); 
+  margin: 10px 0;
+}
+.BuildingSize{
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
+}
+.BuildingAndTenant{
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; 
+  letter-spacing: -0.07px;
 }
 @media (max-width: 576px) {
   .tenant-logo {

@@ -35,492 +35,513 @@
             <div class="my-3">
               <span class="BuyboxSpecifications"> Buybox Specifications </span>
             </div>
-            <div class="row">
-              <!-- Size Range -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="
-                  TenantResult.Buybox[0].MinBuildingSize ||
-                  TenantResult.Buybox[0].MaxBuildingSize
-                "
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img src="../../../assets/Images/size.png" alt="Size" />
+            <div class="col-md-12 d-flex" style="gap: 10px">
+              <div class="col-md-8">
+                <div class="row">
+                  <!-- Size Range -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="
+                      TenantResult.Buybox[0].MinBuildingSize ||
+                      TenantResult.Buybox[0].MaxBuildingSize
+                    "
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img src="../../../assets/Images/size.png" alt="Size" />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Size needed</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].MinBuildingSize }} -
+                          {{ TenantResult.Buybox[0].MaxBuildingSize }} SF
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Size needed</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].MinBuildingSize }} -
-                      {{ TenantResult.Buybox[0].MaxBuildingSize }} SF
+                  <!-- Ceiling Height -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].CeilingHeight"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/height.png"
+                          alt="Ceiling Height"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Ceiling Height</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].CeilingHeight }} ft
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Drive Thru -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].DriveThru !== undefined"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/drive-thru.png"
+                          alt="Drive Thru"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Drive Thru</div>
+                        <div class="spec-value">
+                          {{
+                            TenantResult.Buybox[0].DriveThru
+                              ? "Required"
+                              : "Not Required"
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Overnight Boarding -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="
+                      TenantResult.Buybox[0].OvernightBoardingPermitted !==
+                      undefined
+                    "
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/overnight.png"
+                          alt="Overnight Boarding"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Overnight Boarding</div>
+                        <div class="spec-value">
+                          {{
+                            TenantResult.Buybox[0].OvernightBoardingPermitted
+                              ? "Permitted"
+                              : "Not Permitted"
+                          }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Building Type -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].BuildingType"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/building.png"
+                          alt="Building Type"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Building Type</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].BuildingType }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Deal Structure -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].DealStructure"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/deal.png"
+                          alt="Deal Structure"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Deal Structure</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].DealStructure }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Lease Term -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].LeaseTerm"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/lease.png"
+                          alt="Lease Term"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Lease Term</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].LeaseTerm }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- NNN Charges -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].NNNCharges"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/charges.png"
+                          alt="NNN Charges"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">NNN Charges</div>
+                        <div class="spec-value">
+                          ${{ TenantResult.Buybox[0].NNNCharges | number }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- TI Allowance -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].TIAllowance"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/allowance.png"
+                          alt="TI Allowance"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">TI Allowance</div>
+                        <div class="spec-value">
+                          ${{ TenantResult.Buybox[0].TIAllowance | number }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Parking Spaces -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].ParkingSpaces"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/parking.png"
+                          alt="Parking Spaces"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Parking Spaces</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].ParkingSpaces }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Base Rent -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].BaseRent"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/rent.png"
+                          alt="Base Rent"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Base Rent</div>
+                        <div class="spec-value">
+                          ${{ TenantResult.Buybox[0].BaseRent | number }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Building Square Footage -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].BuildingSquareFootage"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/square-footage.png"
+                          alt="Building Square Footage"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Building Square Footage</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].BuildingSquareFootage }} SF
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Flood Zone -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].FloodZone"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/flood.png"
+                          alt="Flood Zone"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Flood Zone</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].FloodZone }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Frontage Length -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].FrontageLength"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/frontage.png"
+                          alt="Frontage Length"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Frontage Length</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].FrontageLength }} ft
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Historic District -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].HistoricDistrict"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/historic.png"
+                          alt="Historic District"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Historic District</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].HistoricDistrict }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Lot Size -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].LotSize"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/lot-size.png"
+                          alt="Lot Size"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Lot Size</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].LotSize }} acres
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Property Condition -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].PropertyCondition"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/condition.png"
+                          alt="Property Condition"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Property Condition</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].PropertyCondition }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Purchase Price -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].PurchasePrice"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/price.png"
+                          alt="Purchase Price"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Purchase Price</div>
+                        <div class="spec-value">
+                          ${{ TenantResult.Buybox[0].PurchasePrice | number }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Restrictions -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].Restrictions"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/restrictions.png"
+                          alt="Restrictions"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Restrictions</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].Restrictions }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Service Access -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].ServiceAccess"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/access.png"
+                          alt="Service Access"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Service Access</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].ServiceAccess }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Traffic Direction -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].TrafficDrection"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/traffic.png"
+                          alt="Traffic Direction"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Traffic Direction</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].TrafficDrection }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Vehicles Per Day -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].VehiclePerDay"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/vehicles.png"
+                          alt="Vehicles Per Day"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Vehicles Per Day</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].VehiclePerDay }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Zoning -->
+                  <div
+                    class="col-md-4 mb-3"
+                    *ngIf="TenantResult.Buybox[0].Zoning"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/zoning.png"
+                          alt="Zoning"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Zoning</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].Zoning }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Other Comments -->
+                  <div
+                    class="col-12 mb-3"
+                    *ngIf="TenantResult.Buybox[0].OtherComments"
+                  >
+                    <div class="spec-item">
+                      <div class="spec-icon">
+                        <img
+                          src="../../../assets/Images/SVG/comments.png"
+                          alt="Other Comments"
+                        />
+                      </div>
+                      <div class="spec-content">
+                        <div class="spec-title">Other Comments</div>
+                        <div class="spec-value">
+                          {{ TenantResult.Buybox[0].OtherComments }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- Ceiling Height -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].CeilingHeight"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/height.png"
-                      alt="Ceiling Height"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Ceiling Height</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].CeilingHeight }} ft
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Drive Thru -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].DriveThru !== undefined"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/drive-thru.png"
-                      alt="Drive Thru"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Drive Thru</div>
-                    <div class="spec-value">
-                      {{
-                        TenantResult.Buybox[0].DriveThru
-                          ? "Required"
-                          : "Not Required"
-                      }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Overnight Boarding -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="
-                  TenantResult.Buybox[0].OvernightBoardingPermitted !==
-                  undefined
-                "
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/overnight.png"
-                      alt="Overnight Boarding"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Overnight Boarding</div>
-                    <div class="spec-value">
-                      {{
-                        TenantResult.Buybox[0].OvernightBoardingPermitted
-                          ? "Permitted"
-                          : "Not Permitted"
-                      }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Building Type -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].BuildingType"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/building.png"
-                      alt="Building Type"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Building Type</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].BuildingType }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Deal Structure -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].DealStructure"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/deal.png"
-                      alt="Deal Structure"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Deal Structure</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].DealStructure }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Lease Term -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].LeaseTerm"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/lease.png"
-                      alt="Lease Term"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Lease Term</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].LeaseTerm }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- NNN Charges -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].NNNCharges"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/charges.png"
-                      alt="NNN Charges"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">NNN Charges</div>
-                    <div class="spec-value">
-                      ${{ TenantResult.Buybox[0].NNNCharges | number }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- TI Allowance -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].TIAllowance"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/allowance.png"
-                      alt="TI Allowance"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">TI Allowance</div>
-                    <div class="spec-value">
-                      ${{ TenantResult.Buybox[0].TIAllowance | number }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Parking Spaces -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].ParkingSpaces"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/parking.png"
-                      alt="Parking Spaces"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Parking Spaces</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].ParkingSpaces }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Base Rent -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].BaseRent"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/rent.png"
-                      alt="Base Rent"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Base Rent</div>
-                    <div class="spec-value">
-                      ${{ TenantResult.Buybox[0].BaseRent | number }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Building Square Footage -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].BuildingSquareFootage"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/square-footage.png"
-                      alt="Building Square Footage"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Building Square Footage</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].BuildingSquareFootage }} SF
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Flood Zone -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].FloodZone"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/flood.png"
-                      alt="Flood Zone"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Flood Zone</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].FloodZone }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Frontage Length -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].FrontageLength"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/frontage.png"
-                      alt="Frontage Length"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Frontage Length</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].FrontageLength }} ft
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Historic District -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].HistoricDistrict"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/historic.png"
-                      alt="Historic District"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Historic District</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].HistoricDistrict }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Lot Size -->
-              <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].LotSize">
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/lot-size.png"
-                      alt="Lot Size"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Lot Size</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].LotSize }} acres
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Property Condition -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].PropertyCondition"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/condition.png"
-                      alt="Property Condition"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Property Condition</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].PropertyCondition }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Purchase Price -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].PurchasePrice"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/price.png"
-                      alt="Purchase Price"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Purchase Price</div>
-                    <div class="spec-value">
-                      ${{ TenantResult.Buybox[0].PurchasePrice | number }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Restrictions -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].Restrictions"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/restrictions.png"
-                      alt="Restrictions"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Restrictions</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].Restrictions }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Service Access -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].ServiceAccess"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/access.png"
-                      alt="Service Access"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Service Access</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].ServiceAccess }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Traffic Direction -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].TrafficDrection"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/traffic.png"
-                      alt="Traffic Direction"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Traffic Direction</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].TrafficDrection }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Vehicles Per Day -->
-              <div
-                class="col-md-4 mb-3"
-                *ngIf="TenantResult.Buybox[0].VehiclePerDay"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/vehicles.png"
-                      alt="Vehicles Per Day"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Vehicles Per Day</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].VehiclePerDay }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Zoning -->
-              <div class="col-md-4 mb-3" *ngIf="TenantResult.Buybox[0].Zoning">
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/zoning.png"
-                      alt="Zoning"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Zoning</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].Zoning }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Other Comments -->
-              <div
-                class="col-12 mb-3"
-                *ngIf="TenantResult.Buybox[0].OtherComments"
-              >
-                <div class="spec-item">
-                  <div class="spec-icon">
-                    <img
-                      src="../../../assets/Images/SVG/comments.png"
-                      alt="Other Comments"
-                    />
-                  </div>
-                  <div class="spec-content">
-                    <div class="spec-title">Other Comments</div>
-                    <div class="spec-value">
-                      {{ TenantResult.Buybox[0].OtherComments }}
-                    </div>
-                  </div>
-                </div>
+              <div class="col-md-4">
+                <div #mapContainer id="map" style="width: 100%; height: 400px;"></div>
+                <!-- <div *ngFor="let poly of customPolygons; let i = index">
+                  <span>{{ poly.geoJson.properties.NAME }}</span>
+                  <input
+                    type="checkbox"
+                    [checked]="poly.visible"
+                    (change)="togglePolygonVisibility(poly)"
+                  />
+                </div> -->
               </div>
             </div>
           </div>
@@ -638,212 +659,307 @@
         </div>
       </div>
 
-      <div *ngIf="JsonPDF" class="mt-3 shopping-center-container">
-        <div class="row justify-content-center">
-          <div class="col-md-10 col-lg-8">
-            <!-- Center Information Card -->
-            <div class="card shadow-sm mb-4">
-              <div class="card-header text-white text-center background">
-                <h4 class="mb-0 text-dark">Shopping Center Information</h4>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-12">
-                    <dl class="row mb-0">
-                      <ng-container *ngIf="JsonPDF.CenterName">
-                        <dt class="col-sm-4">Center Name:</dt>
-                        <dd class="col-sm-8">{{ JsonPDF.CenterName }}</dd>
-                      </ng-container>
-                      <ng-container *ngIf="JsonPDF.CenterType">
-                        <dt class="col-sm-4">Center Type:</dt>
-                        <dd class="col-sm-8">{{ JsonPDF.CenterType }}</dd>
-                      </ng-container>
-                      <ng-container *ngIf="JsonPDF.CenterAddress">
-                        <dt class="col-sm-4">Address:</dt>
-                        <dd class="col-sm-8">
-                          {{ JsonPDF.CenterAddress }}
-                        </dd>
-                      </ng-container>
-                      <ng-container *ngIf="JsonPDF.CenterCity">
-                        <dt class="col-sm-4">City:</dt>
-                        <dd class="col-sm-8">{{ JsonPDF.CenterCity }}</dd>
-                      </ng-container>
-                      <ng-container *ngIf="JsonPDF.CenterState">
-                        <dt class="col-sm-4">State:</dt>
-                        <dd class="col-sm-8">
-                          {{ JsonPDF.CenterState }}
-                        </dd>
-                      </ng-container>
-                      <ng-container *ngIf="JsonPDF.TotalAvailableSpace_SF">
-                        <dt class="col-sm-4">Available Space:</dt>
-                        <dd class="col-sm-8">
-                          {{ JsonPDF.TotalAvailableSpace_SF }}
-                          <strong>SF</strong>
-                        </dd>
-                      </ng-container>
-                      <ng-container *ngIf="JsonPDF.percentage">
-                        <dt class="col-sm-4">Percentage:</dt>
-                        <dd class="col-sm-8">{{ JsonPDF.percentage }}%</dd>
-                      </ng-container>
-                      <ng-container *ngIf="JsonPDF.reason">
-                        <dt class="col-sm-4">Reason:</dt>
-                        <dd class="col-sm-8">
-                          <div [ngClass]="{ truncate: !showFullReason }">
-                            {{ JsonPDF.reason }}
-                          </div>
-                          <span (click)="toggleReason()" class="toggle-link">
-                            {{ showFullReason ? "View Less" : "View More" }}
-                          </span>
-                        </dd>
-                      </ng-container>
-                    </dl>
-                  </div>
-                </div>
+     <!-- SHOPPING CENTER INFORMATION -->
+     <div *ngIf="JsonPDF" class="mt-3">
+      <div class="card shoppingcentercard">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <h4 class="ShoppingCenterInformation">
+                Shopping Center Information
+              </h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4 mt-3" *ngIf="JsonPDF.CenterName">
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Center Name</span>
+                <span class="shoppingsubtitle">{{ JsonPDF.CenterName }}</span>
               </div>
             </div>
 
-            <!-- Availability and Tenants Section -->
-            <div class="row g-4">
-              <!-- Availability Card -->
-              <div class="col-md-6">
-                <div class="card shadow-sm h-100">
-                  <div class="card-header text-white blackbackground">
-                    <h5 class="mb-0 d-flex justify-content-center">
-                      Availability
-                    </h5>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                      <li
-                        *ngFor="let avail of JsonPDF.Availability"
-                        class="list-group-item border-0 px-0"
-                      >
-                        <div class="form-check">
-                          <input
-                            type="checkbox"
-                            class="form-check-input"
-                            [(ngModel)]="avail.isAdded"
-                            id="availCheckbox-{{ avail.id }}"
-                          />
-                          <label
-                            class="form-check-label"
-                            for="availCheckbox-{{ avail.id }}"
-                          >
-                            <strong>Building Size:</strong>
-                            {{ avail.BuildingSizeSf }} SF
-                          </label>
-                        </div>
-                      </li>
-                    </ul>
-                    <!-- Add Availability Button and Input -->
-                    <div class="mt-3">
-                      <button
-                        (click)="toggleAddAvailability()"
-                        class="btn btn-primary btn-sm"
-                      >
-                        Add Availability
-                      </button>
-                      <div *ngIf="showAddAvailabilityInput" class="mt-2">
-                        <div class="input-group">
-                          <input
-                            type="number"
-                            class="form-control"
-                            [(ngModel)]="newAvailabilitySize"
-                            placeholder="Enter building size (SF)"
-                          />
-                          <button
-                            class="btn btn-success"
-                            (click)="addNewAvailability()"
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div
+              class="col-4 mt-3"
+              *ngIf="JsonPDF.CenterType"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Center Type</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.CenterType || "N/A"
+                }}</span>
               </div>
+            </div>
 
-              <!-- Tenants Card -->
-              <div class="col-md-6">
-                <div class="card shadow-sm h-100">
-                  <div class="card-header text-white blackbg">
-                    <h5 class="mb-0 d-flex justify-content-center">Tenants</h5>
+            <div
+              class="col-4 mt-3 "
+              *ngIf="JsonPDF.CenterAddress"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Address</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.CenterAddress
+                }}</span>
+              </div>
+            </div>
+
+            <div
+              class="col-4 mt-3"
+              *ngIf="JsonPDF.CenterCity"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">City</span>
+                <span class="shoppingsubtitle">{{ JsonPDF.CenterCity }}</span>
+              </div>
+            </div>
+
+            <div class="col-4 mt-3" *ngIf="JsonPDF.CenterState">
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">State</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.CenterState
+                }}</span>
+              </div>
+            </div>
+
+            <div
+              class="col-4 mt-3"
+              *ngIf="JsonPDF.TotalAvailableSpace_SF"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Available Space</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.TotalAvailableSpace_SF
+                }} SF</span>
+              </div>
+            </div>
+
+            <div
+              class="col-4 mt-3"
+              *ngIf="JsonPDF.percentage"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Percentage</span>
+                <span class="shoppingsubtitle"
+                  >{{ JsonPDF.percentage }}%</span
+                >
+              </div>
+            </div>
+
+            <div
+              class="col-4 mt-3"
+              *ngIf="JsonPDF.reason"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Reason</span>
+                <span class="shoppingsubtitle">
+                  <div [ngClass]="{ truncate: !showFullReason }">
+                    {{ JsonPDF.reason }}
                   </div>
-                  <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                      <li
-                        *ngFor="let tenant of JsonPDF.Tenants"
-                        class="list-group-item border-0 px-0"
-                      >
-                        <div class="form-check">
-                          <input
-                            type="checkbox"
-                            class="form-check-input"
-                            [(ngModel)]="tenant.isAdded"
-                            id="tenantCheckbox-{{ tenant.id }}"
-                          />
-                          <label
-                            class="form-check-label"
-                            for="tenantCheckbox-{{ tenant.id }}"
-                          >
-                            {{ tenant.Name }}
-                            <a
-                              *ngIf="tenant.OrgUrl"
-                              [href]="tenant.OrgUrl"
-                              target="_blank"
-                              class="tenant-link"
-                            >
-                              (Website)
-                            </a>
-                          </label>
-                        </div>
-                        <!-- + Icon to Add More Tenants -->
-                      </li>
-                    </ul>
-                    <!-- Add Tenant Button and Input -->
-                    <div class="mt-3">
-                      <button
-                        (click)="toggleAddTenant()"
-                        class="btn btn-primary btn-sm"
-                      >
-                        Add Tenant
-                      </button>
-                      <div *ngIf="showAddTenantInput" class="mt-2">
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            class="form-control"
-                            [(ngModel)]="newTenantName"
-                            placeholder="Enter tenant name"
-                          />
-                          <button
-                            class="btn btn-success"
-                            (click)="addNewTenant()"
-                          >
-                            Add
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  <span (click)="toggleReason()" class="toggle-link">
+                    {{ showFullReason ? "View Less" : "View More" }}
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <div class="col-4 mt-3" *ngIf="JsonPDF.CenterCounty">
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Center County</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.CenterCounty
+                }}</span>
+              </div>
+            </div>
+
+            <div
+              class="col-4 mt-3"
+              *ngIf="JsonPDF.ZipCode"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Zip Code</span>
+                <span class="shoppingsubtitle">{{ JsonPDF.ZipCode }}</span>
+              </div>
+            </div>
+
+            <div class="col-4 mt-3" *ngIf="JsonPDF.LandArea_SF">
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Land Area (SF)</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.LandArea_SF
+                }}</span>
+              </div>
+            </div>
+
+            <div
+              class="col-4 mt-3"
+              *ngIf="JsonPDF.NumberOfPropertiesInCenter"
+            >
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Properties In Center</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.NumberOfPropertiesInCenter
+                }}</span>
+              </div>
+            </div>
+
+            <div class="col-4 mt-3" *ngIf="JsonPDF.PercentLeased">
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Percent Leased</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.PercentLeased
+                }}</span>
+              </div>
+            </div>
+
+            <div class="col-4 mt-3" *ngIf="JsonPDF.SmallestSpaceAvailable">
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle"
+                  >Smallest Space Available</span
+                >
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.SmallestSpaceAvailable
+                }} SF</span>
+              </div>
+            </div>
+
+            <div class="col-4 mt-3" *ngIf="JsonPDF.NumberOfStores">
+              <div class="d-flex flex-column justify-content-center">
+                <span class="shoppingcentertitle">Number of Stores</span>
+                <span class="shoppingsubtitle">{{
+                  JsonPDF.NumberOfStores
+                }}</span>
               </div>
             </div>
           </div>
+
+          <hr class="custom-hr" />
+          <div class="row">
+            <div class="d-flex align-items-center justify-content-between">
+              <h4 class="ShoppingCenterInformation mt-2 mb-3">
+                Availability
+              </h4>
+              <button class="AddAvailablebutton" *ngIf="!showAddAvailabilityInput">
+                <span
+                  class="AddAvailablebuttontext"
+                  (click)="toggleAddAvailability()"
+                  >Add Available
+                </span>
+              </button>
+              <div *ngIf="showAddAvailabilityInput" class="mt-2">
+                <div class="input-group">
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="newAvailabilitySize"
+                    placeholder="Enter building size (SF)"
+                  />
+                  <button
+                    class="btn btn-success"
+                    (click)="addNewAvailability()"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+            <ul>
+              <li
+                *ngFor="let avail of JsonPDF.Availability"
+                class="list-group-item border-0 px-0"
+              >
+                <div class="form-check mt-2">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [(ngModel)]="avail.isAdded"
+                    id="availCheckbox-{{ avail.id }}"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="availCheckbox-{{ avail.id }}"
+                  >
+                    <div
+                      class="d-flex align-items-center justify-content-center gap-1"
+                    >
+                      <span class="BuildingSize">Building Size:</span>
+                      <span class="BuildingAndTenant">
+                        {{ avail.BuildingSizeSf }} SF
+                      </span>
+                    </div>
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <hr class="custom-hr" />
+          <div class="row">
+            <div class="d-flex align-items-center justify-content-between">
+              <h4 class="ShoppingCenterInformation mt-2 mb-3">Tenants</h4>
+              <button class="AddAvailablebutton" *ngIf="!removetenant">
+                <span
+                  class="AddAvailablebuttontext" 
+                  (click)="toggleAddTenant()"
+                  >Add Tenant
+                </span>
+              </button>
+              <div *ngIf="showAddTenantInput" class="mt-2">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="newTenantName"
+                    placeholder="Enter tenant name"
+                  />
+                  <button class="btn btn-success" (click)="addNewTenant()">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+            <ul>
+              <li
+                *ngFor="let tenant of JsonPDF.Tenants"
+                class="list-group-item border-0 px-0"
+              >
+                <div class="form-check mt-2">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [(ngModel)]="tenant.isAdded"
+                    id="tenantCheckbox-{{ tenant.id }}"
+                  />
+                  <label
+                    class="BuildingAndTenant"
+                    for="tenantCheckbox-{{ tenant.id }}"
+                  >
+                    {{ tenant.Name }}
+                    <a
+                      *ngIf="tenant.OrgUrl"
+                      [href]="tenant.OrgUrl"
+                      target="_blank"
+                      class="tenant-link"
+                    >
+                      (Website)
+                    </a>
+                  </label>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+        >
+          <button
+            class="submitpdfbutton"
+            *ngIf="JsonPDF?.IsSubmitted === true"
+            (click)="sendJson()"
+          >
+            Submit PDF Data
+          </button>
         </div>
       </div>
-      <div
-        class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
-      >
-        <button
-          class="submitpdfbutton"
-          *ngIf="JsonPDF?.IsSubmitted === false"
-          (click)="sendJson()"
-        >
-          Submit PDF Data
-        </button>
-      </div>
+    </div>
     </div>
   </div>
 </div>
