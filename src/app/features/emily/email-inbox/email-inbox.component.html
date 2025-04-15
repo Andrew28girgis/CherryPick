@@ -217,8 +217,17 @@
           name="subject" id="subject" placeholder="Enter your subject email" />
       </div>
       <!-- formControlName="body" -->
-      <p-editor [(ngModel)]="emailBodyResponse" [style]="{ height: '400px' }">
+      <p-editor [(ngModel)]="returnGetMailContextGenerated" [style]="{ height: '400px' }">
       </p-editor>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button
+        type="button"
+        class="m-3 buttonSave"
+        (click)="Send()"
+      >
+      Send
+      </button>
     </div>
   </div>
 </div>

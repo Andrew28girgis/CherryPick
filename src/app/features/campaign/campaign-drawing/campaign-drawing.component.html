@@ -131,13 +131,8 @@
                           class="btn btn-success"
                           (click)="viewShoppingCenterOnMap(polygon.id)"
                         >
-                          {{
-                            displayedPolygonsCenters.includes(polygon.id)
-                              ? "Hide"
-                              : "View"
-                          }}
+                        
                           {{ getShoppingCentersForPolygon(polygon.id).length }}
-                          Sites
                         </button>
                       </ng-container>
 

@@ -5,9 +5,8 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { Generated } from 'src/app/shared/models/emailGenerate';
 import { RelationNames } from 'src/app/shared/models/emailGenerate';
 import { BuyBoxOrganizationsForEmail } from 'src/app/shared/models/buyboxOrganizationsForEmail';
-import { from, Observable, of, forkJoin, firstValueFrom } from 'rxjs';
-import { concatMap, tap } from 'rxjs/operators';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, firstValueFrom } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import {
   OrganizationChecked,
   buyboxChecklist,
@@ -19,7 +18,7 @@ import {
 } from 'src/app/shared/models/GenerateContext';
 import { MailContextGenerated } from 'src/app/shared/models/MailContextGenerated';
 import { EmilyService } from 'src/app/core/services/emily.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-email-inbox',
@@ -31,11 +30,9 @@ export class EmailInboxComponent implements OnInit {
   contactId!: any;
   BatchGuid!: string;
   campaignId: any;
-
   prompts: any[] = [];
   selectedPromptId: string = '';
   selectedPromptText: string = '';
-
   isLandingSelected: boolean = true;
   isISCcSelected: boolean = true;
   showRelationNames: boolean = true;
@@ -46,7 +43,6 @@ export class EmailInboxComponent implements OnInit {
   ShowCompetitors: boolean = true;
   ShowComplementaries: boolean = true;
   showMinBuildingSize: boolean = true;
-
   generated: Generated[] = [];
   relationCategoriesNames: RelationNames[] = [];
   BuyBoxOrganizationsForEmail: BuyBoxOrganizationsForEmail[] = [];
@@ -54,7 +50,7 @@ export class EmailInboxComponent implements OnInit {
   OrganizationCheckedServices: OrganizationChecked[] = [];
   showMoreRelations: { [key: number]: boolean } = {};
   returnGetMailContextGenerated: MailContextGenerated[] = [];
-  returnGetMailContext!:any;
+  returnGetMailContext!: any;
   ManagerOrganizationName: string = '';
   BuyBoxOrganizationName: string = '';
   MangerDescription: string = '';
@@ -86,9 +82,7 @@ export class EmailInboxComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
-    private modalService: NgbModal,
-    private emilyService: EmilyService,
-    private sanitizer: DomSanitizer
+    private emilyService: EmilyService
   ) {}
 
   async ngOnInit() {
@@ -445,8 +439,6 @@ export class EmailInboxComponent implements OnInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
-        console.log(`before`, this.returnGetMailContextGenerated);
-
         this.returnGetMailContextGenerated =
           this.returnGetMailContextGenerated.filter((r: any) => {
             if (r.MailContextId == mailContextId) {
@@ -454,22 +446,14 @@ export class EmailInboxComponent implements OnInit {
               this.emailSubject = r.Subject;
             }
           });
-        console.log(`this.mailContextId`, mailContextId);
-        console.log(
-          `this.returnGetMailContextGenerated`,
-          this.returnGetMailContextGenerated
-        );
-        console.log(`this.emailBodyResponse`, this.emailBodyResponse);
-        console.log(`this.emailSubject`, this.emailSubject);
-
         this.spinner.hide();
       },
     });
   }
-  ReadSpecificMails(mailContextId: number) {
-    this.spinner.show();
 
-    var body: any = {
+  ReadSpecificMails(mailContextId: number): void {
+    this.spinner.show();
+    const body: any = {
       Name: 'ReadSpecificMails',
       MainEntity: null,
       Params: {
@@ -481,8 +465,37 @@ export class EmailInboxComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.returnGetMailContextGenerated = data.json;
-        this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(this.returnGetMailContext[0].body);
+        const response = data.json;
+        if (!response || response.length === 0) {
+          setTimeout(() => {
+            this.ReadSpecificMails(mailContextId);
+          }, 3000);
+        } else {
+          this.returnGetMailContextGenerated = response[0].body;
+          this.emailSubject = response[0].subject;
+          this.spinner.hide();
+        }
+      },
+    });
+  }
+
+  Send() {
+    this.spinner.show();
+    const body: any = {
+      Name: 'ComposeEmail',
+      MainEntity: null,
+      Params: {
+        BuyBoxId: +this.buyBoxId,
+        CampaignId: +this.campaignId,
+        RecieverId: [Number(this.selectedContactContactId.ContactId)].join(','),
+        Subject: this.emailSubject,
+        Body: this.returnGetMailContextGenerated,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
         this.spinner.hide();
       },
     });
