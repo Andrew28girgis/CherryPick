@@ -152,7 +152,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.shoppingCenterManage = res.json[0];
+        this.shoppingCenterManage = res.json;
         console.log('ShoppingCenterManage', this.shoppingCenterManage);
         
       },
