@@ -201,6 +201,29 @@ letter-spacing: -0.07px;
   font-weight: 500;
   line-height: 30px;
 }
+.submitbronchure {
+  display: flex;
+  padding: 4px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  width: fit-content;
+  height: fit-content;
+}
+.submitbronchure img {
+  width: 20px;
+  height: 20px;
+}
+.submitbronchure span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
 
 .smalllframe {
   display: flex;
@@ -620,7 +643,7 @@ line-height: 32px;
   height: 540px;
 }
 .heightimportant{
-  height: 100 !important;
+  flex-grow: 1;
 }
 
 @media (max-width: 576px) {
