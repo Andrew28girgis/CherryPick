@@ -1,82 +1,137 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { General, adminLogin } from 'src/app/shared/models/domain';
+import {
+  General,
+  adminLogin as AdminLogin,
+} from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { PlacesService } from 'src/app/core/services/places.service';  
+import { PlacesService } from 'src/app/core/services/places.service';
+
+/**
+ * LoginComponent handles user authentication and login functionality
+ * including both email/password and GUID-based login methods.
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  adminLogin!: adminLogin;
-  wrongPassword = false;
-  General!: General; 
-  t: any;
+  private readonly MICROSOFT_LINKED_KEY = 'accountMicrosoftLinked';
+  private readonly CONTACT_ID_KEY = 'contactId';
+  private readonly ORG_ID_KEY = 'orgId';
+  private readonly MAP_VIEW_KEY = 'mapView';
+
+  public loginData!: AdminLogin;
+  public general!: General;
+  private loginToken: string | null = null;
+
   constructor(
-    public activatedRoute: ActivatedRoute,
-    public router: Router,
-    private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService, 
-    private authService: AuthService
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly placesService: PlacesService,
+    private readonly spinner: NgxSpinnerService,
+    private readonly authService: AuthService
   ) {
-    localStorage.removeItem('mapView');
+    localStorage.removeItem(this.MAP_VIEW_KEY);
   }
 
-  ngOnInit() {
-    this.General = new General();
-    this.adminLogin = new adminLogin(); 
-    this.activatedRoute.queryParamMap.subscribe((params) => {
-      this.t = params.get('t');
-      if (this.t) {
-        localStorage.clear();
-        this.loginWithGUID();
-      } else {
-        localStorage.clear();
-      }
-    });
+  ngOnInit(): void {
+    this.initializeData();
+    this.handleRouteParams();
   }
 
-  loginWithGUID() {
+  /**
+   * Handles form submission for email/password login
+   */
+  public onSubmit(): void {
+    const loginRequest = this.prepareLoginRequest();
+
     this.spinner.show();
-    const body: any = {
-      Name: 'GetBuyBoxIdToBeShown',
-      Params: {
-        BuyBoxGUID: this.t,
+    this.placesService.loginUser(loginRequest).subscribe({
+      next: (response: any) => {
+        this.handleLoginSuccess(response);
       },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        localStorage.setItem('orgId', data.json.organizationId);
-        let buybBoxId = data.json[0].buyBoxId;
-        let organizationId = data.json[0].organizationId;
-        let buyboxName = data.json[0].name;
-        this.router.navigate(['/home', buybBoxId, organizationId, buyboxName]);
+      complete: () => {
         this.spinner.hide();
       },
     });
   }
 
-  onSubmit() {
-    if (this.t) {
-      this.adminLogin.contactToken = this.t;
-    }
-    this.PlacesService.loginUser(this.adminLogin).subscribe((data: any) => {
-      localStorage.setItem(
-        'accountMicrosoftLinked',
-        data.accountMicrosoftLinked
-      );
-      this.authService.setToken(data.token);
-      localStorage.setItem('contactId', data.contactId);
-      localStorage.setItem('orgId', data.orgId);
-      if (data.token) {
-        this.navigateToHome();
+  /**
+   * Initializes login data and general settings
+   */
+  private initializeData(): void {
+    this.general = new General();
+    this.loginData = new AdminLogin();
+    localStorage.clear();
+  }
+
+  /**
+   * Handles route parameters and initiates GUID-based login if token is present
+   */
+  private handleRouteParams(): void {
+    this.route.queryParamMap.subscribe((params) => {
+      this.loginToken = params.get('t');
+      if (this.loginToken) {
+        this.loginWithGUID();
       }
     });
   }
 
-  private navigateToHome() {
+  /**
+   * Handles login with GUID token
+   */
+  private loginWithGUID(): void {
+    this.spinner.show();
+
+    const request = {
+      Name: 'GetBuyBoxIdToBeShown',
+      Params: {
+        BuyBoxGUID: this.loginToken,
+      },
+    };
+
+    this.placesService.GenericAPI(request).subscribe({
+      next: (response) => {
+        this.handleGUIDLoginSuccess(response);
+      },
+      complete: () => {
+        this.spinner.hide();
+      },
+    });
+  }
+
+  private handleGUIDLoginSuccess(response: any): void {
+    const { organizationId, buyBoxId, name: buyboxName } = response.json[0];
+    localStorage.setItem(this.ORG_ID_KEY, organizationId);
+    this.router.navigate(['/home', buyBoxId, organizationId, buyboxName]);
+  }
+
+  private prepareLoginRequest(): AdminLogin {
+    if (this.loginToken) {
+      this.loginData.contactToken = this.loginToken;
+    }
+    return this.loginData;
+  }
+
+  private handleLoginSuccess(response: any): void {
+    localStorage.setItem(
+      this.MICROSOFT_LINKED_KEY,
+      response.accountMicrosoftLinked
+    );
+    localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
+    localStorage.setItem(this.ORG_ID_KEY, response.orgId);
+
+    this.authService.setToken(response.token);
+
+    if (response.token) {
+      this.navigateToHome();
+    }
+  }
+
+  private navigateToHome(): void {
     this.router.navigate(['/campaigns']);
   }
 }
