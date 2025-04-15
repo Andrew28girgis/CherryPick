@@ -14,7 +14,6 @@ import {
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center, Reaction } from '../../../../shared/models/shoppingCenters';
@@ -24,8 +23,6 @@ import { NgForm } from '@angular/forms';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { General } from 'src/app/shared/models/domain';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { StateService } from 'src/app/core/services/state.service';
-import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
   trigger,
@@ -35,6 +32,7 @@ import {
   keyframes,
 } from '@angular/animations';
 import { Subscription } from 'rxjs';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 
 declare const google: any;
 @Component({
@@ -87,7 +85,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   @ViewChild('carousel') carousel!: NgbCarousel;
-  // @ViewChild('carousel', { read: ElementRef }) carouselElement!: ElementRef;
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
@@ -123,7 +120,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   isLikeInProgress = false;
   clickTimeout: any;
   sanitizedUrl!: SafeResourceUrl;
-  // isOpen = false;
   mapViewOnePlacex = false;
   StreetViewOnePlace!: boolean;
   selectedState = '0';
@@ -158,8 +154,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly SWIPE_THRESHOLD = 50;
   private globalClickListenerr!: () => void;
   private isOptionSelected = false;
-  private categoryNameCache = new Map<number, string>();
-  private unitSizeCache = new Map<string, string>();
   private commentSortCache = new WeakMap<any[], any[]>();
   @ViewChild('panelContent') panelContent!: ElementRef;
   heartVisible = false;
@@ -178,14 +172,12 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
-
-    private stateService: StateService,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef,
     private PlacesService: PlacesService,
-    private viewManagerService: ViewManagerService,
     private sanitizer: DomSanitizer,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private shoppingCenterService: ViewManagerService 
   ) {}
 
   ngOnInit(): void {
@@ -193,14 +185,81 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
+    
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-      this.initializeData();
+      
+      // Initialize data using the centralized service
+      this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
+
+    // Subscribe to data from the centralized service
+    this.subscriptions.add(
+      this.shoppingCenterService.isLoading$.subscribe(loading => {
+        this.isLoading = loading;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.shoppingCenters$.subscribe(centers => {
+        this.shoppingCenters = centers;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.filteredCenters$.subscribe(centers => {
+        this.filteredCenters = centers;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.buyboxCategories$.subscribe(categories => {
+        this.buyboxCategories = categories;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.shareOrg$.subscribe(org => {
+        this.ShareOrg = org;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.buyboxPlaces$.subscribe(places => {
+        this.buyboxPlaces = places;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.selectedId$.subscribe(id => {
+        this.selectedId = id;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.selectedIdCard$.subscribe(id => {
+        this.selectedIdCard = id;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.searchQuery$.subscribe(query => {
+        this.searchQuery = query;
+        this.cdr.detectChanges();
+      })
+    );
 
     setTimeout(() => {
       this.mapsLoaded = true;
@@ -210,45 +269,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     window.addEventListener('resize', this.checkMobileView.bind(this));
   }
 
-  async initializeData() {
-    try {
-      this.isLoading = true; // Show skeleton
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
-        this.BuyBoxId
-      );
-      this.stateService.setShoppingCenters(this.shoppingCenters);
-      this.filteredCenters = this.shoppingCenters;
-
-      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(
-        this.BuyBoxId
-      );
-      this.stateService.setBuyboxCategories(this.buyboxCategories);
-
-      this.ShareOrg = await this.viewManagerService.getOrganizationById(
-        this.OrgId
-      );
-      this.stateService.setShareOrg(this.ShareOrg);
-
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
-        this.BuyBoxId
-      );
-      this.stateService.setBuyboxPlaces(this.buyboxPlaces);
-    } catch (error) {
-      // Handle error
-    } finally {
-      this.isLoading = false; // Hide skeleton
-      this.cdr.detectChanges();
-    }
-  }
-
   filterCenters() {
-    if (this.searchQuery.trim()) {
-      this.filteredCenters = this.shoppingCenters.filter((center) =>
-        center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    } else {
-      this.filteredCenters = this.shoppingCenters;
-    }
+    this.shoppingCenterService.filterCenters(this.searchQuery);
   }
 
   ngAfterViewInit(): void {
@@ -330,28 +352,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getNeareastCategoryName(categoryId: number): string {
-    if (this.categoryNameCache.has(categoryId)) {
-      return this.categoryNameCache.get(categoryId)!;
-    }
-
-    const result = this.viewManagerService.getNearestCategoryName(
-      categoryId,
-      this.buyboxCategories
-    );
-    this.categoryNameCache.set(categoryId, result);
-    return result;
+    return this.shoppingCenterService.getNearestCategoryName(categoryId);
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): string {
-    const key = `${shoppingCenter.Id}`;
-    if (this.unitSizeCache.has(key)) {
-      return this.unitSizeCache.get(key)!;
-    }
-
-    const result =
-      this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
-    this.unitSizeCache.set(key, result);
-    return result;
+    return this.shoppingCenterService.getShoppingCenterUnitSize(shoppingCenter);
   }
 
   toggleComments(shopping: any, event: MouseEvent): void {
@@ -377,7 +382,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
-    this.isLoading = true; // Show skeleton
+    this.isLoading = true;
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
         if (!shopping.ShoppingCenter.Comments) {
@@ -393,11 +398,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           shopping.ShoppingCenter.Comments
         );
 
-        this.isLoading = false; // Hide skeleton
+        this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: () => {
-        this.isLoading = false; // Hide skeleton
+        this.isLoading = false;
       },
     });
   }
@@ -419,7 +424,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     };
 
-    this.isLoading = true; // Show skeleton
+    this.isLoading = true;
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {
@@ -440,13 +445,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         }
 
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: () => {
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
       },
     });
   }
@@ -543,13 +546,11 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: () => {},
       error: () => {
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
         this.isLikeInProgress = false;
       },
       complete: () => {
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
         this.isLikeInProgress = false;
         this.cdr.markForCheck();
       },
@@ -897,7 +898,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addContact(form: NgForm): void {
-    this.isLoading = true; // Show skeleton
+    this.isLoading = true;
 
     const body: any = {
       Name: 'AddContactToOrganization',
@@ -912,7 +913,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data: any) => {
-        this.isLoading = false; // Hide skeleton
+        this.isLoading = false;
         this.newContact = {
           firstName: '',
           lastName: '',
@@ -925,8 +926,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
       },
     });
   }
@@ -947,15 +947,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) =>
-      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-    );
-
     try {
-      this.isLoading = true; // Show skeleton
-       
-
-      await this.viewManagerService.deleteShoppingCenter(
+      this.isLoading = true;
+      
+      await this.shoppingCenterService.deleteShoppingCenter(
         this.BuyBoxId,
         this.shoppingCenterIdToDelete!
       );
@@ -963,8 +958,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     } catch (error) {
       // Handle error
     } finally {
-      this.isLoading = false; // Hide skeleton
-       
+      this.isLoading = false;
       this.cdr.markForCheck();
     }
   }
@@ -1039,28 +1033,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-      this.selectedId = null;
-      return;
-    }
-
-    const targetElement = event?.target as HTMLElement;
-    const rect = targetElement?.getBoundingClientRect();
-
-    const shortcutsIcon = document.querySelector(
-      '.shortcuts_icon'
-    ) as HTMLElement;
-
-    if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${
-        rect.top + window.scrollY + targetElement.offsetHeight
-      }px`;
-      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
-    }
-
-    this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    this.selectedId = this.selectedId === id ? null : id;
+    this.shoppingCenterService.toggleShortcuts(id, close, event);
   }
 
   async openMapViewPlace(content: any, modalObject?: any) {
@@ -1078,35 +1051,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
-
-    if (!lat || !lng) {
-      return;
-    }
-
-    this.isLoading = true; // Show skeleton
-     
-
-    const { Map } = (await google.maps.importLibrary('maps')) as any;
-    const mapDiv = document.getElementById('mappopup') as HTMLElement;
-
-    if (!mapDiv) {
-      this.isLoading = false; // Hide skeleton
-       
-      return;
-    }
-
-    const map = new Map(mapDiv, {
-      center: { lat, lng },
-      zoom: 14,
-    });
-    const marker = new google.maps.Marker({
-      position: { lat, lng },
-      map: map,
-      title: 'Location Marker',
-    });
-
-    this.isLoading = false; // Hide skeleton
-     
+    await this.shoppingCenterService.initializeMap('mappopup', lat, lng);
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
@@ -1133,23 +1078,20 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     const heading = this.General.modalObject.Heading || 165;
     const pitch = this.General.modalObject.Pitch || 0;
 
-    this.isLoading = true; // Show skeleton
-     
+    this.isLoading = true;
 
     setTimeout(() => {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
         this.streetMap(lat, lng, heading, pitch);
       } else {
-        // Handle error
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
       }
     });
   }
 
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
-    const panorama = this.viewManagerService.initializeStreetView(
+    const panorama = this.shoppingCenterService.initializeStreetView(
       'street-view',
       lat,
       lng,
@@ -1159,8 +1101,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!panorama) {
       // Handle error
     }
-    this.isLoading = false; // Hide skeleton
-     
+    this.isLoading = false;
     this.cdr.markForCheck();
   }
 
@@ -1181,8 +1122,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openContactsModal(content: any): void {
-    this.isLoading = true; // Show skeleton
-     
+    this.isLoading = true;
 
     const body: any = {
       Name: 'GetOrganizationContacts',
@@ -1197,8 +1137,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.OrganizationContacts = [];
         }
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
         this.modalService.open(content, {
           size: 'lg',
           centered: true,
@@ -1206,8 +1145,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: () => {
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
       },
     });
   }
@@ -1218,8 +1156,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   GetPlaceDetails(placeId: number, ShoppingcenterId: number): void {
-    this.isLoading = true; // Show skeleton
-     
+    this.isLoading = true;
 
     const body: any = {
       Name: 'GetShoppingCenterDetails',
@@ -1240,40 +1177,17 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
             (link: any) => link.trim()
           );
         }
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: () => {
-        this.isLoading = false; // Hide skeleton
-         
+        this.isLoading = false;
       },
     });
   }
 
   RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
-    this.isLoading = true; // Show skeleton
-     
-
-    this.viewManagerService
-      .restoreShoppingCenter(MarketSurveyId, Deleted)
-      .then(() => {
-        const marketSurveyIdNum = Number(MarketSurveyId);
-
-        this.shoppingCenters = this.shoppingCenters.map((center) => {
-          if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
-            return { ...center, Deleted: false };
-          }
-          return center;
-        });
-        this.cdr.markForCheck();
-        this.isLoading = false; // Hide skeleton
-         
-      })
-      .catch(() => {
-        this.isLoading = false; // Hide skeleton
-         
-      });
+    this.shoppingCenterService.restoreShoppingCenter(MarketSurveyId, Deleted);
   }
 
   selectRating(rating: string): void {
