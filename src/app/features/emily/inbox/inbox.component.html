@@ -47,20 +47,27 @@
         <ul style="overflow-y: auto; max-height: 100vh; padding: 0">
           <ng-container *ngFor="let bb of BuyBoxMicroDeals">
             <p
-            class="buybox-name"
-            (click)="toggleBB(bb)"
-            #itemRef
-            [attr.data-org-id]="bb.OrganizationId"
-            [class]="bb.isOpen ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-right'"
-          >
-             <img
-              class="logo"
-              src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ bb.OrganizationId }}"
-              title="Kimco Realty"
-            />
-            {{ bb.OrganizationName }}
-          </p>
-          
+              class="buybox-name"
+              (click)="toggleBB(bb)"
+              #itemRef
+              [attr.data-org-id]="bb.OrganizationId" 
+            >
+              <i
+                [class]="
+                  bb.isOpen
+                    ? 'fa-solid fa-chevron-down'
+                    : 'fa-solid fa-chevron-right'
+                "
+              ></i>
+              <img
+                class="logo"
+                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                  bb.OrganizationId
+                }}"
+                title="Kimco Realty"
+              />
+              {{ bb.OrganizationName }}
+            </p>
 
             <!-- Only show contacts if bb.isOpen is true -->
             <ng-container *ngIf="bb.isOpen">
