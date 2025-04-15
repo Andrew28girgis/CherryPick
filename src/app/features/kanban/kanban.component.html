@@ -1,5 +1,5 @@
 <div class="page-layout">
-  <nav aria-label="breadcrumb">
+  <nav *ngIf="displayBreadcrumb" aria-label="breadcrumb">
     <ol class="breadcrumb">
       <ng-container *ngFor="let item of breadcrumbList; let last = last">
         <li
@@ -96,7 +96,6 @@
                     "
                     [pTooltip]="action.actionName"
                     tooltipPosition="top"
-                    (click)="openActionPopup(action.actionName)"
                   >
                     {{ action.actionName }}
                   </a>
@@ -192,7 +191,7 @@
                       </div>
                     </ng-container>
 
-                    <g-container
+                    <ng-container
                       *ngIf="
                         organization.Actions && organization.Actions.length > 0
                       "
@@ -237,7 +236,7 @@
                           </ng-container>
                         </div>
                       </ng-container>
-                    </g-container>
+                    </ng-container>
                   </div>
                 </ng-container>
               </ng-container>

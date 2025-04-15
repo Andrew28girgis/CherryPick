@@ -25,6 +25,8 @@ import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.c
 import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KayakComponent } from './kayak/kayak.component';
+import { KanbanModule } from '../kanban/kanban.module';
+import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -38,7 +40,8 @@ import { KayakComponent } from './kayak/kayak.component';
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
-    PolygonsControllerComponent
+    PolygonsControllerComponent,
+    KanbanViewComponent
     
   ],
   imports: [
@@ -56,6 +59,7 @@ import { KayakComponent } from './kayak/kayak.component';
     CardModule,
     PaginatorModule,
     EmilyComponent,
+    KanbanModule
   ],
   exports: [
     KayakHomeComponent,

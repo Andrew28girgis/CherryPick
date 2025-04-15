@@ -35,7 +35,6 @@ import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { ManagePropertiesComponent } from './features/landlord/manage-properties/manage-properties.component';
-import { KanbanComponent } from './features/kanban/kanban.component';
 import { KayakModule } from './features/kayak-home/kayak.module';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { HomeComponent } from './features/tenants/market-survery/home/home.component';
@@ -60,7 +59,6 @@ import { EmailInboxComponent } from './features/emily/email-inbox/email-inbox.co
     HomeComponent,
     LandingComponent,
     SummeryComponent,
-    KanbanComponent,
     LogoutComponent,
     TermsComponent,
     NumberWithCommasPipe,
