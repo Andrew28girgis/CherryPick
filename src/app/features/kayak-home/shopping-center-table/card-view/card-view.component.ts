@@ -34,14 +34,11 @@ export class CardViewComponent implements OnInit, OnDestroy {
   KanbanStages: any[] = [];
   isLoading = true;
   placesRepresentative: boolean | undefined;
-  first: number = 0;
-  rows: number = 9;
   mapViewOnePlacex = false;
   sanitizedUrl!: any;
   shareLink: any;
   shoppingCenterIdToDelete: number | null = null;
   DeletedSC: any;
-  totalRecords!: number;
 
   private subscriptions = new Subscription();
   private outsideClickHandler: ((e: Event) => void) | null = null;
@@ -75,7 +72,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.shoppingCenterService.shoppingCenters$.subscribe(centers => {
         this.shoppingCenters = centers;
-        this.totalRecords = centers.length;
         this.cdr.detectChanges();
       })
     );
@@ -83,7 +79,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.shoppingCenterService.filteredCenters$.subscribe(centers => {
         this.filteredCenters = centers;
-        this.totalRecords = centers.length;
         this.cdr.detectChanges();
       })
     );
@@ -122,11 +117,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
-  }
-
-  onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
   }
 
   ngOnDestroy(): void {
