@@ -1,30 +1,3 @@
-.btn_trash{
-  background: transparent;
-    color: rgb(224, 0, 0);
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgb(224, 0, 0);
-    padding-inline: 0;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.btn_edit{
-    background: transparent;
-    color: rgb(107, 119, 133,1);
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgb(107, 119, 133,1);
-    padding-inline: 0;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.input-sty{
-  margin-top: 0px;
-  margin-left: -22px;
-  border: 2px solid #cbcbcb;
-  font-size: 22px;
-  margin-bottom: 4px;
-}
 .BuyboxSpecifications {
   font-size: 18px;
   font-weight: 600;
@@ -220,6 +193,29 @@ letter-spacing: -0.07px;
   height: 20px;
 }
 .uploadbtn span {
+  color: var(--Button-Primary-Label, #fff);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+.submitbronchure {
+  display: flex;
+  padding: 4px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-16, 16px);
+  width: fit-content;
+  height: fit-content;
+}
+.submitbronchure img {
+  width: 20px;
+  height: 20px;
+}
+.submitbronchure span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
   font-family: Montserrat;
@@ -647,7 +643,7 @@ line-height: 32px;
   height: 540px;
 }
 .heightimportant{
-  height: 100 !important;
+  flex-grow: 1;
 }
 
 @media (max-width: 576px) {
