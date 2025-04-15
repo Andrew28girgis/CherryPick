@@ -93,18 +93,7 @@ const routes: Routes = [
       import('./features/kanban/kanban.module').then((m) => m.KanbanModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
-  {
-    path: ':guid',
-    component: TenantComponent,
-    canActivate: [TenantOnlyGuard],
-    data: { hideHeader: true },
-  },
-  {
-    path: ':guid/:userSubmission',
-    component: TenantComponent,
-    canActivate: [TenantOnlyGuard],
-    data: { hideHeader: true },
-  },
+
   {
     path: 'Kanban/:id',
     component: KanbanComponent,
@@ -134,6 +123,18 @@ const routes: Routes = [
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
+  },
+  {
+    path: ':guid',
+    component: TenantComponent,
+    canActivate: [TenantOnlyGuard],
+    data: { hideHeader: true },
+  },
+  {
+    path: ':guid/:userSubmission',
+    component: TenantComponent,
+    canActivate: [TenantOnlyGuard],
+    data: { hideHeader: true },
   },
 ];
 
