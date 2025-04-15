@@ -38,6 +38,8 @@ import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
 import { ICustomPolygon } from 'src/app/shared/models/custom-polygon.model';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
+import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
+import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter';
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -86,6 +88,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   newAvailabilitySize: number | undefined;
   showAddTenantInput = false;
   newTenantName = '';
+  shoppingCenterManage:TenantShoppingCenter[]=[];
   Polgons!: any[];
   customPolygons: ICustomPolygon[] = [];
   map!: google.maps.Map;
@@ -117,6 +120,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
     this.GetUserSubmissionData();
+    this.GetShoppingCenterManageInCampaign();
   }
 
   GetCampaignFromGuid(): void {
@@ -134,6 +138,23 @@ export class TenantComponent implements OnInit, AfterViewInit {
         this.selectedbuyBox = res.json[0].buyBoxId;
         this.GetBuyBoxInfo();
         this.GetGeoJsonFromBuyBox();
+      },
+    });
+  }
+  GetShoppingCenterManageInCampaign(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetShoppingCenterManageInCampaign',
+      Params: {
+        CampaignGUID: this.guid,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.shoppingCenterManage = res.json[0];
+        console.log('ShoppingCenterManage', this.shoppingCenterManage);
+        
       },
     });
   }
@@ -364,7 +385,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
   sendJson() {
     this.spinner.show();
-    this.isSubmitting = true; // Set submitting state early
+    this.isSubmitting = true;
     const shopID = this.jsonGUID;
     const updatedJsonPDF = {
       ...this.JsonPDF,
@@ -372,45 +393,59 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
       Availability: this.JsonPDF.Availability.map((avail) => ({
         ...avail,
-        isAdded: avail.isAdded !== false, // Default to true if undefined
+       isAdded: avail.isAdded !== false,
       })),
       Tenants: this.JsonPDF.Tenants.map((tenant) => ({
         ...tenant,
-        isAdded: tenant.isAdded !== false, // Default to true if undefined
+        isAdded: tenant.isAdded !== false,
       })),
       CampaignId: this.selectedCampaign,
       userSubmissionId: this.userSubmission,
       IsSubmitted: true,
     };
-
-    // Modify the request to expect a plain text response
+  
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        // Check if the response is a plain text success message
-        const responseText = data as string; // We expect a text response
-        if (
-          responseText &&
-          responseText.includes('Shopping center updated successfully')
-        ) {
-          this.showToast('Shopping center updated successfully!');
+        let successMessage = '';
+        
+        // Handle both string and object responses
+        if (typeof data === 'string') {
+          // If the response is a string, check for success message
+          if (data.includes('Shopping center updated successfully')) {
+            successMessage = 'Shopping center updated successfully!';
+          }
+        } else if (typeof data === 'object') {
+          // If the response is JSON, check for success status/message
+          // Adjust this based on your actual API response structure
+          if (data.success || data.message?.includes('success')) {
+            successMessage = data.message || 'Shopping center updated successfully!';
+          }
+        }
+        if (successMessage) {
+          this.showToast(successMessage);
           this.clearModalData();
           this.modalService.dismissAll();
         } else {
-          this.showToast('Failed to update shopping center!');
+          this.showToast('Received unexpected response from server');
         }
         this.isSubmitting = false;
         this.spinner.hide();
       },
       error: (error) => {
-        // Only show error if the request actually fails
         console.error('Error occurred while updating shopping center:', error);
-        // Check if it's a genuine error (e.g., network issues or server failure)
-        if (error.status !== 200) {
-          this.showToast('Failed to update shopping center!');
-        } else {
-          // Handle any non-network errors (e.g., unexpected message or API-specific issues)
-          this.showToast('Unexpected error occurred during submission!');
+        // Handle different error cases
+        let errorMessage = 'Failed to update shopping center!';
+        if (error.status === 200) {
+          // Sometimes errors come with 200 status but error message in response
+          if (error.error && typeof error.error === 'string') {
+            errorMessage = error.error;
+          } else if (error.message) {
+            errorMessage = error.message;
+          }
+        } else if (error.error && error.error.message) {
+          errorMessage = error.error.message;
         }
+        this.showToast(errorMessage);
         this.isSubmitting = false;
         this.spinner.hide();
       },
@@ -543,9 +578,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
             this.spinner.hide();
           } else {
             this.Polgons = res.json;
-            
-            console.log('Polgons', this.Polgons);
-
             this.spinner.hide();
           }
         },
@@ -567,8 +599,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     });
     // Display all polygons by default using displayMyPolygons from your service.
     for (let polygon of this.customPolygons) {
-      console.log(polygon.geoJson);
-
       const coordinates = this.getPolygonCoordinates(polygon.geoJson);
       if (coordinates) {
         polygon.polygonObj = this.mapDrawingService.displayPolygon(

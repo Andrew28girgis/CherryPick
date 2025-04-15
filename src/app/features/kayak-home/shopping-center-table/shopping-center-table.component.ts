@@ -39,6 +39,11 @@ export class ShoppingCenterTableComponent implements OnInit {
       icon: '../../../assets/Images/Icons/globe-solid.svg',
       status: 5,
     },
+    {
+      text: 'Kanban',
+      icon: '../../../../assets/Images/Icons/Cadence.svg',
+      status: 6,
+    },
   ];
   option: any;
 

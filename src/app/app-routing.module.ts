@@ -89,7 +89,8 @@ const routes: Routes = [
   },
   {
     path: 'Kanban',
-    component: KanbanComponent,
+    loadChildren: () =>
+      import('./features/kanban/kanban.module').then((m) => m.KanbanModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {

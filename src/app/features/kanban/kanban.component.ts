@@ -1,8 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  CdkDragDrop,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { IUserKanban } from 'src/app/shared/models/iuser-kanban';
 import {
   IKanbanDetails,
@@ -14,10 +12,9 @@ import {
 } from 'src/app/shared/models/ikanban-details';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Location } from '@angular/common';
-import { popupActions } from './kanban-actions/kanban-actions';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { sharedColors } from '../../shared/others/shared-colors';
-import { PlacesService } from 'src/app/core/services/places.service'; 
+import { PlacesService } from 'src/app/core/services/places.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 
 @Component({
@@ -32,8 +29,9 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   stagesColors: { background: string; color: string }[] = sharedColors;
   selectedKanbanTabId: number = 1;
-  selectedKanbanId?: number;
   breadcrumbList: { kanbanId: number; name: string }[] = [];
+  @Input() selectedKanbanId?: number;
+  @Input() displayBreadcrumb: boolean = true;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -41,15 +39,14 @@ export class KanbanComponent implements OnInit, OnDestroy {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private location: Location,
-    private modalService: NgbModal, 
-    private breadcrumbService: BreadcrumbService,
-
+    private modalService: NgbModal,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbs([
-      { label: 'Cadence', url: '/Kanban' }
-   ]);
+      { label: 'Cadence', url: '/Kanban' },
+    ]);
     this.getUserKanbans();
 
     const fetchingKanbanDetailsInterval = setInterval(() => {
@@ -68,8 +65,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
         }
       }
     }, 100);
-
-  
 
     // this.cadenceService.getKanbanId().subscribe((kanbanId) => {
     //   if (kanbanId) {
@@ -344,7 +339,10 @@ export class KanbanComponent implements OnInit, OnDestroy {
   getKanban(kanbanId: number) {
     this.kanbanDetails = undefined;
 
-    this.selectedKanbanId = kanbanId;
+    if(this.displayBreadcrumb)
+    {
+      this.selectedKanbanId = kanbanId;
+    }
     // this.cadenceService.updateKanbanId(kanbanId);
 
     this.getKanbanDetails();
@@ -396,18 +394,6 @@ export class KanbanComponent implements OnInit, OnDestroy {
 
   checkForStageActionsDisplay(actions: Action[]): boolean {
     return actions.some((a) => a.actionLevel == 'Stage');
-  }
-
-  openActionPopup(key: string): void {
-    const modalComponent = popupActions.get(key);
-
-    if (modalComponent) {
-      const modalRef = this.modalService.open(modalComponent, {
-        windowClass: 'kanban-action-popup',
-        scrollable: true,
-        size: 'xl',
-      });
-    }
   }
 
   ngOnDestroy() {
