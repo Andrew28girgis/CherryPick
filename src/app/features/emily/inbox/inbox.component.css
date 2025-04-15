@@ -409,3 +409,11 @@
   color: white;
   border-radius: 8px;
 }
+
+
+.highlight-open {
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px;
+  background-color: #4d65b4;
+}
