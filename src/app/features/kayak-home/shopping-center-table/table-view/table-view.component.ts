@@ -9,17 +9,12 @@ import {
   HostListener,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { General } from 'src/app/shared/models/domain';
-   
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
-import { ShareOrg } from 'src/app/shared/models/shareOrg';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
-import { StateService } from 'src/app/core/services/state.service';
-import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
-import { PlacesService } from 'src/app/core/services/places.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 
 @Component({
   selector: 'app-table-view',
@@ -27,206 +22,129 @@ import { PlacesService } from 'src/app/core/services/places.service';
   styleUrls: ['./table-view.component.css'],
 })
 export class TableViewComponent implements OnInit, OnDestroy {
+  // Properties
   General: General = new General();
   BuyBoxId!: any;
-  campaignid!:any;
+  campaignid!: any;
   OrgId!: any;
-  dropdowmOptions: any = [];
-  selectedOption: number = 4;
   buyboxCategories: BuyboxCategory[] = [];
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
-  filteredCenters: Center[] = []; 
-  searchQuery: string = ''; 
+  filteredCenters: Center[] = [];
+  searchQuery: string = '';
   selectedId: number | null = null;
   placesRepresentative: boolean | undefined;
   StreetViewOnePlace!: boolean;
   sanitizedUrl!: any;
   mapViewOnePlacex = false;
-  selectedState = '0';
-  selectedCity = '';
-  BuyBoxName = '';
-  ShareOrg: ShareOrg[] = [];
-  currentView: any;
-  shoppingCenterIdToDelete: number | null = null;
-  showbackIds: number[] = [];
-  buyboxPlaces: BbPlace[] = [];
   selectedIdCard: number | null = null;
   @Output() viewChange = new EventEmitter<number>();
+  shoppingCenterIdToDelete: number | null = null;
   DeletedSC: any;
   
   // Loading state for skeleton
   isLoading = true;
-  // Interval for hiding spinner
+  // Kanban stages
   KanbanStages: any[] = [];
   activeDropdown: any = null;
+  
   private subscriptions = new Subscription();
+  private outsideClickHandler: ((e: Event) => void) | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-        
     private cdr: ChangeDetectorRef,
-    private stateService: StateService,
-    private viewManagerService: ViewManagerService,
-    private PlacesService: PlacesService,
+    private shoppingCenterService: ViewManagerService
   ) {}
 
   ngOnInit(): void {
-
     this.General = new General();
-    this.selectedState = '';
-    this.selectedCity = '';
+    
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
-      this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+      
+      // Initialize data using the centralized service
+      this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
 
-    this.initializeData();
+    // Subscribe to data from the centralized service
+    this.subscriptions.add(
+      this.shoppingCenterService.isLoading$.subscribe(loading => {
+        this.isLoading = loading;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.shoppingCenters$.subscribe(centers => {
+        this.shoppingCenters = centers;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.filteredCenters$.subscribe(centers => {
+        this.filteredCenters = centers;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.buyboxCategories$.subscribe(categories => {
+        this.buyboxCategories = categories;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.selectedId$.subscribe(id => {
+        this.selectedId = id;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.selectedIdCard$.subscribe(id => {
+        this.selectedIdCard = id;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.searchQuery$.subscribe(query => {
+        this.searchQuery = query;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.kanbanStages$.subscribe(stages => {
+        this.KanbanStages = stages;
+        this.cdr.detectChanges();
+      })
+    );
   }
 
   ngOnDestroy(): void {
-
     this.subscriptions.unsubscribe();
-  }
-
-
-
-  async initializeData() {
-    try {
-      this.isLoading = true; // Show skeleton
-       
-      
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(this.BuyBoxId);
-      this.stateService.setShoppingCenters(this.shoppingCenters);
-       // Get kanban stages using the first kanban ID from the first shopping center
-    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
-      this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
-    }
-      
-      this.filteredCenters = this.shoppingCenters; 
-      
-      this.buyboxCategories = await this.viewManagerService.getBuyBoxCategories(this.BuyBoxId);
-      this.stateService.setBuyboxCategories(this.buyboxCategories);
-
-      this.ShareOrg = await this.viewManagerService.getOrganizationById(this.OrgId);
-      this.stateService.setShareOrg(this.ShareOrg);
-
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(this.BuyBoxId);
-      this.stateService.setBuyboxPlaces(this.buyboxPlaces);
-    } catch (error) {
-      // Handle error
-    } finally {
-      this.isLoading = false; // Hide skeleton
-      this.cdr.detectChanges();
-    }
-  }
-  
-  GetKanbanStages(kanbanID: number): void {
-    const body: any = {
-      Name: 'GetKanbanStages',
-      Params: {
-        kanbanid: kanbanID,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        this.KanbanStages = res.json || [];
-        this.cdr.detectChanges();
-      }
-    });
-  }
-  // Toggle dropdown visibility
-toggleDropdown(shoppingCenter: any): void {
-  // Close any open dropdown
-  if (this.activeDropdown && this.activeDropdown !== shoppingCenter) {
-    this.activeDropdown.isDropdownOpen = false;
-  }
-  // Toggle current dropdown
-  shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
-  // Set as active dropdown
-  this.activeDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
-  // If opening this dropdown, load kanban stages if not already loaded
-  if (shoppingCenter.isDropdownOpen && (!this.KanbanStages || this.KanbanStages.length === 0)) {
-    this.GetKanbanStages(shoppingCenter.kanbanId);
-  }
-}
-// Get stage name for the selected ID
-getSelectedStageName(stageId: number): string {
-  if (!this.KanbanStages) return 'Select Stage';
-  const stage = this.KanbanStages.find(s => s.id === stageId);
-  return stage ? stage.stageName : 'Select Stage';
-}
-selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-  // Close the dropdown
-  shoppingCenter.isDropdownOpen = false;
-  this.activeDropdown = null;
-  this.UpdatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter);
-}
-// Update the API method to work with the new dropdown
-UpdatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-  const body: any = {
-    Name: 'UpdatePlaceKanbanStage',
-    Params: {
-      stageid: stageId,
-      marketsurveyid: marketSurveyId,
-    },
-  };
-  
-  this.PlacesService.GenericAPI(body).subscribe({
-    next: (res: any) => {
-      // Update local data after successful API call
-      shoppingCenter.kanbanStageId = stageId;
-      shoppingCenter.stageName = this.getSelectedStageName(stageId);
-      this.cdr.detectChanges();
-    }
     
-  });
-}
-@HostListener('document:click', ['$event'])
-handleDocumentClick(event: MouseEvent): void {
-  // Check if click is outside any dropdown
-  const target = event.target as HTMLElement | null;
-  if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
-    this.activeDropdown.isDropdownOpen = false;
-    this.activeDropdown = null;
-    this.cdr.detectChanges();
+    // Remove any document event listeners
+    if (this.outsideClickHandler) {
+      document.removeEventListener('click', this.outsideClickHandler);
+      this.outsideClickHandler = null;
+    }
   }
-}
 
   filterCenters() {
-    if (this.searchQuery.trim()) {
-      this.filteredCenters = this.shoppingCenters.filter((center) =>
-        center.CenterName.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    } else {
-      this.filteredCenters = this.shoppingCenters;
-    }
+    this.shoppingCenterService.filterCenters(this.searchQuery);
   }
-  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
-    this.isLoading = true; // Show skeleton
-       
-    
-    this.viewManagerService
-      .restoreShoppingCenter(MarketSurveyId, Deleted)
-      .then((response: any) => {
-        const marketSurveyIdNum = Number(MarketSurveyId);
 
-        this.shoppingCenters = this.shoppingCenters.map((center) => {
-          if (Number(center.MarketSurveyId) === marketSurveyIdNum) {
-            return { ...center, Deleted: false };
-          }
-          return center;
-        });
-        this.cdr.markForCheck();
-      })
-      .finally(() => {
-        this.isLoading = false; // Hide skeleton
-           
-      });
+  RestoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): void {
+    this.shoppingCenterService.restoreShoppingCenter(MarketSurveyId, Deleted);
   }
 
   openDeleteShoppingCenterModal(
@@ -241,94 +159,71 @@ handleDocumentClick(event: MouseEvent): void {
   }
 
   async deleteShCenter() {
-    this.shoppingCenters = this.shoppingCenters.map((x) =>
-      x.Id === this.shoppingCenterIdToDelete ? { ...x, Deleted: true } : x
-    );
-
-    try {
-      this.isLoading = true; // Show skeleton
-         
-      
-      await this.viewManagerService.deleteShoppingCenter(
+    if (this.shoppingCenterIdToDelete) {
+      await this.shoppingCenterService.deleteShoppingCenter(
         this.BuyBoxId,
-        this.shoppingCenterIdToDelete!
+        this.shoppingCenterIdToDelete
       );
       this.modalService.dismissAll();
-    } catch (error) {
-      // Handle error
-    } finally {
-      this.isLoading = false; // Hide skeleton
-         
-      this.cdr.markForCheck();
-    }
-  }
-
-  async refreshShoppingCenters() {
-    try {
-      this.isLoading = true; // Show skeleton
-         
-      
-      this.shoppingCenters = await this.viewManagerService.getShoppingCenters(
-        this.BuyBoxId
-      );
-      this.buyboxPlaces = await this.viewManagerService.getBuyBoxPlaces(
-        this.BuyBoxId
-      );
-      this.showbackIds = [];
-    } catch (error) {
-      // Handle error
-    } finally {
-      this.isLoading = false; // Hide skeleton
-         
     }
   }
 
   getNeareastCategoryName(categoryId: number): string {
-    return this.viewManagerService.getNearestCategoryName(
-      categoryId,
-      this.buyboxCategories
-    );
+    return this.shoppingCenterService.getNearestCategoryName(categoryId);
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): string {
-    return this.viewManagerService.getShoppingCenterUnitSize(shoppingCenter);
+    return this.shoppingCenterService.getShoppingCenterUnitSize(shoppingCenter);
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-      this.selectedId = null;
-      return;
-    }
-
-    const targetElement = event?.target as HTMLElement;
-    const rect = targetElement?.getBoundingClientRect();
-
-    const shortcutsIcon = document.querySelector(
-      '.shortcuts_icon'
-    ) as HTMLElement;
-
-    if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${
-        rect.top + window.scrollY + targetElement.offsetHeight
-      }px`;
-      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
-    }
-
-    this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    this.selectedId = this.selectedId === id ? null : id;
+    this.shoppingCenterService.toggleShortcuts(id, close, event);
   }
 
-  toggleShortcutsCard(id: number | null): void {
-    this.selectedIdCard = id;
+  toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
+    event?.stopPropagation();
+
+    // If clicking on the same card that's already selected, close it
+    if (this.selectedIdCard === id) {
+      this.selectedIdCard = null;
+      this.shoppingCenterService.setSelectedIdCard(null);
+      
+      // Remove the outside click handler
+      if (this.outsideClickHandler) {
+        document.removeEventListener('click', this.outsideClickHandler);
+        this.outsideClickHandler = null;
+      }
+    } else {
+      // Otherwise, select the new card
+      this.selectedIdCard = id;
+      this.shoppingCenterService.setSelectedIdCard(id);
+
+      // Add event listener to handle clicks outside
+      if (this.outsideClickHandler) {
+        document.removeEventListener('click', this.outsideClickHandler);
+      }
+      
+      this.outsideClickHandler = (e: Event) => {
+        const targetElement = e.target as HTMLElement;
+        const isInside = targetElement.closest('.shortcuts_iconCard, .ellipsis_icont');
+
+        if (!isInside) {
+          this.selectedIdCard = null;
+          this.shoppingCenterService.setSelectedIdCard(null);
+          document.removeEventListener('click', this.outsideClickHandler!);
+          this.outsideClickHandler = null;
+          this.cdr.detectChanges();
+        }
+      };
+
+      setTimeout(() => {
+        document.addEventListener('click', this.outsideClickHandler!);
+      });
+    }
   }
 
   isLast(currentItem: any, array: any[]): boolean {
-    return this.viewManagerService.isLast(currentItem, array);
-  }
-
-  trackByIndex(index: number, item: any): number {
-    return index;
+    return this.shoppingCenterService.isLast(currentItem, array);
   }
 
   openMapViewPlace(content: any, modalObject?: any) {
@@ -342,14 +237,7 @@ handleDocumentClick(event: MouseEvent): void {
 
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
-    const map = await this.viewManagerService.initializeMap(
-      'mappopup',
-      lat,
-      lng
-    );
-    if (!map) {
-      // Handle error
-    }
+    await this.shoppingCenterService.initializeMap('mappopup', lat, lng);
   }
 
   openStreetViewPlace(content: any, modalObject?: any) {
@@ -358,48 +246,79 @@ handleDocumentClick(event: MouseEvent): void {
       size: 'lg',
       scrollable: true,
     });
+    
     this.General.modalObject = modalObject;
 
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
       setTimeout(() => {
-        this.viewOnStreet();
+        this.viewOnStreet(this.General.modalObject);
       }, 100);
     }
   }
 
-  viewOnStreet() {
-    this.StreetViewOnePlace = true;
-    const lat = +this.General.modalObject.StreetLatitude;
-    const lng = +this.General.modalObject.StreetLongitude;
-    const heading = this.General.modalObject.Heading || 165;
-    const pitch = this.General.modalObject.Pitch || 0;
+  viewOnStreet(modalObject: any) {
+    const lat = +modalObject.StreetLatitude;
+    const lng = +modalObject.StreetLongitude;
+    const heading = modalObject.Heading || 165;
+    const pitch = modalObject.Pitch || 0;
 
     setTimeout(() => {
-      const streetViewElement = document.getElementById('street-view');
-      if (streetViewElement) {
-        this.streetMap(lat, lng, heading, pitch);
-      } else {
-        // Handle error
-      }
+      this.shoppingCenterService.initializeStreetView(
+        'street-view',
+        lat,
+        lng,
+        heading,
+        pitch
+      );
     });
   }
 
-  streetMap(lat: number, lng: number, heading: number, pitch: number) {
-    const panorama = this.viewManagerService.initializeStreetView(
-      'street-view',
-      lat,
-      lng,
-      heading,
-      pitch
+  setIframeUrl(url: string): void {
+    this.sanitizedUrl = this.shoppingCenterService.sanitizeUrl(url);
+  }
+
+  // Toggle dropdown for kanban stages
+  toggleDropdown(shoppingCenter: any): void {
+    this.activeDropdown = this.shoppingCenterService.toggleDropdown(
+      shoppingCenter,
+      this.activeDropdown
     );
-    if (!panorama) {
-      // Handle error
+  }
+
+  // Get stage name for the selected ID
+  getSelectedStageName(stageId: number): string {
+    return this.shoppingCenterService.getSelectedStageName(stageId);
+  }
+
+  // Select a stage for a shopping center
+  selectStage(
+    marketSurveyId: number,
+    stageId: number,
+    shoppingCenter: any
+  ): void {
+    shoppingCenter.isDropdownOpen = false;
+    this.activeDropdown = null;
+    this.shoppingCenterService.updatePlaceKanbanStage(
+      marketSurveyId,
+      stageId,
+      shoppingCenter
+    );
+  }
+
+  // Handle document clicks to close dropdowns
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement | null;
+    if (this.activeDropdown && target && !target.closest('.custom-dropdown')) {
+      this.activeDropdown.isDropdownOpen = false;
+      this.activeDropdown = null;
+      this.cdr.detectChanges();
     }
   }
 
-  setIframeUrl(url: string): void {
-    this.sanitizedUrl = this.viewManagerService.sanitizeUrl(url);
+  trackByIndex(index: number, item: any): number {
+    return index;
   }
-} 
+}

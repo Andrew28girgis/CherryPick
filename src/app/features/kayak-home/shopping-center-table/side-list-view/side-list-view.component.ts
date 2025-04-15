@@ -4,10 +4,10 @@ import {
   HostListener,
   NgZone,
   OnInit,
+  OnDestroy,
   TemplateRef,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-   
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
@@ -17,6 +17,8 @@ import { General } from 'src/app/shared/models/domain';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { MapsService } from 'src/app/core/services/maps.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { Subscription } from 'rxjs';
 
 declare const google: any;
 @Component({
@@ -24,11 +26,13 @@ declare const google: any;
   templateUrl: './side-list-view.component.html',
   styleUrls: ['./side-list-view.component.css'],
 })
-export class SideListViewComponent implements OnInit {
+export class SideListViewComponent implements OnInit, OnDestroy {
   General: General = new General();
   cardsSideList: Center[] = [];
   map: any;
   BuyBoxId!: any;
+  orgId!: any;
+  
   mapViewOnePlacex: boolean = false;
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
@@ -46,70 +50,108 @@ export class SideListViewComponent implements OnInit {
   StreetViewOnePlace!: boolean;
   KanbanStages: any[] = [];
   activeDropdown: any = null;
+  
+  private subscriptions = new Subscription();
 
   constructor(
     private markerService: MapsService,
     public activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-        
     private PlacesService: PlacesService,
     private sanitizer: DomSanitizer,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone,    
-
-  ) {
-  }
+    private ngZone: NgZone,
+    private shoppingCenterService: ViewManagerService // Added the centralized service
+  ) {}
 
   ngOnInit(): void {
     this.General = new General();
     this.savedMapView = localStorage.getItem('mapView');
+    
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
+      
+      // Initialize data using the centralized service
+      this.shoppingCenterService.initializeData(this.BuyBoxId,this.orgId);
     });
 
-    this.BuyBoxPlacesCategories(this.BuyBoxId);
+    // Subscribe to data from the centralized service
+    this.subscriptions.add(
+      this.shoppingCenterService.buyboxCategories$.subscribe(categories => {
+        this.buyboxCategories = categories;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.shoppingCenters$.subscribe(centers => {
+        this.shoppingCenters = centers;
+        
+        // Get kanban stages using the first kanban ID from the first shopping center
+        if (this.shoppingCenters && this.shoppingCenters.length > 0 && !this.KanbanStages.length) {
+          this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
+        }
+        
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.buyboxPlaces$.subscribe(places => {
+        this.buyboxPlaces = places;
+        
+        if (this.buyboxCategories && this.buyboxPlaces) {
+          this.buyboxCategories.forEach((category) => {
+            category.isChecked = false;
+            category.places = this.buyboxPlaces?.filter((place) =>
+              place.RetailRelationCategories?.some((x) => x.Id === category.id)
+            );
+          });
+          
+          // Initialize map after we have all the data
+          this.getAllMarker();
+        }
+        
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.selectedId$.subscribe(id => {
+        this.selectedId = id;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.selectedIdCard$.subscribe(id => {
+        this.selectedIdCard = id;
+        this.cdr.detectChanges();
+      })
+    );
   }
 
-  getShoppingCenters(buyboxId: number): void {
-      
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  GetKanbanStages(kanbanID: number): void {
     const body: any = {
-      Name: 'GetMarketSurveyShoppingCenters',
+      Name: 'GetKanbanStages',
       Params: {
-        BuyBoxId: buyboxId,
+        kanbanid: kanbanID,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.shoppingCenters = data.json;
-        this.shoppingCenters = this.shoppingCenters?.sort((a, b) =>
-          a.CenterCity.localeCompare(b.CenterCity)
-        );
-
-             
-        this.getBuyBoxPlaces(this.BuyBoxId);
-    // Get kanban stages using the first kanban ID from the first shopping center
-    if (this.shoppingCenters && this.shoppingCenters.length > 0) {
-      this.GetKanbanStages(this.shoppingCenters[0].kanbanId);
-    }
+      next: (res: any) => {
+        this.KanbanStages = res.json || [];
+        this.cdr.detectChanges();
       }
     });
   }
-    GetKanbanStages(kanbanID: number): void {
-      const body: any = {
-        Name: 'GetKanbanStages',
-        Params: {
-          kanbanid: kanbanID,
-        },
-      };
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (res: any) => {
-          this.KanbanStages = res.json || [];
-          this.cdr.detectChanges();
-        }
-      });
-    }
-    // Toggle dropdown visibility
+
+  // Toggle dropdown visibility
   toggleDropdown(shoppingCenter: any): void {
     // Close any open dropdown
     if (this.activeDropdown && this.activeDropdown !== shoppingCenter) {
@@ -124,18 +166,21 @@ export class SideListViewComponent implements OnInit {
       this.GetKanbanStages(shoppingCenter.kanbanId);
     }
   }
+
   // Get stage name for the selected ID
   getSelectedStageName(stageId: number): string {
     if (!this.KanbanStages) return 'Select Stage';
     const stage = this.KanbanStages.find(s => s.id === stageId);
     return stage ? stage.stageName : 'Select Stage';
   }
+
   selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
     // Close the dropdown
     shoppingCenter.isDropdownOpen = false;
     this.activeDropdown = null;
     this.UpdatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter);
   }
+
   // Update the API method to work with the new dropdown
   UpdatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
     const body: any = {
@@ -153,9 +198,9 @@ export class SideListViewComponent implements OnInit {
         shoppingCenter.stageName = this.getSelectedStageName(stageId);
         this.cdr.detectChanges();
       }
-      
     });
   }
+
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: MouseEvent): void {
     // Check if click is outside any dropdown
@@ -165,42 +210,6 @@ export class SideListViewComponent implements OnInit {
       this.activeDropdown = null;
       this.cdr.detectChanges();
     }
-  }
-
-  BuyBoxPlacesCategories(buyboxId: number): void {
-    const body: any = {
-      Name: 'GetRetailRelationCategories',
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.buyboxCategories = data.json;
-        this.getShoppingCenters(this.BuyBoxId);
-      }
-    });
-  }
-
-  getBuyBoxPlaces(buyboxId: number): void {
-    const body: any = {
-      Name: 'BuyBoxRelatedRetails',
-      Params: {
-        BuyBoxId: buyboxId,
-      },
-    };
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.buyboxPlaces = data.json;
-        this.buyboxCategories.forEach((category) => {
-          category.isChecked = false;
-          category.places = this.buyboxPlaces?.filter((place) =>
-            place.RetailRelationCategories?.some((x) => x.Id === category.id)
-          );
-        });
-        this.getAllMarker();
-      }
-    });
   }
 
   GetPolygons(): void {
@@ -263,7 +272,6 @@ export class SideListViewComponent implements OnInit {
 
   async getAllMarker() {
     try {
-        
       const { Map } = await google.maps.importLibrary('maps');
       if (this.savedMapView) {
         const { lat, lng, zoom } = JSON.parse(this.savedMapView);
@@ -280,7 +288,7 @@ export class SideListViewComponent implements OnInit {
         this.map.addListener('bounds_changed', () =>
           this.onMapDragEnd(this.map)
         );
-      } else {
+      } else if (this.shoppingCenters && this.shoppingCenters.length > 0) {
         this.map = new Map(document.getElementById('map') as HTMLElement, {
           center: {
             lat: this.shoppingCenters[0].Latitude,
@@ -302,8 +310,8 @@ export class SideListViewComponent implements OnInit {
 
       this.GetPolygons();
       this.createCustomMarkers(this.buyboxCategories);
-    } finally {
-           
+    } catch (error) {
+      console.error('Error initializing map:', error);
     }
   }
 
@@ -344,7 +352,6 @@ export class SideListViewComponent implements OnInit {
   createMarkers(markerDataArray: any[], type: string) {
     markerDataArray.forEach((markerData) => {
       this.markerService.createMarker(this.map, markerData, type);
-      // this.markerService.fetchAndDrawPolygon(th)
     });
   }
 
@@ -374,113 +381,11 @@ export class SideListViewComponent implements OnInit {
   }
 
   getShoppingCenterUnitSize(shoppingCenter: any): any {
-    const formatNumberWithCommas = (number: number) => {
-      return number.toLocaleString(); // Format the number with commas
-    };
-    const formatLeasePrice = (price: any) => {
-      if (price === 0 || price === 'On Request') return 'On Request';
-      const priceNumber = parseFloat(price);
-      return !isNaN(priceNumber) ? Math.floor(priceNumber) : price; // Remove decimal points and return the whole number
-    };
-
-    const appendInfoIcon = (calculatedPrice: string, originalPrice: any) => {
-      if (calculatedPrice === 'On Request') {
-        return calculatedPrice; // No icon for "On Request"
-      }
-      const formattedOriginalPrice = `$${parseFloat(
-        originalPrice
-      ).toLocaleString()}/sq ft./year`;
-      return `
-        <div style="display:inline-block; text-align:left; line-height:1.2;">
-          <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
-          <div style="font-size:12px; color:#666; margin-top:4px;">${calculatedPrice}</div>
-        </div>
-      `;
-    };
-    const places = shoppingCenter?.ShoppingCenter?.Places || [];
-    const buildingSizes = places
-      .map((place: any) => place.BuildingSizeSf)
-      .filter(
-        (size: any) => size !== undefined && size !== null && !isNaN(size)
-      );
-
-    if (buildingSizes.length === 0) {
-      const singleSize = shoppingCenter.BuildingSizeSf;
-      if (singleSize) {
-        const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
-        const resultPrice =
-          leasePrice && leasePrice !== 'On Request'
-            ? appendInfoIcon(
-                `$${formatNumberWithCommas(
-                  Math.floor((parseFloat(leasePrice) * singleSize) / 12)
-                )}/month`,
-                shoppingCenter.ForLeasePrice
-              )
-            : 'On Request';
-        return `Unit Size: ${formatNumberWithCommas(
-          singleSize
-        )} sq ft.<br>Lease price: ${resultPrice}`;
-      }
-      return null;
-    }
-    const minSize = Math.min(...buildingSizes);
-    const maxSize = Math.max(...buildingSizes);
-    const minPrice =
-      places.find((place: any) => place.BuildingSizeSf === minSize)
-        ?.ForLeasePrice || 'On Request';
-    const maxPrice =
-      places.find((place: any) => place.BuildingSizeSf === maxSize)
-        ?.ForLeasePrice || 'On Request';
-    const sizeRange =
-      minSize === maxSize
-        ? `${formatNumberWithCommas(minSize)} sq ft.`
-        : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
-            maxSize
-          )} sq ft.`;
-
-    // Ensure only one price is shown if one is "On Request"
-    const formattedMinPrice =
-      minPrice === 'On Request'
-        ? 'On Request'
-        : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((parseFloat(minPrice) * minSize) / 12)
-            )}/month`,
-            minPrice
-          );
-
-    const formattedMaxPrice =
-      maxPrice === 'On Request'
-        ? 'On Request'
-        : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((parseFloat(maxPrice) * maxSize) / 12)
-            )}/month`,
-            maxPrice
-          );
-    let leasePriceRange;
-    if (
-      formattedMinPrice === 'On Request' &&
-      formattedMaxPrice === 'On Request'
-    ) {
-      leasePriceRange = 'On Request';
-    } else if (formattedMinPrice === 'On Request') {
-      leasePriceRange = formattedMaxPrice;
-    } else if (formattedMaxPrice === 'On Request') {
-      leasePriceRange = formattedMinPrice;
-    } else if (formattedMinPrice === formattedMaxPrice) {
-      // If both are the same price, just show one
-      leasePriceRange = formattedMinPrice;
-    } else {
-      leasePriceRange = `${formattedMinPrice} - ${formattedMaxPrice}`;
-    }
-
-    return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
+    return this.shoppingCenterService.getShoppingCenterUnitSize(shoppingCenter);
   }
 
   getNeareastCategoryName(categoryId: number) {
-    let categories = this.buyboxCategories.filter((x) => x.id == categoryId);
-    return categories[0]?.name;
+    return this.shoppingCenterService.getNearestCategoryName(categoryId);
   }
 
   isLast(currentItem: any, array: any[]): boolean {
@@ -529,7 +434,6 @@ export class SideListViewComponent implements OnInit {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
         this.initializeStreetView('street-view', lat, lng, heading, pitch);
-      } else { 
       }
     });
   }
@@ -541,22 +445,13 @@ export class SideListViewComponent implements OnInit {
     heading: number = 165,
     pitch: number = 0
   ): any {
-    const streetViewElement = document.getElementById(elementId);
-    if (!streetViewElement) {
-      return null;
-    }
-
-    const panorama = new google.maps.StreetViewPanorama(
-      streetViewElement as HTMLElement,
-      {
-        position: { lat, lng },
-        pov: { heading, pitch },
-        zoom: 1,
-      }
+    return this.shoppingCenterService.initializeStreetView(
+      elementId,
+      lat,
+      lng,
+      heading,
+      pitch
     );
-
-    this.addMarkerToStreetView(panorama, lat, lng);
-    return panorama;
   }
 
   addMarkerToStreetView(panorama: any, lat: number, lng: number): void {
@@ -585,8 +480,12 @@ export class SideListViewComponent implements OnInit {
     navigator.clipboard
       .writeText(link)
       .then(() => {
+        // Success
       })
-      ;
+      .catch((err) => {
+        // Error
+        console.error('Could not copy text: ', err);
+      });
   }
 
   openDeleteShoppingCenterModal(
@@ -601,26 +500,16 @@ export class SideListViewComponent implements OnInit {
   }
 
   deleteShCenter() {
-      
-
-    const body: any = {
-      Name: 'DeleteShoppingCenterFromBuyBox',
-      MainEntity: null,
-      Params: {
-        BuyBoxId: this.BuyBoxId,
-        ShoppingCenterId: this.shoppingCenterIdToDelete,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe((data) => {
+    this.shoppingCenterService.deleteShoppingCenter(
+      this.BuyBoxId,
+      this.shoppingCenterIdToDelete!
+    ).then(() => {
       this.modalService.dismissAll();
       this.ngZone.run(() => {
         this.cardsSideList = this.cardsSideList.filter(
           (place) => place.Id !== this.shoppingCenterIdToDelete
         );
       });
-      this.getShoppingCenters(this.BuyBoxId);
-           
     });
   }
 
@@ -629,22 +518,10 @@ export class SideListViewComponent implements OnInit {
     Deleted: boolean,
     placeId: number
   ) {
-      
-    Deleted = false;
-
-    const body: any = {
-      Name: 'RestoreShoppingCenter',
-      MainEntity: null,
-      Params: {
-        marketsurveyid: +MarketSurveyId,
-      },
-      Json: null,
-    };
-    this.PlacesService.GenericAPI(body).subscribe((data) => {
-      this.toggleShortcuts(placeId, 'close');
-      this.getShoppingCenters(this.BuyBoxId);
-           
-    });
+    this.shoppingCenterService.restoreShoppingCenter(MarketSurveyId, Deleted)
+      .then(() => {
+        this.toggleShortcuts(placeId, 'close');
+      });
   }
 
   outsideClickHandler = (event: Event): void => {
@@ -674,28 +551,7 @@ export class SideListViewComponent implements OnInit {
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
-    if (close === 'close') {
-      this.selectedIdCard = null;
-      this.selectedId = null;
-      return;
-    }
-
-    const targetElement = event?.target as HTMLElement;
-    const rect = targetElement?.getBoundingClientRect();
-
-    const shortcutsIcon = document.querySelector(
-      '.shortcuts_icon'
-    ) as HTMLElement;
-
-    if (shortcutsIcon && rect) {
-      shortcutsIcon.style.top = `${
-        rect.top + window.scrollY + targetElement.offsetHeight
-      }px`;
-      shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
-    }
-
-    this.selectedIdCard = this.selectedIdCard === id ? null : id;
-    this.selectedId = this.selectedId === id ? null : id;
+    this.shoppingCenterService.toggleShortcuts(id, close, event);
   }
 
   trackById(index: number, place: any): number {

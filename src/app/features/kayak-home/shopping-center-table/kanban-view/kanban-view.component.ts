@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { StateService } from 'src/app/core/services/state.service';
-import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { SocialServiceService } from 'src/app/core/services/social-service.service';
 import { Center } from 'src/app/shared/models/shoppingCenters';
 
 @Component({
@@ -17,7 +17,7 @@ export class KanbanViewComponent implements OnInit {
   kanbanId!: number;
 
   constructor(
-    private viewManagerService: ViewManagerService,
+    private viewManagerService: SocialServiceService,
     private activatedRoute: ActivatedRoute,
     private stateService: StateService,
     private cdr: ChangeDetectorRef,

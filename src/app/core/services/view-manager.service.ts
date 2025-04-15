@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { tap, finalize } from 'rxjs/operators';
 import { PlacesService } from './places.service';
-     
-import { StateService } from './state.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from 'src/app/shared/models/shoppingCenters';
@@ -14,233 +14,422 @@ declare const google: any;
   providedIn: 'root',
 })
 export class ViewManagerService {
+  // Data streams
+  private _shoppingCenters = new BehaviorSubject<Center[]>([]);
+  private _filteredCenters = new BehaviorSubject<Center[]>([]);
+  private _buyboxCategories = new BehaviorSubject<BuyboxCategory[]>([]);
+  private _buyboxPlaces = new BehaviorSubject<BbPlace[]>([]);
+  private _shareOrg = new BehaviorSubject<ShareOrg[]>([]);
+  private _kanbanStages = new BehaviorSubject<any[]>([]);
+  
+  // Loading state
+  private _isLoading = new BehaviorSubject<boolean>(false);
+  
+  // Search query
+  private _searchQuery = new BehaviorSubject<string>('');
+  
+  // Selected items
+  private _selectedIdCard = new BehaviorSubject<number | null>(null);
+  private _selectedId = new BehaviorSubject<number | null>(null);
+  
+  // Current view
+  private _currentView = new BehaviorSubject<number>(5); // Default to social view
+  
+  // Data loaded flag
+  private _dataLoaded = false;
+  
+  // Event emitters
+  private _dataLoadedEvent = new Subject<void>();
+
+  // Public observables
+  public shoppingCenters$ = this._shoppingCenters.asObservable();
+  public filteredCenters$ = this._filteredCenters.asObservable();
+  public buyboxCategories$ = this._buyboxCategories.asObservable();
+  public buyboxPlaces$ = this._buyboxPlaces.asObservable();
+  public shareOrg$ = this._shareOrg.asObservable();
+  public kanbanStages$ = this._kanbanStages.asObservable();
+  public isLoading$ = this._isLoading.asObservable();
+  public searchQuery$ = this._searchQuery.asObservable();
+  public selectedIdCard$ = this._selectedIdCard.asObservable();
+  public selectedId$ = this._selectedId.asObservable();
+  public currentView$ = this._currentView.asObservable();
+  public dataLoadedEvent$ = this._dataLoadedEvent.asObservable();
+
+  // Cache for optimizations
+  private categoryNameCache = new Map<number, string>();
+  private unitSizeCache = new Map<string, string>();
+
   constructor(
     private placesService: PlacesService,
-    
-    private stateService: StateService,
     private sanitizer: DomSanitizer
   ) {}
 
-  // Common methods
-  getShoppingCenters(buyboxId: number): Promise<Center[]> {
-    return new Promise((resolve, reject) => {
-      if (this.stateService.getShoppingCenters().length > 0) {
-        resolve(this.stateService.getShoppingCenters());
-        return;
+  /**
+   * Initialize all data for the shopping center views
+   * This should be called once when the main component loads
+   */
+  public initializeData(buyboxId: number, orgId: number): void {
+    if (this._dataLoaded) {
+      // Data already loaded, just notify subscribers
+      this._dataLoadedEvent.next();
+      return;
+    }
+
+    this._isLoading.next(true);
+
+    // Load all required data in parallel
+    const promises = [
+      this.loadShoppingCenters(buyboxId),
+      this.loadBuyBoxCategories(buyboxId),
+      this.loadOrganizationById(orgId),
+      this.loadBuyBoxPlaces(buyboxId)
+    ];
+
+    Promise.all(promises)
+      .then(() => {
+        this._dataLoaded = true;
+        this._dataLoadedEvent.next();
+        
+        // If we have shopping centers, load kanban stages
+        const centers = this._shoppingCenters.getValue();
+        if (centers && centers.length > 0) {
+          this.loadKanbanStages(centers[0].kanbanId);
+        }
+      })
+      .catch(error => {
+        console.error('Error loading data:', error);
+      })
+      .finally(() => {
+        this._isLoading.next(false);
+      });
+  }
+
+  /**
+   * Set the current view
+   */
+  public setCurrentView(viewId: number): void {
+    this._currentView.next(viewId);
+    localStorage.setItem('currentViewDashBord', viewId.toString());
+  }
+
+  /**
+   * Get the current view
+   */
+  public getCurrentView(): number {
+    return this._currentView.getValue();
+  }
+
+  /**
+   * Filter centers based on search query
+   */
+  public filterCenters(query: string): void {
+    this._searchQuery.next(query);
+    
+    const centers = this._shoppingCenters.getValue();
+    if (query.trim()) {
+      const filtered = centers.filter(center => 
+        center.CenterName.toLowerCase().includes(query.toLowerCase())
+      );
+      this._filteredCenters.next(filtered);
+    } else {
+      this._filteredCenters.next(centers);
+    }
+  }
+
+  /**
+   * Get nearest category name
+   */
+  public getNearestCategoryName(categoryId: number): string {
+    // Check cache first
+    if (this.categoryNameCache.has(categoryId)) {
+      return this.categoryNameCache.get(categoryId)!;
+    }
+
+    const categories = this._buyboxCategories.getValue();
+    const matchedCategories = categories.filter(x => x.id === categoryId);
+    const result = matchedCategories[0]?.name || '';
+    
+    // Cache the result
+    this.categoryNameCache.set(categoryId, result);
+    
+    return result;
+  }
+
+  /**
+   * Get shopping center unit size
+   */
+  public getShoppingCenterUnitSize(shoppingCenter: any): string {
+    const key = `${shoppingCenter.Id}`;
+    if (this.unitSizeCache.has(key)) {
+      return this.unitSizeCache.get(key)!;
+    }
+
+    const formatNumberWithCommas = (number: number) => {
+      return number.toLocaleString();
+    };
+
+    const formatLeasePrice = (price: any) => {
+      if (price === 0 || price === 'On Request') return 'On Request';
+      const priceNumber = parseFloat(price);
+      return !isNaN(priceNumber) ? Math.floor(priceNumber) : price;
+    };
+
+    const appendInfoIcon = (calculatedPrice: string, originalPrice: any) => {
+      if (calculatedPrice === 'On Request') {
+        return calculatedPrice;
+      }
+      const formattedOriginalPrice = `$${parseFloat(
+        originalPrice
+      ).toLocaleString()}/sq ft./year`;
+
+      return `
+        <div style="display:inline-block; text-align:left; line-height:1.2;">
+          <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
+          <div style="font-size:12px; color:#666; margin-top:4px;">${calculatedPrice}</div>
+        </div>
+      `;
+    };
+
+    const places = shoppingCenter?.ShoppingCenter?.Places || [];
+    const buildingSizes = places
+      .map((place: any) => place.BuildingSizeSf)
+      .filter(
+        (size: any) => size !== undefined && size !== null && !isNaN(size)
+      );
+
+    let result = '';
+    
+    if (buildingSizes.length === 0) {
+      const singleSize = shoppingCenter.BuildingSizeSf;
+      if (singleSize) {
+        const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
+        const resultPrice =
+          leasePrice && leasePrice !== 'On Request'
+            ? appendInfoIcon(
+                `$${formatNumberWithCommas(
+                  Math.floor((parseFloat(leasePrice) * singleSize) / 12)
+                )}/month`,
+                shoppingCenter.ForLeasePrice
+              )
+            : 'On Request';
+        result = `Unit Size: ${formatNumberWithCommas(
+          singleSize
+        )} sq ft.<br>Lease price: ${resultPrice}`;
+      }
+    } else {
+      const minSize = Math.min(...buildingSizes);
+      const maxSize = Math.max(...buildingSizes);
+
+      const minPrice =
+        places.find((place: any) => place.BuildingSizeSf === minSize)
+          ?.ForLeasePrice || 'On Request';
+      const maxPrice =
+        places.find((place: any) => place.BuildingSizeSf === maxSize)
+          ?.ForLeasePrice || 'On Request';
+
+      const sizeRange =
+        minSize === maxSize
+          ? `${formatNumberWithCommas(minSize)} sq ft.`
+          : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
+              maxSize
+            )} sq ft.`;
+
+      const formattedMinPrice =
+        minPrice === 'On Request'
+          ? 'On Request'
+          : appendInfoIcon(
+              `$${formatNumberWithCommas(
+                Math.floor((parseFloat(minPrice) * minSize) / 12)
+              )}/month`,
+              minPrice
+            );
+
+      const formattedMaxPrice =
+        maxPrice === 'On Request'
+          ? 'On Request'
+          : appendInfoIcon(
+              `$${formatNumberWithCommas(
+                Math.floor((parseFloat(maxPrice) * maxSize) / 12)
+              )}/month`,
+              maxPrice
+            );
+
+      let leasePriceRange;
+      if (
+        formattedMinPrice === 'On Request' &&
+        formattedMaxPrice === 'On Request'
+      ) {
+        leasePriceRange = 'On Request';
+      } else if (formattedMinPrice === 'On Request') {
+        leasePriceRange = formattedMaxPrice;
+      } else if (formattedMaxPrice === 'On Request') {
+        leasePriceRange = formattedMinPrice;
+      } else if (formattedMinPrice === formattedMaxPrice) {
+        leasePriceRange = formattedMinPrice;
+      } else {
+        leasePriceRange = `${formattedMinPrice} - ${formattedMaxPrice}`;
       }
 
-      const body: any = {
-        Name: 'GetMarketSurveyShoppingCenters',
-        Params: {
-          BuyBoxId: buyboxId,
-        },
-      };
+      result = `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
+    }
+    
+    // Cache the result
+    this.unitSizeCache.set(key, result);
+    
+    return result;
+  }
 
-      this.placesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          const centers = data.json;
-          this.stateService.setShoppingCenters(centers);
-               
-          resolve(centers);
-        }
-      });
+  /**
+   * Toggle dropdown for kanban stages
+   */
+  public toggleDropdown(shoppingCenter: any, activeDropdown: any): any {
+    // Close any open dropdown
+    if (activeDropdown && activeDropdown !== shoppingCenter) {
+      activeDropdown.isDropdownOpen = false;
+    }
+    
+    // Toggle current dropdown
+    shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
+    
+    // Set as active dropdown
+    const newActiveDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
+    
+    // If opening this dropdown, load kanban stages if not already loaded
+    if (shoppingCenter.isDropdownOpen) {
+      const stages = this._kanbanStages.getValue();
+      if (!stages || stages.length === 0) {
+        this.loadKanbanStages(shoppingCenter.kanbanId);
+      }
+    }
+    
+    return newActiveDropdown;
+  }
+
+  /**
+   * Get stage name for the selected ID
+   */
+  public getSelectedStageName(stageId: number): string {
+    const stages = this._kanbanStages.getValue();
+    if (!stages) return 'Select Stage';
+    
+    const stage = stages.find(s => s.id === stageId);
+    return stage ? stage.stageName : 'Select Stage';
+  }
+
+  /**
+   * Update place kanban stage
+   */
+  public updatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+    const body: any = {
+      Name: 'UpdatePlaceKanbanStage',
+      Params: {
+        stageid: stageId,
+        marketsurveyid: marketSurveyId,
+      },
+    };
+    
+    this._isLoading.next(true);
+    
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        // Update local data after successful API call
+        shoppingCenter.kanbanStageId = stageId;
+        shoppingCenter.stageName = this.getSelectedStageName(stageId);
+      },
+      error: (err) => {
+        console.error('Error updating kanban stage:', err);
+      },
+      complete: () => {
+        this._isLoading.next(false);
+      }
     });
   }
 
-  getBuyBoxPlaces(buyboxId: number): Promise<BbPlace[]> {
+  /**
+   * Delete shopping center
+   */
+  public deleteShoppingCenter(buyBoxId: number, shoppingCenterId: number): Promise<any> {
     return new Promise((resolve, reject) => {
-      if (this.stateService.getBuyboxPlaces()?.length > 0) {
-        resolve(this.stateService.getBuyboxPlaces());
-        return;
-      }
-
-      const body: any = {
-        Name: 'BuyBoxRelatedRetails',
-        Params: {
-          BuyBoxId: buyboxId,
-        },
-      };
-
-      this.placesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          const places = data.json;
-          this.stateService.setBuyboxPlaces(places);
-          resolve(places);
-        }
-      });
-    });
-  }
-
-  getBuyBoxCategories(buyboxId: number): Promise<BuyboxCategory[]> {
-    return new Promise((resolve, reject) => {
-      if (this.stateService.getBuyboxCategories().length > 0) {
-        resolve(this.stateService.getBuyboxCategories());
-        return;
-      }
-
-      const body: any = {
-        Name: 'GetRetailRelationCategories',
-        Params: {
-          BuyBoxId: buyboxId,
-        },
-      };
-
-      this.placesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          const categories = data.json;
-          this.stateService.setBuyboxCategories(categories);
-          resolve(categories);
-        }
-      });
-    });
-  }
-
-  getOrganizationById(orgId: number): Promise<ShareOrg[]> {
-    return new Promise((resolve, reject) => {
-      const shareOrg = this.stateService.getShareOrg() || [];
-
-      if (shareOrg && shareOrg.length > 0) {
-        resolve(this.stateService.getShareOrg());
-        return;
-      }
-
-      const body: any = {
-        Name: 'GetOrganizationById',
-        Params: {
-          organizationid: orgId,
-        },
-      };
-
-      this.placesService.GenericAPI(body).subscribe({
-        next: (data) => {
-          const org = data.json;
-          this.stateService.setShareOrg(org);
-          resolve(org);
-        }
-      });
-    });
-  }
-
-  deleteShoppingCenter(
-    buyboxId: number,
-    shoppingCenterId: number | string
-  ): Promise<any> {
-    return new Promise((resolve, reject) => {
+      this._isLoading.next(true);
+      
       const body: any = {
         Name: 'DeleteShoppingCenterFromBuyBox',
+        MainEntity: null,
         Params: {
-          BuyboxId: buyboxId,
+          BuyBoxId: buyBoxId,
           ShoppingCenterId: shoppingCenterId,
         },
+        Json: null,
       };
-
+      
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
-          const currentCenters = this.stateService.getShoppingCentersSnapshot();
-          const updatedCenters = currentCenters.map((center) =>
-            center.Id === shoppingCenterId
-              ? { ...center, Deleted: true }
-              : center
+          // Update local data
+          const centers = this._shoppingCenters.getValue();
+          const updatedCenters = centers.map(center => 
+            center.Id === shoppingCenterId ? { ...center, Deleted: true } : center
           );
-          this.stateService.setShoppingCenters(updatedCenters);
+          
+          this._shoppingCenters.next(updatedCenters);
+          this._filteredCenters.next(this.getFilteredCenters(updatedCenters));
+          
           resolve(data);
         },
-        complete: () => {
-               
+        error: (err) => {
+          console.error('Error deleting shopping center:', err);
+          reject(err);
         },
+        complete: () => {
+          this._isLoading.next(false);
+        }
       });
     });
   }
 
-  restoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): Promise<any> {
+  /**
+   * Restore shopping center
+   */
+  public restoreShoppingCenter(marketSurveyId: number, deleted: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
-      Deleted = false;
+      this._isLoading.next(true);
+      deleted=false;
       const body: any = {
         Name: 'RestoreShoppingCenter',
         MainEntity: null,
         Params: {
-          marketsurveyid: +MarketSurveyId,
+          marketsurveyid: marketSurveyId,
         },
         Json: null,
       };
-
+      
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
-          const currentCenters = this.stateService.getShoppingCentersSnapshot();
-          const updatedCenters = currentCenters.map((center) =>
-            Number(center.MarketSurveyId) === +MarketSurveyId
-              ? { ...center, Deleted: false }
-              : center
+          // Update local data
+          const centers = this._shoppingCenters.getValue();
+          const updatedCenters = centers.map(center => 
+            Number(center.MarketSurveyId) === marketSurveyId ? { ...center, Deleted: false } : center
           );
-          this.stateService.setShoppingCenters(updatedCenters);
+          
+          this._shoppingCenters.next(updatedCenters);
+          this._filteredCenters.next(this.getFilteredCenters(updatedCenters));
+          
           resolve(data);
         },
-        complete: () => {
-               
+        error: (err) => {
+          console.error('Error restoring shopping center:', err);
+          reject(err);
         },
+        complete: () => {
+          this._isLoading.next(false);
+        }
       });
     });
   }
 
-  // deleteShoppingCenter(
-  //   buyboxId: number,
-  //   shoppingCenterId: number | string
-  // ): Promise<any> {
-
-  //   return new Promise((resolve, reject) => {
-  //     this.spinner.show();
-  //     const body: any = {
-  //       Name: 'DeleteShoppingCenterFromBuyBox',
-  //       Params: {
-  //         BuyboxId: buyboxId,
-  //         ShoppingCenterId: shoppingCenterId,
-  //       },
-  //     };
-
-  //     this.placesService.GenericAPI(body).subscribe({
-  //       next: (data) => {
-  //         resolve(data);
-  //       },
-  //       complete: () => {
-  //              
-  //       },
-  //     });
-  //   });
-  // }
-
-  // restoreShoppingCenter(MarketSurveyId: any, Deleted: boolean): Promise<Center[]> {
-  //   return new Promise((resolve, reject) => {
-  //     this.spinner.show();
-  //     Deleted = false;
-
-  //     const body: any = {
-  //       Name: 'RestoreShoppingCenter',
-  //       MainEntity: null,
-  //       Params: {
-  //         marketsurveyid: +MarketSurveyId,
-  //       },
-  //       Json: null,
-  //     };
-
-  //     this.placesService.GenericAPI(body).subscribe({
-  //       next: (data) => {
-  //         resolve(data);
-  //       },
-
-  //       complete: () => {
-  //              
-  //       },
-  //     });
-  //   });
-  // }
-
-  // Map and Street View methods
-  async initializeMap(
-    elementId: string,
-    lat: number,
-    lng: number,
-    zoom: number = 14
-  ): Promise<any> {
+  /**
+   * Initialize map
+   */
+  public async initializeMap(elementId: string, lat: number, lng: number, zoom: number = 14): Promise<any> {
     if (!lat || !lng) {
       return null;
     }
@@ -267,11 +456,15 @@ export class ViewManagerService {
 
       return map;
     } catch (error) {
+      console.error('Error initializing map:', error);
       return null;
     }
   }
 
-  initializeStreetView(
+  /**
+   * Initialize street view
+   */
+  public initializeStreetView(
     elementId: string,
     lat: number,
     lng: number,
@@ -296,7 +489,10 @@ export class ViewManagerService {
     return panorama;
   }
 
-  addMarkerToStreetView(panorama: any, lat: number, lng: number): void {
+  /**
+   * Add marker to street view
+   */
+  private addMarkerToStreetView(panorama: any, lat: number, lng: number): void {
     const svgPath =
       'M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z';
 
@@ -314,130 +510,225 @@ export class ViewManagerService {
     });
   }
 
-  sanitizeUrl(url: string): SafeResourceUrl {
+  /**
+   * Sanitize URL
+   */
+  public sanitizeUrl(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  // Utility methods
-  getNearestCategoryName(
-    categoryId: number,
-    categories: BuyboxCategory[]
-  ): string {
-    const matchedCategories = categories.filter((x) => x.id == categoryId);
-    return matchedCategories[0]?.name || '';
-  }
-
-  getShoppingCenterUnitSize(shoppingCenter: any): string {
-    const formatNumberWithCommas = (number: number) => {
-      return number.toLocaleString();
-    };
-
-    const formatLeasePrice = (price: any) => {
-      if (price === 0 || price === 'On Request') return 'On Request';
-      const priceNumber = Number.parseFloat(price);
-      return !isNaN(priceNumber) ? Math.floor(priceNumber) : price;
-    };
-
-    const appendInfoIcon = (calculatedPrice: string, originalPrice: any) => {
-      if (calculatedPrice === 'On Request') {
-        return calculatedPrice;
-      }
-      const formattedOriginalPrice = `$${Number.parseFloat(
-        originalPrice
-      ).toLocaleString()}/sq ft./year`;
-
-      return `
-        <div style="display:inline-block; text-align:left; line-height:1.2;">
-          <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
-          <div style="font-size:12px; color:#666; margin-top:4px;">${calculatedPrice}</div>
-        </div>
-      `;
-    };
-
-    const places = shoppingCenter?.ShoppingCenter?.Places || [];
-    const buildingSizes = places
-      .map((place: any) => place.BuildingSizeSf)
-      .filter(
-        (size: any) => size !== undefined && size !== null && !isNaN(size)
-      );
-
-    if (buildingSizes.length === 0) {
-      const singleSize = shoppingCenter.BuildingSizeSf;
-      if (singleSize) {
-        const leasePrice = formatLeasePrice(shoppingCenter.ForLeasePrice);
-        const resultPrice =
-          leasePrice && leasePrice !== 'On Request'
-            ? appendInfoIcon(
-                `$${formatNumberWithCommas(
-                  Math.floor((Number.parseFloat(leasePrice) * singleSize) / 12)
-                )}/month`,
-                shoppingCenter.ForLeasePrice
-              )
-            : 'On Request';
-        return `Unit Size: ${formatNumberWithCommas(
-          singleSize
-        )} sq ft.<br>Lease price: ${resultPrice}`;
-      }
-      return '';
-    }
-
-    const minSize = Math.min(...buildingSizes);
-    const maxSize = Math.max(...buildingSizes);
-
-    const minPrice =
-      places.find((place: any) => place.BuildingSizeSf === minSize)
-        ?.ForLeasePrice || 'On Request';
-    const maxPrice =
-      places.find((place: any) => place.BuildingSizeSf === maxSize)
-        ?.ForLeasePrice || 'On Request';
-
-    const sizeRange =
-      minSize === maxSize
-        ? `${formatNumberWithCommas(minSize)} sq ft.`
-        : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
-            maxSize
-          )} sq ft.`;
-
-    const formattedMinPrice =
-      minPrice === 'On Request'
-        ? 'On Request'
-        : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((Number.parseFloat(minPrice) * minSize) / 12)
-            )}/month`,
-            minPrice
-          );
-
-    const formattedMaxPrice =
-      maxPrice === 'On Request'
-        ? 'On Request'
-        : appendInfoIcon(
-            `$${formatNumberWithCommas(
-              Math.floor((Number.parseFloat(maxPrice) * maxSize) / 12)
-            )}/month`,
-            maxPrice
-          );
-
-    let leasePriceRange;
-    if (
-      formattedMinPrice === 'On Request' &&
-      formattedMaxPrice === 'On Request'
-    ) {
-      leasePriceRange = 'On Request';
-    } else if (formattedMinPrice === 'On Request') {
-      leasePriceRange = formattedMaxPrice;
-    } else if (formattedMaxPrice === 'On Request') {
-      leasePriceRange = formattedMinPrice;
-    } else if (formattedMinPrice === formattedMaxPrice) {
-      leasePriceRange = formattedMinPrice;
-    } else {
-      leasePriceRange = `${formattedMinPrice} - ${formattedMaxPrice}`;
-    }
-
-    return `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
-  }
-
-  isLast(currentItem: any, array: any[]): boolean {
+  /**
+   * Check if item is last in array
+   */
+  public isLast(currentItem: any, array: any[]): boolean {
     return array.indexOf(currentItem) === array.length - 1;
+  }
+
+  /**
+   * Set selected ID card
+   */
+  public setSelectedIdCard(id: number | null): void {
+    this._selectedIdCard.next(id);
+  }
+
+  /**
+   * Set selected ID
+   */
+  public setSelectedId(id: number | null): void {
+    this._selectedId.next(id);
+  }
+
+  /**
+   * Toggle shortcuts
+   */
+
+  toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
+    if (close === 'close') {
+      this.setSelectedIdCard(null);
+      this.setSelectedId(null);
+      return;
+    }
+
+    // Position the shortcuts menu if we have an event
+    if (event) {
+      const targetElement = event.target as HTMLElement;
+      const rect = targetElement?.getBoundingClientRect();
+
+      // Find the shortcuts_icon element in the DOM
+      setTimeout(() => {
+        const shortcutsIcon = document.querySelector('.shortcuts_icon') as HTMLElement;
+        if (shortcutsIcon && rect) {
+          shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
+          shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
+        }
+      }, 0);
+    }
+
+    // Toggle the selected ID
+    const currentSelectedIdCard = this._selectedIdCard.getValue();
+    const currentSelectedId = this._selectedId.getValue();
+    
+    // Also update the card ID
+    this.setSelectedIdCard(currentSelectedIdCard === id ? null : id);
+    this.setSelectedId(currentSelectedId === id ? null : id);
+  }
+
+  // Private methods for data loading
+
+  /**
+   * Load shopping centers
+   */
+  private loadShoppingCenters(buyboxId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const body: any = {
+        Name: 'GetMarketSurveyShoppingCenters',
+        Params: {
+          BuyBoxId: buyboxId,
+        },
+      };
+
+      this.placesService.GenericAPI(body).subscribe({
+        next: (data) => {
+          const centers = data.json;
+          this._shoppingCenters.next(centers);
+          this._filteredCenters.next(centers);
+          resolve();
+        },
+        error: (err) => {
+          console.error('Error loading shopping centers:', err);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  /**
+   * Load buybox categories
+   */
+  private loadBuyBoxCategories(buyboxId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const body: any = {
+        Name: 'GetRetailRelationCategories',
+        Params: {
+          BuyBoxId: buyboxId,
+        },
+      };
+
+      this.placesService.GenericAPI(body).subscribe({
+        next: (data) => {
+          const categories = data.json;
+          this._buyboxCategories.next(categories);
+          resolve();
+        },
+        error: (err) => {
+          console.error('Error loading buybox categories:', err);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  /**
+   * Load organization by ID
+   */
+  private loadOrganizationById(orgId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const body: any = {
+        Name: 'GetOrganizationById',
+        Params: {
+          organizationid: orgId,
+        },
+      };
+
+      this.placesService.GenericAPI(body).subscribe({
+        next: (data) => {
+          const org = data.json;
+          this._shareOrg.next(org);
+          resolve();
+        },
+        error: (err) => {
+          console.error('Error loading organization:', err);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  /**
+   * Load buybox places
+   */
+  private loadBuyBoxPlaces(buyboxId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const body: any = {
+        Name: 'BuyBoxRelatedRetails',
+        Params: {
+          BuyBoxId: buyboxId,
+        },
+      };
+
+      this.placesService.GenericAPI(body).subscribe({
+        next: (data) => {
+          const places = data.json;
+          this._buyboxPlaces.next(places);
+          
+          // Update categories with places
+          const categories = this._buyboxCategories.getValue();
+          categories.forEach((category) => {
+            category.isChecked = false;
+            category.places = places?.filter((place: { RetailRelationCategories: any[]; }) =>
+              place.RetailRelationCategories?.some((x: { Id: number; }) => x.Id === category.id)
+            );
+          });
+          
+          this._buyboxCategories.next([...categories]);
+          resolve();
+        },
+        error: (err) => {
+          console.error('Error loading buybox places:', err);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  /**
+   * Load kanban stages
+   */
+  private loadKanbanStages(kanbanId: number): void {
+    const body: any = {
+      Name: 'GetKanbanStages',
+      Params: {
+        kanbanid: kanbanId,
+      },
+    };
+    
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this._kanbanStages.next(res.json || []);
+      },
+      error: (err) => {
+        console.error('Error loading kanban stages:', err);
+      }
+    });
+  }
+
+  /**
+   * Get filtered centers based on search query
+   */
+  private getFilteredCenters(centers: Center[]): Center[] {
+    const query = this._searchQuery.getValue();
+    if (query.trim()) {
+      return centers.filter(center => 
+        center.CenterName.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+    return centers;
+  }
+
+  /**
+   * Reset data loaded flag (for testing or forced refresh)
+   */
+  public resetDataLoaded(): void {
+    this._dataLoaded = false;
   }
 }
