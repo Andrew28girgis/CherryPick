@@ -10,8 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { ApiServiceService } from 'src/app/core/services/api-service.service';
-import { SidbarService } from 'src/app/core/services/sidbar.service';
+import { ApiServiceService } from 'src/app/core/services/api-service.service'; 
 import { StateService } from 'src/app/core/services/state.service';
 import { PropertiesServiceService } from 'src/app/core/services/properties-service.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
@@ -59,15 +58,11 @@ export class SummeryComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private propertiesService: PropertiesServiceService,
     private route: ActivatedRoute,
-    private stateService: StateService,
-    private sidbarService: SidbarService,
+    private stateService: StateService, 
     private modalService: NgbModal,
     private ApiService: ApiServiceService,
     private breadcrumbService: BreadcrumbService
-  ) {
-    this.sidbarService.isCollapsed.subscribe(
-      (state: boolean) => (this.isCollapsed = state)
-    );
+  ) { 
   }
 
   ngOnInit(): void {
@@ -80,10 +75,7 @@ export class SummeryComponent implements OnInit {
       this.Token = params['Token'];
       this.getUserBuyBoxes();
       this.organizationId = localStorage.getItem('orgId');
-    });
-    this.sidbarService.isCollapsed.subscribe((state: boolean) => {
-      this.isCollapsed = state;
-    });
+    }); 
     this.modalOpened = false;
   }
 

@@ -1,19 +1,36 @@
 <div class="w-100">
-  <div class="container-fluid px-2 d-flex justify-content-end gap-2 align-items-center">
+  <div
+    class="container-fluid px-2 d-flex justify-content-end gap-2 align-items-center"
+  >
     <span class="advanced" (click)="toggleAdvanced()">
       Advanced
-      <i class="ms-1" [ngClass]="
-            isAdvancedVisible
-              ? 'fa-solid fa-arrow-up'
-              : 'fa-solid fa-arrow-down'
-          "></i>
+      <i
+        class="ms-1"
+        [ngClass]="
+          isAdvancedVisible ? 'fa-solid fa-arrow-up' : 'fa-solid fa-arrow-down'
+        "
+      ></i>
     </span>
 
-    <button class="Emily__contant__button Emily__contant__Generate ms-2" (click)="PutMailsDraft()">
-      <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <button
+      class="Emily__contant__button Emily__contant__Generate ms-2"
+      (click)="PutMailsDraft()"
+    >
+      <svg
+        width="14"
+        height="20"
+        viewBox="0 0 14 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <path
           d="M2.07492 11.0667H4.64992V17.0667C4.64992 18.4667 5.40826 18.75 6.33326 17.7L12.6416 10.5334C13.4166 9.65838 13.0916 8.93338 11.9166 8.93338H9.34159V2.93338C9.34159 1.53338 8.58326 1.25005 7.65826 2.30005L1.34992 9.46671C0.583255 10.35 0.908256 11.0667 2.07492 11.0667Z"
-          stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+          stroke="white"
+          stroke-width="1.5"
+          stroke-miterlimit="10"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </svg>
       Generate
     </button>
@@ -27,65 +44,116 @@
             <div class="col-12 col-sm-4 p-2">
               <div class="box p-2">
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="detailsMin" id="detailsMin" class="form-check-input"
-                    [(ngModel)]="showMinBuildingSize" />
-                  <label for="detailsMin">Min & Max Unit Size: {{ buybox?.MinBuildingSize }} ,{{
+                  <input
+                    type="checkbox"
+                    name="detailsMin"
+                    id="detailsMin"
+                    class="form-check-input"
+                    [(ngModel)]="showMinBuildingSize"
+                  />
+                  <label for="detailsMin"
+                    >Min & Max Unit Size: {{ buybox?.MinBuildingSize }} ,{{
                       buybox?.MaxBuildingSize
-                    }}</label>
+                    }}</label
+                  >
                 </div>
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="BuyBoxOrganizationDescription" id="BuyBoxOrganizationDescription"
-                    class="form-check-input" [(ngModel)]="showBuyBoxDescriptionDetails" />
-                  <label for="BuyBoxOrganizationDescription">{{ BuyBoxOrganizationName }} Profile</label>
+                  <input
+                    type="checkbox"
+                    name="BuyBoxOrganizationDescription"
+                    id="BuyBoxOrganizationDescription"
+                    class="form-check-input"
+                    [(ngModel)]="showBuyBoxDescriptionDetails"
+                  />
+                  <label for="BuyBoxOrganizationDescription"
+                    >{{ BuyBoxOrganizationName }} Profile</label
+                  >
                 </div>
                 <div class="checkbox-section-head checkbox-section">
-                  <input type="checkbox" name="showBuyBoxDescription" id="showBuyBoxDescription"
-                    class="form-check-input" [(ngModel)]="showBuyBoxDescription" />
+                  <input
+                    type="checkbox"
+                    name="showBuyBoxDescription"
+                    id="showBuyBoxDescription"
+                    class="form-check-input"
+                    [(ngModel)]="showBuyBoxDescription"
+                  />
                   <label for="showBuyBoxDescription">BuyBox Profile</label>
                 </div>
               </div>
             </div>
-            <div class="col-12 col-sm-4 p-2 Section_height" *ngIf="(generated?.[0]?.Releations || []).length > 0">
+            <div
+              class="col-12 col-sm-4 p-2 Section_height"
+              *ngIf="(generated?.[0]?.Releations || []).length > 0"
+            >
               <div class="box p-2">
                 <div class="checkbox-section">
-                  <input type="checkbox" name="Relation" id="Relation" class="form-check-input"
-                    [(ngModel)]="showRelationNames" (change)="toggleRelationNames($event)" />
+                  <input
+                    type="checkbox"
+                    name="Relation"
+                    id="Relation"
+                    class="form-check-input"
+                    [(ngModel)]="showRelationNames"
+                    (change)="toggleRelationNames($event)"
+                  />
                   <label for="Relation">Relation Name</label>
                 </div>
                 <ng-container *ngIf="showRelationNames">
-                  <ng-container *ngIf="generated.length > 0 && generated[0].Releations">
+                  <ng-container
+                    *ngIf="generated.length > 0 && generated[0].Releations"
+                  >
                     <div class="checkbox-section checkbox-section-body-first">
-                      <input type="checkbox" [name]="relationCategoriesNames[0].name"
-                        [id]="relationCategoriesNames[0].name" class="form-check-input" [(ngModel)]="ShowCompetitors" />
+                      <input
+                        type="checkbox"
+                        [name]="relationCategoriesNames[0].name"
+                        [id]="relationCategoriesNames[0].name"
+                        class="form-check-input"
+                        [(ngModel)]="ShowCompetitors"
+                      />
                       <label [for]="relationCategoriesNames[0].name">{{
                         relationCategoriesNames[0].name
                       }}</label>
                     </div>
                     <ng-container *ngIf="ShowCompetitors">
-                      <ng-container *ngIf="
+                      <ng-container
+                        *ngIf="
                           getRelationsForCategory(relationCategoriesNames[0].id)
                             .length > 0
-                        ">
-                        <ng-container *ngFor="
+                        "
+                      >
+                        <ng-container
+                          *ngFor="
                             let item of getVisibleRelations(
                               relationCategoriesNames[0].id
                             )
-                          ">
-                          <div class="checkbox-section checkbox-section-body-first">
-                            <label [for]="item.Name" class="ms-3 label-Relations" [title]="item.Name">
+                          "
+                        >
+                          <div
+                            class="checkbox-section checkbox-section-body-first"
+                          >
+                            <label
+                              [for]="item.Name"
+                              class="ms-3 label-Relations"
+                              [title]="item.Name"
+                            >
                               &bull; {{ item.Name }}
                             </label>
                           </div>
                         </ng-container>
 
-                        <div class="d-flex justify-content-end" *ngIf="
+                        <div
+                          class="d-flex justify-content-end"
+                          *ngIf="
                             getRelationsForCategory(
                               relationCategoriesNames[0].id
                             ).length > 3
-                          ">
-                          <span (click)="
+                          "
+                        >
+                          <span
+                            (click)="
                               toggleShowMore(relationCategoriesNames[0].id)
-                            " class="showMoreRelations">
+                            "
+                            class="showMoreRelations"
+                          >
                             {{
                               showMoreRelations[relationCategoriesNames[0].id]
                                 ? "Show Less"
@@ -97,39 +165,59 @@
                     </ng-container>
 
                     <div class="checkbox-section checkbox-section-body-first">
-                      <input type="checkbox" [name]="relationCategoriesNames[1].name"
-                        [id]="relationCategoriesNames[1].name" class="form-check-input"
-                        [(ngModel)]="ShowComplementaries" />
+                      <input
+                        type="checkbox"
+                        [name]="relationCategoriesNames[1].name"
+                        [id]="relationCategoriesNames[1].name"
+                        class="form-check-input"
+                        [(ngModel)]="ShowComplementaries"
+                      />
                       <label [for]="relationCategoriesNames[1].name">{{
                         relationCategoriesNames[1].name
                       }}</label>
                     </div>
 
                     <ng-container *ngIf="ShowComplementaries">
-                      <ng-container *ngIf="
+                      <ng-container
+                        *ngIf="
                           getRelationsForCategory(relationCategoriesNames[1].id)
                             .length > 0
-                        ">
-                        <ng-container *ngFor="
+                        "
+                      >
+                        <ng-container
+                          *ngFor="
                             let item of getVisibleRelations(
                               relationCategoriesNames[1].id
                             )
-                          ">
-                          <div class="checkbox-section checkbox-section-body-first">
-                            <label [for]="item.Name" class="ms-3 label-Relations" [title]="item.Name">
+                          "
+                        >
+                          <div
+                            class="checkbox-section checkbox-section-body-first"
+                          >
+                            <label
+                              [for]="item.Name"
+                              class="ms-3 label-Relations"
+                              [title]="item.Name"
+                            >
                               &bull; {{ item.Name }}
                             </label>
                           </div>
                         </ng-container>
 
-                        <div class="d-flex justify-content-end" *ngIf="
+                        <div
+                          class="d-flex justify-content-end"
+                          *ngIf="
                             getRelationsForCategory(
                               relationCategoriesNames[1].id
                             ).length > 3
-                          ">
-                          <span (click)="
+                          "
+                        >
+                          <span
+                            (click)="
                               toggleShowMore(relationCategoriesNames[1].id)
-                            " class="showMoreRelations">
+                            "
+                            class="showMoreRelations"
+                          >
                             {{
                               showMoreRelations[relationCategoriesNames[1].id]
                                 ? "Show Less"
@@ -147,18 +235,32 @@
               <div class="box p-2">
                 <!-- Manager Organizations and Contacts -->
                 <div class="checkbox-section">
-                  <input type="checkbox" [name]="ManagerOrganizationName" [id]="ManagerOrganizationName"
-                    class="form-check-input" [(ngModel)]="showOrganizationManagers"
-                    (change)="toggleManagerDesc($event)" />
+                  <input
+                    type="checkbox"
+                    [name]="ManagerOrganizationName"
+                    [id]="ManagerOrganizationName"
+                    class="form-check-input"
+                    [(ngModel)]="showOrganizationManagers"
+                    (change)="toggleManagerDesc($event)"
+                  />
                   <label [for]="ManagerOrganizationName">{{
                     ManagerOrganizationName
                   }}</label>
                 </div>
-                <div class="checkbox-section checkbox-section-body-first" *ngIf="showOrganizationManagers">
-                  <input type="checkbox" name="ManagerOrganizationDescriptionDetails"
-                    id="ManagerOrganizationDescriptionDetails" class="form-check-input"
-                    [(ngModel)]="showMangerDescriptionDetails" />
-                  <label for="ManagerOrganizationDescriptionDetails">{{ ManagerOrganizationName }} Profile</label>
+                <div
+                  class="checkbox-section checkbox-section-body-first"
+                  *ngIf="showOrganizationManagers"
+                >
+                  <input
+                    type="checkbox"
+                    name="ManagerOrganizationDescriptionDetails"
+                    id="ManagerOrganizationDescriptionDetails"
+                    class="form-check-input"
+                    [(ngModel)]="showMangerDescriptionDetails"
+                  />
+                  <label for="ManagerOrganizationDescriptionDetails"
+                    >{{ ManagerOrganizationName }} Profile</label
+                  >
                 </div>
               </div>
             </div>
@@ -167,30 +269,56 @@
       </div>
       <div class="col-12 col-sm-6 checkbox-section-select pb-2">
         <label for="discussionDropdown">Select Prompt</label>
-        <select class="form-select form-select-lg" aria-label="Large select example" id="discussionDropdown"
-          [(ngModel)]="selectedPromptId" (change)="updatePrompt()">
+        <select
+          class="form-select form-select-lg"
+          aria-label="Large select example"
+          id="discussionDropdown"
+          [(ngModel)]="selectedPromptId"
+          (change)="updatePrompt()"
+        >
           <option *ngFor="let prompt of prompts" [value]="prompt.id">
             {{ prompt?.name }}
           </option>
         </select>
       </div>
-      <div class="col-12 col-sm-6 checkbox-section-select checkbox_ISCC pb-2 gap-4">
+      <div
+        class="col-12 col-sm-6 checkbox-section-select checkbox_ISCC pb-2 gap-4"
+      >
         <div class="checkbox-section align-items-center gap-3">
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="IsCC" id="IsCC1" [(ngModel)]="isISCcSelected"
-              [value]="true" />
+            <input
+              class="form-check-input"
+              type="radio"
+              name="IsCC"
+              id="IsCC1"
+              [(ngModel)]="isISCcSelected"
+              [value]="true"
+            />
             <label class="IsCC_checkbox" for="IsCC1">CC</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="IsCC" id="IsCC2" [(ngModel)]="isISCcSelected"
-              [value]="false" />
+            <input
+              class="form-check-input"
+              type="radio"
+              name="IsCC"
+              id="IsCC2"
+              [(ngModel)]="isISCcSelected"
+              [value]="false"
+            />
             <label class="IsCC_checkbox" for="IsCC2">To</label>
           </div>
         </div>
         <div class="checkbox-section align-items-center">
-          <input type="checkbox" [(ngModel)]="isLandingSelected" name="includinglandingpage" id="includinglandingpage"
-            class="form-check-input m-0" />
-          <label for="includinglandingpage" class="ms-2 IsCC_checkbox">Is including landing page</label>
+          <input
+            type="checkbox"
+            [(ngModel)]="isLandingSelected"
+            name="includinglandingpage"
+            id="includinglandingpage"
+            class="form-check-input m-0"
+          />
+          <label for="includinglandingpage" class="ms-2 IsCC_checkbox"
+            >Is including landing page</label
+          >
         </div>
       </div>
       <!-- <div class="col-12 col-sm-12 checkbox_ISCC gap-2 pb-2 d-flex justify-content-end">
@@ -203,30 +331,33 @@
           Generate
         </button>
       </div> -->
-
     </div>
   </div>
 
   <div class="container-GenerateEmail row">
     <div class="col-12 mt-3 mt-sm-0">
       <div class="d-flex pb-3 align-items-center">
-        <label for="subject" class="IsCC_checkbox me-2">Subject:
-        </label>
+        <label for="subject" class="IsCC_checkbox me-2">Subject: </label>
         <!-- formControlName="subject" -->
-        <input type="text" [(ngModel)]="emailSubject"  class="input_checkbox form-control w-50"
-          name="subject" id="subject" placeholder="Enter your subject email" />
+        <input
+          type="text"
+          [(ngModel)]="emailSubject"
+          class="input_checkbox form-control w-50"
+          name="subject"
+          id="subject"
+          placeholder="Enter your subject email"
+        />
       </div>
       <!-- formControlName="body" -->
-      <p-editor [(ngModel)]="returnGetMailContextGenerated" [style]="{ height: '400px' }">
+      <p-editor
+        [(ngModel)]="returnGetMailContextGenerated"
+        [style]="{ height: '400px' }"
+      >
       </p-editor>
     </div>
     <div class="d-flex justify-content-end">
-      <button
-        type="button"
-        class="m-3 buttonSave"
-        (click)="Send()"
-      >
-      Send
+      <button type="button" class="m-3 buttonSave" (click)="Send()">
+        Send
       </button>
     </div>
   </div>

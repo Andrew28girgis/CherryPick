@@ -1,6 +1,6 @@
 <nav
   class="navbar navbar-expand-lg d-flex align-items-center w-100"
-  *ngIf="display"
+  *ngIf="displayHeader"
 >
   <div class="container-fluid">
     <div class="d-flex align-items-center">
@@ -12,13 +12,13 @@
           class="cherry-logo"
           src="../../../assets/Images/Icons/logo (1).png"
           [routerLink]="
-            current.includes('landlord') ? ['/landlord'] : ['/campaigns']
+            currentRoute.includes('landlord') ? ['/landlord'] : ['/campaigns']
           "
         />
         <p
           class="cherry mb-0 d-none d-lg-block"
           [routerLink]="
-            current.includes('landlord') ? ['/landlord'] : ['/campaigns']
+            currentRoute.includes('landlord') ? ['/landlord'] : ['/campaigns']
           "
         >
           Cherry<span class="pick">pick</span>
@@ -33,7 +33,7 @@
       id="navbarNav"
     >
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/tasks']"
             routerLinkActive="active-route"
@@ -47,7 +47,7 @@
             <span>Tasks</span>
           </a>
         </li>
-        <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/campaigns']"
             routerLinkActive="active-route"
@@ -62,7 +62,7 @@
           </a>
         </li>
 
-        <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/summary']"
             routerLinkActive="active-route"
@@ -76,7 +76,7 @@
             <span>Tenants</span>
           </a>
         </li>
-        <li class="nav-item" *ngIf="!current.includes('landlord')">
+        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             class="nav-link"
             [routerLink]="['/Kanban']"
@@ -90,7 +90,7 @@
             <span>Cadence</span>
           </a>
         </li>
-        <li class="nav-item" *ngIf="current.includes('landlord')">
+        <li class="nav-item" *ngIf="currentRoute.includes('landlord')">
           <a
             class="nav-link"
             [routerLink]="['/landlord']"
@@ -113,7 +113,7 @@
     >
       <div
         class="d-none d-lg-block"
-        *ngIf="!isSmallScreen && !current.includes('landlord')"
+        *ngIf="!isSmallScreen && !currentRoute.includes('landlord')"
       >
         <app-notifications></app-notifications>
       </div>
@@ -150,7 +150,7 @@
               (click)="switchView(); $event.preventDefault()"
             >
               Switch to
-              {{ current.includes("landlord") ? "campaigns" : "Landlord" }}
+              {{ currentRoute.includes("landlord") ? "campaigns" : "Landlord" }}
             </a>
           </li>
           <li><hr class="dropdown-divider" /></li>

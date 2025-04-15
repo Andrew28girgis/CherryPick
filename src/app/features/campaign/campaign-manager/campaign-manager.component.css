@@ -158,9 +158,7 @@
   margin: 0 auto;
 }
 
-/* General Container for the Campaign Manager */
 .campaign-manager-container {
-  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
