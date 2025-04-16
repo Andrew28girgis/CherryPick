@@ -21,20 +21,16 @@ import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
  import { PaginatorModule } from 'primeng/paginator';
-import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component';
-import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
-import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
-import { KayakComponent } from './kayak/kayak.component';
+import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component'; 
+import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component'; 
 import { KanbanModule } from '../kanban/kanban.module';
 import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
 @NgModule({
   declarations: [
     KayakHomeComponent,
-    BuyboxDetailsComponent,
-    WorkSpacesComponent,
+    BuyboxDetailsComponent, 
     ShoppingCenterTableComponent,
-    BuyboxRelatiosComponent,
-    KayakComponent,
+    BuyboxRelatiosComponent, 
     SocialViewComponent,
     TableViewComponent,
     CardViewComponent,
@@ -63,8 +59,7 @@ import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-
   ],
   exports: [
     KayakHomeComponent,
-    BuyboxDetailsComponent,
-    WorkSpacesComponent,
+    BuyboxDetailsComponent, 
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     SocialViewComponent,
