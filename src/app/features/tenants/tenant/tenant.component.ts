@@ -447,6 +447,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CampaignId: this.selectedCampaign,
       userSubmissionId: this.userSubmission,
       IsSubmitted: true,
+      ContactId:this.contactID,
     };
   
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
