@@ -44,7 +44,10 @@
       <div class="step-title">Managed By Brokers</div>
     </div>
     <div class="step-content">
-      <app-managed-by-broker></app-managed-by-broker>
+      <app-managed-by-broker
+        [center]="center"
+        (onStepDone)="onStepDone($event)"
+      ></app-managed-by-broker>
     </div>
   </div>
   } @case (3) {

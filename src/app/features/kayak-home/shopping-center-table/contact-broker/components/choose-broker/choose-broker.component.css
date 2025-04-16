@@ -35,9 +35,13 @@
   gap: 0.5rem;
 }
 
+.contact-information * {
+  color: #707791;
+}
+
 .contact-name {
-  font-size: large;
   font-weight: 600;
+  color: #000 !important;
 }
 
 .send-as {
@@ -83,7 +87,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  border: none;
+  border: 1px solid #4d65b4;
   background-color: #4d65b4;
   border-radius: 1rem;
   padding: 0.75rem 1.5rem;

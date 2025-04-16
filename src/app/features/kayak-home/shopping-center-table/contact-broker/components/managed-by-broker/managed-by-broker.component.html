@@ -1,1 +1,67 @@
-<p>managed-by-broker works!</p>
+<div class="managed-by-broker-contaciner">
+  @for (contact of center.ShoppingCenter.ManagerOrganization; track
+  contact.ContactId) {
+  <div class="contact-name">
+    Managed By {{ contact.Firstname }} {{ contact.LastName }}
+  </div>
+  <div class="centers-container">
+    @for (center of getCentersWithContactId(contact.ContactId); track center.id)
+    {
+    <div class="center-container">
+      <div class="d-flex align-items-start gap-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          (change)="onCenterChecked($event, contact.ContactId, center.id)"
+        />
+        <div class="center-name">
+          {{ center.centerName }}
+        </div>
+      </div>
+    </div>
+    }@empty {
+    <div class="empty-centers">
+      There are no another centers managed by {{ contact.Firstname }}
+      {{ contact.LastName }}
+    </div>
+    }
+  </div>
+
+  <hr class="w-100" />
+  }
+
+  <div class="container-control">
+    <button class="skip-btn" (click)="onSkip()">Skip</button>
+    <button class="continue-btn" (click)="onSubmit()">
+      <span>Save & Continue</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 256 256"
+        id="arrow-right"
+      >
+        <rect width="256" height="256" fill="none"></rect>
+        <line
+          x1="40"
+          x2="216"
+          y1="128"
+          y2="128"
+          fill="none"
+          stroke="#fff"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="24"
+        ></line>
+        <polyline
+          fill="none"
+          stroke="#fff"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="24"
+          points="144 56 216 128 144 200"
+        ></polyline>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
