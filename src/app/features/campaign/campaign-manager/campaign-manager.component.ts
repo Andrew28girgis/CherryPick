@@ -200,7 +200,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
     const body: any = {
       Name: 'GetKanbanTemplateStages',
-      Params: { KanbanTemplateId: 5 },
+      Params: { KanbanTemplateId: 6 },
     };
 
     const subscription = this.placesService.GenericAPI(body).subscribe({
