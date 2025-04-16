@@ -125,13 +125,13 @@ const routes: Routes = [
     canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
-    path: ':guid',
+    path: ':guid/:contactId',
     component: TenantComponent,
     canActivate: [TenantOnlyGuard],
     data: { hideHeader: true },
   },
   {
-    path: ':guid/:userSubmission',
+    path: ':guid/:contactId/:userSubmission',
     component: TenantComponent,
     canActivate: [TenantOnlyGuard],
     data: { hideHeader: true },
