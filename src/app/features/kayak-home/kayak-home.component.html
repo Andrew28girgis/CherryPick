@@ -1,6 +1,5 @@
 <div class="row m-0 p-0">
-  <div class="col-12 Responsive">
-    <div
+  <!-- <div
       class="d-flex align-items-center justify-content-between py-3 buybox-actions"
     >
       <h3 class="bb-name m-0">{{ BuyboxName }}</h3>
@@ -27,15 +26,10 @@
           </li>
         </ul>
       </div>
-    </div>
-
-    <div>
-      <ng-container [ngSwitch]="activeComponent">
-        <app-shopping-center-table
-          *ngSwitchCase="'Properties'"
-        ></app-shopping-center-table>
-        <!-- <app-buybox-details *ngSwitchCase="'Details'"></app-buybox-details> -->
-      </ng-container>
-    </div>
-  </div>
+    </div> -->
+ 
+    <app-shopping-center-table 
+    ></app-shopping-center-table>
+    <!-- <app-buybox-details *ngSwitchCase="'Details'"></app-buybox-details> -->
+ 
 </div>
