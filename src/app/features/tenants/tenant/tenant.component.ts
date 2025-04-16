@@ -114,6 +114,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   newPlaceSqFT!: number;
   deleteType: string = '';
   deleteId: number | null = null;
+  showButtons: boolean = true;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -459,6 +460,8 @@ isAllForLeasePriceZero(): boolean {
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
         // Always show success message for 200 OK responses
+        this.JsonPDF.IsSubmitted = true;
+        this.showButtons = false;
         this.showToast('Shopping center updated successfully!');
         // this.clearModalData();
         // this.modalService.dismissAll();
@@ -470,6 +473,9 @@ isAllForLeasePriceZero(): boolean {
         
         // Check if it's actually a success response being misinterpreted as an error
         if (error.status === 200) {
+          this.JsonPDF.IsSubmitted = true;
+          // Set the new flag to hide buttons
+          this.showButtons = false;
           this.showToast('Shopping center updated successfully!');
           // this.clearModalData();
           // this.modalService.dismissAll();
