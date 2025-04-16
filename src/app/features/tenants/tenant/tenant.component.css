@@ -1,3 +1,30 @@
+.btn_trash{
+  background: transparent;
+    color: rgb(224, 0, 0);
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(224, 0, 0);
+    padding-inline: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn_edit{
+    background: transparent;
+    color: rgb(107, 119, 133,1);
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgb(107, 119, 133,1);
+    padding-inline: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.input-sty{
+  margin-top: 0px;
+  margin-left: -22px;
+  border: 2px solid #cbcbcb;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
 .BuyboxSpecifications {
   font-size: 18px;
   font-weight: 600;
@@ -30,14 +57,12 @@
   height: 24px;
 }
 
-.spec-content {
-  flex: 1;
-}
+
 
 .spec-title {
   color: var(--Body-Text-and-Icons, #707791);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -50,7 +75,7 @@
 .spec-value {
   color: var(--Body-Heading-Color, #16181d);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -73,7 +98,7 @@
 }
 .centrename {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -81,7 +106,7 @@
 }
 .centreaddress {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -119,7 +144,7 @@
 }
 .BuyboxSpecifications {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -130,19 +155,19 @@
 }
 .smalltitle {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.07px;
 }
-.truncate {
+/* .truncate {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-}
+} */
 .toggle-link {
   color: #007bff;
   cursor: pointer;
@@ -171,7 +196,7 @@
 .sharebtn span {
   color: var(--Button-Secondary-Label-Default, #4d65b4);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -195,7 +220,7 @@
 .uploadbtn span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -218,7 +243,7 @@
 .submitbronchure span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -247,7 +272,7 @@
 }
 .boldtext {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -262,7 +287,7 @@
 }
 .organizationName{
 color: var(--Body-Heading-Color, #16181D);
-font-family: Montserrat;
+
 font-size: 14px;
 font-style: normal;
 font-weight: 600;
@@ -276,6 +301,7 @@ justify-content: center;
 align-items: center;
 }
 .logo{
+margin-left: 0;
 width: 24px;
 height: 24px;
 border-radius: 24px;
@@ -283,8 +309,8 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .buyboxname {
   color: var(--Body-Heading-Color, #16181D);
-  font-family: Montserrat;
-  font-size: 32px;
+  
+  font-size: 25px;
   font-style: normal;
   font-weight: 600;
   line-height: 40px;
@@ -294,6 +320,9 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.dropzonee:focus-visible {
+  outline: none;
 }
 .filename {
   color: var(--Body-Text-and-Icons, #707791);
@@ -382,7 +411,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .upload-text {
   color: var(--Colors-Positive-500, #28a745);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -391,7 +420,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .uploadspan {
   color: var(--Body-Text-and-Icons, #707791);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -453,6 +482,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
   font-weight: 600;
   cursor: pointer;
   border: none;
+  margin-bottom: 10px;
 }
 .paddingsubmitpdf {
   padding-right: 20px;
@@ -480,7 +510,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .ShoppingCenterInformation {
   color: #4d65b4;
   text-align: center;
-  font-family: Montserrat;
+  padding-top: 20px;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -488,7 +518,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .shoppingcentertitle {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -497,7 +527,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .shoppingsubtitle {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -564,7 +594,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .BuildingSize {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -573,7 +603,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .BuildingAndTenant {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -581,7 +611,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
   letter-spacing: -0.07px;
 }
 .card {
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
 }
 
 .card-img-top {
@@ -633,6 +663,10 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .SubmitBrochure:hover {
   background: var(--Button-Primary-BG-hover, #4052a0);
 }
+.SubmitBrochure:focus-visible {
+  outline: none;
+}
+
 .ManualSubmission {
   display: flex;
   height: 48px;
@@ -660,7 +694,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .title {
   color: var(--Body-Heading-Color, #16181d);
-  font-family: Montserrat;
+  
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -668,7 +702,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .subtitle {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -680,7 +714,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .submitnewproposel {
   color: var(--Body-Heading-Color, #16181d);
   text-align: center;
-  font-family: Montserrat;
+  
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -701,7 +735,7 @@ background:lightgray 50% / cover no-repeat;
 }
 .address {
   color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
+  
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -710,12 +744,9 @@ background:lightgray 50% / cover no-repeat;
 }
 .managedBy {
   margin-top: 10px;
-  color: var(--Body-Text-and-Icons, #707791);
-  font-family: Montserrat;
-  font-size: 16px;
-  font-style: normal;
+  color:  #707791;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
 }
 .table-text {
   color: #7a8591;
@@ -731,7 +762,7 @@ background:lightgray 50% / cover no-repeat;
     height: 40px;
   }
   .buyboxname {
-    font-size: 32px;
+    font-size: 25px;
   }
   .nameincard {
     font-size: 18px;
@@ -762,7 +793,7 @@ background:lightgray 50% / cover no-repeat;
     height: 30px;
   }
   .buyboxname {
-    font-size: 32px;
+    font-size: 25px;
   }
   .nameincard {
     font-size: 20px;
@@ -780,7 +811,7 @@ background:lightgray 50% / cover no-repeat;
 
 @media (min-width: 768px) {
   .buyboxname {
-    font-size: 32px;
+    font-size: 25px;
   }
   .tenant-logo {
     width: 40px;
@@ -801,8 +832,8 @@ background:lightgray 50% / cover no-repeat;
 
 @media (min-width: 992px) {
   .tenant-logo {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     aspect-ratio: 1/1;
     margin-right: 15px;
   }

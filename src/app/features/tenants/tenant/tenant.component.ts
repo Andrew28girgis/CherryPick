@@ -455,8 +455,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (data) => {
         // Always show success message for 200 OK responses
         this.showToast('Shopping center updated successfully!');
-        this.clearModalData();
-        this.modalService.dismissAll();
+        // this.clearModalData();
+        // this.modalService.dismissAll();
         this.isSubmitting = false;
         this.spinner.hide();
       },
@@ -466,8 +466,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
         // Check if it's actually a success response being misinterpreted as an error
         if (error.status === 200) {
           this.showToast('Shopping center updated successfully!');
-          this.clearModalData();
-          this.modalService.dismissAll();
+          // this.clearModalData();
+          // this.modalService.dismissAll();
         } else {
           // It's a genuine error
           let errorMessage = 'Failed to update shopping center!';
@@ -516,14 +516,14 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   // Replace the existing methods with these new ones
   toggleAddAvailability(): void {
-    this.removeavailable=true;
+    // this.removeavailable=true;
     this.showAddAvailabilityInput = !this.showAddAvailabilityInput;
     if (!this.showAddAvailabilityInput) {
       this.newAvailabilitySize = undefined;
     }
   }
   toggleAddTenant(): void {
-    this.removetenant=true;
+    // this.removetenant=true;
     this.showAddTenantInput = !this.showAddTenantInput;
     if (!this.showAddTenantInput) {
       this.newTenantName = '';
