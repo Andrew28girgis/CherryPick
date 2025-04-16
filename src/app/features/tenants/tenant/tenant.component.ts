@@ -40,6 +40,10 @@ import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
 import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter';
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+
+
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -49,6 +53,7 @@ import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCen
     RouterModule,
     FormsModule,
     NgxFileDropModule,
+    NgbPopoverModule 
   ],
   providers: [],
   templateUrl: './tenant.component.html',
@@ -90,6 +95,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   newTenantName = '';
   shoppingCenterManage:TenantShoppingCenter[]=[];
   Polgons!: any[];
+  OrganizationContacts!: any[];
   customPolygons: ICustomPolygon[] = [];
   map!: google.maps.Map;
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
@@ -116,7 +122,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    private mapDrawingService: CampaignDrawingService
+    private mapDrawingService: CampaignDrawingService,
+    private shoppingCenterService: ViewManagerService
   ) {}
 
   ngOnInit(): void {
@@ -169,6 +176,25 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
         console.log('ShoppingCenterManage', this.shoppingCenterManage);
+        
+      },
+    });
+  }
+  GetOrganizationById():void{
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetOrganizationById',
+      Params: {
+        organizationid: this.organizationid,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.OrganizationContacts= res.json;
+        console.log('OrganizationContacts',this.OrganizationContacts);
+        
+        console.log('jdjd',this.organizationid);
         
       },
     });
@@ -227,6 +253,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
               .BuyBoxOrganizationId
           : 0;
         this.spinner.hide();
+        this.GetOrganizationById();
         this.GetOrganizationBranches();
       },
     });
@@ -265,6 +292,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.spinner.hide();
         } else {
           this.organizationBranches = res.json[0];
+          console.log('sssss',this.organizationid);
+
           this.spinner.hide();
         }
       },
@@ -940,6 +969,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.showToast('Tenant deleted successfully!');
         },
       });
+    }
+    isLast(currentItem: any, array: any[]): boolean {
+      return this.shoppingCenterService.isLast(currentItem, array);
     }
     /////////////
 }
