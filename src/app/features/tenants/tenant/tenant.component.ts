@@ -459,6 +459,7 @@ isAllForLeasePriceZero(): boolean {
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
         // Always show success message for 200 OK responses
+        this.JsonPDF.IsSubmitted = true;
         this.showToast('Shopping center updated successfully!');
         // this.clearModalData();
         // this.modalService.dismissAll();
