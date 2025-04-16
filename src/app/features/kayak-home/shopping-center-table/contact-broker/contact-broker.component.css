@@ -64,6 +64,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 1.5rem;
+  overflow: hidden;
 }
 
 .contact-broker-step .step-header {
@@ -90,6 +91,7 @@
 }
 
 .contact-broker-step .step-content {
+  width: 100%;
   flex: 1;
   overflow: hidden;
   overflow-y: auto;

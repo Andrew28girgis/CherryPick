@@ -29,11 +29,24 @@
       <div class="step-title">Choose Brokers</div>
     </div>
     <div class="step-content">
-      <app-choose-broker></app-choose-broker>
+      <app-choose-broker
+        [contacts]="center.ShoppingCenter.ManagerOrganization"
+        (onStepDone)="onStepDone($event)"
+      ></app-choose-broker>
     </div>
   </div>
   } @case (2) {
-  <div class="contact-broker-step step-two"></div>
+  <div class="contact-broker-step step-two">
+    <div class="step-header">
+      <div class="step-number-icon">
+        {{ currentStep }}
+      </div>
+      <div class="step-title">Managed By Brokers</div>
+    </div>
+    <div class="step-content">
+      <app-managed-by-broker></app-managed-by-broker>
+    </div>
+  </div>
   } @case (3) {
   <div class="contact-broker-step step-three"></div>
   } }

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Center } from 'src/app/shared/models/shoppingCenters';
+import { IChooseBroker } from './models/ichoose-broker';
 
 @Component({
   selector: 'app-contact-broker',
@@ -10,10 +11,24 @@ import { Center } from 'src/app/shared/models/shoppingCenters';
 export class ContactBrokerComponent {
   protected stepperSteps: number[] = Array.from({ length: 3 }, (_, i) => i + 1);
   protected currentStep: number = 1;
+  protected chooseBrokerObject!: IChooseBroker;
 
   @Input() center!: Center;
 
   constructor(private activeModal: NgbActiveModal) {}
+
+  onStepDone(event: any): void {
+    switch (this.currentStep) {
+      case 1: {
+        this.chooseBrokerObject = event;
+        this.currentStep++;
+        break;
+      }
+
+      default:
+        break;
+    }
+  }
 
   closeActiveModal() {
     this.activeModal.close();
