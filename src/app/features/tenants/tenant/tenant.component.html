@@ -602,6 +602,170 @@
                     </div>
                   </div>
                 </div>
+                <div
+                  class="col-md-4 mt-3"
+                  *ngFor="let shopping of shoppingCenterManageSubmitted"
+                >
+                  <div class="card shoppingcentersize">
+                    <img
+                      class="card-img-top"
+                      [src]="shopping.MainImage"
+                      alt="Main Image"
+                    />
+
+                    <div class="card-body">
+                      <h5 class="centrename">{{ shopping.CenterName }}</h5>
+                      <h5 class="address">
+                        {{ shopping.CenterAddress }},{{ shopping.CenterCity }},
+                        {{ shopping.CenterState }}
+                      </h5>
+
+                      <div
+                        class="d-flex flex-column gap-2 my-2"
+                        *ngIf="shoppingCenterManageSubmitted[0].O[0].P"
+                      >
+                        <div class="d-flex align-items-center gap-2 my-2">
+                          <img
+                            src="../../../../assets/Images/purchaseprice.png"
+                            alt=""
+                          />
+
+                          <ng-container *ngIf="isAllForLeasePriceZeroSub()">
+                            <span class="title"> On Request </span>
+                          </ng-container>
+
+                          <ng-container *ngIf="shoppingCenterManageSubmitted?.length && shoppingCenterManageSubmitted[0]?.O?.length && shoppingCenterManageSubmitted[0].O[0]?.P?.length">
+                            <ng-container *ngIf="filteredLeasePlaces(shoppingCenterManageSubmitted[0].O[0].P) as leasePlaces">
+                              <div [ngClass]="{ 'd-inline': !showAllLeasePrices, 'd-block': showAllLeasePrices }" class="lease-prices-wrapper">
+                                
+                                <ng-container *ngFor="let place of getVisibleLeasePlaces(leasePlaces); let last = last">
+                                  <span class="title d-inline-block">
+                                    {{ place.ForLeasePrice }}
+                                  </span>
+                                  <span *ngIf="!last && !showAllLeasePrices"> - </span>
+                                </ng-container>
+                          
+                                <!-- View More / View Less -->
+                                <div *ngIf="leasePlaces.length > 3" class="mt-1">
+                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="toggleShowLeasePrices()">
+                                    {{ showAllLeasePrices ? 'View Less' : 'View More' }}
+                                  </a>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                          
+                          
+
+                          <span
+                            class="subtitle"
+                            *ngIf="!isAllForLeasePriceZeroSub()"
+                          >
+                            ($)
+                          </span>
+                        </div>
+
+                        <div class="d-flex flex-column mt-2 gap-1">
+                          <span class="title"> Available Spaces: </span>
+                          <div class="d-flex align-items-center gap-2 my-2">
+                            <img
+                              src="../../../../assets/Images/size.png"
+                              alt=""
+                            />
+                            <ng-container *ngIf="shoppingCenterManageSubmitted[0].O[0].P as places">
+                              <!-- Display items -->
+                              <div [ngClass]="{ 'd-inline': !showAllPlaces, 'd-block': showAllPlaces }" class="building-sizes-wrapper">
+                                <ng-container *ngFor="let place of getVisiblePlaces(places); let last = last">
+                                  <span class="availabletitle d-inline-block">
+                                    {{ place.BuildingSizeSf | number }} SF
+                                  </span>
+                                  <span *ngIf="!last && !showAllPlaces"> - </span>
+                                </ng-container>
+                            
+                                <!-- View More / View Less -->
+                                <div *ngIf="places.length > 3" class="mt-1">
+                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="toggleShowMore()">
+                                    {{ showAllPlaces ? 'View Less' : 'View More' }}
+                                  </a>
+                                </div>
+                              </div>
+                            </ng-container>
+                            
+                            
+                            
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2 my-2">
+                        <img
+                          src="../../../../assets/Images/availableunits.png"
+                          alt=""
+                        />
+                        <span class="title">
+                          {{ getBuildingSizeCountSub() }}
+                        </span>
+                        <span class="subtitle"> Available Units </span>
+                      </div>
+
+                      <div class="line"></div>
+                      <div class="mt-2">
+                        <span class="managedBy">Managed By</span>
+                      </div>
+                      <div class="d-flex align-content-center gap-2">
+                        <img
+                          class="logo"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            OrganizationContacts[0].id
+                          }}"
+                          [title]="OrganizationContacts[0].name"
+                          alt=""
+                        />
+                        <div class="organizationName">
+                          {{ OrganizationContacts[0].name }}
+                        </div>
+                        <img
+                          class="cursor eyeimage"
+                          src="../../../assets/Images/Icons/eye.png"
+                          alt="View Manager Details"
+                          [ngbPopover]="popoverContent"
+                          popoverTitle="Organization Contact Info"
+                          triggers="click:outside"
+                          [placement]="'top'"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="twobuttons">
+                      <button class="SubmitBrochure w-100" (click)="fileDrop.openFileSelector()">
+                        <ngx-file-drop
+                          #fileDrop
+                          class="dropzonee hidden-dropzone w-100"
+                          dropZoneLabel="Drop files here"
+                          (onFileDrop)="uploadFile($event)"
+                          [dropZoneClassName]="'upload-background-image'"
+                        >
+                          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <div class="upload-container cursor w-100">
+                              <div class="d-flex align-items-center justify-content-center w-100">
+                                <div class="submitbronchure cursor w-100">
+                                  <span>Submit Brochure</span>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </ngx-file-drop>
+                      </button>
+                      
+
+                      <button
+                        class="ManualSubmission mt-2 w-100"
+                        (click)="openShoppingModal(shopping.Id)"
+                      >
+                        Manual Submission
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="col-12 mt-3">
                 <div

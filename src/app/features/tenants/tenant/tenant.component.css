@@ -346,6 +346,28 @@
   border: none;
   margin-bottom: 10px;
 }
+.building-sizes-wrapper.d-block {
+  width: 100%;
+}
+
+.building-sizes-wrapper.d-inline {
+  white-space: nowrap;
+}
+
+.availabletitle {
+  margin-right: 4px;
+}
+.lease-prices-wrapper.d-block {
+  width: 100%;
+}
+
+.lease-prices-wrapper.d-inline {
+  white-space: nowrap;
+}
+
+.title {
+  margin-right: 4px;
+}
 .paddingsubmitpdf {
   padding-right: 20px;
 }
@@ -414,7 +436,7 @@
   border-radius: 20px;
   background: #fff;
   overflow: hidden;
-  height: 650px;
+  height: 640px;
 }
 .twobuttons {
   position: absolute;

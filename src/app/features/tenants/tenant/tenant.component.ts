@@ -95,6 +95,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   showAddTenantInput = false;
   newTenantName = '';
   shoppingCenterManage:TenantShoppingCenter[]=[];
+  shoppingCenterManageSubmitted:TenantShoppingCenter[]=[];
   Polgons!: any[];
   OrganizationContacts!: organizationContacts[];
   customPolygons: ICustomPolygon[] = [];
@@ -145,6 +146,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.selectedShoppingID = guid;
     this.GetUserSubmissionData();
     this.GetShoppingCenterManageInCampaign();
+    this.GetUserSubmissionsShoppingCenters();
   }
 
   GetCampaignFromGuid(): void {
@@ -179,6 +181,24 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
         console.log('ShoppingCenterManage', this.shoppingCenterManage);
+        
+      },
+    });
+  }
+  GetUserSubmissionsShoppingCenters(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetUserSubmissionsShoppingCenters',
+      Params: {
+        CampaignGUID: this.guid,
+        ContactId: this.contactID,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.shoppingCenterManageSubmitted = res.json;
+        console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
         
       },
     });
@@ -241,6 +261,34 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
 isAllForLeasePriceZero(): boolean {
   return this.shoppingCenterManage[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+}
+  getBuildingSizeCountSub(): number {
+    return this.shoppingCenterManageSubmitted[0]?.O[0]?.P?.length || 0;
+  }
+isAllForLeasePriceZeroSub(): boolean {
+  return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+}
+showAllPlaces = false;
+
+toggleShowMore(): void {
+  this.showAllPlaces = !this.showAllPlaces;
+}
+
+getVisiblePlaces(places: any[]): any[] {
+  return this.showAllPlaces ? places : places.slice(0, 3);
+}
+showAllLeasePrices = false;
+
+toggleShowLeasePrices(): void {
+  this.showAllLeasePrices = !this.showAllLeasePrices;
+}
+
+filteredLeasePlaces(places: any[]): any[] {
+  return places.filter(p => p.ForLeasePrice !== 0);
+}
+
+getVisibleLeasePlaces(places: any[]): any[] {
+  return this.showAllLeasePrices ? places : places.slice(0, 3);
 }
   GetBuyBoxInfo(): void {
     this.spinner.show();
@@ -461,6 +509,7 @@ isAllForLeasePriceZero(): boolean {
         this.JsonPDF.IsSubmitted = true;
         this.showButtons = false;
         this.showToast('Shopping center updated successfully!');
+        this.GetUserSubmissionsShoppingCenters();
         // this.clearModalData();
         // this.modalService.dismissAll();
         this.isSubmitting = false;
@@ -475,6 +524,7 @@ isAllForLeasePriceZero(): boolean {
           // Set the new flag to hide buttons
           this.showButtons = false;
           this.showToast('Shopping center updated successfully!');
+          this.GetUserSubmissionsShoppingCenters();
           // this.clearModalData();
           // this.modalService.dismissAll();
         } else {
