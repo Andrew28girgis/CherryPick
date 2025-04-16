@@ -28,7 +28,7 @@ export interface KanbanStage {
   stageOrder: number;
   isQualified: boolean;
   KanbanTemplateId: number;
-  kanbanOrganizations: KanbanOrganization[]; 
+  MarketSurveyShoppingCenters: KanbanOrganization[]; 
 }
 export interface KanbanOrganization {
   Id: number;
