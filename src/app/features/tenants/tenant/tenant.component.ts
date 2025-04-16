@@ -262,6 +262,12 @@ export class TenantComponent implements OnInit, AfterViewInit {
 isAllForLeasePriceZero(): boolean {
   return this.shoppingCenterManage[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
 }
+  getBuildingSizeCountSub(): number {
+    return this.shoppingCenterManageSubmitted[0]?.O[0]?.P?.length || 0;
+  }
+isAllForLeasePriceZeroSub(): boolean {
+  return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+}
   GetBuyBoxInfo(): void {
     this.spinner.show();
     const body: any = {

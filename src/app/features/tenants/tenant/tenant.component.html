@@ -630,7 +630,7 @@
                             alt=""
                           />
 
-                          <ng-container *ngIf="isAllForLeasePriceZero()">
+                          <ng-container *ngIf="isAllForLeasePriceZeroSub()">
                             <span class="title"> On Request </span>
                           </ng-container>
 
@@ -650,7 +650,7 @@
 
                           <span
                             class="subtitle"
-                            *ngIf="!isAllForLeasePriceZero()"
+                            *ngIf="!isAllForLeasePriceZeroSub()"
                           >
                             ($)
                           </span>
@@ -683,7 +683,7 @@
                           alt=""
                         />
                         <span class="title">
-                          {{ getBuildingSizeCount() }}
+                          {{ getBuildingSizeCountSub() }}
                         </span>
                         <span class="subtitle"> Available Units </span>
                       </div>
