@@ -52,9 +52,9 @@
                         <div class="spec-content">
                           <div class="spec-title">Size needed</div>
                           <div class="spec-value">
-                            {{ TenantResult.Buybox[0].MinBuildingSize }} -
-                            {{ TenantResult.Buybox[0].MaxBuildingSize }} SF
-                          </div>
+                            {{ TenantResult.Buybox[0].MinBuildingSize | number }} SF -
+                            {{ TenantResult.Buybox[0].MaxBuildingSize | number }} SF
+                          </div>                          
                         </div>
                       </div>
                     </div>
@@ -485,7 +485,7 @@
                           <img src="../../../../assets/Images/size.png" alt="">
                           <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
                             <span class="title">
-                              {{ place.BuildingSizeSf }} 
+                              {{ place.BuildingSizeSf | number }} 
                             </span>
                             <span *ngIf="!last"> - </span> 
                           </ng-container>
