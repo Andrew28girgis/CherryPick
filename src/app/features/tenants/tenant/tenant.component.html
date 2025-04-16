@@ -602,6 +602,151 @@
                     </div>
                   </div>
                 </div>
+                <div
+                  class="col-md-4 mt-3"
+                  *ngFor="let shopping of shoppingCenterManageSubmitted"
+                >
+                  <div class="card shoppingcentersize">
+                    <img
+                      class="card-img-top"
+                      [src]="shopping.MainImage"
+                      alt="Main Image"
+                    />
+
+                    <div class="card-body">
+                      <h5 class="centrename">{{ shopping.CenterName }}</h5>
+                      <h5 class="address">
+                        {{ shopping.CenterAddress }},{{ shopping.CenterCity }},
+                        {{ shopping.CenterState }}
+                      </h5>
+
+                      <div
+                        class="d-flex flex-column gap-2 my-2"
+                        *ngIf="shoppingCenterManage[0].O[0].P"
+                      >
+                        <div class="d-flex align-items-center gap-2 my-2">
+                          <img
+                            src="../../../../assets/Images/purchaseprice.png"
+                            alt=""
+                          />
+
+                          <ng-container *ngIf="isAllForLeasePriceZero()">
+                            <span class="title"> On Request </span>
+                          </ng-container>
+
+                          <ng-container
+                            *ngFor="
+                              let place of shoppingCenterManage[0].O[0].P;
+                              let last = last
+                            "
+                          >
+                            <ng-container *ngIf="place.ForLeasePrice !== 0">
+                              <span class="title">
+                                {{ place.ForLeasePrice }}
+                              </span>
+                              <span *ngIf="!last"> - </span>
+                            </ng-container>
+                          </ng-container>
+
+                          <span
+                            class="subtitle"
+                            *ngIf="!isAllForLeasePriceZero()"
+                          >
+                            ($)
+                          </span>
+                        </div>
+
+                        <div class="d-flex flex-column mt-2 gap-1">
+                          <span class="title"> Available Spaces: </span>
+                          <div class="d-flex align-items-center gap-2 my-2">
+                            <img
+                              src="../../../../assets/Images/size.png"
+                              alt=""
+                            />
+                            <ng-container
+                              *ngFor="
+                                let place of shoppingCenterManage[0].O[0].P;
+                                let last = last
+                              "
+                            >
+                              <span class="availabletitle">
+                                {{ place.BuildingSizeSf | number }} SF
+                              </span>
+                              <span *ngIf="!last"> - </span>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex align-items-center gap-2 my-2">
+                        <img
+                          src="../../../../assets/Images/availableunits.png"
+                          alt=""
+                        />
+                        <span class="title">
+                          {{ getBuildingSizeCount() }}
+                        </span>
+                        <span class="subtitle"> Available Units </span>
+                      </div>
+
+                      <div class="line"></div>
+                      <div class="mt-2">
+                        <span class="managedBy">Managed By</span>
+                      </div>
+                      <div class="d-flex align-content-center gap-2">
+                        <img
+                          class="logo"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            OrganizationContacts[0].id
+                          }}"
+                          [title]="OrganizationContacts[0].name"
+                          alt=""
+                        />
+                        <div class="organizationName">
+                          {{ OrganizationContacts[0].name }}
+                        </div>
+                        <img
+                          class="cursor eyeimage"
+                          src="../../../assets/Images/Icons/eye.png"
+                          alt="View Manager Details"
+                          [ngbPopover]="popoverContent"
+                          popoverTitle="Organization Contact Info"
+                          triggers="click:outside"
+                          [placement]="'top'"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="twobuttons">
+                      <button class="SubmitBrochure w-100" (click)="fileDrop.openFileSelector()">
+                        <ngx-file-drop
+                          #fileDrop
+                          class="dropzonee hidden-dropzone w-100"
+                          dropZoneLabel="Drop files here"
+                          (onFileDrop)="uploadFile($event)"
+                          [dropZoneClassName]="'upload-background-image'"
+                        >
+                          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <div class="upload-container cursor w-100">
+                              <div class="d-flex align-items-center justify-content-center w-100">
+                                <div class="submitbronchure cursor w-100">
+                                  <span>Submit Brochure</span>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-template>
+                        </ngx-file-drop>
+                      </button>
+                      
+
+                      <button
+                        class="ManualSubmission mt-2 w-100"
+                        (click)="openShoppingModal(shopping.Id)"
+                      >
+                        Manual Submission
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="col-12 mt-3">
                 <div

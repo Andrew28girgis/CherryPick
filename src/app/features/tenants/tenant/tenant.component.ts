@@ -95,6 +95,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   showAddTenantInput = false;
   newTenantName = '';
   shoppingCenterManage:TenantShoppingCenter[]=[];
+  shoppingCenterManageSubmitted:TenantShoppingCenter[]=[];
   Polgons!: any[];
   OrganizationContacts!: organizationContacts[];
   customPolygons: ICustomPolygon[] = [];
@@ -145,6 +146,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.selectedShoppingID = guid;
     this.GetUserSubmissionData();
     this.GetShoppingCenterManageInCampaign();
+    this.GetUserSubmissionsShoppingCenters();
   }
 
   GetCampaignFromGuid(): void {
@@ -179,6 +181,24 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
         console.log('ShoppingCenterManage', this.shoppingCenterManage);
+        
+      },
+    });
+  }
+  GetUserSubmissionsShoppingCenters(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetUserSubmissionsShoppingCenters',
+      Params: {
+        CampaignGUID: this.guid,
+        ContactId: this.contactID,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.shoppingCenterManageSubmitted = res.json;
+        console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
         
       },
     });
@@ -461,6 +481,7 @@ isAllForLeasePriceZero(): boolean {
         this.JsonPDF.IsSubmitted = true;
         this.showButtons = false;
         this.showToast('Shopping center updated successfully!');
+        this.GetUserSubmissionsShoppingCenters();
         // this.clearModalData();
         // this.modalService.dismissAll();
         this.isSubmitting = false;
@@ -475,6 +496,7 @@ isAllForLeasePriceZero(): boolean {
           // Set the new flag to hide buttons
           this.showButtons = false;
           this.showToast('Shopping center updated successfully!');
+          this.GetUserSubmissionsShoppingCenters();
           // this.clearModalData();
           // this.modalService.dismissAll();
         } else {
