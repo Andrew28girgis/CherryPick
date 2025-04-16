@@ -480,19 +480,21 @@
                           </span>
                         </div>
                         
-                        
+                       <div class="d-flex flex-column mt-2 gap-1">
+                        <span class="title">
+                          Available Spaces:
+                        </span>
                         <div class="d-flex align-items-center gap-2 my-2">
                           <img src="../../../../assets/Images/size.png" alt="">
                           <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
-                            <span class="title">
-                              {{ place.BuildingSizeSf | number }} 
+                            <span class="availabletitle">
+                              {{ place.BuildingSizeSf | number }} SF
                             </span>
                             <span *ngIf="!last"> - </span> 
                           </ng-container>
-                          <span class="subtitle">
-                            (SF)
-                          </span>
+                       
                         </div>
+                       </div>
                         
                      
                         

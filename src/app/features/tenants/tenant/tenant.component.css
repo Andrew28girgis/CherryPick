@@ -562,7 +562,7 @@
   border-radius: var(--Card-Section-Radius, 20px);
   background: var(--Card-Section-BG, #fff);
   overflow: hidden;
-  height: 620px;
+  height: 650px;
 }
 .twobuttons {
   position: absolute;
@@ -701,6 +701,20 @@
   color: var(--Body-Text-and-Icons, #707791);
 
   font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+.availabletitle {
+  color: var(--Body-Heading-Color, #16181d);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.avaialablesubtitle {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-size: 13px;
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
