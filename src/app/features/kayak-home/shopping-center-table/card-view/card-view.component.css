@@ -405,4 +405,9 @@ img[alt="logo"] {
 
 ::ng-deep .contact-broker-modal-class .modal-content {
   height: 80vh;
+  overflow: hidden;
+}
+
+::ng-deep .contact-broker-modal-class app-contact-broker {
+  height: 100%;
 }
