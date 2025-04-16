@@ -449,16 +449,27 @@
                       <div class="d-flex flex-column gap-2 my-2" *ngIf="shoppingCenterManage[0].O[0].P">
                         <div class="d-flex align-items-center gap-2 my-2">
                           <img src="../../../../assets/Images/purchaseprice.png" alt="">
-                          <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
+                        
+                          <ng-container *ngIf="isAllForLeasePriceZero()">
                             <span class="title">
-                              {{ place.ForLeasePrice }}
+                              On Request
                             </span>
-                            <span *ngIf="!last"> - </span> 
                           </ng-container>
-                          <span class="subtitle">
+                        
+                          <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
+                            <ng-container *ngIf="place.ForLeasePrice !== 0">
+                              <span class="title">
+                                {{ place.ForLeasePrice }}
+                              </span>
+                              <span *ngIf="!last"> - </span>
+                            </ng-container>
+                          </ng-container>
+                        
+                          <span class="subtitle" *ngIf="!isAllForLeasePriceZero()">
                             ($)
                           </span>
                         </div>
+                        
                         
                         <div class="d-flex align-items-center gap-2 my-2">
                           <img src="../../../../assets/Images/size.png" alt="">
@@ -522,15 +533,15 @@
                     <div class="twobuttons">
                       <button class="SubmitBrochure w-100">
                         <ngx-file-drop
-                          class="dropzonee hidden-dropzone"
+                          class="dropzonee hidden-dropzone w-100"  
                           dropZoneLabel="Drop files here"
                           (onFileDrop)="uploadFile($event)"
                           [dropZoneClassName]="'upload-background-image'"
                         >
                           <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-                            <div class="upload-container cursor" (click)="openFileSelector()">
-                              <div class="d-flex align-items-center justify-content-center">
-                                <div class="submitbronchure cursor">
+                            <div class="upload-container cursor w-100" (click)="openFileSelector()">
+                              <div class="d-flex align-items-center justify-content-center w-100">
+                                <div class="submitbronchure cursor w-100">
                                   <span>Submit Brochure</span>
                                 </div>
                               </div>
@@ -538,6 +549,7 @@
                           </ng-template>
                         </ngx-file-drop>
                       </button>
+                      
                       <button class="ManualSubmission mt-2 w-100" (click)="openShoppingModal(shopping.Id)">
                         Manual Submission
                       </button>
