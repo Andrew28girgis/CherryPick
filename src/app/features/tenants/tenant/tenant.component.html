@@ -421,7 +421,6 @@
                             </div>
                           </ng-template>
                         </ngx-file-drop>
-
                         <!-- File name and progress bar section -->
                         <div class="filenameouterframe" *ngIf="fileName">
                           <div class="filenameinnerframe">
@@ -573,24 +572,17 @@
                     </div>
 
                     <div class="twobuttons">
-                      <button class="SubmitBrochure w-100">
+                      <button class="SubmitBrochure w-100" (click)="fileDrop.openFileSelector()">
                         <ngx-file-drop
+                          #fileDrop
                           class="dropzonee hidden-dropzone w-100"
                           dropZoneLabel="Drop files here"
                           (onFileDrop)="uploadFile($event)"
                           [dropZoneClassName]="'upload-background-image'"
                         >
-                          <ng-template
-                            ngx-file-drop-content-tmp
-                            let-openFileSelector="openFileSelector"
-                          >
-                            <div
-                              class="upload-container cursor w-100"
-                              (click)="openFileSelector()"
-                            >
-                              <div
-                                class="d-flex align-items-center justify-content-center w-100"
-                              >
+                          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <div class="upload-container cursor w-100">
+                              <div class="d-flex align-items-center justify-content-center w-100">
                                 <div class="submitbronchure cursor w-100">
                                   <span>Submit Brochure</span>
                                 </div>
@@ -599,6 +591,7 @@
                           </ng-template>
                         </ngx-file-drop>
                       </button>
+                      
 
                       <button
                         class="ManualSubmission mt-2 w-100"
