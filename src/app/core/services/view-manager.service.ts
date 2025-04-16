@@ -69,11 +69,11 @@ export class ViewManagerService {
    * This should be called once when the main component loads
    */
   public initializeData(buyboxId: number, orgId: number): void {
-    if (this._dataLoaded) {
-      // Data already loaded, just notify subscribers
-      this._dataLoadedEvent.next();
-      return;
-    }
+    // if (this._dataLoaded) {
+    //   // Data already loaded, just notify subscribers
+    //   this._dataLoadedEvent.next();
+    //   return;
+    // }
 
     this._isLoading.next(true);
 
