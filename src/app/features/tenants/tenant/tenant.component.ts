@@ -170,6 +170,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       Name: 'GetShoppingCenterManageInCampaign',
       Params: {
         CampaignGUID: this.guid,
+        ContactId: this.contactID,
       },
     };
 
