@@ -33,11 +33,9 @@
           </div>
           <div class="row mt-3 d-flex align-items-stretch">
             <div class="col-md-3 d-flex flex-column">
-              <div *ngIf="TenantResult" class="heightimportant" >
+              <div *ngIf="TenantResult" class="heightimportant">
                 <div class="card shoppingcentercard">
-                  <div
-                    class="card-body d-flex flex-column"
-                  >
+                  <div class="card-body d-flex flex-column">
                     <h4 class="ShoppingCenterInformation">
                       BuyBox Specifications
                     </h4>
@@ -52,9 +50,15 @@
                         <div class="spec-content">
                           <div class="spec-title">Size needed</div>
                           <div class="spec-value">
-                            {{ TenantResult.Buybox[0].MinBuildingSize | number }} SF -
-                            {{ TenantResult.Buybox[0].MaxBuildingSize | number }} SF
-                          </div>                          
+                            {{
+                              TenantResult.Buybox[0].MinBuildingSize | number
+                            }}
+                            SF -
+                            {{
+                              TenantResult.Buybox[0].MaxBuildingSize | number
+                            }}
+                            SF
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -341,13 +345,16 @@
             <div class="col-md-9">
               <div class="row">
                 <div class="col-md-12">
-               
                   <div class="card submitproposelsize">
                     <div class="card-body">
-                      <div class="d-flex align-items-center justify-content-center">
-                        <span class="submitnewproposel">Submit a New Shopping Center</span>
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                      >
+                        <span class="submitnewproposel"
+                          >Submit a New Shopping Center</span
+                        >
                       </div>
-                      <div class="outer-frame">  
+                      <div class="outer-frame">
                         <div
                           class="inner-frame d-flex flex-column align-items-center justify-content-center"
                         >
@@ -359,19 +366,22 @@
                           </div>
                           <div>
                             <span class="upload-text"
-                              >Just upload your <strong>Proposal</strong> file, and
-                              we’ll handle the rest!</span
+                              >Just upload your <strong>Proposal</strong> file,
+                              and we’ll handle the rest!</span
                             >
                           </div>
                           <div>
-                            <span class="upload-text">PDF, DOCX, XLSX, PPTX</span>
+                            <span class="upload-text"
+                              >PDF, DOCX, XLSX, PPTX</span
+                            >
                           </div>
                         </div>
                         <div
                           class="d-flex flex-column gap-4 align-items-center justify-content-center"
                         >
                           <div>
-                            <img class="uploadimg"
+                            <img
+                              class="uploadimg"
                               src="../../../../assets/Images/Icons/UploadIcon.png"
                               alt=""
                             />
@@ -429,44 +439,63 @@
                           </div>
                         </div>
                       </div>
-
                     </div>
-
                   </div>
                 </div>
                 <!-- Progress Bar -->
                 <div *ngIf="isUploading" class="mt-3">
                   <div class="progress">
-                    <div class="progress-bar progress-bar-striped" role="progressbar" [style.width]="uploadProgress + '%'"
-                      [attr.aria-valuenow]="uploadProgress" aria-valuemin="0" aria-valuemax="100">
+                    <div
+                      class="progress-bar progress-bar-striped"
+                      role="progressbar"
+                      [style.width]="uploadProgress + '%'"
+                      [attr.aria-valuenow]="uploadProgress"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                    >
                       {{ uploadProgress }}%
                     </div>
                   </div>
                   <p class="text-center mt-2">Uploading...</p>
                 </div>
-                <div class="col-md-4 mt-3" *ngFor="let shopping of shoppingCenterManage">
+                <div
+                  class="col-md-4 mt-3"
+                  *ngFor="let shopping of shoppingCenterManage"
+                >
                   <div class="card shoppingcentersize">
                     <img
                       class="card-img-top"
                       [src]="shopping.MainImage"
                       alt="Main Image"
                     />
-                
+
                     <div class="card-body">
                       <h5 class="centrename">{{ shopping.CenterName }}</h5>
-                      <h5 class="address">{{ shopping.CenterAddress }},{{ shopping.CenterCity }}, {{ shopping.CenterState }}</h5>
+                      <h5 class="address">
+                        {{ shopping.CenterAddress }},{{ shopping.CenterCity }},
+                        {{ shopping.CenterState }}
+                      </h5>
 
-                      <div class="d-flex flex-column gap-2 my-2" *ngIf="shoppingCenterManage[0].O[0].P">
+                      <div
+                        class="d-flex flex-column gap-2 my-2"
+                        *ngIf="shoppingCenterManage[0].O[0].P"
+                      >
                         <div class="d-flex align-items-center gap-2 my-2">
-                          <img src="../../../../assets/Images/purchaseprice.png" alt="">
-                        
+                          <img
+                            src="../../../../assets/Images/purchaseprice.png"
+                            alt=""
+                          />
+
                           <ng-container *ngIf="isAllForLeasePriceZero()">
-                            <span class="title">
-                              On Request
-                            </span>
+                            <span class="title"> On Request </span>
                           </ng-container>
-                        
-                          <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
+
+                          <ng-container
+                            *ngFor="
+                              let place of shoppingCenterManage[0].O[0].P;
+                              let last = last
+                            "
+                          >
                             <ng-container *ngIf="place.ForLeasePrice !== 0">
                               <span class="title">
                                 {{ place.ForLeasePrice }}
@@ -474,85 +503,94 @@
                               <span *ngIf="!last"> - </span>
                             </ng-container>
                           </ng-container>
-                        
-                          <span class="subtitle" *ngIf="!isAllForLeasePriceZero()">
+
+                          <span
+                            class="subtitle"
+                            *ngIf="!isAllForLeasePriceZero()"
+                          >
                             ($)
                           </span>
                         </div>
-                        
-                       <div class="d-flex flex-column mt-2 gap-1">
-                        <span class="title">
-                          Available Spaces:
-                        </span>
-                        <div class="d-flex align-items-center gap-2 my-2">
-                          <img src="../../../../assets/Images/size.png" alt="">
-                          <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
-                            <span class="availabletitle">
-                              {{ place.BuildingSizeSf | number }} SF
-                            </span>
-                            <span *ngIf="!last"> - </span> 
-                          </ng-container>
-                       
+
+                        <div class="d-flex flex-column mt-2 gap-1">
+                          <span class="title"> Available Spaces: </span>
+                          <div class="d-flex align-items-center gap-2 my-2">
+                            <img
+                              src="../../../../assets/Images/size.png"
+                              alt=""
+                            />
+                            <ng-container
+                              *ngFor="
+                                let place of shoppingCenterManage[0].O[0].P;
+                                let last = last
+                              "
+                            >
+                              <span class="availabletitle">
+                                {{ place.BuildingSizeSf | number }} SF
+                              </span>
+                              <span *ngIf="!last"> - </span>
+                            </ng-container>
+                          </div>
                         </div>
-                       </div>
-                        
-                     
-                        
-                        
                       </div>
                       <div class="d-flex align-items-center gap-2 my-2">
-                        <img src="../../../../assets/Images/availableunits.png" alt="">
+                        <img
+                          src="../../../../assets/Images/availableunits.png"
+                          alt=""
+                        />
                         <span class="title">
                           {{ getBuildingSizeCount() }}
                         </span>
-                        <span class="subtitle">
-                          Available Units
-                        </span>
+                        <span class="subtitle"> Available Units </span>
                       </div>
-                      
-                    
-                      <div class="line">
-                      
-                      </div>
+
+                      <div class="line"></div>
                       <div class="mt-2">
                         <span class="managedBy">Managed By</span>
                       </div>
                       <div class="d-flex align-content-center gap-2">
                         <img
-                        class="logo"
-                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          OrganizationContacts[0].id
-                        }}"
-                        [title]="OrganizationContacts[0].name"
-                        alt=""
-                      />                       
-                      <div class="organizationName">
-                        {{ OrganizationContacts[0].name }}
-                      </div>                      
-                      <img
-                      class="cursor eyeimage"
-                      src="../../../assets/Images/Icons/eye.png"
-                      alt="View Manager Details"
-                      [ngbPopover]="popoverContent"
-                      popoverTitle="Organization Contact Info"
-                      triggers="click:outside"
-                      [placement]="'top'"
-                    />
+                          class="logo"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            OrganizationContacts[0].id
+                          }}"
+                          [title]="OrganizationContacts[0].name"
+                          alt=""
+                        />
+                        <div class="organizationName">
+                          {{ OrganizationContacts[0].name }}
+                        </div>
+                        <img
+                          class="cursor eyeimage"
+                          src="../../../assets/Images/Icons/eye.png"
+                          alt="View Manager Details"
+                          [ngbPopover]="popoverContent"
+                          popoverTitle="Organization Contact Info"
+                          triggers="click:outside"
+                          [placement]="'top'"
+                        />
                       </div>
                     </div>
-                  
-                
+
                     <div class="twobuttons">
                       <button class="SubmitBrochure w-100">
                         <ngx-file-drop
-                          class="dropzonee hidden-dropzone w-100"  
+                          class="dropzonee hidden-dropzone w-100"
                           dropZoneLabel="Drop files here"
                           (onFileDrop)="uploadFile($event)"
                           [dropZoneClassName]="'upload-background-image'"
                         >
-                          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
-                            <div class="upload-container cursor w-100" (click)="openFileSelector()">
-                              <div class="d-flex align-items-center justify-content-center w-100">
+                          <ng-template
+                            ngx-file-drop-content-tmp
+                            let-openFileSelector="openFileSelector"
+                          >
+                            <div
+                              class="upload-container cursor w-100"
+                              (click)="openFileSelector()"
+                            >
+                              <div
+                                class="d-flex align-items-center justify-content-center w-100"
+                              >
                                 <div class="submitbronchure cursor w-100">
                                   <span>Submit Brochure</span>
                                 </div>
@@ -561,30 +599,24 @@
                           </ng-template>
                         </ngx-file-drop>
                       </button>
-                      
-                      <button class="ManualSubmission mt-2 w-100" (click)="openShoppingModal(shopping.Id)">
+
+                      <button
+                        class="ManualSubmission mt-2 w-100"
+                        (click)="openShoppingModal(shopping.Id)"
+                      >
                         Manual Submission
                       </button>
                     </div>
                   </div>
                 </div>
-                
               </div>
               <div class="col-12 mt-3">
-
-                <div class="mapDesign"
+                <div
+                  class="mapDesign"
                   #mapContainer
                   id="map"
                   style="width: 100%; height: 400px"
                 ></div>
-                <!-- <div *ngFor="let poly of customPolygons; let i = index">
-                <span>{{ poly.geoJson.properties.NAME }}</span>
-                <input
-                  type="checkbox"
-                  [checked]="poly.visible"
-                  (change)="togglePolygonVisibility(poly)"
-                />
-              </div> -->
               </div>
             </div>
           </div>
@@ -622,7 +654,10 @@
               <div class="col-4 mt-3" *ngIf="JsonPDF.CenterAddress">
                 <div class="d-flex flex-column justify-content-center">
                   <span class="shoppingcentertitle">Address</span>
-                  <span class="shoppingsubtitle">{{ JsonPDF.CenterAddress }}, {{ JsonPDF.CenterCity }}, {{ JsonPDF.CenterState }}</span>
+                  <span class="shoppingsubtitle"
+                    >{{ JsonPDF.CenterAddress }}, {{ JsonPDF.CenterCity }},
+                    {{ JsonPDF.CenterState }}</span
+                  >
                 </div>
               </div>
 
@@ -630,7 +665,8 @@
                 <div class="d-flex flex-column justify-content-center">
                   <span class="shoppingcentertitle">Available Space</span>
                   <span class="shoppingsubtitle"
-                    >{{ JsonPDF.TotalAvailableSpace_SF }} SF</span>
+                    >{{ JsonPDF.TotalAvailableSpace_SF }} SF</span
+                  >
                 </div>
               </div>
 
@@ -730,9 +766,7 @@
                   Availability
                 </h4>
                 <div *ngIf="JsonPDF?.IsSubmitted === false">
-                  <button
-                    class="AddAvailablebutton"
-                  >
+                  <button class="AddAvailablebutton">
                     <span
                       class="AddAvailablebuttontext"
                       (click)="toggleAddAvailability()"
@@ -790,7 +824,7 @@
               <div class="d-flex align-items-center justify-content-between">
                 <h4 class="ShoppingCenterInformation mt-2 mb-3">Tenants</h4>
                 <div *ngIf="JsonPDF?.IsSubmitted === false">
-                  <button class="AddAvailablebutton" >
+                  <button class="AddAvailablebutton">
                     <span
                       class="AddAvailablebuttontext"
                       (click)="toggleAddTenant()"
@@ -895,7 +929,6 @@
   </div>
 
   <!-- Display JsonPDF Data Section -->
-
   <div *ngIf="!returnsubmit" class="marginleft">
     <div class="col-4">
       <button
@@ -909,10 +942,6 @@
     </div>
   </div>
 
-  <div></div>
-  <div class="modal-footer">
-    <!-- Send Selected Images Button -->
-  </div>
 </ng-template>
 <div id="customToast" class="custom-toast">
   <div class="toast-content">
@@ -977,27 +1006,44 @@
         <!-- Details Section -->
         <div class="col-md-12">
           <div class="details-container p-3 bg-light rounded shadow-sm">
-            <p class="mb-3" style="color: #7a8591;"><b>Address:</b> {{CustomPlace?.CenterAddress}},
-              {{CustomPlace?.CenterCity}}, {{CustomPlace?.CenterState}} {{CustomPlace?.ZipCode}}</p>
+            <p class="mb-3" style="color: #7a8591">
+              <b>Address:</b> {{ CustomPlace?.CenterAddress }},
+              {{ CustomPlace?.CenterCity }}, {{ CustomPlace?.CenterState }}
+              {{ CustomPlace?.ZipCode }}
+            </p>
             <!-- Avalibitlty Section -->
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 style="color: #7a8591;"> <b>Available Spaces</b></h6>
-              <i class="fa-solid fa-plus cursor-pointer text-primary" style="cursor: pointer;"
-                (click)="toggleAddPlaceInput()"></i>
+              <h6 style="color: #7a8591"><b>Available Spaces</b></h6>
+              <i
+                class="fa-solid fa-plus cursor-pointer text-primary"
+                style="cursor: pointer"
+                (click)="toggleAddPlaceInput()"
+              ></i>
             </div>
 
             <div class="mb-4" *ngIf="CustomPlace?.Availability">
-              <div *ngFor="let space of CustomPlace?.Availability; let i = index" class="py-2 border-bottom">
+              <div
+                *ngFor="let space of CustomPlace?.Availability; let i = index"
+                class="py-2 border-bottom"
+              >
                 <div class="d-flex justify-content-between align-items-center">
-                  <span style="color:#7a8591;">{{space.BuildingSizeSf}} sqft</span>
+                  <span style="color: #7a8591"
+                    >{{ space.BuildingSizeSf }} sqft</span
+                  >
                   <div>
                     <!-- <button class="btn_edit mx-1" (click)="startEditPlace(space.Id, space.BuildingSizeSf, i)">
                       <i class="fa-regular fa-pen-to-square text-secondary d-flex justify-content-center"></i>
                     </button> -->
 
-                    <button class="btn_trash" (click)="openDeletePlaceModal(space.Id)" data-bs-toggle="modal"
-                      data-bs-target="#deletePlaceModal">
-                      <i class="fa fa-trash text-danger d-flex justify-content-center"></i>
+                    <button
+                      class="btn_trash"
+                      (click)="openDeletePlaceModal(space.Id)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deletePlaceModal"
+                    >
+                      <i
+                        class="fa fa-trash text-danger d-flex justify-content-center"
+                      ></i>
                     </button>
                   </div>
                 </div>
@@ -1015,58 +1061,98 @@
                 </div> -->
               </div>
 
-              <!-- Input field for adding a new place -->
-              <div *ngIf="showAddPlaceInput" class="mt-3 d-flex align-items-center gap-2">
-                <input type="number" class="form-control" placeholder="Enter square footage" [(ngModel)]="newPlaceSqFT"
-                  min="1">
-                  <!-- (click)="addNewPlace()" -->
+              <div
+                *ngIf="showAddPlaceInput"
+                class="mt-3 d-flex align-items-center gap-2"
+              >
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="Enter square footage"
+                  [(ngModel)]="newPlaceSqFT"
+                  min="1"
+                />
                 <button class="btn btn-success btn-sm" (click)="addNewPlace()">
                   Add
                 </button>
-                <button class="btn btn-danger btn-sm" (click)="cancelAddPlace()">
+                <button
+                  class="btn btn-danger btn-sm"
+                  (click)="cancelAddPlace()"
+                >
                   Cancel
                 </button>
               </div>
             </div>
 
-            <!-- Tenants Section -->
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 style="color: #7a8591;"><b>Tenants</b></h6>
-              <i class="fa-solid fa-plus cursor-pointer text-primary" style="cursor: pointer;"
-                (click)="toggleAddTenantInput()"></i>
+              <h6 style="color: #7a8591"><b>Tenants</b></h6>
+              <i
+                class="fa-solid fa-plus cursor-pointer text-primary"
+                style="cursor: pointer"
+                (click)="toggleAddTenantInput()"
+              ></i>
             </div>
             <div *ngIf="CustomPlace?.Tenants">
-              <div *ngFor="let tenant of CustomPlace?.Tenants"
-                class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                <span style="color:#7a8591;">{{tenant.Name}} -
-                  <a *ngIf="tenant.URL" [href]="tenant.URL" target="_blank" class="tenant-link">
-                    {{tenant.URL}}
+              <div
+                *ngFor="let tenant of CustomPlace?.Tenants"
+                class="d-flex justify-content-between align-items-center py-2 border-bottom"
+              >
+                <span style="color: #7a8591"
+                  >{{ tenant.Name }} -
+                  <a
+                    *ngIf="tenant.URL"
+                    [href]="tenant.URL"
+                    target="_blank"
+                    class="tenant-link"
+                  >
+                    {{ tenant.URL }}
                   </a>
                 </span>
-                <button class="btn_trash" (click)="openDeleteTenantModal(tenant.Id)" data-bs-toggle="modal"
-                  data-bs-target="#deletePlaceModal">
-                  <i class="fa fa-trash text-danger d-flex justify-content-center"></i>
+                <button
+                  class="btn_trash"
+                  (click)="openDeleteTenantModal(tenant.Id)"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deletePlaceModal"
+                >
+                  <i
+                    class="fa fa-trash text-danger d-flex justify-content-center"
+                  ></i>
                 </button>
               </div>
 
-              <!-- Input field for adding a new tenant -->
               <div
                 *ngIf="showAddTenantInput"
                 class="mt-3 d-flex align-items-center gap-2"
               >
                 <div class="d-flex align-items-center gap-2">
-                  <input type="text" class="form-control" placeholder="Organization name" [(ngModel)]="newNameTenant"
-                    required>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Organization name"
+                    [(ngModel)]="newNameTenant"
+                    required
+                  />
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                  <input type="text" class="form-control" placeholder="URL (example.com)" [(ngModel)]="newUrlTenant"
-                    #tenantUrl="ngModel" required pattern="[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+">
-                  <div *ngIf="tenantUrl.invalid && (tenantUrl.dirty || tenantUrl.touched)"
-                    class="text-danger small mt-1">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="URL (example.com)"
+                    [(ngModel)]="newUrlTenant"
+                    #tenantUrl="ngModel"
+                    required
+                    pattern="[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"
+                  />
+                  <div
+                    *ngIf="
+                      tenantUrl.invalid &&
+                      (tenantUrl.dirty || tenantUrl.touched)
+                    "
+                    class="text-danger small mt-1"
+                  >
                     Please enter a valid domain (e.g., example.com)
                   </div>
                 </div>
-                <!--  (click)="addTenantNew()" -->
                 <button class="btn btn-success btn-sm" (click)="addTenantNew()">
                   Add
                 </button>
@@ -1086,9 +1172,7 @@
 </ng-template>
 <ng-template #popoverContent>
   <div
-    *ngFor="
-      let org of OrganizationContacts
-    "
+    *ngFor="let org of OrganizationContacts"
     class="contact-container table-text"
   >
     <p class="text-bold m-0">
@@ -1097,32 +1181,43 @@
     </p>
     <p class="m-0">{{ org.cellPhone }}</p>
     <p class="m-0">{{ org.email }}</p>
-    <hr
-      *ngIf="
-        !isLast(org, OrganizationContacts)
-      "
-    />
+    <hr *ngIf="!isLast(org, OrganizationContacts)" />
   </div>
 </ng-template>
 <ng-template #deletePlaceModal let-modal>
-  <div class="modal-body-general p-4 rounded" style="
+  <div
+    class="modal-body-general p-4 rounded"
+    style="
       background-color: #f8f9fa;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    ">
-    <h2 class="text-center mb-4" style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)">
-      Delete {{deleteType}} <!-- Dynamic title based on what’s being deleted -->
+    "
+  >
+    <h2
+      class="text-center mb-4"
+      style="font-size: 1.5rem; font-weight: bold; color: var(--app-color)"
+    >
+      Delete {{ deleteType }}
     </h2>
     <p class="text-center" style="font-size: 1rem; color: #6c757d">
       Are you sure you want to delete this {{ deleteType }}?
     </p>
 
     <div class="d-flex justify-content-center mt-4">
-      <button type="button" class="btn btn-secondary me-4 px-4 py-2" (click)="modal.dismiss('Cancel click')"
-        style="border-radius: 4px">
+      <button
+        type="button"
+        class="btn btn-secondary me-4 px-4 py-2"
+        (click)="modal.dismiss('Cancel click')"
+        style="border-radius: 4px"
+      >
         Cancel
       </button>
-      <button type="button" class="btn btn-danger px-4 py-2" (click)="confirmDelete(modal)" style="border-radius: 4px">
+      <button
+        type="button"
+        class="btn btn-danger px-4 py-2"
+        (click)="confirmDelete(modal)"
+        style="border-radius: 4px"
+      >
         Delete
       </button>
     </div>
