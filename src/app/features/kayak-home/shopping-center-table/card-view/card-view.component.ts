@@ -278,7 +278,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         // Success
       })
       .catch((err) => {
-        // Error
+        // Error 
         console.error('Could not copy text: ', err);
       });
   }
@@ -320,25 +320,5 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.activeDropdown = null;
       this.cdr.detectChanges();
     }
-  }
-
-  // Card-specific methods
-  getCardClass(index: number): string {
-    const colorClasses = [
-      'card-blue',
-      'card-green',
-      'card-orange',
-      'card-purple',
-      'card-red',
-    ];
-    return colorClasses[index % colorClasses.length];
-  }
-
-  getCardImage(shoppingCenter: any): string {
-    return shoppingCenter.ImageUrl || 'assets/Images/placeholder-image.jpg';
-  }
-
-  trackByIndex(index: number, item: any): number {
-    return index;
   }
 }

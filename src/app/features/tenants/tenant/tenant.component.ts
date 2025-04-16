@@ -40,6 +40,11 @@ import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
 import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter';
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { organizationContacts } from 'src/app/shared/models/organizationContacts';
+
+
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -49,6 +54,7 @@ import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCen
     RouterModule,
     FormsModule,
     NgxFileDropModule,
+    NgbPopoverModule 
   ],
   providers: [],
   templateUrl: './tenant.component.html',
@@ -90,6 +96,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   newTenantName = '';
   shoppingCenterManage:TenantShoppingCenter[]=[];
   Polgons!: any[];
+  OrganizationContacts!: organizationContacts[];
   customPolygons: ICustomPolygon[] = [];
   map!: google.maps.Map;
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
@@ -116,14 +123,16 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    private mapDrawingService: CampaignDrawingService
+    private mapDrawingService: CampaignDrawingService,
+    private shoppingCenterService: ViewManagerService
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
+      this.contactID = params.get('contactId');
     });
-    this.contactID = localStorage.getItem('contactId');
+    // this.contactID = localStorage.getItem('contactId');
 
     this.activatedRoute.params.subscribe((params) => {
       this.guid = params['guid'];
@@ -161,6 +170,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       Name: 'GetShoppingCenterManageInCampaign',
       Params: {
         CampaignGUID: this.guid,
+        ContactId: this.contactID,
       },
     };
 
@@ -169,6 +179,23 @@ export class TenantComponent implements OnInit, AfterViewInit {
         this.shoppingCenterManage = res.json;
         console.log('ShoppingCenterManage', this.shoppingCenterManage);
         
+      },
+    });
+  }
+  GetOrganizationById():void{
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetOrganizationById',
+      Params: {
+        organizationid: this.organizationid,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.OrganizationContacts= res.json;
+        console.log('OrganizationContacts',this.OrganizationContacts);
+                
       },
     });
   }
@@ -208,7 +235,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
+  getBuildingSizeCount(): number {
+    return this.shoppingCenterManage[0]?.O[0]?.P?.length || 0;
+  }
   GetBuyBoxInfo(): void {
     this.spinner.show();
     const body: any = {
@@ -226,6 +255,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
               .BuyBoxOrganizationId
           : 0;
         this.spinner.hide();
+        this.GetOrganizationById();
         this.GetOrganizationBranches();
       },
     });
@@ -264,6 +294,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.spinner.hide();
         } else {
           this.organizationBranches = res.json[0];
+          console.log('sssss',this.organizationid);
+
           this.spinner.hide();
         }
       },
@@ -407,7 +439,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
       Availability: this.JsonPDF.Availability.map((avail) => ({
         ...avail,
-       isAdded: avail.isAdded !== false,
+        isAdded: avail.isAdded !== false,
       })),
       Tenants: this.JsonPDF.Tenants.map((tenant) => ({
         ...tenant,
@@ -416,50 +448,35 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CampaignId: this.selectedCampaign,
       userSubmissionId: this.userSubmission,
       IsSubmitted: true,
+      ContactId: this.contactID,
     };
   
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        let successMessage = '';
-        
-        // Handle both string and object responses
-        if (typeof data === 'string') {
-          // If the response is a string, check for success message
-          if (data.includes('Shopping center updated successfully')) {
-            successMessage = 'Shopping center updated successfully!';
-          }
-        } else if (typeof data === 'object') {
-          // If the response is JSON, check for success status/message
-          // Adjust this based on your actual API response structure
-          if (data.success || data.message?.includes('success')) {
-            successMessage = data.message || 'Shopping center updated successfully!';
-          }
-        }
-        if (successMessage) {
-          this.showToast(successMessage);
-          this.clearModalData();
-          this.modalService.dismissAll();
-        } else {
-          this.showToast('Received unexpected response from server');
-        }
+        // Always show success message for 200 OK responses
+        this.showToast('Shopping center updated successfully!');
+        this.clearModalData();
+        this.modalService.dismissAll();
         this.isSubmitting = false;
         this.spinner.hide();
       },
       error: (error) => {
         console.error('Error occurred while updating shopping center:', error);
-        // Handle different error cases
-        let errorMessage = 'Failed to update shopping center!';
+        
+        // Check if it's actually a success response being misinterpreted as an error
         if (error.status === 200) {
-          // Sometimes errors come with 200 status but error message in response
-          if (error.error && typeof error.error === 'string') {
-            errorMessage = error.error;
-          } else if (error.message) {
-            errorMessage = error.message;
+          this.showToast('Shopping center updated successfully!');
+          this.clearModalData();
+          this.modalService.dismissAll();
+        } else {
+          // It's a genuine error
+          let errorMessage = 'Failed to update shopping center!';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
           }
-        } else if (error.error && error.error.message) {
-          errorMessage = error.error.message;
+          this.showToast(errorMessage);
         }
-        this.showToast(errorMessage);
+        
         this.isSubmitting = false;
         this.spinner.hide();
       },
@@ -938,6 +955,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.showToast('Tenant deleted successfully!');
         },
       });
+    }
+    isLast(currentItem: any, array: any[]): boolean {
+      return this.shoppingCenterService.isLast(currentItem, array);
     }
     /////////////
 }

@@ -48,13 +48,13 @@
 }
 
 .spec-value {
-  color: var(--Body-Heading-Color, #16181D);
+  color: var(--Body-Heading-Color, #16181d);
   text-align: center;
   font-family: Montserrat;
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
-  line-height: 30px; 
+  line-height: 30px;
 }
 
 /* Shopping centers list */
@@ -71,22 +71,22 @@
   font-size: 14px;
   color: #0066cc;
 }
-.centrename{
-color: var(--Body-Heading-Color, #16181D);
-font-family: Montserrat;
-font-size: 16px;
-font-style: normal;
-font-weight: 600;
-line-height: 30px;
+.centrename {
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
 }
-.centreaddress{
-color: var(--Body-Text-and-Icons, #707791);
-font-family: Montserrat;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: 24px; 
-letter-spacing: -0.07px;
+.centreaddress {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
 }
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -254,17 +254,40 @@ letter-spacing: -0.07px;
   line-height: 30px;
 }
 .tenant-logo {
-  width: 90px;
-  height: 90px;
-  border-radius: 120px;
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1/1;
+  border-radius: var(--Radius-Radius-12, 12px);
+  background: lightgray 50% / cover no-repeat;
+}
+.organizationName{
+color: var(--Body-Heading-Color, #16181D);
+font-family: Montserrat;
+font-size: 14px;
+font-style: normal;
+font-weight: 600;
+line-height: 24px;
+}
+.eyeimage{
+display: flex;
+width: 20px;
+height: 20px;
+justify-content: center;
+align-items: center;
+}
+.logo{
+width: 24px;
+height: 24px;
+border-radius: 24px;
+background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .buyboxname {
-  color: var(--Body-Heading-Color, #16181d);
+  color: var(--Body-Heading-Color, #16181D);
   font-family: Montserrat;
-  font-size: 44px;
+  font-size: 32px;
   font-style: normal;
   font-weight: 600;
-  line-height: 56px;
+  line-height: 40px;
 }
 .dropzonee {
   display: flex;
@@ -300,11 +323,15 @@ letter-spacing: -0.07px;
 .uploadingpadding {
   padding: 0px 20px;
 }
+.uploadimg {
+  width: 45px;
+  height: 45px;
+}
 .inner-frame {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 33px;
+  padding: 25px 10px;
   width: 100%;
   gap: 12px;
   border-radius: var(--Radius-Radius-12, 12px);
@@ -313,7 +340,7 @@ letter-spacing: -0.07px;
 }
 .outer-frame {
   display: flex;
-  padding: 12px;
+  padding: 20px 12px;
   flex-direction: column;
   align-items: center;
   gap: 10px;
@@ -503,15 +530,37 @@ letter-spacing: -0.07px;
   border-radius: var(--Card-Section-Radius, 20px);
   background: var(--Card-Section-BG, #fff);
 }
-.shoppingcentersize{
-  width: 18rem;
-  height: 540px;
+.shoppingcentersize {
+  position: relative;
+  border-radius: var(--Card-Section-Radius, 20px);
+  background: var(--Card-Section-BG, #fff);
+  overflow: hidden;
+  height: 620px;
+}
+.twobuttons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.SubmitBrochure,
+.ManualSubmission {
+  position: relative;
+  z-index: 1;
 }
 .custom-hr {
   border: none;
   height: 2px;
   background: var(--Body-General-Body-Border, #737783);
   margin: 10px 0;
+}
+.line {
+  border: none;
+  height: 1px;
+  background: var(--Body-General-Body-Border, #e1e2e3);
 }
 .BuildingSize {
   color: var(--Body-Text-and-Icons, #707791);
@@ -532,9 +581,7 @@ letter-spacing: -0.07px;
   letter-spacing: -0.07px;
 }
 .card {
-  margin-bottom: 20px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
 }
 
 .card-img-top {
@@ -611,15 +658,15 @@ letter-spacing: -0.07px;
   background: var(--Button-Secondary-BG-hover, #f2f3f7);
   border-color: var(--Button-Secondary-Stroke-Color-Hover, #4052a0);
 }
-.title{
-  color: var(--Body-Heading-Color, #16181D);
+.title {
+  color: var(--Body-Heading-Color, #16181d);
   font-family: Montserrat;
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
 }
-.subtitle{
+.subtitle {
   color: var(--Body-Text-and-Icons, #707791);
   font-family: Montserrat;
   font-size: 16px;
@@ -627,32 +674,64 @@ letter-spacing: -0.07px;
   font-weight: 400;
   line-height: 20px;
 }
-.somespace{
+.somespace {
   margin-right: 7px;
 }
-.submitnewproposel{
-color: var(--Body-Heading-Color, #16181D);
-text-align: center;
-font-family: Montserrat;
-font-size: 24px;
-font-style: normal;
-font-weight: 600;
-line-height: 32px; 
+.submitnewproposel {
+  color: var(--Body-Heading-Color, #16181d);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
 }
-.submitproposelsize{
-  height: 540px;
+.submitproposelsize {
+  border-radius: var(--Card-Section-Radius, 20px);
+  background: var(--Card-Section-BG, #fff);
+  height: 620px;
 }
-.heightimportant{
+.mapDesign{
+border-radius: var(--Radius-Radius-12, 12px);
+border-left: 1px solid var(--Body-General-Body-Border, #CACED3);
+background:lightgray 50% / cover no-repeat;
+}
+.heightimportant {
   flex-grow: 1;
+}
+.address {
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
+}
+.managedBy {
+  margin-top: 10px;
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+.table-text {
+  color: #7a8591;
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
 }
 
 @media (max-width: 576px) {
   .tenant-logo {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
   }
   .buyboxname {
-    font-size: 22px;
+    font-size: 32px;
   }
   .nameincard {
     font-size: 18px;
@@ -679,11 +758,11 @@ line-height: 32px;
 }
 @media (min-width: 576px) {
   .tenant-logo {
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
   }
   .buyboxname {
-    font-size: 30px;
+    font-size: 32px;
   }
   .nameincard {
     font-size: 20px;
@@ -701,11 +780,11 @@ line-height: 32px;
 
 @media (min-width: 768px) {
   .buyboxname {
-    font-size: 44px;
+    font-size: 32px;
   }
   .tenant-logo {
-    width: 80px;
-    height: 80px;
+    width: 40px;
+    height: 40px;
     aspect-ratio: 1 / 1;
     margin-right: 15px;
   }
@@ -722,8 +801,8 @@ line-height: 32px;
 
 @media (min-width: 992px) {
   .tenant-logo {
-    width: 90px;
-    height: 90px;
+    width: 50px;
+    height: 50px;
     aspect-ratio: 1/1;
     margin-right: 15px;
   }

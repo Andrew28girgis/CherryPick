@@ -1235,7 +1235,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  skipComparison(modal: any): void {
+  skipComparison(): void {
     if (!this.General.comparisonObject) return;
 
     this.updateComparisonView(this.General.comparisonObject);
