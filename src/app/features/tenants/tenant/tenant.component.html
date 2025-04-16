@@ -371,7 +371,7 @@
                           class="d-flex flex-column gap-4 align-items-center justify-content-center"
                         >
                           <div>
-                            <img
+                            <img class="uploadimg"
                               src="../../../../assets/Images/Icons/UploadIcon.png"
                               alt=""
                             />
@@ -433,104 +433,120 @@
 
                   </div>
                 </div>
-                <div
-                  class="col-md-4"
-                  *ngFor="let shopping of shoppingCenterManage"
-                >
+                <div class="col-md-4" *ngFor="let shopping of shoppingCenterManage">
                   <div class="card shoppingcentersize">
                     <img
                       class="card-img-top"
                       [src]="shopping.mainImage || 'assets/default-image.png'"
                       alt="Main Image"
                     />
-
+                
                     <div class="card-body">
                       <h5 class="centrename">{{ shopping.centerName }}</h5>
+                      <h5 class="address">{{ shopping.centerAddress }},{{ shopping.centerCity }}, {{ shopping.centerState }}</h5>
+<!--                 
                       <div class="d-flex align-items-center gap-1 my-2">
-                        <!-- <img src="../../../../assets/Images/nearestcompetitor.png" class="somespace">  -->
                         <span class="title">
-                          Type:
+                          Type
                         </span>
                         <span class="subtitle">
                           {{ shopping.centerType }}
                         </span>
-
                       </div>
+                
                       <div class="d-flex align-items-center gap-1 my-2">
-                        <!-- <img src="../../../../assets/Images/nearestcomptenant.png" class="somespace">  -->
-
                         <span class="title">
-                          Address:
-                        </span>
-                        <span class="subtitle">
-                          {{ shopping.centerAddress }}
-                        </span>
-
-                      </div>
-                      <div class="d-flex align-items-center gap-1 my-2">
-                        <!-- <img src="../../../../assets/Images/purchaseprice.png" class="somespace">  -->
-                        <span class="title">
-                          City:
-                        </span>
-                        <span class="subtitle">
-                          {{ shopping.centerCity }}
-                        </span>
-
-                      </div>
-                      <div class="d-flex align-items-center gap-1 my-2">
-                        <!-- <img src="../../../../assets/Images/availableunits.png" class="somespace">  -->
-                        <span class="title">
-                          State:
-                        </span>
-                        <span class="subtitle">
-                          {{ shopping.centerState }}
-                        </span>
-
-                      </div>
-                      <div class="d-flex align-items-center gap-1 my-2">
-                        <!-- <img src="../../../../assets/Images/size.png" class="somespace">  -->
-                        <span class="title">
-                          Total Available Space:
+                          Total Available Space
                         </span>
                         <span class="subtitle">
                           {{ shopping.totalAvailableSpace_SF }} SF
                         </span>
+                      </div> -->
 
+                      <div class="d-flex align-items-center gap-2 my-2">
+                        <img src="../../../../assets/Images/purchaseprice.png" alt="">
+                        <span class="title">
+                          13.450$-15000$
+                        </span>
+                        <span class="subtitle">
+                          Purchase Price
+                        </span>
                       </div>
-
+                      <div class="d-flex align-items-center gap-2 my-2">
+                        <img src="../../../../assets/Images/availableunits.png" alt="">
+                        <span class="title">
+                          5
+                        </span>
+                        <span class="subtitle">
+                          Available Units
+                        </span>
+                      </div>
+                      <div class="d-flex align-items-center gap-2 my-2">
+                        <img src="../../../../assets/Images/size.png" alt="">
+                        <span class="title">
+                          1.214 SF-1.568 SF
+                        </span>
+                        <span class="subtitle">
+                          Units Sizes
+                        </span>
+                      </div>
+                      <div class="line">
+                      
+                      </div>
+                      <div class="managedBy">
+                        <span >Managed By</span>
+                      </div>
+                      <!-- <div class="d-flex align-content-center gap-2">
+                        <img
+                        class="logo"
+                        src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                          shopping.ShoppingCenter.ManagerOrganization[0].ID
+                        }}"
+                        [title]="shopping.ShoppingCenter.ManagerOrganization[0].Name"
+                        alt=""
+                      />                       
+                      <div >
+                        {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
+                      </div>                      
+                      <img
+                      class="cursor"
+                      src="../../../assets/Images/Icons/eye.png"
+                      alt="View Manager Details"
+                      [ngbPopover]="popoverContent"
+                      popoverTitle="Organization Contact Info"
+                      triggers="click:outside"
+                      [placement]="'top'"
+                    />
+                      </div> -->
+                    </div>
+                  
+                
+                    <div class="twobuttons">
                       <button class="SubmitBrochure w-100">
                         <ngx-file-drop
-                        class="dropzonee hidden-dropzone"
-                        dropZoneLabel="Drop files here"
-                        (onFileDrop)="uploadFile($event)"
-                        [dropZoneClassName]="'upload-background-image'"
-                      >
-                        <ng-template
-                          ngx-file-drop-content-tmp
-                          let-openFileSelector="openFileSelector"
+                          class="dropzonee hidden-dropzone"
+                          dropZoneLabel="Drop files here"
+                          (onFileDrop)="uploadFile($event)"
+                          [dropZoneClassName]="'upload-background-image'"
                         >
-                          <div
-                            class="upload-container cursor"
-                            (click)="openFileSelector()"
-                          >
-                            <div
-                              class="d-flex align-items-center justify-content-center"
-                            >
-                              <div class="submitbronchure cursor">
-                                <span>Submit Brochure</span>
+                          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                            <div class="upload-container cursor" (click)="openFileSelector()">
+                              <div class="d-flex align-items-center justify-content-center">
+                                <div class="submitbronchure cursor">
+                                  <span>Submit Brochure</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </ng-template>
-                      </ngx-file-drop>
+                          </ng-template>
+                        </ngx-file-drop>
                       </button>
                       <button class="ManualSubmission mt-2 w-100" (click)="openShoppingModal(shopping.id)">
                         Manual Submission
                       </button>
-
                     </div>
                   </div>
                 </div>
+                
               </div>
               <div class="col-12 mt-3">
                 <div
@@ -1061,6 +1077,26 @@
     </div>
   </div>
 </ng-template>
+<!-- <ng-template #popoverContent>
+  <div
+    *ngFor="
+      let org of shopping.ShoppingCenter.ManagerOrganization
+    "
+    class="contact-container table-text"
+  >
+    <p class="text-bold m-0">
+      {{ org.Firstname | titlecase }}
+      {{ org.LastName | titlecase }}
+    </p>
+    <p class="m-0">{{ org.CellPhone }}</p>
+    <p class="m-0">{{ org.Email }}</p>
+    <hr
+      *ngIf="
+        !isLast(org, shopping.ShoppingCenter.ManagerOrganization)
+      "
+    />
+  </div>
+</ng-template> -->
 <ng-template #deletePlaceModal let-modal>
   <div class="modal-body-general p-4 rounded" style="
       background-color: #f8f9fa;
