@@ -239,9 +239,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   getBuildingSizeCount(): number {
     return this.shoppingCenterManage[0]?.O[0]?.P?.length || 0;
   }
-  // In your component class
 isAllForLeasePriceZero(): boolean {
-  // Check if all the ForLeasePrice values are 0
   return this.shoppingCenterManage[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
 }
   GetBuyBoxInfo(): void {
