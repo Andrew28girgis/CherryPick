@@ -455,7 +455,7 @@
                             <span *ngIf="!last"> - </span> 
                           </ng-container>
                           <span class="subtitle">
-                             ($)
+                            ($)
                           </span>
                         </div>
                         
@@ -493,7 +493,7 @@
                       <div class="managedBy">
                         <span >Managed By</span>
                       </div>
-                      <div class="d-flex gap-2 mt-2">
+                      <div class="d-flex align-content-center gap-2">
                         <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
@@ -565,6 +565,287 @@
         </div>
       </div>
 
+      <!-- SHOPPING CENTER INFORMATION -->
+      <div *ngIf="JsonPDF" class="mt-3">
+        <div class="card shoppingcentercard">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12">
+                <h4 class="ShoppingCenterInformation">
+                  Shopping Center Information
+                </h4>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterName">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Center Name</span>
+                  <span class="shoppingsubtitle">{{ JsonPDF.CenterName }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterType">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Center Type</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.CenterType || "N/A"
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterAddress">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Address</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.CenterAddress
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterCity">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">City</span>
+                  <span class="shoppingsubtitle">{{ JsonPDF.CenterCity }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterState">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">State</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.CenterState
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.TotalAvailableSpace_SF">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Available Space</span>
+                  <span class="shoppingsubtitle"
+                    >{{ JsonPDF.TotalAvailableSpace_SF }} SF</span
+                  >
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.percentage">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Percentage</span>
+                  <span class="shoppingsubtitle"
+                    >{{ JsonPDF.percentage }}%</span
+                  >
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.reason">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Reason</span>
+                  <span class="shoppingsubtitle">
+                    <div [ngClass]="{ truncate: !showFullReason }">
+                      {{ JsonPDF.reason }}
+                    </div>
+                    <span (click)="toggleReason()" class="toggle-link">
+                      {{ showFullReason ? "View Less" : "View More" }}
+                    </span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterCounty">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Center County</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.CenterCounty
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.ZipCode">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Zip Code</span>
+                  <span class="shoppingsubtitle">{{ JsonPDF.ZipCode }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.LandArea_SF">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Land Area (SF)</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.LandArea_SF
+                  }}</span>
+                </div>
+              </div>
+
+              <div
+                class="col-4 mt-3"
+                *ngIf="JsonPDF.NumberOfPropertiesInCenter"
+              >
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Properties In Center</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.NumberOfPropertiesInCenter
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.PercentLeased">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Percent Leased</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.PercentLeased
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.SmallestSpaceAvailable">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle"
+                    >Smallest Space Available</span
+                  >
+                  <span class="shoppingsubtitle"
+                    >{{ JsonPDF.SmallestSpaceAvailable }} SF</span
+                  >
+                </div>
+              </div>
+
+              <div class="col-4 mt-3" *ngIf="JsonPDF.NumberOfStores">
+                <div class="d-flex flex-column justify-content-center">
+                  <span class="shoppingcentertitle">Number of Stores</span>
+                  <span class="shoppingsubtitle">{{
+                    JsonPDF.NumberOfStores
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="d-flex align-items-center justify-content-between">
+                <h4 class="ShoppingCenterInformation mt-2 mb-3">
+                  Availability
+                </h4>
+                <button
+                  class="AddAvailablebutton"
+                  *ngIf="!showAddAvailabilityInput"
+                >
+                  <span
+                    class="AddAvailablebuttontext"
+                    (click)="toggleAddAvailability()"
+                    >Add Available
+                  </span>
+                </button>
+                <div *ngIf="showAddAvailabilityInput" class="mt-2">
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      class="form-control"
+                      [(ngModel)]="newAvailabilitySize"
+                      placeholder="Enter building size (SF)"
+                    />
+                    <button
+                      class="btn btn-success"
+                      (click)="addNewAvailability()"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <ul>
+                <li
+                  *ngFor="let avail of JsonPDF.Availability"
+                  class="list-group-item border-0 px-0"
+                >
+                  <div class="form-check mt-2">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      [(ngModel)]="avail.isAdded"
+                      id="availCheckbox-{{ avail.id }}"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="availCheckbox-{{ avail.id }}"
+                    >
+                      <div
+                        class="d-flex align-items-center justify-content-center gap-1"
+                      >
+                        <span class="BuildingSize">Building Size:</span>
+                        <span class="BuildingAndTenant">
+                          {{ avail.BuildingSizeSf }} SF
+                        </span>
+                      </div>
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="d-flex align-items-center justify-content-between">
+                <h4 class="ShoppingCenterInformation mt-2 mb-3">Tenants</h4>
+                <button class="AddAvailablebutton" *ngIf="!removetenant">
+                  <span
+                    class="AddAvailablebuttontext"
+                    (click)="toggleAddTenant()"
+                    >Add Tenant
+                  </span>
+                </button>
+                <div *ngIf="showAddTenantInput" class="mt-2">
+                  <div class="input-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="newTenantName"
+                      placeholder="Enter tenant name"
+                    />
+                    <button class="btn btn-success" (click)="addNewTenant()">
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <ul>
+                <li
+                  *ngFor="let tenant of JsonPDF.Tenants"
+                  class="list-group-item border-0 px-0"
+                >
+                  <div class="form-check mt-2">
+                    <input
+                      type="checkbox"
+                      class="form-check-input"
+                      [(ngModel)]="tenant.isAdded"
+                      id="tenantCheckbox-{{ tenant.id }}"
+                    />
+                    <label
+                      class="BuildingAndTenant"
+                      for="tenantCheckbox-{{ tenant.id }}"
+                    >
+                      {{ tenant.Name }}
+                      <a
+                        *ngIf="tenant.OrgUrl"
+                        [href]="tenant.OrgUrl"
+                        target="_blank"
+                        class="tenant-link"
+                      >
+                        (Website)
+                      </a>
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div
+            class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+          >
+            <button
+              class="submitpdfbutton"
+              *ngIf="JsonPDF?.IsSubmitted === true"
+              (click)="sendJson()"
+            >
+              Submit PDF Data
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
