@@ -1,24 +1,24 @@
-.btn_trash{
+.btn_trash {
   background: transparent;
-    color: rgb(224, 0, 0);
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgb(224, 0, 0);
-    padding-inline: 0;
-    border-radius: 5px;
-    cursor: pointer;
+  color: rgb(224, 0, 0);
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgb(224, 0, 0);
+  padding-inline: 0;
+  border-radius: 5px;
+  cursor: pointer;
 }
-.btn_edit{
-    background: transparent;
-    color: rgb(107, 119, 133,1);
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgb(107, 119, 133,1);
-    padding-inline: 0;
-    border-radius: 5px;
-    cursor: pointer;
+.btn_edit {
+  background: transparent;
+  color: rgb(107, 119, 133, 1);
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgb(107, 119, 133, 1);
+  padding-inline: 0;
+  border-radius: 5px;
+  cursor: pointer;
 }
-.input-sty{
+.input-sty {
   margin-top: 0px;
   margin-left: -22px;
   border: 2px solid #cbcbcb;
@@ -57,12 +57,10 @@
   height: 24px;
 }
 
-
-
 .spec-title {
   color: var(--Body-Text-and-Icons, #707791);
   text-align: center;
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -75,7 +73,7 @@
 .spec-value {
   color: var(--Body-Heading-Color, #16181d);
   text-align: center;
-  
+
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -98,7 +96,7 @@
 }
 .centrename {
   color: var(--Body-Heading-Color, #16181d);
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -106,7 +104,7 @@
 }
 .centreaddress {
   color: var(--Body-Text-and-Icons, #707791);
-  
+
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -144,7 +142,7 @@
 }
 .BuyboxSpecifications {
   color: var(--Body-Heading-Color, #16181d);
-  
+
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
@@ -155,7 +153,7 @@
 }
 .smalltitle {
   color: var(--Body-Text-and-Icons, #707791);
-  
+
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -196,7 +194,7 @@
 .sharebtn span {
   color: var(--Button-Secondary-Label-Default, #4d65b4);
   text-align: center;
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -220,7 +218,7 @@
 .uploadbtn span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -243,7 +241,7 @@
 .submitbronchure span {
   color: var(--Button-Primary-Label, #fff);
   text-align: center;
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -272,7 +270,7 @@
 }
 .boldtext {
   color: var(--Body-Heading-Color, #16181d);
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -285,31 +283,31 @@
   border-radius: var(--Radius-Radius-12, 12px);
   background: lightgray 50% / cover no-repeat;
 }
-.organizationName{
-color: var(--Body-Heading-Color, #16181D);
+.organizationName {
+  color: var(--Body-Heading-Color, #16181d);
 
-font-size: 14px;
-font-style: normal;
-font-weight: 600;
-line-height: 24px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
 }
-.eyeimage{
-display: flex;
-width: 20px;
-height: 20px;
-justify-content: center;
-align-items: center;
+.eyeimage {
+  display: flex;
+  width: 20px;
+  height: 20px;
+  justify-content: center;
+  align-items: center;
 }
-.logo{
-margin-left: 0;
-width: 24px;
-height: 24px;
-border-radius: 24px;
-background:lightgray 50% / cover no-repeat, #D9D9D9;
+.logo {
+  margin-left: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  background: lightgray 50% / cover no-repeat, #d9d9d9;
 }
 .buyboxname {
-  color: var(--Body-Heading-Color, #16181D);
-  
+  color: var(--Body-Heading-Color, #16181d);
+
   font-size: 25px;
   font-style: normal;
   font-weight: 600;
@@ -373,8 +371,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  border-radius: var(--Card-Section-Radius, 20px);
-  border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
+  border-radius: var(--Card-Section-Radius, 20px); 
   width: 100%;
   background-color: #fff;
 }
@@ -411,7 +408,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .upload-text {
   color: var(--Colors-Positive-500, #28a745);
   text-align: center;
-  
+
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -420,7 +417,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .uploadspan {
   color: var(--Body-Text-and-Icons, #707791);
   text-align: center;
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -518,7 +515,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .shoppingcentertitle {
   color: var(--Body-Text-and-Icons, #707791);
-  
+
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -527,7 +524,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .shoppingsubtitle {
   color: var(--Body-Heading-Color, #16181d);
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -594,7 +591,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .BuildingSize {
   color: var(--Body-Text-and-Icons, #707791);
-  
+
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -603,7 +600,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .BuildingAndTenant {
   color: var(--Body-Text-and-Icons, #707791);
-  
+
   font-size: 17px;
   font-style: normal;
   font-weight: 400;
@@ -694,7 +691,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .title {
   color: var(--Body-Heading-Color, #16181d);
-  
+
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
@@ -702,7 +699,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .subtitle {
   color: var(--Body-Text-and-Icons, #707791);
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -714,7 +711,7 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 .submitnewproposel {
   color: var(--Body-Heading-Color, #16181d);
   text-align: center;
-  
+
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -722,20 +719,19 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
 }
 .submitproposelsize {
   border-radius: var(--Card-Section-Radius, 20px);
-  background: var(--Card-Section-BG, #fff);
-  height: 620px;
+  background: var(--Card-Section-BG, #fff); 
 }
-.mapDesign{
-border-radius: var(--Radius-Radius-12, 12px);
-border-left: 1px solid var(--Body-General-Body-Border, #CACED3);
-background:lightgray 50% / cover no-repeat;
+.mapDesign {
+  border-radius: var(--Radius-Radius-12, 12px);
+  border-left: 1px solid var(--Body-General-Body-Border, #caced3);
+  background: lightgray 50% / cover no-repeat;
 }
 .heightimportant {
   flex-grow: 1;
 }
 .address {
   color: var(--Body-Text-and-Icons, #707791);
-  
+
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -744,7 +740,7 @@ background:lightgray 50% / cover no-repeat;
 }
 .managedBy {
   margin-top: 10px;
-  color:  #707791;
+  color: #707791;
   font-size: 14px;
   font-weight: 400;
 }
