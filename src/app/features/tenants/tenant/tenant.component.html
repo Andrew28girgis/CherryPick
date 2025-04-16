@@ -437,79 +437,76 @@
                   <div class="card shoppingcentersize">
                     <img
                       class="card-img-top"
-                      [src]="shopping.mainImage || 'assets/default-image.png'"
+                      [src]="shopping.MainImage"
                       alt="Main Image"
                     />
                 
                     <div class="card-body">
-                      <h5 class="centrename">{{ shopping.centerName }}</h5>
-                      <h5 class="address">{{ shopping.centerAddress }},{{ shopping.centerCity }}, {{ shopping.centerState }}</h5>
-<!--                 
-                      <div class="d-flex align-items-center gap-1 my-2">
-                        <span class="title">
-                          Type
-                        </span>
-                        <span class="subtitle">
-                          {{ shopping.centerType }}
-                        </span>
-                      </div>
-                
-                      <div class="d-flex align-items-center gap-1 my-2">
-                        <span class="title">
-                          Total Available Space
-                        </span>
-                        <span class="subtitle">
-                          {{ shopping.totalAvailableSpace_SF }} SF
-                        </span>
-                      </div> -->
+                      <h5 class="centrename">{{ shopping.CenterName }}</h5>
+                      <h5 class="address">{{ shopping.CenterAddress }},{{ shopping.CenterCity }}, {{ shopping.CenterState }}</h5>
 
-                      <div class="d-flex align-items-center gap-2 my-2">
-                        <img src="../../../../assets/Images/purchaseprice.png" alt="">
-                        <span class="title">
-                          13.450$-15000$
-                        </span>
-                        <span class="subtitle">
-                          Purchase Price
-                        </span>
+                      <div class="d-flex flex-column gap-2 my-2" *ngIf="shoppingCenterManage[0].O[0].P">
+                        <div class="d-flex align-items-center gap-2 my-2">
+                          <img src="../../../../assets/Images/purchaseprice.png" alt="">
+                          <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
+                            <span class="title">
+                              {{ place.ForLeasePrice }}$
+                            </span>
+                            <span *ngIf="!last"> - </span> 
+                          </ng-container>
+                          <span class="subtitle">
+                            ForLeasePrice
+                          </span>
+                        </div>
+                        
+                        <div class="d-flex align-items-center gap-2 my-2">
+                          <img src="../../../../assets/Images/SVG/buildings.png" alt="">
+                          <ng-container *ngFor="let place of shoppingCenterManage[0].O[0].P; let last = last">
+                            <span class="title">
+                              {{ place.BuildingSizeSf }} SF
+                            </span>
+                            <span *ngIf="!last"> - </span> 
+                          </ng-container>
+                          <span class="subtitle">
+                            Building Size
+                          </span>
+                        </div>
+                        
+                     
+                        
+                        
                       </div>
                       <div class="d-flex align-items-center gap-2 my-2">
                         <img src="../../../../assets/Images/availableunits.png" alt="">
                         <span class="title">
-                          5
+                          {{ getBuildingSizeCount() }}
                         </span>
                         <span class="subtitle">
                           Available Units
                         </span>
                       </div>
-                      <div class="d-flex align-items-center gap-2 my-2">
-                        <img src="../../../../assets/Images/size.png" alt="">
-                        <span class="title">
-                          1.214 SF-1.568 SF
-                        </span>
-                        <span class="subtitle">
-                          Units Sizes
-                        </span>
-                      </div>
+                      
+                    
                       <div class="line">
                       
                       </div>
                       <div class="managedBy">
                         <span >Managed By</span>
                       </div>
-                      <!-- <div class="d-flex align-content-center gap-2">
+                      <div class="d-flex align-content-center gap-2">
                         <img
                         class="logo"
                         src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                          shopping.ShoppingCenter.ManagerOrganization[0].ID
+                          OrganizationContacts[0].id
                         }}"
-                        [title]="shopping.ShoppingCenter.ManagerOrganization[0].Name"
+                        [title]="OrganizationContacts[0].name"
                         alt=""
                       />                       
-                      <div >
-                        {{ shopping.ShoppingCenter.ManagerOrganization[0].Name }}
+                      <div class="organizationName">
+                        {{ OrganizationContacts[0].name }}
                       </div>                      
                       <img
-                      class="cursor"
+                      class="cursor eyeimage"
                       src="../../../assets/Images/Icons/eye.png"
                       alt="View Manager Details"
                       [ngbPopover]="popoverContent"
@@ -517,7 +514,7 @@
                       triggers="click:outside"
                       [placement]="'top'"
                     />
-                      </div> -->
+                      </div>
                     </div>
                   
                 
@@ -540,7 +537,7 @@
                           </ng-template>
                         </ngx-file-drop>
                       </button>
-                      <button class="ManualSubmission mt-2 w-100" (click)="openShoppingModal(shopping.id)">
+                      <button class="ManualSubmission mt-2 w-100" (click)="openShoppingModal(shopping.Id)">
                         Manual Submission
                       </button>
                     </div>
@@ -1077,26 +1074,26 @@
     </div>
   </div>
 </ng-template>
-<!-- <ng-template #popoverContent>
+<ng-template #popoverContent>
   <div
     *ngFor="
-      let org of shopping.ShoppingCenter.ManagerOrganization
+      let org of OrganizationContacts
     "
     class="contact-container table-text"
   >
     <p class="text-bold m-0">
-      {{ org.Firstname | titlecase }}
-      {{ org.LastName | titlecase }}
+      {{ org.firstname | titlecase }}
+      {{ org.lastname | titlecase }}
     </p>
-    <p class="m-0">{{ org.CellPhone }}</p>
-    <p class="m-0">{{ org.Email }}</p>
+    <p class="m-0">{{ org.cellPhone }}</p>
+    <p class="m-0">{{ org.email }}</p>
     <hr
       *ngIf="
-        !isLast(org, shopping.ShoppingCenter.ManagerOrganization)
+        !isLast(org, OrganizationContacts)
       "
     />
   </div>
-</ng-template> -->
+</ng-template>
 <ng-template #deletePlaceModal let-modal>
   <div class="modal-body-general p-4 rounded" style="
       background-color: #f8f9fa;

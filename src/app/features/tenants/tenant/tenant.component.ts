@@ -42,6 +42,7 @@ import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { organizationContacts } from 'src/app/shared/models/organizationContacts';
 
 
 @Component({
@@ -95,7 +96,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   newTenantName = '';
   shoppingCenterManage:TenantShoppingCenter[]=[];
   Polgons!: any[];
-  OrganizationContacts!: any[];
+  OrganizationContacts!: organizationContacts[];
   customPolygons: ICustomPolygon[] = [];
   map!: google.maps.Map;
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
@@ -193,9 +194,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.OrganizationContacts= res.json;
         console.log('OrganizationContacts',this.OrganizationContacts);
-        
-        console.log('jdjd',this.organizationid);
-        
+                
       },
     });
   }
@@ -235,7 +234,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
+  getBuildingSizeCount(): number {
+    return this.shoppingCenterManage[0]?.O[0]?.P?.length || 0;
+  }
   GetBuyBoxInfo(): void {
     this.spinner.show();
     const body: any = {
