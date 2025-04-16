@@ -438,7 +438,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
       Availability: this.JsonPDF.Availability.map((avail) => ({
         ...avail,
-       isAdded: avail.isAdded !== false,
+        isAdded: avail.isAdded !== false,
       })),
       Tenants: this.JsonPDF.Tenants.map((tenant) => ({
         ...tenant,
@@ -447,51 +447,35 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CampaignId: this.selectedCampaign,
       userSubmissionId: this.userSubmission,
       IsSubmitted: true,
-      ContactId:this.contactID,
+      ContactId: this.contactID,
     };
   
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        let successMessage = '';
-        
-        // Handle both string and object responses
-        if (typeof data === 'string') {
-          // If the response is a string, check for success message
-          if (data.includes('Shopping center updated successfully')) {
-            successMessage = 'Shopping center updated successfully!';
-          }
-        } else if (typeof data === 'object') {
-          // If the response is JSON, check for success status/message
-          // Adjust this based on your actual API response structure
-          if (data.success || data.message?.includes('success')) {
-            successMessage = data.message || 'Shopping center updated successfully!';
-          }
-        }
-        if (successMessage) {
-          this.showToast(successMessage);
-          this.clearModalData();
-          this.modalService.dismissAll();
-        } else {
-          this.showToast('Received unexpected response from server');
-        }
+        // Always show success message for 200 OK responses
+        this.showToast('Shopping center updated successfully!');
+        this.clearModalData();
+        this.modalService.dismissAll();
         this.isSubmitting = false;
         this.spinner.hide();
       },
       error: (error) => {
         console.error('Error occurred while updating shopping center:', error);
-        // Handle different error cases
-        let errorMessage = 'Failed to update shopping center!';
+        
+        // Check if it's actually a success response being misinterpreted as an error
         if (error.status === 200) {
-          // Sometimes errors come with 200 status but error message in response
-          if (error.error && typeof error.error === 'string') {
-            errorMessage = error.error;
-          } else if (error.message) {
-            errorMessage = error.message;
+          this.showToast('Shopping center updated successfully!');
+          this.clearModalData();
+          this.modalService.dismissAll();
+        } else {
+          // It's a genuine error
+          let errorMessage = 'Failed to update shopping center!';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
           }
-        } else if (error.error && error.error.message) {
-          errorMessage = error.error.message;
+          this.showToast(errorMessage);
         }
-        this.showToast(errorMessage);
+        
         this.isSubmitting = false;
         this.spinner.hide();
       },
