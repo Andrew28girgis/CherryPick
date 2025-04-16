@@ -825,7 +825,7 @@
           >
             <button
               class="submitpdfbutton"
-              *ngIf="JsonPDF?.IsSubmitted === true"
+              *ngIf="JsonPDF?.IsSubmitted === false"
               (click)="sendJson()"
             >
               Submit PDF Data
