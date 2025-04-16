@@ -13,6 +13,7 @@ import { Center } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 
 @Component({
   selector: 'app-card-view',
@@ -56,63 +57,63 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-      
+
       // Initialize data using the centralized service
       this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
 
     // Subscribe to data from the centralized service
     this.subscriptions.add(
-      this.shoppingCenterService.isLoading$.subscribe(loading => {
+      this.shoppingCenterService.isLoading$.subscribe((loading) => {
         this.isLoading = loading;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.shoppingCenters$.subscribe(centers => {
+      this.shoppingCenterService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.filteredCenters$.subscribe(centers => {
+      this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
         this.filteredCenters = centers;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.buyboxCategories$.subscribe(categories => {
+      this.shoppingCenterService.buyboxCategories$.subscribe((categories) => {
         this.buyboxCategories = categories;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.selectedId$.subscribe(id => {
+      this.shoppingCenterService.selectedId$.subscribe((id) => {
         this.selectedId = id;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.selectedIdCard$.subscribe(id => {
+      this.shoppingCenterService.selectedIdCard$.subscribe((id) => {
         this.selectedIdCard = id;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.searchQuery$.subscribe(query => {
+      this.shoppingCenterService.searchQuery$.subscribe((query) => {
         this.searchQuery = query;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.kanbanStages$.subscribe(stages => {
+      this.shoppingCenterService.kanbanStages$.subscribe((stages) => {
         this.KanbanStages = stages;
         this.cdr.detectChanges();
       })
@@ -121,7 +122,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    
+
     // Remove any document event listeners
     if (this.outsideClickHandler) {
       document.removeEventListener('click', this.outsideClickHandler);
@@ -177,7 +178,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     if (this.selectedIdCard === id) {
       this.selectedIdCard = null;
       this.shoppingCenterService.setSelectedIdCard(null);
-      
+
       // Remove the outside click handler
       if (this.outsideClickHandler) {
         document.removeEventListener('click', this.outsideClickHandler);
@@ -192,10 +193,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
       if (this.outsideClickHandler) {
         document.removeEventListener('click', this.outsideClickHandler);
       }
-      
+
       this.outsideClickHandler = (e: Event) => {
         const targetElement = e.target as HTMLElement;
-        const isInside = targetElement.closest('.shortcuts_iconCard, .ellipsis_icont');
+        const isInside = targetElement.closest(
+          '.shortcuts_iconCard, .ellipsis_icont'
+        );
 
         if (!isInside) {
           this.selectedIdCard = null;
@@ -276,7 +279,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         // Success
       })
       .catch((err) => {
-        // Error 
+        // Error
         console.error('Could not copy text: ', err);
       });
   }
@@ -318,5 +321,14 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.activeDropdown = null;
       this.cdr.detectChanges();
     }
+  }
+
+  openContactModal(center: Center): void {
+    const modalRef = this.modalService.open(ContactBrokerComponent, {
+      size: 'lg',
+      centered: true,
+      windowClass: 'contact-broker-modal-class',
+    });
+    modalRef.componentInstance.center = center;
   }
 }
