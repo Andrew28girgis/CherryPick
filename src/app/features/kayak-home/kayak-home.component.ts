@@ -28,8 +28,7 @@ export class KayakHomeComponent implements OnInit {
     //   icon: '../../../assets/icons/svgs/emily.svg',
     //   selectedIcon: '../../../assets/icons/svgs/emily-selected.svg',
     // },
-  ];
-  activeComponent: string = 'Properties';
+  ]; 
   selectedTab: string = 'Properties';
   BuyboxName: string | null = '';
   Buyboxid: any | null = '';
@@ -48,8 +47,7 @@ export class KayakHomeComponent implements OnInit {
 
       this.Buyboxid = params.get('buyboxid');
       console.log(`organization id is ${this.orgId}`);
-    });
-    this.activeComponent = 'Properties';
+    }); 
     this.selectedTab = 'Properties';
 
     this.breadcrumbService.setBreadcrumbs([
@@ -62,8 +60,7 @@ export class KayakHomeComponent implements OnInit {
   }
 
   selectTab(tabId: string): void {
-    this.selectedTab = tabId;
-    this.activeComponent = tabId;
+    this.selectedTab = tabId; 
   }
 
   BackTo() {
