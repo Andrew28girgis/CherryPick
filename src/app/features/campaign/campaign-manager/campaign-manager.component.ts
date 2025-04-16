@@ -197,7 +197,6 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
 
   getKanbanTemplateStages(): void {
     this.isLoading = true; // Show skeleton
-
     const body: any = {
       Name: 'GetKanbanTemplateStages',
       Params: { KanbanTemplateId: 6 },
