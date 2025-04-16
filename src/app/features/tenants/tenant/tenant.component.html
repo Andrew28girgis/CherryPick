@@ -622,7 +622,7 @@
 
                       <div
                         class="d-flex flex-column gap-2 my-2"
-                        *ngIf="shoppingCenterManage[0].O[0].P"
+                        *ngIf="shoppingCenterManageSubmitted[0].O[0].P"
                       >
                         <div class="d-flex align-items-center gap-2 my-2">
                           <img
@@ -634,19 +634,28 @@
                             <span class="title"> On Request </span>
                           </ng-container>
 
-                          <ng-container
-                            *ngFor="
-                              let place of shoppingCenterManage[0].O[0].P;
-                              let last = last
-                            "
-                          >
-                            <ng-container *ngIf="place.ForLeasePrice !== 0">
-                              <span class="title">
-                                {{ place.ForLeasePrice }}
-                              </span>
-                              <span *ngIf="!last"> - </span>
+                          <ng-container *ngIf="shoppingCenterManageSubmitted?.length && shoppingCenterManageSubmitted[0]?.O?.length && shoppingCenterManageSubmitted[0].O[0]?.P?.length">
+                            <ng-container *ngIf="filteredLeasePlaces(shoppingCenterManageSubmitted[0].O[0].P) as leasePlaces">
+                              <div [ngClass]="{ 'd-inline': !showAllLeasePrices, 'd-block': showAllLeasePrices }" class="lease-prices-wrapper">
+                                
+                                <ng-container *ngFor="let place of getVisibleLeasePlaces(leasePlaces); let last = last">
+                                  <span class="title d-inline-block">
+                                    {{ place.ForLeasePrice }}
+                                  </span>
+                                  <span *ngIf="!last && !showAllLeasePrices"> - </span>
+                                </ng-container>
+                          
+                                <!-- View More / View Less -->
+                                <div *ngIf="leasePlaces.length > 3" class="mt-1">
+                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="toggleShowLeasePrices()">
+                                    {{ showAllLeasePrices ? 'View Less' : 'View More' }}
+                                  </a>
+                                </div>
+                              </div>
                             </ng-container>
                           </ng-container>
+                          
+                          
 
                           <span
                             class="subtitle"
@@ -663,17 +672,27 @@
                               src="../../../../assets/Images/size.png"
                               alt=""
                             />
-                            <ng-container
-                              *ngFor="
-                                let place of shoppingCenterManage[0].O[0].P;
-                                let last = last
-                              "
-                            >
-                              <span class="availabletitle">
-                                {{ place.BuildingSizeSf | number }} SF
-                              </span>
-                              <span *ngIf="!last"> - </span>
+                            <ng-container *ngIf="shoppingCenterManageSubmitted[0].O[0].P as places">
+                              <!-- Display items -->
+                              <div [ngClass]="{ 'd-inline': !showAllPlaces, 'd-block': showAllPlaces }" class="building-sizes-wrapper">
+                                <ng-container *ngFor="let place of getVisiblePlaces(places); let last = last">
+                                  <span class="availabletitle d-inline-block">
+                                    {{ place.BuildingSizeSf | number }} SF
+                                  </span>
+                                  <span *ngIf="!last && !showAllPlaces"> - </span>
+                                </ng-container>
+                            
+                                <!-- View More / View Less -->
+                                <div *ngIf="places.length > 3" class="mt-1">
+                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="toggleShowMore()">
+                                    {{ showAllPlaces ? 'View Less' : 'View More' }}
+                                  </a>
+                                </div>
+                              </div>
                             </ng-container>
+                            
+                            
+                            
                           </div>
                         </div>
                       </div>

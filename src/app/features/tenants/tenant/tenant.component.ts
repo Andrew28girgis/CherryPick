@@ -268,6 +268,28 @@ isAllForLeasePriceZero(): boolean {
 isAllForLeasePriceZeroSub(): boolean {
   return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
 }
+showAllPlaces = false;
+
+toggleShowMore(): void {
+  this.showAllPlaces = !this.showAllPlaces;
+}
+
+getVisiblePlaces(places: any[]): any[] {
+  return this.showAllPlaces ? places : places.slice(0, 3);
+}
+showAllLeasePrices = false;
+
+toggleShowLeasePrices(): void {
+  this.showAllLeasePrices = !this.showAllLeasePrices;
+}
+
+filteredLeasePlaces(places: any[]): any[] {
+  return places.filter(p => p.ForLeasePrice !== 0);
+}
+
+getVisibleLeasePlaces(places: any[]): any[] {
+  return this.showAllLeasePrices ? places : places.slice(0, 3);
+}
   GetBuyBoxInfo(): void {
     this.spinner.show();
     const body: any = {
