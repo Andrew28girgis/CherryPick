@@ -122,8 +122,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
+      this.contactID = params.get('contactId');
     });
-    this.contactID = localStorage.getItem('contactId');
+    // this.contactID = localStorage.getItem('contactId');
 
     this.activatedRoute.params.subscribe((params) => {
       this.guid = params['guid'];
