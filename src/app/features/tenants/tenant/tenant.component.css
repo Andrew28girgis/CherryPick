@@ -691,6 +691,11 @@ background:lightgray 50% / cover no-repeat, #D9D9D9;
   background: var(--Card-Section-BG, #fff);
   height: 620px;
 }
+.mapDesign{
+border-radius: var(--Radius-Radius-12, 12px);
+border-left: 1px solid var(--Body-General-Body-Border, #CACED3);
+background:lightgray 50% / cover no-repeat;
+}
 .heightimportant {
   flex-grow: 1;
 }
