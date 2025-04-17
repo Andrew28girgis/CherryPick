@@ -599,6 +599,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       this.newTenantName = '';
     }
   }
+  
   addNewAvailability(): void {
     if (this.newAvailabilitySize) {
       const newId =
