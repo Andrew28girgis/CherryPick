@@ -93,6 +93,7 @@ button:active {
 }
 
 .card__Kayak {
+  padding: 10px  0 ;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -164,9 +165,8 @@ button:active {
   white-space: nowrap;
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
+.ResContainer{
+  cursor: pointer;
 }
 
 #primaryColumn {

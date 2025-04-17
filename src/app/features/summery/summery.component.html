@@ -11,7 +11,10 @@
       </button> -->
   </div>
   <ng-container *ngFor="let type of buyboxTypes">
-    <div class="col-12 col-sm-6 col-md-3 p-3 ResContainer">
+    <div
+      class="col-12 col-sm-6 col-md-3 p-3 ResContainer"
+      [routerLink]="['/dashboard', type.id, type.organizationId, type.name]"
+    >
       <section class="card__Kayak">
         <div class="card__Kayak__img mt-3 mb-3">
           <img
@@ -25,7 +28,7 @@
         <div class="card__Kayak_title">
           {{ type.name }}
         </div>
-        <div class="card__Kayak_buttons mt-2 pb-3">
+        <!-- <div class="card__Kayak_buttons mt-2 pb-3">
           <button
             class="CherryPick__button"
             (click)="chooseType(type.id, type.organizationId, type.name)"
@@ -44,7 +47,7 @@
           >
             Dashboard
           </button>
-        </div>
+        </div> -->
       </section>
     </div>
   </ng-container>
