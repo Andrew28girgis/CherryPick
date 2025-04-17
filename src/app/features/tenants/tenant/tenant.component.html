@@ -344,14 +344,14 @@
             </div>
             <div class="col-md-9">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
                   <div class="card submitproposelsize">
                     <div class="card-body">
                       <div
                         class="d-flex align-items-center justify-content-center"
                       >
                         <span class="submitnewproposel"
-                          >Submit a New Shopping Center</span
+                          >Another Shopping Center ?</span
                         >
                       </div>
                       <div class="outer-frame">
@@ -415,7 +415,7 @@
                                   <img
                                     src="../../../../assets/Images/Icons/choosefile.png"
                                   />
-                                  <span>Choose File</span>
+                                  <span>Submit Brochure</span>
                                 </div>
                               </div>
                             </div>
@@ -926,7 +926,7 @@
                       type="number"
                       class="form-control"
                       [(ngModel)]="newAvailabilitySize"
-                      placeholder="Enter building size (SF)"
+                      placeholder="Enter space size (SF)"
                     />
                     <button
                       class="btn btn-success"
@@ -1031,7 +1031,7 @@
               *ngIf="JsonPDF?.IsSubmitted === false"
               (click)="sendJson()"
             >
-              Submit PDF Data
+              Approve Data
             </button>
           </div>
         </div>
