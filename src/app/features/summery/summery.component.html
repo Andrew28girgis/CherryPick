@@ -10,23 +10,28 @@
       add
       </button> -->
   </div>
-  <ng-container *ngFor="let type of buyboxTypes">
+  <ng-container *ngFor="let tenant of buyboxTypes">
     <div
       class="col-12 col-sm-6 col-md-3 p-3 ResContainer"
-      [routerLink]="['/dashboard', type.id, type.organizationId, type.name]"
+      [routerLink]="[
+        '/dashboard',
+        tenant.id,
+        tenant.organizationId,
+        tenant.name
+      ]"
     >
       <section class="card__Kayak">
         <div class="card__Kayak__img mt-3 mb-3">
           <img
             class="Kayak__img ms-2"
             src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-              type.organizationId
+              tenant.organizationId
             }}"
             alt=""
           />
         </div>
         <div class="card__Kayak_title">
-          {{ type.name }}
+          {{ tenant.name }}
         </div>
         <!-- <div class="card__Kayak_buttons mt-2 pb-3">
           <button

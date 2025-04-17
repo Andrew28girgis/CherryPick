@@ -4,7 +4,7 @@
 
     <div class="row m-0 mb-0 mobile-n">
       <div
-        class="col-12 pt-2 d-flex justify-content-start align-items-center mobile-nav mb-2"
+        class="col-12 pt-2 d-flex justify-content-between align-items-center mobile-nav mb-2"
       >
         <div class="custom-icon-container">
           <div
@@ -20,6 +20,14 @@
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text d-none d-sm-flex">{{ option.text }}</span>
           </div>
+        </div>
+        <div>
+          <button
+            class="CherryPick__button"
+            [routerLink]="['/market-survey', BuyBoxId, OrgId, BuyBoxName]"
+          >
+            Market Survey
+          </button>
         </div>
       </div>
     </div>

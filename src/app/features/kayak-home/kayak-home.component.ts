@@ -29,7 +29,7 @@ export class KayakHomeComponent implements OnInit {
     this.breadcrumbService.setBreadcrumbs([
       { label: 'My Tenants', url: '/summary' },
       {
-        label: `${this.BuyboxName}-Dashboard`,
+        label: `${this.BuyboxName}`,
         url: `dashboard/${this.Buyboxid}/${this.orgId}/${this.BuyboxName}`,
       },
     ]);
