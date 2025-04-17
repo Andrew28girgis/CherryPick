@@ -13,10 +13,14 @@
     </div>
     } @case (3) {
     <div class="center-name">Composing email for shopping center</div>
+    } @case (4) {
+    <div class="center-name">Composing email for shopping center</div>
     }}
     <div
       class="close-icon"
-      [ngClass]="{ 'ms-auto': currentStep == 1 || currentStep == 3 }"
+      [ngClass]="{
+        'ms-auto': currentStep == 1 || currentStep == 3 || currentStep == 4
+      }"
       (click)="closeActiveModal()"
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="close">
