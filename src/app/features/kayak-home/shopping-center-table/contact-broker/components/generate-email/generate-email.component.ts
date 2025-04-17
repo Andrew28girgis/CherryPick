@@ -361,13 +361,13 @@ export class GenerateEmailComponent implements OnInit {
       );
       let centers: ICenterData[] = matchingBroker?.centers || [];
 
-      centers.push({ id: this.center.Id, centerName: this.center.CenterName });
+      centers.push({ Id: this.center.Id, CenterName: this.center.CenterName });
 
       const contactDTO: GetContactManagerDTO = {
         ContactId: contact.ContactId,
         ContactName: `${contact.Firstname} ${contact.LastName}`,
-        ShoppingCentersName: centers.map((c) => c.centerName),
-        ShoppingCentersID: centers.map((c) => c.id.toString()),
+        ShoppingCentersName: centers.map((c) => c.CenterName),
+        ShoppingCentersID: centers.map((c) => c.Id.toString()),
       };
 
       if (!orgMap.has(contact.ID)) {

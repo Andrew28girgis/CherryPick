@@ -79,7 +79,7 @@ export class ManagedByBrokerComponent implements OnChanges {
 
   getCentersWithContactId(contactId: number): ICenterData[] {
     if (this.centers.has(contactId))
-      return this.centers.get(contactId)!.filter((c) => c.id != this.center.Id);
+      return this.centers.get(contactId)!.filter((c) => c.Id != this.center.Id);
     return [];
   }
 
@@ -92,7 +92,7 @@ export class ManagedByBrokerComponent implements OnChanges {
       } else {
         let centers = this.SelectedCenters.get(contactId);
         if (centers) {
-          const existCenter = centers.find((c) => c.id == center.id);
+          const existCenter = centers.find((c) => c.Id == center.Id);
           if (!existCenter) {
             centers = [...centers, center];
           }
@@ -102,9 +102,9 @@ export class ManagedByBrokerComponent implements OnChanges {
       const exist = this.SelectedCenters.has(contactId);
       if (exist) {
         let centers = this.SelectedCenters.get(contactId);
-        const existCenter = centers?.find((c) => c.id == center.id);
+        const existCenter = centers?.find((c) => c.Id == center.Id);
         if (existCenter) {
-          centers = centers?.filter((c) => c.id != center.id);
+          centers = centers?.filter((c) => c.Id != center.Id);
         }
       }
     }

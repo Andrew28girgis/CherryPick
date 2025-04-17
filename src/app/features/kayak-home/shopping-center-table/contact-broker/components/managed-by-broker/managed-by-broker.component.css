@@ -28,7 +28,18 @@
   border-radius: 1.5rem;
 }
 
+.center-container img {
+  height: 8rem;
+  width: 8rem;
+  border-radius: 0.75rem;
+}
+
 .center-name {
+  font-size: large;
+  font-weight: 600;
+}
+
+.center-address {
   color: #707791;
 }
 
