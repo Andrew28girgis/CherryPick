@@ -20,11 +20,11 @@ export class PreviewEmailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.spinner.show();
     this.readSpecificMails();
   }
 
   readSpecificMails(): void {
-    this.spinner.show();
     const body = {
       Name: 'ReadSpecificMails',
       Params: {

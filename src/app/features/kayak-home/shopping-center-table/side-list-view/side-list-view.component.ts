@@ -19,6 +19,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { MapsService } from 'src/app/core/services/maps.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { Subscription } from 'rxjs';
+import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 
 declare const google: any;
 @Component({
@@ -49,7 +50,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   StreetViewOnePlace!: boolean;
   KanbanStages: any[] = [];
   activeDropdown: any = null;
-  
+
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
@@ -67,20 +68,20 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.General = new General();
     this.savedMapView = localStorage.getItem('mapView');
-    
+
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
-      this.orgId = params.orgid; 
+      this.orgId = params.orgid;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.orgId);
-      
+
       // Initialize data using the service
       // this.viewManagerService.initializeData(this.BuyBoxId, this.orgId);
     });
 
     // Subscribe to service observables
     this.subscriptions.push(
-      this.viewManagerService.shoppingCenters$.subscribe(centers => {
+      this.viewManagerService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
         if (centers && centers.length > 0) {
           this.getAllMarker();
@@ -89,7 +90,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.viewManagerService.filteredCenters$.subscribe(centers => {
+      this.viewManagerService.filteredCenters$.subscribe((centers) => {
         this.ngZone.run(() => {
           this.cardsSideList = centers;
         });
@@ -97,32 +98,32 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.viewManagerService.buyboxCategories$.subscribe(categories => {
+      this.viewManagerService.buyboxCategories$.subscribe((categories) => {
         this.buyboxCategories = categories;
       })
     );
 
     this.subscriptions.push(
-      this.viewManagerService.buyboxPlaces$.subscribe(places => {
+      this.viewManagerService.buyboxPlaces$.subscribe((places) => {
         this.buyboxPlaces = places;
       })
     );
 
     this.subscriptions.push(
-      this.viewManagerService.kanbanStages$.subscribe(stages => {
+      this.viewManagerService.kanbanStages$.subscribe((stages) => {
         this.KanbanStages = stages;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.push(
-      this.viewManagerService.selectedId$.subscribe(id => {
+      this.viewManagerService.selectedId$.subscribe((id) => {
         this.selectedId = id;
       })
     );
 
     this.subscriptions.push(
-      this.viewManagerService.selectedIdCard$.subscribe(id => {
+      this.viewManagerService.selectedIdCard$.subscribe((id) => {
         this.selectedIdCard = id;
       })
     );
@@ -137,7 +138,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   onMouseHighlight(place: any) {
@@ -151,7 +152,11 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   async viewOnMap(lat: number, lng: number) {
     this.mapViewOnePlacex = true;
     // Use the service method instead
-    this.map = await this.viewManagerService.initializeMap('mappopup', lat, lng);
+    this.map = await this.viewManagerService.initializeMap(
+      'mappopup',
+      lat,
+      lng
+    );
   }
 
   async getAllMarker() {
@@ -275,7 +280,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.Polygons = data.json;
         this.markerService.drawMultiplePolygons(this.map, this.Polygons);
-      }
+      },
     });
   }
 
@@ -351,7 +356,13 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
         // Use the service method
-        this.viewManagerService.initializeStreetView('street-view', lat, lng, heading, pitch);
+        this.viewManagerService.initializeStreetView(
+          'street-view',
+          lat,
+          lng,
+          heading,
+          pitch
+        );
       }
     });
   }
@@ -374,7 +385,10 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   async deleteShCenter() {
     try {
       // Use the service method
-      await this.viewManagerService.deleteShoppingCenter(this.BuyBoxId, this.shoppingCenterIdToDelete!);
+      await this.viewManagerService.deleteShoppingCenter(
+        this.BuyBoxId,
+        this.shoppingCenterIdToDelete!
+      );
       this.modalService.dismissAll();
     } catch (error) {
       console.error('Error deleting shopping center:', error);
@@ -388,7 +402,10 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   ) {
     try {
       // Use the service method
-      await this.viewManagerService.restoreShoppingCenter(+MarketSurveyId, Deleted);
+      await this.viewManagerService.restoreShoppingCenter(
+        +MarketSurveyId,
+        Deleted
+      );
       this.toggleShortcuts(placeId, 'close');
     } catch (error) {
       console.error('Error restoring shopping center:', error);
@@ -428,7 +445,10 @@ export class SideListViewComponent implements OnInit, OnDestroy {
 
   // Use the service method for toggling dropdown
   toggleDropdown(shoppingCenter: any): void {
-    this.activeDropdown = this.viewManagerService.toggleDropdown(shoppingCenter, this.activeDropdown);
+    this.activeDropdown = this.viewManagerService.toggleDropdown(
+      shoppingCenter,
+      this.activeDropdown
+    );
   }
 
   // Use the service method for getting selected stage name
@@ -437,11 +457,19 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   }
 
   // Use the service method for selecting stage
-  selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  selectStage(
+    marketSurveyId: number,
+    stageId: number,
+    shoppingCenter: any
+  ): void {
     // Close the dropdown
     shoppingCenter.isDropdownOpen = false;
     this.activeDropdown = null;
-    this.viewManagerService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter);
+    this.viewManagerService.updatePlaceKanbanStage(
+      marketSurveyId,
+      stageId,
+      shoppingCenter
+    );
   }
 
   @HostListener('document:click', ['$event'])
@@ -453,6 +481,16 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       this.activeDropdown = null;
       this.cdr.detectChanges();
     }
+  }
+
+  openContactModal(center: Center): void {
+    const modalRef = this.modalService.open(ContactBrokerComponent, {
+      size: 'xl',
+      centered: true,
+      windowClass: 'contact-broker-modal-class',
+    });
+    modalRef.componentInstance.center = center;
+    modalRef.componentInstance.buyboxId = this.BuyBoxId;
   }
 
   trackById(index: number, place: any): number {
