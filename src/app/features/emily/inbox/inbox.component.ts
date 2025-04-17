@@ -440,7 +440,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       MainEntity: null,
       Params: {
         MailContextId: Number(mailContextId),
-        IsSent: 0,
+        IsSent: 1,
       },
       Json: null,
     };
@@ -492,6 +492,8 @@ export class InboxComponent implements OnInit, AfterViewChecked {
         this.emailSubject = '';
         this.emailBody = '';
         this.ContextEmail = '';
+        this.sanitizedEmailBody = '';
+
         this.showToast('Send Success');
       },
     });

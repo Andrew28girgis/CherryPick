@@ -433,7 +433,7 @@ export class EmailInboxComponent implements OnInit {
       MainEntity: null,
       Params: {
         MailContextId: Number(mailContextId),
-        IsSent: 0,
+        IsSent: 1,
       },
       Json: null,
     };
