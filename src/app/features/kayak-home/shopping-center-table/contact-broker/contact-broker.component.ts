@@ -16,6 +16,7 @@ export class ContactBrokerComponent {
   protected managedByBrokerArray!: IManagedByBroker[];
 
   @Input() center!: Center;
+  @Input() buyboxId!: number;
 
   constructor(private activeModal: NgbActiveModal) {}
 
