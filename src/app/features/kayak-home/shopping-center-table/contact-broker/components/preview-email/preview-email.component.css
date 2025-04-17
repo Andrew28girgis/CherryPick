@@ -43,9 +43,6 @@
 
 .body {
   color: #707791;
-  max-height: 15rem;
-  overflow: hidden;
-  overflow-y: auto;
 }
 
 .body:focus {

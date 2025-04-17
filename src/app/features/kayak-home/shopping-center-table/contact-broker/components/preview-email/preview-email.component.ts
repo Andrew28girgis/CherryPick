@@ -34,14 +34,25 @@ export class PreviewEmailComponent implements OnInit {
     };
 
     this.placeService.GenericAPI(body).subscribe((response) => {
-      this.spinner.hide();
       if (response.json && response.json.length > 0) {
+        this.spinner.hide();
         this.emails = response.json;
         this.emails.forEach((email) => {
           email.isEditing = false;
         });
+      } else {
+        setTimeout(() => {
+          this.readSpecificMails();
+        }, 3000);
       }
     });
+  }
+
+  toggleEdit(email: any, bodyDiv: HTMLElement) {
+    if (email.isEditing) {
+      email.body = bodyDiv.innerHTML;
+    }
+    email.isEditing = !email.isEditing;
   }
 
   sendEmail(email: IEmailContent): void {
@@ -66,8 +77,12 @@ export class PreviewEmailComponent implements OnInit {
 
     this.placeService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.showToast('Email sent successfully');
         this.spinner.hide();
+        this.showToast('Email sent successfully');
+        this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+        if (this.emails.length === 0) {
+          this.onStepDone.emit();
+        }
       },
     });
   }
@@ -83,7 +98,6 @@ export class PreviewEmailComponent implements OnInit {
     }
 
     // Create a counter to track when all emails are sent - use filtered length
-    let emailCount = eligibleEmails.length;
 
     this.spinner.show();
 
@@ -102,9 +116,10 @@ export class PreviewEmailComponent implements OnInit {
       this.placeService.GenericAPI(body).subscribe({
         next: (res: any) => {
           this.showToast('Emails sent successfully');
-          // Check if all emails have been processed
-          if (--emailCount === 0) {
+          this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+          if (this.emails.length === 0) {
             this.spinner.hide();
+            this.onStepDone.emit();
           }
         },
       });

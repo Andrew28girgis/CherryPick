@@ -35,6 +35,10 @@ export class ChooseBrokerComponent {
 
   onSubmit(): void {
     const selectedContacts = Array.from(this.selectedContacts.values());
+    if (selectedContacts.length == 0) {
+      alert('Please select at least one contact');
+      return;
+    }
     const object: IChooseBroker = {
       selectedContacts: selectedContacts,
       sendAsTo: this.sendAsTo,

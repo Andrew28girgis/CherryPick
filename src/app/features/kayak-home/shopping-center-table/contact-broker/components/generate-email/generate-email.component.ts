@@ -303,20 +303,24 @@ export class GenerateEmailComponent implements OnInit {
           return new Promise<void>((resolve, reject) => {
             this.placeService.GenericAPI(body).subscribe({
               next: (data) => {
-                const x = data.json;
+                if (data.json.length > 0 && data.json[0].id) {
+                  const x = data.json;
 
-                this.mailContextId = x[0].id;
+                  this.mailContextId = x[0].id;
 
-                this.AddMailContextReceivers(
-                  x[0].id,
-                  x[0].organizationId
-                ).subscribe({
-                  next: () => {},
-                  error: () => {},
-                  complete: () => {
-                    resolve();
-                  },
-                });
+                  this.AddMailContextReceivers(
+                    x[0].id,
+                    x[0].organizationId
+                  ).subscribe({
+                    next: () => {},
+                    error: () => {},
+                    complete: () => {
+                      resolve();
+                    },
+                  });
+                } else {
+                  this.spinner.hide();
+                }
               },
               error: (err) => {
                 reject(err);
