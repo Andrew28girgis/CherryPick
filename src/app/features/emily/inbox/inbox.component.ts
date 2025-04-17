@@ -194,7 +194,6 @@ export class InboxComponent implements OnInit, AfterViewChecked {
     // Since the API returns emails directly, use them as-is.
     const matchingEmails: any[] = this.BuyBoxEmails;
 
-
     // Filter emails that are related to the selected contact.
     this.emailsSentContact = matchingEmails?.filter(
       (email: Mail) =>

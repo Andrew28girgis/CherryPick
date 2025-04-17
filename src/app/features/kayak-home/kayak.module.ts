@@ -1,16 +1,13 @@
-import { MessageService } from 'primeng/api';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KayakRoutingModule } from './kayak-routing.module';
 import { KayakHomeComponent } from './kayak-home.component';
-import { EmilyComponent } from '../emily/emily/emily.component';
-import { BuyboxDetailsComponent } from './buybox-details/buybox-details.component';
 import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-center-table.component';
 import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
- import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 import { SocialViewComponent } from './shopping-center-table/social-view/social-view.component';
 import { TableViewComponent } from './shopping-center-table/table-view/table-view.component';
 import { CardViewComponent } from './shopping-center-table/card-view/card-view.component';
@@ -20,25 +17,23 @@ import { PolygonsControllerComponent } from './polygons-controller/polygons-cont
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
- import { PaginatorModule } from 'primeng/paginator';
-import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component'; 
-import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component'; 
+import { PaginatorModule } from 'primeng/paginator';
+import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component';
+import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KanbanModule } from '../kanban/kanban.module';
 import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
 @NgModule({
   declarations: [
     KayakHomeComponent,
-    BuyboxDetailsComponent, 
     ShoppingCenterTableComponent,
-    BuyboxRelatiosComponent, 
+    BuyboxRelatiosComponent,
     SocialViewComponent,
     TableViewComponent,
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
     PolygonsControllerComponent,
-    KanbanViewComponent
-    
+    KanbanViewComponent,
   ],
   imports: [
     CommonModule,
@@ -54,12 +49,10 @@ import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-
     TableModule,
     CardModule,
     PaginatorModule,
-    EmilyComponent,
-    KanbanModule
+    KanbanModule,
   ],
   exports: [
     KayakHomeComponent,
-    BuyboxDetailsComponent, 
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     SocialViewComponent,
@@ -68,10 +61,7 @@ import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-
     SideListViewComponent,
     MapViewComponent,
     PolygonsControllerComponent,
-    LinkMicrosoftComponent, 
-    EmilyComponent ,
+    LinkMicrosoftComponent,
   ],
-  
 })
-
 export class KayakModule {}

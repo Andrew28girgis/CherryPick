@@ -132,6 +132,6 @@ export class LoginComponent implements OnInit {
   }
 
   private navigateToHome(): void {
-    this.router.navigate(['/campaigns']);
+    this.router.navigate(['/summary']);
   }
 }

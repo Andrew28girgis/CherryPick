@@ -13,6 +13,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   
   currentView: number = 5;
   BuyBoxId!: any;
+  BuyBoxName!: string;
+
   OrgId!: any;
   selectedOption: number = 5;
   dropdowmOptions: any = [
@@ -57,8 +59,10 @@ export class ShoppingCenterTableComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
+      this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+      this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId)
     });
     
     // Get saved view from localStorage or default to social view (5)
