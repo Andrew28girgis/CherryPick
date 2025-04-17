@@ -97,7 +97,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   shoppingCenterManage:TenantShoppingCenter[]=[];
   shoppingCenterManageSubmitted:TenantShoppingCenter[]=[];
   Polgons!: any[];
-  OrganizationContacts!: organizationContacts[];
+  OrganizationContacts: organizationContacts[] = [];
   customPolygons: ICustomPolygon[] = [];
   map!: google.maps.Map;
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
@@ -116,7 +116,15 @@ export class TenantComponent implements OnInit, AfterViewInit {
   deleteType: string = '';
   deleteId: number | null = null;
   showButtons: boolean = true;
-
+  @ViewChild('leasePricesModal') leasePricesModal: TemplateRef<any> | undefined;
+  @ViewChild('buildingSizesModal') buildingSizesModal: TemplateRef<any> | undefined;
+  filteredLeasePlacesManage: any[] = [];
+  allBuildingSizes: any[] = [];
+  ////////////////
+  @ViewChild('buildingSizesSubmissionModal') buildingSizesSubmissionModal: TemplateRef<any> | undefined;
+  modalPlaces: any[] = [];
+  @ViewChild('leasePricesSubmissionModal') leasePricesSubmissionModal: TemplateRef<any> | undefined;
+  modalLeasePlaces: any[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -180,7 +188,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
-        console.log('ShoppingCenterManage', this.shoppingCenterManage);
+        // console.log('ShoppingCenterManage', this.shoppingCenterManage);
         
       },
     });
@@ -198,7 +206,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManageSubmitted = res.json;
-        console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
+        // console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
         
       },
     });
@@ -211,13 +219,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
         organizationid: this.organizationid,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.OrganizationContacts= res.json;
-        console.log('OrganizationContacts',this.OrganizationContacts);
-                
-      },
+        this.OrganizationContacts = res.json as organizationContacts[]      },
     });
   }
   GetUserSubmissionData(): void {
@@ -256,42 +260,53 @@ export class TenantComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  /////////////////// card
   getBuildingSizeCount(): number {
     return this.shoppingCenterManage[0]?.O[0]?.P?.length || 0;
   }
-isAllForLeasePriceZero(): boolean {
-  return this.shoppingCenterManage[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
-}
+  isAllForLeasePriceZero(): boolean {
+    return this.shoppingCenterManage[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+  }
+  getLeasePricesCount(): number {
+    return this.shoppingCenterManage[0]?.O[0]?.P.filter(p => p.ForLeasePrice !== 0).length || 0;
+  }
+  getFirstThreeLeasePrices(): any[] {
+    return this.shoppingCenterManage[0]?.O[0]?.P
+      .filter(p => p.ForLeasePrice !== 0)
+      .slice(0, 3) || [];
+  }
+  getFirstThreeBuildingSizes(): any[] {
+    return this.shoppingCenterManage[0]?.O[0]?.P.slice(0, 3) || [];
+  }
+  openLeasePricesModal(): void {
+    this.filteredLeasePlacesManage = this.shoppingCenterManage[0]?.O[0]?.P
+      .filter(p => p.ForLeasePrice !== 0);
+    this.modalService.open(this.leasePricesModal, { size: 'md', centered: true });
+  }
+  openBuildingSizesModal(): void {
+    this.allBuildingSizes = this.shoppingCenterManage[0]?.O[0]?.P;
+    this.modalService.open(this.buildingSizesModal, { size: 'md', centered: true });
+  }
+  /////////////////// card submission
   getBuildingSizeCountSub(): number {
     return this.shoppingCenterManageSubmitted[0]?.O[0]?.P?.length || 0;
   }
-isAllForLeasePriceZeroSub(): boolean {
-  return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
-}
-showAllPlaces = false;
-
-toggleShowMore(): void {
-  this.showAllPlaces = !this.showAllPlaces;
-}
-
-getVisiblePlaces(places: any[]): any[] {
-  return this.showAllPlaces ? places : places.slice(0, 3);
-}
-showAllLeasePrices = false;
-
-toggleShowLeasePrices(): void {
-  this.showAllLeasePrices = !this.showAllLeasePrices;
-}
-
-filteredLeasePlaces(places: any[]): any[] {
-  return places.filter(p => p.ForLeasePrice !== 0);
-}
-
-getVisibleLeasePlaces(places: any[]): any[] {
-  return this.showAllLeasePrices ? places : places.slice(0, 3);
-}
-  GetBuyBoxInfo(): void {
-    this.spinner.show();
+  isAllForLeasePriceZeroSub(): boolean {
+    return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+  }
+  filteredLeasePlaces(places: any[]): any[] {
+    return places.filter(p => p.ForLeasePrice !== 0);
+  }
+  openLeasePricesSubmissionModal(leasePlaces: any[]) {
+    this.modalLeasePlaces = leasePlaces;
+    this.modalService.open(this.leasePricesSubmissionModal, { size: 'md', centered: true });
+  }
+  openBuildingSizesSubmissionModal(places: any[]) {
+    this.modalPlaces = places;
+    this.modalService.open(this.buildingSizesSubmissionModal, { size: 'md', centered: true });
+  }
+    GetBuyBoxInfo(): void {
+      this.spinner.show();
     const body: any = {
       Name: 'GetBuyBoxInfo',
       Params: {
@@ -510,8 +525,6 @@ getVisibleLeasePlaces(places: any[]): any[] {
         this.showButtons = false;
         this.showToast('Shopping center updated successfully!');
         this.GetUserSubmissionsShoppingCenters();
-        // this.clearModalData();
-        // this.modalService.dismissAll();
         this.isSubmitting = false;
         this.spinner.hide();
       },
@@ -525,8 +538,6 @@ getVisibleLeasePlaces(places: any[]): any[] {
           this.showButtons = false;
           this.showToast('Shopping center updated successfully!');
           this.GetUserSubmissionsShoppingCenters();
-          // this.clearModalData();
-          // this.modalService.dismissAll();
         } else {
           // It's a genuine error
           let errorMessage = 'Failed to update shopping center!';

@@ -63,8 +63,8 @@
 
 .centrename {
   color: #16181d;
-
-  font-size: 16px;
+  margin-bottom: 0;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: 30px;
@@ -354,9 +354,7 @@
   white-space: nowrap;
 }
 
-.availabletitle {
-  margin-right: 4px;
-}
+
 .lease-prices-wrapper.d-block {
   width: 100%;
 }
@@ -391,7 +389,7 @@
 }
 .shoppingcentertitle {
   color: #707791;
-  font-size: 17px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
@@ -436,7 +434,7 @@
   border-radius: 20px;
   background: #fff;
   overflow: hidden;
-  height: 670px;
+  height: 690px;
 }
 .twobuttons {
   position: absolute;
@@ -484,6 +482,7 @@
 }
 
 .card-img-top {
+  min-height: 200px;
   max-height: 200px;
   object-fit: cover;
   border-bottom: 2px solid #ddd;
@@ -563,10 +562,16 @@
 }
 .title {
   color: #16181d;
-  font-size: 17px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
+}
+.title-2{
+  color: #707791;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
 }
 .subtitle {
   color: #707791;
@@ -614,11 +619,12 @@
 }
 .address {
   color: #707791;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.07px;
+  margin-bottom: 0;
 }
 .managedBy {
   margin-top: 10px;
