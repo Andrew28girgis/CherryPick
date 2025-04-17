@@ -64,6 +64,7 @@ export class GenerateEmailComponent implements OnInit {
   isLandingSelected: boolean = true;
   returnGetMailContextGenerated: MailContextGenerated[] = [];
   mailContextId!: number;
+  isAdvancedCollapsed = true;
 
   @Input() buyBoxId!: number;
   @Input() center!: Center;

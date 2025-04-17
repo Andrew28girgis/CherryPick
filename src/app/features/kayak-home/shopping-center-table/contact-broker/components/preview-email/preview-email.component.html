@@ -1,25 +1,34 @@
 <div class="preview-emails-contaciner">
-  @if (emails && emails.length && emails.length > 0) {
+  @if (!dataLoaded) {
+  <div
+    class="h-100 w-100 d-flex flex-column align-items-center justify-content-center gap-3"
+  >
+    <div class="loading-data">Loading your emails</div>
+    <div class="loader"></div>
+  </div>
+  } @if (emails && emails.length ) { @if (emails.length > 1) {
   <div class="w-100 d-flex align-items-center justify-content-end">
     <button class="send-btn" (click)="sendAllEmails()">Send All</button>
   </div>
   }
   <div class="emails-container">
-    @for (email of emails; track email.mailId) {
+    @for (email of emails; track email.mailId;let index = $index) {
     <div class="email-container">
-      <div class="subject">
+      <div
+        #subjectDiv
+        class="subject"
+        contenteditable="true"
+        (input)="updateMailSubject($event, index)"
+      >
         {{ email.subject }}
       </div>
       <div
-        #body
+        #bodyDiv
         class="body"
-        [attr.contenteditable]="email.isEditing"
-        [innerHTML]="email.body"
+        contenteditable="true"
+        (input)="updateMailBody($event, index)"
       ></div>
       <div class="email-actions">
-        <button class="edit-btn" (click)="toggleEdit(email, body)">
-          {{ email.isEditing ? "Save" : "Edit" }}
-        </button>
         <button class="send-btn" (click)="sendEmail(email)">Send</button>
       </div>
     </div>
@@ -27,6 +36,7 @@
     <div class="empty-emails">There are no emails generated</div>
     }
   </div>
+  }
 </div>
 
 <div id="customToast" class="custom-toast">

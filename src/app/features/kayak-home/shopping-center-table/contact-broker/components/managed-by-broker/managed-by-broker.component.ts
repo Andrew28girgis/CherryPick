@@ -47,13 +47,21 @@ export class ManagedByBrokerComponent implements OnChanges {
       this.center.ShoppingCenter.ManagerOrganization.length > 0
     ) {
       this.spinner.show();
+      let skipCounter = 0;
       for (let contact of this.center.ShoppingCenter.ManagerOrganization) {
         const data = await this.getCentersForContactId(
           contact.ContactId,
           this.center.CampaignId
         );
+        const centers = data.filter((c) => c.Id != this.center.Id);
+        if (centers.length > 0) {
+          skipCounter += 1;
+        }
+
+        if (skipCounter == 0) this.onStepDone.emit([]);
         this.centers.set(contact.ContactId, data);
       }
+
       this.spinner.hide();
     }
   }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { KayakRoutingModule } from './kayak-routing.module';
 import { KayakHomeComponent } from './kayak-home.component';
 import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-center-table.component';
-import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapseModule, NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
@@ -60,6 +60,7 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
     CardModule,
     PaginatorModule,
     KanbanModule,
+    NgbCollapseModule
   ],
   exports: [
     KayakHomeComponent,
