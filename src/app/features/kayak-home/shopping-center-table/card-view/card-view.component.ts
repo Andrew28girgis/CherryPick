@@ -13,6 +13,7 @@ import { Center } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 
 @Component({
   selector: 'app-card-view',
@@ -278,7 +279,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         // Success
       })
       .catch((err) => {
-        // Error 
+        // Error
         console.error('Could not copy text: ', err);
       });
   }
@@ -320,5 +321,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.activeDropdown = null;
       this.cdr.detectChanges();
     }
+  }
+
+  openContactModal(center: Center): void {
+    const modalRef = this.modalService.open(ContactBrokerComponent, {
+      size: 'xl',
+      centered: true,
+      windowClass: 'contact-broker-modal-class',
+    });
+    modalRef.componentInstance.center = center;
+    modalRef.componentInstance.buyboxId = this.BuyBoxId;
   }
 }

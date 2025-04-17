@@ -1,0 +1,86 @@
+.preview-emails-contaciner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
+.emails-container {
+  width: 100%;
+  display: flex;
+  align-items: start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.email-container {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #c6c9d3;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.subject,
+.body {
+  width: 100%;
+  background-color: #f1f1f4;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.subject {
+  font-size: large;
+  font-weight: 600;
+}
+
+.body {
+  color: #707791;
+}
+
+.body:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #c6c9d3;
+}
+
+.email-actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.edit-btn,
+.send-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #4d65b4;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.edit-btn {
+  background-color: #fff;
+  color: #4d65b4;
+}
+
+.send-btn {
+  background-color: #4d65b4;
+  color: #fff;
+}
+
+.empty-emails {
+  color: #707791;
+  font-weight: 600;
+}

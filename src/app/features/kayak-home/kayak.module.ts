@@ -22,6 +22,11 @@ import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.c
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
 import { KanbanModule } from '../kanban/kanban.module';
 import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
+import { ContactBrokerComponent } from './shopping-center-table/contact-broker/contact-broker.component';
+import { ChooseBrokerComponent } from './shopping-center-table/contact-broker/components/choose-broker/choose-broker.component';
+import { ManagedByBrokerComponent } from './shopping-center-table/contact-broker/components/managed-by-broker/managed-by-broker.component';
+import { GenerateEmailComponent } from './shopping-center-table/contact-broker/components/generate-email/generate-email.component';
+import { PreviewEmailComponent } from './shopping-center-table/contact-broker/components/preview-email/preview-email.component';
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -34,6 +39,11 @@ import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-
     MapViewComponent,
     PolygonsControllerComponent,
     KanbanViewComponent,
+    ContactBrokerComponent,
+    ChooseBrokerComponent,
+    ManagedByBrokerComponent,
+    GenerateEmailComponent,
+    PreviewEmailComponent,
   ],
   imports: [
     CommonModule,

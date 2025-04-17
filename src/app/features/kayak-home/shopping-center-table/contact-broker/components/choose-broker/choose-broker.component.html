@@ -1,0 +1,78 @@
+<div class="choose-broker-container">
+  <div class="contacts-container">
+    @for (contact of contacts; track contact.ContactId) {
+    <div class="contact-container">
+      <div class="d-flex align-items-start gap-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          (change)="onContactCheck($event, contact)"
+        />
+        <div class="contact-information">
+          <div class="contact-name">
+            {{ contact.Firstname }} {{ contact.LastName }}
+          </div>
+          <div class="contact-phone">
+            {{ contact.CellPhone }}
+          </div>
+          <div class="contact-email">
+            {{ contact.Email }}
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="send-as">
+    <div class="send-as-title">Send As</div>
+    <div class="send-as-switch">
+      <div
+        class="send-as-to"
+        [ngClass]="{ 'send-as-active': sendAsTo }"
+        (click)="sendAsTo = true; sendAsCC = false"
+      >
+        To
+      </div>
+      <div
+        class="send-as-cc"
+        [ngClass]="{ 'send-as-active': sendAsCC }"
+        (click)="sendAsTo = false; sendAsCC = true"
+      >
+        CC
+      </div>
+    </div>
+  </div>
+
+  <div class="continue-btn">
+    <button (click)="onSubmit()">
+      <span>Save & Continue</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 256 256"
+        id="arrow-right"
+      >
+        <rect width="256" height="256" fill="none"></rect>
+        <line
+          x1="40"
+          x2="216"
+          y1="128"
+          y2="128"
+          fill="none"
+          stroke="#fff"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="24"
+        ></line>
+        <polyline
+          fill="none"
+          stroke="#fff"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="24"
+          points="144 56 216 128 144 200"
+        ></polyline>
+      </svg>
+    </button>
+  </div>
+</div>

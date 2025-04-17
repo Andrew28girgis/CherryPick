@@ -217,7 +217,7 @@ img[alt="logo"] {
 
 .ShoppingCenterStage {
   font-size: 16px;
-  color: #FF8028;
+  color: #ff8028;
   font-weight: 700;
 }
 
@@ -403,4 +403,11 @@ img[alt="logo"] {
   color: #888;
 }
 
- 
+::ng-deep .contact-broker-modal-class .modal-content {
+  height: 80vh;
+  overflow: hidden;
+}
+
+::ng-deep .contact-broker-modal-class app-contact-broker {
+  height: 100%;
+}
