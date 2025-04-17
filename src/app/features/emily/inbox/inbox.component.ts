@@ -440,7 +440,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       MainEntity: null,
       Params: {
         MailContextId: Number(mailContextId),
-        IsSent: 1,
+        IsSent: 0,
       },
       Json: null,
     };
