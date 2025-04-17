@@ -2,7 +2,7 @@
 
 <div class="row m-0 mt-3">
   <div class="d-flex justify-content-end">
-    <button class="Kayack__button" (click)="open(BuyBoxProperty)">
+    <button class="Kayack__button" (click)="openAddTenant(BuyBoxProperty)">
       Add Tenant
     </button>
     <!-- <button [routerLink]="'/add-tenant'"
@@ -13,10 +13,15 @@
 
   <div class="container-width">
     <div class="row">
-      <ng-container *ngFor="let type of buyboxTypes">
+      <ng-container *ngFor="let tenant of tenants">
         <div
           class="col-12 col-sm-6 pt-4 ResContainer"
-          [routerLink]="['/dashboard', type.id, type.organizationId, type.name]"
+          [routerLink]="[
+            '/dashboard',
+            tenant.id,
+            tenant.organizationId,
+            tenant.name
+          ]"
         >
           <section class="card__Kayak">
             <div class="card__Kayak__img mt-3 mb-3">
@@ -26,7 +31,7 @@
                     <img
                       class="Kayak__img"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        type.organizationId
+                        tenant.organizationId
                       }}"
                       alt=""
                     />
@@ -38,7 +43,7 @@
                     </div>
 
                     <div class="card__Kayak_title">
-                      {{ type.name }}
+                      {{ tenant.name }}
                     </div>
                   </div>
                 </div>
@@ -47,27 +52,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="card__Kayak_buttons mt-2 pb-3">
-          <button
-            class="CherryPick__button"
-            (click)="chooseType(type.id, type.organizationId, type.name)"
-          >
-            Market Survey
-          </button>
-          <button
-            *ngIf="organizationId != type.organizationId"
-            class="Kayack__button"
-            [routerLink]="[
-              '/dashboard',
-              type.id,
-              type.organizationId,
-              type.name
-            ]"
-          >
-            Dashboard
-          </button>
-        </div> -->
           </section>
         </div>
       </ng-container>

@@ -10,7 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { ApiServiceService } from 'src/app/core/services/api-service.service'; 
+import { ApiServiceService } from 'src/app/core/services/api-service.service';
 import { StateService } from 'src/app/core/services/state.service';
 import { PropertiesServiceService } from 'src/app/core/services/properties-service.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
@@ -22,7 +22,7 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 })
 export class SummeryComponent implements OnInit {
   General!: General;
-  buyboxTypes: any[] = [];
+  tenants: any[] = [];
   showSummery: boolean = false;
   Token: any;
   orgId!: number;
@@ -58,12 +58,11 @@ export class SummeryComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private propertiesService: PropertiesServiceService,
     private route: ActivatedRoute,
-    private stateService: StateService, 
+    private stateService: StateService,
     private modalService: NgbModal,
     private ApiService: ApiServiceService,
     private breadcrumbService: BreadcrumbService
-  ) { 
-  }
+  ) {}
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbs([
@@ -75,7 +74,7 @@ export class SummeryComponent implements OnInit {
       this.Token = params['Token'];
       this.getUserBuyBoxes();
       this.organizationId = localStorage.getItem('orgId');
-    }); 
+    });
     this.modalOpened = false;
   }
 
@@ -87,47 +86,18 @@ export class SummeryComponent implements OnInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        if (data.json != null) {
-          this.buyboxTypes = data.json;
-
-          if (this.buyboxTypes.length === 0 && !this.modalOpened) {
-            this.modalOpened = true;
-            this.open(this.buyBoxProperty);
-          }
-
-          this.spinner.hide();
-        } else {
-          this.router.navigate(['/login']);
+        this.tenants = data.json;
+        if (this.tenants.length === 0 && !this.modalOpened) {
+          this.modalOpened = true;
+          this.openAddTenant(this.buyBoxProperty);
         }
+
+        this.spinner.hide();
       },
     });
   }
 
-  GetUserBuyBoxes() {
-    this.PlacesService.GetUserBuyBoxes().subscribe((res: any) => {
-      this.buyboxTypes = res;
-      if (this.buyboxTypes.length == 1) {
-        this.chooseType(
-          this.buyboxTypes[0].id,
-          this.buyboxTypes[0].organizationId,
-          this.buyboxTypes[0].name
-        );
-      }
-    });
-  }
-
-  chooseType(buyboxId: number, orgId: number, name: string) {
-    this.showSummery = true;
-    this.showSummery = true;
-    this.goToAllPlaces(buyboxId, orgId, name);
-    this.propertiesService.setbuyboxId(buyboxId);
-  }
-
-  goToAllPlaces(buyboxId: number, orgId: number, name: string) {
-    this.router.navigate(['/home', buyboxId, orgId, name]);
-    this.router.navigate(['/market-survey', buyboxId, orgId, name]);
-  }
-  open(content: any) {
+  openAddTenant(content: any) {
     const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       scrollable: true,
@@ -145,100 +115,5 @@ export class SummeryComponent implements OnInit {
       .catch((error) => {
         this.getUserBuyBoxes();
       });
-  }
-  closeModal() {
-    this.editing = false;
-    this.modalService.dismissAll();
-    this.Obj = new BuyBoxModel(); // Reset the 'Obj' to its default state
-  }
-
-  selectOrganization(organization: Organization) {
-    this.selectedOrganizationId = organization.id; // Store the selected organization ID
-    this.selectedOrganizationName = organization.name; // Store the selected organization's name
-    this.searchOrganizationTerm = organization.name; // Keep the selected name in the input field
-    this.organizations = []; // Clear suggestions
-    this.showOrganizationSuggestions = false;
-    this.highlightedOrganizationIndex = -1;
-  }
-  handleOrganizationBlur() {
-    setTimeout(() => {
-      this.showOrganizationSuggestions = false;
-      this.highlightedOrganizationIndex = -1;
-    }, 100);
-  }
-  onOrganizationInput(event: any) {
-    const val: string = event.target.value;
-    this.searchOrganizationTerm = val;
-
-    if (val.length > 2) {
-      this.searchOrganization(val);
-    } else {
-      this.organizations = [];
-      this.showOrganizationSuggestions = false;
-      this.highlightedOrganizationIndex = -1;
-    }
-  }
-  handleOrganizationKeydown(event: KeyboardEvent) {
-    if (this.showOrganizationSuggestions && this.organizations.length > 0) {
-      if (event.key === 'ArrowDown') {
-        this.highlightedOrganizationIndex =
-          (this.highlightedOrganizationIndex + 1) % this.organizations.length;
-        event.preventDefault();
-      } else if (event.key === 'ArrowUp') {
-        this.highlightedOrganizationIndex =
-          (this.highlightedOrganizationIndex - 1 + this.organizations.length) %
-          this.organizations.length;
-        event.preventDefault();
-      } else if (event.key === 'Enter') {
-        if (
-          this.highlightedOrganizationIndex >= 0 &&
-          this.highlightedOrganizationIndex < this.organizations.length
-        ) {
-          this.selectOrganization(
-            this.organizations[this.highlightedOrganizationIndex]
-          );
-          event.preventDefault();
-        }
-      }
-    }
-  }
-  onSubmit() {
-    this.spinner.show();
-    this.Obj.OrganizationId = this.selectedOrganizationId; // Set the selected organization ID
-    this.Obj.ManagerOrganizationId = this.selectedManagerOrganizationId; // Set the selected manager organization ID
-
-    this.spinner.show();
-    let body: any = {
-      Name: 'CreateBuyBox',
-      Params: {
-        Name: this.Obj.Name,
-        OrganizationId: this.Obj.OrganizationId,
-        ManagerOrganizationId: this.Obj.ManagerOrganizationId,
-        MinBuildingSize: this.Obj.MinBuildingSize,
-        MaxBuildingSize: this.Obj.MaxBuildingSize,
-      },
-    };
-    this.ApiService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.getUserBuyBoxes();
-        this.closeModal();
-        this.spinner.hide();
-      },
-    });
-  }
-  searchOrganization(term: string) {
-    this.isSearchingOrganization = true;
-    let body: any = {
-      Name: 'SearchOrganizationByName',
-      Params: {
-        Name: term,
-      },
-    };
-    this.ApiService.GenericAPI(body).subscribe((res: any) => {
-      this.organizations = res.json as Organization[];
-      this.showOrganizationSuggestions = true;
-      this.highlightedOrganizationIndex = -1;
-      this.isSearchingOrganization = false;
-    });
   }
 }
