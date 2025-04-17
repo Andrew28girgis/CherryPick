@@ -57,7 +57,7 @@ button:active {
 }
 .active {
   display: flex;
-  padding:4px  12px;
+  padding: 4px 12px;
   align-items: center;
   width: fit-content;
   gap: 4px;
@@ -152,5 +152,3 @@ button:active {
     align-items: center;
   }
 }
-
-
