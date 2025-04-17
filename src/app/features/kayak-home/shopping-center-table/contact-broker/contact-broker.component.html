@@ -68,5 +68,20 @@
       ></app-generate-email>
     </div>
   </div>
+  }@case (4) {
+  <div class="contact-broker-step step-three">
+    <div class="step-header">
+      <div class="step-number-icon">
+        {{ currentStep }}
+      </div>
+      <div class="step-title">Preview Emails</div>
+    </div>
+    <div class="step-content">
+      <app-preview-email
+        [mailContextId]="mailContextId"
+        (onStepDone)="onStepDone($event)"
+      ></app-preview-email>
+    </div>
+  </div>
   } }
 </div>

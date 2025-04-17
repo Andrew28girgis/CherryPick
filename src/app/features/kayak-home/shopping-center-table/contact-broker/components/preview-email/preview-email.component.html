@@ -1,0 +1,35 @@
+<div class="preview-emails-contaciner">
+  @if (emails.length > 0) {
+  <div class="w-100 d-flex align-items-center justify-content-end">
+    <button class="send-btn" (click)="sendAllEmails()">Send All</button>
+  </div>
+  }
+  <div class="emails-container">
+    @for (email of emails; track email.mailId) {
+    <div class="email-container">
+      <div class="subject">
+        {{ email.subject }}
+      </div>
+      <div
+        class="body"
+        [attr.contenteditable]="email.isEditing"
+        [innerHTML]="email.body"
+      ></div>
+      <div class="email-actions">
+        <button class="edit-btn" (click)="email.isEditing = !email.isEditing">
+          {{ email.isEditing ? "Save" : "Edit" }}
+        </button>
+        <button class="send-btn" (click)="sendEmail(email)">Send</button>
+      </div>
+    </div>
+    }@empty {
+    <div class="empty-emails">There are no emails generated</div>
+    }
+  </div>
+
+  <div class="w-100 d-flex align-items-center justify-content-end">
+    <button class="send-btn" (click)="onSubmit()">Finish</button>
+  </div>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

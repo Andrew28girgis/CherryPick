@@ -4,7 +4,15 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { IBuyboxDetails } from '../../models/ibuybox-details';
 import { Generated, RelationNames } from 'src/app/shared/models/emailGenerate';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { concatMap, forkJoin, from, Observable, of, tap } from 'rxjs';
+import {
+  concatMap,
+  firstValueFrom,
+  forkJoin,
+  from,
+  Observable,
+  of,
+  tap,
+} from 'rxjs';
 import {
   GenerateContextDTO,
   GetContactManagerDTO,
@@ -55,12 +63,13 @@ export class GenerateEmailComponent implements OnInit {
   ManagerOrgDTO!: GetManagerOrgDTO[];
   isLandingSelected: boolean = true;
   returnGetMailContextGenerated: MailContextGenerated[] = [];
+  mailContextId!: number;
 
   @Input() buyBoxId!: number;
   @Input() center!: Center;
   @Input() chooseBrokerObject!: IChooseBroker;
   @Input() managedByBrokerArray!: IManagedByBroker[];
-  @Output() onStepDone = new EventEmitter<void>();
+  @Output() onStepDone = new EventEmitter<number>();
 
   constructor(
     private placeService: PlacesService,
@@ -68,65 +77,60 @@ export class GenerateEmailComponent implements OnInit {
     private modalService: NgbModal
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.spinner.show();
     this.contactId = localStorage.getItem('contactId');
 
-    this.GetBuyBoxDetails();
-    this.GetBuyBoxInfo();
-    this.GetRetailRelationCategories();
-    this.GetPrompts();
+    await this.GetBuyBoxDetails();
+    await this.GetBuyBoxInfo();
+    await this.GetRetailRelationCategories();
+    await this.GetPrompts();
     const guid = crypto.randomUUID();
     this.BatchGuid = guid;
+
+    this.spinner.hide();
   }
 
-  GetBuyBoxDetails() {
+  async GetBuyBoxDetails() {
     const body = {
       Name: 'GetWizardBuyBoxesById',
       Params: {
         buyboxid: this.buyBoxId,
       },
     };
-
-    this.placeService.GenericAPI(body).subscribe({
-      next: (response: any) => {
-        if (response.json) {
-          this.buyboxDetails = response.json;
-        }
-      },
-    });
+    const response = await firstValueFrom(this.placeService.GenericAPI(body));
+    if (response.json) {
+      this.buyboxDetails = response.json;
+    }
   }
 
-  GetBuyBoxInfo() {
+  async GetBuyBoxInfo() {
     const body: any = {
       Name: 'GetBuyBoxInfo',
       Params: {
         buyboxid: this.buyBoxId,
       },
     };
-    this.placeService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.generated = data.json || [];
+    const data = await firstValueFrom(this.placeService.GenericAPI(body));
+    this.generated = data.json || [];
 
-        this.ManagerOrganizationName =
-          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
-        this.BuyBoxOrganizationName =
-          this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
+    this.ManagerOrganizationName =
+      this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
+    this.BuyBoxOrganizationName =
+      this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.Name;
 
-        const buyBox = this.generated?.[0]?.Buybox?.[0];
-        if (buyBox) {
-          this.ManagerOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
-              ?.ManagerOrganizationName || '';
-          this.BuyBoxOrganizationName =
-            buyBox.BuyBoxOrganization?.[0]?.Name || '';
-        }
+    const buyBox = this.generated?.[0]?.Buybox?.[0];
+    if (buyBox) {
+      this.ManagerOrganizationName =
+        buyBox.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]
+          ?.ManagerOrganizationName || '';
+      this.BuyBoxOrganizationName = buyBox.BuyBoxOrganization?.[0]?.Name || '';
+    }
 
-        // Extract Shopping Centers safely
+    // Extract Shopping Centers safely
 
-        this.generated?.[0]?.Releations?.forEach((r) => {
-          r.relationSelect = true;
-        });
-      },
+    this.generated?.[0]?.Releations?.forEach((r) => {
+      r.relationSelect = true;
     });
   }
 
@@ -174,19 +178,16 @@ export class GenerateEmailComponent implements OnInit {
     }
   }
 
-  GetRetailRelationCategories() {
+  async GetRetailRelationCategories() {
     const body: any = {
       Name: 'GetRetailRelationCategories',
       Params: {
         buyboxid: this.buyBoxId,
       },
     };
-    this.placeService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.relationCategoriesNames = data.json;
-        this.relationCategoriesNames?.forEach((r) => (r.selected = true));
-      },
-    });
+    const data = await firstValueFrom(this.placeService.GenericAPI(body));
+    this.relationCategoriesNames = data.json;
+    this.relationCategoriesNames?.forEach((r) => (r.selected = true));
   }
 
   updatePrompt() {
@@ -201,46 +202,44 @@ export class GenerateEmailComponent implements OnInit {
     }
   }
 
-  GetPrompts() {
+  async GetPrompts() {
     const categoryBody = {
       name: 'GetPromptsCategoryId',
       params: {
         Name: 'Availability',
       },
     };
-    this.placeService.GenericAPI(categoryBody).subscribe({
-      next: (catResponse: any) => {
-        const categoryId = catResponse?.json?.[0]?.Id;
-        if (!categoryId) {
-          return;
-        }
-        const promptsBody = {
-          name: 'GetPrompts',
-          MainEntity: null,
-          params: {
-            Id: categoryId,
-          },
-          Json: null,
-        };
-        this.placeService.GenericAPI(promptsBody).subscribe({
-          next: (promptsResponse: any) => {
-            const promptsData = promptsResponse?.json || [];
-            if (promptsData.length > 0) {
-              this.prompts = promptsData.map((prompt: any) => ({
-                id: prompt?.Id || null,
-                name: prompt?.Name || 'Unnamed Prompt',
-                promptText: prompt?.PromptText || 'No prompt text available',
-              }));
-              // Set the first prompt as selected by default
-              this.selectedPromptId = this.prompts[0].id;
-            } else {
-              this.prompts = [];
-              this.selectedPromptId = '';
-            }
-          },
-        });
+    const catResponse = await firstValueFrom(
+      this.placeService.GenericAPI(categoryBody)
+    );
+    const categoryId = catResponse?.json?.[0]?.Id;
+    if (!categoryId) {
+      return;
+    }
+    const promptsBody = {
+      name: 'GetPrompts',
+      MainEntity: null,
+      params: {
+        Id: categoryId,
       },
-    });
+      Json: null,
+    };
+    const promptsResponse = await firstValueFrom(
+      this.placeService.GenericAPI(promptsBody)
+    );
+    const promptsData = promptsResponse?.json || [];
+    if (promptsData.length > 0) {
+      this.prompts = promptsData.map((prompt: any) => ({
+        id: prompt?.Id || null,
+        name: prompt?.Name || 'Unnamed Prompt',
+        promptText: prompt?.PromptText || 'No prompt text available',
+      }));
+      // Set the first prompt as selected by default
+      this.selectedPromptId = this.prompts[0].id;
+    } else {
+      this.prompts = [];
+      this.selectedPromptId = '';
+    }
   }
 
   savePrompt(modal: any) {
@@ -305,6 +304,9 @@ export class GenerateEmailComponent implements OnInit {
             this.placeService.GenericAPI(body).subscribe({
               next: (data) => {
                 const x = data.json;
+
+                this.mailContextId = x[0].id;
+
                 this.AddMailContextReceivers(
                   x[0].id,
                   x[0].organizationId
@@ -508,6 +510,6 @@ export class GenerateEmailComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.onStepDone.emit();
+    this.onStepDone.emit(this.mailContextId);
   }
 }

@@ -30,6 +30,7 @@ import { ContactBrokerComponent } from './shopping-center-table/contact-broker/c
 import { ChooseBrokerComponent } from './shopping-center-table/contact-broker/components/choose-broker/choose-broker.component';
 import { ManagedByBrokerComponent } from './shopping-center-table/contact-broker/components/managed-by-broker/managed-by-broker.component';
 import { GenerateEmailComponent } from './shopping-center-table/contact-broker/components/generate-email/generate-email.component';
+import { PreviewEmailComponent } from './shopping-center-table/contact-broker/components/preview-email/preview-email.component';
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -49,6 +50,7 @@ import { GenerateEmailComponent } from './shopping-center-table/contact-broker/c
     ChooseBrokerComponent,
     ManagedByBrokerComponent,
     GenerateEmailComponent,
+    PreviewEmailComponent,
   ],
   imports: [
     CommonModule,

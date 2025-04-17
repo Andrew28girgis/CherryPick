@@ -88,14 +88,13 @@
   cursor: pointer;
 }
 
-.prompt-controls{
+.prompt-controls {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
 }
-
 
 .generate-btn {
   width: 100%;
@@ -122,4 +121,10 @@
 .generate-btn button svg {
   width: 1.25rem;
   height: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .generate-email-column {
+    width: 100%;
+  }
 }
