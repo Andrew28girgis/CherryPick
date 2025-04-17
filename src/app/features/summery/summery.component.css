@@ -91,39 +91,68 @@ button:active {
   padding: 16px 20px;
   width: 90%;
 }
-
+.container-width {
+  margin: auto;
+  width: 80%;
+}
 .card__Kayak {
-  padding: 10px  0 ;
   display: flex;
   justify-content: center;
-  flex-direction: column;
   gap: 16px;
   background-color: white;
   border-radius: 20px;
-  height: 100%;
 }
 
 .card__Kayak__img {
+  padding-left: 20px;
   height: auto;
   min-height: 100px;
-  display: flex;
-  justify-content: center;
   width: 100%;
+}
+.chevronicon {
+  padding-right: 30px;
+  color: #707791;
 }
 
 .Kayak__img {
-  width: 120px;
-  height: 120px;
-  border-radius: 120px;
+  width: 92px;
+  height: 92px;
+  aspect-ratio: 1/1;
+  border-radius: 12px;
 }
 
 .card__Kayak_title {
   color: #16181d;
-  text-align: center;
   font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
+}
+.active {
+  display: flex;
+  padding: var(--Space-Space-4, 4px) var(--Space-Space-12, 12px);
+  align-items: center;
+  width: fit-content;
+  gap: var(--Space-Space-4, 4px);
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Colors-Positive-100, #eaf6ec);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #28a745;
+  border-radius: 50%;
+}
+
+.text {
+  color: var(--Colors-Positive-500, #28a745);
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
 }
 
 .card__Kayak_description {
@@ -150,7 +179,7 @@ button:active {
   font-size: 10px;
 }
 
-.Kayack__button { 
+.Kayack__button {
   border-radius: 10px;
   background: #001f3fc2;
   color: #fff;
@@ -165,7 +194,7 @@ button:active {
   white-space: nowrap;
 }
 
-.ResContainer{
+.ResContainer {
   cursor: pointer;
 }
 
@@ -200,8 +229,23 @@ button:active {
 .mtop42 {
   margin-top: 42px !important;
 }
+@media (max-width: 567px) {
+  .card__Kayak {
+    margin-bottom: 1rem;
+    width: 300px !important;
+  }
+}
 
 @media (max-width: 767px) {
+  .chevronicon {
+    padding-right: 12px;
+  }
+  .card__Kayak__img {
+    padding-left: 10px;
+  }
+  .container-width {
+    width: 100%;
+  }
   .responsive {
     margin-right: 20px;
     margin-left: 32px;
@@ -220,7 +264,7 @@ button:active {
   }
   .card__Kayak {
     margin-bottom: 1rem;
-    width: 284px;
+    width: 265px;
   }
 
   .card__Kayak_buttons {
@@ -236,6 +280,9 @@ button:active {
     font-size: 10px;
     padding: 4px 8px;
     min-width: 90px;
+  }
+  .card__Kayak_title {
+    font-size: 16px;
   }
 }
 
@@ -399,7 +446,7 @@ button:active {
 }
 
 .sidebar-expanded {
-  margin-left: 240px; 
+  margin-left: 240px;
 }
 
 @media (max-width: 991px) {
