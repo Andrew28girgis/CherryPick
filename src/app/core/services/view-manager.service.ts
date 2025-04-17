@@ -21,7 +21,9 @@ export class ViewManagerService {
   private _buyboxPlaces = new BehaviorSubject<BbPlace[]>([]);
   private _shareOrg = new BehaviorSubject<ShareOrg[]>([]);
   private _kanbanStages = new BehaviorSubject<any[]>([]);
-  
+  private _lastBuyboxId: number | null = null;
+  private _lastOrgId:    number | null = null;
+
   // Loading state
   private _isLoading = new BehaviorSubject<boolean>(false);
   
@@ -68,13 +70,23 @@ export class ViewManagerService {
    * Initialize all data for the shopping center views
    * This should be called once when the main component loads
    */
-  public initializeData(buyboxId: number, orgId: number): void {
-    // if (this._dataLoaded) {
-    //   // Data already loaded, just notify subscribers
-    //   this._dataLoadedEvent.next();
-    //   return;
-    // }
 
+  public initializeData(buyboxId: number, orgId: number): void {
+    if (this._dataLoaded
+        && this._lastBuyboxId === buyboxId
+        && this._lastOrgId    === orgId) {
+      this._dataLoadedEvent.next();
+      return;
+    }
+
+    this._lastBuyboxId = buyboxId;
+    this._lastOrgId    = orgId;
+    this._dataLoaded   = false;
+
+    this.categoryNameCache.clear();
+    this.unitSizeCache.clear();
+
+    
     this._isLoading.next(true);
 
     // Load all required data in parallel

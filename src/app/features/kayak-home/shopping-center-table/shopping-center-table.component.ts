@@ -59,6 +59,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+      this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId)
     });
     
     // Get saved view from localStorage or default to social view (5)
