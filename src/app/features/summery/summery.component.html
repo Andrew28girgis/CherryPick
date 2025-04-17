@@ -11,45 +11,44 @@
       </button> -->
   </div>
 
-<div class="container-width">
- <div class="row">
-  <ng-container *ngFor="let type of buyboxTypes">
-    <div
-      class="col-12 col-sm-6 pt-2 ResContainer"
-      [routerLink]="['/dashboard', type.id, type.organizationId, type.name]"
-    >
-      <section class="card__Kayak">
-        <div class="card__Kayak__img mt-3 mb-3">
-          <div class="d-flex align-items-center justify-content-between ">
-            <div class="d-flex align-items-center gap-3">
-              <div>
-                <img
-                class="Kayak__img"
-                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                  type.organizationId
-                }}"
-                alt=""
-              />
-              </div>
-              <div class="d-flex flex-column gap-2">
-                <div class="active">
-                  <div class="dot"></div>
-                  <p class="text">Active</p>
+  <div class="container-width">
+    <div class="row">
+      <ng-container *ngFor="let type of buyboxTypes">
+        <div
+          class="col-12 col-sm-6 pt-4 ResContainer"
+          [routerLink]="['/dashboard', type.id, type.organizationId, type.name]"
+        >
+          <section class="card__Kayak">
+            <div class="card__Kayak__img mt-3 mb-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                  <div>
+                    <img
+                      class="Kayak__img"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        type.organizationId
+                      }}"
+                      alt=""
+                    />
+                  </div>
+                  <div class="d-flex flex-column gap-2">
+                    <div class="active">
+                      <div class="dot"></div>
+                      <p class="text">Active</p>
+                    </div>
+
+                    <div class="card__Kayak_title">
+                      {{ type.name }}
+                    </div>
+                  </div>
                 </div>
-                
-                <div class="card__Kayak_title">
-                  {{ type.name }}
+                <div class="chevronicon">
+                  <i class="fa-solid fa-chevron-right"></i>
                 </div>
               </div>
-  
             </div>
-            <div class="chevronicon">
-              <i class="fa-solid fa-chevron-right"></i>
-            </div>
-          </div>
-        </div>
-      
-        <!-- <div class="card__Kayak_buttons mt-2 pb-3">
+
+            <!-- <div class="card__Kayak_buttons mt-2 pb-3">
           <button
             class="CherryPick__button"
             (click)="chooseType(type.id, type.organizationId, type.name)"
@@ -69,13 +68,11 @@
             Dashboard
           </button>
         </div> -->
-      </section>
+          </section>
+        </div>
+      </ng-container>
     </div>
-  </ng-container>
-
- </div>
-
-</div>
+  </div>
 </div>
 
 <ng-template #BuyBoxProperty let-modal>
