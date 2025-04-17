@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  ElementRef,
   ViewChild,
   TemplateRef,
 } from '@angular/core';
