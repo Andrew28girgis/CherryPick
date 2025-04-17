@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KayakRoutingModule } from './kayak-routing.module';
-import { KayakHomeComponent } from './kayak-home.component'; 
+import { KayakHomeComponent } from './kayak-home.component';
 import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-center-table.component';
 import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -24,7 +24,7 @@ import { KanbanModule } from '../kanban/kanban.module';
 import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
 @NgModule({
   declarations: [
-    KayakHomeComponent, 
+    KayakHomeComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     SocialViewComponent,
@@ -52,7 +52,7 @@ import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-
     KanbanModule,
   ],
   exports: [
-    KayakHomeComponent, 
+    KayakHomeComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     SocialViewComponent,
