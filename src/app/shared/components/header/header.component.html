@@ -33,7 +33,7 @@
       id="navbarNav"
     >
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
+        <!-- <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/tasks']"
             routerLinkActive="active-route"
@@ -45,6 +45,20 @@
               src="../../../assets/Images/Icons/task-square.svg"
             />
             <span>Tasks</span>
+          </a>
+        </li> -->
+        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
+          <a
+            [routerLink]="['/summary']"
+            routerLinkActive="active-route"
+            class="nav-link"
+            title="Tenants"
+          >
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/Tenant.svg"
+            />
+            <span>Tenants</span>
           </a>
         </li>
         <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
@@ -62,20 +76,7 @@
           </a>
         </li>
 
-        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
-          <a
-            [routerLink]="['/summary']"
-            routerLinkActive="active-route"
-            class="nav-link"
-            title="Tenants"
-          >
-            <img
-              class="img-icn"
-              src="../../../assets/Images/Icons/Tenant.svg"
-            />
-            <span>Tenants</span>
-          </a>
-        </li>
+  
         <!-- <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             class="nav-link"

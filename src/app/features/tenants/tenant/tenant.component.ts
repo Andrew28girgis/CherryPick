@@ -40,6 +40,11 @@ import { IGeoJson } from 'src/app/shared/models/igeo-json';
 import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
 import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter';
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { organizationContacts } from 'src/app/shared/models/organizationContacts';
+
+
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -49,6 +54,7 @@ import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCen
     RouterModule,
     FormsModule,
     NgxFileDropModule,
+    NgbPopoverModule 
   ],
   providers: [],
   templateUrl: './tenant.component.html',
@@ -89,7 +95,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
   showAddTenantInput = false;
   newTenantName = '';
   shoppingCenterManage:TenantShoppingCenter[]=[];
+  shoppingCenterManageSubmitted:TenantShoppingCenter[]=[];
   Polgons!: any[];
+  OrganizationContacts: organizationContacts[] = [];
   customPolygons: ICustomPolygon[] = [];
   map!: google.maps.Map;
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
@@ -107,7 +115,16 @@ export class TenantComponent implements OnInit, AfterViewInit {
   newPlaceSqFT!: number;
   deleteType: string = '';
   deleteId: number | null = null;
-
+  showButtons: boolean = true;
+  @ViewChild('leasePricesModal') leasePricesModal: TemplateRef<any> | undefined;
+  @ViewChild('buildingSizesModal') buildingSizesModal: TemplateRef<any> | undefined;
+  filteredLeasePlacesManage: any[] = [];
+  allBuildingSizes: any[] = [];
+  ////////////////
+  @ViewChild('buildingSizesSubmissionModal') buildingSizesSubmissionModal: TemplateRef<any> | undefined;
+  modalPlaces: any[] = [];
+  @ViewChild('leasePricesSubmissionModal') leasePricesSubmissionModal: TemplateRef<any> | undefined;
+  modalLeasePlaces: any[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -116,14 +133,16 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    private mapDrawingService: CampaignDrawingService
+    private mapDrawingService: CampaignDrawingService,
+    private shoppingCenterService: ViewManagerService
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
+      this.contactID = params.get('contactId');
     });
-    this.contactID = localStorage.getItem('contactId');
+    // this.contactID = localStorage.getItem('contactId');
 
     this.activatedRoute.params.subscribe((params) => {
       this.guid = params['guid'];
@@ -135,6 +154,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.selectedShoppingID = guid;
     this.GetUserSubmissionData();
     this.GetShoppingCenterManageInCampaign();
+    this.GetUserSubmissionsShoppingCenters();
   }
 
   GetCampaignFromGuid(): void {
@@ -161,15 +181,47 @@ export class TenantComponent implements OnInit, AfterViewInit {
       Name: 'GetShoppingCenterManageInCampaign',
       Params: {
         CampaignGUID: this.guid,
+        ContactId: this.contactID,
       },
     };
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
-        console.log('ShoppingCenterManage', this.shoppingCenterManage);
+        // console.log('ShoppingCenterManage', this.shoppingCenterManage);
         
       },
+    });
+  }
+  GetUserSubmissionsShoppingCenters(): void {
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetUserSubmissionsShoppingCenters',
+      Params: {
+        CampaignGUID: this.guid,
+        ContactId: this.contactID,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.shoppingCenterManageSubmitted = res.json;
+        // console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
+        
+      },
+    });
+  }
+  GetOrganizationById():void{
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetOrganizationById',
+      Params: {
+        organizationid: this.organizationid,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.OrganizationContacts = res.json as organizationContacts[]      },
     });
   }
   GetUserSubmissionData(): void {
@@ -208,9 +260,53 @@ export class TenantComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
-  GetBuyBoxInfo(): void {
-    this.spinner.show();
+  /////////////////// card
+  getBuildingSizeCount(): number {
+    return this.shoppingCenterManage[0]?.O[0]?.P?.length || 0;
+  }
+  isAllForLeasePriceZero(): boolean {
+    return this.shoppingCenterManage[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+  }
+  getLeasePricesCount(): number {
+    return this.shoppingCenterManage[0]?.O[0]?.P.filter(p => p.ForLeasePrice !== 0).length || 0;
+  }
+  getFirstThreeLeasePrices(): any[] {
+    return this.shoppingCenterManage[0]?.O[0]?.P
+      .filter(p => p.ForLeasePrice !== 0)
+      .slice(0, 3) || [];
+  }
+  getFirstThreeBuildingSizes(): any[] {
+    return this.shoppingCenterManage[0]?.O[0]?.P.slice(0, 3) || [];
+  }
+  openLeasePricesModal(): void {
+    this.filteredLeasePlacesManage = this.shoppingCenterManage[0]?.O[0]?.P
+      .filter(p => p.ForLeasePrice !== 0);
+    this.modalService.open(this.leasePricesModal, { size: 'md', centered: true });
+  }
+  openBuildingSizesModal(): void {
+    this.allBuildingSizes = this.shoppingCenterManage[0]?.O[0]?.P;
+    this.modalService.open(this.buildingSizesModal, { size: 'md', centered: true });
+  }
+  /////////////////// card submission
+  getBuildingSizeCountSub(): number {
+    return this.shoppingCenterManageSubmitted[0]?.O[0]?.P?.length || 0;
+  }
+  isAllForLeasePriceZeroSub(): boolean {
+    return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+  }
+  filteredLeasePlaces(places: any[]): any[] {
+    return places.filter(p => p.ForLeasePrice !== 0);
+  }
+  openLeasePricesSubmissionModal(leasePlaces: any[]) {
+    this.modalLeasePlaces = leasePlaces;
+    this.modalService.open(this.leasePricesSubmissionModal, { size: 'md', centered: true });
+  }
+  openBuildingSizesSubmissionModal(places: any[]) {
+    this.modalPlaces = places;
+    this.modalService.open(this.buildingSizesSubmissionModal, { size: 'md', centered: true });
+  }
+    GetBuyBoxInfo(): void {
+      this.spinner.show();
     const body: any = {
       Name: 'GetBuyBoxInfo',
       Params: {
@@ -226,6 +322,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
               .BuyBoxOrganizationId
           : 0;
         this.spinner.hide();
+        this.GetOrganizationById();
         this.GetOrganizationBranches();
       },
     });
@@ -264,6 +361,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.spinner.hide();
         } else {
           this.organizationBranches = res.json[0];
+          console.log('sssss',this.organizationid);
+
           this.spinner.hide();
         }
       },
@@ -407,7 +506,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CenterTypeIsAdded: this.JsonPDF.CenterTypeIsAdded || false,
       Availability: this.JsonPDF.Availability.map((avail) => ({
         ...avail,
-       isAdded: avail.isAdded !== false,
+        isAdded: avail.isAdded !== false,
       })),
       Tenants: this.JsonPDF.Tenants.map((tenant) => ({
         ...tenant,
@@ -416,50 +515,38 @@ export class TenantComponent implements OnInit, AfterViewInit {
       CampaignId: this.selectedCampaign,
       userSubmissionId: this.userSubmission,
       IsSubmitted: true,
+      ContactId: this.contactID,
     };
   
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
-        let successMessage = '';
-        
-        // Handle both string and object responses
-        if (typeof data === 'string') {
-          // If the response is a string, check for success message
-          if (data.includes('Shopping center updated successfully')) {
-            successMessage = 'Shopping center updated successfully!';
-          }
-        } else if (typeof data === 'object') {
-          // If the response is JSON, check for success status/message
-          // Adjust this based on your actual API response structure
-          if (data.success || data.message?.includes('success')) {
-            successMessage = data.message || 'Shopping center updated successfully!';
-          }
-        }
-        if (successMessage) {
-          this.showToast(successMessage);
-          this.clearModalData();
-          this.modalService.dismissAll();
-        } else {
-          this.showToast('Received unexpected response from server');
-        }
+        // Always show success message for 200 OK responses
+        this.JsonPDF.IsSubmitted = true;
+        this.showButtons = false;
+        this.showToast('Shopping center updated successfully!');
+        this.GetUserSubmissionsShoppingCenters();
         this.isSubmitting = false;
         this.spinner.hide();
       },
       error: (error) => {
         console.error('Error occurred while updating shopping center:', error);
-        // Handle different error cases
-        let errorMessage = 'Failed to update shopping center!';
+        
+        // Check if it's actually a success response being misinterpreted as an error
         if (error.status === 200) {
-          // Sometimes errors come with 200 status but error message in response
-          if (error.error && typeof error.error === 'string') {
-            errorMessage = error.error;
-          } else if (error.message) {
-            errorMessage = error.message;
+          this.JsonPDF.IsSubmitted = true;
+          // Set the new flag to hide buttons
+          this.showButtons = false;
+          this.showToast('Shopping center updated successfully!');
+          this.GetUserSubmissionsShoppingCenters();
+        } else {
+          // It's a genuine error
+          let errorMessage = 'Failed to update shopping center!';
+          if (error.error && error.error.message) {
+            errorMessage = error.error.message;
           }
-        } else if (error.error && error.error.message) {
-          errorMessage = error.error.message;
+          this.showToast(errorMessage);
         }
-        this.showToast(errorMessage);
+        
         this.isSubmitting = false;
         this.spinner.hide();
       },
@@ -499,14 +586,14 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   // Replace the existing methods with these new ones
   toggleAddAvailability(): void {
-    this.removeavailable=true;
+    // this.removeavailable=true;
     this.showAddAvailabilityInput = !this.showAddAvailabilityInput;
     if (!this.showAddAvailabilityInput) {
       this.newAvailabilitySize = undefined;
     }
   }
   toggleAddTenant(): void {
-    this.removetenant=true;
+    // this.removetenant=true;
     this.showAddTenantInput = !this.showAddTenantInput;
     if (!this.showAddTenantInput) {
       this.newTenantName = '';
@@ -938,6 +1025,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.showToast('Tenant deleted successfully!');
         },
       });
+    }
+    isLast(currentItem: any, array: any[]): boolean {
+      return this.shoppingCenterService.isLast(currentItem, array);
     }
     /////////////
 }

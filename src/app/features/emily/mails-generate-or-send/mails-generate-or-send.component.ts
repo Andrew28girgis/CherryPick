@@ -8,7 +8,7 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 @Component({
   selector: 'app-mails-generate-or-send',
   templateUrl: './mails-generate-or-send.component.html',
-  styleUrl: './mails-generate-or-send.component.css'
+  styleUrl: './mails-generate-or-send.component.css',
 })
 export class MailsGenerateOrSendComponent {
   MailContextId!: any;
@@ -23,7 +23,6 @@ export class MailsGenerateOrSendComponent {
     private PlacesService: PlacesService,
     private sanitizer: DomSanitizer,
     private breadcrumbService: BreadcrumbService
-
   ) {
     this.route.paramMap.subscribe((params) => {
       this.MailContextId = params.get('MailContextId');
@@ -36,7 +35,7 @@ export class MailsGenerateOrSendComponent {
     if (this.MailContextId && this.IsSent) {
       this.ReadSpecificMails();
     }
-        this.breadcrumbService.addBreadcrumb({
+    this.breadcrumbService.addBreadcrumb({
       label: 'MailsList',
       url: `MailsList/${this.MailContextId}/${this.IsSent}`,
     });
@@ -44,7 +43,8 @@ export class MailsGenerateOrSendComponent {
 
   ReadSpecificMails() {
     this.spinner.show();
-    const isSentBoolean = this.IsSent === '1' ? 0 : this.IsSent === '2' ? 1 : Boolean(this.IsSent);
+    const isSentBoolean =
+      this.IsSent === '1' ? 0 : this.IsSent === '2' ? 1 : Boolean(this.IsSent);
 
     var body: any = {
       Name: 'ReadSpecificMails',
@@ -60,7 +60,9 @@ export class MailsGenerateOrSendComponent {
       next: (data) => {
         this.returnGetMailContextGenerated = data.json;
         // Sanitize and apply HTML content to emailBody
-        this.emailBody = this.sanitizer.bypassSecurityTrustHtml(this.returnGetMailContextGenerated[0].body);
+        this.emailBody = this.sanitizer.bypassSecurityTrustHtml(
+          this.returnGetMailContextGenerated[0].body
+        );
         this.spinner.hide();
       },
     });

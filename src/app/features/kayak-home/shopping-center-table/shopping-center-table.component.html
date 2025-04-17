@@ -4,7 +4,7 @@
 
     <div class="row m-0 mb-0 mobile-n">
       <div
-        class="col-12 pt-2 d-flex justify-content-start align-items-center mobile-nav mb-2"
+        class="col-12 pt-2 d-flex justify-content-between align-items-center mobile-nav mb-2"
       >
         <div class="custom-icon-container">
           <div
@@ -21,6 +21,20 @@
             <span class="icon-text d-none d-sm-flex">{{ option.text }}</span>
           </div>
         </div>
+        <div>
+          <button
+          style="border: none;"
+            class=" border-none mx-2" 
+          >
+          <app-link-microsoft></app-link-microsoft>
+          </button>
+          <button
+            class="CherryPick__button"
+            [routerLink]="['/market-survey', BuyBoxId, OrgId, BuyBoxName]"
+          >
+            Market Survey
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -32,7 +46,7 @@
     #mapView
   ></app-map-view>
   <div class="row m-0" *ngIf="currentView == 2">
-    <div class="col-12 p-0"> 
+    <div class="col-12 p-0">
       <app-side-list-view
         (highlightMarker)="onHighlightMarker($event)"
         (unhighlightMarker)="onUnhighlightMarker($event)"

@@ -1,62 +1,42 @@
 export interface TenantShoppingCenter {
-    id: number
-    centerName: string
-    centerType: string
-    centerAddress: string
-    centerCity: string
-    centerState: string
-    anchorGLA_SF: number
-    anchorTenants: any
-    averageWeightedRent: any
-    centerCounty: string
-    directAvailableSpace: any
-    directVacantSpace: any
-    centerRBA_GLA: number
-    landArea_AC: any
-    landArea_SF: number
-    latitude: number
-    longitude: number
-    marketName: any
-    numberOfParkingSpaces: number
-    numberOfPropertiesInCenter: number
-    percentLeased: number
-    smallestSpaceAvailable: number
-    subletVacantSpace: any
-    submarketCluster: string
-    submarketName: string
-    totalAvailableSpace_SF: number
-    totalVacantAvailReletSpace_SF: any
-    totalVacantAvailSubletSpace_SF: any
-    totalReletSpace_SF: any
-    totalSubletSpace_SF: any
-    yearBuilt: number
-    yearRenovated: number
-    numberOfStores: number
-    signageImage: string
-    gallary: any
-    mainImage: string
-    heading: any
-    pitch: any
-    streetLatitude: any
-    streetLongitude: any
-    zipCode: string
-    placeKey: any
-    streetViewZoom: any
-    streetViewURL: string
-    zoningCode: any
-    description: string
-    docsLink: string
-    employees: number
-    householdIncome: number
-    images: string
-    notes: string
-    populationDensity: number
-    sitePlan: string
-    siteSelectionReason: string
-    suburban: any
-    urban: any
-    neighbourhood: any
-    village: any
-    propertyType: any
-  }
+  Id: number
+  CenterName: string
+  CenterType: string
+  CenterAddress: string
+  CenterCity: string
+  CenterState: string
+  CenterCounty: string
+  NumberOfParkingSpaces: number
+  TotalAvailableSpace_SF: number
+  MainImage: string
+  ZipCode: string
+  StreetViewURL: string
+  Description: string
+  DocsLink: string
+  Images: string
+  SitePlan: string
+  SiteSelectionReason: string
+  O: O[]
+}
+
+export interface O {
+  ID: number
+  Name: string
+  P: P[]
+}
+
+export interface P {
+  PlaceId: number
+  Type: string
+  BuildingSizeSf: number
+  ForSalePrice: number
+  PlaceDescription: string
+  SecondaryType: string
+  PlaceMainImage: string
+  ForLeasePrice: number
+  LeaseType: string
+  Suite: string
+  PlaceImages: string
+  PlaceStreetViewURL: string
+}
   

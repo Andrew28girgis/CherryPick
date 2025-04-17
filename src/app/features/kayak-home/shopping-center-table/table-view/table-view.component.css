@@ -30,7 +30,7 @@
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   z-index: 100;
   display: none;
 }
@@ -243,7 +243,7 @@ img[alt="logo"] {
 
 .ShoppingCenterStage {
   font-size: 16px;
-  color: #FF8028;
+  color: #ff8028;
   font-weight: 500;
 }
 
@@ -271,12 +271,12 @@ img[alt="logo"] {
   margin-bottom: 10px;
   margin-right: 20px;
   border-radius: 10px;
-  outline: none; 
+  outline: none;
 }
 
 .search-input:focus {
-  border: 1px solid #ccc; 
-  box-shadow: none; 
+  border: 1px solid #ccc;
+  box-shadow: none;
 }
 .search-button {
   position: absolute;

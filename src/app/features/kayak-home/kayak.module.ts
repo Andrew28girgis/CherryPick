@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { KayakRoutingModule } from './kayak-routing.module';
 import { KayakHomeComponent } from './kayak-home.component';
-import { EmilyComponent } from '../emily/emily/emily.component';
-import { BuyboxDetailsComponent } from './buybox-details/buybox-details.component';
 import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-center-table.component';
 import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -21,9 +19,7 @@ import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
 import { PaginatorModule } from 'primeng/paginator';
 import { LinkMicrosoftComponent } from '../emily/link-microsoft/link-microsoft.component';
-import { WorkSpacesComponent } from './work-spaces/work-spaces.component';
 import { BuyboxRelatiosComponent } from './buybox-relatios/buybox-relatios.component';
-import { KayakComponent } from './kayak/kayak.component';
 import { KanbanModule } from '../kanban/kanban.module';
 import { KanbanViewComponent } from './shopping-center-table/kanban-view/kanban-view.component';
 import { ContactBrokerComponent } from './shopping-center-table/contact-broker/contact-broker.component';
@@ -34,11 +30,8 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
 @NgModule({
   declarations: [
     KayakHomeComponent,
-    BuyboxDetailsComponent,
-    WorkSpacesComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
-    KayakComponent,
     SocialViewComponent,
     TableViewComponent,
     CardViewComponent,
@@ -66,13 +59,10 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
     TableModule,
     CardModule,
     PaginatorModule,
-    EmilyComponent,
     KanbanModule,
   ],
   exports: [
     KayakHomeComponent,
-    BuyboxDetailsComponent,
-    WorkSpacesComponent,
     ShoppingCenterTableComponent,
     BuyboxRelatiosComponent,
     SocialViewComponent,
@@ -82,7 +72,6 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
     MapViewComponent,
     PolygonsControllerComponent,
     LinkMicrosoftComponent,
-    EmilyComponent,
   ],
 })
 export class KayakModule {}
