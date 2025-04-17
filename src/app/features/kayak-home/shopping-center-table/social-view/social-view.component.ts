@@ -88,6 +88,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
   @ViewChild('contactsModal', { static: true }) contactsModalTemplate: any;
   @ViewChild('MapViewPlace', { static: true }) MapViewPlace!: TemplateRef<any>;
+  @ViewChild('panelContent') panelContent!: ElementRef;
   @ViewChild('StreetViewPlace', { static: true })
   @Output()
   viewChange = new EventEmitter<number>();
@@ -149,23 +150,19 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   feedbackSubmitted: boolean = false;
   feedbackData: any[] = [];
   viewedCenters: Set<number> = new Set();
+  heartVisible = false;
+  heartX = 0;
+  heartY = 0;
+  isLoading = true;
   private touchStartX = 0;
   private touchEndX = 0;
   private readonly SWIPE_THRESHOLD = 50;
   private globalClickListenerr!: () => void;
   private isOptionSelected = false;
   private commentSortCache = new WeakMap<any[], any[]>();
-  @ViewChild('panelContent') panelContent!: ElementRef;
-  heartVisible = false;
-  heartX = 0;
-  heartY = 0;
   private heartTimeout: any;
   private lastClickTime = 0;
   private readonly DOUBLE_CLICK_THRESHOLD = 300; // ms
-
-  // Loading state for skeleton
-  isLoading = true;
-
   private subscriptions = new Subscription();
 
   constructor(
@@ -177,7 +174,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private PlacesService: PlacesService,
     private sanitizer: DomSanitizer,
     private ngZone: NgZone,
-    private shoppingCenterService: ViewManagerService 
+    private shoppingCenterService: ViewManagerService
   ) {}
 
   ngOnInit(): void {
@@ -185,77 +182,76 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
-    
+
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-      
-      // Initialize data using the centralized service
+
       // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
 
     // Subscribe to data from the centralized service
     this.subscriptions.add(
-      this.shoppingCenterService.isLoading$.subscribe(loading => {
+      this.shoppingCenterService.isLoading$.subscribe((loading) => {
         this.isLoading = loading;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.shoppingCenters$.subscribe(centers => {
+      this.shoppingCenterService.shoppingCenters$.subscribe((centers) => {
         this.shoppingCenters = centers;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.filteredCenters$.subscribe(centers => {
+      this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
         this.filteredCenters = centers;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.buyboxCategories$.subscribe(categories => {
+      this.shoppingCenterService.buyboxCategories$.subscribe((categories) => {
         this.buyboxCategories = categories;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.shareOrg$.subscribe(org => {
+      this.shoppingCenterService.shareOrg$.subscribe((org) => {
         this.ShareOrg = org;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.buyboxPlaces$.subscribe(places => {
+      this.shoppingCenterService.buyboxPlaces$.subscribe((places) => {
         this.buyboxPlaces = places;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.selectedId$.subscribe(id => {
+      this.shoppingCenterService.selectedId$.subscribe((id) => {
         this.selectedId = id;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.selectedIdCard$.subscribe(id => {
+      this.shoppingCenterService.selectedIdCard$.subscribe((id) => {
         this.selectedIdCard = id;
         this.cdr.detectChanges();
       })
     );
 
     this.subscriptions.add(
-      this.shoppingCenterService.searchQuery$.subscribe(query => {
+      this.shoppingCenterService.searchQuery$.subscribe((query) => {
         this.searchQuery = query;
         this.cdr.detectChanges();
       })
@@ -292,7 +288,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
           }
           this.ngZone.run(() => {
-            this.hideAllComments();
+            for (const key in this.showComments) {
+              this.showComments[key] = false;
+            }
             this.cdr.markForCheck();
           });
         })
@@ -318,12 +316,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.removeGlobalTouchListeners();
 
     document.body.classList.remove('panel-open');
-  }
-
-  hideAllComments(): void {
-    for (const key in this.showComments) {
-      this.showComments[key] = false;
-    }
   }
 
   scrollUp(): void {
@@ -787,28 +779,14 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  outsideClickHandler = (event: Event): void => {
-    const targetElement = event.target as HTMLElement;
-    const isInside = targetElement.closest(
-      '.shortcuts_iconCard, .ellipsis_icont'
-    );
-
-    if (!isInside) {
-      this.selectedIdCard = null;
-      document.removeEventListener('click', this.outsideClickHandler);
-    }
-  };
-
   handleContentDoubleClick(event: MouseEvent, shopping: Center): void {
     const clickTime = new Date().getTime();
     const timeDiff = clickTime - this.lastClickTime;
     const contactIdStr = localStorage.getItem('contactId');
-
     if (!contactIdStr) {
       return;
     }
     const contactId = Number.parseInt(contactIdStr ? contactIdStr : '0', 10);
-
     if (
       shopping.ShoppingCenter.Reactions &&
       shopping.ShoppingCenter.Reactions.some(
@@ -820,49 +798,30 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     if (timeDiff < this.DOUBLE_CLICK_THRESHOLD) {
       event.preventDefault();
       event.stopPropagation();
-
-      // Set heart position - adjust to be relative to viewport
       this.heartX = event.clientX;
       this.heartY = event.clientY;
-
       if (!contactIdStr) {
         return;
       }
-      // Show heart animation
       this.showHeartAnimation();
-
-      // Add like
       this.addLike(shopping, 1);
-
-      // Reset click time
       this.lastClickTime = 0;
     } else {
-      // This is a first click
       this.lastClickTime = clickTime;
     }
   }
 
   showHeartAnimation(): void {
-    // Use NgZone to ensure animations run smoothly
     this.ngZone.run(() => {
-      // Clear any existing timeout to prevent conflicts
       if (this.heartTimeout) {
         clearTimeout(this.heartTimeout);
         this.heartTimeout = null;
       }
-
-      // Hide any existing heart first (if visible) to ensure clean animation
       this.heartVisible = false;
-
-      // Force immediate update before showing new heart
       this.cdr.detectChanges();
-
-      // Small delay before showing new heart to ensure DOM is ready
       setTimeout(() => {
-        // Show the heart
         this.heartVisible = true;
         this.cdr.detectChanges();
-
         this.heartTimeout = setTimeout(() => {
           this.heartVisible = false;
           this.cdr.detectChanges();
@@ -947,105 +906,25 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async deleteShCenter() {
-    try {
-      this.isLoading = true;
-      
+    if (this.shoppingCenterIdToDelete) {
       await this.shoppingCenterService.deleteShoppingCenter(
         this.BuyBoxId,
-        this.shoppingCenterIdToDelete!
+        this.shoppingCenterIdToDelete
       );
       this.modalService.dismissAll();
-    } catch (error) {
-      // Handle error
-    } finally {
-      this.isLoading = false;
-      this.cdr.markForCheck();
     }
-  }
-
-  getMobileShortcutOptions(shopping: any): any[] {
-    if (!shopping) return [];
-
-    return [
-      {
-        icon: 'fa-regular fa-envelope big-text',
-        label: 'Emily',
-        action: (s: any) => {
-          window.open(
-            `/emily/${this.BuyBoxId}/${s.ShoppingCenter.ManagerOrganization[0].ID}/${s.Id}`,
-            '_blank'
-          );
-        },
-      },
-      {
-        icon: 'fa-solid fa-images big-text',
-        label: 'View Gallery',
-        action: (s: any) => {
-          this.openGallery(s.Id);
-        },
-      },
-      {
-        icon: 'fa-solid fa-file-lines',
-        label: 'View Details',
-        action: (s: any) => {
-          this.router.navigate([
-            '/landing',
-            s.ShoppingCenter.Places ? s.ShoppingCenter.Places[0].Id : 0,
-            s.Id,
-            this.BuyBoxId,
-          ]);
-        },
-      },
-      {
-        icon: 'fa-solid fa-map-location-dot big-text',
-        label: 'View Location',
-        action: (s: any) => {
-          this.openMapViewPlace(this.MapViewPlace, s);
-        },
-      },
-      {
-        icon: 'fa-solid fa-street-view',
-        label: 'Street View',
-        action: (s: any) => {
-          this.openStreetViewPlace(this.StreetViewPlace, s);
-        },
-      },
-      {
-        icon: shopping.Deleted
-          ? 'fa-solid fa-trash-arrow-up big-text'
-          : 'fa-regular fa-trash-can big-text',
-        label: shopping.Deleted ? 'Restore' : 'Remove Shopping',
-        action: (shopping: any) => {
-          if (shopping.Deleted) {
-            this.RestoreShoppingCenter(
-              shopping.MarketSurveyId,
-              shopping.Deleted
-            );
-          } else {
-            this.openDeleteShoppingCenterModal(
-              this.deleteShoppingCenterModal,
-              shopping
-            );
-          }
-        },
-      },
-    ];
   }
 
   toggleShortcuts(id: number, close?: string, event?: MouseEvent): void {
     this.shoppingCenterService.toggleShortcuts(id, close, event);
   }
 
-  async openMapViewPlace(content: any, modalObject?: any) {
+  openMapViewPlace(content: any, modalObject?: any) {
     this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
       size: 'lg',
       scrollable: true,
     });
-    if (!this.mapsLoaded) {
-      this.mapsLoaded = true;
-    }
-
     this.viewOnMap(modalObject.Latitude, modalObject.Longitude);
   }
 
@@ -1060,49 +939,33 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       size: 'lg',
       scrollable: true,
     });
+
     this.General.modalObject = modalObject;
 
     if (this.General.modalObject.StreetViewURL) {
       this.setIframeUrl(this.General.modalObject.StreetViewURL);
     } else {
       setTimeout(() => {
-        this.viewOnStreet();
+        this.viewOnStreet(this.General.modalObject);
       }, 100);
     }
   }
 
-  viewOnStreet() {
-    this.StreetViewOnePlace = true;
-    const lat = +this.General.modalObject.StreetLatitude;
-    const lng = +this.General.modalObject.StreetLongitude;
-    const heading = this.General.modalObject.Heading || 165;
-    const pitch = this.General.modalObject.Pitch || 0;
-
-    this.isLoading = true;
+  viewOnStreet(modalObject: any) {
+    const lat = +modalObject.StreetLatitude;
+    const lng = +modalObject.StreetLongitude;
+    const heading = modalObject.Heading || 165;
+    const pitch = modalObject.Pitch || 0;
 
     setTimeout(() => {
-      const streetViewElement = document.getElementById('street-view');
-      if (streetViewElement) {
-        this.streetMap(lat, lng, heading, pitch);
-      } else {
-        this.isLoading = false;
-      }
+      this.shoppingCenterService.initializeStreetView(
+        'street-view',
+        lat,
+        lng,
+        heading,
+        pitch
+      );
     });
-  }
-
-  streetMap(lat: number, lng: number, heading: number, pitch: number) {
-    const panorama = this.shoppingCenterService.initializeStreetView(
-      'street-view',
-      lat,
-      lng,
-      heading,
-      pitch
-    );
-    if (!panorama) {
-      // Handle error
-    }
-    this.isLoading = false;
-    this.cdr.markForCheck();
   }
 
   setIframeUrl(url: string): void {
