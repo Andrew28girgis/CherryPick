@@ -12,7 +12,11 @@
     margin: 0;
     margin-top: 6px;
   }
-  
+  .email-body {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 26px;
+  }
   .Emily__contant__button {
     background: #4d65b4;
     color: white;

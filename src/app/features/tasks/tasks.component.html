@@ -1,11 +1,108 @@
+<div class="row">
+  <!-- Reactions Section -->
+  <div class="col-md-12 action-wrap">
+    <h5 class="mb-2 task-head">Reactions</h5>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <!-- Skeleton loading for Reactions -->
+        <table class="table align-middle m-0" *ngIf="isLoading">
+          <tbody>
+            <tr *ngFor="let i of skeletonArray">
+              <td class="col-10">
+                <div class="skeleton-text"></div>
+              </td>
+              <td class="col-2 text-end">
+                <div class="skeleton-date"></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-  <div class="row">
-    <!-- Reactions Section -->
-    <div class="col-md-12 action-wrap">
-      <h5 class="mb-2 task-head">Reactions</h5>
+        <!-- Actual content for Reactions -->
+        <table class="table align-middle m-0" *ngIf="!isLoading">
+          <tbody>
+            <tr
+              *ngFor="let notification of getNotificationsByCategory(1)"
+              [ngClass]="{ unread: !notification.isRead }"
+              (click)="markAsRead(notification)"
+            >
+              <td class="message-task col-10">{{ notification.message }}</td>
+              <td class="message-task col-2 text-end">
+                {{ notification.createdDate | date : "medium" }}
+              </td>
+            </tr>
+            <tr *ngIf="getNotificationsByCategory(1).length === 0">
+              <td colspan="3" class="text-center">
+                No notifications in this category
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Generated Section -->
+  <div class="col-md-12 action-wrap">
+    <h5 class="mb-2 task-head">Email Generated</h5>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <!-- Skeleton loading for Email Generated -->
+        <table class="table align-middle m-0" *ngIf="isLoading">
+          <tbody>
+            <tr *ngFor="let i of skeletonArray">
+              <td class="col-10">
+                <div class="skeleton-text"></div>
+              </td>
+              <td class="col-2 text-end">
+                <div class="skeleton-date"></div>
+              </td>
+              <td>
+                <div class="skeleton-button"></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Actual content for Email Generated -->
+        <table class="table align-middle m-0" *ngIf="!isLoading">
+          <tbody>
+            <tr
+              *ngFor="let notification of getNotificationsByCategory(2)"
+              [ngClass]="{ unread: !notification.isRead }"
+              (click)="markAsRead(notification)"
+            >
+              <td class="message-task col-10">{{ notification.message }}</td>
+              <td class="message-task col-2 text-end">
+                {{ notification.createdDate | date : "medium" }}
+              </td>
+              <td>
+                <button
+                  class="view"
+                  (click)="GetNotificationActions(notification)"
+                >
+                  View Emails
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="getNotificationsByCategory(2).length === 0">
+              <td colspan="3" class="text-center">
+                No notifications in this category
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sync Section -->
+  <div class="col-md-12 action-wrap">
+    <h5 class="mb-2 task-head">Sync</h5>
+    <div>
       <div class="card-body p-0">
         <div class="table-responsive">
-          <!-- Skeleton loading for Reactions -->
+          <!-- Skeleton loading for Sync -->
           <table class="table align-middle m-0" *ngIf="isLoading">
             <tbody>
               <tr *ngFor="let i of skeletonArray">
@@ -15,22 +112,51 @@
                 <td class="col-2 text-end">
                   <div class="skeleton-date"></div>
                 </td>
+                <td>
+                  <div class="skeleton-button"></div>
+                </td>
+                <td>
+                  <div class="skeleton-button"></div>
+                </td>
               </tr>
             </tbody>
           </table>
-          
-          <!-- Actual content for Reactions -->
+
+          <!-- Actual content for Sync -->
           <table class="table align-middle m-0" *ngIf="!isLoading">
             <tbody>
-              <tr *ngFor="let notification of getNotificationsByCategory(1)" 
-                  [ngClass]="{'unread': !notification.isRead}"
-                  (click)="markAsRead(notification)">
+              <tr
+                *ngFor="let notification of getNotificationsByCategory(3)"
+                [ngClass]="{ unread: !notification.isRead }"
+                (click)="markAsRead(notification)"
+              >
                 <td class="message-task col-10">{{ notification.message }}</td>
                 <td class="message-task col-2 text-end">
                   {{ notification.createdDate | date : "medium" }}
                 </td>
+                <td>
+                  <button
+                    class="view"
+                    (click)="
+                      getCampaignOrganizations(
+                        notification.buyBoxId,
+                        notification.campaignId
+                      )
+                    "
+                  >
+                    Generate emails
+                  </button>
+                </td>
+                <td>
+                  <button
+                    class="view"
+                    (click)="GetNotificationActions(notification)"
+                  >
+                    View Places
+                  </button>
+                </td>
               </tr>
-              <tr *ngIf="getNotificationsByCategory(1).length === 0">
+              <tr *ngIf="getNotificationsByCategory(3).length === 0">
                 <td colspan="3" class="text-center">
                   No notifications in this category
                 </td>
@@ -40,13 +166,15 @@
         </div>
       </div>
     </div>
-    
-    <!-- Email Generated Section -->
-    <div class="col-md-12 action-wrap">
-      <h5 class="mb-2 task-head">Email Generated</h5>
+  </div>
+
+  <!-- Proposal Submissions Section -->
+  <div class="col-md-12 action-wrap">
+    <h5 class="mb-2 task-head">Proposal Submissions</h5>
+    <div>
       <div class="card-body p-0">
         <div class="table-responsive">
-          <!-- Skeleton loading for Email Generated -->
+          <!-- Skeleton loading for Proposal Submissions -->
           <table class="table align-middle m-0" *ngIf="isLoading">
             <tbody>
               <tr *ngFor="let i of skeletonArray">
@@ -62,23 +190,29 @@
               </tr>
             </tbody>
           </table>
-          
-          <!-- Actual content for Email Generated -->
+
+          <!-- Actual content for Proposal Submissions -->
           <table class="table align-middle m-0" *ngIf="!isLoading">
             <tbody>
-              <tr 
-               *ngFor="let notification of getNotificationsByCategory(2)" 
-                  [ngClass]="{'unread': !notification.isRead}"
-                  (click)="markAsRead(notification)">
+              <tr
+                *ngFor="let notification of getNotificationsByCategory(4)"
+                [ngClass]="{ unread: !notification.isRead }"
+                (click)="markAsRead(notification)"
+              >
                 <td class="message-task col-10">{{ notification.message }}</td>
                 <td class="message-task col-2 text-end">
                   {{ notification.createdDate | date : "medium" }}
                 </td>
                 <td>
-                    <button class="view" (click)="GetNotificationActions(notification)"> View Emails</button>
+                  <button
+                    class="view"
+                    (click)="GetNotificationActions(notification)"
+                  >
+                    View Submissions
+                  </button>
                 </td>
               </tr>
-              <tr *ngIf="getNotificationsByCategory(2).length === 0">
+              <tr *ngIf="getNotificationsByCategory(4).length === 0">
                 <td colspan="3" class="text-center">
                   No notifications in this category
                 </td>
@@ -88,174 +222,103 @@
         </div>
       </div>
     </div>
-    
-    <!-- Sync Section -->
-    <div class="col-md-12 action-wrap">
-      <h5 class="mb-2 task-head">Sync</h5>
-      <div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <!-- Skeleton loading for Sync -->
-            <table class="table align-middle m-0" *ngIf="isLoading">
-              <tbody>
-                <tr *ngFor="let i of skeletonArray">
-                  <td class="col-10">
-                    <div class="skeleton-text"></div>
-                  </td>
-                  <td class="col-2 text-end">
-                    <div class="skeleton-date"></div>
-                  </td>
-                  <td>
-                    <div class="skeleton-button"></div>
-                  </td>
-                  <td>
-                    <div class="skeleton-button"></div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <!-- Actual content for Sync -->
-            <table class="table align-middle m-0" *ngIf="!isLoading">
-              <tbody>
-                <tr
-                 *ngFor="let notification of getNotificationsByCategory(3)" 
-                    [ngClass]="{'unread': !notification.isRead}"
-                    (click)="markAsRead(notification)">
-                  <td class="message-task col-10">{{ notification.message }}</td>
-                  <td class="message-task col-2 text-end">
-                    {{ notification.createdDate | date : "medium" }}
-                  </td>
-                  <td>
-                    <button class="view" (click)="getCampaignOrganizations(notification.buyBoxId,notification.campaignId)">Generate emails</button>
-                  </td>
-                  <td>
-                    <button class="view" (click)="GetNotificationActions(notification)">View Places</button>
-                  </td>
-                </tr>
-                <tr *ngIf="getNotificationsByCategory(3).length === 0">
-                  <td colspan="3" class="text-center">
-                    No notifications in this category
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Proposal Submissions Section -->
-    <div class="col-md-12 action-wrap">
-      <h5 class="mb-2 task-head">Proposal Submissions</h5>
-      <div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <!-- Skeleton loading for Proposal Submissions -->
-            <table class="table align-middle m-0" *ngIf="isLoading">
-              <tbody>
-                <tr *ngFor="let i of skeletonArray">
-                  <td class="col-10">
-                    <div class="skeleton-text"></div>
-                  </td>
-                  <td class="col-2 text-end">
-                    <div class="skeleton-date"></div>
-                  </td>
-                  <td>
-                    <div class="skeleton-button"></div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <!-- Actual content for Proposal Submissions -->
-            <table class="table align-middle m-0" *ngIf="!isLoading">
-              <tbody>
-                <tr
-                 *ngFor="let notification of getNotificationsByCategory(4)" 
-                    [ngClass]="{'unread': !notification.isRead}"
-                    (click)="markAsRead(notification)">
-                  <td class="message-task col-10">{{ notification.message }}</td>
-                  <td class="message-task col-2 text-end">
-                    {{ notification.createdDate | date : "medium" }}
-                  </td>
-                  <td>
-                    <button class="view" (click)="GetNotificationActions(notification)">View Submissions</button>
-                  </td>
-                </tr>
-                <tr *ngIf="getNotificationsByCategory(4).length === 0">
-                  <td colspan="3" class="text-center">
-                    No notifications in this category
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
- 
+</div>
 
 <!-- Email Modal Template -->
 <ng-template #EmailView let-modal>
-    <div class="modal-header d-flex justify-content-between">
-        <h4 class="modal-title"> {{getCurrentEmail().buyBoxName}}</h4>
-        <div class="d-flex">
-            <h4 class="modal-title" style="margin-right: 20px;"> {{getCurrentEmail().organizationName}} </h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-        </div>
-    </div>
-    <div class="modal-body" style=" min-height: 75vh; max-height: 75vh;overflow-y: auto;">
-      <div class="email-meta mb-3">
-        <div class="d-flex justify-content-between">
-            <div><strong>Subject:</strong> {{getCurrentEmail().subject}}</div>
-            <div><strong>Date:</strong> {{getCurrentEmail().date | date:'medium'}}</div>
-        </div>
-        <div *ngIf="getCurrentEmail().fromAddress"><strong>From:</strong> {{getCurrentEmail().fromAddress}}</div>
-        <div *ngIf="getCurrentEmail().toAddress"><strong>To:</strong> {{getCurrentEmail().toAddress}}</div>
-        <div *ngIf="getCurrentEmail().cc"><strong>CC:</strong> {{getCurrentEmail().cc}}</div>
-        <div *ngIf="getCurrentEmail().bcc"><strong>BCC:</strong> {{getCurrentEmail().bcc}}</div>
-      </div>
-      <div class="email-body" [innerHTML]="getCurrentEmail().body"></div>
-    </div>
-    <div class="modal-footer d-flex justify-content-between">
-      <div>
-        <button type="button" class="btn btn-outline-primary me-2" 
-                [disabled]="selectedEmailIndex === 0"
-                (click)="previousEmail()">
-          Previous Email
-        </button>
-        <button type="button" class="btn btn-outline-primary" 
-                [disabled]="selectedEmailIndex === emailData.length - 1"
-                (click)="nextEmail()">
-          Next Email
-        </button>
-        <span class="ms-3" *ngIf="emailData.length > 1">
-          Email {{selectedEmailIndex + 1}} of {{emailData.length}}
-        </span>
-      </div>
-        <div class="div">
-            <button *ngIf="getCurrentEmail().direction==4"
-            type="button" class="btn btn-primary me-2"
-                  (click)="sendEmail(getCurrentEmail())">
-            <i class="fas fa-paper-plane"></i> Send
-          </button>
-          <button *ngIf="getCurrentEmail().direction==4"
-          type="button"
-          class="btn btn-success me-2"
-          (click)="sendAllEmails()">
-            <i class="fas fa-paper-plane"></i> Send All
-          </button>
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-        </div>
-    </div>
-  </ng-template>
-
-  <div id="customToast" class="custom-toast">
-    <div class="toast-content">
-      <p id="toastMessage"></p>
+  <div class="modal-header d-flex justify-content-between">
+    <h4 class="modal-title">{{ getCurrentEmail().buyBoxName }}</h4>
+    <div class="d-flex">
+      <h4 class="modal-title" style="margin-right: 20px">
+        {{ getCurrentEmail().organizationName }}
+      </h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
     </div>
   </div>
+  <div
+    class="modal-body"
+    style="min-height: 75vh; max-height: 75vh; overflow-y: auto"
+  >
+    <div class="email-meta mb-3">
+      <div class="d-flex justify-content-between">
+        <div><strong>Subject:</strong> {{ getCurrentEmail().subject }}</div>
+        <div>
+          <strong>Date:</strong> {{ getCurrentEmail().date | date : "medium" }}
+        </div>
+      </div>
+      <div *ngIf="getCurrentEmail().fromAddress">
+        <strong>From:</strong> {{ getCurrentEmail().fromAddress }}
+      </div>
+      <div *ngIf="getCurrentEmail().toAddress">
+        <strong>To:</strong> {{ getCurrentEmail().toAddress }}
+      </div>
+      <div *ngIf="getCurrentEmail().cc">
+        <strong>CC:</strong> {{ getCurrentEmail().cc }}
+      </div>
+      <div *ngIf="getCurrentEmail().bcc">
+        <strong>BCC:</strong> {{ getCurrentEmail().bcc }}
+      </div>
+    </div>
+    <div class="email-body" [innerHTML]="getCurrentEmail().body"></div>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <div>
+      <button
+        type="button"
+        class="btn btn-outline-primary me-2"
+        [disabled]="selectedEmailIndex === 0"
+        (click)="previousEmail()"
+      >
+        Previous Email
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        [disabled]="selectedEmailIndex === emailData.length - 1"
+        (click)="nextEmail()"
+      >
+        Next Email
+      </button>
+      <span class="ms-3" *ngIf="emailData.length > 1">
+        Email {{ selectedEmailIndex + 1 }} of {{ emailData.length }}
+      </span>
+    </div>
+    <div class="div">
+      <button
+        *ngIf="getCurrentEmail().direction == 4"
+        type="button"
+        class="btn btn-primary me-2"
+        (click)="sendEmail(getCurrentEmail())"
+      >
+        <i class="fas fa-paper-plane"></i> Send
+      </button>
+      <button
+        *ngIf="getCurrentEmail().direction == 4"
+        type="button"
+        class="btn btn-success me-2"
+        (click)="sendAllEmails()"
+      >
+        <i class="fas fa-paper-plane"></i> Send All
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="modal.close('Close click')"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>
 
-  
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>

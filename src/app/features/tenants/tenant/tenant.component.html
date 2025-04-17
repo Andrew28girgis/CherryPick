@@ -342,16 +342,381 @@
                 </div>
               </div>
             </div>
+
             <div class="col-md-9">
               <div class="row">
-                <div class="col-md-12">
+                <!-- SHOPPING CENTER INFORMATION -->
+                <div *ngIf="JsonPDF" class="mb-3">
+                  <div class="card shoppingcentercard">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-12">
+                          <h4 class="ShoppingCenterInformation">
+                            Shopping Center Information
+                          </h4>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.CenterName">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle">Center Name</span>
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.CenterName
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.CenterType">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle">Center Type</span>
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.CenterType || "N/A"
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.CenterAddress">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle">Address</span>
+                            <span class="shoppingsubtitle"
+                              >{{ JsonPDF.CenterAddress }},
+                              {{ JsonPDF.CenterCity }},
+                              {{ JsonPDF.CenterState }}</span
+                            >
+                          </div>
+                        </div>
+
+                        <div
+                          class="col-4 mt-3"
+                          *ngIf="JsonPDF.TotalAvailableSpace_SF"
+                        >
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle"
+                              >Available Space</span
+                            >
+                            <span class="shoppingsubtitle"
+                              >{{ JsonPDF.TotalAvailableSpace_SF }} SF</span
+                            >
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.percentage">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle">Percentage</span>
+                            <span class="shoppingsubtitle"
+                              >{{ JsonPDF.percentage }}%</span
+                            >
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.reason">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle">Reason</span>
+                            <span class="shoppingsubtitle">
+                              <div [ngClass]="{ truncate: !showFullReason }">
+                                {{ JsonPDF.reason }}
+                              </div>
+                              <span
+                                (click)="toggleReason()"
+                                class="toggle-link"
+                              >
+                                {{ showFullReason ? "View Less" : "View More" }}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.CenterCounty">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle"
+                              >Center County</span
+                            >
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.CenterCounty
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.ZipCode">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle">Zip Code</span>
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.ZipCode
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.LandArea_SF">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle"
+                              >Land Area (SF)</span
+                            >
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.LandArea_SF
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <div
+                          class="col-4 mt-3"
+                          *ngIf="JsonPDF.NumberOfPropertiesInCenter"
+                        >
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle"
+                              >Properties In Center</span
+                            >
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.NumberOfPropertiesInCenter
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.PercentLeased">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle"
+                              >Percent Leased</span
+                            >
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.PercentLeased
+                            }}</span>
+                          </div>
+                        </div>
+
+                        <div
+                          class="col-4 mt-3"
+                          *ngIf="JsonPDF.SmallestSpaceAvailable"
+                        >
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle"
+                              >Smallest Space Available</span
+                            >
+                            <span class="shoppingsubtitle"
+                              >{{ JsonPDF.SmallestSpaceAvailable }} SF</span
+                            >
+                          </div>
+                        </div>
+
+                        <div class="col-4 mt-3" *ngIf="JsonPDF.NumberOfStores">
+                          <div
+                            class="d-flex flex-column justify-content-center"
+                          >
+                            <span class="shoppingcentertitle"
+                              >Number of Stores</span
+                            >
+                            <span class="shoppingsubtitle">{{
+                              JsonPDF.NumberOfStores
+                            }}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div
+                          class="d-flex align-items-center justify-content-between"
+                        >
+                          <h4 class="ShoppingCenterInformation mt-2 mb-3">
+                            Availability
+                          </h4>
+                         <div class="d-flex align-items-center justify-content-center gap-2">
+                          <div
+                          *ngIf="
+                            JsonPDF?.IsSubmitted === false && showButtons
+                          "
+                        >
+                        <button class="AddAvailablebutton" (click)="toggleAddAvailability()">
+                          <span class="AddAvailablebuttontext" >
+                            <ng-container *ngIf="!showAddAvailabilityInput">Add Available</ng-container>
+                            <ng-container *ngIf="showAddAvailabilityInput" class="xmarkicon">
+                              <i class="fa-solid fa-xmark"></i>                            
+                            </ng-container>
+                          </span>
+                        </button>
+                        
+                        </div>
+                        <div *ngIf="showAddAvailabilityInput" class="mt-2">
+                          <div class="input-group">
+                            <input
+                              type="number"
+                              class="form-control"
+                              [(ngModel)]="newAvailabilitySize"
+                              placeholder="Enter space size (SF)"
+                            />
+                            <button
+                              class="btn btn-success"
+                              (click)="addNewAvailability()"
+                            >
+                              Add
+                            </button>
+                          </div>
+                        </div>
+
+                         </div>
+                        </div>
+                        <ul>
+                          <li
+                            *ngFor="let avail of JsonPDF.Availability"
+                            class="list-group-item border-0 px-0"
+                          >
+                            <div class="form-check mt-2">
+                              <input
+                                type="checkbox"
+                                class="form-check-input"
+                                [(ngModel)]="avail.isAdded"
+                                id="availCheckbox-{{ avail.id }}"
+                              />
+                              <label
+                                class="form-check-label"
+                                for="availCheckbox-{{ avail.id }}"
+                              >
+                                <div
+                                  class="d-flex align-items-center justify-content-center gap-1"
+                                >
+                                  <span class="BuildingSize"
+                                    >Building Size:</span
+                                  >
+                                  <span class="BuildingAndTenant">
+                                    {{ avail.BuildingSizeSf }} SF
+                                  </span>
+                                </div>
+                              </label>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="row">
+                        <div
+                          class="d-flex align-items-center justify-content-between"
+                        >
+                          <h4 class="ShoppingCenterInformation mb-3">
+                            Tenants
+                          </h4>
+                        <div class="d-flex align-items-center justify-content-center gap-2">
+                          <div
+                          *ngIf="
+                            JsonPDF?.IsSubmitted === false && showButtons
+                          "
+                        >
+                        <button class="AddAvailablebutton" (click)="toggleAddTenant()">
+                          <span class="AddAvailablebuttontext" >
+                            <ng-container *ngIf="!showAddTenantInput">Add Tenant</ng-container>
+                            <ng-container *ngIf="showAddTenantInput">
+                              <i class="fa-solid fa-xmark"></i>                            
+                            </ng-container>
+                          </span>
+                        </button>
+                        </div>
+                        <div *ngIf="showAddTenantInput" class="mt-2">
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              class="form-control"
+                              [(ngModel)]="newTenantName"
+                              placeholder="Enter tenant name"
+                            />
+                            <button
+                              class="btn btn-success"
+                              (click)="addNewTenant()"
+                            >
+                              Add
+                            </button>
+                          </div>
+                        </div>
+                        </div>
+                        </div>
+                        <ul>
+                          <li
+                            *ngFor="let tenant of JsonPDF.Tenants"
+                            class="list-group-item border-0 px-0"
+                          >
+                            <div class="form-check mt-2">
+                              <input
+                                type="checkbox"
+                                class="form-check-input"
+                                [(ngModel)]="tenant.isAdded"
+                                id="tenantCheckbox-{{ tenant.id }}"
+                              />
+                              <label
+                                class="BuildingAndTenant"
+                                for="tenantCheckbox-{{ tenant.id }}"
+                              >
+                                {{ tenant.Name }}
+                                <a
+                                  *ngIf="tenant.OrgUrl"
+                                  [href]="tenant.OrgUrl"
+                                  target="_blank"
+                                  class="tenant-link"
+                                >
+                                  (Website)
+                                </a>
+                              </label>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div
+                      class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
+                    >
+                      <button
+                        class="submitpdfbutton"
+                        *ngIf="JsonPDF?.IsSubmitted === false"
+                        (click)="sendJson()"
+                      >
+                        Approve Data
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                 <!-- File name and progress bar section -->
+                 <div class="filenameouterframe" *ngIf="fileName">
+                  <div class="filenameinnerframe">
+                    <div
+                      class="d-flex align-items-center justify-content-between uploaded-file-container"
+                    >
+                      <div class="filename">{{ fileName }}</div>
+                      <!-- <button
+                        class="clear-button"
+                        (click)="clearModalData()"
+                      >
+                        Clear
+                      </button> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
                   <div class="card submitproposelsize">
                     <div class="card-body">
                       <div
                         class="d-flex align-items-center justify-content-center"
                       >
                         <span class="submitnewproposel"
-                          >Submit a New Shopping Center</span
+                          >Another Shopping Center ?</span
                         >
                       </div>
                       <div class="outer-frame">
@@ -415,28 +780,13 @@
                                   <img
                                     src="../../../../assets/Images/Icons/choosefile.png"
                                   />
-                                  <span>Choose File</span>
+                                  <span>Submit Brochure</span>
                                 </div>
                               </div>
                             </div>
                           </ng-template>
                         </ngx-file-drop>
-                        <!-- File name and progress bar section -->
-                        <div class="filenameouterframe" *ngIf="fileName">
-                          <div class="filenameinnerframe">
-                            <div
-                              class="d-flex align-items-center justify-content-between uploaded-file-container"
-                            >
-                              <div class="filename">{{ fileName }}</div>
-                              <!-- <button
-                                class="clear-button"
-                                (click)="clearModalData()"
-                              >
-                                Clear
-                              </button> -->
-                            </div>
-                          </div>
-                        </div>
+                       
                       </div>
                     </div>
                   </div>
@@ -458,15 +808,18 @@
                   <p class="text-center mt-2">Uploading...</p>
                 </div>
                 <div
-                  class="col-md-4 mt-3"
+                  class="col-md-4"
                   *ngFor="let shopping of shoppingCenterManage"
                 >
                   <div class="card shoppingcentersize">
-                    <img 
-                    class="card-img-top" 
-                    [src]="shopping?.MainImage || '../../../../assets/Images/mall.jpg'" 
-                    alt="Main Image"
-                  />
+                    <img
+                      class="card-img-top"
+                      [src]="
+                        shopping?.MainImage ||
+                        '../../../../assets/Images/mall.jpg'
+                      "
+                      alt="Main Image"
+                    />
 
                     <div class="card-body">
                       <h5 class="centrename">{{ shopping.CenterName }}</h5>
@@ -475,62 +828,97 @@
                         {{ shopping.CenterState }}
                       </h5>
 
-                      <div class="d-flex flex-column gap-2" *ngIf="shoppingCenterManage[0].O[0].P">
+                      <div
+                        class="d-flex flex-column gap-2"
+                        *ngIf="shoppingCenterManage[0].O[0].P"
+                      >
                         <!-- Lease Prices Section -->
                         <span class="title-2"> Purchase Price: </span>
                         <div class="d-flex align-items-center gap-2 my-2">
-                          <img src="../../../../assets/Images/purchaseprice.png" alt="" />
-                      
+                          <img
+                            src="../../../../assets/Images/purchaseprice.png"
+                            alt=""
+                          />
+
                           <ng-container *ngIf="isAllForLeasePriceZero()">
                             <span class="title"> On Request </span>
                           </ng-container>
-                      
+
                           <ng-container *ngIf="!isAllForLeasePriceZero()">
                             <!-- Display first 3 lease prices -->
-                            <ng-container *ngFor="let place of getFirstThreeLeasePrices(); let last = last">
+                            <ng-container
+                              *ngFor="
+                                let place of getFirstThreeLeasePrices();
+                                let last = last
+                              "
+                            >
                               <span class="title">
                                 {{ place.ForLeasePrice }}
                               </span>
                               <span *ngIf="!last"> - </span>
                             </ng-container>
-                      
+
                             <!-- View More button if more than 3 lease prices -->
-                            <a *ngIf="getLeasePricesCount() > 3" class="text-primary cursor ms-1" (click)="openLeasePricesModal()">
-                              ({{getLeasePricesCount() - 3}} more)
+                            <a
+                              *ngIf="getLeasePricesCount() > 3"
+                              class="text-primary cursor ms-1"
+                              (click)="openLeasePricesModal()"
+                            >
+                              ({{ getLeasePricesCount() - 3 }} more)
                             </a>
                           </ng-container>
-                      
-                          <span class="subtitle" *ngIf="!isAllForLeasePriceZero()">
+
+                          <span
+                            class="subtitle"
+                            *ngIf="!isAllForLeasePriceZero()"
+                          >
                             ($)
                           </span>
                         </div>
-                      
+
                         <!-- Available Spaces Section -->
                         <div class="d-flex flex-column gap-1">
                           <span class="title-2"> Available Spaces: </span>
                           <div class="d-flex align-items-center gap-2 my-2">
-                            <img src="../../../../assets/Images/size.png" alt="" />
-                            
+                            <img
+                              src="../../../../assets/Images/size.png"
+                              alt=""
+                            />
+
                             <!-- Display first 3 building sizes -->
-                            <ng-container *ngFor="let place of getFirstThreeBuildingSizes(); let last = last">
+                            <ng-container
+                              *ngFor="
+                                let place of getFirstThreeBuildingSizes();
+                                let last = last
+                              "
+                            >
                               <div class="building-sizes-wrapper">
-                              <span class="availabletitle">
-                                {{ place.BuildingSizeSf | number }} SF
-                                <span style="font-weight: 500;" *ngIf="!last"> - </span>
-                              </span>
-                            </div>
+                                <span class="availabletitle">
+                                  {{ place.BuildingSizeSf | number }} SF
+                                  <span style="font-weight: 500" *ngIf="!last">
+                                    -
+                                  </span>
+                                </span>
+                              </div>
                             </ng-container>
-                      
+
                             <!-- View More button if more than 3 building sizes -->
-                            <a *ngIf="getBuildingSizeCount() > 3" class="text-primary cursor ms-1" (click)="openBuildingSizesModal()">
-                              ({{getBuildingSizeCount() - 3}} more)
+                            <a
+                              *ngIf="getBuildingSizeCount() > 3"
+                              class="text-primary cursor ms-1"
+                              (click)="openBuildingSizesModal()"
+                            >
+                              ({{ getBuildingSizeCount() - 3 }} more)
                             </a>
                           </div>
                         </div>
                       </div>
-                      
+
                       <div class="d-flex align-items-center gap-2 mb-2">
-                        <img src="../../../../assets/Images/availableunits.png" alt="" />
+                        <img
+                          src="../../../../assets/Images/availableunits.png"
+                          alt=""
+                        />
                         <span class="title">
                           {{ getBuildingSizeCount() }}
                         </span>
@@ -551,7 +939,10 @@
                           [title]="OrganizationContacts[0].name"
                           alt=""
                         />
-                        <div class="organizationName" *ngIf="OrganizationContacts[0]">
+                        <div
+                          class="organizationName"
+                          *ngIf="OrganizationContacts[0]"
+                        >
                           {{ OrganizationContacts[0].name }}
                         </div>
                         <img
@@ -567,7 +958,10 @@
                     </div>
 
                     <div class="twobuttons">
-                      <button class="SubmitBrochure w-100" (click)="fileDrop.openFileSelector()">
+                      <button
+                        class="SubmitBrochure w-100"
+                        (click)="fileDrop.openFileSelector()"
+                      >
                         <ngx-file-drop
                           #fileDrop
                           class="dropzonee hidden-dropzone w-100"
@@ -575,9 +969,14 @@
                           (onFileDrop)="uploadFile($event)"
                           [dropZoneClassName]="'upload-background-image'"
                         >
-                          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                          <ng-template
+                            ngx-file-drop-content-tmp
+                            let-openFileSelector="openFileSelector"
+                          >
                             <div class="upload-container cursor w-100">
-                              <div class="d-flex align-items-center justify-content-center w-100">
+                              <div
+                                class="d-flex align-items-center justify-content-center w-100"
+                              >
                                 <div class="submitbronchure cursor w-100">
                                   <span>Submit Brochure</span>
                                 </div>
@@ -586,7 +985,6 @@
                           </ng-template>
                         </ngx-file-drop>
                       </button>
-                      
 
                       <button
                         class="ManualSubmission mt-2 w-100"
@@ -598,16 +996,18 @@
                   </div>
                 </div>
                 <div
-                  class="col-md-4 mt-3"
+                  class="col-md-4"
                   *ngFor="let shopping of shoppingCenterManageSubmitted"
                 >
                   <div class="card shoppingcentersize">
-                    <img 
-                    class="card-img-top" 
-                    [src]="shopping?.MainImage || '../../../../assets/Images/mall.jpg'" 
-                    alt="Main Image"
-                  />
-                  
+                    <img
+                      class="card-img-top"
+                      [src]="
+                        shopping?.MainImage ||
+                        '../../../../assets/Images/mall.jpg'
+                      "
+                      alt="Main Image"
+                    />
 
                     <div class="card-body">
                       <h5 class="centrename">{{ shopping.CenterName }}</h5>
@@ -620,40 +1020,70 @@
                         class="d-flex flex-column gap-2"
                         *ngIf="shoppingCenterManageSubmitted[0].O[0].P"
                       >
-                      <div class="title-2">Purchase Price:</div>
+                        <div class="title-2">Purchase Price:</div>
 
-                      <div class="d-flex align-items-center gap-2">
-                        <img src="../../../../assets/Images/purchaseprice.png" alt="" />
-                      
-                        <ng-container *ngIf="isAllForLeasePriceZeroSub()">
-                          <span class="title"> On Request </span>
-                        </ng-container>
-                      
-                        <ng-container *ngIf="shoppingCenterManageSubmitted?.length && shoppingCenterManageSubmitted[0]?.O?.length && shoppingCenterManageSubmitted[0].O[0]?.P?.length">
-                          <ng-container *ngIf="filteredLeasePlaces(shoppingCenterManageSubmitted[0].O[0].P) as leasePlaces">
-                            <div class="lease-prices-wrapper">
-                              <!-- Display first 3 lease prices -->
-                              <ng-container *ngFor="let place of leasePlaces.slice(0, 3); let last = last">
-                                <span class="title d-inline-block">
-                                  {{ place.ForLeasePrice }}$
-                                </span>
-                                <span *ngIf="!last"> - </span>
-                              </ng-container>
-                            
-                              <!-- View More button if more than 3 lease prices -->
-                              <div *ngIf="leasePlaces.length > 3">
-                                <a class="text-primary cursor ms-1 d-inline-block" (click)="openLeasePricesSubmissionModal(leasePlaces)">
-                                  View More ({{leasePlaces.length - 3}} more)
-                                </a>
-                              </div>
-                            </div>
+                        <div class="d-flex align-items-center gap-2">
+                          <img
+                            src="../../../../assets/Images/purchaseprice.png"
+                            alt=""
+                          />
+
+                          <ng-container *ngIf="isAllForLeasePriceZeroSub()">
+                            <span class="title"> On Request </span>
                           </ng-container>
-                        </ng-container>
-                        
-                        <!-- <span class="subtitle" *ngIf="!isAllForLeasePriceZeroSub()">
+
+                          <ng-container
+                            *ngIf="
+                              shoppingCenterManageSubmitted?.length &&
+                              shoppingCenterManageSubmitted[0]?.O?.length &&
+                              shoppingCenterManageSubmitted[0].O[0]?.P?.length
+                            "
+                          >
+                            <ng-container
+                              *ngIf="
+                                filteredLeasePlaces(
+                                  shoppingCenterManageSubmitted[0].O[0].P
+                                ) as leasePlaces
+                              "
+                            >
+                              <div class="lease-prices-wrapper">
+                                <!-- Display first 3 lease prices -->
+                                <ng-container
+                                  *ngFor="
+                                    let place of leasePlaces.slice(0, 3);
+                                    let last = last
+                                  "
+                                >
+                                  <span class="title d-inline-block">
+                                    {{ place.ForLeasePrice }}$
+                                  </span>
+                                  <span *ngIf="!last"> - </span>
+                                </ng-container>
+
+                                <!-- View More button if more than 3 lease prices -->
+                                <div *ngIf="leasePlaces.length > 3">
+                                  <a
+                                    class="text-primary cursor ms-1 d-inline-block"
+                                    (click)="
+                                      openLeasePricesSubmissionModal(
+                                        leasePlaces
+                                      )
+                                    "
+                                  >
+                                    View More ({{
+                                      leasePlaces.length - 3
+                                    }}
+                                    more)
+                                  </a>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+
+                          <!-- <span class="subtitle" *ngIf="!isAllForLeasePriceZeroSub()">
                           ($)
                         </span> -->
-                      </div>
+                        </div>
 
                         <div class="d-flex flex-column gap-1">
                           <span class="title-2"> Available Spaces: </span>
@@ -662,25 +1092,39 @@
                               src="../../../../assets/Images/size.png"
                               alt=""
                             />
-                            <ng-container *ngIf="shoppingCenterManageSubmitted[0].O[0].P as places">
+                            <ng-container
+                              *ngIf="
+                                shoppingCenterManageSubmitted[0].O[0]
+                                  .P as places
+                              "
+                            >
                               <!-- Display first 3 items -->
                               <div class="building-sizes-wrapper">
-                                <ng-container *ngFor="let place of places.slice(0, 3); let last = last">
+                                <ng-container
+                                  *ngFor="
+                                    let place of places.slice(0, 3);
+                                    let last = last
+                                  "
+                                >
                                   <span class="availabletitle d-inline-block">
                                     {{ place.BuildingSizeSf | number }} SF
                                   </span>
                                   <span *ngIf="!last"> - </span>
                                 </ng-container>
-                            
+
                                 <!-- View More button if more than 3 places -->
                                 <div *ngIf="places.length > 3">
-                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="openBuildingSizesSubmissionModal(places)">
-                                    View More ({{places.length - 3}} more)
+                                  <a
+                                    class="text-primary cursor ms-1 d-inline-block"
+                                    (click)="
+                                      openBuildingSizesSubmissionModal(places)
+                                    "
+                                  >
+                                    View More ({{ places.length - 3 }} more)
                                   </a>
                                 </div>
                               </div>
                             </ng-container>
-                            
                           </div>
                         </div>
                       </div>
@@ -709,7 +1153,10 @@
                           [title]="OrganizationContacts[0].name"
                           alt=""
                         />
-                        <div class="organizationName" *ngIf="OrganizationContacts[0]">
+                        <div
+                          class="organizationName"
+                          *ngIf="OrganizationContacts[0]"
+                        >
                           {{ OrganizationContacts[0].name }}
                         </div>
                         <img
@@ -725,7 +1172,10 @@
                     </div>
 
                     <div class="twobuttons">
-                      <button class="SubmitBrochure w-100" (click)="fileDrop.openFileSelector()">
+                      <button
+                        class="SubmitBrochure w-100"
+                        (click)="fileDrop.openFileSelector()"
+                      >
                         <ngx-file-drop
                           #fileDrop
                           class="dropzonee hidden-dropzone w-100"
@@ -733,9 +1183,14 @@
                           (onFileDrop)="uploadFile($event)"
                           [dropZoneClassName]="'upload-background-image'"
                         >
-                          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                          <ng-template
+                            ngx-file-drop-content-tmp
+                            let-openFileSelector="openFileSelector"
+                          >
                             <div class="upload-container cursor w-100">
-                              <div class="d-flex align-items-center justify-content-center w-100">
+                              <div
+                                class="d-flex align-items-center justify-content-center w-100"
+                              >
                                 <div class="submitbronchure cursor w-100">
                                   <span>Submit Brochure</span>
                                 </div>
@@ -744,7 +1199,6 @@
                           </ng-template>
                         </ngx-file-drop>
                       </button>
-                      
 
                       <button
                         class="ManualSubmission mt-2 w-100"
@@ -765,274 +1219,6 @@
                 ></div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SHOPPING CENTER INFORMATION -->
-      <div *ngIf="JsonPDF" class="mt-3">
-        <div class="card shoppingcentercard">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-12">
-                <h4 class="ShoppingCenterInformation">
-                  Shopping Center Information
-                </h4>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterName">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Center Name</span>
-                  <span class="shoppingsubtitle">{{ JsonPDF.CenterName }}</span>
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterType">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Center Type</span>
-                  <span class="shoppingsubtitle">{{
-                    JsonPDF.CenterType || "N/A"
-                  }}</span>
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterAddress">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Address</span>
-                  <span class="shoppingsubtitle"
-                    >{{ JsonPDF.CenterAddress }}, {{ JsonPDF.CenterCity }},
-                    {{ JsonPDF.CenterState }}</span
-                  >
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.TotalAvailableSpace_SF">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Available Space</span>
-                  <span class="shoppingsubtitle"
-                    >{{ JsonPDF.TotalAvailableSpace_SF }} SF</span
-                  >
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.percentage">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Percentage</span>
-                  <span class="shoppingsubtitle"
-                    >{{ JsonPDF.percentage }}%</span
-                  >
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.reason">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Reason</span>
-                  <span class="shoppingsubtitle">
-                    <div [ngClass]="{ truncate: !showFullReason }">
-                      {{ JsonPDF.reason }}
-                    </div>
-                    <span (click)="toggleReason()" class="toggle-link">
-                      {{ showFullReason ? "View Less" : "View More" }}
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.CenterCounty">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Center County</span>
-                  <span class="shoppingsubtitle">{{
-                    JsonPDF.CenterCounty
-                  }}</span>
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.ZipCode">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Zip Code</span>
-                  <span class="shoppingsubtitle">{{ JsonPDF.ZipCode }}</span>
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.LandArea_SF">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Land Area (SF)</span>
-                  <span class="shoppingsubtitle">{{
-                    JsonPDF.LandArea_SF
-                  }}</span>
-                </div>
-              </div>
-
-              <div
-                class="col-4 mt-3"
-                *ngIf="JsonPDF.NumberOfPropertiesInCenter"
-              >
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Properties In Center</span>
-                  <span class="shoppingsubtitle">{{
-                    JsonPDF.NumberOfPropertiesInCenter
-                  }}</span>
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.PercentLeased">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Percent Leased</span>
-                  <span class="shoppingsubtitle">{{
-                    JsonPDF.PercentLeased
-                  }}</span>
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.SmallestSpaceAvailable">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle"
-                    >Smallest Space Available</span
-                  >
-                  <span class="shoppingsubtitle"
-                    >{{ JsonPDF.SmallestSpaceAvailable }} SF</span
-                  >
-                </div>
-              </div>
-
-              <div class="col-4 mt-3" *ngIf="JsonPDF.NumberOfStores">
-                <div class="d-flex flex-column justify-content-center">
-                  <span class="shoppingcentertitle">Number of Stores</span>
-                  <span class="shoppingsubtitle">{{
-                    JsonPDF.NumberOfStores
-                  }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="d-flex align-items-center justify-content-between">
-                <h4 class="ShoppingCenterInformation mt-2 mb-3">
-                  Availability
-                </h4>
-                <div *ngIf="JsonPDF?.IsSubmitted === false && showButtons">
-                  <button class="AddAvailablebutton">
-                    <span
-                      class="AddAvailablebuttontext"
-                      (click)="toggleAddAvailability()"
-                      >Add Available
-                    </span>
-                  </button>
-                </div>
-                <div *ngIf="showAddAvailabilityInput" class="mt-2">
-                  <div class="input-group">
-                    <input
-                      type="number"
-                      class="form-control"
-                      [(ngModel)]="newAvailabilitySize"
-                      placeholder="Enter building size (SF)"
-                    />
-                    <button
-                      class="btn btn-success"
-                      (click)="addNewAvailability()"
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <ul>
-                <li
-                  *ngFor="let avail of JsonPDF.Availability"
-                  class="list-group-item border-0 px-0"
-                >
-                  <div class="form-check mt-2">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      [(ngModel)]="avail.isAdded"
-                      id="availCheckbox-{{ avail.id }}"
-                    />
-                    <label
-                      class="form-check-label"
-                      for="availCheckbox-{{ avail.id }}"
-                    >
-                      <div
-                        class="d-flex align-items-center justify-content-center gap-1"
-                      >
-                        <span class="BuildingSize">Building Size:</span>
-                        <span class="BuildingAndTenant">
-                          {{ avail.BuildingSizeSf }} SF
-                        </span>
-                      </div>
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="row">
-              <div class="d-flex align-items-center justify-content-between">
-                <h4 class="ShoppingCenterInformation mt-2 mb-3">Tenants</h4>
-                <div *ngIf="JsonPDF?.IsSubmitted === false && showButtons">
-                  <button class="AddAvailablebutton">
-                    <span
-                      class="AddAvailablebuttontext"
-                      (click)="toggleAddTenant()"
-                      >Add Tenant
-                    </span>
-                  </button>
-                </div>
-                <div *ngIf="showAddTenantInput" class="mt-2">
-                  <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      [(ngModel)]="newTenantName"
-                      placeholder="Enter tenant name"
-                    />
-                    <button class="btn btn-success" (click)="addNewTenant()">
-                      Add
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <ul>
-                <li
-                  *ngFor="let tenant of JsonPDF.Tenants"
-                  class="list-group-item border-0 px-0"
-                >
-                  <div class="form-check mt-2">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      [(ngModel)]="tenant.isAdded"
-                      id="tenantCheckbox-{{ tenant.id }}"
-                    />
-                    <label
-                      class="BuildingAndTenant"
-                      for="tenantCheckbox-{{ tenant.id }}"
-                    >
-                      {{ tenant.Name }}
-                      <a
-                        *ngIf="tenant.OrgUrl"
-                        [href]="tenant.OrgUrl"
-                        target="_blank"
-                        class="tenant-link"
-                      >
-                        (Website)
-                      </a>
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div
-            class="col-12 d-flex align-items-center justify-content-end paddingsubmitpdf"
-          >
-            <button
-              class="submitpdfbutton"
-              *ngIf="JsonPDF?.IsSubmitted === false"
-              (click)="sendJson()"
-            >
-              Submit PDF Data
-            </button>
           </div>
         </div>
       </div>
@@ -1087,7 +1273,6 @@
       </button>
     </div>
   </div>
-
 </ng-template>
 <div id="customToast" class="custom-toast">
   <div class="toast-content">
@@ -1374,30 +1559,44 @@
 <ng-template #leasePricesModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">All Lease Prices</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
-  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh">
     <div *ngFor="let place of filteredLeasePlacesManage" class="mb-2">
       {{ place.ForLeasePrice }} $
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
   </div>
 </ng-template>
 <!-- Building Sizes Modal -->
 <ng-template #buildingSizesModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">All Building Sizes</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
-  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh">
     <div *ngFor="let place of allBuildingSizes" class="mb-2">
       {{ place.BuildingSizeSf | number }} SF
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
   </div>
 </ng-template>
 
@@ -1407,29 +1606,43 @@
 <ng-template #buildingSizesSubmissionModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">All Building Sizes</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
-  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh">
     <div *ngFor="let place of modalPlaces" class="mb-2">
       {{ place.BuildingSizeSf | number }} SF
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
   </div>
 </ng-template>
 <!-- Modal for displaying all lease prices Submission-->
 <ng-template #leasePricesSubmissionModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">All Lease Prices</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
   </div>
-  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh">
     <div *ngFor="let place of modalLeasePlaces" class="mb-2">
       {{ place.ForLeasePrice }} $
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
   </div>
 </ng-template>

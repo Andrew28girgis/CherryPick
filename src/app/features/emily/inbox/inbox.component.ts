@@ -47,6 +47,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   selected: any = null;
   campaignId: any;
   emailBody: string = '';
+  sanitizedEmailBody!: SafeHtml; // ONLY for [innerHTML] if you display it elsewhere
   emailSubject: string = '';
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -427,6 +428,10 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       },
     });
   }
+  onContentChange(event: Event) {
+    const target = event.target as HTMLElement;
+    this.emailBody = target.innerText;
+  }
 
   getGeneratedEmail(mailContextId: number): void {
     this.spinner.show();
@@ -448,7 +453,13 @@ export class InboxComponent implements OnInit, AfterViewChecked {
             this.getGeneratedEmail(mailContextId);
           }, 3000);
         } else {
-          this.emailBody = response[0].body;
+          this.emailBody = response[0].body; // <-- Must assign plain string here!
+
+          // If you want to display safely elsewhere, use this:
+          this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
+            this.emailBody
+          );
+
           this.emailSubject = response[0].subject;
           this.spinner.hide();
         }

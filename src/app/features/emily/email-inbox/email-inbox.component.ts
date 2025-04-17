@@ -18,7 +18,7 @@ import {
 } from 'src/app/shared/models/GenerateContext';
 import { MailContextGenerated } from 'src/app/shared/models/MailContextGenerated';
 import { EmilyService } from 'src/app/core/services/emily.service';
-import { SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-email-inbox',
@@ -77,12 +77,14 @@ export class EmailInboxComponent implements OnInit {
   @Input() modal: any;
   emailSubject: string = '';
   emailBodyResponse!: SafeHtml;
+  isEditing = false; // Flag indicating if currently editing
 
   constructor(
     private spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
     private route: ActivatedRoute,
-    private emilyService: EmilyService
+    private emilyService: EmilyService,
+    private sanitizer: DomSanitizer
   ) {}
 
   async ngOnInit() {
@@ -424,33 +426,6 @@ export class EmailInboxComponent implements OnInit {
     );
   }
 
-  getGeneratedEmails(mailContextId: number): void {
-    this.spinner.show();
-    var body: any = {
-      Name: 'GetMailContextGenerated',
-      MainEntity: null,
-      Params: {
-        campaignId: this.campaignId,
-        ContactId: this.contactId,
-      },
-      Json: null,
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.returnGetMailContextGenerated = data.json;
-        this.returnGetMailContextGenerated =
-          this.returnGetMailContextGenerated.filter((r: any) => {
-            if (r.MailContextId == mailContextId) {
-              this.emailBodyResponse = r.Body;
-              this.emailSubject = r.Subject;
-            }
-          });
-        this.spinner.hide();
-      },
-    });
-  }
-
   ReadSpecificMails(mailContextId: number): void {
     this.spinner.show();
     const body: any = {
@@ -471,12 +446,23 @@ export class EmailInboxComponent implements OnInit {
             this.ReadSpecificMails(mailContextId);
           }, 3000);
         } else {
-          this.returnGetMailContextGenerated = response[0].body;
+          this.emailBody = response[0].body;
+          this.emailBodyResponse = this.sanitizer.bypassSecurityTrustHtml(
+            this.emailBody
+          );
+
           this.emailSubject = response[0].subject;
           this.spinner.hide();
         }
       },
     });
+  }
+  onContentEditChange(event: Event) {
+    const target = event.target as HTMLElement;
+    // Mark as editing
+    this.isEditing = true;
+    // Store plain text or HTML as per your needs
+    this.emailBody = target.innerHTML; // or innerText if needed
   }
 
   Send() {
@@ -489,7 +475,7 @@ export class EmailInboxComponent implements OnInit {
         CampaignId: +this.campaignId,
         RecieverId: [Number(this.selectedContactContactId.ContactId)].join(','),
         Subject: this.emailSubject,
-        Body: this.returnGetMailContextGenerated,
+        Body: this.emailBody,
       },
       Json: null,
     };
