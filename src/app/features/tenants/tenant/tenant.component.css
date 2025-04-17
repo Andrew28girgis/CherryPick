@@ -414,6 +414,16 @@
   border: none;
   cursor: pointer;
 }
+.btn-success{
+  background: #4d65b4;
+  color: #fff;
+
+
+}
+.xmarkicon{
+  background-color: red;
+  color: white;
+}
 
 .AddAvailablebuttontext {
   color: #fff;
@@ -606,6 +616,7 @@
   line-height: 32px;
 }
 .submitproposelsize {
+  height: 690px;
   border-radius: 20px;
   background: #fff;
 }
