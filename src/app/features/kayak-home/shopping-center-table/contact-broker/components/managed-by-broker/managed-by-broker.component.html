@@ -1,8 +1,10 @@
 <div class="managed-by-broker-contaciner">
   @for (contact of center.ShoppingCenter.ManagerOrganization; track
-  contact.ContactId) {
+  contact.ContactId) { @if (getCentersWithContactId(contact.ContactId).length >
+  0) {
   <div class="contact-name">
-    Managed By {{ contact.Firstname }} {{ contact.LastName }}
+    Other shopping centers also managed by : {{ contact.Firstname }}
+    {{ contact.LastName }}
   </div>
   <div class="centers-container">
     @for (center of getCentersWithContactId(contact.ContactId); track center.Id)
@@ -86,9 +88,8 @@
     </div>
     }
   </div>
-
   <hr class="w-100" />
-  }
+  } }
 
   <div class="container-control">
     <button class="skip-btn" (click)="onSkip()">Skip</button>

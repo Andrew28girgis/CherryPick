@@ -1,27 +1,71 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { IEmailContent } from '../../models/iemail-content';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-preview-email',
   templateUrl: './preview-email.component.html',
   styleUrl: './preview-email.component.css',
 })
-export class PreviewEmailComponent implements OnInit {
+export class PreviewEmailComponent implements OnInit, AfterViewInit {
+  @ViewChildren('bodyDiv') bodyDivs!: QueryList<ElementRef<HTMLDivElement>>;
+  @ViewChildren('subjectDiv') subjectDivs!: QueryList<
+    ElementRef<HTMLDivElement>
+  >;
+
   protected emails!: IEmailContent[];
+  protected dataLoaded: boolean = false;
 
   @Input() mailContextId!: number;
   @Output() onStepDone = new EventEmitter<void>();
 
   constructor(
     private placeService: PlacesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
-    this.spinner.show();
+    this.spinner.hide();
     this.readSpecificMails();
+  }
+
+  ngAfterViewInit(): void {
+    const interval = setInterval(() => {
+      if (this.emails && this.emails.length > 0) {
+        this.bodyDivs.forEach((divRef, index) => {
+          const html = this.emails[index].body;
+          divRef.nativeElement.innerHTML = html;
+        });
+        this.subjectDivs.forEach((divRef, index) => {
+          const text = this.emails[index].subject;
+          divRef.nativeElement.innerText = text;
+        });
+        clearInterval(interval);
+      }
+    }, 1000);
+  }
+
+  updateMailBody(event: Event, index: number) {
+    const div = event.target as HTMLDivElement;
+    this.emails[index].body = div.innerHTML;
+  }
+
+  updateMailSubject(event: Event, index: number) {
+    const div = event.target as HTMLDivElement;
+    this.emails[index].subject = div.innerText;
   }
 
   readSpecificMails(): void {
@@ -32,16 +76,15 @@ export class PreviewEmailComponent implements OnInit {
         IsSent: 0,
       },
     };
-
-    this.placeService.GenericAPI(body).subscribe((response) => {
+    this.placeService.GenericAPI(body).subscribe((response: any) => {
       if (response.json && response.json.length > 0) {
-        this.spinner.hide();
+        this.dataLoaded = true;
         this.emails = response.json;
         this.emails.forEach((email) => {
           email.isEditing = false;
         });
       } else {
-        setTimeout(() => {
+        setTimeout(async () => {
           this.readSpecificMails();
         }, 3000);
       }

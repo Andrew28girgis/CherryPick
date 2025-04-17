@@ -64,6 +64,7 @@
 
 .checkbox-section-select {
   padding-bottom: 3px;
+  margin-inline: 1rem;
 }
 
 .checkbox-section-select > label {
@@ -77,6 +78,10 @@
   font-weight: 400;
   line-height: 24px;
   letter-spacing: -0.005em;
+}
+
+.checkbox-section-select select {
+  height: 3rem;
 }
 
 .showMoreRelations {
@@ -104,7 +109,15 @@
   margin-top: auto;
 }
 
-.generate-btn button {
+.advanced-controls {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.generate-btn button,
+.advanced-controls button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -114,13 +127,20 @@
   padding: 0.75rem 1.5rem;
 }
 
-.generate-btn button * {
+.generate-btn button *,
+.advanced-controls button * {
   color: #fff;
 }
 
-.generate-btn button svg {
+.generate-btn button svg,
+.advanced-controls button svg {
   width: 1.25rem;
   height: 1.25rem;
+}
+
+.generate-btn button svg path,
+.advanced-controls button svg path {
+  fill: #fff;
 }
 
 @media (max-width: 768px) {

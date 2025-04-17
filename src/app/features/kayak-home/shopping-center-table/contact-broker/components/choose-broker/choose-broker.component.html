@@ -6,6 +6,7 @@
         <input
           class="form-check-input"
           type="checkbox"
+          [checked]="selectedContacts.has(contact.ContactId)"
           (change)="onContactCheck($event, contact)"
         />
         <div class="contact-information">
@@ -23,6 +24,8 @@
     </div>
     }
   </div>
+
+  <div class="w-100 load-another-contact" (click)="getContactsByOrgID()">Show all {{contacts[0].Name}} contacts</div>
 
   <div class="send-as">
     <div class="send-as-title">Send As</div>
@@ -76,3 +79,5 @@
     </button>
   </div>
 </div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

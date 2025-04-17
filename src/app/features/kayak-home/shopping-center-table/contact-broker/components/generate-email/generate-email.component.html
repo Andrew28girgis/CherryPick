@@ -1,223 +1,290 @@
 <div class="generate-email-container">
-  <div class="generate-email-sub-container">
-    <div class="generate-email-column">
-      <div class="box p-2">
-        <div class="checkbox-section-head checkbox-section">
-          <input
-            type="checkbox"
-            name="detailsMin"
-            id="detailsMin"
-            class="form-check-input"
-            [(ngModel)]="showMinBuildingSize"
-          />
-          <label for="detailsMin"
-            >Min & Max Unit Size: {{ buyboxDetails.MinBuildingSize }} ,{{
-              buyboxDetails.MaxBuildingSize
-            }}</label
-          >
-        </div>
-        <div class="checkbox-section-head checkbox-section">
-          <input
-            type="checkbox"
-            name="BuyBoxOrganizationDescription"
-            id="BuyBoxOrganizationDescription"
-            class="form-check-input"
-            [(ngModel)]="showBuyBoxDescriptionDetails"
-          />
-          <label for="BuyBoxOrganizationDescription"
-            >{{ BuyBoxOrganizationName }} Profile</label
-          >
-        </div>
-        <div class="checkbox-section-head checkbox-section">
-          <input
-            type="checkbox"
-            name="showBuyBoxDescription"
-            id="showBuyBoxDescription"
-            class="form-check-input"
-            [(ngModel)]="showBuyBoxDescription"
-          />
-          <label for="showBuyBoxDescription">BuyBox Profile</label>
-        </div>
-      </div>
-    </div>
-    <div
-      class="generate-email-column"
-      *ngIf="(generated?.[0]?.Releations || []).length > 0"
+  <div class="advanced-controls">
+    <button
+      type="button"
+      (click)="isAdvancedCollapsed = !isAdvancedCollapsed"
+      [attr.aria-expanded]="!isAdvancedCollapsed"
+      aria-controls="collapseExample"
     >
-      <div class="box p-2">
-        <div class="checkbox-section">
-          <input
-            type="checkbox"
-            name="Relation"
-            id="Relation"
-            class="form-check-input"
-            [(ngModel)]="showRelationNames"
-            (change)="toggleRelationNames($event)"
-          />
-          <label for="Relation">Relation Name</label>
-        </div>
-        <ng-container *ngIf="showRelationNames">
-          <ng-container *ngIf="generated.length > 0 && generated[0].Releations">
-            <div class="checkbox-section checkbox-section-body-first">
+      <span>Advanced Controls</span>
+      @if (isAdvancedCollapsed) {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M18.07 10.3199C17.88 10.3199 17.69 10.2499 17.54 10.0999L12 4.55994L6.46 10.0999C6.17 10.3899 5.69 10.3899 5.4 10.0999C5.11 9.80994 5.11 9.32994 5.4 9.03994L11.47 2.96994C11.76 2.67994 12.24 2.67994 12.53 2.96994L18.6 9.03994C18.89 9.32994 18.89 9.80994 18.6 10.0999C18.46 10.2499 18.26 10.3199 18.07 10.3199Z"
+        />
+        <path
+          d="M12 21.25C11.59 21.25 11.25 20.91 11.25 20.5V3.67004C11.25 3.26004 11.59 2.92004 12 2.92004C12.41 2.92004 12.75 3.26004 12.75 3.67004V20.5C12.75 20.91 12.41 21.25 12 21.25Z"
+        />
+      </svg>
+      }@else {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <path
+          d="M12 21.25C11.81 21.25 11.62 21.18 11.47 21.03L5.4 14.96C5.11 14.67 5.11 14.19 5.4 13.9C5.69 13.61 6.17 13.61 6.46 13.9L12 19.44L17.54 13.9C17.83 13.61 18.31 13.61 18.6 13.9C18.89 14.19 18.89 14.67 18.6 14.96L12.53 21.03C12.38 21.18 12.19 21.25 12 21.25Z"
+        />
+        <path
+          d="M12 21.08C11.59 21.08 11.25 20.74 11.25 20.33V3.5C11.25 3.09 11.59 2.75 12 2.75C12.41 2.75 12.75 3.09 12.75 3.5V20.33C12.75 20.74 12.41 21.08 12 21.08Z"
+        />
+      </svg>
+      }
+    </button>
+  </div>
+
+  <div
+    #collapse="ngbCollapse"
+    class="w-100"
+    [(ngbCollapse)]="isAdvancedCollapsed"
+  >
+    <div class="generate-email-container">
+      <div class="generate-email-sub-container">
+        <div class="generate-email-column">
+          <div class="box p-2">
+            <div class="checkbox-section-head checkbox-section">
               <input
                 type="checkbox"
-                [name]="relationCategoriesNames[0].name"
-                [id]="relationCategoriesNames[0].name"
+                name="detailsMin"
+                id="detailsMin"
                 class="form-check-input"
-                [(ngModel)]="ShowCompetitors"
+                [(ngModel)]="showMinBuildingSize"
               />
-              <label [for]="relationCategoriesNames[0].name">{{
-                relationCategoriesNames[0].name
-              }}</label>
-            </div>
-            <ng-container *ngIf="ShowCompetitors">
-              <ng-container
-                *ngIf="
-                  getRelationsForCategory(relationCategoriesNames[0].id)
-                    .length > 0
-                "
+              <label for="detailsMin"
+                >Min & Max Unit Size: {{ buyboxDetails.MinBuildingSize }} ,{{
+                  buyboxDetails.MaxBuildingSize
+                }}</label
               >
-                <ng-container
-                  *ngFor="
-                    let item of getVisibleRelations(
-                      relationCategoriesNames[0].id
-                    );
-                    let last = last
-                  "
-                >
-                  <div class="checkbox-section checkbox-section-body-first">
-                    <div
-                      class="w-100 d-flex align-items-center justify-content-between"
-                    >
-                      <label
-                        [for]="item.Name"
-                        class="ms-3 label-Relations"
-                        [title]="item.Name"
-                      >
-                        &bull; {{ item.Name }}
-                      </label>
-                      <ng-container *ngIf="last">
-                        <div
-                          class="d-flex justify-content-end"
-                          *ngIf="
-                            getRelationsForCategory(
-                              relationCategoriesNames[0].id
-                            ).length > 3
-                          "
-                        >
-                          <span
-                            (click)="
-                              toggleShowMore(relationCategoriesNames[0].id)
-                            "
-                            class="showMoreRelations"
-                          >
-                            {{
-                              showMoreRelations[relationCategoriesNames[0].id]
-                                ? "Show Less"
-                                : "Show More"
-                            }}
-                          </span>
-                        </div>
-                      </ng-container>
-                    </div>
-                  </div>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-
-            <div class="checkbox-section checkbox-section-body-first">
+            </div>
+            <div class="checkbox-section-head checkbox-section">
               <input
                 type="checkbox"
-                [name]="relationCategoriesNames[1].name"
-                [id]="relationCategoriesNames[1].name"
+                name="BuyBoxOrganizationDescription"
+                id="BuyBoxOrganizationDescription"
                 class="form-check-input"
-                [(ngModel)]="ShowComplementaries"
+                [(ngModel)]="showBuyBoxDescriptionDetails"
               />
-              <label [for]="relationCategoriesNames[1].name">{{
-                relationCategoriesNames[1].name
-              }}</label>
-            </div>
-
-            <ng-container *ngIf="ShowComplementaries">
-              <ng-container
-                *ngIf="
-                  getRelationsForCategory(relationCategoriesNames[1].id)
-                    .length > 0
-                "
+              <label for="BuyBoxOrganizationDescription"
+                >{{ BuyBoxOrganizationName }} Profile</label
               >
-                <ng-container
-                  *ngFor="
-                    let item of getVisibleRelations(
-                      relationCategoriesNames[1].id
-                    )
-                  "
-                >
-                  <div class="checkbox-section checkbox-section-body-first">
-                    <label
-                      [for]="item.Name"
-                      class="ms-3 label-Relations"
-                      [title]="item.Name"
-                    >
-                      &bull; {{ item.Name }}
-                    </label>
-                  </div>
-                </ng-container>
-
-                <div
-                  class="d-flex justify-content-end"
-                  *ngIf="
-                    getRelationsForCategory(relationCategoriesNames[1].id)
-                      .length > 3
-                  "
-                >
-                  <span
-                    (click)="toggleShowMore(relationCategoriesNames[1].id)"
-                    class="showMoreRelations"
-                  >
-                    {{
-                      showMoreRelations[relationCategoriesNames[1].id]
-                        ? "Show Less"
-                        : "Show More"
-                    }}
-                  </span>
-                </div>
-              </ng-container>
-            </ng-container>
-          </ng-container>
-        </ng-container>
-      </div>
-    </div>
-    <div class="generate-email-column">
-      <div class="box p-2">
-        <!-- Manager Organizations and Contacts -->
-        <div class="checkbox-section">
-          <input
-            type="checkbox"
-            [name]="ManagerOrganizationName"
-            [id]="ManagerOrganizationName"
-            class="form-check-input"
-            [(ngModel)]="showOrganizationManagers"
-            (change)="toggleManagerDesc($event)"
-          />
-          <label [for]="ManagerOrganizationName">{{
-            ManagerOrganizationName
-          }}</label>
+            </div>
+            <div class="checkbox-section-head checkbox-section">
+              <input
+                type="checkbox"
+                name="showBuyBoxDescription"
+                id="showBuyBoxDescription"
+                class="form-check-input"
+                [(ngModel)]="showBuyBoxDescription"
+              />
+              <label for="showBuyBoxDescription">BuyBox Profile</label>
+            </div>
+          </div>
         </div>
         <div
-          class="checkbox-section checkbox-section-body-first"
-          *ngIf="showOrganizationManagers"
+          class="generate-email-column"
+          *ngIf="(generated?.[0]?.Releations || []).length > 0"
         >
-          <input
-            type="checkbox"
-            name="ManagerOrganizationDescriptionDetails"
-            id="ManagerOrganizationDescriptionDetails"
-            class="form-check-input"
-            [(ngModel)]="showMangerDescriptionDetails"
-          />
-          <label for="ManagerOrganizationDescriptionDetails"
-            >{{ ManagerOrganizationName }} Profile</label
-          >
+          <div class="box p-2">
+            <div class="checkbox-section">
+              <input
+                type="checkbox"
+                name="Relation"
+                id="Relation"
+                class="form-check-input"
+                [(ngModel)]="showRelationNames"
+                (change)="toggleRelationNames($event)"
+              />
+              <label for="Relation">Relation Name</label>
+            </div>
+            <ng-container *ngIf="showRelationNames">
+              <ng-container
+                *ngIf="generated.length > 0 && generated[0].Releations"
+              >
+                <div class="checkbox-section checkbox-section-body-first">
+                  <input
+                    type="checkbox"
+                    [name]="relationCategoriesNames[0].name"
+                    [id]="relationCategoriesNames[0].name"
+                    class="form-check-input"
+                    [(ngModel)]="ShowCompetitors"
+                  />
+                  <label [for]="relationCategoriesNames[0].name">{{
+                    relationCategoriesNames[0].name
+                  }}</label>
+                </div>
+                <ng-container *ngIf="ShowCompetitors">
+                  <ng-container
+                    *ngIf="
+                      getRelationsForCategory(relationCategoriesNames[0].id)
+                        .length > 0
+                    "
+                  >
+                    <ng-container
+                      *ngFor="
+                        let item of getVisibleRelations(
+                          relationCategoriesNames[0].id
+                        );
+                        let last = last
+                      "
+                    >
+                      <div class="checkbox-section checkbox-section-body-first">
+                        <div
+                          class="w-100 d-flex align-items-center justify-content-between"
+                        >
+                          <label
+                            [for]="item.Name"
+                            class="ms-3 label-Relations"
+                            [title]="item.Name"
+                          >
+                            &bull; {{ item.Name }}
+                          </label>
+                          <ng-container *ngIf="last">
+                            <div
+                              class="d-flex justify-content-end"
+                              *ngIf="
+                                getRelationsForCategory(
+                                  relationCategoriesNames[0].id
+                                ).length > 3
+                              "
+                            >
+                              <span
+                                (click)="
+                                  toggleShowMore(relationCategoriesNames[0].id)
+                                "
+                                class="showMoreRelations"
+                              >
+                                {{
+                                  showMoreRelations[relationCategoriesNames[0].id]
+                                    ? "Show Less"
+                                    : "Show More"
+                                }}
+                              </span>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+  
+                <div class="checkbox-section checkbox-section-body-first">
+                  <input
+                    type="checkbox"
+                    [name]="relationCategoriesNames[1].name"
+                    [id]="relationCategoriesNames[1].name"
+                    class="form-check-input"
+                    [(ngModel)]="ShowComplementaries"
+                  />
+                  <label [for]="relationCategoriesNames[1].name">{{
+                    relationCategoriesNames[1].name
+                  }}</label>
+                </div>
+  
+                <ng-container *ngIf="ShowComplementaries">
+                  <ng-container
+                    *ngIf="
+                      getRelationsForCategory(relationCategoriesNames[1].id)
+                        .length > 0
+                    "
+                  >
+                    <ng-container
+                      *ngFor="
+                        let item of getVisibleRelations(
+                          relationCategoriesNames[1].id
+                        )
+                      "
+                    >
+                      <div class="checkbox-section checkbox-section-body-first">
+                        <label
+                          [for]="item.Name"
+                          class="ms-3 label-Relations"
+                          [title]="item.Name"
+                        >
+                          &bull; {{ item.Name }}
+                        </label>
+                      </div>
+                    </ng-container>
+  
+                    <div
+                      class="d-flex justify-content-end"
+                      *ngIf="
+                        getRelationsForCategory(relationCategoriesNames[1].id)
+                          .length > 3
+                      "
+                    >
+                      <span
+                        (click)="toggleShowMore(relationCategoriesNames[1].id)"
+                        class="showMoreRelations"
+                      >
+                        {{
+                          showMoreRelations[relationCategoriesNames[1].id]
+                            ? "Show Less"
+                            : "Show More"
+                        }}
+                      </span>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </div>
         </div>
+        <div class="generate-email-column">
+          <div class="box p-2">
+            <!-- Manager Organizations and Contacts -->
+            <div class="checkbox-section">
+              <input
+                type="checkbox"
+                [name]="ManagerOrganizationName"
+                [id]="ManagerOrganizationName"
+                class="form-check-input"
+                [(ngModel)]="showOrganizationManagers"
+                (change)="toggleManagerDesc($event)"
+              />
+              <label [for]="ManagerOrganizationName">{{
+                ManagerOrganizationName
+              }}</label>
+            </div>
+            <div
+              class="checkbox-section checkbox-section-body-first"
+              *ngIf="showOrganizationManagers"
+            >
+              <input
+                type="checkbox"
+                name="ManagerOrganizationDescriptionDetails"
+                id="ManagerOrganizationDescriptionDetails"
+                class="form-check-input"
+                [(ngModel)]="showMangerDescriptionDetails"
+              />
+              <label for="ManagerOrganizationDescriptionDetails"
+                >{{ ManagerOrganizationName }} Profile</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+       <div class="w-100 checkbox-section align-items-center">
+        <input
+          type="checkbox"
+          [(ngModel)]="isLandingSelected"
+          name="includinglandingpage"
+          id="includinglandingpage"
+          class="form-check-input m-0"
+        />
+        <label
+          for="includinglandingpage"
+          class="ms-2 IsCC_checkbox"
+          style="white-space: nowrap"
+          >Yes, Include a link to submission page
+        </label>
       </div>
     </div>
   </div>
@@ -238,27 +305,11 @@
         </option>
       </select>
     </div>
-
-    <div class="checkbox-section align-items-center">
-      <input
-        type="checkbox"
-        [(ngModel)]="isLandingSelected"
-        name="includinglandingpage"
-        id="includinglandingpage"
-        class="form-check-input m-0"
-      />
-      <label
-        for="includinglandingpage"
-        class="ms-2 IsCC_checkbox"
-        style="white-space: nowrap"
-        >Is including landing page</label
-      >
-    </div>
   </div>
 
   <div class="generate-btn">
     <button (click)="PutMailsDraft()">
-      <span>Generate</span>
+      <span>Generate Email </span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 256 256"
