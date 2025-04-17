@@ -462,11 +462,11 @@
                   *ngFor="let shopping of shoppingCenterManage"
                 >
                   <div class="card shoppingcentersize">
-                    <img
-                      class="card-img-top"
-                      [src]="shopping.MainImage"
-                      alt="Main Image"
-                    />
+                    <img 
+                    class="card-img-top" 
+                    [src]="shopping?.MainImage || '../../../../assets/Images/mall.jpg'" 
+                    alt="Main Image"
+                  />
 
                     <div class="card-body">
                       <h5 class="centrename">{{ shopping.CenterName }}</h5>
@@ -475,68 +475,62 @@
                         {{ shopping.CenterState }}
                       </h5>
 
-                      <div
-                        class="d-flex flex-column gap-2 my-2"
-                        *ngIf="shoppingCenterManage[0].O[0].P"
-                      >
+                      <div class="d-flex flex-column gap-2" *ngIf="shoppingCenterManage[0].O[0].P">
+                        <!-- Lease Prices Section -->
+                        <span class="title-2"> Purchase Price: </span>
                         <div class="d-flex align-items-center gap-2 my-2">
-                          <img
-                            src="../../../../assets/Images/purchaseprice.png"
-                            alt=""
-                          />
-
+                          <img src="../../../../assets/Images/purchaseprice.png" alt="" />
+                      
                           <ng-container *ngIf="isAllForLeasePriceZero()">
                             <span class="title"> On Request </span>
                           </ng-container>
-
-                          <ng-container
-                            *ngFor="
-                              let place of shoppingCenterManage[0].O[0].P;
-                              let last = last
-                            "
-                          >
-                            <ng-container *ngIf="place.ForLeasePrice !== 0">
+                      
+                          <ng-container *ngIf="!isAllForLeasePriceZero()">
+                            <!-- Display first 3 lease prices -->
+                            <ng-container *ngFor="let place of getFirstThreeLeasePrices(); let last = last">
                               <span class="title">
                                 {{ place.ForLeasePrice }}
                               </span>
                               <span *ngIf="!last"> - </span>
                             </ng-container>
+                      
+                            <!-- View More button if more than 3 lease prices -->
+                            <a *ngIf="getLeasePricesCount() > 3" class="text-primary cursor ms-1" (click)="openLeasePricesModal()">
+                              ({{getLeasePricesCount() - 3}} more)
+                            </a>
                           </ng-container>
-
-                          <span
-                            class="subtitle"
-                            *ngIf="!isAllForLeasePriceZero()"
-                          >
+                      
+                          <span class="subtitle" *ngIf="!isAllForLeasePriceZero()">
                             ($)
                           </span>
                         </div>
-
-                        <div class="d-flex flex-column mt-2 gap-1">
-                          <span class="title"> Available Spaces: </span>
+                      
+                        <!-- Available Spaces Section -->
+                        <div class="d-flex flex-column gap-1">
+                          <span class="title-2"> Available Spaces: </span>
                           <div class="d-flex align-items-center gap-2 my-2">
-                            <img
-                              src="../../../../assets/Images/size.png"
-                              alt=""
-                            />
-                            <ng-container
-                              *ngFor="
-                                let place of shoppingCenterManage[0].O[0].P;
-                                let last = last
-                              "
-                            >
+                            <img src="../../../../assets/Images/size.png" alt="" />
+                            
+                            <!-- Display first 3 building sizes -->
+                            <ng-container *ngFor="let place of getFirstThreeBuildingSizes(); let last = last">
+                              <div class="building-sizes-wrapper">
                               <span class="availabletitle">
                                 {{ place.BuildingSizeSf | number }} SF
+                                <span style="font-weight: 500;" *ngIf="!last"> - </span>
                               </span>
-                              <span *ngIf="!last"> - </span>
+                            </div>
                             </ng-container>
+                      
+                            <!-- View More button if more than 3 building sizes -->
+                            <a *ngIf="getBuildingSizeCount() > 3" class="text-primary cursor ms-1" (click)="openBuildingSizesModal()">
+                              ({{getBuildingSizeCount() - 3}} more)
+                            </a>
                           </div>
                         </div>
                       </div>
-                      <div class="d-flex align-items-center gap-2 my-2">
-                        <img
-                          src="../../../../assets/Images/availableunits.png"
-                          alt=""
-                        />
+                      
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                        <img src="../../../../assets/Images/availableunits.png" alt="" />
                         <span class="title">
                           {{ getBuildingSizeCount() }}
                         </span>
@@ -549,6 +543,7 @@
                       </div>
                       <div class="d-flex align-content-center gap-2">
                         <img
+                          *ngIf="OrganizationContacts[0]"
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                             OrganizationContacts[0].id
@@ -556,7 +551,7 @@
                           [title]="OrganizationContacts[0].name"
                           alt=""
                         />
-                        <div class="organizationName">
+                        <div class="organizationName" *ngIf="OrganizationContacts[0]">
                           {{ OrganizationContacts[0].name }}
                         </div>
                         <img
@@ -607,11 +602,12 @@
                   *ngFor="let shopping of shoppingCenterManageSubmitted"
                 >
                   <div class="card shoppingcentersize">
-                    <img
-                      class="card-img-top"
-                      [src]="shopping.MainImage"
-                      alt="Main Image"
-                    />
+                    <img 
+                    class="card-img-top" 
+                    [src]="shopping?.MainImage || '../../../../assets/Images/mall.jpg'" 
+                    alt="Main Image"
+                  />
+                  
 
                     <div class="card-body">
                       <h5 class="centrename">{{ shopping.CenterName }}</h5>
@@ -621,82 +617,74 @@
                       </h5>
 
                       <div
-                        class="d-flex flex-column gap-2 my-2"
+                        class="d-flex flex-column gap-2"
                         *ngIf="shoppingCenterManageSubmitted[0].O[0].P"
                       >
-                        <div class="d-flex align-items-center gap-2 my-2">
-                          <img
-                            src="../../../../assets/Images/purchaseprice.png"
-                            alt=""
-                          />
+                      <div class="title-2">Purchase Price:</div>
 
-                          <ng-container *ngIf="isAllForLeasePriceZeroSub()">
-                            <span class="title"> On Request </span>
-                          </ng-container>
-
-                          <ng-container *ngIf="shoppingCenterManageSubmitted?.length && shoppingCenterManageSubmitted[0]?.O?.length && shoppingCenterManageSubmitted[0].O[0]?.P?.length">
-                            <ng-container *ngIf="filteredLeasePlaces(shoppingCenterManageSubmitted[0].O[0].P) as leasePlaces">
-                              <div [ngClass]="{ 'd-inline': !showAllLeasePrices, 'd-block': showAllLeasePrices }" class="lease-prices-wrapper">
-                                
-                                <ng-container *ngFor="let place of getVisibleLeasePlaces(leasePlaces); let last = last">
-                                  <span class="title d-inline-block">
-                                    {{ place.ForLeasePrice }}
-                                  </span>
-                                  <span *ngIf="!last && !showAllLeasePrices"> - </span>
-                                </ng-container>
-                          
-                                <!-- View More / View Less -->
-                                <div *ngIf="leasePlaces.length > 3" class="mt-1">
-                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="toggleShowLeasePrices()">
-                                    {{ showAllLeasePrices ? 'View Less' : 'View More' }}
-                                  </a>
-                                </div>
+                      <div class="d-flex align-items-center gap-2">
+                        <img src="../../../../assets/Images/purchaseprice.png" alt="" />
+                      
+                        <ng-container *ngIf="isAllForLeasePriceZeroSub()">
+                          <span class="title"> On Request </span>
+                        </ng-container>
+                      
+                        <ng-container *ngIf="shoppingCenterManageSubmitted?.length && shoppingCenterManageSubmitted[0]?.O?.length && shoppingCenterManageSubmitted[0].O[0]?.P?.length">
+                          <ng-container *ngIf="filteredLeasePlaces(shoppingCenterManageSubmitted[0].O[0].P) as leasePlaces">
+                            <div class="lease-prices-wrapper">
+                              <!-- Display first 3 lease prices -->
+                              <ng-container *ngFor="let place of leasePlaces.slice(0, 3); let last = last">
+                                <span class="title d-inline-block">
+                                  {{ place.ForLeasePrice }}$
+                                </span>
+                                <span *ngIf="!last"> - </span>
+                              </ng-container>
+                            
+                              <!-- View More button if more than 3 lease prices -->
+                              <div *ngIf="leasePlaces.length > 3">
+                                <a class="text-primary cursor ms-1 d-inline-block" (click)="openLeasePricesSubmissionModal(leasePlaces)">
+                                  View More ({{leasePlaces.length - 3}} more)
+                                </a>
                               </div>
-                            </ng-container>
+                            </div>
                           </ng-container>
-                          
-                          
+                        </ng-container>
+                        
+                        <!-- <span class="subtitle" *ngIf="!isAllForLeasePriceZeroSub()">
+                          ($)
+                        </span> -->
+                      </div>
 
-                          <span
-                            class="subtitle"
-                            *ngIf="!isAllForLeasePriceZeroSub()"
-                          >
-                            ($)
-                          </span>
-                        </div>
-
-                        <div class="d-flex flex-column mt-2 gap-1">
-                          <span class="title"> Available Spaces: </span>
+                        <div class="d-flex flex-column gap-1">
+                          <span class="title-2"> Available Spaces: </span>
                           <div class="d-flex align-items-center gap-2 my-2">
                             <img
                               src="../../../../assets/Images/size.png"
                               alt=""
                             />
                             <ng-container *ngIf="shoppingCenterManageSubmitted[0].O[0].P as places">
-                              <!-- Display items -->
-                              <div [ngClass]="{ 'd-inline': !showAllPlaces, 'd-block': showAllPlaces }" class="building-sizes-wrapper">
-                                <ng-container *ngFor="let place of getVisiblePlaces(places); let last = last">
+                              <!-- Display first 3 items -->
+                              <div class="building-sizes-wrapper">
+                                <ng-container *ngFor="let place of places.slice(0, 3); let last = last">
                                   <span class="availabletitle d-inline-block">
                                     {{ place.BuildingSizeSf | number }} SF
                                   </span>
-                                  <span *ngIf="!last && !showAllPlaces"> - </span>
+                                  <span *ngIf="!last"> - </span>
                                 </ng-container>
                             
-                                <!-- View More / View Less -->
-                                <div *ngIf="places.length > 3" class="mt-1">
-                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="toggleShowMore()">
-                                    {{ showAllPlaces ? 'View Less' : 'View More' }}
+                                <!-- View More button if more than 3 places -->
+                                <div *ngIf="places.length > 3">
+                                  <a class="text-primary cursor ms-1 d-inline-block" (click)="openBuildingSizesSubmissionModal(places)">
+                                    View More ({{places.length - 3}} more)
                                   </a>
                                 </div>
                               </div>
                             </ng-container>
                             
-                            
-                            
                           </div>
                         </div>
                       </div>
-                      <div class="d-flex align-items-center gap-2 my-2">
+                      <div class="d-flex align-items-center gap-2 mb-2">
                         <img
                           src="../../../../assets/Images/availableunits.png"
                           alt=""
@@ -713,6 +701,7 @@
                       </div>
                       <div class="d-flex align-content-center gap-2">
                         <img
+                          *ngIf="OrganizationContacts[0]"
                           class="logo"
                           src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                             OrganizationContacts[0].id
@@ -720,7 +709,7 @@
                           [title]="OrganizationContacts[0].name"
                           alt=""
                         />
-                        <div class="organizationName">
+                        <div class="organizationName" *ngIf="OrganizationContacts[0]">
                           {{ OrganizationContacts[0].name }}
                         </div>
                         <img
@@ -1378,5 +1367,69 @@
         Delete
       </button>
     </div>
+  </div>
+</ng-template>
+
+<!-- Lease Prices Modal -->
+<ng-template #leasePricesModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">All Lease Prices</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+    <div *ngFor="let place of filteredLeasePlacesManage" class="mb-2">
+      {{ place.ForLeasePrice }} $
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+<!-- Building Sizes Modal -->
+<ng-template #buildingSizesModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">All Building Sizes</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+    <div *ngFor="let place of allBuildingSizes" class="mb-2">
+      {{ place.BuildingSizeSf | number }} SF
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+
+<!-- second card -->
+
+<!-- Modal for displaying all building sizes Submission -->
+<ng-template #buildingSizesSubmissionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">All Building Sizes</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+    <div *ngFor="let place of modalPlaces" class="mb-2">
+      {{ place.BuildingSizeSf | number }} SF
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+<!-- Modal for displaying all lease prices Submission-->
+<ng-template #leasePricesSubmissionModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">All Lease Prices</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh;">
+    <div *ngFor="let place of modalLeasePlaces" class="mb-2">
+      {{ place.ForLeasePrice }} $
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
   </div>
 </ng-template>
