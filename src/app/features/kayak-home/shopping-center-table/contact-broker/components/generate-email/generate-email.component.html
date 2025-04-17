@@ -221,4 +221,72 @@
       </div>
     </div>
   </div>
+
+  <div class="prompt-controls">
+    <div class="w-100 checkbox-section-select pb-2">
+      <label for="discussionDropdown">Select Prompt</label>
+      <select
+        class="form-select form-select-lg"
+        aria-label="Large select example"
+        id="discussionDropdown"
+        [(ngModel)]="selectedPromptId"
+        (change)="updatePrompt()"
+      >
+        <!-- <option value="" selected>Select Prompt</option> -->
+        <option *ngFor="let prompt of prompts" [value]="prompt.id">
+          {{ prompt?.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="checkbox-section align-items-center">
+      <input
+        type="checkbox"
+        [(ngModel)]="isLandingSelected"
+        name="includinglandingpage"
+        id="includinglandingpage"
+        class="form-check-input m-0"
+      />
+      <label
+        for="includinglandingpage"
+        class="ms-2 IsCC_checkbox"
+        style="white-space: nowrap"
+        >Is including landing page</label
+      >
+    </div>
+  </div>
+
+  <div class="generate-btn">
+    <button (click)="PutMailsDraft()">
+      <span>Generate</span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 256 256"
+        id="arrow-right"
+      >
+        <rect width="256" height="256" fill="none"></rect>
+        <line
+          x1="40"
+          x2="216"
+          y1="128"
+          y2="128"
+          fill="none"
+          stroke="#fff"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="24"
+        ></line>
+        <polyline
+          fill="none"
+          stroke="#fff"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="24"
+          points="144 56 216 128 144 200"
+        ></polyline>
+      </svg>
+    </button>
+  </div>
 </div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>

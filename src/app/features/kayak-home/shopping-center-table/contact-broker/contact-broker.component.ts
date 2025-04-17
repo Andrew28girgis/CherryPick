@@ -32,6 +32,10 @@ export class ContactBrokerComponent {
         this.currentStep++;
         break;
       }
+      case 3: {
+        this.closeActiveModal();
+        break;
+      }
 
       default:
         break;

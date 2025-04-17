@@ -14,11 +14,7 @@ import {
   ManagerOrganization,
 } from 'src/app/shared/models/shoppingCenters';
 import { IManagedByBroker } from '../../models/imanaged-by-broker';
-
-interface CenterData {
-  id: number;
-  centerName: string;
-}
+import { ICenterData } from '../../models/icenter-data';
 
 @Component({
   selector: 'app-managed-by-broker',
@@ -26,13 +22,13 @@ interface CenterData {
   styleUrl: './managed-by-broker.component.css',
 })
 export class ManagedByBrokerComponent implements OnChanges {
-  protected centers: Map<number, CenterData[]> = new Map<
+  protected centers: Map<number, ICenterData[]> = new Map<
     number,
-    CenterData[]
+    ICenterData[]
   >();
-  protected SelectedCenters: Map<number, number[]> = new Map<
+  protected SelectedCenters: Map<number, ICenterData[]> = new Map<
     number,
-    number[]
+    ICenterData[]
   >();
 
   @Input() center!: Center;
@@ -65,7 +61,7 @@ export class ManagedByBrokerComponent implements OnChanges {
   async getCentersForContactId(
     contactId: number,
     campaignId: number
-  ): Promise<CenterData[]> {
+  ): Promise<ICenterData[]> {
     const body = {
       Name: 'GetShoppingCentersForContact',
       Params: {
@@ -81,30 +77,34 @@ export class ManagedByBrokerComponent implements OnChanges {
     return [];
   }
 
-  getCentersWithContactId(contactId: number): CenterData[] {
+  getCentersWithContactId(contactId: number): ICenterData[] {
     if (this.centers.has(contactId))
       return this.centers.get(contactId)!.filter((c) => c.id != this.center.Id);
     return [];
   }
 
-  onCenterChecked(event: any, contactId: number, centerId: number): void {
+  onCenterChecked(event: any, contactId: number, center: ICenterData): void {
     const checked = event.target.checked;
     if (checked) {
       const exist = this.SelectedCenters.has(contactId);
       if (!exist) {
-        this.SelectedCenters.set(contactId, [centerId]);
+        this.SelectedCenters.set(contactId, [center]);
       } else {
         let centers = this.SelectedCenters.get(contactId);
         if (centers) {
-          centers = [...centers, centerId];
+          const existCenter = centers.find((c) => c.id == center.id);
+          if (!existCenter) {
+            centers = [...centers, center];
+          }
         }
       }
     } else {
       const exist = this.SelectedCenters.has(contactId);
       if (exist) {
-        const centers = this.SelectedCenters.get(contactId);
-        if (centers?.includes(centerId)) {
-          centers.splice(centers.indexOf(centerId), 1);
+        let centers = this.SelectedCenters.get(contactId);
+        const existCenter = centers?.find((c) => c.id == center.id);
+        if (existCenter) {
+          centers = centers?.filter((c) => c.id != center.id);
         }
       }
     }

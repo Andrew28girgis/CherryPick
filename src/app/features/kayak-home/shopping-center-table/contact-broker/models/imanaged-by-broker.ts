@@ -1,4 +1,6 @@
+import { ICenterData } from "./icenter-data";
+
 export interface IManagedByBroker {
   contactId: number;
-  centers: number[];
+  centers: ICenterData[];
 }

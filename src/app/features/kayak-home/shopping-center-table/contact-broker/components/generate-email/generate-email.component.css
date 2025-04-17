@@ -87,3 +87,39 @@
   letter-spacing: -0.005em;
   cursor: pointer;
 }
+
+.prompt-controls{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+
+.generate-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-top: auto;
+}
+
+.generate-btn button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #4d65b4;
+  background-color: #4d65b4;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.generate-btn button * {
+  color: #fff;
+}
+
+.generate-btn button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}

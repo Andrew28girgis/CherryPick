@@ -29,12 +29,10 @@
       <div class="step-title">Choose Brokers</div>
     </div>
     <div class="step-content">
-      <app-generate-email [buyBoxId]="buyboxId"></app-generate-email>
-
-      <!-- <app-choose-broker
+      <app-choose-broker
         [contacts]="center.ShoppingCenter.ManagerOrganization"
         (onStepDone)="onStepDone($event)"
-      ></app-choose-broker> -->
+      ></app-choose-broker>
     </div>
   </div>
   } @case (2) {
@@ -61,7 +59,13 @@
       <div class="step-title">Generate Emails</div>
     </div>
     <div class="step-content">
-      <app-generate-email></app-generate-email>
+      <app-generate-email
+        [buyBoxId]="buyboxId"
+        [center]="center"
+        [chooseBrokerObject]="chooseBrokerObject"
+        [managedByBrokerArray]="managedByBrokerArray"
+        (onStepDone)="onStepDone($event)"
+      ></app-generate-email>
     </div>
   </div>
   } }
