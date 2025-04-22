@@ -45,7 +45,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedCity = '';
   BuyBoxName = '';
   ShareOrg: ShareOrg[] = [];
-  isdataLoaded=false;
+  isdataLoaded = false;
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -67,13 +67,11 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-     
     });
 
     // Subscribe to data from ViewManagerService
     this.subscribeToServiceData();
     this.viewManagerService.initializeData(this.BuyBoxId, this.OrgId);
-  
   }
   private subscribeToServiceData(): void {
     // Subscribe to data loaded event
@@ -84,29 +82,33 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     );
   }
-  
+
   private loadDataFromService(): void {
     combineLatest([
       this.viewManagerService.shoppingCenters$,
       this.viewManagerService.buyboxPlaces$,
       this.viewManagerService.buyboxCategories$,
-      this.viewManagerService.shareOrg$
-    ]).pipe(take(1)).subscribe(([shoppingCenters, buyboxPlaces, buyboxCategories, shareOrg]) => {
-      // Get shopping centers from service
-      this.shoppingCenters = shoppingCenters;
-      
-      // Get buybox places from service
-      this.buyboxPlaces = buyboxPlaces;
-      
-      // Get buybox categories from service
-      this.buyboxCategories = buyboxCategories;
-      
-      // Get share org from service
-      this.ShareOrg = shareOrg;
-      
-      // After data is loaded, update the map
-      this.getAllMarker();
-    });
+      this.viewManagerService.shareOrg$,
+    ])
+      .pipe(take(1))
+      .subscribe(
+        ([shoppingCenters, buyboxPlaces, buyboxCategories, shareOrg]) => {
+          // Get shopping centers from service
+          this.shoppingCenters = shoppingCenters;
+
+          // Get buybox places from service
+          this.buyboxPlaces = buyboxPlaces;
+
+          // Get buybox categories from service
+          this.buyboxCategories = buyboxCategories;
+
+          // Get share org from service
+          this.ShareOrg = shareOrg;
+
+          // After data is loaded, update the map
+          this.getAllMarker();
+        }
+      );
   }
 
   ngAfterViewInit(): void {
@@ -231,15 +233,10 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.map = new Map(mapElement, {
           center: {
-            lat: this.shoppingCenters
-              ? this.shoppingCenters?.[0]?.Latitude
-              : this.standAlone?.[0]?.Latitude || 0,
-            lng: this.shoppingCenters
-              ? this.shoppingCenters?.[0]?.Longitude
-              : this.standAlone?.[0]?.Longitude || 0,
+            lat: this.shoppingCenters?.[0]?.Latitude,
+            lng: this.shoppingCenters?.[0]?.Longitude,
           },
-          zoom: 8,
-          mapId: '1234567890',
+          zoom: 11,
         });
       }
 
