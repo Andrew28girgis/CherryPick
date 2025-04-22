@@ -10,9 +10,10 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { TooltipModule } from 'primeng/tooltip';
+import { AddCampaignComponent } from './add-campaign/add-campaign.component';
 
 @NgModule({
-  declarations: [CampaignDrawingComponent, CampaignManagerComponent],
+  declarations: [CampaignDrawingComponent, CampaignManagerComponent, AddCampaignComponent],
   imports: [
     CommonModule,
     CampaignRoutingModule,
