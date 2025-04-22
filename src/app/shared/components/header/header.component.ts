@@ -36,11 +36,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public router: Router,
     private userViewService: UserViewService,
     private activatedRoute: ActivatedRoute
-  ) {  
+  ) {}
 
-  }
-
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.initializeScreenSize();
     this.setupRouteSubscriptions();
     this.setupUserViewSubscription();
