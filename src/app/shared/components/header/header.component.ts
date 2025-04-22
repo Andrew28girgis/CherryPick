@@ -27,7 +27,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userAvatar: string | null = null;
   currentView: UserView = 'campaigns';
   currentRoute = '';
-
+  contactId: any;
+  showRecord: boolean = false;
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
@@ -35,9 +36,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public router: Router,
     private userViewService: UserViewService,
     private activatedRoute: ActivatedRoute
-  ) {}
+  ) {  
 
-  ngOnInit(): void {
+  }
+
+  ngOnInit(): void { 
     this.initializeScreenSize();
     this.setupRouteSubscriptions();
     this.setupUserViewSubscription();
