@@ -457,6 +457,7 @@ export class EmailInboxComponent implements OnInit {
       },
     });
   }
+  
   onContentEditChange(event: Event) {
     const target = event.target as HTMLElement;
     // Mark as editing

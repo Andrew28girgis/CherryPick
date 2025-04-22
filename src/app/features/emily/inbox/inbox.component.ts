@@ -493,7 +493,6 @@ export class InboxComponent implements OnInit, AfterViewChecked {
         this.emailBody = '';
         this.ContextEmail = '';
         this.sanitizedEmailBody = '';
-
         this.showToast('Send Success');
       },
     });

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
-   
+
 import { Center, Place } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -48,7 +48,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService,
-        
+
     private markerService: MapsService,
     private stateService: StateService,
     private ngZone: NgZone
@@ -86,7 +86,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-      
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -98,9 +97,9 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
-             
+
         this.getBuyBoxPlaces(this.BuyBoxId);
-      }
+      },
     });
   }
 
@@ -128,7 +127,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         });
         this.getAllMarker();
-      }
+      },
     });
   }
 
@@ -150,7 +149,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.ShareOrg = data.json;
         this.stateService.setShareOrg(data.json);
-      }
+      },
     });
   }
 
@@ -172,13 +171,12 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
-      }
+      },
     });
   }
 
   async getAllMarker() {
     try {
-        
       const { Map } = await google.maps.importLibrary('maps');
 
       const mapElement = document.getElementById('map') as HTMLElement;
@@ -196,15 +194,10 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.map = new Map(mapElement, {
           center: {
-            lat: this.shoppingCenters
-              ? this.shoppingCenters?.[0]?.Latitude
-              : this.standAlone?.[0]?.Latitude || 0,
-            lng: this.shoppingCenters
-              ? this.shoppingCenters?.[0]?.Longitude
-              : this.standAlone?.[0]?.Longitude || 0,
+            lat: this.shoppingCenters?.[0]?.Latitude,
+            lng: this.shoppingCenters?.[0]?.Longitude,
           },
-          zoom: 8,
-          mapId: '1234567890',
+          zoom: 12,
         });
       }
 
@@ -223,7 +216,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.createCustomMarkers(this.buyboxCategories);
     } catch (error) {
     } finally {
-           
     }
   }
 
