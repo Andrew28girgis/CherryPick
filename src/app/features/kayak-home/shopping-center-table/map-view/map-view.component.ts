@@ -27,7 +27,7 @@ declare const google: any;
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
 })
-export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MapViewComponent implements OnInit, OnDestroy {
   @ViewChild('map') mapElement!: ElementRef;
   @Output() viewChange = new EventEmitter<number>();
   map: any;
@@ -110,9 +110,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.initMap();
-  }
 
   ngOnDestroy(): void {
     this.clearMarkers();
@@ -335,104 +332,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         zoom: zoom,
       })
     );
-  }
-
-  private initMap(): void {
-    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-      setTimeout(() => this.initMap(), 1000);
-      return;
-    }
-
-    const mapOptions = {
-      center: { lat: 37.0902, lng: -95.7129 },
-      zoom: 4,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: true,
-      mapTypeControlOptions: {
-        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.TOP_RIGHT,
-      },
-      fullscreenControl: true,
-      streetViewControl: true,
-      zoomControl: true,
-    };
-
-    this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-    if (this.shoppingCenters.length > 0) {
-      this.addMarkersToMap();
-    }
-  }
-
-  private addMarkersToMap(): void {
-    if (!this.map || !this.shoppingCenters.length) return;
-
-    this.clearMarkers();
-    const bounds = new google.maps.LatLngBounds();
-
-    this.shoppingCenters.forEach((center: any) => {
-      if (center.Latitude && center.Longitude) {
-        const position = new google.maps.LatLng(
-          center.Latitude,
-          center.Longitude
-        );
-        bounds.extend(position);
-
-        const marker = new google.maps.Marker({
-          position: position,
-          map: this.map,
-          title: center.CenterName,
-          animation: google.maps.Animation.DROP,
-          icon: {
-            url: 'assets/Images/Icons/map-marker.png',
-            scaledSize: new google.maps.Size(30, 40),
-          },
-        });
-
-        const infoWindow = new google.maps.InfoWindow({
-          content: this.createInfoWindowContent(center),
-        });
-
-        marker.addListener('click', () => {
-          this.closeAllInfoWindows();
-          infoWindow.open(this.map, marker);
-        });
-
-        this.markers.push(marker);
-        this.infoWindows.push(infoWindow);
-      }
-    });
-
-    if (!bounds.isEmpty()) {
-      this.map.fitBounds(bounds);
-
-      // Adjust zoom level if there's only one marker
-      if (this.markers.length === 1) {
-        this.ngZone.runOutsideAngular(() => {
-          google.maps.event.addListenerOnce(this.map, 'bounds_changed', () => {
-            this.map.setZoom(15);
-          });
-        });
-      }
-    }
-  }
-
-  private createInfoWindowContent(center: any): string {
-    return `
-      <div class="info-window">
-        <h4>${center.CenterName}</h4>
-        <p>${center.CenterAddress}, ${center.CenterCity}, ${
-      center.CenterState
-    }</p>
-        <a href="/landing/${center.ShoppingCenter?.Places?.[0]?.Id || 0}/${
-      center.Id
-    }/${this.BuyBoxId}" class="info-link">View Details</a>
-      </div>
-    `;
-  }
-
-  private closeAllInfoWindows(): void {
-    this.infoWindows.forEach((window) => window.close());
   }
 
   private clearMarkers(): void {
