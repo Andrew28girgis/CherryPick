@@ -104,7 +104,9 @@
 }
 
 .load-another-contact {
-  color: #707791;
+  color: #4d65b4;
+  font-weight: 600;
+  text-decoration: underline;
   cursor: pointer;
 }
 
