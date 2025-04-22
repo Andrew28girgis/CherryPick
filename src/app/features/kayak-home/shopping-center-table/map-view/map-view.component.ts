@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
-
 import { Center, Place } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -48,7 +47,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService,
-
     private markerService: MapsService,
     private stateService: StateService,
     private ngZone: NgZone
