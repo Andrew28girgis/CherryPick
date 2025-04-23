@@ -25,6 +25,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
+import { EmailComposeComponent } from './email-compose/email-compose.component';
 
 @Component({
   selector: 'app-inbox',
@@ -209,7 +210,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
           ))
     );
 
-    console.log('matchingEmails', this.emailsSentContact);
+    // console.log('matchingEmails', this.emailsSentContact);
 
     this.filterEmails(this.selectedFilter);
     if (this.emailsSentContact.length === 0) {
@@ -260,15 +261,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
     );
   }
 
-  openCompoase(modal: any, contactId: number) {
-    this.listcenterName = [];
-    this.emailSubject = '';
-    this.emailBody = '';
-    this.ContextEmail = '';
-    this.showGenerateSection = false;
-    this.GetContactShoppingCenters(contactId);
-    this.modalService.open(modal, { size: 'xl', backdrop: true });
-  }
+
 
   GetContactShoppingCenters(contactId: number): void {
     const body: any = {
@@ -511,5 +504,36 @@ export class InboxComponent implements OnInit, AfterViewChecked {
     setTimeout(() => {
       toast!.classList.remove('show');
     }, 3000);
+  }
+  // openCompoase(modal: any, contactId: number) {
+  //   this.listcenterName = [];
+  //   this.emailSubject = '';
+  //   this.emailBody = '';
+  //   this.ContextEmail = '';
+  //   this.showGenerateSection = false;
+  //   this.GetContactShoppingCenters(contactId);
+  //   this.modalService.open(modal, { size: 'xl', backdrop: true });
+  // }
+  openCompose(contact: Contact) {
+
+    const modalRef = this.modalService.open(EmailComposeComponent, {
+      size: 'xl',
+      backdrop: true
+    });
+    modalRef.componentInstance.contactId   = contact.ContactId;
+    modalRef.componentInstance.buyBoxId     = this.buyBoxId;
+    modalRef.componentInstance.orgId        = this.orgId;
+    modalRef.componentInstance.campaignId   = this.campaignId;
+    modalRef.componentInstance.contactName = `${contact.Firstname ?? ''} ${
+      contact.Lastname ?? ''
+    }`.trim();
+  
+    modalRef.result
+      .then(result => {
+        if (result === 'sent' && this.selectedContact) {
+          this.getEmailsForContact(this.selectedContact);
+        }
+      })
+      .catch(() => { /* dismissed */ });
   }
 }
