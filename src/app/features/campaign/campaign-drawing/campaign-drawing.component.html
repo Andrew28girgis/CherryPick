@@ -1,14 +1,124 @@
 <div class="h-100 d-flex flex-column">
-  <div class="mb-3">
-    <input
-      type="text"
-      class="form-control search-polygons"
-      name="search-polygons"
-      placeholder="Search with name"
-      [(ngModel)]="polygonSearch"
-      (ngModelChange)="onSearchChange($event)"
-    />
+  <div class="row mb-3 g-3">
+    <div class="col-md-10 col-12">
+      <div class="search-field">
+        <svg
+          class="search-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M11.5 21.75C5.85 21.75 1.25 17.15 1.25 11.5C1.25 5.85 5.85 1.25 11.5 1.25C17.15 1.25 21.75 5.85 21.75 11.5C21.75 17.15 17.15 21.75 11.5 21.75ZM11.5 2.75C6.67 2.75 2.75 6.68 2.75 11.5C2.75 16.32 6.67 20.25 11.5 20.25C16.33 20.25 20.25 16.32 20.25 11.5C20.25 6.68 16.33 2.75 11.5 2.75Z"
+            fill="#707791"
+          />
+          <path
+            d="M21.9995 22.7504C21.8095 22.7504 21.6195 22.6804 21.4695 22.5304L19.4695 20.5304C19.1795 20.2404 19.1795 19.7604 19.4695 19.4704C19.7595 19.1804 20.2395 19.1804 20.5295 19.4704L22.5295 21.4704C22.8195 21.7604 22.8195 22.2404 22.5295 22.5304C22.3795 22.6804 22.1895 22.7504 21.9995 22.7504Z"
+            fill="#707791"
+          />
+        </svg>
+        <input
+          class="w-100 search-input"
+          type="text"
+          placeholder="Search for polygons by name"
+          [(ngModel)]="polygonSearch"
+          [disabled]="isSearching"
+          pInputText
+        />
+        <ng-container *ngIf="polygonSearch.trim().length > 0 && !isSearching">
+          <svg
+            (click)="polygonSearch = ''; externalPolygons = []"
+            style="
+              position: absolute;
+              right: 0;
+              margin-right: 0.75rem;
+              cursor: pointer;
+            "
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M8.01186 7.00933L12.27 2.75116C12.341 2.68501 12.398 2.60524 12.4375 2.51661C12.4769 2.42798 12.4982 2.3323 12.4999 2.23529C12.5016 2.13827 12.4838 2.0419 12.4474 1.95194C12.4111 1.86197 12.357 1.78024 12.2884 1.71163C12.2198 1.64302 12.138 1.58893 12.0481 1.55259C11.9581 1.51625 11.8617 1.4984 11.7647 1.50011C11.6677 1.50182 11.572 1.52306 11.4834 1.56255C11.3948 1.60204 11.315 1.65898 11.2488 1.72997L6.99067 5.98814L2.7325 1.72997C2.59553 1.60234 2.41437 1.53286 2.22718 1.53616C2.03999 1.53946 1.8614 1.61529 1.72901 1.74767C1.59663 1.88006 1.5208 2.05865 1.5175 2.24584C1.5142 2.43303 1.58368 2.61419 1.71131 2.75116L5.96948 7.00933L1.71131 11.2675C1.576 11.403 1.5 11.5866 1.5 11.7781C1.5 11.9696 1.576 12.1532 1.71131 12.2887C1.84679 12.424 2.03043 12.5 2.2219 12.5C2.41338 12.5 2.59702 12.424 2.7325 12.2887L6.99067 8.03052L11.2488 12.2887C11.3843 12.424 11.568 12.5 11.7594 12.5C11.9509 12.5 12.1346 12.424 12.27 12.2887C12.4053 12.1532 12.4813 11.9696 12.4813 11.7781C12.4813 11.5866 12.4053 11.403 12.27 11.2675L8.01186 7.00933Z"
+              fill="rgb(107, 114, 128)"
+            ></path>
+          </svg>
+        </ng-container>
+      </div>
+    </div>
+    <!-- <div class="col-md-2 col-12">
+      <p-autoComplete
+        [(ngModel)]="selectedState"
+        [suggestions]="filteredStates"
+        (completeMethod)="filterStates($event)"
+        (ngModelChange)="onStateChanged($event)"
+        (onSelect)="onStateSelected($event)"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="State"
+        [dropdown]="true"
+        [showClear]="true"
+        [virtualScroll]="true"
+        [virtualScrollItemSize]="25"
+        [disabled]="isSearching"
+      >
+      </p-autoComplete>
+    </div>
+    <div class="col-md-2 col-12">
+      <p-autoComplete
+        [(ngModel)]="selectedCity"
+        [virtualScroll]="true"
+        [showClear]="true"
+        [suggestions]="filteredCities"
+        [virtualScrollItemSize]="25"
+        (completeMethod)="filterCities($event)"
+        optionLabel="label"
+        placeholder="City"
+        [dropdown]="true"
+        optionValue="value"
+        [disabled]="
+          selectedState == undefined ||
+          filteredCities == undefined ||
+          cities.length == 0 ||
+          isSearching
+        "
+      />
+    </div> -->
+    <div class="col-md-2 col-12">
+      <p-button *ngIf="isSearching" disabled="true">
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </p-button>
+      <p-button
+        *ngIf="!isSearching"
+        (onClick)="polygonSearch.trim().length > 0 && searchForPolygons()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M11.5 21.75C5.85 21.75 1.25 17.15 1.25 11.5C1.25 5.85 5.85 1.25 11.5 1.25C17.15 1.25 21.75 5.85 21.75 11.5C21.75 17.15 17.15 21.75 11.5 21.75ZM11.5 2.75C6.67 2.75 2.75 6.68 2.75 11.5C2.75 16.32 6.67 20.25 11.5 20.25C16.33 20.25 20.25 16.32 20.25 11.5C20.25 6.68 16.33 2.75 11.5 2.75Z"
+            fill="#fff"
+          />
+          <path
+            d="M21.9995 22.7504C21.8095 22.7504 21.6195 22.6804 21.4695 22.5304L19.4695 20.5304C19.1795 20.2404 19.1795 19.7604 19.4695 19.4704C19.7595 19.1804 20.2395 19.1804 20.5295 19.4704L22.5295 21.4704C22.8195 21.7604 22.8195 22.2404 22.5295 22.5304C22.3795 22.6804 22.1895 22.7504 21.9995 22.7504Z"
+            fill="#fff"
+          />
+        </svg>
+        <span>Search</span>
+      </p-button>
+    </div>
   </div>
+
   <div class="row g-3 mb-3">
     <div class="d-flex gap-2">
       <input
@@ -16,6 +126,7 @@
         type="checkbox"
         name="user-polygons"
         id="user-polygons"
+        [disabled]="userPolygons.length == 0"
         [(ngModel)]="displayUserPolygons"
       />
       <label class="form-check-label" for="user-polygons">
@@ -24,265 +135,336 @@
     </div>
   </div>
 
-  <div class="map-wrapper">
-    <ng-container
+  <div class="mb-3">
+    <ng-container>
+      <div class="w-100 d-flex align-items-center justify-content-center gap-3">
+        <div class="w-50">
+          <div class="table-container">
+            <div
+              class="w-100 d-flex align-items-start justify-content-between m-2"
+            >
+              <h6 class="table-title">Search result</h6>
+            </div>
+            <div class="scrollable-table">
+              <table
+                *ngIf="
+                  externalPolygons.length > 0 ||
+                    (displayUserPolygons && userPolygons.length > 0);
+                  else emptyPolygons
+                "
+                class="table"
+              >
+                <thead class="thead-light">
+                  <tr>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container
+                    *ngFor="
+                      let polygon of concatSearchResult();
+                      let index = index
+                    "
+                  >
+                    <tr *ngIf="!detectIncludeInSearch(polygon.id)">
+                      <td>
+                        <div
+                          class="d-flex align-items-center justify-content-between"
+                        >
+                          <span>{{ polygon.name }}</span>
+                          <ng-container
+                            *ngIf="
+                              displayedExternalPolygons.includes(polygon.id)
+                            "
+                          >
+                            <svg
+                              (click)="centerShapeOnMap(polygon)"
+                              style="
+                                height: 1.5rem;
+                                width: 1.5rem;
+                                cursor: pointer;
+                              "
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              id="aim"
+                            >
+                              <path
+                                d="M21,11H19.93A8,8,0,0,0,13,4.07V3a1,1,0,0,0-2,0V4.07A8,8,0,0,0,4.07,11H3a1,1,0,0,0,0,2H4.07A8,8,0,0,0,11,19.93V21a1,1,0,0,0,2,0V19.93A8,8,0,0,0,19.93,13H21a1,1,0,0,0,0-2Zm-4,2h.91A6,6,0,0,1,13,17.91V17a1,1,0,0,0-2,0v.91A6,6,0,0,1,6.09,13H7a1,1,0,0,0,0-2H6.09A6,6,0,0,1,11,6.09V7a1,1,0,0,0,2,0V6.09A6,6,0,0,1,17.91,11H17a1,1,0,0,0,0,2Zm-5-2a1,1,0,1,0,1,1A1,1,0,0,0,12,11Z"
+                              ></path>
+                            </svg>
+                          </ng-container>
+                        </div>
+                      </td>
+                      <td>{{ polygon.city }}</td>
+                      <td>{{ polygon.state }}</td>
+                      <td class="text-center">
+                        <div class="w-100 d-flex align-items-center gap-2">
+                          <button
+                            *ngIf="!detectIncludeInSearch(polygon.id)"
+                            class="w-100 btn"
+                            [ngClass]="{
+                              'btn-primary':
+                                !displayedExternalPolygons.includes(polygon.id),
+                              'btn-secondary':
+                                displayedExternalPolygons.includes(polygon.id)
+                            }"
+                            (click)="toggleDisplayedExternalPolygon(polygon)"
+                          >
+                            {{
+                              displayedExternalPolygons.includes(polygon.id)
+                                ? "Hide"
+                                : "View"
+                            }}
+                          </button>
+
+                          <button
+                            class="w-100 btn"
+                            [ngClass]="{
+                              'btn-danger': detectIncludeInSearch(polygon.id),
+                              'btn-dark': !detectIncludeInSearch(polygon.id)
+                            }"
+                            (click)="attachPolygonToCampaign(polygon.id)"
+                          >
+                            {{
+                              detectIncludeInSearch(polygon.id)
+                                ? "Remove"
+                                : "Add"
+                            }}
+                          </button>
+                          <ng-container
+                            *ngIf="
+                              checkHaveShoppingCenters(polygon.id) &&
+                              getShoppingCentersForPolygon(polygon.id) &&
+                              displayedExternalPolygons.includes(polygon.id)
+                            "
+                          >
+                            <button
+                              class="btn btn-success"
+                              [pTooltip]="
+                                getShoppingCentersForPolygon(polygon.id)
+                                  .length + ' Sites'
+                              "
+                              tooltipPosition="top"
+                            >
+                              {{
+                                getShoppingCentersForPolygon(polygon.id).length
+                              }}
+                            </button>
+                          </ng-container>
+
+                          <button
+                            *ngIf="searchedPolygonId == polygon.id"
+                            class="btn btn-success"
+                          >
+                            <div
+                              class="spinner-border spinner-border-sm"
+                              role="status"
+                            >
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="w-50">
+          <div class="table-container">
+            <div
+              class="w-100 d-flex align-items-start justify-content-between p-2"
+            >
+              <h6 class="table-title">Inserted polygons</h6>
+              <div
+                *ngIf="getDrawnList"
+                class="launch-campaign-btn"
+                (click)="openNewCampaignPopup(content)"
+              >
+                <div class="launch-campaign-btn-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
+                    />
+                    <path
+                      d="M16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                    />
+                    <path
+                      d="M12 16.75C11.59 16.75 11.25 16.41 11.25 16V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V16C12.75 16.41 12.41 16.75 12 16.75Z"
+                    />
+                  </svg>
+                </div>
+                <span class="launch-campaign-title">
+                  Launch Expansion Campaigns</span
+                >
+              </div>
+            </div>
+            <div class="scrollable-table">
+              <table *ngIf="getDrawnList; else emptyPolygons" class="table">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Name</th>
+                    <th class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let polygon of getDrawnPolygons; let index = index"
+                  >
+                    <td>
+                      {{ polygon.shape.get("label") ?? "Shape" }}
+                    </td>
+                    <td class="text-center">
+                      <div class="w-100 d-flex align-items-center gap-2">
+                        <button
+                          class="w-100 btn btn-danger"
+                          (click)="removePolygonWithIndex(index)"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let circle of getDrawnCircles; let index = index">
+                    <td>
+                      {{ circle.shape.get("label") ?? "Shape" }}
+                    </td>
+                    <td class="text-center">
+                      <div class="w-100 d-flex align-items-center gap-2">
+                        <button
+                          class="w-100 btn btn-danger"
+                          (click)="removeCircleWithIndex(index)"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <!-- <ng-container
       *ngIf="
         (displayUserPolygons && userPolygons.length > 0) ||
         polygonSearch.trim().length > 0 ||
         getDrawnList
       "
     >
-      <div class="dragable-polygons" cdkDragBoundary=".map-wrapper" cdkDrag>
-        <div
-          *ngIf="
-            polygonSearch.trim().length > 0 ||
-            (displayUserPolygons && userPolygons.length > 0)
-          "
-          class="w-100 h-50 ps-2 pe-2"
-          [ngClass]="{ 'h-100': !getDrawnList }"
-        >
-          <ng-container *ngIf="isSearching; else searchTable">
-            <div class="h-100 d-flex align-items-center justify-content-center">
-              <div
-                class="spinner-border"
-                role="status"
-                style="width: 3rem; height: 3rem"
-              >
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          </ng-container>
-          <ng-template #searchTable>
-            <table
-              *ngIf="
-                externalPolygons.length > 0 ||
-                  (displayUserPolygons && userPolygons.length > 0);
-                else emptyPolygons
-              "
-              class="table"
-            >
-              <thead class="thead-light">
-                <tr>
-                  <th>Name</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th class="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody
-                *ngIf="
-                  externalPolygons.length > 0 ||
-                  (displayUserPolygons && userPolygons.length > 0)
-                "
-              >
-                <ng-container
-                  *ngFor="
-                    let polygon of concatSearchResult();
-                    let index = index
-                  "
-                >
-                  <tr *ngIf="!detectIncludeInSearch(polygon.id)">
-                    <td>
-                      <div
-                        class="d-flex align-items-center justify-content-between"
-                      >
-                        <span>{{ polygon.name }}</span>
-                        <ng-container
-                          *ngIf="displayedExternalPolygons.includes(polygon.id)"
-                        >
-                          <svg
-                            (click)="centerShapeOnMap(polygon)"
-                            style="
-                              height: 1.5rem;
-                              width: 1.5rem;
-                              cursor: pointer;
-                            "
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            id="aim"
-                          >
-                            <path
-                              d="M21,11H19.93A8,8,0,0,0,13,4.07V3a1,1,0,0,0-2,0V4.07A8,8,0,0,0,4.07,11H3a1,1,0,0,0,0,2H4.07A8,8,0,0,0,11,19.93V21a1,1,0,0,0,2,0V19.93A8,8,0,0,0,19.93,13H21a1,1,0,0,0,0-2Zm-4,2h.91A6,6,0,0,1,13,17.91V17a1,1,0,0,0-2,0v.91A6,6,0,0,1,6.09,13H7a1,1,0,0,0,0-2H6.09A6,6,0,0,1,11,6.09V7a1,1,0,0,0,2,0V6.09A6,6,0,0,1,17.91,11H17a1,1,0,0,0,0,2Zm-5-2a1,1,0,1,0,1,1A1,1,0,0,0,12,11Z"
-                            ></path>
-                          </svg>
-                        </ng-container>
-                      </div>
-                    </td>
-                    <td>{{ polygon.city }}</td>
-                    <td>{{ polygon.state }}</td>
-                    <td class="text-center">
-                      <div class="w-100 d-flex align-items-center gap-2">
-                        <button
-                          *ngIf="!detectIncludeInSearch(polygon.id)"
-                          class="w-100 btn"
-                          [ngClass]="{
-                            'btn-primary': !displayedExternalPolygons.includes(
-                              polygon.id
-                            ),
-                            'btn-secondary': displayedExternalPolygons.includes(
-                              polygon.id
-                            )
-                          }"
-                          (click)="toggleDisplayedExternalPolygon(polygon)"
-                        >
-                          {{
-                            displayedExternalPolygons.includes(polygon.id)
-                              ? "Hide"
-                              : "View"
-                          }}
-                        </button>
-
-                        <button
-                          class="w-100 btn"
-                          [ngClass]="{
-                            'btn-danger': detectIncludeInSearch(polygon.id),
-                            'btn-dark': !detectIncludeInSearch(polygon.id)
-                          }"
-                          (click)="attachPolygonToCampaign(polygon.id)"
-                        >
-                          {{
-                            detectIncludeInSearch(polygon.id) ? "Remove" : "Add"
-                          }}
-                        </button>
-                        <ng-container
-                          *ngIf="
-                            checkHaveShoppingCenters(polygon.id) &&
-                            getShoppingCentersForPolygon(polygon.id) &&
-                            displayedExternalPolygons.includes(polygon.id)
-                          "
-                        >
-                          <button
-                            class="btn btn-success"
-                            [pTooltip]="
-                              getShoppingCentersForPolygon(polygon.id).length +
-                              ' Sites'
-                            "
-                            tooltipPosition="top"
-                          >
-                            {{
-                              getShoppingCentersForPolygon(polygon.id).length
-                            }}
-                          </button>
-                        </ng-container>
-
-                        <button
-                          *ngIf="searchedPolygonId == polygon.id"
-                          class="btn btn-success"
-                        >
-                          <div
-                            class="spinner-border spinner-border-sm"
-                            role="status"
-                          >
-                            <span class="visually-hidden">Loading...</span>
-                          </div>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </ng-template>
-        </div>
-        <hr
-          *ngIf="polygonSearch.trim().length > 0 && getDrawnList"
-          class="w-100"
-        />
-        <div
-          *ngIf="getDrawnList"
-          class="w-100 h-50 ps-2 pe-2"
-          [ngClass]="{ 'h-100': !(polygonSearch.trim().length > 0) }"
-        >
-          <table class="table mb-3">
-            <thead class="thead-light">
-              <tr>
-                <th>Name</th>
-                <th class="text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let polygon of getDrawnPolygons; let index = index">
-                <td>
-                  {{ polygon.shape.get("label") ?? "Shape" }}
-                </td>
-                <td class="text-center">
-                  <div class="w-100 d-flex align-items-center gap-2">
-                    <button
-                      class="w-100 btn btn-danger"
-                      (click)="removePolygonWithIndex(index)"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr *ngFor="let circle of getDrawnCircles; let index = index">
-                <td>
-                  {{ circle.shape.get("label") ?? "Shape" }}
-                </td>
-                <td class="text-center">
-                  <div class="w-100 d-flex align-items-center gap-2">
-                    <button
-                      class="w-100 btn btn-danger"
-                      (click)="removeCircleWithIndex(index)"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <ng-container *ngIf="userBuyBoxes && userBuyBoxes.length > 0">
-            <label
-              for="user-buybox"
-              class="form-label w-100 d-flex justify-content-start"
-              >Select Tenants</label
-            >
-            <select
-              id="user-buybox"
-              class="form-select mb-3"
-              aria-label="Buybox select"
-              name="userBuybox"
-              [(ngModel)]="buyBoxId"
-            >
-              <ng-container *ngFor="let buyBox of userBuyBoxes">
-                <option [value]="buyBox.id">
-                  {{ buyBox.name }}
-                </option>
-              </ng-container>
-            </select>
-          </ng-container>
-          <div
-            class="launch-campaign-btn"
-            (click)="openNewCampaignPopup(content)"
+     
+      <hr
+        *ngIf="polygonSearch.trim().length > 0 && getDrawnList"
+        class="w-100"
+      />
+      <div
+        *ngIf="getDrawnList"
+        class="w-100 h-50 ps-2 pe-2"
+        [ngClass]="{ 'h-100': !(polygonSearch.trim().length > 0) }"
+      >
+        <table class="table mb-3">
+          <thead class="thead-light">
+            <tr>
+              <th>Name</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let polygon of getDrawnPolygons; let index = index">
+              <td>
+                {{ polygon.shape.get("label") ?? "Shape" }}
+              </td>
+              <td class="text-center">
+                <div class="w-100 d-flex align-items-center gap-2">
+                  <button
+                    class="w-100 btn btn-danger"
+                    (click)="removePolygonWithIndex(index)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngFor="let circle of getDrawnCircles; let index = index">
+              <td>
+                {{ circle.shape.get("label") ?? "Shape" }}
+              </td>
+              <td class="text-center">
+                <div class="w-100 d-flex align-items-center gap-2">
+                  <button
+                    class="w-100 btn btn-danger"
+                    (click)="removeCircleWithIndex(index)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-container *ngIf="userBuyBoxes && userBuyBoxes.length > 0">
+          <label
+            for="user-buybox"
+            class="form-label w-100 d-flex justify-content-start"
+            >Select Tenants</label
           >
-            <div class="launch-campaign-btn-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
-                />
-                <path
-                  d="M16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
-                />
-                <path
-                  d="M12 16.75C11.59 16.75 11.25 16.41 11.25 16V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V16C12.75 16.41 12.41 16.75 12 16.75Z"
-                />
-              </svg>
-            </div>
-            <span class="launch-campaign-title">
-              Launch Expansion Campaigns</span
+          <select
+            id="user-buybox"
+            class="form-select mb-3"
+            aria-label="Buybox select"
+            name="userBuybox"
+            [(ngModel)]="buyBoxId"
+          >
+            <ng-container *ngFor="let buyBox of userBuyBoxes">
+              <option [value]="buyBox.id">
+                {{ buyBox.name }}
+              </option>
+            </ng-container>
+          </select>
+        </ng-container>
+        <div
+          class="launch-campaign-btn"
+          (click)="openNewCampaignPopup(content)"
+        >
+          <div class="launch-campaign-btn-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
             >
+              <path
+                d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
+              />
+              <path
+                d="M16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+              />
+              <path
+                d="M12 16.75C11.59 16.75 11.25 16.41 11.25 16V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V16C12.75 16.41 12.41 16.75 12 16.75Z"
+              />
+            </svg>
           </div>
+          <span class="launch-campaign-title"> Launch Expansion Campaigns</span>
         </div>
       </div>
-    </ng-container>
+    </ng-container> -->
+  </div>
+
+  <div class="map-wrapper">
     <div #mapContainer class="map-container w-100"></div>
 
     <div class="map-controls-container">
@@ -407,6 +589,26 @@
         />
       </svg>
     </div>
+    <ng-container *ngIf="userBuyBoxes && userBuyBoxes.length > 0">
+      <label
+        for="user-buybox"
+        class="form-label w-100 d-flex justify-content-start"
+        >Select Tenants</label
+      >
+      <select
+        id="user-buybox"
+        class="form-select mb-3"
+        aria-label="Buybox select"
+        name="userBuybox"
+        [(ngModel)]="buyBoxId"
+      >
+        <ng-container *ngFor="let buyBox of userBuyBoxes">
+          <option [value]="buyBox.id">
+            {{ buyBox.name }}
+          </option>
+        </ng-container>
+      </select>
+    </ng-container>
     <input
       type="text"
       class="form-control mb-3 campaign-name-input"
@@ -437,10 +639,7 @@
         </button>
       </div>
       <div class="col-6">
-        <button
-          class="w-100 save-campaign"
-          (click)="campaignName.trim().length > 0 && createNewCampaign()"
-        >
+        <button class="w-100 save-campaign" (click)="createNewCampaign()">
           Add
         </button>
       </div>
@@ -455,10 +654,10 @@
     <img
       src="../../../../assets/Images/empty-state.png"
       alt="empty polygons"
-      style="width: 50%"
+      style="height: 50%"
     />
-    <div class="text-center" style="font-size: 1.5rem; font-weight: 700">
-      No polygons founded
+    <div class="text-center" style="font-size: 1.25rem; font-weight: 600">
+      Polygons will be shown in this area.
     </div>
   </div>
 </ng-template>

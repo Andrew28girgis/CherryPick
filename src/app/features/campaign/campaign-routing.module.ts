@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CampaignManagerComponent } from './campaign-manager/campaign-manager.component';
+import { AddCampaignComponent } from './add-campaign/add-campaign.component';
 
 const routes: Routes = [
   { path: '', component: CampaignManagerComponent },
+  { path: 'add-campaign', component: AddCampaignComponent },
   {
     path: 'ataglance/:id',
     loadChildren: () =>
