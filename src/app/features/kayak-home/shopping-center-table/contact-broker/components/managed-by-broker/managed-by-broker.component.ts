@@ -63,6 +63,8 @@ export class ManagedByBrokerComponent implements OnChanges {
       }
 
       this.spinner.hide();
+    }else{
+      this.onStepDone.emit([]);
     }
   }
 

@@ -181,50 +181,31 @@ export class TableViewComponent implements OnInit, OnDestroy {
     this.shoppingCenterService.toggleShortcuts(id, close, event);
   }
 
+  outsideClickHandlerr = (event: Event): void => {
+    const targetElement = event.target as HTMLElement;
+    const isInside = targetElement.closest(
+      '.shortcuts_iconCard, .ellipsis_icont'
+    );
+
+    if (!isInside) {
+      this.shoppingCenterService.setSelectedIdCard(null);
+      document.removeEventListener('click', this.outsideClickHandlerr);
+    }
+  };
+
   toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
     event?.stopPropagation();
 
-    // If clicking on the same card that's already selected, close it
     if (this.selectedIdCard === id) {
-      this.selectedIdCard = null;
       this.shoppingCenterService.setSelectedIdCard(null);
-
-      // Remove the outside click handler
-      if (this.outsideClickHandler) {
-        document.removeEventListener('click', this.outsideClickHandler);
-        this.outsideClickHandler = null;
-      }
+      document.removeEventListener('click', this.outsideClickHandlerr);
     } else {
-      // Otherwise, select the new card
-      this.selectedIdCard = id;
       this.shoppingCenterService.setSelectedIdCard(id);
-
-      // Add event listener to handle clicks outside
-      if (this.outsideClickHandler) {
-        document.removeEventListener('click', this.outsideClickHandler);
-      }
-
-      this.outsideClickHandler = (e: Event) => {
-        const targetElement = e.target as HTMLElement;
-        const isInside = targetElement.closest(
-          '.shortcuts_iconCard, .ellipsis_icont'
-        );
-
-        if (!isInside) {
-          this.selectedIdCard = null;
-          this.shoppingCenterService.setSelectedIdCard(null);
-          document.removeEventListener('click', this.outsideClickHandler!);
-          this.outsideClickHandler = null;
-          this.cdr.detectChanges();
-        }
-      };
-
       setTimeout(() => {
-        document.addEventListener('click', this.outsideClickHandler!);
+        document.addEventListener('click', this.outsideClickHandlerr);
       });
     }
   }
-
   isLast(currentItem: any, array: any[]): boolean {
     return this.shoppingCenterService.isLast(currentItem, array);
   }
