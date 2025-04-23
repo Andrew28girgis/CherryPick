@@ -64,6 +64,8 @@ import { organizationContacts } from 'src/app/shared/models/organizationContacts
 })
 export class TenantComponent implements OnInit, AfterViewInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
+  @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
+  email: string = '';  
   public files: NgxFileDropEntry[] = [];
   selectedShoppingID!: string | undefined;
   JsonPDF!: jsonGPT;
@@ -124,10 +126,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     | undefined;
   filteredLeasePlacesManage: any[] = [];
   allBuildingSizes: any[] = [];
-  ////////////////
-  @ViewChild('buildingSizesSubmissionModal') buildingSizesSubmissionModal:
-    | TemplateRef<any>
-    | undefined;
+  @ViewChild('buildingSizesSubmissionModal') buildingSizesSubmissionModal: TemplateRef<any> | undefined;
   modalPlaces: any[] = [];
   @ViewChild('leasePricesSubmissionModal') leasePricesSubmissionModal:
     | TemplateRef<any>
@@ -144,29 +143,60 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private mapDrawingService: CampaignDrawingService,
     private shoppingCenterService: ViewManagerService
   ) {}
-
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       this.contactID = params.get('contactId');
     });
-    // this.contactID = localStorage.getItem('contactId');
-
     this.activatedRoute.params.subscribe((params) => {
       this.guid = params['guid'];
-      this.GetCampaignFromGuid();
-      // this.GetCampaignDetails();
     });
-
+  
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
+    if (this.contactID === '0') {
+      this.openEmailModal(); 
+    } else {
+      this.GetCampaignFromGuid();
+      this.proceedWithNextSteps(); 
+    }
+
+  }
+  openEmailModal(): void {
+    this.modalService.open(this.emailModal, { size: 'md', centered: true });
+  }
+  getContactByEmail(modal: any): void {
+    this.spinner.show();
+  
+    if (this.email && this.email.trim()) {
+      const body = {
+        Name: 'GetContactByEmail',
+        Params: {
+          ContactEmail: this.email
+        }
+      };
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          this.spinner.hide();
+  
+          if (res.json && res.json[0] && res.json[0].id) {
+            this.contactID = res.json[0].id;
+            this.router.navigate([`/${this.guid}/${this.contactID}`], { replaceUrl: true });
+
+            modal.close();
+            this.GetCampaignFromGuid();
+            this.proceedWithNextSteps();
+          } 
+        },
+      });
+    }
+  }
+  proceedWithNextSteps(): void {
     this.GetUserSubmissionData();
     this.GetShoppingCenterManageInCampaign();
     this.GetUserSubmissionsShoppingCenters();
   }
-
   GetCampaignFromGuid(): void {
-    this.spinner.show();
     const body: any = {
       Name: 'GetCampaignFromGuid',
       Params: {
