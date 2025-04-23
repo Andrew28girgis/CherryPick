@@ -328,6 +328,9 @@
 .fa-share.outbox {
   color: #6c757d;
 }
+.fa-pencil-alt.drafts {
+  color: #aaa22d;
+}
 
 .fa-envelope-circle-check.send {
   color: #28a745;

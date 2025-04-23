@@ -26,6 +26,7 @@ import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { EmailComposeComponent } from './email-compose/email-compose.component';
+import { IEmailContent } from '../../kayak-home/shopping-center-table/contact-broker/models/iemail-content';
 
 @Component({
   selector: 'app-inbox',
@@ -38,7 +39,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   emailsSentContact: Mail[] = [];
   selectedContact: Contact | null = null;
   loginContact: any;
-  emptyMessage: string = 'Select Contact in organization';
+  emptyMessage: string = '';
   selectedEmail: EmailInfo | null = null;
   organization: any = {};
   contacts: Contact[] = [];
@@ -96,6 +97,20 @@ export class InboxComponent implements OnInit, AfterViewChecked {
     });
   }
 
+  // getAllEmails(): void {
+  //   const body: any = {
+  //     Name: 'GetBuyBoxEmails',
+  //     MainEntity: null,
+  //     Params: { buyboxid: this.buyBoxId },
+  //     Json: null,
+  //   };
+  //   this.PlacesService.GenericAPI(body).subscribe({
+  //     next: (data) => {
+  //       this.BuyBoxEmails = data.json;
+  //       this.filteredEmails = this.sortEmails(data.json);
+  //     },
+  //   });
+  // }
   getAllEmails(): void {
     const body: any = {
       Name: 'GetBuyBoxEmails',
@@ -107,6 +122,9 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       next: (data) => {
         this.BuyBoxEmails = data.json;
         this.filteredEmails = this.sortEmails(data.json);
+        
+        // Apply the current filter
+        this.filterEmails(this.selectedFilter);
       },
     });
   }
@@ -285,55 +303,114 @@ export class InboxComponent implements OnInit, AfterViewChecked {
 
   getDirectionIcon(direction: number): string {
     return direction === 2
-      ? 'fa-reply send'
+      ? 'fa-reply send'           // Sent
       : direction === -1
-      ? 'fa-reply outbox'
+      ? 'fa-reply outbox'         // Outbox
       : direction === 1
-      ? 'fa-share inbox'
-      : '';
+      ? 'fa-share inbox'          // Inbox
+      : direction === 4
+      ? 'fa-pencil-alt drafts'    // Drafts
+      : ''; // Default: return an empty string if the direction is unknown
   }
 
+  // filterEmails(filterType: string): void {
+  //   this.selectedFilter = filterType;
+  //   this.selected = null; // Reset selected email to show the list view
+
+  //   // If no emails or contact selected, don't try to filter.
+  //   if (!this.selectedContact || this.emailsSentContact?.length === 0) {
+  //     this.filteredEmails = [];
+  //     this.selectedEmail = null;
+  //     return;
+  //   }
+  //   // Apply the filter based on the selected type.
+  //   let filtered: Mail[] = [];
+  //   switch (filterType) {
+  //     case 'inbox':
+  //       filtered = this.emailsSentContact.filter(
+  //         (email) => email.Direction === 1
+  //       );
+  //       break;
+  //     case 'outbox':
+  //       filtered = this.emailsSentContact.filter(
+  //         (email) => email.Direction === -1
+  //       );
+  //       break;
+  //     case 'sent':
+  //       filtered = this.emailsSentContact.filter(
+  //         (email) => email.Direction === 2
+  //       );
+  //       break;
+  //     case 'drafts':
+  //       filtered = this.emailsSentContact.filter(
+  //         (email) => email.Direction === 4
+  //       );
+  //       break;
+  //     case 'all':
+  //     default:
+  //       filtered = [...this.emailsSentContact];
+  //       break;
+  //   }
+  //   this.filteredEmails = this.sortEmails(filtered);
+  //   if (this.filteredEmails.length === 0) {
+  //     this.emptyMessage = `No ${filterType} emails available for this contact`;
+  //     this.selectedEmail = null;
+  //   } else if (
+  //     !this.selectedEmail ||
+  //     !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
+  //   ) {
+  //   }
+  // }
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
     this.selected = null; // Reset selected email to show the list view
-
-    // If no emails or contact selected, don't try to filter.
-    if (!this.selectedContact || this.emailsSentContact?.length === 0) {
+  
+    // Create a properly typed source array based on whether a contact is selected
+    let sourceEmails: Mail[] = [];
+    
+    if (this.selectedContact) {
+      // If contact is selected, use their emails
+      sourceEmails = this.emailsSentContact;
+    } else {
+      // If no contact is selected, use all emails
+      sourceEmails = this.BuyBoxEmails as any[] as Mail[];
+      // You might need to adjust this depending on the actual structure of BuyBoxEmails
+    }
+    
+    // If no emails available, don't try to filter
+    if (!sourceEmails || sourceEmails.length === 0) {
       this.filteredEmails = [];
       this.selectedEmail = null;
+      this.emptyMessage = 'No emails available';
       return;
     }
-    // Apply the filter based on the selected type.
+  
+    // Apply the filter based on the selected type
     let filtered: Mail[] = [];
     switch (filterType) {
       case 'inbox':
-        filtered = this.emailsSentContact.filter(
-          (email) => email.Direction === 1
-        );
+        filtered = sourceEmails.filter(email => email.Direction === 1);
         break;
       case 'outbox':
-        filtered = this.emailsSentContact.filter(
-          (email) => email.Direction === -1
-        );
+        filtered = sourceEmails.filter(email => email.Direction === -1);
         break;
       case 'sent':
-        filtered = this.emailsSentContact.filter(
-          (email) => email.Direction === 2
-        );
+        filtered = sourceEmails.filter(email => email.Direction === 2);
+        break;
+      case 'drafts':
+        filtered = sourceEmails.filter(email => email.Direction === 4);
         break;
       case 'all':
       default:
-        filtered = [...this.emailsSentContact];
+        filtered = [...sourceEmails];
         break;
     }
+  
     this.filteredEmails = this.sortEmails(filtered);
+    
     if (this.filteredEmails.length === 0) {
-      this.emptyMessage = `No ${filterType} emails available for this contact`;
+      // this.emptyMessage = `No ${filterType} emails available`;
       this.selectedEmail = null;
-    } else if (
-      !this.selectedEmail ||
-      !this.filteredEmails.some((email) => email.id === this.selectedEmail?.ID)
-    ) {
     }
   }
 
@@ -491,9 +568,23 @@ export class InboxComponent implements OnInit, AfterViewChecked {
     });
   }
 
+  // showAllEmails() {
+  //   this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
+  //   this.getAllEmails();
+  // }
   showAllEmails() {
-    this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
+    // Close all organization dropdowns
+    this.BuyBoxMicroDeals.forEach(item => (item.isOpen = false));
+    
+    // Clear the selected contact
+    this.selectedContact = null;
+    
+    // Reset to show all emails
+    this.emailsSentContact = [];
     this.getAllEmails();
+    
+    // Apply the current filter to all emails
+    this.filterEmails(this.selectedFilter);
   }
 
   showToast(message: string) {
@@ -536,4 +627,54 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       })
       .catch(() => { /* dismissed */ });
   }
+  send(email: EmailInfo | null): void {
+    if (!email) {
+      // Handle the case where email is null (for example, show an error message or return early)
+      return;
+    }
+  
+    // Map EmailInfo to Mail (creating a new Mail object)
+    const mail: Mail = {
+      body: email.Body,  // Mapping Body from EmailInfo to Mail
+      id: email.ID,  // Mapping ID from EmailInfo to Mail
+      Subject: email.Subject,  // Mapping Subject from EmailInfo to Mail
+      Date: email.Date,  // Mapping Date from EmailInfo to Mail
+      Direction: email.Direction,  // Mapping Direction from EmailInfo to Mail
+      ContactId: email.ContactId,  // Mapping ContactId from EmailInfo to Mail
+      O: []  // Assuming O is an array and you might need to adjust this
+    };
+  
+    const emailContent: IEmailContent = {
+      mailId: mail.id,
+      direction: mail.Direction,
+      subject: mail.Subject,
+      body: mail.body,  // Mail body
+      organizationId: 0,  // You can fill this in as needed
+      organizationName: '',  // You can fill this in as needed
+      isEditing: false  // Adjust this based on your needs
+    };
+  
+    this.spinner.show();
+  
+    const body: any = {
+      Name: 'UpdateEmailData',
+      MainEntity: null,
+      Params: {
+        MailId: emailContent.mailId,
+        Subject: emailContent.subject,
+        Body: emailContent.body,
+      },
+      Json: null,
+    };
+  
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+        this.showToast('Email sent successfully');
+        this.getAllEmails();
+      },
+    });
+  }
+  
+  
 }
