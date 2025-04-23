@@ -159,8 +159,7 @@ export class EmailInboxComponent implements OnInit {
                 id: prompt?.Id || null,
                 name: prompt?.Name || 'Unnamed Prompt',
                 promptText: prompt?.PromptText || 'No prompt text available',
-              }));
-              // Set the first prompt as selected by default
+              })); 
               this.selectedPromptId = this.prompts[0].id;
             } else {
               this.prompts = [];
