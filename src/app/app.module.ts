@@ -4,8 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-// Components & Directives
 import { AppComponent } from './app.component';
 import { LoginComponent } from './shared/components/login/login.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
