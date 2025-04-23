@@ -29,27 +29,22 @@ export class AppComponent implements OnInit {
     //   }
     // });
 
-
-        this.router.events
-        .pipe(
-          filter(event => event instanceof NavigationEnd),
-          map(() => {
-            // Traverse the activated route to the deepest child
-            let route = this.activatedRoute;
-            while (route.firstChild) {
-              route = route.firstChild;
-            }
-            return route;
-          }),
-          mergeMap(route => route.data)
-        )
-        .subscribe((data:any) => {
-       
-          
-          // If the current route has data { hideHeader: true }, then do not display the header.
-          this.display = !data.hideHeader;
-         
-        });
-}
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        map(() => {
+          // Traverse the activated route to the deepest child
+          let route = this.activatedRoute;
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        }),
+        mergeMap((route) => route.data)
+      )
+      .subscribe((data: any) => {
+        // If the current route has data { hideHeader: true }, then do not display the header.
+        this.display = !data.hideHeader;
+      });
   }
-
+}

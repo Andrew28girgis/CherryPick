@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { General } from 'src/app/shared/models/domain';
-   
 import { Center, Place } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
@@ -19,13 +18,15 @@ import { ShareOrg } from 'src/app/shared/models/shareOrg';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { MapsService } from 'src/app/core/services/maps.service';
 import { StateService } from 'src/app/core/services/state.service';
+import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { Subscription, combineLatest, take } from 'rxjs';
 declare const google: any;
 @Component({
   selector: 'app-map-view',
   templateUrl: './map-view.component.html',
   styleUrls: ['./map-view.component.css'],
 })
-export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MapViewComponent implements OnInit, OnDestroy {
   @ViewChild('map') mapElement!: ElementRef;
   @Output() viewChange = new EventEmitter<number>();
   map: any;
@@ -44,11 +45,13 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedCity = '';
   BuyBoxName = '';
   ShareOrg: ShareOrg[] = [];
+  isdataLoaded = false;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService,
-        
+    private viewManagerService: ViewManagerService,
     private markerService: MapsService,
     private stateService: StateService,
     private ngZone: NgZone
@@ -66,15 +69,48 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
     });
 
-    this.BuyBoxPlacesCategories(this.BuyBoxId);
-    this.GetOrganizationById(this.OrgId);
-    this.getShoppingCenters(this.BuyBoxId);
-    this.getBuyBoxPlaces(this.BuyBoxId);
+    // Subscribe to data from ViewManagerService
+    this.subscribeToServiceData();
+    this.viewManagerService.initializeData(this.BuyBoxId, this.OrgId);
+  }
+  private subscribeToServiceData(): void {
+    // Subscribe to data loaded event
+    this.subscriptions.push(
+      this.viewManagerService.dataLoadedEvent$.subscribe(() => {
+        // When all data is loaded, get it from the service
+        this.loadDataFromService();
+      })
+    );
   }
 
-  ngAfterViewInit(): void {
-    this.initMap();
+  private loadDataFromService(): void {
+    combineLatest([
+      this.viewManagerService.shoppingCenters$,
+      this.viewManagerService.buyboxPlaces$,
+      this.viewManagerService.buyboxCategories$,
+      this.viewManagerService.shareOrg$,
+    ])
+      .pipe(take(1))
+      .subscribe(
+        ([shoppingCenters, buyboxPlaces, buyboxCategories, shareOrg]) => {
+          // Get shopping centers from service
+          this.shoppingCenters = shoppingCenters;
+
+          // Get buybox places from service
+          this.buyboxPlaces = buyboxPlaces;
+
+          // Get buybox categories from service
+          this.buyboxCategories = buyboxCategories;
+
+          // Get share org from service
+          this.ShareOrg = shareOrg;
+
+          // After data is loaded, update the map
+          this.getAllMarker();
+        }
+      );
   }
+
 
   ngOnDestroy(): void {
     this.clearMarkers();
@@ -86,7 +122,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-      
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
@@ -98,9 +133,9 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.shoppingCenters = data.json;
         this.stateService.setShoppingCenters(data.json);
-             
+
         this.getBuyBoxPlaces(this.BuyBoxId);
-      }
+      },
     });
   }
 
@@ -128,7 +163,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         });
         this.getAllMarker();
-      }
+      },
     });
   }
 
@@ -150,7 +185,7 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       next: (data) => {
         this.ShareOrg = data.json;
         this.stateService.setShareOrg(data.json);
-      }
+      },
     });
   }
 
@@ -172,13 +207,12 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.buyboxCategories = data.json;
         this.stateService.setBuyboxCategories(data.json);
         this.getShoppingCenters(this.BuyBoxId);
-      }
+      },
     });
   }
 
   async getAllMarker() {
     try {
-        
       const { Map } = await google.maps.importLibrary('maps');
 
       const mapElement = document.getElementById('map') as HTMLElement;
@@ -196,15 +230,10 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.map = new Map(mapElement, {
           center: {
-            lat: this.shoppingCenters
-              ? this.shoppingCenters?.[0]?.Latitude
-              : this.standAlone?.[0]?.Latitude || 0,
-            lng: this.shoppingCenters
-              ? this.shoppingCenters?.[0]?.Longitude
-              : this.standAlone?.[0]?.Longitude || 0,
+            lat: this.shoppingCenters?.[0]?.Latitude,
+            lng: this.shoppingCenters?.[0]?.Longitude,
           },
-          zoom: 8,
-          mapId: '1234567890',
+          zoom: 11,
         });
       }
 
@@ -223,7 +252,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.createCustomMarkers(this.buyboxCategories);
     } catch (error) {
     } finally {
-           
     }
   }
 
@@ -300,104 +328,6 @@ export class MapViewComponent implements OnInit, AfterViewInit, OnDestroy {
         zoom: zoom,
       })
     );
-  }
-
-  private initMap(): void {
-    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-      setTimeout(() => this.initMap(), 1000);
-      return;
-    }
-
-    const mapOptions = {
-      center: { lat: 37.0902, lng: -95.7129 },
-      zoom: 4,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
-      mapTypeControl: true,
-      mapTypeControlOptions: {
-        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-        position: google.maps.ControlPosition.TOP_RIGHT,
-      },
-      fullscreenControl: true,
-      streetViewControl: true,
-      zoomControl: true,
-    };
-
-    this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-    if (this.shoppingCenters.length > 0) {
-      this.addMarkersToMap();
-    }
-  }
-
-  private addMarkersToMap(): void {
-    if (!this.map || !this.shoppingCenters.length) return;
-
-    this.clearMarkers();
-    const bounds = new google.maps.LatLngBounds();
-
-    this.shoppingCenters.forEach((center: any) => {
-      if (center.Latitude && center.Longitude) {
-        const position = new google.maps.LatLng(
-          center.Latitude,
-          center.Longitude
-        );
-        bounds.extend(position);
-
-        const marker = new google.maps.Marker({
-          position: position,
-          map: this.map,
-          title: center.CenterName,
-          animation: google.maps.Animation.DROP,
-          icon: {
-            url: 'assets/Images/Icons/map-marker.png',
-            scaledSize: new google.maps.Size(30, 40),
-          },
-        });
-
-        const infoWindow = new google.maps.InfoWindow({
-          content: this.createInfoWindowContent(center),
-        });
-
-        marker.addListener('click', () => {
-          this.closeAllInfoWindows();
-          infoWindow.open(this.map, marker);
-        });
-
-        this.markers.push(marker);
-        this.infoWindows.push(infoWindow);
-      }
-    });
-
-    if (!bounds.isEmpty()) {
-      this.map.fitBounds(bounds);
-
-      // Adjust zoom level if there's only one marker
-      if (this.markers.length === 1) {
-        this.ngZone.runOutsideAngular(() => {
-          google.maps.event.addListenerOnce(this.map, 'bounds_changed', () => {
-            this.map.setZoom(15);
-          });
-        });
-      }
-    }
-  }
-
-  private createInfoWindowContent(center: any): string {
-    return `
-      <div class="info-window">
-        <h4>${center.CenterName}</h4>
-        <p>${center.CenterAddress}, ${center.CenterCity}, ${
-      center.CenterState
-    }</p>
-        <a href="/landing/${center.ShoppingCenter?.Places?.[0]?.Id || 0}/${
-      center.Id
-    }/${this.BuyBoxId}" class="info-link">View Details</a>
-      </div>
-    `;
-  }
-
-  private closeAllInfoWindows(): void {
-    this.infoWindows.forEach((window) => window.close());
   }
 
   private clearMarkers(): void {

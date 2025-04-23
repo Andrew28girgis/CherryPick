@@ -27,6 +27,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userAvatar: string | null = null;
   currentView: UserView = 'campaigns';
   currentRoute = '';
+  contactId: any;
+  showRecord: boolean = false;
+  showlink: boolean = false;
 
   // Subscriptions
   private subscriptions: Subscription[] = [];
@@ -42,6 +45,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.setupRouteSubscriptions();
     this.setupUserViewSubscription();
     this.fetchUserAvatar();
+    // Update showlink on every navigation event in case login state changes
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.showlink = Number(localStorage.getItem('contactId')) === 15562;
+      });
   }
 
   ngOnDestroy(): void {

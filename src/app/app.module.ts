@@ -4,8 +4,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-// Components & Directives
 import { AppComponent } from './app.component';
 import { LoginComponent } from './shared/components/login/login.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
@@ -50,6 +48,7 @@ import { EditorModule } from 'primeng/editor';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { CampaignModule } from './features/campaign/campaign.module';
 import { EmailInboxComponent } from './features/emily/email-inbox/email-inbox.component';
+import { EmailComposeComponent } from './features/emily/inbox/email-compose/email-compose.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +73,7 @@ import { EmailInboxComponent } from './features/emily/email-inbox/email-inbox.co
     InboxComponent,
     NewMulipleEmailComponent,
     EmailInboxComponent,
+    EmailComposeComponent,
   ],
   imports: [
     BrowserModule,
