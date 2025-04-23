@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
@@ -8,14 +9,19 @@ import { PlacesService } from 'src/app/core/services/places.service';
   styleUrl: './add-campaign.component.css',
 })
 export class AddCampaignComponent implements OnInit {
-  protected userBuyBoxes!: { id: number; name: string }[] ;
+  protected userBuyBoxes!: { id: number; name: string }[];
 
   constructor(
     private placesService: PlacesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Campaigns', url: '/campaigns' },
+      { label: 'Add Campaign', url: '/add-campaign' },
+    ]);
     this.getUserBuyBoxes();
   }
 

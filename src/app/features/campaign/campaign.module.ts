@@ -11,9 +11,17 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddCampaignComponent } from './add-campaign/add-campaign.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
-  declarations: [CampaignDrawingComponent, CampaignManagerComponent, AddCampaignComponent],
+  declarations: [
+    CampaignDrawingComponent,
+    CampaignManagerComponent,
+    AddCampaignComponent,
+  ],
   imports: [
     CommonModule,
     CampaignRoutingModule,
@@ -22,7 +30,10 @@ import { AddCampaignComponent } from './add-campaign/add-campaign.component';
     SelectButtonModule,
     DragDropModule,
     NgbCollapseModule,
-    TooltipModule
+    TooltipModule,
+    InputTextModule,
+    AutoCompleteModule,
+    ButtonModule
   ],
   exports: [CampaignDrawingComponent],
 })
