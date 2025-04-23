@@ -24,6 +24,7 @@ export class EmailComposeComponent implements OnInit {
   emailSubject = '';
   emailBody = '';
   sanitizedEmailBody!: SafeHtml;
+  sanitizedEmailBodyContext!: SafeHtml;
   showGenerateSection = false;
   listcenterName: string[] = [];
   GetShoppingCenters: ICenterData[] = [];
@@ -154,7 +155,7 @@ export class EmailComposeComponent implements OnInit {
 
     this.places.GenerateContext(dto as GenerateContextDTO).subscribe((res) => {
       this.ContextEmail = res.context.replace(/\n/g, '<br>');
-      this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
+      this.sanitizedEmailBodyContext = this.sanitizer.bypassSecurityTrustHtml(
         this.ContextEmail
       );
       this.showGenerateSection = true;

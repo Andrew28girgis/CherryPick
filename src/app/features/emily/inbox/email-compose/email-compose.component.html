@@ -87,7 +87,7 @@
                : 'fa-solid fa-arrow-down'">
           </i>
         </span>
-        
+
         <div *ngIf="isAdvancedVisible" class="mt-2">
           <div *ngFor="let opt of flagOptions" class="form-check mb-2">
             <input class="form-check-input"
@@ -121,7 +121,7 @@
           </button>
          </div> -->
 
-        <div class="mb-3">
+        <div class="mb-3" *ngIf="sanitizedEmailBody">
           <label for="subject" class="form-label">Subject</label>
           <input
             id="subject"
@@ -131,7 +131,7 @@
           />
         </div>
 
-        <div
+        <div *ngIf="sanitizedEmailBody"
           class="email-body"
           [innerHTML]="sanitizedEmailBody"
           contenteditable="true"
