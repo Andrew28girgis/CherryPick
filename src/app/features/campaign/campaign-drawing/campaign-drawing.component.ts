@@ -709,5 +709,7 @@ export class CampaignDrawingComponent
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.campaignDrawingService.clearDrawnLists();
+    this.campaignDrawingService.completelyRemoveExplorePolygon();
   }
 }
