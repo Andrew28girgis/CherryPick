@@ -195,8 +195,7 @@ export class EmailInboxComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.generated = data.json || [];
-
+        this.generated = data.json || []; 
         this.ManagerOrganizationName =
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
@@ -457,7 +456,7 @@ export class EmailInboxComponent implements OnInit {
       },
     });
   }
-  
+
   onContentEditChange(event: Event) {
     const target = event.target as HTMLElement;
     // Mark as editing
