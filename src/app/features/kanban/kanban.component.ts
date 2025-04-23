@@ -339,8 +339,7 @@ export class KanbanComponent implements OnInit, OnDestroy {
   getKanban(kanbanId: number) {
     this.kanbanDetails = undefined;
 
-    if(this.displayBreadcrumb)
-    {
+    if (this.displayBreadcrumb) {
       this.selectedKanbanId = kanbanId;
     }
     // this.cadenceService.updateKanbanId(kanbanId);
