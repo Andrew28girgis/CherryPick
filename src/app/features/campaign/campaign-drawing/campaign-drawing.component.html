@@ -1,6 +1,6 @@
 <div class="h-100 d-flex flex-column">
   <div class="row mb-3 g-3">
-    <div class="col-md-6 col-12">
+    <div class="col-md-10 col-12">
       <div class="search-field">
         <svg
           class="search-icon"
@@ -50,7 +50,7 @@
         </ng-container>
       </div>
     </div>
-    <div class="col-md-2 col-12">
+    <!-- <div class="col-md-2 col-12">
       <p-autoComplete
         [(ngModel)]="selectedState"
         [suggestions]="filteredStates"
@@ -87,7 +87,7 @@
           isSearching
         "
       />
-    </div>
+    </div> -->
     <div class="col-md-2 col-12">
       <p-button *ngIf="isSearching" disabled="true">
         <div class="spinner-border spinner-border-sm" role="status">
