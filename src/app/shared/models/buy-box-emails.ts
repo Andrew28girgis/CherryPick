@@ -40,6 +40,7 @@ export interface BuyBoxEmails {
 }
 
 export interface Mail {
+  body: string
   id: number
   Subject: string
   Date: string
