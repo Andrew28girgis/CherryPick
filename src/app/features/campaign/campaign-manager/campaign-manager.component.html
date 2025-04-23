@@ -398,8 +398,8 @@
                     <div class="stage-name">{{ kanbanStage.stageName }}</div>
                     <div class="stage-value">
                       {{
-                        kanbanStage.kanbanOrganizations[0].Id
-                          ? kanbanStage.kanbanOrganizations.length
+                        kanbanStage.MarketSurveyShoppingCenters[0].Id
+                          ? kanbanStage.MarketSurveyShoppingCenters.length
                           : 0
                       }}
                     </div>
@@ -614,30 +614,20 @@
                   >
                 </td>
 
-                <ng-container *ngFor="let kanbanStage of campaign.Kanban">
+                <ng-container *ngFor="let stage of stages">
                   <td style="text-align: center">
                     <div
                       class="d-flex flex-column align-items-center justify-content-center gap-2"
                     >
                       <div>
                         {{
-                          kanbanStage.kanbanOrganizations[0].Id
-                            ? kanbanStage.kanbanOrganizations.length
-                            : 0
+                          getKanbanCount(stage.stageName,campaign.Kanban)
                         }}
                       </div>
-                      <!-- <a
-                        class="hyber-link"
-                        *ngIf="
-                          kanbanStage.stageName.toLowerCase() ==
-                          'Precontact'.toLowerCase()
-                        "
-                        (click)="goToEmily(c, index, true)"
-                        >Launch Campaign</a
-                      > -->
                     </div>
                   </td>
                 </ng-container>
+                
               </tr>
             </ng-container>
           </ng-container>

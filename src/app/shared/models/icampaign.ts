@@ -1,22 +1,21 @@
-export interface ICampaign  {
-  id: number
-  name: string
-  organizationid: number
-  Campaigns: Campaign[]
+export interface ICampaign {
+  id: number;
+  name: string;
+  organizationid: number;
+  Campaigns: Campaign[];
 }
 
 export interface Campaign {
-  Id: number
-  CampaignPrivacy: number
-  CampaignName: string
-  CreatedDate: string
-  MailsSent: number
-  Submissions?: Submission[] 
-  Sites: number
-  Stages?: Stage[]
-  expanded?: boolean
-  Kanban: KanbanStage[]; 
-
+  Id: number;
+  CampaignPrivacy: number;
+  CampaignName: string;
+  CreatedDate: string;
+  MailsSent: number;
+  Submissions?: Submission[];
+  Sites: number;
+  Stages?: Stage[];
+  expanded?: boolean;
+  Kanban: KanbanStage[];
 }
 export interface MailsSent {
   MailsSent: number;
@@ -28,29 +27,33 @@ export interface KanbanStage {
   stageOrder: number;
   isQualified: boolean;
   KanbanTemplateId: number;
-  kanbanOrganizations: KanbanOrganization[]; 
+  MarketSurveyShoppingCenters: KanbanOrganization[];
 }
 export interface KanbanOrganization {
   Id: number;
-  OrganizationId: number;
   kanbanStageId: number;
+  BuyboxId: number;
+  ShoppingCenterId: number;
+  Deleted: boolean;
+  CampaignId: number;
+  CampaignPolygonId: number;
 }
 
 export interface Submission {
-  Id: number
-  UserId: number
-  ShoppingCenterId: number
-  CreatedDate: string
-  CampaignId: number
-  StatusId: number
-  SourceId: number
+  Id: number;
+  UserId: number;
+  ShoppingCenterId: number;
+  CreatedDate: string;
+  CampaignId: number;
+  StatusId: number;
+  SourceId: number;
 }
 
 export interface MailsSent {
-  MailsSent: number
+  MailsSent: number;
 }
 
 export interface Stage {
-  stageName: string
-  Organizations: number
+  stageName: string;
+  Organizations: number;
 }
