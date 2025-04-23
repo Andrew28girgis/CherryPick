@@ -39,6 +39,26 @@
   width: 24px;
   height: 24px;
 }
+.custom-button {
+  padding: 10px 15px; 
+  font-size: 15px; 
+  border-radius: 10px; 
+}
+
+.custom-button-secondary {
+  background-color: #6c757d; 
+  color: white;
+  border: none;
+}
+.custom-button-primary {
+  background-color: #007bff; 
+  color: white;
+  border: none;
+}
+
+.custom-button:hover {
+  opacity: 0.9; 
+}
 
 .spec-title {
   color: #707791;
