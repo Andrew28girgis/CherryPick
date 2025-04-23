@@ -39,7 +39,7 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.spinner.hide();
-    this.readSpecificMails();
+    this.checkMailGenerated();
   }
 
   ngAfterViewInit(): void {
@@ -83,9 +83,36 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
         this.emails.forEach((email) => {
           email.isEditing = false;
         });
-      } else {
-        setTimeout(async () => {
+      }
+    });
+  }
+
+  checkMailGenerated(): void {
+    const body = {
+      Name: 'CheckMailGenerated',
+      Params: {
+        MailContextId: this.mailContextId,
+      },
+    };
+    this.placeService.GenericAPI(body).subscribe((response: any) => {
+      if (response.json && response.json.length > 0) {
+        const data: {
+          isGenerated: boolean;
+          errorMessage: string | null;
+        } = response.json[0];
+        if (data.errorMessage) {
+          this.dataLoaded = true;
+          alert(
+            'Email generation is taking longer than expected. Please close this window and check your drafts folder in Emily later.'
+          );
+          this.onStepDone.emit();
+          return;
+        } else if (data.isGenerated) {
           this.readSpecificMails();
+          return;
+        }
+        setTimeout(async () => {
+          this.checkMailGenerated();
         }, 3000);
       }
     });
