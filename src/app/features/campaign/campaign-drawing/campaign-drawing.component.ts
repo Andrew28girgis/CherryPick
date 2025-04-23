@@ -15,7 +15,18 @@ import {
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { firstValueFrom, Subject, switchMap, takeUntil } from 'rxjs';
+import { SelectItem } from 'primeng/api';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteSelectEvent,
+} from 'primeng/autocomplete';
+import {
+  firstValueFrom,
+  Observable,
+  Subject,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { PolygonsControllerService } from 'src/app/core/services/polygons-controller.service';
@@ -39,7 +50,7 @@ export class CampaignDrawingComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   private destroy$ = new Subject<void>();
-  private searchSubject: Subject<string> = new Subject<string>();
+  private stateSubject: Subject<string> = new Subject<string>();
 
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
 
@@ -65,6 +76,12 @@ export class CampaignDrawingComponent
   userPolygons: IPolygon[] = [];
   displayUserPolygons: boolean = false;
   isSearching: boolean = false;
+  states!: SelectItem[];
+  filteredStates!: SelectItem[];
+  selectedState: string | undefined;
+  cities!: SelectItem[];
+  filteredCities!: SelectItem[];
+  selectedCity: string | undefined;
 
   @Output() onCampaignCreated = new EventEmitter<void>();
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
@@ -92,10 +109,11 @@ export class CampaignDrawingComponent
       this.contactId = +contact;
     }
 
+    this.getAllStates();
     this.polygonsListeners();
     this.circlesListeners();
     this.drawingCancelListener();
-    this.getPolygonsByNameListener();
+    this.stateChangeListener();
     this.getUserPolygons();
   }
 
@@ -139,11 +157,7 @@ export class CampaignDrawingComponent
   }
 
   openNewCampaignPopup(content: TemplateRef<any>): void {
-    if (this.buyBoxId) {
-      this.modalService.open(content, { centered: true });
-    } else {
-      alert('Plese select a buybox first.');
-    }
+    this.modalService.open(content, { centered: true });
   }
 
   getUserPolygons(): void {
@@ -169,7 +183,24 @@ export class CampaignDrawingComponent
     this.placesService.GenericAPI(body).subscribe((response) => {});
   }
 
+  scrollToMap(): void {
+    this.gmapContainer.nativeElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
+
   createNewCampaign(): void {
+    if (!this.buyBoxId) {
+      alert('Plese select a buybox first.');
+      return;
+    }
+
+    if (this.campaignName.trim().length == 0) {
+      alert('Plese set campaign name first.');
+      return;
+    }
+
     this.spinner.show();
     const body: any = {
       Name: 'CreateCampaign ',
@@ -243,6 +274,93 @@ export class CampaignDrawingComponent
     const response = await firstValueFrom(this.placesService.GenericAPI(body));
   }
 
+  filterStates(event: AutoCompleteCompleteEvent) {
+    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
+    let filtered: any[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < (this.states as any[]).length; i++) {
+      let item = (this.states as any[])[i];
+      if (item.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(item);
+      }
+    }
+
+    this.filteredStates = filtered;
+  }
+
+  filterCities(event: AutoCompleteCompleteEvent) {
+    //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
+    let filtered: any[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < (this.cities as any[]).length; i++) {
+      let item = (this.cities as any[])[i];
+      if (item.label.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(item);
+      }
+    }
+
+    this.filteredCities = filtered;
+  }
+
+  getAllStates(): void {
+    const body: any = {
+      Name: 'GetAllStates',
+      Params: {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      if (response.json && response.json.length > 0) {
+        const data: {
+          stateName: string;
+          stateCode: string;
+        }[] = response.json;
+        this.states = data.map((state) => ({
+          label: state.stateName,
+          value: state.stateCode,
+        }));
+        this.filteredStates = this.states;
+        console.log(this.states);
+      }
+    });
+  }
+
+  getAllCitiesByStateCode(stateCode: string): Observable<any> {
+    const body: any = {
+      Name: 'GetAllCityWithStateCode',
+      Params: {
+        StateCode: stateCode,
+      },
+    };
+
+    return this.placesService.GenericAPI(body);
+  }
+
+  onStateSelected(event: AutoCompleteSelectEvent) {
+    // pull your selected state out of `.suggestion`
+    const state = event.value;
+    console.log(state);
+    console.log(this.selectedState);
+
+    this.filteredCities = [];
+    this.cities = [];
+    this.selectedCity = undefined;
+    if (this.selectedState) {
+      this.stateSubject.next(this.selectedState);
+      // this.getAllCitiesByStateCode(this.selectedState);
+    }
+  }
+
+  onStateChanged(event: any): void {
+    if (event.trim().length == 0) {
+      this.selectedState = undefined;
+    }
+    this.filteredCities = [];
+    this.cities = [];
+    this.selectedCity = undefined;
+  }
+
   async saveShapesWithCampaign(campaignId: number): Promise<void> {
     const drawnPolygons = this.campaignDrawingService.getDrawnPolygons;
     const drawnCircles = this.campaignDrawingService.getDrawnCircles;
@@ -302,17 +420,6 @@ export class CampaignDrawingComponent
     this.campaignDrawingService.clearDrawnLists();
   }
 
-  onSearchChange(value: string): void {
-    this.externalPolygons = [];
-    this.displayedExternalPolygons = [];
-    if (value.trim().length > 0) {
-      this.isSearching = true;
-      this.searchSubject.next(value);
-    }
-    // else {
-    //   this.campaignDrawingService.completelyRemoveExplorePolygon();
-    // }
-  }
   centerShapeOnMap(polygon: IPolygon): void {
     if (this.displayedExternalPolygons.includes(polygon.id)) {
       const coordinates = this.getPolygonCoordinates(polygon);
@@ -372,6 +479,7 @@ export class CampaignDrawingComponent
         (id) => id != polygon.id
       );
     } else {
+      this.scrollToMap();
       const shoppingCenters = this.polygonShoppingCenters.has(polygon.id);
       if (!shoppingCenters) {
         this.getShoppingCentersByPolygonId(polygon.id);
@@ -397,33 +505,54 @@ export class CampaignDrawingComponent
     }
   }
 
-  getPolygonsByNameListener(): void {
+  stateChangeListener(): void {
     const observer = {
       next: (response: any) => {
-        this.isSearching = false;
-        if (response && response.length > 0) {
-          // this.campaignDrawingService.completelyRemoveExplorePolygon();
-          this.externalPolygons = response;
-          this.addExplorePolygonsToMap();
+        if (response.json && response.json.length > 0) {
+          const data: string[] = response.json;
+
+          this.cities = data.map((city) => ({
+            label: city,
+            value: city,
+          }));
+          this.filteredCities = this.cities;
+          console.log(this.filteredCities);
         }
-      },
-      error: (error: any) => {
-        this.isSearching = false;
-        console.error(error);
       },
     };
 
-    this.searchSubject
+    this.stateSubject
       .pipe(
         // switchMap cancels previous requests when a new value is emitted
-        switchMap((searchTerm: string) =>
-          this.polygonsControllerService.getPolygonsByName(searchTerm)
-        ),
+        switchMap((state: string) => this.getAllCitiesByStateCode(state)),
         takeUntil(this.destroy$)
       )
       .subscribe(observer);
   }
+  searchForPolygons(): void {
+    console.log('hello');
+    this.isSearching = true;
 
+    const object = {
+      location: this.polygonSearch,
+      city: this.selectedCity ?? '',
+      state: this.selectedState ?? '',
+    };
+    this.polygonsControllerService.getPolygonsByName(object).subscribe({
+      next: (response) => {
+        if (response && response.length > 0) {
+          this.isSearching = false;
+          this.externalPolygons = response;
+          this.addExplorePolygonsToMap();
+        }
+      },
+      error: (error) => {
+        this.isSearching = false;
+
+        console.error(error);
+      },
+    });
+  }
   addExplorePolygonsToMap(): void {
     for (let polygon of this.externalPolygons) {
       const coordinates = this.getPolygonCoordinates(polygon);
@@ -580,5 +709,7 @@ export class CampaignDrawingComponent
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.campaignDrawingService.clearDrawnLists();
+    this.campaignDrawingService.completelyRemoveExplorePolygon();
   }
 }

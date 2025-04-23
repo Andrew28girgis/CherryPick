@@ -118,8 +118,8 @@ export class PolygonsControllerService {
     return this.placesService.GenericAPI(body);
   }
 
-  getPolygonsByName(name: string): Observable<any> {
-    return this.httpClient.get(`${environment.api}/GetLocationData/${name}`);
+  getPolygonsByName(object: any): Observable<any> {
+    return this.httpClient.post(`${environment.api}/GetLocationData`, object);
   }
 
   attachPolygonToBuyBox(buyBoxId: number, polygonId: number): Observable<any> {

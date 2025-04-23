@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentRoute = '';
   contactId: any;
   showRecord: boolean = false;
-  showlink: boolean=false;
+  showlink: boolean = false;
 
   // Subscriptions
   private subscriptions: Subscription[] = [];
@@ -38,11 +38,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public router: Router,
     private userViewService: UserViewService,
     private activatedRoute: ActivatedRoute
-  ) {  
+  ) {}
 
-  }
-
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.initializeScreenSize();
     this.setupRouteSubscriptions();
     this.setupUserViewSubscription();
@@ -51,14 +49,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-      this.showlink = Number(localStorage.getItem("contactId")) === 15562;
+        this.showlink = Number(localStorage.getItem('contactId')) === 15562;
       });
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub?.unsubscribe());
   }
-
 
   /**
    * Toggles the navigation menu in mobile view
@@ -91,7 +88,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private initializeScreenSize(): void {
     this.isSmallScreen = window.innerWidth < this.MOBILE_BREAKPOINT;
     this.currentRoute = this.router.url;
-    
   }
 
   private setupRouteSubscriptions(): void {

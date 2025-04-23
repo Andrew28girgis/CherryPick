@@ -16,7 +16,10 @@ import {
   IFile,
   jsonGPT,
 } from 'src/app/shared/models/manage-prop';
-import { Tenant , Availability } from 'src/app/shared/models/manage-prop-shoppingCenter';
+import {
+  Tenant,
+  Availability,
+} from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService, NgxSpinnerModule } from 'ngx-spinner';
 import { CommonModule } from '@angular/common';
@@ -44,7 +47,6 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { organizationContacts } from 'src/app/shared/models/organizationContacts';
 
-
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -54,7 +56,7 @@ import { organizationContacts } from 'src/app/shared/models/organizationContacts
     RouterModule,
     FormsModule,
     NgxFileDropModule,
-    NgbPopoverModule 
+    NgbPopoverModule,
   ],
   providers: [],
   templateUrl: './tenant.component.html',
@@ -62,6 +64,8 @@ import { organizationContacts } from 'src/app/shared/models/organizationContacts
 })
 export class TenantComponent implements OnInit, AfterViewInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
+  @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
+  email: string = '';
   public files: NgxFileDropEntry[] = [];
   selectedShoppingID!: string | undefined;
   JsonPDF!: jsonGPT;
@@ -86,16 +90,16 @@ export class TenantComponent implements OnInit, AfterViewInit {
   CampaignData!: any;
   showFullReason: boolean = false;
   guid!: string;
-  removeavailable:boolean=false;
-  removetenant:boolean=false;  
+  removeavailable: boolean = false;
+  removetenant: boolean = false;
   userSubmission: any;
   jsonGUID!: string;
   showAddAvailabilityInput = false;
   newAvailabilitySize: number | undefined;
   showAddTenantInput = false;
   newTenantName = '';
-  shoppingCenterManage:TenantShoppingCenter[]=[];
-  shoppingCenterManageSubmitted:TenantShoppingCenter[]=[];
+  shoppingCenterManage: TenantShoppingCenter[] = [];
+  shoppingCenterManageSubmitted: TenantShoppingCenter[] = [];
   Polgons!: any[];
   OrganizationContacts: organizationContacts[] = [];
   customPolygons: ICustomPolygon[] = [];
@@ -104,7 +108,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   @ViewChild('openShopping', { static: true }) openShopping!: TemplateRef<any>;
   @ViewChild('deletePlaceModal', { static: true })
   deletePlaceModal!: TemplateRef<any>;
-  ShoppingID!:number;
+  ShoppingID!: number;
   CustomPlace!: PropertiesDetails | undefined;
   newUrlTenant: string = '';
   newNameTenant = '';
@@ -117,13 +121,18 @@ export class TenantComponent implements OnInit, AfterViewInit {
   deleteId: number | null = null;
   showButtons: boolean = true;
   @ViewChild('leasePricesModal') leasePricesModal: TemplateRef<any> | undefined;
-  @ViewChild('buildingSizesModal') buildingSizesModal: TemplateRef<any> | undefined;
+  @ViewChild('buildingSizesModal') buildingSizesModal:
+    | TemplateRef<any>
+    | undefined;
   filteredLeasePlacesManage: any[] = [];
   allBuildingSizes: any[] = [];
-  ////////////////
-  @ViewChild('buildingSizesSubmissionModal') buildingSizesSubmissionModal: TemplateRef<any> | undefined;
+  @ViewChild('buildingSizesSubmissionModal') buildingSizesSubmissionModal:
+    | TemplateRef<any>
+    | undefined;
   modalPlaces: any[] = [];
-  @ViewChild('leasePricesSubmissionModal') leasePricesSubmissionModal: TemplateRef<any> | undefined;
+  @ViewChild('leasePricesSubmissionModal') leasePricesSubmissionModal:
+    | TemplateRef<any>
+    | undefined;
   modalLeasePlaces: any[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -136,29 +145,61 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private mapDrawingService: CampaignDrawingService,
     private shoppingCenterService: ViewManagerService
   ) {}
-
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       this.contactID = params.get('contactId');
     });
-    // this.contactID = localStorage.getItem('contactId');
-
     this.activatedRoute.params.subscribe((params) => {
       this.guid = params['guid'];
-      this.GetCampaignFromGuid();
-      // this.GetCampaignDetails();
     });
 
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
+    if (this.contactID === '0') {
+      this.openEmailModal();
+    } else {
+      this.GetCampaignFromGuid();
+      this.proceedWithNextSteps();
+    }
+  }
+  openEmailModal(): void {
+    this.modalService.open(this.emailModal, { size: 'md', centered: true });
+  }
+  getContactByEmail(modal: any): void {
+    this.spinner.show();
+
+    if (this.email && this.email.trim()) {
+      const body = {
+        Name: 'GetContactByEmail',
+        Params: {
+          ContactEmail: this.email,
+        },
+      };
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          this.spinner.hide();
+
+          if (res.json && res.json[0] && res.json[0].id) {
+            this.contactID = res.json[0].id;
+            this.router.navigate([`/${this.guid}/${this.contactID}`], {
+              replaceUrl: true,
+            });
+
+            modal.close();
+            this.GetCampaignFromGuid();
+            this.proceedWithNextSteps();
+          }
+        },
+      });
+    }
+  }
+  proceedWithNextSteps(): void {
     this.GetUserSubmissionData();
     this.GetShoppingCenterManageInCampaign();
     this.GetUserSubmissionsShoppingCenters();
   }
-
   GetCampaignFromGuid(): void {
-    this.spinner.show();
     const body: any = {
       Name: 'GetCampaignFromGuid',
       Params: {
@@ -175,6 +216,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       },
     });
   }
+
   GetShoppingCenterManageInCampaign(): void {
     this.spinner.show();
     const body: any = {
@@ -189,7 +231,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
         // console.log('ShoppingCenterManage', this.shoppingCenterManage);
-        
       },
     });
   }
@@ -207,11 +248,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.shoppingCenterManageSubmitted = res.json;
         // console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
-        
       },
     });
   }
-  GetOrganizationById():void{
+  GetOrganizationById(): void {
     this.spinner.show();
     const body: any = {
       Name: 'GetOrganizationById',
@@ -221,7 +261,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.OrganizationContacts = res.json as organizationContacts[]      },
+        this.OrganizationContacts = res.json as organizationContacts[];
+      },
     });
   }
   GetUserSubmissionData(): void {
@@ -265,48 +306,71 @@ export class TenantComponent implements OnInit, AfterViewInit {
     return this.shoppingCenterManage[0]?.O[0]?.P?.length || 0;
   }
   isAllForLeasePriceZero(): boolean {
-    return this.shoppingCenterManage[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+    return this.shoppingCenterManage[0]?.O[0]?.P.every(
+      (place) => place.ForLeasePrice === 0
+    );
   }
   getLeasePricesCount(): number {
-    return this.shoppingCenterManage[0]?.O[0]?.P.filter(p => p.ForLeasePrice !== 0).length || 0;
+    return (
+      this.shoppingCenterManage[0]?.O[0]?.P.filter((p) => p.ForLeasePrice !== 0)
+        .length || 0
+    );
   }
   getFirstThreeLeasePrices(): any[] {
-    return this.shoppingCenterManage[0]?.O[0]?.P
-      .filter(p => p.ForLeasePrice !== 0)
-      .slice(0, 3) || [];
+    return (
+      this.shoppingCenterManage[0]?.O[0]?.P.filter(
+        (p) => p.ForLeasePrice !== 0
+      ).slice(0, 3) || []
+    );
   }
   getFirstThreeBuildingSizes(): any[] {
     return this.shoppingCenterManage[0]?.O[0]?.P.slice(0, 3) || [];
   }
   openLeasePricesModal(): void {
-    this.filteredLeasePlacesManage = this.shoppingCenterManage[0]?.O[0]?.P
-      .filter(p => p.ForLeasePrice !== 0);
-    this.modalService.open(this.leasePricesModal, { size: 'md', centered: true });
+    this.filteredLeasePlacesManage =
+      this.shoppingCenterManage[0]?.O[0]?.P.filter(
+        (p) => p.ForLeasePrice !== 0
+      );
+    this.modalService.open(this.leasePricesModal, {
+      size: 'md',
+      centered: true,
+    });
   }
   openBuildingSizesModal(): void {
     this.allBuildingSizes = this.shoppingCenterManage[0]?.O[0]?.P;
-    this.modalService.open(this.buildingSizesModal, { size: 'md', centered: true });
+    this.modalService.open(this.buildingSizesModal, {
+      size: 'md',
+      centered: true,
+    });
   }
   /////////////////// card submission
   getBuildingSizeCountSub(): number {
     return this.shoppingCenterManageSubmitted[0]?.O[0]?.P?.length || 0;
   }
   isAllForLeasePriceZeroSub(): boolean {
-    return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(place => place.ForLeasePrice === 0);
+    return this.shoppingCenterManageSubmitted[0]?.O[0]?.P.every(
+      (place) => place.ForLeasePrice === 0
+    );
   }
   filteredLeasePlaces(places: any[]): any[] {
-    return places.filter(p => p.ForLeasePrice !== 0);
+    return places.filter((p) => p.ForLeasePrice !== 0);
   }
   openLeasePricesSubmissionModal(leasePlaces: any[]) {
     this.modalLeasePlaces = leasePlaces;
-    this.modalService.open(this.leasePricesSubmissionModal, { size: 'md', centered: true });
+    this.modalService.open(this.leasePricesSubmissionModal, {
+      size: 'md',
+      centered: true,
+    });
   }
   openBuildingSizesSubmissionModal(places: any[]) {
     this.modalPlaces = places;
-    this.modalService.open(this.buildingSizesSubmissionModal, { size: 'md', centered: true });
+    this.modalService.open(this.buildingSizesSubmissionModal, {
+      size: 'md',
+      centered: true,
+    });
   }
-    GetBuyBoxInfo(): void {
-      this.spinner.show();
+  GetBuyBoxInfo(): void {
+    this.spinner.show();
     const body: any = {
       Name: 'GetBuyBoxInfo',
       Params: {
@@ -361,7 +425,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.spinner.hide();
         } else {
           this.organizationBranches = res.json[0];
-          console.log('sssss',this.organizationid);
+          console.log('sssss', this.organizationid);
 
           this.spinner.hide();
         }
@@ -517,7 +581,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       IsSubmitted: true,
       ContactId: this.contactID,
     };
-  
+
     this.PlacesService.SendJsonData(updatedJsonPDF, shopID).subscribe({
       next: (data) => {
         // Always show success message for 200 OK responses
@@ -530,7 +594,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.error('Error occurred while updating shopping center:', error);
-        
+
         // Check if it's actually a success response being misinterpreted as an error
         if (error.status === 200) {
           this.JsonPDF.IsSubmitted = true;
@@ -546,7 +610,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
           }
           this.showToast(errorMessage);
         }
-        
+
         this.isSubmitting = false;
         this.spinner.hide();
       },
@@ -599,7 +663,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       this.newTenantName = '';
     }
   }
-  
+
   addNewAvailability(): void {
     if (this.newAvailabilitySize) {
       const newId =
@@ -666,25 +730,24 @@ export class TenantComponent implements OnInit, AfterViewInit {
     });
   }
   GetGeoJsonFromBuyBox(): void {
-      this.spinner.show();
-      const body: any = {
-        Name: 'GetGeoJsonFromBuyBox',
-        Params: {
-          CampaignId: this.selectedCampaign,
-        },
-      };
+    this.spinner.show();
+    const body: any = {
+      Name: 'GetGeoJsonFromBuyBox',
+      Params: {
+        CampaignId: this.selectedCampaign,
+      },
+    };
 
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (res: any) => {
-          if (res.json == null) {
-            this.spinner.hide();
-          } else {
-            this.Polgons = res.json;
-            this.spinner.hide();
-          }
-        },
-      });
-    
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        if (res.json == null) {
+          this.spinner.hide();
+        } else {
+          this.Polgons = res.json;
+          this.spinner.hide();
+        }
+      },
+    });
   }
   loadPolygons(): void {
     if (!this.Polgons || !Array.isArray(this.Polgons)) {
@@ -756,13 +819,17 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
     const interval = setInterval(() => {
-      if (this.TenantResult && this.TenantResult.Buybox&&this.customPolygons) {
+      if (
+        this.TenantResult &&
+        this.TenantResult.Buybox &&
+        this.customPolygons
+      ) {
         this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
         // debugger
         this.mapDrawingService.initializeDrawingManager(this.map);
-        this.map.setZoom(9)
+        this.map.setZoom(9);
         // this.mapDrawingService.updateMapCenter(this.map, null);
-        
+
         this.loadPolygons();
         clearInterval(interval);
       }
@@ -771,7 +838,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   /////////////////////
   openShoppingModal(id: number) {
     this.ShoppingID = id;
-    console.log('this.ShoppingID',this.ShoppingID);
+    console.log('this.ShoppingID', this.ShoppingID);
     this.modalService.open(this.openShopping, { size: 'lg', centered: true });
     this.GetShoppingCenterDetailsById();
   }
@@ -794,241 +861,241 @@ export class TenantComponent implements OnInit, AfterViewInit {
     });
   }
   /////////////////////////
-    getImagesArray(): string[] {
-      if (!this.CustomPlace?.Images) return [];
-      return this.CustomPlace.Images.split(',').map((url) => url.trim());
+  getImagesArray(): string[] {
+    if (!this.CustomPlace?.Images) return [];
+    return this.CustomPlace.Images.split(',').map((url) => url.trim());
+  }
+  toggleAddTenantInput() {
+    // Initialize CustomPlace.Tenants if it’s null or undefined
+    if (!this.CustomPlace?.Tenants) {
+      this.CustomPlace = {
+        ...this.CustomPlace,
+        Tenants: [], // Initialize an empty array for tenants
+      } as PropertiesDetails;
     }
-    toggleAddTenantInput() {
-      // Initialize CustomPlace.Tenants if it’s null or undefined
-      if (!this.CustomPlace?.Tenants) {
-        this.CustomPlace = {
-          ...this.CustomPlace,
-          Tenants: [], // Initialize an empty array for tenants
-        } as PropertiesDetails;
-      }
-      this.showAddTenantInput = !this.showAddTenantInput;
-      if (this.showAddTenantInput) {
-        this.newNameTenant = '';
-        this.newUrlTenant = '';
-      }
-    }
-    cancelAddTenant() {
-      this.showAddTenantInput = false;
+    this.showAddTenantInput = !this.showAddTenantInput;
+    if (this.showAddTenantInput) {
       this.newNameTenant = '';
       this.newUrlTenant = '';
     }
-    // Add a new tenant (send to API and update locally)
-    addTenantNew() {
-      if (
-        !this.newNameTenant ||
-        this.newNameTenant.trim() === '' ||
-        !this.newUrlTenant ||
-        this.newUrlTenant.trim() === ''
-      ) {
-        this.showToast('Please enter a valid tenant name.');
-        return;
-      }
-      // Basic validation for domain format (optional, since HTML pattern handles it)
-      const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-      if (!domainPattern.test(this.newUrlTenant.trim())) {
-        alert('Please enter a valid domain (e.g., example.com).');
-        return;
-      }
-      this.spinner.show();
-      const body: any = {
-        Name: 'ModifyTenantsWithBranch',
-        Params: {
-          ShoppingCenterId: this.ShoppingID,
+  }
+  cancelAddTenant() {
+    this.showAddTenantInput = false;
+    this.newNameTenant = '';
+    this.newUrlTenant = '';
+  }
+  // Add a new tenant (send to API and update locally)
+  addTenantNew() {
+    if (
+      !this.newNameTenant ||
+      this.newNameTenant.trim() === '' ||
+      !this.newUrlTenant ||
+      this.newUrlTenant.trim() === ''
+    ) {
+      this.showToast('Please enter a valid tenant name.');
+      return;
+    }
+    // Basic validation for domain format (optional, since HTML pattern handles it)
+    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+    if (!domainPattern.test(this.newUrlTenant.trim())) {
+      alert('Please enter a valid domain (e.g., example.com).');
+      return;
+    }
+    this.spinner.show();
+    const body: any = {
+      Name: 'ModifyTenantsWithBranch',
+      Params: {
+        ShoppingCenterId: this.ShoppingID,
+        Name: this.newNameTenant,
+        Url: this.newUrlTenant,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        // Assuming the API returns the new tenant or an updated list
+        const newTenant: Tenant = {
+          Id: data.json?.Id || this.CustomPlace?.Tenants.length! + 1, // Generate a temporary ID or use API response
           Name: this.newNameTenant,
-          Url: this.newUrlTenant,
-        },
-      };
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (data: any) => {
-          // Assuming the API returns the new tenant or an updated list
-          const newTenant: Tenant = {
-            Id: data.json?.Id || this.CustomPlace?.Tenants.length! + 1, // Generate a temporary ID or use API response
-            Name: this.newNameTenant,
-            URL: this.newUrlTenant,
-          };
-          // Add the new tenant to CustomPlace.Tenants
-          if (this.CustomPlace && this.CustomPlace.Tenants) {
-            this.CustomPlace.Tenants.push(newTenant);
-          } else {
-            // Initialize Tenants if it doesn't exist
-            this.CustomPlace = {
-              ...this.CustomPlace,
-              Tenants: [newTenant],
-            } as PropertiesDetails;
-          }
-          this.spinner.hide();
-          this.showToast('New tenant added successfully!');
-          this.showAddTenantInput = false;
-          this.newNameTenant = '';
-        },
-      });
+          URL: this.newUrlTenant,
+        };
+        // Add the new tenant to CustomPlace.Tenants
+        if (this.CustomPlace && this.CustomPlace.Tenants) {
+          this.CustomPlace.Tenants.push(newTenant);
+        } else {
+          // Initialize Tenants if it doesn't exist
+          this.CustomPlace = {
+            ...this.CustomPlace,
+            Tenants: [newTenant],
+          } as PropertiesDetails;
+        }
+        this.spinner.hide();
+        this.showToast('New tenant added successfully!');
+        this.showAddTenantInput = false;
+        this.newNameTenant = '';
+      },
+    });
+  }
+  toggleAddPlaceInput() {
+    if (!this.CustomPlace?.Availability) {
+      this.CustomPlace = {
+        ...this.CustomPlace,
+        Availability: [], // Initialize Availability if null
+      } as PropertiesDetails;
     }
-    toggleAddPlaceInput() {
-      if (!this.CustomPlace?.Availability) {
-        this.CustomPlace = {
-          ...this.CustomPlace,
-          Availability: [], // Initialize Availability if null
-        } as PropertiesDetails;
-      }
-      this.showAddPlaceInput = !this.showAddPlaceInput;
-      if (this.showAddPlaceInput) {
-        this.newPlaceSqFT = 0; // Reset the input value
-      }
+    this.showAddPlaceInput = !this.showAddPlaceInput;
+    if (this.showAddPlaceInput) {
+      this.newPlaceSqFT = 0; // Reset the input value
     }
-    cancelAddPlace() {
-      this.showAddPlaceInput = false;
-      this.newPlaceSqFT = 0;
+  }
+  cancelAddPlace() {
+    this.showAddPlaceInput = false;
+    this.newPlaceSqFT = 0;
+  }
+  // Add a new place (send to API and update locally)
+  addNewPlace() {
+    if (!this.newPlaceSqFT || this.newPlaceSqFT <= 0) {
+      this.showToast('Please enter a valid SQFT');
+      return;
     }
-    // Add a new place (send to API and update locally)
-    addNewPlace() {
-      if (!this.newPlaceSqFT || this.newPlaceSqFT <= 0) {
-        this.showToast('Please enter a valid SQFT');
-        return;
-      }
-      this.spinner.show();
-      const body: any = {
-        Name: 'AddAvailability',
-        Params: {
-          ShoppingCenterId: this.ShoppingID,
+    this.spinner.show();
+    const body: any = {
+      Name: 'AddAvailability',
+      Params: {
+        ShoppingCenterId: this.ShoppingID,
+        BuildingSizeSf: this.newPlaceSqFT,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        // Assuming the API returns the new space or an updated list
+        const newSpace: Availability = {
+          Id: data.json?.Id || this.CustomPlace?.Availability.length! + 1, // Generate a temporary ID or use API response
           BuildingSizeSf: this.newPlaceSqFT,
-        },
-      };
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (data: any) => {
-          // Assuming the API returns the new space or an updated list
-          const newSpace: Availability = {
-            Id: data.json?.Id || this.CustomPlace?.Availability.length! + 1, // Generate a temporary ID or use API response
-            BuildingSizeSf: this.newPlaceSqFT,
-          };
-          // Add the new space to CustomPlace.Availability
-          if (this.CustomPlace && this.CustomPlace.Availability) {
-            this.CustomPlace.Availability.push(newSpace);
-          } else {
-            // Initialize Availability if it doesn't exist
-            this.CustomPlace = {
-              ...this.CustomPlace,
-              Availability: [newSpace],
-            } as PropertiesDetails;
-          }
-          this.showAddPlaceInput = false;
-          this.spinner.hide();
-        },
-      });
+        };
+        // Add the new space to CustomPlace.Availability
+        if (this.CustomPlace && this.CustomPlace.Availability) {
+          this.CustomPlace.Availability.push(newSpace);
+        } else {
+          // Initialize Availability if it doesn't exist
+          this.CustomPlace = {
+            ...this.CustomPlace,
+            Availability: [newSpace],
+          } as PropertiesDetails;
+        }
+        this.showAddPlaceInput = false;
+        this.spinner.hide();
+      },
+    });
+  }
+  // Start editing a place
+  startEditPlace(placeId: number, currentSqFt: number, index: number) {
+    this.editingPlaceId = placeId;
+    this.showEditInput = true;
+    this.editedPlaceSqFT = currentSqFt;
+  }
+  cancelEditPlace() {
+    this.editingPlaceId = null;
+    this.showEditInput = false;
+    this.editedPlaceSqFT = 0;
+  }
+  saveEditedPlace(placeId: number) {
+    if (!this.editedPlaceSqFT || this.editedPlaceSqFT <= 0) {
+      this.showToast('Please enter a valid SQFT');
+      return;
     }
-    // Start editing a place
-    startEditPlace(placeId: number, currentSqFt: number, index: number) {
-      this.editingPlaceId = placeId;
-      this.showEditInput = true;
-      this.editedPlaceSqFT = currentSqFt;
+    this.spinner.show();
+    const body: any = {
+      Name: 'UpdateBuildingSizeSfForAvailability',
+      Params: {
+        PlaceId: placeId,
+        ShoppingCenterId: this.selectedShoppingID,
+        NewBuildingSizeSf: this.editedPlaceSqFT,
+      },
+    };
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data: any) => {
+        const spaceIndex = this.CustomPlace?.Availability.findIndex(
+          (space) => space.Id === placeId
+        );
+        if (spaceIndex !== -1 && this.CustomPlace?.Availability) {
+          this.CustomPlace.Availability[spaceIndex!].BuildingSizeSf =
+            this.editedPlaceSqFT;
+        }
+        this.spinner.hide();
+        this.showToast('Place updated successfully!');
+        this.editingPlaceId = null;
+        this.showEditInput = false;
+        this.editedPlaceSqFT = 0;
+      },
+    });
+  }
+  openDeletePlaceModal(placeId: number) {
+    this.deleteId = placeId;
+    this.deleteType = 'Place';
+    this.modalService.open(this.deletePlaceModal, { size: 'md' });
+  }
+  openDeleteTenantModal(tenantId: number) {
+    this.deleteId = tenantId;
+    this.deleteType = 'Tenant';
+    this.modalService.open(this.deletePlaceModal, { size: 'md' });
+  }
+  // Confirm and perform the delete (for both places and tenants)
+  confirmDelete(modal: any) {
+    if (this.deleteType === 'Place' && this.deleteId !== null) {
+      this.deletePlace(this.deleteId);
+    } else if (this.deleteType === 'Tenant' && this.deleteId !== null) {
+      this.deleteTenant(this.deleteId);
     }
-    cancelEditPlace() {
-      this.editingPlaceId = null;
-      this.showEditInput = false;
-      this.editedPlaceSqFT = 0;
-    }
-    saveEditedPlace(placeId: number) {
-      if (!this.editedPlaceSqFT || this.editedPlaceSqFT <= 0) {
-        this.showToast('Please enter a valid SQFT');
-        return;
-      }
-      this.spinner.show();
-      const body: any = {
-        Name: 'UpdateBuildingSizeSfForAvailability',
-        Params: {
-          PlaceId: placeId,
-          ShoppingCenterId: this.selectedShoppingID,
-          NewBuildingSizeSf: this.editedPlaceSqFT,
-        },
-      };
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (data: any) => {
-          const spaceIndex = this.CustomPlace?.Availability.findIndex(
-            (space) => space.Id === placeId
-          );
-          if (spaceIndex !== -1 && this.CustomPlace?.Availability) {
-            this.CustomPlace.Availability[spaceIndex!].BuildingSizeSf =
-              this.editedPlaceSqFT;
-          }
-          this.spinner.hide();
-          this.showToast('Place updated successfully!');
-          this.editingPlaceId = null;
-          this.showEditInput = false;
-          this.editedPlaceSqFT = 0;
-        },
-      });
-    }
-    openDeletePlaceModal(placeId: number) {
-      this.deleteId = placeId;
-      this.deleteType = 'Place';
-      this.modalService.open(this.deletePlaceModal, { size: 'md' });
-    }
-    openDeleteTenantModal(tenantId: number) {
-      this.deleteId = tenantId;
-      this.deleteType = 'Tenant';
-      this.modalService.open(this.deletePlaceModal, { size: 'md' });
-    }
-    // Confirm and perform the delete (for both places and tenants)
-    confirmDelete(modal: any) {
-      if (this.deleteType === 'Place' && this.deleteId !== null) {
-        this.deletePlace(this.deleteId);
-      } else if (this.deleteType === 'Tenant' && this.deleteId !== null) {
-        this.deleteTenant(this.deleteId);
-      }
-      modal.close('Delete confirmed');
-    }
-    deletePlace(placeId: number) {
-      this.spinner.show();
-      const body: any = {
-        Name: 'DeleteAvailabilityByPlaceId',
-        Params: {
-          placeId: placeId,
-          ShoppingCenterId: this.ShoppingID,
-        },
-      };
-  
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (res: any) => {
-          const index = this.CustomPlace?.Availability.findIndex(
-            (space) => space.Id === placeId
-          );
-          if (index !== -1 && this.CustomPlace?.Availability) {
-            this.CustomPlace.Availability.splice(index!, 1);
-          }
-          this.showToast('Place deleted successfully!');
-          this.spinner.hide();
-        },
-      });
-    }
-    deleteTenant(tenantId: number) {
-      this.spinner.show();
-      const body: any = {
-        Name: 'DeleteBranchByOrganizationId',
-        Params: {
-          organizationID: tenantId,
-          shoppingCenterId: this.ShoppingID,
-        },
-      };
-  
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (res: any) => {
-          const index = this.CustomPlace?.Tenants.findIndex(
-            (tenant) => tenant.Id === tenantId
-          );
-          if (index !== -1 && this.CustomPlace?.Tenants) {
-            this.CustomPlace.Tenants.splice(index!, 1);
-          }
-          this.spinner.hide();
-          this.showToast('Tenant deleted successfully!');
-        },
-      });
-    }
-    isLast(currentItem: any, array: any[]): boolean {
-      return this.shoppingCenterService.isLast(currentItem, array);
-    }
-    /////////////
+    modal.close('Delete confirmed');
+  }
+  deletePlace(placeId: number) {
+    this.spinner.show();
+    const body: any = {
+      Name: 'DeleteAvailabilityByPlaceId',
+      Params: {
+        placeId: placeId,
+        ShoppingCenterId: this.ShoppingID,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        const index = this.CustomPlace?.Availability.findIndex(
+          (space) => space.Id === placeId
+        );
+        if (index !== -1 && this.CustomPlace?.Availability) {
+          this.CustomPlace.Availability.splice(index!, 1);
+        }
+        this.showToast('Place deleted successfully!');
+        this.spinner.hide();
+      },
+    });
+  }
+  deleteTenant(tenantId: number) {
+    this.spinner.show();
+    const body: any = {
+      Name: 'DeleteBranchByOrganizationId',
+      Params: {
+        organizationID: tenantId,
+        shoppingCenterId: this.ShoppingID,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        const index = this.CustomPlace?.Tenants.findIndex(
+          (tenant) => tenant.Id === tenantId
+        );
+        if (index !== -1 && this.CustomPlace?.Tenants) {
+          this.CustomPlace.Tenants.splice(index!, 1);
+        }
+        this.spinner.hide();
+        this.showToast('Tenant deleted successfully!');
+      },
+    });
+  }
+  isLast(currentItem: any, array: any[]): boolean {
+    return this.shoppingCenterService.isLast(currentItem, array);
+  }
+  /////////////
 }
