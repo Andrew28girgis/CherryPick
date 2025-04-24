@@ -68,7 +68,7 @@ export class PlacesService {
     return this.http.post<any>(apiUrl, body);
   }
   public GetSiteCurrentStatus(body: any) {
-    const apiUrl = `${environment.api}/PromptHub`;
+    const apiUrl = `${environment.api}/PromptHub/GetSiteCurrentStatus`;
     return this.http.get<any>(apiUrl, body);
   }
 

@@ -341,7 +341,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
     console.log('ssssss:', campaignId);
     
 
-    this.placesService.GenericAPI(body).subscribe({
+    this.placesService.GetSiteCurrentStatus(body).subscribe({
       next: (res: any) => {
         this.htmlContent = res.html;
         // ensure the view picks up the new HTML
