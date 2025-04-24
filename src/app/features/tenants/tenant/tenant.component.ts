@@ -60,7 +60,8 @@ import * as CryptoJS from 'crypto-js';
 export class TenantComponent implements OnInit, AfterViewInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
-  @ViewChild('contactDataModal', { static: true }) contactDataModal!: TemplateRef<any>;
+  @ViewChild('contactDataModal', { static: true })
+  contactDataModal!: TemplateRef<any>;
   email: string = '';
   public files: NgxFileDropEntry[] = [];
   selectedShoppingID!: string | undefined;
@@ -135,7 +136,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
-  ContactData:any[]=[];
+  ContactData: any[] = [];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -151,21 +152,25 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       const encryptedContactId = params.get('contactId');
-      console.log(encryptedContactId);
+      console.log('encryptedContactId', encryptedContactId);
+      const parsedId = Number(encryptedContactId);
+      console.log('parsedId', parsedId);
+      if (!isNaN(parsedId)) {
+        this.contactID = parsedId;
+        console.log('Contact ID is a number:', this.contactID);
+      }
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
       });
-      
-    if (encryptedContactId) {
-      try {
-        this.contactIDs = this.decrypt(encryptedContactId);
-        console.log('Decrypted Contact IDs:', this.contactIDs);
-      } catch (err) {
-        console.error('Decryption failed', err);
+      if (encryptedContactId) {
+        try {
+          this.contactIDs = this.decrypt(encryptedContactId);
+          console.log('Decrypted Contact IDs:', this.contactIDs);
+        } catch (err) {
+          console.error('Decryption failed', err);
+        }
       }
-    }
-  });
-
+    });
 
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
@@ -173,61 +178,67 @@ export class TenantComponent implements OnInit, AfterViewInit {
       this.GetContactData();
       // this.opencontactDataModal();
     }
-    
+
     this.GetCampaignFromGuid();
     this.proceedWithNextSteps();
   }
   encrypt(value: string): string {
-      const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value), this.key, {
-        keySize: 256 / 8,
-        iv: this.iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-      });
-      
-      return encrypted.toString();
-    }
-  decrypt(encryptedValue: string): string {
-      const decrypted = CryptoJS.AES.decrypt(encryptedValue, this.key, {
+    const encrypted = CryptoJS.AES.encrypt(
+      CryptoJS.enc.Utf8.parse(value),
+      this.key,
+      {
         keySize: 256 / 8,
         iv: this.iv,
         mode: CryptoJS.mode.CBC,
         padding: CryptoJS.pad.Pkcs7,
-      });
-    
-      return decrypted.toString(CryptoJS.enc.Utf8);
-    }
-    GetContactData(){
-      const body: any = {
-        Name: 'GetContactData',
-        Params: {
-          ContactIds: this.contactIDs,
-        },
-      };
-  
-      this.PlacesService.GenericAPI(body).subscribe({
-        next: (res: any) => {
-          this.ContactData = res.json;
-          console.log('this.ContactData',this.ContactData);
-          this.opencontactDataModal();
+      }
+    );
 
-          // this.GetBuyBoxInfo();
-          // this.GetGeoJsonFromBuyBox();
-        },
-      });
-    }
-    selectContact(contactId: string) {
-      this.contactID = contactId;
-      this.router.navigate(
-        [`/${this.guid}/${this.contactID}`],
-        { replaceUrl: true }
-      );
-      this.GetCampaignFromGuid();
-      this.proceedWithNextSteps();
-    }
-    opencontactDataModal(): void {
-      this.modalService.open(this.contactDataModal, { size: 'md', centered: true });
-    }
+    return encrypted.toString();
+  }
+  decrypt(encryptedValue: string): string {
+    const decrypted = CryptoJS.AES.decrypt(encryptedValue, this.key, {
+      keySize: 256 / 8,
+      iv: this.iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    });
+
+    return decrypted.toString(CryptoJS.enc.Utf8);
+  }
+  GetContactData() {
+    const body: any = {
+      Name: 'GetContactData',
+      Params: {
+        ContactIds: this.contactIDs,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.ContactData = res.json;
+        console.log('this.ContactData', this.ContactData);
+        this.opencontactDataModal();
+
+        // this.GetBuyBoxInfo();
+        // this.GetGeoJsonFromBuyBox();
+      },
+    });
+  }
+  selectContact(contactId: string) {
+    this.contactID = contactId;
+    this.router.navigate([`/${this.guid}/${this.contactID}`], {
+      replaceUrl: true,
+    });
+    this.GetCampaignFromGuid();
+    this.proceedWithNextSteps();
+  }
+  opencontactDataModal(): void {
+    this.modalService.open(this.contactDataModal, {
+      size: 'md',
+      centered: true,
+    });
+  }
   openEmailModal(): void {
     this.modalService.open(this.emailModal, { size: 'md', centered: true });
   }
@@ -489,7 +500,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
         if (res.json == null) {
           this.spinner.hide();
         } else {
-          this.organizationBranches = res.json[0];  
+          this.organizationBranches = res.json[0];
           this.spinner.hide();
         }
       },
