@@ -1,6 +1,5 @@
 import {
   AfterViewChecked,
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -8,6 +7,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import {
@@ -16,7 +16,6 @@ import {
   Contact,
   EmailInfo,
   Mail,
-  MailsContact,
 } from 'src/app/shared/models/buy-box-emails';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -33,7 +32,7 @@ import { IEmailContent } from '../../kayak-home/shopping-center-table/contact-br
   templateUrl: './inbox.component.html',
   styleUrls: ['./inbox.component.css'],
 })
-export class InboxComponent implements OnInit, AfterViewChecked {
+export class InboxComponent implements OnInit {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];
   emailsSentContact: Mail[] = [];
@@ -50,6 +49,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   campaignId: any;
   emailBody: string = '';
   sanitizedEmailBody!: SafeHtml; // ONLY for [innerHTML] if you display it elsewhere
+  sanitizedEmailBodyDraft!: SafeHtml;
   emailSubject: string = '';
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -65,7 +65,12 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   listcenterName: string[] = [];
   showGenerateSection: boolean = false;
   isEmailBodyEmpty: boolean = true;
-
+  selectedEmailToDelete: any | null;
+  @ViewChild('deleteEmailModal') deleteEmailModal: any;
+  @ViewChild('sendEmailModal') sendEmailModal: any;
+  selectedEmailForSend: EmailInfo | null = null;
+  emailSubjectModal?: string = '';
+  emailBodySafeModal: SafeHtml = '';
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -122,7 +127,6 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       next: (data) => {
         this.BuyBoxEmails = data.json;
         this.filteredEmails = this.sortEmails(data.json);
-        
         // Apply the current filter
         this.filterEmails(this.selectedFilter);
       },
@@ -160,7 +164,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
           this.BuyBoxMicroDeals.forEach((item) => {
             if (item.OrganizationId === this.selectedMicro) {
               item.isOpen = true;
-              this.scrollToOpenItem(item);
+              // this.scrollToOpenItem(item);
             }
           });
         } else {
@@ -171,33 +175,31 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       },
     });
   }
-  @ViewChildren('itemRef') itemRefs: QueryList<any> | undefined;
-
-  ngAfterViewChecked() {
-    // After view checks, try scrolling to the first opened item
-    const firstOpenItem = this.BuyBoxMicroDeals.find((item) => item.isOpen);
-    if (firstOpenItem) {
-      this.scrollToOpenItem(firstOpenItem);
-    }
-  }
-
-  scrollToOpenItem(bb: any): void {
-    // Find the corresponding element using the data-org-id attribute
-    const element = this.itemRefs
-      ?.toArray()
-      .find(
-        (item) =>
-          item.nativeElement.getAttribute('data-org-id') ===
-          bb.OrganizationId.toString()
-      );
-    if (element) {
-      // Scroll the item into view
-      element.nativeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  }
+  // @ViewChildren('itemRef') itemRefs: QueryList<any> | undefined;
+  // ngAfterViewChecked() {
+  //   // After view checks, try scrolling to the first opened item
+  //   const firstOpenItem = this.BuyBoxMicroDeals.find((item) => item.isOpen);
+  //   if (firstOpenItem) {
+  //     this.scrollToOpenItem(firstOpenItem);
+  //   }
+  // }
+  // scrollToOpenItem(bb: any): void {
+  //   // Find the corresponding element using the data-org-id attribute
+  //   const element = this.itemRefs
+  //     ?.toArray()
+  //     .find(
+  //       (item) =>
+  //         item.nativeElement.getAttribute('data-org-id') ===
+  //         bb.OrganizationId.toString()
+  //     );
+  //   if (element) {
+  //     // Scroll the item into view
+  //     element.nativeElement.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'start',
+  //     });
+  //   }
+  // }
 
   getEmailsForContact(contact: Contact): void {
     if (this.selectedContact?.ContactId !== contact.ContactId) {
@@ -210,10 +212,8 @@ export class InboxComponent implements OnInit, AfterViewChecked {
     } else if (this.emailsSentContact.length > 0) {
       return;
     }
-
     // Since the API returns emails directly, use them as-is.
     const matchingEmails: any[] = this.BuyBoxEmails;
-
     // Filter emails that are related to the selected contact.
     this.emailsSentContact = matchingEmails?.filter(
       (email: Mail) =>
@@ -247,6 +247,8 @@ export class InboxComponent implements OnInit, AfterViewChecked {
 
   goBack(): void {
     this.selected = null;
+    this.emailSubjectModal='';
+    this.emailBodySafeModal = '';
   }
 
   openEmail(email: Mail): void {
@@ -267,6 +269,8 @@ export class InboxComponent implements OnInit, AfterViewChecked {
         this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(
           this.selectedEmail!.Body
         );
+        this.emailBodySafeModal = this.emailBodySafe;
+        this.emailSubjectModal = this.selectedEmail?.Subject;
       },
     });
   }
@@ -278,8 +282,6 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       (EmailStats.Outbox || 0)
     );
   }
-
-
 
   GetContactShoppingCenters(contactId: number): void {
     const body: any = {
@@ -303,14 +305,34 @@ export class InboxComponent implements OnInit, AfterViewChecked {
 
   getDirectionIcon(direction: number): string {
     return direction === 2
-      ? 'fa-reply send'           // Sent
+      ? 'fa-reply send' // Sent
       : direction === -1
-      ? 'fa-reply outbox'         // Outbox
+      ? 'fa-reply outbox' // Outbox
       : direction === 1
-      ? 'fa-share inbox'          // Inbox
+      ? 'fa-share inbox' // Inbox
       : direction === 4
-      ? 'fa-pencil-alt drafts'    // Drafts
+      ? 'fa-pencil-alt drafts' // Drafts
       : ''; // Default: return an empty string if the direction is unknown
+  }
+  getDirectionLabel(direction: number): string {
+    return direction === 2
+      ? 'Sent'
+      : direction === -1
+      ? 'Outbox'
+      : direction === 1
+      ? 'Inbox'
+      : direction === 4
+      ? 'Drafts'
+      : 'Unknown';
+  }
+  getDirectionColor(direction: number): string {
+    switch (direction) {
+      case 2: return '#d1e7dd'; // Sent - greenish
+      case -1: return '#f8d7da'; // Outbox - reddish
+      case 1: return '#cff4fc'; // Inbox - light blue
+      case 4: return '#fff3cd'; // Drafts - yellowish
+      default: return '#e2e3e5'; // Unknown - grey
+    }
   }
 
   // filterEmails(filterType: string): void {
@@ -364,10 +386,8 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
     this.selected = null; // Reset selected email to show the list view
-  
     // Create a properly typed source array based on whether a contact is selected
     let sourceEmails: Mail[] = [];
-    
     if (this.selectedContact) {
       // If contact is selected, use their emails
       sourceEmails = this.emailsSentContact;
@@ -376,7 +396,6 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       sourceEmails = this.BuyBoxEmails as any[] as Mail[];
       // You might need to adjust this depending on the actual structure of BuyBoxEmails
     }
-    
     // If no emails available, don't try to filter
     if (!sourceEmails || sourceEmails.length === 0) {
       this.filteredEmails = [];
@@ -384,30 +403,27 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       this.emptyMessage = 'No emails available';
       return;
     }
-  
     // Apply the filter based on the selected type
     let filtered: Mail[] = [];
     switch (filterType) {
       case 'inbox':
-        filtered = sourceEmails.filter(email => email.Direction === 1);
+        filtered = sourceEmails.filter((email) => email.Direction === 1);
         break;
       case 'outbox':
-        filtered = sourceEmails.filter(email => email.Direction === -1);
+        filtered = sourceEmails.filter((email) => email.Direction === -1);
         break;
       case 'sent':
-        filtered = sourceEmails.filter(email => email.Direction === 2);
+        filtered = sourceEmails.filter((email) => email.Direction === 2);
         break;
       case 'drafts':
-        filtered = sourceEmails.filter(email => email.Direction === 4);
+        filtered = sourceEmails.filter((email) => email.Direction === 4);
         break;
       case 'all':
       default:
         filtered = [...sourceEmails];
         break;
     }
-  
     this.filteredEmails = this.sortEmails(filtered);
-    
     if (this.filteredEmails.length === 0) {
       // this.emptyMessage = `No ${filterType} emails available`;
       this.selectedEmail = null;
@@ -524,7 +540,6 @@ export class InboxComponent implements OnInit, AfterViewChecked {
           }, 3000);
         } else {
           this.emailBody = response[0].body; // <-- Must assign plain string here!
-
           // If you want to display safely elsewhere, use this:
           this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
@@ -575,14 +590,11 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   showAllEmails() {
     // Close all organization dropdowns
     this.BuyBoxMicroDeals.forEach(item => (item.isOpen = false));
-    
     // Clear the selected contact
     this.selectedContact = null;
-    
     // Reset to show all emails
     this.emailsSentContact = [];
     this.getAllEmails();
-    
     // Apply the current filter to all emails
     this.filterEmails(this.selectedFilter);
   }
@@ -606,56 +618,55 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   //   this.modalService.open(modal, { size: 'xl', backdrop: true });
   // }
   openCompose(contact: Contact) {
-
     const modalRef = this.modalService.open(EmailComposeComponent, {
       size: 'xl',
-      backdrop: true
+      backdrop: true,
     });
-    modalRef.componentInstance.contactId   = contact.ContactId;
-    modalRef.componentInstance.buyBoxId     = this.buyBoxId;
-    modalRef.componentInstance.orgId        = this.orgId;
-    modalRef.componentInstance.campaignId   = this.campaignId;
+    modalRef.componentInstance.contactId = contact.ContactId;
+    modalRef.componentInstance.buyBoxId = this.buyBoxId;
+    modalRef.componentInstance.orgId = this.orgId;
+    modalRef.componentInstance.campaignId = this.campaignId;
     modalRef.componentInstance.contactName = `${contact.Firstname ?? ''} ${
       contact.Lastname ?? ''
     }`.trim();
-  
+
     modalRef.result
-      .then(result => {
+      .then((result) => {
         if (result === 'sent' && this.selectedContact) {
           this.getEmailsForContact(this.selectedContact);
         }
       })
-      .catch(() => { /* dismissed */ });
+      .catch(() => {
+        /* dismissed */
+      });
   }
   send(email: EmailInfo | null): void {
     if (!email) {
       // Handle the case where email is null (for example, show an error message or return early)
       return;
     }
-  
+
     // Map EmailInfo to Mail (creating a new Mail object)
     const mail: Mail = {
-      body: email.Body,  // Mapping Body from EmailInfo to Mail
-      id: email.ID,  // Mapping ID from EmailInfo to Mail
-      Subject: email.Subject,  // Mapping Subject from EmailInfo to Mail
-      Date: email.Date,  // Mapping Date from EmailInfo to Mail
-      Direction: email.Direction,  // Mapping Direction from EmailInfo to Mail
-      ContactId: email.ContactId,  // Mapping ContactId from EmailInfo to Mail
-      O: []  // Assuming O is an array and you might need to adjust this
+      body: email.Body, // Mapping Body from EmailInfo to Mail
+      id: email.ID, // Mapping ID from EmailInfo to Mail
+      Subject: email.Subject, // Mapping Subject from EmailInfo to Mail
+      Date: email.Date, // Mapping Date from EmailInfo to Mail
+      Direction: email.Direction, // Mapping Direction from EmailInfo to Mail
+      ContactId: email.ContactId, // Mapping ContactId from EmailInfo to Mail
+      O: [], // Assuming O is an array and you might need to adjust this
     };
-  
     const emailContent: IEmailContent = {
       mailId: mail.id,
       direction: mail.Direction,
       subject: mail.Subject,
-      body: mail.body,  // Mail body
-      organizationId: 0,  // You can fill this in as needed
-      organizationName: '',  // You can fill this in as needed
-      isEditing: false  // Adjust this based on your needs
+      body: mail.body, // Mail body
+      organizationId: 0, // You can fill this in as needed
+      organizationName: '', // You can fill this in as needed
+      isEditing: false, // Adjust this based on your needs
     };
-  
+
     this.spinner.show();
-  
     const body: any = {
       Name: 'UpdateEmailData',
       MainEntity: null,
@@ -666,7 +677,6 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       },
       Json: null,
     };
-  
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.spinner.hide();
@@ -675,6 +685,77 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       },
     });
   }
+  DeleteMailTemplate(email: any): void {
+    // Set the email to be deleted as the selected email
+    this.selectedEmailToDelete = email;
+    const modalRef = this.modalService.open(this.deleteEmailModal);
+    modalRef.result.then(
+      (result) => {
+        // Handle modal dismissal
+        if (result === 'Delete') {
+          this.deleteEmail();
+        }
+      },
+    );
+  }
+  deleteEmail(): void {
+    if (!this.selectedEmailToDelete) {
+      return;
+    }
+    this.spinner.show();
+    const body: any = {
+      Name: 'DeleteMail',
+      MainEntity: null,
+      Params: {
+        MailId:
+          this.selectedEmailToDelete.id === undefined
+            ? this.selectedEmailToDelete.ID
+            : this.selectedEmailToDelete.id,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.spinner.hide();
+        this.showToast('Email Deleted successfully!');
+        this.modalService.dismissAll();
+        this.getAllEmails();
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.showToast('Error deleting email.');
+      },
+    });
+  }
+  // This method opens the modal for sending an email
+  openSendEmailModal(email: Mail): void {
+    // First, fetch the email details (including body) using getOneMail
+    this.getOneMail(email.id);
+    // Now open the modal, as the email body will be set after calling getOneMail
+    const modalRef = this.modalService.open(this.sendEmailModal, {
+      size: 'xl',
+    });
+    modalRef.result.then(
+      (result) => {
+        if (result === 'Send') {
+          this.sendDraftEmail(); // If confirmed, send the email
+        }
+      },
+    );
+  }
+sendDraftEmail(): void {
+  if (!this.selectedEmailForSend) {
+    return;
+  }
+  // Use the provided send function to send the email
+  this.send(this.selectedEmailForSend);
+}
   
-  
+onBodyChange(event: Event): void {
+  const target = event.target as HTMLElement;
+  if (this.selectedEmail) {
+    this.selectedEmail.Body = target.innerHTML;
+  }
+}
 }

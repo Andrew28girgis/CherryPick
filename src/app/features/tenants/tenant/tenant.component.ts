@@ -158,10 +158,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.selectedShoppingID = guid;
     if (this.contactID === '0') {
       this.openEmailModal();
-    } else {
+    } 
       this.GetCampaignFromGuid();
       this.proceedWithNextSteps();
-    }
+    
   }
   openEmailModal(): void {
     this.modalService.open(this.emailModal, { size: 'md', centered: true });

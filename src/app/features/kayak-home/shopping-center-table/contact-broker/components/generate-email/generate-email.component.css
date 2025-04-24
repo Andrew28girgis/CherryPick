@@ -127,6 +127,12 @@
   padding: 0.75rem 1.5rem;
 }
 
+.generate-btn button:disabled,
+.advanced-controls button:disabled {
+  border: 1px solid #94a3d2;
+  background-color: #94a3d2;
+}
+
 .generate-btn button *,
 .advanced-controls button * {
   color: #fff;
@@ -141,6 +147,130 @@
 .generate-btn button svg path,
 .advanced-controls button svg path {
   fill: #fff;
+}
+
+.preview-emails-contaciner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
+.emails-container {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.email-container {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #c6c9d3;
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.subject,
+.body {
+  width: 100%;
+  background-color: #f1f1f4;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.subject {
+  font-size: large;
+  font-weight: 600;
+}
+
+.body {
+  white-space: pre-line;
+  color: #707791;
+}
+
+.subject:focus,
+.body:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #c6c9d3;
+}
+
+.email-actions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.edit-btn,
+.send-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #4d65b4;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+}
+
+.edit-btn {
+  background-color: #fff;
+  color: #4d65b4;
+}
+
+.send-btn {
+  background-color: #4d65b4;
+  color: #fff;
+}
+
+.empty-emails {
+  color: #707791;
+  font-weight: 600;
+}
+
+.loader {
+  display: block;
+  --height-of-loader: 4px;
+  --loader-color: #4d65b4;
+  width: 10rem;
+  height: var(--height-of-loader);
+  border-radius: 30px;
+  background-color: rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.loader::before {
+  content: "";
+  position: absolute;
+  background: var(--loader-color);
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  border-radius: 30px;
+  animation: moving 1s ease-in-out infinite;
+}
+
+@keyframes moving {
+  50% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+    right: 0;
+    left: unset;
+  }
 }
 
 @media (max-width: 768px) {

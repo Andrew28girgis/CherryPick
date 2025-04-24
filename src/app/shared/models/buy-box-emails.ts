@@ -57,8 +57,13 @@ export interface O {
 
 export interface MailsContact {
   MailContactId: number
+  RecieverFullName: string
+  SC: Sc[]
 }
 
+export interface Sc {
+  CenterName: string
+}
  
 
 export interface EmailInfo {

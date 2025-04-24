@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { IBuyboxDetails } from '../../models/ibuybox-details';
@@ -24,6 +33,7 @@ import { Center } from 'src/app/shared/models/shoppingCenters';
 import { IChooseBroker } from '../../models/ichoose-broker';
 import { IManagedByBroker } from '../../models/imanaged-by-broker';
 import { ICenterData } from '../../models/icenter-data';
+import { IEmailContent } from '../../models/iemail-content';
 
 @Component({
   selector: 'app-generate-email',
@@ -66,11 +76,19 @@ export class GenerateEmailComponent implements OnInit {
   mailContextId!: number;
   isAdvancedCollapsed = true;
 
+  @ViewChildren('bodyDiv') bodyDivs!: QueryList<ElementRef<HTMLDivElement>>;
+  @ViewChildren('subjectDiv') subjectDivs!: QueryList<
+    ElementRef<HTMLDivElement>
+  >;
+
+  protected emails!: IEmailContent[];
+  protected dataLoaded: boolean = true;
+
   @Input() buyBoxId!: number;
   @Input() center!: Center;
   @Input() chooseBrokerObject!: IChooseBroker;
   @Input() managedByBrokerArray!: IManagedByBroker[];
-  @Output() onStepDone = new EventEmitter<number>();
+  @Output() onStepDone = new EventEmitter<void>();
 
   constructor(
     private placeService: PlacesService,
@@ -275,8 +293,10 @@ export class GenerateEmailComponent implements OnInit {
       this.showToast('Please select a prompt to Generate.');
       return;
     }
+    this.emails = [];
+    this.dataLoaded = false;
 
-    this.spinner.show();
+    // this.spinner.show();
     await this.PutGenerateContext();
 
     const promptId = Number(this.selectedPromptId);
@@ -320,7 +340,8 @@ export class GenerateEmailComponent implements OnInit {
                     },
                   });
                 } else {
-                  this.spinner.hide();
+                  this.dataLoaded = true;
+                  // this.spinner.hide();
                 }
               },
               error: (err) => {
@@ -331,10 +352,10 @@ export class GenerateEmailComponent implements OnInit {
         })
       )
       .subscribe({
-        complete: () => {
-          this.getGeneratedEmails();
-          this.spinner.hide();
-          this.onSubmit();
+        complete: async () => {
+          await this.getGeneratedEmails();
+          this.checkMailGenerated();
+          // this.onSubmit();
         },
       });
   }
@@ -450,7 +471,7 @@ export class GenerateEmailComponent implements OnInit {
       return of(null);
     }
 
-    this.spinner.show();
+    // this.spinner.show();
 
     const observables = org.GetContactManagers.map((manager: any) => {
       const ContactSCIds = manager.ShoppingCentersID.join(',');
@@ -471,13 +492,12 @@ export class GenerateEmailComponent implements OnInit {
 
     return forkJoin(observables).pipe(
       tap(() => {
-        this.spinner.hide();
+        // this.spinner.hide();
       })
     );
   }
 
-  getGeneratedEmails() {
-    this.spinner.show();
+  async getGeneratedEmails() {
     var body: any = {
       Name: 'GetMailContextGenerated',
       MainEntity: null,
@@ -488,14 +508,11 @@ export class GenerateEmailComponent implements OnInit {
       Json: null,
     };
 
-    this.placeService.GenericAPI(body).subscribe({
-      next: (data) => {
-        this.returnGetMailContextGenerated = data.json;
-        console.log(this.returnGetMailContextGenerated);
+    const data = await firstValueFrom(this.placeService.GenericAPI(body));
 
-        this.spinner.hide();
-      },
-    });
+    if (data.json) {
+      this.returnGetMailContextGenerated = data.json;
+    }
   }
 
   openPromptTextModal(modal: any) {
@@ -514,7 +531,158 @@ export class GenerateEmailComponent implements OnInit {
     this.editablePromptText = this.selectedPromptText;
   }
 
-  onSubmit(): void {
-    this.onStepDone.emit(this.mailContextId);
+  // onSubmit(): void {
+  //   this.onStepDone.emit();
+  // }
+
+  updateMailBody(event: Event, index: number) {
+    const div = event.target as HTMLDivElement;
+    this.emails[index].body = div.innerHTML;
+  }
+
+  updateMailSubject(event: Event, index: number) {
+    const div = event.target as HTMLDivElement;
+    this.emails[index].subject = div.innerText;
+  }
+
+  readSpecificMails(): void {
+    const body = {
+      Name: 'ReadSpecificMails',
+      Params: {
+        MailContextId: this.mailContextId,
+        IsSent: 0,
+      },
+    };
+    this.placeService.GenericAPI(body).subscribe((response: any) => {
+      if (response.json && response.json.length > 0) {
+        this.dataLoaded = true;
+        // this.spinner.hide();
+
+        this.dataLoaded = true;
+        this.emails = response.json;
+        this.emails.forEach((email) => {
+          email.isEditing = false;
+        });
+
+        const interval = setInterval(() => {
+          if (this.bodyDivs && this.subjectDivs) {
+            this.bodyDivs.forEach((divRef, index) => {
+              const html = this.emails[index].body;
+              divRef.nativeElement.innerHTML = html;
+            });
+            this.subjectDivs.forEach((divRef, index) => {
+              const text = this.emails[index].subject;
+              divRef.nativeElement.innerText = text;
+            });
+            clearInterval(interval);
+          }
+        }, 100);
+      }
+    });
+  }
+
+  checkMailGenerated(): void {
+    const body = {
+      Name: 'CheckMailGenerated',
+      Params: {
+        MailContextId: this.mailContextId,
+      },
+    };
+    this.placeService.GenericAPI(body).subscribe((response: any) => {
+      if (response.json && response.json.length > 0) {
+        const data: {
+          isGenerated: boolean;
+          errorMessage: string | null;
+        } = response.json[0];
+        if (data.errorMessage) {
+          this.dataLoaded = true;
+          alert(
+            'Email generation is taking longer than expected. Please close this window and check your drafts folder in Emily later.'
+          );
+          // this.onStepDone.emit();
+          this.dataLoaded = true;
+          // this.spinner.hide();
+
+          return;
+        } else if (data.isGenerated) {
+          this.readSpecificMails();
+          return;
+        }
+        setTimeout(async () => {
+          this.checkMailGenerated();
+        }, 3000);
+      }
+    });
+  }
+
+  sendEmail(email: IEmailContent): void {
+    // Only proceed if direction is equal to 4
+    if (email.direction !== 4) {
+      console.log('Email not sent - direction is not 4:', email.mailId);
+      return;
+    }
+
+    this.spinner.show();
+
+    const body: any = {
+      Name: 'UpdateEmailData',
+      MainEntity: null,
+      Params: {
+        MailId: email.mailId,
+        Subject: email.subject,
+        Body: email.body,
+      },
+      Json: null,
+    };
+
+    this.placeService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.spinner.hide();
+        this.showToast('Email sent successfully');
+        this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+        if (this.emails.length === 0) {
+          this.onStepDone.emit();
+        }
+      },
+    });
+  }
+
+  // Send all emails
+  sendAllEmails(): void {
+    // Filter emails to only include those with direction = 4
+    const eligibleEmails = this.emails.filter((email) => email.direction === 4);
+    // If no eligible emails, return early
+    if (eligibleEmails.length === 0) {
+      console.log('No eligible emails to send (direction = 4)');
+      return;
+    }
+
+    // Create a counter to track when all emails are sent - use filtered length
+
+    this.spinner.show();
+
+    // Send each eligible email one by one - iterate through filtered array
+    eligibleEmails.forEach((email) => {
+      const body: any = {
+        Name: 'UpdateEmailData',
+        MainEntity: null,
+        Params: {
+          MailId: email.mailId,
+          Subject: email.subject,
+          Body: email.body,
+        },
+        Json: null,
+      };
+      this.placeService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          this.showToast('Emails sent successfully');
+          this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+          if (this.emails.length === 0) {
+            this.spinner.hide();
+            this.onStepDone.emit();
+          }
+        },
+      });
+    });
   }
 }
