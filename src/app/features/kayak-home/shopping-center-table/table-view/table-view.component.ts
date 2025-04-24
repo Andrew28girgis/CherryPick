@@ -344,9 +344,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.htmlContent = res.html;
-        // ensure the view picks up the new HTML
         this.cdr.detectChanges();
-        // open the modal after content is ready
+        
         this.openCenterStatusModal();
       },
       error: err => {
