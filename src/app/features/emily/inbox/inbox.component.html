@@ -55,7 +55,7 @@
           <ng-container *ngFor="let bb of BuyBoxMicroDeals">
             <p
               class="buybox-name"
-              (click)="toggleBB(bb)" 
+              (click)="toggleBB(bb)"
               [attr.data-org-id]="bb.OrganizationId"
               [ngClass]="{ 'highlight-open': bb.isOpen }"
             >
@@ -71,7 +71,6 @@
                 src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                   bb.OrganizationId
                 }}"
-                title="Kimco Realty"
               />
               {{ bb.OrganizationName }}
             </p>
@@ -92,10 +91,7 @@
                     {{ contact.Firstname }} {{ contact.Lastname }}
                   </span>
 
-                  <button
-                    class="new-btnCompose"
-                    (click)="openCompose(contact)"
-                  >
+                  <button class="new-btnCompose" (click)="openCompose(contact)">
                     Compose
                     <i class="fa-solid fa-arrow-right"></i>
                   </button>
@@ -160,8 +156,8 @@
                   <!-- <div (click)="send(email)">
                     <i class="fa-solid fa-paper-plane text-primary"  *ngIf="email.Direction === 4"></i>
                    </div> -->
-                <p class="date">{{ email.Date | date : "medium" }}</p>
-              </div>
+                  <p class="date">{{ email.Date | date : "medium" }}</p>
+                </div>
               </div>
               <p *ngIf="emailsSentContact?.length === 0" class="no-email-msg">
                 {{ emptyMessage }}
@@ -209,9 +205,10 @@
             Reply
           </button>
           <button
-          class="replay"
-          (click)="send(selectedEmail)"
-          *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 4">
+            class="replay"
+            (click)="send(selectedEmail)"
+            *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 4"
+          >
             Send
           </button>
         </div>

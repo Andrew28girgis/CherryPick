@@ -120,7 +120,7 @@ export class InboxComponent implements OnInit {
       next: (data) => {
         this.BuyBoxEmails = data.json;
         this.filteredEmails = this.sortEmails(data.json);
-        
+
         // Apply the current filter
         this.filterEmails(this.selectedFilter);
       },
@@ -277,8 +277,6 @@ export class InboxComponent implements OnInit {
     );
   }
 
-
-
   GetContactShoppingCenters(contactId: number): void {
     const body: any = {
       Name: 'GetShoppingCentersForContact',
@@ -301,13 +299,13 @@ export class InboxComponent implements OnInit {
 
   getDirectionIcon(direction: number): string {
     return direction === 2
-      ? 'fa-reply send'           // Sent
+      ? 'fa-reply send' // Sent
       : direction === -1
-      ? 'fa-reply outbox'         // Outbox
+      ? 'fa-reply outbox' // Outbox
       : direction === 1
-      ? 'fa-share inbox'          // Inbox
+      ? 'fa-share inbox' // Inbox
       : direction === 4
-      ? 'fa-pencil-alt drafts'    // Drafts
+      ? 'fa-pencil-alt drafts' // Drafts
       : ''; // Default: return an empty string if the direction is unknown
   }
 
@@ -362,10 +360,10 @@ export class InboxComponent implements OnInit {
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
     this.selected = null; // Reset selected email to show the list view
-  
+
     // Create a properly typed source array based on whether a contact is selected
     let sourceEmails: Mail[] = [];
-    
+
     if (this.selectedContact) {
       // If contact is selected, use their emails
       sourceEmails = this.emailsSentContact;
@@ -374,7 +372,7 @@ export class InboxComponent implements OnInit {
       sourceEmails = this.BuyBoxEmails as any[] as Mail[];
       // You might need to adjust this depending on the actual structure of BuyBoxEmails
     }
-    
+
     // If no emails available, don't try to filter
     if (!sourceEmails || sourceEmails.length === 0) {
       this.filteredEmails = [];
@@ -382,30 +380,30 @@ export class InboxComponent implements OnInit {
       this.emptyMessage = 'No emails available';
       return;
     }
-  
+
     // Apply the filter based on the selected type
     let filtered: Mail[] = [];
     switch (filterType) {
       case 'inbox':
-        filtered = sourceEmails.filter(email => email.Direction === 1);
+        filtered = sourceEmails.filter((email) => email.Direction === 1);
         break;
       case 'outbox':
-        filtered = sourceEmails.filter(email => email.Direction === -1);
+        filtered = sourceEmails.filter((email) => email.Direction === -1);
         break;
       case 'sent':
-        filtered = sourceEmails.filter(email => email.Direction === 2);
+        filtered = sourceEmails.filter((email) => email.Direction === 2);
         break;
       case 'drafts':
-        filtered = sourceEmails.filter(email => email.Direction === 4);
+        filtered = sourceEmails.filter((email) => email.Direction === 4);
         break;
       case 'all':
       default:
         filtered = [...sourceEmails];
         break;
     }
-  
+
     this.filteredEmails = this.sortEmails(filtered);
-    
+
     if (this.filteredEmails.length === 0) {
       // this.emptyMessage = `No ${filterType} emails available`;
       this.selectedEmail = null;
@@ -572,15 +570,15 @@ export class InboxComponent implements OnInit {
   // }
   showAllEmails() {
     // Close all organization dropdowns
-    this.BuyBoxMicroDeals.forEach(item => (item.isOpen = false));
-    
+    this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
+
     // Clear the selected contact
     this.selectedContact = null;
-    
+
     // Reset to show all emails
     this.emailsSentContact = [];
     this.getAllEmails();
-    
+
     // Apply the current filter to all emails
     this.filterEmails(this.selectedFilter);
   }
@@ -604,56 +602,57 @@ export class InboxComponent implements OnInit {
   //   this.modalService.open(modal, { size: 'xl', backdrop: true });
   // }
   openCompose(contact: Contact) {
-
     const modalRef = this.modalService.open(EmailComposeComponent, {
       size: 'xl',
-      backdrop: true
+      backdrop: true,
     });
-    modalRef.componentInstance.contactId   = contact.ContactId;
-    modalRef.componentInstance.buyBoxId     = this.buyBoxId;
-    modalRef.componentInstance.orgId        = this.orgId;
-    modalRef.componentInstance.campaignId   = this.campaignId;
+    modalRef.componentInstance.contactId = contact.ContactId;
+    modalRef.componentInstance.buyBoxId = this.buyBoxId;
+    modalRef.componentInstance.orgId = this.orgId;
+    modalRef.componentInstance.campaignId = this.campaignId;
     modalRef.componentInstance.contactName = `${contact.Firstname ?? ''} ${
       contact.Lastname ?? ''
     }`.trim();
-  
+
     modalRef.result
-      .then(result => {
+      .then((result) => {
         if (result === 'sent' && this.selectedContact) {
           this.getEmailsForContact(this.selectedContact);
         }
       })
-      .catch(() => { /* dismissed */ });
+      .catch(() => {
+        /* dismissed */
+      });
   }
   send(email: EmailInfo | null): void {
     if (!email) {
       // Handle the case where email is null (for example, show an error message or return early)
       return;
     }
-  
+
     // Map EmailInfo to Mail (creating a new Mail object)
     const mail: Mail = {
-      body: email.Body,  // Mapping Body from EmailInfo to Mail
-      id: email.ID,  // Mapping ID from EmailInfo to Mail
-      Subject: email.Subject,  // Mapping Subject from EmailInfo to Mail
-      Date: email.Date,  // Mapping Date from EmailInfo to Mail
-      Direction: email.Direction,  // Mapping Direction from EmailInfo to Mail
-      ContactId: email.ContactId,  // Mapping ContactId from EmailInfo to Mail
-      O: []  // Assuming O is an array and you might need to adjust this
+      body: email.Body, // Mapping Body from EmailInfo to Mail
+      id: email.ID, // Mapping ID from EmailInfo to Mail
+      Subject: email.Subject, // Mapping Subject from EmailInfo to Mail
+      Date: email.Date, // Mapping Date from EmailInfo to Mail
+      Direction: email.Direction, // Mapping Direction from EmailInfo to Mail
+      ContactId: email.ContactId, // Mapping ContactId from EmailInfo to Mail
+      O: [], // Assuming O is an array and you might need to adjust this
     };
-  
+
     const emailContent: IEmailContent = {
       mailId: mail.id,
       direction: mail.Direction,
       subject: mail.Subject,
-      body: mail.body,  // Mail body
-      organizationId: 0,  // You can fill this in as needed
-      organizationName: '',  // You can fill this in as needed
-      isEditing: false  // Adjust this based on your needs
+      body: mail.body, // Mail body
+      organizationId: 0, // You can fill this in as needed
+      organizationName: '', // You can fill this in as needed
+      isEditing: false, // Adjust this based on your needs
     };
-  
+
     this.spinner.show();
-  
+
     const body: any = {
       Name: 'UpdateEmailData',
       MainEntity: null,
@@ -664,7 +663,7 @@ export class InboxComponent implements OnInit {
       },
       Json: null,
     };
-  
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.spinner.hide();
@@ -673,6 +672,4 @@ export class InboxComponent implements OnInit {
       },
     });
   }
-  
-  
 }
