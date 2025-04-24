@@ -247,6 +247,8 @@ export class InboxComponent implements OnInit {
 
   goBack(): void {
     this.selected = null;
+    this.emailSubjectModal='';
+    this.emailBodySafeModal = '';
   }
 
   openEmail(email: Mail): void {

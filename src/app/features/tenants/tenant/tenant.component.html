@@ -1647,15 +1647,15 @@
 </ng-template>
 <!-- Email Modal Template - Place it here at the end of the file -->
 <ng-template #emailModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Enter Your Email</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  <div class="modal-header d-flex justify-content-center">
+    <h4 class="modal-title">Enter Your Email To Upload Submissions</h4>
+    <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button> -->
   </div>
   <div class="modal-body">
     <input type="text" [(ngModel)]="email" class="form-control" placeholder="Enter your email" />
   </div>
   <div class="modal-footer">
     <button type="button" class="custom-button custom-button-secondary" (click)="modal.dismiss()">Cancel</button>
-    <button type="button" class="custom-button custom-button-primary" (click)="getContactByEmail(modal)">Submit</button>
+    <button type="button" class="custom-button custom-button-primary" style="background-color: #4d65b4;" (click)="getContactByEmail(modal)">Submit</button>
   </div>
 </ng-template>
