@@ -340,7 +340,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.center = center;
     modalRef.componentInstance.buyboxId = this.BuyBoxId;
   }
-  requestCenterStatus(shoppingCenterId: number, campaignId: number) {
+  requestCenterStatus(shoppingCenterId: number, campaignId: any) {
     // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true;
 
@@ -348,7 +348,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(this.statusModal, {
       size: 'lg',
       scrollable: true,
-      backdrop: 'static',
     });
 
     // Fetch the actual data
