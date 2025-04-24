@@ -530,6 +530,27 @@ export class CampaignDrawingService {
     );
   }
 
+  private boundsChangeListener(map: any): void {
+    map.addListener('bounds_changed', () => {
+      const bounds = map.getBounds();
+      if (bounds) {
+        const northEast = bounds.getNorthEast();
+        const southWest = bounds.getSouthWest();
+
+        console.log('Bounds:');
+        console.log('NE lat:', northEast.lat(), 'lng:', northEast.lng());
+        console.log('SW lat:', southWest.lat(), 'lng:', southWest.lng());
+      }
+    });
+  }
+
+  private zoomChangeListener(map: any): void {
+    map.addListener('zoom_changed', () => {
+      const zoomLevel = map.getZoom();
+      console.log('Zoom Level Changed:', zoomLevel);
+    });
+  }
+
   initializeMap(gmapContainer: ElementRef): google.maps.Map {
     const mapOptions: google.maps.MapOptions = {
       center: { lat: 38.889805, lng: -77.009056 },
@@ -540,6 +561,9 @@ export class CampaignDrawingService {
     const map = new google.maps.Map(gmapContainer.nativeElement, mapOptions);
 
     this.addMapListener(map);
+
+    this.boundsChangeListener(map);
+    this.zoomChangeListener(map);
 
     this.initializeInfoWindow();
 

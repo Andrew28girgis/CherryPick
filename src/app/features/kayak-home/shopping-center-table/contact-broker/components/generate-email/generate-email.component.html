@@ -162,7 +162,9 @@
                                 class="showMoreRelations"
                               >
                                 {{
-                                  showMoreRelations[relationCategoriesNames[0].id]
+                                  showMoreRelations[
+                                    relationCategoriesNames[0].id
+                                  ]
                                     ? "Show Less"
                                     : "Show More"
                                 }}
@@ -174,7 +176,7 @@
                     </ng-container>
                   </ng-container>
                 </ng-container>
-  
+
                 <div class="checkbox-section checkbox-section-body-first">
                   <input
                     type="checkbox"
@@ -187,7 +189,7 @@
                     relationCategoriesNames[1].name
                   }}</label>
                 </div>
-  
+
                 <ng-container *ngIf="ShowComplementaries">
                   <ng-container
                     *ngIf="
@@ -212,7 +214,7 @@
                         </label>
                       </div>
                     </ng-container>
-  
+
                     <div
                       class="d-flex justify-content-end"
                       *ngIf="
@@ -271,7 +273,7 @@
           </div>
         </div>
       </div>
-       <div class="w-100 checkbox-section align-items-center">
+      <div class="w-100 checkbox-section align-items-center">
         <input
           type="checkbox"
           [(ngModel)]="isLandingSelected"
@@ -308,7 +310,7 @@
   </div>
 
   <div class="generate-btn">
-    <button (click)="PutMailsDraft()">
+    <button [disabled]="!dataLoaded" (click)="PutMailsDraft()">
       <span>Generate Email </span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -337,6 +339,58 @@
         ></polyline>
       </svg>
     </button>
+  </div>
+  @if (!dataLoaded) {
+  <div
+    class="h-100 w-100 d-flex flex-column align-items-center justify-content-center gap-3"
+  >
+    <div class="loading-data">
+      Your email is being generated. This may take a few seconds. You can either
+      wait or close this window and check back later in your drafts.
+    </div>
+    <div class="loader"></div>
+  </div>
+  } @if (emails) {
+
+  <div class="preview-emails-contaciner">
+    @if (emails && emails.length ) { @if (emails.length > 1) {
+    <div class="w-100 d-flex align-items-center justify-content-end">
+      <button class="send-btn" (click)="sendAllEmails()">Send All</button>
+    </div>
+    }
+    <div class="emails-container">
+      @for (email of emails; track email.mailId;let index = $index) {
+      <div class="email-container">
+        <div
+          #subjectDiv
+          class="subject"
+          contenteditable="true"
+          (input)="updateMailSubject($event, index)"
+        >
+          {{ email.subject }}
+        </div>
+        <div
+          #bodyDiv
+          class="body"
+          contenteditable="true"
+          (input)="updateMailBody($event, index)"
+        ></div>
+        <div class="email-actions">
+          <button class="send-btn" (click)="sendEmail(email)">Send</button>
+        </div>
+      </div>
+      }@empty {
+      <div class="empty-emails">There are no emails generated</div>
+      }
+    </div>
+    }
+  </div>
+  }
+</div>
+
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
   </div>
 </div>
 

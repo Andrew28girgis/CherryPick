@@ -118,12 +118,12 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
     });
   }
 
-  toggleEdit(email: any, bodyDiv: HTMLElement) {
-    if (email.isEditing) {
-      email.body = bodyDiv.innerHTML;
-    }
-    email.isEditing = !email.isEditing;
-  }
+  // toggleEdit(email: any, bodyDiv: HTMLElement) {
+  //   if (email.isEditing) {
+  //     email.body = bodyDiv.innerHTML;
+  //   }
+  //   email.isEditing = !email.isEditing;
+  // }
 
   sendEmail(email: IEmailContent): void {
     // Only proceed if direction is equal to 4

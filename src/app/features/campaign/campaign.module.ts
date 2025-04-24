@@ -15,12 +15,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
+import { AddNewCampaignComponent } from './add-new-campaign/add-new-campaign.component';
 
 @NgModule({
   declarations: [
     CampaignDrawingComponent,
     CampaignManagerComponent,
     AddCampaignComponent,
+    AddNewCampaignComponent,
   ],
   imports: [
     CommonModule,
