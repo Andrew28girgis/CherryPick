@@ -6,8 +6,8 @@ import { AddNewCampaignComponent } from './add-new-campaign/add-new-campaign.com
 
 const routes: Routes = [
   { path: '', component: CampaignManagerComponent },
-  // { path: 'add-campaign', component: AddCampaignComponent },
-  { path: 'add-campaign', component: AddNewCampaignComponent },
+  { path: 'add-campaign', component: AddCampaignComponent },
+  // { path: 'add-campaign', component: AddNewCampaignComponent },
   {
     path: 'ataglance/:id',
     loadChildren: () =>
