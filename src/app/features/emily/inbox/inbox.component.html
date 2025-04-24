@@ -167,12 +167,15 @@
                       [placement]="'bottom'"
                     />
                   </div>
-                  <i
-                  class="fa-solid fa-trash-arrow-up delete-icn"
-                  title="Delete Mail"
-                  (click)="DeleteMailTemplate(email)"
-                  *ngIf="email.Direction === 4"
-                ></i>
+                  <div class="ms-auto">
+                    
+                    <i
+                    class="fa-solid fa-trash-can delete-icn"
+                    title="Delete Mail"
+                    (click)="DeleteMailTemplate(email)"
+                    *ngIf="email.Direction === 4"
+                    ></i>
+                  </div>
                   <br />
                   <ng-template #popoverContent>
                     <div>

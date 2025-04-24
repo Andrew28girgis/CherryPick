@@ -423,14 +423,14 @@
   padding: 26px;
 }
 .delete-icn{
-  color: #000000;
+  color: #404244;
   font-size: 18px;
   margin-top: 5px;
   cursor: pointer;
   margin-left: 10px;
 }
 .delete-icn:hover{
-  color: #363636;
+  color: #222121;
 }
 .delete-btn{
   background-color: #ce0000;
