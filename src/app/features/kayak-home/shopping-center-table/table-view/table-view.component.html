@@ -405,6 +405,21 @@
                           </li>
                           <li
                             (click)="
+                              requestCenterStatus(shoppingCenter.Id, campaignid)
+                            "
+                          >
+                            <a
+                              class="target"
+                              (click)="
+                                $event.preventDefault();
+                                $event.stopPropagation();
+                                requestCenterStatus(313, 53)
+                              "
+                              >center status</a
+                            >
+                          </li>
+                          <!-- <li
+                            (click)="
                               toggleShortcuts(shoppingCenter.Id, 'close')
                             "
                           >
@@ -553,4 +568,24 @@
 
 <ng-template #MapViewPlace let-modal>
   <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
+</ng-template>
+
+<ng-template #statusModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Center Status</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" [innerHTML]="htmlContent"></div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
+  </div>
 </ng-template>

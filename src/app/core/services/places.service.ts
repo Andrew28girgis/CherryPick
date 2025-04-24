@@ -67,6 +67,10 @@ export class PlacesService {
     const apiUrl = `${environment.api}/PromptHub/GenerateContext`;
     return this.http.post<any>(apiUrl, body);
   }
+  public GetSiteCurrentStatus(body: any) {
+    const apiUrl = `${environment.api}/PromptHub/GetSiteCurrentStatus`;
+    return this.http.get<any>(apiUrl, body);
+  }
 
   public UploadFile(formData: FormData, id: number) {
     return this.http.post<any>(
