@@ -65,7 +65,7 @@ export class InboxComponent implements OnInit {
   listcenterName: string[] = [];
   showGenerateSection: boolean = false;
   isEmailBodyEmpty: boolean = true;
-  selectedEmailToDelete: any|null;
+  selectedEmailToDelete: any | null;
   @ViewChild('deleteEmailModal') deleteEmailModal: any;
   @ViewChild('sendEmailModal') sendEmailModal: any;
   selectedEmailForSend: EmailInfo | null = null;
@@ -685,8 +685,7 @@ export class InboxComponent implements OnInit {
   DeleteMailTemplate(email: any): void {
     // Set the email to be deleted as the selected email
     this.selectedEmailToDelete = email;
-    console.log('this.selectedEmailToDelete',this.selectedEmailToDelete);
-    
+    console.log('this.selectedEmailToDelete', this.selectedEmailToDelete);
 
     // Open the confirmation modal
     const modalRef = this.modalService.open(this.deleteEmailModal);
@@ -712,13 +711,15 @@ export class InboxComponent implements OnInit {
     this.spinner.show();
     // const mailId= this.selectedEmailToDelete.mailId; // Get the mail ID from the selected email
     // console.log(,mailId);
-    
 
     const body: any = {
       Name: 'DeleteMail',
       MainEntity: null,
       Params: {
-        MailId: this.selectedEmailToDelete.id === undefined ? this.selectedEmailToDelete.ID : this.selectedEmailToDelete.id,
+        MailId:
+          this.selectedEmailToDelete.id === undefined
+            ? this.selectedEmailToDelete.ID
+            : this.selectedEmailToDelete.id,
       },
       Json: null,
     };
@@ -727,26 +728,28 @@ export class InboxComponent implements OnInit {
       next: (data) => {
         this.spinner.hide();
         this.showToast('Email Deleted successfully!');
-        this.modalService.dismissAll(); 
-        this.getAllEmails(); 
+        this.modalService.dismissAll();
+        this.getAllEmails();
       },
       error: (err) => {
         this.spinner.hide();
         this.showToast('Error deleting email.');
-      }
+      },
     });
   }
   // This method opens the modal for sending an email
   openSendEmailModal(email: Mail): void {
     // First, fetch the email details (including body) using getOneMail
     this.getOneMail(email.id);
-  
+
     // Now open the modal, as the email body will be set after calling getOneMail
-    const modalRef = this.modalService.open(this.sendEmailModal, { size: 'xl' });
+    const modalRef = this.modalService.open(this.sendEmailModal, {
+      size: 'xl',
+    });
     modalRef.result.then(
       (result) => {
         if (result === 'Send') {
-          this.sendDraftEmail();  // If confirmed, send the email
+          this.sendDraftEmail(); // If confirmed, send the email
         }
       },
       (reason) => {
@@ -754,20 +757,20 @@ export class InboxComponent implements OnInit {
       }
     );
   }
-// This method sends the email using the provided send function
-sendDraftEmail(): void {
-  if (!this.selectedEmailForSend) {
-    return; // Ensure that there is a selected email for sending
+  // This method sends the email using the provided send function
+  sendDraftEmail(): void {
+    if (!this.selectedEmailForSend) {
+      return; // Ensure that there is a selected email for sending
+    }
+
+    // Use the provided send function to send the email
+    this.send(this.selectedEmailForSend);
   }
 
-  // Use the provided send function to send the email
-  this.send(this.selectedEmailForSend);
-}
-  
-onBodyChange(event: Event): void {
-  const target = event.target as HTMLElement;
-  if (this.selectedEmail) {
-    this.selectedEmail.Body = target.innerHTML;
+  onBodyChange(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (this.selectedEmail) {
+      this.selectedEmail.Body = target.innerHTML;
+    }
   }
-}
 }
