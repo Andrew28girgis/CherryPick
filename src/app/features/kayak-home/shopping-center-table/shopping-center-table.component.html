@@ -22,12 +22,15 @@
           </div>
         </div>
         <div>
-          <button
-          style="border: none;"
-            class=" border-none mx-2" 
-          >
-          <app-link-microsoft></app-link-microsoft>
+          <button style="border: none" class="border-none mx-2">
+            <app-link-microsoft></app-link-microsoft>
           </button>
+          <!-- <button
+            class="CherryPick__button mx-2"
+            [routerLink]="['/organization-mail', BuyBoxId, OrgId, 0]"
+          >
+            Emily
+          </button> -->
           <button
             class="CherryPick__button"
             [routerLink]="['/market-survey', BuyBoxId, OrgId, BuyBoxName]"
