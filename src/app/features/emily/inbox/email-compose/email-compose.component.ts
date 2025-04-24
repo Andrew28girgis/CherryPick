@@ -27,10 +27,13 @@ export class EmailComposeComponent implements OnInit {
   sanitizedEmailBodyContext!: SafeHtml;
   showGenerateSection = false;
   listcenterName: string[] = [];
+  listcenteIds: number[] = [];
+  listcenteIdsString: string = '';
   GetShoppingCenters: ICenterData[] = [];
   ContextEmail = '';
   BatchGuid = crypto.randomUUID();
   localStorageContactId!: any;
+  mailContextId!: number;
 
   prompts: { id: number; name: string; promptText: string }[] = [];
   selectedPromptId!: number;
@@ -79,6 +82,9 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe((res) => {
       this.GetShoppingCenters = res.json;
       this.listcenterName = this.GetShoppingCenters.map((c) => c.CenterName);
+      this.listcenteIds = this.GetShoppingCenters.map((c) => c.Id);
+      this.listcenteIdsString = this.listcenteIds.join(','); // <-- convert array to comma-separated string
+
     });
   }
 
@@ -180,10 +186,27 @@ export class EmailComposeComponent implements OnInit {
     };
     this.places.GenericAPI(body).subscribe({
       next: (data) => {
+        this.mailContextId=data.json[0].id;
+        this.AddMailContextReceivers();
         this.getGeneratedEmail(data.json[0].id);
       },
     });
   }
+   AddMailContextReceivers() {
+    const body: any = {
+      Name: 'AddMailContextReceivers',
+      MainEntity: null,
+      Params: {
+        MailContextId: this.mailContextId,
+        ContactId: this.contactId,
+        ShoppingCenterIds: this.listcenteIdsString,
+      },
+      Json: null,
+    };
+    this.places.GenericAPI(body).subscribe(() => {
+    });
+  }
+  
 
   getGeneratedEmail(id: number): void {
     this.spinner.show();

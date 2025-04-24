@@ -8,6 +8,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import {
@@ -50,6 +51,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   campaignId: any;
   emailBody: string = '';
   sanitizedEmailBody!: SafeHtml; // ONLY for [innerHTML] if you display it elsewhere
+  sanitizedEmailBodyDraft!: SafeHtml; // ONLY for [innerHTML] if you display it elsewhere
   emailSubject: string = '';
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -65,7 +67,12 @@ export class InboxComponent implements OnInit, AfterViewChecked {
   listcenterName: string[] = [];
   showGenerateSection: boolean = false;
   isEmailBodyEmpty: boolean = true;
-
+  selectedEmailToDelete: any|null;
+  @ViewChild('deleteEmailModal') deleteEmailModal: any;
+  @ViewChild('sendEmailModal') sendEmailModal: any;
+  selectedEmailForSend: EmailInfo | null = null;
+  emailSubjectModal?: string = '';
+  emailBodySafeModal: SafeHtml = '';
   constructor(
     public spinner: NgxSpinnerService,
     private PlacesService: PlacesService,
@@ -267,6 +274,8 @@ export class InboxComponent implements OnInit, AfterViewChecked {
         this.emailBodySafe = this.sanitizer.bypassSecurityTrustHtml(
           this.selectedEmail!.Body
         );
+        this.emailBodySafeModal = this.emailBodySafe;
+        this.emailSubjectModal = this.selectedEmail?.Subject;
       },
     });
   }
@@ -675,6 +684,93 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       },
     });
   }
+  // This method is called when the delete icon is clicked
+  DeleteMailTemplate(email: any): void {
+    // Set the email to be deleted as the selected email
+    this.selectedEmailToDelete = email;
+    console.log('this.selectedEmailToDelete',this.selectedEmailToDelete);
+    
+
+    // Open the confirmation modal
+    const modalRef = this.modalService.open(this.deleteEmailModal);
+    modalRef.result.then(
+      (result) => {
+        // Handle modal dismissal
+        if (result === 'Delete') {
+          this.deleteEmail(); // Call the delete method if confirmed
+        }
+      },
+      (reason) => {
+        // Handle modal dismissal reason (can be cancelled)
+      }
+    );
+  }
+
+  // This method is called to delete the email
+  deleteEmail(): void {
+    if (!this.selectedEmailToDelete) {
+      return; // Ensure that there is an email selected for deletion
+    }
+
+    this.spinner.show();
+    // const mailId= this.selectedEmailToDelete.mailId; // Get the mail ID from the selected email
+    // console.log(,mailId);
+    
+
+    const body: any = {
+      Name: 'DeleteMail',
+      MainEntity: null,
+      Params: {
+        MailId: this.selectedEmailToDelete.id === undefined ? this.selectedEmailToDelete.ID : this.selectedEmailToDelete.id,
+      },
+      Json: null,
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (data) => {
+        this.spinner.hide();
+        this.showToast('Email Deleted successfully!');
+        this.modalService.dismissAll(); 
+        this.getAllEmails(); 
+      },
+      error: (err) => {
+        this.spinner.hide();
+        this.showToast('Error deleting email.');
+      }
+    });
+  }
+  // This method opens the modal for sending an email
+  openSendEmailModal(email: Mail): void {
+    // First, fetch the email details (including body) using getOneMail
+    this.getOneMail(email.id);
   
+    // Now open the modal, as the email body will be set after calling getOneMail
+    const modalRef = this.modalService.open(this.sendEmailModal, { size: 'xl' });
+    modalRef.result.then(
+      (result) => {
+        if (result === 'Send') {
+          this.sendDraftEmail();  // If confirmed, send the email
+        }
+      },
+      (reason) => {
+        // Handle modal dismissal reasons if needed
+      }
+    );
+  }
+// This method sends the email using the provided send function
+sendDraftEmail(): void {
+  if (!this.selectedEmailForSend) {
+    return; // Ensure that there is a selected email for sending
+  }
+
+  // Use the provided send function to send the email
+  this.send(this.selectedEmailForSend);
+}
   
+onBodyChange(event: Event): void {
+  const target = event.target as HTMLElement;
+  if (this.selectedEmail) {
+    this.selectedEmail.Body = target.innerHTML;
+  }
+}
 }
