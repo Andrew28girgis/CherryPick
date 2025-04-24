@@ -6,11 +6,7 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import {
-  NgxFileDropEntry,
-  FileSystemFileEntry,
-  FileSystemDirectoryEntry,
-} from 'ngx-file-drop';
+import { NgxFileDropEntry, FileSystemFileEntry } from 'ngx-file-drop';
 import {
   AvailabilityTenant,
   IFile,
@@ -39,14 +35,13 @@ import { OrganizationBranches } from 'src/app/shared/models/organization-branche
 import { LandingPageTenants } from 'src/app/shared/models/landing-page-tenants';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
 import { ICustomPolygon } from 'src/app/shared/models/custom-polygon.model';
-import { IGeoJson } from 'src/app/shared/models/igeo-json';
-import { ShoppingCenter } from 'src/app/shared/models/landingPlace';
 import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter';
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { organizationContacts } from 'src/app/shared/models/organizationContacts';
-
+import { Injectable } from '@angular/core';
+import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -65,6 +60,7 @@ import { organizationContacts } from 'src/app/shared/models/organizationContacts
 export class TenantComponent implements OnInit, AfterViewInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
+  @ViewChild('contactDataModal', { static: true }) contactDataModal!: TemplateRef<any>;
   email: string = '';
   public files: NgxFileDropEntry[] = [];
   selectedShoppingID!: string | undefined;
@@ -77,6 +73,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   images: IFile[] = [];
   pdfFileName: string = '';
   contactID!: any;
+  contactIDs!: any;
   TenantResult!: LandingPageTenants;
   organizationBranches!: OrganizationBranches;
   selectedbuyBox!: string;
@@ -134,6 +131,11 @@ export class TenantComponent implements OnInit, AfterViewInit {
     | TemplateRef<any>
     | undefined;
   modalLeasePlaces: any[] = [];
+
+  private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
+  private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
+
+  ContactData:any[]=[];
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -148,21 +150,84 @@ export class TenantComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
-      this.contactID = params.get('contactId');
-    });
-    this.activatedRoute.params.subscribe((params) => {
-      this.guid = params['guid'];
-    });
+      const encryptedContactId = params.get('contactId');
+      console.log(encryptedContactId);
+      this.activatedRoute.params.subscribe((params) => {
+        this.guid = params['guid'];
+      });
+      
+    if (encryptedContactId) {
+      try {
+        this.contactIDs = this.decrypt(encryptedContactId);
+        console.log('Decrypted Contact IDs:', this.contactIDs);
+      } catch (err) {
+        console.error('Decryption failed', err);
+      }
+    }
+  });
+
 
     const guid = crypto.randomUUID();
     this.selectedShoppingID = guid;
-    if (this.contactID === '0') {
-      this.openEmailModal();
-    } 
+    if (this.contactIDs) {
+      this.GetContactData();
+      // this.opencontactDataModal();
+    }
+    
+    this.GetCampaignFromGuid();
+    this.proceedWithNextSteps();
+  }
+  encrypt(value: string): string {
+      const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value), this.key, {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+      });
+      
+      return encrypted.toString();
+    }
+  decrypt(encryptedValue: string): string {
+      const decrypted = CryptoJS.AES.decrypt(encryptedValue, this.key, {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      });
+    
+      return decrypted.toString(CryptoJS.enc.Utf8);
+    }
+    GetContactData(){
+      const body: any = {
+        Name: 'GetContactData',
+        Params: {
+          ContactIds: this.contactIDs,
+        },
+      };
+  
+      this.PlacesService.GenericAPI(body).subscribe({
+        next: (res: any) => {
+          this.ContactData = res.json;
+          console.log('this.ContactData',this.ContactData);
+          this.opencontactDataModal();
+
+          // this.GetBuyBoxInfo();
+          // this.GetGeoJsonFromBuyBox();
+        },
+      });
+    }
+    selectContact(contactId: string) {
+      this.contactID = contactId;
+      this.router.navigate(
+        [`/${this.guid}/${this.contactID}`],
+        { replaceUrl: true }
+      );
       this.GetCampaignFromGuid();
       this.proceedWithNextSteps();
-    
-  }
+    }
+    opencontactDataModal(): void {
+      this.modalService.open(this.contactDataModal, { size: 'md', centered: true });
+    }
   openEmailModal(): void {
     this.modalService.open(this.emailModal, { size: 'md', centered: true });
   }
@@ -209,8 +274,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        this.selectedCampaign = res.json[0].id;
-        this.selectedbuyBox = res.json[0].buyBoxId;
+        this.selectedCampaign = res.json[0]?.id;
+        this.selectedbuyBox = res.json[0]?.buyBoxId;
         this.GetBuyBoxInfo();
         this.GetGeoJsonFromBuyBox();
       },
@@ -424,9 +489,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
         if (res.json == null) {
           this.spinner.hide();
         } else {
-          this.organizationBranches = res.json[0];
-          console.log('sssss', this.organizationid);
-
+          this.organizationBranches = res.json[0];  
           this.spinner.hide();
         }
       },
