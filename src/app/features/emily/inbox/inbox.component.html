@@ -56,7 +56,6 @@
             <p
               class="buybox-name"
               (click)="toggleBB(bb)"
-              #itemRef
               [attr.data-org-id]="bb.OrganizationId"
               [ngClass]="{ 'highlight-open': bb.isOpen }"
             >
@@ -72,7 +71,7 @@
                 src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                   bb.OrganizationId
                 }}"
-                title="Kimco Realty"
+                title="{{ bb.OrganizationName }}"
               />
               {{ bb.OrganizationName }}
             </p>
@@ -93,10 +92,7 @@
                     {{ contact.Firstname }} {{ contact.Lastname }}
                   </span>
 
-                  <button
-                    class="new-btnCompose"
-                    (click)="openCompose(contact)"
-                  >
+                  <button class="new-btnCompose" (click)="openCompose(contact)">
                     Compose
                     <i class="fa-solid fa-arrow-right"></i>
                   </button>
@@ -145,24 +141,99 @@
                 class="single-mail"
                 style="cursor: pointer"
                 *ngFor="let email of filteredEmails"
-                (click)="openEmail(email)"
                 [ngClass]="{
                   'selected-email': email.id === selectedEmail?.ID
                 }"
               >
-                <strong>
-                  <i
-                    [ngClass]="'fa-solid ' + getDirectionIcon(email.Direction)"
-                    class="me-2"
-                  ></i>
-                  <span class="subject"> {{ email.Subject }}</span>
-                </strong>
-                <div class="d-flex gap-4">
-                  <!-- <div (click)="send(email)">
+                <div class="d-flex">
+                  <img
+                    style="width: 24px; height: 24px"
+                    class="logo ms-0 me-2"
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      email.O[0].OrganizationId
+                    }}"
+                    title="{{ email.O[0].OrganizationName }}"
+                  />
+                  <p>{{ email.O[0].OrganizationName }}</p>
+
+                  <div>
+                    <img
+                      class="ms-2 cursor"
+                      src="../../../assets/Images/Icons/eye.png"
+                      alt="View Manager Details"
+                      [ngbPopover]="popoverContent"
+                      popoverTitle="Email Contact"
+                      triggers="click:outside"
+                      [placement]="'bottom'"
+                    />
+                  </div>
+                  <div class="ms-auto">
+                    
+                    <i
+                    class="fa-solid fa-trash-can delete-icn"
+                    title="Delete Mail"
+                    (click)="DeleteMailTemplate(email)"
+                    *ngIf="email.Direction === 4"
+                    ></i>
+                  </div>
+                  <br />
+                  <ng-template #popoverContent>
+                    <div>
+                      <ng-container
+                        *ngFor="let contact of email.O[0].MailsContacts"
+                      >
+                        <div>
+                          <p class="m-0">
+                            <b>{{ contact.RecieverFullName }}</b>
+                          </p>
+                          <ul>
+                            <ng-container *ngFor="let sc of contact.SC">
+                              <li class="ms-2">{{ sc.CenterName }}</li>
+                            </ng-container>
+                          </ul>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-template>
+                </div>
+                <div class="d-flex justify-content-between w-100">
+                  <strong class="d-flex align-items-center">
+                    <div
+                      [ngStyle]="{
+                        'background-color': getDirectionColor(email.Direction),
+                        'border-radius': '5px',
+                        'padding': '3px 6px',
+                        'margin-right': '7px'
+                      }"
+                      class="d-flex align-items-center"
+                    >
+                      <i
+                        (click)="openEmail(email)"
+                        [ngClass]="'fa-solid ' + getDirectionIcon(email.Direction)"
+                        class="me-2"
+                      ></i>
+                      <span style="font-size: 12px;">{{ getDirectionLabel(email.Direction) }}</span>
+                    </div>
+                  
+                    <span class="subject" (click)="openEmail(email)">
+                      {{ email.Subject }}
+                    </span>
+                  </strong>
+                  
+                  <div class="d-flex">
+                    <!-- <div (click)="send(email)">
                     <i class="fa-solid fa-paper-plane text-primary"  *ngIf="email.Direction === 4"></i>
                    </div> -->
-                <p class="date">{{ email.Date | date : "medium" }}</p>
-              </div>
+                    <!-- <i
+                   class="fa-solid fa-paper-plane text-primary send-icn"
+                   title="Send Mail"
+                   (click)="openSendEmailModal(email)"
+                   *ngIf="email.Direction === 4"
+                 ></i> -->
+                 <p class="date mb-0">{{ email.Date | date : "medium" }}</p>
+
+                  </div>
+                </div>
               </div>
               <p *ngIf="emailsSentContact?.length === 0" class="no-email-msg">
                 {{ emptyMessage }}
@@ -190,8 +261,27 @@
             <i class="fa-solid fa-arrow-left"></i>
           </button>
           <div *ngIf="selectedEmail">
-            <p class="subject-details">{{ selectedEmail.Subject }}</p>
-            <div class="body-details" [innerHTML]="emailBodySafe"></div>
+            <!-- Editable Subject -->
+            <div class="d-flex pb-3 align-items-center">
+              <label for="subject" class="IsCC_checkbox me-2">Subject: </label>
+              <input
+                type="text"
+                [(ngModel)]="emailSubjectModal"
+                class="input_checkbox form-control w-50"
+                name="subject"
+                id="subject"
+                placeholder="Subject"
+              />
+            </div>
+
+            <!-- Editable Body -->
+            <div
+              class="email-body"
+              [innerHTML]="emailBodySafeModal"
+              contenteditable="true"
+              style="white-space: pre-line"
+              (input)="onBodyChange($event)"
+            ></div>
           </div>
         </div>
         <div class="d-flex justify-content-end w-100">
@@ -210,9 +300,18 @@
             Reply
           </button>
           <button
-          class="replay"
-          (click)="send(selectedEmail)"
-          *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 4">
+            *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 4"
+            type="button"
+            class="replay delete-btn mx-2"
+            (click)="DeleteMailTemplate(selectedEmail)"
+          >
+            Delete
+          </button>
+          <button
+            class="replay"
+            (click)="send(selectedEmail)"
+            *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 4"
+          >
             Send
           </button>
         </div>
@@ -282,3 +381,56 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #deleteEmailModal let-modal>
+  <div class="modal-body-general p-4 rounded deleteShopping">
+    <h3 class="text-start mb-1 RemoveShopping">Delete Email</h3>
+    <p class="text-start Areyou">
+      Are you sure you want to delete this email?
+    </p>
+
+    <div class="d-flex justify-content-end mt-4">
+      <button
+        type="button"
+        class="btn btn-secondary me-2 px-4 py-2 btnborder"
+        (click)="modal.dismiss('Cancel click')"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        style="background-color: #4d65b4; border:none ;"
+        class="btn btn-danger px-4 py-2 btnborder"
+        (click)="deleteEmail()"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- <ng-template #sendEmailModal let-modal>
+  <div class="modal-body-general p-4 rounded deleteShopping">
+    <h2 class="text-center mb-4">Send Email</h2>
+    <p class="text-center">Subject: {{ emailSubjectModal }}</p>
+    <div class="d-flex justify-content-center">
+      <div class="email-body" [innerHTML]="emailBodySafe"></div>
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+      <button
+        type="button"
+        class="btn btn-secondary me-2 px-4 py-2 btnborder"
+        (click)="modal.dismiss('Cancel click')"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary px-4 py-2 btnborder"
+        (click)="sendDraftEmail()"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</ng-template> -->

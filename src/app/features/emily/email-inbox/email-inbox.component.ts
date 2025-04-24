@@ -159,7 +159,7 @@ export class EmailInboxComponent implements OnInit {
                 id: prompt?.Id || null,
                 name: prompt?.Name || 'Unnamed Prompt',
                 promptText: prompt?.PromptText || 'No prompt text available',
-              })); 
+              }));
               this.selectedPromptId = this.prompts[0].id;
             } else {
               this.prompts = [];
@@ -194,7 +194,7 @@ export class EmailInboxComponent implements OnInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
-        this.generated = data.json || []; 
+        this.generated = data.json || [];
         this.ManagerOrganizationName =
           this.generated?.[0]?.Buybox?.[0]?.BuyBoxOrganization?.[0]?.ManagerOrganization?.[0]?.ManagerOrganizationName;
         this.BuyBoxOrganizationName =
