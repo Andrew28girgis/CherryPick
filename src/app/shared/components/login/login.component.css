@@ -21,7 +21,8 @@ input::placeholder {
 .login-container {
   background-color: #fff;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  border-radius: 15px;
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
   padding: 40px;
   justify-content: center;
   display: flex;
@@ -30,9 +31,9 @@ input::placeholder {
 .right-container {
   background-color: #edf0f8;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  border-radius: 15px;
   padding: 40px;
-
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
   justify-content: center;
   display: flex;
   flex-direction: column;
@@ -62,7 +63,6 @@ input::placeholder {
   display: inline-block; /* Ensure the effect applies correctly */
 }
 
-
 .login {
   width: 100%;
   border-radius: 16px;
@@ -71,13 +71,12 @@ input::placeholder {
   background-color: #4d65b4;
 }
 
-
 .cherry-desc {
   color: #707791;
   font-size: 16px;
 }
-.termsofservice{
-  text-decoration: underline; 
+.termsofservice {
+  text-decoration: underline;
   cursor: pointer;
 }
 
@@ -88,18 +87,17 @@ input::placeholder {
   }
   .login-container {
     padding: 15px;
-    border-radius: 15px;
-
+    border-radius: 1rem;
   }
-  .right-container{
-    border-radius: 15px;
+  .right-container {
+    border-radius: 1rem;
     margin-top: 10px;
   }
   .focus {
     font-size: 21px;
   }
   .worth {
-    font-size:22px;
+    font-size: 22px;
   }
   .cherry-desc {
     font-size: 15px;
@@ -124,19 +122,12 @@ input::placeholder {
     height: 650px;
     width: 60%;
   }
-  .login-container {
-    padding: 30px;
-    border-radius: 15px;
 
-  }
-  .right-container{
-    border-radius: 30px;
-  }
   .focus {
     font-size: 22px;
   }
   .worth {
-    font-size:23px;
+    font-size: 23px;
   }
   .cherry-desc {
     font-size: 16px;
