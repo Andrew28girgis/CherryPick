@@ -384,8 +384,8 @@
 
 <ng-template #deleteEmailModal let-modal>
   <div class="modal-body-general p-4 rounded deleteShopping">
-    <h2 class="text-center mb-4 RemoveShopping">Delete Email</h2>
-    <p class="text-center Areyou">
+    <h3 class="text-start mb-1 RemoveShopping">Delete Email</h3>
+    <p class="text-start Areyou">
       Are you sure you want to delete this email?
     </p>
 
@@ -399,6 +399,7 @@
       </button>
       <button
         type="button"
+        style="background-color: #4d65b4; border:none ;"
         class="btn btn-danger px-4 py-2 btnborder"
         (click)="deleteEmail()"
       >
