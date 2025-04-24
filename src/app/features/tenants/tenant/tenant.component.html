@@ -1659,3 +1659,34 @@
     <button type="button" class="custom-button custom-button-primary" style="background-color: #4d65b4;" (click)="getContactByEmail(modal)">Submit</button>
   </div>
 </ng-template>
+
+<ng-template #contactDataModal let-modal>
+  <!-- <div class="modal-header d-flex justify-content-between">
+    <h4 class="modal-title">Select User</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div> -->
+  <div class="modal-body">
+    <div class="row">
+      <div 
+        class="col-12 mb-3" 
+        *ngFor="let contact of ContactData"
+      >
+        <div 
+          class="card contact-card border" 
+          style="cursor: pointer;" 
+          (click)="selectContact(contact.id); modal.close()"
+        >
+          <div class="card-body">
+            <h5 class="card-title">{{ contact.column1 }}</h5>
+            <p class="card-text">{{ contact.email }}</p>
+          </div>
+        </div>
+      </div>
+      <!-- Optional: show a message if no contacts -->
+      <!-- <div *ngIf="ContactData.length === 0" class="text-center text-muted">
+        No contacts found.
+      </div> -->
+    </div>
+  </div>
+</ng-template>
+

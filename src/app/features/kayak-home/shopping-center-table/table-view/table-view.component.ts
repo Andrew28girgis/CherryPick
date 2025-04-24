@@ -342,7 +342,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(this.statusModal, {
       size: 'lg',
       scrollable: true,
-      backdrop: 'static',
     });
   
     // Fetch the actual data
