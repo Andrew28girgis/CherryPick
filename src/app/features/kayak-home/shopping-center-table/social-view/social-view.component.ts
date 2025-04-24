@@ -1168,7 +1168,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  requestCenterStatus(shoppingCenterId: number, campaignId: number) {
+  requestCenterStatus(shoppingCenterId: number, campaignId: any) {
     // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true;
   
@@ -1176,7 +1176,6 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalRef = this.modalService.open(this.statusModal, {
       size: 'lg',
       scrollable: true,
-      backdrop: 'static',
     });
   
     // Fetch the actual data

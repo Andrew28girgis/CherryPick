@@ -337,7 +337,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
   requestCenterStatus(shoppingCenterId: number, campaignId: any) {
     // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true;
-  console.log('campaign id',campaignId);
   
     // Open the modal immediately
     this.modalRef = this.modalService.open(this.statusModal, {

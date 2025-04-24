@@ -501,7 +501,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   trackById(index: number, place: any): number {
     return place.Id;
   }
-  requestCenterStatus(shoppingCenterId: number, campaignId: number) {
+  requestCenterStatus(shoppingCenterId: number, campaignId: any) {
     // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true;
   
@@ -509,7 +509,6 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(this.statusModal, {
       size: 'lg',
       scrollable: true,
-      backdrop: 'static',
     });
   
     // Fetch the actual data
