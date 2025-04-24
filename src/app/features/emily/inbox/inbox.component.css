@@ -131,8 +131,11 @@
 }
 
 .single-mail {
-  border-bottom: 1px solid #e2e4e9;
-  padding: 17px;
+  align-items: center;
+    display: flex
+;
+  border-bottom: 1px solid #e2e4e9; 
+  padding: 17px;  
 }
 
 .selected-email {
