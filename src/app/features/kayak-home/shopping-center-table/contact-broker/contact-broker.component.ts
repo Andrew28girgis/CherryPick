@@ -10,7 +10,7 @@ import { IManagedByBroker } from './models/imanaged-by-broker';
   styleUrl: './contact-broker.component.css',
 })
 export class ContactBrokerComponent {
-  protected stepperSteps: number[] = Array.from({ length: 4 }, (_, i) => i + 1);
+  protected stepperSteps: number[] = Array.from({ length: 3 }, (_, i) => i + 1);
   protected currentStep: number = 1;
   protected chooseBrokerObject!: IChooseBroker;
   protected managedByBrokerArray!: IManagedByBroker[];
@@ -34,14 +34,13 @@ export class ContactBrokerComponent {
         break;
       }
       case 3: {
-        this.mailContextId = event;
-        this.currentStep++;
-        break;
-      }
-      case 4: {
         this.closeActiveModal();
         break;
       }
+      // case 4: {
+      //   this.closeActiveModal();
+      //   break;
+      // }
 
       default:
         break;
