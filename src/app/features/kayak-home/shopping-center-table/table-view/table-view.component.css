@@ -291,3 +291,51 @@ img[alt="logo"] {
     right: 5vw !important;
   }
 }
+
+.skeleton-loader {
+  text-align: center;
+  font-size: 16px;
+  color: #888;
+}
+
+.skeleton-header,
+.skeleton-line {
+  /* Using a 90deg linear gradient to enhance the animation effect */
+  background: linear-gradient(90deg, #f6f7f8 0%, #edeef1 50%, #f6f7f8 100%);
+  background-size: 800px 104px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-header {
+  height: 24px;
+  width: 40%;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.skeleton-line {
+  height: 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-paragraph .skeleton-line:nth-child(1) {
+  width: 100%;
+}
+
+.skeleton-paragraph .skeleton-line:nth-child(2) {
+  width: 95%;
+}
+
+.skeleton-paragraph .skeleton-line:nth-child(3) {
+  width: 90%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -800px 0;
+  }
+  100% {
+    background-position: 800px 0;
+  }
+}

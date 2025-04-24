@@ -6,15 +6,16 @@ import {
   OnInit,
   OnDestroy,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Polygon } from 'src/app/shared/models/polygons';
 import { General } from 'src/app/shared/models/domain';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { MapsService } from 'src/app/core/services/maps.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
@@ -50,6 +51,10 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   StreetViewOnePlace!: boolean;
   KanbanStages: any[] = [];
   activeDropdown: any = null;
+  @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
+  htmlContent!: SafeHtml;
+  private modalRef?: NgbModalRef;
+  isLoadingstatus =true;
 
   // Subscriptions
   private subscriptions: Subscription[] = [];
@@ -496,4 +501,33 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   trackById(index: number, place: any): number {
     return place.Id;
   }
+  requestCenterStatus(shoppingCenterId: number, campaignId: number) {
+    // Set loading state to true to show the skeleton loader
+    this.isLoadingstatus = true;
+  
+    // Open the modal immediately
+    this.modalRef = this.modalService.open(this.statusModal, {
+      size: 'lg',
+      scrollable: true,
+      backdrop: 'static',
+    });
+  
+    // Fetch the actual data
+    this.placesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
+      next: (res: any) => {
+        // Update the content with the fetched data
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      error: () => {
+        // Handle errors and show fallback content
+        const errHtml = '<p>Error loading content</p>';
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
 }

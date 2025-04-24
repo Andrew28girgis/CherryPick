@@ -5,15 +5,18 @@ import {
   TemplateRef,
   OnDestroy,
   HostListener,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-card-view',
@@ -40,7 +43,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
   shareLink: any;
   shoppingCenterIdToDelete: number | null = null;
   DeletedSC: any;
-
+  @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
+  htmlContent!: SafeHtml;
+  private modalRef?: NgbModalRef;
+  isLoadingstatus = true;
   private subscriptions = new Subscription();
   private outsideClickHandler: ((e: Event) => void) | null = null;
 
@@ -48,7 +54,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
-    private shoppingCenterService: ViewManagerService
+    private shoppingCenterService: ViewManagerService,
+    private placesService: PlacesService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -331,5 +339,35 @@ export class CardViewComponent implements OnInit, OnDestroy {
     });
     modalRef.componentInstance.center = center;
     modalRef.componentInstance.buyboxId = this.BuyBoxId;
+  }
+  requestCenterStatus(shoppingCenterId: number, campaignId: number) {
+    // Set loading state to true to show the skeleton loader
+    this.isLoadingstatus = true;
+
+    // Open the modal immediately
+    this.modalRef = this.modalService.open(this.statusModal, {
+      size: 'lg',
+      scrollable: true,
+      backdrop: 'static',
+    });
+
+    // Fetch the actual data
+    this.placesService
+      .GetSiteCurrentStatus(shoppingCenterId, campaignId)
+      .subscribe({
+        next: (res: any) => {
+          // Update the content with the fetched data
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges(); // Trigger change detection
+        },
+        error: () => {
+          // Handle errors and show fallback content
+          const errHtml = '<p>Error loading content</p>';
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges();
+        },
+      });
   }
 }
