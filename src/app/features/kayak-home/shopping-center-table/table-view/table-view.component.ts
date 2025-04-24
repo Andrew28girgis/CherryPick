@@ -341,11 +341,11 @@ export class TableViewComponent implements OnInit, OnDestroy {
     console.log('ssssss:', campaignId);
     
 
-    this.placesService.GenericAPI(body).subscribe({
+    this.placesService.GenericAPILocal(body).subscribe({
       next: (res: any) => {
         this.htmlContent = res.html;
         this.cdr.detectChanges();
-        
+
         this.openCenterStatusModal();
       },
       error: err => {
