@@ -7,15 +7,17 @@ import {
   EventEmitter,
   OnDestroy,
   HostListener,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-table-view',
@@ -32,6 +34,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
   filteredCenters: Center[] = [];
+  
   searchQuery: string = '';
   selectedId: number | null = null;
   placesRepresentative: boolean | undefined;
@@ -49,6 +52,10 @@ export class TableViewComponent implements OnInit, OnDestroy {
   KanbanStages: any[] = [];
   activeDropdown: any = null;
 
+  @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
+  htmlContent = '';
+  private modalRef?: NgbModalRef;
+
   private subscriptions = new Subscription();
   private outsideClickHandler: ((e: Event) => void) | null = null;
 
@@ -56,7 +63,9 @@ export class TableViewComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
-    private shoppingCenterService: ViewManagerService
+    private shoppingCenterService: ViewManagerService,
+    private placesService: PlacesService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -67,9 +76,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-
-      // Initialize data using the centralized service
-      // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
 
     // Subscribe to data from the centralized service
@@ -128,6 +134,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
+
   }
 
   ngOnDestroy(): void {
@@ -206,6 +213,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
       });
     }
   }
+
   isLast(currentItem: any, array: any[]): boolean {
     return this.shoppingCenterService.isLast(currentItem, array);
   }
@@ -240,6 +248,15 @@ export class TableViewComponent implements OnInit, OnDestroy {
         this.viewOnStreet(this.General.modalObject);
       }, 100);
     }
+  }
+
+  openStatus(content: any, modalObject?: any) {
+    this.modalService.open(content, {
+      ariaLabelledBy: 'modal-basic-title',
+      size: 'lg',
+      scrollable: true,
+    });
+    this.General.modalObject = modalObject;
   }
 
   viewOnStreet(modalObject: any) {
@@ -315,4 +332,34 @@ export class TableViewComponent implements OnInit, OnDestroy {
   trackByIndex(index: number, item: any): number {
     return index;
   }
+
+  requestCenterStatus(shoppingCenterId: number, campaignId: any): void {
+    const body = {
+      Name: 'GetSiteCurrentStatus',
+      Params: { ShoppingCenterId: shoppingCenterId, CampaignId: campaignId }
+    };
+    console.log('ssssss:', campaignId);
+    
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.htmlContent = res.html;
+        // ensure the view picks up the new HTML
+        this.cdr.detectChanges();
+        // open the modal after content is ready
+        this.openCenterStatusModal();
+      },
+      error: err => {
+        console.error('Error fetching HTML content:', err);
+      }
+    });
+  }
+
+  openCenterStatusModal(): void {
+    this.modalRef = this.modalService.open(this.statusModal, {
+      size: 'lg',
+      backdrop: 'static'
+    });
+  }
+  
 }
