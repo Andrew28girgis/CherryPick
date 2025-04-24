@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-table-view',
@@ -34,7 +35,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
   showShoppingCenters = true;
   shoppingCenters: Center[] = [];
   filteredCenters: Center[] = [];
-  
+
   searchQuery: string = '';
   selectedId: number | null = null;
   placesRepresentative: boolean | undefined;
@@ -48,12 +49,13 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   // Loading state for skeleton
   isLoading = true;
+  isLoadingstatus =true;
   // Kanban stages
   KanbanStages: any[] = [];
   activeDropdown: any = null;
 
   @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
-  htmlContent = '';
+  htmlContent!: SafeHtml;
   private modalRef?: NgbModalRef;
 
   private subscriptions = new Subscription();
@@ -65,7 +67,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private shoppingCenterService: ViewManagerService,
     private placesService: PlacesService,
-    
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -134,7 +136,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       })
     );
-
   }
 
   ngOnDestroy(): void {
@@ -333,32 +334,31 @@ export class TableViewComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  requestCenterStatus(shoppingCenterId: number, campaignId: any): void {
-    const body = {
-      Name: 'GetSiteCurrentStatus',
-      Params: { ShoppingCenterId: shoppingCenterId, CampaignId: campaignId }
-    };
-    console.log('ssssss:', campaignId);
-    
-
-    this.placesService.GenericAPILocal(body).subscribe({
-      next: (res: any) => {
-        this.htmlContent = res.html;
-        this.cdr.detectChanges();
-
-        this.openCenterStatusModal();
-      },
-      error: err => {
-        console.error('Error fetching HTML content:', err);
-      }
-    });
-  }
-
-  openCenterStatusModal(): void {
+  requestCenterStatus(shoppingCenterId: number, campaignId: number) {
+    // Set loading state to true to show the skeleton loader
+    this.isLoadingstatus = true;
+  
+    // Open the modal immediately
     this.modalRef = this.modalService.open(this.statusModal, {
       size: 'lg',
-      backdrop: 'static'
+      scrollable: true,
+    });
+  
+    // Fetch the actual data
+    this.placesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
+      next: (res: any) => {
+        // Update the content with the fetched data
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      error: () => {
+        // Handle errors and show fallback content
+        const errHtml = '<p>Error loading content</p>';
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges();
+      },
     });
   }
-  
 }

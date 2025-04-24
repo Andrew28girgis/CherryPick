@@ -67,7 +67,11 @@ export class PlacesService {
     const apiUrl = `${environment.api}/PromptHub/GenerateContext`;
     return this.http.post<any>(apiUrl, body);
   }
-
+  
+  public GetSiteCurrentStatus(shoppingCenterId: number, CampaignId: number): Observable<string> {
+    const apiUrl = `${environment.api}/PromptHub/GetSiteCurrentStatus/${shoppingCenterId}/${CampaignId}`;
+    return this.http.get(apiUrl, { responseType: 'text' });
+  }
 
   public UploadFile(formData: FormData, id: number) {
     return this.http.post<any>(

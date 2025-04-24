@@ -14,7 +14,7 @@ import {
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarousel, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center, Reaction } from '../../../../shared/models/shoppingCenters';
 import { ShareOrg } from 'src/app/shared/models/shareOrg';
@@ -22,7 +22,7 @@ import { LandingPlace } from 'src/app/shared/models/landingPlace';
 import { NgForm } from '@angular/forms';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { General } from 'src/app/shared/models/domain';
-import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+import { SafeResourceUrl, DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
 import {
   trigger,
@@ -164,6 +164,10 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   private lastClickTime = 0;
   private readonly DOUBLE_CLICK_THRESHOLD = 300; // ms
   private subscriptions = new Subscription();
+  @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
+  htmlContent!: SafeHtml;
+  private modalRef?: NgbModalRef;
+  isLoadingstatus =true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -174,7 +178,7 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private PlacesService: PlacesService,
     private sanitizer: DomSanitizer,
     private ngZone: NgZone,
-    private shoppingCenterService: ViewManagerService
+    private shoppingCenterService: ViewManagerService,
   ) {}
 
   ngOnInit(): void {
@@ -1163,4 +1167,34 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
       windowClass: 'custom-modal',
     });
   }
+
+  requestCenterStatus(shoppingCenterId: number, campaignId: number) {
+    // Set loading state to true to show the skeleton loader
+    this.isLoadingstatus = true;
+  
+    // Open the modal immediately
+    this.modalRef = this.modalService.open(this.statusModal, {
+      size: 'lg',
+      scrollable: true,
+      backdrop: 'static',
+    });
+  
+    // Fetch the actual data
+    this.PlacesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
+      next: (res: any) => {
+        // Update the content with the fetched data
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      error: () => {
+        // Handle errors and show fallback content
+        const errHtml = '<p>Error loading content</p>';
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
 }
