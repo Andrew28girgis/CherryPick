@@ -1,6 +1,5 @@
 import {
   AfterViewChecked,
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -16,7 +15,6 @@ import {
   Contact,
   EmailInfo,
   Mail,
-  MailsContact,
 } from 'src/app/shared/models/buy-box-emails';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -33,7 +31,7 @@ import { IEmailContent } from '../../kayak-home/shopping-center-table/contact-br
   templateUrl: './inbox.component.html',
   styleUrls: ['./inbox.component.css'],
 })
-export class InboxComponent implements OnInit, AfterViewChecked {
+export class InboxComponent implements OnInit {
   BuyBoxMicroDeals: BuyBoxMicroDeals[] = [];
   BuyBoxEmails: BuyBoxEmails[] = [];
   emailsSentContact: Mail[] = [];
@@ -160,7 +158,7 @@ export class InboxComponent implements OnInit, AfterViewChecked {
           this.BuyBoxMicroDeals.forEach((item) => {
             if (item.OrganizationId === this.selectedMicro) {
               item.isOpen = true;
-              this.scrollToOpenItem(item);
+              // this.scrollToOpenItem(item);
             }
           });
         } else {
@@ -171,33 +169,33 @@ export class InboxComponent implements OnInit, AfterViewChecked {
       },
     });
   }
-  @ViewChildren('itemRef') itemRefs: QueryList<any> | undefined;
+  // @ViewChildren('itemRef') itemRefs: QueryList<any> | undefined;
 
-  ngAfterViewChecked() {
-    // After view checks, try scrolling to the first opened item
-    const firstOpenItem = this.BuyBoxMicroDeals.find((item) => item.isOpen);
-    if (firstOpenItem) {
-      this.scrollToOpenItem(firstOpenItem);
-    }
-  }
+  // ngAfterViewChecked() {
+  //   // After view checks, try scrolling to the first opened item
+  //   const firstOpenItem = this.BuyBoxMicroDeals.find((item) => item.isOpen);
+  //   if (firstOpenItem) {
+  //     this.scrollToOpenItem(firstOpenItem);
+  //   }
+  // }
 
-  scrollToOpenItem(bb: any): void {
-    // Find the corresponding element using the data-org-id attribute
-    const element = this.itemRefs
-      ?.toArray()
-      .find(
-        (item) =>
-          item.nativeElement.getAttribute('data-org-id') ===
-          bb.OrganizationId.toString()
-      );
-    if (element) {
-      // Scroll the item into view
-      element.nativeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  }
+  // scrollToOpenItem(bb: any): void {
+  //   // Find the corresponding element using the data-org-id attribute
+  //   const element = this.itemRefs
+  //     ?.toArray()
+  //     .find(
+  //       (item) =>
+  //         item.nativeElement.getAttribute('data-org-id') ===
+  //         bb.OrganizationId.toString()
+  //     );
+  //   if (element) {
+  //     // Scroll the item into view
+  //     element.nativeElement.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'start',
+  //     });
+  //   }
+  // }
 
   getEmailsForContact(contact: Contact): void {
     if (this.selectedContact?.ContactId !== contact.ContactId) {

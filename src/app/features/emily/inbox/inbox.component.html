@@ -55,8 +55,7 @@
           <ng-container *ngFor="let bb of BuyBoxMicroDeals">
             <p
               class="buybox-name"
-              (click)="toggleBB(bb)"
-              #itemRef
+              (click)="toggleBB(bb)" 
               [attr.data-org-id]="bb.OrganizationId"
               [ngClass]="{ 'highlight-open': bb.isOpen }"
             >
