@@ -38,6 +38,13 @@
       <i class="fa-solid fa-reply me-1" style="color: green"></i>
       Sent
     </div>
+    <div
+      class="filter-button"
+      [ngClass]="{ active: selectedFilter === 'drafts' }"
+      (click)="filterEmails('drafts')"
+    >
+      <i class="fa-solid fa-pencil-alt me-1 drafts"></i> Drafts
+    </div>
     <button class="replay" (click)="showAllEmails()">Show All</button>
   </div>
 
@@ -150,7 +157,12 @@
                   ></i>
                   <span class="subject"> {{ email.Subject }}</span>
                 </strong>
+                <div class="d-flex gap-4">
+                  <!-- <div (click)="send(email)">
+                    <i class="fa-solid fa-paper-plane text-primary"  *ngIf="email.Direction === 4"></i>
+                   </div> -->
                 <p class="date">{{ email.Date | date : "medium" }}</p>
+              </div>
               </div>
               <p *ngIf="emailsSentContact?.length === 0" class="no-email-msg">
                 {{ emptyMessage }}
@@ -196,6 +208,12 @@
           >
             <img [src]="'../../../assets/Images/Icons/send.png'" />
             Reply
+          </button>
+          <button
+          class="replay"
+          (click)="send(selectedEmail)"
+          *ngIf="selectedEmail?.Body && selectedEmail?.Direction === 4">
+            Send
           </button>
         </div>
       </div>
