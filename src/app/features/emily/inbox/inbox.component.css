@@ -132,7 +132,7 @@
 
 .single-mail {
   border-bottom: 1px solid #e2e4e9; 
-  padding: 10px;  
+  padding: 17px;  
 }
 
 .selected-email {
@@ -423,13 +423,14 @@
   padding: 26px;
 }
 .delete-icn{
-  color: #ce0000;
-  font-size: 22px;
-  margin-top: 7px;
+  color: #000000;
+  font-size: 18px;
+  margin-top: 5px;
   cursor: pointer;
+  margin-left: 10px;
 }
 .delete-icn:hover{
-  color: #940303;
+  color: #363636;
 }
 .delete-btn{
   background-color: #ce0000;

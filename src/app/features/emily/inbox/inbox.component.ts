@@ -49,7 +49,7 @@ export class InboxComponent implements OnInit {
   campaignId: any;
   emailBody: string = '';
   sanitizedEmailBody!: SafeHtml; // ONLY for [innerHTML] if you display it elsewhere
-  sanitizedEmailBodyDraft!: SafeHtml; // ONLY for [innerHTML] if you display it elsewhere
+  sanitizedEmailBodyDraft!: SafeHtml;
   emailSubject: string = '';
   @Input() orgId!: number;
   @Input() buyBoxId!: number;
@@ -127,7 +127,6 @@ export class InboxComponent implements OnInit {
       next: (data) => {
         this.BuyBoxEmails = data.json;
         this.filteredEmails = this.sortEmails(data.json);
-
         // Apply the current filter
         this.filterEmails(this.selectedFilter);
       },
@@ -177,7 +176,6 @@ export class InboxComponent implements OnInit {
     });
   }
   // @ViewChildren('itemRef') itemRefs: QueryList<any> | undefined;
-
   // ngAfterViewChecked() {
   //   // After view checks, try scrolling to the first opened item
   //   const firstOpenItem = this.BuyBoxMicroDeals.find((item) => item.isOpen);
@@ -185,7 +183,6 @@ export class InboxComponent implements OnInit {
   //     this.scrollToOpenItem(firstOpenItem);
   //   }
   // }
-
   // scrollToOpenItem(bb: any): void {
   //   // Find the corresponding element using the data-org-id attribute
   //   const element = this.itemRefs
@@ -215,10 +212,8 @@ export class InboxComponent implements OnInit {
     } else if (this.emailsSentContact.length > 0) {
       return;
     }
-
     // Since the API returns emails directly, use them as-is.
     const matchingEmails: any[] = this.BuyBoxEmails;
-
     // Filter emails that are related to the selected contact.
     this.emailsSentContact = matchingEmails?.filter(
       (email: Mail) =>
@@ -317,6 +312,26 @@ export class InboxComponent implements OnInit {
       ? 'fa-pencil-alt drafts' // Drafts
       : ''; // Default: return an empty string if the direction is unknown
   }
+  getDirectionLabel(direction: number): string {
+    return direction === 2
+      ? 'Sent'
+      : direction === -1
+      ? 'Outbox'
+      : direction === 1
+      ? 'Inbox'
+      : direction === 4
+      ? 'Drafts'
+      : 'Unknown';
+  }
+  getDirectionColor(direction: number): string {
+    switch (direction) {
+      case 2: return '#d1e7dd'; // Sent - greenish
+      case -1: return '#f8d7da'; // Outbox - reddish
+      case 1: return '#cff4fc'; // Inbox - light blue
+      case 4: return '#fff3cd'; // Drafts - yellowish
+      default: return '#e2e3e5'; // Unknown - grey
+    }
+  }
 
   // filterEmails(filterType: string): void {
   //   this.selectedFilter = filterType;
@@ -369,10 +384,8 @@ export class InboxComponent implements OnInit {
   filterEmails(filterType: string): void {
     this.selectedFilter = filterType;
     this.selected = null; // Reset selected email to show the list view
-
     // Create a properly typed source array based on whether a contact is selected
     let sourceEmails: Mail[] = [];
-
     if (this.selectedContact) {
       // If contact is selected, use their emails
       sourceEmails = this.emailsSentContact;
@@ -381,7 +394,6 @@ export class InboxComponent implements OnInit {
       sourceEmails = this.BuyBoxEmails as any[] as Mail[];
       // You might need to adjust this depending on the actual structure of BuyBoxEmails
     }
-
     // If no emails available, don't try to filter
     if (!sourceEmails || sourceEmails.length === 0) {
       this.filteredEmails = [];
@@ -389,7 +401,6 @@ export class InboxComponent implements OnInit {
       this.emptyMessage = 'No emails available';
       return;
     }
-
     // Apply the filter based on the selected type
     let filtered: Mail[] = [];
     switch (filterType) {
@@ -410,9 +421,7 @@ export class InboxComponent implements OnInit {
         filtered = [...sourceEmails];
         break;
     }
-
     this.filteredEmails = this.sortEmails(filtered);
-
     if (this.filteredEmails.length === 0) {
       // this.emptyMessage = `No ${filterType} emails available`;
       this.selectedEmail = null;
@@ -529,7 +538,6 @@ export class InboxComponent implements OnInit {
           }, 3000);
         } else {
           this.emailBody = response[0].body; // <-- Must assign plain string here!
-
           // If you want to display safely elsewhere, use this:
           this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
@@ -579,15 +587,12 @@ export class InboxComponent implements OnInit {
   // }
   showAllEmails() {
     // Close all organization dropdowns
-    this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
-
+    this.BuyBoxMicroDeals.forEach(item => (item.isOpen = false));
     // Clear the selected contact
     this.selectedContact = null;
-
     // Reset to show all emails
     this.emailsSentContact = [];
     this.getAllEmails();
-
     // Apply the current filter to all emails
     this.filterEmails(this.selectedFilter);
   }
@@ -649,7 +654,6 @@ export class InboxComponent implements OnInit {
       ContactId: email.ContactId, // Mapping ContactId from EmailInfo to Mail
       O: [], // Assuming O is an array and you might need to adjust this
     };
-
     const emailContent: IEmailContent = {
       mailId: mail.id,
       direction: mail.Direction,
@@ -661,7 +665,6 @@ export class InboxComponent implements OnInit {
     };
 
     this.spinner.show();
-
     const body: any = {
       Name: 'UpdateEmailData',
       MainEntity: null,
@@ -672,7 +675,6 @@ export class InboxComponent implements OnInit {
       },
       Json: null,
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.spinner.hide();
@@ -681,37 +683,24 @@ export class InboxComponent implements OnInit {
       },
     });
   }
-  // This method is called when the delete icon is clicked
   DeleteMailTemplate(email: any): void {
     // Set the email to be deleted as the selected email
     this.selectedEmailToDelete = email;
-    console.log('this.selectedEmailToDelete', this.selectedEmailToDelete);
-
-    // Open the confirmation modal
     const modalRef = this.modalService.open(this.deleteEmailModal);
     modalRef.result.then(
       (result) => {
         // Handle modal dismissal
         if (result === 'Delete') {
-          this.deleteEmail(); // Call the delete method if confirmed
+          this.deleteEmail();
         }
       },
-      (reason) => {
-        // Handle modal dismissal reason (can be cancelled)
-      }
     );
   }
-
-  // This method is called to delete the email
   deleteEmail(): void {
     if (!this.selectedEmailToDelete) {
-      return; // Ensure that there is an email selected for deletion
+      return;
     }
-
     this.spinner.show();
-    // const mailId= this.selectedEmailToDelete.mailId; // Get the mail ID from the selected email
-    // console.log(,mailId);
-
     const body: any = {
       Name: 'DeleteMail',
       MainEntity: null,
@@ -741,7 +730,6 @@ export class InboxComponent implements OnInit {
   openSendEmailModal(email: Mail): void {
     // First, fetch the email details (including body) using getOneMail
     this.getOneMail(email.id);
-
     // Now open the modal, as the email body will be set after calling getOneMail
     const modalRef = this.modalService.open(this.sendEmailModal, {
       size: 'xl',
@@ -752,25 +740,20 @@ export class InboxComponent implements OnInit {
           this.sendDraftEmail(); // If confirmed, send the email
         }
       },
-      (reason) => {
-        // Handle modal dismissal reasons if needed
-      }
     );
   }
-  // This method sends the email using the provided send function
-  sendDraftEmail(): void {
-    if (!this.selectedEmailForSend) {
-      return; // Ensure that there is a selected email for sending
-    }
-
-    // Use the provided send function to send the email
-    this.send(this.selectedEmailForSend);
+sendDraftEmail(): void {
+  if (!this.selectedEmailForSend) {
+    return;
   }
-
-  onBodyChange(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (this.selectedEmail) {
-      this.selectedEmail.Body = target.innerHTML;
-    }
+  // Use the provided send function to send the email
+  this.send(this.selectedEmailForSend);
+}
+  
+onBodyChange(event: Event): void {
+  const target = event.target as HTMLElement;
+  if (this.selectedEmail) {
+    this.selectedEmail.Body = target.innerHTML;
   }
+}
 }
