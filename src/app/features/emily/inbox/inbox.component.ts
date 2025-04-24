@@ -325,11 +325,16 @@ export class InboxComponent implements OnInit {
   }
   getDirectionColor(direction: number): string {
     switch (direction) {
-      case 2: return '#d1e7dd'; // Sent - greenish
-      case -1: return '#f8d7da'; // Outbox - reddish
-      case 1: return '#cff4fc'; // Inbox - light blue
-      case 4: return '#fff3cd'; // Drafts - yellowish
-      default: return '#e2e3e5'; // Unknown - grey
+      case 2:
+        return '#d1e7dd'; // Sent - greenish
+      case -1:
+        return '#f8d7da'; // Outbox - reddish
+      case 1:
+        return '#cff4fc'; // Inbox - light blue
+      case 4:
+        return '#fff3cd'; // Drafts - yellowish
+      default:
+        return '#e2e3e5'; // Unknown - grey
     }
   }
 
@@ -587,7 +592,7 @@ export class InboxComponent implements OnInit {
   // }
   showAllEmails() {
     // Close all organization dropdowns
-    this.BuyBoxMicroDeals.forEach(item => (item.isOpen = false));
+    this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
     // Clear the selected contact
     this.selectedContact = null;
     // Reset to show all emails
@@ -687,14 +692,12 @@ export class InboxComponent implements OnInit {
     // Set the email to be deleted as the selected email
     this.selectedEmailToDelete = email;
     const modalRef = this.modalService.open(this.deleteEmailModal);
-    modalRef.result.then(
-      (result) => {
-        // Handle modal dismissal
-        if (result === 'Delete') {
-          this.deleteEmail();
-        }
-      },
-    );
+    modalRef.result.then((result) => {
+      // Handle modal dismissal
+      if (result === 'Delete') {
+        this.deleteEmail();
+      }
+    });
   }
   deleteEmail(): void {
     if (!this.selectedEmailToDelete) {
@@ -734,26 +737,24 @@ export class InboxComponent implements OnInit {
     const modalRef = this.modalService.open(this.sendEmailModal, {
       size: 'xl',
     });
-    modalRef.result.then(
-      (result) => {
-        if (result === 'Send') {
-          this.sendDraftEmail(); // If confirmed, send the email
-        }
-      },
-    );
+    modalRef.result.then((result) => {
+      if (result === 'Send') {
+        this.sendDraftEmail(); // If confirmed, send the email
+      }
+    });
   }
-sendDraftEmail(): void {
-  if (!this.selectedEmailForSend) {
-    return;
+  sendDraftEmail(): void {
+    if (!this.selectedEmailForSend) {
+      return;
+    }
+    // Use the provided send function to send the email
+    this.send(this.selectedEmailForSend);
   }
-  // Use the provided send function to send the email
-  this.send(this.selectedEmailForSend);
-}
-  
-onBodyChange(event: Event): void {
-  const target = event.target as HTMLElement;
-  if (this.selectedEmail) {
-    this.selectedEmail.Body = target.innerHTML;
+
+  onBodyChange(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (this.selectedEmail) {
+      this.selectedEmail.Body = target.innerHTML;
+    }
   }
-}
 }
