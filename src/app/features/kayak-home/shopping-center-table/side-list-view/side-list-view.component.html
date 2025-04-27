@@ -431,17 +431,17 @@
     </div>
   </div>
 
-  <div class="col-4" *ngIf="!isLoading; else mapLoadingSkeleton">
-    <div id="map" class="custom-map"></div>
+  <div class="col-4">
+    <ng-container *ngIf="isLoading; else mapContent">
+      <div class="skeleton-map h700"></div>
+    </ng-container>
+    <ng-template #mapContent>
+      <div id="map" class="custom-map"></div>
+    </ng-template>
   </div>
-</div>
 
-<ng-template #MapViewPlace let-modal>
- </ng-template>
-
-<ng-template #mapLoadingSkeleton>
-  <div class="skeleton-map h700"></div>
-</ng-template>
+  <ng-template #MapViewPlace let-modal>
+  </ng-template>
 
 <ng-template #ShareLink let-modal>
   <div class="d-flex p-3 m-3 align-items-center">

@@ -108,7 +108,9 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           this.cardsSideList = centers;
           
         })
-  
+  if(centers && centers.length > 0) {
+          this.isLoading = false; // Hide the skeleton loader
+        }
       })
     );
     
