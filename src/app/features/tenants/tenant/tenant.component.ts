@@ -237,6 +237,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.modalService.open(this.contactDataModal, {
       size: 'md',
       centered: true,
+      backdrop: 'static', // Prevent modal from closing on backdrop click
     });
   }
   openEmailModal(): void {
