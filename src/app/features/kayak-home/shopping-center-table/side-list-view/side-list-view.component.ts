@@ -55,7 +55,9 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   htmlContent!: SafeHtml;
   private modalRef?: NgbModalRef;
   isLoadingstatus =true;
-
+  isLoading = true;
+  skeletonItems = Array(6);  // render 6 placeholder cards
+  
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
@@ -71,6 +73,8 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
+
     this.General = new General();
     this.savedMapView = localStorage.getItem('mapView');
 
@@ -82,6 +86,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
 
       // Initialize data using the service
       // this.viewManagerService.initializeData(this.BuyBoxId, this.orgId);
+      
     });
 
     // Subscribe to service observables
@@ -94,13 +99,21 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.isLoading = true;
+    this.skeletonItems = Array(6);
+    
     this.subscriptions.push(
       this.viewManagerService.filteredCenters$.subscribe((centers) => {
         this.ngZone.run(() => {
           this.cardsSideList = centers;
-        });
+          
+        })
+  if(centers && centers.length > 0) {
+          this.isLoading = false; // Hide the skeleton loader
+        }
       })
     );
+    
 
     this.subscriptions.push(
       this.viewManagerService.buyboxCategories$.subscribe((categories) => {

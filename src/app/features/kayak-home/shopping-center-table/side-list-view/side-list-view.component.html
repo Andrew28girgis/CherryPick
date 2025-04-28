@@ -5,7 +5,7 @@
 </div>
 <div class="row m-0">
   <div class="col-8 p-0 d-flex flex-column cards-container">
-    <div class="row m-0 mt-1">
+    <div class="row m-0 mt-1" *ngIf="!isLoading; else loadingSkeleton">
       <ng-container *ngFor="let place of cardsSideList; trackBy: trackById">
         <div class="col-6">
           <div
@@ -237,10 +237,25 @@
                               (click)="
                                 $event.preventDefault();
                                 $event.stopPropagation();
-                                requestCenterStatus(place.Id,place.CampaignId)
+                                requestCenterStatus(place.Id, place.CampaignId)
                               "
                             >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big-icon lucide-circle-check-big"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>                              center status</a
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-circle-check-big-icon lucide-circle-check-big"
+                              >
+                                <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+                                <path d="m9 11 3 3L22 4" />
+                              </svg>
+                              center status</a
                             >
                           </li>
                           <!-- <li *ngIf="place.Deleted != true" class="cursor">
@@ -417,13 +432,16 @@
   </div>
 
   <div class="col-4">
-    <div id="map" class="custom-map"></div>
+    <ng-container *ngIf="isLoading; else mapContent">
+      <div class="skeleton-map h700"></div>
+    </ng-container>
+    <ng-template #mapContent>
+      <div id="map" class="custom-map"></div>
+    </ng-template>
   </div>
-</div>
 
-<ng-template #MapViewPlace let-modal>
-  <div id="mappopup" class="h700" *ngIf="mapViewOnePlacex"></div>
-</ng-template>
+  <ng-template #MapViewPlace let-modal>
+  </ng-template>
 
 <ng-template #ShareLink let-modal>
   <div class="d-flex p-3 m-3 align-items-center">
@@ -492,20 +510,47 @@
       <div class="skeleton-loader">
         <div
           class="skeleton-header"
-          style="height: 24px; width: 40%; margin-bottom: 16px; border-radius: 4px; background-color: #e0e0e0; animation: shimmer 1.5s infinite;"
+          style="
+            height: 24px;
+            width: 40%;
+            margin-bottom: 16px;
+            border-radius: 4px;
+            background-color: #e0e0e0;
+            animation: shimmer 1.5s infinite;
+          "
         ></div>
         <div class="skeleton-paragraph">
           <div
             class="skeleton-line"
-            style="height: 16px; width: 100%; margin-bottom: 8px; border-radius: 4px; background-color: #e0e0e0; animation: shimmer 1.5s infinite;"
+            style="
+              height: 16px;
+              width: 100%;
+              margin-bottom: 8px;
+              border-radius: 4px;
+              background-color: #e0e0e0;
+              animation: shimmer 1.5s infinite;
+            "
           ></div>
           <div
             class="skeleton-line"
-            style="height: 16px; width: 95%; margin-bottom: 8px; border-radius: 4px; background-color: #e0e0e0; animation: shimmer 1.5s infinite;"
+            style="
+              height: 16px;
+              width: 95%;
+              margin-bottom: 8px;
+              border-radius: 4px;
+              background-color: #e0e0e0;
+              animation: shimmer 1.5s infinite;
+            "
           ></div>
           <div
             class="skeleton-line"
-            style="height: 16px; width: 90%; border-radius: 4px; background-color: #e0e0e0; animation: shimmer 1.5s infinite;"
+            style="
+              height: 16px;
+              width: 90%;
+              border-radius: 4px;
+              background-color: #e0e0e0;
+              animation: shimmer 1.5s infinite;
+            "
           ></div>
         </div>
       </div>
@@ -516,3 +561,25 @@
   </div>
 </ng-template>
 
+<ng-template #loadingSkeleton>
+  <div class="row m-0 mt-1">
+    <ng-container *ngFor="let _ of skeletonItems">
+      <div class="col-6 skeleton-col">
+        <div class="card-window total skeleton-card">
+          <div class="card-window_c skeleton">
+            <div class="main-img">
+              <div class="skeleton-image"></div>
+            </div>
+            <div class="content-wrap card-content skeleton-content">
+              <div class="skeleton-text skeleton-title"></div>
+              <div class="skeleton-text skeleton-line"></div>
+              <div class="skeleton-text skeleton-line short"></div>
+              <div class="skeleton-text skeleton-line"></div>
+              <div class="skeleton-text skeleton-line short"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
