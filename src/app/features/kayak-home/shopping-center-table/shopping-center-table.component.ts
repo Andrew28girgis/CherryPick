@@ -75,7 +75,6 @@ export class ShoppingCenterTableComponent implements OnInit {
 
     // Set current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
-
     this.filterDropdownOptions();
   }
 

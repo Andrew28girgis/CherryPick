@@ -49,7 +49,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   // Loading state for skeleton
   isLoading = true;
-  isLoadingstatus =true;
+  isLoadingstatus = true;
   // Kanban stages
   KanbanStages: any[] = [];
   activeDropdown: any = null;
@@ -203,7 +203,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
     event?.stopPropagation();
-
     if (this.selectedIdCard === id) {
       this.shoppingCenterService.setSelectedIdCard(null);
       document.removeEventListener('click', this.outsideClickHandlerr);
@@ -337,28 +336,30 @@ export class TableViewComponent implements OnInit, OnDestroy {
   requestCenterStatus(shoppingCenterId: number, campaignId: any) {
     // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true;
-  
+
     // Open the modal immediately
     this.modalRef = this.modalService.open(this.statusModal, {
       size: 'lg',
       scrollable: true,
     });
-  
+
     // Fetch the actual data
-    this.placesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
-      next: (res: any) => {
-        // Update the content with the fetched data
-        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
-        this.isLoadingstatus = false; // Hide the skeleton loader
-        this.cdr.detectChanges(); // Trigger change detection
-      },
-      error: () => {
-        // Handle errors and show fallback content
-        const errHtml = '<p>Error loading content</p>';
-        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
-        this.isLoadingstatus = false; // Hide the skeleton loader
-        this.cdr.detectChanges();
-      },
-    });
+    this.placesService
+      .GetSiteCurrentStatus(shoppingCenterId, campaignId)
+      .subscribe({
+        next: (res: any) => {
+          // Update the content with the fetched data
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges(); // Trigger change detection
+        },
+        error: () => {
+          // Handle errors and show fallback content
+          const errHtml = '<p>Error loading content</p>';
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges();
+        },
+      });
   }
 }
