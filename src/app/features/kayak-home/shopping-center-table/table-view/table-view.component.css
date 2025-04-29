@@ -298,12 +298,11 @@ img[alt="logo"] {
   color: #888;
 }
 
-.skeleton-header,
+.skeleton-head,
 .skeleton-line {
-  /* Using a 90deg linear gradient to enhance the animation effect */
   background: linear-gradient(90deg, #f6f7f8 0%, #edeef1 50%, #f6f7f8 100%);
   background-size: 800px 104px;
-  animation: shimmer 1.5s infinite;
+  animation: status-animation 1.5s infinite linear;
 }
 
 .skeleton-header {
@@ -331,7 +330,8 @@ img[alt="logo"] {
   width: 90%;
 }
 
-@keyframes shimmer {
+
+@keyframes status-animation {
   0% {
     background-position: -800px 0;
   }

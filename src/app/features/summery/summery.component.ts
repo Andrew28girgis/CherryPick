@@ -48,6 +48,7 @@ export class SummeryComponent implements OnInit {
   selectedOrganizationName!: string; // Holds the selected organization name
   @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;
   modalOpened: boolean = false;
+  isLoading = true;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -75,6 +76,7 @@ export class SummeryComponent implements OnInit {
   }
 
   getUserBuyBoxes(): void {
+    this.isLoading = true;
     const body: any = {
       Name: 'GetUserBuyBoxes',
       Params: {},
@@ -88,7 +90,8 @@ export class SummeryComponent implements OnInit {
           this.openAddTenant(this.buyBoxProperty);
         }
 
-        this.spinner.hide();
+        // this.spinner.hide();
+        this.isLoading = false;
       },
     });
   }
