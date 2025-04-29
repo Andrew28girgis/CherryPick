@@ -78,7 +78,6 @@ export class SummeryComponent implements OnInit {
       Name: 'GetUserBuyBoxes',
       Params: {},
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.tenants = data.json;
@@ -86,7 +85,6 @@ export class SummeryComponent implements OnInit {
           this.modalOpened = true;
           this.openAddTenant(this.buyBoxProperty);
         }
-
         this.spinner.hide();
       },
     });
@@ -99,7 +97,6 @@ export class SummeryComponent implements OnInit {
       size: 'xl',
     });
     this.Obj = new BuyBoxModel();
-
     modalRef.result
       .then((result) => {
         if (result && result.created) {
