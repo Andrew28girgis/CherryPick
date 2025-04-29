@@ -26,10 +26,10 @@ export class MapsService {
     private stateService: StateService
   ) {}
 
-      // Add this method to get all markers
-      getAllMarkers(): google.maps.Marker[] {
-        return this.markers;
-      }
+  // Add this method to get all markers
+  getAllMarkers(): google.maps.Marker[] {
+    return this.markers;
+  }
 
   createMarker(map: any, markerData: any, type: string): any {
     this.map = map;
@@ -61,7 +61,6 @@ export class MapsService {
       this.handleMarkerClick(marker, infoWindow);
     });
     google.maps.event.addListener(this.map, 'click', (event: any) => {
-      // Close the info window when clicking on the map, if one is open
       if (this.openInfoWindow) {
         this.openInfoWindow.close();
         this.openInfoWindow = null;

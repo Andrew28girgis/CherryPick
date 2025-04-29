@@ -8,7 +8,11 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { PlacesService } from 'src/app/core/services/places.service';
-import { ICampaign, KanbanStage, Submission } from 'src/app/shared/models/icampaign';
+import {
+  ICampaign,
+  KanbanStage,
+  Submission,
+} from 'src/app/shared/models/icampaign';
 import { EmilyService } from 'src/app/core/services/emily.service';
 import { Router } from '@angular/router';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
@@ -287,7 +291,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   getSumbmissionsCountRejected(submissions: Submission[]) {
     return submissions.filter((s) => s.StatusId == -1).length;
   }
-  getKanbanCount(stageName: string,kanbansList:KanbanStage[]): number {
+  getKanbanCount(stageName: string, kanbansList: KanbanStage[]): number {
     const kanbanStage = kanbansList.find(
       (k) => k.stageName.toLowerCase() === stageName.toLowerCase()
     );
@@ -295,5 +299,4 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
       ? kanbanStage.MarketSurveyShoppingCenters.length
       : 0;
   }
-  
 }

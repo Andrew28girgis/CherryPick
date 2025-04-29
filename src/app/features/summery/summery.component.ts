@@ -17,7 +17,6 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
   templateUrl: './summery.component.html',
   styleUrls: ['./summery.component.css'],
 })
-
 export class SummeryComponent implements OnInit {
   General!: General;
   tenants: any[] = [];
