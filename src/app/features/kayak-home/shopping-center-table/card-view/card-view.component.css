@@ -408,7 +408,6 @@ img[alt="logo"] {
   height: 100%;
 }
 
-
 .skeleton-loader {
   text-align: center;
   font-size: 16px;
@@ -454,4 +453,106 @@ img[alt="logo"] {
   100% {
     background-position: 800px 0;
   }
+}
+
+.submission-button {
+  display: flex;
+  padding: var(--Space-Space-8, 8px) var(--Space-Space-12, 12px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+  align-self: stretch;
+  border-radius: var(--Radius-Radius-12, 12px);
+  border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
+  background: var(--Card-Section-BG, #fff);
+  margin-top: 10px;
+}
+
+.submission-details {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+  color: #707791;
+  margin: 0;
+}
+.available-space {
+  display: flex;
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+  color: #707791;
+  margin: 0;
+  margin-top: 5px;
+}
+.user-info {
+  margin-top: 5px;
+  gap: 16px;
+  align-items: center;
+}
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  justify-content: center;
+}
+.match-percentage {
+  text-align: center;
+}
+.circle-progress {
+  position: relative;
+  width: 98px;
+  height: 98px;
+}
+.circle-bg {
+  fill: none;
+  stroke: #E6E6E6;
+  stroke-width: 3.8;
+  stroke-linecap: round;
+}
+.circle-fg {
+  fill: none;
+  stroke: #FFC107;
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
+}
+.circle-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #8A8A8A;
+  display: flex;
+  flex-direction: column;
+}
+.match {
+  align-self: stretch;
+  color: var(--Body-Text-and-Icons, #707791);
+  font-family: Montserrat;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.match-percentage {
+  align-self: stretch;
+  color: #997404;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
 }

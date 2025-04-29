@@ -67,7 +67,18 @@ export interface Center {
     Reactions: Reaction[]
     BuyBoxPlaces: BuyBoxPlace[]
     ManagerOrganization: ManagerOrganization[]
+    UserSubmmision: UserSubmmision[]
   }
+  export interface UserSubmmision {
+    Id?: number;
+    CreatedDate?: string;
+    Percentage?: number;
+    SubmmisionLink?: string | null;
+    UserId?: number;
+    FirstName?: string;
+    LastName?: string;
+  }
+  
   export interface Reaction {
     Id?: number
     ContactId?: number
@@ -100,7 +111,7 @@ export interface Center {
     Email: string
     ContactId: number
   }
-  
+ 
   export interface Place {
     Id: number
     Address: string
