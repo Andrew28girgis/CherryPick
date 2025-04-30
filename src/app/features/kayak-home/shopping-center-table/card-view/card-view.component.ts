@@ -408,4 +408,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
     
     return `0 ${startPosition} ${bgLength} ${totalLength}`;
   }
+  checkSubmission(submissions: any[] | undefined): boolean {
+    if (!submissions || !Array.isArray(submissions)) {
+      return false;
+    }
+    
+    // Loop through submissions and return true if any submission has a SubmmisionLink
+    return submissions.some(submission => submission.SubmmisionLink !== null);
+  }
 }
