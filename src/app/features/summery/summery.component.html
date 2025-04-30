@@ -5,16 +5,12 @@
     <button class="Kayack__button" (click)="openAddTenant(BuyBoxProperty)">
       Add Tenant
     </button>
-    <!-- <button [routerLink]="'/add-tenant'"
-      >
-      add
-      </button> -->
   </div>
 
   <div class="container-width">
     <div class="row" style="padding-bottom: 2%" *ngIf="!isLoading">
       <ng-container *ngFor="let tenant of tenants">
-        <div class="col-12 col-sm-6 pt-4">
+        <div class="col-12 col-sm-6 pt-4" (click)="selectTenant(tenant)">
           <section class="card__Kayak">
             <div class="card__Kayak__img mt-3 mb-3">
               <div class="d-flex align-items-center justify-content-between">
@@ -22,9 +18,7 @@
                   <div>
                     <img
                       class="Kayak__img"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                        tenant.OrganizationId
-                      }}"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ tenant.OrganizationId }}"
                       alt=""
                     />
                   </div>
@@ -40,23 +34,19 @@
                     <div
                       class="d-flex align-items-center gap-2 cursor"
                       data-bs-toggle="offcanvas"
-                      data-bs-target="#campaignDetails"
+                      [attr.data-bs-target]="'#campaignDetails' + tenant.Id"
                       aria-controls="campaignDetails"
                     >
-                      <span class="nomberofcampains" *ngIf="tenant.Campaigns">{{
-                        tenant.Campaigns.length
-                      }}</span>
+                      <span class="nomberofcampains" *ngIf="tenant.Campaigns">{{ tenant.Campaigns.length }}</span>
                       <span class="campaingstext">Campaigns</span>
-                      <img
-                        src="../../../assets/Images/Icons/info.png"
-                        alt="Info Icon"
-                      />
+                      <img src="../../../assets/Images/Icons/info.png" alt="Info Icon" />
                     </div>
 
+                    <!-- Each offcanvas will have a unique ID based on the tenant ID -->
                     <div
                       class="offcanvas offcanvas-end"
                       tabindex="-1"
-                      id="campaignDetails"
+                      [id]="'campaignDetails' + tenant.Id"
                       aria-labelledby="campaignDetailsLabel"
                       data-bs-backdrop="true"
                     >
@@ -66,9 +56,7 @@
                             <div>
                               <img
                                 class="Kayak__img"
-                                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                                  tenant.OrganizationId
-                                }}"
+                                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ tenant.OrganizationId }}"
                                 alt=""
                               />
                             </div>
@@ -96,17 +84,12 @@
                         <div class="CampaignsList mb-3">
                           <span>Campaigns List</span>
                         </div>
-                        <!-- Insert your content here -->
+
                         <div class="offcanvas-background">
-                          <ng-container
-                            *ngFor="let campaign of tenant.Campaigns"
-                          >
-                            <div
-                              class="d-flex align-items-center justify-content-between"
-                            >
-                              <div
-                                class="d-flex flex-column justify-content-center gap-1"
-                              >
+                          <!-- Loop over campaigns for the selected tenant -->
+                          <ng-container *ngFor="let campaign of tenant.Campaigns">
+                            <div class="d-flex align-items-center justify-content-between">
+                              <div class="d-flex flex-column justify-content-center gap-1">
                                 <div class="private">
                                   <div class="privatedot"></div>
                                   <p class="privatetext">Public</p>
@@ -115,31 +98,14 @@
                                   <span>{{ campaign.CampaignName }}</span>
                                 </div>
                                 <div class="graytext">
-                                  <span>{{
-                                    campaign.CreatedDate | date : "mediumDate"
-                                  }}</span>
+                                  <span>{{ campaign.CreatedDate | date }}</span>
                                 </div>
                               </div>
-                              <div>
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 20 20"
-                                  fill="none"
-                                >
-                                  <path
-                                    d="M7.47388 3.28711L7.51294 3.3125L12.9465 8.74512C13.2785 9.07708 13.467 9.52549 13.467 10C13.467 10.4189 13.3264 10.8118 13.0676 11.123L12.9495 11.252L12.9465 11.2549L7.52271 16.6777C7.48085 16.7159 7.44298 16.7255 7.42505 16.7256C7.40737 16.7256 7.3915 16.7222 7.37817 16.7168L7.33716 16.6885C7.3157 16.667 7.30208 16.6363 7.302 16.6006C7.302 16.5826 7.30571 16.5657 7.31177 16.5508L7.33716 16.5117L12.7698 11.0791C13.3278 10.521 13.3635 9.63596 12.8752 9.03711L12.7698 8.92188L7.33716 3.48828C7.31566 3.46678 7.30203 3.43619 7.302 3.40039C7.302 3.38232 7.30566 3.36553 7.31177 3.35059L7.33716 3.3125C7.35869 3.29097 7.3892 3.27734 7.42505 3.27734C7.44282 3.27736 7.45912 3.28118 7.47388 3.28711Z"
-                                    fill="#707791"
-                                    stroke="#707791"
-                                  />
-                                </svg>
-                              </div>
                             </div>
+
                             <div class="customline"></div>
-                            <div
-                              class="d-flex align-items-center justify-content-between"
-                            >
+
+                            <div class="d-flex align-items-center justify-content-between">
                               <div class="graytext">
                                 <span>Sites</span>
                               </div>
@@ -147,35 +113,7 @@
                                 <span>{{ campaign.Sites }}</span>
                               </div>
                             </div>
-                            <!-- <div
-                            class="d-flex align-items-center justify-content-between"
-                          >
-                            <div class="graytext">
-                              <span>Submissions</span>
-                            </div>
-                            <div class="status-label Rejected">
-                              <div class="status-dot"></div>
-                              <p class="status-nomber">15</p>
-                              <p class="status-text">Rejected</p>
-                            </div>
-
-                            <div
-                              class="status-label Pendding d-flex align-items-center justify-content-center"
-                            >
-                              <div class="status-dot"></div>
-                              <p class="status-nomber">15</p>
-                              <p class="status-text">Pendding</p>
-                            </div>
-
-                            <div class="status-label Accepted">
-                              <div class="status-dot"></div>
-                              <p class="status-nomber">15</p>
-                              <p class="status-text">Accepted</p>
-                            </div>
-                          </div> -->
-                            <div
-                              class="d-flex align-items-center justify-content-between"
-                            >
+                            <div class="d-flex align-items-center justify-content-between">
                               <div class="graytext">
                                 <span>Mail Sent</span>
                               </div>
@@ -183,79 +121,35 @@
                                 <span>{{ campaign.MailsSent }}</span>
                               </div>
                             </div>
-                          </ng-container>
 
-                          <div class="customline"></div>
-                          <div class="CampaignWorkfow">
-                            <span>Campaign Workflow</span>
-                          </div>
-                          <ng-container
-                            *ngFor="let campaign of tenant.Campaigns"
-                          >
-                            <div
-                              *ngFor="
-                                let stage of campaign.Kanban;
-                                let first = first
-                              "
-                              class="d-flex flex-column"
-                            >
+                            <div class="CampaignWorkfow">
+                              <span>Campaign Workflow</span>
+                            </div>
+
+                            <ng-container *ngFor="let stage of campaign.Kanban; let first = first">
                               <div *ngIf="!first" class="smallline"></div>
-
-                              <div
-                                class="d-flex align-items-center justify-content-between"
-                              >
-                                <div class="graytext">
-                                  <span>{{ stage.stageName }}</span>
-                                </div>
-                                <div class="blackbold">
-                                  <span>{{
-                                    stage.MarketSurveyShoppingCenters.length ||
-                                      0
-                                  }}</span>
+                              <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center justify-content-between">
+                                  <div class="graytext">
+                                    <span>{{ stage.stageName }}</span>
+                                  </div>
+                                  <div class="blackbold">
+                                    <span>{{ stage.MarketSurveyShoppingCenters.length || 0 }}</span>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            </ng-container>
                           </ng-container>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div
-                  class="chevronicon cursor"
-                  [routerLink]="[
-                    '/dashboard',
-                    tenant.Id,
-                    tenant.OrganizationId,
-                    tenant.Name
-                  ]"
-                >
-                  <i class="fa-solid fa-chevron-right"></i>
-                </div>
               </div>
             </div>
-          </section>
+          </section> 
         </div>
       </ng-container>
-    </div>
-    <div *ngIf="isLoading" class="row m-0 mt-3">
-      <div
-        class="col-12 col-sm-6 ResContainer"
-        *ngFor="let _ of [1, 2, 3, 4, 5, 6]"
-      >
-        <section class="skeleton-card">
-          <div class="skeleton-container">
-            <div class="skeleton skeleton-avatar"></div>
-            <div class="skeleton-details">
-              <div class="skeleton skeleton-pill"></div>
-              <div class="skeleton skeleton-title"></div>
-            </div>
-            <div class="chevronicon">
-              <div class="skeleton skeleton-chevron"></div>
-            </div>
-          </div>
-        </section>
-      </div>
     </div>
   </div>
 </div>
