@@ -1,7 +1,5 @@
 export const environment = {
   production: true,
-  // api: 'http://10.0.0.15:8082/api',
   api: 'https://apibeta.cherrypick.com/api',
-
   // api: 'https://api.cherrypick.com/api',
 };

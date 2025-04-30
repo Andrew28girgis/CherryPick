@@ -49,7 +49,7 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   // Loading state for skeleton
   isLoading = true;
-  isLoadingstatus =true;
+  isLoadingstatus = true;
   // Kanban stages
   KanbanStages: any[] = [];
   activeDropdown: any = null;
@@ -60,6 +60,8 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
   private outsideClickHandler: ((e: Event) => void) | null = null;
+  submissions: any;
+  @ViewChild('submission', { static: true }) submissionModal!: TemplateRef<any>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -203,7 +205,6 @@ export class TableViewComponent implements OnInit, OnDestroy {
 
   toggleShortcutsCard(id: number | null, event?: MouseEvent): void {
     event?.stopPropagation();
-
     if (this.selectedIdCard === id) {
       this.shoppingCenterService.setSelectedIdCard(null);
       document.removeEventListener('click', this.outsideClickHandlerr);
@@ -337,28 +338,75 @@ export class TableViewComponent implements OnInit, OnDestroy {
   requestCenterStatus(shoppingCenterId: number, campaignId: any) {
     // Set loading state to true to show the skeleton loader
     this.isLoadingstatus = true;
-  
+
     // Open the modal immediately
     this.modalRef = this.modalService.open(this.statusModal, {
       size: 'lg',
       scrollable: true,
     });
-  
+
     // Fetch the actual data
-    this.placesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
-      next: (res: any) => {
-        // Update the content with the fetched data
-        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
-        this.isLoadingstatus = false; // Hide the skeleton loader
-        this.cdr.detectChanges(); // Trigger change detection
-      },
-      error: () => {
-        // Handle errors and show fallback content
-        const errHtml = '<p>Error loading content</p>';
-        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
-        this.isLoadingstatus = false; // Hide the skeleton loader
-        this.cdr.detectChanges();
-      },
-    });
+    this.placesService
+      .GetSiteCurrentStatus(shoppingCenterId, campaignId)
+      .subscribe({
+        next: (res: any) => {
+          // Update the content with the fetched data
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges(); // Trigger change detection
+        },
+        error: () => {
+          // Handle errors and show fallback content
+          const errHtml = '<p>Error loading content</p>';
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges();
+        },
+      });
+  }
+  
+  openModalSubmission(submissions: any[], submissionModal: TemplateRef<any>): void {
+    this.submissions = submissions; 
+    this.modalService.open(submissionModal,{size: 'md', scrollable: true}); 
+  }
+  getCircleProgress(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap size
+  
+    // If 100%, return full circle without gaps
+    if (percentage === 100) {
+      return `${totalLength} 0`;
+    }
+  
+    // Calculate the length for the green progress
+    const progressLength = (percentage / 100) * (totalLength - (2 * gapSize));
+    return `${progressLength} ${totalLength}`;
+  }
+  
+  getCircleProgressBackground(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap
+  
+    // If 100%, don't show background
+    if (percentage === 100) {
+      return `0 ${totalLength}`;
+    }
+  
+    // Calculate the remaining percentage
+    const remainingPercentage = 100 - percentage;
+    const bgLength = (remainingPercentage / 100) * (totalLength - (2 * gapSize));
+    const startPosition = (percentage / 100) * (totalLength - (2 * gapSize)) + gapSize;
+    
+    return `0 ${startPosition} ${bgLength} ${totalLength}`;
+  }
+  checkSubmission(submissions: any[] | undefined): boolean {
+    if (!submissions || !Array.isArray(submissions)) {
+      return false;
+    }
+    
+    // Loop through submissions and return true if any submission has a SubmmisionLink
+    return submissions.some(submission => submission.SubmmisionLink !== null);
   }
 }

@@ -378,8 +378,67 @@
                 </div>
                 <p class="text-center mt-2">Uploading...</p>
               </div>  
+              <!-- Submission Match -->
+              <div *ngIf="MatchCampaignsFromSubmission" class="mb-2 subm-div">
+                <h2 class="organization-title">{{MatchCampaignsFromSubmission.OrganizationName}}</h2>
+                <h3  class="d-flex justify-content-center buybox-title">Are you want to Share this Shopping Center Info with other Buyboxes ?</h3>
+                
+                <div *ngFor="let buyBox of MatchCampaignsFromSubmission.BB" class="mb-4">
+                  <h3 class="organization-title">{{buyBox.BuyBoxName}}</h3>
+                  
+                  <div class="row campaign-row">
+                    <div *ngFor="let campaign of buyBox.C" class="col-md-6 col-lg-4 mb-4">
+                      <div class="campaign-card h-100">
+                        <div class="card-header d-flex align-items-center">
+                          <div class="form-check">
+                            <input type="checkbox" class="form-check-input campaign-master-checkbox cursor" 
+                            [checked]="hasAnyPlaceSelected(campaign.CampaignId)"
+                            [indeterminate]="isSomePlacesSelected(campaign.CampaignId)"
+                            (change)="toggleAllPlacesForCampaign(campaign.CampaignId, campaign.P, $event)"
+                            [id]="'campaign-master-' + campaign.CampaignId">
+                            <label class="form-check-label" [for]="'campaign-master-' + campaign.CampaignId"></label>
+                          </div>
+                          <h4 class="campaign-name mb-0">{{campaign.CampaignName}}</h4>
+                        </div>
+                        <div>
+                          <!-- <div class="campaign-detail">
+                            <span class="detail-label">Campaign ID:</span>
+                            <span class="detail-value">{{campaign.CampaignId}}</span>
+                          </div> -->
+                          <div class="d-flex align-items-center gap-2">
+                            <div>
+                              <span class="detail-value mb-0">{{buyBox.MinBuildingSize}} SF - {{buyBox.MaxBuildingSize}} SF</span>
+                            </div>
+                            <span class="detail-label">Building Size Range</span>
+                          </div>
+                          
+                          <div class="places-section mt-3">
+                            <h5 class="places">Places:</h5>
+                            <div class="place-list">
+                              <div *ngFor="let place of campaign.P" class="place-item">
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input place-checkbox cursor" 
+                                         [checked]="isPlaceSelected(campaign.CampaignId, place.PlaceId)"
+                                         (change)="toggleSinglePlace(campaign.CampaignId, place.PlaceId)"
+                                         [id]="'place-' + campaign.CampaignId + '-' + place.PlaceId">
+                                  <label class="form-check-label places-sqft" [for]="'place-' + campaign.CampaignId + '-' + place.PlaceId">
+                                     {{place.BuildingSizeSf}} SF
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary SubmitBrochure" (click)="InsertIntoDestinationTable(buyBox)">Approve</button>
+                  </div>
+                </div>
+              </div>
                 <!-- SHOPPING CENTER INFORMATION -->
-                <div *ngIf="JsonPDF" class="mb-3">
+                <!-- <div *ngIf="JsonPDF" class="mb-3">
                   <div class="card shoppingcentercard">
                     <div class="card-body">
                       <div class="row">
@@ -723,7 +782,7 @@
                       </button>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
               <div class="row">
                 <div class="col-md-4">
@@ -788,8 +847,10 @@
                           >
                             <div
                               class="upload-container cursor"
-                              (click)="openFileSelector()"
-                            >
+                              (click)="contactID
+                              ? openFileSelector()
+                              : opencontactDataModal()"
+                  >
                               <div
                                 class="d-flex align-items-center justify-content-center"
                               >
@@ -1663,7 +1724,6 @@
 <ng-template #contactDataModal let-modal>
   <div class="modal-header d-flex justify-content-between">
     <h6 class="modal-title" style="text-align: center; font-weight: 600;">This email has been sent to multiple brokers. Please select your account to proceed with updating the shopping center information.</h6>
-    <!-- <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button> -->
   </div>
   <div class="modal-body">
     <div class="row">
@@ -1682,10 +1742,32 @@
           </div>
         </div>
       </div>
-      <!-- Optional: show a message if no contacts -->
-      <!-- <div *ngIf="ContactData.length === 0" class="text-center text-muted">
-        No contacts found.
-      </div> -->
+          <!-- Manager / Updater checkboxes -->
+    <div class="mb-3">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="isManager"
+          [(ngModel)]="isManager"
+        />
+        <label class="form-check-label" for="isManager">
+          I am manager of this shopping center
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="onlyUpdate"
+          [(ngModel)]="onlyUpdate"
+        />
+        <label class="form-check-label" for="onlyUpdate">
+          I only update data of this shopping center
+        </label>
+      </div>
+    </div>
     </div>
   </div>
 </ng-template>

@@ -10,7 +10,7 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
-  
+
   currentView: number = 5;
   BuyBoxId!: any;
   BuyBoxName!: string;
@@ -62,27 +62,26 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-      if (Number(localStorage.getItem('currentViewDashBord')) !==1) {
+      if (Number(localStorage.getItem('currentViewDashBord')) !== 1) {
         this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
       }
     });
-    
+
     // Get saved view from localStorage or default to social view (5)
     this.currentView = Number(
       localStorage.getItem('currentViewDashBord') || '5'
     );
     this.selectedOption = this.currentView;
-    
+
     // Set current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
-    
     this.filterDropdownOptions();
   }
 
   selectOption(option: any): void {
     this.selectedOption = option.status;
     this.currentView = option.status;
-    
+
     // Update current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
   }
@@ -102,7 +101,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   onViewChange(viewStatus: any) {
     this.currentView = viewStatus;
     this.selectedOption = viewStatus;
-    
+
     // Update current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
   }

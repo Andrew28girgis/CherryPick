@@ -22,24 +22,24 @@ export class ViewManagerService {
   private _shareOrg = new BehaviorSubject<ShareOrg[]>([]);
   private _kanbanStages = new BehaviorSubject<any[]>([]);
   private _lastBuyboxId: number | null = null;
-  private _lastOrgId:    number | null = null;
+  private _lastOrgId: number | null = null;
 
   // Loading state
   private _isLoading = new BehaviorSubject<boolean>(false);
-  
+
   // Search query
   private _searchQuery = new BehaviorSubject<string>('');
-  
+
   // Selected items
   private _selectedIdCard = new BehaviorSubject<number | null>(null);
   private _selectedId = new BehaviorSubject<number | null>(null);
-  
+
   // Current view
   private _currentView = new BehaviorSubject<number>(5); // Default to social view
-  
+
   // Data loaded flag
   private _dataLoaded = false;
-  
+
   // Event emitters
   private _dataLoadedEvent = new Subject<void>();
 
@@ -72,21 +72,22 @@ export class ViewManagerService {
    */
 
   public initializeData(buyboxId: number, orgId: number): void {
-    if (this._dataLoaded
-        && this._lastBuyboxId === buyboxId
-        && this._lastOrgId    === orgId) {
+    if (
+      this._dataLoaded &&
+      this._lastBuyboxId === buyboxId &&
+      this._lastOrgId === orgId
+    ) {
       this._dataLoadedEvent.next();
       return;
     }
 
     this._lastBuyboxId = buyboxId;
-    this._lastOrgId    = orgId;
-    this._dataLoaded   = false;
+    this._lastOrgId = orgId;
+    this._dataLoaded = false;
 
     this.categoryNameCache.clear();
     this.unitSizeCache.clear();
 
-    
     this._isLoading.next(true);
 
     // Load all required data in parallel
@@ -94,21 +95,21 @@ export class ViewManagerService {
       this.loadShoppingCenters(buyboxId),
       this.loadBuyBoxCategories(buyboxId),
       this.loadOrganizationById(orgId),
-      this.loadBuyBoxPlaces(buyboxId)
+      this.loadBuyBoxPlaces(buyboxId),
     ];
 
     Promise.all(promises)
       .then(() => {
         this._dataLoaded = true;
         this._dataLoadedEvent.next();
-        
+
         // If we have shopping centers, load kanban stages
         const centers = this._shoppingCenters.getValue();
         if (centers && centers.length > 0) {
           this.loadKanbanStages(centers[0].kanbanId);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error loading data:', error);
       })
       .finally(() => {
@@ -136,10 +137,10 @@ export class ViewManagerService {
    */
   public filterCenters(query: string): void {
     this._searchQuery.next(query);
-    
+
     const centers = this._shoppingCenters.getValue();
     if (query.trim()) {
-      const filtered = centers.filter(center => 
+      const filtered = centers.filter((center) =>
         center.CenterName.toLowerCase().includes(query.toLowerCase())
       );
       this._filteredCenters.next(filtered);
@@ -158,12 +159,12 @@ export class ViewManagerService {
     }
 
     const categories = this._buyboxCategories.getValue();
-    const matchedCategories = categories.filter(x => x.id === categoryId);
+    const matchedCategories = categories.filter((x) => x.id === categoryId);
     const result = matchedCategories[0]?.name || '';
-    
+
     // Cache the result
     this.categoryNameCache.set(categoryId, result);
-    
+
     return result;
   }
 
@@ -210,7 +211,7 @@ export class ViewManagerService {
       );
 
     let result = '';
-    
+
     if (buildingSizes.length === 0) {
       const singleSize = shoppingCenter.BuildingSizeSf;
       if (singleSize) {
@@ -242,9 +243,9 @@ export class ViewManagerService {
       const sizeRange =
         minSize === maxSize
           ? `${formatNumberWithCommas(minSize)} sq ft.`
-          : `${formatNumberWithCommas(minSize)} sq ft. - ${formatNumberWithCommas(
-              maxSize
-            )} sq ft.`;
+          : `${formatNumberWithCommas(
+              minSize
+            )} sq ft. - ${formatNumberWithCommas(maxSize)} sq ft.`;
 
       const formattedMinPrice =
         minPrice === 'On Request'
@@ -284,10 +285,10 @@ export class ViewManagerService {
 
       result = `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`;
     }
-    
+
     // Cache the result
     this.unitSizeCache.set(key, result);
-    
+
     return result;
   }
 
@@ -299,13 +300,15 @@ export class ViewManagerService {
     if (activeDropdown && activeDropdown !== shoppingCenter) {
       activeDropdown.isDropdownOpen = false;
     }
-    
+
     // Toggle current dropdown
     shoppingCenter.isDropdownOpen = !shoppingCenter.isDropdownOpen;
-    
+
     // Set as active dropdown
-    const newActiveDropdown = shoppingCenter.isDropdownOpen ? shoppingCenter : null;
-    
+    const newActiveDropdown = shoppingCenter.isDropdownOpen
+      ? shoppingCenter
+      : null;
+
     // If opening this dropdown, load kanban stages if not already loaded
     if (shoppingCenter.isDropdownOpen) {
       const stages = this._kanbanStages.getValue();
@@ -313,7 +316,7 @@ export class ViewManagerService {
         this.loadKanbanStages(shoppingCenter.kanbanId);
       }
     }
-    
+
     return newActiveDropdown;
   }
 
@@ -323,15 +326,19 @@ export class ViewManagerService {
   public getSelectedStageName(stageId: number): string {
     const stages = this._kanbanStages.getValue();
     if (!stages) return 'Select Stage';
-    
-    const stage = stages.find(s => s.id === stageId);
+
+    const stage = stages.find((s) => s.id === stageId);
     return stage ? stage.stageName : 'Select Stage';
   }
 
   /**
    * Update place kanban stage
    */
-  public updatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
+  public updatePlaceKanbanStage(
+    marketSurveyId: number,
+    stageId: number,
+    shoppingCenter: any
+  ): void {
     const body: any = {
       Name: 'UpdatePlaceKanbanStage',
       Params: {
@@ -339,9 +346,9 @@ export class ViewManagerService {
         marketsurveyid: marketSurveyId,
       },
     };
-    
+
     this._isLoading.next(true);
-    
+
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         // Update local data after successful API call
@@ -353,17 +360,20 @@ export class ViewManagerService {
       },
       complete: () => {
         this._isLoading.next(false);
-      }
+      },
     });
   }
 
   /**
    * Delete shopping center
    */
-  public deleteShoppingCenter(buyBoxId: number, shoppingCenterId: number): Promise<any> {
+  public deleteShoppingCenter(
+    buyBoxId: number,
+    shoppingCenterId: number
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       this._isLoading.next(true);
-      
+
       const body: any = {
         Name: 'DeleteShoppingCenterFromBuyBox',
         MainEntity: null,
@@ -373,18 +383,20 @@ export class ViewManagerService {
         },
         Json: null,
       };
-      
+
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           // Update local data
           const centers = this._shoppingCenters.getValue();
-          const updatedCenters = centers.map(center => 
-            center.Id === shoppingCenterId ? { ...center, Deleted: true } : center
+          const updatedCenters = centers.map((center) =>
+            center.Id === shoppingCenterId
+              ? { ...center, Deleted: true }
+              : center
           );
-          
+
           this._shoppingCenters.next(updatedCenters);
           this._filteredCenters.next(this.getFilteredCenters(updatedCenters));
-          
+
           resolve(data);
         },
         error: (err) => {
@@ -393,7 +405,7 @@ export class ViewManagerService {
         },
         complete: () => {
           this._isLoading.next(false);
-        }
+        },
       });
     });
   }
@@ -401,10 +413,13 @@ export class ViewManagerService {
   /**
    * Restore shopping center
    */
-  public restoreShoppingCenter(marketSurveyId: number, deleted: boolean): Promise<any> {
+  public restoreShoppingCenter(
+    marketSurveyId: number,
+    deleted: boolean
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       this._isLoading.next(true);
-      deleted=false;
+      deleted = false;
       const body: any = {
         Name: 'RestoreShoppingCenter',
         MainEntity: null,
@@ -413,18 +428,20 @@ export class ViewManagerService {
         },
         Json: null,
       };
-      
+
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           // Update local data
           const centers = this._shoppingCenters.getValue();
-          const updatedCenters = centers.map(center => 
-            Number(center.MarketSurveyId) === marketSurveyId ? { ...center, Deleted: false } : center
+          const updatedCenters = centers.map((center) =>
+            Number(center.MarketSurveyId) === marketSurveyId
+              ? { ...center, Deleted: false }
+              : center
           );
-          
+
           this._shoppingCenters.next(updatedCenters);
           this._filteredCenters.next(this.getFilteredCenters(updatedCenters));
-          
+
           resolve(data);
         },
         error: (err) => {
@@ -433,7 +450,7 @@ export class ViewManagerService {
         },
         complete: () => {
           this._isLoading.next(false);
-        }
+        },
       });
     });
   }
@@ -441,7 +458,12 @@ export class ViewManagerService {
   /**
    * Initialize map
    */
-  public async initializeMap(elementId: string, lat: number, lng: number, zoom: number = 14): Promise<any> {
+  public async initializeMap(
+    elementId: string,
+    lat: number,
+    lng: number,
+    zoom: number = 14
+  ): Promise<any> {
     if (!lat || !lng) {
       return null;
     }
@@ -568,9 +590,13 @@ export class ViewManagerService {
 
       // Find the shortcuts_icon element in the DOM
       setTimeout(() => {
-        const shortcutsIcon = document.querySelector('.shortcuts_icon') as HTMLElement;
+        const shortcutsIcon = document.querySelector(
+          '.shortcuts_icon'
+        ) as HTMLElement;
         if (shortcutsIcon && rect) {
-          shortcutsIcon.style.top = `${rect.top + window.scrollY + targetElement.offsetHeight}px`;
+          shortcutsIcon.style.top = `${
+            rect.top + window.scrollY + targetElement.offsetHeight
+          }px`;
           shortcutsIcon.style.left = `${rect.left + window.scrollX}px`;
         }
       }, 0);
@@ -579,7 +605,7 @@ export class ViewManagerService {
     // Toggle the selected ID
     const currentSelectedIdCard = this._selectedIdCard.getValue();
     const currentSelectedId = this._selectedId.getValue();
-    
+
     // Also update the card ID
     this.setSelectedIdCard(currentSelectedIdCard === id ? null : id);
     this.setSelectedId(currentSelectedId === id ? null : id);
@@ -609,7 +635,7 @@ export class ViewManagerService {
         error: (err) => {
           console.error('Error loading shopping centers:', err);
           reject(err);
-        }
+        },
       });
     });
   }
@@ -635,7 +661,7 @@ export class ViewManagerService {
         error: (err) => {
           console.error('Error loading buybox categories:', err);
           reject(err);
-        }
+        },
       });
     });
   }
@@ -661,7 +687,7 @@ export class ViewManagerService {
         error: (err) => {
           console.error('Error loading organization:', err);
           reject(err);
-        }
+        },
       });
     });
   }
@@ -682,23 +708,26 @@ export class ViewManagerService {
         next: (data) => {
           const places = data.json;
           this._buyboxPlaces.next(places);
-          
+
           // Update categories with places
           const categories = this._buyboxCategories.getValue();
           categories.forEach((category) => {
             category.isChecked = false;
-            category.places = places?.filter((place: { RetailRelationCategories: any[]; }) =>
-              place.RetailRelationCategories?.some((x: { Id: number; }) => x.Id === category.id)
+            category.places = places?.filter(
+              (place: { RetailRelationCategories: any[] }) =>
+                place.RetailRelationCategories?.some(
+                  (x: { Id: number }) => x.Id === category.id
+                )
             );
           });
-          
+
           this._buyboxCategories.next([...categories]);
           resolve();
         },
         error: (err) => {
           console.error('Error loading buybox places:', err);
           reject(err);
-        }
+        },
       });
     });
   }
@@ -713,14 +742,14 @@ export class ViewManagerService {
         kanbanid: kanbanId,
       },
     };
-    
+
     this.placesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this._kanbanStages.next(res.json || []);
       },
       error: (err) => {
         console.error('Error loading kanban stages:', err);
-      }
+      },
     });
   }
 
@@ -730,7 +759,7 @@ export class ViewManagerService {
   private getFilteredCenters(centers: Center[]): Center[] {
     const query = this._searchQuery.getValue();
     if (query.trim()) {
-      return centers.filter(center => 
+      return centers.filter((center) =>
         center.CenterName.toLowerCase().includes(query.toLowerCase())
       );
     }

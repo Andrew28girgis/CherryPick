@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -7,6 +7,8 @@ import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { ActivatedRoute } from '@angular/router';
 import { ICenterData } from 'src/app/features/kayak-home/shopping-center-table/contact-broker/models/icenter-data';
 import { firstValueFrom } from 'rxjs';
+import { IManager } from 'src/app/features/kayak-home/shopping-center-table/contact-broker/models/imanage-shopping';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-email-compose',
@@ -19,6 +21,7 @@ export class EmailComposeComponent implements OnInit {
   @Input() orgId!: number;
   @Input() campaignId!: string | null;
   @Input() contactName!: string;
+  @Input() email!: string;
 
   currentStep = 1;
   emailSubject = '';
@@ -48,12 +51,15 @@ export class EmailComposeComponent implements OnInit {
     { key: 'IsCC', label: 'CC', checked: true },
   ];
   isAdvancedVisible :boolean = false;
+  GetManagersShoppingCenters: IManager[] = [];
+  @ViewChild('sendModal') sendModal: any;
   constructor(
     public modal: NgbActiveModal,
     private spinner: NgxSpinnerService,
     private places: PlacesService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
+    private modalService: NgbModal,
   ) {}
 
   async ngOnInit() {
@@ -85,7 +91,35 @@ export class EmailComposeComponent implements OnInit {
       this.listcenteIds = this.GetShoppingCenters.map((c) => c.Id);
       this.listcenteIdsString = this.listcenteIds.join(','); // <-- convert array to comma-separated string
 
+      this.fetchManagersForAllCenters();
     });
+  }
+  fetchManagersForAllCenters() {
+    this.GetShoppingCenters.forEach(center => {
+      const mgrBody = {
+        Name: 'GetShoppingCenterManagers',
+        Params: {
+          ContactId: this.contactId,
+          ShoppingCenterId: center.Id
+        }
+      };
+      this.places.GenericAPI(mgrBody).subscribe(res => {
+        const raw = res.json as IManager[];
+        // Attach `selected` (default true) and the parent center name
+        center.Managers = raw.map(m => ({
+          ...m,
+          selected: true,
+          centerName: center.CenterName
+        }));
+      });
+    });
+  }
+  onManagerCheckboxChange(
+    mgr: IManager & { selected: boolean; centerName: string },
+    event: Event
+  ) {
+    const input = event.target as HTMLInputElement;
+    mgr.selected = input.checked;
   }
 
   private async loadPrompts() {
@@ -142,17 +176,38 @@ export class EmailComposeComponent implements OnInit {
 
   generateContext() {
     this.spinner.show();
+
+  // 1) build a map from manager.id → { info + array of center names }
+  const mgrMap = new Map<
+    number,
+    { ContactId: number; ContactName: string; ShoppingCentersName: string[] }
+  >();
+
+  this.GetShoppingCenters.forEach(sc => {
+    (sc.Managers || []).forEach(mgr => {
+      if (!mgr.selected) return;
+
+      if (!mgrMap.has(mgr.contactId)) {
+        mgrMap.set(mgr.contactId, {
+          ContactId:   mgr.contactId,
+          ContactName: `${mgr.firstname} ${mgr.lastname}`,
+          ShoppingCentersName: []
+        });
+      }
+      // push this center’s name into that manager’s array
+      mgrMap.get(mgr.contactId)!.ShoppingCentersName.push(sc.CenterName);
+    });
+  });
+
+  // 2) convert map → array
+  const selectedManagers = Array.from(mgrMap.values());
+
+  // 3) build your dto
     const dto: any = {
       ContactId: this.localStorageContactId,
       BuyBoxId: this.buyBoxId,
       CampaignId: this.campaignId ? +this.campaignId : 0,
-      GetContactManagers: [
-        {
-          ContactId: this.contactId,
-          ContactName: this.contactName,
-          ShoppingCentersName: this.listcenterName,
-        },
-      ],
+      GetContactManagers: selectedManagers,
       OrganizationId: this.orgId,
       BatchGuid: this.BatchGuid,
     };
@@ -254,11 +309,15 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe(() => {
       this.spinner.hide();
       this.modal.close('sent');
+      this.modalService.dismissAll();
     });
   }
 
   public generateAndNext() {
     this.currentStep = 3;
     this.generateContext();
+  }
+  openSendModal() {
+    this.modalService.open(this.sendModal, { centered: true ,windowClass: 'email-mod'});
   }
 }
