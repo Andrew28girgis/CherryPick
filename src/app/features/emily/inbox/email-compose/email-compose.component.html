@@ -262,11 +262,11 @@
       <h3 class="titlee">Send Email with</h3>
     </div>
     <div class="modal-body pt-0" style="overflow-y: auto; height: 45vh">
-
+<!-- &cc={{ CCEmail }} -->
       <a
       class="mb-3 w-100 text-decoration-none"
       style="cursor: pointer"
-      href="https://outlook.office.com/mail/deeplink/compose?to={{email}}&subject={{emailSubject}}&body={{sanitizedEmailBody}}"
+      href="https://outlook.office.com/mail/deeplink/compose?to={{email}},{{ CCEmail }},{{selectedManagerEmails}}&subject={{emailSubject}}&body={{sanitizedEmailBody}}"
       target="_blank"
     >
       <div class="card-email d-flex align-items-center gap-2">
@@ -279,9 +279,10 @@
       style="cursor: pointer"
       href="https://mail.google.com/mail/?view=cm&fs=1&to={{ email }}&su={{
         emailSubject
-      }}&{{ sanitizedEmailBody }}"
+      }}&body={{ sanitizedEmailBody }}&cc={{ CCEmail }},{{selectedManagerEmails}}"
       target="_blank"
     >
+    <!-- &bcc={{BCCEmail}} -->
       <div class="card-email d-flex align-items-center">
         <img [src]="'../../../assets/Images/Icons/gmail-icon.svg'" />
         <p class="text-outlook">Gmail</p>
@@ -297,7 +298,7 @@
       <a
         class="mb-3 w-100 text-decoration-none"
         style="cursor: pointer"
-        href="mailto:{{email}}?subject={{emailSubject}}&body={{sanitizedEmailBody}}"
+        href="mailto:{{email}},{{ CCEmail }},{{selectedManagerEmails}}?subject={{emailSubject}}&body={{sanitizedEmailBody}}"
         target="_blank"
       >
         <div class="card-email d-flex align-items-center gap-2  mb-0">

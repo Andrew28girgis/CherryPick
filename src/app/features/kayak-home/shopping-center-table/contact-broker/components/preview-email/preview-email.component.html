@@ -15,7 +15,7 @@
   </div>
   }
   <div class="emails-container">
-    @for (email of emails; track email.mailId;let index = $index) {
+    @for (email of emails; track email.MailId;let index = $index) {
     <div class="email-container">
       <div
         #subjectDiv
@@ -23,7 +23,7 @@
         contenteditable="true"
         (input)="updateMailSubject($event, index)"
       >
-        {{ email.subject }}
+        <!-- {{ email.subject }} -->
       </div>
       <div
         #bodyDiv

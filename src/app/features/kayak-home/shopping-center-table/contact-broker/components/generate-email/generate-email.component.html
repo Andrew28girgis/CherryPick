@@ -353,13 +353,14 @@
   } @if (emails) {
 
   <div class="preview-emails-contaciner">
-    @if (emails && emails.length ) { @if (emails.length > 1) {
+    @if (emails && emails.length ) {
+    <!-- @if (emails.length > 1) {
     <div class="w-100 d-flex align-items-center justify-content-end">
       <button class="send-btn" (click)="sendAllEmails()">Send All</button>
     </div>
-    }
+    } -->
     <div class="emails-container">
-      @for (email of emails; track email.mailId;let index = $index) {
+      @for (email of emails; track email.MailId;let index = $index) {
       <div class="email-container">
         <div
           #subjectDiv
@@ -367,7 +368,7 @@
           contenteditable="true"
           (input)="updateMailSubject($event, index)"
         >
-          {{ email.subject }}
+          {{ email.Subject }}
         </div>
         <div
           #bodyDiv
@@ -376,7 +377,12 @@
           (input)="updateMailBody($event, index)"
         ></div>
         <div class="email-actions">
-          <button class="send-btn" (click)="sendEmail(email)">Send</button>
+          <button
+            class="send-btn"
+            (click)="openSendMailsModal(sendMailsContact, email)"
+          >
+            Send
+          </button>
         </div>
       </div>
       }@empty {
@@ -393,5 +399,99 @@
     <p id="toastMessage"></p>
   </div>
 </div>
+
+<ng-template #sendMailsContact let-modal>
+  <div class="modal-body p-4">
+    <div class="d-flex flex-column align-items-center gap-3">
+      <h5>Send Email With</h5>
+      <a
+        class="send-mail-card"
+        href="https://outlook.office.com/mail/deeplink/compose?to={{
+          (selectedmail?.O)![0].C[0].Email
+        }},{{ getStringCC() }},{{ CCEmail }}&subject={{
+          selectedmail?.Subject
+        }}&body={{ selectedmail?.Body }}"
+        target="_blank"
+      >
+        <div class="mail-card-icon">
+          <img
+            src="../../../../../../../assets/Images/Icons/outlook-icon.svg"
+            alt="send with outlook"
+          />
+        </div>
+        <div class="mail-card-title">OutLook</div>
+      </a>
+      <a
+        class="send-mail-card"
+        href="https://mail.google.com/mail/?view=cm&fs=1&to={{
+          (selectedmail?.O)![0].C[0].Email
+        }}&su={{ selectedmail?.Subject }}&body={{ selectedmail?.Body }}&cc={{
+          CCEmail
+        }},{{ getStringCC() }}"
+        target="_blank"
+      >
+        <div class="mail-card-icon">
+          <img
+            src="../../../../../../../assets/Images/Icons/gmail-icon.svg"
+            alt="send with gmail"
+          />
+        </div>
+        <div class="mail-card-title">Gmail</div>
+      </a>
+      <div
+        class="send-mail-card"
+        (click)="selectedmail && sendEmail(selectedmail)"
+      >
+        <div class="mail-card-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="27"
+            height="27"
+            viewBox="0 0 27 27"
+            fill="none"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M14.7409 21.6689C17.7619 21.1157 20.3458 18.8752 21.3306 15.9599L21.4579 15.5893H23.826C25.7016 15.5893 26.194 15.6059 26.194 15.6612C26.194 15.6999 26.111 16.065 26.0059 16.4744C24.8274 21.1544 21.1812 24.8166 16.5115 26.0225C14.7631 26.4706 12.7104 26.5481 10.8845 26.2383C10.6189 26.1885 10.3534 26.1387 10.3036 26.1221C10.2095 26.0944 10.204 25.934 10.204 23.7212C10.204 22.4157 10.2261 21.3369 10.2483 21.3204C10.2759 21.3038 10.4308 21.3369 10.5968 21.3923C11.2608 21.6191 12.5499 21.8404 13.2139 21.8404C13.5126 21.8404 14.2485 21.7574 14.7409 21.6689ZM12.0022 0.0776364C8.88717 0.387426 6.2203 1.60446 4.02375 3.71767C1.84933 5.80876 0.532501 8.41984 0.0677374 11.5786C-0.0318545 12.2812 -0.0207887 14.3446 0.095402 15.0637C0.47717 17.4369 1.30157 19.4229 2.64606 21.1987C2.99463 21.6578 4.03482 22.8195 4.21738 22.9523C4.27826 22.9965 4.52172 23.1957 4.7541 23.4004C4.992 23.6106 5.20778 23.7765 5.23546 23.7765C5.25758 23.7765 5.2797 20.651 5.2797 16.8339V9.89135L5.50656 9.43218C6.18159 8.0824 7.32689 6.81003 8.61051 5.98576C9.65622 5.31641 10.8624 4.88491 12.1958 4.71895C13.0036 4.61386 13.4573 4.61386 14.2319 4.71895C15.676 4.90703 16.9541 5.39938 18.1326 6.2181C18.7412 6.64408 19.8367 7.75048 20.2572 8.37005C20.6168 8.90112 21.1038 9.836 21.2476 10.2675C21.2974 10.4113 21.3638 10.5607 21.3915 10.5994C21.4357 10.6492 21.9558 10.6658 23.7817 10.6548L26.111 10.6382L26.0944 10.4169C26.0723 10.1347 25.7458 9.02281 25.4969 8.38113C24.5286 5.90278 22.7028 3.66234 20.4564 2.18531C18.5476 0.935088 16.6221 0.282317 14.1047 0.044445C13.3632 -0.0219401 12.9372 -0.016407 12.0022 0.0776364ZM12.4116 9.59258C10.5636 9.99088 9.31317 11.7666 9.54555 13.6641C9.70602 15.0194 10.453 16.0539 11.6702 16.6126C12.2179 16.8671 12.5831 16.9446 13.2471 16.9446C13.9387 16.9446 14.2872 16.8671 14.8793 16.585C15.8475 16.1203 16.4783 15.3735 16.8379 14.2671C17.0094 13.7416 17.0039 12.7348 16.8213 12.1483C16.2404 10.2675 14.3536 9.17217 12.4116 9.59258Z"
+              fill="url(#paint0_linear_6571_22065)"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_6571_22065"
+                x1="13.097"
+                y1="26.4252"
+                x2="13.097"
+                y2="0"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#4D65B4" />
+                <stop offset="1" stop-color="#5E84F1" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="mail-card-title">CherryPick</div>
+      </div>
+      <a
+        class="send-mail-card"
+        href="mailto:{{ (selectedmail?.O)![0].C[0].Email }},{{
+          getStringCC()
+        }},{{ CCEmail }}&subject={{ selectedmail?.Subject }}&body={{
+          selectedmail?.Body
+        }}"
+        target="_blank"
+      >
+        <div class="mail-card-icon">
+          <img
+            src="../../../../../../../assets/Images/Icons/mail-icon.svg"
+            alt="send with normal email"
+          />
+        </div>
+        <div class="mail-card-title">Mail</div>
+      </a>
+    </div>
+  </div>
+</ng-template>
 
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>

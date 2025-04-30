@@ -663,12 +663,11 @@ export class InboxComponent implements OnInit {
       O: [], // Assuming O is an array and you might need to adjust this
     };
     const emailContent: IEmailContent = {
-      mailId: mail.id,
-      direction: mail.Direction,
-      subject: mail.Subject,
-      body: mail.body, // Mail body
-      organizationId: 0, // You can fill this in as needed
-      organizationName: '', // You can fill this in as needed
+      MailId: mail.id,
+      Direction: mail.Direction,
+      Subject: mail.Subject,
+      Body: mail.body, // Mail body
+      O:[],
       isEditing: false, // Adjust this based on your needs
     };
 
@@ -677,9 +676,9 @@ export class InboxComponent implements OnInit {
       Name: 'UpdateEmailData',
       MainEntity: null,
       Params: {
-        MailId: emailContent.mailId,
-        Subject: emailContent.subject,
-        Body: emailContent.body,
+        MailId: emailContent.MailId,
+        Subject: emailContent.Subject,
+        Body: emailContent.Body,
       },
       Json: null,
     };

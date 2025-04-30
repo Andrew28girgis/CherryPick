@@ -261,6 +261,22 @@
   animation: moving 1s ease-in-out infinite;
 }
 
+::ng-deep .send-mail-content .modal-content {
+  border-radius: 1rem;
+}
+
+.send-mail-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #e2e4e9;
+  padding: 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  color: #000;
+}
+
 @keyframes moving {
   50% {
     width: 100%;
