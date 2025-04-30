@@ -7,6 +7,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-new-password',
@@ -25,6 +26,8 @@ export class NewPasswordComponent {
   public showConfirmPassword: boolean = false;
   public fadeSuccess: boolean = false;
   public fadeError: boolean = false;
+  private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
+  private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -42,24 +45,25 @@ export class NewPasswordComponent {
       this.errorMessage = 'Passwords do not match.';
       this.successMessage = '';
       this.fadeError = true;
-      setTimeout(() => this.fadeError = false, 4000); 
+      setTimeout(() => (this.fadeError = false), 4000);
       return;
     }
+  
     this.spinner.show();
     this.errorMessage = '';
     this.successMessage = '';
-
+  
+    const encryptedOldPassword = this.encrypt(this.ChangePassword.OldPassword);
+    const encryptedNewPassword = this.encrypt(this.ChangePassword.NewPassword);
+  
     const payload: ChangePassword = {
       Email: this.ChangePassword.Email,
-      OldPassword: this.ChangePassword.OldPassword,
-      NewPassword: this.ChangePassword.NewPassword,
+      OldPassword: encryptedOldPassword,
+      NewPassword: encryptedNewPassword,
     };
-
-    console.log('Sending payload:', payload);
-
+    
     this.placesService.ChangePassword(payload).subscribe({
       next: (res: any) => {
-        console.log('Reset password response:', res);
         if (res.message === 'Password has been reset successfully.') {
           this.successMessage = 'Password has been reset successfully!';
           this.fadeSuccess = true;
@@ -67,20 +71,21 @@ export class NewPasswordComponent {
         } else {
           this.errorMessage = 'Password change failed. Please try again.';
           this.fadeError = true;
-          setTimeout(() => this.fadeError = false, 4000);
+          setTimeout(() => (this.fadeError = false), 4000);
         }
-
+  
         this.spinner.hide();
       },
       error: (err) => {
         console.error('API error:', err);
         this.errorMessage = 'An error occurred. Please try again.';
         this.fadeError = true;
-        setTimeout(() => this.fadeError = false, 4000);
+        setTimeout(() => (this.fadeError = false), 4000);
         this.spinner.hide();
       },
     });
   }
+  
 
   toggleNewPassword() {
     this.showNewPassword = !this.showNewPassword;
@@ -89,4 +94,18 @@ export class NewPasswordComponent {
   toggleConfirmPassword() {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
+  encrypt(value: string): string {
+    const encrypted = CryptoJS.AES.encrypt(
+      CryptoJS.enc.Utf8.parse(value),
+      this.key,
+      {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    return encrypted.toString(); 
+  }
+  
 }

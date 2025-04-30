@@ -7,7 +7,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-reset-password',
@@ -24,8 +24,10 @@ export class ResetPasswordComponent implements OnInit {
   public successMessage: string = '';
   public showNewPassword: boolean = false;
   public showConfirmPassword: boolean = false;
-  public fadeSuccess: boolean = false; 
-  public fadeError: boolean = false; 
+  public fadeSuccess: boolean = false;
+  public fadeError: boolean = false;
+  private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
+  private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -51,59 +53,62 @@ export class ResetPasswordComponent implements OnInit {
       this.errorMessage = 'Passwords do not match.';
       this.successMessage = '';
       this.fadeError = true;
-      setTimeout(() => this.fadeError = false, 4000);
+      setTimeout(() => (this.fadeError = false), 4000);
       return;
     }
-  
-    if (!this.ResetPassword.Email || !this.ResetPassword.NewPassword || !this.ResetPassword.Token) {
+
+    if (
+      !this.ResetPassword.Email ||
+      !this.ResetPassword.NewPassword ||
+      !this.ResetPassword.Token
+    ) {
       this.errorMessage = 'Please fill in all required fields.';
       this.successMessage = '';
       this.fadeError = true;
-      setTimeout(() => this.fadeError = false, 4000);
+      setTimeout(() => (this.fadeError = false), 4000);
       return;
     }
-  
+
     this.spinner.show();
     this.errorMessage = '';
     this.successMessage = '';
-  
+
     const payload: ResetPassword = {
       Email: this.ResetPassword.Email,
-      NewPassword: this.ResetPassword.NewPassword,
+      NewPassword: this.encrypt(this.ResetPassword.NewPassword),
       Token: this.ResetPassword.Token,
     };
-  
+
     console.log('Sending payload:', payload);
-  
+
     this.placesService.ResetPassword(payload).subscribe({
       next: (res: any) => {
         console.log('Reset password response:', res);
-  
-        if (res.message === "Password has been reset successfully.") {
+
+        if (res.message === 'Password has been reset successfully.') {
           this.successMessage = 'Password has been reset successfully!';
           this.fadeSuccess = true;
-  
+
           setTimeout(() => {
             this.router.navigate(['/login']);
-          }, 3000); 
+          }, 3000);
         } else {
           this.errorMessage = 'Password change failed. Please try again.';
           this.fadeError = true;
-          setTimeout(() => this.fadeError = false, 4000);
+          setTimeout(() => (this.fadeError = false), 4000);
         }
-  
+
         this.spinner.hide();
       },
       error: (err) => {
         console.error('API error:', err);
         this.errorMessage = 'An error occurred. Please try again.';
         this.fadeError = true;
-        setTimeout(() => this.fadeError = false, 4000);
+        setTimeout(() => (this.fadeError = false), 4000);
         this.spinner.hide();
-      }
+      },
     });
   }
-  
 
   toggleNewPassword() {
     this.showNewPassword = !this.showNewPassword;
@@ -111,5 +116,18 @@ export class ResetPasswordComponent implements OnInit {
 
   toggleConfirmPassword() {
     this.showConfirmPassword = !this.showConfirmPassword;
+  }
+  encrypt(value: string): string {
+    const encrypted = CryptoJS.AES.encrypt(
+      CryptoJS.enc.Utf8.parse(value),
+      this.key,
+      {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    return encrypted.toString(); // Use encodeURIComponent(...) if backend requires
   }
 }
