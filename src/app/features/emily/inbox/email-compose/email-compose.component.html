@@ -9,41 +9,64 @@
     ></button>
   </div>
   <div class="modal-body">
-        <div class="contact-broker-stepper mb-4">
-          <ul>
-            <li [ngClass]="{ 'active-step': currentStep >= 1 }" (click)="currentStep=1"></li>
-            <li [ngClass]="{ 'active-step': currentStep >= 2 }" (click)="currentStep=2"></li>
-            <li [ngClass]="{ 'active-step': currentStep >= 3 }" (click)="currentStep=3"></li>
-          </ul>
-          <div class="contact-broker-step">
-            <div class="step-header" (click)="currentStep=1" style="cursor: pointer;">
-              <span class="step-number-icon">1</span>
-              <span class="step-title">Centers</span>
-            </div>
-            <div class="step-header" (click)="currentStep=2" style="cursor: pointer;">
-              <span class="step-number-icon">2</span>
-              <span class="step-title">Generate</span>
-            </div>
-            <div class="step-header" (click)="currentStep=3" style="cursor: pointer;">
-              <span class="step-number-icon">3</span>
-              <span class="step-title">Email</span>
-            </div>
-          </div>
+    <div class="contact-broker-stepper mb-4">
+      <ul>
+        <li
+          [ngClass]="{ 'active-step': currentStep >= 1 }"
+          (click)="currentStep = 1"
+        ></li>
+        <li
+          [ngClass]="{ 'active-step': currentStep >= 2 }"
+          (click)="currentStep = 2"
+        ></li>
+        <li
+          [ngClass]="{ 'active-step': currentStep >= 3 }"
+          (click)="currentStep = 3"
+        ></li>
+      </ul>
+      <div class="contact-broker-step">
+        <div
+          class="step-header"
+          (click)="currentStep = 1"
+          style="cursor: pointer"
+        >
+          <span class="step-number-icon">1</span>
+          <span class="step-title">Centers</span>
         </div>
+        <div
+          class="step-header"
+          (click)="currentStep = 2"
+          style="cursor: pointer"
+        >
+          <span class="step-number-icon">2</span>
+          <span class="step-title">Choose Brokers</span>
+        </div>
+        <div
+          class="step-header"
+          (click)="currentStep = 3"
+          style="cursor: pointer"
+        >
+          <span class="step-number-icon">3</span>
+          <span class="step-title">Email</span>
+        </div>
+      </div>
+    </div>
     <ng-container [ngSwitch]="currentStep">
       <div *ngSwitchCase="1">
         <div class="row">
-          <div class="col-6 mb-3 center-container"
-               *ngFor="let sc of GetShoppingCenters">
+          <div
+            class="col-6 mb-3 center-container"
+            *ngFor="let sc of GetShoppingCenters"
+          >
             <div class="d-flex align-items-start">
-                <div class="d-flex align-items-start gap-3">
-                  <div class="d-flex gap-2">
-                <input
-                  type="checkbox"
-                  class="form-check-input me-2"
-                  [checked]="isCenterSelected(sc.CenterName)"
-                  (change)="onCenterCheckboxChange(sc.CenterName, $event)"
-                />
+              <div class="d-flex align-items-start gap-3">
+                <div class="d-flex gap-2">
+                  <input
+                    type="checkbox"
+                    class="form-check-input me-2"
+                    [checked]="isCenterSelected(sc.CenterName)"
+                    (change)="onCenterCheckboxChange(sc.CenterName, $event)"
+                  />
                   <img src="{{ sc.MainImage }}" alt="{{ sc.CenterName }}" />
                 </div>
                 <div class="w-100">
@@ -78,23 +101,76 @@
         </div>
       </div>
       <div *ngSwitchCase="2">
-        
+        <div *ngFor="let sc of GetShoppingCenters" class="mb-5">
+          <h5 class="mb-3 shopping-name">{{ sc.CenterName }}</h5>
+          <span >Also Managed by</span>
+          <div class="row">
+            <div
+              class="col-6 col-lg-4 mb-3 manager-card"
+              *ngFor="let mgr of sc.Managers"
+            >
+              <div class="card-broker mt-3">
+                <!-- inline checkbox + name -->
+                <div class="d-flex align-items-center mb-2">
+                  <input
+                    type="checkbox"
+                    class="form-check-input me-2"
+                    [checked]="mgr.selected"
+                    (change)="onManagerCheckboxChange(mgr, $event)"
+                  />
+                </div>
+                <div>
+                  <h6 class="broker-name mb-0">
+                    {{ mgr.firstname }} {{ mgr.lastname }}
+                  </h6>
+
+                  <p class="card-text text-truncate">
+                    <a class="broker-email" href="mailto:{{ mgr.email }}">{{
+                      mgr.email
+                    }}</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!sc.Managers?.length" class="col-12">
+              <p class="text-muted">
+                <em>No managers found for this center.</em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngSwitchCase="3">
+        <!-- <div class="generate-btn d-flex justify-content-end mb-3">
+          <button
+            (click)="generateContext()">
+            Generate Email
+          </button>
+         </div> -->
         <span class="advanced" (click)="toggleAdvanced()">
           Advanced
-          <i class="ms-1"
-             [ngClass]="isAdvancedVisible
-               ? 'fa-solid fa-arrow-up'
-               : 'fa-solid fa-arrow-down'">
+          <i
+            class="ms-1"
+            [ngClass]="
+              isAdvancedVisible
+                ? 'fa-solid fa-arrow-up'
+                : 'fa-solid fa-arrow-down'
+            "
+          >
           </i>
         </span>
 
         <div *ngIf="isAdvancedVisible" class="mt-2">
           <div *ngFor="let opt of flagOptions" class="form-check mb-2">
-            <input class="form-check-input"
-                  type="checkbox"
-                  [id]="opt.key"
-                  [checked]="opt.checked"
-                  (change)="onFlagChange(opt, $event)" />
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [id]="opt.key"
+              [checked]="opt.checked"
+              (change)="onFlagChange(opt, $event)"
+            />
             <label class="form-check-label" [for]="opt.key">
               {{ opt.label }}
             </label>
@@ -103,23 +179,16 @@
 
         <div class="mt-3">
           <label for="promptSelect" class="form-label">Choose Prompt</label>
-          <select id="promptSelect"
-                  class="form-select"
-                  [(ngModel)]="selectedPromptId">
+          <select
+            id="promptSelect"
+            class="form-select"
+            [(ngModel)]="selectedPromptId"
+          >
             <option *ngFor="let p of prompts" [value]="p.id">
               {{ p.name }}
             </option>
           </select>
         </div>
-
-      </div>
-      <div *ngSwitchCase="3">
-        <!-- <div class="generate-btn d-flex justify-content-end mb-3">
-          <button
-            (click)="generateContext()">
-            Generate Email
-          </button>
-         </div> -->
 
         <div class="mb-3" *ngIf="sanitizedEmailBody">
           <label for="subject" class="form-label">Subject</label>
@@ -131,15 +200,14 @@
           />
         </div>
 
-        <div *ngIf="sanitizedEmailBody"
+        <div
+          *ngIf="sanitizedEmailBody"
           class="email-body"
           [innerHTML]="sanitizedEmailBody"
           contenteditable="true"
           style="white-space: normal"
           (input)="onContentChange($event)"
-        >
-        </div>
-
+        ></div>
       </div>
     </ng-container>
   </div>
@@ -153,32 +221,100 @@
       Previous
     </button> -->
     <div class="generate-btn">
-    <button
-      *ngIf="currentStep ==2"
-      (click)="generateAndNext()"
-        >
+      <button *ngIf="currentStep == 2" (click)="next()">Next</button>
+    </div>
+    <div class="generate-btn">
+      <button
+        *ngIf="currentStep == 1"
+        type="button"
+        class="btn btn-primary"
+        (click)="next()"
+      >
+        Next
+      </button>
+    </div>
+    <div class="generate-btn">
+      <button
+        *ngIf="currentStep === 3 && !sanitizedEmailBody"
+        type="button"
+        class="btn btn-success"
+        (click)="generateAndNext()"
+      >
         Generate Email
-    </button>
-  </div>
-  <div class="generate-btn">
-    <button
-      *ngIf="currentStep ==1"
-      type="button"
-      class="btn btn-primary"
-      (click)="next()"
-    >
-      Next
-    </button>
-  </div>
-  <div class="generate-btn">
-    <button
-      *ngIf="currentStep === 3"
-      type="button"
-      class="btn btn-success"
-      (click)="send()"
-    >
-      Send
-    </button>
-  </div>
+      </button>
+
+      <!--     *ngIf="currentStep === 3 && sanitizedEmailBody" -->
+      <button
+        (click)="openSendModal()"
+        type="button"
+        class="btn btn-success"
+        *ngIf="currentStep === 3 && sanitizedEmailBody"
+      >
+        Send
+      </button>
+    </div>
   </div>
 </div>
+
+<ng-template #sendModal let-modal>
+  <div class="modal-content">
+    <div class="modal-header d-flex justify-content-center" style="border-bottom: none;">
+      <h3 class="titlee">Send Email with</h3>
+    </div>
+    <div class="modal-body pt-0" style="overflow-y: auto; height: 45vh">
+
+      <a
+      class="mb-3 w-100 text-decoration-none"
+      style="cursor: pointer"
+      href="https://outlook.office.com/mail/deeplink/compose?to={{email}}&subject={{emailSubject}}&body={{sanitizedEmailBody}}"
+      target="_blank"
+    >
+      <div class="card-email d-flex align-items-center gap-2">
+        <img [src]="'../../../assets/Images/Icons/outlook-icon.svg'" />
+        <p class="text-outlook">OutLook</p>
+      </div>
+    </a>
+    <a
+      class="mb-3 w-100 text-decoration-none"
+      style="cursor: pointer"
+      href="https://mail.google.com/mail/?view=cm&fs=1&to={{ email }}&su={{
+        emailSubject
+      }}&{{ sanitizedEmailBody }}"
+      target="_blank"
+    >
+      <div class="card-email d-flex align-items-center">
+        <img [src]="'../../../assets/Images/Icons/gmail-icon.svg'" />
+        <p class="text-outlook">Gmail</p>
+      </div>
+    </a>
+
+    <div class="mb-3 w-100" style="cursor: pointer" (click)="send()">
+      <div class="card-email d-flex align-items-center gap-5">
+        <img [src]="'../../../assets/Images/Icons/logo-icon.svg'" />
+      </div>
+    </div>
+    
+      <a
+        class="mb-3 w-100 text-decoration-none"
+        style="cursor: pointer"
+        href="mailto:{{email}}?subject={{emailSubject}}&body={{sanitizedEmailBody}}"
+        target="_blank"
+      >
+        <div class="card-email d-flex align-items-center gap-2  mb-0">
+          <img [src]="'../../../assets/Images/Icons/mail-icon.svg'" />
+          <p class="text-outlook">Email</p>
+        </div>
+      </a>
+
+    </div>
+    <!-- <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary contact-btn"
+        (click)="modal.close()"
+      >
+        Close
+      </button>
+    </div> -->
+  </div>
+</ng-template>
