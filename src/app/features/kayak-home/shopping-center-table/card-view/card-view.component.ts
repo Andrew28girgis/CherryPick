@@ -51,6 +51,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private outsideClickHandler: ((e: Event) => void) | null = null;
   submissions: any;
+  isModalOpen = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,

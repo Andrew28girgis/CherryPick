@@ -689,7 +689,7 @@
                     a 15.9155 15.9155 0 0 1 0 31.831
                     a 15.9155 15.9155 0 0 1 0 -31.831"
                   [style.stroke-dasharray]="
-                    getCircleProgressBackground(98)
+                    getCircleProgressBackground(submission?.Percentage)
                   "
                 />
                 <!-- Foreground path (green) -->
@@ -699,7 +699,7 @@
                     a 15.9155 15.9155 0 0 1 0 31.831
                     a 15.9155 15.9155 0 0 1 0 -31.831"
                   [style.stroke-dasharray]="
-                    getCircleProgress(98)
+                    getCircleProgress(submission?.Percentage)
                   "
                 />
               </svg>
