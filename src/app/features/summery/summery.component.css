@@ -278,10 +278,11 @@ button:active {
   font-weight: 600;
   line-height: 30px;
 }
-.grayline {
+.smallline{
   height: 1px;
   background: #e2e4e9;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 567px) {
