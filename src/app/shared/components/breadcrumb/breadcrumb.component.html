@@ -1,12 +1,16 @@
 <nav aria-label="breadcrumb" *ngIf="breadcrumbs.length > 0">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
-      <a [routerLink]="'/campaigns'">
-        <i class="fa-solid fa-house"></i>      
+      <a [routerLink]="'/summary'">
+        <i class="fa-solid fa-house"></i>
       </a>
     </li>
 
-    <li class="breadcrumb-item" *ngFor="let item of breadcrumbs; let last = last" [class.active]="last">
+    <li
+      class="breadcrumb-item"
+      *ngFor="let item of breadcrumbs; let last = last"
+      [class.active]="last"
+    >
       <a [routerLink]="item.url" [class.active]="last">{{ item.label }}</a>
     </li>
   </ol>
