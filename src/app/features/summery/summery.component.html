@@ -17,7 +17,14 @@
                 <div class="d-flex align-items-center gap-3">
                   <div>
                     <img
-                      class="Kayak__img"
+                      class="Kayak__img cursor"  
+                      [routerLink]="[
+                      '/dashboard',
+                      tenant.Id,
+                      tenant.OrganizationId,
+                      tenant.Name,
+                      tenant.Campaigns[0].Id
+                    ]"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         tenant.OrganizationId
                       }}"
@@ -30,7 +37,16 @@
                       <p class="text">Active</p>
                     </div>
 
-                    <div class="card__Kayak_title">
+                    <div
+                      class="card__Kayak_title cursor"
+                      [routerLink]="[
+                        '/dashboard',
+                        tenant.Id,
+                        tenant.OrganizationId,
+                        tenant.Name,
+                        tenant.Campaigns[0].Id
+                      ]"
+                    >
                       {{ tenant.Name }}
                     </div>
                     <div
@@ -49,13 +65,11 @@
                       />
                     </div>
 
-                    <!-- Each offcanvas will have a unique ID based on the tenant ID -->
                     <div
                       class="offcanvas offcanvas-end"
                       tabindex="-1"
                       [id]="'campaignDetails' + tenant.Id"
                       aria-labelledby="campaignDetailsLabel"
-                      data-bs-backdrop="false"
                     >
                       <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="campaignDetailsLabel">
@@ -95,7 +109,6 @@
                         </div>
 
                         <div class="offcanvas-background">
-                          <!-- Loop over campaigns for the selected tenant -->
                           <ng-container
                             *ngFor="let campaign of tenant.Campaigns"
                           >
