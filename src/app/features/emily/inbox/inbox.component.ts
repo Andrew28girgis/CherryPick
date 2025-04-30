@@ -631,6 +631,7 @@ export class InboxComponent implements OnInit {
     modalRef.componentInstance.buyBoxId = this.buyBoxId;
     modalRef.componentInstance.orgId = this.orgId;
     modalRef.componentInstance.campaignId = this.campaignId;
+    modalRef.componentInstance.email = contact.Email;
     modalRef.componentInstance.contactName = `${contact.Firstname ?? ''} ${
       contact.Lastname ?? ''
     }`.trim();

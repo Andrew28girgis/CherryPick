@@ -44,11 +44,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
   shoppingCenterIdToDelete: number | null = null;
   DeletedSC: any;
   @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
+  @ViewChild('submission', { static: true }) submissionModal!: TemplateRef<any>;
   htmlContent!: SafeHtml;
   private modalRef?: NgbModalRef;
   isLoadingstatus = true;
   private subscriptions = new Subscription();
   private outsideClickHandler: ((e: Event) => void) | null = null;
+  submissions: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -60,6 +62,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
@@ -368,5 +371,26 @@ export class CardViewComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         },
       });
+  }
+
+  openModalSubmission(submissions: any[], submissionModal: TemplateRef<any>): void {
+    this.submissions = submissions; 
+    this.modalService.open(submissionModal,{size: 'md', scrollable: true}); 
+  }
+  getCircleProgressN(percentage: number): number {
+    const value = (percentage / 100) * 100;
+    return value+5;
+  }
+  private readonly circumference: number = 2 * Math.PI * 45; // 2πr where r=45
+
+  getCircleProgress(percentage: number): string {
+    // Calculate the length of the progress arc
+    const progressLength = (percentage / 100) * (this.circumference - 2);
+    // Return the dasharray with a small gap (2px)
+    return `${progressLength}, ${this.circumference}`;
+  }
+  getCircleProgressbackgrond(percentage: number): string {
+    const value = (percentage / 100) * 100;
+    return `${100-value-10}, 100`;
   }
 }

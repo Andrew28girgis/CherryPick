@@ -152,3 +152,89 @@ button:active {
     align-items: center;
   }
 }
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(150%);
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #e2e2e2;
+}
+.skeleton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.2s infinite;
+}
+
+.skeleton-card {
+  display: flex;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.skeleton-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+  padding-left: 20px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.skeleton-avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+}
+
+.skeleton-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-pill {
+  width: 80px;
+  height: 24px;
+  border-radius: 16px;
+}
+
+.skeleton-title {
+  width: 50%;
+  height: 24px;
+  border-radius: 6px;
+}
+.skeleton-chevron {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+@media (max-width: 767px) {
+  .skeleton-container {
+    padding: 20px 10px;
+  }
+}

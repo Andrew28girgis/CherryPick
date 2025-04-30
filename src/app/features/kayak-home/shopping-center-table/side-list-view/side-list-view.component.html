@@ -509,14 +509,13 @@
     <div *ngIf="isLoadingstatus; else contentTemplate">
       <div class="skeleton-loader">
         <div
-          class="skeleton-header"
+          class="skeleton-head"
           style="
             height: 24px;
             width: 40%;
             margin-bottom: 16px;
             border-radius: 4px;
             background-color: #e0e0e0;
-            animation: shimmer 1.5s infinite;
           "
         ></div>
         <div class="skeleton-paragraph">
@@ -528,7 +527,6 @@
               margin-bottom: 8px;
               border-radius: 4px;
               background-color: #e0e0e0;
-              animation: shimmer 1.5s infinite;
             "
           ></div>
           <div
@@ -539,7 +537,6 @@
               margin-bottom: 8px;
               border-radius: 4px;
               background-color: #e0e0e0;
-              animation: shimmer 1.5s infinite;
             "
           ></div>
           <div
@@ -549,7 +546,6 @@
               width: 90%;
               border-radius: 4px;
               background-color: #e0e0e0;
-              animation: shimmer 1.5s infinite;
             "
           ></div>
         </div>
