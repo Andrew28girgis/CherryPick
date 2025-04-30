@@ -17,14 +17,14 @@
                 <div class="d-flex align-items-center gap-3">
                   <div>
                     <img
-                      class="Kayak__img cursor"  
+                      class="Kayak__img cursor"
                       [routerLink]="[
-                      '/dashboard',
-                      tenant.Id,
-                      tenant.OrganizationId,
-                      tenant.Name,
-                      tenant.Campaigns[0].Id
-                    ]"
+                        '/dashboard',
+                        tenant.Id,
+                        tenant.OrganizationId,
+                        tenant.Name,
+                        tenant.Campaigns[0].Id
+                      ]"
                       src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                         tenant.OrganizationId
                       }}"
