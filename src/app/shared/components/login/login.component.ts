@@ -26,6 +26,9 @@ export class LoginComponent implements OnInit {
   public loginData!: AdminLogin;
   public general!: General;
   private loginToken: string | null = null;
+  public showPassword: boolean = false;
+  public errorMessage: string | null = null; 
+  public fadeSuccess: boolean = false; 
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -48,15 +51,31 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
 
-    this.spinner.show();
+
     this.placesService.loginUser(loginRequest).subscribe({
       next: (response: any) => {
         this.handleLoginSuccess(response);
+      },
+      error: (err: any) => {
+        this.handleLoginError();
       },
       complete: () => {
         this.spinner.hide();
       },
     });
+  }
+
+  private handleLoginError(): void {
+    this.errorMessage = 'Invalid email or password. Please try again.';
+
+    setTimeout(() => {
+      this.fadeSuccess = true; 
+    }, 4000);
+
+    setTimeout(() => {
+      this.errorMessage = null; 
+      this.fadeSuccess = false; 
+    }, 4000); 
   }
 
   /**
@@ -133,5 +152,9 @@ export class LoginComponent implements OnInit {
 
   private navigateToHome(): void {
     this.router.navigate(['/summary']);
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 }

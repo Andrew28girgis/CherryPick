@@ -60,6 +60,8 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   
   // Subscriptions
   private subscriptions: Subscription[] = [];
+  submissions: any;
+  @ViewChild('submission', { static: true }) submissionModal!: TemplateRef<any>;
 
   constructor(
     private markerService: MapsService,
@@ -542,4 +544,49 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     });
   }
 
+  openModalSubmission(submissions: any[], submissionModal: TemplateRef<any>): void {
+    this.submissions = submissions; 
+    this.modalService.open(submissionModal,{size: 'md', scrollable: true}); 
+  }
+  getCircleProgress(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap size
+  
+    // If 100%, return full circle without gaps
+    if (percentage === 100) {
+      return `${totalLength} 0`;
+    }
+  
+    // Calculate the length for the green progress
+    const progressLength = (percentage / 100) * (totalLength - (2 * gapSize));
+    return `${progressLength} ${totalLength}`;
+  }
+  
+  getCircleProgressBackground(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap
+  
+    // If 100%, don't show background
+    if (percentage === 100) {
+      return `0 ${totalLength}`;
+    }
+  
+    // Calculate the remaining percentage
+    const remainingPercentage = 100 - percentage;
+    const bgLength = (remainingPercentage / 100) * (totalLength - (2 * gapSize));
+    const startPosition = (percentage / 100) * (totalLength - (2 * gapSize)) + gapSize;
+    
+    return `0 ${startPosition} ${bgLength} ${totalLength}`;
+  }
+  checkSubmission(submissions: any[] | undefined): boolean {
+    if (!submissions || !Array.isArray(submissions)) {
+      return false;
+    }
+    
+    // Loop through submissions and return true if any submission has a SubmmisionLink
+    return submissions.some(submission => submission.SubmmisionLink !== null);
+  }
 }
+

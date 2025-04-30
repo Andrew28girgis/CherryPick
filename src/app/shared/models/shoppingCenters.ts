@@ -73,7 +73,7 @@ export interface Center {
     Id?: number;
     CreatedDate?: string;
     Percentage?: number;
-    SubmmisionLink?: string | null;
+    SubmmisionLink: string | null;
     UserId?: number;
     FirstName?: string;
     LastName?: string;
