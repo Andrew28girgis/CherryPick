@@ -256,11 +256,13 @@ export class ManagePropertiesComponent implements OnInit {
     this.showEditInput = true;
     this.editedPlaceSqFT = currentSqFt;
   }
+
   cancelEditPlace() {
     this.editingPlaceId = null;
     this.showEditInput = false;
     this.editedPlaceSqFT = 0;
   }
+
   saveEditedPlace(placeId: number) {
     if (!this.editedPlaceSqFT || this.editedPlaceSqFT <= 0) {
       this.showToast('Please enter a valid SQFT');
@@ -292,11 +294,13 @@ export class ManagePropertiesComponent implements OnInit {
       },
     });
   }
+
   openDeletePlaceModal(placeId: number) {
     this.deleteId = placeId;
     this.deleteType = 'Place';
     this.modalService.open(this.deletePlaceModal, { size: 'md' });
   }
+
   openDeleteTenantModal(tenantId: number) {
     this.deleteId = tenantId;
     this.deleteType = 'Tenant';
