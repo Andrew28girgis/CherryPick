@@ -84,16 +84,16 @@ button:active {
   width: fit-content;
   gap: 4px;
   border-radius: 16px;
-  background: #DBE0F0;
+  background: #dbe0f0;
 }
 .privatedot {
   width: 8px;
   height: 8px;
-  background-color: #4D65B4;
+  background-color: #4d65b4;
   border-radius: 50%;
 }
 .privatetext {
-  color: #4D65B4;
+  color: #4d65b4;
   text-align: center;
   font-size: 14px;
   font-weight: 500;
@@ -142,7 +142,7 @@ button:active {
 }
 .line {
   height: 1px;
-  background: #E2E4E9;
+  background: #e2e4e9;
   width: 95%;
   margin: 0 auto;
 }
@@ -155,51 +155,50 @@ button:active {
 .offcanvas-end {
   width: 40% !important;
 }
-.backgroundframe{
-display: flex;
-padding: 24px 12px;
-flex-direction: column;
-align-items: flex-start;
-gap:  16px;
-align-self: stretch;
-border-radius: 20px;
-border: 1px solid #E2E4E9;
-background:  #FFF;
+.backgroundframe {
+  display: flex;
+  padding: 24px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+  border-radius: 20px;
+  border: 1px solid #e2e4e9;
+  background: #fff;
 }
-.firsttradelist{
-color: #16181D;
-font-size: 16px;
-font-weight: 600;
-line-height: 30px;
+.firsttradelist {
+  color: #16181d;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 30px;
 }
-.graytext{
-color: #707791;
-font-size: 17px;
-font-weight: 400;
-line-height: 24px; 
-letter-spacing: -0.07px;
+.graytext {
+  color: #707791;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
 }
-.customline{
+.customline {
   height: 1px;
-  background: #E2E4E9;
+  background: #e2e4e9;
   width: 100%;
-
 }
-.offcanvas-background{
-display: flex;
-padding: 18px 18px;
-flex-direction: column;
-gap: 16px;
-align-self: stretch;
-border-radius:20px;
-border: 1px solid #E2E4E9;
-background: #FFF;
+.offcanvas-background {
+  display: flex;
+  padding: 18px 18px;
+  flex-direction: column;
+  gap: 16px;
+  align-self: stretch;
+  border-radius: 20px;
+  border: 1px solid #e2e4e9;
+  background: #fff;
 }
-.blackbold{
-color: #16181D;
-font-size: 16px;
-font-weight: 600;
-line-height: 30px;
+.blackbold {
+  color: #16181d;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 30px;
 }
 
 .status-label {
@@ -231,62 +230,60 @@ line-height: 30px;
   margin: 0;
 }
 
-
 .status-label.Rejected {
-  background: #FFEDED;
+  background: #ffeded;
 }
 
 .status-label.Rejected .status-dot {
-  background-color: #FF4C4C;
+  background-color: #ff4c4c;
 }
 
 .status-label.Rejected .status-text {
-  color: #FF4C4C;
+  color: #ff4c4c;
 }
 .status-label.Rejected .status-nomber {
-  color: #FF4C4C;
+  color: #ff4c4c;
 }
 
 .status-label.Pendding {
-  background: #FFF9E6;
+  background: #fff9e6;
 }
 
 .status-label.Pendding .status-dot {
-  background-color: #CC9A06;
+  background-color: #cc9a06;
 }
 .status-label.Pendding .status-nomber {
-  color: #CC9A06;
+  color: #cc9a06;
 }
 .status-label.Pendding .status-text {
-  color: #CC9A06;
+  color: #cc9a06;
 }
 
 .status-label.Accepted {
-  background: #EAF6EC;
+  background: #eaf6ec;
 }
 
 .status-label.Accepted .status-dot {
-  background-color: #28A745;
+  background-color: #28a745;
 }
 .status-label.Accepted .status-nomber {
-  color: #28A745;
+  color: #28a745;
 }
 .status-label.Accepted .status-text {
-  color: #28A745;
+  color: #28a745;
 }
-.CampaignWorkfow{
-color: #16181D;
-font-size: 16px;
-font-weight: 600;
-line-height: 30px; 
+.CampaignWorkfow {
+  color: #16181d;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 30px;
 }
 .smallline{
   height: 1px;
-  background: #E2E4E9;
+  background: #e2e4e9;
   width: 100%;
   margin-bottom: 20px;
 }
-
 
 @media (max-width: 567px) {
   .card__Kayak {

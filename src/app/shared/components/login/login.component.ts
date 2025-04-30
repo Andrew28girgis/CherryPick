@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
   public general!: General;
   private loginToken: string | null = null;
   public showPassword: boolean = false;
-  public errorMessage: string | null = null; 
-  public fadeSuccess: boolean = false; 
+  public errorMessage: string | null = null;
+  public fadeSuccess: boolean = false;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -55,7 +55,6 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
 
-
     this.placesService.loginUser(loginRequest).subscribe({
       next: (response: any) => {
         this.handleLoginSuccess(response);
@@ -73,13 +72,13 @@ export class LoginComponent implements OnInit {
     this.errorMessage = 'Invalid email or password. Please try again.';
 
     setTimeout(() => {
-      this.fadeSuccess = true; 
+      this.fadeSuccess = true;
     }, 4000);
 
     setTimeout(() => {
-      this.errorMessage = null; 
-      this.fadeSuccess = false; 
-    }, 4000); 
+      this.errorMessage = null;
+      this.fadeSuccess = false;
+    }, 4000);
   }
 
   /**
@@ -135,15 +134,14 @@ export class LoginComponent implements OnInit {
   private prepareLoginRequest(): AdminLogin {
     const encryptedLoginData = new AdminLogin();
     encryptedLoginData.Email = this.loginData.Email;
-    encryptedLoginData.Password = this.encrypt(this.loginData.Password); 
-    
+    // encryptedLoginData.Password = this.encrypt(this.loginData.Password);
+    encryptedLoginData.Password = this.loginData.Password;
+
     if (this.loginToken) {
       encryptedLoginData.contactToken = this.loginToken;
     }
     return encryptedLoginData;
   }
-  
-  
 
   private handleLoginSuccess(response: any): void {
     localStorage.setItem(
