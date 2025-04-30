@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { ICampaign } from 'src/app/shared/models/icampaign';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -10,6 +11,7 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
+  filteredCampaigns?: ICampaign[];
 
   currentView: number = 5;
   BuyBoxId!: any;

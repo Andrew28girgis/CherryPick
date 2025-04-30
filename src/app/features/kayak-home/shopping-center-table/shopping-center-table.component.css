@@ -105,3 +105,23 @@
     z-index: 1000;
   }
 }
+
+
+.inbox {
+  padding: 5px 8px;
+  border-radius: 1rem;
+  background-color: #4d65b4;
+  text-decoration: none;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  align-items: center;
+  gap: 5px;
+}
+.mail {
+  background-color: #0077b6;
+}
+.mail a {
+  color: #fff;
+  width: max-content;
+}
