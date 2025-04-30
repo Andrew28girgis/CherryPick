@@ -96,39 +96,41 @@
                         </div>
                         <!-- Insert your content here -->
                         <div class="offcanvas-background">
+                         <ng-container *ngFor="let campaign of tenant.Campaigns">
                           <div
-                            class="d-flex align-items-center justify-content-between"
+                          class="d-flex align-items-center justify-content-between"
+                        >
+                          <div
+                            class="d-flex flex-column justify-content-center gap-1"
                           >
-                            <div
-                              class="d-flex flex-column justify-content-center gap-1"
-                            >
-                              <div class="private">
-                                <div class="privatedot"></div>
-                                <p class="privatetext">Public</p>
-                              </div>
-                              <div class="firsttradelist">
-                                <span>First Trade Campaign</span>
-                              </div>
-                              <div class="graytext">
-                                <span>Aug 25, 2025</span>
-                              </div>
+                            <div class="private">
+                              <div class="privatedot"></div>
+                              <p class="privatetext">Public</p>
                             </div>
-                            <div>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                fill="none"
-                              >
-                                <path
-                                  d="M7.47388 3.28711L7.51294 3.3125L12.9465 8.74512C13.2785 9.07708 13.467 9.52549 13.467 10C13.467 10.4189 13.3264 10.8118 13.0676 11.123L12.9495 11.252L12.9465 11.2549L7.52271 16.6777C7.48085 16.7159 7.44298 16.7255 7.42505 16.7256C7.40737 16.7256 7.3915 16.7222 7.37817 16.7168L7.33716 16.6885C7.3157 16.667 7.30208 16.6363 7.302 16.6006C7.302 16.5826 7.30571 16.5657 7.31177 16.5508L7.33716 16.5117L12.7698 11.0791C13.3278 10.521 13.3635 9.63596 12.8752 9.03711L12.7698 8.92188L7.33716 3.48828C7.31566 3.46678 7.30203 3.43619 7.302 3.40039C7.302 3.38232 7.30566 3.36553 7.31177 3.35059L7.33716 3.3125C7.35869 3.29097 7.3892 3.27734 7.42505 3.27734C7.44282 3.27736 7.45912 3.28118 7.47388 3.28711Z"
-                                  fill="#707791"
-                                  stroke="#707791"
-                                />
-                              </svg>
+                            <div class="firsttradelist">
+                              <span>{{campaign.CampaignName}}</span>
                             </div>
+                            <div class="graytext">
+                              <span>{{ campaign.CreatedDate | date: 'mediumDate' }}</span>
+                            </div>
+                            
                           </div>
+                          <div>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                            >
+                              <path
+                                d="M7.47388 3.28711L7.51294 3.3125L12.9465 8.74512C13.2785 9.07708 13.467 9.52549 13.467 10C13.467 10.4189 13.3264 10.8118 13.0676 11.123L12.9495 11.252L12.9465 11.2549L7.52271 16.6777C7.48085 16.7159 7.44298 16.7255 7.42505 16.7256C7.40737 16.7256 7.3915 16.7222 7.37817 16.7168L7.33716 16.6885C7.3157 16.667 7.30208 16.6363 7.302 16.6006C7.302 16.5826 7.30571 16.5657 7.31177 16.5508L7.33716 16.5117L12.7698 11.0791C13.3278 10.521 13.3635 9.63596 12.8752 9.03711L12.7698 8.92188L7.33716 3.48828C7.31566 3.46678 7.30203 3.43619 7.302 3.40039C7.302 3.38232 7.30566 3.36553 7.31177 3.35059L7.33716 3.3125C7.35869 3.29097 7.3892 3.27734 7.42505 3.27734C7.44282 3.27736 7.45912 3.28118 7.47388 3.28711Z"
+                                fill="#707791"
+                                stroke="#707791"
+                              />
+                            </svg>
+                          </div>
+                        </div>
                           <div class="customline"></div>
                           <div
                             class="d-flex align-items-center justify-content-between"
@@ -137,10 +139,10 @@
                               <span>Sites</span>
                             </div>
                             <div class="blackbold">
-                              <span>15</span>
+                              <span>{{campaign.Sites}}</span>
                             </div>
                           </div>
-                          <div
+                          <!-- <div
                             class="d-flex align-items-center justify-content-between"
                           >
                             <div class="graytext">
@@ -165,7 +167,7 @@
                               <p class="status-nomber">15</p>
                               <p class="status-text">Accepted</p>
                             </div>
-                          </div>
+                          </div> -->
                           <div
                             class="d-flex align-items-center justify-content-between"
                           >
@@ -173,83 +175,34 @@
                               <span>Mail Sent</span>
                             </div>
                             <div class="blackbold">
-                              <span>22</span>
+                              <span>{{campaign.MailsSent}}</span>
                             </div>
                           </div>
+                        </ng-container>
+
                           <div class="customline"></div>
                           <div class="CampaignWorkfow">
                             <span>Campaign Workflow</span>
                           </div>
-                          <div
-                            class="d-flex align-items-center justify-content-between"
-                          >
-                            <div class="graytext">
-                              <span>Sent</span>
+                          <ng-container *ngFor="let campaign of tenant.Campaigns">
+                            <div *ngFor="let stage of campaign.Kanban; let first = first" class="d-flex flex-column">
+                              
+                              <div *ngIf="!first" class="smallline"></div> 
+                          
+                              <div class="d-flex align-items-center justify-content-between">
+                                <div class="graytext">
+                                  <span>{{ stage.stageName }}</span>
+                                </div>
+                                <div class="blackbold">
+                                  <span>{{ stage.MarketSurveyShoppingCenters.length || 0 }}</span>
+                                </div>
+                              </div>
+                              
                             </div>
-                            <div class="blackbold">
-                              <span>1</span>
-                            </div>
-                          </div>
-                          <div class="grayline"></div>
-
-                          <div
-                            class="d-flex align-items-center justify-content-between"
-                          >
-                            <div class="graytext">
-                              <span>Waiting For Reply</span>
-                            </div>
-                            <div class="blackbold">
-                              <span>5</span>
-                            </div>
-                          </div>
-                          <div class="grayline"></div>
-
-                          <div
-                            class="d-flex align-items-center justify-content-between"
-                          >
-                            <div class="graytext">
-                              <span>Replied</span>
-                            </div>
-                            <div class="blackbold">
-                              <span>3</span>
-                            </div>
-                          </div>
-                          <div class="grayline"></div>
-
-                          <div
-                            class="d-flex align-items-center justify-content-between"
-                          >
-                            <div class="graytext">
-                              <span>Matching Properties</span>
-                            </div>
-                            <div class="blackbold">
-                              <span>0</span>
-                            </div>
-                          </div>
-                          <div class="grayline"></div>
-
-                          <div
-                            class="d-flex align-items-center justify-content-between"
-                          >
-                            <div class="graytext">
-                              <span>Not a Match</span>
-                            </div>
-                            <div class="blackbold">
-                              <span>0</span>
-                            </div>
-                          </div>
-                          <div class="grayline"></div>
-
-                          <div
-                            class="d-flex align-items-center justify-content-between"
-                          >
-                            <div class="graytext">
-                              <span>Scan With Emily</span>
-                            </div>
-                            <div class="blackbold">
-                              <span>0</span>
-                            </div>
-                          </div>
+                          </ng-container>
+                          
+                          
+                          
                         </div>
                       </div>
                     </div>
