@@ -1,10 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Center, Place } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
-import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { StateService } from 'src/app/core/services/state.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
@@ -16,22 +14,11 @@ import { Tenant } from 'src/app/shared/models/tenants';
   styleUrls: ['./summery.component.css'],
 })
 export class SummeryComponent implements OnInit {
-  tenants: Tenant[] = []; 
+  tenants: Tenant[] = [];
   buyboxPlaces: BbPlace[] = [];
   isCollapsed = true;
   organizationId!: any;
-  editing!: boolean;
   Obj!: BuyBoxModel;
-  showManagerOrganizationSuggestions: boolean = false;
-  isSearchingOrganization: boolean = false;
-  isSearchingManagerOrganization: boolean = false;
-  managerOrganizations: { id: number; name: string }[] = [];
-  selectedManagerOrganizationId!: number; // Bound to the manager dropdown
-  buyBoxes: any[] = [];
-  organizations: Organization[] = [];
-  selectedOrganizationId!: number; // To bind the selected organization
-  searchOrganizationTerm: string = '';
-  selectedOrganizationName!: string; // Holds the selected organization name
   @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;
   modalOpened: boolean = false;
   isLoading = true;
@@ -71,8 +58,6 @@ export class SummeryComponent implements OnInit {
           this.modalOpened = true;
           this.openAddTenant(this.buyBoxProperty);
         }
-
-        // this.spinner.hide();
         this.isLoading = false;
       },
     });
