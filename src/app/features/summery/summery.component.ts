@@ -19,9 +19,6 @@ export class SummeryComponent implements OnInit {
   showSummery: boolean = false;
   Token: any;
   orgId!: number;
-  buyboxCategories: BuyboxCategory[] = [];
-  shoppingCenters: Center[] = [];
-  standAlone: Place[] = [];
   buyboxPlaces: BbPlace[] = [];
   isCollapsed = true;
   organizationId!: any;
