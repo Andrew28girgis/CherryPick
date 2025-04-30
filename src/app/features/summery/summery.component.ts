@@ -11,6 +11,7 @@ import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { StateService } from 'src/app/core/services/state.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
+import { Tenant } from 'src/app/shared/models/tenants';
 
 @Component({
   selector: 'app-summery',
@@ -19,7 +20,7 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 })
 export class SummeryComponent implements OnInit {
   General!: General;
-  tenants: any[] = [];
+  tenants: Tenant[] = [];
   showSummery: boolean = false;
   Token: any;
   orgId!: number;
