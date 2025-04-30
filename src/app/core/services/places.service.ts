@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
+import { ChangePassword } from 'src/app/shared/models/domain';
+import { ResetPassword } from 'src/app/shared/models/domain';
+import { ForgotPassword } from 'src/app/shared/models/domain';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +42,15 @@ export class PlacesService {
 
   public loginUser(message: any) {
     return this.http.post<any[]>(`${environment.api}/BuyBox/Login`, message);
+  }
+  ChangePassword(request: ChangePassword) {
+    return this.http.post<boolean>(`${environment.api}/BuyBox/ChangePassword`, request);
+  }
+  ResetPassword(request: ResetPassword) {
+    return this.http.post<boolean>(`${environment.api}/BuyBox/ResetPassword`, request);
+  }
+  ForgotPassword(request: ForgotPassword) {
+    return this.http.post<boolean>(`${environment.api}/BuyBox/ForgotPassword`, request);
   }
 
   public UpdateBuyBoxWorkSpacePlace(message: any) {

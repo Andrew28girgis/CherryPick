@@ -14,15 +14,7 @@
   <div class="container-width">
     <div class="row">
       <ng-container *ngFor="let tenant of tenants">
-        <div
-          class="col-12 col-sm-6 pt-4 ResContainer"
-          [routerLink]="[
-            '/dashboard',
-            tenant.id,
-            tenant.organizationId,
-            tenant.name
-          ]"
-        >
+        <div class="col-12 col-sm-6 pt-4">
           <section class="card__Kayak">
             <div class="card__Kayak__img mt-3 mb-3">
               <div class="d-flex align-items-center justify-content-between">
@@ -45,9 +37,233 @@
                     <div class="card__Kayak_title">
                       {{ tenant.name }}
                     </div>
+                    <div
+                      class="d-flex align-items-center gap-2 cursor"
+                      data-bs-toggle="offcanvas"
+                      data-bs-target="#campaignDetails"
+                      aria-controls="campaignDetails"
+                    >
+                      <span class="nomberofcampains">13</span>
+                      <span class="campaingstext">Campaigns</span>
+                      <img
+                        src="../../../assets/Images/Icons/info.png"
+                        alt="Info Icon"
+                      />
+                    </div>
+
+                    <div
+                      class="offcanvas offcanvas-end"
+                      tabindex="-1"
+                      id="campaignDetails"
+                      aria-labelledby="campaignDetailsLabel"
+                      data-bs-backdrop="true"
+                    >
+                      <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="campaignDetailsLabel">
+                          <div class="d-flex align-items-center gap-3">
+                            <div>
+                              <img
+                                class="Kayak__img"
+                                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                                  tenant.organizationId
+                                }}"
+                                alt=""
+                              />
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                              <div class="active">
+                                <div class="dot"></div>
+                                <p class="text">Active</p>
+                              </div>
+
+                              <div class="card__Kayak_title">
+                                {{ tenant.name }}
+                              </div>
+                            </div>
+                          </div>
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close text-reset"
+                          data-bs-dismiss="offcanvas"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="line"></div>
+                      <div class="offcanvas-body">
+                        <div class="CampaignsList mb-3">
+                          <span>Campaigns List</span>
+                        </div>
+                        <!-- Insert your content here -->
+                        <div class="offcanvas-background">
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div
+                              class="d-flex flex-column justify-content-center gap-1"
+                            >
+                              <div class="private">
+                                <div class="privatedot"></div>
+                                <p class="privatetext">Public</p>
+                              </div>
+                              <div class="firsttradelist">
+                                <span>First Trade Campaign</span>
+                              </div>
+                              <div class="graytext">
+                                <span>Aug 25, 2025</span>
+                              </div>
+                            </div>
+                            <div>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                              >
+                                <path
+                                  d="M7.47388 3.28711L7.51294 3.3125L12.9465 8.74512C13.2785 9.07708 13.467 9.52549 13.467 10C13.467 10.4189 13.3264 10.8118 13.0676 11.123L12.9495 11.252L12.9465 11.2549L7.52271 16.6777C7.48085 16.7159 7.44298 16.7255 7.42505 16.7256C7.40737 16.7256 7.3915 16.7222 7.37817 16.7168L7.33716 16.6885C7.3157 16.667 7.30208 16.6363 7.302 16.6006C7.302 16.5826 7.30571 16.5657 7.31177 16.5508L7.33716 16.5117L12.7698 11.0791C13.3278 10.521 13.3635 9.63596 12.8752 9.03711L12.7698 8.92188L7.33716 3.48828C7.31566 3.46678 7.30203 3.43619 7.302 3.40039C7.302 3.38232 7.30566 3.36553 7.31177 3.35059L7.33716 3.3125C7.35869 3.29097 7.3892 3.27734 7.42505 3.27734C7.44282 3.27736 7.45912 3.28118 7.47388 3.28711Z"
+                                  fill="#707791"
+                                  stroke="#707791"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="customline"></div>
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Sites</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>15</span>
+                            </div>
+                          </div>
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Submissions</span>
+                            </div>
+                            <div class="status-label Rejected">
+                              <div class="status-dot"></div>
+                              <p class="status-nomber">15</p>
+                              <p class="status-text">Rejected</p>
+                            </div>
+
+                            <div
+                              class="status-label Pendding d-flex align-items-center justify-content-center"
+                            >
+                              <div class="status-dot"></div>
+                              <p class="status-nomber">15</p>
+                              <p class="status-text">Pendding</p>
+                            </div>
+
+                            <div class="status-label Accepted">
+                              <div class="status-dot"></div>
+                              <p class="status-nomber">15</p>
+                              <p class="status-text">Accepted</p>
+                            </div>
+                          </div>
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Mail Sent</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>22</span>
+                            </div>
+                          </div>
+                          <div class="customline"></div>
+                          <div class="CampaignWorkfow">
+                            <span>Campaign Workflow</span>
+                          </div>
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Sent</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>1</span>
+                            </div>
+                          </div>
+                          <div class="grayline"></div>
+
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Waiting For Reply</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>5</span>
+                            </div>
+                          </div>
+                          <div class="grayline"></div>
+
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Replied</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>3</span>
+                            </div>
+                          </div>
+                          <div class="grayline"></div>
+
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Matching Properties</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>0</span>
+                            </div>
+                          </div>
+                          <div class="grayline"></div>
+
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Not a Match</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>0</span>
+                            </div>
+                          </div>
+                          <div class="grayline"></div>
+
+                          <div
+                            class="d-flex align-items-center justify-content-between"
+                          >
+                            <div class="graytext">
+                              <span>Scan With Emily</span>
+                            </div>
+                            <div class="blackbold">
+                              <span>0</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="chevronicon">
+                <div
+                  class="chevronicon cursor"
+                  [routerLink]="[
+                    '/dashboard',
+                    tenant.id,
+                    tenant.organizationId,
+                    tenant.name
+                  ]"
+                >
                   <i class="fa-solid fa-chevron-right"></i>
                 </div>
               </div>

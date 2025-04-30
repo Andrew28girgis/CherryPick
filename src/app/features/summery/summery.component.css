@@ -51,9 +51,14 @@ button:active {
 .card__Kayak_title {
   color: #16181d;
   font-size: 18px;
-  font-style: normal;
   font-weight: 600;
   line-height: 24px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #28a745;
+  border-radius: 50%;
 }
 .active {
   display: flex;
@@ -64,18 +69,33 @@ button:active {
   border-radius: 16px;
   background: #eaf6ec;
 }
-
-.dot {
-  width: 8px;
-  height: 8px;
-  background-color: #28a745;
-  border-radius: 50%;
-}
-
 .text {
   color: #28a745;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+.private {
+  display: flex;
+  padding: 4px 12px;
+  align-items: center;
+  width: fit-content;
+  gap: 4px;
+  border-radius: 16px;
+  background: #DBE0F0;
+}
+.privatedot {
+  width: 8px;
+  height: 8px;
+  background-color: #4D65B4;
+  border-radius: 50%;
+}
+.privatetext {
+  color: #4D65B4;
+  text-align: center;
+  font-size: 14px;
   font-weight: 500;
   line-height: 20px;
   margin: 0;
@@ -86,15 +106,13 @@ button:active {
   color: #fff;
   text-align: center;
   font-size: 1vw;
-  font-style: normal;
   font-weight: 500;
   line-height: 30px;
   border: 0;
   padding: 4px 10px;
   white-space: nowrap;
 }
-
-.ResContainer {
+.cursor {
   cursor: pointer;
 }
 
@@ -107,6 +125,167 @@ button:active {
 .Kayack__button {
   background: #4d65b4;
 }
+.nomberofcampains {
+  color: #16181d;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.campaingstext {
+  color: #707791;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.07px;
+}
+.line {
+  height: 1px;
+  background: #E2E4E9;
+  width: 95%;
+  margin: 0 auto;
+}
+.CampaignsList {
+  color: #16181d;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.offcanvas-end {
+  width: 40% !important;
+}
+.backgroundframe{
+display: flex;
+padding: 24px 12px;
+flex-direction: column;
+align-items: flex-start;
+gap:  16px;
+align-self: stretch;
+border-radius: 20px;
+border: 1px solid #E2E4E9;
+background:  #FFF;
+}
+.firsttradelist{
+color: #16181D;
+font-size: 16px;
+font-weight: 600;
+line-height: 30px;
+}
+.graytext{
+color: #707791;
+font-size: 17px;
+font-weight: 400;
+line-height: 24px; 
+letter-spacing: -0.07px;
+}
+.customline{
+  height: 1px;
+  background: #E2E4E9;
+  width: 100%;
+
+}
+.offcanvas-background{
+display: flex;
+padding: 18px 18px;
+flex-direction: column;
+gap: 16px;
+align-self: stretch;
+border-radius:20px;
+border: 1px solid #E2E4E9;
+background: #FFF;
+}
+.blackbold{
+color: #16181D;
+font-size: 16px;
+font-weight: 600;
+line-height: 30px;
+}
+
+.status-label {
+  display: flex;
+  padding: 4px 12px;
+  align-items: center;
+  width: fit-content;
+  gap: 4px;
+  border-radius: 16px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.status-nomber {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+.status-text {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+}
+
+
+.status-label.Rejected {
+  background: #FFEDED;
+}
+
+.status-label.Rejected .status-dot {
+  background-color: #FF4C4C;
+}
+
+.status-label.Rejected .status-text {
+  color: #FF4C4C;
+}
+.status-label.Rejected .status-nomber {
+  color: #FF4C4C;
+}
+
+.status-label.Pendding {
+  background: #FFF9E6;
+}
+
+.status-label.Pendding .status-dot {
+  background-color: #CC9A06;
+}
+.status-label.Pendding .status-nomber {
+  color: #CC9A06;
+}
+.status-label.Pendding .status-text {
+  color: #CC9A06;
+}
+
+.status-label.Accepted {
+  background: #EAF6EC;
+}
+
+.status-label.Accepted .status-dot {
+  background-color: #28A745;
+}
+.status-label.Accepted .status-nomber {
+  color: #28A745;
+}
+.status-label.Accepted .status-text {
+  color: #28A745;
+}
+.CampaignWorkfow{
+color: #16181D;
+font-size: 16px;
+font-weight: 600;
+line-height: 30px; 
+}
+.grayline{
+  height: 1px;
+  background: #E2E4E9;
+  width: 100%;
+}
+
 
 @media (max-width: 567px) {
   .card__Kayak {
