@@ -14,7 +14,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   currentView: number = 5;
   BuyBoxId!: any;
   BuyBoxName!: string;
-
+  CampaignId!: any;
   OrgId!: any;
   selectedOption: number = 5;
   dropdowmOptions: any = [
@@ -62,8 +62,11 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-      if (Number(localStorage.getItem('currentViewDashBord')) !== 1) {
-        this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
+      this.CampaignId = params.campaignId;
+
+      if (Number(localStorage.getItem('currentViewDashBord')) !== 1 ) {
+        this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);        
+        
       }
     });
 

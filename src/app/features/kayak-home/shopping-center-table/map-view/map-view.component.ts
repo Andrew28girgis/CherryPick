@@ -47,6 +47,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
   ShareOrg: ShareOrg[] = [];
   isdataLoaded = false;
   private subscriptions: Subscription[] = [];
+  CampaignId: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -65,13 +66,14 @@ export class MapViewComponent implements OnInit, OnDestroy {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
+      this.CampaignId = params.campaignId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
     });
 
     // Subscribe to data from ViewManagerService
     this.subscribeToServiceData();
-    this.viewManagerService.initializeData(this.BuyBoxId, this.OrgId);
+    this.viewManagerService.initializeData(this.CampaignId, this.OrgId);
   }
   private subscribeToServiceData(): void {
     // Subscribe to data loaded event
