@@ -232,7 +232,6 @@ export class ViewManagerService {
     } else {
       const minSize = Math.min(...buildingSizes);
       const maxSize = Math.max(...buildingSizes);
-
       const minPrice =
         places.find((place: any) => place.BuildingSizeSf === minSize)
           ?.ForLeasePrice || 'On Request';

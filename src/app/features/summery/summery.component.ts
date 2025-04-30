@@ -11,16 +11,16 @@ import { Organization } from 'src/app/shared/models/buyboxShoppingCenter';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { StateService } from 'src/app/core/services/state.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
+import { Tenant } from 'src/app/shared/models/tenants';
 
 @Component({
   selector: 'app-summery',
   templateUrl: './summery.component.html',
   styleUrls: ['./summery.component.css'],
 })
-
 export class SummeryComponent implements OnInit {
   General!: General;
-  tenants: any[] = [];
+  tenants: Tenant[] = [];
   showSummery: boolean = false;
   Token: any;
   orgId!: number;
@@ -81,7 +81,6 @@ export class SummeryComponent implements OnInit {
       Name: 'GetUserBuyBoxes',
       Params: {},
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.tenants = data.json;
@@ -103,7 +102,6 @@ export class SummeryComponent implements OnInit {
       size: 'xl',
     });
     this.Obj = new BuyBoxModel();
-
     modalRef.result
       .then((result) => {
         if (result && result.created) {

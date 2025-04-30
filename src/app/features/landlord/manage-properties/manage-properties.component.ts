@@ -71,7 +71,6 @@ export class ManagePropertiesComponent implements OnInit {
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
     private breadcrumbService: BreadcrumbService
-
   ) {}
   ngOnInit() {
     this.breadcrumbService.setBreadcrumbs([
@@ -257,11 +256,13 @@ export class ManagePropertiesComponent implements OnInit {
     this.showEditInput = true;
     this.editedPlaceSqFT = currentSqFt;
   }
+
   cancelEditPlace() {
     this.editingPlaceId = null;
     this.showEditInput = false;
     this.editedPlaceSqFT = 0;
   }
+
   saveEditedPlace(placeId: number) {
     if (!this.editedPlaceSqFT || this.editedPlaceSqFT <= 0) {
       this.showToast('Please enter a valid SQFT');
@@ -293,11 +294,13 @@ export class ManagePropertiesComponent implements OnInit {
       },
     });
   }
+
   openDeletePlaceModal(placeId: number) {
     this.deleteId = placeId;
     this.deleteType = 'Place';
     this.modalService.open(this.deletePlaceModal, { size: 'md' });
   }
+
   openDeleteTenantModal(tenantId: number) {
     this.deleteId = tenantId;
     this.deleteType = 'Tenant';
@@ -384,7 +387,7 @@ export class ManagePropertiesComponent implements OnInit {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
         fileEntry.file((file: File) => {
           const formData = new FormData();
-          formData.append('filename', file/*, file.name*/);
+          formData.append('filename', file /*, file.name*/);
           this.fileName = file.name;
           this.isUploading = true;
           this.uploadProgress = 0;
@@ -472,7 +475,7 @@ export class ManagePropertiesComponent implements OnInit {
     // Extract the content of the selected images
     const array = selectedImages.map((image) => image.content);
     const shopID = this.selectedShoppingID;
-    
+
     this.PlacesService.SendImagesArray(array, shopID).subscribe({
       next: (data) => {
         this.JsonPDF = data;
