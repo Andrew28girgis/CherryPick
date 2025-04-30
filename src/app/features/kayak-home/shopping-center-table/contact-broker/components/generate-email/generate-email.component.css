@@ -193,7 +193,7 @@
 }
 
 .body {
-  white-space: normal;
+  white-space: break-spaces;
   color: #707791;
 }
 

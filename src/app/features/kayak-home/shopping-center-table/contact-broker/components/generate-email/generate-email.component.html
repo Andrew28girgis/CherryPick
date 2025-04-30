@@ -406,11 +406,7 @@
       <h5>Send Email With</h5>
       <a
         class="send-mail-card"
-        href="https://outlook.office.com/mail/deeplink/compose?to={{
-          (selectedmail?.O)![0].C[0].Email
-        }},{{ getStringCC() }},{{ CCEmail }}&subject={{
-          selectedmail?.Subject
-        }}&body={{ selectedmail?.Body }}"
+        [href]="generateMailtoLink()"
         target="_blank"
       >
         <div class="mail-card-icon">
@@ -425,7 +421,7 @@
         class="send-mail-card"
         href="https://mail.google.com/mail/?view=cm&fs=1&to={{
           (selectedmail?.O)![0].C[0].Email
-        }}&su={{ selectedmail?.Subject }}&body={{ selectedmail?.Body }}&cc={{
+        }}&su={{ selectedmail?.Subject }}&body={{ encodeBody(selectedmail?.Body) }}&cc={{
           CCEmail
         }},{{ getStringCC() }}"
         target="_blank"
@@ -478,7 +474,7 @@
         href="mailto:{{ (selectedmail?.O)![0].C[0].Email }},{{
           getStringCC()
         }},{{ CCEmail }}&subject={{ selectedmail?.Subject }}&body={{
-          selectedmail?.Body
+          encodeBody(selectedmail?.Body)
         }}"
         target="_blank"
       >

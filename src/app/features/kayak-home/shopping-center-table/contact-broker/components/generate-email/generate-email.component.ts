@@ -725,4 +725,29 @@ export class GenerateEmailComponent implements OnInit {
       }).join(',') || ''
     );
   }
+  //    encodeBody(body:any) {
+  //     return encodeURIComponent(body).replace(/ /g, '%20');
+  // }
+
+  encodeBody(body: any): string {
+    return encodeURIComponent(body)
+      .replace(/%20/g, ' ') // Spaces are encoded as '%20' by default
+      .replace(/\+/g, '%20'); // Replace '+' with '%20'
+  }
+
+  generateMailtoLink(): any {
+    const toEmails = `${
+      this.selectedmail?.O![0].C[0].Email
+    },${this.getStringCC()},${this.CCEmail}`;
+    const subject = encodeURIComponent(this.selectedmail?.Subject || '');
+    const body = this.encodeBody(this.selectedmail?.Body || '');
+    const target = `https://outlook.office.com/mail/deeplink/compose?to=${toEmails}&subject=${subject}&body=${body}`;
+ 
+    const redirectURL = new URL('https://outlook.office.com/owa/?state=1');
+    redirectURL.searchParams.set(
+      'redirectTo',
+      btoa(target).replaceAll('=', '')
+    );
+    return redirectURL;
+  }
 }

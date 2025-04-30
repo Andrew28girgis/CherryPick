@@ -205,7 +205,7 @@
           class="email-body"
           [innerHTML]="sanitizedEmailBody"
           contenteditable="true"
-          style="white-space: normal"
+          style="white-space: break-spaces;"
           (input)="onContentChange($event)"
         ></div>
       </div>
@@ -263,10 +263,12 @@
     </div>
     <div class="modal-body pt-0" style="overflow-y: auto; height: 45vh">
 <!-- &cc={{ CCEmail }} -->
+ <!--       href="https://outlook.office.com/mail/deeplink/compose?to={{email}},{{ CCEmail }},{{selectedManagerEmails}}&subject={{emailSubject}}&body={{emailBody}}"
+ -->
       <a
       class="mb-3 w-100 text-decoration-none"
       style="cursor: pointer"
-      href="https://outlook.office.com/mail/deeplink/compose?to={{email}},{{ CCEmail }},{{selectedManagerEmails}}&subject={{emailSubject}}&body={{emailBody}}"
+      [href]="generateMailtoLink()"
       target="_blank"
     >
       <div class="card-email d-flex align-items-center gap-2">

@@ -382,4 +382,23 @@ export class EmailComposeComponent implements OnInit {
     // Join the emails with a comma
     this.selectedManagerEmails = selectedEmails.join(',');
   }
+  encodeBody(body: any): string {
+    return encodeURIComponent(body)
+      .replace(/%20/g, ' ') // Spaces are encoded as '%20' by default
+      .replace(/\+/g, '%20'); // Replace '+' with '%20'
+  }
+
+  generateMailtoLink(): any {
+    const toEmails = `${this.email},${this.CCEmail},${this.selectedManagerEmails}`;
+    const subject = encodeURIComponent(this.emailSubject || '');
+    const body = this.encodeBody(this.emailBody || '');
+    const target = `https://outlook.office.com/mail/deeplink/compose?to=${toEmails}&subject=${subject}&body=${body}`;
+ 
+    const redirectURL = new URL('https://outlook.office.com/owa/?state=1');
+    redirectURL.searchParams.set(
+      'redirectTo',
+      btoa(target).replaceAll('=', '')
+    );
+    return redirectURL;
+  }
 }
