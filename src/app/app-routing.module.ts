@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, type Routes } from '@angular/router';
 import { LoginComponent } from './shared/components/login/login.component';
+import { ResetPasswordComponent } from './shared/components/change-password/change-password.component';
+import { ForgetPasswordComponent } from './shared/components/forget-password/forget-password.component';
+import { NewPasswordComponent } from './shared/components/new-password/new-password.component';
 import { LandingComponent } from './features/tenants/market-survery/landing/landing.component';
 import { SummeryComponent } from './features/summery/summery.component';
 import { TermsComponent } from './shared/components/terms/terms.component';
@@ -21,6 +24,9 @@ import { InboxComponent } from './features/emily/inbox/inbox.component';
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
+  { path: 'ResetPassword', component: ResetPasswordComponent, data: { hideHeader: true } },
+  { path: 'ForgetPassword', component: ForgetPasswordComponent, data: { hideHeader: true } },
+  { path: 'NewPassword', component: NewPasswordComponent, data: { hideHeader: true } },
   { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
