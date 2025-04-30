@@ -76,7 +76,39 @@ export class EmailComposeComponent implements OnInit {
   }
 
   next() {
-    this.currentStep++;
+    if (this.currentStep === 1) {
+      this.onStepChange(); // Check if there are managers when moving from Step 1 to Step 2
+    } else if (this.currentStep === 2) {
+      this.checkManagersAndSwitchToNextStep(); // Check if there are managers when moving from Step 2
+    } else if (this.currentStep === 3) {
+      this.currentStep = 3; // Ensure it stays on step 3 if already on it
+    }
+  }
+  onStepChange() {
+    // This logic is now for moving from Step 1 to Step 2
+    const hasManagers = this.GetShoppingCenters.some(
+      (sc) => sc.Managers && sc.Managers.length > 0
+    );
+    if (!hasManagers) {
+      // If no managers are found, go to step 3
+      this.currentStep = 3;
+    } else {
+      // Otherwise, go to step 2
+      this.currentStep = 2;
+    }
+  }
+  checkManagersAndSwitchToNextStep() {
+    // This logic is for moving from Step 2 to Step 3, checking if managers are selected
+    const selectedManagers = this.GetShoppingCenters.some(
+      (sc) => sc.Managers && sc.Managers.some((mgr) => mgr.selected)
+    );
+    if (!selectedManagers) {
+      // If no managers are selected, go to step 3
+      this.currentStep = 3;
+    } else {
+      // If there are selected managers, proceed to next step
+      this.currentStep = 3;
+    }
   }
   previous() {
     this.currentStep--;
