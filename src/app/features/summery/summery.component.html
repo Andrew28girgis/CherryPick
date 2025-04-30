@@ -49,13 +49,11 @@
                       />
                     </div>
 
-                    <!-- Each offcanvas will have a unique ID based on the tenant ID -->
                     <div
                       class="offcanvas offcanvas-end"
                       tabindex="-1"
                       [id]="'campaignDetails' + tenant.Id"
                       aria-labelledby="campaignDetailsLabel"
-                      data-bs-backdrop="false"
                     >
                       <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="campaignDetailsLabel">
@@ -95,7 +93,6 @@
                         </div>
 
                         <div class="offcanvas-background">
-                          <!-- Loop over campaigns for the selected tenant -->
                           <ng-container
                             *ngFor="let campaign of tenant.Campaigns"
                           >
@@ -180,8 +177,7 @@
                     '/dashboard',
                     tenant.Id,
                     tenant.OrganizationId,
-                    tenant.Name,
-                    tenant.Campaigns[0].Id
+                    tenant.Name
                   ]"
                 >
                   <i class="fa-solid fa-chevron-right"></i>
