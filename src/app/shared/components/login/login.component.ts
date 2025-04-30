@@ -7,6 +7,8 @@ import {
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { Injectable } from '@angular/core';
+import * as CryptoJS from 'crypto-js';
 
 /**
  * LoginComponent handles user authentication and login functionality
@@ -22,6 +24,8 @@ export class LoginComponent implements OnInit {
   private readonly CONTACT_ID_KEY = 'contactId';
   private readonly ORG_ID_KEY = 'orgId';
   private readonly MAP_VIEW_KEY = 'mapView';
+  private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
+  private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   public loginData!: AdminLogin;
   public general!: General;
@@ -129,11 +133,17 @@ export class LoginComponent implements OnInit {
   }
 
   private prepareLoginRequest(): AdminLogin {
+    const encryptedLoginData = new AdminLogin();
+    encryptedLoginData.Email = this.loginData.Email;
+    encryptedLoginData.Password = this.encrypt(this.loginData.Password); 
+    
     if (this.loginToken) {
-      this.loginData.contactToken = this.loginToken;
+      encryptedLoginData.contactToken = this.loginToken;
     }
-    return this.loginData;
+    return encryptedLoginData;
   }
+  
+  
 
   private handleLoginSuccess(response: any): void {
     localStorage.setItem(
@@ -156,5 +166,30 @@ export class LoginComponent implements OnInit {
 
   togglePassword() {
     this.showPassword = !this.showPassword;
+  }
+  encrypt(value: string): string {
+    const encrypted = CryptoJS.AES.encrypt(
+      CryptoJS.enc.Utf8.parse(value),
+      this.key,
+      {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    return encrypted.toString(); // Or encodeURIComponent(...) if backend requires it
+  }
+
+  decrypt(encryptedValue: string): string {
+    const decodedValue = decodeURIComponent(encryptedValue);
+    const decrypted = CryptoJS.AES.decrypt(decodedValue, this.key, {
+      keySize: 256 / 8,
+      iv: this.iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    });
+
+    return decrypted.toString(CryptoJS.enc.Utf8);
   }
 }

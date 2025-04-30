@@ -111,9 +111,9 @@
   text-align: start;
   margin: 0;
   z-index: 100;
-  right: 2vw !important;
+  right: 3vw;
   width: max-content;
-  top: -135%;
+  top: -23%;
 }
 
 .shortcuts_iconCard > ul {
@@ -169,9 +169,7 @@
   height: 20px;
 }
 
-.shortcuts_iconCard > ul > li > .target svg path {
-  fill: #707791;
-}
+
 
 .shortcuts_iconCard > i {
   position: absolute;
@@ -201,7 +199,7 @@
   width: 30px;
   height: 30px;
   background: transparent;
-  border-radius: 6px;
+  border-radius: 50%;
   position: relative;
   z-index: 1;
 }
