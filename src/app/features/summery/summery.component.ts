@@ -1,8 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { General } from 'src/app/shared/models/domain';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center, Place } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,23 +16,12 @@ import { Tenant } from 'src/app/shared/models/tenants';
   styleUrls: ['./summery.component.css'],
 })
 export class SummeryComponent implements OnInit {
-  General!: General;
-  tenants: Tenant[] = [];
-  showSummery: boolean = false;
-  Token: any;
-  orgId!: number;
-  buyboxCategories: BuyboxCategory[] = [];
-  shoppingCenters: Center[] = [];
-  standAlone: Place[] = [];
+  tenants: Tenant[] = []; 
   buyboxPlaces: BbPlace[] = [];
   isCollapsed = true;
   organizationId!: any;
   editing!: boolean;
   Obj!: BuyBoxModel;
-  searchManagerOrganizationTerm: string = '';
-  highlightedOrganizationIndex: number = -1;
-  highlightedManagerOrganizationIndex: number = -1;
-  showOrganizationSuggestions: boolean = false;
   showManagerOrganizationSuggestions: boolean = false;
   isSearchingOrganization: boolean = false;
   isSearchingManagerOrganization: boolean = false;
@@ -54,7 +40,6 @@ export class SummeryComponent implements OnInit {
     public activatedRoute: ActivatedRoute,
     public router: Router,
     private PlacesService: PlacesService,
-    private spinner: NgxSpinnerService,
     private route: ActivatedRoute,
     private stateService: StateService,
     private modalService: NgbModal,
@@ -66,9 +51,7 @@ export class SummeryComponent implements OnInit {
       { label: 'My Tenants', url: '/summary' },
     ]);
     this.stateService.clearAll();
-    this.General = new General();
     this.route.queryParams.subscribe((params) => {
-      this.Token = params['Token'];
       this.getUserBuyBoxes();
       this.organizationId = localStorage.getItem('orgId');
     });
