@@ -62,7 +62,6 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
@@ -377,20 +376,36 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.submissions = submissions; 
     this.modalService.open(submissionModal,{size: 'md', scrollable: true}); 
   }
-  getCircleProgressN(percentage: number): number {
-    const value = (percentage / 100) * 100;
-    return value+5;
-  }
-  private readonly circumference: number = 2 * Math.PI * 45; // 2πr where r=45
-
   getCircleProgress(percentage: number): string {
-    // Calculate the length of the progress arc
-    const progressLength = (percentage / 100) * (this.circumference - 2);
-    // Return the dasharray with a small gap (2px)
-    return `${progressLength}, ${this.circumference}`;
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap size
+  
+    // If 100%, return full circle without gaps
+    if (percentage === 100) {
+      return `${totalLength} 0`;
+    }
+  
+    // Calculate the length for the green progress
+    const progressLength = (percentage / 100) * (totalLength - (2 * gapSize));
+    return `${progressLength} ${totalLength}`;
   }
-  getCircleProgressbackgrond(percentage: number): string {
-    const value = (percentage / 100) * 100;
-    return `${100-value-10}, 100`;
+  
+  getCircleProgressBackground(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap
+  
+    // If 100%, don't show background
+    if (percentage === 100) {
+      return `0 ${totalLength}`;
+    }
+  
+    // Calculate the remaining percentage
+    const remainingPercentage = 100 - percentage;
+    const bgLength = (remainingPercentage / 100) * (totalLength - (2 * gapSize));
+    const startPosition = (percentage / 100) * (totalLength - (2 * gapSize)) + gapSize;
+    
+    return `0 ${startPosition} ${bgLength} ${totalLength}`;
   }
 }

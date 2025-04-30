@@ -615,7 +615,7 @@
   </div>
   <div class="modal-body">
     <div *ngFor="let submission of submissions">
-      <div class="submission-details" *ngIf="submission?.SubmmisionLink">
+      <div class="submission-details">
         <div class="detailsInfo d-flex flex-column">
           <a
             [href]="
@@ -623,23 +623,34 @@
               submission?.SubmmisionLink
             "
             target="_blank"
-            style="
-              display: inline-block; 
-              width: 217px; 
-              color: #000;
-              white-space: nowrap;
-              overflow: hidden; 
-              text-overflow: ellipsis;
-            "
+            class="submission-link"
           >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="8"
+              height="8"
+              viewBox="0 0 8 8"
+              fill="none"
+            >
+              <circle cx="4" cy="4" r="4" fill="#16181D" />
+            </svg>
+
             https://files.cherrypick.com/submissions/' +
             submission?.SubmmisionLink
           </a>
 
           <div class="user-info d-flex flex-row">
-            <p *ngIf="submission?.FirstName">{{ submission?.FirstName +' '+ submission?.LastName }}</p>
-            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-              <circle cx="4" cy="4" r="4" fill="#E2E4E9"/>
+            <p *ngIf="submission?.FirstName">
+              {{ submission?.FirstName + " " + submission?.LastName }}
+            </p>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="8"
+              height="8"
+              viewBox="0 0 8 8"
+              fill="none"
+            >
+              <circle cx="4" cy="4" r="4" fill="#E2E4E9" />
             </svg>
             <p *ngIf="submission?.CreatedDate">
               {{ submission?.CreatedDate | date : "MMM dd, yyyy" }}
@@ -652,50 +663,33 @@
         <div class="progress-bar-container">
           <div class="match-percentage">
             <div class="circle-progress">
-              <div style="position: relative;display: flex;align-items: center;justify-content: center;">
-                <svg width="98" height="98" viewBox="0 0 98 98">
-                  <!-- Background circle with gap -->
-                  <circle
-                    class="circle-bg"
-                    cx="49"
-                    cy="49"
-                    r="45"
-                    stroke-dasharray="282.6, 282.6"
-                    stroke-dashoffset="0"
-                    transform="rotate(-90, 49, 49)"
-                  ></circle>
-                  <!-- Foreground circle with gap -->
-                  <circle
-                    class="circle-fg"
-                    cx="49"
-                    cy="49"
-                    r="45"
-                    [attr.stroke-dasharray]="getCircleProgress(submission?.Percentage)"
-                    stroke-dashoffset="0"
-                    transform="rotate(-90, 49, 49)"
-                  ></circle>
-                  <!-- Gap overlay -->
-                  <circle
-                    class="circle-gap"
-                    cx="49"
-                    cy="49"
-                    r="45"
-                    stroke="#FFFFFF"
-                    stroke-width="3.8"
-                    fill="none"
-                    stroke-dasharray="2, 282.6"
-                    stroke-dashoffset="0"
-                    transform="rotate(-90, 49, 49)"
-                  ></circle>
-                </svg>
-                
-              </div>
-
+              <svg viewBox="0 0 36 36" class="circle-svg">
+                <!-- Background path (gray) -->
+                <path
+                  class="circle-bg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  [style.stroke-dasharray]="
+                    getCircleProgressBackground(submission?.Percentage)
+                  "
+                />
+                <!-- Foreground path (green) -->
+                <path
+                  class="circle-fg"
+                  d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                  [style.stroke-dasharray]="
+                    getCircleProgress(submission?.Percentage)
+                  "
+                />
+              </svg>
               <div class="circle-label">
-                <p class="m-0 match">Match</p>
-                <p class="m-0 match-percentage">
-                  {{ submission?.Percentage }}%
-                </p>
+                <span class="match">Match</span>
+                <span class="match-percentage"
+                  >{{ submission?.Percentage }}%</span
+                >
               </div>
             </div>
           </div>
