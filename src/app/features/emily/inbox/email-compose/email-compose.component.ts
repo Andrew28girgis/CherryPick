@@ -53,6 +53,7 @@ export class EmailComposeComponent implements OnInit {
   isAdvancedVisible :boolean = false;
   GetManagersShoppingCenters: IManager[] = [];
   @ViewChild('sendModal') sendModal: any;
+  CCEmail: any;
   constructor(
     public modal: NgbActiveModal,
     private spinner: NgxSpinnerService,
@@ -68,6 +69,7 @@ export class EmailComposeComponent implements OnInit {
     });
     this.loadShoppingCenters();
     await this.loadPrompts();
+    this.GetCCEmail();
   }
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
@@ -261,6 +263,20 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe(() => {
     });
   }
+  GetCCEmail() {
+    const body: any = {
+      Name: 'GetCCEmail',
+      MainEntity: null,
+      Params: {},
+      Json: null,
+    };
+    this.places.GenericAPI(body).subscribe((res) => {
+      const CEmail = res.json[0].virtualEmail;
+     console.log('CEmail', CEmail);
+     this.CCEmail= CEmail;
+     
+    });
+  }
   
 
   getGeneratedEmail(id: number): void {
@@ -283,11 +299,11 @@ export class EmailComposeComponent implements OnInit {
             this.getGeneratedEmail(id);
           }, 3000);
         } else {
-          this.emailBody = response[0].body;
+          this.emailBody = response[0].Body;
           this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
           );
-          this.emailSubject = response[0].subject;
+          this.emailSubject = response[0].Subject;
           this.spinner.hide();
         }
       },
@@ -318,6 +334,20 @@ export class EmailComposeComponent implements OnInit {
     this.generateContext();
   }
   openSendModal() {
+    this.getSelectedManagerEmails();
     this.modalService.open(this.sendModal, { centered: true ,windowClass: 'email-mod'});
+  }
+  selectedManagerEmails: string = ''; // Added variable to store manager emails
+  getSelectedManagerEmails() {
+    const selectedEmails: string[] = [];  // Explicitly declare the type as an array of strings
+    this.GetShoppingCenters.forEach(center => {
+      (center.Managers || []).forEach(mgr => {
+        if (mgr.selected) {
+          selectedEmails.push(mgr.email); // Add email of selected manager
+        }
+      });
+    });
+    // Join the emails with a comma
+    this.selectedManagerEmails = selectedEmails.join(',');
   }
 }
