@@ -21,7 +21,7 @@
             <span class="icon-text d-none d-sm-flex">{{ option.text }}</span>
           </div>
         </div>
-        <div>
+        <div style="gap: 5px; display: flex">
           <button style="border: none" class="border-none mx-2">
             <app-link-microsoft></app-link-microsoft>
           </button>
@@ -32,7 +32,24 @@
             Emily
           </button> -->
           <button
-            class="CherryPick__button"
+            class="btn btn-primary"
+            style="height: 38px"
+            [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
+          >
+            <i class="fa-regular fa-envelope me-2"></i>
+            <span>Emily</span>
+          </button>
+
+          <button
+            class="btn btn-primary"
+            style="height: 38px"
+            [routerLink]="['/campaigns/ataglance', CampaignId]"
+          >
+            At a Glance
+          </button>
+          <button
+            class="btn btn-primary"
+            style="height: 38px"
             [routerLink]="['/market-survey', BuyBoxId, OrgId, BuyBoxName]"
           >
             Market Survey
