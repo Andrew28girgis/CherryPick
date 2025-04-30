@@ -21,6 +21,7 @@ import { Tenant } from 'src/app/shared/models/tenants';
 export class SummeryComponent implements OnInit {
   General!: General;
   tenants: Tenant[] = [];
+  selectedTenant: Tenant | null = null; 
   showSummery: boolean = false;
   Token: any;
   orgId!: number;
@@ -94,7 +95,9 @@ export class SummeryComponent implements OnInit {
       },
     });
   }
-
+  selectTenant(tenant: Tenant) {
+    this.selectedTenant = tenant;
+  }
   openAddTenant(content: any) {
     const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
