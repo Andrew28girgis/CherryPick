@@ -71,17 +71,17 @@ export class ViewManagerService {
    * This should be called once when the main component loads
    */
 
-  public initializeData(buyboxId: number, orgId: number): void {
+  public initializeData(campaignId: number, orgId: number): void {
     if (
       this._dataLoaded &&
-      this._lastBuyboxId === buyboxId &&
+      this._lastBuyboxId === campaignId &&
       this._lastOrgId === orgId
     ) {
       this._dataLoadedEvent.next();
       return;
     }
 
-    this._lastBuyboxId = buyboxId;
+    this._lastBuyboxId = campaignId;
     this._lastOrgId = orgId;
     this._dataLoaded = false;
 
@@ -92,10 +92,10 @@ export class ViewManagerService {
 
     // Load all required data in parallel
     const promises = [
-      this.loadShoppingCenters(buyboxId),
-      this.loadBuyBoxCategories(buyboxId),
+      this.loadShoppingCenters(campaignId),
+      this.loadBuyBoxCategories(campaignId),
       this.loadOrganizationById(orgId),
-      this.loadBuyBoxPlaces(buyboxId),
+      this.loadBuyBoxPlaces(campaignId),
     ];
 
     Promise.all(promises)
@@ -615,12 +615,12 @@ export class ViewManagerService {
   /**
    * Load shopping centers
    */
-  private loadShoppingCenters(buyboxId: number): Promise<void> {
+  private loadShoppingCenters(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
       const body: any = {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
-          BuyBoxId: buyboxId,
+          CampaignId: campaignId,
         },
       };
 

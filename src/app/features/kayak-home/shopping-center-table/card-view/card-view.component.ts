@@ -70,7 +70,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
 
       // Initialize data using the centralized service
-      this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
+      // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
 
     // Subscribe to data from the centralized service
