@@ -18,7 +18,9 @@
                   <div>
                     <img
                       class="Kayak__img"
-                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ tenant.OrganizationId }}"
+                      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                        tenant.OrganizationId
+                      }}"
                       alt=""
                     />
                   </div>
@@ -37,9 +39,14 @@
                       [attr.data-bs-target]="'#campaignDetails' + tenant.Id"
                       aria-controls="campaignDetails"
                     >
-                      <span class="nomberofcampains" *ngIf="tenant.Campaigns">{{ tenant.Campaigns.length }}</span>
+                      <span class="nomberofcampains" *ngIf="tenant.Campaigns">{{
+                        tenant.Campaigns.length
+                      }}</span>
                       <span class="campaingstext">Campaigns</span>
-                      <img src="../../../assets/Images/Icons/info.png" alt="Info Icon" />
+                      <img
+                        src="../../../assets/Images/Icons/info.png"
+                        alt="Info Icon"
+                      />
                     </div>
 
                     <!-- Each offcanvas will have a unique ID based on the tenant ID -->
@@ -56,7 +63,9 @@
                             <div>
                               <img
                                 class="Kayak__img"
-                                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{ tenant.OrganizationId }}"
+                                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                                  tenant.OrganizationId
+                                }}"
                                 alt=""
                               />
                             </div>
@@ -87,9 +96,15 @@
 
                         <div class="offcanvas-background">
                           <!-- Loop over campaigns for the selected tenant -->
-                          <ng-container *ngFor="let campaign of tenant.Campaigns">
-                            <div class="d-flex align-items-center justify-content-between">
-                              <div class="d-flex flex-column justify-content-center gap-1">
+                          <ng-container
+                            *ngFor="let campaign of tenant.Campaigns"
+                          >
+                            <div
+                              class="d-flex align-items-center justify-content-between"
+                            >
+                              <div
+                                class="d-flex flex-column justify-content-center gap-1"
+                              >
                                 <div class="private">
                                   <div class="privatedot"></div>
                                   <p class="privatetext">Public</p>
@@ -105,7 +120,9 @@
 
                             <div class="customline"></div>
 
-                            <div class="d-flex align-items-center justify-content-between">
+                            <div
+                              class="d-flex align-items-center justify-content-between"
+                            >
                               <div class="graytext">
                                 <span>Sites</span>
                               </div>
@@ -113,7 +130,9 @@
                                 <span>{{ campaign.Sites }}</span>
                               </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-between">
+                            <div
+                              class="d-flex align-items-center justify-content-between"
+                            >
                               <div class="graytext">
                                 <span>Mail Sent</span>
                               </div>
@@ -126,15 +145,25 @@
                               <span>Campaign Workflow</span>
                             </div>
 
-                            <ng-container *ngFor="let stage of campaign.Kanban; let first = first">
+                            <ng-container
+                              *ngFor="
+                                let stage of campaign.Kanban;
+                                let first = first
+                              "
+                            >
                               <div *ngIf="!first" class="smallline"></div>
                               <div class="d-flex flex-column">
-                                <div class="d-flex align-items-center justify-content-between">
+                                <div
+                                  class="d-flex align-items-center justify-content-between"
+                                >
                                   <div class="graytext">
                                     <span>{{ stage.stageName }}</span>
                                   </div>
                                   <div class="blackbold">
-                                    <span>{{ stage.MarketSurveyShoppingCenters.length || 0 }}</span>
+                                    <span>{{
+                                      stage.MarketSurveyShoppingCenters
+                                        .length || 0
+                                    }}</span>
                                   </div>
                                 </div>
                               </div>
@@ -145,9 +174,20 @@
                     </div>
                   </div>
                 </div>
+                <div
+                  class="chevronicon cursor"
+                  [routerLink]="[
+                    '/dashboard',
+                    tenant.Id,
+                    tenant.OrganizationId,
+                    tenant.Name
+                  ]"
+                >
+                  <i class="fa-solid fa-chevron-right"></i>
+                </div>
               </div>
             </div>
-          </section> 
+          </section>
         </div>
       </ng-container>
     </div>
