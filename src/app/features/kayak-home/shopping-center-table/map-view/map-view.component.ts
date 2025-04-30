@@ -132,8 +132,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.shoppingCenters = data.json;
-        this.stateService.setShoppingCenters(data.json);
-
+        this.stateService.setShoppingCenters(data.json); 
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
     });

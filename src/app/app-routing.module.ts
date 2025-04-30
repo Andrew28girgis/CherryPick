@@ -125,7 +125,7 @@ const routes: Routes = [
     component: InboxComponent,
   },
   {
-    path: 'dashboard/:buyboxid/:orgId/:buyboxName',
+    path: 'dashboard/:buyboxid/:orgId/:buyboxName/:campaignId',
     loadChildren: () =>
       import('./features/kayak-home/kayak.module').then((m) => m.KayakModule),
     canActivate: [AuthGuardService, TenantOnlyGuard],
