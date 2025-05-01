@@ -346,7 +346,7 @@ export class AddNewCampaignComponent
   }
 
   attachFeaturesToCampaign(campaignId: number): void {
-    const PolygonIds = this.getAllAddedFeatures.join(', ');
+    const PolygonIds = this.getAllAddedFeatures.map((f) => f.id).join(', ');
     const body = {
       Name: 'SyncMarketSurveyWithCampaignByPolygonId',
       Params: {
