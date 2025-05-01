@@ -1,7 +1,6 @@
 <div class="tab-view-container">
   <div class="bottom-navbar">
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-
     <div class="row m-0 mb-0 mobile-n">
       <div
         class="col-12 pt-2 d-flex justify-content-between align-items-center mobile-nav mb-2"
@@ -22,7 +21,10 @@
           </div>
         </div>
         <div style="gap: 5px; display: flex">
-          <button style="border: none;background: none;" class="border-none mx-2">
+          <button
+            style="border: none; background: none"
+            class="border-none mx-2"
+          >
             <app-link-microsoft></app-link-microsoft>
           </button>
           <!-- <button
@@ -33,23 +35,23 @@
           </button> -->
           <button
             class="btn"
-            style="height: 38px;color: #fff; background-color: #001f3f;"
+            style="height: 38px; color: #fff; background-color: #001f3f"
             [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
           >
-            <i class="fa-regular fa-envelope me-2" style="color: #fff;"></i>
+            <i class="fa-regular fa-envelope me-2" style="color: #fff"></i>
             <span>Emily</span>
           </button>
 
           <button
             class="btn"
-            style="height: 38px ;color: #fff; background-color: #001f3f;"
+            style="height: 38px; color: #fff; background-color: #001f3f"
             [routerLink]="['/campaigns/ataglance', CampaignId]"
           >
             At a Glance
           </button>
           <button
-            class="btn "
-            style="height: 38px;color: #fff; background-color: #001f3f;"
+            class="btn"
+            style="height: 38px; color: #fff; background-color: #001f3f"
             [routerLink]="['/market-survey', BuyBoxId, OrgId, BuyBoxName]"
           >
             Market Survey
