@@ -1,6 +1,13 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h5 class="center-name">Composing email</h5>
+    <h5 class="center-name">Composing email to broker {{contactName}} / <img
+      class="logo"
+      src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+        BBId
+      }}"
+      title="{{ BBId }}"
+      style="width: 28px; height: 28px;"
+    /> {{BBName}}</h5>
     <button
       type="button"
       class="btn-close"
@@ -102,8 +109,11 @@
       </div>
       <div *ngSwitchCase="2">
         <div *ngFor="let sc of GetShoppingCenters" class="mb-5">
+          <div class="d-flex justify-content-center">
+          <span class="shopping-name">do you want to include them as CC in the email too ?</span>
+        </div>
           <h5 class="mb-3 shopping-name">{{ sc.CenterName }}</h5>
-          <span>Also Managed by</span>
+          <span>These Shopping Centers are also manager by</span>
           <div class="row">
             <div
               class="col-6 col-lg-4 mb-3 manager-card"
