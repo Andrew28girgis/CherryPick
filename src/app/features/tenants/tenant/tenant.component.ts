@@ -142,6 +142,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   MatchCampaignsFromSubmission: MatchCampaignFromSubmission | null = null;
   isManager: boolean = true;
   onlyUpdate: boolean = false;
+  selectedOption: string = 'isManager'; // This will control the radio button selection
   selectedCampaignIds: number[] = [];
   selectedPlaces: { [campaignId: number]: number[] } = {};
   constructor(
@@ -206,6 +207,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
     const storedUpd = localStorage.getItem('onlyUpdate');
     this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+    // Default the selectedOption to 'isManager' initially
+    this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
     // console.log('Is Manager:', this.isManager);
     // console.log('Only Update:', this.onlyUpdate);
     if(this.userSubmission){
@@ -255,10 +258,21 @@ export class TenantComponent implements OnInit, AfterViewInit {
       },
     });
   }
+  updateRoleSelection(): void {
+    if (this.selectedOption === 'isManager') {
+      this.isManager = true;
+      this.onlyUpdate = false;
+    } else if (this.selectedOption === 'onlyUpdate') {
+      this.isManager = false;
+      this.onlyUpdate = true;
+    }
+    // Store updated values in localStorage
+    localStorage.setItem('isManager', JSON.stringify(this.isManager));
+    localStorage.setItem('onlyUpdate', JSON.stringify(this.onlyUpdate));
+  }
   selectContact(contactId: string) {
      // 1) store the two boolean flags
-     localStorage.setItem('isManager',   JSON.stringify(this.isManager));
-     localStorage.setItem('onlyUpdate',  JSON.stringify(this.onlyUpdate));
+     this.updateRoleSelection();
      // 2) set and navigate
     this.contactID = contactId;
     this.router.navigate([`/${this.guid}/${this.contactID}`], {
