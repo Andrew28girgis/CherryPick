@@ -411,3 +411,38 @@ img[alt="logo"] {
 ::ng-deep .contact-broker-modal-class app-contact-broker {
   height: 100%;
 }
+
+::ng-deep .send-mail-content .modal-content {
+  border-radius: 1rem;
+}
+
+.send-mail-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid #e2e4e9;
+  padding: 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.send-cancel-btn {
+  background-color: #ff4c4c;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.send-confermation-btn {
+  background-color: #4d65b4;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  padding: 0.75rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}

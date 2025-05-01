@@ -323,13 +323,20 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  openContactModal(center: Center): void {
-    const modalRef = this.modalService.open(ContactBrokerComponent, {
-      size: 'xl',
+  // openContactModal(center: Center): void {
+  //   const modalRef = this.modalService.open(ContactBrokerComponent, {
+  //     size: 'xl',
+  //     centered: true,
+  //     windowClass: 'contact-broker-modal-class',
+  //   });
+  //   modalRef.componentInstance.center = center;
+  //   modalRef.componentInstance.buyboxId = this.BuyBoxId;
+  // }
+  openContactModal(object: any): void {
+    const modalRef = this.modalService.open(object, {
       centered: true,
-      windowClass: 'contact-broker-modal-class',
+    windowClass:'send-mail-content'
     });
-    modalRef.componentInstance.center = center;
-    modalRef.componentInstance.buyboxId = this.BuyBoxId;
+   
   }
 }

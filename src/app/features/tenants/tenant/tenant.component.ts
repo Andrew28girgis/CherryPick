@@ -46,6 +46,7 @@ import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCen
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { organizationContacts } from 'src/app/shared/models/organizationContacts';
+import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
 
 @Component({
   selector: 'app-tenant',
@@ -142,7 +143,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    private mapDrawingService: CampaignDrawingService,
+    private mapDrawingService: MapDrawingService,
     private shoppingCenterService: ViewManagerService
   ) {}
   ngOnInit(): void {

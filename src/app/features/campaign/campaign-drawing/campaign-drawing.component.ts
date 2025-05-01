@@ -28,6 +28,7 @@ import {
   takeUntil,
 } from 'rxjs';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
+import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { PolygonsControllerService } from 'src/app/core/services/polygons-controller.service';
 import { IGeoJson } from 'src/app/shared/models/igeo-json';
@@ -87,7 +88,7 @@ export class CampaignDrawingComponent
   @Input() userBuyBoxes: { id: number; name: string }[] = [];
 
   constructor(
-    private campaignDrawingService: CampaignDrawingService,
+    private campaignDrawingService: MapDrawingService,
     private cdr: ChangeDetectorRef,
     private modalService: NgbModal,
     private placesService: PlacesService,
