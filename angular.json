@@ -37,14 +37,10 @@
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
-              "./node_modules/popper.js/dist/umd/popper.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
             "serviceWorker": false,
-            "allowedCommonJsDependencies": [
-              "quill-delta"
-            ]
+            "allowedCommonJsDependencies": ["quill-delta"]
           },
           "configurations": {
             "production": {
@@ -101,7 +97,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
- 
+
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
