@@ -33,7 +33,6 @@ export class AtaglanceComponent implements OnInit {
     private placeService: PlacesService,
     private spinner: NgxSpinnerService,
     private breadcrumbService: BreadcrumbService
-
   ) {}
 
   ngOnInit(): void {
@@ -47,7 +46,6 @@ export class AtaglanceComponent implements OnInit {
       label: 'At a glance',
       url: `/campaigns/ataglance/${this.campaignId}`,
     });
-
 
     this.initializeAtaglance();
   }
