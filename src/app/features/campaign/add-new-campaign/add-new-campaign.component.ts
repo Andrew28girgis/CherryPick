@@ -218,7 +218,6 @@ export class AddNewCampaignComponent
             for (let state of this.mapStates) {
               this.getAllCitiesByStateCode(state);
             }
-            console.log(this.mapStates);
 
             this.cdr.detectChanges();
           });
@@ -454,7 +453,6 @@ export class AddNewCampaignComponent
   //         value: state.stateCode,
   //       }));
   //       this.filteredStates = this.states;
-  //       console.log(this.states);
   //     }
   //   });
   // }
@@ -554,7 +552,6 @@ export class AddNewCampaignComponent
           a.localeCompare(b)
         );
         this.cdr.detectChanges();
-        console.log(state);
       }
     });
   }
@@ -569,8 +566,7 @@ export class AddNewCampaignComponent
   // onStateSelected(event: AutoCompleteSelectEvent) {
   //   // pull your selected state out of `.suggestion`
   //   const state = event.value;
-  //   console.log(state);
-  //   console.log(this.selectedState);
+
 
   //   this.filteredCities = [];
   //   this.cities = [];
@@ -747,7 +743,6 @@ export class AddNewCampaignComponent
   //           value: city,
   //         }));
   //         this.filteredCities = this.cities;
-  //         console.log(this.filteredCities);
   //       }
   //     },
   //   };
@@ -763,7 +758,6 @@ export class AddNewCampaignComponent
 
   // to be uncommented
   // searchForPolygons(): void {
-  //   console.log('hello');
   //   this.isSearching = true;
 
   //   const object = {

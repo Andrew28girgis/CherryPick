@@ -572,7 +572,6 @@ export class MapDrawingService {
   private zoomChangeListener(map: any): void {
     map.addListener('zoom_changed', () => {
       const zoomLevel = map.getZoom();
-      console.log('Zoom Level Changed:', zoomLevel);
     });
   }
 

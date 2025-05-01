@@ -233,7 +233,6 @@ export class GenericMapService {
   //         result.types.includes('locality')
   //       );
   //       if (city) {
-  //         console.log(city);
 
   //         // Create IMapCity object
   //         const mapCity: IMapCity = {

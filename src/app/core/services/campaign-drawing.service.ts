@@ -104,13 +104,11 @@ export class CampaignDrawingService {
                 );
 
                 if (!condition) {
-                  console.log('here add');
                   this.addedFeatures.push({
                     id: Number(featureId),
                     name: name as string,
                   });
                 } else {
-                  console.log('here remove');
                   this.addedFeatures = this.addedFeatures.filter(
                     (f) => f.id !== Number(featureId)
                   );
@@ -127,7 +125,6 @@ export class CampaignDrawingService {
 
                 this.infoWindow.setContent(updatedWindowContent);
                 this.infoWindow.open(this.map);
-                console.log(this.addedFeatures);
 
                 // Re-attach the click handler to the newly created button
                 const newActionBtn =
