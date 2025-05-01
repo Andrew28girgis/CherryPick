@@ -26,6 +26,9 @@ export class SummeryComponent implements OnInit {
   @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;
   modalOpened: boolean = false;
   isLoading = true;
+  showCampaigns: boolean = false;
+  campaignsViewMode: 'table' | 'card' = 'table';
+
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -86,5 +89,21 @@ export class SummeryComponent implements OnInit {
       .catch((error) => {
         this.getUserBuyBoxes();
       });
+  }
+  showCampaignsTable() {
+    this.showCampaigns = true;
+    this.campaignsViewMode = 'table';
+    console.log('Showing campaigns in table view', this.showCampaigns); // For debugging
+  }
+
+  showCampaignsCard() {
+    this.showCampaigns = true;
+    this.campaignsViewMode = 'card';
+    console.log('Showing campaigns in card view', this.showCampaigns); // For debugging
+  }
+
+  // Add method to go back to tenants view if needed
+  showTenants() {
+    this.showCampaigns = false;
   }
 }
