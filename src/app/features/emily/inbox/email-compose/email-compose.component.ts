@@ -276,8 +276,9 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe({
       next: (data) => {
         this.mailContextId=data.json[0].id;
+        // this.getGeneratedEmail(data.json[0].id);
         this.AddMailContextReceivers();
-        this.getGeneratedEmail(data.json[0].id);
+        this.CheckMailGenerated();
       },
     });
   }
@@ -309,7 +310,40 @@ export class EmailComposeComponent implements OnInit {
      
     });
   }
-  
+  CheckMailGenerated() {
+    const body: any = {
+      Name: 'CheckMailGenerated',
+      MainEntity: null,
+      Params: {
+        MailContextId: this.mailContextId,
+      },
+      Json: null,
+    };
+    this.places.GenericAPI(body).subscribe((res) => {
+      const response = res.json[0];
+      if (!response || response.length === 0) {
+          this.CheckMailGenerated();
+      } else {
+      if (response.isGenerated) {
+        console.log('Email generated successfully:', response.isGenerated);
+        this.getGeneratedEmail(this.mailContextId);
+        this.spinner.hide();
+        // this.getGeneratedEmail(this.mailContextId);
+        return;
+      } else if (response.errorMessage) {
+        this.spinner.hide();
+        alert(
+          'Email generation is taking longer than expected. Please close this window and check your drafts folder in Emily later.'
+        );
+        this.modal.close('sent');
+        return;
+      }
+      setTimeout(() => {
+        this.CheckMailGenerated();
+      }, 3000);
+    }
+    });
+  }
 
   getGeneratedEmail(id: number): void {
     this.spinner.show();
@@ -326,18 +360,12 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe({
       next: (data) => {
         const response = data.json;
-        if (!response || response.length === 0) {
-          setTimeout(() => {
-            this.getGeneratedEmail(id);
-          }, 3000);
-        } else {
           this.emailBody = response[0].Body;
           this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
           );
           this.emailSubject = response[0].Subject;
           this.spinner.hide();
-        }
       },
     });
   }
