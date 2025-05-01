@@ -28,7 +28,10 @@ export class SummeryComponent implements OnInit {
   isLoading = true;
   showCampaigns: boolean = false;
   campaignsViewMode: 'table' | 'card' = 'table';
+  currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
 
+  // Add a new property to track if campaigns were loaded
+  campaignsLoaded = false;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -90,20 +93,25 @@ export class SummeryComponent implements OnInit {
         this.getUserBuyBoxes();
       });
   }
+
   showCampaignsTable() {
     this.showCampaigns = true;
     this.campaignsViewMode = 'table';
-    console.log('Showing campaigns in table view', this.showCampaigns); // For debugging
+    this.currentView = 'campaigns-table';
+    this.campaignsLoaded = true;
   }
 
   showCampaignsCard() {
     this.showCampaigns = true;
     this.campaignsViewMode = 'card';
-    console.log('Showing campaigns in card view', this.showCampaigns); // For debugging
+    this.currentView = 'campaigns-card';
+    this.campaignsLoaded = true;
   }
 
-  // Add method to go back to tenants view if needed
+  // Add method to go back to tenants view
   showTenants() {
     this.showCampaigns = false;
+    this.currentView = 'tenants';
+    // Don't reset campaignsLoaded here to preserve the state
   }
 }
