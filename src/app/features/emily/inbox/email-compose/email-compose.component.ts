@@ -22,6 +22,8 @@ export class EmailComposeComponent implements OnInit {
   @Input() campaignId!: string | null;
   @Input() contactName!: string;
   @Input() email!: string;
+  @Input() BBName!: string;
+  @Input() BBId!: string;
 
   currentStep = 1;
   emailSubject = '';
