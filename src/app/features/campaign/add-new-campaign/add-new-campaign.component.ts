@@ -314,17 +314,11 @@ export class AddNewCampaignComponent
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0 && response.json[0].id) {
-        if (!this.router.url.includes('campaigns')) {
-          setTimeout(() => {
-            this.spinner.hide();
-            this.modalService.dismissAll();
-            this.router.navigate(['/campaigns']);
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1000);
-        }
+        setTimeout(() => {
+          this.spinner.hide();
+          this.modalService.dismissAll();
+          this.router.navigate(['/summary']);
+        }, 1000);
         this.attachAreasToCampaign(response.json[0].id);
         this.attachFeaturesToCampaign(response.json[0].id);
       }
