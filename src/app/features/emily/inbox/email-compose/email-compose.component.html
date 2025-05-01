@@ -103,7 +103,7 @@
       <div *ngSwitchCase="2">
         <div *ngFor="let sc of GetShoppingCenters" class="mb-5">
           <h5 class="mb-3 shopping-name">{{ sc.CenterName }}</h5>
-          <span >Also Managed by</span>
+          <span>Also Managed by</span>
           <div class="row">
             <div
               class="col-6 col-lg-4 mb-3 manager-card"
@@ -205,7 +205,7 @@
           class="email-body"
           [innerHTML]="sanitizedEmailBody"
           contenteditable="true"
-          style="white-space: break-spaces;"
+          style="white-space: break-spaces"
           (input)="onContentChange($event)"
         ></div>
       </div>
@@ -258,57 +258,61 @@
 
 <ng-template #sendModal let-modal>
   <div class="modal-content">
-    <div class="modal-header d-flex justify-content-center" style="border-bottom: none;">
+    <div
+      class="modal-header d-flex justify-content-center"
+      style="border-bottom: none"
+    >
       <h3 class="titlee">Send Email with</h3>
     </div>
     <div class="modal-body pt-0" style="overflow-y: auto; height: 45vh">
-<!-- &cc={{ CCEmail }} -->
- <!--       href="https://outlook.office.com/mail/deeplink/compose?to={{email}},{{ CCEmail }},{{selectedManagerEmails}}&subject={{emailSubject}}&body={{emailBody}}"
+      <!-- &cc={{ CCEmail }} -->
+      <!--       href="https://outlook.office.com/mail/deeplink/compose?to={{email}},{{ CCEmail }},{{selectedManagerEmails}}&subject={{emailSubject}}&body={{emailBody}}"
  -->
-      <a
-      class="mb-3 w-100 text-decoration-none"
-      style="cursor: pointer"
-      [href]="generateMailtoLink()"
-      target="_blank"
-    >
-      <div class="card-email d-flex align-items-center gap-2">
-        <img [src]="'../../../assets/Images/Icons/outlook-icon.svg'" />
-        <p class="text-outlook">OutLook</p>
-      </div>
-    </a>
-    <a
-      class="mb-3 w-100 text-decoration-none"
-      style="cursor: pointer"
-      href="https://mail.google.com/mail/?view=cm&fs=1&to={{ email }}&su={{
-        emailSubject
-      }}&body={{ emailBody }}&cc={{ CCEmail }},{{selectedManagerEmails}}"
-      target="_blank"
-    >
-    <!-- &bcc={{BCCEmail}} -->
-      <div class="card-email d-flex align-items-center">
-        <img [src]="'../../../assets/Images/Icons/gmail-icon.svg'" />
-        <p class="text-outlook">Gmail</p>
-      </div>
-    </a>
-
-    <div class="mb-3 w-100" style="cursor: pointer" (click)="send()">
-      <div class="card-email d-flex align-items-center gap-5">
-        <img [src]="'../../../assets/Images/Icons/logo-icon.svg'" />
-      </div>
-    </div>
-    
       <a
         class="mb-3 w-100 text-decoration-none"
         style="cursor: pointer"
-        href="mailto:{{email}},{{ CCEmail }},{{selectedManagerEmails}}?subject={{emailSubject}}&body={{emailBody}}"
+        [href]="generateMailtoLink()"
         target="_blank"
       >
-        <div class="card-email d-flex align-items-center gap-2  mb-0">
+        <div class="card-email d-flex align-items-center gap-2">
+          <img [src]="'../../../assets/Images/Icons/outlook-icon.svg'" />
+          <p class="text-outlook">OutLook</p>
+        </div>
+      </a>
+      <a
+        class="mb-3 w-100 text-decoration-none"
+        style="cursor: pointer"
+        href="https://mail.google.com/mail/?view=cm&fs=1&to={{ email }}&su={{
+          emailSubject
+        }}&body={{ emailBody }}&cc={{ CCEmail }},{{ selectedManagerEmails }}"
+        target="_blank"
+      >
+        <!-- &bcc={{BCCEmail}} -->
+        <div class="card-email d-flex align-items-center">
+          <img [src]="'../../../assets/Images/Icons/gmail-icon.svg'" />
+          <p class="text-outlook">Gmail</p>
+        </div>
+      </a>
+
+      <div class="mb-3 w-100" style="cursor: pointer" (click)="send()">
+        <div class="card-email d-flex align-items-center gap-5">
+          <img [src]="'../../../assets/Images/Icons/logo-icon.svg'" />
+        </div>
+      </div>
+
+      <a
+        class="mb-3 w-100 text-decoration-none"
+        style="cursor: pointer"
+        href="mailto:{{ email }},{{ CCEmail }},{{
+          selectedManagerEmails
+        }}?subject={{ emailSubject }}&body={{ emailBody }}"
+        target="_blank"
+      >
+        <div class="card-email d-flex align-items-center gap-2 mb-0">
           <img [src]="'../../../assets/Images/Icons/mail-icon.svg'" />
           <p class="text-outlook">Email</p>
         </div>
       </a>
-
     </div>
     <!-- <div class="modal-footer">
       <button

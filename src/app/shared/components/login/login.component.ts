@@ -134,8 +134,8 @@ export class LoginComponent implements OnInit {
   private prepareLoginRequest(): AdminLogin {
     const encryptedLoginData = new AdminLogin();
     encryptedLoginData.Email = this.loginData.Email;
-    // encryptedLoginData.Password = this.encrypt(this.loginData.Password);
-    encryptedLoginData.Password = this.loginData.Password;
+    encryptedLoginData.Password = this.encrypt(this.loginData.Password);
+    // encryptedLoginData.Password = this.loginData.Password;
 
     if (this.loginToken) {
       encryptedLoginData.contactToken = this.loginToken;
@@ -150,9 +150,7 @@ export class LoginComponent implements OnInit {
     );
     localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
     localStorage.setItem(this.ORG_ID_KEY, response.orgId);
-
     this.authService.setToken(response.token);
-
     if (response.token) {
       this.navigateToHome();
     }
@@ -165,6 +163,7 @@ export class LoginComponent implements OnInit {
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
+
   encrypt(value: string): string {
     const encrypted = CryptoJS.AES.encrypt(
       CryptoJS.enc.Utf8.parse(value),
@@ -176,7 +175,7 @@ export class LoginComponent implements OnInit {
         padding: CryptoJS.pad.Pkcs7,
       }
     );
-    return encrypted.toString(); // Or encodeURIComponent(...) if backend requires it
+    return encrypted.toString();
   }
 
   decrypt(encryptedValue: string): string {
