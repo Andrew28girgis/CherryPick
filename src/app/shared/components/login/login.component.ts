@@ -134,8 +134,8 @@ export class LoginComponent implements OnInit {
   private prepareLoginRequest(): AdminLogin {
     const encryptedLoginData = new AdminLogin();
     encryptedLoginData.Email = this.loginData.Email;
-    // encryptedLoginData.Password = this.encrypt(this.loginData.Password);
-    encryptedLoginData.Password = this.loginData.Password;
+    encryptedLoginData.Password = this.encrypt(this.loginData.Password);
+    // encryptedLoginData.Password = this.loginData.Password;
 
     if (this.loginToken) {
       encryptedLoginData.contactToken = this.loginToken;
