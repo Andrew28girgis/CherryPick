@@ -16,6 +16,135 @@
   border-radius: 0.5rem;
 }
 
+.loading-polygons *,
+.map-zoom-alert * {
+  color: #4d65b4;
+  font-weight: 600;
+}
+
+.left-panel {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.loading-polygons,
+.map-zoom-alert,
+.map-areas,
+.added-list {
+  padding: 1rem;
+  min-width: 18vw;
+  max-width: 25vw;
+  max-height: 45vh;
+  overflow: auto;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+.map-areas,
+.added-list {
+  padding-top: 0;
+}
+
+.loading-polygons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: auto;
+  width: fit-content;
+}
+
+.added-list {
+  max-height: 30vh;
+}
+
+.map-areas-header {
+  width: 100%;
+  padding-block: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.areas-card-title {
+  color: #4d65b4;
+}
+
+.map-areas-collapsed-icon {
+  transform: rotate(180deg);
+}
+
+.states-tabs {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.state-tab {
+  width: 100%;
+  text-align: center;
+  color: #707791;
+  cursor: pointer;
+  border-radius: 1rem;
+  padding: 0.25rem 0.75rem;
+}
+
+.state-tab-active {
+  background-color: #b8c1e1;
+  color: #2e3d6c;
+}
+
+.cities-card-content {
+  flex: 1;
+  width: 100%;
+}
+
+.cities-card-content hr {
+  margin: 0.75rem 0;
+}
+
+.area-card-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.area-card-item .add-area-btn {
+  font-size: small;
+  background-color: #4d65b4;
+  border-color: #4d65b4;
+  padding: 0.25rem 0.5rem;
+  color: #fff;
+}
+
+.area-card-item .remove-area-btn {
+  font-size: small;
+  background-color: #ff4c4c;
+  border-color: #ff4c4c;
+  padding: 0.25rem 0.5rem;
+  color: #fff;
+}
+
+.area-name {
+  color: #707791;
+}
+
 .map-controls-container {
   position: absolute;
   top: 0.5rem;
@@ -72,100 +201,10 @@
   color: #4d65b4;
 }
 
-.launch-campaign {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-}
-
-.launch-campaign-btn {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  gap: 0.5rem;
-  background: #4d65b4;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid transparent;
-  /* box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25); */
-  cursor: pointer;
-}
-
-.launch-campaign-btn-icon {
-  display: flex;
-  align-items: center;
-}
-
-.launch-campaign-btn-icon svg path {
-  fill: #ffffff;
-}
-
-.launch-campaign-title {
-  color: #ffffff;
-}
-
-.exit-draw-mode {
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  cursor: pointer;
-}
-
-.exit-draw-mode-btn {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
-  background: #ffffff;
-  border: 1px solid #ff4c4c;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
-}
-
-.exit-draw-mode-btn-icon {
-  display: flex;
-  align-items: center;
-}
-
-.exit-draw-mode-btn-icon svg path {
-  fill: #ff4c4c;
-}
-
-.exit-draw-mode-title {
-  color: #ff4c4c;
-}
-
-.start-drawing-btn {
-  border-color: #2e3d6c;
-}
-
-.start-drawing-btn .exit-draw-mode-title {
-  color: #2e3d6c;
-}
-
 .new-campaign-title {
   font-weight: 600;
 }
 
-::ng-deep .p-selectbutton .p-button {
-  padding: 4px 12px;
-  box-shadow: none;
-  outline: none;
-  color: #707791 !important;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400 !important;
-  border: 1px solid #4d65b4;
-}
-
-::ng-deep .p-selectbutton .p-button.p-highlight {
-  background: #4d65b4;
-  color: white !important;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400 !important;
-  border: 1px solid #4d65b4;
-}
 .campaign-status {
   font-size: 1.125rem;
   font-weight: 500;
@@ -199,156 +238,34 @@
   color: #ffffff;
 }
 
-.search-polygons {
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
-}
-
-.polygons-options ul {
-  display: flex;
-  list-style: none;
-  gap: 0.25rem;
-  padding: 0;
-  margin: 0;
-  margin-bottom: 1rem;
-}
-
-.nav-item {
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  color: #707791;
-  display: flex;
+.launch-campaign-btn {
+  margin-top: 0.5rem;
   align-items: center;
+  justify-content: center;
+  display: flex;
   gap: 0.5rem;
-}
-.active-nav-item {
-  background-color: #b8c1e1;
-  border: 1px solid #2e3d6c;
-  color: #4d65b4;
-  font-weight: 500;
-}
-
-.table-container {
-  background-color: #fff;
+  background: #4d65b4;
   padding: 0.5rem;
-  border: 1px solid #dee2e6;
   border-radius: 0.5rem;
-  height: 40vh;
-  max-height: 40vh;
-  /* overflow: auto; */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-
-  /* scrollbar-width: none;
-    flex: 1; */
+  border: 1px solid transparent;
+  /* box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25); */
+  cursor: pointer;
 }
 
-.scrollable-table {
-  width: 100%;
-  flex: 1;
-  overflow: auto;
-}
-
-.table {
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #dee2e6;
-  margin: 0;
-}
-
-.table thead th {
-  border: 1px solid #dee2e6;
-}
-
-.table tbody td {
-  border: 1px solid #dee2e6;
-}
-
-.table-title {
-  font-size: large;
-  font-weight: 600;
-}
-
-.dragable-polygons {
-  width: 30%;
-  height: 100%;
-  border: solid 1px #ccc;
-  color: rgba(0, 0, 0, 0.87);
-  cursor: move;
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-  background: #fff;
-  border-radius: 0.5rem;
-  margin-right: 25px;
-  position: absolute;
-  z-index: 1;
-  box-sizing: border-box;
-  padding: 10px;
-  transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
-  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12);
-
-  overflow: auto;
-  top: 0rem;
-  left: 0rem;
-}
-
-.dragable-polygons .h-50 {
-  overflow: auto;
-}
-
-.dragable-polygons:active {
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
-}
-
-.collaped-popup {
-  position: absolute;
-  top: 3.5rem;
-  right: 0.5rem;
-  max-width: 30%;
-  max-height: 75%;
-  overflow: hidden;
-  overflow-y: auto;
-}
-
-.search-field {
+.launch-campaign-btn-icon {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  position: relative;
 }
 
-.search-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  position: absolute;
-  left: 0;
-  margin-left: 0.75rem;
+.launch-campaign-btn-icon svg path {
+  fill: #ffffff;
 }
 
-.search-input {
-  border-radius: 0.5rem;
-  padding-inline: 2.5rem;
+.launch-campaign-title {
+  color: #ffffff;
 }
 
-.search-input:hover {
-  border-color: #4d65b4;
-}
-
-.search-input:focus {
-  box-shadow: none;
-  border-color: #4d65b4;
-}
-
-.form-check-input:focus {
+/* .form-check-input:focus {
   border-color: #4d65b4;
   box-shadow: none;
 }
@@ -356,62 +273,28 @@
 .form-check-input:checked {
   background-color: #4d65b4;
   border-color: #4d65b4;
-}
-
-::ng-deep p-autoComplete .p-autocomplete {
-  width: 100% !important;
-}
-
-::ng-deep p-autoComplete ul {
-  padding: 0 !important;
-}
-
-::ng-deep p-autoComplete ul li {
-  height: auto !important;
-}
-
-::ng-deep p-autoComplete input {
-  border-top-left-radius: 0.5rem !important;
-  border-bottom-left-radius: 0.5rem !important;
-}
-
-::ng-deep p-autoComplete input:hover {
-  border-color: #4d65b4;
-}
-
-::ng-deep p-autoComplete input:focus {
-  box-shadow: none;
-  border-color: #4d65b4;
-}
-
-::ng-deep p-autoComplete button {
-  background-color: #4d65b4 !important;
-  border-color: #4d65b4 !important;
-  border-top-right-radius: 0.5rem !important;
-  border-bottom-right-radius: 0.5rem !important;
-}
-
-::ng-deep p-button button {
-  height: 100%;
-  background-color: #4d65b4;
-  border-color: #4d65b4;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 0.5rem;
-}
-
-::ng-deep p-button button:focus {
-  box-shadow: none;
-}
-
-::ng-deep p-button button svg {
-  width: 1.25rem;
-  height: 1.25rem;
-}
+} */
 
 #user-buybox {
   border-radius: 1rem;
+}
+
+::ng-deep .p-selectbutton .p-button {
+  padding: 4px 12px;
+  box-shadow: none;
+  outline: none;
+  color: #707791 !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400 !important;
+  border: 1px solid #4d65b4;
+}
+
+::ng-deep .p-selectbutton .p-button.p-highlight {
+  background: #4d65b4;
+  color: white !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400 !important;
+  border: 1px solid #4d65b4;
 }

@@ -13,7 +13,6 @@ import { TableViewComponent } from './shopping-center-table/table-view/table-vie
 import { CardViewComponent } from './shopping-center-table/card-view/card-view.component';
 import { SideListViewComponent } from './shopping-center-table/side-list-view/side-list-view.component';
 import { MapViewComponent } from './shopping-center-table/map-view/map-view.component';
-import { PolygonsControllerComponent } from './polygons-controller/polygons-controller.component';
 import { AccordionModule } from 'primeng/accordion';
 import { TableModule } from 'primeng/table';
 import { CardModule } from 'primeng/card';
@@ -37,7 +36,6 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
-    PolygonsControllerComponent,
     KanbanViewComponent,
     ContactBrokerComponent,
     ChooseBrokerComponent,
@@ -71,7 +69,6 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
     CardViewComponent,
     SideListViewComponent,
     MapViewComponent,
-    PolygonsControllerComponent,
     LinkMicrosoftComponent,
   ],
 })

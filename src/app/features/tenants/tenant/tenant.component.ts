@@ -43,7 +43,13 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { organizationContacts } from 'src/app/shared/models/organizationContacts';
 import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
-import { Bb, C, MatchCampaignFromSubmission, P } from 'src/app/shared/models/MatchCampaignFromSubmission';
+import {
+  Bb,
+  C,
+  MatchCampaignFromSubmission,
+  P,
+} from 'src/app/shared/models/MatchCampaignFromSubmission';
+import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
 @Component({
   selector: 'app-tenant',
   standalone: true,
@@ -153,7 +159,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    private mapDrawingService: CampaignDrawingService,
+    private mapDrawingService: MapDrawingService,
     private shoppingCenterService: ViewManagerService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -211,7 +217,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
     // console.log('Is Manager:', this.isManager);
     // console.log('Only Update:', this.onlyUpdate);
-    if(this.userSubmission){
+    if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
   }
@@ -271,9 +277,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
     localStorage.setItem('onlyUpdate', JSON.stringify(this.onlyUpdate));
   }
   selectContact(contactId: string) {
-     // 1) store the two boolean flags
-     this.updateRoleSelection();
-     // 2) set and navigate
+    // 1) store the two boolean flags
+    this.updateRoleSelection();
+    // 2) set and navigate
     this.contactID = contactId;
     this.router.navigate([`/${this.guid}/${this.contactID}`], {
       replaceUrl: true,
@@ -289,7 +295,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     });
   }
   ///
-  GetMatchCampaignsFromSubmission(){
+  GetMatchCampaignsFromSubmission() {
     const body: any = {
       Name: 'GetMatchCampaignsFromSubmission',
       Params: {
@@ -301,45 +307,50 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         if (res?.json?.[0]) {
           this.MatchCampaignsFromSubmission = res.json[0];
-          console.log('MatchCampaignsFromSubmission',this.MatchCampaignsFromSubmission);
+          console.log(
+            'MatchCampaignsFromSubmission',
+            this.MatchCampaignsFromSubmission
+          );
           this.selectedPlaces = {};
-          this.MatchCampaignsFromSubmission!.BB.forEach(buyBox => {
-            buyBox.C.forEach(campaign => {
-              this.selectedPlaces[campaign.CampaignId] = campaign.P.map(place => place.PlaceId);
+          this.MatchCampaignsFromSubmission!.BB.forEach((buyBox) => {
+            buyBox.C.forEach((campaign) => {
+              this.selectedPlaces[campaign.CampaignId] = campaign.P.map(
+                (place) => place.PlaceId
+              );
             });
           });
         } else {
           this.MatchCampaignsFromSubmission = null;
-        }  
+        }
       },
     });
   }
   InsertIntoDestinationTable(buyBox: Bb) {
     this.spinner.show();
-    
+
     // Process each campaign in the buyBox
-    const approvalPromises = buyBox.C
-      .filter(campaign => this.selectedPlaces[campaign.CampaignId]?.length > 0)
-      .map(campaign => {
-        const placeIds = this.selectedPlaces[campaign.CampaignId].join(',');
-        const body = {
-          Name: 'InsertIntoDestinationTable',
-          Params: {
-            CampaignID: campaign.CampaignId,
-            PlaceIDs: placeIds
-          }
-        };
-        return this.PlacesService.GenericAPI(body).toPromise();
-      });
+    const approvalPromises = buyBox.C.filter(
+      (campaign) => this.selectedPlaces[campaign.CampaignId]?.length > 0
+    ).map((campaign) => {
+      const placeIds = this.selectedPlaces[campaign.CampaignId].join(',');
+      const body = {
+        Name: 'InsertIntoDestinationTable',
+        Params: {
+          CampaignID: campaign.CampaignId,
+          PlaceIDs: placeIds,
+        },
+      };
+      return this.PlacesService.GenericAPI(body).toPromise();
+    });
 
     Promise.all(approvalPromises)
-      .then(responses => {
+      .then((responses) => {
         console.log('All approvals successful', responses);
         this.spinner.hide();
         this.MatchCampaignsFromSubmission = null;
         this.showToast('Campaigns and Places Approved Successfully');
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Approval failed', error);
         this.spinner.hide();
         this.showToast('Error approving campaigns');
@@ -349,14 +360,15 @@ export class TenantComponent implements OnInit, AfterViewInit {
   private findCampaign(campaignId: number): C | undefined {
     if (!this.MatchCampaignsFromSubmission) return undefined;
     for (const buyBox of this.MatchCampaignsFromSubmission.BB) {
-      const found = buyBox.C.find(c => c.CampaignId === campaignId);
+      const found = buyBox.C.find((c) => c.CampaignId === campaignId);
       if (found) return found;
     }
     return undefined;
   }
 
   isAllPlacesSelected(campaignId: number): boolean {
-    if (!this.MatchCampaignsFromSubmission || !this.selectedPlaces[campaignId]) return false;
+    if (!this.MatchCampaignsFromSubmission || !this.selectedPlaces[campaignId])
+      return false;
     const campaign = this.findCampaign(campaignId);
     return campaign?.P.length === this.selectedPlaces[campaignId]?.length;
   }
@@ -366,7 +378,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   toggleAllPlacesForCampaign(campaignId: number, places: P[], event: any) {
     if (event.target.checked) {
       // Select all places for this campaign
-      this.selectedPlaces[campaignId] = places.map(p => p.PlaceId);
+      this.selectedPlaces[campaignId] = places.map((p) => p.PlaceId);
     } else {
       // Deselect all places for this campaign
       this.selectedPlaces[campaignId] = [];
@@ -376,33 +388,36 @@ export class TenantComponent implements OnInit, AfterViewInit {
     if (!this.selectedPlaces[campaignId]) {
       this.selectedPlaces[campaignId] = [];
     }
-    
+
     const index = this.selectedPlaces[campaignId].indexOf(placeId);
     if (index === -1) {
       this.selectedPlaces[campaignId].push(placeId);
     } else {
       this.selectedPlaces[campaignId].splice(index, 1);
     }
-    
+
     // Update view manually since we're not using two-way binding
     this.cdr.detectChanges();
   }
   hasAnyPlaceSelected(campaignId: number): boolean {
     return this.selectedPlaces[campaignId]?.length > 0;
   }
-  
+
   isSomePlacesSelected(campaignId: number): boolean {
-    if (!this.MatchCampaignsFromSubmission || !this.selectedPlaces[campaignId]) return false;
+    if (!this.MatchCampaignsFromSubmission || !this.selectedPlaces[campaignId])
+      return false;
     const campaign = this.findCampaign(campaignId);
-    return this.selectedPlaces[campaignId]?.length > 0 && 
-           this.selectedPlaces[campaignId]?.length < (campaign?.P?.length ?? 0);
+    return (
+      this.selectedPlaces[campaignId]?.length > 0 &&
+      this.selectedPlaces[campaignId]?.length < (campaign?.P?.length ?? 0)
+    );
   }
-  
+
   // togglePlaceSelection(campaignId: number, placeId: number) {
   //   if (!this.selectedPlaces[campaignId]) {
   //     this.selectedPlaces[campaignId] = [];
   //   }
-    
+
   //   const index = this.selectedPlaces[campaignId].indexOf(placeId);
   //   if (index === -1) {
   //     this.selectedPlaces[campaignId].push(placeId);
@@ -709,12 +724,12 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.fileName = file.name;
           const formData = new FormData();
           formData.append('filename', file);
-        // Create a DTO object and serialize it to JSON
-        const dto = {
-          IsManage: this.isManager,
-          IsUpdatedOnly: this.onlyUpdate,
-        };
-        formData.append('ConvertPdfToImagesDTO', JSON.stringify(dto));
+          // Create a DTO object and serialize it to JSON
+          const dto = {
+            IsManage: this.isManager,
+            IsUpdatedOnly: this.onlyUpdate,
+          };
+          formData.append('ConvertPdfToImagesDTO', JSON.stringify(dto));
 
           // const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
           const SERVER_URL = `https://apibeta.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;

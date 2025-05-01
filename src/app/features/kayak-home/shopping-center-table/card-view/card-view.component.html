@@ -203,7 +203,7 @@
                         Street View
                       </a>
                     </li>
-                  
+
                     <li>
                       <a
                         class="target"
@@ -648,7 +648,9 @@
                   d="M18 2.0845
                     a 15.9155 15.9155 0 0 1 0 31.831
                     a 15.9155 15.9155 0 0 1 0 -31.831"
-                  [style.stroke-dasharray]="getCircleProgressBackground(submission?.Percentage)"
+                  [style.stroke-dasharray]="
+                    getCircleProgressBackground(submission?.Percentage)
+                  "
                 />
                 <!-- Foreground path (green) -->
                 <path
@@ -656,8 +658,10 @@
                   d="M18 2.0845
                     a 15.9155 15.9155 0 0 1 0 31.831
                     a 15.9155 15.9155 0 0 1 0 -31.831"
-                  [style.stroke-dasharray]="getCircleProgress(submission?.Percentage)"
-                  />
+                  [style.stroke-dasharray]="
+                    getCircleProgress(submission?.Percentage)
+                  "
+                />
               </svg>
               <div class="circle-label">
                 <span class="match">Match</span>
