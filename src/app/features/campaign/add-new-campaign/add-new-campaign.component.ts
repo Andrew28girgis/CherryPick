@@ -452,6 +452,7 @@ export class AddNewCampaignComponent
   // }
 
   addState(stateCode: string, stateName: string): void {
+    this.selectedAddedListTab = 'States';
     const condition = this.addedStates.has(stateCode);
     if (!condition) {
       this.selectedStateTab = '';
@@ -467,6 +468,7 @@ export class AddNewCampaignComponent
   }
 
   addCity(stateCode: string, city: string): void {
+    this.selectedAddedListTab = 'Cities';
     const condition = this.addedCities.get(stateCode)?.includes(city);
     if (!condition) {
       const cities = this.addedCities.get(stateCode) || [];
@@ -476,13 +478,16 @@ export class AddNewCampaignComponent
   }
 
   removeCity(stateCode: string, city: string): void {
-    const cities = this.addedCities.get(stateCode) || [];
-    const index = cities.indexOf(city);
-    if (index > -1) {
-      cities.splice(index, 1);
-      cities.length > 1
-        ? this.addedCities.set(stateCode, cities)
-        : this.addedCities.delete(stateCode);
+    let cities = this.addedCities.get(stateCode) || [];
+    const condition = cities.includes(city);
+    if (condition) {
+      cities = cities.filter((c) => c !== city);
+      if (cities.length > 0) {
+        this.addedCities.delete(stateCode);
+        this.addedCities.set(stateCode, cities);
+      } else {
+        this.addedCities.delete(stateCode);
+      }
     }
   }
 
@@ -560,7 +565,6 @@ export class AddNewCampaignComponent
   // onStateSelected(event: AutoCompleteSelectEvent) {
   //   // pull your selected state out of `.suggestion`
   //   const state = event.value;
-
 
   //   this.filteredCities = [];
   //   this.cities = [];
