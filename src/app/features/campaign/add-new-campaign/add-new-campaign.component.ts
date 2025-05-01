@@ -326,12 +326,13 @@ export class AddNewCampaignComponent
 
   attachAreasToCampaign(campaignId: number): void {
     const states = Array.from(this.addedStates.keys()).join(', ');
-    const cities = Array.from(this.addedCities.entries()).map(
-      ([key, value]) => ({
+    const cities = Array.from(this.addedCities.entries())
+      .map(([key, value]) => ({
         key,
         value: value.join(', '),
-      })
-    );
+      }))
+      .map((city) => city.value)
+      .join(', ');
     const body = {
       Name: 'SyncMarketSurveyWithCampaignByCityAndState',
       Params: {
