@@ -1,3 +1,136 @@
+.contact-card {
+  border: 1px solid #ccc;      /* visible border */
+  border-radius: 0.25rem;      /* same radius as .card */
+  background-color: #fff;      /* ensure white bg */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+/* Organization Title */
+.organization-title {
+  color: #000;
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+/* BuyBox Container */
+.buybox-container {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.buybox-title {
+  color: #4D65B4;
+  text-align: center;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px;
+}
+
+/* Campaign Cards */
+.campaign-row {
+  margin: 0 -10px;
+}
+
+.campaign-card {
+  border-radius: 12px;
+  border: 1px solid #E2E4E9;
+  padding: 13px 14px;
+  flex-direction: column;
+  gap: 16px;
+}
+.places{
+  color: #000;
+font-size: 12px;
+font-style: normal;
+font-weight: 600;
+line-height: 20px;
+}
+.places-sqft{
+  color: #707791;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 30px; 
+}
+
+.campaign-card:hover {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+.campaign-name {
+  color: #000;
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+}
+
+.card-body {
+  padding: 0;
+}
+
+.campaign-detail {
+  margin-bottom: 10px;
+  display: flex;
+}
+
+.detail-label {
+  color: #707791;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.detail-value {
+  color:  #16181D;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.campaign-master-checkbox:indeterminate {
+  background-color: #00eeff;
+  border-color: #00eeff;
+}
+.subm-div{
+  padding: 32px;
+  align-items: center;
+  gap: 24px;
+  align-self: stretch;
+  border-radius: 20px;
+  background:#FFF;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .campaign-card {
+    padding: 15px;
+  }
+  
+  .organization-title {
+    font-size: 24px;
+  }
+  
+  .buybox-title {
+    font-size: 20px;
+  }
+}
 .btn_trash {
   background: transparent;
   color: rgb(224, 0, 0);

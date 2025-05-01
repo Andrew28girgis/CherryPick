@@ -16,6 +16,7 @@ import {
   Contact,
   EmailInfo,
   Mail,
+  MailsContact,
 } from 'src/app/shared/models/buy-box-emails';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -45,6 +46,8 @@ export class InboxComponent implements OnInit {
   filteredEmails: Mail[] = [];
   selectedFilter: string = 'all';
   selectedMicro: any;
+  selectedMicroName: any;
+  selectedMicroId: any;
   selected: any = null;
   campaignId: any;
   emailBody: string = '';
@@ -140,6 +143,8 @@ export class InboxComponent implements OnInit {
     }
     this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
     bb.isOpen = true;
+    this.selectedMicroName = bb.OrganizationName;
+    this.selectedMicroId = bb.OrganizationId;
   }
 
   getOrganizations() {
@@ -247,6 +252,8 @@ export class InboxComponent implements OnInit {
 
   goBack(): void {
     this.selected = null;
+    this.emailSubjectModal = '';
+    this.emailBodySafeModal = '';
   }
 
   openEmail(email: Mail): void {
@@ -325,11 +332,16 @@ export class InboxComponent implements OnInit {
   }
   getDirectionColor(direction: number): string {
     switch (direction) {
-      case 2: return '#d1e7dd'; // Sent - greenish
-      case -1: return '#f8d7da'; // Outbox - reddish
-      case 1: return '#cff4fc'; // Inbox - light blue
-      case 4: return '#fff3cd'; // Drafts - yellowish
-      default: return '#e2e3e5'; // Unknown - grey
+      case 2:
+        return '#d1e7dd'; // Sent - greenish
+      case -1:
+        return '#f8d7da'; // Outbox - reddish
+      case 1:
+        return '#cff4fc'; // Inbox - light blue
+      case 4:
+        return '#fff3cd'; // Drafts - yellowish
+      default:
+        return '#e2e3e5'; // Unknown - grey
     }
   }
 
@@ -587,7 +599,7 @@ export class InboxComponent implements OnInit {
   // }
   showAllEmails() {
     // Close all organization dropdowns
-    this.BuyBoxMicroDeals.forEach(item => (item.isOpen = false));
+    this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
     // Clear the selected contact
     this.selectedContact = null;
     // Reset to show all emails
@@ -622,8 +634,11 @@ export class InboxComponent implements OnInit {
     });
     modalRef.componentInstance.contactId = contact.ContactId;
     modalRef.componentInstance.buyBoxId = this.buyBoxId;
+    modalRef.componentInstance.BBName = this.selectedMicroName;
+    modalRef.componentInstance.BBId = this.selectedMicroId;
     modalRef.componentInstance.orgId = this.orgId;
     modalRef.componentInstance.campaignId = this.campaignId;
+    modalRef.componentInstance.email = contact.Email;
     modalRef.componentInstance.contactName = `${contact.Firstname ?? ''} ${
       contact.Lastname ?? ''
     }`.trim();
@@ -655,12 +670,11 @@ export class InboxComponent implements OnInit {
       O: [], // Assuming O is an array and you might need to adjust this
     };
     const emailContent: IEmailContent = {
-      mailId: mail.id,
-      direction: mail.Direction,
-      subject: mail.Subject,
-      body: mail.body, // Mail body
-      organizationId: 0, // You can fill this in as needed
-      organizationName: '', // You can fill this in as needed
+      MailId: mail.id,
+      Direction: mail.Direction,
+      Subject: mail.Subject,
+      Body: mail.body, // Mail body
+      O:[],
       isEditing: false, // Adjust this based on your needs
     };
 
@@ -669,9 +683,9 @@ export class InboxComponent implements OnInit {
       Name: 'UpdateEmailData',
       MainEntity: null,
       Params: {
-        MailId: emailContent.mailId,
-        Subject: emailContent.subject,
-        Body: emailContent.body,
+        MailId: emailContent.MailId,
+        Subject: emailContent.Subject,
+        Body: emailContent.Body,
       },
       Json: null,
     };
@@ -687,14 +701,12 @@ export class InboxComponent implements OnInit {
     // Set the email to be deleted as the selected email
     this.selectedEmailToDelete = email;
     const modalRef = this.modalService.open(this.deleteEmailModal);
-    modalRef.result.then(
-      (result) => {
-        // Handle modal dismissal
-        if (result === 'Delete') {
-          this.deleteEmail();
-        }
-      },
-    );
+    modalRef.result.then((result) => {
+      // Handle modal dismissal
+      if (result === 'Delete') {
+        this.deleteEmail();
+      }
+    });
   }
   deleteEmail(): void {
     if (!this.selectedEmailToDelete) {
@@ -734,26 +746,24 @@ export class InboxComponent implements OnInit {
     const modalRef = this.modalService.open(this.sendEmailModal, {
       size: 'xl',
     });
-    modalRef.result.then(
-      (result) => {
-        if (result === 'Send') {
-          this.sendDraftEmail(); // If confirmed, send the email
-        }
-      },
-    );
+    modalRef.result.then((result) => {
+      if (result === 'Send') {
+        this.sendDraftEmail(); // If confirmed, send the email
+      }
+    });
   }
-sendDraftEmail(): void {
-  if (!this.selectedEmailForSend) {
-    return;
+  sendDraftEmail(): void {
+    if (!this.selectedEmailForSend) {
+      return;
+    }
+    // Use the provided send function to send the email
+    this.send(this.selectedEmailForSend);
   }
-  // Use the provided send function to send the email
-  this.send(this.selectedEmailForSend);
-}
-  
-onBodyChange(event: Event): void {
-  const target = event.target as HTMLElement;
-  if (this.selectedEmail) {
-    this.selectedEmail.Body = target.innerHTML;
+
+  onBodyChange(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (this.selectedEmail) {
+      this.selectedEmail.Body = target.innerHTML;
+    }
   }
-}
 }

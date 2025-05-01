@@ -5,15 +5,18 @@ import {
   TemplateRef,
   OnDestroy,
   HostListener,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { PlacesService } from 'src/app/core/services/places.service';
 
 @Component({
   selector: 'app-card-view',
@@ -40,15 +43,23 @@ export class CardViewComponent implements OnInit, OnDestroy {
   shareLink: any;
   shoppingCenterIdToDelete: number | null = null;
   DeletedSC: any;
-
+  @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
+  @ViewChild('submission', { static: true }) submissionModal!: TemplateRef<any>;
+  htmlContent!: SafeHtml;
+  private modalRef?: NgbModalRef;
+  isLoadingstatus = true;
   private subscriptions = new Subscription();
   private outsideClickHandler: ((e: Event) => void) | null = null;
+  submissions: any;
+  isModalOpen = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
-    private shoppingCenterService: ViewManagerService
+    private shoppingCenterService: ViewManagerService,
+    private placesService: PlacesService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +70,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
 
       // Initialize data using the centralized service
-      this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
+      // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
 
     // Subscribe to data from the centralized service
@@ -323,20 +334,92 @@ export class CardViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  // openContactModal(center: Center): void {
-  //   const modalRef = this.modalService.open(ContactBrokerComponent, {
-  //     size: 'xl',
-  //     centered: true,
-  //     windowClass: 'contact-broker-modal-class',
-  //   });
-  //   modalRef.componentInstance.center = center;
-  //   modalRef.componentInstance.buyboxId = this.BuyBoxId;
-  // }
-  openContactModal(object: any): void {
-    const modalRef = this.modalService.open(object, {
+  openContactModal(center: Center): void {
+    const modalRef = this.modalService.open(ContactBrokerComponent, {
+      size: 'xl',
       centered: true,
-    windowClass:'send-mail-content'
+      windowClass: 'contact-broker-modal-class',
     });
-   
+    modalRef.componentInstance.center = center;
+    modalRef.componentInstance.buyboxId = this.BuyBoxId;
+  }
+
+  requestCenterStatus(shoppingCenterId: number, campaignId: any) {
+    // Set loading state to true to show the skeleton loader
+    this.isLoadingstatus = true;
+
+    // Open the modal immediately
+    this.modalRef = this.modalService.open(this.statusModal, {
+      size: 'lg',
+      scrollable: true,
+    });
+
+    // Fetch the actual data
+    this.placesService
+      .GetSiteCurrentStatus(shoppingCenterId, campaignId)
+      .subscribe({
+        next: (res: any) => {
+          // Update the content with the fetched data
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges(); // Trigger change detection
+        },
+        error: () => {
+          // Handle errors and show fallback content
+          const errHtml = '<p>Error loading content</p>';
+          this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+          this.isLoadingstatus = false; // Hide the skeleton loader
+          this.cdr.detectChanges();
+        },
+      });
+  }
+
+  openModalSubmission(
+    submissions: any[],
+    submissionModal: TemplateRef<any>
+  ): void {
+    this.submissions = submissions;
+    this.modalService.open(submissionModal, { size: 'md', scrollable: true });
+  }
+  getCircleProgress(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap size
+
+    // If 100%, return full circle without gaps
+    if (percentage === 100) {
+      return `${totalLength} 0`;
+    }
+
+    // Calculate the length for the green progress
+    const progressLength = (percentage / 100) * (totalLength - 2 * gapSize);
+    return `${progressLength} ${totalLength}`;
+  }
+
+  getCircleProgressBackground(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap
+
+    // If 100%, don't show background
+    if (percentage === 100) {
+      return `0 ${totalLength}`;
+    }
+
+    // Calculate the remaining percentage
+    const remainingPercentage = 100 - percentage;
+    const bgLength = (remainingPercentage / 100) * (totalLength - 2 * gapSize);
+    const startPosition =
+      (percentage / 100) * (totalLength - 2 * gapSize) + gapSize;
+
+    return `0 ${startPosition} ${bgLength} ${totalLength}`;
+  }
+  checkSubmission(submissions: any[] | undefined): boolean {
+    if (!submissions || !Array.isArray(submissions)) {
+      return false;
+    }
+
+    // Loop through submissions and return true if any submission has a SubmmisionLink
+    return submissions.some((submission) => submission.SubmmisionLink !== null);
   }
 }

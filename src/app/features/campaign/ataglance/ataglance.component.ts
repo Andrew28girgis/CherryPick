@@ -44,7 +44,7 @@ export class AtaglanceComponent implements OnInit {
       }
     });
     this.breadcrumbService.addBreadcrumb({
-      label: 'At a Glance',
+      label: 'At a glance',
       url: `/campaigns/ataglance/${this.campaignId}`,
     });
 

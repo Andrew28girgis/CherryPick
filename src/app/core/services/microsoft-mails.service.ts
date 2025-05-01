@@ -14,7 +14,7 @@ export class MicrosoftMailsService {
       `${environment.api}/MicrosoftMails/GetContactFolders?ContactId=${ContactId}`
     );
   }
-
+  
   public AddFolderToBeRead(body: any) {
     return this.http.post<any>(
       `${environment.api}/MicrosoftMails/AddFolderToBeRead`,

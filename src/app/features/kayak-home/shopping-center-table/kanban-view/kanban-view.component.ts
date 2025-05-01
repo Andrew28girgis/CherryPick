@@ -15,6 +15,7 @@ export class KanbanViewComponent implements OnInit {
 
   // shoppingCenters: Center[] = [];
   kanbanId!: number;
+  CampaignId: any;
 
   constructor(
     private viewManagerService: SocialServiceService,
@@ -27,6 +28,7 @@ export class KanbanViewComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
+      this.CampaignId = params.campaignId;
 
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
     });
@@ -38,7 +40,7 @@ export class KanbanViewComponent implements OnInit {
       this.spinner.show();
 
       const shoppingCenters = await this.viewManagerService.getShoppingCenters(
-        this.BuyBoxId
+        this.CampaignId
       );
       this.stateService.setShoppingCenters(shoppingCenters);
       // Get kanban stages using the first kanban ID from the first shopping center
@@ -55,3 +57,4 @@ export class KanbanViewComponent implements OnInit {
     }
   }
 }
+

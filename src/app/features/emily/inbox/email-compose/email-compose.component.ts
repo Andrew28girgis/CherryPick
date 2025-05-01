@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -7,6 +7,8 @@ import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { ActivatedRoute } from '@angular/router';
 import { ICenterData } from 'src/app/features/kayak-home/shopping-center-table/contact-broker/models/icenter-data';
 import { firstValueFrom } from 'rxjs';
+import { IManager } from 'src/app/features/kayak-home/shopping-center-table/contact-broker/models/imanage-shopping';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-email-compose',
@@ -19,6 +21,9 @@ export class EmailComposeComponent implements OnInit {
   @Input() orgId!: number;
   @Input() campaignId!: string | null;
   @Input() contactName!: string;
+  @Input() email!: string;
+  @Input() BBName!: string;
+  @Input() BBId!: string;
 
   currentStep = 1;
   emailSubject = '';
@@ -48,12 +53,16 @@ export class EmailComposeComponent implements OnInit {
     { key: 'IsCC', label: 'CC', checked: true },
   ];
   isAdvancedVisible :boolean = false;
+  GetManagersShoppingCenters: IManager[] = [];
+  @ViewChild('sendModal') sendModal: any;
+  CCEmail: any;
   constructor(
     public modal: NgbActiveModal,
     private spinner: NgxSpinnerService,
     private places: PlacesService,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
+    private modalService: NgbModal,
   ) {}
 
   async ngOnInit() {
@@ -62,13 +71,46 @@ export class EmailComposeComponent implements OnInit {
     });
     this.loadShoppingCenters();
     await this.loadPrompts();
+    this.GetCCEmail();
   }
   toggleAdvanced() {
     this.isAdvancedVisible = !this.isAdvancedVisible;
   }
 
   next() {
-    this.currentStep++;
+    if (this.currentStep === 1) {
+      this.onStepChange(); // Check if there are managers when moving from Step 1 to Step 2
+    } else if (this.currentStep === 2) {
+      this.checkManagersAndSwitchToNextStep(); // Check if there are managers when moving from Step 2
+    } else if (this.currentStep === 3) {
+      this.currentStep = 3; // Ensure it stays on step 3 if already on it
+    }
+  }
+  onStepChange() {
+    // This logic is now for moving from Step 1 to Step 2
+    const hasManagers = this.GetShoppingCenters.some(
+      (sc) => sc.Managers && sc.Managers.length > 0
+    );
+    if (!hasManagers) {
+      // If no managers are found, go to step 3
+      this.currentStep = 3;
+    } else {
+      // Otherwise, go to step 2
+      this.currentStep = 2;
+    }
+  }
+  checkManagersAndSwitchToNextStep() {
+    // This logic is for moving from Step 2 to Step 3, checking if managers are selected
+    const selectedManagers = this.GetShoppingCenters.some(
+      (sc) => sc.Managers && sc.Managers.some((mgr) => mgr.selected)
+    );
+    if (!selectedManagers) {
+      // If no managers are selected, go to step 3
+      this.currentStep = 3;
+    } else {
+      // If there are selected managers, proceed to next step
+      this.currentStep = 3;
+    }
   }
   previous() {
     this.currentStep--;
@@ -85,7 +127,35 @@ export class EmailComposeComponent implements OnInit {
       this.listcenteIds = this.GetShoppingCenters.map((c) => c.Id);
       this.listcenteIdsString = this.listcenteIds.join(','); // <-- convert array to comma-separated string
 
+      this.fetchManagersForAllCenters();
     });
+  }
+  fetchManagersForAllCenters() {
+    this.GetShoppingCenters.forEach(center => {
+      const mgrBody = {
+        Name: 'GetShoppingCenterManagers',
+        Params: {
+          ContactId: this.contactId,
+          ShoppingCenterId: center.Id
+        }
+      };
+      this.places.GenericAPI(mgrBody).subscribe(res => {
+        const raw = res.json as IManager[];
+        // Attach `selected` (default true) and the parent center name
+        center.Managers = raw.map(m => ({
+          ...m,
+          selected: true,
+          centerName: center.CenterName
+        }));
+      });
+    });
+  }
+  onManagerCheckboxChange(
+    mgr: IManager & { selected: boolean; centerName: string },
+    event: Event
+  ) {
+    const input = event.target as HTMLInputElement;
+    mgr.selected = input.checked;
   }
 
   private async loadPrompts() {
@@ -142,17 +212,38 @@ export class EmailComposeComponent implements OnInit {
 
   generateContext() {
     this.spinner.show();
+
+  // 1) build a map from manager.id → { info + array of center names }
+  const mgrMap = new Map<
+    number,
+    { ContactId: number; ContactName: string; ShoppingCentersName: string[] }
+  >();
+
+  this.GetShoppingCenters.forEach(sc => {
+    (sc.Managers || []).forEach(mgr => {
+      if (!mgr.selected) return;
+
+      if (!mgrMap.has(mgr.contactId)) {
+        mgrMap.set(mgr.contactId, {
+          ContactId:   mgr.contactId,
+          ContactName: `${mgr.firstname} ${mgr.lastname}`,
+          ShoppingCentersName: []
+        });
+      }
+      // push this center’s name into that manager’s array
+      mgrMap.get(mgr.contactId)!.ShoppingCentersName.push(sc.CenterName);
+    });
+  });
+
+  // 2) convert map → array
+  const selectedManagers = Array.from(mgrMap.values());
+
+  // 3) build your dto
     const dto: any = {
       ContactId: this.localStorageContactId,
       BuyBoxId: this.buyBoxId,
       CampaignId: this.campaignId ? +this.campaignId : 0,
-      GetContactManagers: [
-        {
-          ContactId: this.contactId,
-          ContactName: this.contactName,
-          ShoppingCentersName: this.listcenterName,
-        },
-      ],
+      GetContactManagers: selectedManagers,
       OrganizationId: this.orgId,
       BatchGuid: this.BatchGuid,
     };
@@ -187,8 +278,9 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe({
       next: (data) => {
         this.mailContextId=data.json[0].id;
+        // this.getGeneratedEmail(data.json[0].id);
         this.AddMailContextReceivers();
-        this.getGeneratedEmail(data.json[0].id);
+        this.CheckMailGenerated();
       },
     });
   }
@@ -206,7 +298,54 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe(() => {
     });
   }
-  
+  GetCCEmail() {
+    const body: any = {
+      Name: 'GetCCEmail',
+      MainEntity: null,
+      Params: {},
+      Json: null,
+    };
+    this.places.GenericAPI(body).subscribe((res) => {
+      const CEmail = res.json[0].virtualEmail;
+     console.log('CEmail', CEmail);
+     this.CCEmail= CEmail;
+     
+    });
+  }
+  CheckMailGenerated() {
+    const body: any = {
+      Name: 'CheckMailGenerated',
+      MainEntity: null,
+      Params: {
+        MailContextId: this.mailContextId,
+      },
+      Json: null,
+    };
+    this.places.GenericAPI(body).subscribe((res) => {
+      const response = res.json[0];
+      if (!response || response.length === 0) {
+          this.CheckMailGenerated();
+      } else {
+      if (response.isGenerated) {
+        console.log('Email generated successfully:', response.isGenerated);
+        this.getGeneratedEmail(this.mailContextId);
+        this.spinner.hide();
+        // this.getGeneratedEmail(this.mailContextId);
+        return;
+      } else if (response.errorMessage) {
+        this.spinner.hide();
+        alert(
+          'Email generation is taking longer than expected. Please close this window and check your drafts folder in Emily later.'
+        );
+        this.modal.close('sent');
+        return;
+      }
+      setTimeout(() => {
+        this.CheckMailGenerated();
+      }, 3000);
+    }
+    });
+  }
 
   getGeneratedEmail(id: number): void {
     this.spinner.show();
@@ -223,18 +362,12 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe({
       next: (data) => {
         const response = data.json;
-        if (!response || response.length === 0) {
-          setTimeout(() => {
-            this.getGeneratedEmail(id);
-          }, 3000);
-        } else {
-          this.emailBody = response[0].body;
+          this.emailBody = response[0].Body;
           this.sanitizedEmailBody = this.sanitizer.bypassSecurityTrustHtml(
             this.emailBody
           );
-          this.emailSubject = response[0].subject;
+          this.emailSubject = response[0].Subject;
           this.spinner.hide();
-        }
       },
     });
   }
@@ -254,11 +387,48 @@ export class EmailComposeComponent implements OnInit {
     this.places.GenericAPI(body).subscribe(() => {
       this.spinner.hide();
       this.modal.close('sent');
+      this.modalService.dismissAll();
     });
   }
 
   public generateAndNext() {
     this.currentStep = 3;
     this.generateContext();
+  }
+  openSendModal() {
+    this.getSelectedManagerEmails();
+    this.modalService.open(this.sendModal, { centered: true ,windowClass: 'email-mod'});
+  }
+  selectedManagerEmails: string = ''; // Added variable to store manager emails
+  getSelectedManagerEmails() {
+    const selectedEmails: string[] = [];  // Explicitly declare the type as an array of strings
+    this.GetShoppingCenters.forEach(center => {
+      (center.Managers || []).forEach(mgr => {
+        if (mgr.selected) {
+          selectedEmails.push(mgr.email); // Add email of selected manager
+        }
+      });
+    });
+    // Join the emails with a comma
+    this.selectedManagerEmails = selectedEmails.join(',');
+  }
+  encodeBody(body: any): string {
+    return encodeURIComponent(body)
+      .replace(/%20/g, ' ') // Spaces are encoded as '%20' by default
+      .replace(/\+/g, '%20'); // Replace '+' with '%20'
+  }
+
+  generateMailtoLink(): any {
+    const toEmails = `${this.email},${this.CCEmail},${this.selectedManagerEmails}`;
+    const subject = encodeURIComponent(this.emailSubject || '');
+    const body = this.encodeBody(this.emailBody || '');
+    const target = `https://outlook.office.com/mail/deeplink/compose?to=${toEmails}&subject=${subject}&body=${body}`;
+ 
+    const redirectURL = new URL('https://outlook.office.com/owa/?state=1');
+    redirectURL.searchParams.set(
+      'redirectTo',
+      btoa(target).replaceAll('=', '')
+    );
+    return redirectURL;
   }
 }

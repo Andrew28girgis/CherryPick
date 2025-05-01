@@ -12,13 +12,13 @@
           class="cherry-logo"
           src="../../../assets/Images/Icons/logo (1).png"
           [routerLink]="
-            currentRoute.includes('landlord') ? ['/landlord'] : ['/campaigns']
+            currentRoute.includes('landlord') ? ['/landlord'] : ['/summary']
           "
         />
         <p
           class="cherry mb-0 d-none d-lg-block"
           [routerLink]="
-            currentRoute.includes('landlord') ? ['/landlord'] : ['/campaigns']
+            currentRoute.includes('landlord') ? ['/landlord'] : ['/summary']
           "
         >
           Cherry<span class="pick">pick</span>
@@ -47,7 +47,7 @@
             <span>Tasks</span>
           </a>
         </li> -->
-        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
+        <!-- <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
             [routerLink]="['/summary']"
             routerLinkActive="active-route"
@@ -74,7 +74,7 @@
             />
             <span>Campaigns</span>
           </a>
-        </li>
+        </li> -->
 
         <!-- <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
           <a
@@ -111,8 +111,8 @@
     <div
       class="d-flex align-items-center justify-content-end avatar-notifcations ms-auto"
     >
-      <a 
-      *ngIf="showlink"
+      <a
+        *ngIf="showlink"
         href="https://share.zight.com/re/01962ee5-bbf3-7088-8aa5-30e50bc772f9"
         target="_blank"
       >
@@ -161,6 +161,12 @@
               {{ currentRoute.includes("landlord") ? "campaigns" : "Landlord" }}
             </a>
           </li>
+          <li>
+            <a class="dropdown-item" [routerLink]="['/NewPassword']">
+              Change Password
+            </a>
+          </li>
+
           <li><hr class="dropdown-divider" /></li>
           <li>
             <a

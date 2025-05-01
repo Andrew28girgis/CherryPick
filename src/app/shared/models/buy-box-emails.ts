@@ -9,6 +9,7 @@ export interface Contact {
   ContactId: number
   Firstname: string
   Lastname: string
+  Email: string
   ShoppingCenters: ShoppingCenter[]
 }
 

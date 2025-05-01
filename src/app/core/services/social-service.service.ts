@@ -22,7 +22,7 @@ export class SocialServiceService {
   ) {}
 
   // Common methods
-  getShoppingCenters(buyboxId: number): Promise<Center[]> {
+  getShoppingCenters(campaignId: number): Promise<Center[]> {
     return new Promise((resolve, reject) => {
       if (this.stateService.getShoppingCenters().length > 0) {
         resolve(this.stateService.getShoppingCenters());
@@ -32,7 +32,7 @@ export class SocialServiceService {
       const body: any = {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
-          BuyBoxId: buyboxId,
+          CampaignId: campaignId,
         },
       };
 

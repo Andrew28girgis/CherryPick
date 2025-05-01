@@ -75,6 +75,7 @@ export class GenerateEmailComponent implements OnInit {
   returnGetMailContextGenerated: MailContextGenerated[] = [];
   mailContextId!: number;
   isAdvancedCollapsed = true;
+  selectedmail: IEmailContent | null = null;
 
   @ViewChildren('bodyDiv') bodyDivs!: QueryList<ElementRef<HTMLDivElement>>;
   @ViewChildren('subjectDiv') subjectDivs!: QueryList<
@@ -89,6 +90,7 @@ export class GenerateEmailComponent implements OnInit {
   @Input() chooseBrokerObject!: IChooseBroker;
   @Input() managedByBrokerArray!: IManagedByBroker[];
   @Output() onStepDone = new EventEmitter<void>();
+  CCEmail: any;
 
   constructor(
     private placeService: PlacesService,
@@ -98,6 +100,7 @@ export class GenerateEmailComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.spinner.show();
+    this.getCCEmail();
     this.contactId = localStorage.getItem('contactId');
 
     await this.GetBuyBoxDetails();
@@ -537,12 +540,12 @@ export class GenerateEmailComponent implements OnInit {
 
   updateMailBody(event: Event, index: number) {
     const div = event.target as HTMLDivElement;
-    this.emails[index].body = div.innerHTML;
+    this.emails[index].Body = div.innerHTML;
   }
 
   updateMailSubject(event: Event, index: number) {
     const div = event.target as HTMLDivElement;
-    this.emails[index].subject = div.innerText;
+    this.emails[index].Subject = div.innerText;
   }
 
   readSpecificMails(): void {
@@ -567,11 +570,11 @@ export class GenerateEmailComponent implements OnInit {
         const interval = setInterval(() => {
           if (this.bodyDivs && this.subjectDivs) {
             this.bodyDivs.forEach((divRef, index) => {
-              const html = this.emails[index].body;
+              const html = this.emails[index].Body;
               divRef.nativeElement.innerHTML = html;
             });
             this.subjectDivs.forEach((divRef, index) => {
-              const text = this.emails[index].subject;
+              const text = this.emails[index].Subject;
               divRef.nativeElement.innerText = text;
             });
             clearInterval(interval);
@@ -615,10 +618,24 @@ export class GenerateEmailComponent implements OnInit {
     });
   }
 
+  getCCEmail() {
+    const body: any = {
+      Name: 'GetCCEmail',
+      MainEntity: null,
+      Params: {},
+      Json: null,
+    };
+    this.placeService.GenericAPI(body).subscribe((res) => {
+      const CEmail = res.json[0].virtualEmail;
+      console.log('CEmail', CEmail);
+      this.CCEmail = CEmail;
+    });
+  }
+
   sendEmail(email: IEmailContent): void {
     // Only proceed if direction is equal to 4
-    if (email.direction !== 4) {
-      console.log('Email not sent - direction is not 4:', email.mailId);
+    if (email.Direction !== 4) {
+      console.log('Email not sent - direction is not 4:', email.MailId);
       return;
     }
 
@@ -628,9 +645,9 @@ export class GenerateEmailComponent implements OnInit {
       Name: 'UpdateEmailData',
       MainEntity: null,
       Params: {
-        MailId: email.mailId,
-        Subject: email.subject,
-        Body: email.body,
+        MailId: email.MailId,
+        Subject: email.Subject,
+        Body: email.Body,
       },
       Json: null,
     };
@@ -639,7 +656,7 @@ export class GenerateEmailComponent implements OnInit {
       next: (res: any) => {
         this.spinner.hide();
         this.showToast('Email sent successfully');
-        this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+        this.emails = this.emails.filter((e) => e.MailId !== email.MailId);
         if (this.emails.length === 0) {
           this.onStepDone.emit();
         }
@@ -650,33 +667,29 @@ export class GenerateEmailComponent implements OnInit {
   // Send all emails
   sendAllEmails(): void {
     // Filter emails to only include those with direction = 4
-    const eligibleEmails = this.emails.filter((email) => email.direction === 4);
+    const eligibleEmails = this.emails.filter((email) => email.Direction === 4);
     // If no eligible emails, return early
     if (eligibleEmails.length === 0) {
       console.log('No eligible emails to send (direction = 4)');
       return;
     }
 
-    // Create a counter to track when all emails are sent - use filtered length
-
     this.spinner.show();
-
-    // Send each eligible email one by one - iterate through filtered array
     eligibleEmails.forEach((email) => {
       const body: any = {
         Name: 'UpdateEmailData',
         MainEntity: null,
         Params: {
-          MailId: email.mailId,
-          Subject: email.subject,
-          Body: email.body,
+          MailId: email.MailId,
+          Subject: email.Subject,
+          Body: email.Body,
         },
         Json: null,
       };
       this.placeService.GenericAPI(body).subscribe({
         next: (res: any) => {
           this.showToast('Emails sent successfully');
-          this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+          this.emails = this.emails.filter((e) => e.MailId !== email.MailId);
           if (this.emails.length === 0) {
             this.spinner.hide();
             this.onStepDone.emit();
@@ -684,5 +697,53 @@ export class GenerateEmailComponent implements OnInit {
         },
       });
     });
+  }
+
+  openSendMailsModal(content: any, email: IEmailContent): void {
+    this.selectedmail = email;
+    this.modalService.open(content, {
+      centered: true,
+      windowClass: 'send-mail-content',
+    });
+  }
+
+  getStringCC(): string {
+    return (
+      this.selectedmail?.O.map((o, oIndex) => {
+        // For the first "O", exclude the first "C" from its emails
+        if (oIndex === 0) {
+          return o.C.slice(1)
+            .map((c) => c.Email)
+            .join(',');
+        } else {
+          return o.C.map((c) => c.Email).join(',');
+        }
+      }).join(',') || ''
+    );
+  }
+  //    encodeBody(body:any) {
+  //     return encodeURIComponent(body).replace(/ /g, '%20');
+  // }
+
+  encodeBody(body: any): string {
+    return encodeURIComponent(body)
+      .replace(/%20/g, ' ') // Spaces are encoded as '%20' by default
+      .replace(/\+/g, '%20'); // Replace '+' with '%20'
+  }
+
+  generateMailtoLink(): any {
+    const toEmails = `${
+      this.selectedmail?.O![0].C[0].Email
+    },${this.getStringCC()},${this.CCEmail}`;
+    const subject = encodeURIComponent(this.selectedmail?.Subject || '');
+    const body = this.encodeBody(this.selectedmail?.Body || '');
+    const target = `https://outlook.office.com/mail/deeplink/compose?to=${toEmails}&subject=${subject}&body=${body}`;
+
+    const redirectURL = new URL('https://outlook.office.com/owa/?state=1');
+    redirectURL.searchParams.set(
+      'redirectTo',
+      btoa(target).replaceAll('=', '')
+    );
+    return redirectURL;
   }
 }

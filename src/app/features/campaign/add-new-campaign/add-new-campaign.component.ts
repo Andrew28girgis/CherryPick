@@ -28,6 +28,7 @@ import {
   switchMap,
   takeUntil,
 } from 'rxjs';
+import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { CampaignDrawingService } from 'src/app/core/services/campaign-drawing.service';
 import { GenericMapService } from 'src/app/core/services/generic-map.service';
 import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
@@ -124,10 +125,15 @@ export class AddNewCampaignComponent
     private httpClient: HttpClient,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private polygonsControllerService: PolygonsControllerService
+    private polygonsControllerService: PolygonsControllerService,
+    private breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Campaigns', url: '/summary' },
+      { label: 'Add Campaign', url: '/add-campaign' },
+    ]);
     const contact = localStorage.getItem('contactId');
     if (contact) {
       this.contactId = +contact;
@@ -217,11 +223,9 @@ export class AddNewCampaignComponent
             this.cdr.detectChanges();
           });
 
-        if (this.mapBounds.zoomLevel >= 13) {
-          this.loadingGlobalPolygons = true;
-          this.cdr.detectChanges();
-          this.getGeoJsonsFile();
-        }
+        this.loadingGlobalPolygons = true;
+        this.cdr.detectChanges();
+        this.getGeoJsonsFile();
       });
   }
 
@@ -981,12 +985,12 @@ export class AddNewCampaignComponent
   getGeoJsonsFile(): void {
     this.campaignDrawingService.removeAllFeatures();
     const body = {
-      Name: 'GetPolygon',
+      Name: 'GetViewportPolygons',
       Params: {
-        minlatitude: this.mapBounds?.southWestLat,
-        minlongitude: this.mapBounds?.southWestLng,
-        maxlatitude: this.mapBounds?.northEastLat,
-        maxlongitude: this.mapBounds?.northEastLng,
+        minLat: this.mapBounds?.southWestLat,
+        minLon: this.mapBounds?.southWestLng,
+        maxLat: this.mapBounds?.northEastLat,
+        maxLon: this.mapBounds?.northEastLng,
       },
     };
 
@@ -999,7 +1003,7 @@ export class AddNewCampaignComponent
         for (let path of response.json) {
           this.genericMapService.loadGeoJsonFileOnMap(
             map,
-            `https://files.cherrypick.com/geojson/${path.path}`
+            `${environment.geoJsonsFilesPath}/${path.id}.geojson`
           );
         }
       }

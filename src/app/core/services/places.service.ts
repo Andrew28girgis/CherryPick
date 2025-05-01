@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
+import { ChangePassword } from 'src/app/shared/models/domain';
+import { ResetPassword } from 'src/app/shared/models/domain';
+import { ForgotPassword } from 'src/app/shared/models/domain';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +43,15 @@ export class PlacesService {
   public loginUser(message: any) {
     return this.http.post<any[]>(`${environment.api}/BuyBox/Login`, message);
   }
+  ChangePassword(request: ChangePassword) {
+    return this.http.post<boolean>(`${environment.api}/BuyBox/ChangePassword`, request);
+  }
+  ResetPassword(request: ResetPassword) {
+    return this.http.post<boolean>(`${environment.api}/BuyBox/ResetPassword`, request);
+  }
+  ForgotPassword(request: ForgotPassword) {
+    return this.http.post<boolean>(`${environment.api}/BuyBox/ForgotPassword`, request);
+  }
 
   public UpdateBuyBoxWorkSpacePlace(message: any) {
     return this.http.post<any>(
@@ -52,13 +64,18 @@ export class PlacesService {
     return this.http.get<any>(`${environment.api}/BuyBox/GetUserBuyBoxes`);
   }
 
-  public generateEmail(promptId: number, context: string, OrganizaitonsId: any, IsCC: boolean,) {
+  public generateEmail(
+    promptId: number,
+    context: string,
+    OrganizaitonsId: any,
+    IsCC: boolean
+  ) {
     const apiUrl = `${environment.api}/PromptHub/GenerateEmail`;
     const body = {
       promptId,
       context,
       IsCC,
-      OrganizaitonsId ,
+      OrganizaitonsId,
     };
     return this.http.post<any>(apiUrl, body);
   }
@@ -66,6 +83,14 @@ export class PlacesService {
   public GenerateContext(body: GenerateContextDTO) {
     const apiUrl = `${environment.api}/PromptHub/GenerateContext`;
     return this.http.post<any>(apiUrl, body);
+  }
+
+  public GetSiteCurrentStatus(
+    shoppingCenterId: number,
+    CampaignId: number
+  ): Observable<string> {
+    const apiUrl = `${environment.api}/PromptHub/GetSiteCurrentStatus/${shoppingCenterId}/${CampaignId}`;
+    return this.http.get(apiUrl, { responseType: 'text' });
   }
 
   public UploadFile(formData: FormData, id: number) {
@@ -80,13 +105,17 @@ export class PlacesService {
       images
     );
   }
-  public SendImagesArrayWithBuyBoxId(images: any, shoppingID: any, buyboxid: any) {
+  public SendImagesArrayWithBuyBoxId(
+    images: any,
+    shoppingID: any,
+    buyboxid: any
+  ) {
     return this.http.post<any>(
       `${environment.api}/BrokerWithChatGPT/ProcessImagesWithGPT/${shoppingID}?buyboxId=${buyboxid}`,
       images
     );
   }
-  
+
   public SendJsonData(data: any, id: any) {
     const requestPayload = {
       ...data, // Spread the existing data

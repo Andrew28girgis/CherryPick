@@ -7,6 +7,8 @@ import {
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { Injectable } from '@angular/core';
+import * as CryptoJS from 'crypto-js';
 
 /**
  * LoginComponent handles user authentication and login functionality
@@ -22,10 +24,15 @@ export class LoginComponent implements OnInit {
   private readonly CONTACT_ID_KEY = 'contactId';
   private readonly ORG_ID_KEY = 'orgId';
   private readonly MAP_VIEW_KEY = 'mapView';
+  private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
+  private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   public loginData!: AdminLogin;
   public general!: General;
   private loginToken: string | null = null;
+  public showPassword: boolean = false;
+  public errorMessage: string | null = null;
+  public fadeSuccess: boolean = false;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -48,15 +55,30 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
 
-    this.spinner.show();
     this.placesService.loginUser(loginRequest).subscribe({
       next: (response: any) => {
         this.handleLoginSuccess(response);
+      },
+      error: (err: any) => {
+        this.handleLoginError();
       },
       complete: () => {
         this.spinner.hide();
       },
     });
+  }
+
+  private handleLoginError(): void {
+    this.errorMessage = 'Invalid email or password. Please try again.';
+
+    setTimeout(() => {
+      this.fadeSuccess = true;
+    }, 4000);
+
+    setTimeout(() => {
+      this.errorMessage = null;
+      this.fadeSuccess = false;
+    }, 4000);
   }
 
   /**
@@ -85,14 +107,12 @@ export class LoginComponent implements OnInit {
    */
   private loginWithGUID(): void {
     this.spinner.show();
-
     const request = {
       Name: 'GetBuyBoxIdToBeShown',
       Params: {
         BuyBoxGUID: this.loginToken,
       },
     };
-
     this.placesService.GenericAPI(request).subscribe({
       next: (response) => {
         this.handleGUIDLoginSuccess(response);
@@ -110,10 +130,15 @@ export class LoginComponent implements OnInit {
   }
 
   private prepareLoginRequest(): AdminLogin {
+    const encryptedLoginData = new AdminLogin();
+    encryptedLoginData.Email = this.loginData.Email;
+    encryptedLoginData.Password = this.encrypt(this.loginData.Password);
+    // encryptedLoginData.Password = this.loginData.Password;
+
     if (this.loginToken) {
-      this.loginData.contactToken = this.loginToken;
+      encryptedLoginData.contactToken = this.loginToken;
     }
-    return this.loginData;
+    return encryptedLoginData;
   }
 
   private handleLoginSuccess(response: any): void {
@@ -123,9 +148,7 @@ export class LoginComponent implements OnInit {
     );
     localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
     localStorage.setItem(this.ORG_ID_KEY, response.orgId);
-
     this.authService.setToken(response.token);
-
     if (response.token) {
       this.navigateToHome();
     }
@@ -133,5 +156,35 @@ export class LoginComponent implements OnInit {
 
   private navigateToHome(): void {
     this.router.navigate(['/summary']);
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  encrypt(value: string): string {
+    const encrypted = CryptoJS.AES.encrypt(
+      CryptoJS.enc.Utf8.parse(value),
+      this.key,
+      {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    return encrypted.toString();
+  }
+
+  decrypt(encryptedValue: string): string {
+    const decodedValue = decodeURIComponent(encryptedValue);
+    const decrypted = CryptoJS.AES.decrypt(decodedValue, this.key, {
+      keySize: 256 / 8,
+      iv: this.iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    });
+
+    return decrypted.toString(CryptoJS.enc.Utf8);
   }
 }

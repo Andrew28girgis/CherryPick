@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
+import { ICampaign } from 'src/app/shared/models/icampaign';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -10,11 +11,12 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 })
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
-  
+  filteredCampaigns?: ICampaign[];
+
   currentView: number = 5;
   BuyBoxId!: any;
   BuyBoxName!: string;
-
+  CampaignId!: any;
   OrgId!: any;
   selectedOption: number = 5;
   dropdowmOptions: any = [
@@ -62,27 +64,29 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.BuyBoxName = params.buyboxName;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-      if (Number(localStorage.getItem('currentViewDashBord')) !==1) {
-        this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
+      this.CampaignId = params.campaignId;
+
+      if (Number(localStorage.getItem('currentViewDashBord')) !== 1 ) {
+        this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);        
+        
       }
     });
-    
+
     // Get saved view from localStorage or default to social view (5)
     this.currentView = Number(
       localStorage.getItem('currentViewDashBord') || '5'
     );
     this.selectedOption = this.currentView;
-    
+
     // Set current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
-    
     this.filterDropdownOptions();
   }
 
   selectOption(option: any): void {
     this.selectedOption = option.status;
     this.currentView = option.status;
-    
+
     // Update current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
   }
@@ -102,7 +106,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   onViewChange(viewStatus: any) {
     this.currentView = viewStatus;
     this.selectedOption = viewStatus;
-    
+
     // Update current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
   }

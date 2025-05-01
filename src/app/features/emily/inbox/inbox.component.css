@@ -131,8 +131,10 @@
 }
 
 .single-mail {
-  border-bottom: 1px solid #e2e4e9; 
-  padding: 17px;  
+  align-items: center;
+  display: flex;
+  border-bottom: 1px solid #e2e4e9;
+  padding: 17px;
 }
 
 .selected-email {
@@ -422,26 +424,26 @@
   border-radius: 10px;
   padding: 26px;
 }
-.delete-icn{
+.delete-icn {
   color: #404244;
   font-size: 18px;
   margin-top: 5px;
   cursor: pointer;
   margin-left: 10px;
 }
-.delete-icn:hover{
+.delete-icn:hover {
   color: #222121;
 }
-.delete-btn{
+.delete-btn {
   background-color: #ce0000;
 }
-.delete-btn:hover{
+.delete-btn:hover {
   background-color: #940303 !important;
 }
-.replay:hover{
+.replay:hover {
   background-color: #263d88;
 }
-.send-icn{
+.send-icn {
   font-size: 22px;
   margin-top: 7px;
   cursor: pointer;

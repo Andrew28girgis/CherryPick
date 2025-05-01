@@ -46,11 +46,11 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
     const interval = setInterval(() => {
       if (this.emails && this.emails.length > 0) {
         this.bodyDivs.forEach((divRef, index) => {
-          const html = this.emails[index].body;
+          const html = this.emails[index].Body;
           divRef.nativeElement.innerHTML = html;
         });
         this.subjectDivs.forEach((divRef, index) => {
-          const text = this.emails[index].subject;
+          const text = this.emails[index].Subject;
           divRef.nativeElement.innerText = text;
         });
         clearInterval(interval);
@@ -60,12 +60,12 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
 
   updateMailBody(event: Event, index: number) {
     const div = event.target as HTMLDivElement;
-    this.emails[index].body = div.innerHTML;
+    this.emails[index].Body = div.innerHTML;
   }
 
   updateMailSubject(event: Event, index: number) {
     const div = event.target as HTMLDivElement;
-    this.emails[index].subject = div.innerText;
+    this.emails[index].Subject = div.innerText;
   }
 
   readSpecificMails(): void {
@@ -127,8 +127,8 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
 
   sendEmail(email: IEmailContent): void {
     // Only proceed if direction is equal to 4
-    if (email.direction !== 4) {
-      console.log('Email not sent - direction is not 4:', email.mailId);
+    if (email.Direction !== 4) {
+      console.log('Email not sent - direction is not 4:', email.MailId);
       return;
     }
 
@@ -138,9 +138,9 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
       Name: 'UpdateEmailData',
       MainEntity: null,
       Params: {
-        MailId: email.mailId,
-        Subject: email.subject,
-        Body: email.body,
+        MailId: email.MailId,
+        Subject: email.Subject,
+        Body: email.Body,
       },
       Json: null,
     };
@@ -149,7 +149,7 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.spinner.hide();
         this.showToast('Email sent successfully');
-        this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+        this.emails = this.emails.filter((e) => e.MailId !== email.MailId);
         if (this.emails.length === 0) {
           this.onStepDone.emit();
         }
@@ -160,7 +160,7 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
   // Send all emails
   sendAllEmails(): void {
     // Filter emails to only include those with direction = 4
-    const eligibleEmails = this.emails.filter((email) => email.direction === 4);
+    const eligibleEmails = this.emails.filter((email) => email.Direction === 4);
     // If no eligible emails, return early
     if (eligibleEmails.length === 0) {
       console.log('No eligible emails to send (direction = 4)');
@@ -177,16 +177,16 @@ export class PreviewEmailComponent implements OnInit, AfterViewInit {
         Name: 'UpdateEmailData',
         MainEntity: null,
         Params: {
-          MailId: email.mailId,
-          Subject: email.subject,
-          Body: email.body,
+          MailId: email.MailId,
+          Subject: email.Subject,
+          Body: email.Body,
         },
         Json: null,
       };
       this.placeService.GenericAPI(body).subscribe({
         next: (res: any) => {
           this.showToast('Emails sent successfully');
-          this.emails = this.emails.filter((e) => e.mailId !== email.mailId);
+          this.emails = this.emails.filter((e) => e.MailId !== email.MailId);
           if (this.emails.length === 0) {
             this.spinner.hide();
             this.onStepDone.emit();

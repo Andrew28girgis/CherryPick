@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  TemplateRef,
-} from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { ActivatedRoute } from '@angular/router';

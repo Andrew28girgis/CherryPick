@@ -338,6 +338,19 @@ export class adminLogin {
   Password!: string;
   contactToken!:any;
 }
+export class ChangePassword {
+  Email!: string;
+  OldPassword!: string;
+  NewPassword!: string;
+}
+export class ResetPassword {
+  Email!: string;
+  NewPassword!: string;
+  Token!: string
+}
+export class ForgotPassword {
+  Email!: string;
+}
 
 export class Filter {
   cities!: string[];

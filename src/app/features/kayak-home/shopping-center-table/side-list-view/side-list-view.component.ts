@@ -6,15 +6,16 @@ import {
   OnInit,
   OnDestroy,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center } from '../../../../shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { Polygon } from 'src/app/shared/models/polygons';
 import { General } from 'src/app/shared/models/domain';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { MapsService } from 'src/app/core/services/maps.service';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
@@ -50,9 +51,17 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   StreetViewOnePlace!: boolean;
   KanbanStages: any[] = [];
   activeDropdown: any = null;
-
+  @ViewChild('statusModal', { static: true }) statusModal!: TemplateRef<any>;
+  htmlContent!: SafeHtml;
+  private modalRef?: NgbModalRef;
+  isLoadingstatus =true;
+  isLoading = true;
+  skeletonItems = Array(6);  // render 6 placeholder cards
+  
   // Subscriptions
   private subscriptions: Subscription[] = [];
+  submissions: any;
+  @ViewChild('submission', { static: true }) submissionModal!: TemplateRef<any>;
 
   constructor(
     private markerService: MapsService,
@@ -66,6 +75,8 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
+
     this.General = new General();
     this.savedMapView = localStorage.getItem('mapView');
 
@@ -77,6 +88,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
 
       // Initialize data using the service
       // this.viewManagerService.initializeData(this.BuyBoxId, this.orgId);
+      
     });
 
     // Subscribe to service observables
@@ -89,13 +101,21 @@ export class SideListViewComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.isLoading = true;
+    this.skeletonItems = Array(6);
+    
     this.subscriptions.push(
       this.viewManagerService.filteredCenters$.subscribe((centers) => {
         this.ngZone.run(() => {
           this.cardsSideList = centers;
-        });
+          
+        })
+  if(centers && centers.length > 0) {
+          this.isLoading = false; // Hide the skeleton loader
+        }
       })
     );
+    
 
     this.subscriptions.push(
       this.viewManagerService.buyboxCategories$.subscribe((categories) => {
@@ -496,4 +516,77 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   trackById(index: number, place: any): number {
     return place.Id;
   }
+  requestCenterStatus(shoppingCenterId: number, campaignId: any) {
+    // Set loading state to true to show the skeleton loader
+    this.isLoadingstatus = true;
+  
+    // Open the modal immediately
+    this.modalRef = this.modalService.open(this.statusModal, {
+      size: 'lg',
+      scrollable: true,
+    });
+  
+    // Fetch the actual data
+    this.placesService.GetSiteCurrentStatus(shoppingCenterId, campaignId).subscribe({
+      next: (res: any) => {
+        // Update the content with the fetched data
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(res);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      error: () => {
+        // Handle errors and show fallback content
+        const errHtml = '<p>Error loading content</p>';
+        this.htmlContent = this.sanitizer.bypassSecurityTrustHtml(errHtml);
+        this.isLoadingstatus = false; // Hide the skeleton loader
+        this.cdr.detectChanges();
+      },
+    });
+  }
+
+  openModalSubmission(submissions: any[], submissionModal: TemplateRef<any>): void {
+    this.submissions = submissions; 
+    this.modalService.open(submissionModal,{size: 'md', scrollable: true}); 
+  }
+  getCircleProgress(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap size
+  
+    // If 100%, return full circle without gaps
+    if (percentage === 100) {
+      return `${totalLength} 0`;
+    }
+  
+    // Calculate the length for the green progress
+    const progressLength = (percentage / 100) * (totalLength - (2 * gapSize));
+    return `${progressLength} ${totalLength}`;
+  }
+  
+  getCircleProgressBackground(percentage: number): string {
+    const circumference = 2 * Math.PI * 15.9155;
+    const totalLength = circumference;
+    const gapSize = (5 / 100) * totalLength; // 5% gap
+  
+    // If 100%, don't show background
+    if (percentage === 100) {
+      return `0 ${totalLength}`;
+    }
+  
+    // Calculate the remaining percentage
+    const remainingPercentage = 100 - percentage;
+    const bgLength = (remainingPercentage / 100) * (totalLength - (2 * gapSize));
+    const startPosition = (percentage / 100) * (totalLength - (2 * gapSize)) + gapSize;
+    
+    return `0 ${startPosition} ${bgLength} ${totalLength}`;
+  }
+  checkSubmission(submissions: any[] | undefined): boolean {
+    if (!submissions || !Array.isArray(submissions)) {
+      return false;
+    }
+    
+    // Loop through submissions and return true if any submission has a SubmmisionLink
+    return submissions.some(submission => submission.SubmmisionLink !== null);
+  }
 }
+

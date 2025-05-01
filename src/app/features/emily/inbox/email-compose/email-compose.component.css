@@ -134,3 +134,70 @@
     font-weight: 600;
     cursor: pointer;
   }
+  .card-email:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  .shopping-name{
+    color:  #16181D;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; 
+  }
+  .card-broker{
+    min-height: 100px;
+    display: flex;
+    padding:  12px  20px;
+    align-items: flex-start;
+    gap:  12px;
+    flex: 1 0 0;
+    border-radius:  20px;
+    border: 1px solid  #C6C9D3;
+    background:  #FFF;
+  }
+  .broker-name{
+    color:  #16181D;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+  }
+  .broker-email{
+    color: #16181D !important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.07px;
+  }
+  .titlee{
+    align-self: stretch;
+    color: #16181D;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px;
+  }
+  .text-outlook{
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px;
+    margin-bottom: 0;
+  }
+  .card-email{
+    border-radius:  12px;
+    border: 1px solid  #E2E4E9;
+    display: flex;
+    padding: 16px;
+    align-items: center;
+    gap:12px;
+    align-self: stretch;
+    margin-bottom: 16px;
+  }
+  ::ng-deep .email-mod .modal-content {
+    border-radius: 1rem;
+  }
+  

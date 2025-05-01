@@ -1168,19 +1168,6 @@ body.panel-open {
   border-radius: 5px;
 }
 
-/* .skeleton-indicator {
-  background-color: rgba(0, 31, 63, 0.5);
-}
-
-.skeleton-icon {
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
-  background-size: 800px 104px;
-  animation: shimmer 1.5s infinite linear;
-  border-radius: 50%;
-} */
-
 .skeleton-title {
   height: 24px;
   width: 60%;
@@ -1217,7 +1204,7 @@ body.panel-open {
   margin-bottom: 8px;
   background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
   background-size: 800px 104px;
-  animation: shimmer 1.5s infinite linear;
+  animation: status-animation 1.5s infinite linear;
   border-radius: 4px;
 }
 
@@ -1226,7 +1213,7 @@ body.panel-open {
   width: 100%;
   background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
   background-size: 800px 104px;
-  animation: shimmer 1.5s infinite linear;
+  animation: status-animation 1.5s infinite linear;
 }
 
 .skeleton-button {
@@ -1235,6 +1222,156 @@ body.panel-open {
   border-radius: 50%;
   background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
   background-size: 800px 104px;
-  animation: shimmer 1.5s infinite linear;
+  animation: status-animation 1.5s infinite linear;
   margin: 0 10px;
+}
+
+
+.skeleton-loader {
+  text-align: center;
+  font-size: 16px;
+  color: #888;
+}
+
+.skeleton-head,
+.skeleton-line {
+  background: linear-gradient(90deg, #f6f7f8 0%, #edeef1 50%, #f6f7f8 100%);
+  background-size: 800px 104px;
+  animation: status-animation 1.5s infinite;
+}
+
+.skeleton-head {
+  height: 24px;
+  width: 40%;
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+
+.skeleton-line {
+  height: 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.skeleton-paragraph .skeleton-line:nth-child(1) {
+  width: 100%;
+}
+
+.skeleton-paragraph .skeleton-line:nth-child(2) {
+  width: 95%;
+}
+
+.skeleton-paragraph .skeleton-line:nth-child(3) {
+  width: 90%;
+}
+
+@keyframes status-animation {
+  0% {
+    background-position: -800px 0;
+  }
+  100% {
+    background-position: 800px 0;
+  }
+}
+
+.submission-button {
+  display: flex;
+  padding: var(--Space-Space-8, 8px) var(--Space-Space-12, 12px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+  align-self: stretch;
+  border-radius: var(--Radius-Radius-12, 12px);
+  border: 1px solid var(--Body-General-Body-Border, #e2e4e9);
+  background: var(--Card-Section-BG, #fff);
+  margin-top: 10px;
+}
+
+.submission-details {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+  color: #707791;
+  margin: 0;
+}
+.available-space {
+  display: flex;
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+  color: #707791;
+  margin: 0;
+  margin-top: 5px;
+}
+.user-info {
+  margin-top: 5px;
+  gap: 16px;
+  align-items: center;
+}
+
+.progress-bar-container {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.match-percentage {
+  text-align: center;
+}
+
+.circle-progress {
+  position: relative;
+  width: 98px;
+  height: 98px;
+}
+.circle-svg {
+  transform: rotate(180deg);
+  width: 98px;
+  height: 98px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #e2e4e9;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+}
+
+.circle-fg {
+  fill: none;
+  stroke: #ffc107;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
+}
+.circle-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.submission-link {
+  display: inline-block;
+  width: 217px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--Body-Heading-Color, #16181d);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px;
 }
