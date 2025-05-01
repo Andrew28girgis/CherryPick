@@ -232,6 +232,7 @@ img[alt="logo"] {
 }
 
 .table-text_second {
+  padding: 0px 12px;
   color: #7a8591;
   font-size: 0.8rem;
   font-style: normal;
