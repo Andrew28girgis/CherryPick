@@ -4,6 +4,7 @@ import {
   TemplateRef,
   HostListener,
   OnDestroy,
+  Input,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -24,13 +25,24 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./campaign-manager.component.css'],
 })
 export class CampaignManagerComponent implements OnInit, OnDestroy {
+  @Input() hideViewToggles: boolean = false;
+  @Input() set viewMode(value: 'table' | 'card') {
+    if (!this.isMobile) {
+      this._viewMode = value;
+      localStorage.setItem('campaignViewMode', value);
+    }
+  }
+  get viewMode(): 'table' | 'card' {
+    return this._viewMode;
+  }
+  private _viewMode: 'table' | 'card' = 'table';
+
   userBuyBoxes: { id: number; name: string }[] = [];
   selectedBuyBoxId = 0;
   campaigns: ICampaign[] = [];
   filteredCampaigns?: ICampaign[];
   stages: { id: number; stageName: string }[] = [];
   searchCampaign = '';
-  viewMode: 'table' | 'card' = 'table';
   isMobile = false;
 
   // Loading state
