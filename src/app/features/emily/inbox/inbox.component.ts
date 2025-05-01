@@ -16,6 +16,7 @@ import {
   Contact,
   EmailInfo,
   Mail,
+  MailsContact,
 } from 'src/app/shared/models/buy-box-emails';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -45,6 +46,8 @@ export class InboxComponent implements OnInit {
   filteredEmails: Mail[] = [];
   selectedFilter: string = 'all';
   selectedMicro: any;
+  selectedMicroName: any;
+  selectedMicroId: any;
   selected: any = null;
   campaignId: any;
   emailBody: string = '';
@@ -140,6 +143,8 @@ export class InboxComponent implements OnInit {
     }
     this.BuyBoxMicroDeals.forEach((item) => (item.isOpen = false));
     bb.isOpen = true;
+    this.selectedMicroName = bb.OrganizationName;
+    this.selectedMicroId = bb.OrganizationId;
   }
 
   getOrganizations() {
@@ -629,6 +634,8 @@ export class InboxComponent implements OnInit {
     });
     modalRef.componentInstance.contactId = contact.ContactId;
     modalRef.componentInstance.buyBoxId = this.buyBoxId;
+    modalRef.componentInstance.BBName = this.selectedMicroName;
+    modalRef.componentInstance.BBId = this.selectedMicroId;
     modalRef.componentInstance.orgId = this.orgId;
     modalRef.componentInstance.campaignId = this.campaignId;
     modalRef.componentInstance.email = contact.Email;
