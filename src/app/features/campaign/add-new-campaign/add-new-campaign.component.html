@@ -8,6 +8,10 @@
         <div>Loading neighborhoods</div>
       </div>
 
+      <div *ngIf="mapBounds && mapBounds.zoomLevel < 13" class="map-zoom-alert">
+        <div>Zoom in to view more neighborhoods</div>
+      </div>
+
       <div
         *ngIf="mapStates && mapStates.length"
         class="map-areas"

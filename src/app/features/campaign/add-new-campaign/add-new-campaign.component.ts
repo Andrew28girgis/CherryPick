@@ -222,9 +222,11 @@ export class AddNewCampaignComponent
             this.cdr.detectChanges();
           });
 
-        this.loadingGlobalPolygons = true;
-        this.cdr.detectChanges();
-        this.getGeoJsonsFile();
+        if (this.mapBounds.zoomLevel >= 13) {
+          this.loadingGlobalPolygons = true;
+          this.cdr.detectChanges();
+          this.getGeoJsonsFile();
+        }
       });
   }
 
