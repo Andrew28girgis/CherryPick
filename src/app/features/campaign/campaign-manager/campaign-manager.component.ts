@@ -24,7 +24,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './campaign-manager.component.html',
   styleUrls: ['./campaign-manager.component.css'],
 })
-export class CampaignManagerComponent implements OnInit, OnDestroy {
+export class       CampaignManagerComponent implements OnInit, OnDestroy {
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
   @Input() set viewMode(value: 'table' | 'card') {

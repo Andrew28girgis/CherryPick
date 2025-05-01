@@ -248,6 +248,7 @@
             </div>
             <div class="campaign-card-header">
               <div
+              
                 class="d-flex align-items-center gap-2 d-flex flex-column tenant-header"
               >
                 <img
@@ -259,7 +260,16 @@
                   [alt]="c.name"
                   class="tenant-logo-card"
                 />
-                <h3 class="campaign-name">{{ campaign.CampaignName }}</h3>
+                <h3 
+                style="cursor: pointer;"
+                [routerLink]="[
+                '/dashboard',
+                c.id,
+                c.organizationid,
+                c.name ,
+                campaign.Id
+              ]" class="campaign-name"
+                >{{ campaign.CampaignName }}</h3>
               </div>
             </div>
 
@@ -447,7 +457,13 @@
                     class="d-flex flex-column gap-2"
                     style="min-height: 100%; padding: 8px"
                   >
-                    <div style="font-weight: 600">
+                    <div style="font-weight: 600" [routerLink]="[
+                    '/dashboard',
+                    c.id,
+                    c.organizationid,
+                    c.name ,
+                    campaign.Id
+                  ]">
                       {{ campaign.CampaignName }}
                     </div>
 
@@ -471,7 +487,8 @@
                           '/dashboard',
                           c.id,
                           c.organizationid,
-                          c.name
+                          c.name ,
+                          campaign.Id
                         ]"
                         style="
                           font-size: 14px;
