@@ -37,6 +37,6 @@ import { AddNewCampaignComponent } from './add-new-campaign/add-new-campaign.com
     AutoCompleteModule,
     ButtonModule
   ],
-  exports: [CampaignDrawingComponent],
+  exports: [CampaignDrawingComponent,CampaignManagerComponent],
 })
 export class CampaignModule {}

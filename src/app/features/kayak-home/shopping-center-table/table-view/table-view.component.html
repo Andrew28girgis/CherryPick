@@ -632,7 +632,7 @@
               {{ submission?.CreatedDate | date : "MMM dd, yyyy" }}
             </p>
           </div>
-          <p class="available-space">
+          <p class="available-space" *ngIf="submission?.AvailableSpace">
             Available Space:{{ submission?.AvailableSpace }} SF
           </p>
         </div>
