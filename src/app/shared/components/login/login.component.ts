@@ -107,14 +107,12 @@ export class LoginComponent implements OnInit {
    */
   private loginWithGUID(): void {
     this.spinner.show();
-
     const request = {
       Name: 'GetBuyBoxIdToBeShown',
       Params: {
         BuyBoxGUID: this.loginToken,
       },
     };
-
     this.placesService.GenericAPI(request).subscribe({
       next: (response) => {
         this.handleGUIDLoginSuccess(response);

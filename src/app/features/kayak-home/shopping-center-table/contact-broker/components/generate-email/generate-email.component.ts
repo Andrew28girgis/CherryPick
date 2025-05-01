@@ -674,11 +674,7 @@ export class GenerateEmailComponent implements OnInit {
       return;
     }
 
-    // Create a counter to track when all emails are sent - use filtered length
-
     this.spinner.show();
-
-    // Send each eligible email one by one - iterate through filtered array
     eligibleEmails.forEach((email) => {
       const body: any = {
         Name: 'UpdateEmailData',
@@ -742,7 +738,7 @@ export class GenerateEmailComponent implements OnInit {
     const subject = encodeURIComponent(this.selectedmail?.Subject || '');
     const body = this.encodeBody(this.selectedmail?.Body || '');
     const target = `https://outlook.office.com/mail/deeplink/compose?to=${toEmails}&subject=${subject}&body=${body}`;
- 
+
     const redirectURL = new URL('https://outlook.office.com/owa/?state=1');
     redirectURL.searchParams.set(
       'redirectTo',
