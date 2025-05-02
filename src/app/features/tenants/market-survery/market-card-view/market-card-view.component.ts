@@ -101,7 +101,7 @@ export class MarketCardViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
         this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
-          [42, 43, 44].includes(element.kanbanTemplateStageId)
+          [42,  44].includes(element.kanbanTemplateStageId)
         );
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();

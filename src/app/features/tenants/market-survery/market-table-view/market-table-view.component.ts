@@ -98,7 +98,7 @@ export class MarketTableViewComponent implements OnInit {
         );
 
         this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
-          [42, 43, 44].includes(element.kanbanTemplateStageId)
+          [42, 44].includes(element.kanbanTemplateStageId)
         );
 
         console.log(`xx`);

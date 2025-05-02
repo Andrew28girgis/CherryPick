@@ -131,7 +131,7 @@ export class SocialMediaViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
         this.shoppingCenters = this.shoppingCenters?.filter(
-          (element: any) => [42, 43, 44].includes(element.kanbanTemplateStageId)
+          (element: any) => [42,  44].includes(element.kanbanTemplateStageId)
         );
 
         this.stateService.setShoppingCenters(this.shoppingCenters);
