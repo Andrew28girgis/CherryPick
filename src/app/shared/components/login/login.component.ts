@@ -124,9 +124,9 @@ export class LoginComponent implements OnInit {
   }
 
   private handleGUIDLoginSuccess(response: any): void {
-    const { organizationId, buyBoxId, name: buyboxName } = response.json[0];
+    const { organizationId, buyBoxId, name: buyboxName ,campaignId } = response.json[0];
     localStorage.setItem(this.ORG_ID_KEY, organizationId);
-    this.router.navigate(['/home', buyBoxId, organizationId, buyboxName]);
+    this.router.navigate(['/market-survey', buyBoxId, organizationId, buyboxName , campaignId ]);
   }
 
   private prepareLoginRequest(): AdminLogin {

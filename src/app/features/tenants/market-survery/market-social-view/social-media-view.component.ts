@@ -61,7 +61,7 @@ export class SocialMediaViewComponent implements OnInit {
   @ViewChild('loginRegisterModal', { static: true }) loginRegisterModal: any;
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
-
+  campaignId!: any;
   constructor(
     private stateService: StateService,
     private PlacesService: PlacesService,
@@ -77,6 +77,8 @@ export class SocialMediaViewComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
+      this.campaignId = params.campaignId;
+
       this.currentView = localStorage.getItem('currentView') || '2';
 
       // localStorage.setItem('BuyBoxId', this.BuyBoxId);
@@ -116,7 +118,7 @@ export class SocialMediaViewComponent implements OnInit {
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({

@@ -56,6 +56,7 @@ export class MarketSurveyComponent implements OnInit {
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
   Guid!: string;
   GuidLink!: string;
+  campaignId!: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService,
@@ -75,8 +76,10 @@ export class MarketSurveyComponent implements OnInit {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
+      this.campaignId = params.campaignId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
+      localStorage.setItem('CampaignId', this.campaignId);
       this.ContactId = localStorage.getItem('contactId');
     });
 
@@ -111,8 +114,8 @@ export class MarketSurveyComponent implements OnInit {
     const body: any = {
       Name: 'GetBuyBoxGUID',
       Params: {
-        BuyBoxId: +this.BuyBoxId,
-        OrganizationId: +this.OrgId,
+        CampaignId: +this.campaignId,
+        OrganizationId: + this.OrgId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({

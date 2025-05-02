@@ -81,7 +81,7 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   {
-    path: 'market-survey/:buyboxid/:orgId/:buyboxName',
+    path: 'market-survey/:buyboxid/:orgId/:buyboxName/:campaignId',
     component: MarketSurveyComponent,
     canActivate: [TenantOnlyGuard],
     data: { hideHeader: true },
