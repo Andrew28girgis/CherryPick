@@ -274,9 +274,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.updateRoleSelection();
     // 2) set and navigate
     this.contactID = contactId;
-    this.router.navigate([`tenant/${this.guid}/${this.contactID}`], {
-      replaceUrl: true,
-    });
+    this.showToast('You Can Submit Brochure Now!');
+    // this.router.navigate([`tenant/${this.guid}/${this.contactID}`], {
+    //   replaceUrl: true,
+    // });
     this.GetCampaignFromGuid();
     this.proceedWithNextSteps();
   }
@@ -1080,12 +1081,12 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {
 
-    const storedMgr = localStorage.getItem('isManager');
-    this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
-    const storedUpd = localStorage.getItem('onlyUpdate');
-    this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
-    // Default the selectedOption to 'isManager' initially
-    this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
+    // const storedMgr = localStorage.getItem('isManager');
+    // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
+    // const storedUpd = localStorage.getItem('onlyUpdate');
+    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+    // // Default the selectedOption to 'isManager' initially
+    // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
     // console.log('Is Manager:', this.isManager);
     // console.log('Only Update:', this.onlyUpdate);
 
