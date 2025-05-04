@@ -164,7 +164,6 @@ export class TenantComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
