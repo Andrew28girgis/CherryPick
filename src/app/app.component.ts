@@ -15,7 +15,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.fullURL = window.location.href;
-    alert('fullURL: ' + this.fullURL);    // this.router.events
+    alert('fullURL: ' + this.fullURL);    
+    // this.router.events
     // .pipe(filter(event => event instanceof NavigationEnd))
     // .subscribe(() => {
     //   const childRoute = this.activatedRoute.firstChild;
