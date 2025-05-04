@@ -41,6 +41,7 @@ import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCen
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { organizationContacts } from 'src/app/shared/models/organizationContacts';
+import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import {
   Bb,
@@ -64,7 +65,7 @@ import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
-export class TenantComponent implements OnInit {
+export class TenantComponent implements OnInit, AfterViewInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
   @ViewChild('contactDataModal', { static: true })
@@ -125,7 +126,6 @@ export class TenantComponent implements OnInit {
   deleteType: string = '';
   deleteId: number | null = null;
   showButtons: boolean = true;
-  fullURL: string = ''; // Variable to store the full URL
   @ViewChild('leasePricesModal') leasePricesModal: TemplateRef<any> | undefined;
   @ViewChild('buildingSizesModal') buildingSizesModal:
     | TemplateRef<any>
@@ -159,32 +159,42 @@ export class TenantComponent implements OnInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    // private mapDrawingService: MapDrawingService,
+    private mapDrawingService: MapDrawingService,
     private shoppingCenterService: ViewManagerService,
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-    alert('hello');
 
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
+      console.log('encryptedContactId (before merge)', encryptedContactId);
+      // Check if the last segment is a number or string
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
+        // If userSubmission is a string, merge it with encryptedContactId
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        this.userSubmission = null;
+        console.log('encryptedContactId (after merge)', encryptedContactId);
+        this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
+      console.log('parsedId', parsedId);
+      // If parsedId is a number, assign it to contactID
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
+        console.log('Contact ID is a number:', this.contactID);
       }
       // Retrieve the guid
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
+        console.log('GUID:', this.guid);
+        console.log('userSubmission', this.userSubmission);
+        console.log('contactID', this.contactID);
       });
       // Decrypt contact ID if available
       if (encryptedContactId) {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
+          console.log('Decrypted Contact IDs:', this.contactIDs);
         } catch (err) {
           console.error('Decryption failed', err);
         }
@@ -200,12 +210,6 @@ export class TenantComponent implements OnInit {
 
     this.GetCampaignFromGuid();
     this.proceedWithNextSteps();
-    // const storedMgr = localStorage.getItem('isManager');
-    // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
-    // const storedUpd = localStorage.getItem('onlyUpdate');
-    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
-    // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
-
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
@@ -270,7 +274,7 @@ export class TenantComponent implements OnInit {
     this.updateRoleSelection();
     // 2) set and navigate
     this.contactID = contactId;
-    this.router.navigate([`/${this.guid}/${this.contactID}`], {
+    this.router.navigate([`tenant/${this.guid}/${this.contactID}`], {
       replaceUrl: true,
     });
     this.GetCampaignFromGuid();
@@ -1006,30 +1010,30 @@ export class TenantComponent implements OnInit {
       },
     });
   }
-  // loadPolygons(): void {
-  //   if (!this.Polgons || !Array.isArray(this.Polgons)) {
-  //     console.error('No polygons available');
-  //     return;
-  //   }
-  //   // Replace apiResponse with this.Polgons
-  //   this.customPolygons = this.Polgons.map((item) => {
-  //     return {
-  //       geoJson: JSON.parse(item.json),
-  //       visible: true,
-  //       polygonObj: undefined,
-  //     } as ICustomPolygon;
-  //   });
-  //   // Display all polygons by default using displayMyPolygons from your service.
-  //   for (let polygon of this.customPolygons) {
-  //     const coordinates = this.getPolygonCoordinates(polygon.geoJson);
-  //     if (coordinates) {
-  //       polygon.polygonObj = this.mapDrawingService.displayPolygon(
-  //         coordinates,
-  //         this.map
-  //       );
-  //     }
-  //   }
-  // }
+  loadPolygons(): void {
+    if (!this.Polgons || !Array.isArray(this.Polgons)) {
+      console.error('No polygons available');
+      return;
+    }
+    // Replace apiResponse with this.Polgons
+    this.customPolygons = this.Polgons.map((item) => {
+      return {
+        geoJson: JSON.parse(item.json),
+        visible: true,
+        polygonObj: undefined,
+      } as ICustomPolygon;
+    });
+    // Display all polygons by default using displayMyPolygons from your service.
+    for (let polygon of this.customPolygons) {
+      const coordinates = this.getPolygonCoordinates(polygon.geoJson);
+      if (coordinates) {
+        polygon.polygonObj = this.mapDrawingService.displayPolygon(
+          coordinates,
+          this.map
+        );
+      }
+    }
+  }
   getPolygonCoordinates(geoJson: any):
     | {
         lat: number;
@@ -1057,39 +1061,50 @@ export class TenantComponent implements OnInit {
   }
 
   // Toggle the visibility of a single polygon.
-  // togglePolygonVisibility(polygon: ICustomPolygon): void {
-  //   polygon.visible = !polygon.visible;
-  //   if (polygon.visible) {
-  //     // If the polygon is not already on the map, display it.
-  //     if (!polygon.polygonObj) {
-  //       // polygon.polygonObj = this.mapDrawingService.displayPolygon(polygon.geoJson, this.map);
-  //     } else {
-  //       // Otherwise, ensure it’s set on the map.
-  //       polygon.polygonObj.setMap(this.map);
-  //     }
-  //   } else {
-  //     // Hide the polygon using hideMyPolygons from your service.
-  //     if (polygon.polygonObj) {
-  //       this.mapDrawingService.hidePolygon(polygon.polygonObj);
-  //     }
-  //   }
-  // }
+  togglePolygonVisibility(polygon: ICustomPolygon): void {
+    polygon.visible = !polygon.visible;
+    if (polygon.visible) {
+      // If the polygon is not already on the map, display it.
+      if (!polygon.polygonObj) {
+        // polygon.polygonObj = this.mapDrawingService.displayPolygon(polygon.geoJson, this.map);
+      } else {
+        // Otherwise, ensure it’s set on the map.
+        polygon.polygonObj.setMap(this.map);
+      }
+    } else {
+      // Hide the polygon using hideMyPolygons from your service.
+      if (polygon.polygonObj) {
+        this.mapDrawingService.hidePolygon(polygon.polygonObj);
+      }
+    }
+  }
   ngAfterViewInit(): void {
-    // const interval = setInterval(() => {
-    //   if (
-    //     this.TenantResult &&
-    //     this.TenantResult.Buybox &&
-    //     this.customPolygons
-    //   ) {
-    //     this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
-    //     // debugger
-    //     this.mapDrawingService.initializeDrawingManager(this.map);
-    //     this.map.setZoom(9);
-    //     // this.mapDrawingService.updateMapCenter(this.map, null);
-    //     //this.loadPolygons();
-    //     clearInterval(interval);
-    //   }
-    // }, 100);
+
+    const storedMgr = localStorage.getItem('isManager');
+    this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
+    const storedUpd = localStorage.getItem('onlyUpdate');
+    this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+    // Default the selectedOption to 'isManager' initially
+    this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
+    // console.log('Is Manager:', this.isManager);
+    // console.log('Only Update:', this.onlyUpdate);
+
+    const interval = setInterval(() => {
+      if (
+        this.TenantResult &&
+        this.TenantResult.Buybox &&
+        this.customPolygons
+      ) {
+        this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
+        // debugger
+        this.mapDrawingService.initializeDrawingManager(this.map);
+        this.map.setZoom(9);
+        // this.mapDrawingService.updateMapCenter(this.map, null);
+
+        this.loadPolygons();
+        clearInterval(interval);
+      }
+    }, 1000);
   }
   /////////////////////
   openShoppingModal(id: number) {
