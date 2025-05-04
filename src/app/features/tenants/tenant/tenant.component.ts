@@ -165,143 +165,67 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-    this.fullURL = window.location.href;
-    // Add debug alert that will show on all browsers
-    alert('Component initialized. Browser: ' + this.getBrowserInfo());
-     
+     this.fullURL = window.location.href;
+     alert('fullURL: ' + this.fullURL);
     this.activatedRoute.paramMap.subscribe((params) => {
-      try {
-        this.userSubmission = params.get('userSubmission');
-        let encryptedContactId = params.get('contactId');
-        console.log('encryptedContactId (before merge)', encryptedContactId);
-        
-        // Check if the last segment is a number or string
-        if (this.userSubmission && isNaN(Number(this.userSubmission))) {
-          // If userSubmission is a string, merge it with encryptedContactId
-          encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-          console.log('encryptedContactId (after merge)', encryptedContactId);
-          this.userSubmission = null; // Reset userSubmission to null
-        }
-        
-        // Try parsing as number first
-        const parsedId = Number(encryptedContactId);
-        console.log('parsedId', parsedId);
-        
-        // If parsedId is a number, assign it to contactID
-        if (!isNaN(parsedId)) {
-          this.contactID = parsedId;
-          console.log('Contact ID is a number:', this.contactID);
-        }
-        
-        // Retrieve the guid - use snapshot for more reliability
-        this.guid = this.activatedRoute.snapshot.params['guid'];
-        console.log('GUID from snapshot:', this.guid);
+      this.userSubmission = params.get('userSubmission');
+      let encryptedContactId = params.get('contactId');
+      console.log('encryptedContactId (before merge)', encryptedContactId);
+      // Check if the last segment is a number or string
+      if (this.userSubmission && isNaN(Number(this.userSubmission))) {
+        // If userSubmission is a string, merge it with encryptedContactId
+        encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
+        console.log('encryptedContactId (after merge)', encryptedContactId);
+        alert('encryptedContactId: ' + encryptedContactId);
+        this.userSubmission = null; // Reset userSubmission to null
+      }
+      const parsedId = Number(encryptedContactId);
+      console.log('parsedId', parsedId);
+      // If parsedId is a number, assign it to contactID
+      if (!isNaN(parsedId)) {
+        this.contactID = parsedId;
+        console.log('Contact ID is a number:', this.contactID);
+        alert('contactID: ' + this.contactID);
+      }
+      // Retrieve the guid
+      this.activatedRoute.params.subscribe((params) => {
+        this.guid = params['guid'];
+        console.log('GUID:', this.guid);
         console.log('userSubmission', this.userSubmission);
         console.log('contactID', this.contactID);
-        
-        // Decrypt contact ID if available - with proper error handling
-        if (encryptedContactId) {
-          try {
-            this.contactIDs = this.safeDecrypt(encryptedContactId);
-            console.log('Decrypted Contact IDs:', this.contactIDs);
-          } catch (err) {
-            console.error('Decryption failed', err);
-            alert('Decryption error: ' + (err instanceof Error ? err.message : String(err)));
-          }
+      });
+      // Decrypt contact ID if available
+      if (encryptedContactId) {
+        try {
+          this.contactIDs = this.decrypt(encryptedContactId);
+          console.log('Decrypted Contact IDs:', this.contactIDs);
+          alert('contactIDs: ' + this.contactIDs);
+        } catch (err) {
+          console.error('Decryption failed', err);
         }
-      } catch (e) {
-        console.error('Error in paramMap processing:', e);
-        alert('Error in route params: ' + (e instanceof Error ? e.message : String(e)));
       }
     });
-  
-    // Use a safer UUID generation method
-    const guid = this.generateUUID();
-    this.selectedShoppingID = guid;
-    
+
+    // const guid = crypto.randomUUID();
+    // this.selectedShoppingID = guid;
     if (this.contactIDs) {
       this.GetContactData();
+      // this.opencontactDataModal();
     }
-  
-    // Continue with the rest of your initialization
+
     this.GetCampaignFromGuid();
     this.proceedWithNextSteps();
-    
     const storedMgr = localStorage.getItem('isManager');
     this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
     const storedUpd = localStorage.getItem('onlyUpdate');
     this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+    // Default the selectedOption to 'isManager' initially
     this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
-    
+    // console.log('Is Manager:', this.isManager);
+    // console.log('Only Update:', this.onlyUpdate);
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
-  }
-  
-  // Safer decrypt method with better error handling for Safari
-  safeDecrypt(encryptedValue: string): string {
-    try {
-      // Make sure we have a valid string to decrypt
-      if (!encryptedValue) {
-        throw new Error('Empty encrypted value');
-      }
-      
-      // Handle URL encoded values safely
-      const decodedValue = decodeURIComponent(encryptedValue);
-      
-      // Perform the decryption with better error handling
-      const decrypted = CryptoJS.AES.decrypt(decodedValue, this.key, {
-        keySize: 256 / 8,
-        iv: this.iv,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7,
-      });
-      
-      const result = decrypted.toString(CryptoJS.enc.Utf8);
-      if (!result) {
-        throw new Error('Decryption resulted in empty string');
-      }
-      
-      return result;
-    } catch (e) {
-      console.error('Safe decrypt failed:', e);
-      // Return a fallback or re-throw based on your error handling strategy
-      throw new Error(`Decryption failed: ${e instanceof Error ? e.message : String(e)}`);
-    }
-  }
-  
-  // Cross-browser UUID generation (fallback if crypto.randomUUID() is not available)
-  generateUUID(): string {
-    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-      return crypto.randomUUID();
-    }
-    
-    // Fallback implementation for browsers without crypto.randomUUID()
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
-  
-  // Helper function to identify browser for debugging
-  getBrowserInfo(): string {
-    const userAgent = navigator.userAgent;
-    let browserName = "Unknown";
-    
-    if (userAgent.match(/chrome|chromium|crios/i)) {
-      browserName = "Chrome";
-    } else if (userAgent.match(/firefox|fxios/i)) {
-      browserName = "Firefox";
-    } else if (userAgent.match(/safari/i)) {
-      browserName = "Safari";
-    } else if (userAgent.match(/opr\//i)) {
-      browserName = "Opera";
-    } else if (userAgent.match(/edg/i)) {
-      browserName = "Edge";
-    }
-    
-    return `${browserName} on ${/iPhone|iPad|iPod/.test(userAgent) ? 'iOS' : 'other'}`;
   }
   encrypt(value: string): string {
     const encrypted = CryptoJS.AES.encrypt(
