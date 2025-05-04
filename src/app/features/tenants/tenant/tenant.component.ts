@@ -126,6 +126,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   deleteType: string = '';
   deleteId: number | null = null;
   showButtons: boolean = true;
+  fullURL: string = ''; // Variable to store the full URL
   @ViewChild('leasePricesModal') leasePricesModal: TemplateRef<any> | undefined;
   @ViewChild('buildingSizesModal') buildingSizesModal:
     | TemplateRef<any>
@@ -164,6 +165,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
+     this.fullURL = window.location.href;
+     alert('fullURL: ' + this.fullURL);
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
@@ -173,6 +176,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
         // If userSubmission is a string, merge it with encryptedContactId
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
         console.log('encryptedContactId (after merge)', encryptedContactId);
+        alert('encryptedContactId: ' + encryptedContactId);
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
@@ -181,6 +185,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
         console.log('Contact ID is a number:', this.contactID);
+        alert('contactID: ' + this.contactID);
       }
       // Retrieve the guid
       this.activatedRoute.params.subscribe((params) => {
@@ -194,6 +199,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
           console.log('Decrypted Contact IDs:', this.contactIDs);
+          alert('contactIDs: ' + this.contactIDs);
         } catch (err) {
           console.error('Decryption failed', err);
         }
