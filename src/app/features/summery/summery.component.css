@@ -290,12 +290,39 @@ button:active {
 }
 
 @media (max-width: 567px) {
+
   .card__Kayak {
     margin-bottom: 1rem;
-    width: 300px !important;
   }
+  .Kayak__img {
+    width: 80px;
+    height: 70px;
+}
+.active {
+  padding: 2px 9px;
+}
+.card__Kayak_title {
+  font-size: 15px;
+}
+.private {
+  padding: 2px 9px;
+}
+.graytext {
+  font-size: 15px;
+  line-height: 15px;
+}
+.firsttradelist {
+  font-size: 15px;
+}
+.CampaignWorkfow {
+  font-size: 15px;
+  line-height: 5px;
+}
 }
 @media (max-width: 767px) {
+  .offcanvas-end {
+    width: 70% !important;
+  }
   .chevronicon {
     padding-right: 12px;
   }
@@ -312,7 +339,6 @@ button:active {
   }
   .card__Kayak {
     margin-bottom: 1rem;
-    width: 265px;
   }
   .card__Kayak_buttons {
     justify-content: space-evenly;
