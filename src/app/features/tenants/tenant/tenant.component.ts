@@ -165,8 +165,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-     this.fullURL = window.location.href;
-     alert('fullURL: ' + this.fullURL);
+    alert('hello');
+
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
@@ -175,8 +175,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         // If userSubmission is a string, merge it with encryptedContactId
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        console.log('encryptedContactId (after merge)', encryptedContactId);
-        alert('encryptedContactId: ' + encryptedContactId);
+        console.log('encryptedContactId (after merge)', encryptedContactId); 
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
@@ -184,8 +183,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       // If parsedId is a number, assign it to contactID
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
-        console.log('Contact ID is a number:', this.contactID);
-        alert('contactID: ' + this.contactID);
+        console.log('Contact ID is a number:', this.contactID); 
       }
       // Retrieve the guid
       this.activatedRoute.params.subscribe((params) => {
@@ -198,8 +196,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       if (encryptedContactId) {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
-          console.log('Decrypted Contact IDs:', this.contactIDs);
-          alert('contactIDs: ' + this.contactIDs);
+          console.log('Decrypted Contact IDs:', this.contactIDs); 
         } catch (err) {
           console.error('Decryption failed', err);
         }
@@ -1092,22 +1089,22 @@ export class TenantComponent implements OnInit, AfterViewInit {
     }
   }
   ngAfterViewInit(): void {
-    const interval = setInterval(() => {
-      if (
-        this.TenantResult &&
-        this.TenantResult.Buybox &&
-        this.customPolygons
-      ) {
-        this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
-        // debugger
-        this.mapDrawingService.initializeDrawingManager(this.map);
-        this.map.setZoom(9);
-        // this.mapDrawingService.updateMapCenter(this.map, null);
+    // const interval = setInterval(() => {
+    //   if (
+    //     this.TenantResult &&
+    //     this.TenantResult.Buybox &&
+    //     this.customPolygons
+    //   ) {
+    //     this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
+    //     // debugger
+    //     this.mapDrawingService.initializeDrawingManager(this.map);
+    //     this.map.setZoom(9);
+    //     // this.mapDrawingService.updateMapCenter(this.map, null);
 
-        this.loadPolygons();
-        clearInterval(interval);
-      }
-    }, 100);
+    //     //this.loadPolygons();
+    //     clearInterval(interval);
+    //   }
+    // }, 100);
   }
   /////////////////////
   openShoppingModal(id: number) {
@@ -1172,7 +1169,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     // Basic validation for domain format (optional, since HTML pattern handles it)
     const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     if (!domainPattern.test(this.newUrlTenant.trim())) {
-      alert('Please enter a valid domain (e.g., example.com).');
       return;
     }
     this.spinner.show();

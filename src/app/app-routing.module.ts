@@ -132,14 +132,12 @@ const routes: Routes = [
   },
   {
     path: 'tenant/:guid/:contactId',
-    component: TenantComponent,
-    canActivate: [TenantOnlyGuard],
+    component: TenantComponent, 
     data: { hideHeader: true },
   },
   {
     path: 'tenant/:guid/:contactId/:userSubmission',
-    component: TenantComponent,
-    canActivate: [TenantOnlyGuard],
+    component: TenantComponent, 
     data: { hideHeader: true },
   },
 ];
