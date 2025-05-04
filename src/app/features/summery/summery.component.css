@@ -318,6 +318,9 @@ button:active {
   font-size: 15px;
   line-height: 5px;
 }
+.smallline {
+  margin-bottom: 0px;
+}
 }
 @media (max-width: 767px) {
   .offcanvas-end {
