@@ -40,7 +40,7 @@ import { TenantShoppingCenter } from 'src/app/shared/models/tenantShoppingCenter
 import { PropertiesDetails } from 'src/app/shared/models/manage-prop-shoppingCenter';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
-import { organizationContacts } from 'src/app/shared/models/organizationContacts'; 
+import { organizationContacts } from 'src/app/shared/models/organizationContacts';
 import * as CryptoJS from 'crypto-js';
 import {
   Bb,
@@ -171,7 +171,7 @@ export class TenantComponent implements OnInit {
       let encryptedContactId = params.get('contactId');
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        this.userSubmission = null; 
+        this.userSubmission = null;
       }
       const parsedId = Number(encryptedContactId);
       if (!isNaN(parsedId)) {
@@ -203,9 +203,9 @@ export class TenantComponent implements OnInit {
     // const storedMgr = localStorage.getItem('isManager');
     // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
     // const storedUpd = localStorage.getItem('onlyUpdate');
-    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false; 
+    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
     // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
- 
+
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
@@ -1086,7 +1086,6 @@ export class TenantComponent implements OnInit {
     //     this.mapDrawingService.initializeDrawingManager(this.map);
     //     this.map.setZoom(9);
     //     // this.mapDrawingService.updateMapCenter(this.map, null);
-
     //     //this.loadPolygons();
     //     clearInterval(interval);
     //   }
