@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
+    alert('AppComponent ngOnInit called');
     // this.router.events
     // .pipe(filter(event => event instanceof NavigationEnd))
     // .subscribe(() => {
