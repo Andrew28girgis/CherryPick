@@ -1131,7 +1131,7 @@ body.panel-open {
   overflow: hidden;
 }
 ::ng-deep .popover-body {
-  padding: 0 !important;
+  padding: 5px !important;
 }
 ::ng-deep .popover-arrow::after {
   border-top: none !important;

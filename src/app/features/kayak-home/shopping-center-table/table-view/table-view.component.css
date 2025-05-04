@@ -249,7 +249,7 @@ img[alt="logo"] {
 }
 
 ::ng-deep .popover-body {
-  padding: 0 !important;
+  padding: 5px !important;
 }
 
 ::ng-deep .popover-arrow::after {
