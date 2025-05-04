@@ -10,11 +10,12 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   display: boolean = false;
+  fullURL: string = '';
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    alert('AppComponent ngOnInit called');
-    // this.router.events
+    this.fullURL = window.location.href;
+    alert('fullURL: ' + this.fullURL);    // this.router.events
     // .pipe(filter(event => event instanceof NavigationEnd))
     // .subscribe(() => {
     //   const childRoute = this.activatedRoute.firstChild;
