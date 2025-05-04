@@ -65,7 +65,7 @@ import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
-export class TenantComponent implements OnInit, AfterViewInit {
+export class TenantComponent implements OnInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
   @ViewChild('contactDataModal', { static: true })
@@ -148,7 +148,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   MatchCampaignsFromSubmission: MatchCampaignFromSubmission | null = null;
   isManager: boolean = true;
   onlyUpdate: boolean = false;
-  selectedOption: string = 'isManager'; // This will control the radio button selection
+  selectedOption: string = 'isManager';
   selectedCampaignIds: number[] = [];
   selectedPlaces: { [campaignId: number]: number[] } = {};
   constructor(
@@ -168,44 +168,28 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
-      console.log('encryptedContactId (before merge)', encryptedContactId);
-      // Check if the last segment is a number or string
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
-        // If userSubmission is a string, merge it with encryptedContactId
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        console.log('encryptedContactId (after merge)', encryptedContactId);
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
-      console.log('parsedId', parsedId);
-      // If parsedId is a number, assign it to contactID
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
-        console.log('Contact ID is a number:', this.contactID);
       }
-      // Retrieve the guid
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
-        console.log('GUID:', this.guid);
-        console.log('userSubmission', this.userSubmission);
-        console.log('contactID', this.contactID);
       });
-      // Decrypt contact ID if available
       if (encryptedContactId) {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
-          console.log('Decrypted Contact IDs:', this.contactIDs);
         } catch (err) {
           console.error('Decryption failed', err);
         }
       }
     });
 
-    // const guid = crypto.randomUUID();
-    // this.selectedShoppingID = guid;
     if (this.contactIDs) {
       this.GetContactData();
-      // this.opencontactDataModal();
     }
 
     this.GetCampaignFromGuid();
@@ -1079,34 +1063,34 @@ export class TenantComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  ngAfterViewInit(): void {
+  // ngAfterViewInit(): void {
 
-    // const storedMgr = localStorage.getItem('isManager');
-    // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
-    // const storedUpd = localStorage.getItem('onlyUpdate');
-    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
-    // // Default the selectedOption to 'isManager' initially
-    // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
-    // console.log('Is Manager:', this.isManager);
-    // console.log('Only Update:', this.onlyUpdate);
+  //   // const storedMgr = localStorage.getItem('isManager');
+  //   // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
+  //   // const storedUpd = localStorage.getItem('onlyUpdate');
+  //   // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+  //   // // Default the selectedOption to 'isManager' initially
+  //   // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
+  //   // console.log('Is Manager:', this.isManager);
+  //   // console.log('Only Update:', this.onlyUpdate);
 
-    const interval = setInterval(() => {
-      if (
-        this.TenantResult &&
-        this.TenantResult.Buybox &&
-        this.customPolygons
-      ) {
-        this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
-        // debugger
-        this.mapDrawingService.initializeDrawingManager(this.map);
-        this.map.setZoom(9);
-        // this.mapDrawingService.updateMapCenter(this.map, null);
+  //   // const interval = setInterval(() => {
+  //   //   if (
+  //   //     this.TenantResult &&
+  //   //     this.TenantResult.Buybox &&
+  //   //     this.customPolygons
+  //   //   ) {
+  //   //     this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
+  //   //     // debugger
+  //   //     this.mapDrawingService.initializeDrawingManager(this.map);
+  //   //     this.map.setZoom(9);
+  //   //     // this.mapDrawingService.updateMapCenter(this.map, null);
 
-        this.loadPolygons();
-        clearInterval(interval);
-      }
-    }, 1000);
-  }
+  //   //     this.loadPolygons();
+  //   //     clearInterval(interval);
+  //   //   }
+  //   // }, 1000);
+  // }
   /////////////////////
   openShoppingModal(id: number) {
     this.ShoppingID = id;
