@@ -65,7 +65,7 @@ import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
-export class TenantComponent implements OnInit, AfterViewInit {
+export class TenantComponent implements OnInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
   @ViewChild('contactDataModal', { static: true })
@@ -159,7 +159,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    private mapDrawingService: MapDrawingService,
+    // private mapDrawingService: MapDrawingService,
     private shoppingCenterService: ViewManagerService,
     private cdr: ChangeDetectorRef
   ) {}
@@ -1011,102 +1011,102 @@ export class TenantComponent implements OnInit, AfterViewInit {
       },
     });
   }
-  loadPolygons(): void {
-    if (!this.Polgons || !Array.isArray(this.Polgons)) {
-      console.error('No polygons available');
-      return;
-    }
-    // Replace apiResponse with this.Polgons
-    this.customPolygons = this.Polgons.map((item) => {
-      return {
-        geoJson: JSON.parse(item.json),
-        visible: true,
-        polygonObj: undefined,
-      } as ICustomPolygon;
-    });
-    // Display all polygons by default using displayMyPolygons from your service.
-    for (let polygon of this.customPolygons) {
-      const coordinates = this.getPolygonCoordinates(polygon.geoJson);
-      if (coordinates) {
-        polygon.polygonObj = this.mapDrawingService.displayPolygon(
-          coordinates,
-          this.map
-        );
-      }
-    }
-  }
-  getPolygonCoordinates(geoJson: any):
-    | {
-        lat: number;
-        lng: number;
-      }[]
-    | null {
-    try {
-      if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
-        return null;
-      }
+  // loadPolygons(): void {
+  //   if (!this.Polgons || !Array.isArray(this.Polgons)) {
+  //     console.error('No polygons available');
+  //     return;
+  //   }
+  //   // Replace apiResponse with this.Polgons
+  //   this.customPolygons = this.Polgons.map((item) => {
+  //     return {
+  //       geoJson: JSON.parse(item.json),
+  //       visible: true,
+  //       polygonObj: undefined,
+  //     } as ICustomPolygon;
+  //   });
+  //   // Display all polygons by default using displayMyPolygons from your service.
+  //   for (let polygon of this.customPolygons) {
+  //     const coordinates = this.getPolygonCoordinates(polygon.geoJson);
+  //     if (coordinates) {
+  //       polygon.polygonObj = this.mapDrawingService.displayPolygon(
+  //         coordinates,
+  //         this.map
+  //       );
+  //     }
+  //   }
+  // }
+  // getPolygonCoordinates(geoJson: any):
+  //   | {
+  //       lat: number;
+  //       lng: number;
+  //     }[]
+  //   | null {
+  //   try {
+  //     if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
+  //       return null;
+  //     }
 
-      const coordinates = geoJson.geometry.coordinates[0]?.map(
-        (coord: number[]) => {
-          return { lat: coord[1], lng: coord[0] };
-        }
-      );
+  //     const coordinates = geoJson.geometry.coordinates[0]?.map(
+  //       (coord: number[]) => {
+  //         return { lat: coord[1], lng: coord[0] };
+  //       }
+  //     );
 
-      if (!coordinates) {
-        return null;
-      }
+  //     if (!coordinates) {
+  //       return null;
+  //     }
 
-      return coordinates;
-    } catch (error) {}
-    return null;
-  }
+  //     return coordinates;
+  //   } catch (error) {}
+  //   return null;
+  // }
 
   // Toggle the visibility of a single polygon.
-  togglePolygonVisibility(polygon: ICustomPolygon): void {
-    polygon.visible = !polygon.visible;
-    if (polygon.visible) {
-      // If the polygon is not already on the map, display it.
-      if (!polygon.polygonObj) {
-        // polygon.polygonObj = this.mapDrawingService.displayPolygon(polygon.geoJson, this.map);
-      } else {
-        // Otherwise, ensure it’s set on the map.
-        polygon.polygonObj.setMap(this.map);
-      }
-    } else {
-      // Hide the polygon using hideMyPolygons from your service.
-      if (polygon.polygonObj) {
-        this.mapDrawingService.hidePolygon(polygon.polygonObj);
-      }
-    }
-  }
-  ngAfterViewInit(): void {
+  // togglePolygonVisibility(polygon: ICustomPolygon): void {
+  //   polygon.visible = !polygon.visible;
+  //   if (polygon.visible) {
+  //     // If the polygon is not already on the map, display it.
+  //     if (!polygon.polygonObj) {
+  //       // polygon.polygonObj = this.mapDrawingService.displayPolygon(polygon.geoJson, this.map);
+  //     } else {
+  //       // Otherwise, ensure it’s set on the map.
+  //       polygon.polygonObj.setMap(this.map);
+  //     }
+  //   } else {
+  //     // Hide the polygon using hideMyPolygons from your service.
+  //     if (polygon.polygonObj) {
+  //       this.mapDrawingService.hidePolygon(polygon.polygonObj);
+  //     }
+  //   }
+  // }
+  // ngAfterViewInit(): void {
 
-    // const storedMgr = localStorage.getItem('isManager');
-    // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
-    // const storedUpd = localStorage.getItem('onlyUpdate');
-    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
-    // // Default the selectedOption to 'isManager' initially
-    // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
-    // console.log('Is Manager:', this.isManager);
-    // console.log('Only Update:', this.onlyUpdate);
+  //   // const storedMgr = localStorage.getItem('isManager');
+  //   // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
+  //   // const storedUpd = localStorage.getItem('onlyUpdate');
+  //   // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+  //   // // Default the selectedOption to 'isManager' initially
+  //   // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
+  //   // console.log('Is Manager:', this.isManager);
+  //   // console.log('Only Update:', this.onlyUpdate);
 
-    const interval = setInterval(() => {
-      if (
-        this.TenantResult &&
-        this.TenantResult.Buybox &&
-        this.customPolygons
-      ) {
-        this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
-        // debugger
-        this.mapDrawingService.initializeDrawingManager(this.map);
-        this.map.setZoom(9);
-        // this.mapDrawingService.updateMapCenter(this.map, null);
+  //   const interval = setInterval(() => {
+  //     if (
+  //       this.TenantResult &&
+  //       this.TenantResult.Buybox &&
+  //       this.customPolygons
+  //     ) {
+  //       this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
+  //       // debugger
+  //       this.mapDrawingService.initializeDrawingManager(this.map);
+  //       this.map.setZoom(9);
+  //       // this.mapDrawingService.updateMapCenter(this.map, null);
 
-        this.loadPolygons();
-        clearInterval(interval);
-      }
-    }, 1000);
-  }
+  //       this.loadPolygons();
+  //       clearInterval(interval);
+  //     }
+  //   }, 1000);
+  // }
   /////////////////////
   openShoppingModal(id: number) {
     this.ShoppingID = id;
