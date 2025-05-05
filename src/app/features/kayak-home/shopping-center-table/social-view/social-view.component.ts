@@ -170,7 +170,8 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoadingstatus =true;
   submissions: any;
   @ViewChild('submission', { static: true }) submissionModal!: TemplateRef<any>;
-
+  Campaign:any;
+  isSocialView: boolean=false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -184,12 +185,15 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.isSocialView = this.localStorage.getItem('currentViewDashBord') === '5';
+ 
     this.checkMobileView();
     this.General = new General();
     this.selectedState = '';
     this.selectedCity = '';
 
     this.activatedRoute.params.subscribe((params: any) => {
+      this.Campaign = params.campaign;
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
@@ -1241,6 +1245,9 @@ export class SocialViewComponent implements OnInit, AfterViewInit, OnDestroy {
     
     // Loop through submissions and return true if any submission has a SubmmisionLink
     return submissions.some(submission => submission.SubmmisionLink !== null);
+  }
+  get localStorage() {
+    return localStorage;
   }
 }
 

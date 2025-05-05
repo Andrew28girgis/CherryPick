@@ -1,45 +1,7 @@
 <div class="tab-view-container">
   <div class="bottom-navbar">
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-    <div
-      *ngIf="isMobile && isSocialView"
-      style="
-        position: absolute;
-        bottom: 82vh;
-        right: 4vh;
-        gap: 5px;
-        display: flex;
-      "
-    >
-      <span
-        class="btn optionMobileColor"
-        style="color: #d3d3d3; background: transparent"
-        [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
-      >
-        <span>Emily</span>
-      </span>
-
-      <span
-        class="btn optionMobileColor"
-        style="color: #d3d3d3; background: transparent"
-        [routerLink]="['/campaigns/ataglance', CampaignId]"
-      >
-        <span> At a Glance </span>
-      </span>
-      <span
-        class="btn optionMobileColor"
-        style="color: #d3d3d3; background: transparent"
-        [routerLink]="[
-          '/market-survey',
-          BuyBoxId,
-          OrgId,
-          BuyBoxName,
-          CampaignId
-        ]"
-      >
-        <span> Market Survey </span>
-      </span>
-    </div>
+   
     <div class="row m-0 mb-0 mobile-n">
       <div
         class="col-12 pt-2 d-flex justify-content-between align-items-center mobile-nav mb-2"
