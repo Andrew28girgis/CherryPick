@@ -98,46 +98,7 @@
     [style.left.px]="heartX - 50"
   ></div>
 </div>
-<div
-*ngIf="isMobileView "
-style="
-  position: absolute;
-  bottom: 82vh;
-  right: 4vh;
-  gap: 5px;
-  display: flex;
-  z-index: 1;
-"
->
-<span
-  class="btn optionMobileColor"
-  style="color: #d3d3d3; background: transparent"
-  [routerLink]="['/organization-mail', BuyBoxId, OrgId, Campaign]"
->
-  <span>Emily</span>
-</span>
-
-<span
-  class="btn optionMobileColor"
-  style="color: #d3d3d3; background: transparent"
-  [routerLink]="['/campaigns/ataglance', Campaign]"
->
-  <span> At a Glance </span>
-</span>
-<span
-  class="btn optionMobileColor"
-  style="color: #d3d3d3; background: transparent"
-  [routerLink]="[
-    '/market-survey',
-    BuyBoxId,
-    OrgId,
-    BuyBoxName,
-    Campaign
-  ]"
->
-  <span> Market Survey </span>
-</span>
-</div>
+ 
 <div class="scroll-container" #scrollContainer *ngIf="!isLoading">
   
   <div

@@ -52,7 +52,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
   private outsideClickHandler: ((e: Event) => void) | null = null;
   submissions: any;
   isModalOpen = false;
-
+  BuyBoxName: any;
+  Campaign: any;
+  isMobileView:boolean=false;
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -63,12 +65,15 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.checkMobileView();
+
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-
+      this.Campaign = params.campaign;
+      this.BuyBoxName = params.buyboxName;
       // Initialize data using the centralized service
       // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
@@ -421,5 +426,14 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
     // Loop through submissions and return true if any submission has a SubmmisionLink
     return submissions.some((submission) => submission.SubmmisionLink !== null);
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkMobileView();
+  }
+
+  checkMobileView(): void {
+    this.isMobileView = window.innerWidth <= 768;
+    this.cdr.detectChanges();
   }
 }

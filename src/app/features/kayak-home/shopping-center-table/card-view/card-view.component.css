@@ -242,6 +242,7 @@ img[alt="logo"] {
 }
 
 @media (max-width: 768px) {
+ 
   ::ng-deep .p-element .p-paginator {
     margin-bottom: 70px;
   }

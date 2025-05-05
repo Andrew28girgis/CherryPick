@@ -15,6 +15,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   isMobile = false;
   currentView: number = 5;
   isSocialView: boolean = false;
+  isMapView: boolean = false;
   BuyBoxId!: any;
   BuyBoxName!: string;
   CampaignId!: any;
@@ -63,6 +64,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   ngOnInit(): void {
     this.cdr.detectChanges();
     this.isSocialView = this.localStorage.getItem('currentViewDashBord') === '5';
+    this.isMapView = this.localStorage.getItem('currentViewDashBord') === '1';
     this.checkScreenSize(); // Check screen size on initialization
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
