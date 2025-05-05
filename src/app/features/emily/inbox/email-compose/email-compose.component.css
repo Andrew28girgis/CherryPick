@@ -200,4 +200,66 @@
   ::ng-deep .email-mod .modal-content {
     border-radius: 1rem;
   }
-  
+  .shopp-container{
+    display: flex;
+    gap: 5px;
+  }
+  @media (max-width: 768px) {
+    .center-name{
+      font-size: 15px;
+    }
+    .center-address{
+      font-size: 14px;
+    }
+    .shopp-container{
+      display: flex;
+      flex-direction: column;
+    }
+    .center-container img {
+      height: 6rem;
+      width: 6rem;
+    }
+    .center-container {
+      width: 100%;
+      padding: 0.5rem;
+    }
+    .contact-broker-step .step-header .step-title{
+      font-size: 12px;
+    }
+    .contact-broker-step .step-header .step-number-icon {
+      width: 1.0rem;
+      height: 1.0rem;
+      /* border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #4d65b4;
+      /* color: #fff; */
+      font-size: 0.7rem;
+      font-weight: 500; 
+    }
+    .contact-broker-step {
+      gap: 0.9rem;
+    }   
+    .shopping-name{
+      font-size: 16px;
+      text-align: center;
+      line-height: 18px;
+      margin-bottom: 20px;
+    }
+    .manager-by{
+      font-size: 15px;
+      line-height: 20px;
+    }
+    .logo{
+      width: 22px;
+      height: 22px;
+    }
+    .contact-broker-stepper ul{
+      margin: 0 0 0.5rem 0;
+
+    }
+    .email-body{
+      padding: 10px;
+    }
+  }
