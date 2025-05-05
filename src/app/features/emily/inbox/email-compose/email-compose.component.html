@@ -60,9 +60,9 @@
     </div>
     <ng-container [ngSwitch]="currentStep">
       <div *ngSwitchCase="1">
-        <div class="row">
+        <div class="col-md-12 shopp-container">
           <div
-            class="col-6 mb-3 center-container"
+            class="col-md-6 mb-3 center-container"
             *ngFor="let sc of GetShoppingCenters"
           >
             <div class="d-flex align-items-start">
@@ -108,15 +108,17 @@
         </div>
       </div>
       <div *ngSwitchCase="2">
-        <div *ngFor="let sc of GetShoppingCenters" class="mb-5">
-          <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
           <span class="shopping-name">do you want to include them as CC in the email too ?</span>
         </div>
-          <h5 class="mb-3 shopping-name">{{ sc.CenterName }}</h5>
-          <span>These Shopping Centers are also manager by</span>
+        <div *ngFor="let sc of GetShoppingCenters" class="mb-5">
+          <div class="d-flex justify-content-center">
+        </div>
+          <h5 class="mb-3 shopping-name" style="color: #565fb3;">{{ sc.CenterName }}</h5>
+          <p class="manager-by">These Shopping Centers are also manager by</p>
           <div class="row">
             <div
-              class="col-6 col-lg-4 mb-3 manager-card"
+              class="col-md-6 col-lg-4 mb-3 manager-card"
               *ngFor="let mgr of sc.Managers"
             >
               <div class="card-broker mt-3">
