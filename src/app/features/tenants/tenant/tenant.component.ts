@@ -213,7 +213,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     });
 
     if (this.contactIDs) {
-
+      this.GetShoppingCenterManageInCampaign();
     }
     
     
@@ -540,7 +540,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       Name: 'GetShoppingCenterManageInCampaign',
       Params: {
         CampaignID: this.selectedCampaign,
-        ContactId: this.contactID,
+        ContactId: this.contactIDs,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
