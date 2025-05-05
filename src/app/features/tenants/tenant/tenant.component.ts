@@ -197,6 +197,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       this.GetMatchCampaignsFromSubmission();
     }
   }
+
   encrypt(value: string): string {
     const encrypted = CryptoJS.AES.encrypt(
       CryptoJS.enc.Utf8.parse(value),
@@ -696,8 +697,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
           };
           formData.append('ConvertPdfToImagesDTO', JSON.stringify(dto));
 
-          // const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
-          const SERVER_URL = `https://apibeta.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
+          const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
+          // const SERVER_URL = `https://apibeta.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
 
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
