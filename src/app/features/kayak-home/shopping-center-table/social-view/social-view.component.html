@@ -408,8 +408,7 @@
       </div>
       <div
       class="card-header"
-      (click)="
-        isMobileView ? openCustomPanel(shopping) : toggleDetails(i, shopping);
+      (click)=" toggleDetails(i, shopping);
         $event.stopPropagation()
       "
     >
@@ -435,7 +434,7 @@
 
         <div
           *ngIf="showDetails[i]"
-          class="shopping-center-details d-none d-sm-flex"
+          class="shopping-center-details  d-sm-flex"
         >
           <div class="row mt-2">
             <ng-container
@@ -465,17 +464,10 @@
           </div>
         </div>
         <!-- Replace the expandable content with a button to open panel -->
-        <p
-          *ngIf="
-            isMobileView ? 1 : shopping.ShoppingCenter?.BuyBoxPlaces?.length
-          "
-          class="see-more-btn d-sm-none d-flex"
-        >
-          See More
-        </p>
+ 
         <p
           *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
-          class="see-more-btn d-none d-sm-flex"
+          class="see-more-btn d-flex d-sm-flex"
           (click)="toggleDetails(i, shopping); $event.stopPropagation()"
         >
           {{ showDetails[i] ? "See less" : "See more" }}
