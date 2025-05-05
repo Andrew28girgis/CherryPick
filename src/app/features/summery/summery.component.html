@@ -107,7 +107,12 @@
         </svg>
         Add Tenant
       </button>
-      <button class="  Kayack__button" style="height: fit-content;" routerLink="/campaigns/add-campaign" *ngIf="showCampaigns">
+      <button
+        class="Kayack__button"
+        style="height: fit-content"
+        routerLink="/campaigns/add-campaign"
+        *ngIf="showCampaigns"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -156,12 +161,17 @@
     <div class="row" style="padding-bottom: 2%" *ngIf="!isLoading">
       <ng-container *ngFor="let tenant of tenants">
         <div class="col-12 col-sm-6 pt-sm-4" (click)="selectTenant(tenant)">
-          <section class="card__Kayak">
+          <section
+            class="card__Kayak"
+            (click)="goToTenant(tenant)"
+            style="cursor: pointer"
+          >
             <div class="card__Kayak__img mt-3 mb-3">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-3">
                   <div>
                     <img
+                      (click)="$event.stopPropagation()"
                       class="Kayak__img cursor"
                       [routerLink]="[
                         '/dashboard',
@@ -199,6 +209,7 @@
                       data-bs-toggle="offcanvas"
                       [attr.data-bs-target]="'#campaignDetails' + tenant.Id"
                       aria-controls="campaignDetails"
+                      (click)="$event.stopPropagation()"
                     >
                       <span class="nomberofcampains" *ngIf="tenant.Campaigns">{{
                         tenant.Campaigns.length
@@ -210,131 +221,7 @@
                       />
                     </div>
 
-                    <div
-                      class="offcanvas offcanvas-end"
-                      tabindex="-1"
-                      [id]="'campaignDetails' + tenant.Id"
-                      aria-labelledby="campaignDetailsLabel"
-                    >
-                      <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="campaignDetailsLabel">
-                          <div class="d-flex align-items-center gap-3">
-                            <div>
-                              <img
-                                class="Kayak__img"
-                                src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                                  tenant.OrganizationId
-                                }}"
-                                alt=""
-                              />
-                            </div>
-                            <div class="d-flex flex-column gap-2">
-                              <div class="active">
-                                <div class="dot"></div>
-                                <p class="text">Active</p>
-                              </div>
-
-                              <div class="card__Kayak_title">
-                                {{ tenant.Name }}
-                              </div>
-                            </div>
-                          </div>
-                        </h5>
-                        <button
-                          type="button"
-                          class="btn-close text-reset"
-                          data-bs-dismiss="offcanvas"
-                          aria-label="Close"
-                        ></button>
-                      </div>
-                      <div class="line"></div>
-                      <div class="offcanvas-body">
-                        <div class="offcanvas-background">
-                          <ng-container
-                            *ngFor="let campaign of tenant.Campaigns"
-                          >
-                            <div
-                              class="d-flex align-items-center justify-content-between"
-                            >
-                              <div
-                                class="d-flex flex-column justify-content-center gap-1"
-                              >
-                                <div class="private">
-                                  <div class="privatedot"></div>
-                                  <p class="privatetext">Public</p>
-                                </div>
-                                <div
-                                  class="firsttradelist"
-                                  [routerLink]="[
-                                    '/dashboard',
-                                    tenant.Id,
-                                    tenant.OrganizationId,
-                                    tenant.Name,
-                                    campaign.Id
-                                  ]"
-                                >
-                                  <span>{{ campaign.CampaignName }}</span>
-                                </div>
-                                <div class="graytext">
-                                  <span>{{ campaign.CreatedDate | date }}</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="customline"></div>
-
-                            <div
-                              class="d-flex align-items-center justify-content-between"
-                            >
-                              <div class="graytext">
-                                <span>Sites</span>
-                              </div>
-                              <div class="blackbold">
-                                <span>{{ campaign.Sites }}</span>
-                              </div>
-                            </div>
-                            <div
-                              class="d-flex align-items-center justify-content-between"
-                            >
-                              <div class="graytext">
-                                <span>Mail Sent</span>
-                              </div>
-                              <div class="blackbold">
-                                <span>{{ campaign.MailsSent }}</span>
-                              </div>
-                            </div>
-
-                            <div class="CampaignWorkfow">
-                              <span>Campaign Workflow</span>
-                            </div>
-
-                            <ng-container
-                              *ngFor="
-                                let stage of campaign.Kanban;
-                                let first = first
-                              "
-                            >
-                              <div *ngIf="!first" class="smallline"></div>
-                              <div class="d-flex flex-column">
-                                <div
-                                  class="d-flex align-items-center justify-content-between"
-                                >
-                                  <div class="graytext">
-                                    <span>{{ stage.stageName }}</span>
-                                  </div>
-                                  <div class="blackbold">
-                                    <span>{{
-                                      stage.MarketSurveyShoppingCenters
-                                        .length || 0
-                                    }}</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </ng-container>
-                          </ng-container>
-                        </div>
-                      </div>
-                    </div>
+                   
                   </div>
                 </div>
                 <div
@@ -352,6 +239,132 @@
               </div>
             </div>
           </section>
+          <div
+          class="offcanvas offcanvas-end"
+          tabindex="-1"
+          [id]="'campaignDetails' + tenant.Id"
+          aria-labelledby="campaignDetailsLabel"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="campaignDetailsLabel">
+              <div class="d-flex align-items-center gap-3">
+                <div>
+                  <img
+                    class="Kayak__img"
+                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                      tenant.OrganizationId
+                    }}"
+                    alt=""
+                  />
+                </div>
+                <div class="d-flex flex-column gap-2">
+                  <div class="active">
+                    <div class="dot"></div>
+                    <p class="text">Active</p>
+                  </div>
+
+                  <div class="card__Kayak_title">
+                    {{ tenant.Name }}
+                  </div>
+                </div>
+              </div>
+            </h5>
+            <button
+              type="button"
+              class="btn-close text-reset"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="line"></div>
+          <div class="offcanvas-body">
+            <div class="offcanvas-background">
+              <ng-container
+                *ngFor="let campaign of tenant.Campaigns"
+              >
+                <div
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <div
+                    class="d-flex flex-column justify-content-center gap-1"
+                  >
+                    <div class="private">
+                      <div class="privatedot"></div>
+                      <p class="privatetext">Public</p>
+                    </div>
+                    <div
+                      class="firsttradelist"
+                      [routerLink]="[
+                        '/dashboard',
+                        tenant.Id,
+                        tenant.OrganizationId,
+                        tenant.Name,
+                        campaign.Id
+                      ]"
+                    >
+                      <span>{{ campaign.CampaignName }}</span>
+                    </div>
+                    <div class="graytext">
+                      <span>{{ campaign.CreatedDate | date }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="customline"></div>
+
+                <div
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <div class="graytext">
+                    <span>Sites</span>
+                  </div>
+                  <div class="blackbold">
+                    <span>{{ campaign.Sites }}</span>
+                  </div>
+                </div>
+                <div
+                  class="d-flex align-items-center justify-content-between"
+                >
+                  <div class="graytext">
+                    <span>Mail Sent</span>
+                  </div>
+                  <div class="blackbold">
+                    <span>{{ campaign.MailsSent }}</span>
+                  </div>
+                </div>
+
+                <div class="CampaignWorkfow">
+                  <span>Campaign Workflow</span>
+                </div>
+
+                <ng-container
+                  *ngFor="
+                    let stage of campaign.Kanban;
+                    let first = first
+                  "
+                >
+                  <div *ngIf="!first" class="smallline"></div>
+                  <div class="d-flex flex-column">
+                    <div
+                      class="d-flex align-items-center justify-content-between"
+                    >
+                      <div class="graytext">
+                        <span>{{ stage.stageName }}</span>
+                      </div>
+                      <div class="blackbold">
+                        <span>{{
+                          stage.MarketSurveyShoppingCenters
+                            .length || 0
+                        }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
         </div>
       </ng-container>
     </div>
