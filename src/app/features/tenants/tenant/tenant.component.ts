@@ -65,7 +65,7 @@ import { MapDrawingService } from 'src/app/core/services/map-drawing.service';
   templateUrl: './tenant.component.html',
   styleUrl: './tenant.component.css',
 })
-export class TenantComponent implements OnInit {
+export class TenantComponent implements OnInit, AfterViewInit {
   @ViewChild('uploadPDF', { static: true }) uploadPDF!: TemplateRef<any>;
   @ViewChild('emailModal', { static: true }) emailModal!: TemplateRef<any>;
   @ViewChild('contactDataModal', { static: true })
@@ -148,7 +148,7 @@ export class TenantComponent implements OnInit {
   MatchCampaignsFromSubmission: MatchCampaignFromSubmission | null = null;
   isManager: boolean = true;
   onlyUpdate: boolean = false;
-  selectedOption: string = 'isManager'; // This will control the radio button selection
+  selectedOption: string = 'isManager';
   selectedCampaignIds: number[] = [];
   selectedPlaces: { [campaignId: number]: number[] } = {};
   constructor(
@@ -159,53 +159,36 @@ export class TenantComponent implements OnInit {
     private modalService: NgbModal,
     private httpClient: HttpClient,
     private sanitizer: DomSanitizer,
-    // private mapDrawingService: MapDrawingService,
+    private mapDrawingService: MapDrawingService,
     private shoppingCenterService: ViewManagerService,
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
-
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
-      console.log('encryptedContactId (before merge)', encryptedContactId);
-      // Check if the last segment is a number or string
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
-        // If userSubmission is a string, merge it with encryptedContactId
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        console.log('encryptedContactId (after merge)', encryptedContactId);
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
-      console.log('parsedId', parsedId);
-      // If parsedId is a number, assign it to contactID
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
-        console.log('Contact ID is a number:', this.contactID);
       }
-      // Retrieve the guid
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
-        console.log('GUID:', this.guid);
-        console.log('userSubmission', this.userSubmission);
-        console.log('contactID', this.contactID);
       });
-      // Decrypt contact ID if available
       if (encryptedContactId) {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
-          console.log('Decrypted Contact IDs:', this.contactIDs);
         } catch (err) {
           console.error('Decryption failed', err);
         }
       }
     });
 
-    // const guid = crypto.randomUUID();
-    // this.selectedShoppingID = guid;
     if (this.contactIDs) {
       this.GetContactData();
-      // this.opencontactDataModal();
     }
 
     this.GetCampaignFromGuid();
@@ -1011,55 +994,55 @@ export class TenantComponent implements OnInit {
       },
     });
   }
-  // loadPolygons(): void {
-  //   if (!this.Polgons || !Array.isArray(this.Polgons)) {
-  //     console.error('No polygons available');
-  //     return;
-  //   }
-  //   // Replace apiResponse with this.Polgons
-  //   this.customPolygons = this.Polgons.map((item) => {
-  //     return {
-  //       geoJson: JSON.parse(item.json),
-  //       visible: true,
-  //       polygonObj: undefined,
-  //     } as ICustomPolygon;
-  //   });
-  //   // Display all polygons by default using displayMyPolygons from your service.
-  //   for (let polygon of this.customPolygons) {
-  //     const coordinates = this.getPolygonCoordinates(polygon.geoJson);
-  //     if (coordinates) {
-  //       polygon.polygonObj = this.mapDrawingService.displayPolygon(
-  //         coordinates,
-  //         this.map
-  //       );
-  //     }
-  //   }
-  // }
-  // getPolygonCoordinates(geoJson: any):
-  //   | {
-  //       lat: number;
-  //       lng: number;
-  //     }[]
-  //   | null {
-  //   try {
-  //     if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
-  //       return null;
-  //     }
+  loadPolygons(): void {
+    if (!this.Polgons || !Array.isArray(this.Polgons)) {
+      console.error('No polygons available');
+      return;
+    }
+    // Replace apiResponse with this.Polgons
+    this.customPolygons = this.Polgons.map((item) => {
+      return {
+        geoJson: JSON.parse(item.json),
+        visible: true,
+        polygonObj: undefined,
+      } as ICustomPolygon;
+    });
+    // Display all polygons by default using displayMyPolygons from your service.
+    for (let polygon of this.customPolygons) {
+      const coordinates = this.getPolygonCoordinates(polygon.geoJson);
+      if (coordinates) {
+        polygon.polygonObj = this.mapDrawingService.displayPolygon(
+          coordinates,
+          this.map
+        );
+      }
+    }
+  }
+  getPolygonCoordinates(geoJson: any):
+    | {
+        lat: number;
+        lng: number;
+      }[]
+    | null {
+    try {
+      if (!geoJson || !geoJson.geometry || !geoJson.geometry.coordinates) {
+        return null;
+      }
 
-  //     const coordinates = geoJson.geometry.coordinates[0]?.map(
-  //       (coord: number[]) => {
-  //         return { lat: coord[1], lng: coord[0] };
-  //       }
-  //     );
+      const coordinates = geoJson.geometry.coordinates[0]?.map(
+        (coord: number[]) => {
+          return { lat: coord[1], lng: coord[0] };
+        }
+      );
 
-  //     if (!coordinates) {
-  //       return null;
-  //     }
+      if (!coordinates) {
+        return null;
+      }
 
-  //     return coordinates;
-  //   } catch (error) {}
-  //   return null;
-  // }
+      return coordinates;
+    } catch (error) {}
+    return null;
+  }
 
   // Toggle the visibility of a single polygon.
   // togglePolygonVisibility(polygon: ICustomPolygon): void {
@@ -1079,34 +1062,37 @@ export class TenantComponent implements OnInit {
   //     }
   //   }
   // }
-  // ngAfterViewInit(): void {
+  ngAfterViewInit(): void {
+    // const storedMgr = localStorage.getItem('isManager');
+    // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
+    // const storedUpd = localStorage.getItem('onlyUpdate');
+    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+    // // Default the selectedOption to 'isManager' initially
+    // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
+    // console.log('Is Manager:', this.isManager);
+    // console.log('Only Update:', this.onlyUpdate);
 
-  //   // const storedMgr = localStorage.getItem('isManager');
-  //   // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
-  //   // const storedUpd = localStorage.getItem('onlyUpdate');
-  //   // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
-  //   // // Default the selectedOption to 'isManager' initially
-  //   // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
-  //   // console.log('Is Manager:', this.isManager);
-  //   // console.log('Only Update:', this.onlyUpdate);
-
-  //   const interval = setInterval(() => {
-  //     if (
-  //       this.TenantResult &&
-  //       this.TenantResult.Buybox &&
-  //       this.customPolygons
-  //     ) {
-  //       this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
-  //       // debugger
-  //       this.mapDrawingService.initializeDrawingManager(this.map);
-  //       this.map.setZoom(9);
-  //       // this.mapDrawingService.updateMapCenter(this.map, null);
-
-  //       this.loadPolygons();
-  //       clearInterval(interval);
-  //     }
-  //   }, 1000);
-  // }
+    const interval = setInterval(() => {
+      if (
+        this.TenantResult &&
+        this.TenantResult.Buybox &&
+        this.customPolygons
+      ) {
+        this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
+        // debugger
+        this.mapDrawingService.initializeDrawingManager(this.map);
+        const innerInterval = setInterval(() => {
+          if (this.map) {
+            this.map.setZoom(9);
+            this.loadPolygons();
+            clearInterval(interval);
+            clearInterval(innerInterval);
+          }
+        }, 100);
+        // this.mapDrawingService.updateMapCenter(this.map, null);
+      }
+    }, 100);
+  }
   /////////////////////
   openShoppingModal(id: number) {
     this.ShoppingID = id;
