@@ -4,3 +4,4 @@ export const environment = {
   geoJsonsFilesPath: 'https://files.cherrypick.com/geojson',
   api: 'https://api.cherrypick.com/api',
 };
+  

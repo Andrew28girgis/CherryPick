@@ -96,6 +96,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   CampaignData!: any;
   showFullReason: boolean = false;
   guid!: string;
+  emailguid!: string;
   removeavailable: boolean = false;
   removetenant: boolean = false;
   userSubmission: any;
@@ -106,6 +107,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   newTenantName = '';
   shoppingCenterManage: TenantShoppingCenter[] = [];
   shoppingCenterManageSubmitted: TenantShoppingCenter[] = [];
+  shoppingCenterInMail: TenantShoppingCenter[] = [];
   Polgons!: any[];
   OrganizationContacts: organizationContacts[] = [];
   customPolygons: ICustomPolygon[] = [];
@@ -126,12 +128,18 @@ export class TenantComponent implements OnInit, AfterViewInit {
   deleteType: string = '';
   deleteId: number | null = null;
   showButtons: boolean = true;
+  @ViewChild('MailleasePricesModal') MailleasePricesModal: TemplateRef<any> | undefined;
   @ViewChild('leasePricesModal') leasePricesModal: TemplateRef<any> | undefined;
   @ViewChild('buildingSizesModal') buildingSizesModal:
     | TemplateRef<any>
     | undefined;
+  @ViewChild('MailbuildingSizesModal') MailbuildingSizesModal:
+    | TemplateRef<any>
+    | undefined;
+  MailfilteredLeasePlacesManage: any[] = [];
   filteredLeasePlacesManage: any[] = [];
   allBuildingSizes: any[] = [];
+  MailallBuildingSizes: any[] = [];
   @ViewChild('buildingSizesSubmissionModal') buildingSizesSubmissionModal:
     | TemplateRef<any>
     | undefined;
@@ -145,6 +153,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   ContactData: any[] = [];
+  IfZeroContactData: any[] = [];
   MatchCampaignsFromSubmission: MatchCampaignFromSubmission | null = null;
   isManager: boolean = true;
   onlyUpdate: boolean = false;
@@ -167,35 +176,105 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
+      console.log('encryptedContactId', encryptedContactId);
+      
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
+        // console.log('encryptedContactId', encryptedContactId);
+        
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
+        console.log('Parsed contact ID:', this.contactID);
+        
       }
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
+        // this.GetCampaignGUIDFromMail();
       });
       if (encryptedContactId) {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
+          console.log('Decrypted contact ID:', this.contactIDs);
+          if (this.contactIDs) {
+          this.GetContactDataUsingContactIds();
+          }
+          else{
+            this.GetContactData();
+          }
         } catch (err) {
           console.error('Decryption failed', err);
         }
       }
+      if(!encryptedContactId){
+      }
     });
 
     if (this.contactIDs) {
-      this.GetContactData();
-    }
 
-    this.GetCampaignFromGuid();
-    this.proceedWithNextSteps();
+    }
+    
+    
+      if(this.guid){
+        this.GetCampaignFromGuid();
+        this.proceedWithNextSteps();
+       
+        this.GetShoppingCenterFromOutBoxMail();
+      }      
+    
+
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
+  }
+  GetContactDataUsingContactIds(){
+    const body: any = {
+      Name: 'GetContactDataUsingContactIds',
+      Params: {
+        ContactIds: this.contactIDs,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.ContactData = res.json;
+        console.log('IfZeroContactData:', this.IfZeroContactData);
+        
+      },
+    });
+  }
+  GetCampaignGUIDFromMail(){
+    const body: any = {
+      Name: 'GetCampaignGUIDFromMail',
+      Params: {
+        Outbox: this.guid,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.guid = res.json[0].guid;
+        console.log('Campaign GUID from email:', this.guid);
+        
+      },
+    });
+  }
+  GetShoppingCenterFromOutBoxMail(){
+    const body: any = {
+      Name: 'GetShoppingCenterFromOutBoxMail',
+      Params: {
+        Outbox: this.guid,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.shoppingCenterInMail = res.json;
+        console.log('shoppingCenterInMail', this.shoppingCenterInMail);
+      },
+    });
   }
 
   encrypt(value: string): string {
@@ -226,7 +305,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     const body: any = {
       Name: 'GetContactData',
       Params: {
-        ContactIds: this.contactIDs,
+        Outbox: this.guid,
       },
     };
 
@@ -432,8 +511,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   proceedWithNextSteps(): void {
     this.GetUserSubmissionData();
-    this.GetShoppingCenterManageInCampaign();
-    this.GetUserSubmissionsShoppingCenters();
+    if(this.contactID) {
+      this.GetShoppingCenterManageInCampaign();
+      this.GetUserSubmissionsShoppingCenters();
+    }
   }
   GetCampaignFromGuid(): void {
     const body: any = {
@@ -458,7 +539,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     const body: any = {
       Name: 'GetShoppingCenterManageInCampaign',
       Params: {
-        CampaignGUID: this.guid,
+        CampaignID: this.selectedCampaign,
         ContactId: this.contactID,
       },
     };
@@ -473,7 +554,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     const body: any = {
       Name: 'GetUserSubmissionsShoppingCenters',
       Params: {
-        CampaignGUID: this.guid,
+        CampaignID: this.selectedCampaign,
         ContactId: this.contactID,
       },
     };
@@ -530,6 +611,48 @@ export class TenantComponent implements OnInit, AfterViewInit {
         },
       });
     }
+  }
+  ////////////
+  MailisAllForLeasePriceZero(): boolean {
+    return this.shoppingCenterInMail[0]?.O[0]?.P.every(
+      (place) => place.ForLeasePrice === 0
+    );
+  }
+  MailgetFirstThreeLeasePrices(): any[] {
+    return (
+      this.shoppingCenterInMail[0]?.O[0]?.P.filter(
+        (p) => p.ForLeasePrice !== 0
+      ).slice(0, 3) || []
+    );
+  }
+  MailgetLeasePricesCount(): number {
+    return (
+      this.shoppingCenterInMail[0]?.O[0]?.P.filter((p) => p.ForLeasePrice !== 0)
+        .length || 0
+    );
+  }
+  MailopenLeasePricesModal(): void {
+    this.MailfilteredLeasePlacesManage =
+      this.shoppingCenterInMail[0]?.O[0]?.P.filter(
+        (p) => p.ForLeasePrice !== 0
+      );
+    this.modalService.open(this.MailleasePricesModal, {
+      size: 'md',
+      centered: true,
+    });
+  }
+  MailgetFirstThreeBuildingSizes(): any[] {
+    return this.shoppingCenterInMail[0]?.O[0]?.P.slice(0, 3) || [];
+  }
+  MailgetBuildingSizeCount(): number {
+    return this.shoppingCenterInMail[0]?.O[0]?.P?.length || 0;
+  }
+  MailopenBuildingSizesModal(): void {
+    this.MailallBuildingSizes = this.shoppingCenterInMail[0]?.O[0]?.P;
+    this.modalService.open(this.MailbuildingSizesModal, {
+      size: 'md',
+      centered: true,
+    });
   }
   /////////////////// card
   getBuildingSizeCount(): number {
