@@ -676,12 +676,12 @@
   margin-bottom: 20px;
   margin-right: 20px;
   border-radius: 10px;
-  outline: none; 
+  outline: none;
 }
 
 .search-input:focus {
-  border: 1px solid #ccc; 
-  box-shadow: none; 
+  border: 1px solid #ccc;
+  box-shadow: none;
 }
 .search-button {
   position: absolute;
@@ -924,6 +924,7 @@
     font-size: 0.9rem;
   }
   .card-footer {
+    display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
   }
@@ -1225,7 +1226,6 @@ body.panel-open {
   animation: status-animation 1.5s infinite linear;
   margin: 0 10px;
 }
-
 
 .skeleton-loader {
   text-align: center;

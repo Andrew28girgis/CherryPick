@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
@@ -10,9 +10,12 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   isMarketSurveyRoute = false;
   display: boolean = false;
+  isMobile = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
-
+  isSocialView: boolean = false;
   ngOnInit() {
+    this.checkScreenSize();
+    this.isSocialView = this.localStorage.getItem('currentViewDashBord') === '5';
     // this.router.events
     // .pipe(filter(event => event instanceof NavigationEnd))
     // .subscribe(() => {
@@ -46,5 +49,19 @@ export class AppComponent implements OnInit {
         // If the current route has data { hideHeader: true }, then do not display the header.
         this.display = !data.hideHeader;
       });
+  }
+  get localStorage() {
+    return localStorage;
+  }
+   
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
+    // On mobile, always use the responsive card view
+   
+    
   }
 }

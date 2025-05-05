@@ -72,9 +72,15 @@
 }
 
 @media (max-width: 768px) {
+ 
+  .optionMobile{
+    padding: 0 !important;
+    margin: 0 !important;
+  }
   .mobile-nav {
     width: fit-content;
     margin-bottom: 5px;
+    gap: 50px;
   }
 
   .mobile-n {
@@ -124,4 +130,12 @@
 .mail a {
   color: #fff;
   width: max-content;
+}
+
+.displayNone{
+  display: none !important;
+}
+
+::ng-deep .container-fluid  {
+  padding: 0 !important;
 }
