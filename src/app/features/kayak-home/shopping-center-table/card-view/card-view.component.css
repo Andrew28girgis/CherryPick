@@ -39,6 +39,7 @@
 
 .dropdown-options.show {
   display: block;
+  width: fit-content;
 }
 
 .dropdown-item {

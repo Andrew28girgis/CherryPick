@@ -22,6 +22,7 @@
             class="toggle-btn"
             [class.active]="currentView === 'campaigns-table'"
             (click)="showCampaignsTable()"
+            *ngIf="!isMobile"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +149,7 @@
   </div>
 
   <!-- Campaigns view container -->
-  <div *ngIf="showCampaigns">
+  <div *ngIf="showCampaigns" style="padding: 0;">
     <app-campaign-manager
       [viewMode]="campaignsViewMode"
       [hideViewToggles]="true"

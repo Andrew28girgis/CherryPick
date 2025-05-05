@@ -65,8 +65,7 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
     private router: Router,
     private breadcrumbService: BreadcrumbService
   ) {
-    this.checkScreenSize();
-  }
+   }
 
   ngOnInit(): void {
     // Only proceed if data hasn't been loaded before or if force reload is requested
@@ -81,7 +80,6 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScreenSize();
@@ -104,12 +102,10 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   toggleView(mode: 'table' | 'card'): void {
-    if (!this.isMobile) {
-      this.viewMode = mode;
+       this.viewMode = mode;
       // Save preference in localStorage
       localStorage.setItem('campaignViewMode', mode);
-    }
-  }
+   }
 
   toggleExpand(campaign: any): void {
     campaign.expanded = !campaign.expanded;

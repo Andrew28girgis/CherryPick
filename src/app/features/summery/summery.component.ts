@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +29,7 @@ export class SummeryComponent implements OnInit {
   showCampaigns: boolean = false;
   campaignsViewMode: 'table' | 'card' = 'table';
   currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
-
+  isMobile = false;
   // Add a new property to track if campaigns were loaded
   campaignsLoaded = false;
 
@@ -44,6 +44,7 @@ export class SummeryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.checkScreenSize(); // Check screen size on initialization
     this.breadcrumbService.setBreadcrumbs([
       { label: 'My Tenants', url: '/summary' },
     ]);
@@ -123,4 +124,26 @@ export class SummeryComponent implements OnInit {
       tenant.Campaigns[0].Id
     ]);
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
+    // On mobile, always use the responsive card view
+    if (this.isMobile) {
+      this.campaignsViewMode = 'card'; // Automatically switch to card view for mobile
+    } else {
+      // For larger screens, check localStorage for user preference
+      const savedViewMode = localStorage.getItem('campaignViewMode') as
+        | 'table'
+        | 'card';
+      if (savedViewMode) {
+        this.campaignsViewMode = savedViewMode;
+      }
+    }
+  }
+
 }
