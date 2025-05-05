@@ -212,9 +212,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       }
     });
 
-    if (this.contactIDs) {
-      this.GetShoppingCenterManageInCampaign();
-    }
+
     
     
       if(this.guid){
@@ -223,7 +221,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
        
         this.GetShoppingCenterFromOutBoxMail();
       }      
-    
+      if (this.contactIDs) {
+        
+      }
 
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
@@ -527,8 +527,11 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.selectedCampaign = res.json[0]?.id;
+        console.log('Selected Campaign:', this.selectedCampaign);
+        
         this.selectedbuyBox = res.json[0]?.buyBoxId;
         this.GetBuyBoxInfo();
+        this.GetShoppingCenterManageInCampaign();
         this.GetGeoJsonFromBuyBox();
       },
     });
