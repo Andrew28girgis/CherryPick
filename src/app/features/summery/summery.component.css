@@ -96,12 +96,12 @@
   background: #e6e8ec;
 }
 
-.toggle-btn.active {
+.toggle-btn.activee {
   background: #4d65b4;
   color: white;
 }
 
-.toggle-btn.active svg {
+.toggle-btn.activee svg {
   stroke: white;
 }
 

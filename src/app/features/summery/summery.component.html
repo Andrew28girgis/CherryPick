@@ -11,7 +11,7 @@
         <div class="d-flex flex-row gap-2">
           <button
             class="toggle-btn"
-            [class.active]="currentView === 'tenants'"
+            [class.activee]="currentView === 'tenants'"
             (click)="showTenants()"
           >
             <i class="fa-solid fa-building"></i>
@@ -20,7 +20,7 @@
 
           <button
             class="toggle-btn"
-            [class.active]="currentView === 'campaigns-table'"
+            [class.activee]="currentView === 'campaigns-table'"
             (click)="showCampaignsTable()"
             *ngIf="!isMobile"
           >
@@ -46,7 +46,7 @@
 
           <button
             class="toggle-btn"
-            [class.active]="currentView === 'campaigns-card'"
+            [class.activee]="currentView === 'campaigns-card'"
             (click)="showCampaignsCard()"
           >
             <svg
