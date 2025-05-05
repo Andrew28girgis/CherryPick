@@ -1116,7 +1116,6 @@ export class AddNewCampaignComponent
           `${environment.geoJsonsFilesPath}/${geoJson.id}.geojson`
         )
         .then((featureId) => {
-          debugger;
           if (featureId)
             this.displayedGeoJsons.push({ featureId: featureId, ...geoJson });
         });
