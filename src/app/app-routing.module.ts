@@ -24,21 +24,9 @@ import { InboxComponent } from './features/emily/inbox/inbox.component';
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
-  {
-    path: 'ResetPassword',
-    component: ResetPasswordComponent,
-    data: { hideHeader: true },
-  },
-  {
-    path: 'ForgetPassword',
-    component: ForgetPasswordComponent,
-    data: { hideHeader: true },
-  },
-  {
-    path: 'NewPassword',
-    component: NewPasswordComponent,
-    data: { hideHeader: true },
-  },
+  { path: 'ResetPassword', component: ResetPasswordComponent, data: { hideHeader: true } },
+  { path: 'ForgetPassword', component: ForgetPasswordComponent, data: { hideHeader: true } },
+  { path: 'NewPassword', component: NewPasswordComponent, data: { hideHeader: true } },
   { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
@@ -144,12 +132,12 @@ const routes: Routes = [
   },
   {
     path: 'tenant/:guid/:contactId',
-    component: TenantComponent,
+    component: TenantComponent, 
     data: { hideHeader: true },
   },
   {
     path: 'tenant/:guid/:contactId/:userSubmission',
-    component: TenantComponent,
+    component: TenantComponent, 
     data: { hideHeader: true },
   },
 ];
