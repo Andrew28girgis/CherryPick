@@ -1,23 +1,136 @@
-.card-body {
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #e2e2e2;
+}
+.skeleton::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.2s infinite;
+}
+
+.skeleton-card {
+  display: flex;
+  background-color: white;
+  border-radius: 20px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  padding: 25px;
-  margin: 20px;
-  border-radius: 10px;
+  margin-bottom: 1rem;
+  overflow: hidden;
 }
 
-.card-category {
-  margin-top: 8px;
-  font-size: 14px;
-  color: #8d9498;
-  margin-bottom: 0;
-  word-break: normal;
+.skeleton-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+  padding-left: 20px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
+.skeleton-avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+}
+
+.skeleton-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeleton-pill {
+  width: 80px;
+  height: 24px;
+  border-radius: 16px;
+}
+
+.skeleton-title {
+  width: 50%;
+  height: 24px;
+  border-radius: 6px;
+}
+.skeleton-chevron {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.toggle-buttons-group {
+  background: #f5f5f5;
+  padding: 4px;
+  border-radius: 8px;
+  margin-left: auto;
+}
+
+.toggle-btn {
+  border: none;
+  background: #fff;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  color: #707791;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 40px;
+}
+
+.toggle-btn:hover {
+  background: #e6e8ec;
+}
+
+.toggle-btn.active {
+  background: #4d65b4;
+  color: white;
+}
+
+.toggle-btn.active svg {
+  stroke: white;
+}
+
+.toggle-btn .hover-text {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  right: -10%;
+  bottom: 82%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  z-index: 1000;
+}
+
+.toggle-btn:hover .hover-text {
+  visibility: visible;
+  opacity: 1;
+}
 button:active {
   box-shadow: none;
   transform: translateY(0);
 }
-
 .container-width {
   margin: auto;
   width: 80%;
@@ -115,13 +228,6 @@ button:active {
 .cursor {
   cursor: pointer;
 }
-
-.card__Kayak_buttons {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  flex-wrap: nowrap;
-}
 .Kayack__button {
   background: #4d65b4;
 }
@@ -204,78 +310,6 @@ button:active {
   font-weight: 600;
   line-height: 30px;
 }
-
-.status-label {
-  display: flex;
-  padding: 4px 12px;
-  align-items: center;
-  width: fit-content;
-  gap: 4px;
-  border-radius: 16px;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-.status-nomber {
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  margin: 0;
-}
-.status-text {
-  text-align: center;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  margin: 0;
-}
-
-.status-label.Rejected {
-  background: #ffeded;
-}
-
-.status-label.Rejected .status-dot {
-  background-color: #ff4c4c;
-}
-
-.status-label.Rejected .status-text {
-  color: #ff4c4c;
-}
-.status-label.Rejected .status-nomber {
-  color: #ff4c4c;
-}
-
-.status-label.Pendding {
-  background: #fff9e6;
-}
-
-.status-label.Pendding .status-dot {
-  background-color: #cc9a06;
-}
-.status-label.Pendding .status-nomber {
-  color: #cc9a06;
-}
-.status-label.Pendding .status-text {
-  color: #cc9a06;
-}
-
-.status-label.Accepted {
-  background: #eaf6ec;
-}
-
-.status-label.Accepted .status-dot {
-  background-color: #28a745;
-}
-.status-label.Accepted .status-nomber {
-  color: #28a745;
-}
-.status-label.Accepted .status-text {
-  color: #28a745;
-}
 .CampaignWorkfow {
   color: #16181d;
   font-size: 16px;
@@ -290,39 +324,41 @@ button:active {
 }
 
 @media (max-width: 567px) {
-
   .card__Kayak {
     margin-bottom: 1rem;
   }
   .Kayak__img {
     width: 80px;
     height: 70px;
-}
-.active {
-  padding: 2px 9px;
-}
-.card__Kayak_title {
-  font-size: 15px;
-}
-.private {
-  padding: 2px 9px;
-}
-.graytext {
-  font-size: 15px;
-  line-height: 15px;
-}
-.firsttradelist {
-  font-size: 15px;
-}
-.CampaignWorkfow {
-  font-size: 15px;
-  line-height: 5px;
-}
-.smallline {
-  margin-bottom: 0px;
-}
+  }
+  .active {
+    padding: 2px 9px;
+  }
+  .card__Kayak_title {
+    font-size: 15px;
+  }
+  .private {
+    padding: 2px 9px;
+  }
+  .graytext {
+    font-size: 15px;
+    line-height: 15px;
+  }
+  .firsttradelist {
+    font-size: 15px;
+  }
+  .CampaignWorkfow {
+    font-size: 15px;
+    line-height: 5px;
+  }
+  .smallline {
+    margin-bottom: 0px;
+  }
 }
 @media (max-width: 767px) {
+  .skeleton-container {
+    padding: 20px 10px;
+  }
   .offcanvas-end {
     width: 70% !important;
   }
@@ -372,137 +408,4 @@ button:active {
   }
 }
 
-.skeleton {
-  position: relative;
-  overflow: hidden;
-  background-color: #e2e2e2;
-}
-.skeleton::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150px;
-  width: 150px;
-  height: 100%;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.6) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  animation: shimmer 1.2s infinite;
-}
 
-.skeleton-card {
-  display: flex;
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  margin-bottom: 1rem;
-  overflow: hidden;
-}
-
-.skeleton-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 16px;
-  padding-left: 20px;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-.skeleton-avatar {
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
-}
-
-.skeleton-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.skeleton-pill {
-  width: 80px;
-  height: 24px;
-  border-radius: 16px;
-}
-
-.skeleton-title {
-  width: 50%;
-  height: 24px;
-  border-radius: 6px;
-}
-.skeleton-chevron {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-}
-
-@media (max-width: 767px) {
-  .skeleton-container {
-    padding: 20px 10px;
-  }
-}
-.toggle-buttons-group {
-  background: #f5f5f5;
-  padding: 4px;
-  border-radius: 8px;
-  margin-left: auto;
-}
-
-.toggle-btn {
-  border: none;
-  background: #fff;
-  padding: 0.5rem 0.75rem;
-  cursor: pointer;
-  color: #707791;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 40px;
-}
-
-.toggle-btn:hover {
-  background: #e6e8ec;
-}
-
-.toggle-btn.active {
-  background: #4d65b4;
-  color: white;
-}
-
-.toggle-btn.active svg {
-  stroke: white;
-}
-
-.toggle-btn .hover-text {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  right: -10%;
-  bottom: 82%;
-  transform: translateY(-50%);
-  margin-left: 8px;
-  z-index: 1000;
-}
-
-.toggle-btn:hover .hover-text {
-  visibility: visible;
-  opacity: 1;
-}

@@ -1,6 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -16,11 +15,8 @@ import { Tenant } from 'src/app/shared/models/tenants';
 export class SummeryComponent implements OnInit {
   tenants: Tenant[] = [];
   selectedTenant: Tenant | null = null; 
-  showSummery: boolean = false;
   Token: any;
   orgId!: number;
-  buyboxPlaces: BbPlace[] = [];
-  isCollapsed = true;
   organizationId!: any;
   Obj!: BuyBoxModel;
   @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;
@@ -29,7 +25,6 @@ export class SummeryComponent implements OnInit {
   showCampaigns: boolean = false;
   campaignsViewMode: 'table' | 'card' = 'table';
   currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
-
   // Add a new property to track if campaigns were loaded
   campaignsLoaded = false;
 
