@@ -1034,7 +1034,7 @@
   }
   .header-info  {
     position: absolute;
-    bottom: 15%;
+    top: 45%;
     left: 16px;
     right: 16px;
     z-index: 0;
