@@ -252,25 +252,8 @@ button:active {
   width: 95%;
   margin: 0 auto;
 }
-.CampaignsList {
-  color: #16181d;
-  font-size: 19px;
-  font-weight: 600;
-  line-height: 24px;
-}
 .offcanvas-end {
   width: 40% !important;
-}
-.backgroundframe {
-  display: flex;
-  padding: 24px 12px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  align-self: stretch;
-  border-radius: 20px;
-  border: 1px solid #e2e4e9;
-  background: #fff;
 }
 .firsttradelist {
   color: #16181d;
