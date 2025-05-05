@@ -127,8 +127,8 @@ export class MarketSurveyComponent implements OnInit {
       next: (data) => {
         this.Guid = data.json[0].buyBoxLink;
         if (this.Guid) {
-          // this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
-          this.GuidLink = `http://localhost:4200/?t=${this.Guid}`;
+          this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
+          // this.GuidLink = `http://localhost:4200/?t=${this.Guid}`;
 
         } else {
           this.GuidLink = '';
