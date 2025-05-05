@@ -114,4 +114,13 @@ export class SummeryComponent implements OnInit {
     this.currentView = 'tenants';
     // Don't reset campaignsLoaded here to preserve the state
   }
+  goToTenant(tenant: Tenant) {
+    this.router.navigate([
+      '/dashboard',
+      tenant.Id,
+      tenant.OrganizationId,
+      tenant.Name,
+      tenant.Campaigns[0].Id
+    ]);
+  }
 }
