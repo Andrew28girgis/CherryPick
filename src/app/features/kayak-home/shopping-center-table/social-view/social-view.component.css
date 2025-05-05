@@ -1032,14 +1032,14 @@
     );
     pointer-events: none;
   }
-  .header-info {
+  .header-info  {
     position: absolute;
-    bottom: 27%;
+    bottom: 15%;
     left: 16px;
     right: 16px;
     z-index: 0;
-    width: fit-content;
-  }
+     width: fit-content;
+}
   .header-info .center-address {
     color: #fff;
     font-size: 12px;
