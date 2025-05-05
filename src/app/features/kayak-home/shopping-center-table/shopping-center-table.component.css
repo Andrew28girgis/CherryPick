@@ -72,8 +72,15 @@
 }
 
 @media (max-width: 768px) {
- 
-  .optionMobile{
+  .mobileButtons {
+    padding-top: 10px;
+    justify-content: center;
+    gap: 5px;
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .optionMobile {
     padding: 0 !important;
     margin: 0 !important;
   }
@@ -112,7 +119,6 @@
   }
 }
 
-
 .inbox {
   padding: 5px 8px;
   border-radius: 1rem;
@@ -132,10 +138,16 @@
   width: max-content;
 }
 
-.displayNone{
+.displayNone {
   display: none !important;
 }
 
-::ng-deep .container-fluid  {
+::ng-deep .container-fluid {
   padding: 0 !important;
+}
+
+@media (min-width: 769px) {
+  .mobileButtons {
+    justify-content: flex-end;
+    }
 }
