@@ -27,10 +27,10 @@
                 </div>
               </div>
             </div>
-            <div class="sharebtn">
+            <!-- <div class="sharebtn">
               <img src="../../../../assets/Images/Icons/share.png" />
               <span>Share</span>
-            </div>
+            </div> -->
           </div>
           <div class="row mt-3 d-flex align-items-stretch">
             <div class="col-md-3 d-flex flex-column">
@@ -345,7 +345,7 @@
             </div>
 
             <div class="col-md-9">
-              <div class="row">
+              
                 <!-- File name and progress bar section -->
                 <div class="filenameouterframe" *ngIf="fileName">
                 <div class="filenameinnerframe">
@@ -379,7 +379,7 @@
                 <p class="text-center mt-2">Uploading...</p>
               </div>  
               <!-- Submission Match -->
-              <div *ngIf="MatchCampaignsFromSubmission" class="mb-2 subm-div">
+              <div *ngIf="MatchCampaignsFromSubmission" class="mb-3 subm-div">
                 <h2 class="organization-title">{{MatchCampaignsFromSubmission.OrganizationName}}</h2>
                 <h3  class="d-flex justify-content-center buybox-title">Are you want to Share this Shopping Center Info with other Buyboxes ?</h3>
                 
@@ -783,7 +783,7 @@
                     </div>
                   </div>
                 </div> -->
-              </div>
+              
               <div class="row">
                 <div class="col-md-4">
                   <div class="card submitproposelsize">
@@ -870,7 +870,7 @@
                   </div>
                 </div>
                 <div
-                  class="col-md-4"
+                  class="col-md-4 mrg-top-15"
                   *ngFor="let shopping of shoppingCenterManage"
                 >
                   <div class="card shoppingcentersize">
@@ -1058,7 +1058,7 @@
                   </div>
                 </div>
                 <div
-                  class="col-md-4"
+                  class="col-md-4 mrg-top-15"
                   *ngFor="let shopping of shoppingCenterManageSubmitted"
                 >
                   <div class="card shoppingcentersize">
