@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
@@ -12,14 +12,16 @@ import { ICampaign } from 'src/app/shared/models/icampaign';
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
   filteredCampaigns?: ICampaign[];
-
+  isMobile = false;
   currentView: number = 5;
+  isSocialView: boolean = false;
   BuyBoxId!: any;
   BuyBoxName!: string;
   CampaignId!: any;
   OrgId!: any;
   selectedOption: number = 5;
-  dropdowmOptions: any = [
+  view: boolean = false;
+   dropdowmOptions: any = [
     {
       text: 'Map',
       icon: '../../../assets/Images/Icons/map.png',
@@ -54,10 +56,14 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private shoppingCenterService: ViewManagerService
+    private shoppingCenterService: ViewManagerService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
+    this.cdr.detectChanges();
+    this.isSocialView = this.localStorage.getItem('currentViewDashBord') === '5';
+    this.checkScreenSize(); // Check screen size on initialization
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
@@ -86,7 +92,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   selectOption(option: any): void {
     this.selectedOption = option.status;
     this.currentView = option.status;
-
+    this.isSocialView= this.localStorage.getItem('currentViewDashBord') === '5';
+    this.cdr.detectChanges();
     // Update current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
   }
@@ -118,4 +125,17 @@ export class ShoppingCenterTableComponent implements OnInit {
       );
     }
   }
+
+   @HostListener('window:resize', ['$event'])
+    onResize() {
+      this.checkScreenSize();
+    }
+  
+    checkScreenSize() {
+      this.isMobile = window.innerWidth <= 767;
+    }
+    get localStorage() {
+      return localStorage;
+    }
+     
 }
