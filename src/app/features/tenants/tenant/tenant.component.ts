@@ -232,9 +232,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.ContactData = res.json;
-        // console.log('this.ContactData', this.ContactData);
-        // this.opencontactDataModal();
-
         // this.GetBuyBoxInfo();
         // this.GetGeoJsonFromBuyBox();
       },
@@ -248,7 +245,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
       this.isManager = false;
       this.onlyUpdate = true;
     }
-    // Store updated values in localStorage
     localStorage.setItem('isManager', JSON.stringify(this.isManager));
     localStorage.setItem('onlyUpdate', JSON.stringify(this.onlyUpdate));
   }
@@ -304,7 +300,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   InsertIntoDestinationTable(buyBox: Bb) {
     this.spinner.show();
-
     // Process each campaign in the buyBox
     const approvalPromises = buyBox.C.filter(
       (campaign) => this.selectedPlaces[campaign.CampaignId]?.length > 0
@@ -466,11 +461,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
         ContactId: this.contactID,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
-        // console.log('ShoppingCenterManage', this.shoppingCenterManage);
       },
     });
   }
@@ -483,11 +476,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
         ContactId: this.contactID,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManageSubmitted = res.json;
-        // console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
       },
     });
   }
@@ -521,7 +512,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
           const parsedJson = JSON.parse(res.json[0].jsonResponse);
           // Now parsedJson will be an object and can be used normally
           this.JsonPDF = parsedJson;
-
           if (this.JsonPDF.Availability) {
             this.JsonPDF.Availability.forEach((avail) => {
               avail.isAdded = true;
@@ -532,7 +522,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
               tenant.isAdded = true;
             });
           }
-
           this.AvailabilityAndTenants = res.json[0].AvailabilityAndTenants;
           this.isFileUploaded = true;
           this.spinner.hide();
@@ -658,7 +647,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
         organizationid: this.selectedbuyBox,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         if (res.json == null) {
