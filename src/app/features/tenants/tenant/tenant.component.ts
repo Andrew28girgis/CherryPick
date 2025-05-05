@@ -163,6 +163,7 @@ export class TenantComponent implements OnInit {
     private shoppingCenterService: ViewManagerService,
     private cdr: ChangeDetectorRef
   ) {}
+
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
