@@ -153,6 +153,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   ContactData: any[] = [];
+  IfZeroContactData: any[] = [];
   MatchCampaignsFromSubmission: MatchCampaignFromSubmission | null = null;
   isManager: boolean = true;
   onlyUpdate: boolean = false;
@@ -175,35 +176,51 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
+      console.log('encryptedContactId', encryptedContactId);
+      
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
+        // console.log('encryptedContactId', encryptedContactId);
+        
         this.userSubmission = null; // Reset userSubmission to null
       }
-      // const parsedId = Number(encryptedContactId);
-      // if (!isNaN(parsedId)) {
-      //   this.contactID = parsedId;
-      // }
+      const parsedId = Number(encryptedContactId);
+      if (!isNaN(parsedId)) {
+        this.contactID = parsedId;
+        console.log('Parsed contact ID:', this.contactID);
+        
+      }
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
         // this.GetCampaignGUIDFromMail();
       });
-      // if (encryptedContactId) {
-      //   try {
-      //     this.contactIDs = this.decrypt(encryptedContactId);
-      //   } catch (err) {
-      //     console.error('Decryption failed', err);
-      //   }
-      // }
+      if (encryptedContactId) {
+        try {
+          this.contactIDs = this.decrypt(encryptedContactId);
+          console.log('Decrypted contact ID:', this.contactIDs);
+          if (this.contactIDs) {
+          this.GetContactDataUsingContactIds();
+          }
+          else{
+            this.GetContactData();
+          }
+        } catch (err) {
+          console.error('Decryption failed', err);
+        }
+      }
+      if(!encryptedContactId){
+      }
     });
 
     if (this.contactIDs) {
+
     }
     
     
       if(this.guid){
         this.GetCampaignFromGuid();
         this.proceedWithNextSteps();
-        this.GetContactData();
+       
         this.GetShoppingCenterFromOutBoxMail();
       }      
     
@@ -211,6 +228,22 @@ export class TenantComponent implements OnInit, AfterViewInit {
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
+  }
+  GetContactDataUsingContactIds(){
+    const body: any = {
+      Name: 'GetContactDataUsingContactIds',
+      Params: {
+        ContactIds: this.contactIDs,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.ContactData = res.json;
+        console.log('IfZeroContactData:', this.IfZeroContactData);
+        
+      },
+    });
   }
   GetCampaignGUIDFromMail(){
     const body: any = {
