@@ -63,9 +63,9 @@
   text-align: start;
   margin: 0;
   z-index: 100;
-  right: 14%;
+  right: 5%;
   width: max-content;
-  top: 2%;
+  top: 23%;
 }
 
 .shortcuts_iconCard > ul {
@@ -109,10 +109,10 @@
 
 .shortcuts_iconCard > i {
   position: absolute;
-  right: -8px;
+  right: 7px;
   font-size: 25px;
   color: white;
-  top: 5%;
+  top: -6%;
 }
 
 .h700 {
@@ -361,19 +361,7 @@ img[alt="logo"] {
   border-radius: 4px;
 }
 
-.shortcuts_iconCard {
-  position: absolute;
-  background: white;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
-  padding: 16px;
-  border-radius: 10px;
-  text-align: start;
-  margin: 0;
-  z-index: 100;
-  right: 14%;
-  width: max-content;
-  top: 2%;
-}
+ 
 .search-container {
   position: relative;
   display: flex;
@@ -569,3 +557,7 @@ img[alt="logo"] {
   font-size: 12px;
   transition: transform 0.2s ease;
 }
+
+
+
+
