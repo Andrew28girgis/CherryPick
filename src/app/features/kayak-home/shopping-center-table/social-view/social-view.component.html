@@ -120,82 +120,7 @@
       (dblclick)="handleContentDoubleClick($event, shopping)"
     >
     
-      <div
-        class="card-header"
-        (click)="
-          isMobileView ? openCustomPanel(shopping) : toggleDetails(i, shopping);
-          $event.stopPropagation()
-        "
-      >
-        <div class="header-info Res">
-          <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
-          <span class="badge badge-danger mx-2" *ngIf="shopping.Deleted == true"
-            >Deleted</span
-          >
 
-          <p class="center-address" style="color: #fff">
-            {{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }},
-            {{ shopping.CenterState }}
-          </p>
-          <p class="ShoppingCenterStage mb-1">{{ shopping.stageName }}</p>
-
-          <div>
-            <p
-              style="color: #fff"
-              class="getShoppingCenterr"
-              [innerHTML]="getShoppingCenterUnitSize(shopping)"
-            ></p>
-          </div>
-
-          <div
-            *ngIf="showDetails[i]"
-            class="shopping-center-details d-none d-sm-flex"
-          >
-            <div class="row mt-2">
-              <ng-container
-                *ngFor="
-                  let item of shopping.ShoppingCenter?.BuyBoxPlaces;
-                  trackBy: trackByShoppingId
-                "
-              >
-                <div
-                  class="nearestt"
-                  style="color: #fff; padding: 0 !important; max-width: 60%"
-                >
-                  <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
-
-                  <img
-                    class="logo"
-                    src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
-                      item.RelationOrganizationId
-                    }}"
-                    [title]="item.RelationOrganizationName"
-                    alt=""
-                  />
-
-                  <span> {{ item.RelationOrganizationName }}</span>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-          <!-- Replace the expandable content with a button to open panel -->
-          <p
-            *ngIf="
-              isMobileView ? 1 : shopping.ShoppingCenter?.BuyBoxPlaces?.length
-            "
-            class="see-more-btn d-sm-none d-flex"
-          >
-            See More
-          </p>
-          <p
-            *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
-            class="see-more-btn d-none d-sm-flex"
-            (click)="toggleDetails(i, shopping); $event.stopPropagation()"
-          >
-            {{ showDetails[i] ? "See less" : "See more" }}
-          </p>
-        </div>
-      </div>
       <div
         class="card-image Res tiktok-imgg"
         (dblclick)="handleContentDoubleClick($event, shopping)"
@@ -481,6 +406,82 @@
           </ng-template>
         </div>
       </div>
+      <div
+      class="card-header"
+      (click)="
+        isMobileView ? openCustomPanel(shopping) : toggleDetails(i, shopping);
+        $event.stopPropagation()
+      "
+    >
+      <div class="header-info Res">
+        <h3 class="center-name">{{ shopping.CenterName | titlecase }}</h3>
+        <span class="badge badge-danger mx-2" *ngIf="shopping.Deleted == true"
+          >Deleted</span
+        >
+
+        <p class="center-address" style="color: #fff">
+          {{ shopping.CenterAddress }}, {{ shopping.CenterCity | titlecase }},
+          {{ shopping.CenterState }}
+        </p>
+        <p class="ShoppingCenterStage mb-1">{{ shopping.stageName }}</p>
+
+        <div>
+          <p
+            style="color: #fff"
+            class="getShoppingCenterr"
+            [innerHTML]="getShoppingCenterUnitSize(shopping)"
+          ></p>
+        </div>
+
+        <div
+          *ngIf="showDetails[i]"
+          class="shopping-center-details d-none d-sm-flex"
+        >
+          <div class="row mt-2">
+            <ng-container
+              *ngFor="
+                let item of shopping.ShoppingCenter?.BuyBoxPlaces;
+                trackBy: trackByShoppingId
+              "
+            >
+              <div
+                class="nearestt"
+                style="color: #fff; padding: 0 !important; max-width: 60%"
+              >
+                <span> {{ getNeareastCategoryName(item.CategoryId) }}: </span>
+
+                <img
+                  class="logo"
+                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                    item.RelationOrganizationId
+                  }}"
+                  [title]="item.RelationOrganizationName"
+                  alt=""
+                />
+
+                <span> {{ item.RelationOrganizationName }}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <!-- Replace the expandable content with a button to open panel -->
+        <p
+          *ngIf="
+            isMobileView ? 1 : shopping.ShoppingCenter?.BuyBoxPlaces?.length
+          "
+          class="see-more-btn d-sm-none d-flex"
+        >
+          See More
+        </p>
+        <p
+          *ngIf="shopping.ShoppingCenter?.BuyBoxPlaces?.length"
+          class="see-more-btn d-none d-sm-flex"
+          (click)="toggleDetails(i, shopping); $event.stopPropagation()"
+        >
+          {{ showDetails[i] ? "See less" : "See more" }}
+        </p>
+      </div>
+    </div>
       <div
         class="comments-section"
         *ngIf="showComments[shopping.Id]"

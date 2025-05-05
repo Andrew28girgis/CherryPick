@@ -908,13 +908,13 @@
     color: #007bff;
   }
   .tiktok-imgg {
-    position: absolute;
-    top: 15%;
+    position: relative;
   }
   .card-header {
     background-color: #000;
     flex-direction: row;
     align-items: flex-start;
+    margin-bottom: 40vh;
   }
   .card-image img {
     height: auto;
