@@ -69,8 +69,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * Switches between campaign and landlord views
    */
   switchView(): void {
-    const newView: UserView =
-      this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
+    const newView: UserView =  this.currentView === 'campaigns' ? 'landlord' : 'campaigns';
     this.userViewService.switchView(newView);
     this.router.navigate([newView]);
   }
