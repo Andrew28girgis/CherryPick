@@ -199,14 +199,14 @@ export class TenantComponent implements OnInit, AfterViewInit {
     if (this.contactIDs) {
     }
     
-    setTimeout(() => {
+    
       if(this.guid){
         this.GetCampaignFromGuid();
         this.proceedWithNextSteps();
         this.GetContactData();
         this.GetShoppingCenterFromOutBoxMail();
       }      
-    }, 500);
+    
 
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
