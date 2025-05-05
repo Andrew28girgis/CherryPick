@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -16,11 +15,8 @@ import { Tenant } from 'src/app/shared/models/tenants';
 export class SummeryComponent implements OnInit {
   tenants: Tenant[] = [];
   selectedTenant: Tenant | null = null; 
-  showSummery: boolean = false;
   Token: any;
   orgId!: number;
-  buyboxPlaces: BbPlace[] = [];
-  isCollapsed = true;
   organizationId!: any;
   Obj!: BuyBoxModel;
   @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;

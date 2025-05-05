@@ -813,6 +813,15 @@ line-height: 30px;
   .spec-icon {
     margin-bottom: 8px;
   }
+  .submitproposelsize{
+    margin-top: 15px;
+  }
+  .subm-div{
+    margin-top: 15px;
+  }
+  .mrg-top-15{
+    margin-top: 15px;
+  }
 }
 @media (max-width: 576px) {
   .tenant-logo {
@@ -821,6 +830,7 @@ line-height: 30px;
   }
   .buyboxname {
     font-size: 25px;
+    margin-left: 10px;
   }
   .nameincard {
     font-size: 18px;
