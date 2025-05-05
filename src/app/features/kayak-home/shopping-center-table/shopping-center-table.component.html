@@ -1,3 +1,43 @@
+<div
+*ngIf="isMobile"
+style="
+ justify-content: center;
+ gap: 5px;
+  display: flex;
+  z-index: 1;
+  margin-bottom: 10px;
+  margin-top: 10px;
+"
+>
+<button
+  class="btn optionMobileColor btn-primary"
+  style="color: #000; background: transparent"
+  [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
+>
+  <span>Emily</span>
+</button>
+
+<button
+  class="btn btn-primary optionMobileColor"
+  style="color: #000; background: transparent"
+  [routerLink]="['/campaigns/ataglance', CampaignId]"
+>
+  <span> At a Glance </span>
+</button>
+<button
+  class="btn btn-primary optionMobileColor"
+  style="color: #000; background: transparent"
+  [routerLink]="[
+    '/market-survey',
+    BuyBoxId,
+    OrgId,
+    BuyBoxName,
+    CampaignId
+  ]"
+>
+  <span> Market Survey </span>
+</button>
+</div>
 <div class="tab-view-container">
   <div class="bottom-navbar">
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
@@ -14,7 +54,7 @@
             [class.d-sm-flex]="option.status == 2"
             (click)="selectOption(option)"
             [class.displayNone]="
-              option.status == 6 || (option.status == 4 && isMobile)
+              (option.status == 6 && isMobile) || (option.status == 4 && isMobile)
             "
             [class.selected]="
               selectedOption === option.status || selectedOption === option
