@@ -5,7 +5,7 @@
 }
 
 .selected-option {
-  padding: 3px 8px;
+  padding: 2px 8px;
   border: 1px solid #ced4da;
   border-radius: 4px;
   background-color: #fff;
@@ -13,6 +13,7 @@
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
+  gap: 5px;
 }
 
 .selected-option:hover {
@@ -26,11 +27,11 @@
   left: 0;
   width: 100%;
   max-height: 200px;
-  overflow-y: auto;
+  overflow-y: hidden;
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   z-index: 100;
   display: none;
 }
@@ -520,4 +521,14 @@
   font-style: normal;
   font-weight: 600;
   line-height: 30px;
+}
+
+.selected-option i.rotate {
+  transform: rotate(180deg);
+  transition: 0.2 ease;
+}
+.selected-option i {
+  color: #707791;
+  font-size: 12px;
+  transition: transform 0.2s ease;
 }

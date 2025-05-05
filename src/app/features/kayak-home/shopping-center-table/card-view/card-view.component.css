@@ -5,7 +5,7 @@
 }
 
 .selected-option {
-  padding: 3px 8px;
+  padding: 2px 8px;
   border: 1px solid #ced4da;
   border-radius: 4px;
   background-color: #fff;
@@ -13,6 +13,7 @@
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
+  gap: 5px;
 }
 
 .selected-option:hover {
@@ -26,7 +27,7 @@
   left: 0;
   width: 100%;
   max-height: 200px;
-  overflow-y: auto;
+  overflow-y: hidden;
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 4px;
@@ -534,6 +535,7 @@ img[alt="logo"] {
   transition: stroke-dasharray 0.6s ease;
 }
 .circle-label {
+  color: #ffc107;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -555,4 +557,14 @@ img[alt="logo"] {
   font-style: normal;
   font-weight: 600;
   line-height: 30px;
+}
+
+.selected-option i.rotate {
+  transform: rotate(180deg);
+  transition: 0.2 ease;
+}
+.selected-option i {
+  color: #707791;
+  font-size: 12px;
+  transition: transform 0.2s ease;
 }
