@@ -148,7 +148,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   MatchCampaignsFromSubmission: MatchCampaignFromSubmission | null = null;
   isManager: boolean = true;
   onlyUpdate: boolean = false;
-  selectedOption: string = 'isManager'; // This will control the radio button selection
+  selectedOption: string = 'isManager';
   selectedCampaignIds: number[] = [];
   selectedPlaces: { [campaignId: number]: number[] } = {};
   constructor(
@@ -167,60 +167,37 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
-      console.log('encryptedContactId (before merge)', encryptedContactId);
-      // Check if the last segment is a number or string
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
-        // If userSubmission is a string, merge it with encryptedContactId
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        console.log('encryptedContactId (after merge)', encryptedContactId);
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
-      console.log('parsedId', parsedId);
-      // If parsedId is a number, assign it to contactID
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
-        console.log('Contact ID is a number:', this.contactID);
       }
-      // Retrieve the guid
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
-        console.log('GUID:', this.guid);
-        console.log('userSubmission', this.userSubmission);
-        console.log('contactID', this.contactID);
       });
-      // Decrypt contact ID if available
       if (encryptedContactId) {
         try {
           this.contactIDs = this.decrypt(encryptedContactId);
-          console.log('Decrypted Contact IDs:', this.contactIDs);
         } catch (err) {
           console.error('Decryption failed', err);
         }
       }
     });
 
-    const guid = crypto.randomUUID();
-    this.selectedShoppingID = guid;
     if (this.contactIDs) {
       this.GetContactData();
-      // this.opencontactDataModal();
     }
 
     this.GetCampaignFromGuid();
     this.proceedWithNextSteps();
-    const storedMgr = localStorage.getItem('isManager');
-    this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
-    const storedUpd = localStorage.getItem('onlyUpdate');
-    this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
-    // Default the selectedOption to 'isManager' initially
-    this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
-    // console.log('Is Manager:', this.isManager);
-    // console.log('Only Update:', this.onlyUpdate);
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
   }
+
   encrypt(value: string): string {
     const encrypted = CryptoJS.AES.encrypt(
       CryptoJS.enc.Utf8.parse(value),
@@ -256,9 +233,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.ContactData = res.json;
-        // console.log('this.ContactData', this.ContactData);
-        // this.opencontactDataModal();
-
         // this.GetBuyBoxInfo();
         // this.GetGeoJsonFromBuyBox();
       },
@@ -272,7 +246,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
       this.isManager = false;
       this.onlyUpdate = true;
     }
-    // Store updated values in localStorage
     localStorage.setItem('isManager', JSON.stringify(this.isManager));
     localStorage.setItem('onlyUpdate', JSON.stringify(this.onlyUpdate));
   }
@@ -281,9 +254,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.updateRoleSelection();
     // 2) set and navigate
     this.contactID = contactId;
-    this.router.navigate([`/${this.guid}/${this.contactID}`], {
-      replaceUrl: true,
-    });
+    this.showToast('You Can Submit Brochure Now!');
+    // this.router.navigate([`tenant/${this.guid}/${this.contactID}`], {
+    //   replaceUrl: true,
+    // });
     this.GetCampaignFromGuid();
     this.proceedWithNextSteps();
   }
@@ -327,7 +301,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   InsertIntoDestinationTable(buyBox: Bb) {
     this.spinner.show();
-
     // Process each campaign in the buyBox
     const approvalPromises = buyBox.C.filter(
       (campaign) => this.selectedPlaces[campaign.CampaignId]?.length > 0
@@ -489,11 +462,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
         ContactId: this.contactID,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
-        // console.log('ShoppingCenterManage', this.shoppingCenterManage);
       },
     });
   }
@@ -506,11 +477,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
         ContactId: this.contactID,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManageSubmitted = res.json;
-        // console.log('shoppingCenterManageSubmitted', this.shoppingCenterManageSubmitted);
       },
     });
   }
@@ -544,7 +513,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
           const parsedJson = JSON.parse(res.json[0].jsonResponse);
           // Now parsedJson will be an object and can be used normally
           this.JsonPDF = parsedJson;
-
           if (this.JsonPDF.Availability) {
             this.JsonPDF.Availability.forEach((avail) => {
               avail.isAdded = true;
@@ -555,7 +523,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
               tenant.isAdded = true;
             });
           }
-
           this.AvailabilityAndTenants = res.json[0].AvailabilityAndTenants;
           this.isFileUploaded = true;
           this.spinner.hide();
@@ -681,7 +648,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
         organizationid: this.selectedbuyBox,
       },
     };
-
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         if (res.json == null) {
@@ -731,8 +697,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
           };
           formData.append('ConvertPdfToImagesDTO', JSON.stringify(dto));
 
-          // const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
-          const SERVER_URL = `https://apibeta.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
+          const SERVER_URL = `https://api.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
+          // const SERVER_URL = `https://apibeta.cherrypick.com/api/BrokerWithChatGPT/ConvertPdfToImages/${this.selectedShoppingID}/${this.contactID}/${this.selectedCampaign}`;
 
           const req = new HttpRequest('POST', SERVER_URL, formData, {
             reportProgress: true,
@@ -1068,24 +1034,33 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
 
   // Toggle the visibility of a single polygon.
-  togglePolygonVisibility(polygon: ICustomPolygon): void {
-    polygon.visible = !polygon.visible;
-    if (polygon.visible) {
-      // If the polygon is not already on the map, display it.
-      if (!polygon.polygonObj) {
-        // polygon.polygonObj = this.mapDrawingService.displayPolygon(polygon.geoJson, this.map);
-      } else {
-        // Otherwise, ensure it’s set on the map.
-        polygon.polygonObj.setMap(this.map);
-      }
-    } else {
-      // Hide the polygon using hideMyPolygons from your service.
-      if (polygon.polygonObj) {
-        this.mapDrawingService.hidePolygon(polygon.polygonObj);
-      }
-    }
-  }
+  // togglePolygonVisibility(polygon: ICustomPolygon): void {
+  //   polygon.visible = !polygon.visible;
+  //   if (polygon.visible) {
+  //     // If the polygon is not already on the map, display it.
+  //     if (!polygon.polygonObj) {
+  //       // polygon.polygonObj = this.mapDrawingService.displayPolygon(polygon.geoJson, this.map);
+  //     } else {
+  //       // Otherwise, ensure it’s set on the map.
+  //       polygon.polygonObj.setMap(this.map);
+  //     }
+  //   } else {
+  //     // Hide the polygon using hideMyPolygons from your service.
+  //     if (polygon.polygonObj) {
+  //       this.mapDrawingService.hidePolygon(polygon.polygonObj);
+  //     }
+  //   }
+  // }
   ngAfterViewInit(): void {
+    // const storedMgr = localStorage.getItem('isManager');
+    // this.isManager = storedMgr !== null ? JSON.parse(storedMgr) : true;
+    // const storedUpd = localStorage.getItem('onlyUpdate');
+    // this.onlyUpdate = storedUpd !== null ? JSON.parse(storedUpd) : false;
+    // // Default the selectedOption to 'isManager' initially
+    // this.selectedOption = this.isManager ? 'isManager' : 'onlyUpdate';
+    // console.log('Is Manager:', this.isManager);
+    // console.log('Only Update:', this.onlyUpdate);
+
     const interval = setInterval(() => {
       if (
         this.TenantResult &&
@@ -1095,11 +1070,15 @@ export class TenantComponent implements OnInit, AfterViewInit {
         this.map = this.mapDrawingService.initializeMap(this.gmapContainer);
         // debugger
         this.mapDrawingService.initializeDrawingManager(this.map);
-        this.map.setZoom(9);
+        const innerInterval = setInterval(() => {
+          if (this.map) {
+            this.map.setZoom(9);
+            this.loadPolygons();
+            clearInterval(interval);
+            clearInterval(innerInterval);
+          }
+        }, 100);
         // this.mapDrawingService.updateMapCenter(this.map, null);
-
-        this.loadPolygons();
-        clearInterval(interval);
       }
     }, 100);
   }
@@ -1166,7 +1145,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
     // Basic validation for domain format (optional, since HTML pattern handles it)
     const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     if (!domainPattern.test(this.newUrlTenant.trim())) {
-      alert('Please enter a valid domain (e.g., example.com).');
       return;
     }
     this.spinner.show();

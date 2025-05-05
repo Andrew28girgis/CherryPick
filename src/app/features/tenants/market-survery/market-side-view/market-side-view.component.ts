@@ -46,7 +46,7 @@ export class MarketSideViewComponent implements OnInit {
   private mapMovementDebounce: number | null = null;
   private lastUpdateTime = 0;
   private readonly UPDATE_INTERVAL = 100; // ms
-
+  campaignId!: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     private stateService: StateService,
@@ -67,6 +67,7 @@ export class MarketSideViewComponent implements OnInit {
     this.General = new General();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
+      this.campaignId = params.campaignId;
       this.spinner.show();
       this.BuyBoxPlacesCategories(this.BuyBoxId);
     });
@@ -106,7 +107,7 @@ export class MarketSideViewComponent implements OnInit {
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -119,7 +120,7 @@ export class MarketSideViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
         this.shoppingCenters = this.shoppingCenters?.filter(
-          (element: any) => [42, 43, 44].includes(element.kanbanTemplateStageId)
+          (element: any) => [42,  44].includes(element.kanbanTemplateStageId)
         );
         this.cardsSideList = [...this.shoppingCenters];
         this.stateService.setShoppingCenters(this.shoppingCenters);

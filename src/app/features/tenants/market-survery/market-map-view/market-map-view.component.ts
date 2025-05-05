@@ -32,7 +32,7 @@ export class MarketMapViewComponent implements OnInit {
   mapInitialized: boolean = false;
 
   @Output() visibleCentersChanged = new EventEmitter<any[]>();
-
+  campaignId!: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     private stateService: StateService,
@@ -51,6 +51,8 @@ export class MarketMapViewComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
+      this.campaignId = params.campaignId;
+
       this.spinner.show();
       this.BuyBoxPlacesCategories(this.BuyBoxId);
     });
@@ -90,7 +92,7 @@ export class MarketMapViewComponent implements OnInit {
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.campaignId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -103,7 +105,7 @@ export class MarketMapViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
         this.shoppingCenters = this.shoppingCenters?.filter(
-          (element: any) => [42, 43, 44].includes(element.kanbanTemplateStageId)
+          (element: any) => [42,  44].includes(element.kanbanTemplateStageId)
         );
 
         this.stateService.setShoppingCenters(this.shoppingCenters);

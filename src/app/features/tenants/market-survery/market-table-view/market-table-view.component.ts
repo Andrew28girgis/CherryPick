@@ -31,7 +31,7 @@ export class MarketTableViewComponent implements OnInit {
   currentView: any;
   isMobileView!: boolean;
   selectedActionType: { [key: number]: string } = {};
-
+  campainId!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -47,6 +47,7 @@ export class MarketTableViewComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
+      this.campainId = params.campaignId;
       this.currentView = localStorage.getItem('currentView') || '2';
     });
     this.currentView = this.isMobileView ? '5' : '2';
@@ -83,7 +84,7 @@ export class MarketTableViewComponent implements OnInit {
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.campainId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -97,7 +98,7 @@ export class MarketTableViewComponent implements OnInit {
         );
 
         this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
-          [42, 43, 44].includes(element.kanbanTemplateStageId)
+          [42, 44].includes(element.kanbanTemplateStageId)
         );
 
         console.log(`xx`);

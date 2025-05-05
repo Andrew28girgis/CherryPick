@@ -228,22 +228,24 @@ export class GenerateEmailComponent implements OnInit {
     try {
       // Show the spinner while fetching data
       this.spinner.show();
-  
+
       // Fetch category ID based on 'Availability'
       const categoryBody = {
         name: 'GetPromptsCategoryId',
         params: { Name: 'Availability' },
       };
-      const catResponse = await firstValueFrom(this.placeService.GenericAPI(categoryBody));
+      const catResponse = await firstValueFrom(
+        this.placeService.GenericAPI(categoryBody)
+      );
       const categoryId = catResponse?.json?.[0]?.Id;
-  
+
       // If categoryId doesn't exist, exit early
       if (!categoryId) {
         console.error('Category ID not found.');
         this.spinner.hide(); // Hide the spinner when exiting early
         return;
       }
-  
+
       // Fetch prompts based on categoryId
       const promptsBody = {
         name: 'GetPrompts',
@@ -251,24 +253,25 @@ export class GenerateEmailComponent implements OnInit {
         params: { Id: categoryId },
         Json: null,
       };
-      const promptsResponse = await firstValueFrom(this.placeService.GenericAPI(promptsBody));
+      const promptsResponse = await firstValueFrom(
+        this.placeService.GenericAPI(promptsBody)
+      );
       const promptsData = promptsResponse?.json || [];
-  
+
       // Process prompts data and set to prompts array
       this.prompts = promptsData.map((prompt: any) => ({
         id: prompt?.Id || null,
         name: prompt?.Name || 'Unnamed Prompt',
         promptText: prompt?.PromptText || 'No prompt text available',
       }));
-  
+
       console.log('promptsData', this.prompts);
-  
+
       // Select the first prompt as default, if available
       if (this.prompts.length > 0) {
         this.selectedPromptId = this.prompts[0].id;
       } else {
-       }
-  
+      }
     } catch (error) {
       console.error('Error fetching prompts:', error);
     } finally {
@@ -276,7 +279,7 @@ export class GenerateEmailComponent implements OnInit {
       this.spinner.hide();
     }
   }
-  
+
   savePrompt(modal: any) {
     if (!this.selectedPromptId) {
       this.showToast('No prompt selected to update.');

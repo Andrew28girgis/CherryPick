@@ -377,7 +377,7 @@
                 >
               </div>
 
-              <button class="expand-btn" (click)="toggleExpand(campaign)">
+              <button class="expand-btn" (click)="toggleExpand(campaign) " *ngIf="campaign.Kanban ">
                 {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

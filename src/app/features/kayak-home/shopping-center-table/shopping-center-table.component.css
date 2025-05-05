@@ -63,7 +63,7 @@
 }
 
 ::ng-deep .popover-body {
-  padding: 0 !important;
+  padding: 5px !important;
 }
 
 ::ng-deep .popover-arrow::after {
@@ -72,9 +72,19 @@
 }
 
 @media (max-width: 768px) {
+  .mobileButtons {
+    padding-top: 10px;
+    justify-content: center;
+    gap: 5px;
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+ 
   .mobile-nav {
     width: fit-content;
     margin-bottom: 5px;
+    gap: 50px;
   }
 
   .mobile-n {
@@ -106,7 +116,6 @@
   }
 }
 
-
 .inbox {
   padding: 5px 8px;
   border-radius: 1rem;
@@ -124,4 +133,18 @@
 .mail a {
   color: #fff;
   width: max-content;
+}
+
+.displayNone {
+  display: none !important;
+}
+
+::ng-deep .container-fluid {
+  padding: 0 !important;
+}
+
+@media (min-width: 769px) {
+  .mobileButtons {
+    justify-content: flex-end;
+    }
 }

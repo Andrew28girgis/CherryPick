@@ -2,7 +2,9 @@
   <app-header></app-header>
   <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
     <div class="container-fluid main-content-area">
-      <app-breadcrumb *ngIf="display"></app-breadcrumb>
+      <app-breadcrumb
+        *ngIf="display "
+      ></app-breadcrumb>
       <div class="content-container">
         <router-outlet></router-outlet>
       </div>

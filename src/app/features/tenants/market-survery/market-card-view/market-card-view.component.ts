@@ -31,7 +31,7 @@ export class MarketCardViewComponent implements OnInit {
   selectedActionType: { [key: number]: string } = {}
 
   @Input() layout: 'grid' | 'side' = 'grid'; // default layout
-
+  campainId!: any;
 
   constructor(
     public activatedRoute: ActivatedRoute,
@@ -50,6 +50,8 @@ export class MarketCardViewComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
+      this.campainId = params.campaignId;
+
       this.currentView = localStorage.getItem('currentView') || '2';
     });
     this.currentView = this.isMobileView ? '5' : '2';
@@ -86,7 +88,7 @@ export class MarketCardViewComponent implements OnInit {
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
-        BuyBoxId: buyboxId,
+        CampaignId: this.campainId,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -99,7 +101,7 @@ export class MarketCardViewComponent implements OnInit {
           (element: any) => element.Deleted == false
         );
         this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
-          [42, 43, 44].includes(element.kanbanTemplateStageId)
+          [42,  44].includes(element.kanbanTemplateStageId)
         );
         this.stateService.setShoppingCenters(this.shoppingCenters);
         this.spinner.hide();

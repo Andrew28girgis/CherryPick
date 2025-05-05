@@ -676,12 +676,12 @@
   margin-bottom: 20px;
   margin-right: 20px;
   border-radius: 10px;
-  outline: none; 
+  outline: none;
 }
 
 .search-input:focus {
-  border: 1px solid #ccc; 
-  box-shadow: none; 
+  border: 1px solid #ccc;
+  box-shadow: none;
 }
 .search-button {
   position: absolute;
@@ -908,13 +908,13 @@
     color: #007bff;
   }
   .tiktok-imgg {
-    position: absolute;
-    top: 15%;
+    position: relative;
   }
   .card-header {
     background-color: #000;
     flex-direction: row;
     align-items: flex-start;
+    margin-bottom: 40vh;
   }
   .card-image img {
     height: auto;
@@ -924,6 +924,7 @@
     font-size: 0.9rem;
   }
   .card-footer {
+    display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
   }
@@ -1031,14 +1032,14 @@
     );
     pointer-events: none;
   }
-  .header-info {
+  .header-info  {
     position: absolute;
-    bottom: 27%;
+    top: 45%;
     left: 16px;
     right: 16px;
     z-index: 0;
-    width: fit-content;
-  }
+     width: fit-content;
+}
   .header-info .center-address {
     color: #fff;
     font-size: 12px;
@@ -1131,7 +1132,7 @@ body.panel-open {
   overflow: hidden;
 }
 ::ng-deep .popover-body {
-  padding: 0 !important;
+  padding: 5px !important;
 }
 ::ng-deep .popover-arrow::after {
   border-top: none !important;
@@ -1225,7 +1226,6 @@ body.panel-open {
   animation: status-animation 1.5s infinite linear;
   margin: 0 10px;
 }
-
 
 .skeleton-loader {
   text-align: center;

@@ -5,14 +5,16 @@
 }
 
 .selected-option {
-  padding: 3px 8px;
+  padding: 2px 8px;
   border: 1px solid #ced4da;
-  border-radius: 4px;
+  border-radius: 16px 0 0 16px;
   background-color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
+  gap: 5px;
+  height: 30px;
 }
 
 .selected-option:hover {
@@ -26,7 +28,7 @@
   left: 0;
   width: 100%;
   max-height: 200px;
-  overflow-y: auto;
+  overflow-y: hidden;
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 4px;
@@ -37,6 +39,7 @@
 
 .dropdown-options.show {
   display: block;
+  width: fit-content;
 }
 
 .dropdown-item {
@@ -61,9 +64,9 @@
   text-align: start;
   margin: 0;
   z-index: 100;
-  right: 14%;
+  right: 5%;
   width: max-content;
-  top: 2%;
+  top: 23%;
 }
 
 .shortcuts_iconCard > ul {
@@ -107,10 +110,10 @@
 
 .shortcuts_iconCard > i {
   position: absolute;
-  right: -8px;
+  right: 7px;
   font-size: 25px;
   color: white;
-  top: 5%;
+  top: -6%;
 }
 
 .h700 {
@@ -144,7 +147,7 @@ img[alt="logo"] {
   width: 30px;
   height: 30px;
   background: transparent;
-  border-radius: 6px;
+  border-radius: 0px 50% 50% 0;
   position: relative;
   z-index: 1;
 }
@@ -222,7 +225,7 @@ img[alt="logo"] {
 }
 
 ::ng-deep .popover-body {
-  padding: 0 !important;
+  padding: 5px !important;
 }
 
 ::ng-deep .popover-arrow::after {
@@ -239,6 +242,7 @@ img[alt="logo"] {
 }
 
 @media (max-width: 768px) {
+ 
   ::ng-deep .p-element .p-paginator {
     margin-bottom: 70px;
   }
@@ -359,19 +363,7 @@ img[alt="logo"] {
   border-radius: 4px;
 }
 
-.shortcuts_iconCard {
-  position: absolute;
-  background: white;
-  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 8px 26px rgba(0, 0, 0, 0.23);
-  padding: 16px;
-  border-radius: 10px;
-  text-align: start;
-  margin: 0;
-  z-index: 100;
-  right: 14%;
-  width: max-content;
-  top: 2%;
-}
+ 
 .search-container {
   position: relative;
   display: flex;
@@ -534,6 +526,7 @@ img[alt="logo"] {
   transition: stroke-dasharray 0.6s ease;
 }
 .circle-label {
+  color: #ffc107;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -556,3 +549,17 @@ img[alt="logo"] {
   font-weight: 600;
   line-height: 30px;
 }
+
+.selected-option i.rotate {
+  transform: rotate(180deg);
+  transition: 0.2 ease;
+}
+.selected-option i {
+  color: #707791;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+
+
+

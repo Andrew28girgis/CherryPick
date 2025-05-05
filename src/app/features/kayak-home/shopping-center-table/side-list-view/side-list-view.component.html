@@ -25,15 +25,18 @@
                     loading="lazy"
                   />
                 </div>
-                
               </a>
               <div class="content-wrap card-content">
                 <div>
                   <div class="d-flex justify-content-between">
                     <a
+                      style="max-width: 45%"
                       [routerLink]="[ '/landing', place?.ShoppingCenter?.Places ? place?.ShoppingCenter?.Places?.[0]?.Id : 0,place.Id,BuyBoxId]"
                     >
-                      <p class="content-title total">
+                      <p
+                        class="content-title total"
+                        style="white-space: pre-line"
+                      >
                         {{
                           place.CenterName.length > 22
                             ? (place.CenterName | titlecase).slice(0, 22) +
@@ -41,14 +44,45 @@
                             : (place.CenterName | titlecase)
                         }}
                       </p>
-                  
+
                       <span
                         class="badge badge-danger mx-2"
                         *ngIf="place.Deleted == true"
                         >Deleted</span
                       >
                     </a>
-                    <div>
+                    <div style="display: flex; gap: 5px">
+                      <div *ngIf="place.stageName">
+                        <!-- <p class="ShoppingCenterStage mb-1">{{place.stageName}}</p> -->
+                        <div class="custom-dropdown" style="width: 200px">
+                          <div
+                            class="selected-option"
+                            (click)="toggleDropdown(place)"
+                          >
+                            {{ getSelectedStageName(place.kanbanStageId) }}
+                            <i class="fas fa-chevron-down"></i>
+                          </div>
+                          <div
+                            class="dropdown-options"
+                            [class.show]="place.isDropdownOpen"
+                          >
+                            <div
+                              *ngFor="let stage of KanbanStages"
+                              class="dropdown-item"
+                              [class.active]="stage.id === place.kanbanStageId"
+                              (click)="
+                                selectStage(
+                                  place.MarketSurveyId,
+                                  stage.id,
+                                  place
+                                )
+                              "
+                            >
+                              {{ stage.stageName }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <button
                         class="ellipsis_icont"
                         (click)="toggleShortcutsCard(place.Id)"
@@ -239,7 +273,7 @@
                             </a>
                           </li>
                         </ul>
-                        <i class="fa-solid fa-caret-right"></i>
+                        <i class="fa-solid fa-caret-up"></i>
                       </div>
                     </div>
                   </div>
@@ -254,34 +288,6 @@
                       {{ place.CenterCity | titlecase }},
                       {{ place.CenterState }}
                     </span>
-                  </div>
-
-                  <div *ngIf="place.stageName">
-                    <!-- <p class="ShoppingCenterStage mb-1">{{place.stageName}}</p> -->
-                    <div class="custom-dropdown" style="width: 200px">
-                      <div
-                        class="selected-option"
-                        (click)="toggleDropdown(place)"
-                      >
-                        {{ getSelectedStageName(place.kanbanStageId) }}
-                        <i class="fas fa-chevron-down"></i>
-                      </div>
-                      <div
-                        class="dropdown-options"
-                        [class.show]="place.isDropdownOpen"
-                      >
-                        <div
-                          *ngFor="let stage of KanbanStages"
-                          class="dropdown-item"
-                          [class.active]="stage.id === place.kanbanStageId"
-                          (click)="
-                            selectStage(place.MarketSurveyId, stage.id, place)
-                          "
-                        >
-                          {{ stage.stageName }}
-                        </div>
-                      </div>
-                    </div>
                   </div>
 
                   <div *ngIf="place.CenterAddress">
@@ -375,29 +381,42 @@
                           "
                         />
                       </div>
-                      
                     </ng-template>
                   </div>
-                  
                 </div>
                 <button
-                *ngIf="checkSubmission(place?.ShoppingCenter?.UserSubmmision)"
-                class="submission-button"
-                (click)="
-                  openModalSubmission(
-                    place?.ShoppingCenter?.UserSubmmision || [],
-                    submission
-                  )
-                "
-              >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-icon lucide-file"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-                View Submissions
-              </button>
+                  *ngIf="checkSubmission(place?.ShoppingCenter?.UserSubmmision)"
+                  class="submission-button"
+                  (click)="
+                    openModalSubmission(
+                      place?.ShoppingCenter?.UserSubmmision || [],
+                      submission
+                    )
+                  "
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-file-icon lucide-file"
+                  >
+                    <path
+                      d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"
+                    />
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                  </svg>
+                  View Submissions
+                </button>
               </div>
             </div>
           </div>
         </div>
-        
       </ng-container>
     </div>
   </div>
@@ -411,262 +430,257 @@
     </ng-template>
   </div>
 
-  <ng-template #MapViewPlace let-modal>
+  <ng-template #MapViewPlace let-modal> </ng-template>
+
+  <ng-template #ShareLink let-modal>
+    <div class="d-flex p-3 m-3 align-items-center">
+      <p>{{ shareLink }}</p>
+      <i class="fa-solid fa-copy ms-3 cursor" (click)="copyLink(shareLink)"></i>
+    </div>
   </ng-template>
 
-<ng-template #ShareLink let-modal>
-  <div class="d-flex p-3 m-3 align-items-center">
-    <p>{{ shareLink }}</p>
-    <i class="fa-solid fa-copy ms-3 cursor" (click)="copyLink(shareLink)"></i>
-  </div>
-</ng-template>
-
-<ng-template #StreetViewPlace let-modal>
-  <div *ngIf="General.modalObject.StreetViewURL">
-    <iframe
-      [src]="sanitizedUrl"
-      height="700"
-      width="798px"
-      class="sanitizedUrl"
-      allowfullscreen=""
-    >
-    </iframe>
-  </div>
-  <div
-    id="street-view"
-    class="h700"
-    *ngIf="!General.modalObject.StreetViewURL"
-  ></div>
-</ng-template>
-
-<ng-template #deleteSingleShoppingCenterModal let-modal>
-  <div class="modal-body-general p-4 rounded deleteShopping">
-    <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
-    <p class="text-center Areyou">
-      Are you sure you want to remove this Shopping Center?
-    </p>
-
-    <div class="d-flex justify-content-end mt-4">
-      <button
-        type="button"
-        class="btn btn-secondary me-2 px-4 py-2 btnborder"
-        (click)="modal.dismiss('Cancel click')"
+  <ng-template #StreetViewPlace let-modal>
+    <div *ngIf="General.modalObject.StreetViewURL">
+      <iframe
+        [src]="sanitizedUrl"
+        height="700"
+        width="798px"
+        class="sanitizedUrl"
+        allowfullscreen=""
       >
-        Cancel
-      </button>
-      <button
-        type="button"
-        class="btn btn-danger px-4 py-2 btnborder"
-        (click)="deleteShCenter()"
-      >
-        Remove
-      </button>
+      </iframe>
     </div>
-  </div>
-</ng-template>
+    <div
+      id="street-view"
+      class="h700"
+      *ngIf="!General.modalObject.StreetViewURL"
+    ></div>
+  </ng-template>
 
-<ng-template #statusModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Center Status</h5>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    ></button>
-  </div>
-  <div class="modal-body">
-    <!-- Render the skeleton loader or fetched content -->
-    <div *ngIf="isLoadingstatus; else contentTemplate">
-      <div class="skeleton-loader">
-        <div
-          class="skeleton-head"
-          style="
-            height: 24px;
-            width: 40%;
-            margin-bottom: 16px;
-            border-radius: 4px;
-            background-color: #e0e0e0;
-          "
-        ></div>
-        <div class="skeleton-paragraph">
-          <div
-            class="skeleton-line"
-            style="
-              height: 16px;
-              width: 100%;
-              margin-bottom: 8px;
-              border-radius: 4px;
-              background-color: #e0e0e0;
-            "
-          ></div>
-          <div
-            class="skeleton-line"
-            style="
-              height: 16px;
-              width: 95%;
-              margin-bottom: 8px;
-              border-radius: 4px;
-              background-color: #e0e0e0;
-            "
-          ></div>
-          <div
-            class="skeleton-line"
-            style="
-              height: 16px;
-              width: 90%;
-              border-radius: 4px;
-              background-color: #e0e0e0;
-            "
-          ></div>
-        </div>
+  <ng-template #deleteSingleShoppingCenterModal let-modal>
+    <div class="modal-body-general p-4 rounded deleteShopping">
+      <h2 class="text-center mb-4 RemoveShopping">Remove Shopping Center</h2>
+      <p class="text-center Areyou">
+        Are you sure you want to remove this Shopping Center?
+      </p>
+
+      <div class="d-flex justify-content-end mt-4">
+        <button
+          type="button"
+          class="btn btn-secondary me-2 px-4 py-2 btnborder"
+          (click)="modal.dismiss('Cancel click')"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger px-4 py-2 btnborder"
+          (click)="deleteShCenter()"
+        >
+          Remove
+        </button>
       </div>
     </div>
-    <ng-template #contentTemplate>
-      <div [innerHTML]="htmlContent"></div>
-    </ng-template>
-  </div>
-</ng-template>
+  </ng-template>
 
-<ng-template #loadingSkeleton>
-  <div class="row m-0 mt-1">
-    <ng-container *ngFor="let _ of skeletonItems">
-      <div class="col-6 skeleton-col">
-        <div class="card-window total skeleton-card">
-          <div class="card-window_c skeleton">
-            <div class="main-img">
-              <div class="skeleton-image"></div>
-            </div>
-            <div class="content-wrap card-content skeleton-content">
-              <div class="skeleton-text skeleton-title"></div>
-              <div class="skeleton-text skeleton-line"></div>
-              <div class="skeleton-text skeleton-line short"></div>
-              <div class="skeleton-text skeleton-line"></div>
-              <div class="skeleton-text skeleton-line short"></div>
-            </div>
+  <ng-template #statusModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Center Status</h5>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <!-- Render the skeleton loader or fetched content -->
+      <div *ngIf="isLoadingstatus; else contentTemplate">
+        <div class="skeleton-loader">
+          <div
+            class="skeleton-head"
+            style="
+              height: 24px;
+              width: 40%;
+              margin-bottom: 16px;
+              border-radius: 4px;
+              background-color: #e0e0e0;
+            "
+          ></div>
+          <div class="skeleton-paragraph">
+            <div
+              class="skeleton-line"
+              style="
+                height: 16px;
+                width: 100%;
+                margin-bottom: 8px;
+                border-radius: 4px;
+                background-color: #e0e0e0;
+              "
+            ></div>
+            <div
+              class="skeleton-line"
+              style="
+                height: 16px;
+                width: 95%;
+                margin-bottom: 8px;
+                border-radius: 4px;
+                background-color: #e0e0e0;
+              "
+            ></div>
+            <div
+              class="skeleton-line"
+              style="
+                height: 16px;
+                width: 90%;
+                border-radius: 4px;
+                background-color: #e0e0e0;
+              "
+            ></div>
           </div>
         </div>
       </div>
-    </ng-container>
-  </div>
-</ng-template>
+      <ng-template #contentTemplate>
+        <div [innerHTML]="htmlContent"></div>
+      </ng-template>
+    </div>
+  </ng-template>
 
-
-<ng-template #submission let-modal>
-  <div class="modal-header d-flex justify-content-between">
-    <h4 class="modal-title">Submissions</h4>
-    <button
-      type="button"
-      class="close"
-      style="background: none; border: none"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <path
-          d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
-          fill="#7A8591"
-        />
-        <path
-          d="M9.16986 15.5799C8.97986 15.5799 8.78986 15.5099 8.63986 15.3599C8.34986 15.0699 8.34986 14.5899 8.63986 14.2999L14.2999 8.63986C14.5899 8.34986 15.0699 8.34986 15.3599 8.63986C15.6499 8.92986 15.6499 9.40986 15.3599 9.69986L9.69986 15.3599C9.55986 15.5099 9.35986 15.5799 9.16986 15.5799Z"
-          fill="#7A8591"
-        />
-        <path
-          d="M14.8299 15.5799C14.6399 15.5799 14.4499 15.5099 14.2999 15.3599L8.63986 9.69986C8.34986 9.40986 8.34986 8.92986 8.63986 8.63986C8.92986 8.34986 9.40986 8.34986 9.69986 8.63986L15.3599 14.2999C15.6499 14.5899 15.6499 15.0699 15.3599 15.3599C15.2099 15.5099 15.0199 15.5799 14.8299 15.5799Z"
-          fill="#7A8591"
-        />
-      </svg>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div *ngFor="let submission of submissions">
-      <div class="submission-details" *ngIf="submission?.SubmmisionLink">
-        <div class="detailsInfo d-flex flex-column">
-          <a
-            [href]="
-              'https://files.cherrypick.com/submissions/' +
-              submission?.SubmmisionLink
-            "
-            target="_blank"
-            class="submission-link"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="8"
-              height="8"
-              viewBox="0 0 8 8"
-              fill="none"
-            >
-              <circle cx="4" cy="4" r="4" fill="#16181D" />
-            </svg>
-
-            https://files.cherrypick.com/submissions/' +
-            submission?.SubmmisionLink
-          </a>
-
-          <div class="user-info d-flex flex-row">
-            <p *ngIf="submission?.FirstName">
-              {{ submission?.FirstName + " " + submission?.LastName }}
-            </p>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="8"
-              height="8"
-              viewBox="0 0 8 8"
-              fill="none"
-            >
-              <circle cx="4" cy="4" r="4" fill="#E2E4E9" />
-            </svg>
-            <p *ngIf="submission?.CreatedDate">
-              {{ submission?.CreatedDate | date : "MMM dd, yyyy" }}
-            </p>
-          </div>
-          <p class="available-space" *ngIf="submission?.AvailableSpace">
-            Available Space:{{ submission?.AvailableSpace }} SF
-          </p>
-        </div>
-        <div class="progress-bar-container">
-          <div class="match-percentage">
-            <div class="circle-progress">
-              <svg viewBox="0 0 36 36" class="circle-svg">
-                <!-- Background path (gray) -->
-                <path
-                  class="circle-bg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                  [style.stroke-dasharray]="
-                    getCircleProgressBackground(98)
-                  "
-                />
-                <!-- Foreground path (green) -->
-                <path
-                  class="circle-fg"
-                  d="M18 2.0845
-                    a 15.9155 15.9155 0 0 1 0 31.831
-                    a 15.9155 15.9155 0 0 1 0 -31.831"
-                  [style.stroke-dasharray]="
-                    getCircleProgress(98)
-                  "
-                />
-              </svg>
-              <div class="circle-label">
-                <span class="match">Match</span>
-                <span class="match-percentage"
-                  >{{ submission?.Percentage }}%</span
-                >
+  <ng-template #loadingSkeleton>
+    <div class="row m-0 mt-1">
+      <ng-container *ngFor="let _ of skeletonItems">
+        <div class="col-6 skeleton-col">
+          <div class="card-window total skeleton-card">
+            <div class="card-window_c skeleton">
+              <div class="main-img">
+                <div class="skeleton-image"></div>
+              </div>
+              <div class="content-wrap card-content skeleton-content">
+                <div class="skeleton-text skeleton-title"></div>
+                <div class="skeleton-text skeleton-line"></div>
+                <div class="skeleton-text skeleton-line short"></div>
+                <div class="skeleton-text skeleton-line"></div>
+                <div class="skeleton-text skeleton-line short"></div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <br />
+      </ng-container>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
+
+  <ng-template #submission let-modal>
+    <div class="modal-header d-flex justify-content-between">
+      <h4 class="modal-title">Submissions</h4>
+      <button
+        type="button"
+        class="close"
+        style="background: none; border: none"
+        aria-label="Close"
+        (click)="modal.dismiss()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
+            fill="#7A8591"
+          />
+          <path
+            d="M9.16986 15.5799C8.97986 15.5799 8.78986 15.5099 8.63986 15.3599C8.34986 15.0699 8.34986 14.5899 8.63986 14.2999L14.2999 8.63986C14.5899 8.34986 15.0699 8.34986 15.3599 8.63986C15.6499 8.92986 15.6499 9.40986 15.3599 9.69986L9.69986 15.3599C9.55986 15.5099 9.35986 15.5799 9.16986 15.5799Z"
+            fill="#7A8591"
+          />
+          <path
+            d="M14.8299 15.5799C14.6399 15.5799 14.4499 15.5099 14.2999 15.3599L8.63986 9.69986C8.34986 9.40986 8.34986 8.92986 8.63986 8.63986C8.92986 8.34986 9.40986 8.34986 9.69986 8.63986L15.3599 14.2999C15.6499 14.5899 15.6499 15.0699 15.3599 15.3599C15.2099 15.5099 15.0199 15.5799 14.8299 15.5799Z"
+            fill="#7A8591"
+          />
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngFor="let submission of submissions">
+        <div class="submission-details" *ngIf="submission?.SubmmisionLink">
+          <div class="detailsInfo d-flex flex-column">
+            <a
+              [href]="
+                'https://files.cherrypick.com/submissions/' +
+                submission?.SubmmisionLink
+              "
+              target="_blank"
+              class="submission-link"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="8"
+                height="8"
+                viewBox="0 0 8 8"
+                fill="none"
+              >
+                <circle cx="4" cy="4" r="4" fill="#16181D" />
+              </svg>
+
+              https://files.cherrypick.com/submissions/' +
+              submission?.SubmmisionLink
+            </a>
+
+            <div class="user-info d-flex flex-row">
+              <p *ngIf="submission?.FirstName">
+                {{ submission?.FirstName + " " + submission?.LastName }}
+              </p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="8"
+                height="8"
+                viewBox="0 0 8 8"
+                fill="none"
+              >
+                <circle cx="4" cy="4" r="4" fill="#E2E4E9" />
+              </svg>
+              <p *ngIf="submission?.CreatedDate">
+                {{ submission?.CreatedDate | date : "MMM dd, yyyy" }}
+              </p>
+            </div>
+            <p class="available-space" *ngIf="submission?.AvailableSpace">
+              Available Space:{{ submission?.AvailableSpace }} SF
+            </p>
+          </div>
+          <div class="progress-bar-container">
+            <div class="match-percentage">
+              <div class="circle-progress">
+                <svg viewBox="0 0 36 36" class="circle-svg">
+                  <!-- Background path (gray) -->
+                  <path
+                    class="circle-bg"
+                    d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                    [style.stroke-dasharray]="getCircleProgressBackground(98)"
+                  />
+                  <!-- Foreground path (green) -->
+                  <path
+                    class="circle-fg"
+                    d="M18 2.0845
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                    [style.stroke-dasharray]="getCircleProgress(98)"
+                  />
+                </svg>
+                <div class="circle-label">
+                  <span class="match">Match</span>
+                  <span class="match-percentage"
+                    >{{ submission?.Percentage }}%</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+      </div>
+    </div>
+  </ng-template>
+</div>
