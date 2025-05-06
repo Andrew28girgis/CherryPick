@@ -266,19 +266,18 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        if(res.json) {
-        this.shoppingCenterInMail = res.json;
-        console.log('shoppingCenterInMail', this.shoppingCenterInMail);
-        this.shoppingCentersIds = this.shoppingCenterInMail
-        .map((center: any) => center.Id)
-        .join(',') + ',';
-        console.log('shoppingCentersIds', this.shoppingCentersIds);
-      }
-      else{
-        this.shoppingCentersIds = '';
-        console.log('No shopping centers found in the email.');
-        
-      }
+        if (res.json) {
+          this.shoppingCenterInMail = res.json;
+          console.log('shoppingCenterInMail', this.shoppingCenterInMail);
+          this.shoppingCentersIds =
+            this.shoppingCenterInMail
+              .map((center: any) => center.Id)
+              .join(',') + ',';
+          console.log('shoppingCentersIds', this.shoppingCentersIds);
+        } else {
+          this.shoppingCentersIds = '';
+          console.log('No shopping centers found in the email.');
+        }
       },
     });
   }
@@ -557,13 +556,14 @@ export class TenantComponent implements OnInit, AfterViewInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        if(res.json !== null) {
-        this.shoppingCenterManage = res.json;
-        this.shoppingCentersIds += this.shoppingCenterManage
-        .map((center: any) => center.Id)
-        .join(',') + ',';
-        console.log('shoppingCentersIds', this.shoppingCentersIds);
-      }
+        if (res.json !== null) {
+          this.shoppingCenterManage = res.json;
+          this.shoppingCentersIds +=
+            this.shoppingCenterManage
+              .map((center: any) => center.Id)
+              .join(',') + ',';
+          console.log('shoppingCentersIds', this.shoppingCentersIds);
+        }
       },
     });
   }
@@ -579,13 +579,13 @@ export class TenantComponent implements OnInit, AfterViewInit {
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
-        if(res.json !==null){
-        this.shoppingCenterManageSubmitted = res.json;
-        this.shoppingCentersIds += this.shoppingCenterManageSubmitted
-        .map((center: any) => center.Id)
-        .join(',');
-        console.log('shoppingCentersIds', this.shoppingCentersIds);
-      }
+        if (res.json !== null) {
+          this.shoppingCenterManageSubmitted = res.json;
+          this.shoppingCentersIds += this.shoppingCenterManageSubmitted
+            .map((center: any) => center.Id)
+            .join(',');
+          console.log('shoppingCentersIds', this.shoppingCentersIds);
+        }
       },
     });
   }
