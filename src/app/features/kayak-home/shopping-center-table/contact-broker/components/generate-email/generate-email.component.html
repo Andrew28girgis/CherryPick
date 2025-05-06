@@ -49,8 +49,13 @@
     <div class="generate-email-container">
       <div class="generate-email-sub-container">
         <div class="generate-email-column">
-          <div class="box p-2">
-            <div class="checkbox-section-head checkbox-section">
+          <div *ngIf="buyboxDetails" class="box p-2">
+            <div
+              *ngIf="
+                buyboxDetails.MinBuildingSize && buyboxDetails.MaxBuildingSize
+              "
+              class="checkbox-section-head checkbox-section"
+            >
               <input
                 type="checkbox"
                 name="detailsMin"
@@ -106,7 +111,16 @@
             </div>
             <ng-container *ngIf="showRelationNames">
               <ng-container
-                *ngIf="generated.length > 0 && generated[0].Releations"
+                *ngIf="
+                  generated.length > 0 &&
+                  generated[0].Releations &&
+                  relationCategoriesNames[0] &&
+                  relationCategoriesNames[1] &&
+                  relationCategoriesNames[0].id &&
+                  relationCategoriesNames[0].name &&
+                  relationCategoriesNames[1].id &&
+                  relationCategoriesNames[1].name
+                "
               >
                 <div class="checkbox-section checkbox-section-body-first">
                   <input
@@ -404,11 +418,7 @@
   <div class="modal-body p-4">
     <div class="d-flex flex-column align-items-center gap-3">
       <h5>Send Email With</h5>
-      <a
-        class="send-mail-card"
-        [href]="generateMailtoLink()"
-        target="_blank"
-      >
+      <a class="send-mail-card" [href]="generateMailtoLink()" target="_blank">
         <div class="mail-card-icon">
           <img
             src="../../../../../../../assets/Images/Icons/outlook-icon.svg"
@@ -421,9 +431,9 @@
         class="send-mail-card"
         href="https://mail.google.com/mail/?view=cm&fs=1&to={{
           (selectedmail?.O)![0].C[0].Email
-        }}&su={{ selectedmail?.Subject }}&body={{ encodeBody(selectedmail?.Body) }}&cc={{
-          CCEmail
-        }},{{ getStringCC() }}"
+        }}&su={{ selectedmail?.Subject }}&body={{
+          encodeBody(selectedmail?.Body)
+        }}&cc={{ CCEmail }},{{ getStringCC() }}"
         target="_blank"
       >
         <div class="mail-card-icon">
