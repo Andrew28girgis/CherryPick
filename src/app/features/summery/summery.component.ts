@@ -19,8 +19,7 @@ import { Tenant } from 'src/app/shared/models/tenants';
   styleUrls: ['./summery.component.css'],
 })
 export class SummeryComponent implements OnInit {
-  tenants: Tenant[] = [];
-  selectedTenant: Tenant | null = null; 
+  tenants: Tenant[] = []; 
   Token: any;
   orgId!: number;
   organizationId!: any;
@@ -31,8 +30,7 @@ export class SummeryComponent implements OnInit {
   showCampaigns: boolean = false;
   campaignsViewMode: 'table' | 'card' = 'table';
   currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
-  isMobile = false;
-  // Add a new property to track if campaigns were loaded
+  isMobile = false; 
   campaignsLoaded = false;
 
   constructor(
@@ -46,7 +44,6 @@ export class SummeryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.checkScreenSize(); // Check screen size on initialization
     this.breadcrumbService.setBreadcrumbs([
       { label: 'My Tenants', url: '/summary' },
     ]);
@@ -56,6 +53,7 @@ export class SummeryComponent implements OnInit {
       this.organizationId = localStorage.getItem('orgId');
     });
     this.modalOpened = false;
+    this.checkScreenSize();
   }
 
   getUserBuyBoxes(): void {
@@ -75,9 +73,8 @@ export class SummeryComponent implements OnInit {
       },
     });
   }
-  selectTenant(tenant: Tenant) {
-    this.selectedTenant = tenant;
-  }
+
+ 
   openAddTenant(content: any) {
     const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -116,16 +113,15 @@ export class SummeryComponent implements OnInit {
       { label: 'Campaigns', url: '/campaigns' },
     ]);
   }
-
-  // Add method to go back to tenants view
+ 
   showTenants() {
     this.showCampaigns = false;
     this.currentView = 'tenants';
     this.breadcrumbService.setBreadcrumbs([
       { label: 'My Tenants', url: '/summary' },
     ]);
-    // Don't reset campaignsLoaded here to preserve the state
   }
+
   goToTenant(tenant: Tenant) {
     this.router.navigate([
       '/dashboard',
@@ -143,11 +139,9 @@ export class SummeryComponent implements OnInit {
 
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
-    // On mobile, always use the responsive card view
     if (this.isMobile) {
-      this.campaignsViewMode = 'card'; // Automatically switch to card view for mobile
+      this.campaignsViewMode = 'card';
     } else {
-      // For larger screens, check localStorage for user preference
       const savedViewMode = localStorage.getItem('campaignViewMode') as
         | 'table'
         | 'card';
