@@ -111,7 +111,7 @@
           <ng-container *ngIf="displayMode == 1 && getStatesToDisplay">
             <div class="area-card-item">
               <div class="area-name">
-                {{ getStatesToDisplay.longName }}
+                {{ getStatesToDisplay.code }}
               </div>
               <button
                 class="btn add-area-btn ms-auto"
@@ -121,10 +121,7 @@
                 (click)="
                   checkStateDisplay(getStatesToDisplay.code)
                     ? removeState(getStatesToDisplay.code)
-                    : addState(
-                        getStatesToDisplay.code,
-                        getStatesToDisplay.longName
-                      )
+                    : addState(getStatesToDisplay.code, getStatesToDisplay.code)
                 "
               >
                 {{
@@ -155,7 +152,7 @@
                   <button
                     *ngIf="city.COUNT > 0"
                     class="btn add-area-btn"
-                    (click)="viewNH(city.City)"
+                    (click)="viewNeighborhoods(city.City)"
                   >
                     Neighborhoods
                   </button>
@@ -174,7 +171,7 @@
                         ? addCity(getStatesToDisplay.code, city.City)
                         : addState(
                             getStatesToDisplay.code,
-                            getStatesToDisplay.longName
+                            getStatesToDisplay.code
                           )
                     "
                   >
