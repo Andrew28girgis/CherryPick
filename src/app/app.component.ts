@@ -15,7 +15,8 @@ export class AppComponent implements OnInit {
   isSocialView: boolean = false;
   ngOnInit() {
     this.checkScreenSize();
-    this.isSocialView = this.localStorage.getItem('currentViewDashBord') === '5';
+    this.isSocialView =
+      this.localStorage.getItem('currentViewDashBord') === '5';
     // this.router.events
     // .pipe(filter(event => event instanceof NavigationEnd))
     // .subscribe(() => {
@@ -36,7 +37,6 @@ export class AppComponent implements OnInit {
       .pipe(
         filter((event) => event instanceof NavigationEnd),
         map(() => {
-          // Traverse the activated route to the deepest child
           let route = this.activatedRoute;
           while (route.firstChild) {
             route = route.firstChild;
@@ -46,14 +46,14 @@ export class AppComponent implements OnInit {
         mergeMap((route) => route.data)
       )
       .subscribe((data: any) => {
-        // If the current route has data { hideHeader: true }, then do not display the header.
         this.display = !data.hideHeader;
       });
   }
+
   get localStorage() {
     return localStorage;
   }
-   
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScreenSize();
@@ -61,7 +61,5 @@ export class AppComponent implements OnInit {
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 767;
     // On mobile, always use the responsive card view
-   
-    
   }
 }
