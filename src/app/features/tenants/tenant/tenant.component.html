@@ -871,6 +871,195 @@
                 </div>
                 <div
                   class="col-md-4 mrg-top-15"
+                  *ngFor="let shopping of shoppingCenterInMail"
+                >
+                  <div class="card shoppingcentersize">
+                    <img
+                      class="card-img-top"
+                      [src]="
+                        shopping?.MainImage ||
+                        '../../../../assets/Images/mall.jpg'
+                      "
+                      alt="Main Image"
+                    />
+
+                    <div class="card-body">
+                      <h5 class="centrename">{{ shopping.CenterName }}</h5>
+                      <h5 class="address">
+                        {{ shopping.CenterAddress }},{{ shopping.CenterCity }},
+                        {{ shopping.CenterState }}
+                      </h5>
+
+                      <div
+                        class="d-flex flex-column gap-2"
+                        *ngIf="shoppingCenterInMail[0].O[0].P"
+                      >
+                        <!-- Lease Prices Section -->
+                        <span class="title-2"> Purchase Price: </span>
+                        <div class="d-flex align-items-center gap-2 my-2">
+                          <img
+                            src="../../../../assets/Images/purchaseprice.png"
+                            alt=""
+                          />
+
+                          <ng-container *ngIf="MailisAllForLeasePriceZero()">
+                            <span class="title"> On Request </span>
+                          </ng-container>
+
+                          <ng-container *ngIf="!MailisAllForLeasePriceZero()">
+                            <!-- Display first 3 lease prices -->
+                            <ng-container
+                              *ngFor="
+                                let place of MailgetFirstThreeLeasePrices();
+                                let last = last
+                              "
+                            >
+                              <span class="title">
+                                {{ place.ForLeasePrice }}
+                              </span>
+                              <span *ngIf="!last"> - </span>
+                            </ng-container>
+
+                            <!-- View More button if more than 3 lease prices -->
+                            <a
+                              *ngIf="MailgetLeasePricesCount() > 3"
+                              class="text-primary cursor ms-1"
+                              (click)="MailopenLeasePricesModal()"
+                            >
+                              ({{ MailgetLeasePricesCount() - 3 }} more)
+                            </a>
+                          </ng-container>
+
+                          <span
+                            class="subtitle"
+                            *ngIf="!MailisAllForLeasePriceZero()"
+                          >
+                            ($)
+                          </span>
+                        </div>
+
+                        <!-- Available Spaces Section -->
+                        <div class="d-flex flex-column gap-1">
+                          <span class="title-2"> Available Spaces: </span>
+                          <div class="d-flex align-items-center gap-2 my-2">
+                            <img
+                              src="../../../../assets/Images/size.png"
+                              alt=""
+                            />
+
+                            <!-- Display first 3 building sizes -->
+                            <ng-container
+                              *ngFor="
+                                let place of MailgetFirstThreeBuildingSizes();
+                                let last = last
+                              "
+                            >
+                              <div class="building-sizes-wrapper">
+                                <span class="availabletitle">
+                                  {{ place.BuildingSizeSf | number }} SF
+                                  <span style="font-weight: 500" *ngIf="!last">
+                                    -
+                                  </span>
+                                </span>
+                              </div>
+                            </ng-container>
+
+                            <!-- View More button if more than 3 building sizes -->
+                            <a
+                              *ngIf="MailgetBuildingSizeCount() > 3"
+                              class="text-primary cursor ms-1"
+                              (click)="MailopenBuildingSizesModal()"
+                            >
+                              ({{ MailgetBuildingSizeCount() - 3 }} more)
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="d-flex align-items-center gap-2 mb-2">
+                        <img
+                          src="../../../../assets/Images/availableunits.png"
+                          alt=""
+                        />
+                        <span class="title">
+                          {{ MailgetBuildingSizeCount() }}
+                        </span>
+                        <span class="subtitle"> Available Units </span>
+                      </div>
+<!-- 
+                      <div class="line"></div>
+                      <div class="mt-2">
+                        <span class="managedBy">Managed By</span>
+                      </div>
+                      <div class="d-flex align-content-center gap-2">
+                        <img
+                          *ngIf="OrganizationContacts[0]"
+                          class="logo"
+                          src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
+                            OrganizationContacts[0].id
+                          }}"
+                          [title]="OrganizationContacts[0].name"
+                          alt=""
+                        />
+                        <div
+                          class="organizationName"
+                          *ngIf="OrganizationContacts[0]"
+                        >
+                          {{ OrganizationContacts[0].name }}
+                        </div>
+                        <img
+                          class="cursor eyeimage"
+                          src="../../../assets/Images/Icons/eye.png"
+                          alt="View Manager Details"
+                          [ngbPopover]="popoverContent"
+                          popoverTitle="Organization Contact Info"
+                          triggers="click:outside"
+                          [placement]="'top'"
+                        />
+                      </div> -->
+                    </div>
+
+                    <div class="twobuttons">
+                      <button
+                      class="SubmitBrochure w-100"
+                      (click)="contactID ? fileDrop.openFileSelector() : opencontactDataModal()"
+                    >
+                      <ngx-file-drop
+                        #fileDrop
+                        class="dropzonee hidden-dropzone w-100"
+                        dropZoneLabel="Drop files here"
+                        (onFileDrop)="uploadFile($event)"
+                        [dropZoneClassName]="'upload-background-image'"
+                      >
+                        <ng-template
+                          ngx-file-drop-content-tmp
+                          let-openFileSelector="openFileSelector"
+                        >
+                          <div class="upload-container cursor w-100">
+                            <div
+                              class="d-flex align-items-center justify-content-center w-100"
+                            >
+                              <div class="submitbronchure cursor w-100">
+                                <span>Submit Brochure</span>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ngx-file-drop>
+                    </button>
+                    
+
+                      <button
+                        class="ManualSubmission mt-2 w-100"
+                        (click)="openShoppingModal(shopping.Id)"
+                      >
+                        Manual Submission
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-md-4 mrg-top-15"
                   *ngFor="let shopping of shoppingCenterManage"
                 >
                   <div class="card shoppingcentersize">
@@ -987,7 +1176,7 @@
                         <span class="subtitle"> Available Units </span>
                       </div>
 
-                      <div class="line"></div>
+                      <!-- <div class="line"></div>
                       <div class="mt-2">
                         <span class="managedBy">Managed By</span>
                       </div>
@@ -1016,44 +1205,45 @@
                           triggers="click:outside"
                           [placement]="'top'"
                         />
-                      </div>
+                      </div> -->
                     </div>
 
                     <div class="twobuttons">
                       <button
-                        class="SubmitBrochure w-100"
-                        (click)="fileDrop.openFileSelector()"
+                      class="SubmitBrochure w-100"
+                      (click)="contactID ? fileDrop.openFileSelector() : opencontactDataModal()"
+                    >
+                      <ngx-file-drop
+                        #fileDrop
+                        class="dropzonee hidden-dropzone w-100"
+                        dropZoneLabel="Drop files here"
+                        (onFileDrop)="uploadFile($event)"
+                        [dropZoneClassName]="'upload-background-image'"
                       >
-                        <ngx-file-drop
-                          #fileDrop
-                          class="dropzonee hidden-dropzone w-100"
-                          dropZoneLabel="Drop files here"
-                          (onFileDrop)="uploadFile($event)"
-                          [dropZoneClassName]="'upload-background-image'"
+                        <ng-template
+                          ngx-file-drop-content-tmp
+                          let-openFileSelector="openFileSelector"
                         >
-                          <ng-template
-                            ngx-file-drop-content-tmp
-                            let-openFileSelector="openFileSelector"
-                          >
-                            <div class="upload-container cursor w-100">
-                              <div
-                                class="d-flex align-items-center justify-content-center w-100"
-                              >
-                                <div class="submitbronchure cursor w-100">
-                                  <span>Submit Brochure</span>
-                                </div>
+                          <div class="upload-container cursor w-100">
+                            <div
+                              class="d-flex align-items-center justify-content-center w-100"
+                            >
+                              <div class="submitbronchure cursor w-100">
+                                <span>Submit Brochure</span>
                               </div>
                             </div>
-                          </ng-template>
-                        </ngx-file-drop>
-                      </button>
+                          </div>
+                        </ng-template>
+                      </ngx-file-drop>
+                    </button>
+                    
 
-                      <button
-                        class="ManualSubmission mt-2 w-100"
-                        (click)="openShoppingModal(shopping.Id)"
-                      >
-                        Manual Submission
-                      </button>
+                    <button
+                    class="ManualSubmission mt-2 w-100"
+                    (click)="contactID ? openShoppingModal(shopping.Id) : opencontactDataModal()"
+                  >
+                    Manual Submission
+                  </button>
                     </div>
                   </div>
                 </div>
@@ -1201,7 +1391,7 @@
                         <span class="subtitle"> Available Units </span>
                       </div>
 
-                      <div class="line"></div>
+                      <!-- <div class="line"></div>
                       <div class="mt-2">
                         <span class="managedBy">Managed By</span>
                       </div>
@@ -1228,7 +1418,7 @@
                           triggers="click:outside"
                           [placement]="'top'"
                         />
-                      </div>
+                      </div> -->
                     </div>
 
                     <div class="twobuttons">
@@ -1475,7 +1665,7 @@
               </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-2">
+            <!-- <div class="d-flex justify-content-between align-items-center mb-2">
               <h6 style="color: #7a8591"><b>Tenants</b></h6>
               <i
                 class="fa-solid fa-plus cursor-pointer text-primary"
@@ -1554,7 +1744,7 @@
                   Cancel
                 </button>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -1616,6 +1806,27 @@
 </ng-template>
 
 <!-- Lease Prices Modal -->
+<ng-template #MailleasePricesModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">All Lease Prices</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh">
+    <div *ngFor="let place of MailfilteredLeasePlacesManage" class="mb-2">
+      {{ place.ForLeasePrice }} $
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
+  </div>
+</ng-template>
 <ng-template #leasePricesModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">All Lease Prices</h4>
@@ -1650,6 +1861,27 @@
   </div>
   <div class="modal-body" style="overflow-y: auto; max-height: 75vh">
     <div *ngFor="let place of allBuildingSizes" class="mb-2">
+      {{ place.BuildingSizeSf | number }} SF
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
+  </div>
+</ng-template>
+<ng-template #MailbuildingSizesModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">All Building Sizes</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto; max-height: 75vh">
+    <div *ngFor="let place of MailallBuildingSizes" class="mb-2">
       {{ place.BuildingSizeSf | number }} SF
     </div>
   </div>

@@ -261,13 +261,10 @@ export class GenericMapService {
           if (state) {
             // Create IMapState object
             const mapState: IMapState = {
-              longName: state.formatted_address,
               code:
                 state.address_components.find((component) =>
                   component.types.includes('administrative_area_level_1')
                 )?.short_name || '',
-              lat: state.geometry.location.lat(),
-              lng: state.geometry.location.lng(),
             };
 
             // Check if the state code is unique and add it to the list

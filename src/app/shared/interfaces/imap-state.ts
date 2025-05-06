@@ -1,8 +1,8 @@
 export interface IMapState {
-  longName: string;
+  // longName: string;
   code: string;
-  lat: number;
-  lng: number;
+  // lat: number;
+  // lng: number;
   cities?: {
     City: string;
     COUNT: number;

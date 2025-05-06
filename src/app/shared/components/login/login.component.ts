@@ -144,8 +144,8 @@ export class LoginComponent implements OnInit {
     );
     localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
     localStorage.setItem(this.ORG_ID_KEY, response.orgId);
-    this.authService.setToken(response.token);
     if (response.token) {
+      this.authService.setToken(response.token);
       this.navigateToHome();
     }
   }
