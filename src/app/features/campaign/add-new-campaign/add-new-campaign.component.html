@@ -121,10 +121,7 @@
                 (click)="
                   checkStateDisplay(getStatesToDisplay.code)
                     ? removeState(getStatesToDisplay.code)
-                    : addState(
-                        getStatesToDisplay.code,
-                        getStatesToDisplay.code
-                      )
+                    : addState(getStatesToDisplay.code, getStatesToDisplay.code)
                 "
               >
                 {{
@@ -155,7 +152,7 @@
                   <button
                     *ngIf="city.COUNT > 0"
                     class="btn add-area-btn"
-                    (click)="viewNH(city.City)"
+                    (click)="viewNeighborhoods(city.City)"
                   >
                     Neighborhoods
                   </button>
