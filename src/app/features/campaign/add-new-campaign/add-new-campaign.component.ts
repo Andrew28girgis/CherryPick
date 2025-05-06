@@ -243,21 +243,23 @@ export class AddNewCampaignComponent
         this.mapBounds = bounds;
         this.cdr.detectChanges();
 
-        const map = this.campaignDrawingService.getMap();
-        if (map)
-          this.genericMapService.getStatesInsideMapView(map, (states) => {
-            this.mapStates = states.sort((a: IMapState, b: IMapState) =>
-              a.code.localeCompare(b.code)
-            );
-            if (this.mapStates && this.mapStates.length) {
-              this.selectedStateTab = this.mapStates[0].code;
-            }
-            for (let state of this.mapStates) {
-              this.getAllCitiesByStateCode(state);
-            }
+        this.getStatesInsideMapView();
 
-            this.cdr.detectChanges();
-          });
+        // const map = this.campaignDrawingService.getMap();
+        // if (map)
+        //   this.genericMapService.getStatesInsideMapView(map, (states) => {
+        //     this.mapStates = states.sort((a: IMapState, b: IMapState) =>
+        //       a.code.localeCompare(b.code)
+        //     );
+        //     if (this.mapStates && this.mapStates.length) {
+        //       this.selectedStateTab = this.mapStates[0].code;
+        //     }
+        //     for (let state of this.mapStates) {
+        //       this.getAllCitiesByStateCode(state);
+        //     }
+
+        //     this.cdr.detectChanges();
+        //   });
 
         // if (this.mapBounds.zoomLevel >= 13) {
         //   this.loadingGlobalPolygons = true;
@@ -265,6 +267,39 @@ export class AddNewCampaignComponent
         //   this.getGeoJsonsFile();
         // }
       });
+  }
+
+  getStatesInsideMapView(): void {
+    const body: any = {
+      Name: 'GetStatesInsideBoundingBox',
+      Params: {
+        minLat: this.mapBounds?.southWestLat,
+        minLng: this.mapBounds?.southWestLng,
+        maxLat: this.mapBounds?.northEastLat,
+        maxLng: this.mapBounds?.northEastLng,
+      },
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      if (response.json && response.json.length > 0) {
+        this.mapStates = response.json
+          .sort((a: { state_id: string }, b: { state_id: string }) =>
+            a.state_id.localeCompare(b.state_id)
+          )
+          .map((s: { state_id: string }): IMapState => ({ code: s.state_id }));
+
+        console.log(this.mapStates);
+
+        if (this.mapStates && this.mapStates.length) {
+          this.selectedStateTab = this.mapStates[0].code;
+        }
+        for (let state of this.mapStates) {
+          this.getAllCitiesByStateCode(state);
+        }
+
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   /**/
