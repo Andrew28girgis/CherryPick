@@ -282,19 +282,38 @@ export class AddNewCampaignComponent
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       if (response.json && response.json.length > 0) {
-        this.mapStates = response.json
-          .sort((a: { state_id: string }, b: { state_id: string }) =>
-            a.state_id.localeCompare(b.state_id)
+        const existingStateCodes = new Set(
+          this.mapStates?.map((s: IMapState) => s.code) || []
+        );
+        const newStates: IMapState[] = response.json
+          .filter(
+            (s: { state_id: string }) => !existingStateCodes.has(s.state_id)
           )
-          .map((s: { state_id: string }): IMapState => ({ code: s.state_id }));
+          .map((s: { state_id: string }) => ({ code: s.state_id }));
 
-        console.log(this.mapStates);
+        const combinedStates = [...this.mapStates, ...newStates];
 
-        if (this.mapStates && this.mapStates.length) {
+        this.mapStates = response.json
+          .map(
+            (s: { state_id: string }) =>
+              combinedStates.find((state) => state.code === s.state_id)!
+          )
+          .sort((a: IMapState, b: IMapState) => a.code.localeCompare(b.code));
+
+        // this.mapStates = response.json
+        //   .sort((a: { state_id: string }, b: { state_id: string }) =>
+        //     a.state_id.localeCompare(b.state_id)
+        //   )
+        //   .map((s: { state_id: string }): IMapState => ({ code: s.state_id }));
+
+        // console.log(this.mapStates);
+
+        if (this.mapStates.length) {
           this.selectedStateTab = this.mapStates[0].code;
         }
         for (let state of this.mapStates) {
-          this.getAllCitiesByStateCode(state);
+          if (!state.cities || !state.cities.length)
+            this.getAllCitiesByStateCode(state);
         }
 
         this.cdr.detectChanges();
