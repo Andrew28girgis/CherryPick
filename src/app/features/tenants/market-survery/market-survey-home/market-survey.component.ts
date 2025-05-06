@@ -83,9 +83,7 @@ export class MarketSurveyComponent implements OnInit {
       localStorage.setItem('OrgId', this.OrgId);
       localStorage.setItem('CampaignId', this.campaignId);
       this.ContactId = localStorage.getItem('contactId');
-      this.loginSharedToken = localStorage.getItem('loginToken');
-      console.log('loginSharedToken', this.loginSharedToken);
-      
+      this.loginSharedToken = localStorage.getItem('loginToken');      
     });
 
     this.currentView = this.isMobileView ? '5' : '2';
@@ -127,8 +125,8 @@ export class MarketSurveyComponent implements OnInit {
       next: (data) => {
         this.Guid = data.json[0].buyBoxLink;
         if (this.Guid) {
-          this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
-          // this.GuidLink = `http://localhost:4200/?t=${this.Guid}`;
+          // this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
+          this.GuidLink = `http://localhost:4200/?t=${this.Guid}`;
 
         } else {
           this.GuidLink = '';
