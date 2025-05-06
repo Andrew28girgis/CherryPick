@@ -62,6 +62,7 @@ export class SocialMediaViewComponent implements OnInit {
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
   campaignId!: any;
+  loginSharedToken!: any;
   constructor(
     private stateService: StateService,
     private PlacesService: PlacesService,
@@ -78,16 +79,14 @@ export class SocialMediaViewComponent implements OnInit {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.campaignId = params.campaignId;
-
       this.currentView = localStorage.getItem('currentView') || '2';
-
-      // localStorage.setItem('BuyBoxId', this.BuyBoxId);
-      // localStorage.setItem('OrgId', this.OrgId);
-      // this.ContactId = localStorage.getItem('contactId');
+      this.loginSharedToken = localStorage.getItem('loginToken');
     });
+
     this.currentView = this.isMobileView ? '5' : '2';
     this.BuyBoxPlacesCategories(this.BuyBoxId);
   }
+  
   BuyBoxPlacesCategories(buyboxId: number): void {
     if (this.stateService.getBuyboxCategories().length > 0) {
       this.buyboxCategories = this.stateService.getBuyboxCategories();

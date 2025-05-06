@@ -20,7 +20,15 @@ export class CampaignDrawingService {
 
   private infoWindow = new google.maps.InfoWindow();
 
-  private addedFeatures: { id: number; name: string }[] = [];
+  private addedFeatures: {
+    featureId: number | string;
+    id: number | undefined;
+    name: string;
+  }[] = [];
+
+  onFeatureAdded: EventEmitter<number | string> = new EventEmitter<
+    number | string
+  >();
 
   constructor(private genericMapService: GenericMapService) {}
 
@@ -29,6 +37,17 @@ export class CampaignDrawingService {
     this.map = this.genericMapService.initializeMap(gmapContainer);
     this.genericMapService.addBoundsChangeListener(this.map);
     this.genericMapService.addZoomLevelChangeListener(this.map);
+
+    this.map.addListener('click', () => {
+      this.infoWindow.close();
+    });
+    // this.map.addListener('mousemove', (e: google.maps.MapMouseEvent) => {
+    //   if (e.latLng) {
+    //     const { lat, lng } = e.latLng.toJSON();
+    //     console.log(`Hovered at ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+    //   }
+    // });
+
     return this.map;
   }
 
@@ -100,17 +119,19 @@ export class CampaignDrawingService {
               // Define the new click handler
               currentClickHandler = () => {
                 const condition = this.addedFeatures.find(
-                  (f) => f.id === Number(featureId)
+                  (f) => f.featureId === Number(featureId)
                 );
 
                 if (!condition) {
                   this.addedFeatures.push({
-                    id: Number(featureId),
+                    featureId: featureId,
+                    id: undefined,
                     name: name as string,
                   });
+                  this.onFeatureAdded.emit(featureId);
                 } else {
                   this.addedFeatures = this.addedFeatures.filter(
-                    (f) => f.id !== Number(featureId)
+                    (f) => f.featureId !== Number(featureId)
                   );
                 }
 
@@ -177,18 +198,50 @@ export class CampaignDrawingService {
     this.addedFeatures = [];
   }
 
-  getAllAddedFeatures(): { id: number; name: string }[] {
-    return this.addedFeatures || [];
-  }
-
-  removeFeatureById(featureId: number): void {
-    this.addedFeatures = this.addedFeatures.filter(
-      (f) => f.id !== featureId
+  getAllAddedFeatures(): {
+    featureId: number | string;
+    id: number;
+    name: string;
+  }[] {
+    return this.addedFeatures.filter(
+      (
+        f
+      ): f is {
+        featureId: number | string;
+        id: number;
+        name: string;
+      } => f.id !== undefined
     );
   }
 
+  removeFeatureById(map: google.maps.Map, featureId: number | string): void {
+    this.genericMapService.removeFeatureById(map, featureId);
+    this.addedFeatures = this.addedFeatures.filter(
+      (f) => f.featureId !== featureId
+    );
+  }
+
+  updateFeatureOriginalId(
+    featureId: number | string,
+    originalId: number
+  ): void {
+    const feature = this.addedFeatures.find((f) => f.featureId === featureId);
+    if (feature) feature.id = originalId;
+  }
+
+  addNewFeatureWithOriginalData(feature: {
+    featureId: number | string;
+    id: number;
+    name: string;
+  }): void {
+    const existFeature = this.addedFeatures.find(
+      (f) => f.featureId === feature.featureId
+    );
+    if (!existFeature) this.addedFeatures.push(feature);
+  }
+
   private getFeatureClickButton(featureId: number): string {
-    const condition = this.addedFeatures.find((f) => f.id === featureId);
+    const condition = this.addedFeatures.find((f) => f.featureId === featureId);
     const addBtn = `<button _ngcontent-ng-c51349347="" class="btn" style="
           font-size: small;
           background-color: #4d65b4;

@@ -3,5 +3,8 @@ export interface IMapState {
   code: string;
   lat: number;
   lng: number;
-  cities?: string[];
+  cities?: {
+    City: string;
+    COUNT: number;
+  }[];
 }

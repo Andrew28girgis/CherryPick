@@ -7,13 +7,8 @@ import {
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
-import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 
-/**
- * LoginComponent handles user authentication and login functionality
- * including both email/password and GUID-based login methods.
- */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -97,6 +92,7 @@ export class LoginComponent implements OnInit {
     this.route.queryParamMap.subscribe((params) => {
       this.loginToken = params.get('t');
       if (this.loginToken) {
+        localStorage.setItem('loginToken', this.loginToken || '');
         this.loginWithGUID();
       }
     });
@@ -148,8 +144,8 @@ export class LoginComponent implements OnInit {
     );
     localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
     localStorage.setItem(this.ORG_ID_KEY, response.orgId);
-    this.authService.setToken(response.token);
     if (response.token) {
+      this.authService.setToken(response.token);
       this.navigateToHome();
     }
   }

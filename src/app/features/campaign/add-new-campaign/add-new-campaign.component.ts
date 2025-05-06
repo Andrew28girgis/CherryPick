@@ -79,10 +79,20 @@ export class AddNewCampaignComponent
   protected mapStates: IMapState[] = [];
   protected selectedStateTab: string = '';
   protected mapCities: IMapCity[] = [];
-  protected mapAreasCollapsed: boolean = false;
+  protected mainFloatingCardCollapsed: boolean = false;
   protected addedListCollapsed: boolean = false;
+  protected campaignContentCollapsed: boolean = false;
   protected addedListTabs: string[] = ['States', 'Cities', 'Neighborhoods'];
   protected selectedAddedListTab: string = '';
+  protected realTimeGeoJsons: { id: number; name: string }[] = [];
+  protected displayedGeoJsons: {
+    featureId: number | string;
+    id: number;
+    name: string;
+  }[] = [];
+  protected displayMode: number = 1;
+  protected lastDisplayMode: number = 1;
+  protected selectedCityName: string = '';
 
   @ViewChild('mapContainer', { static: false }) gmapContainer!: ElementRef;
 
@@ -140,6 +150,7 @@ export class AddNewCampaignComponent
     }
 
     this.mapBoundsChangeListeners();
+    this.featureAddedListeners();
     this.getUserBuyBoxes();
     // to be uncommented
     // this.getAllStates();
@@ -149,6 +160,15 @@ export class AddNewCampaignComponent
     // this.drawingCancelListener();
     // this.getUserPolygons();
     // this.stateChangeListener();
+  }
+
+  viewNH(city: string): void {
+    this.displayMode = 2;
+    this.lastDisplayMode = 1;
+    this.selectedCityName = city;
+    this.loadingGlobalPolygons = true;
+    this.cdr.detectChanges();
+    this.getGeoJsonsFile(city);
   }
 
   ngAfterViewInit(): void {
@@ -199,10 +219,27 @@ export class AddNewCampaignComponent
   //     });
   // }
 
+  featureAddedListeners(): void {
+    this.campaignDrawingService.onFeatureAdded
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((featureId: number | string) => {
+        const feature = this.displayedGeoJsons.find(
+          (f) => f.featureId == featureId
+        );
+        if (feature) {
+          this.campaignDrawingService.updateFeatureOriginalId(
+            featureId,
+            feature.id
+          );
+        }
+      });
+  }
+
   mapBoundsChangeListeners(): void {
     this.genericMapService.onMapBoundsChanged
       .pipe(takeUntil(this.destroy$))
       .subscribe((bounds: IMapBounds) => {
+        // this.campaignDrawingService.removeAllFeatures();
         this.mapBounds = bounds;
         this.cdr.detectChanges();
 
@@ -222,11 +259,11 @@ export class AddNewCampaignComponent
             this.cdr.detectChanges();
           });
 
-        if (this.mapBounds.zoomLevel >= 13) {
-          this.loadingGlobalPolygons = true;
-          this.cdr.detectChanges();
-          this.getGeoJsonsFile();
-        }
+        // if (this.mapBounds.zoomLevel >= 13) {
+        //   this.loadingGlobalPolygons = true;
+        //   this.cdr.detectChanges();
+        //   this.getGeoJsonsFile();
+        // }
       });
   }
 
@@ -456,7 +493,7 @@ export class AddNewCampaignComponent
     this.selectedAddedListTab = 'States';
     const condition = this.addedStates.has(stateCode);
     if (!condition) {
-      this.selectedStateTab = '';
+      // this.selectedStateTab = '';
       this.addedStates.set(stateCode, stateName);
       const citiesCondition = this.addedCities.has(stateCode);
       if (citiesCondition) this.addedCities.delete(stateCode);
@@ -466,15 +503,24 @@ export class AddNewCampaignComponent
   removeState(stateCode: string): void {
     this.addedStates.delete(stateCode);
     this.selectedStateTab = stateCode;
+
+    if (
+      this.displayMode == 3 &&
+      this.getAllAddedStates().length == 0 &&
+      this.getAddedCitiesCount() == 0 &&
+      this.getAllAddedFeatures.length == 0
+    ) {
+      this.displayMode = this.lastDisplayMode;
+    }
   }
 
   addCity(stateCode: string, city: string): void {
     this.selectedAddedListTab = 'Cities';
     const condition = this.addedCities.get(stateCode)?.includes(city);
     if (!condition) {
-      const cities = this.addedCities.get(stateCode) || [];
-      cities.push(city);
-      this.addedCities.set(stateCode, cities);
+      let cities = this.addedCities.get(stateCode) || [];
+      cities = [...cities, city];
+      this.addedCities.set(stateCode, [...cities]);
     }
   }
 
@@ -490,10 +536,68 @@ export class AddNewCampaignComponent
         this.addedCities.delete(stateCode);
       }
     }
+
+    if (
+      this.displayMode == 3 &&
+      this.getAllAddedStates().length == 0 &&
+      this.getAddedCitiesCount() == 0 &&
+      this.getAllAddedFeatures.length == 0
+    ) {
+      this.displayMode = this.lastDisplayMode;
+    }
   }
 
-  removeAddedFeature(id: number): void {
-    this.campaignDrawingService.removeFeatureById(id);
+  addNewFeature(feature: { id: number; name: string }): void {
+    const geoFeatureId = this.checkDisplayedGeoJson(feature.id);
+    if (!geoFeatureId) {
+      const map = this.campaignDrawingService.getMap();
+      if (!map) return;
+      this.genericMapService
+        .loadGeoJsonFileOnMap(
+          map,
+          `${environment.geoJsonsFilesPath}/${feature.id}.geojson`
+        )
+        .then((featureId) => {
+          if (featureId) {
+            this.displayedGeoJsons.push({ featureId: featureId, ...feature });
+            this.campaignDrawingService.addNewFeatureWithOriginalData({
+              featureId: featureId,
+              ...feature,
+            });
+          }
+        });
+    } else {
+      this.campaignDrawingService.addNewFeatureWithOriginalData({
+        featureId: geoFeatureId,
+        ...feature,
+      });
+    }
+    // this.realTimeGeoJsons = this.realTimeGeoJsons.filter(
+    //   (g) => g.id != feature.id
+    // );
+    this.selectedAddedListTab = 'Neighborhoods';
+  }
+
+  checkAddedFeatureDisplay(id: number): boolean {
+    return this.getAllAddedFeatures.find((f) => f.id == id) ? true : false;
+  }
+
+  removeAddedFeature(id: number | string): void {
+    const map = this.campaignDrawingService.getMap();
+    if (!map) return;
+    this.displayedGeoJsons = this.displayedGeoJsons.filter(
+      (g) => g.featureId != id
+    );
+    this.campaignDrawingService.removeFeatureById(map, id);
+
+    if (
+      this.displayMode == 3 &&
+      this.getAllAddedStates().length == 0 &&
+      this.getAddedCitiesCount() == 0 &&
+      this.getAllAddedFeatures.length == 0
+    ) {
+      this.displayMode = this.lastDisplayMode;
+    }
   }
 
   checkStateDisplay(stateCode: string): boolean {
@@ -520,7 +624,11 @@ export class AddNewCampaignComponent
     );
   }
 
-  get getAllAddedFeatures(): { id: number; name: string }[] {
+  get getAllAddedFeatures(): {
+    featureId: number | string;
+    id: number;
+    name: string;
+  }[] {
     return this.campaignDrawingService.getAllAddedFeatures();
   }
 
@@ -529,6 +637,12 @@ export class AddNewCampaignComponent
       key,
       value,
     }));
+  }
+
+  getAddedCitiesCount(): number {
+    return Array.from(this.addedCities.entries())
+      .map(([key, value]) => value.length)
+      .reduce((acc, len) => acc + len, 0);
   }
 
   getAllAddedCities(): { key: string; value: string[] }[] {
@@ -548,8 +662,8 @@ export class AddNewCampaignComponent
 
     this.placesService.GenericAPI(body).subscribe((response: any) => {
       if (response.json && response.json.length) {
-        state.cities = response.json.sort((a: string, b: string) =>
-          a.localeCompare(b)
+        state.cities = response.json.sort((a: any, b: any) =>
+          a.City.localeCompare(b.City)
         );
         this.cdr.detectChanges();
       }
@@ -975,31 +1089,99 @@ export class AddNewCampaignComponent
     return 0;
   }
 
-  getGeoJsonsFile(): void {
-    this.campaignDrawingService.removeAllFeatures();
+  getGeoJsonFeatureId(id: number): string | number {
+    const geo = this.getAllAddedFeatures.find((g) => g.id == id);
+    return geo!.featureId;
+  }
+
+  checkDisplayedGeoJson(id: number): string | number | undefined {
+    const geo = this.displayedGeoJsons.find((g) => g.id == id);
+    return geo ? geo.featureId : undefined;
+  }
+
+  toggleJeoJsonOnMap(geoJson: { id: number; name: string }): void {
+    const geoFeatureId = this.checkDisplayedGeoJson(geoJson.id);
+
+    const map = this.campaignDrawingService.getMap();
+    if (!map) return;
+    if (geoFeatureId) {
+      this.genericMapService.removeFeatureById(map, geoFeatureId);
+      this.displayedGeoJsons = this.displayedGeoJsons.filter(
+        (g) => g.id != geoJson.id
+      );
+    } else {
+      this.genericMapService
+        .loadGeoJsonFileOnMap(
+          map,
+          `${environment.geoJsonsFilesPath}/${geoJson.id}.geojson`
+        )
+        .then((featureId) => {
+          if (featureId)
+            this.displayedGeoJsons.push({ featureId: featureId, ...geoJson });
+        });
+      // console.log(featureId);
+    }
+  }
+
+  // getGeoJsonsFile(): void {
+  //   const body = {
+  //     Name: 'GetViewportPolygons',
+  //     Params: {
+  //       minLat: this.mapBounds?.southWestLat,
+  //       minLon: this.mapBounds?.southWestLng,
+  //       maxLat: this.mapBounds?.northEastLat,
+  //       maxLon: this.mapBounds?.northEastLng,
+  //     },
+  //   };
+
+  //   this.placesService.GenericAPI(body).subscribe((response) => {
+  //     this.loadingGlobalPolygons = false;
+  //     this.cdr.detectChanges();
+  //     this.realTimeGeoJsons = [];
+  //     if (response.json && response.json.length > 0) {
+  //       this.realTimeGeoJsons = response.json;
+  //       // const map = this.campaignDrawingService.getMap();
+  //       // if (!map) return;
+  //       // for (let path of response.json) {
+  //       //   this.genericMapService.loadGeoJsonFileOnMap(
+  //       //     map,
+  //       //     `${environment.geoJsonsFilesPath}/${path.id}.geojson`
+  //       //   );
+  //       // }
+  //     }
+  //   });
+  // }
+
+  getGeoJsonsFile(city: string): void {
     const body = {
-      Name: 'GetViewportPolygons',
+      Name: 'GetPolygonsByCityAndState',
       Params: {
-        minLat: this.mapBounds?.southWestLat,
-        minLon: this.mapBounds?.southWestLng,
-        maxLat: this.mapBounds?.northEastLat,
-        maxLon: this.mapBounds?.northEastLng,
+        City: city,
+        State: this.getStatesToDisplay?.code,
       },
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
       this.loadingGlobalPolygons = false;
-      this.cdr.detectChanges();
+      this.realTimeGeoJsons = [];
       if (response.json && response.json.length > 0) {
-        const map = this.campaignDrawingService.getMap();
-        if (!map) return;
-        for (let path of response.json) {
-          this.genericMapService.loadGeoJsonFileOnMap(
-            map,
-            `${environment.geoJsonsFilesPath}/${path.id}.geojson`
-          );
-        }
+        this.realTimeGeoJsons = response.json.filter(
+          (g: any) => g.name != null && g.name.trim().length != 0
+        );
+        this.realTimeGeoJsons.sort((a, b) => a.name.localeCompare(b.name));
+
+        console.log(this.realTimeGeoJsons);
+
+        // const map = this.campaignDrawingService.getMap();
+        // if (!map) return;
+        // for (let path of response.json) {
+        //   this.genericMapService.loadGeoJsonFileOnMap(
+        //     map,
+        //     `${environment.geoJsonsFilesPath}/${path.id}.geojson`
+        //   );
+        // }
       }
+      this.cdr.detectChanges();
     });
   }
 
