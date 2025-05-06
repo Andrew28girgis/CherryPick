@@ -129,7 +129,9 @@ export class TenantComponent implements OnInit, AfterViewInit {
   deleteType: string = '';
   deleteId: number | null = null;
   showButtons: boolean = true;
-  @ViewChild('MailleasePricesModal') MailleasePricesModal: TemplateRef<any> | undefined;
+  @ViewChild('MailleasePricesModal') MailleasePricesModal:
+    | TemplateRef<any>
+    | undefined;
   @ViewChild('leasePricesModal') leasePricesModal: TemplateRef<any> | undefined;
   @ViewChild('buildingSizesModal') buildingSizesModal:
     | TemplateRef<any>
@@ -178,18 +180,17 @@ export class TenantComponent implements OnInit, AfterViewInit {
       this.userSubmission = params.get('userSubmission');
       let encryptedContactId = params.get('contactId');
       console.log('encryptedContactId', encryptedContactId);
-      
+
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
         // console.log('encryptedContactId', encryptedContactId);
-        
+
         this.userSubmission = null; // Reset userSubmission to null
       }
       const parsedId = Number(encryptedContactId);
       if (!isNaN(parsedId)) {
         this.contactID = parsedId;
         console.log('Parsed contact ID:', this.contactID);
-        
       }
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
@@ -200,37 +201,32 @@ export class TenantComponent implements OnInit, AfterViewInit {
           this.contactIDs = this.decrypt(encryptedContactId);
           console.log('Decrypted contact ID:', this.contactIDs);
           if (this.contactIDs) {
-          this.GetContactDataUsingContactIds();
-          }
-          else{
+            this.GetContactDataUsingContactIds();
+          } else {
             this.GetContactData();
           }
         } catch (err) {
           console.error('Decryption failed', err);
         }
       }
-      if(!encryptedContactId){
+      if (!encryptedContactId) {
       }
     });
 
-    if (this.contactIDs) {
+    if (this.guid) {
+      this.GetCampaignFromGuid();
+      this.proceedWithNextSteps();
 
+      this.GetShoppingCenterFromOutBoxMail();
     }
-    
-    
-      if(this.guid){
-        this.GetCampaignFromGuid();
-        this.proceedWithNextSteps();
-       
-        this.GetShoppingCenterFromOutBoxMail();
-      }      
-    
+    if (this.contactIDs) {
+    }
 
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
   }
-  GetContactDataUsingContactIds(){
+  GetContactDataUsingContactIds() {
     const body: any = {
       Name: 'GetContactDataUsingContactIds',
       Params: {
@@ -242,11 +238,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.ContactData = res.json;
         console.log('IfZeroContactData:', this.IfZeroContactData);
-        
       },
     });
   }
-  GetCampaignGUIDFromMail(){
+  GetCampaignGUIDFromMail() {
     const body: any = {
       Name: 'GetCampaignGUIDFromMail',
       Params: {
@@ -258,11 +253,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.guid = res.json[0].guid;
         console.log('Campaign GUID from email:', this.guid);
-        
       },
     });
   }
-  GetShoppingCenterFromOutBoxMail(){
+  GetShoppingCenterFromOutBoxMail() {
     const body: any = {
       Name: 'GetShoppingCenterFromOutBoxMail',
       Params: {
@@ -333,6 +327,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     localStorage.setItem('isManager', JSON.stringify(this.isManager));
     localStorage.setItem('onlyUpdate', JSON.stringify(this.onlyUpdate));
   }
+
   selectContact(contactId: string) {
     // 1) store the two boolean flags
     this.updateRoleSelection();
@@ -345,6 +340,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.GetCampaignFromGuid();
     this.proceedWithNextSteps();
   }
+
   opencontactDataModal(): void {
     this.modalService.open(this.contactDataModal, {
       size: 'md',
@@ -516,7 +512,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   }
   proceedWithNextSteps(): void {
     this.GetUserSubmissionData();
-    if(this.contactID) {
+    if (this.contactID) {
       this.GetShoppingCenterManageInCampaign();
       this.GetUserSubmissionsShoppingCenters();
     }
@@ -532,8 +528,11 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.selectedCampaign = res.json[0]?.id;
+        console.log('Selected Campaign:', this.selectedCampaign);
+
         this.selectedbuyBox = res.json[0]?.buyBoxId;
         this.GetBuyBoxInfo();
+        this.GetShoppingCenterManageInCampaign();
         this.GetGeoJsonFromBuyBox();
       },
     });
@@ -545,8 +544,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
       Name: 'GetShoppingCenterManageInCampaign',
       Params: {
         CampaignID: this.selectedCampaign,
-        ContactId: this.contactID,
-        ShoppingCentersIds: this.shoppingCentersIds,
+        ContactId: this.contactIDs,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
