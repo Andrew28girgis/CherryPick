@@ -48,12 +48,9 @@
               aria-label="Password"
               autocomplete="current-password"
             />
-            <img
-              src="../../../../assets/Images/Icons/eye-slash.png"
-              (click)="togglePassword()"
-              class="eye-icon"
-              alt="Toggle password visibility"
-            />
+            <i *ngIf="showPassword"  (click)="togglePassword()" class="fa-regular fa-eye eye-icon"></i>
+            <i *ngIf="!showPassword"   (click)="togglePassword()" class="fa-regular fa-eye-slash eye-icon"></i>
+            
           </div>
 
           <!-- Forget Password -->
