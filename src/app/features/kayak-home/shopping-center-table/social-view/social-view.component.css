@@ -671,14 +671,23 @@
 }
 
 .search-input {
-  padding: 10px 20px;
   border: 1px solid #ccc;
   margin-bottom: 20px;
   margin-right: 20px;
   border-radius: 10px;
   outline: none;
+  width: 432px;
+  height: 48px;
+  padding: 0.75rem 3rem;
 }
-
+.search-campaign-icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 0;
+  margin-inline: 1rem;
+  top: 13px;
+}
 .search-input:focus {
   border: 1px solid #ccc;
   box-shadow: none;
@@ -1032,14 +1041,14 @@
     );
     pointer-events: none;
   }
-  .header-info  {
+  .header-info {
     position: absolute;
     top: 45%;
     left: 16px;
     right: 16px;
     z-index: 0;
-     width: fit-content;
-}
+    width: fit-content;
+  }
   .header-info .center-address {
     color: #fff;
     font-size: 12px;

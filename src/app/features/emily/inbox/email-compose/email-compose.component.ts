@@ -238,6 +238,14 @@ export class EmailComposeComponent implements OnInit {
   // 2) convert map → array
   const selectedManagers = Array.from(mgrMap.values());
 
+  // 2.5) append this.contactID and this.contactName and the shopping center name
+  if (this.contactId && this.contactName) {
+    selectedManagers.push({
+      ContactId: this.contactId,
+      ContactName: this.contactName,
+      ShoppingCentersName: this.listcenterName // or populate if applicable
+    });
+  }
   // 3) build your dto
     const dto: any = {
       ContactId: this.localStorageContactId,

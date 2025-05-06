@@ -17,6 +17,7 @@
 </div>
 }
 <div class="scroll-container" #scrollContainer>
+
   <div class="card" *ngFor="let shopping of shoppingCenters; let i = index">
     <div
       class="social-card mb-0 mb-sm-5 Res"
@@ -24,7 +25,7 @@
         'url(' + (shopping.MainImage || 'assets/Images/DefaultImage.png') + ')'
       "
     >
-      <div class="card-header" (click)="toggleDetails(i, shopping)">
+      <div class="card-header" (click)=" toggleDetails(i, shopping)">
         <div class="header-info Res">
           <h3 class="center-name">
             {{ shopping.CenterName | titlecase }}
@@ -106,10 +107,10 @@
       <div class="card-footer">
         <div class="reaction-buttons">
           <button
-            class="action-btn like-btn"
-            [class.liked]="isLiked(shopping)"
-            (click)="addLike(shopping, i)"
-            [disabled]="isLikeInProgress"
+          class="action-btn like-btn"
+          [class.liked]="isLiked(shopping)"
+          (click)="handleShoppingCenterLike(shopping, 1)"
+          [disabled]="isLikeInProgress"
           >
             <svg
               class="iconResponsive"
@@ -603,6 +604,37 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #addContactModal let-modal>
+  <form #addContactForm="ngForm" (ngSubmit)="submitAddContactForm(modal)">
+    <div class="modal-header">
+      <h5 class="modal-title">Add Contact</h5>
+      <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-3">
+        <label>First Name</label>
+        <input type="text" class="form-control" [(ngModel)]="formData.FirstName" name="FirstName" required />
+      </div>
+      <div class="mb-3">
+        <label>Last Name</label>
+        <input type="text" class="form-control" [(ngModel)]="formData.LastName" name="LastName" required />
+      </div>
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="email" class="form-control" [(ngModel)]="formData.email" name="email" required />
+      </div>
+      <div class="mb-3">
+        <label>Password</label>
+        <input type="password" class="form-control" [(ngModel)]="formData.password" name="password" required />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="!addContactForm.valid">Submit</button>
+    </div>
+  </form>
+</ng-template>
+
 
 <div id="customToast" class="custom-toast">
   <div class="toast-content">

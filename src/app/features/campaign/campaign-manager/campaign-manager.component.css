@@ -178,6 +178,8 @@
 
 /* Search Campaign Container */
 .search-campaign-container {
+  width: 432px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -575,10 +577,8 @@
 
 /* Mobile Styles */
 @media (max-width: 767px) {
- 
-
   .campaign-manager-container {
-     display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
   }
