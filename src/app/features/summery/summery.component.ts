@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
@@ -96,6 +102,9 @@ export class SummeryComponent implements OnInit {
     this.campaignsViewMode = 'table';
     this.currentView = 'campaigns-table';
     this.campaignsLoaded = true;
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Campaigns', url: '/campaigns' },
+    ]);
   }
 
   showCampaignsCard() {
@@ -103,12 +112,18 @@ export class SummeryComponent implements OnInit {
     this.campaignsViewMode = 'card';
     this.currentView = 'campaigns-card';
     this.campaignsLoaded = true;
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Campaigns', url: '/campaigns' },
+    ]);
   }
 
   // Add method to go back to tenants view
   showTenants() {
     this.showCampaigns = false;
     this.currentView = 'tenants';
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'My Tenants', url: '/summary' },
+    ]);
     // Don't reset campaignsLoaded here to preserve the state
   }
   goToTenant(tenant: Tenant) {
@@ -117,7 +132,7 @@ export class SummeryComponent implements OnInit {
       tenant.Id,
       tenant.OrganizationId,
       tenant.Name,
-      tenant.Campaigns[0].Id
+      tenant.Campaigns[0].Id,
     ]);
   }
 
@@ -141,5 +156,4 @@ export class SummeryComponent implements OnInit {
       }
     }
   }
-
 }

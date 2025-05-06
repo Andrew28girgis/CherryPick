@@ -80,7 +80,6 @@
     margin-bottom: 10px;
   }
 
- 
   .mobile-nav {
     width: fit-content;
     margin-bottom: 5px;
@@ -143,8 +142,12 @@
   padding: 0 !important;
 }
 
+::ng-deep .app-container {
+  overflow-x: hidden;
+}
+
 @media (min-width: 769px) {
   .mobileButtons {
     justify-content: flex-end;
-    }
+  }
 }
