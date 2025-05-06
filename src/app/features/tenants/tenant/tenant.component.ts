@@ -83,6 +83,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
   pdfFileName: string = '';
   contactID!: any;
   contactIDs!: any;
+  shoppingCentersIds!: string;
   TenantResult!: LandingPageTenants;
   organizationBranches!: OrganizationBranches;
   selectedbuyBox!: string;
@@ -273,6 +274,10 @@ export class TenantComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         this.shoppingCenterInMail = res.json;
         console.log('shoppingCenterInMail', this.shoppingCenterInMail);
+        this.shoppingCentersIds = this.shoppingCenterInMail
+        .map((center: any) => center.Id)
+        .join(',') + ',';
+        console.log('shoppingCentersIds', this.shoppingCentersIds);
       },
     });
   }
@@ -541,11 +546,16 @@ export class TenantComponent implements OnInit, AfterViewInit {
       Params: {
         CampaignID: this.selectedCampaign,
         ContactId: this.contactID,
+        ShoppingCentersIds: this.shoppingCentersIds,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManage = res.json;
+        this.shoppingCentersIds += this.shoppingCenterManage
+        .map((center: any) => center.Id)
+        .join(',') + ',';
+        console.log('shoppingCentersIds', this.shoppingCentersIds);
       },
     });
   }
@@ -556,11 +566,16 @@ export class TenantComponent implements OnInit, AfterViewInit {
       Params: {
         CampaignID: this.selectedCampaign,
         ContactId: this.contactID,
+        ShoppingCentersIds: this.shoppingCentersIds,
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.shoppingCenterManageSubmitted = res.json;
+        this.shoppingCentersIds += this.shoppingCenterManageSubmitted
+        .map((center: any) => center.Id)
+        .join(',');
+        console.log('shoppingCentersIds', this.shoppingCentersIds);
       },
     });
   }
