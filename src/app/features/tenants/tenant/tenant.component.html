@@ -1051,7 +1051,7 @@
 
                       <button
                         class="ManualSubmission mt-2 w-100"
-                        (click)="openShoppingModal(shopping.Id)"
+                        (click)="contactID ? openShoppingModal(shopping.Id) : opencontactDataModal()"
                       >
                         Manual Submission
                       </button>
