@@ -40,6 +40,7 @@ export class StorageService {
    * Remove an item from localStorage
    * @param key The key to remove
    */
+
   removeItem(key: string): void {
     try {
       localStorage.removeItem(key);
