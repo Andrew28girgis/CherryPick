@@ -153,4 +153,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   get localStorage() {
     return localStorage;
   }
+  ngOnDestroy(): void {
+     this.shoppingCenterService.resetSelectedStageId();
+  }
 }

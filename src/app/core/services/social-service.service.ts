@@ -33,6 +33,7 @@ export class SocialServiceService {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
           CampaignId: campaignId,
+          ShoppingCenterStageId: 0,
         },
       };
 
