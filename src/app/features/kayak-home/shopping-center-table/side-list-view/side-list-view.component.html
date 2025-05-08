@@ -338,14 +338,14 @@
                       <ul class="mail-list">
                         <ng-container *ngIf="getSentMails(place) as mails">
       
-                          
+                          <span class="mail-summary">
+                              {{ mails.length }} {{ mails.length > 1 ? 'Emails' : 'Email' }}
+                          </span>
                           <li *ngFor="let m of mails"
                               class="mail-item"
                               (click)="openMailPopup(m.Id)"
                           >
-                          <span class="mail-summary">
-                            You have {{ mails.length }} {{ mails.length > 1 ? 'Emails' : 'Email' }}
-                          </span>
+                          
                             <ng-container [ngSwitch]="m.Direction">
                               <span *ngSwitchCase="2"  class="sent">Sent</span>
                               <span *ngSwitchCase="-1" class="outbox">Outbox</span>
