@@ -367,13 +367,13 @@ img[alt="logo"] {
   display: flex;
   align-items: center;
 }
-.search-stage{
+.search-stage {
   margin-bottom: 20px;
   align-items: center;
 }
 .search-input {
   border: 1px solid #ccc;
-   margin-right: 20px;
+  margin-right: 20px;
   border-radius: 10px;
   outline: none;
   width: 432px;
@@ -571,12 +571,10 @@ img[alt="logo"] {
   transition: transform 0.2s ease;
 }
 
-
-
 .dropdown-item.active {
   color: #000 !important;
 }
- .stage-select-container {
+.stage-select-container {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -661,7 +659,7 @@ img[alt="logo"] {
 .dropdown-item:focus {
   color: #16181b;
   text-decoration: none;
-  background-color: #F3F3E0;
+  background-color: #f3f3e0;
 }
 
 .dropdown-item.active,
@@ -696,3 +694,46 @@ img[alt="logo"] {
   border-bottom: 2px solid #6b7280;
   transform: rotate(45deg);
 }
+/* container */
+.mail-list {
+  padding-left: 1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* summary line */
+.mail-summary {
+  font-size: 1.1rem;
+  font-weight: 500;
+ }
+
+/* each mail item */
+.mail-item {
+  list-style: none;
+  margin: 0.25rem 0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* base style for the label */
+.mail-item span {
+  font-weight: bold;
+}
+
+/* per-direction colors */
+.mail-item .sent {
+  color: #28a745;
+} /* green */
+.mail-item .outbox {
+  color: #fd7e14;
+} /* orange */
+.mail-item .inbox {
+  color: #007bff;
+} /* blue */
+.mail-item .drafts {
+  color: #6c757d;
+} /* gray  */
+.mail-item .unknown {
+  color: #dc3545;
+} /* red   */

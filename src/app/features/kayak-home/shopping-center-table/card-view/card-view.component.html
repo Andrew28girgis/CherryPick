@@ -35,7 +35,7 @@
 <div class="row m-0" *ngIf="!isLoading">
   <div class="d-flex align-items-center justify-content-end gap-3 search-stage">
     <div class="stage-select-container">
-       <div class="custom-select-wrapper">
+      <div class="custom-select-wrapper">
         <button
           class="custom-select"
           type="button"
@@ -376,6 +376,38 @@
                 class="ShoppingCenterUnitSize"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
               ></p>
+              <div *ngIf="getSentMails(shopping).length > 0">
+                <ul class="mail-list">
+                  <!-- bind mails once per shopping center -->
+                  <ng-container *ngIf="getSentMails(shopping) as mails">
+                    <!-- summary line -->
+                    <li class="mail-summary">
+                      You have {{ mails.length }}
+                      <ng-container [ngSwitch]="mails.length > 1">
+                        <span *ngSwitchCase="true">Emails</span>
+                        <span *ngSwitchDefault>Email</span>
+                      </ng-container>
+                    </li>
+                
+                    <!-- one <li> per mail, switch on numeric code -->
+                    <li 
+                      *ngFor="let m of mails" 
+                      class="mail-item"
+                      [ngSwitch]="m.Direction"
+                    >
+                      <span *ngSwitchCase="2"  class="sent">Sent</span>
+                      <span *ngSwitchCase="-1" class="outbox">Outbox</span>
+                      <span *ngSwitchCase="1"  class="inbox">Inbox</span>
+                      <span *ngSwitchCase="4"  class="drafts">Drafts</span>
+                      <span *ngSwitchDefault  class="unknown">
+                        Unknown ({{ m.Direction }})
+                      </span>
+                    </li>
+                  </ng-container>
+                </ul>
+                
+                
+              </div>
             </div>
             <div class="row m-0">
               <div
@@ -398,6 +430,10 @@
                     />
                   </p>
                 </div>
+
+                <!-- sent mails  -->
+
+               
               </div>
             </div>
           </div>
