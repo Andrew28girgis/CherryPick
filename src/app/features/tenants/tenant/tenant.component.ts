@@ -393,7 +393,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     ).map((campaign) => {
       const placeIds = this.selectedPlaces[campaign.CampaignId].join(',');
       const body = {
-        Name: 'InsertIntoDestinationTable',
+        Name: 'AddCampaignToPlaces',
         Params: {
           CampaignID: campaign.CampaignId,
           PlaceIDs: placeIds,

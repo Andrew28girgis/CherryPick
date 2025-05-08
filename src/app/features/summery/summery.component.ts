@@ -19,7 +19,7 @@ import { Tenant } from 'src/app/shared/models/tenants';
   styleUrls: ['./summery.component.css'],
 })
 export class SummeryComponent implements OnInit {
-  tenants: Tenant[] = []; 
+  tenants: Tenant[] = [];
   Token: any;
   orgId!: number;
   organizationId!: any;
@@ -30,7 +30,7 @@ export class SummeryComponent implements OnInit {
   showCampaigns: boolean = false;
   campaignsViewMode: 'table' | 'card' = 'table';
   currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
-  isMobile = false; 
+  isMobile = false;
   campaignsLoaded = false;
 
   constructor(
@@ -74,7 +74,6 @@ export class SummeryComponent implements OnInit {
     });
   }
 
- 
   openAddTenant(content: any) {
     const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -113,7 +112,7 @@ export class SummeryComponent implements OnInit {
       { label: 'Campaigns', url: '/campaigns' },
     ]);
   }
- 
+
   showTenants() {
     this.showCampaigns = false;
     this.currentView = 'tenants';
