@@ -1,9 +1,7 @@
-<div class="p-3">
+<div class="p-3 justify-content-between d-flex"> 
   <p class="m-0 f500" style="color: #000">
     {{ cardsSideList.length }} places within map area
   </p>
-</div>
-<div class="row m-0">
   <div class="stage-select-container">
     <div class="custom-select-wrapper">
      <button
@@ -40,6 +38,10 @@
      </ul>
    </div>
  </div>
+</div>
+
+<div class="row m-0">
+
 
   <div class="col-8 p-0 d-flex flex-column cards-container">
     <div class="row m-0 mt-1" *ngIf="!isLoading; else loadingSkeleton">
@@ -339,6 +341,7 @@
                       *ngFor="let item of place.ShoppingCenter?.BuyBoxPlaces"
                       class="col-12 d-flex flex-column spec"
                     >
+
                       <div class="d-flex flex-column">
                         <p class="nearset-category">
                           <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
