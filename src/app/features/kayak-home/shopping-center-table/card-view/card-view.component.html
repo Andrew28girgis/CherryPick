@@ -402,6 +402,9 @@
                       <span *ngSwitchDefault  class="unknown">
                         Unknown ({{ m.Direction }})
                       </span>
+                      <span class="mail-date">
+                        {{ m.Date | date:'yyyy-MM-dd HH:mm:ss' }}
+                      </span>
                     </li>
                   </ng-container>
                 </ul>
