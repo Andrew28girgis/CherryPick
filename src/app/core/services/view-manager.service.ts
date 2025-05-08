@@ -620,11 +620,12 @@ export class ViewManagerService {
   public loadShoppingCenters(campaignId: number,StageId:number): Promise<void> {
     return new Promise((resolve, reject) => {
       this._isLoading.next(true)
+      const stageIdNumber = Number(StageId)
       const body: any = {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
           CampaignId: campaignId,
-          ShoppingCenterStageId:StageId,
+          ShoppingCenterStageId:stageIdNumber,
         },
       };
 
