@@ -648,8 +648,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
           // **THIS** must be your TemplateRef, not a string
           this.modalService.open(this.mailModalTpl, {
             size:    'lg',
-            backdrop:'static'
-          });
+           });
         },
        });
     }

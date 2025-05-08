@@ -18,6 +18,7 @@ import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { Email } from 'src/app/shared/models/email';
 
 @Component({
   selector: 'app-card-view',
@@ -62,6 +63,12 @@ export class CardViewComponent implements OnInit, OnDestroy {
   selectedStageName = ' ';
   stages: Stage[] = [];
   selectedStageId = 0; // Default to 0 (All)
+  @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
+
+  selectedMailSubject = '';
+  selectedMailDate   = new Date();
+  selectedMailBody: SafeHtml = '';
+  openedEmail!: Email ;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -522,10 +529,30 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
   getSentMails(shopping: any): SentMails[] {
     const raw: any[] = shopping?.SentMails ?? [];
-    return raw.map((mail) => ({
-      Id: mail.ID,
-      Date: new Date(mail.Date),
-      Direction: mail.Direction,
+    return raw.map(mail => ({
+      Id:         mail.ID,
+      Date:       new Date(mail.Date),
+      Direction:  mail.Direction,
     }));
+  }
+  openMailPopup(mailId: number): void {
+    const payload = {
+      Name:       "GetMail", 
+      Params:     { mailid: mailId }, 
+    };
+
+    // call the HTML-returning variant
+    this.placesService.GenericAPIHtml(payload).subscribe({
+      next: (res: any) => {
+        this.openedEmail = res.json[0];
+        
+        this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(this.openedEmail.Body);
+
+        // **THIS** must be your TemplateRef, not a string
+        this.modalService.open(this.mailModalTpl, {
+          size:    'lg',
+         });
+      },
+     });
   }
 }
