@@ -296,6 +296,7 @@ export class CampaignManagerComponent implements OnInit, OnDestroy {
   getSumbmissionsCountRejected(submissions: Submission[]) {
     return submissions.filter((s) => s.StatusId == -1).length;
   }
+  
   getKanbanCount(stageName: string, kanbansList: KanbanStage[]): number {
     const kanbanStage = kanbansList?.find(
       (k) => k.stageName.toLowerCase() === stageName.toLowerCase()
