@@ -4,6 +4,7 @@
   </p>
 </div>
 <div class="row m-0">
+  
   <div class="col-8 p-0 d-flex flex-column cards-container">
     <div class="row m-0 mt-1" *ngIf="!isLoading; else loadingSkeleton">
       <ng-container *ngFor="let place of cardsSideList; trackBy: trackById">
