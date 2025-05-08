@@ -16,6 +16,14 @@
   transition: transform 0.2s, background-color 0.2s;
   border: 1px solid rgb(190, 190, 190);
 }
+.action-btn {
+  height: 34px;
+  color: #fff;
+  background-color: #4d65b4;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+}
 
 .icon-image {
   filter: brightness(1) invert(1);
@@ -48,8 +56,6 @@
 }
 
 .tab-view-container {
-  background-color: #fff;
-  padding: 0.5rem;
   min-height: 85vh;
   border-radius: 1rem;
 }
@@ -136,14 +142,6 @@
 
 .displayNone {
   display: none !important;
-}
-
-::ng-deep .container-fluid {
-  padding: 0 !important;
-}
-
-::ng-deep .app-container {
-  overflow-x: hidden;
 }
 
 @media (min-width: 769px) {
