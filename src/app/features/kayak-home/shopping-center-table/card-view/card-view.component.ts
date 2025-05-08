@@ -1,3 +1,4 @@
+import { SentMails } from './../../../../shared/models/shoppingCenters';
 import {
   Component,
    OnInit,
@@ -25,6 +26,7 @@ import { PlacesService } from "src/app/core/services/places.service"
 })
 export class CardViewComponent implements OnInit, OnDestroy {
   // Properties
+  SentMails: SentMails[] = []
   General: General = new General()
   buyboxCategories: BuyboxCategory[] = []
   shoppingCenters: Center[] = []
@@ -481,5 +483,14 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.selectedStageId = id
     this.selectedStageName = id === 0 ? "All" : this.stages.find((s) => s.id === id)?.stageName || "Stage"
     this.shoppingCenterService.setSelectedStageId(id)
+  }   
+  getSentMails(shopping: any): SentMails[] {
+    const raw: any[] = shopping?.SentMails ?? [];
+    return raw.map(mail => ({
+      Id:         mail.ID,
+      Date:       new Date(mail.Date),
+      Direction:  mail.Direction,
+    }));
   }
+  
 }
