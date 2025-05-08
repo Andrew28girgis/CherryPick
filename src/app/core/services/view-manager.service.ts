@@ -349,47 +349,60 @@ export class ViewManagerService {
   /**
    * Update place kanban stage
    */
-  public updatePlaceKanbanStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
-    const body: any = {
-      Name: "UpdatePlaceKanbanStage",
-      Params: {
-        stageid: stageId,
-        marketsurveyid: marketSurveyId,
-      },
-    }
-
-    this._isLoading.next(true)
-
-    this.placesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        // Update local data after successful API call
-        shoppingCenter.kanbanStageId = stageId
-        shoppingCenter.stageName = this.getSelectedStageName(stageId)
-
-        // Update the center in the all centers list
-        const allCenters = this._allShoppingCenters.getValue()
-        const updatedAllCenters = allCenters.map((center) =>
-          center.Id === shoppingCenter.Id
-            ? {
-                ...center,
-                kanbanStageId: stageId,
-                stageName: this.getSelectedStageName(stageId),
-              }
-            : center,
-        )
-        this._allShoppingCenters.next(updatedAllCenters)
-
-        // Re-apply filters to update the filtered list
-        this.applyFilters()
-      },
-      error: (err) => {
-        console.error("Error updating kanban stage:", err)
-      },
-      complete: () => {
-        this._isLoading.next(false)
-      },
-    })
+/**
+ * Update place kanban stage
+ */
+public updatePlaceKanbanStage(
+  marketSurveyId: number,
+  stageId: number,
+  shoppingCenter: any,
+   campaignId: number,
+): void {
+  const body: any = {
+    Name: "UpdatePlaceKanbanStage",
+    Params: {
+      stageid: stageId,
+      marketsurveyid: marketSurveyId,
+    },
   }
+
+  this._isLoading.next(true)
+
+  this.placesService.GenericAPI(body).subscribe({
+    next: (res: any) => {
+      // Update local data after successful API call
+      shoppingCenter.kanbanStageId = stageId
+      shoppingCenter.stageName = this.getSelectedStageName(stageId)
+      shoppingCenter.kanbanTemplateStageId = stageId // Update the filter property
+
+      // Update the center in the all centers list
+      const allCenters = this._allShoppingCenters.getValue()
+      const updatedAllCenters = allCenters.map((center) =>
+        center.Id === shoppingCenter.Id
+          ? {
+              ...center,
+              kanbanStageId: stageId,
+              stageName: this.getSelectedStageName(stageId),
+              kanbanTemplateStageId: stageId, // Update the filter property
+            }
+          : center,
+      )
+      this._allShoppingCenters.next(updatedAllCenters)
+
+      // Re-apply filters to update the filtered list
+      this.applyFilters()
+
+      // Reload the page if requested
+         this.loadShoppingCenters(campaignId) 
+    },
+    error: (err) => {
+      console.error("Error updating kanban stage:", err)
+    },
+    complete: () => {
+      this._isLoading.next(false)
+    },
+  })
+}
 
   /**
    * Delete shopping center
