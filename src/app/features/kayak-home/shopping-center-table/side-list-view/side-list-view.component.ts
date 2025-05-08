@@ -476,7 +476,7 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     // Close the dropdown
     shoppingCenter.isDropdownOpen = false
     this.activeDropdown = null
-    this.viewManagerService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter)
+    this.viewManagerService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter,this.CampaignId)
   }
 
   @HostListener("document:click", ["$event"])

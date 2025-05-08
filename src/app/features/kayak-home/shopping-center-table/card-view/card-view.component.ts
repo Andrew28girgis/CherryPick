@@ -327,7 +327,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   selectStage(marketSurveyId: number, stageId: number, shoppingCenter: any): void {
     shoppingCenter.isDropdownOpen = false
     this.activeDropdown = null
-    this.shoppingCenterService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter)
+    this.shoppingCenterService.updatePlaceKanbanStage(marketSurveyId, stageId, shoppingCenter,this.CampaignId)
   }
 
   // Handle document clicks to close dropdowns
