@@ -29,6 +29,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
   filteredCenters: Center[] = [];
+  allShoppingCenters: Center[] = []; // Store all shopping centers
   searchQuery: string = '';
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
@@ -56,7 +57,10 @@ export class CardViewComponent implements OnInit, OnDestroy {
   Campaign: any;
   CampaignId!: any;
   isMobileView: boolean = false;
+  selectedStageName = 'All';
   stages: Stage[] = [];
+  selectedStageId: number = 0; // Default to 0 (All)
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -78,7 +82,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       this.BuyBoxName = params.buyboxName;
       this.CampaignId = params.campaignId;
       // Initialize data using the centralized service
-      // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
+      this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
     });
 
     // Subscribe to data from the centralized service
@@ -99,6 +103,13 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
         this.filteredCenters = centers;
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.allShoppingCenters$.subscribe((centers) => {
+        this.allShoppingCenters = centers;
         this.cdr.detectChanges();
       })
     );
@@ -462,27 +473,29 @@ export class CardViewComponent implements OnInit, OnDestroy {
       error: (err) => console.error('Error loading kanban stages:', err),
     });
   }
-  selectedStageId!: number;
 
   onStageChange(id: number) {
-    this.selectedStageId = id
-    // Show loading state
-    this.isLoading = true
-
-    // Load shopping centers for the selected stage
-    this.shoppingCenterService
-      .loadShoppingCenters(this.CampaignId, id)
-      .then(() => {
-        // Update was successful
-        this.cdr.detectChanges()
-      })
-      .catch((err) => {
-        console.error("Error loading shopping centers for stage:", err)
-      })
-      .finally(() => {
-        // Hide loading state
-        this.isLoading = false
-        this.cdr.detectChanges()
-      })
+    // Client-side filtering
+    this.selectedStageId = id;
+    this.shoppingCenterService.setSelectedStageId(id);
+    
+    // Update the selected stage name for display
+    if (id === 0) {
+      this.selectedStageName = 'All';
+    } else {
+      const stage = this.stages.find(s => s.id === id);
+      this.selectedStageName = stage ? stage.stageName : 'Stage';
+    }
+  }
+  
+  selectStagekan(id: number) {
+    this.selectedStageId = id;
+    if (id === 0) {
+      this.selectedStageName = 'All';
+    } else {
+      const st = this.stages.find(s => s.id === id);
+      this.selectedStageName = st ? st.stageName : 'Stage';
+    }
+    this.onStageChange(id);
   }
 }

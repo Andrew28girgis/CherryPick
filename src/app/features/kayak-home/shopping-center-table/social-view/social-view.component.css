@@ -1384,3 +1384,10 @@ body.panel-open {
   font-weight: 600;
   line-height: 30px;
 }
+
+.dropdown-item.active {
+  color: #000 !important;
+}
+.dropdown-menu {
+  transform: translate(-81px, 40px) !important;
+}

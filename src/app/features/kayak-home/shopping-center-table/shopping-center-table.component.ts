@@ -89,8 +89,7 @@ export class ShoppingCenterTableComponent implements OnInit {
         this.shoppingCenterService.initializeData(
           this.CampaignId,
           this.OrgId,
-          this.StageId
-        );
+         );
       }
     });
 

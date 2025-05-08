@@ -17,6 +17,7 @@ export class ViewManagerService {
   // Data streams
   private _shoppingCenters = new BehaviorSubject<Center[]>([]);
   private _filteredCenters = new BehaviorSubject<Center[]>([]);
+  private _allShoppingCenters = new BehaviorSubject<Center[]>([]); // Store all shopping centers
   private _buyboxCategories = new BehaviorSubject<BuyboxCategory[]>([]);
   private _buyboxPlaces = new BehaviorSubject<BbPlace[]>([]);
   private _shareOrg = new BehaviorSubject<ShareOrg[]>([]);
@@ -33,6 +34,7 @@ export class ViewManagerService {
   // Selected items
   private _selectedIdCard = new BehaviorSubject<number | null>(null);
   private _selectedId = new BehaviorSubject<number | null>(null);
+  private _selectedStageId = new BehaviorSubject<number>(0); // Default to 0 (All)
 
   // Current view
   private _currentView = new BehaviorSubject<number>(5); // Default to social view
@@ -46,6 +48,7 @@ export class ViewManagerService {
   // Public observables
   public shoppingCenters$ = this._shoppingCenters.asObservable();
   public filteredCenters$ = this._filteredCenters.asObservable();
+  public allShoppingCenters$ = this._allShoppingCenters.asObservable();
   public buyboxCategories$ = this._buyboxCategories.asObservable();
   public buyboxPlaces$ = this._buyboxPlaces.asObservable();
   public shareOrg$ = this._shareOrg.asObservable();
@@ -54,6 +57,7 @@ export class ViewManagerService {
   public searchQuery$ = this._searchQuery.asObservable();
   public selectedIdCard$ = this._selectedIdCard.asObservable();
   public selectedId$ = this._selectedId.asObservable();
+  public selectedStageId$ = this._selectedStageId.asObservable();
   public currentView$ = this._currentView.asObservable();
   public dataLoadedEvent$ = this._dataLoadedEvent.asObservable();
 
@@ -73,7 +77,7 @@ export class ViewManagerService {
    * This should be called once when the main component loads
    */
 
-  public initializeData(campaignId: number, orgId: number,StageId:number): void {
+  public initializeData(campaignId: number, orgId: number): void {
     if (
       this._dataLoaded &&
       this._lastBuyboxId === campaignId &&
@@ -94,7 +98,7 @@ export class ViewManagerService {
 
     // Load all required data in parallel
     const promises = [
-      this.loadShoppingCenters(campaignId,StageId),
+      this.loadShoppingCenters(campaignId),
       this.loadBuyBoxCategories(campaignId),
       this.loadOrganizationById(orgId),
       this.loadBuyBoxPlaces(campaignId),
@@ -135,20 +139,45 @@ export class ViewManagerService {
   }
 
   /**
-   * Filter centers based on search query
+   * Filter centers based on search query and stage ID
    */
   public filterCenters(query: string): void {
     this._searchQuery.next(query);
+    this.applyFilters();
+  }
 
-    const centers = this._shoppingCenters.getValue();
+  /**
+   * Set selected stage ID and filter centers
+   */
+  public setSelectedStageId(stageId: number): void {
+    this._selectedStageId.next(stageId);
+    this.applyFilters();
+  }
+
+  /**
+   * Apply all filters (search query and stage ID)
+   */
+  private applyFilters(): void {
+    const query = this._searchQuery.getValue();
+    const stageId = this._selectedStageId.getValue();
+    const allCenters = this._allShoppingCenters.getValue();
+    
+    let filtered = allCenters;
+    
+    // Apply stage filter if not "All" (0)
+    if (stageId !== 0) {
+      filtered = filtered.filter(center => center.kanbanTemplateStageId === stageId);
+    }
+    
+    // Apply search filter
     if (query.trim()) {
-      const filtered = centers.filter((center) =>
+      filtered = filtered.filter(center => 
         center.CenterName.toLowerCase().includes(query.toLowerCase())
       );
-      this._filteredCenters.next(filtered);
-    } else {
-      this._filteredCenters.next(centers);
     }
+    
+    this._filteredCenters.next(filtered);
+    this._shoppingCenters.next(filtered);
   }
 
   /**
@@ -355,6 +384,16 @@ export class ViewManagerService {
         // Update local data after successful API call
         shoppingCenter.kanbanStageId = stageId;
         shoppingCenter.stageName = this.getSelectedStageName(stageId);
+        
+        // Update the center in the all centers list
+        const allCenters = this._allShoppingCenters.getValue();
+        const updatedAllCenters = allCenters.map(center => 
+          center.Id === shoppingCenter.Id ? { ...center, kanbanStageId: stageId, stageName: this.getSelectedStageName(stageId) } : center
+        );
+        this._allShoppingCenters.next(updatedAllCenters);
+        
+        // Re-apply filters to update the filtered list
+        this.applyFilters();
       },
       error: (err) => {
         console.error('Error updating kanban stage:', err);
@@ -387,16 +426,17 @@ export class ViewManagerService {
 
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
-          // Update local data
-          const centers = this._shoppingCenters.getValue();
-          const updatedCenters = centers.map((center) =>
+          // Update all centers
+          const allCenters = this._allShoppingCenters.getValue();
+          const updatedAllCenters = allCenters.map((center) =>
             center.Id === shoppingCenterId
               ? { ...center, Deleted: true }
               : center
           );
-
-          this._shoppingCenters.next(updatedCenters);
-          this._filteredCenters.next(this.getFilteredCenters(updatedCenters));
+          this._allShoppingCenters.next(updatedAllCenters);
+          
+          // Re-apply filters
+          this.applyFilters();
 
           resolve(data);
         },
@@ -432,16 +472,17 @@ export class ViewManagerService {
 
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
-          // Update local data
-          const centers = this._shoppingCenters.getValue();
-          const updatedCenters = centers.map((center) =>
+          // Update all centers
+          const allCenters = this._allShoppingCenters.getValue();
+          const updatedAllCenters = allCenters.map((center) =>
             Number(center.MarketSurveyId) === marketSurveyId
               ? { ...center, Deleted: false }
               : center
           );
-
-          this._shoppingCenters.next(updatedCenters);
-          this._filteredCenters.next(this.getFilteredCenters(updatedCenters));
+          this._allShoppingCenters.next(updatedAllCenters);
+          
+          // Re-apply filters
+          this.applyFilters();
 
           resolve(data);
         },
@@ -617,23 +658,25 @@ export class ViewManagerService {
   /**
    * Load shopping centers
    */
-  public loadShoppingCenters(campaignId: number,StageId:number): Promise<void> {
+  public loadShoppingCenters(campaignId: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._isLoading.next(true)
-      const stageIdNumber = Number(StageId)
+      this._isLoading.next(true);
+      
       const body: any = {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
           CampaignId: campaignId,
-          ShoppingCenterStageId:stageIdNumber,
+          ShoppingCenterStageId: 0, // Load all centers
         },
       };
 
       this.placesService.GenericAPI(body).subscribe({
         next: (data) => {
           const centers = data.json;
-          this._shoppingCenters.next(centers);
-          this._filteredCenters.next(centers);
+          // Store all centers
+          this._allShoppingCenters.next(centers);
+          // Apply current filters
+          this.applyFilters();
           resolve();
         },
         error: (err) => {
@@ -641,7 +684,7 @@ export class ViewManagerService {
           reject(err);
         },
         complete: () => {
-           this._isLoading.next(false)
+          this._isLoading.next(false);
         },
       });
     });
@@ -758,19 +801,6 @@ export class ViewManagerService {
         console.error('Error loading kanban stages:', err);
       },
     });
-  }
-
-  /**
-   * Get filtered centers based on search query
-   */
-  private getFilteredCenters(centers: Center[]): Center[] {
-    const query = this._searchQuery.getValue();
-    if (query.trim()) {
-      return centers.filter((center) =>
-        center.CenterName.toLowerCase().includes(query.toLowerCase())
-      );
-    }
-    return centers;
   }
 
   /**
