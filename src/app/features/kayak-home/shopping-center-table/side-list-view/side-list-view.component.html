@@ -334,6 +334,37 @@
                       class="ShoppingCenterUnit"
                       [innerHTML]="getShoppingCenterUnitSize(place)"
                     ></p>
+                    <div *ngIf="getSentMails(place).length > 0">
+                      <ul class="mail-list">
+                        <ng-container *ngIf="getSentMails(place) as mails">
+      
+                          
+                          <li *ngFor="let m of mails"
+                              class="mail-item"
+                              (click)="openMailPopup(m.Id)"
+                          >
+                          <span class="mail-summary">
+                            You have {{ mails.length }} {{ mails.length > 1 ? 'Emails' : 'Email' }}
+                          </span>
+                            <ng-container [ngSwitch]="m.Direction">
+                              <span *ngSwitchCase="2"  class="sent">Sent</span>
+                              <span *ngSwitchCase="-1" class="outbox">Outbox</span>
+                              <span *ngSwitchCase="1"  class="inbox">Inbox</span>
+                              <span *ngSwitchCase="4"  class="drafts">Drafts</span>
+                              <span *ngSwitchDefault class="unknown">
+                                Unknown ({{ m.Direction }})
+                              </span>
+                            </ng-container>
+                            <span class="mail-date">
+                              {{ m.Date | date:'yyyy-MM-dd HH:mm:ss' }}
+                            </span>
+                          </li>
+                        </ng-container>
+                      </ul>
+                      
+                      
+                      
+                    </div>
                   </div>
 
                   <div class="row m-0">
@@ -724,3 +755,25 @@
     </div>
   </ng-template>
 </div>
+
+
+<ng-template #mailModal let-modal> 
+  <div class="modal-body">
+    <div>
+      <label for="">Email Subject</label>
+      <div class="mail-body" [innerHTML]="openedEmail.Subject"></div>
+    </div>
+    <div class="date">
+      {{ openedEmail.Date 
+         | date:'EEEE, MMMM d, y'      
+         }} at {{ openedEmail.Date 
+         | date:'h:mm a'             
+      }}
+    </div>
+
+     <div>
+      <label for="">Email Body</label>
+      <div class="mail-body" [innerHTML]="openedEmail.Body"></div>
+    </div>
+  </div>
+</ng-template>

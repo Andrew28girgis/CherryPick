@@ -63,7 +63,13 @@ export class PlacesService {
   GetUserBuyBoxes(): Observable<any> {
     return this.http.get<any>(`${environment.api}/BuyBox/GetUserBuyBoxes`);
   }
+  public GenericAPIHtml(body: any): Observable<any> {
+    return this.http.post(
+      `${environment.api}/GenericAPI/Execute`,
+      body,
 
+    );
+  }
   public generateEmail(
     promptId: number,
     context: string,
