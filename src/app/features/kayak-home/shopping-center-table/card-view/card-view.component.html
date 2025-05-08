@@ -35,6 +35,28 @@
 <div class="row m-0" *ngIf="!isLoading">
  
   <div class="d-flex align-items-center justify-content-end">
+    <div class="stage-select-container">
+      <label for="stage-select" class="stage-select-label">Stage:</label>
+      <div class="custom-select-wrapper">
+        <select
+          id="stage-select"
+          [(ngModel)]="selectedStageId"
+          name="stage"
+          (ngModelChange)="onStageChange($event)"
+          class="custom-select"
+        >
+          <option
+            *ngFor="let stage of stages"
+            [value]="stage.id"
+          >
+            {{ stage.stageName }}
+          </option>
+        </select>
+        <div class="select-arrow">
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+    </div>
     <div class="search-container">
       <input
         type="text"

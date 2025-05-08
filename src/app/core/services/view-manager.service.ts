@@ -4,7 +4,7 @@ import { tap, finalize } from 'rxjs/operators';
 import { PlacesService } from './places.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
-import { Center } from 'src/app/shared/models/shoppingCenters';
+import { Center, Stage } from 'src/app/shared/models/shoppingCenters';
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { ShareOrg } from 'src/app/shared/models/shareOrg';
 
@@ -60,6 +60,8 @@ export class ViewManagerService {
   // Cache for optimizations
   private categoryNameCache = new Map<number, string>();
   private unitSizeCache = new Map<string, string>();
+  StageId: number=0;
+  stages: Stage[] = [];
 
   constructor(
     private placesService: PlacesService,
@@ -71,7 +73,7 @@ export class ViewManagerService {
    * This should be called once when the main component loads
    */
 
-  public initializeData(campaignId: number, orgId: number): void {
+  public initializeData(campaignId: number, orgId: number,StageId:number): void {
     if (
       this._dataLoaded &&
       this._lastBuyboxId === campaignId &&
@@ -92,7 +94,7 @@ export class ViewManagerService {
 
     // Load all required data in parallel
     const promises = [
-      this.loadShoppingCenters(campaignId),
+      this.loadShoppingCenters(campaignId,StageId),
       this.loadBuyBoxCategories(campaignId),
       this.loadOrganizationById(orgId),
       this.loadBuyBoxPlaces(campaignId),
@@ -615,12 +617,14 @@ export class ViewManagerService {
   /**
    * Load shopping centers
    */
-  private loadShoppingCenters(campaignId: number): Promise<void> {
+  public loadShoppingCenters(campaignId: number,StageId:number): Promise<void> {
     return new Promise((resolve, reject) => {
+      this._isLoading.next(true)
       const body: any = {
         Name: 'GetMarketSurveyShoppingCenters',
         Params: {
           CampaignId: campaignId,
+          ShoppingCenterStageId:StageId,
         },
       };
 
@@ -634,6 +638,9 @@ export class ViewManagerService {
         error: (err) => {
           console.error('Error loading shopping centers:', err);
           reject(err);
+        },
+        complete: () => {
+           this._isLoading.next(false)
         },
       });
     });
