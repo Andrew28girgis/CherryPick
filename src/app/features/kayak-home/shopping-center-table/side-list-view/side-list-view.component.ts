@@ -11,7 +11,7 @@ import {
 import   { ActivatedRoute } from "@angular/router"
 import   { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap"
 import   { BuyboxCategory } from "src/app/shared/models/buyboxCategory"
-import   { Center, Stage } from "../../../../shared/models/shoppingCenters"
+import   { Center, SentMails, Stage } from "../../../../shared/models/shoppingCenters"
 import   { BbPlace } from "src/app/shared/models/buyboxPlaces"
 import   { Polygon } from "src/app/shared/models/polygons"
 import { General } from "src/app/shared/models/domain"
@@ -21,6 +21,7 @@ import   { MapsService } from "src/app/core/services/maps.service"
 import   { ViewManagerService } from "src/app/core/services/view-manager.service"
 import { Subscription } from "rxjs"
 import { ContactBrokerComponent } from "../contact-broker/contact-broker.component"
+import { Email } from "src/app/shared/models/email"
 
 declare const google: any
 @Component({
@@ -62,6 +63,12 @@ export class SideListViewComponent implements OnInit, OnDestroy {
   selectedStageId = 0 // Default to 0 (All)
   allShoppingCenters: Center[] = [] // Store all shopping centers
   CampaignId!: any
+  @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
+
+  selectedMailSubject = '';
+  selectedMailDate   = new Date();
+  selectedMailBody: SafeHtml = '';
+  openedEmail!: Email ;
 
   // Subscriptions
   private subscriptions: Subscription[] = []
@@ -617,4 +624,33 @@ export class SideListViewComponent implements OnInit, OnDestroy {
     // Use the service to update the stage ID
     this.viewManagerService.setSelectedStageId(id)
   }
+    getSentMails(shopping: any): SentMails[] {
+      const raw: any[] = shopping?.SentMails ?? [];
+      return raw.map(mail => ({
+        Id:         mail.ID,
+        Date:       new Date(mail.Date),
+        Direction:  mail.Direction,
+      }));
+    }
+    openMailPopup(mailId: number): void {
+      const payload = {
+        Name:       "GetMail", 
+        Params:     { mailid: mailId }, 
+      };
+  
+      // call the HTML-returning variant
+      this.placesService.GenericAPIHtml(payload).subscribe({
+        next: (res: any) => {
+          this.openedEmail = res.json[0];
+          
+          this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(this.openedEmail.Body);
+  
+          // **THIS** must be your TemplateRef, not a string
+          this.modalService.open(this.mailModalTpl, {
+            size:    'lg',
+           });
+        },
+       });
+    }
+  
 }
