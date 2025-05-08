@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
-import { Center } from '../../../../shared/models/shoppingCenters';
+import { Center, Stage } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
@@ -54,7 +54,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
   isModalOpen = false;
   BuyBoxName: any;
   Campaign: any;
-  isMobileView:boolean=false;
+  CampaignId!: any;
+  isMobileView: boolean = false;
+  stages: Stage[] = [];
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
@@ -65,8 +67,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.loadStages();
     this.checkMobileView();
-
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
@@ -74,6 +76,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
       localStorage.setItem('OrgId', this.OrgId);
       this.Campaign = params.campaign;
       this.BuyBoxName = params.buyboxName;
+      this.CampaignId = params.campaignId;
       // Initialize data using the centralized service
       // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
     });
@@ -435,5 +438,51 @@ export class CardViewComponent implements OnInit, OnDestroy {
   checkMobileView(): void {
     this.isMobileView = window.innerWidth <= 768;
     this.cdr.detectChanges();
+  }
+
+  loadStages(): void {
+    const body = {
+      Name: 'GetKanbanTemplateStages',
+      Params: { KanbanTemplateId: 6 },
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        // Assuming the API returns { json: Stage[] }
+        this.stages = res.json
+          .map((s: any) => ({
+            id: +s.id,
+            stageName: s.stageName,
+            stageOrder: +s.stageOrder,
+            isQualified: s.isQualified,
+            kanbanTemplateId: +s.kanbanTemplateId,
+          }))
+          .sort((a: Stage, b: Stage) => a.stageOrder - b.stageOrder);
+      },
+      error: (err) => console.error('Error loading kanban stages:', err),
+    });
+  }
+  selectedStageId!: number;
+
+  onStageChange(id: number) {
+    this.selectedStageId = id
+    // Show loading state
+    this.isLoading = true
+
+    // Load shopping centers for the selected stage
+    this.shoppingCenterService
+      .loadShoppingCenters(this.CampaignId, id)
+      .then(() => {
+        // Update was successful
+        this.cdr.detectChanges()
+      })
+      .catch((err) => {
+        console.error("Error loading shopping centers for stage:", err)
+      })
+      .finally(() => {
+        // Hide loading state
+        this.isLoading = false
+        this.cdr.detectChanges()
+      })
   }
 }

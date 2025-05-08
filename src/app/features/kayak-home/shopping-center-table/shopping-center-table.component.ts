@@ -1,8 +1,15 @@
-import { Component, HostListener, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
+import { Stage } from 'src/app/shared/models/shoppingCenters';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -22,7 +29,10 @@ export class ShoppingCenterTableComponent implements OnInit {
   OrgId!: any;
   selectedOption: number = 5;
   view: boolean = false;
-   dropdowmOptions: any = [
+  StageId: number = 0;
+  stages: Stage[] = [];
+
+  dropdowmOptions: any = [
     {
       text: 'Map',
       icon: '../../../assets/Images/Icons/map.png',
@@ -58,12 +68,13 @@ export class ShoppingCenterTableComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private shoppingCenterService: ViewManagerService,
-    private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.cdr.detectChanges();
-    this.isSocialView = this.localStorage.getItem('currentViewDashBord') === '5';
+    this.isSocialView =
+      this.localStorage.getItem('currentViewDashBord') === '5';
     this.isMapView = this.localStorage.getItem('currentViewDashBord') === '1';
     this.checkScreenSize(); // Check screen size on initialization
     this.activatedRoute.params.subscribe((params: any) => {
@@ -74,9 +85,12 @@ export class ShoppingCenterTableComponent implements OnInit {
       localStorage.setItem('OrgId', this.OrgId);
       this.CampaignId = params.campaignId;
 
-      if (Number(localStorage.getItem('currentViewDashBord')) !== 1 ) {
-        this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);        
-        
+      if (Number(localStorage.getItem('currentViewDashBord')) !== 1) {
+        this.shoppingCenterService.initializeData(
+          this.CampaignId,
+          this.OrgId,
+          this.StageId
+        );
       }
     });
 
@@ -94,7 +108,8 @@ export class ShoppingCenterTableComponent implements OnInit {
   selectOption(option: any): void {
     this.selectedOption = option.status;
     this.currentView = option.status;
-    this.isSocialView= this.localStorage.getItem('currentViewDashBord') === '5';
+    this.isSocialView =
+      this.localStorage.getItem('currentViewDashBord') === '5';
     this.cdr.detectChanges();
     // Update current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
@@ -128,16 +143,15 @@ export class ShoppingCenterTableComponent implements OnInit {
     }
   }
 
-   @HostListener('window:resize', ['$event'])
-    onResize() {
-      this.checkScreenSize();
-    }
-  
-    checkScreenSize() {
-      this.isMobile = window.innerWidth <= 767;
-    }
-    get localStorage() {
-      return localStorage;
-    }
-     
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
+  }
+  get localStorage() {
+    return localStorage;
+  }
 }

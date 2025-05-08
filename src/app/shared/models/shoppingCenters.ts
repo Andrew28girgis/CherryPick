@@ -176,3 +176,10 @@ export interface Center {
     Distance: number
   }
   
+  export interface Stage {
+    id: number;
+    stageName: string;
+    stageOrder: number;
+    isQualified: boolean;
+    kanbanTemplateId: number;
+  }

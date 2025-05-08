@@ -73,7 +73,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
 
     // Subscribe to data from ViewManagerService
     this.subscribeToServiceData();
-    this.viewManagerService.initializeData(this.CampaignId, this.OrgId);
+    // this.viewManagerService.initializeData(this.CampaignId, this.OrgId);
   }
   private subscribeToServiceData(): void {
     // Subscribe to data loaded event
