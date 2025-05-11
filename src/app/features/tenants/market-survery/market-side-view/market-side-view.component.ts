@@ -108,6 +108,8 @@ export class MarketSideViewComponent implements OnInit {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         CampaignId: this.campaignId,
+        ShoppingCenterStageId: 0, // Load all centers
+
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
