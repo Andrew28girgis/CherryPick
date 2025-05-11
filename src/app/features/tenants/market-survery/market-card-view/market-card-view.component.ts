@@ -89,6 +89,8 @@ export class MarketCardViewComponent implements OnInit {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         CampaignId: this.campainId,
+        ShoppingCenterStageId: 0, // Load all centers
+
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
