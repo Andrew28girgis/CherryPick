@@ -183,7 +183,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        // console.log('encryptedContactId', encryptedContactId);
+        console.log('encryptedContactId', encryptedContactId);
 
         this.userSubmission = null; // Reset userSubmission to null
       }
@@ -235,7 +235,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.ContactData = res.json;
-        console.log('IfZeroContactData:', this.IfZeroContactData);
+        // console.log('IfZeroContactData:', this.IfZeroContactData);
       },
     });
   }
