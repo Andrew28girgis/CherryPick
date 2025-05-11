@@ -183,7 +183,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
       if (this.userSubmission && isNaN(Number(this.userSubmission))) {
         encryptedContactId = `${encryptedContactId}/${this.userSubmission}`;
-        // console.log('encryptedContactId', encryptedContactId);
+        console.log('encryptedContactId', encryptedContactId);
 
         this.userSubmission = null; // Reset userSubmission to null
       }
@@ -209,23 +209,20 @@ export class TenantComponent implements OnInit, AfterViewInit {
         }
       }
       if (!encryptedContactId) {
+        this.GetContactData();
       }
     });
 
     if (this.guid) {
       this.GetCampaignFromGuid();
       this.proceedWithNextSteps();
-
       this.GetShoppingCenterFromOutBoxMail();
     }
-        const guid = crypto.randomUUID();
-    this.selectedShoppingID = guid;
-    if (this.contactIDs) {
-    }
-
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
+    const guid = crypto.randomUUID();
+    this.selectedShoppingID = guid;
   }
   GetContactDataUsingContactIds() {
     const body: any = {
@@ -238,7 +235,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
     this.PlacesService.GenericAPI(body).subscribe({
       next: (res: any) => {
         this.ContactData = res.json;
-        console.log('IfZeroContactData:', this.IfZeroContactData);
+        // console.log('IfZeroContactData:', this.IfZeroContactData);
       },
     });
   }
