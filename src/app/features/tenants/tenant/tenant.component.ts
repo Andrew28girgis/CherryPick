@@ -209,6 +209,7 @@ export class TenantComponent implements OnInit, AfterViewInit {
         }
       }
       if (!encryptedContactId) {
+        this.GetContactData();
       }
     });
 
