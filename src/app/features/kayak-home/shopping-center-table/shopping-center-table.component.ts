@@ -155,4 +155,10 @@ export class ShoppingCenterTableComponent implements OnInit {
   ngOnDestroy(): void {
     this.shoppingCenterService.resetSelectedStageId();
   }
+
+  generateSafeUrl(): string {
+    const safeEncodedName = encodeURIComponent(this.BuyBoxName || ''); 
+    return `/market-survey?buyBoxId=${this.BuyBoxId}&orgId=${this.OrgId}&name=${safeEncodedName}&campaignId=${this.CampaignId}`;
+  }
+  
 }

@@ -66,6 +66,7 @@ export class MarketSurveyComponent implements OnInit {
     private markerService: MapsService,
     private modalService: NgbModal
   ) {
+
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
     this.markerService.clearMarkers();
@@ -74,17 +75,21 @@ export class MarketSurveyComponent implements OnInit {
   ngOnInit() {
 
     this.General = new General();
-    this.activatedRoute.params.subscribe((params: any) => {
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
       this.campaignId = params.campaignId;
+    
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
       localStorage.setItem('CampaignId', this.campaignId);
+    
       this.ContactId = localStorage.getItem('contactId');
-      this.loginSharedToken = localStorage.getItem('loginToken');      
+      this.loginSharedToken = localStorage.getItem('loginToken');
     });
+    
 
     this.currentView = this.isMobileView ? '5' : '2';
 

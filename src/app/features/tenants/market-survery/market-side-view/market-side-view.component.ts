@@ -65,7 +65,7 @@ export class MarketSideViewComponent implements OnInit {
 
   ngOnInit() {
     this.General = new General();
-    this.activatedRoute.params.subscribe((params: any) => {
+    this.activatedRoute.queryParams.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.campaignId = params.campaignId;
       this.spinner.show();
@@ -163,7 +163,7 @@ export class MarketSideViewComponent implements OnInit {
   }
   // Process categories with buybox places
   processCategories(): void {
-    this.buyboxCategories.forEach((category) => {
+    this.buyboxCategories?.forEach((category) => {
       category.isChecked = false;
       category.places = this.buyboxPlaces?.filter((place) =>
         place.RetailRelationCategories?.some((x) => x.Id === category.id)

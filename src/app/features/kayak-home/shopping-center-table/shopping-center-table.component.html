@@ -14,7 +14,6 @@
     </button> -->
     <button
       class="action-btn optionMobileColor"
-      
       [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
     >
       <i
@@ -26,34 +25,23 @@
 
     <button
       class="action-btn optionMobileColor"
-      
       [routerLink]="['/campaigns/ataglance', CampaignId]"
     >
       <i class="fa-regular fa-star"></i>
       <span> At a Glance </span>
     </button>
-    <button
-    class="action-btn optionMobileColor">
-    <a
-    class="action-btn optionMobileColor"
-    
-    [href]="
-      '/market-survey/' +
-      BuyBoxId +
-      '/' +
-      OrgId +
-      '/' +
-      encodedName +
-      '/' +
-      CampaignId
-    "
-    target="_blank"
-  >
-    <i class="fa-solid fa-house"></i>
-    <span> Market Survey </span>
-  </a>
-  </button>
-  
+    <button class="action-btn optionMobileColor">
+      <a
+        class="action-btn optionMobileColor"
+        [href]="generateSafeUrl()"
+
+     
+        target="_blank"
+      >
+        <i class="fa-solid fa-house"></i>
+        <span> Market Survey </span>
+      </a>
+    </button>
   </div>
   <div class="bottom-navbar">
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
