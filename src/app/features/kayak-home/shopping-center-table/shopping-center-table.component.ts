@@ -31,7 +31,7 @@ export class ShoppingCenterTableComponent implements OnInit {
   view: boolean = false;
   StageId: number = 0;
   stages: Stage[] = [];
-
+  encodedName: string = '';
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -81,6 +81,8 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
+      this.encodedName = encodeURIComponent(this.BuyBoxName);
+       
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
       this.CampaignId = params.campaignId;
