@@ -86,10 +86,7 @@ export class ShoppingCenterTableComponent implements OnInit {
       this.CampaignId = params.campaignId;
 
       if (Number(localStorage.getItem('currentViewDashBord')) !== 1) {
-        this.shoppingCenterService.initializeData(
-          this.CampaignId,
-          this.OrgId,
-         );
+        this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
       }
     });
 
@@ -154,6 +151,6 @@ export class ShoppingCenterTableComponent implements OnInit {
     return localStorage;
   }
   ngOnDestroy(): void {
-     this.shoppingCenterService.resetSelectedStageId();
+    this.shoppingCenterService.resetSelectedStageId();
   }
 }
