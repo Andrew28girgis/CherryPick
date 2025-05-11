@@ -216,17 +216,13 @@ export class TenantComponent implements OnInit, AfterViewInit {
     if (this.guid) {
       this.GetCampaignFromGuid();
       this.proceedWithNextSteps();
-
       this.GetShoppingCenterFromOutBoxMail();
     }
-        const guid = crypto.randomUUID();
-    this.selectedShoppingID = guid;
-    if (this.contactIDs) {
-    }
-
     if (this.userSubmission) {
       this.GetMatchCampaignsFromSubmission();
     }
+    const guid = crypto.randomUUID();
+    this.selectedShoppingID = guid;
   }
   GetContactDataUsingContactIds() {
     const body: any = {
