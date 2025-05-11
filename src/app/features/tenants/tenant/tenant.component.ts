@@ -194,7 +194,6 @@ export class TenantComponent implements OnInit, AfterViewInit {
       }
       this.activatedRoute.params.subscribe((params) => {
         this.guid = params['guid'];
-        // this.GetCampaignGUIDFromMail();
       });
       if (encryptedContactId) {
         try {
@@ -219,6 +218,8 @@ export class TenantComponent implements OnInit, AfterViewInit {
 
       this.GetShoppingCenterFromOutBoxMail();
     }
+        const guid = crypto.randomUUID();
+    this.selectedShoppingID = guid;
     if (this.contactIDs) {
     }
 
