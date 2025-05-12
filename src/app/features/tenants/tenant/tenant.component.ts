@@ -235,16 +235,30 @@ export class TenantComponent implements OnInit, AfterViewInit {
     return encodeURIComponent(encrypted.toString()); // Important: encode here
   }
   decrypt(encryptedValue: string): string {
-    const decodedValue = decodeURIComponent(encryptedValue); // Important: decode first
-    const decrypted = CryptoJS.AES.decrypt(decodedValue, this.key, {
+  try {
+    // Only decode if it's encoded
+    const isEncoded = encryptedValue.includes('%');
+    const rawValue = isEncoded ? decodeURIComponent(encryptedValue) : encryptedValue;
+
+    const decrypted = CryptoJS.AES.decrypt(rawValue, this.key, {
       keySize: 256 / 8,
       iv: this.iv,
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Pkcs7,
     });
 
-    return decrypted.toString(CryptoJS.enc.Utf8);
+    const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+    if (!plaintext) {
+      throw new Error('Failed to decrypt — empty string');
+    }
+
+    return plaintext;
+  } catch (err) {
+    console.error('Decryption failed:', err);
+    return '';
   }
+}
+
   GetContactData() {
     const body: any = {
       Name: 'GetContactData',
