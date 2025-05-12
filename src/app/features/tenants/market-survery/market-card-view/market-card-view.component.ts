@@ -48,7 +48,7 @@ export class MarketCardViewComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.campainId = params.campaignId;
 

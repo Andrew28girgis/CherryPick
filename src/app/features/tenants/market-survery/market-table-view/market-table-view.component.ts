@@ -45,7 +45,7 @@ export class MarketTableViewComponent implements OnInit {
   }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.campainId = params.campaignId;
       this.currentView = localStorage.getItem('currentView') || '2';

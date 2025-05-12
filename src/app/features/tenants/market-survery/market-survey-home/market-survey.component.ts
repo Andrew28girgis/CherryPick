@@ -77,7 +77,7 @@ export class MarketSurveyComponent implements OnInit {
     this.General = new General();
     this.activatedRoute.queryParams.subscribe((params: any) => {
       
-      this.BuyBoxId = params.buyboxid;
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
       this.campaignId = params.campaignId;
