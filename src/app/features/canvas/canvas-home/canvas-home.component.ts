@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CanvasService } from 'src/app/core/services/canvas.service';
+import { PlacesService } from 'src/app/core/services/places.service';
 import {
   AiResponse,
   CanvasChatDTO,
@@ -14,13 +15,6 @@ import {
 })
 export class CanvasHomeComponent {
   contactId: number | null = null;
-  constructor(private CanvasService: CanvasService) {}
-
-  ngOnInit() {
-    this.contactId = Number(localStorage.getItem('contactId'));
-    console.log(this.contactId);
-  }
-
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('canvasContainer') canvasContainer!: ElementRef;
@@ -29,37 +23,63 @@ export class CanvasHomeComponent {
   aiResponse: AiResponse[] = [];
   newMessage = '';
 
-  ngAfterViewInit() {}
+  constructor(
+    private CanvasService: CanvasService,
+    private placesService: PlacesService
+  ) {}
+
+  ngOnInit() {
+    this.contactId = Number(localStorage.getItem('contactId'));
+    console.log(this.contactId);
+  }
 
   sendMessage() {
     const trimmedMessage = this.newMessage.trim();
     if (!trimmedMessage) return;
-  
+
     const userMessage = {
       message: trimmedMessage,
       senderType: 'user',
       messageSendDate: this.getCurrentTime(),
     };
-  
+
     this.messages.push(userMessage);
     this.newMessage = '';
-  
+
     const messageRequest: GetGPTActionDTO = {
       contactId: this.contactId,
-      canvasChats: [...this.messages],  
+      canvasChats: [...this.messages],
     };
-   
-  
+
     this.CanvasService.getGPTAction(messageRequest).subscribe({
       next: (response) => {
         this.aiResponse = response;
-        console.log('AI Response:', this.aiResponse);
-        console.log(this.messages);
-        
+        this.aiResponse.forEach((response) => {
+          if (response.actionName == 'Message') {
+            this.messages.push({
+              message: response.messageText,
+              senderType: 'ai',
+              messageSendDate: this.getCurrentTime(),
+            });
+          } else {
+            this.makeAction(response.actionName, response.params);
+          }
+        });
       },
     });
   }
-  
+
+  makeAction(apiName: string, params: any[]) {
+    const body = {
+      Name: apiName,
+      Params: params.length == 0 ? {} : {},
+    };
+
+    this.placesService.GenericAPI(body).subscribe((response) => {
+      console.log(response);
+    });
+  }
+
   scrollToBottom() {
     const element = this.messagesContainer.nativeElement;
     element.scrollTop = element.scrollHeight;
