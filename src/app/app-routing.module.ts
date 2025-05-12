@@ -20,13 +20,26 @@ import { MailsGenerateOrSendComponent } from './features/emily/mails-generate-or
 import { TasksComponent } from './features/tasks/tasks.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
+import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
-  { path: 'ResetPassword', component: ResetPasswordComponent, data: { hideHeader: true } },
-  { path: 'ForgetPassword', component: ForgetPasswordComponent, data: { hideHeader: true } },
-  { path: 'NewPassword', component: NewPasswordComponent, data: { hideHeader: true } },
+  {
+    path: 'ResetPassword',
+    component: ResetPasswordComponent,
+    data: { hideHeader: true },
+  },
+  {
+    path: 'ForgetPassword',
+    component: ForgetPasswordComponent,
+    data: { hideHeader: true },
+  },
+  {
+    path: 'NewPassword',
+    component: NewPasswordComponent,
+    data: { hideHeader: true },
+  },
   { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
@@ -45,6 +58,10 @@ const routes: Routes = [
     path: 'summary',
     component: SummeryComponent,
     canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'canvas',
+    component: CanvasHomeComponent,
   },
   {
     path: 'tasks',

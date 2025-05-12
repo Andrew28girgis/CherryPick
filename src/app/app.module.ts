@@ -49,6 +49,7 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
 import { CampaignModule } from './features/campaign/campaign.module';
 import { EmailInboxComponent } from './features/emily/email-inbox/email-inbox.component';
 import { EmailComposeComponent } from './features/emily/inbox/email-compose/email-compose.component';
+import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import { EmailComposeComponent } from './features/emily/inbox/email-compose/emai
     NewMulipleEmailComponent,
     EmailInboxComponent,
     EmailComposeComponent,
+    CanvasHomeComponent
   ],
   imports: [
     BrowserModule,
