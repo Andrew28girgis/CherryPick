@@ -156,6 +156,7 @@ export interface Center {
     ShoppingCenterId: number
     Place:Root
     CampaignId:number
+    MailId:number
   }
   
    

@@ -762,14 +762,16 @@ img[alt="logo"] {
   display: grid;
   grid-template-areas:
     "subject date"
-    "body    body"; 
+    "body    body";
+  grid-template-columns: 1fr auto;
   gap: 24px 32px;
   padding: 32px;
   max-width: 800px;
   margin: 0 auto;
   background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Subject section */
