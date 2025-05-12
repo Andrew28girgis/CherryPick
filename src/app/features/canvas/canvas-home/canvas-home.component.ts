@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CanvasService } from 'src/app/core/services/canvas.service';
 import {
+  AiResponse,
   CanvasChatDTO,
   GetGPTActionDTO,
 } from 'src/app/shared/models/canvas/canvas';
@@ -25,7 +26,7 @@ export class CanvasHomeComponent {
   @ViewChild('canvasContainer') canvasContainer!: ElementRef;
   title = 'chat-canvas-app';
   messages: CanvasChatDTO[] = [];
-
+  aiResponse: AiResponse[] = [];
   newMessage = '';
 
   ngAfterViewInit() {}
@@ -51,13 +52,10 @@ export class CanvasHomeComponent {
   
     this.CanvasService.getGPTAction(messageRequest).subscribe({
       next: (response) => {
-        console.log('AI Response:', response);
-      },
-      error: (error) => {
-        console.error('Error while fetching AI response:', error);
-        // Optionally show a user-friendly message
-      },
-      complete: () => { 
+        this.aiResponse = response;
+        console.log('AI Response:', this.aiResponse);
+        console.log(this.messages);
+        
       },
     });
   }
