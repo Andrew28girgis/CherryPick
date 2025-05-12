@@ -687,7 +687,7 @@ img[alt="logo"] {
   }
 }
 
- .select-arrow:not(.fa-chevron-down)::after {
+.select-arrow:not(.fa-chevron-down)::after {
   content: "";
   display: inline-block;
   width: 0.5em;
@@ -706,8 +706,12 @@ img[alt="logo"] {
 
 /* summary line */
 .mail-summary {
-  font-size: 1.1rem;
+  font-size: 14px;
+  cursor: pointer;
   font-weight: 500;
+}
+.mail-summary:hover {
+  text-decoration: underline;
 }
 
 /* each mail item */

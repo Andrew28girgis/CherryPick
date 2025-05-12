@@ -66,9 +66,9 @@ export class CardViewComponent implements OnInit, OnDestroy {
   @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
 
   selectedMailSubject = '';
-  selectedMailDate   = new Date();
+  selectedMailDate = new Date();
   selectedMailBody: SafeHtml = '';
-  openedEmail!: Email ;
+  openedEmail!: Email;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -124,6 +124,27 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
         this.filteredCenters = centers;
+
+        this.filteredCenters.forEach((center: any) => { 
+          const lastOutgoingEmail = center.SentMails.filter(
+            (mail: any) => mail.Direction == 2
+          ).sort(
+            (a: any, b: any) =>
+              new Date(b.Date).getTime() - new Date(a.Date).getTime()
+          )[0];
+
+          // Get last email with Direction == 2 (sorted by date descending)
+          const lastIncomingEmail = center.SentMails.filter(
+            (mail: any) => mail.Direction == 1
+          ).sort(
+            (a: any, b: any) =>
+              new Date(b.Date).getTime() - new Date(a.Date).getTime()
+          )[0];
+          console.log(center.CenterName);
+          center.lastOutgoingEmail = lastOutgoingEmail;
+          center.lastIncomingEmail = lastIncomingEmail; 
+        });
+
         this.cdr.detectChanges();
       })
     );
@@ -529,30 +550,32 @@ export class CardViewComponent implements OnInit, OnDestroy {
   }
   getSentMails(shopping: any): SentMails[] {
     const raw: any[] = shopping?.SentMails ?? [];
-    return raw.map(mail => ({
-      Id:         mail.ID,
-      Date:       new Date(mail.Date),
-      Direction:  mail.Direction,
+    return raw.map((mail) => ({
+      Id: mail.ID,
+      Date: new Date(mail.Date),
+      Direction: mail.Direction,
     }));
   }
   openMailPopup(mailId: number): void {
     const payload = {
-      Name:       "GetMail", 
-      Params:     { mailid: mailId }, 
+      Name: 'GetMail',
+      Params: { mailid: mailId },
     };
 
     // call the HTML-returning variant
     this.placesService.GenericAPIHtml(payload).subscribe({
       next: (res: any) => {
         this.openedEmail = res.json[0];
-        
-        this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(this.openedEmail.Body);
+
+        this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(
+          this.openedEmail.Body
+        );
 
         // **THIS** must be your TemplateRef, not a string
         this.modalService.open(this.mailModalTpl, {
-          size:    'lg',
-         });
+          size: 'lg',
+        });
       },
-     });
+    });
   }
 }

@@ -334,11 +334,14 @@
                   <table class="table table-sm table-striped mb-0 small-table" style="font-size:0.75rem;">
                   <thead>
                     <tr>
-                      <th scope="col" style="min-width: 60px;">Size (SF)</th>
-                      <th scope="col" style="min-width: 77px;">Lease Price</th>
+                      <th scope="col" style="min-width: 60px">Size (SF)</th>
+                      <th scope="col">Price</th>
                       <th scope="col">Extras</th>
-                      <th scope="col" style="min-width: 75px;">Lease Type</th>
-                      <th scope="col" style="min-width: 100px;">Secondary Type</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">
+                        S.Type
+                      </th>
+                      <th scope="col">Privacy</th>
                     </tr>
                   </thead>
                     <tbody>
@@ -352,41 +355,50 @@
                         <td>{{ place.Extras || '—' }}</td>
                         <td>{{ place.LeaseType }}</td>
                         <td>{{ place.SecondaryType }}</td>
+                        <td>
+                        <i *ngIf=" !place.CampaignId" class="fa-solid fa-lock-open"></i>
+                        <i *ngIf=" place.CampaignId" class="fa-solid fa-lock"></i>
+                      </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                    <div *ngIf="getSentMails(place).length > 0">
-                      <ul class="mail-list">
-                        <ng-container *ngIf="getSentMails(place) as mails">
-      
-                          <span class="mail-summary">
-                              {{ mails.length }} {{ mails.length > 1 ? 'Emails' : 'Email' }}
-                          </span>
-                          <li *ngFor="let m of mails"
-                              class="mail-item"
-                              (click)="openMailPopup(m.Id)"
-                          >
-                          
-                            <ng-container [ngSwitch]="m.Direction">
-                              <span *ngSwitchCase="2"  class="sent">Sent</span>
-                              <span *ngSwitchCase="-1" class="outbox">Outbox</span>
-                              <span *ngSwitchCase="1"  class="inbox">Inbox</span>
-                              <span *ngSwitchCase="4"  class="drafts">Drafts</span>
-                              <span *ngSwitchDefault class="unknown">
-                                Unknown ({{ m.Direction }})
-                              </span>
-                            </ng-container>
-                            <span class="mail-date">
-                              {{ m.Date | date:'yyyy-MM-dd HH:mm:ss' }}
-                            </span>
-                          </li>
-                        </ng-container>
-                      </ul>
-                      
-                      
-                      
-                    </div>
+                   <ng-container *ngIf="getSentMails(place) as mails">
+                  <div *ngIf="place.lastOutgoingEmail">
+                    <span
+                      class="mail-summary"
+                      (click)="openMailPopup(place.lastOutgoingEmail.ID)"
+                    >
+                      Last Sent Email:  <span style="text-decoration: none;">{{place.lastOutgoingEmail.Date |date}}</span>
+                    </span>
+                  </div>
+                  <div *ngIf="place.lastIncomingEmail" class="mt-2">
+                    <span
+                      class="mail-summary"
+                      (click)="openMailPopup(place.lastIncomingEmail.ID)"
+                    >
+                      Last Received Email: <span style="text-decoration: none;">{{place.lastIncomingEmail.Date | date}}</span>
+                    </span>
+                  </div>
+                  <!-- <li
+                      *ngFor="let m of mails"
+                      class="mail-item"
+                      (click)="openMailPopup(m.Id)"
+                    >
+                      <ng-container [ngSwitch]="m.Direction">
+                        <span *ngSwitchCase="2" class="sent">Sent</span>
+                        <span *ngSwitchCase="-1" class="outbox">Outbox</span>
+                        <span *ngSwitchCase="1" class="inbox">Inbox</span>
+                        <span *ngSwitchCase="4" class="drafts">Drafts</span>
+                        <span *ngSwitchDefault class="unknown">
+                          Unknown ({{ m.Direction }})
+                        </span>
+                      </ng-container>
+                      <span class="mail-date">
+                        {{ m.Date | date : "yyyy-MM-dd HH:mm:ss" }}
+                      </span>
+                    </li> -->
+                </ng-container>
                   </div>
 
                   <div class="row m-0">
@@ -780,7 +792,7 @@
 
 
 <ng-template #mailModal let-modal> 
-  <div class="modal-body">
+  <div  class="modal-body" style="height: 90vh; overflow-y: auto">
     <div>
       <label for="">Email Subject</label>
       <div class="mail-body" [innerHTML]="openedEmail.Subject"></div>
