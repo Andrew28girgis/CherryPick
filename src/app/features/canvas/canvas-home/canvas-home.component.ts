@@ -1,6 +1,9 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CanvasService } from 'src/app/core/services/canvas.service';
-import { CanvasChatDTO } from 'src/app/shared/models/canvas/canvas';
+import {
+  CanvasChatDTO,
+  GetGPTActionDTO,
+} from 'src/app/shared/models/canvas/canvas';
 
 @Component({
   selector: 'app-canvas-home',
@@ -9,13 +12,12 @@ import { CanvasChatDTO } from 'src/app/shared/models/canvas/canvas';
   styleUrl: './canvas-home.component.css',
 })
 export class CanvasHomeComponent {
-  contactId: string | null = null;
+  contactId: number | null = null;
   constructor(private CanvasService: CanvasService) {}
 
   ngOnInit() {
-    this.contactId = localStorage.getItem('contactId');
+    this.contactId = Number(localStorage.getItem('contactId'));
     console.log(this.contactId);
-    
   }
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
@@ -23,24 +25,43 @@ export class CanvasHomeComponent {
   @ViewChild('canvasContainer') canvasContainer!: ElementRef;
   title = 'chat-canvas-app';
   messages: CanvasChatDTO[] = [];
+
   newMessage = '';
 
   ngAfterViewInit() {}
 
   sendMessage() {
-    if (this.newMessage.trim() === '') return;
-    this.messages.push({
-      message: this.newMessage,
+    const trimmedMessage = this.newMessage.trim();
+    if (!trimmedMessage) return;
+  
+    const userMessage = {
+      message: trimmedMessage,
       senderType: 'user',
       messageSendDate: this.getCurrentTime(),
-    });
-
+    };
+  
+    this.messages.push(userMessage);
     this.newMessage = '';
-    this.CanvasService.getGPTAction(this.messages).subscribe((res: any) => {
-      console.log(res);
+  
+    const messageRequest: GetGPTActionDTO = {
+      contactId: this.contactId,
+      canvasChats: [...this.messages],  
+    };
+   
+  
+    this.CanvasService.getGPTAction(messageRequest).subscribe({
+      next: (response) => {
+        console.log('AI Response:', response);
+      },
+      error: (error) => {
+        console.error('Error while fetching AI response:', error);
+        // Optionally show a user-friendly message
+      },
+      complete: () => { 
+      },
     });
   }
-
+  
   scrollToBottom() {
     const element = this.messagesContainer.nativeElement;
     element.scrollTop = element.scrollHeight;
