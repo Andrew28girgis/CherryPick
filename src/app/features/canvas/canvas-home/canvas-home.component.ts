@@ -1,9 +1,7 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-interface Message {
-  text: string;
-  sender: 'user' | 'ai';
-  time: string;
-}
+import { CanvasService } from 'src/app/core/services/canvas.service';
+import { CanvasChatDTO } from 'src/app/shared/models/canvas/canvas';
+
 @Component({
   selector: 'app-canvas-home',
   standalone: false,
@@ -11,59 +9,31 @@ interface Message {
   styleUrl: './canvas-home.component.css',
 })
 export class CanvasHomeComponent {
-  constructor() {}
+  constructor(private CanvasService: CanvasService) {}
 
   ngOnInit() {}
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('canvasContainer') canvasContainer!: ElementRef;
-
   title = 'chat-canvas-app';
-
-  messages: Message[] = [
-    {
-      text: "Hello! I'm your AI assistant. How can I help you today?",
-      sender: 'ai',
-      time: this.getCurrentTime(),
-    },
-  ];
-
+  messages: CanvasChatDTO[] = [];
   newMessage = '';
 
   ngAfterViewInit() {}
 
   sendMessage() {
     if (this.newMessage.trim() === '') return;
-
-    // Add user message
     this.messages.push({
-      text: this.newMessage,
-      sender: 'user',
-      time: this.getCurrentTime(),
+      message: this.newMessage,
+      senderType: 'user',
+      messageSendDate: this.getCurrentTime(),
     });
 
-    // Clear input field
-    const userMessage = this.newMessage;
     this.newMessage = '';
-
-    // Scroll to bottom
-    setTimeout(() => {
-      this.scrollToBottom();
+    this.CanvasService.getGPTAction(this.messages).subscribe((res: any) => {
+      console.log(res);
     });
-
-    // Simulate AI response
-    setTimeout(() => {
-      this.messages.push({
-        text: 'I received your message. You can draw on the canvas on the right side!',
-        sender: 'ai',
-        time: this.getCurrentTime(),
-      });
-
-      setTimeout(() => {
-        this.scrollToBottom();
-      });
-    }, 1000);
   }
 
   scrollToBottom() {
@@ -72,7 +42,10 @@ export class CanvasHomeComponent {
   }
 
   getCurrentTime(): string {
-    return new Date().toLocaleTimeString([], {
+    return new Date().toLocaleString([], {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
     });
@@ -83,6 +56,4 @@ export class CanvasHomeComponent {
       this.sendMessage();
     }
   }
-
-  // Add any additional methods or properties as needed
 }

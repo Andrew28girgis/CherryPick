@@ -7,19 +7,19 @@
         <div class="message" *ngFor="let message of messages">
           <div
             [ngClass]="
-              message.sender === 'user' ? 'user-message' : 'ai-message'
+              message.senderType === 'user' ? 'user-message' : 'ai-message'
             "
           >
-            {{ message.text }}
+            {{ message.message }}
           </div>
           <div
             [ngClass]="
-              message.sender === 'user'
+              message.senderType === 'user'
                 ? 'message-time text-end'
                 : 'message-time'
             "
           >
-            {{ message.time }}
+            {{ message.messageSendDate }}
           </div>
         </div>
       </div>
@@ -40,8 +40,6 @@
     </div>
 
     <!-- Canvas Area -->
-    <div class="col-md-6 canvas-container" #canvasContainer>
-        
-    </div>
+    <div class="col-md-6 canvas-container" #canvasContainer></div>
   </div>
 </div>
