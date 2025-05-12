@@ -1,8 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ICampaign } from 'src/app/shared/models/icampaign';
+import { Stage } from 'src/app/shared/models/shoppingCenters';
 
 @Component({
   selector: 'app-shopping-center-table',
@@ -12,13 +19,19 @@ import { ICampaign } from 'src/app/shared/models/icampaign';
 export class ShoppingCenterTableComponent implements OnInit {
   @ViewChild('mapView') mapView!: MapViewComponent;
   filteredCampaigns?: ICampaign[];
-
+  isMobile = false;
   currentView: number = 5;
+  isSocialView: boolean = false;
+  isMapView: boolean = false;
   BuyBoxId!: any;
   BuyBoxName!: string;
   CampaignId!: any;
   OrgId!: any;
   selectedOption: number = 5;
+  view: boolean = false;
+  StageId: number = 0;
+  stages: Stage[] = [];
+  encodedName: string = '';
   dropdowmOptions: any = [
     {
       text: 'Map',
@@ -54,21 +67,28 @@ export class ShoppingCenterTableComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private shoppingCenterService: ViewManagerService
+    private shoppingCenterService: ViewManagerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.cdr.detectChanges();
+    this.isSocialView =
+      this.localStorage.getItem('currentViewDashBord') === '5';
+    this.isMapView = this.localStorage.getItem('currentViewDashBord') === '1';
+    this.checkScreenSize(); // Check screen size on initialization
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
+      this.encodedName = encodeURIComponent(this.BuyBoxName);
+       
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
       this.CampaignId = params.campaignId;
 
-      if (Number(localStorage.getItem('currentViewDashBord')) !== 1 ) {
-        this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);        
-        
+      if (Number(localStorage.getItem('currentViewDashBord')) !== 1) {
+        this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
       }
     });
 
@@ -86,7 +106,9 @@ export class ShoppingCenterTableComponent implements OnInit {
   selectOption(option: any): void {
     this.selectedOption = option.status;
     this.currentView = option.status;
-
+    this.isSocialView =
+      this.localStorage.getItem('currentViewDashBord') === '5';
+    this.cdr.detectChanges();
     // Update current view in service
     this.shoppingCenterService.setCurrentView(this.currentView);
   }
@@ -118,4 +140,25 @@ export class ShoppingCenterTableComponent implements OnInit {
       );
     }
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
+  }
+  get localStorage() {
+    return localStorage;
+  }
+  ngOnDestroy(): void {
+    this.shoppingCenterService.resetSelectedStageId();
+  }
+
+  generateSafeUrl(): string {
+    const safeEncodedName = encodeURIComponent(this.BuyBoxName || ''); 
+    return `/market-survey?buyBoxId=${this.BuyBoxId}&orgId=${this.OrgId}&name=${safeEncodedName}&campaignId=${this.CampaignId}`;
+  }
+  
 }

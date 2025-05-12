@@ -7,8 +7,7 @@
 }
 
 body {
-  font-family: var(--app-font) !important;
-  background-color: #f2f3f4;
+  font-family: var(--app-font) !important; 
 }
 
 a {

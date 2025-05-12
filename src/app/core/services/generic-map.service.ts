@@ -11,6 +11,7 @@ declare const google: any;
 })
 export class GenericMapService {
   private placesService?: google.maps.places.PlacesService;
+  private tempCircles: { id: any; circle: google.maps.Circle }[] = [];
 
   onMapBoundsChanged = new EventEmitter<IMapBounds>();
   onMapZoomLevelChanged = new EventEmitter<number>();
@@ -93,8 +94,105 @@ export class GenericMapService {
     map.setZoom(zoomLevel);
   }
 
-  loadGeoJsonFileOnMap(map: google.maps.Map, url: string): void {
-    map.data.loadGeoJson(url);
+  loadGeoJsonFileOnMap(
+    map: google.maps.Map,
+    url: string
+  ): Promise<number | string | undefined> {
+    return new Promise((resolve, reject) => {
+      map.data.loadGeoJson(url, null, (features) => {
+        try {
+          const zoomLevel = map.getZoom();
+          if (zoomLevel && zoomLevel < 13) map.setZoom(13);
+          // compute bounds over all features
+          const bounds = new google.maps.LatLngBounds();
+          features.forEach((f) => {
+            f.getGeometry()?.forEachLatLng((latlng) => bounds.extend(latlng));
+          });
+
+          // fit & then bump the zoom
+          const center = bounds.getCenter();
+          map.setCenter(center);
+
+          const type = features[0].getGeometry()?.getType();
+          if (
+            features[0].getGeometry() instanceof google.maps.Data.Point &&
+            type &&
+            type.trim().length > 0 &&
+            type.toLowerCase() == 'point'
+          ) {
+            if (this.tempCircles.find((t) => t.id == features[0].getId())) {
+              const tempCircle = this.tempCircles.find(
+                (t) => t.id == features[0].getId()
+              );
+              tempCircle?.circle.setMap(map);
+            } else {
+              const point = features[0].getGeometry() as google.maps.Data.Point;
+              const latlng = (point as any).get();
+              const tempCircle = this.drawStaticCircle(map, latlng);
+              this.tempCircles.push({
+                id: features[0].getId(),
+                circle: tempCircle,
+              });
+            }
+          }
+
+          // resolve with whatever ID we picked up (or undefined if none)
+          resolve(features[0].getId());
+        } catch (err) {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  // loadGeoJsonFileOnMap(
+  //   map: google.maps.Map,
+  //   url: string
+  // ): number | string | undefined {
+  //   const zoomLevel = map.getZoom();
+  //   let featureId = undefined;
+  //   map.data.loadGeoJson(url, null, (features) => {
+  //     // run inside Angular’s zone if you’re binding to changes
+  //     const bounds = new google.maps.LatLngBounds();
+  //     features.forEach((f) => {
+  //       featureId = f.getId();
+  //       console.log(featureId);
+
+  //       f.getGeometry()?.forEachLatLng((latlng) => bounds.extend(latlng));
+  //     });
+  //     map.fitBounds(bounds, 50);
+
+  //     google.maps.event.addListenerOnce(map, 'idle', () => {
+  //       if (zoomLevel != null) map.setZoom(zoomLevel + 2);
+  //     });
+  //   });
+
+  //   return featureId;
+  // }
+
+  removeFeatureById(map: google.maps.Map, id: string | number): void {
+    console.log(id);
+
+    const feature = map.data.getFeatureById(id);
+    console.log(feature);
+
+    if (feature) {
+      const type = feature.getGeometry()?.getType();
+      if (
+        feature.getGeometry() instanceof google.maps.Data.Point &&
+        type &&
+        type.trim().length > 0 &&
+        type.toLowerCase() == 'point'
+      ) {
+        if (this.tempCircles.find((t) => t.id == feature.getId())) {
+          const tempCircle = this.tempCircles.find(
+            (t) => t.id == feature.getId()
+          );
+          tempCircle?.circle.setMap(null);
+        }
+      }
+      map.data.remove(feature);
+    }
   }
 
   getStatesInsideMapView(
@@ -163,13 +261,10 @@ export class GenericMapService {
           if (state) {
             // Create IMapState object
             const mapState: IMapState = {
-              longName: state.formatted_address,
               code:
                 state.address_components.find((component) =>
                   component.types.includes('administrative_area_level_1')
                 )?.short_name || '',
-              lat: state.geometry.location.lat(),
-              lng: state.geometry.location.lng(),
             };
 
             // Check if the state code is unique and add it to the list
@@ -182,6 +277,23 @@ export class GenericMapService {
         callback(); // Call the callback after processing this request
       }
     );
+  }
+
+  private drawStaticCircle(map: any, center: any): google.maps.Circle {
+    const circle = new google.maps.Circle({
+      map: map,
+      center: center,
+      radius: 1000,
+      fillColor: '#3395FF',
+      fillOpacity: 0.3,
+      strokeWeight: 2,
+      strokeColor: '#3395FF',
+      editable: false,
+      draggable: false,
+    });
+
+    circle.setMap(map);
+    return circle;
   }
 
   // getCitiesInsideMapView(map: google.maps.Map, callback: (cities: IMapCity[]) => void): void {

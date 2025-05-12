@@ -1,3 +1,6 @@
+.small-table {
+  font-size: 0.75rem;
+}
 .custom-dropdown {
   position: relative;
   cursor: pointer;
@@ -5,14 +8,16 @@
 }
 
 .selected-option {
-  padding: 3px 8px;
+  padding: 2px 8px;
   border: 1px solid #ced4da;
-  border-radius: 4px;
+  border-radius: 16px 0 0 16px;
   background-color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
+  gap: 5px;
+  height: 30px;
 }
 
 .selected-option:hover {
@@ -26,11 +31,11 @@
   left: 0;
   width: 100%;
   max-height: 200px;
-  overflow-y: auto;
+  overflow-y: hidden;
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   z-index: 100;
   display: none;
 }
@@ -57,7 +62,7 @@
   width: 30px;
   height: 30px;
   background: transparent;
-  border-radius: 6px;
+  border-radius: 0px 50% 50% 0;
   position: relative;
   z-index: 1;
 }
@@ -71,9 +76,9 @@
   text-align: start;
   margin: 0;
   z-index: 100;
-  right: 14%;
+  right: 5%;
   width: max-content;
-  top: 2%;
+  top: 23%;
 }
 
 .shortcuts_iconCard > ul {
@@ -117,10 +122,10 @@
 
 .shortcuts_iconCard > i {
   position: absolute;
-  right: -8px;
+  right: 7px;
   font-size: 25px;
   color: white;
-  top: 5%;
+  top: -6%;
 }
 
 .card-window_c {
@@ -225,12 +230,12 @@
 
 .ShoppingCenterStage {
   font-size: 16px;
-  color: #FF8028;
+  color: #ff8028;
   font-weight: 700;
 }
 
 ::ng-deep .popover-body {
-  padding: 0 !important;
+  padding: 5px !important;
 }
 
 ::ng-deep .popover-arrow::after {
@@ -241,7 +246,6 @@
 ::ng-deep .popover-arrow::before {
   border-top: none !important;
 }
-
 
 .skeleton-loader {
   text-align: center;
@@ -296,7 +300,7 @@
 .skeleton-card {
   width: 100%;
   max-width: 437px;
-  margin: 0 auto;     
+  margin: 0 auto;
 }
 
 .skeleton-content {
@@ -304,8 +308,12 @@
 }
 
 @keyframes shimmer {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .card-window_c.skeleton {
@@ -316,13 +324,15 @@
 .card-window_c.skeleton::after {
   content: "";
   position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
     to right,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0) 100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
   animation: shimmer 1.5s infinite;
 }
@@ -346,12 +356,16 @@
   height: 20px;
   margin-top: 16px;
 }
-.skeleton-line { width: 90%; }
-.skeleton-line.short { width: 50%; }
+.skeleton-line {
+  width: 90%;
+}
+.skeleton-line.short {
+  width: 50%;
+}
 
 .skeleton-map {
-  height: 100vh; 
-  width: 100%;   
+  height: 100vh;
+  width: 100%;
   position: relative;
   background-color: #f0f0f0;
   overflow: hidden;
@@ -360,18 +374,18 @@
 .skeleton-map::after {
   content: "";
   position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
     to right,
-    rgba(255,255,255,0)   0%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0)   100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
   animation: shimmer 1.5s infinite;
 }
-
-
 
 .skeleton-loader {
   text-align: center;
@@ -520,4 +534,327 @@
   font-style: normal;
   font-weight: 600;
   line-height: 30px;
+}
+
+.selected-option i.rotate {
+  transform: rotate(180deg);
+  transition: 0.2 ease;
+}
+.selected-option i {
+  color: #707791;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-item.active {
+  color: #000 !important;
+}
+.stage-select-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.stage-select-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  min-width: 180px;
+}
+
+.custom-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 16px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.custom-select:hover {
+  border-color: #9ca3af;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: #16181b;
+  text-decoration: none;
+  background-color: #f3f3e0;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+  color: #fff !important;
+  text-decoration: none;
+  background-color: #4d65b4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stage-select-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .custom-select-wrapper {
+    width: 100%;
+    min-width: unset;
+  }
+}
+
+/* If you're not using Font Awesome, you can use this CSS arrow instead */
+.select-arrow:not(.fa-chevron-down)::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform: rotate(45deg);
+}
+
+.select-arrow:not(.fa-chevron-down)::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform: rotate(45deg);
+}
+/* container */
+.mail-list {
+  padding-left: 1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* summary line */
+.mail-summary {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* each mail item */
+.mail-item {
+  list-style: none;
+  margin: 0.25rem 0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.mail-item:hover {
+  background-color: #f0f4ff;
+  cursor: pointer;
+
+  text-decoration: underline;
+}
+
+/* base style for the label */
+.mail-item span {
+  font-weight: bold;
+}
+.mail-date {
+  margin-left: 1rem;
+  font-style: italic;
+  color: #555;
+  white-space: nowrap;
+}
+
+/* per-direction colors */
+.mail-item .sent {
+  color: #28a745;
+} /* green */
+.mail-item .outbox {
+  color: #fd7e14;
+} /* orange */
+.mail-item .inbox {
+  color: #007bff;
+} /* blue */
+.mail-item .drafts {
+  color: #6c757d;
+} /* gray  */
+.mail-item .unknown {
+  color: #dc3545;
+} /* red   */
+
+/* Modal container as a card with grid layout */
+.modal-body {
+  display: grid;
+  grid-template-areas:
+    "subject date"
+    "body    body";
+  grid-template-columns: 1fr auto;
+  gap: 24px 32px;
+  padding: 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Subject section */
+.modal-body > div:first-child {
+  grid-area: subject;
+}
+.modal-body > div:first-child label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 8px;
+  display: block;
+}
+.modal-body > div:first-child .mail-body {
+  background: #f0f4ff;
+  border-left: 4px solid #4299e1;
+  padding: 16px;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a202c;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Date pill at top right */
+.modal-body .date {
+  grid-area: date;
+  align-self: center;
+  justify-self: end;
+  background: #edf2f7;
+  color: #4a5568;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Body block section */
+.modal-body > div:last-child {
+  grid-area: body;
+}
+.modal-body > div:last-child label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 8px;
+  display: block;
+}
+.modal-body > div:last-child .mail-body {
+  background: #f9fafb;
+  padding: 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2d3748;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.03);
+  white-space: pre-line;
+}
+
+/* Inside paragraphs and links */
+.mail-body p {
+  margin-bottom: 1em;
+}
+.mail-body a {
+  color: #4299e1;
+  text-decoration: none;
+  border-bottom: 1px dashed #4299e1;
+  transition: border-color 0.2s, color 0.2s;
+}
+.mail-body a:hover {
+  color: #2b6cb0;
+  border-bottom-style: solid;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 576px) {
+  .modal-body {
+    grid-template-areas:
+      "subject"
+      "date"
+      "body";
+    grid-template-columns: 1fr;
+    padding: 24px;
+    gap: 16px;
+  }
+  .modal-body .date {
+    justify-self: start;
+  }
+  .modal-body > div:first-child .mail-body,
+  .modal-body > div:last-child .mail-body {
+    padding: 16px;
+  }
+}
+
+.mail-summary {
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.mail-summary:hover {
+  text-decoration: underline;
 }

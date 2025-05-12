@@ -5,7 +5,7 @@
   </div> -->
   <!-- Search and buttons - always visible -->
   <div class="w-100 d-flex align-items-center justify-content-between">
-    <div class="search-campaign-container">
+    <!-- <div class="search-campaign-container">
       <input
         type="text"
         class="form-control search-campaign-input"
@@ -31,7 +31,7 @@
           fill="#707791"
         />
       </svg>
-    </div>
+    </div> -->
     <div class="d-flex align-items-center gap-3 toggle-cont"  *ngIf="!hideViewToggles">
       <div class="view-toggle">
         <button
@@ -377,7 +377,7 @@
                 >
               </div>
 
-              <button class="expand-btn" (click)="toggleExpand(campaign)">
+              <button class="expand-btn" (click)="toggleExpand(campaign) " *ngIf="campaign.Kanban ">
                 {{ campaign.expanded ? "Hide Stages" : "Show Stages" }}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

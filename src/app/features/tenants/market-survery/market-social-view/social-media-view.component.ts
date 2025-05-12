@@ -11,13 +11,15 @@ import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { Center, Reaction } from 'src/app/shared/models/shoppingCenters';
 import { StateService } from 'src/app/core/services/state.service';
 import { PlacesService } from 'src/app/core/services/places.service';
-   
+
 import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { General } from 'src/app/shared/models/domain';
 import { LandingPlace } from 'src/app/shared/models/landingPlace';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import * as CryptoJS from 'crypto-js';
+import { AuthService } from 'src/app/core/services/auth.service';
+
 declare const google: any;
 
 @Component({
@@ -56,38 +58,210 @@ export class SocialMediaViewComponent implements OnInit {
   isMobileView!: boolean;
   selectedCenterId: number | null = null;
   currentIndex = -1;
+  returnedEmail!: any;
+  returnedPassword!: any;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   @ViewChild('commentsContainer') commentsContainer: ElementRef | undefined;
   @ViewChild('loginRegisterModal', { static: true }) loginRegisterModal: any;
   @ViewChild('ShareWithContact', { static: true }) ShareWithContact: any;
   @ViewChild('galleryModal', { static: true }) galleryModal: any;
+  @ViewChild('addContactModal', { static: true }) addContactModal: any;
   campaignId!: any;
+  loginSharedToken!: any;
+  selectedMarketSurveyId: number | null = null;
+
+  private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
+  private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
+
+  formData = {
+    FirstName: '',
+    LastName: '',
+    OrganizationId: null,
+    CampaignId: null,
+    email: '',
+    password: '',
+  };
   constructor(
     private stateService: StateService,
     private PlacesService: PlacesService,
-        
     private renderer: Renderer2,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    private readonly placesService: PlacesService,
+    private readonly authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.campaignId = params.campaignId;
-
       this.currentView = localStorage.getItem('currentView') || '2';
-
-      // localStorage.setItem('BuyBoxId', this.BuyBoxId);
-      // localStorage.setItem('OrgId', this.OrgId);
-      // this.ContactId = localStorage.getItem('contactId');
+      this.loginSharedToken = localStorage.getItem('loginToken');
     });
+
     this.currentView = this.isMobileView ? '5' : '2';
     this.BuyBoxPlacesCategories(this.BuyBoxId);
   }
+  encrypt(value: string): string {
+    const encrypted = CryptoJS.AES.encrypt(
+      CryptoJS.enc.Utf8.parse(value),
+      this.key,
+      {
+        keySize: 256 / 8,
+        iv: this.iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      }
+    );
+    return encrypted.toString();
+  }
+  handleShoppingCenterLike(shoppingCenter: Center, reactionId: number): void {
+    if (!this.loginSharedToken) {
+      return;
+    }
+      if (this.isTokenReturned()) {
+      this.onShoppingCenterSelect(shoppingCenter);
+      this.updatePlaceKanbanStage();
+      return;
+    }
+  
+    // Proceed with the like action
+    this.onShoppingCenterSelect(shoppingCenter);
+    this.addLike(shoppingCenter, reactionId);
+  }
+  addLike(shopping: Center, reactionId: number): void {
+    if (this.loginSharedToken) {
+      this.modalService.open(this.addContactModal, { centered: true });
+      return;
+    }
+
+    if (!this.isUserLoggedIn()) {
+      this.openLoginModal();
+      return;
+    }
+
+    const contactIdStr = localStorage.getItem('contactId');
+    if (!contactIdStr) {
+      return;
+    }
+    const contactId = parseInt(contactIdStr, 10);
+
+    if (
+      shopping.ShoppingCenter.Reactions &&
+      shopping.ShoppingCenter.Reactions.some(
+        (reaction: Reaction) => reaction.ContactId === contactId
+      )
+    ) {
+      return;
+    }
+
+    if (this.isLikeInProgress) {
+      return;
+    }
+
+    this.isLikeInProgress = true;
+    const isLiked = this.likedShoppings[shopping.MarketSurveyId];
+
+    if (!shopping.ShoppingCenter.Reactions) {
+      shopping.ShoppingCenter.Reactions = [];
+    }
+
+    if (!isLiked) {
+      shopping.ShoppingCenter.Reactions.length++;
+      this.likedShoppings[shopping.MarketSurveyId] = true;
+    }
+
+    this.cdr.detectChanges();
+
+    this.isLikeInProgress = false;
+    this.cdr.detectChanges();
+  }
+  submitAddContactForm(modal: any): void {
+    const encryptedPassword = this.encrypt(this.formData.password);
+    const body = {
+      Name: 'AddContactToOrganization',
+      Params: {
+        FirstName: this.formData.FirstName,
+        LastName: this.formData.LastName,
+        OrganizationId: +this.OrgId,
+        CampaignId: +this.campaignId,
+        email: this.formData.email,
+        password: encryptedPassword,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: (res) => {
+        this.showToast('Contact successfully added!');
+        this.onSubmit();
+        modal.close();
+        this.resetForm();
+      },
+    });
+  }
+  onShoppingCenterSelect(shoppingCenter: Center): void {
+    this.selectedMarketSurveyId = shoppingCenter.MarketSurveyId;
+  }
+  updatePlaceKanbanStage(): void {
+    const body = {
+      Name: 'UpdatePlaceKanbanStage',
+      Params: {
+        MarketSurveyId: this.selectedMarketSurveyId,
+        StageId: 446,
+      },
+    };
+
+    this.PlacesService.GenericAPI(body).subscribe({
+      next: () => {
+        console.log('UpdatePlaceKanbanStage API call was successful');
+        
+      },
+    });
+  }
+
+
+  public onSubmit(): void {
+    const loginRequest = {
+      Email: this.formData.email,
+      Password: this.encrypt(this.formData.password),
+    };
+
+    this.placesService.loginUser(loginRequest).subscribe({
+      next: (response: any) => {
+        this.handleLoginSuccess(response);
+        this.updatePlaceKanbanStage();
+      },
+    });
+  }
+
+  private handleLoginSuccess(response: any): void {
+    if (response?.token) {
+      this.authService.setToken(response.token);
+      // Optionally you can add any further logic after successful login
+    } else {
+      console.error('Token not found in the response.');
+      this.showToast('Login failed. Please try again.');
+    }
+  }
+
+  private handleLoginError(error: any): void {
+    console.error('Login failed:', error);
+    this.showToast('Something went wrong. Please try again.');
+  }
+  resetForm(): void {
+    this.formData = {
+      FirstName: '',
+      LastName: '',
+      OrganizationId: null,
+      CampaignId: null,
+      email: '',
+      password: '',
+    };
+  }
+
   BuyBoxPlacesCategories(buyboxId: number): void {
     if (this.stateService.getBuyboxCategories().length > 0) {
       this.buyboxCategories = this.stateService.getBuyboxCategories();
@@ -114,11 +288,13 @@ export class SocialMediaViewComponent implements OnInit {
       this.getBuyBoxPlaces(this.BuyBoxId);
       return;
     }
-      
+
     const body: any = {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         CampaignId: this.campaignId,
+        ShoppingCenterStageId: 0, // Load all centers
+
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -130,12 +306,12 @@ export class SocialMediaViewComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.filter(
           (element: any) => element.Deleted == false
         );
-        this.shoppingCenters = this.shoppingCenters?.filter(
-          (element: any) => [42,  44].includes(element.kanbanTemplateStageId)
+        this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
+          [42, 44].includes(element.kanbanTemplateStageId)
         );
 
         this.stateService.setShoppingCenters(this.shoppingCenters);
-             
+
         this.getBuyBoxPlaces(this.BuyBoxId);
       },
     });
@@ -151,7 +327,7 @@ export class SocialMediaViewComponent implements OnInit {
       next: (data) => {
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
-        this.buyboxCategories.forEach((category) => {
+        this.buyboxCategories?.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces?.filter((place) =>
             place.RetailRelationCategories?.some((x) => x.Id === category.id)
@@ -212,66 +388,6 @@ export class SocialMediaViewComponent implements OnInit {
     }
   }
 
-  addLike(shopping: Center, reactionId: number): void {
-    if (!this.isUserLoggedIn()) {
-      this.openLoginModal();
-      return;
-    }
-    const contactIdStr = localStorage.getItem('contactId');
-    if (!contactIdStr) {
-      return;
-    }
-    const contactId = parseInt(contactIdStr, 10);
-
-    if (
-      shopping.ShoppingCenter.Reactions &&
-      shopping.ShoppingCenter.Reactions.some(
-        (reaction: Reaction) => reaction.ContactId === contactId
-      )
-    ) {
-      return;
-    }
-
-    if (this.isLikeInProgress) {
-      return;
-    }
-
-    this.isLikeInProgress = true;
-    const isLiked = this.likedShoppings[shopping.MarketSurveyId];
-
-    if (!shopping.ShoppingCenter.Reactions) {
-      shopping.ShoppingCenter.Reactions = [];
-    }
-
-    if (!isLiked) {
-      shopping.ShoppingCenter.Reactions.length++;
-      this.likedShoppings[shopping.MarketSurveyId] = true;
-    }
-    // else {
-    //   shopping.ShoppingCenter.Reactions.length--;
-    //   delete this.likedShoppings[shopping.MarketSurveyId];
-    // }
-
-    this.cdr.detectChanges();
-
-    const body = {
-      Name: 'CreatePropertyReaction',
-      Params: {
-        MarketSurveyId: shopping.MarketSurveyId,
-        ReactionId: reactionId,
-      },
-    };
-
-    this.PlacesService.GenericAPI(body).subscribe({
-      next: (response: any) => {},
-
-      complete: () => {
-        this.isLikeInProgress = false;
-        this.cdr.detectChanges();
-      },
-    });
-  }
-
   isLiked(shopping: any): boolean {
     return shopping?.ShoppingCenter?.Reactions?.length >= 1;
   }
@@ -288,19 +404,19 @@ export class SocialMediaViewComponent implements OnInit {
     this.selectedRating = rating;
   }
 
-  handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
-    if (this.clickTimeout) {
-      clearTimeout(this.clickTimeout);
-      this.clickTimeout = null;
-      this.addLike(shopping, 1);
-    } else {
-      this.clickTimeout = setTimeout(() => {
-        const nextShopping = this.getNextShopping(index);
-        this.open(likeTpl, shopping, nextShopping);
-        this.clickTimeout = null;
-      }, 250);
-    }
-  }
+  // handleClick(shopping: any, likeTpl: TemplateRef<any>, index: number): void {
+  //   if (this.clickTimeout) {
+  //     clearTimeout(this.clickTimeout);
+  //     this.clickTimeout = null;
+  //     this.addLike(shopping, 1);
+  //   } else {
+  //     this.clickTimeout = setTimeout(() => {
+  //       const nextShopping = this.getNextShopping(index);
+  //       this.open(likeTpl, shopping, nextShopping);
+  //       this.clickTimeout = null;
+  //     }, 250);
+  //   }
+  // }
   getNextShopping(currentIndex: number): any {
     if (this.shoppingCenters && this.shoppingCenters.length > 0) {
       const nextIndex = (currentIndex + 1) % this.shoppingCenters.length;
@@ -319,6 +435,11 @@ export class SocialMediaViewComponent implements OnInit {
     const contactId = localStorage.getItem('contactId');
     return contactId !== null && contactId !== 'undefined';
   }
+  isTokenReturned(): boolean {
+    const token = this.authService.getToken();
+    return token !== null && token !== undefined;
+  }
+  
   toggleDetails(index: number, shopping: any): void {
     if (shopping.ShoppingCenter?.BuyBoxPlaces) {
       this.showDetails[index] = !this.showDetails[index];
@@ -435,14 +556,22 @@ export class SocialMediaViewComponent implements OnInit {
   }
   toggleComments(shopping: any, event: MouseEvent): void {
     event.stopPropagation();
+
+    // If loginSharedToken exists, show modal and exit early
+    if (this.loginSharedToken) {
+      this.modalService.open(this.addContactModal, { centered: true });
+      return;
+    }
+
     if (!this.isUserLoggedIn()) {
       this.openLoginModal();
       return;
     }
+
     this.showComments[shopping.Id] = !this.showComments[shopping.Id];
   }
+
   OpenShareWithContactModal(content: any): void {
-      
     const body: any = {
       Name: 'GetBuyBoxGUID',
       Params: {
@@ -458,7 +587,6 @@ export class SocialMediaViewComponent implements OnInit {
         } else {
           this.GuidLink = '';
         }
-             
       },
     });
     this.modalService.open(this.ShareWithContact, { size: 'lg' });

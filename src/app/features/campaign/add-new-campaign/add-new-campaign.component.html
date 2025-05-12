@@ -1,39 +1,70 @@
 <div class="add-new-campaign-container">
   <div class="map-wrapper">
-    <div class="left-panel">
-      <div *ngIf="loadingGlobalPolygons" class="loading-polygons">
-        <div class="spinner-border spinner-border-sm" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-        <div>Loading neighborhoods</div>
-      </div>
-
-      <div *ngIf="mapBounds && mapBounds.zoomLevel < 13" class="map-zoom-alert">
-        <div>Zoom in to view more neighborhoods</div>
-      </div>
-
+    <div class="right-panel">
       <div
         *ngIf="mapStates && mapStates.length"
-        class="map-areas"
-        [ngClass]="{ 'p-3': mapAreasCollapsed }"
+        class="floating-card"
+        [ngClass]="{
+          'p-3': mainFloatingCardCollapsed,
+          'h-auto': mainFloatingCardCollapsed
+        }"
       >
-        <div class="map-areas-header" [ngClass]="{ 'p-0': mapAreasCollapsed }">
+        <div
+          class="floating-card-header"
+          [ngClass]="{ 'p-0': mainFloatingCardCollapsed }"
+        >
           <div
             class="w-100 d-flex align-items-center justify-content-between gap-2"
-            (click)="mapAreasCollapsed = !mapAreasCollapsed"
           >
-            <div class="areas-card-title">
-              {{
-                mapAreasCollapsed ? "Show Viewed Areas" : "Hide Viewed Areas"
-              }}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              *ngIf="displayMode == 2 || displayMode == 3"
+              (click)="
+                displayMode == 2
+                  ? (displayMode = 1)
+                  : (displayMode = lastDisplayMode)
+              "
+            >
+              <path
+                d="M15 20.67C14.81 20.67 14.62 20.6 14.47 20.45L7.95003 13.93C6.89003 12.87 6.89003 11.13 7.95003 10.07L14.47 3.55002C14.76 3.26002 15.24 3.26002 15.53 3.55002C15.82 3.84002 15.82 4.32002 15.53 4.61002L9.01003 11.13C8.53003 11.61 8.53003 12.39 9.01003 12.87L15.53 19.39C15.82 19.68 15.82 20.16 15.53 20.45C15.38 20.59 15.19 20.67 15 20.67Z"
+                fill="#4D65B4"
+              />
+            </svg>
+            <div class="floating-card-header-titles-container">
+              <span class="title"> Campaign Geo Manager </span>
+
+              <span *ngIf="displayMode == 2" class="sub-title">
+                <nav aria-label="breadcrumb">
+                  <ul class="breadcrumb">
+                    <li>
+                      <a (click)="displayMode = 1">
+                        {{ getStatesToDisplay?.code }}
+                      </a>
+                    </li>
+                    <li>
+                      <a (click)="displayMode = 1">
+                        {{ selectedCityName }}
+                      </a>
+                    </li>
+                    <li class="active">Neighborhoods</li>
+                  </ul>
+                </nav>
+              </span>
             </div>
             <svg
-              [ngClass]="{ 'map-areas-collapsed-icon': mapAreasCollapsed }"
+              [ngClass]="{
+                'floating-card-collapsed-icon': mainFloatingCardCollapsed
+              }"
               xmlns="http://www.w3.org/2000/svg"
               width="18"
               height="18"
               viewBox="0 0 16 16"
               fill="none"
+              (click)="mainFloatingCardCollapsed = !mainFloatingCardCollapsed"
             >
               <path
                 d="M13.28 10.5332C13.1533 10.5332 13.0267 10.4866 12.9267 10.3866L8.58001 6.03989C8.26001 5.71989 7.74001 5.71989 7.42001 6.03989L3.07335 10.3866C2.88001 10.5799 2.56001 10.5799 2.36668 10.3866C2.17335 10.1932 2.17335 9.87322 2.36668 9.67989L6.71335 5.33322C7.42001 4.62656 8.57335 4.62656 9.28668 5.33322L13.6333 9.67989C13.8267 9.87322 13.8267 10.1932 13.6333 10.3866C13.5333 10.4799 13.4067 10.5332 13.28 10.5332Z"
@@ -42,10 +73,12 @@
             </svg>
           </div>
 
-          <div *ngIf="!mapAreasCollapsed" class="states-tabs">
+          <div
+            *ngIf="displayMode == 1 && !mainFloatingCardCollapsed"
+            class="states-tabs"
+          >
             <ng-container *ngFor="let state of mapStates; let lastState = last">
               <div
-                *ngIf="!checkStateDisplay(state.code)"
                 class="state-tab"
                 [ngClass]="{
                   'state-tab-active': selectedStateTab == state.code
@@ -56,96 +89,10 @@
               </div>
             </ng-container>
           </div>
-        </div>
-        <div *ngIf="!mapAreasCollapsed" class="cities-card-content">
-          <ng-container
-            *ngIf="
-              getStatesToDisplay && !checkStateDisplay(getStatesToDisplay.code)
-            "
-          >
-            <div class="area-card-item">
-              <div class="area-name">
-                {{ getStatesToDisplay.longName }}
-              </div>
-              <button
-                class="btn add-area-btn"
-                (click)="
-                  addState(getStatesToDisplay.code, getStatesToDisplay.longName)
-                "
-              >
-                Add State
-              </button>
-            </div>
-            <hr />
-            <ng-container
-              *ngIf="
-                getStatesToDisplay.cities && getStatesToDisplay.cities.length
-              "
-            >
-              <ng-container
-                *ngFor="
-                  let city of getStatesToDisplay.cities;
-                  let lastCity = last
-                "
-              >
-                <ng-container
-                  *ngIf="!checkCityDisplay(getStatesToDisplay.code, city)"
-                >
-                  <div class="area-card-item">
-                    <div class="area-name">
-                      {{ city }}, {{ getStatesToDisplay.code }}
-                    </div>
-                    <button
-                      class="btn add-area-btn"
-                      (click)="
-                        getStatesToDisplay.cities.length > 1
-                          ? addCity(getStatesToDisplay.code, city)
-                          : addState(
-                              getStatesToDisplay.code,
-                              getStatesToDisplay.longName
-                            )
-                      "
-                    >
-                      Add City
-                    </button>
-                  </div>
-                  <hr *ngIf="!lastCity" />
-                </ng-container>
-              </ng-container>
-            </ng-container>
-          </ng-container>
-        </div>
-      </div>
-
-      <div
-        *ngIf="checkAddedListDisplay()"
-        class="added-list"
-        [ngClass]="{ 'p-3': addedListCollapsed }"
-      >
-        <div class="map-areas-header" [ngClass]="{ 'p-0': addedListCollapsed }">
           <div
-            class="w-100 d-flex align-items-center gap-2"
-            (click)="addedListCollapsed = !addedListCollapsed"
+            *ngIf="displayMode == 3 && !mainFloatingCardCollapsed"
+            class="states-tabs"
           >
-            <div class="areas-card-title">Your Added List</div>
-
-            <svg
-              class="ms-auto"
-              [ngClass]="{ 'map-areas-collapsed-icon': addedListCollapsed }"
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <path
-                d="M13.28 10.5332C13.1533 10.5332 13.0267 10.4866 12.9267 10.3866L8.58001 6.03989C8.26001 5.71989 7.74001 5.71989 7.42001 6.03989L3.07335 10.3866C2.88001 10.5799 2.56001 10.5799 2.36668 10.3866C2.17335 10.1932 2.17335 9.87322 2.36668 9.67989L6.71335 5.33322C7.42001 4.62656 8.57335 4.62656 9.28668 5.33322L13.6333 9.67989C13.8267 9.87322 13.8267 10.1932 13.6333 10.3866C13.5333 10.4799 13.4067 10.5332 13.28 10.5332Z"
-                fill="#4D65B4"
-              />
-            </svg>
-          </div>
-
-          <div *ngIf="!addedListCollapsed" class="states-tabs">
             <ng-container *ngFor="let tab of addedListTabs">
               <div
                 *ngIf="checkAddedListTabsDisplay(tab)"
@@ -160,84 +107,278 @@
             </ng-container>
           </div>
         </div>
-
-        <div *ngIf="!addedListCollapsed" class="cities-card-content">
-          <ng-container *ngIf="selectedAddedListTab == 'States'">
-            <ng-container *ngFor="let state of getAllAddedStates()">
-              <div class="area-card-item">
-                <div class="area-name">
-                  {{ state.value }}
-                </div>
-                <button
-                  class="btn remove-area-btn"
-                  (click)="removeState(state.key)"
-                >
-                  Remove State
-                </button>
+        <div *ngIf="!mainFloatingCardCollapsed" class="floating-card-content">
+          <ng-container *ngIf="displayMode == 1 && getStatesToDisplay">
+            <div class="area-card-item">
+              <div class="area-name">
+                {{ getStatesToDisplay.code }}
               </div>
-              <hr />
+              <button
+                class="btn add-area-btn ms-auto"
+                [ngClass]="{
+                  'remove-area-btn': checkStateDisplay(getStatesToDisplay.code)
+                }"
+                (click)="
+                  checkStateDisplay(getStatesToDisplay.code)
+                    ? removeState(getStatesToDisplay.code)
+                    : addState(getStatesToDisplay.code, getStatesToDisplay.code)
+                "
+              >
+                {{
+                  checkStateDisplay(getStatesToDisplay.code)
+                    ? "Remove State"
+                    : "Add State"
+                }}
+              </button>
+            </div>
+            <hr />
+            <ng-container
+              *ngIf="
+                !checkStateDisplay(getStatesToDisplay.code) &&
+                getStatesToDisplay.cities &&
+                getStatesToDisplay.cities.length
+              "
+            >
+              <ng-container
+                *ngFor="
+                  let city of getStatesToDisplay.cities;
+                  let lastCity = last
+                "
+              >
+                <div class="area-card-item">
+                  <div class="area-name me-auto">
+                    {{ city.City }}
+                  </div>
+                  <button
+                    *ngIf="city.COUNT > 0"
+                    class="btn add-area-btn"
+                    (click)="viewNeighborhoods(city.City)"
+                  >
+                    Neighborhoods
+                  </button>
+                  <button
+                    class="btn add-area-btn"
+                    [ngClass]="{
+                      'remove-area-btn': checkCityDisplay(
+                        getStatesToDisplay.code,
+                        city.City
+                      )
+                    }"
+                    (click)="
+                      checkCityDisplay(getStatesToDisplay.code, city.City)
+                        ? removeCity(getStatesToDisplay.code, city.City)
+                        : getStatesToDisplay.cities.length > 1
+                        ? addCity(getStatesToDisplay.code, city.City)
+                        : addState(
+                            getStatesToDisplay.code,
+                            getStatesToDisplay.code
+                          )
+                    "
+                  >
+                    {{
+                      checkCityDisplay(getStatesToDisplay.code, city.City)
+                        ? "Remove City"
+                        : "Add City"
+                    }}
+                  </button>
+                </div>
+                <hr *ngIf="!lastCity" />
+              </ng-container>
             </ng-container>
           </ng-container>
 
-          <ng-container *ngIf="selectedAddedListTab == 'Cities'">
-            <ng-container *ngFor="let state of getAllAddedCities()">
-              <ng-container *ngFor="let city of state.value">
+          <ng-container *ngIf="displayMode == 2">
+            <ng-container *ngIf="loadingGlobalPolygons">
+              <div
+                class="w-100 h-100 d-flex align-items-center justify-content-center"
+              >
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container
+              *ngIf="!loadingGlobalPolygons && realTimeGeoJsons.length"
+            >
+              <ng-container
+                *ngFor="let geoJson of realTimeGeoJsons; let last = last"
+              >
                 <div class="area-card-item">
-                  <div class="area-name">{{ city }}, {{ state.key }}</div>
+                  <div class="area-name">
+                    {{ geoJson.name }}
+                  </div>
                   <button
-                    class="btn remove-area-btn"
-                    (click)="removeCity(state.key, city)"
+                    class="btn add-area-btn ms-auto"
+                    (click)="toggleJeoJsonOnMap(geoJson)"
+                    [ngClass]="{
+                      'hide-area-btn': checkDisplayedGeoJson(geoJson.id)
+                    }"
                   >
-                    Remove City
+                    {{ checkDisplayedGeoJson(geoJson.id) ? "Hide" : "View" }}
+                  </button>
+                  <button
+                    class="btn add-area-btn"
+                    [ngClass]="{
+                      'remove-area-btn': checkAddedFeatureDisplay(geoJson.id)
+                    }"
+                    (click)="
+                      checkAddedFeatureDisplay(geoJson.id)
+                        ? removeAddedFeature(getGeoJsonFeatureId(geoJson.id)!)
+                        : addNewFeature(geoJson)
+                    "
+                  >
+                    {{
+                      checkAddedFeatureDisplay(geoJson.id) ? "Remove" : "Add"
+                    }}
+                  </button>
+                </div>
+                <hr *ngIf="!last" />
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <div *ngIf="displayMode == 3">
+            <ng-container *ngIf="selectedAddedListTab == 'States'">
+              <ng-container *ngFor="let state of getAllAddedStates()">
+                <div class="area-card-item">
+                  <div class="area-name">
+                    {{ state.value }}
+                  </div>
+                  <button
+                    class="btn remove-area-btn ms-auto"
+                    (click)="removeState(state.key)"
+                  >
+                    Remove State
                   </button>
                 </div>
                 <hr />
               </ng-container>
             </ng-container>
-          </ng-container>
 
-          <ng-container *ngIf="selectedAddedListTab == 'Neighborhoods'">
-            <ng-container *ngFor="let feature of getAllAddedFeatures">
-              <div class="area-card-item">
-                <div class="area-name">
-                  {{ feature.name }}
-                </div>
-                <button
-                  class="btn remove-area-btn"
-                  (click)="removeAddedFeature(feature.id)"
-                >
-                  Remove Neighborhood
-                </button>
-              </div>
-              <hr />
+            <ng-container *ngIf="selectedAddedListTab == 'Cities'">
+              <ng-container *ngFor="let state of getAllAddedCities()">
+                <ng-container *ngFor="let city of state.value">
+                  <div class="area-card-item">
+                    <div class="area-name">{{ city }}, {{ state.key }}</div>
+                    <button
+                      class="btn remove-area-btn ms-auto"
+                      (click)="removeCity(state.key, city)"
+                    >
+                      Remove City
+                    </button>
+                  </div>
+                  <hr />
+                </ng-container>
+              </ng-container>
             </ng-container>
-          </ng-container>
-        </div>
 
+            <ng-container *ngIf="selectedAddedListTab == 'Neighborhoods'">
+              <ng-container *ngFor="let feature of getAllAddedFeatures">
+                <div class="area-card-item">
+                  <div class="area-name">
+                    {{ feature.name }}
+                  </div>
+                  <button
+                    class="btn remove-area-btn ms-auto"
+                    (click)="removeAddedFeature(feature.featureId)"
+                  >
+                    Remove Neighborhood
+                  </button>
+                </div>
+                <hr />
+              </ng-container>
+            </ng-container>
+            <div
+              class="launch-campaign-btn"
+              (click)="openNewCampaignPopup(content)"
+            >
+              <div class="launch-campaign-btn-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
+                  />
+                  <path
+                    d="M16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
+                  />
+                  <path
+                    d="M12 16.75C11.59 16.75 11.25 16.41 11.25 16V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V16C12.75 16.41 12.41 16.75 12 16.75Z"
+                  />
+                </svg>
+              </div>
+              <span class="launch-campaign-title">
+                Launch Expansion Campaigns</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="floating-card campaign-content-card"
+        style="height: auto"
+        [ngClass]="{ 'p-3': campaignContentCollapsed }"
+      >
         <div
-          class="launch-campaign-btn"
-          (click)="openNewCampaignPopup(content)"
+          class="floating-card-header"
+          [ngClass]="{ 'p-0': campaignContentCollapsed }"
         >
-          <div class="launch-campaign-btn-icon">
+          <div
+            class="w-100 d-flex align-items-center justify-content-between gap-2"
+          >
+            <div class="floating-card-header-titles-container">
+              <span class="title"> Campaign Contains </span>
+            </div>
             <svg
+              [ngClass]="{
+                'floating-card-collapsed-icon': campaignContentCollapsed
+              }"
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              viewBox="0 0 16 16"
               fill="none"
+              (click)="campaignContentCollapsed = !campaignContentCollapsed"
             >
               <path
-                d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"
-              />
-              <path
-                d="M16 12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
-              />
-              <path
-                d="M12 16.75C11.59 16.75 11.25 16.41 11.25 16V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V16C12.75 16.41 12.41 16.75 12 16.75Z"
+                d="M13.28 10.5332C13.1533 10.5332 13.0267 10.4866 12.9267 10.3866L8.58001 6.03989C8.26001 5.71989 7.74001 5.71989 7.42001 6.03989L3.07335 10.3866C2.88001 10.5799 2.56001 10.5799 2.36668 10.3866C2.17335 10.1932 2.17335 9.87322 2.36668 9.67989L6.71335 5.33322C7.42001 4.62656 8.57335 4.62656 9.28668 5.33322L13.6333 9.67989C13.8267 9.87322 13.8267 10.1932 13.6333 10.3866C13.5333 10.4799 13.4067 10.5332 13.28 10.5332Z"
+                fill="#4D65B4"
               />
             </svg>
           </div>
-          <span class="launch-campaign-title"> Launch Expansion Campaigns</span>
+        </div>
+        <div *ngIf="!campaignContentCollapsed" class="floating-card-content">
+          <div class="area-card-item">
+            <div class="area-name">
+              States: {{ getAllAddedStates().length }}
+            </div>
+          </div>
+          <hr />
+          <div class="area-card-item">
+            <div class="area-name">Cities: {{ getAddedCitiesCount() }}</div>
+          </div>
+          <hr />
+          <div class="area-card-item">
+            <div class="area-name">
+              Neighborhoods: {{ getAllAddedFeatures.length }}
+            </div>
+          </div>
+          <button
+            [disabled]="
+              getAllAddedStates().length == 0 &&
+              getAddedCitiesCount() == 0 &&
+              getAllAddedFeatures.length == 0
+            "
+            class="w-100 launch-campaign-btn"
+            (click)="lastDisplayMode = displayMode; displayMode = 3"
+          >
+            <span class="launch-campaign-title"> View Details</span>
+          </button>
         </div>
       </div>
     </div>

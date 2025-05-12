@@ -155,19 +155,19 @@
                         'background-color': getDirectionColor(email.Direction),
                         'border-radius': '5px',
                         'padding': '3px 6px',
-                        'margin-right': '7px'
+                        'margin-right': '5px'
                       }"
-                      class="d-flex align-items-center"
+                      class="d-flex align-items-center direction-icon"
                     >
                       <i
                         (click)="openEmail(email)"
                         [ngClass]="'fa-solid ' + getDirectionIcon(email.Direction)"
                         class="me-2"
                       ></i>
-                      <span style="font-size: 12px;">{{ getDirectionLabel(email.Direction) }}</span>
+                      <span class="direction-name" style="font-size: 12px;">{{ getDirectionLabel(email.Direction) }}</span>
                     </div>
                   
-                    <span class="subject" (click)="openEmail(email)">
+                    <span class="subject subject-mob" (click)="openEmail(email)">
                       {{ email.Subject }}
                     </span>
                   </strong>
@@ -184,13 +184,13 @@
                  ></i> -->
                  <img
                  style="width: 24px; height: 24px"
-                 class="logo ms-0 me-2"
+                 class="logo ms-0 me-2 logo-mob"
                  src="https://api.cherrypick.com/api/Organization/GetOrgImag?orgId={{
                    email.O[0].OrganizationId
                  }}"
                  title="{{ email.O[0].OrganizationName }}"
                />
-               <p class="mb-0" style="font-size: 13px;">{{ email.O[0].OrganizationName }}</p>
+               <p class="mb-0 organization-name" style="font-size: 13px;">{{ email.O[0].OrganizationName }}</p>
 
                <div>
                  <img
@@ -281,7 +281,7 @@
               class="email-body"
               [innerHTML]="emailBodySafeModal"
               contenteditable="true"
-              style="white-space: normal"
+              style="white-space: pre-line"
               (input)="onBodyChange($event)"
             ></div>
           </div>

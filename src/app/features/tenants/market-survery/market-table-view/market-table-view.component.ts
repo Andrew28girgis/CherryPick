@@ -44,8 +44,8 @@ export class MarketTableViewComponent implements OnInit {
   ) {
   }
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.campainId = params.campaignId;
       this.currentView = localStorage.getItem('currentView') || '2';
@@ -85,6 +85,8 @@ export class MarketTableViewComponent implements OnInit {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         CampaignId: this.campainId,
+        ShoppingCenterStageId: 0, // Load all centers
+
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -121,7 +123,7 @@ export class MarketTableViewComponent implements OnInit {
       next: (data) => {
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
-        this.buyboxCategories.forEach((category) => {
+        this.buyboxCategories?.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces?.filter((place) =>
             place.RetailRelationCategories?.some((x) => x.Id === category.id)

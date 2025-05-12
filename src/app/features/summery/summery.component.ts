@@ -1,6 +1,11 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BbPlace } from 'src/app/shared/models/buyboxPlaces';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BuyBoxModel } from 'src/app/shared/models/BuyBoxModel';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -15,12 +20,8 @@ import { Tenant } from 'src/app/shared/models/tenants';
 })
 export class SummeryComponent implements OnInit {
   tenants: Tenant[] = [];
-  selectedTenant: Tenant | null = null; 
-  showSummery: boolean = false;
   Token: any;
   orgId!: number;
-  buyboxPlaces: BbPlace[] = [];
-  isCollapsed = true;
   organizationId!: any;
   Obj!: BuyBoxModel;
   @ViewChild('BuyBoxProperty') buyBoxProperty!: TemplateRef<any>;
@@ -29,8 +30,7 @@ export class SummeryComponent implements OnInit {
   showCampaigns: boolean = false;
   campaignsViewMode: 'table' | 'card' = 'table';
   currentView: 'tenants' | 'campaigns-table' | 'campaigns-card' = 'tenants';
-
-  // Add a new property to track if campaigns were loaded
+  isMobile = false;
   campaignsLoaded = false;
 
   constructor(
@@ -53,6 +53,7 @@ export class SummeryComponent implements OnInit {
       this.organizationId = localStorage.getItem('orgId');
     });
     this.modalOpened = false;
+    this.checkScreenSize();
   }
 
   getUserBuyBoxes(): void {
@@ -72,9 +73,7 @@ export class SummeryComponent implements OnInit {
       },
     });
   }
-  selectTenant(tenant: Tenant) {
-    this.selectedTenant = tenant;
-  }
+
   openAddTenant(content: any) {
     const modalRef = this.modalService.open(content, {
       ariaLabelledBy: 'modal-basic-title',
@@ -99,6 +98,9 @@ export class SummeryComponent implements OnInit {
     this.campaignsViewMode = 'table';
     this.currentView = 'campaigns-table';
     this.campaignsLoaded = true;
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Campaigns', url: '/campaigns' },
+    ]);
   }
 
   showCampaignsCard() {
@@ -106,12 +108,45 @@ export class SummeryComponent implements OnInit {
     this.campaignsViewMode = 'card';
     this.currentView = 'campaigns-card';
     this.campaignsLoaded = true;
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'Campaigns', url: '/campaigns' },
+    ]);
   }
 
-  // Add method to go back to tenants view
   showTenants() {
     this.showCampaigns = false;
     this.currentView = 'tenants';
-    // Don't reset campaignsLoaded here to preserve the state
+    this.breadcrumbService.setBreadcrumbs([
+      { label: 'My Tenants', url: '/summary' },
+    ]);
+  }
+
+  goToTenant(tenant: Tenant) {
+    this.router.navigate([
+      '/dashboard',
+      tenant.Id,
+      tenant.OrganizationId,
+      tenant.Name,
+      tenant.Campaigns[0].Id,
+    ]);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 767;
+    if (this.isMobile) {
+      this.campaignsViewMode = 'card';
+    } else {
+      const savedViewMode = localStorage.getItem('campaignViewMode') as
+        | 'table'
+        | 'card';
+      if (savedViewMode) {
+        this.campaignsViewMode = savedViewMode;
+      }
+    }
   }
 }

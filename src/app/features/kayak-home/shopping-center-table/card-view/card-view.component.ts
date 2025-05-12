@@ -1,3 +1,4 @@
+import { SentMails } from './../../../../shared/models/shoppingCenters';
 import {
   Component,
   OnInit,
@@ -10,13 +11,14 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
-import { Center } from '../../../../shared/models/shoppingCenters';
+import { Center, Stage } from '../../../../shared/models/shoppingCenters';
 import { General } from 'src/app/shared/models/domain';
 import { Subscription } from 'rxjs';
 import { ViewManagerService } from 'src/app/core/services/view-manager.service';
 import { ContactBrokerComponent } from '../contact-broker/contact-broker.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { PlacesService } from 'src/app/core/services/places.service';
+import { Email } from 'src/app/shared/models/email';
 
 @Component({
   selector: 'app-card-view',
@@ -25,11 +27,13 @@ import { PlacesService } from 'src/app/core/services/places.service';
 })
 export class CardViewComponent implements OnInit, OnDestroy {
   // Properties
+  SentMails: SentMails[] = [];
   General: General = new General();
   buyboxCategories: BuyboxCategory[] = [];
   shoppingCenters: Center[] = [];
   filteredCenters: Center[] = [];
-  searchQuery: string = '';
+  allShoppingCenters: Center[] = []; // Store all shopping centers
+  searchQuery = '';
   selectedId: number | null = null;
   selectedIdCard: number | null = null;
   BuyBoxId!: any;
@@ -52,25 +56,54 @@ export class CardViewComponent implements OnInit, OnDestroy {
   private outsideClickHandler: ((e: Event) => void) | null = null;
   submissions: any;
   isModalOpen = false;
+  BuyBoxName: any;
+  Campaign: any;
+  CampaignId!: any;
+  isMobileView = false;
+  selectedStageName = ' ';
+  stages: Stage[] = [];
+  selectedStageId = 0; // Default to 0 (All)
+  @ViewChild('mailModal', { static: true }) mailModalTpl!: TemplateRef<any>;
+
+  selectedMailSubject = '';
+  selectedMailDate = new Date();
+  selectedMailBody: SafeHtml = '';
+  openedEmail!: Email;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private cdr: ChangeDetectorRef,
-    private shoppingCenterService: ViewManagerService,
+    public shoppingCenterService: ViewManagerService,
     private placesService: PlacesService,
     private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
+    this.loadStages();
+    this.subscriptions.add(
+      this.shoppingCenterService.selectedStageId$.subscribe((id) => {
+        this.selectedStageId = id;
+        if (id === 0) {
+          this.selectedStageName = 'All';
+        } else {
+          const stage = this.stages.find((s) => s.id === id);
+          this.selectedStageName = stage ? stage.stageName : '';
+        }
+        this.cdr.detectChanges();
+      })
+    );
+    this.checkMobileView();
     this.activatedRoute.params.subscribe((params: any) => {
       this.BuyBoxId = params.buyboxid;
       this.OrgId = params.orgId;
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
-
+      this.Campaign = params.campaign;
+      this.BuyBoxName = params.buyboxName;
+      this.CampaignId = params.campaignId;
       // Initialize data using the centralized service
-      // this.shoppingCenterService.initializeData(this.BuyBoxId, this.OrgId);
+      // this.shoppingCenterService.initializeData(this.CampaignId, this.OrgId);
     });
 
     // Subscribe to data from the centralized service
@@ -91,6 +124,37 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.shoppingCenterService.filteredCenters$.subscribe((centers) => {
         this.filteredCenters = centers;
+
+        this.filteredCenters.forEach((center: any) => { 
+          const lastOutgoingEmail = center.SentMails?.filter(
+            (mail: any) => mail.Direction == 2
+          ).sort(
+            (a: any, b: any) =>
+              new Date(b.Date).getTime() - new Date(a.Date).getTime()
+          )[0];
+
+          // Get last email with Direction == 2 (sorted by date descending)
+          const lastIncomingEmail = center.SentMails?.filter(
+            (mail: any) => mail.Direction == 1
+          ).sort(
+            (a: any, b: any) =>
+              new Date(b.Date).getTime() - new Date(a.Date).getTime()
+          )[0];
+          center.lastOutgoingEmail = lastOutgoingEmail;
+          center.lastIncomingEmail = lastIncomingEmail; 
+          console.log(center.CenterName);
+          console.log(center.lastOutgoingEmail);
+          console.log(center.lastIncomingEmail);
+          
+        });
+
+        this.cdr.detectChanges();
+      })
+    );
+
+    this.subscriptions.add(
+      this.shoppingCenterService.allShoppingCenters$.subscribe((centers) => {
+        this.allShoppingCenters = centers;
         this.cdr.detectChanges();
       })
     );
@@ -319,7 +383,8 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.shoppingCenterService.updatePlaceKanbanStage(
       marketSurveyId,
       stageId,
-      shoppingCenter
+      shoppingCenter,
+      this.CampaignId
     );
   }
 
@@ -421,5 +486,99 @@ export class CardViewComponent implements OnInit, OnDestroy {
 
     // Loop through submissions and return true if any submission has a SubmmisionLink
     return submissions.some((submission) => submission.SubmmisionLink !== null);
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.checkMobileView();
+  }
+
+  checkMobileView(): void {
+    this.isMobileView = window.innerWidth <= 768;
+    this.cdr.detectChanges();
+  }
+
+  loadStages(): void {
+    const body = {
+      Name: 'GetKanbanTemplateStages',
+      Params: { KanbanTemplateId: 6 },
+    };
+
+    this.placesService.GenericAPI(body).subscribe({
+      next: (res: any) => {
+        this.stages = res.json
+          .map((s: any) => ({
+            id: +s.id,
+            stageName: s.stageName,
+            stageOrder: +s.stageOrder,
+            isQualified: s.isQualified,
+            kanbanTemplateId: +s.kanbanTemplateId,
+          }))
+          .sort((a: any, b: any) => a.stageOrder - b.stageOrder);
+
+        // --- initialize the button label ---
+        if (this.selectedStageId === 0) {
+          this.selectedStageName = 'All';
+        } else {
+          const current = this.stages.find(
+            (s) => s.id === this.selectedStageId
+          );
+          this.selectedStageName = current ? current.stageName : 'Stage';
+        }
+      },
+      error: (err) => console.error('Error loading kanban stages:', err),
+    });
+  }
+
+  onStageChange(id: number) {
+    // Client-side filtering
+    this.selectedStageId = id;
+    this.shoppingCenterService.setSelectedStageId(id);
+
+    // Update the selected stage name for display
+    if (id === 0) {
+      this.selectedStageName = 'All';
+    } else {
+      const stage = this.stages.find((s) => s.id === id);
+      this.selectedStageName = stage ? stage.stageName : 'Stage';
+    }
+  }
+
+  selectStagekan(id: number) {
+    this.selectedStageId = id;
+    this.selectedStageName =
+      id === 0
+        ? 'All'
+        : this.stages.find((s) => s.id === id)?.stageName || 'Stage';
+    this.shoppingCenterService.setSelectedStageId(id);
+  }
+  getSentMails(shopping: any): SentMails[] {
+    const raw: any[] = shopping?.SentMails ?? [];
+    return raw.map((mail) => ({
+      Id: mail.ID,
+      Date: new Date(mail.Date),
+      Direction: mail.Direction,
+    }));
+  }
+  openMailPopup(mailId: number): void {
+    const payload = {
+      Name: 'GetMail',
+      Params: { mailid: mailId },
+    };
+
+    // call the HTML-returning variant
+    this.placesService.GenericAPIHtml(payload).subscribe({
+      next: (res: any) => {
+        this.openedEmail = res.json[0];
+
+        this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(
+          this.openedEmail.Body
+        );
+
+        // **THIS** must be your TemplateRef, not a string
+        this.modalService.open(this.mailModalTpl, {
+          size: 'lg',
+        });
+      },
+    });
   }
 }

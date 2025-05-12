@@ -24,7 +24,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './campaign-manager.component.html',
   styleUrls: ['./campaign-manager.component.css'],
 })
-export class       CampaignManagerComponent implements OnInit, OnDestroy {
+export class CampaignManagerComponent implements OnInit, OnDestroy {
   @Input() hideViewToggles: boolean = false;
   @Input() forceReload: boolean = false;
   @Input() set viewMode(value: 'table' | 'card') {
@@ -64,9 +64,7 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
     private emilyService: EmilyService,
     private router: Router,
     private breadcrumbService: BreadcrumbService
-  ) {
-    this.checkScreenSize();
-  }
+  ) {}
 
   ngOnInit(): void {
     // Only proceed if data hasn't been loaded before or if force reload is requested
@@ -81,7 +79,6 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScreenSize();
@@ -104,11 +101,9 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
   }
 
   toggleView(mode: 'table' | 'card'): void {
-    if (!this.isMobile) {
-      this.viewMode = mode;
-      // Save preference in localStorage
-      localStorage.setItem('campaignViewMode', mode);
-    }
+    this.viewMode = mode;
+    // Save preference in localStorage
+    localStorage.setItem('campaignViewMode', mode);
   }
 
   toggleExpand(campaign: any): void {
@@ -301,8 +296,9 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
   getSumbmissionsCountRejected(submissions: Submission[]) {
     return submissions.filter((s) => s.StatusId == -1).length;
   }
+  
   getKanbanCount(stageName: string, kanbansList: KanbanStage[]): number {
-    const kanbanStage = kanbansList.find(
+    const kanbanStage = kanbansList?.find(
       (k) => k.stageName.toLowerCase() === stageName.toLowerCase()
     );
     return kanbanStage && kanbanStage.MarketSurveyShoppingCenters[0]?.Id
@@ -313,13 +309,15 @@ export class       CampaignManagerComponent implements OnInit, OnDestroy {
   private loadData(): void {
     this.getAllCampaigns();
     this.getUserBuyBoxes();
-    
+
     // Check if there's a saved preference for view mode
-    const savedViewMode = localStorage.getItem('campaignViewMode') as 'table' | 'card';
+    const savedViewMode = localStorage.getItem('campaignViewMode') as
+      | 'table'
+      | 'card';
     if (savedViewMode && !this.isMobile) {
       this.viewMode = savedViewMode;
     }
-    
+
     this.dataLoaded = true;
   }
 }

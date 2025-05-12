@@ -52,6 +52,9 @@ export interface Center {
     Neighbourhood?: string
     isDropdownOpen?: boolean
     CampaignId?: number
+    SentMails?: SentMails
+    lastOutgoingEmail:any
+    lastIncomingEmail:any
   }
   export class Comment {
     Id?: number
@@ -152,6 +155,7 @@ export interface Center {
     Extras: string
     ShoppingCenterId: number
     Place:Root
+    CampaignId:number
   }
   
    
@@ -176,3 +180,16 @@ export interface Center {
     Distance: number
   }
   
+  export interface Stage {
+    id: number;
+    stageName: string;
+    stageOrder: number;
+    isQualified: boolean;
+    kanbanTemplateId: number;
+  }
+
+  export interface SentMails {
+    Id: number
+    Date:Date
+    Direction:number
+  }

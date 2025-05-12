@@ -16,6 +16,14 @@
   transition: transform 0.2s, background-color 0.2s;
   border: 1px solid rgb(190, 190, 190);
 }
+.action-btn {
+  height: 34px;
+  color: #fff;
+  background-color: #4d65b4;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+}
 
 .icon-image {
   filter: brightness(1) invert(1);
@@ -48,8 +56,6 @@
 }
 
 .tab-view-container {
-  background-color: #fff;
-  padding: 0.5rem;
   min-height: 85vh;
   border-radius: 1rem;
 }
@@ -63,7 +69,7 @@
 }
 
 ::ng-deep .popover-body {
-  padding: 0 !important;
+  padding: 5px !important;
 }
 
 ::ng-deep .popover-arrow::after {
@@ -72,9 +78,18 @@
 }
 
 @media (max-width: 768px) {
+  .mobileButtons {
+    padding-top: 10px;
+    justify-content: center;
+    gap: 5px;
+    display: flex;
+    margin-bottom: 10px;
+  }
+
   .mobile-nav {
     width: fit-content;
     margin-bottom: 5px;
+    gap: 50px;
   }
 
   .mobile-n {
@@ -106,7 +121,6 @@
   }
 }
 
-
 .inbox {
   padding: 5px 8px;
   border-radius: 1rem;
@@ -124,4 +138,14 @@
 .mail a {
   color: #fff;
   width: max-content;
+}
+
+.displayNone {
+  display: none !important;
+}
+
+@media (min-width: 769px) {
+  .mobileButtons {
+    justify-content: flex-end;
+  }
 }

@@ -57,6 +57,7 @@ export class MarketSurveyComponent implements OnInit {
   Guid!: string;
   GuidLink!: string;
   campaignId!: any;
+  loginSharedToken  !: any;
   constructor(
     public activatedRoute: ActivatedRoute,
     private PlacesService: PlacesService,
@@ -65,23 +66,30 @@ export class MarketSurveyComponent implements OnInit {
     private markerService: MapsService,
     private modalService: NgbModal
   ) {
+
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
     this.markerService.clearMarkers();
   }
 
   ngOnInit() {
+
     this.General = new General();
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.BuyBoxName = params.buyboxName;
       this.campaignId = params.campaignId;
+    
       localStorage.setItem('BuyBoxId', this.BuyBoxId);
       localStorage.setItem('OrgId', this.OrgId);
       localStorage.setItem('CampaignId', this.campaignId);
+    
       this.ContactId = localStorage.getItem('contactId');
+      this.loginSharedToken = localStorage.getItem('loginToken');
     });
+    
 
     this.currentView = this.isMobileView ? '5' : '2';
 
@@ -122,7 +130,9 @@ export class MarketSurveyComponent implements OnInit {
       next: (data) => {
         this.Guid = data.json[0].buyBoxLink;
         if (this.Guid) {
-          this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
+          // this.GuidLink = `https://cp.cherrypick.com/?t=${this.Guid}`;
+          this.GuidLink = `http://localhost:4200/?t=${this.Guid}`;
+
         } else {
           this.GuidLink = '';
         }
@@ -131,6 +141,7 @@ export class MarketSurveyComponent implements OnInit {
     });
     this.modalService.open(this.ShareWithContact, { size: 'lg' });
   }
+
   copyGUID(link: string) {
     navigator.clipboard
       .writeText(link)

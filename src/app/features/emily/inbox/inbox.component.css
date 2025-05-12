@@ -448,3 +448,41 @@
   margin-top: 7px;
   cursor: pointer;
 }
+@media (max-width: 768px) {
+  .single-mail{
+    padding: 5px;
+    border-bottom: 1px solid #cdcdcd;
+  }
+  .subject {
+    color: #16181d;
+    font-size: 14px;
+    line-height: 16px;
+    width: 100px;
+  }
+  .direction-name{
+    display: none;
+  }
+  .direction-icon{
+    padding: 3px 3px;
+  }
+  .organization-name{
+    font-size: 11px !important;
+    width: 75px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .logo-mob{
+    width: 20px;
+    height: 20px; 
+  }
+  .subject-mob{
+    width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .email-body{
+    width: 95%;
+  }
+}

@@ -14,7 +14,7 @@ import { MapsService } from 'src/app/core/services/maps.service';
 @Component({
   selector: 'app-market-map-view',
   templateUrl: './market-map-view.component.html',
-  styleUrls: ['./market-map-view.component.css']
+  styleUrls: ['./market-map-view.component.css'],
 })
 export class MarketMapViewComponent implements OnInit {
   General: any = {};
@@ -39,8 +39,8 @@ export class MarketMapViewComponent implements OnInit {
     private PlacesService: PlacesService,
     private spinner: NgxSpinnerService,
     private markerService: MapsService,
-    private ngZone: NgZone,
-  ) { 
+    private ngZone: NgZone
+  ) {
     this.savedMapView = localStorage.getItem('mapView');
     this.isMobileView = window.innerWidth <= 768;
     this.markerService.clearMarkers();
@@ -48,8 +48,8 @@ export class MarketMapViewComponent implements OnInit {
 
   ngOnInit() {
     this.General = new General();
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.campaignId = params.campaignId;
 
@@ -79,7 +79,7 @@ export class MarketMapViewComponent implements OnInit {
       error: (err) => {
         console.error('Error loading categories:', err);
         this.spinner.hide();
-      }
+      },
     });
   }
 
@@ -93,6 +93,7 @@ export class MarketMapViewComponent implements OnInit {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         CampaignId: this.campaignId,
+        ShoppingCenterStageId: 0, // Load all centers
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -104,8 +105,8 @@ export class MarketMapViewComponent implements OnInit {
         this.shoppingCenters = this.shoppingCenters?.filter(
           (element: any) => element.Deleted == false
         );
-        this.shoppingCenters = this.shoppingCenters?.filter(
-          (element: any) => [42,  44].includes(element.kanbanTemplateStageId)
+        this.shoppingCenters = this.shoppingCenters?.filter((element: any) =>
+          [42, 44].includes(element.kanbanTemplateStageId)
         );
 
         this.stateService.setShoppingCenters(this.shoppingCenters);
@@ -114,7 +115,7 @@ export class MarketMapViewComponent implements OnInit {
       error: (err) => {
         console.error('Error loading shopping centers:', err);
         this.spinner.hide();
-      }
+      },
     });
   }
 
@@ -124,7 +125,7 @@ export class MarketMapViewComponent implements OnInit {
       this.processCategories();
       this.initializeMap();
       return;
-    } 
+    }
     const body: any = {
       Name: 'BuyBoxRelatedRetails',
       Params: {
@@ -141,13 +142,13 @@ export class MarketMapViewComponent implements OnInit {
       error: (err) => {
         console.error('Error loading buybox places:', err);
         this.spinner.hide();
-      }
+      },
     });
   }
 
   // Process categories with buybox places
   processCategories(): void {
-    this.buyboxCategories.forEach((category) => {
+    this.buyboxCategories?.forEach((category) => {
       category.isChecked = false;
       category.places = this.buyboxPlaces?.filter((place) =>
         place.RetailRelationCategories?.some((x) => x.Id === category.id)
@@ -162,7 +163,7 @@ export class MarketMapViewComponent implements OnInit {
         resolve(true);
         return;
       }
-      
+
       // Poll for Google Maps to become available
       const checkInterval = setInterval(() => {
         if (window.google && window.google.maps) {
@@ -170,7 +171,7 @@ export class MarketMapViewComponent implements OnInit {
           resolve(true);
         }
       }, 100);
-      
+
       // Timeout after 10 seconds
       setTimeout(() => {
         clearInterval(checkInterval);
@@ -183,7 +184,7 @@ export class MarketMapViewComponent implements OnInit {
   // Initialize map after data is loaded
   async initializeMap() {
     if (this.mapInitialized) return;
-    
+
     try {
       // Ensure Google Maps is available
       const mapsAvailable = await this.checkGoogleMapsAvailable();
@@ -192,7 +193,7 @@ export class MarketMapViewComponent implements OnInit {
         console.error('Google Maps API not available');
         return;
       }
-      
+
       // Now initialize the map with data
       await this.createMap();
       this.mapInitialized = true;
@@ -216,7 +217,7 @@ export class MarketMapViewComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading polygons:', err);
-      }
+      },
     });
   }
 
@@ -224,7 +225,7 @@ export class MarketMapViewComponent implements OnInit {
   async createMap() {
     try {
       const mapElement = document.getElementById('map');
-      
+
       if (!mapElement) {
         console.error('Map element not found');
         this.spinner.hide();
@@ -236,24 +237,29 @@ export class MarketMapViewComponent implements OnInit {
       let mapOptions: any = {
         center: { lat: 38.9072, lng: -77.0369 }, // Default to DC
         zoom: 8,
-        mapId: '1234567890'
+        mapId: '1234567890',
       };
-      
+
       // Try to use saved map view if available
       if (this.savedMapView) {
         try {
           const savedView = JSON.parse(this.savedMapView);
-          if (savedView && 
-              typeof savedView.lat === 'number' && !isNaN(savedView.lat) &&
-              typeof savedView.lng === 'number' && !isNaN(savedView.lng) &&
-              typeof savedView.zoom === 'number' && !isNaN(savedView.zoom)) {
+          if (
+            savedView &&
+            typeof savedView.lat === 'number' &&
+            !isNaN(savedView.lat) &&
+            typeof savedView.lng === 'number' &&
+            !isNaN(savedView.lng) &&
+            typeof savedView.zoom === 'number' &&
+            !isNaN(savedView.zoom)
+          ) {
             mapOptions.center = { lat: savedView.lat, lng: savedView.lng };
             mapOptions.zoom = savedView.zoom;
           }
         } catch (e) {
           console.error('Error parsing saved map view:', e);
         }
-      } 
+      }
       // Otherwise, try to use the first shopping center
       else if (this.shoppingCenters && this.shoppingCenters.length > 0) {
         const firstCenter = this.shoppingCenters[0];
@@ -263,18 +269,17 @@ export class MarketMapViewComponent implements OnInit {
           mapOptions.center = { lat, lng };
         }
       }
-      
+
       // Create the map
       this.map = new Map(mapElement, mapOptions);
-      
+
       // Add listeners after map is created
       this.map.addListener('dragend', () => this.onMapDragEnd(this.map));
       this.map.addListener('zoom_changed', () => this.onMapDragEnd(this.map));
       this.map.addListener('bounds_changed', () => this.onMapDragEnd(this.map));
-      
+
       // Now add markers and polygons
       this.addMarkersToMap();
-      
     } catch (error) {
       console.error('Error creating map:', error);
       this.spinner.hide();
@@ -291,11 +296,11 @@ export class MarketMapViewComponent implements OnInit {
 
       // Get polygons and create custom markers
       this.GetPolygons();
-      
+
       if (this.buyboxCategories && this.buyboxCategories.length > 0) {
         this.createCustomMarkers(this.buyboxCategories);
       }
-      
+
       // Update the cards side list
       if (this.map && this.map.getBounds()) {
         this.updateCardsSideList(this.map);
@@ -307,7 +312,7 @@ export class MarketMapViewComponent implements OnInit {
 
   createMarkers(markerDataArray: any[], type: string) {
     if (!this.map || !markerDataArray) return;
-    
+
     markerDataArray.forEach((markerData) => {
       if (markerData) {
         this.markerService.createMarker(this.map, markerData, type);
@@ -330,13 +335,13 @@ export class MarketMapViewComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading polygons:', err);
-      }
+      },
     });
   }
 
   createCustomMarkers(markerDataArray: any[]) {
     if (!this.map || !markerDataArray) return;
-    
+
     markerDataArray.forEach((categoryData) => {
       if (categoryData) {
         this.markerService.createCustomMarker(this.map, categoryData);
@@ -352,7 +357,7 @@ export class MarketMapViewComponent implements OnInit {
 
   private onMapDragEnd(map: any) {
     if (!map) return;
-    
+
     this.saveMapView(map);
     this.updateShoppingCenterCoordinates();
     this.updateCardsSideList(map);
@@ -360,12 +365,16 @@ export class MarketMapViewComponent implements OnInit {
 
   private saveMapView(map: any): void {
     if (!map || !map.getCenter) return;
-    
+
     try {
       const center = map.getCenter();
       const zoom = map.getZoom();
-      
-      if (center && typeof center.lat === 'function' && typeof center.lng === 'function') {
+
+      if (
+        center &&
+        typeof center.lat === 'function' &&
+        typeof center.lng === 'function'
+      ) {
         localStorage.setItem(
           'mapView',
           JSON.stringify({
@@ -379,7 +388,7 @@ export class MarketMapViewComponent implements OnInit {
       console.error('Error saving map view:', error);
     }
   }
-  
+
   private updateShoppingCenterCoordinates(): void {
     if (this.shoppingCenters) {
       this.shoppingCenters?.forEach((center) => {
@@ -389,21 +398,20 @@ export class MarketMapViewComponent implements OnInit {
     }
   }
 
-  
-
   private updateCardsSideList(map: any): void {
     if (!map || !map.getBounds) return;
-    
+
     const bounds = map.getBounds();
     if (!bounds) return;
-    
+
     try {
-      const visibleMarkers = this.markerService.getVisibleProspectMarkers(bounds);
+      const visibleMarkers =
+        this.markerService.getVisibleProspectMarkers(bounds);
       const visibleCoords = new Set(
         visibleMarkers.map((marker) => `${marker.lat},${marker.lng}`)
       );
       const allProperties = [...(this.shoppingCenters || [])];
-      
+
       this.ngZone.run(() => {
         this.cardsSideList = allProperties.filter(
           (property) =>
@@ -418,7 +426,7 @@ export class MarketMapViewComponent implements OnInit {
 
   private isWithinBounds(property: any, bounds: any): boolean {
     if (!property || !bounds || !bounds.contains) return false;
-    
+
     try {
       const lat = parseFloat(property.Latitude);
       const lng = parseFloat(property.Longitude);
@@ -434,12 +442,12 @@ export class MarketMapViewComponent implements OnInit {
 
   onMouseEnter(place: any): void {
     if (!place || !this.map) return;
-    
+
     try {
       const { Latitude, Longitude } = place;
       const lat = parseFloat(Latitude);
       const lng = parseFloat(Longitude);
-      
+
       if (!isNaN(lat) && !isNaN(lng)) {
         this.map.setCenter({ lat, lng });
         this.map.setZoom(17);
@@ -460,21 +468,18 @@ export class MarketMapViewComponent implements OnInit {
       this.markerService.onMouseLeave(this.map, place);
     }
   }
-  
+
   streetMap(lat: number, lng: number, heading: number, pitch: number) {
     if (!google || !google.maps) return;
-    
+
     try {
       const streetViewElement = document.getElementById('street-view');
       if (streetViewElement) {
-        const panorama = new google.maps.StreetViewPanorama(
-          streetViewElement,
-          {
-            position: { lat, lng },
-            pov: { heading: heading || 0, pitch: pitch || 0 },
-            zoom: 1,
-          }
-        );
+        const panorama = new google.maps.StreetViewPanorama(streetViewElement, {
+          position: { lat, lng },
+          pov: { heading: heading || 0, pitch: pitch || 0 },
+          zoom: 1,
+        });
         this.addMarkerToStreetView(panorama, lat, lng);
       }
     } catch (error) {
@@ -484,10 +489,10 @@ export class MarketMapViewComponent implements OnInit {
 
   addMarkerToStreetView(panorama: any, lat: number, lng: number) {
     if (!panorama || !google || !google.maps || !google.maps.Marker) return;
-    
+
     try {
       const svgPath = 'M 0,0 m -12,0 a 12,12 0 1,0 24,0 a 12,12 0 1,0 -24,0';
-      
+
       new google.maps.Marker({
         position: { lat, lng },
         map: panorama,

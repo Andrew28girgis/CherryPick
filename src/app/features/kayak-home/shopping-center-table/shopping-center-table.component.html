@@ -1,9 +1,54 @@
 <div class="tab-view-container">
+  <div style="gap: 5px; display: flex;align-items: center;" class="mobileButtons">
+    <button
+      style="border: none; background: none"
+      class="border-none mx-2 d-sm-flex d-none"
+    >
+      <app-link-microsoft style="    height: 25px;"></app-link-microsoft>
+    </button>
+    <!-- <button
+      class="CherryPick__button mx-2"
+      [routerLink]="['/organization-mail', BuyBoxId, OrgId, 0]"
+    >
+      Emily
+    </button> -->
+    <button
+      class="action-btn optionMobileColor"
+      [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
+    >
+      <i
+        class="fa-regular fa-envelope me-2 optionMobile"
+        style="color: #fff"
+      ></i>
+      <span>Emily</span>
+    </button>
+
+    <button
+      class="action-btn optionMobileColor"
+      [routerLink]="['/campaigns/ataglance', CampaignId]"
+    >
+      <i class="fa-regular fa-star"></i>
+      <span> At a Glance </span>
+    </button>
+    <button class="action-btn optionMobileColor">
+      <a
+        class="action-btn optionMobileColor"
+        [href]="generateSafeUrl()"
+
+     
+        target="_blank"
+      >
+        <i class="fa-solid fa-house"></i>
+        <span> Market Survey </span>
+      </a>
+    </button>
+  </div>
   <div class="bottom-navbar">
     <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
     <div class="row m-0 mb-0 mobile-n">
       <div
-        class="col-12 pt-2 d-flex justify-content-between align-items-center mobile-nav mb-2"
+        class="col-12 d-flex justify-content-between align-items-center mobile-nav"
       >
         <div class="custom-icon-container">
           <div
@@ -12,50 +57,19 @@
             [class.d-none]="option.status == 2"
             [class.d-sm-flex]="option.status == 2"
             (click)="selectOption(option)"
+            [class.displayNone]="
+              (option.status == 6 && isMobile) ||
+              (option.status == 4 && isMobile)
+            "
             [class.selected]="
               selectedOption === option.status || selectedOption === option
             "
           >
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
-            <span class="icon-text d-none d-sm-flex">{{ option.text }}</span>
+            <span class="icon-text d-none d-sm-flex" *ngIf="!isMobile">{{
+              option.text
+            }}</span>
           </div>
-        </div>
-        <div style="gap: 5px; display: flex">
-          <button
-            style="border: none; background: none"
-            class="border-none mx-2"
-          >
-            <app-link-microsoft></app-link-microsoft>
-          </button>
-          <!-- <button
-            class="CherryPick__button mx-2"
-            [routerLink]="['/organization-mail', BuyBoxId, OrgId, 0]"
-          >
-            Emily
-          </button> -->
-          <button
-            class="btn"
-            style="height: 38px; color: #fff; background-color: #001f3f"
-            [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
-          >
-            <i class="fa-regular fa-envelope me-2" style="color: #fff"></i>
-            <span>Emily</span>
-          </button>
-
-          <button
-            class="btn"
-            style="height: 38px; color: #fff; background-color: #001f3f"
-            [routerLink]="['/campaigns/ataglance', CampaignId]"
-          >
-            At a Glance
-          </button>
-          <button
-            class="btn"
-            style="height: 38px; color: #fff; background-color: #001f3f"
-            [routerLink]="['/market-survey', BuyBoxId, OrgId, BuyBoxName , CampaignId]"
-          >
-            Market Survey
-          </button>
         </div>
       </div>
     </div>

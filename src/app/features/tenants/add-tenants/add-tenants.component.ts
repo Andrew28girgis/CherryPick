@@ -73,7 +73,6 @@ export class AddTenantsComponent implements OnInit {
 
   onOrganizationInput(event: any) {
     const val: string = event.target.value;
-
     if (val.length > 2) {
       this.searchOrganization(val);
     } else {

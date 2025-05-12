@@ -1,0 +1,102 @@
+/* File: app.component.scss */
+:host {
+  display: block;
+  height: 90vh;
+}
+
+body {
+  height: 90vh;
+  overflow: hidden;
+}
+
+.chat-container {
+  height: 92vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  background-color: #f8f9fa;
+  padding: 10px 15px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.messages-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px;
+  background-color: #f8f9fa;
+}
+
+.message {
+  margin-bottom: 15px;
+  max-width: 80%;
+}
+
+.user-message {
+  background-color: #d1e7ff;
+  border-radius: 15px 15px 15px 15px;
+  padding: 10px 15px;
+  margin-left: auto;
+}
+
+.ai-message {
+  background-color: #e9ecef;
+  border-radius: 15px 15px 15px 0;
+  padding: 10px 15px;
+}
+
+.message-time {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+.input-area {
+  padding: 15px;
+  background-color: #fff;
+  border-top: 1px solid #dee2e6;
+}
+
+.canvas-container {
+  height: 100vh;
+  background-color: #fff;
+  border-left: 1px solid #dee2e6;
+  position: relative;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  cursor: crosshair;
+}
+
+.canvas-tools {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.color-picker {
+  width: 30px;
+  height: 30px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.brush-size {
+  width: 100px;
+}
+
+.barb {
+  background-color: #4d65b4;
+  color: #fff;
+}

@@ -65,8 +65,8 @@ export class MarketSideViewComponent implements OnInit {
 
   ngOnInit() {
     this.General = new General();
-    this.activatedRoute.params.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+    this.activatedRoute.queryParams.subscribe((params: any) => {
+      this.BuyBoxId = params.buyBoxId;
       this.campaignId = params.campaignId;
       this.spinner.show();
       this.BuyBoxPlacesCategories(this.BuyBoxId);
@@ -108,6 +108,8 @@ export class MarketSideViewComponent implements OnInit {
       Name: 'GetMarketSurveyShoppingCenters',
       Params: {
         CampaignId: this.campaignId,
+        ShoppingCenterStageId: 0, // Load all centers
+
       },
     };
     this.PlacesService.GenericAPI(body).subscribe({
@@ -161,7 +163,7 @@ export class MarketSideViewComponent implements OnInit {
   }
   // Process categories with buybox places
   processCategories(): void {
-    this.buyboxCategories.forEach((category) => {
+    this.buyboxCategories?.forEach((category) => {
       category.isChecked = false;
       category.places = this.buyboxPlaces?.filter((place) =>
         place.RetailRelationCategories?.some((x) => x.Id === category.id)

@@ -157,7 +157,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.buyboxPlaces = data.json;
         this.stateService.setBuyboxPlaces(data.json);
-        this.buyboxCategories.forEach((category) => {
+        this.buyboxCategories?.forEach((category) => {
           category.isChecked = false;
           category.places = this.buyboxPlaces?.filter((place) =>
             place.RetailRelationCategories?.some((x) => x.Id === category.id)
