@@ -255,8 +255,36 @@
               class="table-text"
               
             >
-          <P class="mb-0" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></P>
+          <!-- <P class="mb-0" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></P> -->
+            <div *ngIf="shoppingCenter.ShoppingCenter?.Places?.length" class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
+              <table class="table table-sm table-striped mb-0 small-table" style="font-size:0.75rem;">
+                <thead>
+                  <tr>
+                    <th scope="col">Size (SF)</th>
+                    <th scope="col">Lease Price</th>
+                    <th scope="col">Extras</th>
+                    <th scope="col">Lease Type</th>
+                    <th scope="col">Secondary Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let place of shoppingCenter.ShoppingCenter.Places">
+                    <td>{{ place.BuildingSizeSf | number }}</td>
+                    <td>
+                      {{ place.ForLeasePrice 
+                          ? (place.ForLeasePrice | currency:'USD':'symbol':'1.0-0') 
+                          : 'On Request' }}
+                    </td>
+                    <td>{{ place.Extras || '—' }}</td>
+                    <td>{{ place.LeaseType }}</td>
+                    <td>{{ place.SecondaryType }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>       
+               
           </td>
+
             <td *ngIf="shoppingCenters[0].ShoppingCenter">
               <ng-container
                 *ngIf="

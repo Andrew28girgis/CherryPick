@@ -372,10 +372,40 @@
             </div>
 
             <div>
-              <p
+
+               <!-- <p
                 class="ShoppingCenterUnitSize"
                 [innerHTML]="getShoppingCenterUnitSize(shopping)"
-              ></p>
+              ></p> -->
+              <!-- table places here -->
+              <div *ngIf="shopping.ShoppingCenter?.Places?.length" class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
+                <table class="table table-sm table-striped mb-0 small-table" style="font-size:0.75rem;">
+                  <thead>
+                    <tr>
+                      <th scope="col">Size (SF)</th>
+                      <th scope="col">Lease Price</th>
+                      <th scope="col">Extras</th>
+                      <th scope="col">Lease Type</th>
+                      <th scope="col">Secondary Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let place of shopping.ShoppingCenter.Places">
+                      <td>{{ place.BuildingSizeSf | number }}</td>
+                      <td>
+                        {{ place.ForLeasePrice 
+                            ? (place.ForLeasePrice | currency:'USD':'symbol':'1.0-0') 
+                            : 'On Request' }}
+                      </td>
+                      <td>{{ place.Extras || '—' }}</td>
+                      <td>{{ place.LeaseType }}</td>
+                      <td>{{ place.SecondaryType }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+
               <div *ngIf="getSentMails(shopping).length > 0">
                 <ul class="mail-list">
                   <ng-container *ngIf="getSentMails(shopping) as mails">
@@ -465,7 +495,7 @@
                   [placement]="'top'"
                 />
               </div>
-              <br />
+              <!-- <br /> -->
               <ng-template #popoverContent>
                 <div
                   *ngFor="
