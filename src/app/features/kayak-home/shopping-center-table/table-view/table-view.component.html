@@ -253,8 +253,10 @@
             </td>
             <td
               class="table-text"
-              [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"
-            ></td>
+              
+            >
+          <P class="mb-0" [innerHTML]="getShoppingCenterUnitSize(shoppingCenter)"></P>
+          </td>
             <td *ngIf="shoppingCenters[0].ShoppingCenter">
               <ng-container
                 *ngIf="
