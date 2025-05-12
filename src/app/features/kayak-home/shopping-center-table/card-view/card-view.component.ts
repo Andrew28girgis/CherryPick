@@ -126,7 +126,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
         this.filteredCenters = centers;
 
         this.filteredCenters.forEach((center: any) => { 
-          const lastOutgoingEmail = center.SentMails.filter(
+          const lastOutgoingEmail = center.SentMails?.filter(
             (mail: any) => mail.Direction == 2
           ).sort(
             (a: any, b: any) =>
@@ -134,15 +134,18 @@ export class CardViewComponent implements OnInit, OnDestroy {
           )[0];
 
           // Get last email with Direction == 2 (sorted by date descending)
-          const lastIncomingEmail = center.SentMails.filter(
+          const lastIncomingEmail = center.SentMails?.filter(
             (mail: any) => mail.Direction == 1
           ).sort(
             (a: any, b: any) =>
               new Date(b.Date).getTime() - new Date(a.Date).getTime()
           )[0];
-          console.log(center.CenterName);
           center.lastOutgoingEmail = lastOutgoingEmail;
           center.lastIncomingEmail = lastIncomingEmail; 
+          console.log(center.CenterName);
+          console.log(center.lastOutgoingEmail);
+          console.log(center.lastIncomingEmail);
+          
         });
 
         this.cdr.detectChanges();

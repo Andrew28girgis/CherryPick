@@ -392,9 +392,7 @@
                       <th scope="col">Price</th>
                       <th scope="col">Extras</th>
                       <th scope="col">Type</th>
-                      <th scope="col">
-                        S.Type
-                      </th>
+                      <th scope="col">S.Type</th>
                       <th scope="col">Privacy</th>
                     </tr>
                   </thead>
@@ -413,8 +411,16 @@
                       <td>{{ place.LeaseType }}</td>
                       <td>{{ place.SecondaryType }}</td>
                       <td>
-                        <i *ngIf=" !place.CampaignId" class="fa-solid fa-lock-open"></i>
-                        <i *ngIf=" place.CampaignId" class="fa-solid fa-lock"></i>
+                        <i
+                          *ngIf="!place.CampaignId"
+                          class="fa-solid fa-lock-open"
+                        ></i>
+                        <i
+                          *ngIf="place.CampaignId"
+                          class="fa-solid fa-lock"
+                          style="cursor: pointer"
+                          (click)="openMailPopup(shopping.lastOutgoingEmail.ID)"
+                        ></i>
                       </td>
                     </tr>
                   </tbody>
@@ -428,7 +434,10 @@
                       class="mail-summary"
                       (click)="openMailPopup(shopping.lastOutgoingEmail.ID)"
                     >
-                      Last Sent Email:  <span style="text-decoration: none;">{{shopping.lastOutgoingEmail.Date |date}}</span>
+                      Last Sent Email:
+                      <span style="text-decoration: none">{{
+                        shopping.lastOutgoingEmail.Date | date
+                      }}</span>
                     </span>
                   </div>
                   <div *ngIf="shopping.lastIncomingEmail" class="mt-2">
@@ -436,7 +445,10 @@
                       class="mail-summary"
                       (click)="openMailPopup(shopping.lastIncomingEmail.ID)"
                     >
-                      Last Received Email: <span style="text-decoration: none;">{{shopping.lastIncomingEmail.Date | date}}</span>
+                      Last Received Email:
+                      <span style="text-decoration: none">{{
+                        shopping.lastIncomingEmail.Date | date
+                      }}</span>
                     </span>
                   </div>
                   <!-- <li
