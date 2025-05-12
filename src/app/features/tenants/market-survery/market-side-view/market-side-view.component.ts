@@ -66,7 +66,7 @@ export class MarketSideViewComponent implements OnInit {
   ngOnInit() {
     this.General = new General();
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+      this.BuyBoxId = params.buyBoxId;
       this.campaignId = params.campaignId;
       this.spinner.show();
       this.BuyBoxPlacesCategories(this.BuyBoxId);

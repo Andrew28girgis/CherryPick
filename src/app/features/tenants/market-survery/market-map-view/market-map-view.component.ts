@@ -49,7 +49,7 @@ export class MarketMapViewComponent implements OnInit {
   ngOnInit() {
     this.General = new General();
     this.activatedRoute.queryParams.subscribe((params: any) => {
-      this.BuyBoxId = params.buyboxid;
+      this.BuyBoxId = params.buyBoxId;
       this.OrgId = params.orgId;
       this.campaignId = params.campaignId;
 
