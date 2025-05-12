@@ -4,7 +4,8 @@ import { map } from "rxjs/operators"
 import   { PlacesService } from "./places.service"
 import   { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser"
 import   { BuyboxCategory } from "src/app/shared/models/buyboxCategory"
-import   { Center, Stage } from "src/app/shared/models/shoppingCenters"
+// import   { Center, Stage } from "src/app/shared/models/shoppingCenters"
+import   { Center } from "src/app/shared/models/shoppingCenters"
 import   { BbPlace } from "src/app/shared/models/buyboxPlaces"
 import   { ShareOrg } from "src/app/shared/models/shareOrg"
 
@@ -75,7 +76,7 @@ export class ViewManagerService {
   private categoryNameCache = new Map<number, string>()
   private unitSizeCache = new Map<string, string>()
   StageId = 0
-  stages: Stage[] = []
+  // stages: Stage[] = []
 
   constructor(
     private placesService: PlacesService,
@@ -302,6 +303,39 @@ export class ViewManagerService {
 
       result = `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`
     }
+      const extrasList = places
+        .map((place: any) => place.Extras)
+        .filter((extra: any) => extra && extra.trim() !== '');
+      if (extrasList.length > 0) {
+        const uniqueExtras = [...new Set(extrasList)];
+        result += `<br><b>Extras</b>: ${uniqueExtras.join('; ')}`;
+      }
+
+      const leaseType = places
+        .map((place: any) => place.LeaseType)
+        .filter((type: any) => type && type.trim() !== '');
+      if (leaseType.length > 0) {
+        const uniqueLeaseTypes = [...new Set(leaseType)];
+        result += `<br><b>Lease Type</b>: ${uniqueLeaseTypes.join('; ')}`;
+      }
+
+      const type = places
+        .map((place: any) => place.Type)
+        .filter((type: any) => type && type.trim() !== '');
+      if (type.length > 0) {
+        const uniqueTypes = [...new Set(type)];
+        result += `<br><b>Type</b>: ${uniqueTypes.join('; ')}`;
+      }
+
+      // const buildingSizess = places
+      //   .map((place: any) => place.BuildingSizeSf)
+      //   .filter((size: any) => size);
+
+      // if (buildingSizess.length > 0) {
+      //   const minSize = Math.min(...buildingSizess);
+      //   const maxSize = Math.max(...buildingSizess);
+      //   result += `<br><b>Unit Size</b>: ${minSize} sq ft. - ${maxSize} sq ft.`;
+      // }
 
     // Cache the result
     this.unitSizeCache.set(key, result)
