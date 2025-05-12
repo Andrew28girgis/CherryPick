@@ -147,6 +147,27 @@ export class SideListViewComponent implements OnInit, OnDestroy {
         this.ngZone.run(() => {
           this.cardsSideList = centers
         })
+
+
+         this.cardsSideList.forEach((center: any) => { 
+          const lastOutgoingEmail = center.SentMails.filter(
+            (mail: any) => mail.Direction == 2
+          ).sort(
+            (a: any, b: any) =>
+              new Date(b.Date).getTime() - new Date(a.Date).getTime()
+          )[0];
+
+          // Get last email with Direction == 2 (sorted by date descending)
+          const lastIncomingEmail = center.SentMails.filter(
+            (mail: any) => mail.Direction == 1
+          ).sort(
+            (a: any, b: any) =>
+              new Date(b.Date).getTime() - new Date(a.Date).getTime()
+          )[0];
+          console.log(center.CenterName);
+          center.lastOutgoingEmail = lastOutgoingEmail;
+          center.lastIncomingEmail = lastIncomingEmail; 
+        });
         if (centers && centers.length > 0) {
           this.isLoading = false // Hide the skeleton loader
         }

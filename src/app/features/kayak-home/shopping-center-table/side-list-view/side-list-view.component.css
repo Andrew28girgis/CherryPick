@@ -20,7 +20,6 @@
   height: 30px;
 }
 
-
 .selected-option:hover {
   background-color: #f8f9fa;
   border-color: #adb5bd;
@@ -231,7 +230,7 @@
 
 .ShoppingCenterStage {
   font-size: 16px;
-  color: #FF8028;
+  color: #ff8028;
   font-weight: 700;
 }
 
@@ -247,7 +246,6 @@
 ::ng-deep .popover-arrow::before {
   border-top: none !important;
 }
-
 
 .skeleton-loader {
   text-align: center;
@@ -302,7 +300,7 @@
 .skeleton-card {
   width: 100%;
   max-width: 437px;
-  margin: 0 auto;     
+  margin: 0 auto;
 }
 
 .skeleton-content {
@@ -310,8 +308,12 @@
 }
 
 @keyframes shimmer {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .card-window_c.skeleton {
@@ -322,13 +324,15 @@
 .card-window_c.skeleton::after {
   content: "";
   position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
     to right,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0) 100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
   animation: shimmer 1.5s infinite;
 }
@@ -352,12 +356,16 @@
   height: 20px;
   margin-top: 16px;
 }
-.skeleton-line { width: 90%; }
-.skeleton-line.short { width: 50%; }
+.skeleton-line {
+  width: 90%;
+}
+.skeleton-line.short {
+  width: 50%;
+}
 
 .skeleton-map {
-  height: 100vh; 
-  width: 100%;   
+  height: 100vh;
+  width: 100%;
   position: relative;
   background-color: #f0f0f0;
   overflow: hidden;
@@ -366,18 +374,18 @@
 .skeleton-map::after {
   content: "";
   position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
     to right,
-    rgba(255,255,255,0)   0%,
-    rgba(255,255,255,0.6) 50%,
-    rgba(255,255,255,0)   100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
   animation: shimmer 1.5s infinite;
 }
-
-
 
 .skeleton-loader {
   text-align: center;
@@ -538,13 +546,10 @@
   transition: transform 0.2s ease;
 }
 
-
-
-
 .dropdown-item.active {
   color: #000 !important;
 }
- .stage-select-container {
+.stage-select-container {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -629,7 +634,7 @@
 .dropdown-item:focus {
   color: #16181b;
   text-decoration: none;
-  background-color: #F3F3E0;
+  background-color: #f3f3e0;
 }
 
 .dropdown-item.active,
@@ -664,8 +669,6 @@
   border-bottom: 2px solid #6b7280;
   transform: rotate(45deg);
 }
-
-
 
 .select-arrow:not(.fa-chevron-down)::after {
   content: "";
@@ -845,4 +848,13 @@
   .modal-body > div:last-child .mail-body {
     padding: 16px;
   }
+}
+
+.mail-summary {
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.mail-summary:hover {
+  text-decoration: underline;
 }

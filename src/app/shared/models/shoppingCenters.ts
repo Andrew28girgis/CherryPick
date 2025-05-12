@@ -53,6 +53,8 @@ export interface Center {
     isDropdownOpen?: boolean
     CampaignId?: number
     SentMails?: SentMails
+    lastOutgoingEmail:any
+    lastIncomingEmail:any
   }
   export class Comment {
     Id?: number
@@ -153,6 +155,7 @@ export interface Center {
     Extras: string
     ShoppingCenterId: number
     Place:Root
+    CampaignId:number
   }
   
    

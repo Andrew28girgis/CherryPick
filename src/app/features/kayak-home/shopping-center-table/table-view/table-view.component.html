@@ -260,11 +260,14 @@
               <table class="table table-sm table-striped mb-0 small-table" style="font-size:0.75rem;">
                   <thead>
                     <tr>
-                      <th scope="col" style="min-width: 60px;">Size (SF)</th>
-                      <th scope="col" style="min-width: 77px;">Lease Price</th>
+                      <th scope="col" style="min-width: 60px">Size (SF)</th>
+                      <th scope="col">Price</th>
                       <th scope="col">Extras</th>
-                      <th scope="col" style="min-width: 75px;">Lease Type</th>
-                      <th scope="col" style="min-width: 100px;">Secondary Type</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">
+                        S.Type
+                      </th>
+                      <th scope="col">Privacy</th>
                     </tr>
                   </thead>
                 <tbody>
@@ -278,6 +281,10 @@
                     <td>{{ place.Extras || '—' }}</td>
                     <td>{{ place.LeaseType }}</td>
                     <td>{{ place.SecondaryType }}</td>
+                    <td>
+                        <i *ngIf=" !place.CampaignId" class="fa-solid fa-lock-open"></i>
+                        <i *ngIf=" place.CampaignId" class="fa-solid fa-lock"></i>
+                    </td>
                   </tr>
                 </tbody>
               </table>
