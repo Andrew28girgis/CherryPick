@@ -9,6 +9,6 @@ export class CanvasService {
   constructor(private http: HttpClient) {}
 
   getGPTAction(request: any) {
-    return this.http.post<any>(`${environment.api}/GetGPTAction`, request);
+    return this.http.post<any>(`${environment.api}/Canvas/GetGPTAction`, request);
   }
 }

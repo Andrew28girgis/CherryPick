@@ -9,9 +9,14 @@ import { CanvasChatDTO } from 'src/app/shared/models/canvas/canvas';
   styleUrl: './canvas-home.component.css',
 })
 export class CanvasHomeComponent {
+  contactId: string | null = null;
   constructor(private CanvasService: CanvasService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.contactId = localStorage.getItem('contactId');
+    console.log(this.contactId);
+    
+  }
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
