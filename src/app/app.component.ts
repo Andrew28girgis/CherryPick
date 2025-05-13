@@ -13,25 +13,11 @@ export class AppComponent implements OnInit {
   isMobile = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
   isSocialView: boolean = false;
+  
   ngOnInit() {
     this.checkScreenSize();
     this.isSocialView =
       this.localStorage.getItem('currentViewDashBord') === '5';
-    // this.router.events
-    // .pipe(filter(event => event instanceof NavigationEnd))
-    // .subscribe(() => {
-    //   const childRoute = this.activatedRoute.firstChild;
-    //   // Check for 'hideHeader' in route data
-    //   if (childRoute && childRoute.snapshot.data['hideHeader']) {
-    //     this.display = false;
-    //   } else {
-    //     this.display = true;
-    //   }
-    //   const currentUrl = this.router.url;
-    //   if (currentUrl.startsWith('/Kanban')) {
-    //     this.display = false;
-    //   }
-    // });
 
     this.router.events
       .pipe(

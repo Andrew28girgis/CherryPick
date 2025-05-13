@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  General,
-  adminLogin as AdminLogin,
-} from 'src/app/shared/models/domain';
+import { adminLogin as AdminLogin } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
@@ -23,7 +20,6 @@ export class LoginComponent implements OnInit {
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   public loginData!: AdminLogin;
-  public general!: General;
   private loginToken: string | null = null;
   public showPassword: boolean = false;
   public errorMessage: string | null = null;
@@ -42,52 +38,13 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.initializeData();
     this.handleRouteParams();
-  }
+  } 
 
-  /**
-   * Handles form submission for email/password login
-   */
-  public onSubmit(): void {
-    const loginRequest = this.prepareLoginRequest();
-
-    this.placesService.loginUser(loginRequest).subscribe({
-      next: (response: any) => {
-        this.handleLoginSuccess(response);
-      },
-      error: (err: any) => {
-        this.handleLoginError();
-      },
-      complete: () => {
-        this.spinner.hide();
-      },
-    });
-  }
-
-  private handleLoginError(): void {
-    this.errorMessage = 'Invalid email or password. Please try again.';
-
-    setTimeout(() => {
-      this.fadeSuccess = true;
-    }, 4000);
-
-    setTimeout(() => {
-      this.errorMessage = null;
-      this.fadeSuccess = false;
-    }, 4000);
-  }
-
-  /**
-   * Initializes login data and general settings
-   */
   private initializeData(): void {
-    this.general = new General();
     this.loginData = new AdminLogin();
     localStorage.clear();
-  }
+  } 
 
-  /**
-   * Handles route parameters and initiates GUID-based login if token is present
-   */
   private handleRouteParams(): void {
     this.route.queryParamMap.subscribe((params) => {
       this.loginToken = params.get('t');
@@ -96,11 +53,8 @@ export class LoginComponent implements OnInit {
         this.loginWithGUID();
       }
     });
-  }
+  } 
 
-  /**
-   * Handles login with GUID token
-   */
   private loginWithGUID(): void {
     this.spinner.show();
     const request = {
@@ -120,28 +74,49 @@ export class LoginComponent implements OnInit {
   }
 
   private handleGUIDLoginSuccess(response: any): void {
-    const { organizationId, buyBoxId, name: buyboxName ,campaignId } = response.json[0];
+    const {
+      organizationId,
+      buyBoxId,
+      name: buyboxName,
+      campaignId,
+    } = response.json[0];
     localStorage.setItem(this.ORG_ID_KEY, organizationId);
+
     this.router.navigate(['/market-survey'], {
       queryParams: {
         buyBoxId: buyBoxId,
         orgId: organizationId,
         buyboxName: buyboxName,
-        campaignId: campaignId
-      }
+        campaignId: campaignId,
+      },
     });
-      }
+    
+  }
 
   private prepareLoginRequest(): AdminLogin {
     const encryptedLoginData = new AdminLogin();
     encryptedLoginData.Email = this.loginData.Email;
     encryptedLoginData.Password = this.encrypt(this.loginData.Password);
-    // encryptedLoginData.Password = this.loginData.Password;
-
     if (this.loginToken) {
       encryptedLoginData.contactToken = this.loginToken;
     }
     return encryptedLoginData;
+  }
+
+  public onSubmit(): void {
+    const loginRequest = this.prepareLoginRequest();
+
+    this.placesService.loginUser(loginRequest).subscribe({
+      next: (response: any) => {
+        this.handleLoginSuccess(response);
+      },
+      error: (err: any) => {
+        this.handleLoginError();
+      },
+      complete: () => {
+        this.spinner.hide();
+      },
+    });
   }
 
   private handleLoginSuccess(response: any): void {
@@ -161,6 +136,19 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/summary']);
   }
 
+  private handleLoginError(): void {
+    this.errorMessage = 'Invalid email or password. Please try again.';
+
+    setTimeout(() => {
+      this.fadeSuccess = true;
+    }, 4000);
+
+    setTimeout(() => {
+      this.errorMessage = null;
+      this.fadeSuccess = false;
+    }, 4000);
+  }
+  
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
@@ -177,17 +165,5 @@ export class LoginComponent implements OnInit {
       }
     );
     return encrypted.toString();
-  }
-
-  decrypt(encryptedValue: string): string {
-    const decodedValue = decodeURIComponent(encryptedValue);
-    const decrypted = CryptoJS.AES.decrypt(decodedValue, this.key, {
-      keySize: 256 / 8,
-      iv: this.iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7,
-    });
-
-    return decrypted.toString(CryptoJS.enc.Utf8);
   }
 }

@@ -53,10 +53,7 @@ export class NotificationsComponent implements OnInit {
         this.notifications = (response.json || []) as Notification[];
         this.sortNotificationsByDate();
         this.updateNotificationCounts();
-      },
-      error: (error) => {
-        console.error('Error fetching notifications:', error);
-      },
+      }
     });
   }
 
@@ -92,10 +89,7 @@ export class NotificationsComponent implements OnInit {
       next: () => {
         notification.isRead = true;
         this.updateNotificationCounts();
-      },
-      error: (error) => {
-        console.error('Error updating notification:', error);
-      },
+      }
     });
   }
 
