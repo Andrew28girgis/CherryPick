@@ -450,6 +450,17 @@
                 </table>
               </div>
 
+              <div *ngIf="shopping.ShoppingCenter?.Places?.length" class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
+                <p class="mb-0 pt-1"><b>Notes</b></p>
+                <table class="table table-sm table-striped mb-0 small-table" style="font-size: 0.75rem;">
+                  <tbody>
+                    <tr *ngFor="let place of shopping.ShoppingCenter.Places">
+                      <td>{{ place.Notes || '—' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
               <div *ngIf="getSentMails(shopping).length > 0" class="mt-2">
                 <ng-container *ngIf="getSentMails(shopping) as mails">
                   <div *ngIf="shopping.lastOutgoingEmail">
