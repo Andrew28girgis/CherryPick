@@ -379,11 +379,11 @@ img[alt="logo"] {
 }
 .search-input {
   border: 1px solid #ccc;
-  margin-right: 20px;
-  border-radius: 10px;
+  margin: 0 20px 0 0;
+  border-radius: 6px;
   outline: none;
-  width: 432px;
-  height: 48px;
+  width: 363px;
+  height: 40px;
   padding: 0.75rem 3rem;
 }
 .search-campaign-icon {
