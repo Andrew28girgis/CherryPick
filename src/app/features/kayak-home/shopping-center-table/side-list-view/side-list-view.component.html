@@ -1,48 +1,46 @@
-<div class="p-3 justify-content-between d-flex"> 
+<div class="p-3 justify-content-between d-flex">
   <p class="m-0 f500" style="color: #000">
     {{ cardsSideList.length }} places within map area
   </p>
   <div class="stage-select-container">
     <div class="custom-select-wrapper">
-     <button
-       class="custom-select"
-       type="button"
-       id="stageDropdown"
-       data-bs-toggle="dropdown"
-       aria-expanded="false"
-     >
-       {{ selectedStageName }}
-       <i class="fa-solid fa-chevron-down ms-2"></i>
-     </button>
-     <ul class="dropdown-menu" aria-labelledby="stageDropdown">
-       <li>
-         <a
-           class="dropdown-item"
-           style="cursor: pointer"
-           [class.active]="selectedStageId === 0"
-           (click)="selectStagekan(0)"
-           >All</a
-         >
-       </li>
-       <li *ngFor="let stage of stages">
-         <a
-           class="dropdown-item"
-           style="cursor: pointer"
-           [class.active]="selectedStageId === stage.id"
-           [attr.aria-current]="selectedStageId === stage.id ? 'true' : null"
-           (click)="selectStagekan(stage.id)"
-         >
-           {{ stage.stageName }}
-         </a>
-       </li>
-     </ul>
-   </div>
- </div>
+      <button
+        class="custom-select"
+        type="button"
+        id="stageDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {{ selectedStageName }}
+        <i class="fa-solid fa-chevron-down ms-2"></i>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="stageDropdown">
+        <li>
+          <a
+            class="dropdown-item"
+            style="cursor: pointer"
+            [class.active]="selectedStageId === 0"
+            (click)="selectStagekan(0)"
+            >All</a
+          >
+        </li>
+        <li *ngFor="let stage of stages">
+          <a
+            class="dropdown-item"
+            style="cursor: pointer"
+            [class.active]="selectedStageId === stage.id"
+            [attr.aria-current]="selectedStageId === stage.id ? 'true' : null"
+            (click)="selectStagekan(stage.id)"
+          >
+            {{ stage.stageName }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
 <div class="row m-0">
-
-
   <div class="col-8 p-0 d-flex flex-column cards-container">
     <div class="row m-0 mt-1" *ngIf="!isLoading; else loadingSkeleton">
       <ng-container *ngFor="let place of cardsSideList; trackBy: trackById">
@@ -330,65 +328,102 @@
                   </div>
 
                   <div *ngIf="place.CenterAddress">
-                    <div *ngIf="place.ShoppingCenter?.Places?.length" class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
-                  <table class="table table-sm table-striped mb-0 small-table" style="font-size:0.75rem;">
-                  <thead>
-                    <tr>
-                      <th scope="col">Select</th>
-                      <th scope="col" style="min-width: 60px">Size (SF)</th>
-                      <th scope="col">Price</th>
-                      <th scope="col">Extras</th>
-                      <th scope="col">Type</th>
-                      <th scope="col">
-                        S.Type
-                      </th>
-                      <th scope="col">Privacy</th>
-                    </tr>
-                  </thead>
-                    <tbody>
-                      <tr *ngFor="let place of place.ShoppingCenter.Places">
-                        <td>
-                          <input
-                          type="checkbox"
-                          [(ngModel)]="place.Checked"
-                          (change)="onCheckboxChange($event, place.Id, place.CampaignId)"
-                          />
-                        </td>
-                        <td>{{ place.BuildingSizeSf | number }}</td>
-                        <td>
-                          {{ place.ForLeasePrice 
-                              ? (place.ForLeasePrice | currency:'USD':'symbol':'1.0-0') 
-                              : 'On Request' }}
-                        </td>
-                        <td>{{ place.Extras || '—' }}</td>
-                        <td>{{ place.LeaseType }}</td>
-                        <td>{{ place.SecondaryType }}</td>
-                        <td>
-                        <i *ngIf="!place.CampaignId" class="fa-solid fa-lock-open"></i>
-                        <i *ngIf="place.CampaignId" class="fa-solid fa-lock" (click)="place.MailId && openMailPopup(place.MailId)"></i>
-                      </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                   <ng-container *ngIf="getSentMails(place) as mails">
-                  <div *ngIf="place.lastOutgoingEmail">
-                    <span
-                      class="mail-summary"
-                      (click)="openMailPopup(place.lastOutgoingEmail.ID)"
+                    <div
+                      *ngIf="place.ShoppingCenter?.Places?.length"
+                      class="table-responsive mt-2"
+                      style="max-height: 150px; overflow-y: auto"
                     >
-                      Last Sent Email:  <span style="text-decoration: none;">{{place.lastOutgoingEmail.Date |date}}</span>
-                    </span>
-                  </div>
-                  <div *ngIf="place.lastIncomingEmail" class="mt-2">
-                    <span
-                      class="mail-summary"
-                      (click)="openMailPopup(place.lastIncomingEmail.ID)"
-                    >
-                      Last Received Email: <span style="text-decoration: none;">{{place.lastIncomingEmail.Date | date}}</span>
-                    </span>
-                  </div>
-                  <!-- <li
+                      <table
+                        class="table table-sm table-striped mb-0 small-table"
+                        style="font-size: 0.75rem"
+                      >
+                        <thead>
+                          <tr>
+                            <th scope="col">Select</th>
+                            <th scope="col" style="min-width: 60px">
+                              Size (SF)
+                            </th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Extras</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">S.Type</th>
+                            <th scope="col">Privacy</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let place of place.ShoppingCenter.Places">
+                            <ng-container
+                              *ngIf="
+                                place.BuildingSizeSf || place.ForLeasePrice
+                              "
+                            >
+                              <td>
+                                <input
+                                  type="checkbox"
+                                  [(ngModel)]="place.Checked"
+                                  (change)="
+                                    onCheckboxChange(
+                                      $event,
+                                      place.Id,
+                                      place.CampaignId
+                                    )
+                                  "
+                                />
+                              </td>
+                              <td>{{ place.BuildingSizeSf | number }}</td>
+                              <td>
+                                {{
+                                  place.ForLeasePrice
+                                    ? (place.ForLeasePrice
+                                      | currency : "USD" : "symbol" : "1.0-0")
+                                    : "On Request"
+                                }}
+                              </td>
+                              <td>{{ place.Extras || "—" }}</td>
+                              <td>{{ place.LeaseType }}</td>
+                              <td>{{ place.SecondaryType }}</td>
+                              <td>
+                                <i
+                                  *ngIf="!place.CampaignId"
+                                  class="fa-solid fa-lock-open"
+                                ></i>
+                                <i
+                                  *ngIf="place.CampaignId"
+                                  class="fa-solid fa-lock"
+                                  (click)="
+                                    place.MailId && openMailPopup(place.MailId)
+                                  "
+                                ></i>
+                              </td>
+                            </ng-container>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <ng-container *ngIf="getSentMails(place) as mails">
+                      <div *ngIf="place.lastOutgoingEmail">
+                        <span
+                          class="mail-summary"
+                          (click)="openMailPopup(place.lastOutgoingEmail.ID)"
+                        >
+                          Last Sent Email:
+                          <span style="text-decoration: none">{{
+                            place.lastOutgoingEmail.Date | date
+                          }}</span>
+                        </span>
+                      </div>
+                      <div *ngIf="place.lastIncomingEmail" class="mt-2">
+                        <span
+                          class="mail-summary"
+                          (click)="openMailPopup(place.lastIncomingEmail.ID)"
+                        >
+                          Last Received Email:
+                          <span style="text-decoration: none">{{
+                            place.lastIncomingEmail.Date | date
+                          }}</span>
+                        </span>
+                      </div>
+                      <!-- <li
                       *ngFor="let m of mails"
                       class="mail-item"
                       (click)="openMailPopup(m.Id)"
@@ -406,7 +441,7 @@
                         {{ m.Date | date : "yyyy-MM-dd HH:mm:ss" }}
                       </span>
                     </li> -->
-                </ng-container>
+                    </ng-container>
                   </div>
 
                   <div class="row m-0">
@@ -414,7 +449,6 @@
                       *ngFor="let item of place.ShoppingCenter?.BuyBoxPlaces"
                       class="col-12 d-flex flex-column spec"
                     >
-
                       <div class="d-flex flex-column">
                         <p class="nearset-category">
                           <b>{{ getNeareastCategoryName(item.CategoryId) }} </b>
@@ -798,22 +832,18 @@
   </ng-template>
 </div>
 
-
-<ng-template #mailModal let-modal> 
-  <div  class="modal-body" style="height: 90vh; overflow-y: auto">
+<ng-template #mailModal let-modal>
+  <div class="modal-body" style="height: 90vh; overflow-y: auto">
     <div>
       <label for="">Email Subject</label>
       <div class="mail-body" [innerHTML]="openedEmail.Subject"></div>
     </div>
     <div class="date">
-      {{ openedEmail.Date 
-         | date:'EEEE, MMMM d, y'      
-         }} at {{ openedEmail.Date 
-         | date:'h:mm a'             
-      }}
+      {{ openedEmail.Date | date : "EEEE, MMMM d, y" }} at
+      {{ openedEmail.Date | date : "h:mm a" }}
     </div>
 
-     <div>
+    <div>
       <label for="">Email Body</label>
       <div class="mail-body" [innerHTML]="openedEmail.Body"></div>
     </div>

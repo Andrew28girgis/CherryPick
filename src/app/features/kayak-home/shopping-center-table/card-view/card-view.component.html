@@ -100,7 +100,6 @@
   </div>
 
   <ng-container *ngFor="let shopping of filteredCenters">
-    <!-- | slice: first:(first + rows)" -->
     <div class="card-window cursor col-md-4 col-sm-4 col-12">
       <div class="cardResponsive">
         <a
@@ -364,7 +363,7 @@
               class="card-address cursor"
               (click)="openMapViewPlace(MapViewPlace, shopping)"
               title="View Location"
-              style="cursor: pointer;"
+              style="cursor: pointer"
             >
               <span class="mb-5">
                 {{ shopping.CenterAddress }},
@@ -401,39 +400,51 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let place of shopping.ShoppingCenter.Places">
-                      <td>
-                        <input
-                        type="checkbox"
-                        [(ngModel)]="place.Checked"
-                        (change)="onCheckboxChange($event, place.Id, shopping.CampaignId)"
-                        />
-                      </td>
-                      <td>{{ place.BuildingSizeSf | number }}</td>
-                      <td>
-                        {{
-                          place.ForLeasePrice
-                            ? (place.ForLeasePrice
-                              | currency : "USD" : "symbol" : "1.0-0")
-                            : "On Request"
-                        }}
-                      </td>
-                      <td>{{ place.Extras || "—" }}</td>
-                      <td>{{ place.LeaseType }}</td>
-                      <td>{{ place.SecondaryType }}</td>
-                      <td>
-                        <i
-                          *ngIf="!place.CampaignId"
-                          class="fa-solid fa-lock-open"
-                        ></i>
-                        
-                  <i
-  *ngIf="place.CampaignId"
-  class="fa-solid fa-lock"
-  style="cursor: pointer"
-  (click)="place.MailId && openMailPopup(place.MailId)">
-</i>
+                      <ng-container
+                        *ngIf="place.BuildingSizeSf || place.ForLeasePrice"
+                      >
+                        <td>
+                          <input
+                            type="checkbox"
+                            [(ngModel)]="place.Checked"
+                            (change)="
+                              onCheckboxChange(
+                                $event,
+                                place.Id,
+                                shopping.CampaignId
+                              )
+                            "
+                          />
+                        </td>
+                        <td>{{ place.BuildingSizeSf | number }}</td>
+                        <td>
+                          {{
+                            place.ForLeasePrice
+                              ? (place.ForLeasePrice
+                                | currency : "USD" : "symbol" : "1.0-0")
+                              : "On Request"
+                          }}
+                        </td>
+                        <td>{{ place.Extras || "—" }}</td>
+                        <td>{{ place.LeaseType }}</td>
+                        <td>{{ place.SecondaryType }}</td>
+                        <td>
+                          <i
+                            *ngIf="!place.CampaignId"
+                            class="fa-solid fa-lock-open"
+                          ></i>
 
-                      </td>
+                          <i
+                            *ngIf="place.CampaignId"
+                            class="fa-solid fa-lock"
+                            style="cursor: pointer"
+                            (click)="
+                              place.MailId && openMailPopup(place.MailId)
+                            "
+                          >
+                          </i>
+                        </td>
+                      </ng-container>
                     </tr>
                   </tbody>
                 </table>
