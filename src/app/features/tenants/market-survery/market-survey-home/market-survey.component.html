@@ -74,6 +74,8 @@
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text">{{ option.text }}</span>
           </div>
+        
+      
 
           <button 
           *ngIf="!loginSharedToken"
@@ -83,7 +85,16 @@
             Share
           </button>
 
+  
+
+
           <app-logout   *ngIf="!loginSharedToken" ></app-logout>
+<!--             
+          <div class="content-to-download" id="contentToDownload">
+             <h1>Your PDF Content</h1>
+            <p>This content will be downloaded as PDF.</p>
+          </div> -->
+          
         </div>
       </div>
       <div
@@ -97,48 +108,47 @@
   </div>
 </nav>
 
-<!-- Social Media View (currentView == 5) -->
-<ng-container *ngIf="currentView == 5">
-  <app-social-media-view></app-social-media-view>
-</ng-container>
+<div class="view-container">
+  <!-- Your existing view content -->
+  <div class="content-to-download" #contentToDownload id="contentToDownload">
+    <!-- Social Media View -->
+    <ng-container *ngIf="currentView == 5">
+      <app-social-media-view></app-social-media-view>
+    </ng-container>
 
-<!-- Table View (currentView == 4) -->
-<ng-container *ngIf="currentView == 4">
-  <app-market-table-view></app-market-table-view>
-</ng-container>
+    <!-- Table View -->
+    <ng-container *ngIf="currentView == 4">
+      <app-market-table-view></app-market-table-view>
+    </ng-container>
 
-<!-- Cards Only View (currentView == 3) -->
-<ng-container *ngIf="currentView == 3">
-  <div class="background2 col-12">
-    <div class="row m-0 mt-2">
-      <!-- The card view is set to 'grid' layout for 3 cards per row -->
-      <app-market-card-view layout="grid"></app-market-card-view>
-    </div>
-  </div>
-</ng-container>
-
-<!-- Side View (currentView == 2): Cards on left and Map on right -->
-<ng-container *ngIf="currentView == 2">
-  <!-- <div class="d-flex">
-    <div class="background2 col-md-8 col-sm-12 cards">
-      <div class="row m-0 mt-2" style="overflow-y: auto; max-height: 100vh">
-        <app-market-card-view layout="side"></app-market-card-view>
+    <!-- Cards Only View -->
+    <ng-container *ngIf="currentView == 3">
+      <div class="background2 col-12">
+        <div class="row m-0 mt-2">
+          <app-market-card-view layout="grid"></app-market-card-view>
+        </div>
       </div>
-    </div>
-    <div class="p-0 col-12 col-sm-4">
-      <app-market-map-view></app-market-map-view>
-    </div>
-  </div> -->
-  
-  <app-market-side-view></app-market-side-view>
-</ng-container>
+    </ng-container>
 
-<!-- Map Only View (currentView == 1) -->
-<ng-container *ngIf="currentView == 1">
-  <div class="p-0 col-12">
-    <app-market-map-view></app-market-map-view>
+    <!-- Side View: Cards on left and Map on right -->
+    <ng-container *ngIf="currentView == 2">
+      <app-market-side-view></app-market-side-view>
+    </ng-container>
+
+    <!-- Map Only View -->
+    <ng-container *ngIf="currentView == 1">
+      <div class="p-0 col-12">
+        <app-market-map-view></app-market-map-view>
+      </div>
+    </ng-container>
   </div>
-</ng-container>
+  
+  <!-- Download button - place this where you want in your UI -->
+  <!-- <button class="btn btn-primary" (click)="downloadPDF()">
+    <i class="fa fa-download"></i> Download as PDF
+  </button> -->
+</div>
+
 
 <div class="row m-0 d-sm-none fixed-bottom-mobile">
   <div class="col-12 d-flex justify-content-around align-items-center">

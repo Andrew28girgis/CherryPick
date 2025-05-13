@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BuyboxCategory } from 'src/app/shared/models/buyboxCategory';
 import { General } from 'src/app/shared/models/domain';
@@ -7,6 +7,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { MapsService } from 'src/app/core/services/maps.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import * as html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-market-survey',
@@ -166,5 +167,66 @@ export class MarketSurveyComponent implements OnInit {
   closeToast() {
     const toast = document.getElementById('customToast');
     toast!.classList.remove('show');
+  }
+  @ViewChild('contentToDownload', { static: false }) contentToDownload!: ElementRef;
+  
+  // Get a human-readable name for the current view (for the PDF filename)
+  getViewName(): string {
+    switch (this.currentView) {
+      case 1: return 'Map-View';
+      case 2: return 'Side-View';
+      case 3: return 'Cards-View';
+      case 4: return 'Table-View';
+      case 5: return 'Social-Media-View';
+      default: return 'Market-View';
+    }
+  }
+  
+  downloadPDF(): void {
+    // We need to wait a moment to ensure all components are fully rendered
+    setTimeout(() => {
+      const element = this.contentToDownload.nativeElement;
+      
+      if (!element) {
+        console.error('Element not found');
+        return;
+      }
+      
+      // Create a timestamp for the filename
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      
+      // Options for the PDF
+      const options = {
+        filename: `${this.getViewName()}-${timestamp}.pdf`,
+        margin: 0,
+
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          logging: true
+        },
+        jsPDF: { 
+          unit: 'px', 
+          format: 'a0', 
+          orientation: 'portrait', 
+          hotfixes: ['px_scaling']
+        }
+      };
+      
+      // Show loading indicator (optional)
+      // this.isGeneratingPDF = true;
+      
+      // Create and download the PDF
+      html2pdf()
+        .from(element)
+        .set(options)
+        .save()
+        .then(() => {
+          console.log('PDF downloaded successfully');
+          // this.isGeneratingPDF = false;
+        })
+       
+    }, 0); // Short delay to ensure rendering is complete
   }
 }
