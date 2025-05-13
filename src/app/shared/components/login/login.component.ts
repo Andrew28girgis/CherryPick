@@ -122,8 +122,15 @@ export class LoginComponent implements OnInit {
   private handleGUIDLoginSuccess(response: any): void {
     const { organizationId, buyBoxId, name: buyboxName ,campaignId } = response.json[0];
     localStorage.setItem(this.ORG_ID_KEY, organizationId);
-    this.router.navigate(['/market-survey', buyBoxId, organizationId, buyboxName , campaignId ]);
-  }
+    this.router.navigate(['/market-survey'], {
+      queryParams: {
+        buyBoxId: buyBoxId,
+        orgId: organizationId,
+        buyboxName: buyboxName,
+        campaignId: campaignId
+      }
+    });
+      }
 
   private prepareLoginRequest(): AdminLogin {
     const encryptedLoginData = new AdminLogin();
