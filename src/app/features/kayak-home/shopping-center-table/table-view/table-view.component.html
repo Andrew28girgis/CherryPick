@@ -272,6 +272,11 @@
                   </thead>
                 <tbody>
                   <tr *ngFor="let place of shoppingCenter.ShoppingCenter.Places">
+                    <ng-container
+                    *ngIf="
+                      place.BuildingSizeSf || place.ForLeasePrice
+                    "
+                  > 
                     <td>{{ place.BuildingSizeSf | number }}</td>
                     <td>
                       {{ place.ForLeasePrice 
@@ -285,6 +290,7 @@
                         <i *ngIf=" !place.CampaignId" class="fa-solid fa-lock-open"></i>
                         <i *ngIf=" place.CampaignId" class="fa-solid fa-lock"></i>
                     </td>
+                    </ng-container>
                   </tr>
                 </tbody>
               </table>
