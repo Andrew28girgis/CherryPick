@@ -334,6 +334,7 @@
                   <table class="table table-sm table-striped mb-0 small-table" style="font-size:0.75rem;">
                   <thead>
                     <tr>
+                      <th scope="col">Select</th>
                       <th scope="col" style="min-width: 60px">Size (SF)</th>
                       <th scope="col">Price</th>
                       <th scope="col">Extras</th>
@@ -346,6 +347,13 @@
                   </thead>
                     <tbody>
                       <tr *ngFor="let place of place.ShoppingCenter.Places">
+                        <td>
+                          <input
+                          type="checkbox"
+                          [(ngModel)]="place.Checked"
+                          (change)="onCheckboxChange($event, place.Id, place.CampaignId)"
+                          />
+                        </td>
                         <td>{{ place.BuildingSizeSf | number }}</td>
                         <td>
                           {{ place.ForLeasePrice 

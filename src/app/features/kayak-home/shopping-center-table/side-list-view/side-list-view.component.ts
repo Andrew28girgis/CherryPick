@@ -673,5 +673,32 @@ export class SideListViewComponent implements OnInit, OnDestroy {
         },
        });
     }
+       onCheckboxChange(event: Event, placeId: number, campaignId: number): void {
+  const checkbox = event.target as HTMLInputElement;
+  
+  if (checkbox.checked) {
+    this.AddPlaceToMarketSurvery(campaignId, placeId);
+  } else {
+    console.log(`Unchecked place with ID ${placeId} from shopping center ${campaignId}`);
+    this.AddPlaceToMarketSurvery(campaignId, placeId);
+  }
+}
+
+AddPlaceToMarketSurvery(campaignId: number, placeId: number): void {
+  const body: any = {
+    Name: 'AddPlaceToMarketSurvery',
+    MainEntity: null,
+    Params: { 
+      CampaignID: campaignId,
+      PlaceID: placeId,
+    },
+    Json: null,
+  };
+  this.placesService.GenericAPI(body).subscribe({
+    next: (data) => {
+      console.log("API response data:", data);
+    }
+  });
+}
   
 }
