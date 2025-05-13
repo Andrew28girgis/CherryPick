@@ -403,7 +403,7 @@ export class MarketSideViewComponent implements OnInit {
     
     // Filter shopping centers based on visibility
     this.ngZone.run(() => {
-      this.cardsSideList = this.shoppingCenters.filter(center => {
+      this.cardsSideList = this.shoppingCenters?.filter(center => {
         try {
           const centerLatLng = new google.maps.LatLng(
             parseFloat(center.Latitude.toString()),
@@ -730,6 +730,9 @@ private isCenterVisible(center: any, bounds: any): boolean {
     this.cdr.detectChanges()
   }
     getCheckedPlaces(places: any[]): any[] {
-    return places.filter(place => place.Checked);
+      if (!places) return [];
+      else{
+    return places?.filter(place => place.Checked);
+    }
   }
 }
