@@ -1,6 +1,6 @@
 <div class="tab-view-container">
   <div
-    style="gap: 5px; display: flex; align-items: center"
+    style="display: flex; justify-content: space-between"
     class="mobileButtons"
   >
     <div class="custom-icon-container">
@@ -23,47 +23,43 @@
         }}</span>
       </div>
     </div>
-
-    <button
-      style="border: none; background: none"
-      class="border-none mx-2 d-sm-flex d-none"
-    >
-      <app-link-microsoft style="height: 25px"></app-link-microsoft>
-    </button>
-    <!-- <button
-      class="CherryPick__button mx-2"
-      [routerLink]="['/organization-mail', BuyBoxId, OrgId, 0]"
-    >
-      Emily
-    </button> -->
-    <button
-      class="action-btn optionMobileColor"
-      [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
-    >
-      <i
-        class="fa-regular fa-envelope me-2 optionMobile"
-        style="color: #fff"
-      ></i>
-      <span>Emily</span>
-    </button>
-
-    <button
-      class="action-btn optionMobileColor"
-      [routerLink]="['/campaigns/ataglance', CampaignId]"
-    >
-      <i class="fa-regular fa-star"></i>
-      <span> At a Glance </span>
-    </button>
-    <button class="action-btn optionMobileColor">
-      <a
-        class="action-btn optionMobileColor"
-        [href]="generateSafeUrl()"
-        target="_blank"
+    <div>
+      <button
+        style="border: none; background: none"
+        class="border-none mx-2 d-sm-flex d-none"
       >
-        <i class="fa-solid fa-house"></i>
-        <span> Market Survey </span>
-      </a>
-    </button>
+        <app-link-microsoft style="height: 25px"></app-link-microsoft>
+      </button>
+
+      <button
+        class="action-btn optionMobileColor"
+        [routerLink]="['/organization-mail', BuyBoxId, OrgId, CampaignId]"
+      >
+        <i
+          class="fa-regular fa-envelope me-2 optionMobile"
+          style="color: #fff"
+        ></i>
+        <span>Emily</span>
+      </button>
+
+      <button
+        class="action-btn optionMobileColor"
+        [routerLink]="['/campaigns/ataglance', CampaignId]"
+      >
+        <i class="fa-regular fa-star"></i>
+        <span> At a Glance </span>
+      </button>
+      <button class="action-btn optionMobileColor">
+        <a
+          class="action-btn optionMobileColor"
+          [href]="generateSafeUrl()"
+          target="_blank"
+        >
+          <i class="fa-solid fa-house"></i>
+          <span> Market Survey </span>
+        </a>
+      </button>
+    </div>
   </div>
 
   <!-- The rest of your view components -->
