@@ -347,4 +347,7 @@ export class MarketCardViewComponent implements OnInit {
     }
     this.cdr.detectChanges()
   }
+  getCheckedPlaces(places: any[]): any[] {
+    return places.filter(place => place.Checked);
+  }
 }
