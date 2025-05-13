@@ -596,6 +596,7 @@ export class CardViewComponent implements OnInit, OnDestroy {
     this.AddPlaceToMarketSurvery(campaignId, placeId);
   } else {
     console.log(`Unchecked place with ID ${placeId} from shopping center ${campaignId}`);
+    this.AddPlaceToMarketSurvery(campaignId, placeId);
   }
 }
 
