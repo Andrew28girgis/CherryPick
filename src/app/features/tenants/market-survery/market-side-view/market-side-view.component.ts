@@ -729,4 +729,7 @@ private isCenterVisible(center: any, bounds: any): boolean {
     }
     this.cdr.detectChanges()
   }
+    getCheckedPlaces(places: any[]): any[] {
+    return places.filter(place => place.Checked);
+  }
 }
