@@ -564,19 +564,27 @@ export class CardViewComponent implements OnInit, OnDestroy {
       Name: 'GetMail',
       Params: { mailid: mailId },
     };
-
-    // call the HTML-returning variant
+  
+    // Call the HTML-returning variant
     this.placesService.GenericAPIHtml(payload).subscribe({
       next: (res: any) => {
         this.openedEmail = res.json[0];
-
+  
         this.openedEmail.Body = this.sanitizer.bypassSecurityTrustHtml(
           this.openedEmail.Body
         );
-
-        // **THIS** must be your TemplateRef, not a string
-        this.modalService.open(this.mailModalTpl, {
+  
+        // Open the modal
+        const modalRef = this.modalService.open(this.mailModalTpl, {
           size: 'lg',
+        });
+  
+        // Ensure the scroll position is at the top of the modal
+        modalRef.result.finally(() => {
+          const modalElement = document.querySelector('.modal-content');
+          if (modalElement) {
+            modalElement.scrollTop = 0;
+          }
         });
       },
     });

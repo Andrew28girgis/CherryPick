@@ -28,6 +28,7 @@ input::placeholder {
   display: flex;
   flex-direction: column;
 }
+
 .right-container {
   background-color: #edf0f8;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;

@@ -16,6 +16,7 @@ import * as CryptoJS from 'crypto-js';
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css'],
 })
+
 export class ResetPasswordComponent implements OnInit {
   public ResetPassword!: ResetPassword;
   public general: General = new General();
@@ -128,6 +129,6 @@ export class ResetPasswordComponent implements OnInit {
         padding: CryptoJS.pad.Pkcs7,
       }
     );
-    return encrypted.toString(); // Use encodeURIComponent(...) if backend requires
+    return encrypted.toString();
   }
 }

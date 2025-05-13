@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChangePassword, General } from 'src/app/shared/models/domain';
+import { ChangePassword } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { PlacesService } from 'src/app/core/services/places.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -18,7 +18,6 @@ import * as CryptoJS from 'crypto-js';
 })
 export class NewPasswordComponent {
   public ChangePassword!: ChangePassword;
-  public general: General = new General();
   public confirmPassword: string = '';
   public errorMessage: string = '';
   public successMessage: string = '';
@@ -30,7 +29,6 @@ export class NewPasswordComponent {
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
   constructor(
-    private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly placesService: PlacesService,
     private readonly spinner: NgxSpinnerService
@@ -48,20 +46,20 @@ export class NewPasswordComponent {
       setTimeout(() => (this.fadeError = false), 4000);
       return;
     }
-  
+
     this.spinner.show();
     this.errorMessage = '';
     this.successMessage = '';
-  
+
     const encryptedOldPassword = this.encrypt(this.ChangePassword.OldPassword);
     const encryptedNewPassword = this.encrypt(this.ChangePassword.NewPassword);
-  
+
     const payload: ChangePassword = {
       Email: this.ChangePassword.Email,
       OldPassword: encryptedOldPassword,
       NewPassword: encryptedNewPassword,
     };
-    
+
     this.placesService.ChangePassword(payload).subscribe({
       next: (res: any) => {
         if (res.message === 'Password has been reset successfully.') {
@@ -73,7 +71,7 @@ export class NewPasswordComponent {
           this.fadeError = true;
           setTimeout(() => (this.fadeError = false), 4000);
         }
-  
+
         this.spinner.hide();
       },
       error: (err) => {
@@ -85,7 +83,6 @@ export class NewPasswordComponent {
       },
     });
   }
-  
 
   toggleNewPassword() {
     this.showNewPassword = !this.showNewPassword;
@@ -105,7 +102,6 @@ export class NewPasswordComponent {
         padding: CryptoJS.pad.Pkcs7,
       }
     );
-    return encrypted.toString(); 
+    return encrypted.toString();
   }
-  
 }

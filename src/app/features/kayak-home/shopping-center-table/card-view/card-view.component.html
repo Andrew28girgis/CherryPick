@@ -425,12 +425,14 @@
                           *ngIf="!place.CampaignId"
                           class="fa-solid fa-lock-open"
                         ></i>
-                        <i
-                          *ngIf="place.CampaignId"
-                          class="fa-solid fa-lock"
-                          style="cursor: pointer"
-                          (click)="openMailPopup(shopping.lastOutgoingEmail.ID)"
-                        ></i>
+                        
+                  <i
+  *ngIf="place.CampaignId"
+  class="fa-solid fa-lock"
+  style="cursor: pointer"
+  (click)="place.MailId && openMailPopup(place.MailId)">
+</i>
+
                       </td>
                     </tr>
                   </tbody>

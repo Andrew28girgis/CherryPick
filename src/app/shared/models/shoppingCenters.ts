@@ -157,6 +157,7 @@ export interface Center {
     Place:Root
     CampaignId:number
     Checked: boolean
+    MailId:number
   }
   
    
