@@ -189,6 +189,9 @@ img[alt="logo"] {
   text-decoration-skip-ink: none;
   color: #7a8591;
 }
+.card-address:hover {
+  color: #000000;
+}
 
 .managed-by {
   font-size: 14px;

@@ -363,6 +363,8 @@
             <div
               class="card-address cursor"
               (click)="openMapViewPlace(MapViewPlace, shopping)"
+              title="View Location"
+              style="cursor: pointer;"
             >
               <span class="mb-5">
                 {{ shopping.CenterAddress }},
@@ -388,6 +390,7 @@
                 >
                   <thead>
                     <tr>
+                      <th scope="col">Select</th>
                       <th scope="col" style="min-width: 60px">Size (SF)</th>
                       <th scope="col">Price</th>
                       <th scope="col">Extras</th>
@@ -398,6 +401,13 @@
                   </thead>
                   <tbody>
                     <tr *ngFor="let place of shopping.ShoppingCenter.Places">
+                      <td>
+                        <input
+                        type="checkbox"
+                        [(ngModel)]="place.Checked"
+                        (change)="onCheckboxChange($event, place.Id, shopping.CampaignId)"
+                        />
+                      </td>
                       <td>{{ place.BuildingSizeSf | number }}</td>
                       <td>
                         {{

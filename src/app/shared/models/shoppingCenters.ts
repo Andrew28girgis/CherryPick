@@ -51,7 +51,7 @@ export interface Center {
     Suburban?: boolean
     Neighbourhood?: string
     isDropdownOpen?: boolean
-    CampaignId?: number
+    CampaignId: number
     SentMails?: SentMails
     lastOutgoingEmail:any
     lastIncomingEmail:any
@@ -156,6 +156,7 @@ export interface Center {
     ShoppingCenterId: number
     Place:Root
     CampaignId:number
+    Checked: boolean
   }
   
    

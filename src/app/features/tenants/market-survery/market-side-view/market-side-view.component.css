@@ -1,3 +1,6 @@
+.small-table {
+  font-size: 0.75rem;
+}
 .card-window_c {
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.19), 0 2px 14px rgba(0, 0, 0, 0.23);
     border-radius: 18px;
