@@ -1,6 +1,6 @@
 <div class="tab-view-container">
   <div
-    style="display: flex; justify-content: space-between"
+    style="display: flex; justify-content: space-between; align-items: center"
     class="mobileButtons"
   >
     <div class="custom-icon-container">
@@ -23,7 +23,7 @@
         }}</span>
       </div>
     </div>
-    <div>
+    <div class="d-flex">
       <button
         style="border: none; background: none"
         class="border-none mx-2 d-sm-flex d-none"
@@ -61,13 +61,13 @@
       </button>
     </div>
   </div>
-
-  <!-- The rest of your view components -->
+ 
   <app-map-view
     *ngIf="currentView == 1"
     (viewChange)="onViewChange($event)"
     #mapView
   ></app-map-view>
+  
   <div class="row m-0" *ngIf="currentView == 2">
     <div class="col-12 p-0">
       <app-side-list-view
