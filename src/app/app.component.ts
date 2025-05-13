@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   isMobile = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
   isSocialView: boolean = false;
-  
+
   ngOnInit() {
     this.checkScreenSize();
     this.isSocialView =
