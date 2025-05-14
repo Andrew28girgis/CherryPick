@@ -50,6 +50,8 @@
     color: #fff !important; 
     padding: 5px;
     border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .titleResponsive{
     color:  #686c70;

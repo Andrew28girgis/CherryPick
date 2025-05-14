@@ -102,10 +102,11 @@
   </div>
 </nav>
 
-  <!-- Download button - place this where you want in your UI -->
-  <button *ngIf="currentView == 3|| currentView==4" class="custom-share-btn" (click)="downloadPDF()">
-    <i class="fa fa-download"></i> Download as PDF
-  </button>
+  <div class="d-flex justify-content-end">
+    <button *ngIf="currentView == 3|| currentView==4" class="custom-share-btn" (click)="downloadPDF()">
+      <i class="fa fa-download"></i> Download as PDF
+    </button>
+  </div>
 
 <div class="view-container">
   <!-- Your existing view content -->
