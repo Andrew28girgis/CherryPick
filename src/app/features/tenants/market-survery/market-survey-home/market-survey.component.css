@@ -48,6 +48,8 @@
   .custom-share-btn {
     background-color: #001f3f !important; 
     color: #fff !important; 
+    padding: 5px;
+    border-radius: 5px;
   }
   .titleResponsive{
     color:  #686c70;

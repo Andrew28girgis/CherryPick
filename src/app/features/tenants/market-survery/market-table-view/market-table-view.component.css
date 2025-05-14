@@ -1,3 +1,24 @@
+/* ensure header rows repeat on every page */
+table.procpect-table thead { 
+  display: table-header-group; 
+}
+/* avoid splitting rows across pages */
+table.procpect-table, 
+table.procpect-table tr, 
+table.procpect-table td, 
+table.procpect-table th {
+  page-break-inside: avoid;
+}
+
+/* allow auto page breaks */
+@media print {
+  table.procpect-table {
+    page-break-after: auto;
+  }
+  tr    { page-break-inside: avoid; page-break-after: auto; }
+  td    { page-break-inside: avoid; page-break-after: auto; }
+}
+
 .h700 {
   height: 700px;
 }

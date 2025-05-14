@@ -149,25 +149,31 @@ export class SideListViewComponent implements OnInit, OnDestroy {
         })
 
 
-         this.cardsSideList.forEach((center: any) => { 
-          const lastOutgoingEmail = center.SentMails.filter(
-            (mail: any) => mail.Direction == 2
-          ).sort(
-            (a: any, b: any) =>
-              new Date(b.Date).getTime() - new Date(a.Date).getTime()
-          )[0];
+this.cardsSideList.forEach((center: any) => { 
+  // Initialize with null if no emails exist
+  center.lastOutgoingEmail = null;
+  center.lastIncomingEmail = null;
 
-          // Get last email with Direction == 2 (sorted by date descending)
-          const lastIncomingEmail = center.SentMails.filter(
-            (mail: any) => mail.Direction == 1
-          ).sort(
-            (a: any, b: any) =>
-              new Date(b.Date).getTime() - new Date(a.Date).getTime()
-          )[0];
-          console.log(center.CenterName);
-          center.lastOutgoingEmail = lastOutgoingEmail;
-          center.lastIncomingEmail = lastIncomingEmail; 
-        });
+  // Only proceed if SentMails exists and is an array
+  if (center.SentMails && Array.isArray(center.SentMails)) {
+    const outgoing = center.SentMails.filter(
+      (mail: any) => mail.Direction == 2
+    ).sort(
+      (a: any, b: any) =>
+        new Date(b.Date).getTime() - new Date(a.Date).getTime()
+    );
+    
+    const incoming = center.SentMails.filter(
+      (mail: any) => mail.Direction == 1
+    ).sort(
+      (a: any, b: any) =>
+        new Date(b.Date).getTime() - new Date(a.Date).getTime()
+    );
+
+    center.lastOutgoingEmail = outgoing.length > 0 ? outgoing[0] : null;
+    center.lastIncomingEmail = incoming.length > 0 ? incoming[0] : null;
+  }
+});
         if (centers && centers.length > 0) {
           this.isLoading = false // Hide the skeleton loader
         }
