@@ -50,6 +50,7 @@ import { CampaignModule } from './features/campaign/campaign.module';
 import { EmailInboxComponent } from './features/emily/email-inbox/email-inbox.component';
 import { EmailComposeComponent } from './features/emily/inbox/email-compose/email-compose.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
+import { TenantCardComponent } from './features/summery/tenant-card/tenant-card.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.c
     NewMulipleEmailComponent,
     EmailInboxComponent,
     EmailComposeComponent,
-    CanvasHomeComponent
+    CanvasHomeComponent ,
+    TenantCardComponent
   ],
   imports: [
     BrowserModule,

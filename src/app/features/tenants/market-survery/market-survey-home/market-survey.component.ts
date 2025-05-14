@@ -192,14 +192,11 @@ export class MarketSurveyComponent implements OnInit {
         return;
       }
       
-      // Create a timestamp for the filename
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       
-      // Options for the PDF
       const options = {
         filename: `${this.getViewName()}-${timestamp}.pdf`,
         margin: 0,
-
         image: { type: 'jpeg', quality: 1 },
         html2canvas: { 
           scale: 2,

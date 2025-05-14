@@ -68,7 +68,7 @@ export class CanvasHomeComponent {
       },
     });
   }
-
+  tenant:any;
   makeAction(apiName: string, params: any[]) {
     const body = {
       Name: apiName,
@@ -76,7 +76,12 @@ export class CanvasHomeComponent {
     };
 
     this.placesService.GenericAPI(body).subscribe((response) => {
-      console.log(response);
+      if (apiName == 'GetUserBuyBoxes') {
+        this.tenant = response.json ;
+      }else if (apiName == 'GetUserCampaigns') {
+
+      }
+
     });
   }
 

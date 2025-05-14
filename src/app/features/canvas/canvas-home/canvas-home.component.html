@@ -40,6 +40,9 @@
     </div>
 
     <!-- Canvas Area -->
-    <div class="col-md-7 canvas-container" #canvasContainer></div>
+    <div class="col-md-7 canvas-container" #canvasContainer>
+      <app-tenant-card [tenants]="tenant" *ngIf="tenant"></app-tenant-card>
+
+    </div>
   </div>
 </div>

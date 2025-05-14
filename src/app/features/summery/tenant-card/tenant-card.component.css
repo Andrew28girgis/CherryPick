@@ -1,0 +1,298 @@
+.toggle-btn {
+    border: none;
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    color: #707791;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 40px;
+  }
+  
+  .toggle-btn:hover {
+    background: #e6e8ec;
+  }
+  
+  .toggle-btn.activee {
+    background: #4d65b4;
+    color: white;
+  }
+  
+  .toggle-btn.activee svg {
+    stroke: white;
+  }
+  
+  .toggle-btn .hover-text {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    right: -10%;
+    bottom: 82%;
+    transform: translateY(-50%);
+    margin-left: 8px;
+    z-index: 1000;
+  }
+  
+  .toggle-btn:hover .hover-text {
+    visibility: visible;
+    opacity: 1;
+  } 
+  
+  .card-kayak {
+    padding: 20px;
+    cursor: pointer;
+    border-radius: 19px;
+    color: #16181d;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
+  .card-kayak:hover {
+    background-color: #b7c1e1;
+  }
+  .chevronicon {
+    padding-right: 30px;
+    color: #707791;
+  }
+  
+  .Kayak__img {
+    width: 100px;
+    border-radius: 12px;
+  }
+  
+  .card__Kayak_title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border-radius: 50%;
+  }
+  .active {
+    display: flex;
+    padding: 4px 12px;
+    align-items: center;
+    width: fit-content;
+    gap: 4px;
+    border-radius: 16px;
+    background: #eaf6ec;
+  }
+  .text {
+    color: #28a745;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    margin: 0;
+  }
+  .private {
+    display: flex;
+    padding: 4px 12px;
+    align-items: center;
+    width: fit-content;
+    gap: 4px;
+    border-radius: 16px;
+    background: #dbe0f0;
+  }
+  .privatedot {
+    width: 8px;
+    height: 8px;
+    background-color: #4d65b4;
+    border-radius: 50%;
+  }
+  .privatetext {
+    color: #4d65b4;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    margin: 0;
+  }
+  .Kayack__button {
+    border-radius: 10px;
+    background: #001f3fc2;
+    color: #fff;
+    text-align: center;
+    font-size: 1vw;
+    font-weight: 500;
+    line-height: 30px;
+    border: 0;
+    padding: 4px 10px;
+    white-space: nowrap;
+  }
+  .Kayack__button {
+    background: #4d65b4;
+  }
+  .nomberofcampains {
+    color: #16181d;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+  .campaingstext {
+    color: #707791;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.07px;
+  }
+  .line {
+    height: 1px;
+    background: #e2e4e9;
+    width: 95%;
+    margin: 0 auto;
+  }
+  .offcanvas-end {
+    width: 40% !important;
+  }
+  .firsttradelist {
+    color: #16181d;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 30px;
+    cursor: pointer;
+  }
+  .firsttradelist:hover {
+    text-decoration: underline;
+  }
+  .graytext {
+    color: #707791;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: -0.07px;
+  }
+  .customline {
+    height: 1px;
+    background: #e2e4e9;
+    width: 100%;
+  }
+  .offcanvas-background {
+    display: flex;
+    padding: 18px 18px;
+    flex-direction: column;
+    gap: 16px;
+    align-self: stretch;
+    border-radius: 20px;
+    border: 1px solid #e2e4e9;
+    background: #fff;
+  }
+  .blackbold {
+    color: #16181d;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 30px;
+  }
+  .CampaignWorkfow {
+    color: #16181d;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 30px;
+  }
+  .smallline {
+    height: 1px;
+    background: #e2e4e9;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 567px) {
+    .card__Kayak {
+      margin-bottom: 1rem;
+    }
+    .Kayak__img {
+      width: 80px;
+      height: 70px;
+    }
+    .active {
+      padding: 2px 9px;
+    }
+    .card__Kayak_title {
+      font-size: 15px;
+    }
+    .private {
+      padding: 2px 9px;
+    }
+    .graytext {
+      font-size: 15px;
+      line-height: 15px;
+    }
+    .firsttradelist {
+      font-size: 15px;
+    }
+    .CampaignWorkfow {
+      font-size: 15px;
+      line-height: 5px;
+    }
+    .smallline {
+      margin-bottom: 0px;
+    }
+  }
+  @media (max-width: 767px) {
+    .skeleton-container {
+      padding: 20px 10px;
+    }
+    .offcanvas-end {
+      width: 70% !important;
+    }
+    .chevronicon {
+      padding-right: 12px;
+    }
+    .card__Kayak__img {
+      padding-left: 10px;
+    }
+    .container-width {
+      width: 100%;
+    }
+    .ResContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card__Kayak {
+      margin-bottom: 1rem;
+    }
+    .card__Kayak_buttons {
+      justify-content: space-evenly;
+      flex-direction: row;
+    }
+    .Kayack__button,
+    .CherryPick__button {
+      font-size: 10px;
+      padding: 4px 8px;
+      min-width: 90px;
+    }
+    .card__Kayak_title {
+      font-size: 16px;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .ResContainer {
+      align-items: center;
+    }
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(150%);
+    }
+  }
+  
