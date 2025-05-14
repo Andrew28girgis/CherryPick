@@ -33,14 +33,16 @@
       <ng-container *ngFor="let shopping of cardsSideList">
         <div class="card-window total col-12 col-sm-6">
           <div class="card-window_c">
-            <a
+            <!-- <a
               [routerLink]="[
                     '/landing',
                     shopping?.ShoppingCenter?.Places?.[0]?.Id || 0,
                     shopping?.Id,
                     BuyBoxId 
                   ]"
-            >
+            > -->
+            <a class="info-value text-dark px-1" href="{{ shopping.DocsLink }}" target="_blank">
+
               <div class="main-img">
                 <img
                   src="{{
