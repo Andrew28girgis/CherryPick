@@ -22,7 +22,7 @@
           {{ getNeareastCategoryName(item.CategoryId) }}
         </ng-container>
       </th>
-      <th>Actions</th>
+      <!-- <th>Actions</th> -->
     </tr>
   </thead>
   <tbody class="procpect-table-body">
@@ -197,7 +197,7 @@
         </td>
         <ng-template #emptyTd> </ng-template>
 
-        <td>
+        <!-- <td>
           <div class="d-flex justify-content-center align-items-center total d-flex flex-column">
             <div class="d-flex gap16">
               <div class="framee">
@@ -291,6 +291,13 @@
               </div>
 
             </div>
+
+          </div>
+        </td> -->
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
             <!-- <div class="action-buttons mt-3 d-flex justify-content-between flex-column">
               <button 
                 class="action-btn accept" 
@@ -305,13 +312,6 @@
                 Reject
               </button>
             </div> -->
-          </div>
-        </td>
-      </tr>
-    </ng-container>
-  </tbody>
-</table>
-
 <ng-template #StreetViewPlace let-modal>
   <div *ngIf="General.modalObject.StreetViewURL">
     <iframe
