@@ -182,51 +182,104 @@ export class MarketSurveyComponent implements OnInit {
     }
   }
   
-  downloadPDF(): void {
-    // We need to wait a moment to ensure all components are fully rendered
-    setTimeout(() => {
-      const element = this.contentToDownload.nativeElement;
-      
-      if (!element) {
-        console.error('Element not found');
-        return;
-      }
-      
-      // Create a timestamp for the filename
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      
-      // Options for the PDF
-      const options = {
-        filename: `${this.getViewName()}-${timestamp}.pdf`,
-        margin: 0,
+private async toDataURL(src: string): Promise<string> {
+  // helper that actually does fetch+FileReader
+  const fetchAndConvert = async (url: string) => {
+    const res = await fetch(url, { mode: 'cors' });
+    if (!res.ok) throw new Error(`bad status: ${res.status}`);
+    const blob = await res.blob();
+    return await new Promise<string>(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+  };
 
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { 
-          scale: 2,
-          useCORS: true,
-          logging: true
-        },
-        jsPDF: { 
-          unit: 'px', 
-          format: 'a0', 
-          orientation: 'portrait', 
-          hotfixes: ['px_scaling']
+  try {
+    // first attempt: direct fetch
+    return await fetchAndConvert(src);
+  } catch (err) {
+    console.warn('Direct fetch failed, retrying via CORS proxy:', src, err);
+    // fallback to public CORS proxy
+    const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(src);
+    return await fetchAndConvert(proxyUrl);
+  }
+}
+
+  /** 
+   * Unified PDF download method. Tables → paginated A4-Landscape. 
+   * Cards → one tall single page, all images embedded via data-URLs.
+   */
+  async downloadPDF(): Promise<void> {
+    this.spinner.show();
+    const container = this.contentToDownload.nativeElement as HTMLElement;
+    if (!container) {
+      console.error('No container found for PDF export');
+      this.spinner.hide();
+      return;
+    }
+
+    // 1) Embed ALL <img> as data-URLs if they’re cross-origin
+    const imgs = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
+    await Promise.all(imgs.map(async img => {
+      try {
+        // only convert if it looks like an external URL
+        if (/^https?:\/\//.test(img.src) && !img.src.startsWith(window.location.origin)) {
+          img.src = await this.toDataURL(img.src);
         }
+      } catch (err) {
+        console.warn('Could not embed image, skipping:', img.src, err);
+      }
+    }));
+
+    // 2) Figure out view mode
+    const isTable = this.currentView === 4;
+    const isCard  = this.currentView === 3;
+    const filename = `${this.getViewName()}-${Date.now()}.pdf`;
+
+    // 3) html2canvas settings
+    const h2cOpts: any = {
+      scale:     isTable ? 1 : 2,
+      useCORS:   true,
+      allowTaint:false
+    };
+
+    // 4) jsPDF settings
+    let jsPDFOpts: any;
+    if (isTable) {
+      jsPDFOpts = { unit:'pt', format:'a4', orientation:'landscape' };
+    } else if (isCard) {
+      // measure full container
+      const w = container.scrollWidth;
+      const h = container.scrollHeight;
+      h2cOpts.width        = w;
+      h2cOpts.height       = h;
+      h2cOpts.windowWidth  = w;
+      h2cOpts.windowHeight = h;
+      jsPDFOpts = {
+        unit:'px',
+        format:[w, h],
+        orientation:'portrait',
+        hotfixes:['px_scaling']
       };
-      
-      // Show loading indicator (optional)
-      // this.isGeneratingPDF = true;
-      
-      // Create and download the PDF
-      html2pdf()
-        .from(element)
-        .set(options)
-        .save()
-        .then(() => {
-          console.log('PDF downloaded successfully');
-          // this.isGeneratingPDF = false;
-        })
-       
-    }, 0); // Short delay to ensure rendering is complete
+    } else {
+      // fallback
+      jsPDFOpts = { unit:'pt', format:'a4', orientation:'landscape' };
+    }
+
+    // 5) Generate PDF
+    await html2pdf()
+      .from(container)
+      .set({
+        filename,
+        margin:      isTable ? 10 : 15,
+        image:       { type:'jpeg', quality:1 },
+        html2canvas: h2cOpts,
+        jsPDF:       jsPDFOpts,
+        pagebreak:   { mode:['css','legacy'] }
+      })
+      .save();
+
+    this.spinner.hide();
   }
 }

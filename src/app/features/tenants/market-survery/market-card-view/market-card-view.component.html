@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row g-4">
   <ng-container *ngFor="let shopping of shoppingCenters">
     <div
       [ngClass]="{
@@ -17,11 +17,11 @@
             ]"
           >
             <div class="main-img">
-              <img
-                src="{{
-                  shopping.MainImage || 'assets/Images/DefaultImage.png'
-                }}"
-              />
+             <img
+            class="card-photo"
+            src="{{ shopping.MainImage || 'assets/Images/DefaultImage.png' }}"
+            alt="{{ shopping.CenterName }}"
+            />
             </div>
           </a>
           <div class="content-wrap card-content">

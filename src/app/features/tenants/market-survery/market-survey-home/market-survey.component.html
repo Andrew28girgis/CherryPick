@@ -77,13 +77,13 @@
         
       
 
-          <button 
+          <!-- <button 
           *ngIf="!loginSharedToken"
             class="btn custom-share-btn ms-3 d-none d-sm-flex"
             (click)="OpenShareWithContactModal(ShareWithContact)"
           >
             Share
-          </button>
+          </button> -->
 
   
 
@@ -107,6 +107,11 @@
     </div>
   </div>
 </nav>
+
+  <!-- Download button - place this where you want in your UI -->
+  <button *ngIf="currentView == 3|| currentView==4" class="custom-share-btn" (click)="downloadPDF()">
+    <i class="fa fa-download"></i> Download as PDF
+  </button>
 
 <div class="view-container">
   <!-- Your existing view content -->
@@ -143,10 +148,7 @@
     </ng-container>
   </div>
   
-  <!-- Download button - place this where you want in your UI -->
-  <!-- <button class="btn btn-primary" (click)="downloadPDF()">
-    <i class="fa fa-download"></i> Download as PDF
-  </button> -->
+
 </div>
 
 
