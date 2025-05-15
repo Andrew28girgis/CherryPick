@@ -100,9 +100,8 @@ const routes: Routes = [
   {
     path: 'market-survey',
     component: MarketSurveyComponent,
-    canActivate: [TenantOnlyGuard],
+    canActivate: [TenantOnlyGuard, AuthGuardService],
     data: { hideHeader: true },
-    // canActivate: [AuthGuardService],
   },
   {
     path: 'home/:buyboxid/:orgId/:buyboxName',
