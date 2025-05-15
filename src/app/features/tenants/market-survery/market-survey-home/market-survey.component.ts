@@ -26,31 +26,31 @@ export class MarketSurveyComponent implements OnInit {
   savedMapView: any;
   map: any;
   dropdowmOptions: any = [
-    {
-      text: 'Map',
-      icon: '../../../assets/Images/Icons/map.png',
-      status: 1,
-    },
-    {
-      text: 'Side',
-      icon: '../../../assets/Images/Icons/element-3.png',
-      status: 2,
-    },
-    {
-      text: 'Cards',
-      icon: '../../../assets/Images/Icons/grid-1.png',
-      status: 3,
-    },
+    // {
+    //   text: 'Map',
+    //   icon: '../../../assets/Images/Icons/map.png',
+    //   status: 1,
+    // },
+    // {
+    //   text: 'Side',
+    //   icon: '../../../assets/Images/Icons/element-3.png',
+    //   status: 2,
+    // },
+    // {
+    //   text: 'Cards',
+    //   icon: '../../../assets/Images/Icons/grid-1.png',
+    //   status: 3,
+    // },
     {
       text: 'Table',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
-    {
-      text: 'Social',
-      icon: '../../../assets/Images/Icons/globe-solid.svg',
-      status: 5,
-    },
+    // {
+    //   text: 'Social',
+    //   icon: '../../../assets/Images/Icons/globe-solid.svg',
+    //   status: 5,
+    // },
   ];
   selectedOption!: number;
   isMobileView!: boolean;
@@ -92,7 +92,7 @@ export class MarketSurveyComponent implements OnInit {
     });
     
 
-    this.currentView = this.isMobileView ? '5' : '2';
+    this.currentView = this.isMobileView ? '4' : '4';
 
     const selectedOption = this.dropdowmOptions.find(
       (option: any) => option.status === parseInt(this.currentView)
@@ -281,5 +281,104 @@ private async toDataURL(src: string): Promise<string> {
       .save();
 
     this.spinner.hide();
+  }
+
+  async downloadCSV(): Promise<void> {
+    this.spinner.show();
+    
+    try {
+      // Different handling based on view type
+      let csvContent: string = '';
+      const fileName = `${this.getViewName()}-${Date.now()}.csv`;
+      
+      if (this.currentView === 4) { // Table view
+        // Assume data is in a table format
+        const table = this.contentToDownload.nativeElement.querySelector('table');
+        if (!table) {
+          throw new Error('No table found for CSV export');
+        }
+        
+        // Extract headers
+        const headers = Array.from(table.querySelectorAll('thead th'))
+          .map(th => this.escapeCSVField((th as HTMLElement).innerText));
+        
+        csvContent += headers.join(',') + '\n';
+        
+        // Extract rows
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach((row:any) => {
+          const rowData = Array.from(row.querySelectorAll('td'))
+            .map(td => this.escapeCSVField((td as HTMLElement).innerText));
+          csvContent += rowData.join(',') + '\n';
+        });
+      } else if (this.currentView === 3) { // Card view
+        // For card view, we need to determine what data to extract
+        // This depends on your specific card structure
+        const cards = this.contentToDownload.nativeElement.querySelectorAll('.card');
+        
+        if (cards && cards.length > 0) {
+          // Determine headers based on first card's data attributes
+          // This is just an example - adjust to your actual card structure
+          const firstCard = cards[0];
+          const headerElements = firstCard.querySelectorAll('[data-field]');
+          const headers = Array.from(headerElements)
+            .map(el => this.escapeCSVField((el as HTMLElement).getAttribute('data-field') || ''));
+          
+          csvContent += headers.join(',') + '\n';
+          
+          // Extract data from all cards
+          cards.forEach((card:any) => {
+            const rowData = Array.from(card.querySelectorAll('[data-field]'))
+              .map(el => this.escapeCSVField((el as HTMLElement).innerText));
+            csvContent += rowData.join(',') + '\n';
+          });
+        } else {
+          // Fallback if no cards with the expected structure are found
+          // You might need a different approach based on your actual data structure
+          throw new Error('No suitable data found for CSV export in card view');
+        }
+      } else {
+        throw new Error('Current view does not support CSV export');
+      }
+      
+      // Create and trigger download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', fileName);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+    } catch (error) {
+      console.error('Error generating CSV:', error);
+      // Optionally show an error message to the user
+     } finally {
+      this.spinner.hide();
+    }
+  }
+  
+  // Helper method to properly escape CSV fields
+  private escapeCSVField(field: string): string {
+    // If the field contains commas, newlines, or double quotes, enclose in double quotes
+    // Also escape any double quotes by doubling them
+    if (field.includes(',') || field.includes('\n') || field.includes('"')) {
+      return `"${field.replace(/"/g, '""')}"`;
+    }
+    return field;
+  }
+  
+  // Optional: Add method to extract specific data from custom elements
+  private extractDataFromElement(element: HTMLElement, selector: string, attribute?: string): string {
+    const el = element.querySelector(selector);
+    if (!el) return '';
+    
+    if (attribute) {
+      return el.getAttribute(attribute) || '';
+    }
+    return (el as HTMLElement).innerText;
   }
 }

@@ -59,7 +59,7 @@
           [ngClass]="{ show: navbarOpen }"
           id="navbarNav"
         >
-          <div
+          <!-- <div
             class="icon-option"
             *ngFor="let option of dropdowmOptions"
             (click)="selectOption(option)"
@@ -73,7 +73,7 @@
           >
             <img [src]="option.icon" [alt]="option.text" class="icon-image" />
             <span class="icon-text">{{ option.text }}</span>
-          </div>
+          </div> -->
         
       
 
@@ -103,7 +103,10 @@
 </nav>
 
   <div class="d-flex justify-content-end">
-    <button *ngIf="currentView == 3|| currentView==4" class="custom-share-btn" (click)="downloadPDF()">
+    <button *ngIf="  currentView == 4" class="custom-share-btn me-2" (click)="downloadCSV()">
+      <i class="fa fa-table"></i> Download as CSV
+    </button>
+    <button *ngIf="  currentView==4" class="custom-share-btn" (click)="downloadPDF()">
       <i class="fa fa-download"></i> Download as PDF
     </button>
   </div>
