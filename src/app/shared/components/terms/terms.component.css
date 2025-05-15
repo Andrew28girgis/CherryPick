@@ -1,41 +1,43 @@
-h1, h2, h3 {
-    margin-top: 1.5em;
+h1,
+h2,
+h3 {
+  margin-top: 1em;
 }
 h1 {
-    font-size: 1.75em;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 0.5em;
+  font-size: 1.75em;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 0.5em;
 }
 h2 {
-    font-size: 1.5em;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
+  font-size: 1.5em;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
 }
 h3 {
-    font-size: 1.25em;
+  font-size: 1.25em;
 }
 p {
-    margin: 0.7em 0;
+  margin: 0.7em 0;
 }
 ul {
-    margin-left: 1.5em;
-    list-style-type: disc;
+  margin-left: 1.5em;
+  list-style-type: disc;
 }
 code {
-    background-color: #f4f4f4;
-    padding: 0.2em 0.4em;
-    font-size: 90%;
+  background-color: #f4f4f4;
+  padding: 0.2em 0.4em;
+  font-size: 90%;
 }
-.total{
-    cursor: pointer;
+.total {
+  cursor: pointer;
 }
-.imglogo{
-    width: 184px;
+.imglogo {
+  width: 184px;
 }
-.termss{
-    background-color: #fff; 
-    border-radius: 10px;
+.termss {
+  background-color: #fff;
+  border-radius: 10px;
 }
-.margin-left{
-    margin-left: 8px;
+.margin-left {
+  margin-left: 8px;
 }
