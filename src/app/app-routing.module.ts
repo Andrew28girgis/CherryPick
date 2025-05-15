@@ -21,6 +21,7 @@ import { TasksComponent } from './features/tasks/tasks.component';
 import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new-muliple-email.component';
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
+import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
@@ -103,6 +104,12 @@ const routes: Routes = [
     canActivate: [TenantOnlyGuard, AuthGuardService],
     data: { hideHeader: true },
   },
+  {
+    path: 'not-found',
+    component: NotFoundComponent ,
+    data: { hideHeader: true }
+  },
+
   {
     path: 'home/:buyboxid/:orgId/:buyboxName',
     component: HomeComponent,

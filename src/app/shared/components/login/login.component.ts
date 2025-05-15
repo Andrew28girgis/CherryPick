@@ -49,8 +49,9 @@ export class LoginComponent implements OnInit {
     this.route.queryParamMap.subscribe((params) => {
       this.loginToken = params.get('t');
       if (this.loginToken) {
-        localStorage.setItem('loginToken', this.loginToken || '');
-        this.loginWithGUID();
+        this.router.navigate(['/not-found']); 
+        // localStorage.setItem('loginToken', this.loginToken || '');
+        // this.loginWithGUID();
       }
     });
   } 
