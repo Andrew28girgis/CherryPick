@@ -18,3 +18,12 @@
   height: 100vh;
   overflow-y: auto;
 }
+.termsofservice {
+  text-decoration: underline;
+  color: #4d65b4;
+}
+
+.termsofservice:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

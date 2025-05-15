@@ -5,6 +5,11 @@
       <app-breadcrumb *ngIf="display && !isMobile"></app-breadcrumb>
       <div class="content-container">
         <router-outlet></router-outlet>
+        <div class="text-center my-3">
+          <a class="termsofservice" [routerLink]="['/tos']" style="font-size: 21px;">
+            Terms of Service
+          </a>
+        </div>
       </div>
     </div>
   </ng-container>
@@ -15,3 +20,5 @@
     </div>
   </ng-template>
 </div>
+
+
