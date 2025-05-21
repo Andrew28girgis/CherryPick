@@ -43,6 +43,13 @@ const routes: Routes = [
   },
   { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
   {
+    path: 'properties',
+    loadChildren: () =>
+      import('../app/features/properties/properties.module').then(
+        (m) => m.PropertiesModule
+      ),
+  },
+  {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
     data: { hideHeader: true },
@@ -106,8 +113,8 @@ const routes: Routes = [
   },
   {
     path: 'not-found',
-    component: NotFoundComponent ,
-    data: { hideHeader: true }
+    component: NotFoundComponent,
+    data: { hideHeader: true },
   },
 
   {

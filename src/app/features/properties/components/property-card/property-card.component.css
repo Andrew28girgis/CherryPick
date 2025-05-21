@@ -1,0 +1,89 @@
+.property-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.property-controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.property-options {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  padding: 0.25rem;
+  box-sizing: content-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(0.25rem);
+  cursor: pointer;
+}
+
+.property-options::after {
+  display: none !important;
+}
+
+.property-options svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.property-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.property-option-btn * {
+  color: #707791;
+}
+
+.property-option-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.property-option-btn:active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.property-option-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.property-option-btn svg path {
+  fill: #707791;
+}
+
+.property-image {
+  width: 100%;
+  height: 15rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.property-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.property-name {
+  color: #16181d;
+  font-weight: 600;
+}
+
+.property-address {
+  color: #707791;
+  font-size: 0.85;
+}

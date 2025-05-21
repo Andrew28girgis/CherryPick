@@ -1,0 +1,11 @@
+<div class="container-fluid properties-container">
+  <section class="row g-4">
+    @for (property of properties; track property.Id) {
+    <article class="col-sm-6 col-lg-4 col-12">
+      <app-property-card [property]="property"></app-property-card>
+    </article>
+    }
+  </section>
+</div>
+
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
