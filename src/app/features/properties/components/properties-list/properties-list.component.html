@@ -1,11 +1,20 @@
 <div class="container-fluid properties-container">
   <section class="row g-4">
-    @for (property of properties; track property.Id) {
+    @if (dataLoaded) { @for (property of properties; track property.Id) {
     <article class="col-sm-6 col-lg-4 col-12">
       <app-property-card [property]="property"></app-property-card>
     </article>
+    } }@else { @for (card of [1,2,3,4,5,6]; track $index) {
+    <article class="col-sm-6 col-lg-4 col-12">
+      <div class="property-card">
+        <div class="property-image skeleton skeleton-img"></div>
+        <div class="property-name skeleton skeleton-text"></div>
+        <div class="property-address skeleton skeleton-text"></div>
+      </div>
+    </article>
+    }
+
+    <div></div>
     }
   </section>
 </div>
-
-<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
