@@ -1,9 +1,9 @@
 <div class="tab-view-container">
   <div 
-    class="mobileButtons mt-2 d-flex justify-content-end align-items-center "
+    class="mobileButtons mt-2 d-flex justify-content-between align-items-center "
     style="padding-left: 12px;"
   >
-    <!-- <div class="custom-icon-container">
+    <div class="custom-icon-container">
       <div
         class="icon-option"
         *ngFor="let option of dropdowmOptions"
@@ -20,9 +20,9 @@
         <img [src]="option.icon" [alt]="option.text" class="icon-image" />
         <span class="icon-text d-none d-sm-flex" *ngIf="!isMobile">{{
           option.text
-        }}</span>
+        }}</span> 
       </div>
-    </div> -->
+    </div>
     <div class="d-flex">
       <button
         style="border: none; background: none"

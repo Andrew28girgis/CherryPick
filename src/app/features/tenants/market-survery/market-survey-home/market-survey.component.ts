@@ -26,31 +26,31 @@ export class MarketSurveyComponent implements OnInit {
   savedMapView: any;
   map: any;
   dropdowmOptions: any = [
-    // {
-    //   text: 'Map',
-    //   icon: '../../../assets/Images/Icons/map.png',
-    //   status: 1,
-    // },
-    // {
-    //   text: 'Side',
-    //   icon: '../../../assets/Images/Icons/element-3.png',
-    //   status: 2,
-    // },
-    // {
-    //   text: 'Cards',
-    //   icon: '../../../assets/Images/Icons/grid-1.png',
-    //   status: 3,
-    // },
+    {
+      text: 'Map',
+      icon: '../../../assets/Images/Icons/map.png',
+      status: 1,
+    },
+    {
+      text: 'Side',
+      icon: '../../../assets/Images/Icons/element-3.png',
+      status: 2,
+    },
+    {
+      text: 'Cards',
+      icon: '../../../assets/Images/Icons/grid-1.png',
+      status: 3,
+    },
     {
       text: 'Table',
       icon: '../../../assets/Images/Icons/grid-4.png',
       status: 4,
     },
-    // {
-    //   text: 'Social',
-    //   icon: '../../../assets/Images/Icons/globe-solid.svg',
-    //   status: 5,
-    // },
+    {
+      text: 'Social',
+      icon: '../../../assets/Images/Icons/globe-solid.svg',
+      status: 5,
+    },
   ];
   selectedOption!: number;
   isMobileView!: boolean;

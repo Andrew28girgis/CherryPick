@@ -56,7 +56,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub?.unsubscribe());
   }
-
   /**
    * Toggles the navigation menu in mobile view
    */
@@ -91,7 +90,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private setupRouteSubscriptions(): void {
-    // Subscribe to route data to handle header visibility
     const routeDataSub = this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -132,7 +130,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   private fetchUserAvatar(): void {
-    // TODO: Implement user avatar fetching logic
     this.userAvatar = '';
   }
 }

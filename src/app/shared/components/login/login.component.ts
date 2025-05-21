@@ -38,23 +38,23 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.initializeData();
     this.handleRouteParams();
-  } 
+  }
 
   private initializeData(): void {
     this.loginData = new AdminLogin();
     localStorage.clear();
-  } 
+  }
 
   private handleRouteParams(): void {
     this.route.queryParamMap.subscribe((params) => {
       this.loginToken = params.get('t');
       if (this.loginToken) {
-        this.router.navigate(['/not-found']); 
+        this.router.navigate(['/not-found']);
         // localStorage.setItem('loginToken', this.loginToken || '');
         // this.loginWithGUID();
       }
     });
-  } 
+  }
 
   private loginWithGUID(): void {
     this.spinner.show();
@@ -91,7 +91,6 @@ export class LoginComponent implements OnInit {
         campaignId: campaignId,
       },
     });
-    
   }
 
   private prepareLoginRequest(): AdminLogin {
@@ -149,7 +148,7 @@ export class LoginComponent implements OnInit {
       this.fadeSuccess = false;
     }, 4000);
   }
-  
+
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
