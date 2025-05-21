@@ -1,0 +1,54 @@
+<div class="organization-card">
+  <div class="d-flex align-items-center gap-2">
+    <div class="organization-logo">
+      <img src="" alt="" />
+    </div>
+    <div class="organization-name">Organization</div>
+
+    <div
+      class="view-contacts-btn ms-auto"
+      (click)="openOrganizationOffcanvas(content)"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+      >
+        <path
+          d="M7.42505 16.6L12.8584 11.1667C13.5 10.525 13.5 9.47503 12.8584 8.83336L7.42505 3.40002"
+          stroke="#707791"
+          stroke-width="1.5"
+          stroke-miterlimit="10"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-offcanvas>
+  <div class="offcanvas-header">
+    <h4 class="offcanvas-title">Offcanvas title</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="offcanvas.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <p>One fine body&hellip;</p>
+    <div class="text-end">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="offcanvas.close('Close click')"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>

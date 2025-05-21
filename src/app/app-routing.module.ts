@@ -50,6 +50,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'organizations',
+    loadChildren: () =>
+      import('../app/features/organizations/organizations.module').then(
+        (m) => m.OrganizationsModule
+      ),
+  },
+  {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
     data: { hideHeader: true },
