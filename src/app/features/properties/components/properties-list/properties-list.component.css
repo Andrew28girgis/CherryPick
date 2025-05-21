@@ -60,3 +60,27 @@
   width: 100px;
   border-radius: 4px;
 }
+
+::ng-deep .p-paginator-element {
+  border-radius: 0.5rem !important;
+}
+
+::ng-deep .p-paginator-pages {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+::ng-deep .p-dropdown-items-wrapper {
+  border-radius: 0.5rem !important;
+}
+
+::ng-deep .p-dropdown-items {
+  padding: 0 !important;
+}
+
+::ng-deep .p-dropdown-items li {
+  padding: 0 !important;
+  padding-block: 0.75rem !important;
+  text-align: center !important;
+}

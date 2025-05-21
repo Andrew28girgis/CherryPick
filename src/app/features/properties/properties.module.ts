@@ -6,6 +6,7 @@ import { PropertiesListComponent } from './components/properties-list/properties
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { PropertyCardComponent } from './components/property-card/property-card.component';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [PropertiesListComponent,PropertyCardComponent],
@@ -14,6 +15,7 @@ import { PropertyCardComponent } from './components/property-card/property-card.
     PropertiesRoutingModule,
     NgxSpinnerModule,
     NgbDropdownModule,
+    PaginatorModule
   ],
 })
 export class PropertiesModule {}
