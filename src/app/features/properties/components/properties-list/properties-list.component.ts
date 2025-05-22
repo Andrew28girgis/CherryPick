@@ -6,7 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { PropertiesService } from '../../services/properties.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { IPageEvent } from '../../models/ipage-event';
+import { IPageEvent } from '../../../../shared/interfaces/ipage-event';
 
 @Component({
   selector: 'app-properties-list',

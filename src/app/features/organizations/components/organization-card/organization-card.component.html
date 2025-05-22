@@ -1,11 +1,20 @@
 <div class="organization-card">
   <div class="d-flex align-items-center gap-2">
     <div class="organization-logo">
-      <img src="" alt="" />
+      <img
+        [src]="
+          'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+          organization.id
+        "
+        [alt]="organization.name"
+      />
     </div>
-    <div class="organization-name">Organization</div>
+    <div class="organization-name">
+      {{ organization.name }}
+    </div>
 
     <div
+      *ngIf="organization.contact.length && organization.contact[0].ID"
       class="view-contacts-btn ms-auto"
       (click)="openOrganizationOffcanvas(content)"
     >
@@ -33,9 +42,17 @@
   <div class="offcanvas-header">
     <div class="d-flex align-items-center gap-2">
       <div class="organization-logo">
-        <img src="" alt="" />
+        <img
+          [src]="
+            'https://api.cherrypick.com/api/Organization/GetOrgImag?orgId=' +
+            organization.id
+          "
+          [alt]="organization.name"
+        />
       </div>
-      <div class="organization-name">Organization</div>
+      <div class="organization-name">
+        {{ organization.name }}
+      </div>
     </div>
     <button
       type="button"
@@ -49,11 +66,19 @@
     <div
       class="w-100 d-flex flex-column align-items-center justify-content start gap-3"
     >
-      <div class="contact-card">
-        <div class="contact-name">Contact Name</div>
-        <div class="contact-email">example.gmail.com</div>
-        <div class="contact-phone">+201273985008</div>
+      @for (contact of organization.contact; track contact.ID) {
+      <div *ngIf="contact.ID" class="contact-card">
+        <div class="contact-name">
+          {{ contact.Firstname }} {{ contact.Lastname }}
+        </div>
+        <div *ngIf="contact.Email" class="contact-email">
+          {{ contact.Email }}
+        </div>
+        <div *ngIf="contact.CellPhone" class="contact-phone">
+          {{ contact.CellPhone }}
+        </div>
       </div>
+      }
     </div>
   </div>
 </ng-template>
