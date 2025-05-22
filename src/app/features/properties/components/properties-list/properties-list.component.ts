@@ -35,6 +35,10 @@ export class PropertiesListComponent implements OnInit {
     const properties = this.propertiesService.getProperties();
     if (properties.length) {
       this.properties = [...properties];
+      this.paginatedProperties = this.properties.slice(
+        this.first,
+        this.first + this.rows
+      );
       this.dataLoaded = true;
       return;
     }
