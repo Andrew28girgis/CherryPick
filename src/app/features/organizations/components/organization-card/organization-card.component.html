@@ -31,7 +31,12 @@
 
 <ng-template #content let-offcanvas>
   <div class="offcanvas-header">
-    <h4 class="offcanvas-title">Offcanvas title</h4>
+    <div class="d-flex align-items-center gap-2">
+      <div class="organization-logo">
+        <img src="" alt="" />
+      </div>
+      <div class="organization-name">Organization</div>
+    </div>
     <button
       type="button"
       class="btn-close"
@@ -39,16 +44,16 @@
       (click)="offcanvas.dismiss('Cross click')"
     ></button>
   </div>
+  <hr />
   <div class="offcanvas-body">
-    <p>One fine body&hellip;</p>
-    <div class="text-end">
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        (click)="offcanvas.close('Close click')"
-      >
-        Close
-      </button>
+    <div
+      class="w-100 d-flex flex-column align-items-center justify-content start gap-3"
+    >
+      <div class="contact-card">
+        <div class="contact-name">Contact Name</div>
+        <div class="contact-email">example.gmail.com</div>
+        <div class="contact-phone">+201273985008</div>
+      </div>
     </div>
   </div>
 </ng-template>
