@@ -22,10 +22,17 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { RegisterationComponent } from './shared/components/registeration/registeration.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
+  {
+    path: 'registeration',
+    component: RegisterationComponent,
+    data: { hideHeader: true },
+  },
+
   {
     path: 'ResetPassword',
     component: ResetPasswordComponent,
@@ -106,8 +113,8 @@ const routes: Routes = [
   },
   {
     path: 'not-found',
-    component: NotFoundComponent ,
-    data: { hideHeader: true }
+    component: NotFoundComponent,
+    data: { hideHeader: true },
   },
 
   {
