@@ -1,0 +1,210 @@
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+
+<div class="back">
+  <div class="row">
+    <div class="d-flex justify-content-center">
+      <div class="my-card">
+        <div class="image m-4"></div>
+
+        <div class="d-flex justify-content-center">
+          <h3 class="no-files">No Files or Paths Yet!</h3>
+        </div>
+        <h3 class="start-uploading">
+          Start uploading your files, sending your paths, and get your process
+          done!
+        </h3>
+
+        <div class="row m-3 mt-4">
+          <div class="d-flex justify-content-evenly">
+            <button
+              class="submit"
+              style="min-width: 160px"
+              (click)="fileInput.click()"
+            >
+              <i class="fa-solid fa-upload"></i> Upload File
+            </button>
+            <input
+              #fileInput
+              type="file"
+              accept=".pdf, .xml, .xls, .xlsx"
+              (change)="uploadFile($event)"
+              style="display: none"
+            />
+
+            <button
+              class="close"
+              style="min-width: 160px"
+              (click)="openPartitionModal(partitionModal)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="21"
+                viewBox="0 0 20 21"
+                fill="none"
+              >
+                <path
+                  d="M6.16665 5.76655L13.2417 3.40822C16.4167 2.34988 18.1417 4.08322 17.0917 7.25822L14.7333 14.3332C13.15 19.0916 10.55 19.0916 8.96665 14.3332L8.26665 12.2332L6.16665 11.5332C1.40832 9.94988 1.40832 7.35822 6.16665 5.76655Z"
+                  stroke="#4D65B4"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M8.42505 11.875L11.4084 8.8833"
+                  stroke="#4D65B4"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Send Path
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="isUploading" class="pt-4">
+          <progress [value]="uploadProgress" max="100" style="width: 400px;"></progress>
+          {{ uploadProgress }}%
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #partitionModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Select a Drive</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body" style="overflow-y: auto; max-height: 72vh">
+    <!-- drive buttons -->
+    <div class="d-flex mb-3" *ngIf="DirectoryNames.length; else loading">
+      <div *ngIf="selectedFullPath">
+        <!-- Back button -->
+        <button class="btn btn-secondary mt-1 mx-2" (click)="onBack()">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+      </div>
+      <button
+        *ngFor="let d of DirectoryNames"
+        class="drive"
+        [ngClass]="{ 'drive--selected': d.name === selectedDrive }"
+        (click)="onPartitionSelect(d.name)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M17 2H8C5.79 2 4 3.79 4 6V13.25C4 13.8 4.45 14.25 5 14.25H20C20.55 14.25 21 13.8 21 13.25V6C21 3.79 19.21 2 17 2ZM8 12.75H7C6.59 12.75 6.25 12.41 6.25 12C6.25 11.59 6.59 11.25 7 11.25H8C8.41 11.25 8.75 11.59 8.75 12C8.75 12.41 8.41 12.75 8 12.75ZM8 10.25H7C6.59 10.25 6.25 9.91 6.25 9.5C6.25 9.09 6.59 8.75 7 8.75H8C8.41 8.75 8.75 9.09 8.75 9.5C8.75 9.91 8.41 10.25 8 10.25ZM8 7.75H7C6.59 7.75 6.25 7.41 6.25 7C6.25 6.59 6.59 6.25 7 6.25H8C8.41 6.25 8.75 6.59 8.75 7C8.75 7.41 8.41 7.75 8 7.75Z"
+            fill="#707791"
+          />
+          <path
+            d="M4 16.75V18C4 20.21 5.79 22 8 22H17C19.21 22 21 20.21 21 18V16.75C21 16.2 20.55 15.75 20 15.75H5C4.45 15.75 4 16.2 4 16.75ZM17.71 19.46C17.52 19.64 17.26 19.75 17 19.75C16.74 19.75 16.48 19.64 16.29 19.46C16.11 19.27 16 19.01 16 18.75C16 18.49 16.11 18.23 16.29 18.04C16.66 17.67 17.33 17.67 17.71 18.04C17.89 18.23 18 18.49 18 18.75C18 19.01 17.89 19.27 17.71 19.46Z"
+            fill="#707791"
+          />
+        </svg>
+        <span class="drive-name"> {{ d.name }} </span>
+      </button>
+    </div>
+    <ng-template #loading><p>Loading drives…</p></ng-template>
+
+    <!-- drill-down view -->
+    <div *ngIf="selectedFullPath">
+      <!-- Current folder -->
+      <h6>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M17 2H8C5.79 2 4 3.79 4 6V13.25C4 13.8 4.45 14.25 5 14.25H20C20.55 14.25 21 13.8 21 13.25V6C21 3.79 19.21 2 17 2ZM8 12.75H7C6.59 12.75 6.25 12.41 6.25 12C6.25 11.59 6.59 11.25 7 11.25H8C8.41 11.25 8.75 11.59 8.75 12C8.75 12.41 8.41 12.75 8 12.75ZM8 10.25H7C6.59 10.25 6.25 9.91 6.25 9.5C6.25 9.09 6.59 8.75 7 8.75H8C8.41 8.75 8.75 9.09 8.75 9.5C8.75 9.91 8.41 10.25 8 10.25ZM8 7.75H7C6.59 7.75 6.25 7.41 6.25 7C6.25 6.59 6.59 6.25 7 6.25H8C8.41 6.25 8.75 6.59 8.75 7C8.75 7.41 8.41 7.75 8 7.75Z"
+            fill="#707791"
+          />
+          <path
+            d="M4 16.75V18C4 20.21 5.79 22 8 22H17C19.21 22 21 20.21 21 18V16.75C21 16.2 20.55 15.75 20 15.75H5C4.45 15.75 4 16.2 4 16.75ZM17.71 19.46C17.52 19.64 17.26 19.75 17 19.75C16.74 19.75 16.48 19.64 16.29 19.46C16.11 19.27 16 19.01 16 18.75C16 18.49 16.11 18.23 16.29 18.04C16.66 17.67 17.33 17.67 17.71 18.04C17.89 18.23 18 18.49 18 18.75C18 19.01 17.89 19.27 17.71 19.46Z"
+            fill="#707791"
+          />
+        </svg>
+        <span class="drive-name"> {{ selectedPartition }}: </span>
+      </h6>
+      <ul class="list-group">
+        <li
+          *ngFor="let child of childrenPaths"
+          class="list-group-item d-flex align-items-center"
+          [ngClass]="{
+            'folder-item': !isFile(child),
+            'file-item': isFile(child)
+          }"
+          (click)="onChildSelect(child)"
+        >
+          <!-- icon -->
+          <i
+            class="me-2"
+            [ngClass]="
+              !isFile(child) ? 'fa-solid fa-folder' : 'fa-solid fa-file'
+            "
+          ></i>
+
+          <!-- name -->
+          <span [class.text-muted]="isFile(child)">
+            {{ child.name }}
+          </span>
+        </li>
+      </ul>
+    </div>
+    <ng-template #loading>
+      <p>Loading drives…</p>
+    </ng-template>
+  </div>
+  <div class="modal-footer d-flex justify-content-between">
+    <div>
+      <div class="d-flex align-items-center gap-2">
+        <div class="form-check mt-2">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="includeFilesCheckbox"
+            [(ngModel)]="includeFiles"
+          />
+          <label class="include" for="includeFilesCheckbox">
+            Include files in folder
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex">
+      <div>
+        <button
+          class="submit mx-1"
+          [disabled]="!pathStack.length"
+          (click)="sendPath()"
+        >
+          Submit
+        </button>
+      </div>
+      <div>
+        <button class="close" (click)="modal.close()">Close</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div id="customToast" class="custom-toast">
+  <div class="toast-content">
+    <p id="toastMessage"></p>
+  </div>
+</div>
