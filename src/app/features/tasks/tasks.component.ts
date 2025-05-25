@@ -216,6 +216,7 @@ export class TasksComponent implements OnInit, OnDestroy {
       this.selectedEmailIndex++;
     }
   }
+
   previousEmail(): void {
     if (this.selectedEmailIndex > 0) {
       this.selectedEmailIndex--;

@@ -107,16 +107,6 @@ export class SubmissionsComponent implements OnInit {
     );
   }
 
-  // getSubmissionSourceId(submission: submission) {
-  //   if (submission.UserSubmissions[0].SourceId == 1) {
-  //     return 'Landing Page';
-  //   } else if (submission.UserSubmissions[0].SourceId == 2) {
-  //     return 'Email';
-  //   } else {
-  //     return 'Internal';
-  //   }
-  // }
-
   AcceptUserSubmission(userSubmission: any): void {
     userSubmission.StatusId = 1;
     const userSubmissionId = userSubmission.Id;
@@ -148,10 +138,12 @@ export class SubmissionsComponent implements OnInit {
       },
     });
   }
+
   openAddNoteModal(SubmissionId: number) {
     this.modalService.open(this.AddNote, { size: 'xl', centered: true });
     this.SubmID = SubmissionId;
   }
+
   InsertTenantNotes() {
     this.spinner.show();
     const body: any = {

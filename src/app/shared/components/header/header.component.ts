@@ -17,21 +17,16 @@ export type UserView = 'campaigns' | 'landlord';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  // UI State
   readonly MOBILE_BREAKPOINT = 992;
   isSmallScreen = window.innerWidth < this.MOBILE_BREAKPOINT;
   isNavbarOpen = false;
   displayHeader = true;
-
-  // User State
   userAvatar: string | null = null;
   currentView: UserView = 'campaigns';
   currentRoute = '';
   contactId: any;
   showRecord: boolean = false;
   showlink: boolean = false;
-
-  // Subscriptions
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -45,7 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.setupRouteSubscriptions();
     this.setupUserViewSubscription();
     this.fetchUserAvatar();
-    // Update showlink on every navigation event in case login state changes
+
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
