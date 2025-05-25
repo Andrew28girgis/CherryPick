@@ -1,17 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { adminLogin as AdminLogin } from 'src/app/shared/models/domain';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { Registeration } from 'src/app/shared/models/domain';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import * as CryptoJS from 'crypto-js';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  selector: 'app-registeration',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, NgxSpinnerModule],
+  templateUrl: './registeration.component.html',
+  styleUrl: './registeration.component.css',
 })
-export class LoginComponent implements OnInit {
+export class RegisterationComponent implements OnInit {
   private readonly MICROSOFT_LINKED_KEY = 'accountMicrosoftLinked';
   private readonly CONTACT_ID_KEY = 'contactId';
   private readonly ORG_ID_KEY = 'orgId';
@@ -19,7 +25,7 @@ export class LoginComponent implements OnInit {
   private key = CryptoJS.enc.Utf8.parse('YourSecretKey123YourSecretKey123');
   private iv = CryptoJS.enc.Utf8.parse('1234567890123456');
 
-  public loginData!: AdminLogin;
+  public loginData!: Registeration;
   private loginToken: string | null = null;
   public showPassword: boolean = false;
   public errorMessage: string | null = null;
@@ -41,7 +47,7 @@ export class LoginComponent implements OnInit {
   }
 
   private initializeData(): void {
-    this.loginData = new AdminLogin();
+    this.loginData = new Registeration();
     localStorage.clear();
   }
 
@@ -56,68 +62,62 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  private loginWithGUID(): void {
-    this.spinner.show();
-    const request = {
-      Name: 'GetBuyBoxIdToBeShown',
-      Params: {
-        BuyBoxGUID: this.loginToken,
-      },
-    };
-    this.placesService.GenericAPI(request).subscribe({
-      next: (response) => {
-        this.handleGUIDLoginSuccess(response);
-      },
-      complete: () => {
+ public onSubmit(): void {
+  const orgName = this.loginData.OrganizationName;
+  const orgRequest = {
+    Name: 'CreateOrganizationByName',
+    Params: {
+      'Name': orgName,
+    },
+  };
+
+  this.spinner.show();
+
+  this.placesService.GenericAPI(orgRequest).subscribe({
+    next: (orgResponse: any) => {
+      const orgId = orgResponse?.json?.[0]?.id;
+
+      if (!orgId) {
+        this.errorMessage = 'Failed to retrieve organization ID.';
         this.spinner.hide();
-      },
-    });
-  }
+        return;
+      }
 
-  private handleGUIDLoginSuccess(response: any): void {
-    const {
-      organizationId,
-      buyBoxId,
-      name: buyboxName,
-      campaignId,
-    } = response.json[0];
-    localStorage.setItem(this.ORG_ID_KEY, organizationId);
+      const contactRequest = {
+        Name: 'CreateContact',
+        Params: {
+          'Firstname': this.loginData.FirstName,
+          'Lastname': this.loginData.LastName,
+          'OrganizationId': orgId,
+          'Email': this.loginData.Email,
+          'Password': this.encrypt(this.loginData.Password),
+        },
+      };
 
-    this.router.navigate(['/market-survey'], {
-      queryParams: {
-        buyBoxId: buyBoxId,
-        orgId: organizationId,
-        buyboxName: buyboxName,
-        campaignId: campaignId,
-      },
-    });
-  }
+      this.placesService.GenericAPI(contactRequest).subscribe({
+        next: () => {
+          const loginRequest = {
+            Email: this.loginData.Email,
+            Password: this.encrypt(this.loginData.Password)
+          };
 
-  private prepareLoginRequest(): AdminLogin {
-    const encryptedLoginData = new AdminLogin();
-    encryptedLoginData.Email = this.loginData.Email;
-    encryptedLoginData.Password = this.encrypt(this.loginData.Password);
-    if (this.loginToken) {
-      encryptedLoginData.contactToken = this.loginToken;
-    }
-    return encryptedLoginData;
-  }
-
-  public onSubmit(): void {
-    const loginRequest = this.prepareLoginRequest();
-
-    this.placesService.loginUser(loginRequest).subscribe({
-      next: (response: any) => {
-        this.handleLoginSuccess(response);
-      },
-      error: (err: any) => {
-        this.handleLoginError();
-      },
-      complete: () => {
-        this.spinner.hide();
-      },
-    });
-  }
+          this.placesService.loginUser(loginRequest).subscribe({
+            next: (loginResponse: any) => {
+              this.handleLoginSuccess(loginResponse); 
+            },
+            complete: () => {
+              this.spinner.hide();
+            }
+          });
+        },
+        error: () => {
+          this.errorMessage = 'Failed to create contact.';
+          this.spinner.hide();
+        }
+      });
+    },
+  });
+}
 
   private handleLoginSuccess(response: any): void {
     localStorage.setItem(
@@ -126,6 +126,8 @@ export class LoginComponent implements OnInit {
     );
     localStorage.setItem(this.CONTACT_ID_KEY, response.contactId);
     localStorage.setItem(this.ORG_ID_KEY, response.orgId);
+    this.navigateToHome();
+
     if (response.token) {
       this.authService.setToken(response.token);
       this.navigateToHome();
@@ -134,19 +136,6 @@ export class LoginComponent implements OnInit {
 
   private navigateToHome(): void {
     this.router.navigate(['/summary']);
-  }
-
-  private handleLoginError(): void {
-    this.errorMessage = 'Invalid email or password. Please try again.';
-
-    setTimeout(() => {
-      this.fadeSuccess = true;
-    }, 4000);
-
-    setTimeout(() => {
-      this.errorMessage = null;
-      this.fadeSuccess = false;
-    }, 4000);
   }
 
   togglePassword() {

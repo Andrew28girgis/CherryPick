@@ -1,0 +1,26 @@
+<div class="container-fluid properties-container">
+  <section class="row g-4 mb-5">
+    @if (dataLoaded) { @for (property of paginatedProperties; track property.Id)
+    {
+    <article class="col-sm-6 col-lg-4 col-12">
+      <app-property-card [property]="property"></app-property-card>
+    </article>
+    } }@else { @for (card of [1,2,3,4,5,6,7,8,9,10]; track $index) {
+    <article class="col-sm-6 col-lg-4 col-12">
+      <div class="property-card">
+        <div class="property-image skeleton skeleton-img"></div>
+        <div class="property-name skeleton skeleton-text"></div>
+        <div class="property-address skeleton skeleton-text"></div>
+      </div>
+    </article>
+    } }
+  </section>
+
+  <p-paginator
+    (onPageChange)="onPageChange($event)"
+    [first]="first"
+    [rows]="rows"
+    [totalRecords]="properties.length"
+    [rowsPerPageOptions]="[10, 20, 30]"
+  />
+</div>

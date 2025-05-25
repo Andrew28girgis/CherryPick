@@ -90,18 +90,32 @@
             <span>Cadence</span>
           </a>
         </li> -->
-        <li class="nav-item" *ngIf="!currentRoute.includes('landlord')">
+        <li class="nav-item">
           <a
             class="nav-link"
-            [routerLink]="['/data-sources']"
+            [routerLink]="['/properties']"
             routerLinkActive="active-route"
-            title="Data-Sources"
+            title="Properties"
           >
             <img
               class="img-icn"
               src="../../../assets/Images/Icons/Cadence.svg"
             />
-            <span>Data Sources</span>
+            <span>Properties</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/organizations']"
+            routerLinkActive="active-route"
+            title="Organizations"
+          >
+            <img
+              class="img-icn"
+              src="../../../assets/Images/Icons/Cadence.svg"
+            />
+            <span>Organizations</span>
           </a>
         </li>
         <li class="nav-item" *ngIf="currentRoute.includes('landlord')">
