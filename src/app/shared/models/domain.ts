@@ -13,35 +13,33 @@ export class General {
   comparisonObject: any;
 }
 
-export class AllPlaces{
-  centers!:  shoppingMall[];
-  standAlonePlaces!:Property[];
-
-
+export class AllPlaces {
+  centers!: shoppingMall[];
+  standAlonePlaces!: Property[];
 }
-export class shoppingMall{
-  address!:string;
-  city!:string;
-  state!:string;
-  centerName !:string; 
-  nearestCotenantsName!:string;
-  nearestCompetitorsName!:string;
-  leasePrice:any;
-  mainImage!:string;
-  heading !: number ;
+export class shoppingMall {
+  address!: string;
+  city!: string;
+  state!: string;
+  centerName!: string;
+  nearestCotenantsName!: string;
+  nearestCompetitorsName!: string;
+  leasePrice: any;
+  mainImage!: string;
+  heading!: number;
   longitude!: number;
   latitude!: number;
-  lat !: number;
-  minUnitSize:any;
-  maxUnitSize:any;
-  lng !: number;
-  nearestBranchesInMiles :any ;
-  nearestCompetitorsInMiles :any;
-  nearestCotenantsMiles :any ; 
-  pitch :any ;
-  stLat!: number; 
-  stLng!:number ;
-  places:Property[]=[];
+  lat!: number;
+  minUnitSize: any;
+  maxUnitSize: any;
+  lng!: number;
+  nearestBranchesInMiles: any;
+  nearestCompetitorsInMiles: any;
+  nearestCotenantsMiles: any;
+  pitch: any;
+  stLat!: number;
+  stLng!: number;
+  places: Property[] = [];
 }
 
 export interface WorkSpace {
@@ -61,22 +59,22 @@ export interface WorkSpace {
   GetFboStage: GetFboStage[];
 }
 
-export interface ApiBody{
-  Name:string;
-  Params:ApiParam;
-  MainEntity : string;
-  Json:any;
+export interface ApiBody {
+  Name: string;
+  Params: ApiParam;
+  MainEntity: string;
+  Json: any;
 }
-export interface ApiParam{
-  id?:number ;
-  Query?:string;
-  Name?:string;
-  Duration ?: any;
-  CreatedDate ?: any;
+export interface ApiParam {
+  id?: number;
+  Query?: string;
+  Name?: string;
+  Duration?: any;
+  CreatedDate?: any;
   Authentication?: any;
-  categoryId?:number;
-  whereCondition?:string;
-  TopStatement?:string;
+  categoryId?: number;
+  whereCondition?: string;
+  TopStatement?: string;
 }
 
 export interface GroupedProperties {
@@ -95,16 +93,16 @@ export class Property {
   city!: string;
   state!: string;
   zip!: string;
-  extras!:any;
-  nearestCompetitorsName!:string;
-  nearestCotenantsName!:string;
-  reaction!:string;
+  extras!: any;
+  nearestCompetitorsName!: string;
+  nearestCotenantsName!: string;
+  reaction!: string;
   longitude!: number;
-  imagesLinks!:string;
-  feedBack!:string;
-  centerName!:string;
-  lat!:number;
-  lon!:number
+  imagesLinks!: string;
+  feedBack!: string;
+  centerName!: string;
+  lat!: number;
+  lon!: number;
   latitude!: number;
   urban!: boolean;
   suburban!: boolean;
@@ -124,8 +122,8 @@ export class Property {
   listingType!: string;
   forSalePrice?: any;
   forLeasePrice?: any;
-  docsLink?:string;
-  sitePlan?:string;
+  docsLink?: string;
+  sitePlan?: string;
   leaseType!: string;
   landUse!: string;
   minHighwayDist?: any;
@@ -136,7 +134,7 @@ export class Property {
   images?: any;
   streetLatitude?: any;
   streetLongitude?: any;
-  organizationId?:any;
+  organizationId?: any;
   heading?: any;
   pitch?: any;
   notes?: any;
@@ -250,7 +248,7 @@ export class Place {
   centerName!: string;
   urban!: boolean;
   suburban!: boolean;
-  outdoorArea_Garden!:string;
+  outdoorArea_Garden!: string;
   units!: string;
   suite!: string;
   parking!: string;
@@ -336,17 +334,25 @@ export class ScoutlynImages {
 export class adminLogin {
   Email!: string;
   Password!: string;
-  contactToken!:any;
+  contactToken!: any;
 }
 export class ChangePassword {
   Email!: string;
   OldPassword!: string;
   NewPassword!: string;
 }
+export class Registeration {
+  Email!: string;
+  Password!: string;
+  FirstName!: string;
+  LastName!: string;
+  OrganizationName!: string;
+  contactToken?: string;
+}
 export class ResetPassword {
   Email!: string;
   NewPassword!: string;
-  Token!: string
+  Token!: string;
 }
 export class ForgotPassword {
   Email!: string;
@@ -401,7 +407,7 @@ export class Activity {
 export class nearsetPlaces {
   competitorPlaces: place[] = [];
   ourPlaces: place[] = [];
-  cotenants:place[]=[];
+  cotenants: place[] = [];
 }
 
 export interface place {
@@ -531,19 +537,18 @@ export interface Organization {
   placeTypes: any;
 }
 
-
-export class AnotherPlaces{
-  competitorPlaces!:MapPlace[];
-  cotenants!:MapPlace[];
-  ourPlaces!:MapPlace[];
+export class AnotherPlaces {
+  competitorPlaces!: MapPlace[];
+  cotenants!: MapPlace[];
+  ourPlaces!: MapPlace[];
 }
 
-export class MapPlace{
-  buyBoxId!:number;
-  distance!:any;
-  id!:number;
-  isCompetitor!:number;
-  latitude!:number;
-  longitude!:number; 
-  name!:string;
+export class MapPlace {
+  buyBoxId!: number;
+  distance!: any;
+  id!: number;
+  isCompetitor!: number;
+  latitude!: number;
+  longitude!: number;
+  name!: string;
 }
