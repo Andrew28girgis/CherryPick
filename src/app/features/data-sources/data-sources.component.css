@@ -1,0 +1,120 @@
+.back {
+  min-height: 75vh;
+}
+.my-card {
+  width: 440px;
+  height: 70vh;
+}
+.image {
+  height: 30vh;
+  background-image: url("../../../assets/Images/upload-select.png");
+  background-size: cover;
+  background-position: center;
+}
+.folder-item {
+  cursor: pointer;
+}
+.folder-item i {
+  color: #f0ad4e;
+}
+
+.file-item {
+  cursor: default;
+  background-color: #f8f9fa;
+}
+.file-item i {
+  color: #6c757d;
+}
+.drive {
+  border-radius: 16px;
+  border: 1px solid #e2e4e9;
+  padding: 8px 12px;
+  align-items: center;
+  background-color: white;
+  margin-right: 10px;
+}
+.drive:hover {
+  background-color: #b8c1e1;
+}
+
+.drive--selected {
+  background-color: #b8c1e1;
+  border-color: #b8c1e1;
+}
+/* .drive--selected .drive-name,
+.drive--selected svg path {
+  fill: #fff !important;
+} */
+.drive-name {
+  color: #16181d;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+.modal-title {
+  color: #000;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.include {
+  color: #707791;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
+}
+.start-uploading {
+  color: #7a8591;
+  text-align: center;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+}
+.no-files {
+  color: #0c0d0e;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 32px;
+}
+.submit {
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  border-radius: 16px;
+  background: #4d65b4;
+  display: flex;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  max-height: 40px;
+  max-width: 130px;
+  cursor: pointer;
+  border: 1px solid #4d65b4;
+}
+.submit:disabled {
+  background-color: #a5b7f3;
+  cursor: default;
+}
+.close {
+  display: flex;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  max-height: 40px;
+  max-width: 130px;
+  background-color: white;
+  color: #4d65b4;
+  border: 1px solid #4d65b4;
+  border-radius: 16px;
+}

@@ -52,6 +52,7 @@ import { EmailComposeComponent } from './features/emily/inbox/email-compose/emai
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 import { TenantCardComponent } from './features/summery/tenant-card/tenant-card.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { NotFoundComponent } from './shared/components/not-found/not-found.compo
     EmailComposeComponent,
     CanvasHomeComponent ,
     TenantCardComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    DataSourcesComponent,
   ],
   imports: [
     BrowserModule,

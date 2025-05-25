@@ -22,6 +22,7 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { DataSourcesComponent } from './features/data-sources/data-sources.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
@@ -67,6 +68,11 @@ const routes: Routes = [
   {
     path: 'tasks',
     component: TasksComponent,
+    canActivate: [TenantOnlyGuard],
+  },
+  {
+    path: 'data-sources',
+    component: DataSourcesComponent,
     canActivate: [TenantOnlyGuard],
   },
   {
