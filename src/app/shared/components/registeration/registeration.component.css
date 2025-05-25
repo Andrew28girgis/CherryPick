@@ -39,13 +39,6 @@ input::placeholder {
   display: flex;
   flex-direction: column;
 }
-.cursor{
-  cursor: pointer;
-}
-.createaccount{
-  color: #4d65b4;
-  text-decoration: underline;
-}
 
 .forget {
   color: #4d65b4;

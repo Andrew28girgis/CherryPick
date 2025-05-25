@@ -22,10 +22,17 @@ import { NewMulipleEmailComponent } from './features/emily/new-muliple-email/new
 import { InboxComponent } from './features/emily/inbox/inbox.component';
 import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
+import { RegisterationComponent } from './shared/components/registeration/registeration.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
+  {
+    path: 'registeration',
+    component: RegisterationComponent,
+    data: { hideHeader: true },
+  },
+
   {
     path: 'ResetPassword',
     component: ResetPasswordComponent,
@@ -42,6 +49,20 @@ const routes: Routes = [
     data: { hideHeader: true },
   },
   { path: 'tos', component: TermsComponent, data: { hideHeader: true } },
+  {
+    path: 'properties',
+    loadChildren: () =>
+      import('../app/features/properties/properties.module').then(
+        (m) => m.PropertiesModule
+      ),
+  },
+  {
+    path: 'organizations',
+    loadChildren: () =>
+      import('../app/features/organizations/organizations.module').then(
+        (m) => m.OrganizationsModule
+      ),
+  },
   {
     path: 'landing/:id/:shoppiongCenterId/:buyboxid',
     component: LandingComponent,
@@ -106,8 +127,8 @@ const routes: Routes = [
   },
   {
     path: 'not-found',
-    component: NotFoundComponent ,
-    data: { hideHeader: true }
+    component: NotFoundComponent,
+    data: { hideHeader: true },
   },
 
   {

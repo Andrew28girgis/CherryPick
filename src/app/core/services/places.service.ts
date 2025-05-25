@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
-import { ChangePassword } from 'src/app/shared/models/domain';
+import { ChangePassword, Registeration } from 'src/app/shared/models/domain';
 import { ResetPassword } from 'src/app/shared/models/domain';
 import { ForgotPassword } from 'src/app/shared/models/domain';
 

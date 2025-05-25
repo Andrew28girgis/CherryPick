@@ -1,0 +1,50 @@
+.organization-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.organization-logo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.organization-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.organization-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.view-contacts-btn {
+  cursor: pointer;
+}
+
+.contact-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #e2e4e9;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.contact-name {
+  font-weight: 600;
+}
+
+.contact-email,
+.contact-phone {
+  color: #707791;
+}
