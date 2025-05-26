@@ -134,13 +134,4 @@ export class PlacesService {
     );
   }
   
-  public getPartitions(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.api}/Directory/partitions`);
-  }
-
-  public getChildren(parentPath: string): Observable<any> {
-    return this.http.get<any>(
-      `${environment.api}/Directory/children?parentPath=${encodeURIComponent(parentPath)}`
-    );
-  }
 }
