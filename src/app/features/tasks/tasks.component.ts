@@ -255,7 +255,6 @@ export class TasksComponent implements OnInit, OnDestroy {
         this.isLoading = false; // Hide skeleton on error
       },
     });
-
     this.subscriptions.add(subscription);
   }
 
