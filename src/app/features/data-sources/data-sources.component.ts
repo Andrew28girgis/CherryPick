@@ -10,6 +10,7 @@ import {
   partitions,
 } from 'src/app/shared/models/partitions';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NonGenericService } from 'src/app/core/services/non-generic.service';
 @Component({
   selector: 'app-data-sources',
   templateUrl: './data-sources.component.html',
@@ -32,6 +33,7 @@ export class DataSourcesComponent implements OnInit {
   constructor(
     private breadcrumbService: BreadcrumbService,
     private placesService: PlacesService,
+    private nonGenericService: NonGenericService,
     public activatedRoute: ActivatedRoute,
     private http: HttpClient,
     private spinner: NgxSpinnerService,
@@ -62,9 +64,7 @@ export class DataSourcesComponent implements OnInit {
 
   private loadPartitions() {
     this.spinner.show();
-    this.http
-      .get<partitions[]>('https://api.cherrypick.com/api/Directory/partitions')
-      .subscribe({
+    this.nonGenericService.getPartitions().subscribe({
         next: (drives) => {
           this.DirectoryNames = drives;
           this.childrenPaths = [];
@@ -113,10 +113,7 @@ export class DataSourcesComponent implements OnInit {
 
   private loadChildren(path: string) {
     this.spinner.show();
-    const url = `https://api.cherrypick.com/api/Directory/children?parentPath=${encodeURIComponent(
-      path
-    )}`;
-    this.http.get<partitionParent>(url).subscribe({
+    this.nonGenericService.getChildren(path).subscribe({
       next: (resp) => {
         this.selectedFullPath = resp.parentFullPath;
         this.selectedPartition = path;
