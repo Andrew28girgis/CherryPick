@@ -12,6 +12,7 @@ import { PlacesService } from 'src/app/core/services/places.service';
 import { StateService } from 'src/app/core/services/state.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { Tenant } from 'src/app/shared/models/tenants';
+import { EncodeService } from 'src/app/core/services/encode.service';
 
 @Component({
   selector: 'app-summery',
@@ -40,7 +41,8 @@ export class SummeryComponent implements OnInit {
     private route: ActivatedRoute,
     private stateService: StateService,
     private modalService: NgbModal,
-    private breadcrumbService: BreadcrumbService
+    private breadcrumbService: BreadcrumbService,
+    private base62: EncodeService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +64,10 @@ export class SummeryComponent implements OnInit {
       Name: 'GetUserBuyBoxes',
       Params: {},
     };
+
+    const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
+    let encoded = this.base62.encode(utf8Bytes);
+
     this.PlacesService.GenericAPI(body).subscribe({
       next: (data) => {
         this.tenants = data.json;
