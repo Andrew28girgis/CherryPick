@@ -22,7 +22,7 @@ import { DropboxService } from './dropbox.service';
   providedIn: 'root',
 })
 export class PlacesService {
-  appMode: string = 'apiz';
+  appMode: string = 'api';
 
   constructor(
     private http: HttpClient,
