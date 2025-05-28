@@ -46,13 +46,11 @@ export class PlacesService {
     );
   }
 
-  public GenericAPI(body: any, dropboxPath?: string): Observable<any> {
+  public GenericAPI(body: any): Observable<any> {
     let encoded: string | undefined;
-    if (!dropboxPath) {
-      const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
-      encoded = this.base62.encode(utf8Bytes);
-      dropboxPath = `/cache/${encoded}.json`;
-    }
+    const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
+    encoded = this.base62.encode(utf8Bytes);
+    let dropboxPath = `/cache/${encoded}.json`;
 
     if (this.appMode === 'api') {
       return this.http.post<any>(`${environment.api}/GenericAPI/Execute`, body);
@@ -121,6 +119,7 @@ export class PlacesService {
       retry({ delay: 2000 })
     );
   }
+
   public GenericAPILocal(body: any) {
     return this.http.post<any>(
       `http://10.0.0.15:8082/api/GenericAPI/Execute`,
