@@ -22,7 +22,7 @@ import { DropboxService } from './dropbox.service';
   providedIn: 'root',
 })
 export class PlacesService {
-  appMode: string = 'api';
+  appMode: string = 'apiz';
 
   constructor(
     private http: HttpClient,
@@ -56,7 +56,6 @@ export class PlacesService {
       return this.http.post<any>(`${environment.api}/GenericAPI/Execute`, body);
     } else {
       let hasUploaded = false;
-
       const tryDownload = (): Observable<any> => {
         return this.dropbox.downloadFile(dropboxPath!).pipe(
           map((fileContent: string) => {
