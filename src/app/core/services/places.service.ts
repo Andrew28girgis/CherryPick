@@ -1,17 +1,34 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  catchError,
+  map,
+  Observable,
+  retry,
+  switchMap,
+  tap,
+  throwError,
+  timer,
+} from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { GenerateContextDTO } from 'src/app/shared/models/GenerateContext';
 import { ChangePassword, Registeration } from 'src/app/shared/models/domain';
 import { ResetPassword } from 'src/app/shared/models/domain';
 import { ForgotPassword } from 'src/app/shared/models/domain';
+import { EncodeService } from './encode.service';
+import { DropboxService } from './dropbox.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlacesService {
-  constructor(private http: HttpClient) {}
+  appMode: string = 'buffer';
+
+  constructor(
+    private http: HttpClient,
+    private base62: EncodeService,
+    private dropbox: DropboxService
+  ) {}
 
   public GetBuyBoxPlaces(buyBoxId: any) {
     return this.http.get<any>(
@@ -29,10 +46,81 @@ export class PlacesService {
     );
   }
 
-  public GenericAPI(body: any) {
-    return this.http.post<any>(`${environment.api}/GenericAPI/Execute`, body);
+  public GenericAPI(body: any, dropboxPath?: string): Observable<any> {
+    let encoded: string | undefined;
+    if (!dropboxPath) {
+      const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
+      encoded = this.base62.encode(utf8Bytes);
+      dropboxPath = `/cache/${encoded}.json`;
+    }
+
+    if (this.appMode === 'api') {
+      return this.http.post<any>(`${environment.api}/GenericAPI/Execute`, body);
+    } else {
+      let hasUploaded = false;
+
+      const tryDownload = (): Observable<any> => {
+        return this.dropbox.downloadFile(dropboxPath!).pipe(
+          map((fileContent: string) => {
+            try {
+              const convertedBytes = JSON.parse(fileContent);
+              console.log('Converted Bytes:', convertedBytes);
+
+              // Check if we got a meaningful result (not empty)
+              if (convertedBytes && Object.keys(convertedBytes).length > 0) {
+                return convertedBytes;
+              } else {
+                // If empty result, continue polling
+                throw new Error('Empty result, continue polling');
+              }
+            } catch (err) {
+              console.error(
+                'Error parsing JSON from Dropbox file content:',
+                err
+              );
+              throw err;
+            }
+          }),
+          catchError((error: any) => {
+            // If file doesn't exist (404/409) and we haven't uploaded yet
+            if (
+              (error.status === 409 || error.status === 404) &&
+              !hasUploaded &&
+              encoded
+            ) {
+              hasUploaded = true;
+              const emptyJsonBlob = new Blob(['{}'], {
+                type: 'application/json',
+              });
+              const newPath = `/new/${encoded}.json`;
+
+              return this.dropbox.uploadFile(emptyJsonBlob, newPath).pipe(
+                tap((res) => console.log('Dropbox upload succeeded:', res)),
+                switchMap(() => {
+                  return this.pollForResult(tryDownload);
+                })
+              );
+            }
+
+            if (hasUploaded) {
+              return this.pollForResult(tryDownload);
+            }
+
+            return throwError(error);
+          })
+        );
+      };
+
+      return tryDownload();
+    }
   }
-  // for testing local generic api
+
+  private pollForResult(downloadFn: () => Observable<any>): Observable<any> {
+    return timer(2000).pipe(
+      switchMap(() => downloadFn()),
+      retry({ delay: 2000 })
+    );
+  }
   public GenericAPILocal(body: any) {
     return this.http.post<any>(
       `http://10.0.0.15:8082/api/GenericAPI/Execute`,
@@ -44,13 +132,22 @@ export class PlacesService {
     return this.http.post<any[]>(`${environment.api}/BuyBox/Login`, message);
   }
   ChangePassword(request: ChangePassword) {
-    return this.http.post<boolean>(`${environment.api}/BuyBox/ChangePassword`, request);
+    return this.http.post<boolean>(
+      `${environment.api}/BuyBox/ChangePassword`,
+      request
+    );
   }
   ResetPassword(request: ResetPassword) {
-    return this.http.post<boolean>(`${environment.api}/BuyBox/ResetPassword`, request);
+    return this.http.post<boolean>(
+      `${environment.api}/BuyBox/ResetPassword`,
+      request
+    );
   }
   ForgotPassword(request: ForgotPassword) {
-    return this.http.post<boolean>(`${environment.api}/BuyBox/ForgotPassword`, request);
+    return this.http.post<boolean>(
+      `${environment.api}/BuyBox/ForgotPassword`,
+      request
+    );
   }
 
   public UpdateBuyBoxWorkSpacePlace(message: any) {
@@ -64,11 +161,7 @@ export class PlacesService {
     return this.http.get<any>(`${environment.api}/BuyBox/GetUserBuyBoxes`);
   }
   public GenericAPIHtml(body: any): Observable<any> {
-    return this.http.post(
-      `${environment.api}/GenericAPI/Execute`,
-      body,
-
-    );
+    return this.http.post(`${environment.api}/GenericAPI/Execute`, body);
   }
   public generateEmail(
     promptId: number,
@@ -133,5 +226,4 @@ export class PlacesService {
       requestPayload
     );
   }
-  
 }

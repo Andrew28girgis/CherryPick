@@ -13,6 +13,10 @@ import { StateService } from 'src/app/core/services/state.service';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
 import { Tenant } from 'src/app/shared/models/tenants';
 import { EncodeService } from 'src/app/core/services/encode.service';
+import {
+  DropboxService,
+  UploadArgs,
+} from 'src/app/core/services/dropbox.service';
 
 @Component({
   selector: 'app-summery',
@@ -42,7 +46,8 @@ export class SummeryComponent implements OnInit {
     private stateService: StateService,
     private modalService: NgbModal,
     private breadcrumbService: BreadcrumbService,
-    private base62: EncodeService
+    private base62: EncodeService,
+    private dropbox: DropboxService
   ) {}
 
   ngOnInit(): void {
@@ -64,12 +69,9 @@ export class SummeryComponent implements OnInit {
       Name: 'GetUserBuyBoxes',
       Params: {},
     };
-
-    const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
-    let encoded = this.base62.encode(utf8Bytes);
-
+    
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data) => {
+      next: (data :any) => {
         this.tenants = data.json;
         if (this.tenants.length === 0 && !this.modalOpened) {
           this.modalOpened = true;

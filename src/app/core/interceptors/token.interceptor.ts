@@ -43,7 +43,11 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   private shouldExclude(url: string): boolean {
-    const excludedUrls = ['https://api.cherrypick.com/api/BuyBox/Login'];
+    const excludedUrls = ['https://api.cherrypick.com/api/BuyBox/Login' , 
+      'https://api.dropboxapi.com/2/file_requests/create',
+      'https://content.dropboxapi.com/2/files/upload',
+      'https://content.dropboxapi.com/2/files/download'
+    ];
     return excludedUrls.some((excludedUrl) => url.startsWith(excludedUrl));
   }
 }
