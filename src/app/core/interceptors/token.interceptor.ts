@@ -46,7 +46,8 @@ export class TokenInterceptor implements HttpInterceptor {
     const excludedUrls = ['https://api.cherrypick.com/api/BuyBox/Login' , 
       'https://api.dropboxapi.com/2/file_requests/create',
       'https://content.dropboxapi.com/2/files/upload',
-      'https://content.dropboxapi.com/2/files/download'
+      'https://content.dropboxapi.com/2/files/download',
+      'https://api.dropboxapi.com/2/files/delete_v2',
     ];
     return excludedUrls.some((excludedUrl) => url.startsWith(excludedUrl));
   }

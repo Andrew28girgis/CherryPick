@@ -22,7 +22,7 @@ import { DropboxService } from './dropbox.service';
   providedIn: 'root',
 })
 export class PlacesService {
-  appMode: string = 'api';
+  appMode: string = 'apxi';
 
   constructor(
     private http: HttpClient,
@@ -126,9 +126,86 @@ export class PlacesService {
     );
   }
 
+  public newLoginUser(message: any): Observable<any> {
+    if (this.appMode === 'api') {
+      // Direct API call
+      return this.http.post<any[]>(`${environment.api}/BuyBox/Login`, message);
+    }
+
+    let encoded: string | undefined;
+    const utf8Bytes = new TextEncoder().encode(JSON.stringify(message));
+    encoded = this.base62.encode(utf8Bytes);
+    let dropboxPath = `/loginResponse/${encoded}.json`;
+
+    if (this.appMode === 'api') {
+      return this.http.post<any>(
+        `${environment.api}/GenericAPI/Execute`,
+        message
+      );
+    } else {
+      let hasUploaded = false;
+      const tryDownload = (): Observable<any> => {
+        return this.dropbox.downloadFile(dropboxPath!).pipe(
+          map((fileContent: string) => {
+            try {
+              const convertedBytes = JSON.parse(fileContent);
+              console.log('Converted Bytes:', convertedBytes);
+
+              if (convertedBytes && Object.keys(convertedBytes).length > 0) {
+                return convertedBytes;
+              } else {
+                throw new Error('Empty result, continue polling');
+              }
+            } catch (err) {
+              console.error(
+                'Error parsing JSON from Dropbox file content:',
+                err
+              );
+              throw err;
+            }
+          }),
+          tap((data) => {
+            // Fire-and-forget delete
+            this.dropbox.deleteFile(dropboxPath!).subscribe({
+              next: () => console.log('Dropbox file deleted:', dropboxPath),
+              error: (err) => console.error('Dropbox file delete error:', err),
+            });
+          }),
+          catchError((error: any) => {
+            if (
+              (error.status === 409 || error.status === 404) &&
+              !hasUploaded &&
+              encoded
+            ) {
+              hasUploaded = true;
+              const emptyJsonBlob = new Blob(['{}'], {
+                type: 'application/json',
+              });
+              const newPath = `/login/${encoded}.json`;
+
+              return this.dropbox.uploadFile(emptyJsonBlob, newPath).pipe(
+                tap((res) => console.log('Dropbox upload succeeded:', res)),
+                switchMap(() => this.pollForResult(tryDownload))
+              );
+            }
+
+            if (hasUploaded) {
+              return this.pollForResult(tryDownload);
+            }
+
+            return throwError(error);
+          })
+        );
+      };
+
+      return tryDownload();
+    }
+  }
+
   public loginUser(message: any) {
     return this.http.post<any[]>(`${environment.api}/BuyBox/Login`, message);
   }
+
   ChangePassword(request: ChangePassword) {
     return this.http.post<boolean>(
       `${environment.api}/BuyBox/ChangePassword`,

@@ -106,7 +106,7 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
 
-    this.placesService.loginUser(loginRequest).subscribe({
+    this.placesService.newLoginUser(loginRequest).subscribe({
       next: (response: any) => {
         this.handleLoginSuccess(response);
       },
