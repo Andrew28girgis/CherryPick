@@ -1,7 +1,7 @@
 // src/app/services/dropbox.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { catchError, from, Observable, switchMap, tap, throwError } from 'rxjs';
 
 export interface UploadArgs {
   path: string; // e.g. "/File Requests/Homework/andrew.json"
@@ -40,18 +40,79 @@ export class DropboxService {
     });
   }
 
-  downloadFile(path: string): Observable<string> {
+ downloadFile(path: string): Observable<string> {
     const downloadUrl = 'https://content.dropboxapi.com/2/files/download';
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-      'Dropbox-API-Arg': JSON.stringify({ path }),
+      'Authorization': `Bearer ${this.token}`,
+      'Dropbox-API-Arg': JSON.stringify({ path })
     });
 
     return this.http.post(downloadUrl, null, {
       headers,
-      responseType: 'text',
-    });
+      responseType: 'text'
+    }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          return this.refreshToken().pipe(
+            switchMap(() => {
+              // Retry with new token
+              const newHeaders = new HttpHeaders({
+                'Authorization': `Bearer ${this.token}`,
+                'Dropbox-API-Arg': JSON.stringify({ path })
+              });
+              return this.http.post(downloadUrl, null, {
+                headers: newHeaders,
+                responseType: 'text'
+              });
+            })
+          );
+        }
+        return throwError(error);
+      })
+    );
+  }
+
+  private refreshToken(): Observable<void> {
+    const tokenUrl = 'https://api.dropbox.com/oauth2/token';
+    
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    const urlencoded = new URLSearchParams();
+    urlencoded.append('grant_type', 'refresh_token');
+    urlencoded.append('refresh_token', '4c0iGjoMkC4AAAAAAAAAAUfN-sZQSKkC0emybcZKBGMC9JW---H4ciQukxUEEdYU');
+    urlencoded.append('client_id', 'gv5zzfqsv9rlinh');
+    urlencoded.append('client_secret', '6yixqee9j8w9r00');
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: urlencoded
+    };
+
+    // Convert fetch to Observable
+    return from(
+      fetch(tokenUrl, requestOptions)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+    ).pipe(
+      tap((response: { access_token: string }) => {
+        // Update the token with the new access token
+        this.token = response.access_token;
+        // You might want to store the new token in your app's state or storage
+      }),
+      switchMap(() => {
+        return new Observable<void>(observer => {
+          observer.next();
+          observer.complete();
+        });
+      })
+    );
   }
 
   deleteFile(path: string) {

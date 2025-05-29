@@ -11,6 +11,8 @@ import {
 } from 'src/app/shared/models/partitions';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NonGenericService } from 'src/app/core/services/non-generic.service';
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-data-sources',
   templateUrl: './data-sources.component.html',
@@ -28,8 +30,8 @@ export class DataSourcesComponent implements OnInit {
   selectedPartition = '';
   selectedFullPath = '';
   pathStack: string[] = [];
-  private modalRef?: NgbModalRef;
   includeFiles: boolean = true;
+  private modalRef?: NgbModalRef;
   constructor(
     private breadcrumbService: BreadcrumbService,
     private placesService: PlacesService,
@@ -176,7 +178,7 @@ export class DataSourcesComponent implements OnInit {
     };
     formData.append('UploadFile', JSON.stringify(dto));
 
-    const SERVER_URL = `https://api.cherrypick.com/api/uploadfile/${this.contactID}`;
+    const SERVER_URL = `${environment.api}/uploadfile/${this.contactID}`; // Adjust the URL as needed still not done from backend
 
     this.isUploading = true;
     this.uploadProgress = 0;
