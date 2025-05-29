@@ -79,7 +79,6 @@ export class PlacesService {
             }
           }),
           catchError((error: any) => {
-            // If file doesn't exist (404/409) and we haven't uploaded yet
             if (
               (error.status === 409 || error.status === 404) &&
               !hasUploaded &&
