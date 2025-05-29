@@ -119,16 +119,8 @@ export class PlacesService {
     );
   }
 
-  public GenericAPILocal(body: any) {
-    return this.http.post<any>(
-      `http://10.0.0.15:8082/api/GenericAPI/Execute`,
-      body
-    );
-  }
-
   public newLoginUser(message: any): Observable<any> {
     if (this.appMode === 'api') {
-      // Direct API call
       return this.http.post<any[]>(`${environment.api}/BuyBox/Login`, message);
     }
 
@@ -200,6 +192,13 @@ export class PlacesService {
 
       return tryDownload();
     }
+  }
+
+  public GenericAPILocal(body: any) {
+    return this.http.post<any>(
+      `http://10.0.0.15:8082/api/GenericAPI/Execute`,
+      body
+    );
   }
 
   public loginUser(message: any) {

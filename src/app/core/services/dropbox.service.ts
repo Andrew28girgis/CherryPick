@@ -34,7 +34,6 @@ export class DropboxService {
       'Dropbox-API-Arg': JSON.stringify(args),
     });
 
-    // responseType:'text' so we get the raw JSON string back
     return this.http.post(this.UPLOAD_URL, fileBlob, {
       headers,
       responseType: 'text',
@@ -51,23 +50,22 @@ export class DropboxService {
 
     return this.http.post(downloadUrl, null, {
       headers,
-      responseType: 'text', // Get the raw file content as text
+      responseType: 'text',
     });
   }
 
-  private dropboxApiUrl = 'https://api.dropboxapi.com/2/files/delete_v2';
-
   deleteFile(path: string) {
+    const dropboxApiUrl = 'https://api.dropboxapi.com/2/files/delete_v2';
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`, // single space!
+      Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     });
 
     const body = { path };
 
-    return this.http.post(this.dropboxApiUrl, body, {
+    return this.http.post(dropboxApiUrl, body, {
       headers,
-      responseType: 'json', // Dropbox returns JSON on delete success
+      responseType: 'json',
     });
   }
 }
