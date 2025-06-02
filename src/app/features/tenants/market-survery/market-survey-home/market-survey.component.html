@@ -6,14 +6,18 @@
       <div
         class="nav-right-responsive col-4 justify-content-strat justify-content-sm-strat gap-0 gap-sm-2"
       >
-        <img
-          alt="logo"
-          class="cherry-logo"
+                <div
+          class="sidebar-logo d-flex justify-content-start align-items-center me-4" style="cursor: pointer;"
           [routerLink]="['/summary']"
-          decoding="async"
-          data-nimg="1"
-          src="../../../assets/Images/logo.png"
-        />
+        >
+          <img
+            class="cherry-logo"
+            src="../../../assets/Images/Icons/logo (1).png"
+          />
+          <p class="cherry mb-0 d-none d-lg-block">
+            Cherry<span class="pick">pick</span>
+          </p>
+        </div>
         <p class="titleResponsive m-0 ms-2 d-none d-sm-flex">
           {{ BuyBoxName }}
         </p>

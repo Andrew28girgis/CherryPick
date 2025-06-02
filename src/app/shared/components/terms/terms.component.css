@@ -41,3 +41,22 @@ code {
 .margin-left {
   margin-left: 8px;
 }
+.cherry-logo {
+  max-width: 30px;
+  max-height: 30px !important;
+  height: auto;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.cherry {
+  margin: 0 6px;
+  background: linear-gradient(0deg, #4d65b4 0%, #5e84f1 100%);
+  font-weight: 700;
+  font-size: 24px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pick {
+  font-weight: 300;
+}
