@@ -30,11 +30,11 @@ import { ShoppingComponent } from './features/shopping/shopping.component';
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
   { path: 'login', component: LoginComponent, data: { hideHeader: true } },
-  {
-    path: 'registeration',
-    component: RegisterationComponent,
-    data: { hideHeader: true },
-  },
+  // {
+  //   path: 'registeration',
+  //   component: RegisterationComponent,
+  //   data: { hideHeader: true },
+  // },
 
   {
     path: 'ResetPassword',
