@@ -30,6 +30,7 @@ export class RegisterationComponent implements OnInit {
   public showPassword: boolean = false;
   public errorMessage: string | null = null;
   public fadeSuccess: boolean = false;
+  public acceptedTerms: boolean = false;
 
   constructor(
     private readonly route: ActivatedRoute,

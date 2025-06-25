@@ -24,6 +24,8 @@ import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.c
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { RegisterationComponent } from './shared/components/registeration/registeration.component';
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
+import { ContactsComponent } from './features/contacts/contacts.component';
+import { ShoppingComponent } from './features/shopping/shopping.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { hideHeader: true } },
@@ -80,14 +82,13 @@ const routes: Routes = [
   {
     path: 'summary',
     component: SummeryComponent,
-    canActivate: [TenantOnlyGuard],
   },
   {
     path: 'canvas',
     component: CanvasHomeComponent,
   },
   {
-    path: 'tasks',
+    path: 'overview',
     component: TasksComponent,
     canActivate: [TenantOnlyGuard],
   },
@@ -173,6 +174,16 @@ const routes: Routes = [
   {
     path: 'organization-mail/:buyBoxId/:organizationId/:campaignId',
     component: InboxComponent,
+  },
+  {
+    path: 'contacts',
+    component: ContactsComponent,
+    canActivate: [AuthGuardService, TenantOnlyGuard],
+  },
+  {
+    path: 'shoppingcenters',
+    component: ShoppingComponent,
+    canActivate: [AuthGuardService, TenantOnlyGuard],
   },
   {
     path: 'dashboard/:buyboxid/:orgId/:buyboxName/:campaignId',

@@ -56,13 +56,7 @@ export interface Center {
     lastOutgoingEmail:any
     lastIncomingEmail:any
   }
-  export class Comment {
-    Id?: number
-    ContactId?: number
-    MarketSurveyId?: number
-    Comment?: string
-    CommentDate?: string
-  }
+ 
   
   export interface ShoppingCenter {
     Places: Place[]

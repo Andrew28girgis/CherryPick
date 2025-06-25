@@ -1,5 +1,6 @@
 export interface partitions {
   name: string
+  fullPath: string
 }
 
 export interface partitionParent {
@@ -10,4 +11,5 @@ export interface partitionParent {
 export interface Children {
   name: string
   fullPath: string
+  lastModified?: Date
 }

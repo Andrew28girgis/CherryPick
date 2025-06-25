@@ -38,6 +38,25 @@ export class SummeryComponent implements OnInit {
   isMobile = false;
   campaignsLoaded = false;
 
+  // Search
+  searchQuery: string = '';
+  filteredTenants: Tenant[] = [];
+
+  // Filter
+  showFilterDropdown: boolean = false;
+  showSortDropdown: boolean = false;
+  filters = {
+    active: false,
+    inactive: false,
+    fastFood: false,
+    sportswear: false,
+    luxury: false,
+    fastFashion: false
+  };
+
+  // Sort
+  sortField: 'alphabetical' | 'newest' | 'oldest' = 'alphabetical';
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public router: Router,
@@ -61,6 +80,7 @@ export class SummeryComponent implements OnInit {
     });
     this.modalOpened = false;
     this.checkScreenSize();
+    this.filteredTenants = this.tenants;
   }
 
   getUserBuyBoxes(): void {
@@ -71,8 +91,9 @@ export class SummeryComponent implements OnInit {
     };
     
     this.PlacesService.GenericAPI(body).subscribe({
-      next: (data :any) => {
+      next: (data: any) => {
         this.tenants = data.json;
+        this.filteredTenants = this.tenants;
         if (this.tenants.length === 0 && !this.modalOpened) {
           this.modalOpened = true;
           this.openAddTenant(this.buyBoxProperty);
@@ -96,9 +117,7 @@ export class SummeryComponent implements OnInit {
           this.modalService.dismissAll();
         }
       })
-      .catch((error) => {
-        this.getUserBuyBoxes();
-      });
+      ;
   }
 
   showCampaignsTable() {
@@ -156,5 +175,89 @@ export class SummeryComponent implements OnInit {
         this.campaignsViewMode = savedViewMode;
       }
     }
+  }
+
+  // Search and Filter Functions
+  filterTenants() {
+    this.filteredTenants = this.tenants.filter(tenant => {
+      // Search filter
+      const matchesSearch = !this.searchQuery || 
+        tenant.Name.toLowerCase().includes(this.searchQuery.toLowerCase());
+
+      // Status filters
+      const statusMatch = 
+        (!this.filters.active && !this.filters.inactive) ||
+        (this.filters.active && tenant.Status === 'Active') ||
+        (this.filters.inactive && tenant.Status === 'Inactive');
+
+      // Category filters
+      const categoryMatch = 
+        (!this.filters.fastFood && !this.filters.sportswear && 
+         !this.filters.luxury && !this.filters.fastFashion) ||
+        (this.filters.fastFood && tenant.Category === 'Fast Food Brand') ||
+        (this.filters.sportswear && tenant.Category === 'Sportswear') ||
+        (this.filters.luxury && tenant.Category === 'Luxury Brands') ||
+        (this.filters.fastFashion && tenant.Category === 'Basic & Everyday Wear');
+
+      return matchesSearch && statusMatch && categoryMatch;
+    });
+
+    // Maintain current sort
+    this.sortTenants(this.sortField);
+  }
+
+  // Sort Functions
+  sortTenants(field: 'alphabetical' | 'newest' | 'oldest') {
+    this.sortField = field;
+
+    this.filteredTenants.sort((a, b) => {
+      switch (field) {
+        case 'alphabetical':
+          return a.Name.localeCompare(b.Name);
+        case 'newest':
+          return new Date(b.CreatedDate).getTime() - new Date(a.CreatedDate).getTime();
+        case 'oldest':
+          return new Date(a.CreatedDate).getTime() - new Date(b.CreatedDate).getTime();
+        default:
+          return 0;
+      }
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Get the clicked element
+    const clickedElement = event.target as HTMLElement;
+
+    // Check if click is outside filter button and dropdown
+    if (!clickedElement.closest('.filter-btn') && !clickedElement.closest('.filter-dropdown')) {
+      this.showFilterDropdown = false;
+    }
+
+    // Check if click is outside sort button and dropdown
+    if (!clickedElement.closest('.sort-btn') && !clickedElement.closest('.sort-dropdown')) {
+      this.showSortDropdown = false;
+    }
+  }
+
+  // Toggle Dropdowns
+  toggleFilter(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.showFilterDropdown = !this.showFilterDropdown;
+    this.showSortDropdown = false;
+  }
+
+  toggleSort(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.showSortDropdown = !this.showSortDropdown;
+    this.showFilterDropdown = false;
+  }
+
+  openAddTenants() {
+    this.router.navigate(['/add-tenant']);
   }
 }

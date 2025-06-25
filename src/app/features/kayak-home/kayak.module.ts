@@ -6,8 +6,8 @@ import { ShoppingCenterTableComponent } from './shopping-center-table/shopping-c
 import { NgbCollapseModule, NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
-import { FormsModule } from '@angular/forms';
-import { SharedModule } from 'src/app/shared/shared.module';
+  import { FormsModule } from '@angular/forms';
+  import { SharedModule } from 'src/app/shared/shared.module';
 import { SocialViewComponent } from './shopping-center-table/social-view/social-view.component';
 import { TableViewComponent } from './shopping-center-table/table-view/table-view.component';
 import { CardViewComponent } from './shopping-center-table/card-view/card-view.component';
@@ -26,6 +26,8 @@ import { ChooseBrokerComponent } from './shopping-center-table/contact-broker/co
 import { ManagedByBrokerComponent } from './shopping-center-table/contact-broker/components/managed-by-broker/managed-by-broker.component';
 import { GenerateEmailComponent } from './shopping-center-table/contact-broker/components/generate-email/generate-email.component';
 import { PreviewEmailComponent } from './shopping-center-table/contact-broker/components/preview-email/preview-email.component';
+import { FilterRepliesPipe } from './shopping-center-table/social-view/social-view.component';
+
 @NgModule({
   declarations: [
     KayakHomeComponent,
@@ -42,6 +44,7 @@ import { PreviewEmailComponent } from './shopping-center-table/contact-broker/co
     ManagedByBrokerComponent,
     GenerateEmailComponent,
     PreviewEmailComponent,
+    FilterRepliesPipe,
   ],
   imports: [
     CommonModule,

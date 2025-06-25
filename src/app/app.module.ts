@@ -53,6 +53,8 @@ import { CanvasHomeComponent } from './features/canvas/canvas-home/canvas-home.c
 import { TenantCardComponent } from './features/summery/tenant-card/tenant-card.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { DataSourcesComponent } from './features/data-sources/data-sources.component';
+import { ContactsComponent } from './features/contacts/contacts.component';
+import { ShoppingComponent } from './features/shopping/shopping.component';
 
 @NgModule({
   declarations: [
@@ -78,10 +80,12 @@ import { DataSourcesComponent } from './features/data-sources/data-sources.compo
     NewMulipleEmailComponent,
     EmailInboxComponent,
     EmailComposeComponent,
-    CanvasHomeComponent ,
+    CanvasHomeComponent,
     TenantCardComponent,
     NotFoundComponent,
     DataSourcesComponent,
+    ContactsComponent,
+    ShoppingComponent,
   ],
   imports: [
     BrowserModule,

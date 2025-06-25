@@ -1,15 +1,15 @@
 <div class="app-container">
-  <app-header></app-header>
+  <app-header style="background-color: #F1F1F5;"></app-header>
   <ng-container *ngIf="!isMarketSurveyRoute; else fullWidthContent">
     <div class="container-fluid main-content-area">
-      <app-breadcrumb *ngIf="display && !isMobile"></app-breadcrumb>
+      <!-- <app-breadcrumb *ngIf="display && !isMobile"></app-breadcrumb> -->
       <div class="content-container">
         <router-outlet></router-outlet>
-        <div class="text-center my-3">
+        <!-- <div class="text-center my-3">
           <a class="termsofservice" [routerLink]="['/tos']" style="font-size: 21px;">
             Terms of Service
           </a>
-        </div>
+        </div> -->
       </div>
     </div>
   </ng-container>

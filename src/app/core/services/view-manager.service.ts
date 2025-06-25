@@ -235,11 +235,13 @@ export class ViewManagerService {
 
       return `
         <div style="display:inline-block; text-align:left; line-height:1.2;">
-          <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
-          <div style="font-size:12px; color:#666; margin-top:4px;">${calculatedPrice}</div>
         </div>
       `
     }
+    //           <div style="font-size:12px; color:#666; margin-top:4px;">${calculatedPrice}</div>
+
+    //           <div style="font-size:14px; font-weight:600; color:#333;">${formattedOriginalPrice}</div>
+
 
     const places = shoppingCenter?.ShoppingCenter?.Places || []
     const buildingSizes = places
@@ -301,14 +303,14 @@ export class ViewManagerService {
         leasePriceRange = `${formattedMinPrice} - ${formattedMaxPrice}`
       }
 
-      result = `Unit Size: ${sizeRange}<br> <b>Lease price</b>: ${leasePriceRange}`
+      result = `Unit Size: ${sizeRange} ${leasePriceRange}`
     }
       const extrasList = places
         .map((place: any) => place.Extras)
         .filter((extra: any) => extra && extra.trim() !== '');
       if (extrasList.length > 0) {
         const uniqueExtras = [...new Set(extrasList)];
-        result += `<br><b>Extras</b>: ${uniqueExtras.join('; ')}`;
+        // result += `<br><b>Extras</b>: ${uniqueExtras.join('; ')}`;
       }
 
       const leaseType = places
@@ -316,7 +318,7 @@ export class ViewManagerService {
         .filter((type: any) => type && type.trim() !== '');
       if (leaseType.length > 0) {
         const uniqueLeaseTypes = [...new Set(leaseType)];
-        result += `<br><b>Lease Type</b>: ${uniqueLeaseTypes.join('; ')}`;
+        // result += `<br><b>Lease Type</b>: ${uniqueLeaseTypes.join('; ')}`;
       }
 
       const type = places
@@ -324,7 +326,7 @@ export class ViewManagerService {
         .filter((type: any) => type && type.trim() !== '');
       if (type.length > 0) {
         const uniqueTypes = [...new Set(type)];
-        result += `<br><b>Type</b>: ${uniqueTypes.join('; ')}`;
+        // result += `<br><b>Type</b>: ${uniqueTypes.join('; ')}`;
       }
 
       // const buildingSizess = places
