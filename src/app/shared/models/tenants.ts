@@ -9,6 +9,10 @@ export class Tenant {
     ManagerOrganizationId!: number;
     ManagerContactId!: number;
     Campaigns!: Campaign[];
+    Status!: 'Active' | 'Inactive';
+    Category!: 'Fast Food Brand' | 'Sportswear' | 'Luxury Brands' | 'Basic & Everyday Wear';
+    CreatedDate!: string;
+  
   }
   
   export class Campaign {

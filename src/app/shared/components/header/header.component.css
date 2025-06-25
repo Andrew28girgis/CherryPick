@@ -1,7 +1,22 @@
 .navbar {
-  background-color: #fff;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background-color: #f1f1f5;
+  display: flex;
+  width: 100%;
+  padding: var(--Space-Space-16, 16px) 32px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 0;
 }
+
+.container-fluid {
+  width: 100%;
+  border-bottom: 1px solid var(--Body-General-Body-Border, #e4e3eb);
+  padding-bottom: 16px;
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .sidebar-logo {
   cursor: pointer;
 }
@@ -25,8 +40,17 @@
   font-weight: 300;
 }
 .navbar-nav .nav-item {
-  margin: 0 5px;
+  margin: 0;
+  display: flex;
+  height: 43px;
+  padding: 6px 0;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--Radius-Radius-8, 8px);
+  background: var(--Card-Section-BG, #fff);
 }
+
 .nav-link {
   display: flex;
   align-items: center;
@@ -36,35 +60,33 @@
   transition: all 0.3s ease;
   border-radius: 8px;
   font-size: 14px;
+  text-transform: none;
+  gap: 8px;
 }
 .nav-link:not(.active-route):hover {
-  background-color: #f5f7fa;
-  color: #4d65b4;
+  background-color: rgba(57, 34, 210, 0.05);
+  color: #3922d2;
 }
-.nav-link.active-route:hover {
-  background-color: #b8c1e1;
-  color: #4d65b4 !important;
+.nav-link:not(.active-route):hover .nav-text {
+  color: #3922d2;
 }
-.img-icn {
-  margin-right: 8px;
-  font-size: 16px;
-  filter: brightness(0) saturate(100%) invert(46%) sepia(9%) saturate(382%)
-    hue-rotate(173deg) brightness(94%) contrast(87%);
+.nav-link.active-route {
+  color: #3922d2 !important;
+  border-radius: var(--Radius-Radius-8, 8px);
+  border: 1px solid var(--Colors-Primary-700, #22147e);
+  background: var(--Colors-Primary-100, #d7d3f6);
 }
-.nav-link.active-route .img-icn {
-  /* Filter for #4d65b4 blue color */
-  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%)
-    hue-rotate(202deg) brightness(92%) contrast(87%);
+.nav-link.active-route .nav-text {
+  color: #3922d2 !important;
+}
+.nav-link .nav-text {
+  color: #707791;
+  transition: color 0.3s ease;
 }
 
-/* Also apply the blue filter on hover for non-active items */
-.nav-link:not(.active-route):hover .img-icn {
-  filter: brightness(0) saturate(100%) invert(32%) sepia(19%) saturate(2289%)
-    hue-rotate(202deg) brightness(92%) contrast(87%);
-}
 .active-route {
-  background-color: #b8c1e1;
-  color: #4d65b4 !important;
+  background-color: rgba(57, 34, 210, 0.1);
+  color: #3922d2 !important;
   font-weight: 600;
 }
 .navbar-toggler {
@@ -145,8 +167,21 @@
 }
 .navbar-nav {
   display: flex;
-  justify-content: center;
-  width: 100%;
+  padding: var(--Space-Space-8, 8px);
+  align-items: center;
+  gap: var(--Space-Space-8, 8px);
+
+  border-radius: var(--Radius-Radius-12, 12px);
+  background: var(--Card-Section-BG, #fff);
+}
+
+.nav-link.active-route .img-icn {
+  filter: invert(12%) sepia(98%) saturate(6000%) hue-rotate(245deg)
+    brightness(88%) contrast(102%);
+}
+
+.nav-link:not(.active-route):hover .img-icn {
+  filter: invert(12%) sepia(98%) saturate(6000%) hue-rotate(245deg) brightness(88%) contrast(102%);
 }
 
 /* Responsive Styles */
@@ -173,4 +208,27 @@
   .nav-link {
     padding: 12px 15px;
   }
+}
+
+.navbar-collapse {
+  justify-content: center;
+}
+
+.messages-icon :hover svg path {
+  fill: var(--primary-color, #007bff);
+}
+
+.nav-text {
+  color: var(--Body-Text-and-Icons, #777199);
+
+  /* Body/16/30/Medium */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 187.5% */
+}
+
+.nav-text.active-route {
+  color: #3922d2 !important;
 }

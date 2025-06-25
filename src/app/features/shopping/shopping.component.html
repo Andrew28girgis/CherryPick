@@ -1,0 +1,474 @@
+<div class="shopping-centers-container" (click)="onDocumentClick()">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="search-section">
+        <div class="search-input-container">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search Shopping Centers..."
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            (click)="$event.stopPropagation()"
+          >
+        </div>
+        <div class="add-new-actions">
+          <button class="add-new-btn" (click)="openPartitionModal(partitionModal); $event.stopPropagation()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Add New Shopping Center
+          </button>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <!-- Filter Dropdown -->
+        <div class="dropdown" ngbDropdown>
+          <button class="action-btn" ngbDropdownToggle>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"></polygon>
+            </svg>
+            Filter
+          </button>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <h3 class="dropdown-header">Share Status</h3>
+            <div class="radio-group px-3">
+              <div class="form-check">
+                <input type="radio" class="form-check-input" id="all" name="share" value="all" [(ngModel)]="shareFilter" (change)="onFilterChange()">
+                <label class="form-check-label" for="all">All</label>
+              </div>
+              <div class="form-check">
+                <input type="radio" class="form-check-input" id="shared" name="share" value="shared" [(ngModel)]="shareFilter" (change)="onFilterChange()">
+                <label class="form-check-label" for="shared">Shared</label>
+              </div>
+              <div class="form-check">
+                <input type="radio" class="form-check-input" id="not-shared" name="share" value="not-shared" [(ngModel)]="shareFilter" (change)="onFilterChange()">
+                <label class="form-check-label" for="not-shared">Not Shared</label>
+              </div>
+            </div>
+  
+            <h3 class="dropdown-header mt-3">Price</h3>
+            <div class="px-3 mb-3">
+              <div class="input-group input-group-sm">
+                <input type="number" class="form-control" placeholder="From" [(ngModel)]="priceFrom" (input)="onFilterChange()">
+                <input type="number" class="form-control" placeholder="To" [(ngModel)]="priceTo" (input)="onFilterChange()">
+              </div>
+            </div>
+  
+            <h3 class="dropdown-header">Building Size (SF)</h3>
+            <div class="px-3 mb-3">
+              <div class="input-group input-group-sm">
+                <input type="number" class="form-control" placeholder="From" [(ngModel)]="sizeFrom" (input)="onFilterChange()">
+                <input type="number" class="form-control" placeholder="To" [(ngModel)]="sizeTo" (input)="onFilterChange()">
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Sort Dropdown -->
+        <div class="dropdown" ngbDropdown>
+          <button class="action-btn" ngbDropdownToggle>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="7" y1="12" x2="17" y2="12"></line>
+              <line x1="10" y1="18" x2="14" y2="18"></line>
+            </svg>
+            Sort
+          </button>
+          <div class="dropdown-menu" ngbDropdownMenu>
+            <div class="px-3">
+              <div class="form-check" *ngFor="let option of sortOptions">
+                <input type="radio" class="form-check-input" [id]="option.value" name="sort" [value]="option.value" [(ngModel)]="sortBy" (change)="onSortChange()">
+                <label class="form-check-label" [for]="option.value">{{ option.label }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Loading shopping centers...</p>
+    </div>
+  
+    <!-- Skeleton Loading State -->
+    <div class="skeleton-grid" *ngIf="isLoading">
+      <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6,7,8,9]">
+        <div class="skeleton-image">
+          <div class="skeleton-overlay">
+            <div class="skeleton-badge"></div>
+            <div class="skeleton-menu"></div>
+          </div>
+        </div>
+        <div class="skeleton-content">
+          <div class="skeleton-title"></div>
+          <div class="skeleton-address"></div>
+          <div class="skeleton-details">
+            <div class="skeleton-price"></div>
+            <div class="skeleton-price-line">
+              <div class="skeleton-price-sf"></div>
+              <div class="skeleton-unit-size"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Shopping Centers Grid -->
+    <div class="centers-grid" *ngIf="!isLoading">
+      <div class="center-card" *ngFor="let center of filteredCenters">
+        <div class="image-container">
+          <img 
+            [src]="center.mainImage || 'assets/Images/placeholder.png'" 
+            [alt]="center.centerName"
+            class="center-image"
+            (error)="center.mainImage = 'assets/Images/placeholder.png'"
+          >
+          <div class="card-overlay">
+            <!-- Only show shared badge if center is shared -->
+            <div class="share-badge" *ngIf="center.isShared">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Shared
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="1"></circle>
+              </svg>
+            </div>
+            <button class="menu-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M4.16699 8.20801C5.15737 8.20818 5.95801 9.00958 5.95801 10C5.95783 10.9903 5.15726 11.7908 4.16699 11.791C3.17658 11.791 2.37518 10.9904 2.375 10C2.375 9.00948 3.17647 8.20801 4.16699 8.20801ZM4.16699 8.45801C3.31585 8.45801 2.625 9.14886 2.625 10C2.62518 10.851 3.31596 11.541 4.16699 11.541C5.01788 11.5408 5.70783 10.8509 5.70801 10C5.70801 9.14897 5.01799 8.45818 4.16699 8.45801Z" fill="#18171F" stroke="#18171F"/>
+                    <path d="M15.8334 12.2913C14.5667 12.2913 13.5417 11.2663 13.5417 9.99967C13.5417 8.73301 14.5667 7.70801 15.8334 7.70801C17.1001 7.70801 18.1251 8.73301 18.1251 9.99967C18.1251 11.2663 17.1001 12.2913 15.8334 12.2913ZM15.8334 8.95801C15.2584 8.95801 14.7917 9.42467 14.7917 9.99967C14.7917 10.5747 15.2584 11.0413 15.8334 11.0413C16.4084 11.0413 16.8751 10.5747 16.8751 9.99967C16.8751 9.42467 16.4084 8.95801 15.8334 8.95801Z" fill="#18171F"/>
+                    <path d="M9.99992 12.2913C8.73325 12.2913 7.70825 11.2663 7.70825 9.99967C7.70825 8.73301 8.73325 7.70801 9.99992 7.70801C11.2666 7.70801 12.2916 8.73301 12.2916 9.99967C12.2916 11.2663 11.2666 12.2913 9.99992 12.2913ZM9.99992 8.95801C9.42492 8.95801 8.95825 9.42467 8.95825 9.99967C8.95825 10.5747 9.42492 11.0413 9.99992 11.0413C10.5749 11.0413 11.0416 10.5747 11.0416 9.99967C11.0416 9.42467 10.5749 8.95801 9.99992 8.95801Z" fill="#18171F"/>
+                  </svg>            </button>
+          </div>
+        </div>
+        
+        <div class="center-info">
+          <h3 class="center-name">{{ center.centerName }}</h3>
+          <p class="center-address">{{ center.centerAddress }}</p>
+          <div class="center-details">
+             <span class="purchase-price" *ngIf="center.forSalePrice && center.forSalePrice > 0">Purchase Price</span>
+          </div>
+          <div class="price-line" *ngIf="center.buildingSizeSf">
+            <span *ngIf="center.forSalePrice && center.forSalePrice > 0" class="price-per-sf">1.2% SF-1.568 SF</span>
+            <span *ngIf="center.buildingSizeSf" class="unit-size"> {{center.buildingSizeSf}} SF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalItems > itemsPerPage">
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(currentPage - 1)"
+      >
+        Previous
+      </button>
+
+      <button 
+        class="pagination-btn"
+        [class.active]="currentPage === 1"
+        (click)="onPageChange(1)"
+        *ngIf="shouldShowLeftDots()"
+      >
+        1
+      </button>
+
+      <span class="pagination-ellipsis" *ngIf="shouldShowLeftDots()">...</span>
+
+      <button 
+        *ngFor="let page of visiblePages"
+        class="pagination-btn"
+        [class.active]="currentPage === page"
+        (click)="onPageChange(page)"
+      >
+        {{ page }}
+      </button>
+
+      <span class="pagination-ellipsis" *ngIf="shouldShowRightDots()">...</span>
+
+      <button 
+        class="pagination-btn"
+        [class.active]="currentPage === totalPages"
+        (click)="onPageChange(totalPages)"
+        *ngIf="shouldShowRightDots()"
+      >
+        {{ totalPages }}
+      </button>
+
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === totalPages"
+        (click)="onPageChange(currentPage + 1)"
+      >
+        Next
+      </button>
+
+      <span class="pagination-info">
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, totalItems) }} of {{ totalItems }} items
+      </span>
+    </div>
+  
+    <!-- No Results Message -->
+    <div class="no-results" *ngIf="!isLoading && filteredCenters.length === 0 && centers.length > 0">
+      <p>No shopping centers match your search criteria.</p>
+    </div>
+  
+    <!-- Empty State -->
+    <div class="no-results" *ngIf="!isLoading && centers.length === 0">
+      <p>No shopping centers available.</p>
+    </div>
+
+    <!-- Add upload progress bar -->
+    <div *ngIf="isUploading" class="upload-progress">
+      <progress [value]="uploadProgress" max="100" style="width: 400px;"></progress>
+      {{ uploadProgress }}%
+    </div>
+  </div>
+
+  <!-- Add partition modal template -->
+  <ng-template #partitionModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">
+        Select PDF File
+      </h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+
+    <div class="modal-alert" id="customToast">
+      <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <p class="alert-message" id="toastMessage"></p>
+    </div>
+
+    <div class="modal-body p-0">
+      <div class="explorer-container">
+        <!-- Toolbar -->
+        <div class="explorer-toolbar">
+          <button class="toolbar-button" (click)="onBack()" [disabled]="!pathStack.length">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button class="toolbar-button" (click)="onForward()" [disabled]="!forwardHistory.length">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+          <button class="toolbar-button" (click)="onUp()" [disabled]="!pathStack.length">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          </button>
+          <div class="toolbar-separator"></div>
+        </div>
+
+        <!-- Path bar -->
+        <div class="explorer-header">
+          <div class="path-breadcrumb">
+            <div class="breadcrumb-item" (click)="goToRoot()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              </svg>
+              This PC
+            </div>
+            <span class="breadcrumb-separator" *ngIf="pathStack.length">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </span>
+            <div class="breadcrumb-item" *ngFor="let path of pathStack; let i = index" (click)="goToPath(i)">
+              {{ path.split('\\').pop() }}
+              <span class="breadcrumb-separator" *ngIf="i < pathStack.length - 1">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main explorer layout -->
+        <div class="explorer-layout">
+          <!-- Sidebar -->
+          <div class="explorer-sidebar">
+            <div class="sidebar-item" [class.active]="!selectedDrive" (click)="goToRoot()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              </svg>
+              This PC
+            </div>
+            <div class="sidebar-item" *ngFor="let drive of DirectoryNames" [class.active]="drive.name === selectedDrive" (click)="onPartitionSelect(drive.name)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12H2M22 12V18C22 19.1046 21.1046 20 20 20H4C2.89543 20 2 19.1046 2 18V6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V12ZM6 16H6.01M10 16H18" />
+              </svg>
+              {{ drive.name }}
+            </div>
+          </div>
+
+          <!-- Content area -->
+          <div class="explorer-content">
+            <!-- Drive selection view -->
+            <div class="drive-section" *ngIf="!selectedDrive">
+              <div class="drive-grid">
+                <div
+                  *ngFor="let drive of DirectoryNames"
+                  class="drive-item"
+                  [class.selected]="drive.name === selectedDrive"
+                  (click)="onPartitionSelect(drive.name)"
+                >
+                  <svg class="drive-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 12H2M22 12V18C22 19.1046 21.1046 20 20 20H4C2.89543 20 2 19.1046 2 18V6C2 4.89543 2.89543 4 4 4H20C21.1046 4 22 4.89543 22 6V12ZM6 16H6.01M10 16H18" />
+                  </svg>
+                  <div class="drive-info">
+                    <div class="drive-label">{{ drive.name }}</div>
+                    <div class="drive-details">Local Drive</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- File/folder list view -->
+            <ng-container *ngIf="selectedDrive">
+              <div class="content-header">
+                <div class="content-header-item">Name</div>
+                <div class="content-header-item">Type</div>
+                <div class="content-header-item">Date modified</div>
+              </div>
+
+              <div class="split-view">
+                <div class="file-list">
+                  <div class="explorer-grid">
+                    <div class="explorer-list">
+                      <div
+                        *ngFor="let child of childrenPaths"
+                        class="explorer-item"
+                        [class.selected]="child.fullPath === selectedFullPath"
+                        (click)="onChildSelect(child)"
+                      >
+                        <div class="item-name-section">
+                          <!-- Folder icon -->
+                          <div class="item-icon" *ngIf="!isFile(child)">
+                            <svg class="folder-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                              <path d="M3 7h18" opacity="0.6"/>
+                            </svg>
+                          </div>
+                          <!-- PDF icon -->
+                          <div class="item-icon" *ngIf="isFile(child) && child.name.toLowerCase().endsWith('.pdf')">
+                            <svg class="file-icon pdf" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                              <path d="M14 2v6h6" />
+                              <text x="8" y="19" font-size="8" fill="currentColor">PDF</text>
+                            </svg>
+                          </div>
+                          <!-- Image icon -->
+                          <div class="item-icon" *ngIf="isFile(child) && isImageFile(child)">
+                            <svg class="file-icon image" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <rect x="3" y="3" width="18" height="18" rx="2" />
+                              <circle cx="9" cy="9" r="2" />
+                              <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                          </div>
+                          <!-- Other file icon -->
+                          <div class="item-icon" *ngIf="isFile(child) && !child.name.toLowerCase().endsWith('.pdf') && !isImageFile(child)">
+                            <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                              <path d="M14 2v6h6" />
+                            </svg>
+                          </div>
+                          <span class="item-name" [class.file-selectable]="isFile(child) && isValidFileType(child)" [class.file-not-allowed]="isFile(child) && !isValidFileType(child)">
+                            {{ child.name }}
+                          </span>
+                          <!-- Preview icon for PDFs -->
+                          <button 
+                            *ngIf="isFile(child) && child.name.toLowerCase().endsWith('.pdf')"
+                            class="preview-button"
+                            (click)="togglePreview($event, child)"
+                            title="Preview PDF"
+                          >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                          </button>
+                        </div>
+                        <div class="item-type">
+                          {{ !isFile(child) ? 'File folder' : getFileType(child.name) }}
+                        </div>
+                        <div class="item-modified">
+                          {{ child.lastModified | date:'medium' }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Preview Modal -->
+              <div class="preview-modal" *ngIf="showPreview">
+                <div class="preview-modal-content">
+                  <div class="preview-modal-header">
+                    <h3>{{ previewFile?.name }}</h3>
+                    <button class="close-preview" (click)="closePreview()">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="preview-modal-body">
+                    <iframe [src]="sanitizedPdfUrl" class="pdf-viewer" *ngIf="sanitizedPdfUrl"></iframe>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Status bar -->
+        <div class="explorer-statusbar">
+          <div class="statusbar-items">
+            <span>{{ getItemCount() }} items</span>
+            <span *ngIf="selectedFullPath">Selected: {{ selectedFullPath.split('\\').pop() }}</span>
+          </div>
+          <div class="statusbar-items">
+            <span>Select PDF File</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="close" (click)="modal.close()">Cancel</button>
+      <button 
+        class="submit" 
+        [disabled]="!selectedFullPath"
+        (click)="sendPath()"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        Add Shopping Center
+      </button>
+    </div>
+  </ng-template>
+ 

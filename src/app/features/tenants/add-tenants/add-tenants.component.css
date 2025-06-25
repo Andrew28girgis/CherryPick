@@ -1,9 +1,16 @@
 .container {
   overflow-y: auto;
+
+  display: flex;
+  width: 900px;
+  padding: var(--Card-Section-Padding-All-Sides, 32px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--Space-Space-24, 24px);
 }
 
 .Head-Model {
-  color: #16181D;
+  color: #16181d;
   font-size: 24px;
   font-style: normal;
   font-weight: 600;
@@ -32,14 +39,64 @@
 .form-select {
   box-shadow: none;
   outline: none;
-  border-radius: 8px;
-  padding: .375rem .75rem;
+  border-radius: var(--Inputs-Border-Radius-20, 20px);
+  border: var(--Inputs-Border-Stroke, 1px) solid
+    var(--Inputs-Border-Color, #c9c6d6);
+  background: var(--Inputs-Color-BG, #fff);
+  display: flex;
+  padding: 13px 16px;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
   font-size: 16px;
-  background-color: white;
+}
+
+.form-group-default {
+  display: flex;
+  width: 100%;
+}
+
+.input-group {
+  border-radius: var(--Inputs-Border-Radius-20, 20px);
+  overflow: hidden;
+}
+
+.input-group .form-control {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.input-group-text {
+  border-radius: var(--Inputs-Border-Radius-20, 20px) 0 0
+    var(--Inputs-Border-Radius-20, 20px);
+  border: var(--Inputs-Border-Stroke, 1px) solid
+    var(--Inputs-Border-Color, #c9c6d6);
+  background: var(--Inputs-Color-BG, #fff);
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.input-group-text:last-child {
+  border-radius: 0 var(--Inputs-Border-Radius-20, 20px)
+    var(--Inputs-Border-Radius-20, 20px) 0;
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .form-select {
-  color: #707791;
+  padding-right: 40px;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23707791" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .form-check-input {
@@ -49,14 +106,19 @@
 }
 
 ::placeholder {
-  color: #707791;
+  color: var(--Inputs-Color-Hierarchy-1, #777199);
+
+  /* Body/16/30/Regular */
+  font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+  line-height: 30px; /* 187.5% */
 }
 
 .search-input {
-  background: url('../../../../assets/Images/Icons/search-normal.png') no-repeat left 10px center;
+  background: url("../../../../assets/Images/Icons/search-normal.png") no-repeat
+    left 10px center;
   background-color: white;
   background-size: 16px;
   padding-left: 30px;
@@ -79,7 +141,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #4D65B4;
+  background-color: #4d65b4;
   color: white;
   border-radius: 50%;
 }
@@ -88,7 +150,7 @@
   width: auto;
   min-width: 120px;
   border-radius: 10px;
-  background: #4D65B4;
+  background: #4d65b4;
   color: #fff;
   text-align: center;
   font-size: 15px;
@@ -101,41 +163,31 @@
 }
 
 .p-button-left ::ng-deep .p-button {
-  background: white;
-  color: #4D65B4;
-  border: 1px solid #4D65B4 !important;
-  border-radius: 10px;
-  width: auto;
-  min-width: 120px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px;
-  border: 0;
-  padding: 4px 16px;
-  white-space: nowrap;
-  box-shadow: none;
-  outline: none;
+  border-radius: var(--Radius-Radius-16, 16px);
+  border: 1px solid var(--Button-Secondary-Stroke-Color-Default, #3922d2);
+  background: var(--Button-Secondary-BG, #fff);
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  width: 406px;
+  color: #3922D2;
 }
 
 .p-button-right ::ng-deep .p-button {
-  width: auto;
-  min-width: 120px;
-  border-radius: 10px;
-  background: #4D65B4;
-  color: #fff;
-  text-align: center;
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px;
-  border: 0;
-  padding: 4px 16px;
-  white-space: nowrap;
-  box-shadow: none;
-  outline: none;
+  display: flex;
+  height: 48px;
+  padding: 14px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1 0 0;
+  border-radius: var(--Radius-Radius-16, 16px);
+  background: var(--Button-Primary-BG, #3922d2);
+  width: 406px;
 }
 
 ::ng-deep .p-selectbutton .p-button {
@@ -146,38 +198,212 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 400 !important;
-  border: 1px solid #4D65B4;
+  border: 1px solid #4d65b4;
 }
 
 ::ng-deep .p-selectbutton .p-button.p-highlight {
-  background: #4D65B4;
+  background: #3922d2;
   color: white !important;
   font-size: 14px;
   font-style: normal;
   font-weight: 400 !important;
-  border: 1px solid #4D65B4;
+  border: 1px solid #3922d2;
 }
 
-
-::ng-deep .p-stepper .p-stepper-separator {
-  background-color: #DBE0F0;
-  width: 100%;
-  height: 8px;
-  margin-inline-start: 1rem;
-  transition: box-shadow 0.2s;
-  border-radius: 6px;
+/* Stepper Styles */
+::ng-deep .p-stepper {
+  margin: 20px 0;
 }
 
 ::ng-deep .p-stepper .p-stepper-nav {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
   padding: 0;
+  margin-bottom: 30px;
+}
+
+::ng-deep .p-stepper .p-stepper-header {
+  /* padding: 0px; */
+  display: flex;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+/* Hide the step numbers */
+::ng-deep .p-stepper .p-stepper-header .p-stepper-number {
+  display: none;
+}
+
+::ng-deep .p-stepper .p-stepper-header .p-stepper-title {
+  display: none;
+}
+
+::ng-deep .p-stepper .p-stepper-separator {
+  height: 8px;
+  background-color: #dbe0f0;
+  flex: 1;
+  margin: 0 4px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+::ng-deep .p-stepper .p-stepper-header.p-highlight .p-stepper-separator,
+::ng-deep .p-stepper .p-stepper-header.p-highlight-exact .p-stepper-separator {
+  background-color: #3922d2;
 }
 
 ::ng-deep .p-stepper .p-stepper-panels {
-  padding: 10px;
-  border-radius: 10px;
   background: #f2f3f4;
+  padding: 0;
+  border-radius: 10px;
+  margin-top: 20px;
 }
 
-::ng-deep .p-stepper .p-stepper-header:has(~ .p-highlight) .p-stepper-separator {
-  background-color: #4D65B4;
+/* Remove any existing stepper styles that might conflict */
+.stepper-container,
+.step-indicators,
+.step,
+.step-number,
+.step-label,
+.step.active,
+.step.completed {
+  display: none;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #707791;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  padding-left: 10px;
+}
+
+.back-link:hover {
+  color: #3922d2;
+}
+
+.back-link:hover svg path {
+  stroke: #3922d2;
+}
+
+.step-indicators {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+
+.step-indicators::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #e4e3eb;
+  z-index: 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #e4e3eb;
+  color: #707791;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.step-label {
+  color: #707791;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.step.active .step-number {
+  background: #3922d2;
+  border-color: #3922d2;
+  color: white;
+}
+
+.step.active .step-label {
+  color: #3922d2;
+  font-weight: 600;
+}
+
+.step.active ~ .step {
+  .step-number {
+    background: #ffffff;
+    border-color: #e4e3eb;
+    color: #707791;
+  }
+  .step-label {
+    color: #707791;
+  }
+}
+
+.step.completed .step-number {
+  background: #3922d2;
+  border-color: #3922d2;
+  color: white;
+}
+
+.step.completed .step-label {
+  color: #3922d2;
+}
+
+.step.completed ~ .step.active .step-number {
+  background: #3922d2;
+  border-color: #3922d2;
+  color: white;
+}
+
+/* Add the blue line between completed steps */
+.step.completed::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  right: -50%;
+  height: 2px;
+  background: #3922d2;
+  z-index: 0;
+}
+
+/* Remove the line after the last step */
+.step:last-child::after {
+  display: none;
+}
+
+.form-content {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
 }

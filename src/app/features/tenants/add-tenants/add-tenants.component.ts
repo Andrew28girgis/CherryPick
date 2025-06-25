@@ -34,6 +34,8 @@ export class AddTenantsComponent implements OnInit {
     { label: 'Zone X', value: 'Zone X' },
     { label: 'Zone AE', value: 'Zone AE' },
   ];
+  currentStep = 1;
+  totalSteps = 3;
 
   constructor(
     private router: Router,
@@ -219,11 +221,10 @@ export class AddTenantsComponent implements OnInit {
         'MaxBuildingSize',
       ];
 
-      if (
-        controlsToCheck.every(
+      if (controlsToCheck.every(
           (control) => this.siteDetailsForm.get(control)?.valid
-        )
-      ) {
+        )) {
+        this.nextStep();
         nextCallback.emit();
       } else {
         controlsToCheck.forEach((control) =>
@@ -231,6 +232,7 @@ export class AddTenantsComponent implements OnInit {
         );
       }
     } else if (StepNum == 2) {
+      this.nextStep();
       nextCallback.emit();
     } else {
       this.siteDetailsForm.markAllAsTouched();
@@ -243,5 +245,25 @@ export class AddTenantsComponent implements OnInit {
     this.activeModal.dismissAll({ created: true });
     this.spinner.hide();
     this.router.navigate(['/summary']);
+  }
+
+  isStepActive(step: number): boolean {
+    return this.currentStep === step;
+  }
+
+  isStepCompleted(step: number): boolean {
+    return this.currentStep > step;
+  }
+
+  nextStep() {
+    if (this.currentStep < this.totalSteps) {
+      this.currentStep++;
+    }
+  }
+
+  previousStep() {
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
   }
 }

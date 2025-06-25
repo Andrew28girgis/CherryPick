@@ -89,7 +89,8 @@
         >
           <div class="main-img">
             <img
-              src="{{ shopping.MainImage || 'assets/Images/DefaultImage.png' }}"
+              src="{{ shopping.MainImage
+               || 'assets/Images/DefaultImage.png' }}"
               [title]="shopping.CenterName"
             />
           </div>
