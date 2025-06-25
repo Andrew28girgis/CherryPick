@@ -111,7 +111,7 @@ export class LoginComponent implements OnInit {
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
     this.userEmail = loginRequest.Email;
-        this.getUserToken(this.userEmail);
+    this.getUserToken(this.userEmail);
     this.placesService.newLoginUser(loginRequest).subscribe({
       next: (response: any) => {
         this.handleLoginSuccess(response);
@@ -125,20 +125,19 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  getUserToken(email: string): void  {
+  getUserToken(email: string): void {
     const userEmail = email;
     this.placesService.userToken(userEmail).subscribe({
       next: (response: any) => {
         if (response) {
-        
           const userToken = response.encodedAccessToken;
           const refreshToken = response.encodedRefreshToken;
           console.log('User Token:', userToken);
           console.log('Refresh Token:', refreshToken);
-           const decodedUserToken = this.decodeService.decodeToString(userToken);
-           console.log('Decoded User Token:', decodedUserToken);
-           this.dropboxService.setToken(decodedUserToken);
-           this.dropboxService.setRefreshToken(refreshToken);
+          const decodedUserToken = this.decodeService.decodeToString(userToken);
+          console.log('Decoded User Token:', decodedUserToken);
+          this.dropboxService.setToken(decodedUserToken);
+          this.dropboxService.setRefreshToken(refreshToken);
         } else {
           this.errorMessage = 'Failed to retrieve user token.';
         }
@@ -152,7 +151,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-
   private handleLoginSuccess(response: any): void {
     localStorage.setItem(
       this.MICROSOFT_LINKED_KEY,
@@ -163,6 +161,9 @@ export class LoginComponent implements OnInit {
     if (response.token) {
       this.authService.setToken(response.token);
       this.navigateToHome();
+    }
+    if (response.guidSignature) {
+      localStorage.setItem('guid', response.guidSignature);
     }
   }
 

@@ -17,8 +17,10 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmilyService } from 'src/app/core/services/emily.service';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, forkJoin, Observable, Subscription } from 'rxjs';
 import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-tasks',
@@ -27,334 +29,466 @@ import { BreadcrumbService } from 'src/app/core/services/breadcrumb.service';
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
 })
-export class TasksComponent implements OnInit, OnDestroy {
-  UserNotifications: notificationCategory[] = [];
-  ContactId!: number;
-  NotificationCategoryAction: any = {};
-  emailData: EmailNotificationResponse[] = [];
-  categoryNames = {
-    1: 'Reactions',
-    2: 'Email Generated',
-    3: 'Sync',
-    4: 'Proposal Submissions',
-  };
-  @ViewChild('EmailView', { static: false }) EmailView!: TemplateRef<any>;
-  selectedEmailIndex = 0; // Track the currently selected email
+export class TasksComponent implements OnInit {
+  private guid!: string;
+  private contactId!: number;
 
-  isLoading = true;
-  skeletonArray = Array(3).fill(0);
-  private subscriptions = new Subscription();
+  protected microsoftState: number = 1;
+  protected googleState: number = 1;
+
+  protected MICROSOFT_CONNECT_LINK = '';
+  protected GOOGLE_CONNECT_LINK = '';
+
+  protected ContactFolders: any;
+  protected ContactInfos: any;
+
+  emailsList: { email: string; isAdded: boolean }[] = [];
+  domainList: { domain: string; isAdded: boolean }[] = [];
+
+  protected googleContactFolders: {
+    id: any;
+    name: string;
+    isChecked: boolean;
+  }[] = [];
+  protected googleContactInfos: any;
+
+  googleEmailsList: { email: string; isAdded: boolean }[] = [];
+  googleDomainList: { domain: string; isAdded: boolean }[] = [];
+
   constructor(
-    private placesService: PlacesService,
-    private router: Router,
-    private modalService: NgbModal,
-    private emilyService: EmilyService,
-    private breadcrumbService: BreadcrumbService
+    private genericApiService: PlacesService,
+    private http: HttpClient,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.setBreadcrumbs([{ label: 'Tasks', url: '/tasks' }]);
-    const storedContactId = localStorage.getItem('contactId');
-    if (storedContactId) {
-      this.ContactId = +storedContactId;
-      this.GetUserNotifications();
-    }
+    const guid = localStorage.getItem('guid');
+    const contactId = localStorage.getItem('contactId');
+    if (guid) this.guid = guid;
+    if (contactId) this.contactId = +contactId;
+
+    this.MICROSOFT_CONNECT_LINK = `${environment.API_URL}/auth/signin?ContactId=${this.contactId}`;
+    this.GOOGLE_CONNECT_LINK = `${environment.API_URL}/GoogleAuth/signin?ContactId=${this.contactId}`;
+
+    this.checkOwnerData();
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
-  GetUserNotifications(): void {
-    this.isLoading = true; // Show skeleton
-
-    const body: any = {
-      Name: 'GetUserNotifications',
+  private getOwnerData(guid: string): Observable<any> {
+    const contactRequestBody = {
+      Name: 'GetContactDataFromGUID',
       Params: {
-        ContactId: this.ContactId,
+        GUIDSignature: guid,
       },
     };
 
-    const subscription = this.placesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        this.UserNotifications = res.json || [];
-        this.isLoading = false; // Hide skeleton
-      },
-      error: () => {
-        this.isLoading = false; // Hide skeleton on error
-      },
-    });
-
-    this.subscriptions.add(subscription);
+    return this.genericApiService.GenericAPI(contactRequestBody);
   }
 
-  getNotificationsByCategory(categoryId: number): notificationCategory[] {
-    return this.UserNotifications.filter(
-      (notification) => notification.notificationCategoryId === categoryId
-    ).sort((a, b) => {
-      return (
-        new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
-      );
-    });
-  }
+  private async checkOwnerData(): Promise<void> {
+    if (!this.guid) return;
 
-  markAsRead(notification: notificationCategory): void {
-    notification.isRead = true;
-  }
+    const response = await firstValueFrom(this.getOwnerData(this.guid.trim()));
+    if (response.json && response.json.length) {
+      const googleAccessToken = response.json[0].googleAccessToken;
 
-  GetNotificationActions(notification: notificationCategory): void {
-    this.isLoading = true; // Show skeleton
-
-    const body: any = {
-      Name: 'GetNotificationActions',
-      Params: {
-        NotificationId: notification.id,
-      },
-    };
-
-    const subscription = this.placesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        this.isLoading = false; // Hide skeleton
-
-        if (!res.json) {
-          console.error('Empty response from GetNotificationActions');
-          return;
-        }
-        this.NotificationCategoryAction = res.json;
-        // Handle different notification categories
-        switch (notification.notificationCategoryId) {
-          case 2: // Email Generated
-            // Make sure we're handling the array of emails properly
-            if (Array.isArray(this.NotificationCategoryAction)) {
-              this.emailData = this.NotificationCategoryAction;
-              this.selectedEmailIndex = 0; // Reset to first email
-              this.openEmailModal();
-            } else {
-              console.error(
-                'Expected array for email data but got:',
-                this.NotificationCategoryAction
-              );
-            }
-            break;
-
-          case 3: // Sync
-            try {
-              const syncData = this
-                .NotificationCategoryAction[0] as SyncNotificationResponse;
-              if (
-                syncData &&
-                syncData.id &&
-                syncData.organizationId &&
-                syncData.name
-              ) {
-                console.log(
-                  'Navigating to market-survey with params:',
-                  syncData
-                );
-                this.router.navigate([
-                  '/market-survey',
-                  syncData.id,
-                  syncData.organizationId,
-                  syncData.name,
-                ]);
-              } else {
-                console.error('Invalid sync data format:', syncData);
-              }
-            } catch (error) {
-              console.error('Error processing sync notification:', error);
-            }
-            break;
-
-          case 4: // Proposal Submissions
-            try {
-              const submissionData = this
-                .NotificationCategoryAction[0] as SubmissionNotificationResponse;
-              if (submissionData && submissionData.actionId) {
-                console.log(
-                  'Navigating to submissions with actionId:',
-                  submissionData.actionId
-                );
-                this.router.navigate(['/submissions', submissionData.actionId]);
-              } else {
-                console.error(
-                  'Invalid submission data format:',
-                  submissionData
-                );
-              }
-            } catch (error) {
-              console.error('Error processing submission notification:', error);
-            }
-            break;
-
-          default:
-            console.log(
-              'Unhandled notification category:',
-              notification.notificationCategoryId
-            );
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching notification actions', err);
-        this.isLoading = false; // Hide skeleton on error
-      },
-    });
-
-    this.subscriptions.add(subscription);
-  }
-
-  openEmailModal(): void {
-    this.modalService.open(this.EmailView, {
-      size: 'lg',
-      centered: true,
-      scrollable: true,
-    });
-  }
-
-  // For navigating between multiple emails in the modal
-  nextEmail(): void {
-    if (this.selectedEmailIndex < this.emailData.length - 1) {
-      this.selectedEmailIndex++;
+      if (googleAccessToken) {
+        this.googleState = 3;
+        this.GoogleGetContactFolders();
+      }
     }
   }
 
-  previousEmail(): void {
-    if (this.selectedEmailIndex > 0) {
-      this.selectedEmailIndex--;
-    }
-  }
-  // Helper method to get current email
-  getCurrentEmail(): EmailNotificationResponse {
-    return this.emailData[this.selectedEmailIndex];
-  }
-  // Send a single email
-  sendEmail(email: EmailNotificationResponse): void {
-    // Only proceed if direction is equal to 4
-    if (email.direction !== 4) {
-      console.log('Email not sent - direction is not 4:', email.id);
-      return;
-    }
-
-    this.isLoading = true; // Show skeleton
-
-    const body: any = {
-      Name: 'SendMail',
-      MainEntity: null,
-      Params: {
-        MailId: email.id,
-      },
-      Json: null,
-    };
-
-    const subscription = this.placesService.GenericAPI(body).subscribe({
-      next: (res: any) => {
-        this.showToast('Email sent successfully');
-        this.modalService.dismissAll();
-        this.isLoading = false; // Hide skeleton
-      },
-      error: () => {
-        this.isLoading = false; // Hide skeleton on error
-      },
-    });
-    this.subscriptions.add(subscription);
+  protected openConfigurationsModal(content: TemplateRef<any>): void {
+    this.modalService.open(content, { size: 'lg' });
   }
 
-  // Send all emails
-  sendAllEmails(): void {
-    // Filter emails to only include those with direction = 4
-    const eligibleEmails = this.emailData.filter(
-      (email) => email.direction === 4
-    );
-    // If no eligible emails, return early
-    if (eligibleEmails.length === 0) {
-      console.log('No eligible emails to send (direction = 4)');
-      return;
-    }
-
-    // Create a counter to track when all emails are sent - use filtered length
-    let emailCount = eligibleEmails.length;
-    let successCount = 0;
-    let errorCount = 0;
-
-    this.isLoading = true; // Show skeleton
-
-    // Send each eligible email one by one - iterate through filtered array
-    eligibleEmails.forEach((email) => {
+  protected AcceptToReadReplyEmails(canRead: any): void {
+    try {
       const body: any = {
-        Name: 'SendMail',
-        MainEntity: null,
+        Name: 'AcceptToReadReplyEmails',
         Params: {
-          MailId: email.id,
+          ContactId: this.contactId,
+          CanRead: canRead.target.checked,
         },
-        Json: null,
       };
 
-      const subscription = this.placesService.GenericAPI(body).subscribe({
-        next: (res: any) => {
-          this.showToast('Emails sent successfully');
-          successCount++;
-          // Check if all emails have been processed
-          if (--emailCount === 0) {
-            this.modalService.dismissAll();
-            this.isLoading = false; // Hide skeleton
-          }
-        },
-        error: () => {
-          errorCount++;
-          // Check if all emails have been processed
-          if (--emailCount === 0) {
-            this.isLoading = false; // Hide skeleton on error
-          }
+      this.genericApiService.GenericAPI(body).subscribe({
+        next: (data: any) => {},
+      });
+    } catch (error) {}
+  }
+
+  GetContactFolders() {
+    this.http
+      .get<any>(
+        `${environment.API_URL}/MicrosoftMails/GetContactFolders?ContactId=${this.contactId}`
+      )
+      .subscribe({
+        next: (data: any) => {
+          this.ContactFolders = data;
+          this.mergeContactFoldersWithInfos();
         },
       });
-
-      this.subscriptions.add(subscription);
-    });
   }
 
-  showToast(message: string) {
-    const toast = document.getElementById('customToast');
-    const toastMessage = document.getElementById('toastMessage');
-    toastMessage!.innerText = message;
-    toast!.classList.add('show');
-    setTimeout(() => {
-      toast!.classList.remove('show');
-    }, 3000);
+  mergeContactFoldersWithInfos() {
+    if (this.ContactFolders && this.ContactInfos) {
+      this.ContactFolders.forEach((folder: any) => {
+        const contactInfo = this.ContactInfos.readEmailsWithFolderName.find(
+          (info: any) => info.folderId === folder.id
+        );
+        if (contactInfo) {
+          folder.isChecked = true;
+        } else {
+          folder.isChecked = false;
+        }
+      });
+
+      this.emailsList = [...this.ContactInfos.readEmailsWithFroms];
+      this.domainList = [...this.ContactInfos.readEmailsWithDomains];
+    }
   }
 
-  getCampaignOrganizations(buboxId: number, campaignId: number): void {
-    this.isLoading = true; // Show skeleton
+  GetContactInfos() {
+    this.http
+      .get<any>(
+        `${environment.API_URL}/MicrosoftMails/GetContactInfos?ContactId=${this.contactId}`
+      )
+      .subscribe({
+        next: (data: any) => {
+          this.ContactInfos = data;
+          this.mergeContactFoldersWithInfos();
+        },
+      });
+  }
 
-    const body: any = {
-      Name: 'GetCampaignOrganizations',
-      Params: { CampaignId: campaignId },
+  AddFolderToBeRead(id: any, displayName: any, IsAdded: any) {
+    const payload = {
+      ContactId: this.contactId,
+      FolderId: id,
+      FolderName: displayName,
+      IsAdded: IsAdded.target.checked,
+    };
+    this.http
+      .post<any>(
+        `${environment.API_URL}/MicrosoftMails/AddFolderToBeRead`,
+        payload
+      )
+      .subscribe(() => {});
+  }
+
+  validateEmail(email: string): boolean {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  }
+
+  AddEmailsToBeRead(emailInput: HTMLInputElement) {
+    const email = emailInput.value.trim();
+
+    if (this.validateEmail(email)) {
+      const payload = {
+        ContactId: this.contactId,
+        Email: email,
+        IsAdded: true,
+      };
+
+      this.http
+        .post<any>(
+          `${environment.API_URL}/MicrosoftMails/AddEmailsToBeRead`,
+          payload
+        )
+        .subscribe(() => {
+          this.emailsList.push({ email: email, isAdded: true });
+          emailInput.value = '';
+        });
+    } else {
+      alert('Please enter a valid email address!');
+    }
+  }
+
+  deleteEmailsToBeRead(email: string) {
+    const payload = {
+      ContactId: this.contactId,
+      Email: email,
+      IsAdded: false,
     };
 
-    const subscription = this.placesService.GenericAPI(body).subscribe({
-      next: (response) => {
-        if (response.json && response.json.length > 0) {
-          const organizationsIds = [
-            ...new Set(response.json.map((o: any) => o.organizationId)),
-          ];
-          const organizations: {
-            id: number;
-            contacts: any[];
-          }[] = organizationsIds.map((id) => {
-            return { id: id as number, contacts: [] };
-          });
-          const emilyObject: { buyboxId: number[]; organizations: any[] } = {
-            buyboxId: [buboxId],
-            organizations: organizations,
-          };
-          this.emilyService.updateCheckList(emilyObject);
-          this.router.navigate(['/MutipleEmail', campaignId]);
-        }
-        this.isLoading = false; // Hide skeleton
-      },
-      error: () => {
-        this.isLoading = false; // Hide skeleton on error
-      },
-    });
+    this.http
+      .post<any>(
+        `${environment.API_URL}/MicrosoftMails/AddEmailsToBeRead`,
+        payload
+      )
+      .subscribe(() => {
+        this.emailsList = this.emailsList.filter(
+          (item) => item.email !== email
+        );
+      });
+  }
 
-    this.subscriptions.add(subscription);
+  AddDomainToBeRead(domainInput: HTMLInputElement) {
+    const domain = domainInput.value.trim();
+
+    const payload = {
+      ContactId: this.contactId,
+      Domain: domain,
+      IsAdded: true,
+    };
+
+    this.http
+      .post<any>(
+        `${environment.API_URL}/MicrosoftMails/AddDomainToBeRead`,
+        payload
+      )
+      .subscribe(() => {
+        this.domainList.push({ domain: domain, isAdded: true });
+        domainInput.value = '';
+      });
+  }
+
+  deleteDomainToBeRead(domain: string) {
+    const payload = {
+      ContactId: this.contactId,
+      Domain: domain,
+      IsAdded: false,
+    };
+
+    this.http
+      .post<any>(
+        `${environment.API_URL}/MicrosoftMails/AddDomainToBeRead`,
+        payload
+      )
+      .subscribe(() => {
+        this.domainList = this.domainList.filter(
+          (item) => item.domain !== domain
+        );
+      });
+  }
+
+  //
+  //
+  //
+
+  // protected GoogleAcceptToReadReplyEmails(canRead: any): void {
+  //   try {
+  //     this.spinner.show();
+  //     const body: any = {
+  //       Name: 'AcceptToReadReplyEmails',
+  //       Params: {
+  //         ContactId: this.contactId,
+  //         CanRead: canRead.target.checked,
+  //       },
+  //     };
+
+  //     this.genericApiService.genericApi(body).subscribe({
+  //       next: (data: any) => {
+  //         this.spinner.hide();
+  //       },
+  //     });
+  //   } catch (error) {}
+  // }
+
+  GoogleGetContactFolders() {
+    this.http
+      .get<any>(
+        `${environment.API_URL}/GoogleMails/GetUserGmailFolder?ContactId=${this.contactId}`
+      )
+      .subscribe({
+        next: (data: any) => {
+          this.googleContactFolders = data.map((f: any) => ({
+            id: f.id,
+            name: f.name,
+            isChecked: false,
+          }));
+          this.GoogleGetSavedData();
+          // this.GooglemergeContactFoldersWithInfos();
+        },
+      });
+  }
+
+  // GooglemergeContactFoldersWithInfos() {
+  //   if (this.googleContactFolders && this.googleContactInfos) {
+  //     this.googleContactFolders.forEach((folder: any) => {
+  //       const contactInfo =
+  //         this.googleContactInfos.readEmailsWithFolderName.find(
+  //           (info: any) => info.folderId === folder.id
+  //         );
+  //       if (contactInfo) {
+  //         folder.isChecked = true;
+  //       } else {
+  //         folder.isChecked = false;
+  //       }
+  //     });
+
+  //     this.googleEmailsList = [...this.googleContactInfos.readEmailsWithFroms];
+  //     this.googleDomainList = [
+  //       ...this.googleContactInfos.readEmailsWithDomains,
+  //     ];
+  //   }
+  // }
+
+  // GoogleGetContactInfos() {
+  //   this.http
+  //     .get<any>(
+  //       `${environment.API_URL}/MicrosoftMails/GetContactInfos?ContactId=${this.contactId}`
+  //     )
+  //     .subscribe({
+  //       next: (data: any) => {
+  //         this.googleContactInfos = data;
+  //         this.GooglemergeContactFoldersWithInfos();
+  //       },
+  //     });
+  // }
+
+  GoogleAddFolderToBeRead(id: any, displayName: any, IsAdded: any) {
+    const body = {
+      Name: 'ReadFromSpecificFolderInGoogle',
+      Params: {
+        IsLinkedWithGoogle: IsAdded.target.checked ? 1 : 0,
+        FolderName: displayName,
+        FolderId: id,
+        GUIDSignature: this.guid,
+      },
+    };
+    this.genericApiService.GenericAPI(body).subscribe((response) => {});
+  }
+
+  GoogleAddEmailsToBeRead(
+    bool: number,
+    emailInput?: HTMLInputElement,
+    stringEmail?: string
+  ) {
+    const email = emailInput ? emailInput.value.trim() : stringEmail;
+
+    if (this.validateEmail(email!)) {
+      const body = {
+        Name: 'ReadFromSpecificMailInGoogle',
+        Params: {
+          IsLinkedWithGoogle: bool,
+          Email: email,
+          GUIDSignature: this.guid,
+        },
+      };
+      this.genericApiService.GenericAPI(body).subscribe((response) => {
+        if (bool) {
+          this.googleEmailsList.push({ email: email!, isAdded: true });
+          emailInput!.value = '';
+        } else {
+          this.googleEmailsList = this.googleEmailsList.filter(
+            (item) => item.email !== email
+          );
+        }
+      });
+    } else {
+      alert('Please enter a valid email address!');
+    }
+  }
+
+  GoogleAddDomainToBeRead(
+    bool: number,
+    domainInput?: HTMLInputElement,
+    stringDomain?: string
+  ) {
+    const domain = domainInput ? domainInput.value.trim() : stringDomain;
+
+    const body = {
+      Name: 'ReadFromSpecificDomainInGoogle',
+      Params: {
+        IsLinkedWithGoogle: bool,
+        Domain: domain,
+        GUIDSignature: this.guid,
+      },
+    };
+    this.genericApiService.GenericAPI(body).subscribe((response) => {
+      if (bool) {
+        this.googleDomainList.push({ domain: domain!, isAdded: true });
+        domainInput!.value = '';
+      } else {
+        this.googleDomainList = this.googleDomainList.filter(
+          (item) => item.domain !== domain
+        );
+      }
+    });
+  }
+
+  GoogleGetDBFolders(): Observable<any> {
+    const body = {
+      Name: 'GetUserFolderAddedInGoogle',
+      Params: {
+        GUIDSignature: this.guid,
+      },
+    };
+    return this.genericApiService.GenericAPI(body);
+  }
+  GoogleGetDBEmails(): Observable<any> {
+    const body = {
+      Name: 'GetUserFromsAddedInGoogle',
+      Params: {
+        GUIDSignature: this.guid,
+      },
+    };
+    return this.genericApiService.GenericAPI(body);
+  }
+  GoogleGetDBDomains(): Observable<any> {
+    const body = {
+      Name: 'GetUserDomainsInGoogle',
+      Params: {
+        GUIDSignature: this.guid,
+      },
+    };
+    return this.genericApiService.GenericAPI(body);
+  }
+  UnlinkGoogle(event: any): void {
+    event.preventDefault();
+
+    const body = {
+      Name: 'UnlinkGoogle',
+      Params: {
+        ContactId: this.contactId,
+      },
+    };
+    this.genericApiService.GenericAPI(body).subscribe((response) => {
+      this.googleState = 1;
+      this.googleContactFolders = [];
+      this.googleDomainList = [];
+      this.googleEmailsList = [];
+    });
+  }
+
+  GoogleGetSavedData() {
+    forkJoin({
+      folders: this.GoogleGetDBFolders(),
+      emails: this.GoogleGetDBEmails(),
+      domains: this.GoogleGetDBDomains(),
+    }).subscribe((result) => {
+      if (result.folders.json.length) {
+        this.googleContactFolders.forEach((f) => (f.isChecked = false));
+        for (let f of result.folders.json) {
+          const folder = this.googleContactFolders.find(
+            (folder) => folder.id == f.folderId
+          );
+          if (folder) {
+            folder.isChecked = true;
+          }
+        }
+      }
+
+      if (result.emails.json.length) {
+        this.googleEmailsList = [
+          ...result.emails.json.map((e: any) => ({
+            email: e.email,
+            isAdded: true,
+          })),
+        ];
+      }
+
+      if (result.domains.json.length) {
+        this.googleDomainList = [
+          ...result.domains.json.map((d: any) => ({
+            domain: d.domain,
+            isAdded: true,
+          })),
+        ];
+      }
+    });
   }
 }
