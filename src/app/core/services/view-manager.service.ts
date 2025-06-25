@@ -78,6 +78,9 @@ export class ViewManagerService {
   StageId = 0
   // stages: Stage[] = []
 
+  private sortOptionSubject = new BehaviorSubject<number>(1)
+  sortOption$ = this.sortOptionSubject.asObservable()
+
   constructor(
     private placesService: PlacesService,
     private sanitizer: DomSanitizer,
@@ -819,5 +822,11 @@ public updatePlaceKanbanStage(
   public resetSelectedStageId(): void {
     this._selectedStageId.next(0)
     // Don't save to localStorage since we want to reset when navigating away
+  }
+
+  setSortOption(sortId: number): void {
+    this.sortOptionSubject.next(sortId)
+    // Here you would implement the actual sorting logic
+    // For example, resorting the centers array based on the sort option
   }
 }
