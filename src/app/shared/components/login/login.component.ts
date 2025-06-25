@@ -168,7 +168,7 @@ export class LoginComponent implements OnInit {
   }
 
   private navigateToHome(): void {
-    this.router.navigate(['/overview']);
+    this.router.navigate(['/summary']);
   }
 
   private handleLoginError(): void {
