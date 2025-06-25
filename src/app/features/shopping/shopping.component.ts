@@ -437,9 +437,10 @@ export class ShoppingComponent implements OnInit {
 
     this.spinner.show();
     const body = {
-      Name: 'AddPDFDirectory',
+      Name: 'AddDirectory',
       Params: {
-        Path: this.selectedFullPath
+        Path: this.selectedFullPath,
+        IncludeSubfolders: false,
       },
     };
 

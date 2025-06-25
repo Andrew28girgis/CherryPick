@@ -175,10 +175,12 @@
   background: var(--Card-Section-BG, #fff);
 }
 
-.nav-link.active-route .img-icn {
-  filter: invert(12%) sepia(98%) saturate(6000%) hue-rotate(245deg)
-    brightness(88%) contrast(102%);
-}
+  .nav-link.active-route .img-icn {
+    /* filter: invert(12%) sepia(98%) saturate(6000%) hue-rotate(245deg)
+      brightness(88%) contrast(102%); */
+    background-color: #3922d2;
+  clip-path: inset(0 0 0 0);
+  }
 
 .nav-link:not(.active-route):hover .img-icn {
   filter: invert(12%) sepia(98%) saturate(6000%) hue-rotate(245deg) brightness(88%) contrast(102%);
