@@ -79,13 +79,13 @@
             <span class="icon-text">{{ option.text }}</span>
           </div>
 
-          <!-- <button 
+          <button 
           *ngIf="!loginSharedToken"
             class="btn custom-share-btn ms-3 d-none d-sm-flex"
             (click)="OpenShareWithContactModal(ShareWithContact)"
           >
             Share
-          </button> -->
+          </button>
 
           <app-logout *ngIf="!loginSharedToken"></app-logout>
         </div>

@@ -57,40 +57,42 @@ export class DropboxService {
     });
   }
 
- downloadFile(path: string): Observable<string> {
+  downloadFile(path: string): Observable<string> {
     const downloadUrl = 'https://content.dropboxapi.com/2/files/download';
     console.log('tokenSubject',this.tokenSubject);
     console.log('token',this.token);
     console.log('RefreshToken',this.RefreshToken);
 
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`,
-      'Dropbox-API-Arg': JSON.stringify({ path })
+      Authorization: `Bearer ${this.token}`,
+      'Dropbox-API-Arg': JSON.stringify({ path }),
     });
 
-    return this.http.post(downloadUrl, null, {
-      headers,
-      responseType: 'text'
-    }).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          return this.refreshToken().pipe(
-            switchMap(() => {
-              // Retry with new token
-              const newHeaders = new HttpHeaders({
-                'Authorization': `Bearer ${this.token}`,
-                'Dropbox-API-Arg': JSON.stringify({ path })
-              });
-              return this.http.post(downloadUrl, null, {
-                headers: newHeaders,
-                responseType: 'text'
-              });
-            })
-          );
-        }
-        return throwError(error);
+    return this.http
+      .post(downloadUrl, null, {
+        headers,
+        responseType: 'text',
       })
-    );
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            return this.refreshToken().pipe(
+              switchMap(() => {
+                // Retry with new token
+                const newHeaders = new HttpHeaders({
+                  Authorization: `Bearer ${this.token}`,
+                  'Dropbox-API-Arg': JSON.stringify({ path }),
+                });
+                return this.http.post(downloadUrl, null, {
+                  headers: newHeaders,
+                  responseType: 'text',
+                });
+              })
+            );
+          }
+          return throwError(error);
+        })
+      );
   }
 
   private refreshToken(): Observable<any> {
