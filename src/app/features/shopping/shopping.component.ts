@@ -31,7 +31,7 @@ interface ShoppingCenter {
 })
 export class ShoppingComponent implements OnInit {
   Math = Math;
-  contactID: any;
+  contactID: any = localStorage.getItem('contactId');
   DirectoryNames: partitions[] = [];
   childrenPaths: Children[] = [];
   selectedDrive = '';
@@ -437,10 +437,11 @@ export class ShoppingComponent implements OnInit {
 
     this.spinner.show();
     const body = {
-      Name: 'AddDirectory',
+      Name: 'AddFile',
       Params: {
         Path: this.selectedFullPath,
-        IncludeSubfolders: false,
+        isProcessed: false,
+        ContactId: this.contactID,
       },
     };
 
