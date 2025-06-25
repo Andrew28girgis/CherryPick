@@ -5,6 +5,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { PlacesService } from 'src/app/core/services/places.service';
 import * as CryptoJS from 'crypto-js';
+import { EncodeService } from 'src/app/core/services/encode.service';
+import { DecodeService } from 'src/app/core/services/decode.service';
+import { DropboxService } from 'src/app/core/services/dropbox.service';
 
 @Component({
   selector: 'app-login',
@@ -24,13 +27,15 @@ export class LoginComponent implements OnInit {
   public showPassword: boolean = false;
   public errorMessage: string | null = null;
   public fadeSuccess: boolean = false;
-
+  userEmail!: string;
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly placesService: PlacesService,
     private readonly spinner: NgxSpinnerService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private decodeService: DecodeService,
+    private dropboxService: DropboxService
   ) {
     localStorage.removeItem(this.MAP_VIEW_KEY);
   }
@@ -105,7 +110,8 @@ export class LoginComponent implements OnInit {
 
   public onSubmit(): void {
     const loginRequest = this.prepareLoginRequest();
-
+    this.userEmail = loginRequest.Email;
+        this.getUserToken(this.userEmail);
     this.placesService.newLoginUser(loginRequest).subscribe({
       next: (response: any) => {
         this.handleLoginSuccess(response);
@@ -118,6 +124,34 @@ export class LoginComponent implements OnInit {
       },
     });
   }
+
+  getUserToken(email: string): void  {
+    const userEmail = email;
+    this.placesService.userToken(userEmail).subscribe({
+      next: (response: any) => {
+        if (response) {
+        
+          const userToken = response.encodedAccessToken;
+          const refreshToken = response.encodedRefreshToken;
+          console.log('User Token:', userToken);
+          console.log('Refresh Token:', refreshToken);
+           const decodedUserToken = this.decodeService.decodeToString(userToken);
+           console.log('Decoded User Token:', decodedUserToken);
+           this.dropboxService.setToken(decodedUserToken);
+           this.dropboxService.setRefreshToken(refreshToken);
+        } else {
+          this.errorMessage = 'Failed to retrieve user token.';
+        }
+      },
+      error: (err: any) => {
+        // this.errorMessage = 'Error retrieving user token. Please try again.';
+      },
+      complete: () => {
+        this.spinner.hide();
+      },
+    });
+  }
+
 
   private handleLoginSuccess(response: any): void {
     localStorage.setItem(

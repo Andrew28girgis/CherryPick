@@ -46,6 +46,10 @@ export class PlacesService {
     );
   }
 
+  public userToken(email:string){
+    return this.http.get(`${environment.api}/DropBox/GetUserTokens?Email=${email}`);
+  }
+
   public GenericAPI(body: any): Observable<any> {
     let encoded: string | undefined;
     const utf8Bytes = new TextEncoder().encode(JSON.stringify(body));
