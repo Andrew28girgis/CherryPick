@@ -1,324 +1,395 @@
-<div class="row">
-  <!-- Reactions Section -->
-  <div class="col-md-12 action-wrap">
-    <h5 class="mb-2 task-head">Reactions</h5>
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <!-- Skeleton loading for Reactions -->
-        <table class="table align-middle m-0" *ngIf="isLoading">
-          <tbody>
-            <tr *ngFor="let i of skeletonArray">
-              <td class="col-10">
-                <div class="skeleton-text"></div>
-              </td>
-              <td class="col-2 text-end">
-                <div class="skeleton-date"></div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+<div class="row g-4 mb-4">
+  <div class="col-6">
+    <div class="x-section h-100">
+      <img
+        class="section-img"
+        src="../../../assets/icons/microsoft.png"
+        alt="microsoft"
+      />
+      <div class="w-100 d-flex align-items-center gap-2">
+        <a
+          [href]="MICROSOFT_CONNECT_LINK"
+          class="w-100 btn card-btn"
+          [ngClass]="{ 'card-btn-unlink': microsoftState == 3 }"
+          (click)="microsoftState == 3 ? $event.preventDefault() : null"
+        >
+          @if (microsoftState == 2) {
+          <div
+            class="spinner-border spinner-border-sm text-light"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          }@else {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M10.8832 9.11667C12.7582 10.9917 12.7582 14.025 10.8832 15.8917C9.00821 17.7583 5.97487 17.7667 4.1082 15.8917C2.24154 14.0167 2.2332 10.9833 4.1082 9.11667"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M8.8248 11.175C6.8748 9.225 6.8748 6.05833 8.8248 4.1C10.7748 2.14167 13.9415 2.15 15.8998 4.1C17.8581 6.05 17.8498 9.21667 15.8998 11.175"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>
+            {{ microsoftState == 3 ? "UnLink" : "Link" }}
+          </span>
+          }
+        </a>
 
-        <!-- Actual content for Reactions -->
-        <table class="table align-middle m-0" *ngIf="!isLoading">
-          <tbody>
-            <tr
-              *ngFor="let notification of getNotificationsByCategory(1)"
-              [ngClass]="{ unread: !notification.isRead }"
-              (click)="markAsRead(notification)"
-            >
-              <td class="message-task col-10">{{ notification.message }}</td>
-              <td class="message-task col-2 text-end">
-                {{ notification.createdDate | date : "medium" }}
-              </td>
-            </tr>
-            <tr *ngIf="getNotificationsByCategory(1).length === 0">
-              <td colspan="3" class="text-center">
-                No notifications in this category
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        @if (microsoftState == 3 ) {
+        <button
+          class="w-100 btn card-btn card-btn-outline"
+          (click)="openConfigurationsModal(msConfiguration)"
+        >
+          <span>Configuration</span>
+        </button>
+        }
       </div>
     </div>
   </div>
 
-  <!-- Email Generated Section -->
-  <div class="col-md-12 action-wrap">
-    <h5 class="mb-2 task-head">Email Generated</h5>
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <!-- Skeleton loading for Email Generated -->
-        <table class="table align-middle m-0" *ngIf="isLoading">
-          <tbody>
-            <tr *ngFor="let i of skeletonArray">
-              <td class="col-10">
-                <div class="skeleton-text"></div>
-              </td>
-              <td class="col-2 text-end">
-                <div class="skeleton-date"></div>
-              </td>
-              <td>
-                <div class="skeleton-button"></div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  <div class="col-6">
+    <div class="x-section h-100">
+      <img
+        class="section-img"
+        src="../../../assets/icons/google.png"
+        alt="google"
+      />
+      <div class="w-100 d-flex align-items-center gap-2">
+        <a
+          [href]="GOOGLE_CONNECT_LINK"
+          class="w-100 btn card-btn"
+          [ngClass]="{ 'card-btn-unlink': googleState == 3 }"
+          (click)="googleState == 3 ? UnlinkGoogle($event) : null"
+        >
+          @if (googleState == 2) {
+          <div
+            class="spinner-border spinner-border-sm text-light"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          }@else {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <path
+              d="M10.8832 9.11667C12.7582 10.9917 12.7582 14.025 10.8832 15.8917C9.00821 17.7583 5.97487 17.7667 4.1082 15.8917C2.24154 14.0167 2.2332 10.9833 4.1082 9.11667"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M8.8248 11.175C6.8748 9.225 6.8748 6.05833 8.8248 4.1C10.7748 2.14167 13.9415 2.15 15.8998 4.1C17.8581 6.05 17.8498 9.21667 15.8998 11.175"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>
+            {{ googleState == 3 ? "UnLink" : "Link" }}
+          </span>
+          }
+        </a>
 
-        <!-- Actual content for Email Generated -->
-        <table class="table align-middle m-0" *ngIf="!isLoading">
-          <tbody>
-            <tr
-              *ngFor="let notification of getNotificationsByCategory(2)"
-              [ngClass]="{ unread: !notification.isRead }"
-              (click)="markAsRead(notification)"
-            >
-              <td class="message-task col-10">{{ notification.message }}</td>
-              <td class="message-task col-2 text-end">
-                {{ notification.createdDate | date : "medium" }}
-              </td>
-              <td>
-                <button
-                  class="view"
-                  (click)="GetNotificationActions(notification)"
-                >
-                  View Emails
-                </button>
-              </td>
-            </tr>
-            <tr *ngIf="getNotificationsByCategory(2).length === 0">
-              <td colspan="3" class="text-center">
-                No notifications in this category
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sync Section -->
-  <div class="col-md-12 action-wrap">
-    <h5 class="mb-2 task-head">Sync</h5>
-    <div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <!-- Skeleton loading for Sync -->
-          <table class="table align-middle m-0" *ngIf="isLoading">
-            <tbody>
-              <tr *ngFor="let i of skeletonArray">
-                <td class="col-10">
-                  <div class="skeleton-text"></div>
-                </td>
-                <td class="col-2 text-end">
-                  <div class="skeleton-date"></div>
-                </td>
-                <td>
-                  <div class="skeleton-button"></div>
-                </td>
-                <td>
-                  <div class="skeleton-button"></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- Actual content for Sync -->
-          <table class="table align-middle m-0" *ngIf="!isLoading">
-            <tbody>
-              <tr
-                *ngFor="let notification of getNotificationsByCategory(3)"
-                [ngClass]="{ unread: !notification.isRead }"
-                (click)="markAsRead(notification)"
-              >
-                <td class="message-task col-10">{{ notification.message }}</td>
-                <td class="message-task col-2 text-end">
-                  {{ notification.createdDate | date : "medium" }}
-                </td>
-                <td>
-                  <button
-                    class="view"
-                    (click)="
-                      getCampaignOrganizations(
-                        notification.buyBoxId,
-                        notification.campaignId
-                      )
-                    "
-                  >
-                    Generate emails
-                  </button>
-                </td>
-                <td>
-                  <button
-                    class="view"
-                    (click)="GetNotificationActions(notification)"
-                  >
-                    View Places
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="getNotificationsByCategory(3).length === 0">
-                <td colspan="3" class="text-center">
-                  No notifications in this category
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Proposal Submissions Section -->
-  <div class="col-md-12 action-wrap">
-    <h5 class="mb-2 task-head">Proposal Submissions</h5>
-    <div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <!-- Skeleton loading for Proposal Submissions -->
-          <table class="table align-middle m-0" *ngIf="isLoading">
-            <tbody>
-              <tr *ngFor="let i of skeletonArray">
-                <td class="col-10">
-                  <div class="skeleton-text"></div>
-                </td>
-                <td class="col-2 text-end">
-                  <div class="skeleton-date"></div>
-                </td>
-                <td>
-                  <div class="skeleton-button"></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- Actual content for Proposal Submissions -->
-          <table class="table align-middle m-0" *ngIf="!isLoading">
-            <tbody>
-              <tr
-                *ngFor="let notification of getNotificationsByCategory(4)"
-                [ngClass]="{ unread: !notification.isRead }"
-                (click)="markAsRead(notification)"
-              >
-                <td class="message-task col-10">{{ notification.message }}</td>
-                <td class="message-task col-2 text-end">
-                  {{ notification.createdDate | date : "medium" }}
-                </td>
-                <td>
-                  <button
-                    class="view"
-                    (click)="GetNotificationActions(notification)"
-                  >
-                    View Submissions
-                  </button>
-                </td>
-              </tr>
-              <tr *ngIf="getNotificationsByCategory(4).length === 0">
-                <td colspan="3" class="text-center">
-                  No notifications in this category
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        @if (googleState == 3 ) {
+        <button
+          class="w-100 btn card-btn card-btn-outline"
+          (click)="openConfigurationsModal(googleConfiguration)"
+        >
+          <span>Configuration</span>
+        </button>
+        }
       </div>
     </div>
   </div>
 </div>
 
-<!-- Email Modal Template -->
-<ng-template #EmailView let-modal>
-  <div class="modal-header d-flex justify-content-between">
-    <h4 class="modal-title">{{ getCurrentEmail().buyBoxName }}</h4>
-    <div class="d-flex">
-      <h4 class="modal-title" style="margin-right: 20px">
-        {{ getCurrentEmail().organizationName }}
-      </h4>
-      <button
-        type="button"
-        class="btn-close"
-        aria-label="Close"
-        (click)="modal.dismiss('Cross click')"
-      ></button>
+<ng-template #msConfiguration let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title text-dark d-flex justify-content-between w-100">
+        Email Configuration
+      </h3>
     </div>
-  </div>
-  <div
-    class="modal-body"
-    style="min-height: 75vh; max-height: 75vh; overflow-y: auto"
-  >
-    <div class="email-meta mb-3">
-      <div class="d-flex justify-content-between">
-        <div><strong>Subject:</strong> {{ getCurrentEmail().subject }}</div>
-        <div>
-          <strong>Date:</strong> {{ getCurrentEmail().date | date : "medium" }}
+    <div class="modal-body">
+      <div class="row m-0 mb-3">
+        <div class="col-12 p-0 row m-0">
+          <div class="checkbox-section p-0">
+            <input
+              type="checkbox"
+              name="ReadReply"
+              id="ReadReply"
+              class="form-check-input"
+              (change)="AcceptToReadReplyEmails($event)"
+            />
+            <label for="ReadReply">Accept To Read Reply Emails</label>
+          </div>
         </div>
       </div>
-      <div *ngIf="getCurrentEmail().fromAddress">
-        <strong>From:</strong> {{ getCurrentEmail().fromAddress }}
+
+      <div class="row m-0 mb-3">
+        <div class="col-2 p-0">
+          <p class="folder_p">Folders :</p>
+        </div>
+        <div class="col-10 p-0 row m-0">
+          @for (item of ContactFolders; track $index) {
+
+          <div class="col-6 col-sm-4">
+            <div class="checkbox-section">
+              <input
+                type="checkbox"
+                [name]="item.id"
+                [id]="item.id"
+                class="form-check-input"
+                [checked]="item.isChecked"
+                (change)="AddFolderToBeRead(item.id, item.displayName, $event)"
+              />
+              <label [for]="item.id">
+                {{ item.displayName }}
+              </label>
+            </div>
+          </div>
+          }
+        </div>
       </div>
-      <div *ngIf="getCurrentEmail().toAddress">
-        <strong>To:</strong> {{ getCurrentEmail().toAddress }}
+
+      <div class="d-flex align-items-center section-Text-email mt-2 row m-0">
+        <label for="AddEmailsToBeRead" class="col-2 p-0 m-0">Email :</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="email"
+            name="AddEmailsToBeRead"
+            id="AddEmailsToBeRead"
+            #emailInput
+          />
+          <button (click)="AddEmailsToBeRead(emailInput)" class="btn card-btn">
+            <span>Add</span>
+          </button>
+        </div>
       </div>
-      <div *ngIf="getCurrentEmail().cc">
-        <strong>CC:</strong> {{ getCurrentEmail().cc }}
+
+      @for (item of emailsList; track $index) {
+
+      <div class="d-flex align-items-center section-Text-email mt-2 row m-0">
+        <label class="col-2 p-0 m-0">Email added:</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="email"
+            [value]="item.email"
+            disabled
+          />
+          <button
+            (click)="deleteEmailsToBeRead(item.email)"
+            class="btn card-btn"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
       </div>
-      <div *ngIf="getCurrentEmail().bcc">
-        <strong>BCC:</strong> {{ getCurrentEmail().bcc }}
+      }
+
+      <div class="d-flex align-items-center section-Text-email mt-2 row m-0">
+        <label for="AddDomainToBeRead" class="col-2 p-0 m-0">Domain :</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="text"
+            name="AddDomainToBeRead"
+            id="AddDomainToBeRead"
+            #domainInput
+          />
+          <button (click)="AddDomainToBeRead(domainInput)" class="btn card-btn">
+            <span>Add</span>
+          </button>
+        </div>
       </div>
+
+      @for (item of domainList; track $index) {
+
+      <div class="d-flex align-items-center section-Text-email mt-2">
+        <label class="col-2 p-0 m-0">Domain added:</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="text"
+            [value]="item.domain"
+            disabled
+          />
+          <button
+            (click)="deleteDomainToBeRead(item.domain)"
+            class="btn card-btn"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      }
     </div>
-    <div class="email-body" [innerHTML]="getCurrentEmail().body"></div>
-  </div>
-  <div class="modal-footer d-flex justify-content-between">
-    <div>
+    <div class="modal-footer">
       <button
-        type="button"
-        class="btn btn-outline-primary me-2"
-        [disabled]="selectedEmailIndex === 0"
-        (click)="previousEmail()"
-      >
-        Previous Email
-      </button>
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        [disabled]="selectedEmailIndex === emailData.length - 1"
-        (click)="nextEmail()"
-      >
-        Next Email
-      </button>
-      <span class="ms-3" *ngIf="emailData.length > 1">
-        Email {{ selectedEmailIndex + 1 }} of {{ emailData.length }}
-      </span>
-    </div>
-    <div class="div">
-      <button
-        *ngIf="getCurrentEmail().direction == 4"
-        type="button"
-        class="btn btn-primary me-2"
-        (click)="sendEmail(getCurrentEmail())"
-      >
-        <i class="fas fa-paper-plane"></i> Send
-      </button>
-      <button
-        *ngIf="getCurrentEmail().direction == 4"
-        type="button"
-        class="btn btn-success me-2"
-        (click)="sendAllEmails()"
-      >
-        <i class="fas fa-paper-plane"></i> Send All
-      </button>
-      <button
-        type="button"
         class="btn btn-secondary"
-        (click)="modal.close('Close click')"
+        (click)="modal.dismiss('Close click'); GetContactInfos()"
       >
-        Close
+        Confirm
       </button>
     </div>
   </div>
 </ng-template>
 
-<div id="customToast" class="custom-toast">
-  <div class="toast-content">
-    <p id="toastMessage"></p>
+<ng-template #googleConfiguration let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title text-dark d-flex justify-content-between w-100">
+        Email Configuration
+      </h3>
+    </div>
+    <div class="modal-body">
+      <!-- <div class="row m-0 mb-3">
+        <div class="col-12 p-0 row m-0">
+          <div class="checkbox-section p-0">
+            <input
+              type="checkbox"
+              name="ReadReply"
+              id="ReadReply"
+              class="form-check-input"
+              (change)="GoogleAcceptToReadReplyEmails($event)"
+            />
+            <label for="ReadReply">Accept To Read Reply Emails</label>
+          </div>
+        </div>
+      </div> -->
+
+      <p class="folder_p mb-3">Folders :</p>
+      <div class="row g-1 m-0 mb-3">
+        @for (item of googleContactFolders; track $index) {
+
+        <div class="col-sm-4 col-md-6 col-12">
+          <div class="checkbox-section">
+            <input
+              type="checkbox"
+              [name]="item.name"
+              [id]="item.id"
+              class="form-check-input"
+              [checked]="item.isChecked"
+              (change)="GoogleAddFolderToBeRead(item.id, item.name, $event)"
+            />
+            <label [for]="item.id">
+              {{ item.name }}
+            </label>
+          </div>
+        </div>
+        }
+      </div>
+
+      <div class="d-flex align-items-center section-Text-email mt-2 row m-0">
+        <label for="AddEmailsToBeRead" class="col-2 p-0 m-0">Email :</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="email"
+            name="AddEmailsToBeRead"
+            id="AddEmailsToBeRead"
+            #emailInput
+          />
+          <button
+            (click)="GoogleAddEmailsToBeRead(1, emailInput)"
+            class="btn card-btn"
+          >
+            <span>Add</span>
+          </button>
+        </div>
+      </div>
+
+      @for (item of googleEmailsList; track $index) {
+
+      <div class="d-flex align-items-center section-Text-email mt-2 row m-0">
+        <label class="col-2 p-0 m-0">Email added:</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="email"
+            [value]="item.email"
+            disabled
+          />
+          <button
+            (click)="GoogleAddEmailsToBeRead(0, undefined, item.email)"
+            class="btn card-btn"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      }
+
+      <div class="d-flex align-items-center section-Text-email mt-2 row m-0">
+        <label for="AddDomainToBeRead" class="col-2 p-0 m-0">Domain :</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="text"
+            name="AddDomainToBeRead"
+            id="AddDomainToBeRead"
+            #domainInput
+          />
+          <button
+            (click)="GoogleAddDomainToBeRead(1, domainInput)"
+            class="btn card-btn"
+          >
+            <span>Add</span>
+          </button>
+        </div>
+      </div>
+
+      @for (item of googleDomainList; track $index) {
+
+      <div class="d-flex align-items-center section-Text-email mt-2">
+        <label class="col-2 p-0 m-0">Domain added:</label>
+        <div class="col-10 p-0 m-0 d-flex gap-3">
+          <input
+            class="form-control"
+            type="text"
+            [value]="item.domain"
+            disabled
+          />
+          <button
+            (click)="GoogleAddDomainToBeRead(0, undefined, item.domain)"
+            class="btn card-btn"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+    <div class="modal-footer">
+      <button
+        class="btn btn-secondary"
+        (click)="modal.dismiss('Close click'); GoogleGetSavedData()"
+      >
+        Confirm
+      </button>
+    </div>
   </div>
-</div>
+</ng-template>
